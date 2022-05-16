@@ -152,7 +152,7 @@ static AttachmentInfo g_ceramic_attachment(CERAMIC_PLATES, "CERAMIC PLATES");
 static AttachmentInfo g_detonator_attachment(DETONATOR, "DETONATOR");
 
 GUIButtonRef guiActionItemButton;
-static void ActionItemCallback(GUI_BUTTON* btn, INT32 reason);
+static void ActionItemCallback(GUI_BUTTON* btn, UINT32 reason);
 INT8 gbActionItemIndex = ACTIONITEM_MEDIUM;
 INT8 gbDefaultBombTrapLevel = 9;
 
@@ -538,7 +538,7 @@ void UpdateItemStatsPanel()
 }
 
 
-static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
+static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -554,7 +554,7 @@ static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
+static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -570,7 +570,7 @@ static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BothModesCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
+static void BothModesCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -636,7 +636,7 @@ static bool MakeAttachmentButton(AttachmentInfo& a, INT16 const x, INT16 const y
 
 
 static void ReEvaluateAttachmentStatii(void);
-static void ToggleWeaponAttachment(GUI_BUTTON* btn, INT32 reason);
+static void ToggleWeaponAttachment(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void SetupGunGUI()
@@ -778,7 +778,7 @@ static void ToggleAttachment(AttachmentInfo& a)
 }
 
 
-static void ToggleItemAttachment(GUI_BUTTON* const btn, INT32 const reason)
+static void ToggleItemAttachment(GUI_BUTTON* const btn, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -986,7 +986,7 @@ static void RemoveMoneyGUI(void)
 }
 
 
-static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void SetupOwnershipGUI(void)
@@ -997,7 +997,7 @@ static void SetupOwnershipGUI(void)
 }
 
 
-static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1112,7 +1112,7 @@ static void RemoveActionItemsGUI(void)
 }
 
 
-static void AlarmTriggerCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
+static void AlarmTriggerCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1178,7 +1178,7 @@ static void RemoveTriggersGUI(void)
 }
 
 
-static void ToggleWeaponAttachment(GUI_BUTTON* const btn, INT32 const reason)
+static void ToggleWeaponAttachment(GUI_BUTTON* const btn, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1188,7 +1188,7 @@ static void ToggleWeaponAttachment(GUI_BUTTON* const btn, INT32 const reason)
 }
 
 
-static void ActionItemCallback(GUI_BUTTON* btn, INT32 reason)
+static void ActionItemCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{

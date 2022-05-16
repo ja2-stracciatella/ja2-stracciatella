@@ -684,26 +684,26 @@ static GUIButtonRef MakeCheckBox(INT16 const x, INT16 const y, GUI_CALLBACK cons
 
 
 static void AddNPCsInSectorToArray(void);
-static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 static void EnableQDSButtons(void);
-static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void EnterQuestDebugSystem(void)
@@ -1303,7 +1303,7 @@ static void DisplayFactInformation(void)
 }
 
 
-static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1379,7 +1379,7 @@ static void DisplayFactList(void)
 }
 
 
-static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1397,7 +1397,7 @@ static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1423,12 +1423,12 @@ static void DisplayNPCInfo(void)
 
 
 static void DisplaySelectedListBox(void);
-static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
-static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
-static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason);
+static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason);
+static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
@@ -1746,7 +1746,7 @@ static void DisplaySelectedItem(void)
 }
 
 
-static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1764,7 +1764,7 @@ static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1853,7 +1853,7 @@ static void DrawQdsScrollRectangle(void)
 }
 
 
-static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
@@ -1891,7 +1891,7 @@ static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static void CalcPositionOfNewScrollBoxLocation(void);
 
 
-static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1910,7 +1910,7 @@ static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2033,7 +2033,7 @@ static void CalcPositionOfNewScrollBoxLocation(void)
 static void AddNPCToGridNo(INT32 iGridNo);
 
 
-static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2046,7 +2046,7 @@ static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, INT32 r
 static void AddItemToGridNo(INT32 iGridNo);
 
 
-static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2056,7 +2056,7 @@ static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, INT32 
 }
 
 
-static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2085,7 +2085,7 @@ static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, INT32 reas
 static void ChangeDayNumber(INT32 iDayToChangeTo);
 
 
-static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2097,7 +2097,7 @@ static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2109,7 +2109,7 @@ static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason)
 static void RefreshAllNPCInventory(void);
 
 
-static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2119,7 +2119,7 @@ static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reas
 }
 
 
-static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2141,7 +2141,7 @@ static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, INT32 reaso
 }
 
 
-static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* const btn, INT32 const reason)
+static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2172,7 +2172,7 @@ static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* const btn, I
 static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom);
 
 
-static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2187,7 +2187,7 @@ static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, I
 }
 
 
-static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 static void DestroyQuestDebugTextInputBoxes(void);
 static void InitQuestDebugTextInputBoxes(void);
 
@@ -2292,7 +2292,7 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const ST::string& p
 }
 
 
-static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2309,7 +2309,7 @@ static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion
 }
 
 
-static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2328,7 +2328,7 @@ static void TextEntryBox(const ST::string& pString, TEXT_ENTRY_CALLBACK TextEntr
 static void ChangeQuestState(INT32 iNumber);
 
 
-static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2346,7 +2346,7 @@ static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static void ChangeFactState(INT32 iNumber);
 
 
-static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2475,7 +2475,7 @@ static void ChangeDayNumber(INT32 iDayToChangeTo)
 }
 
 
-static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
@@ -2569,7 +2569,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 }
 
 
-static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2581,7 +2581,7 @@ static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, INT32 rea
 static INT16 IsMercInTheSector(UINT16 usMercID);
 
 
-static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2675,7 +2675,7 @@ static void ChangeFactState(INT32 iNumber)
 }
 
 
-static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2691,7 +2691,7 @@ static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3052,7 +3052,7 @@ static void DisplayQDSCurrentlyQuoteNum(void)
 }
 
 
-static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3064,7 +3064,7 @@ static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, INT32 reaso
 }
 
 
-static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{

@@ -468,8 +468,8 @@ void HelpScreenHandler()
 }
 
 
-static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnHelpScreenExitCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnHelpScreenExitCallback(GUI_BUTTON* btn, UINT32 reason);
 static void ChangeHelpScreenSubPage(void);
 static void CreateHelpScreenButtons(void);
 static void CreateHelpScreenTextBuffer(void);
@@ -834,7 +834,7 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 }
 
 
-static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, UINT32 reason);
 static ST::string GetHelpScreenText(UINT32 uiRecordToGet);
 
 
@@ -1166,7 +1166,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 }
 
 
-static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1256,7 +1256,7 @@ static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16
 }
 
 
-static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -1284,7 +1284,7 @@ void NewScreenSoResetHelpScreen( )
 }
 
 
-static void BtnHelpScreenExitCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnHelpScreenExitCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1956,9 +1956,9 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 }
 
 
-static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason);
-static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, UINT32 reason);
+static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateScrollAreaButtons(void)
@@ -2058,7 +2058,7 @@ static void CalculateHeightAndPositionForHelpScreenScrollBox(INT32* piHeightOfSc
 }
 
 
-static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2081,7 +2081,7 @@ static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
@@ -2118,7 +2118,7 @@ static void HelpScreenMouseMoveScrollBox(INT32 const mouse_y)
 }
 
 
-static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)

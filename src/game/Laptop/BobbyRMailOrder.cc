@@ -240,27 +240,27 @@ std::vector<NewBobbyRayOrderStruct> gpNewBobbyrShipments;
 //
 
 //Clear Order Button
-static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyRClearOrderImage;
 static GUIButtonRef guiBobbyRClearOrder;
 
 //Accept Order Button
-static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyRAcceptOrderImage;
 static GUIButtonRef guiBobbyRAcceptOrder;
 
 //Back Button
-static void BtnBobbyRBackCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRBackCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyRBackImage;
 static GUIButtonRef guiBobbyRBack;
 
 //Home Button
-static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyRHomeImage;
 static GUIButtonRef guiBobbyRHome;
 
 //Goto Shipment Page Button
-static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* giBobbyRGotoShipmentPageImage;
 static GUIButtonRef guiBobbyRGotoShipmentPage;
 
@@ -308,10 +308,10 @@ static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x
 }
 
 
-static void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectCloseDroDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectCloseDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterBobbyRMailOrder()
@@ -596,7 +596,7 @@ void RenderBobbyRMailOrder()
 }
 
 
-static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -618,7 +618,7 @@ static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, INT32 reason)
 static void ConfirmBobbyRPurchaseMessageBoxCallBack(MessageBoxReturnValue);
 
 
-static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -851,7 +851,7 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 }
 
 
-static void BtnBobbyRBackCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRBackCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -860,7 +860,7 @@ static void BtnBobbyRBackCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -869,7 +869,7 @@ static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -897,7 +897,7 @@ static void DrawShippingSpeedLights(UINT8 ubSelected)
 }
 
 
-static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -929,11 +929,11 @@ static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 
 static void DrawGoldRectangle(INT8 bCityNum);
 static void DrawSelectedCity(UINT8 ubCityNumber);
-static void SelectDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
-static void SelectDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
-static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectDropDownMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason);
+static void SelectDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason);
+static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
@@ -1149,7 +1149,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 }
 
 
-static void SelectDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1163,7 +1163,7 @@ static void SelectDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1172,7 +1172,7 @@ static void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION* pRegion, INT32
 }
 
 
-static void SelectDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectDropDownMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1284,7 +1284,7 @@ static void DisplayShippingLocationCity(void)
 }
 
 
-static void SelectCloseDroDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectCloseDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1319,7 +1319,7 @@ static bool IsAnythingPurchasedFromBobbyRayPage()
 }
 
 
-static void SelectTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectTitleLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1328,7 +1328,7 @@ static void SelectTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1375,7 +1375,7 @@ static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 
 }
 
 
-static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1409,7 +1409,7 @@ static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, INT3
 }
 
 
-static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
@@ -1744,7 +1744,7 @@ static void DisplayPackageWeight(void)
 }
 
 
-static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

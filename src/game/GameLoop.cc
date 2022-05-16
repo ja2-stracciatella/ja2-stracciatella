@@ -126,6 +126,10 @@ try
 	{
 		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
 	}
+	while (DequeueSpecificEvent(&InputEvent, TOUCH_EVENTS))
+	{
+		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
+	}
 
 
 	if ( gfGlobalError )

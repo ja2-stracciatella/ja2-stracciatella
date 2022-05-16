@@ -43,8 +43,8 @@ SGPVObject* guiCHARACTERPORTRAIT;
 extern INT32 iCurrentVoices;
 
 
-extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON* btn, INT32 reason);
-extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON* btn, INT32 reason);
+extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON* btn, UINT32 reason);
+extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPFinishButtons(void);
@@ -115,10 +115,10 @@ static void MakeButton(UINT idx, const char* img_file, const ST::string& text, I
 }
 
 
-static void BtnIMPFinishAttributesCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishDoneCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishPersonalityCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPFinishAttributesCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPFinishDoneCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPFinishPersonalityCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPFinishButtons(void)
@@ -186,7 +186,7 @@ static void DeleteIMPFinishButtons(void)
 static void FinishMessageBoxCallBack(MessageBoxReturnValue);
 
 
-static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -195,7 +195,7 @@ static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -210,7 +210,7 @@ static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 	static BOOLEAN fAnimateFlag = FALSE;
@@ -257,7 +257,7 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 

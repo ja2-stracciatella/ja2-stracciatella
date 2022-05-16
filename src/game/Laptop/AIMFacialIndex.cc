@@ -63,9 +63,9 @@ static MOUSE_REGION gMercFaceMouseRegions[MAX_NUMBER_MERCS];
 static MOUSE_REGION gScreenMouseRegions;
 
 
-static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason);
-static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, UINT32 reason);
+static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterAimFacialIndex()
@@ -182,7 +182,7 @@ void RenderAimFacialIndex()
 }
 
 
-static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -196,7 +196,7 @@ static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -205,7 +205,7 @@ static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	UINT8	ubMercNum;
 	UINT16 usPosX, usPosY;

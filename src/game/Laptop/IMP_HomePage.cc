@@ -19,7 +19,7 @@
 #include <string_theory/string>
 
 
-static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, UINT32 reason);
 
 // position defines
 #define IMP_PLAYER_ACTIVATION_STRING_X LAPTOP_SCREEN_UL_X + 259
@@ -133,7 +133,7 @@ static void RemoveIMPHomePageButtons(void)
 }
 
 
-static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

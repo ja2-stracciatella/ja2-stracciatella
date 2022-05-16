@@ -376,7 +376,7 @@ BOOLEAN InOverheadMap( )
 }
 
 
-static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
+static void ClickOverheadRegionCallback(MOUSE_REGION* reg, UINT32 reason);
 
 
 void GoIntoOverheadMap( )
@@ -846,7 +846,7 @@ static void RenderOverheadOverlays(void)
 }
 
 
-static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
+static void ClickOverheadRegionCallback(MOUSE_REGION* reg, UINT32 reason)
 {
 	if( gfTacticalPlacementGUIActive )
 	{

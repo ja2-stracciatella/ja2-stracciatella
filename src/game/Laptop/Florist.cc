@@ -69,7 +69,7 @@ static BOOLEAN gfHomePageActive = FALSE; // Specifies whether or not the home pa
 
 //Graphic for button
 static BUTTON_PICS* guiGalleryButtonImage;
-static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiGalleryButton;
 
 
@@ -158,7 +158,7 @@ void RenderFlorist()
 }
 
 
-static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void InitFloristDefaults()
@@ -225,7 +225,7 @@ void RemoveFloristDefaults()
 }
 
 
-static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -234,7 +234,7 @@ static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

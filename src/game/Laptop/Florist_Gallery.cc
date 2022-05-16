@@ -77,8 +77,8 @@ static GUIButtonRef guiGalleryButton[FLOR_GALLERY_NUMBER_FLORAL_BUTTONS];
 
 //Next Previous buttons
 static BUTTON_PICS* guiFloralGalleryButtonImage;
-static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, UINT32 reason);
+static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiFloralGalleryButton[2];
 
 
@@ -172,7 +172,7 @@ void RenderFloristGallery()
 static void ChangingFloristGallerySubPage(UINT8 ubSubPageNumber);
 
 
-static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -185,7 +185,7 @@ static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -206,7 +206,7 @@ static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

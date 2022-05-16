@@ -457,7 +457,7 @@ static void DisplayFileMessage(void)
 }
 
 
-static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void FilesBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void InitializeFilesMouseRegions(void)
@@ -482,7 +482,7 @@ static void RemoveFilesMouseRegions()
 }
 
 
-static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void FilesBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -772,7 +772,7 @@ static void LoadNextPage()
 }
 
 
-static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+static void ScrollRegionCallback(MOUSE_REGION* const, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
@@ -785,8 +785,8 @@ static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 }
 
 
-static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnNextFilePageCallback(GUI_BUTTON *btn, UINT32 reason);
+static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, UINT32 reason);
 
 
 static void CreateButtonsForFilesPage(void)
@@ -813,7 +813,7 @@ static void DeleteButtonsForFilesPage(void)
 }
 
 
-static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -822,7 +822,7 @@ static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnNextFilePageCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

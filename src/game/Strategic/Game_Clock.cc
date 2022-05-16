@@ -784,7 +784,7 @@ void LoadGameClock(HWFILE const hFile)
 }
 
 
-static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void CreateMouseRegionForPauseOfClock(void)
@@ -819,7 +819,7 @@ void RemoveMouseRegionForPauseOfClock( void )
 }
 
 
-static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -866,7 +866,7 @@ void HandlePlayerPauseUnPauseOfGame( void )
 }
 
 
-static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyScreenMaskForPauseGame(void)
@@ -909,7 +909,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 }
 
 
-static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

@@ -991,7 +991,7 @@ static void HandleTacticalTextUI(ProfileID profile_id, const ST::string& zQuoteS
 
 
 static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter);
-static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void TextOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::string& pString)
@@ -1016,7 +1016,7 @@ void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::s
 }
 
 
-static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter);
 
 
@@ -1482,7 +1482,7 @@ void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, 
 }
 
 
-static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TextOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
@@ -1505,7 +1505,7 @@ static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 

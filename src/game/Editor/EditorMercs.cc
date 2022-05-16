@@ -573,7 +573,7 @@ static SOLDIERTYPE* IsMercHere(INT32 iMapIndex)
 //----------------------------------------------------------------------------------------------
 
 
-void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsToggleColorModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -596,7 +596,7 @@ void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetColorsCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	INT32 iBtn;
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -619,7 +619,7 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
 static void ChangeBodyType(INT8 bOffset);
 
 
-void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetBodyTypeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{

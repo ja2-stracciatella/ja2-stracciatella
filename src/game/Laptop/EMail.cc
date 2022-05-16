@@ -244,7 +244,7 @@ static INT32 iTotalHeight = 0;
 
 
 static void CreateNextPreviousEmailPageButtons(void);
-static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void EmailBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void InitializeMouseRegions(void)
@@ -837,7 +837,7 @@ static void NextListPage()
 }
 
 
-static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void EmailBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iCount;
 	if(fDisplayMessageFlag)
@@ -900,7 +900,7 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void BtnMessageXCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMessageXCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP || reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -1048,7 +1048,7 @@ static INT32 DisplayEmailMessage(Email* const m)
 }
 
 
-static void BtnNewOkback(GUI_BUTTON *btn, INT32 reason)
+static void BtnNewOkback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1083,7 +1083,7 @@ static void NextMailPage()
 }
 
 
-static void MailScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+static void MailScrollRegionCallback(MOUSE_REGION* const, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
@@ -1096,9 +1096,9 @@ static void MailScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 }
 
 
-static void BtnDeleteCallback(GUI_BUTTON* btn, INT32 iReason);
-static void BtnNextEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnPreviousEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnDeleteCallback(GUI_BUTTON* btn, UINT32 iReason);
+static void BtnNextEmailPageCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnPreviousEmailPageCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
@@ -1252,7 +1252,7 @@ void ReDrawNewMailBox(void)
 }
 
 
-static void NextRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void NextRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1261,7 +1261,7 @@ static void NextRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnPreviousEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnPreviousEmailPageCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1270,7 +1270,7 @@ static void BtnPreviousEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnNextEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnNextEmailPageCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1279,7 +1279,7 @@ static void BtnNextEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void PreviousRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void PreviousRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1288,7 +1288,7 @@ static void PreviousRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnDeleteNoback(GUI_BUTTON* btn, INT32 reason)
+static void BtnDeleteNoback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1301,7 +1301,7 @@ static void BtnDeleteNoback(GUI_BUTTON* btn, INT32 reason)
 static void DeleteEmail(void);
 
 
-static void BtnDeleteYesback(GUI_BUTTON* btn, INT32 reason)
+static void BtnDeleteYesback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1423,7 +1423,7 @@ static void DeleteEmail(void)
 }
 
 
-static void FromCallback(GUI_BUTTON *btn, INT32 iReason)
+static void FromCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1435,7 +1435,7 @@ static void FromCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void SubjectCallback(GUI_BUTTON *btn, INT32 iReason)
+static void SubjectCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1447,7 +1447,7 @@ static void SubjectCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void BtnDeleteCallback(GUI_BUTTON *btn, INT32 iReason)
+static void BtnDeleteCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1456,7 +1456,7 @@ static void BtnDeleteCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void DateCallback(GUI_BUTTON *btn, INT32 iReason)
+static void DateCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1468,7 +1468,7 @@ static void DateCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void ReadCallback(GUI_BUTTON *btn, INT32 iReason)
+static void ReadCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

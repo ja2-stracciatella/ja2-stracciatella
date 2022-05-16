@@ -93,8 +93,8 @@ static GUIButtonRef MakeButton(const ST::string& text, INT16 x, GUI_CALLBACK cli
 }
 
 
-static void BtnMercAuthorizeButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnMercBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnMercAuthorizeButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnMercBackButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 void EnterMercsAccount()
@@ -186,7 +186,7 @@ void RenderMercsAccount()
 static void MercAuthorizePaymentMessageBoxCallBack(MessageBoxReturnValue);
 
 
-static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -203,7 +203,7 @@ static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnMercBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

@@ -162,10 +162,10 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const ST::string& text, c
 }
 
 
-static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason);
-static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
-static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 reason);
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, UINT32 reason);
+static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason);
+static void NextQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason);
 
 
 static void CreateIMPPersonalityQuizButtons(void)
@@ -294,7 +294,7 @@ static void DestroyPersonalityQuizButtons(void)
 }
 
 
-static void BtnQuizAnswerCallback(GUI_BUTTON*, INT32 reason);
+static void BtnQuizAnswerCallback(GUI_BUTTON*, UINT32 reason);
 
 
 static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
@@ -334,7 +334,7 @@ static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 static void CheckStateOfTheConfirmButton(void);
 
 
-static void BtnQuizAnswerCallback(GUI_BUTTON* const btn, INT32 const reason)
+static void BtnQuizAnswerCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -353,7 +353,7 @@ static void CheckAndUpdateNextPreviousIMPQuestionButtonStates(void);
 static void CompileQuestionsInStatsAndWhatNot(void);
 
 
-static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -383,7 +383,7 @@ static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 re
 }
 
 
-static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -912,7 +912,7 @@ static void ToggleQuestionNumberButtonOn(INT32 iAnswerNumber)
 }
 
 
-static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason)
+static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -921,7 +921,7 @@ static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason)
+static void NextQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

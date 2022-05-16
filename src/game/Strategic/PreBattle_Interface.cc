@@ -157,11 +157,11 @@ static void MakeButton(UINT idx, INT16 x, const ST::string& text, GUI_CALLBACK c
 }
 
 
-static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason);
+static void AutoResolveBattleCallback(GUI_BUTTON* btn, UINT32 reason);
 static void CheckForRobotAndIfItsControlled(void);
 static void DoTransitionFromMapscreenToPreBattleInterface(void);
-static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason);
-static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason);
+static void GoToSectorCallback(GUI_BUTTON* btn, UINT32 reason);
+static void RetreatMercsCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi)
@@ -960,7 +960,7 @@ void RenderPreBattleInterface()
 }
 
 
-static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason)
+static void AutoResolveBattleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
@@ -997,7 +997,7 @@ static void ClearMovementForAllInvolvedPlayerGroups(void);
 static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles);
 
 
-static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
+static void GoToSectorCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
@@ -1068,7 +1068,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
+static void RetreatMercsCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{

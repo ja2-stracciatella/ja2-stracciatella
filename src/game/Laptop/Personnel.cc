@@ -598,8 +598,8 @@ static GUIButtonRef MakeButton(char const* const gfx, INT32 const off_normal, IN
 }
 
 
-static void LeftButtonCallBack(GUI_BUTTON* btn, INT32 reason);
-static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason);
+static void LeftButtonCallBack(GUI_BUTTON* btn, UINT32 reason);
+static void RightButtonCallBack(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreatePersonnelButtons(void)
@@ -617,7 +617,7 @@ static void DeletePersonnelButtons(void)
 }
 
 
-static void LeftButtonCallBack(GUI_BUTTON* btn, INT32 reason)
+static void LeftButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -629,7 +629,7 @@ static void LeftButtonCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason)
+static void RightButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -904,7 +904,7 @@ static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void)
 }
 
 
-static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
@@ -977,7 +977,7 @@ catch (...) { /* XXX ignore */ }
 static SOLDIERTYPE const& GetSoldierOfCurrentSlot(void);
 
 
-static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iPortraitId = 0;
 	INT32 iOldPortraitId;
@@ -1230,7 +1230,7 @@ static void InventoryDown(void)
 }
 
 
-static void InventoryUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void InventoryUpButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1240,7 +1240,7 @@ static void InventoryUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void InventoryDownButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void InventoryDownButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1298,7 +1298,7 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 }
 
 
-static void HandleInventoryCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void HandleInventoryCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
@@ -1314,7 +1314,7 @@ static void HandleInventoryCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static MOUSE_REGION InventoryRegion;
 
 
-static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyPersonnelInventoryScrollButtons(void)
@@ -1669,8 +1669,8 @@ static void DisplayStateOfPastTeamMembers(void)
 }
 
 
-static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
@@ -1705,7 +1705,7 @@ static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
 }
 
 
-static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1719,7 +1719,7 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1737,8 +1737,8 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void DepartedDownCallBack(GUI_BUTTON* btn, INT32 reason);
-static void DepartedUpCallBack(GUI_BUTTON* btn, INT32 reason);
+static void DepartedDownCallBack(GUI_BUTTON* btn, UINT32 reason);
+static void DepartedUpCallBack(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
@@ -1765,7 +1765,7 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 }
 
 
-static void DepartedUpCallBack(GUI_BUTTON *btn, INT32 reason)
+static void DepartedUpCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1778,7 +1778,7 @@ static void DepartedUpCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
+static void DepartedDownCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2139,9 +2139,9 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const ST::string& 
 }
 
 
-static void EmployementInfoButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PersonnelINVStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void EmployementInfoButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PersonnelINVStartButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateDestroyStartATMButton(const BOOLEAN create)
@@ -2181,7 +2181,7 @@ static void FindPositionOfPersInvSlider(void)
 }
 
 
-static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
@@ -2223,7 +2223,7 @@ static void RenderSliderBarForPersonnelInventory(void)
 }
 
 
-static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -2236,7 +2236,7 @@ static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -2249,7 +2249,7 @@ static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void EmployementInfoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{

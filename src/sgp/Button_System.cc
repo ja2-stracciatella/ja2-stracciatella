@@ -500,8 +500,8 @@ static INT32 GetNextButtonNumber(void)
 }
 
 
-static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason);
-static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason);
+static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason);
+static void QuickButtonCallbackMMove(MOUSE_REGION* reg, UINT32 reason);
 
 
 GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, INT16 const width, INT16 const height, INT8 const priority, GUI_CALLBACK const click, GUI_CALLBACK const move) :
@@ -570,7 +570,7 @@ GUI_BUTTON::~GUI_BUTTON()
 }
 
 
-static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason);
+static void DefaultMoveCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
@@ -774,7 +774,7 @@ void GUI_BUTTON::SetFastHelpText(const ST::string& str)
 /* Dispatches all button callbacks for mouse movement. This function gets
  * called by the Mouse System. *DO NOT CALL DIRECTLY*
  */
-static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
+static void QuickButtonCallbackMMove(MOUSE_REGION* reg, UINT32 reason)
 {
 	Assert(reg != NULL);
 	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
@@ -802,7 +802,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 /* Dispatches all button callbacks for button presses. This function is called
  * by the Mouse System. *DO NOT CALL DIRECTLY*
  */
-static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
+static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 {
 	Assert(reg != NULL);
 	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
@@ -1630,7 +1630,7 @@ GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 
 /* Generic Button Movement Callback to reset the mouse button if the mouse is no
  * longer in the button region.
  */
-static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
+static void DefaultMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	// If the button isn't the anchored button, then we don't want to modify the button state.
 	if (btn != gpAnchoredButton) return;

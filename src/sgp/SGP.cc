@@ -221,11 +221,13 @@ static void MainLoop(int msPerGameCycle)
 				case SDL_MOUSEBUTTONDOWN: MouseButtonDown(&event.button); break;
 				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
 
-				case SDL_MOUSEMOTION:
-					SetSafeMousePosition(event.motion.x, event.motion.y);
-					break;
+				case SDL_MOUSEMOTION: MouseMove(&event.motion); break;
 
 				case SDL_MOUSEWHEEL: MouseWheelScroll(&event.wheel); break;
+
+				case SDL_FINGERMOTION: FingerMove(&event.tfinger); break;
+				case SDL_FINGERUP:     FingerUp(&event.tfinger); break;
+				case SDL_FINGERDOWN:   FingerDown(&event.tfinger); break;
 
 				case SDL_QUIT: deinitGameAndExit(); break;
 			}

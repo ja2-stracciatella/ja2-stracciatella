@@ -387,7 +387,7 @@ static void DecrementStat(INT32 iStatToDecrement)
 }
 
 
-static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPAttributeSelectionButtons(void)
@@ -414,7 +414,7 @@ static void DestroyIMPAttributeSelectionButtons(void)
 }
 
 
-static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -458,8 +458,8 @@ void RenderAttributeBoxes(void)
 }
 
 
-static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateAttributeSliderButtons(void)
@@ -502,7 +502,7 @@ static void DestroyAttributeSliderButtons(void)
 }
 
 
-static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
@@ -515,7 +515,7 @@ static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
@@ -528,7 +528,7 @@ static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateSlideRegionMouseRegions()
@@ -553,7 +553,7 @@ static void DestroySlideRegionMouseRegions()
 }
 
 
-static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static INT16 sOldX      = -1; // Changed from relative (to skill bar) to absolute position.
 	static INT32 iAttribute = -1;

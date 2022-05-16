@@ -151,9 +151,9 @@ static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 o
 }
 
 
-static void BtnIMPVoicesDoneCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPVoicesNextCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPVoicesPreviousCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPVoicesDoneCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPVoicesNextCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPVoicesPreviousCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPVoicesButtons(void)
@@ -186,7 +186,7 @@ static void DestroyIMPVoicesButtons(void)
 }
 
 
-static void BtnIMPVoicesNextCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPVoicesNextCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -198,7 +198,7 @@ static void BtnIMPVoicesNextCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -210,7 +210,7 @@ static void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -269,7 +269,7 @@ static void PlayVoice()
 }
 
 
-static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateIMPVoiceMouseRegions(void)
@@ -288,7 +288,7 @@ static void DestroyIMPVoiceMouseRegions(void)
 }
 
 
-static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// callback handler for imp portrait region button events
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)

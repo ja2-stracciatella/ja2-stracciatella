@@ -55,8 +55,8 @@ static BUTTON_PICS* guiFlowerCardsButtonImage;
 static GUIButtonRef guiFlowerCardsBackButton;
 
 
-static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterFloristCards()
@@ -167,7 +167,7 @@ void RenderFloristCards()
 }
 
 
-static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -178,7 +178,7 @@ static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

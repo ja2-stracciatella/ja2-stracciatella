@@ -42,7 +42,7 @@ static SGPVObject* guiInsCmntBulletImage;
 static MOUSE_REGION gSelectedInsuranceCommentLinkRegion[3];
 
 
-static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterInsuranceComments()
@@ -150,7 +150,7 @@ void RenderInsuranceComments()
 }
 
 
-static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

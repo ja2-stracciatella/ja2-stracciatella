@@ -139,37 +139,37 @@ static SGPVObject* guiGIOMainBackGroundImage;
 
 
 // Done Button
-static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnGIODoneCallback(GUI_BUTTON *btn,UINT32 reason);
 static GUIButtonRef guiGIODoneButton;
 static BUTTON_PICS* giGIODoneBtnImage;
 
 // Cancel Button
-static void BtnGIOCancelCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnGIOCancelCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiGIOCancelButton;
 static BUTTON_PICS* giGIOCancelBtnImage;
 
 
 //checkbox to toggle the Diff level
 static GUIButtonRef guiDifficultySettingsToggles[NUM_DIF_LEVELS];
-static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 
 //checkbox to toggle Game style
 static GUIButtonRef guiGameStyleToggles[NUM_GAME_STYLES];
-static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn,UINT32 reason);
 
 //checkbox to toggle Gun options
 static GUIButtonRef guiGunOptionToggles[NUM_GUN_OPTIONS];
-static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 
 #if 0// JA2Gold: no more timed turns setting
 //checkbox to toggle Timed turn option on or off
 static UINT32 guiTimedTurnToggles[GIO_NUM_TIMED_TURN_OPTIONS];
-static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 #endif
 
 //checkbox to toggle Save style
 static GUIButtonRef guiGameSaveToggles[NUM_SAVE_OPTIONS];
-static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 
 
 static void EnterGIOScreen();
@@ -533,7 +533,7 @@ template<typename T> static inline void SelectCheckbox(T& array, GUI_BUTTON cons
 }
 
 
-static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -542,7 +542,7 @@ static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -551,7 +551,7 @@ static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -560,7 +560,7 @@ static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -570,7 +570,7 @@ static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 
 
 #if 0 // JA2Gold: no more timed turns setting
-static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -580,7 +580,7 @@ static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 #endif
 
 
-static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnGIODoneCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -594,7 +594,7 @@ static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-static void BtnGIOCancelCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGIOCancelCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

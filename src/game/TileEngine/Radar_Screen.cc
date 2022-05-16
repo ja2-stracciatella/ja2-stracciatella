@@ -62,8 +62,8 @@ BOOLEAN		gfRadarCurrentGuyFlash = FALSE;
 static MOUSE_REGION gRadarRegionSquadList[NUMBER_OF_SQUADS];
 
 
-static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void InitRadarScreen()
@@ -126,7 +126,7 @@ void MoveRadarScreen( )
 static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY);
 
 
-static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT16 sRadarX, sRadarY;
 
@@ -150,7 +150,7 @@ static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT16 sRadarX, sRadarY;
 
@@ -362,8 +362,8 @@ void ToggleRadarScreenRender( void )
 }
 
 
-static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 // create destroy squad list regions as needed
@@ -471,7 +471,7 @@ static void RenderSquadList(void)
 }
 
 
-static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = -1;
 
@@ -491,7 +491,7 @@ static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for team list info region
 	INT32 iValue = 0;

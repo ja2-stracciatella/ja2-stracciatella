@@ -583,7 +583,7 @@ static void RemoveImpGraphics(void)
 }
 
 
-static void BtnIMPCancelCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPCancelCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPButtons(void)
@@ -615,7 +615,7 @@ static void DestroyIMPButtons(void)
 }
 
 
-static void BtnIMPCancelCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPCancelCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

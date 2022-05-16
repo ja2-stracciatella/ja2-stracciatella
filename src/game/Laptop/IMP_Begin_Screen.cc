@@ -235,7 +235,7 @@ void HandleIMPBeginScreen( void )
 }
 
 
-static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPBeginScreenButtons(void)
@@ -269,7 +269,7 @@ static void RemoveIMPBeginScreenButtons(void)
 static void CopyFirstNameIntoNickName(void);
 
 
-static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -385,8 +385,8 @@ static void CopyFirstNameIntoNickName(void)
 	}
 }
 
-static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 static void CreateIMPBeginScreenMouseRegions(void)
 {
@@ -423,7 +423,7 @@ static void DestroyIMPBeginScreenMouseRegions()
 	FOR_EACH(MOUSE_REGION, i, gIMPBeginScreenMouseRegions) MSYS_RemoveRegion(&*i);
 }
 
-static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -434,7 +434,7 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

@@ -116,20 +116,20 @@ static SGPVObject* guiBioBox;
 //
 
 // The Prev button
-static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static BUTTON_PICS* guiButtonImage;
 GUIButtonRef guiPrevButton;
 
 // The Next button
-static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercNextButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiNextButton;
 
 // The Hire button
-static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercHireButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiHireButton;
 
 // The Back button
-static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiMercBackButton;
 
 
@@ -231,7 +231,7 @@ void RenderMercsFiles()
 }
 
 
-static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -242,7 +242,7 @@ static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -256,7 +256,7 @@ static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static BOOLEAN MercFilesHireMerc(UINT8 ubMercID);
 
 
-static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercHireButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -480,7 +480,7 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 }
 
 
-static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

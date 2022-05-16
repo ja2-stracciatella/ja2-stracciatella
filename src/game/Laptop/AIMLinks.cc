@@ -46,7 +46,7 @@ static UINT8 const gubLinkPages[] = { BOBBYR_BOOKMARK, FUNERAL_BOOKMARK, INSURAN
 static MOUSE_REGION gSelectedLinkRegion[AIM_LINK_NUM_LINKS];
 
 
-static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterAimLinks()
@@ -107,7 +107,7 @@ void RenderAimLinks()
 }
 
 
-static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

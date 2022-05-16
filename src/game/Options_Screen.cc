@@ -148,7 +148,7 @@ static GUIButtonRef guiDoneButton;
 
 //checkbox to toggle tracking mode on or off
 static GUIButtonRef guiOptionsToggles[NUM_GAME_OPTIONS];
-static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 //Mouse regions for the name of the option
@@ -231,14 +231,14 @@ static GUIButtonRef MakeButton(INT16 x, GUI_CALLBACK click, const ST::string& te
 }
 
 
-static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnOptQuitCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnDoneCallback(GUI_BUTTON* btn, UINT32 reason);
 static void MusicSliderChangeCallBack(INT32 iNewValue);
-static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
-static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason);
+static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason);
 static void SetOptionsScreenToggleBoxes(void);
 static void SoundFXSliderChangeCallBack(INT32 iNewValue);
 static void SpeechSliderChangeCallBack(INT32 iNewValue);
@@ -555,7 +555,7 @@ static void SetOptionsExitScreen(ScreenID const uiExitScreen)
 }
 
 
-static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -565,7 +565,7 @@ static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -579,7 +579,7 @@ static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue);
 static void DoOptionsMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 
-static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnOptQuitCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -589,7 +589,7 @@ static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnDoneCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -601,7 +601,7 @@ static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason)
 static void HandleOptionToggle(UINT8 button_id, bool state, bool down, bool play_sound);
 
 
-static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	bool down;
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -771,7 +771,7 @@ static void HandleSliderBarMovementSounds(void)
 }
 
 
-static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	UINT8	ubButton = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -787,7 +787,7 @@ static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	INT8	bButton = (INT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -877,7 +877,7 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 }
 
 
-static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{

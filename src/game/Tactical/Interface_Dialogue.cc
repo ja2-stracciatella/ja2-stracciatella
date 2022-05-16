@@ -358,12 +358,12 @@ static void InitTalkingMenu(UINT8 const ubCharacterNum, INT16 const sGridNo)
 
 
 static void CalculatePopupTextOrientation(INT16 sWidth, INT16 sHeight);
-static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void TalkPanelNameRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason);
+static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TalkPanelClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TalkPanelNameRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
@@ -501,7 +501,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 }
 
 
-static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason)
+static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -629,7 +629,7 @@ void DeleteTalkingMenu( )
 
 
 static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight);
-static void TextRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void TextRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void RenderTalkingMenu()
@@ -777,7 +777,7 @@ void RenderTalkingMenu()
 }
 
 
-static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	UINT32 uiItemPos;
 
@@ -798,7 +798,7 @@ static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TalkPanelClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	UINT32  uiItemPos;
 	BOOLEAN fDoConverse = TRUE;
@@ -872,7 +872,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
@@ -899,7 +899,7 @@ static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -913,7 +913,7 @@ static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static void TalkPanelNameRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TalkPanelNameRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// Donot do this if we are talking already
 	if (gTalkPanel.face->fTalking) return;
@@ -4663,7 +4663,7 @@ static BOOLEAN NPCOpenThing(SOLDIERTYPE* pSoldier, BOOLEAN fDoor)
 }
 
 
-static void TextRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TextRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 

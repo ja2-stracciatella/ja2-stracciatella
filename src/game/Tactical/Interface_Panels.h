@@ -74,8 +74,8 @@ void    CheckForAndAddMercToTeamPanel(SOLDIERTYPE* s);
 void DisableTacticalTeamPanelButtons(BOOLEAN fDisable);
 void RenderTownIDString(void);
 
-void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
-void KeyRingSlotInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+void KeyRingSlotInvClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed);

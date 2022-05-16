@@ -623,8 +623,8 @@ static void AssociateEnemiesWithStrategicGroups(void)
 }
 
 
-static void MercCellMouseClickCallback(MOUSE_REGION* reg, INT32 reason);
-static void MercCellMouseMoveCallback(MOUSE_REGION* reg, INT32 reason);
+static void MercCellMouseClickCallback(MOUSE_REGION* reg, UINT32 reason);
+static void MercCellMouseMoveCallback(MOUSE_REGION* reg, UINT32 reason);
 
 
 static void CalculateSoldierCells(BOOLEAN fReset)
@@ -1462,15 +1462,15 @@ static SOLDIERCELL* MakeCreatures(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUC
 }
 
 
-static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason);
-static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void FastButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void FinishButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PauseButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PlayButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void RejectSurrenderCallback(GUI_BUTTON* btn, INT32 reason);
-static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void AcceptSurrenderCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BandageButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void DoneButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void FastButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void FinishButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PauseButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PlayButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void RejectSurrenderCallback(GUI_BUTTON* btn, UINT32 reason);
+static void RetreatButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateAutoResolveInterface(void)
@@ -1884,7 +1884,7 @@ static void DepressAutoButton(UINT btn)
 }
 
 
-static void PauseButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void PauseButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1893,7 +1893,7 @@ static void PauseButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void PlayButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void PlayButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1903,7 +1903,7 @@ static void PlayButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void FastButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void FastButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1913,7 +1913,7 @@ static void FastButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void FinishButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void FinishButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1925,7 +1925,7 @@ static void FinishButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void RetreatButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2002,7 +2002,7 @@ static void DetermineBandageButtonState(void)
 static void SetupDoneInterface(void);
 
 
-static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BandageButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2012,7 +2012,7 @@ static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void DoneButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2033,7 +2033,7 @@ static SOLDIERCELL* GetCell(MOUSE_REGION const* const reg)
 }
 
 
-static void MercCellMouseMoveCallback(MOUSE_REGION* reg, INT32 reason)
+static void MercCellMouseMoveCallback(MOUSE_REGION* reg, UINT32 reason)
 {
 	SOLDIERCELL* const pCell = GetCell(reg);
 	if( gpAR->fPendingSurrender )
@@ -2058,7 +2058,7 @@ static void MercCellMouseMoveCallback(MOUSE_REGION* reg, INT32 reason)
 }
 
 
-static void MercCellMouseClickCallback(MOUSE_REGION* reg, INT32 reason)
+static void MercCellMouseClickCallback(MOUSE_REGION* reg, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3651,7 +3651,7 @@ static void HideSurrenderInterface(void)
 }
 
 
-static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason)
+static void AcceptSurrenderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3664,7 +3664,7 @@ static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void RejectSurrenderCallback(GUI_BUTTON* btn, INT32 reason)
+static void RejectSurrenderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{

@@ -25,7 +25,7 @@ extern SCHEDULENODE gCurrSchedule;
 
 
 //TERRAIN
-void BtnFgGrndCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnFgGrndCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -33,7 +33,7 @@ void BtnFgGrndCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnBkGrndCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnBkGrndCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -41,7 +41,7 @@ void BtnBkGrndCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnObjectCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnObjectCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -54,7 +54,7 @@ void BtnObjectCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnObject1Callback(GUI_BUTTON *btn,INT32 reason)
+void BtnObject1Callback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -68,7 +68,7 @@ void BtnObject1Callback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnObject2Callback(GUI_BUTTON *btn,INT32 reason)
+void BtnObject2Callback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -82,7 +82,7 @@ void BtnObject2Callback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnBanksCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnBanksCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -95,7 +95,7 @@ void BtnBanksCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnRoadsCallback( GUI_BUTTON *btn, INT32 reason )
+void BtnRoadsCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -108,7 +108,7 @@ void BtnRoadsCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BtnDebrisCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnDebrisCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -121,7 +121,7 @@ void BtnDebrisCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnBrushCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnBrushCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -129,7 +129,7 @@ void BtnBrushCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnFillCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnFillCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -138,7 +138,7 @@ void BtnFillCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnIncBrushDensityCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnIncBrushDensityCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -147,7 +147,7 @@ void BtnIncBrushDensityCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnDecBrushDensityCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnDecBrushDensityCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -156,7 +156,7 @@ void BtnDecBrushDensityCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 //BUILDINGS
-void BuildingWallCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingWallCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -170,7 +170,7 @@ void BuildingWallCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingDoorCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingDoorCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -184,7 +184,7 @@ void BuildingDoorCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingWindowCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingWindowCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -198,7 +198,7 @@ void BuildingWindowCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingRoofCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingRoofCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -212,7 +212,7 @@ void BuildingRoofCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingCrackWallCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingCrackWallCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -226,7 +226,7 @@ void BuildingCrackWallCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingFloorCallback(GUI_BUTTON *btn, INT32 reason)
+void BuildingFloorCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -240,7 +240,7 @@ void BuildingFloorCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 }
 
-void BuildingToiletCallback(GUI_BUTTON *btn, INT32 reason)
+void BuildingToiletCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -254,7 +254,7 @@ void BuildingToiletCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 }
 
-void BuildingFurnitureCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingFurnitureCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -268,7 +268,7 @@ void BuildingFurnitureCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingDecalCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingDecalCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -282,7 +282,7 @@ void BuildingDecalCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingSmartWallCallback( GUI_BUTTON *btn, INT32 reason )
+void BuildingSmartWallCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -291,7 +291,7 @@ void BuildingSmartWallCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BuildingSmartWindowCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingSmartWindowCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -300,7 +300,7 @@ void BuildingSmartWindowCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingSmartDoorCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingSmartDoorCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -309,7 +309,7 @@ void BuildingSmartDoorCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingSmartCrackWallCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingSmartCrackWallCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -318,7 +318,7 @@ void BuildingSmartCrackWallCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingDoorKeyCallback(GUI_BUTTON *btn, INT32 reason )
+void BuildingDoorKeyCallback(GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -333,7 +333,7 @@ void BuildingDoorKeyCallback(GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BuildingNewRoomCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingNewRoomCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -350,7 +350,7 @@ void BuildingNewRoomCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingNewRoofCallback(GUI_BUTTON *btn, INT32 reason )
+void BuildingNewRoofCallback(GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -365,7 +365,7 @@ void BuildingNewRoofCallback(GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BuildingCaveDrawingCallback( GUI_BUTTON *btn, INT32 reason )
+void BuildingCaveDrawingCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -375,7 +375,7 @@ void BuildingCaveDrawingCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BuildingSawRoomCallback( GUI_BUTTON *btn, INT32 reason )
+void BuildingSawRoomCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -386,7 +386,7 @@ void BuildingSawRoomCallback( GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void BuildingKillBuildingCallback(GUI_BUTTON *btn, INT32 reason)
+void BuildingKillBuildingCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -395,7 +395,7 @@ void BuildingKillBuildingCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 }
 
-void BuildingCopyBuildingCallback( GUI_BUTTON *btn, INT32 reason )
+void BuildingCopyBuildingCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -404,7 +404,7 @@ void BuildingCopyBuildingCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BuildingMoveBuildingCallback( GUI_BUTTON *btn, INT32 reason )
+void BuildingMoveBuildingCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -413,7 +413,7 @@ void BuildingMoveBuildingCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BuildingDrawRoomNumCallback(GUI_BUTTON *btn, INT32 reason)
+void BuildingDrawRoomNumCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -423,7 +423,7 @@ void BuildingDrawRoomNumCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 }
 
-void BuildingEraseRoomNumCallback( GUI_BUTTON *btn, INT32 reason )
+void BuildingEraseRoomNumCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason &MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -432,7 +432,7 @@ void BuildingEraseRoomNumCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BuildingToggleRoofViewCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingToggleRoofViewCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -450,7 +450,7 @@ void BuildingToggleRoofViewCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingToggleWallViewCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingToggleWallViewCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -468,7 +468,7 @@ void BuildingToggleWallViewCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BuildingToggleInfoViewCallback(GUI_BUTTON *btn,INT32 reason)
+void BuildingToggleInfoViewCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -485,7 +485,7 @@ void BuildingToggleInfoViewCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 //MAPINFO
-void BtnFakeLightCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnFakeLightCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -494,13 +494,13 @@ void BtnFakeLightCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnDrawLightsCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnDrawLightsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorMapInfoTaskbarMode( MAPINFO_ADD_LIGHT1_SOURCE );
 }
 
-void MapInfoDrawExitGridCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfoDrawExitGridCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetEditorMapInfoTaskbarMode( MAPINFO_DRAW_EXITGRIDS );
@@ -511,7 +511,7 @@ void MapInfoDrawExitGridCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MapInfoEntryPointsCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfoEntryPointsCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_RBUTTON_UP) )
 	{
@@ -545,44 +545,44 @@ void MapInfoEntryPointsCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MapInfoNormalRadioCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfoNormalRadioCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetEditorMapInfoTaskbarMode( MAPINFO_RADIO_NORMAL );
 }
 
-void MapInfoBasementRadioCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfoBasementRadioCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetEditorMapInfoTaskbarMode( MAPINFO_RADIO_BASEMENT );
 }
 
-void MapInfoCavesRadioCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfoCavesRadioCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetEditorMapInfoTaskbarMode( MAPINFO_RADIO_CAVES );
 }
 
-void MapInfoPrimeTimeRadioCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfoPrimeTimeRadioCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		ChangeLightDefault( PRIMETIME_LIGHT );
 }
 
-void MapInfoNightTimeRadioCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfoNightTimeRadioCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		ChangeLightDefault( NIGHTTIME_LIGHT );
 }
 
-void MapInfo24HourTimeRadioCallback( GUI_BUTTON *btn, INT32 reason )
+void MapInfo24HourTimeRadioCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		ChangeLightDefault( ALWAYSON_LIGHT );
 }
 
 //OPTIONS
-void BtnNewMapCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnNewMapCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -592,7 +592,7 @@ void BtnNewMapCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnNewBasementCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnNewBasementCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -602,7 +602,7 @@ void BtnNewBasementCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnNewCavesCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnNewCavesCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -612,7 +612,7 @@ void BtnNewCavesCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnSaveCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnSaveCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -620,7 +620,7 @@ void BtnSaveCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnLoadCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnLoadCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -628,7 +628,7 @@ void BtnLoadCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnChangeTilesetCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnChangeTilesetCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -637,7 +637,7 @@ void BtnChangeTilesetCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnCancelCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnCancelCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason&MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -645,7 +645,7 @@ void BtnCancelCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnQuitCallback( GUI_BUTTON *btn, INT32 reason )
+void BtnQuitCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -654,7 +654,7 @@ void BtnQuitCallback( GUI_BUTTON *btn, INT32 reason )
 }
 
 //ITEMS
-void MouseMovedInItemsRegion( MOUSE_REGION *reg, INT32 reason )
+void MouseMovedInItemsRegion( MOUSE_REGION *reg, UINT32 reason )
 {
 	HandleItemsPanel( gusMouseXPos, gusMouseYPos, GUI_MOVE_EVENT );
 }
@@ -679,7 +679,7 @@ static void ItemsScrollRight()
 }
 
 
-void MouseClickedInItemsRegion(MOUSE_REGION *reg, INT32 reason)
+void MouseClickedInItemsRegion(MOUSE_REGION *reg, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		HandleItemsPanel( gusMouseXPos, gusMouseYPos, GUI_LCLICK_EVENT );
@@ -695,72 +695,72 @@ void MouseClickedInItemsRegion(MOUSE_REGION *reg, INT32 reason)
 	}
 }
 
-void ItemsWeaponsCallback(GUI_BUTTON *btn,INT32 reason)
+void ItemsWeaponsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_WEAPONS );
 }
 
-void ItemsAmmoCallback(GUI_BUTTON *btn,INT32 reason)
+void ItemsAmmoCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_AMMO );
 }
 
-void ItemsArmourCallback(GUI_BUTTON *btn,INT32 reason)
+void ItemsArmourCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_ARMOUR );
 }
 
-void ItemsExplosivesCallback(GUI_BUTTON *btn,INT32 reason)
+void ItemsExplosivesCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_EXPLOSIVES );
 }
 
-void ItemsEquipment1Callback(GUI_BUTTON *btn,INT32 reason)
+void ItemsEquipment1Callback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_EQUIPMENT1 );
 }
 
-void ItemsEquipment2Callback(GUI_BUTTON *btn,INT32 reason)
+void ItemsEquipment2Callback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_EQUIPMENT2 );
 }
 
-void ItemsEquipment3Callback(GUI_BUTTON *btn,INT32 reason)
+void ItemsEquipment3Callback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_EQUIPMENT3 );
 }
 
-void ItemsTriggersCallback(GUI_BUTTON *btn,INT32 reason)
+void ItemsTriggersCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_TRIGGERS );
 }
 
-void ItemsKeysCallback(GUI_BUTTON *btn,INT32 reason)
+void ItemsKeysCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		SetEditorItemsTaskbarMode( ITEMS_KEYS );
 }
 
-void ItemsLeftScrollCallback(GUI_BUTTON *btn, INT32 reason)
+void ItemsLeftScrollCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ItemsScrollLeft();
 }
 
-void ItemsRightScrollCallback(GUI_BUTTON *btn, INT32 reason)
+void ItemsRightScrollCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ItemsScrollRight();
 }
 
 //MERCS
-void MercsTogglePlayers( GUI_BUTTON *btn, INT32 reason )
+void MercsTogglePlayers( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -769,7 +769,7 @@ void MercsTogglePlayers( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsToggleEnemies( GUI_BUTTON *btn, INT32 reason )
+void MercsToggleEnemies( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -778,7 +778,7 @@ void MercsToggleEnemies( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsToggleCreatures( GUI_BUTTON *btn, INT32 reason )
+void MercsToggleCreatures( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -787,7 +787,7 @@ void MercsToggleCreatures( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsToggleRebels( GUI_BUTTON *btn, INT32 reason )
+void MercsToggleRebels( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -796,7 +796,7 @@ void MercsToggleRebels( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsToggleCivilians( GUI_BUTTON *btn, INT32 reason )
+void MercsToggleCivilians( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -805,7 +805,7 @@ void MercsToggleCivilians( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsPlayerTeamCallback(GUI_BUTTON *btn,INT32 reason)
+void MercsPlayerTeamCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -819,7 +819,7 @@ void MercsPlayerTeamCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void MercsEnemyTeamCallback(GUI_BUTTON *btn,INT32 reason)
+void MercsEnemyTeamCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -837,7 +837,7 @@ void MercsEnemyTeamCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void MercsCreatureTeamCallback(GUI_BUTTON *btn,INT32 reason)
+void MercsCreatureTeamCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -855,7 +855,7 @@ void MercsCreatureTeamCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void MercsRebelTeamCallback(GUI_BUTTON *btn,INT32 reason)
+void MercsRebelTeamCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -873,7 +873,7 @@ void MercsRebelTeamCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void MercsCivilianTeamCallback(GUI_BUTTON *btn,INT32 reason)
+void MercsCivilianTeamCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -891,7 +891,7 @@ void MercsCivilianTeamCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void MercsNextCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsNextCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -899,7 +899,7 @@ void MercsNextCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsDeleteCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsDeleteCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -908,7 +908,7 @@ void MercsDeleteCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsInventorySlotCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsInventorySlotCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -917,7 +917,7 @@ void MercsInventorySlotCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsSetEnemyColorCodeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetEnemyColorCodeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -926,7 +926,7 @@ void MercsSetEnemyColorCodeCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsCivilianGroupCallback(GUI_BUTTON *btn,INT32 reason)
+void MercsCivilianGroupCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -935,7 +935,7 @@ void MercsCivilianGroupCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void MercsScheduleAction1Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleAction1Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -944,7 +944,7 @@ void MercsScheduleAction1Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleAction2Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleAction2Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -953,7 +953,7 @@ void MercsScheduleAction2Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleAction3Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleAction3Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -962,7 +962,7 @@ void MercsScheduleAction3Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleAction4Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleAction4Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -971,7 +971,7 @@ void MercsScheduleAction4Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleToggleVariance1Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleToggleVariance1Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -982,7 +982,7 @@ void MercsScheduleToggleVariance1Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleToggleVariance2Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleToggleVariance2Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -993,7 +993,7 @@ void MercsScheduleToggleVariance2Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleToggleVariance3Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleToggleVariance3Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1004,7 +1004,7 @@ void MercsScheduleToggleVariance3Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleToggleVariance4Callback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleToggleVariance4Callback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1015,7 +1015,7 @@ void MercsScheduleToggleVariance4Callback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData1ACallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData1ACallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1029,7 +1029,7 @@ void MercsScheduleData1ACallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData1BCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData1BCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1043,7 +1043,7 @@ void MercsScheduleData1BCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData2ACallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData2ACallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1057,7 +1057,7 @@ void MercsScheduleData2ACallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData2BCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData2BCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1071,7 +1071,7 @@ void MercsScheduleData2BCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData3ACallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData3ACallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1085,7 +1085,7 @@ void MercsScheduleData3ACallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData3BCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData3BCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1099,7 +1099,7 @@ void MercsScheduleData3BCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData4ACallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData4ACallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1113,7 +1113,7 @@ void MercsScheduleData4ACallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleData4BCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleData4BCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1127,7 +1127,7 @@ void MercsScheduleData4BCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsScheduleClearCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleClearCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1137,7 +1137,7 @@ void MercsScheduleClearCallback( GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void MercsDetailedPlacementCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsDetailedPlacementCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1154,7 +1154,7 @@ void MercsDetailedPlacementCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsPriorityExistanceCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsPriorityExistanceCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1172,7 +1172,7 @@ void MercsPriorityExistanceCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsHasKeysCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsHasKeysCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1194,37 +1194,37 @@ void MercsHasKeysCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsGeneralModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsGeneralModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercEditingMode( MERC_GENERALMODE );
 }
 
-void MercsAttributesModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsAttributesModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercEditingMode( MERC_ATTRIBUTEMODE );
 }
 
-void MercsInventoryModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsInventoryModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercEditingMode( MERC_INVENTORYMODE );
 }
 
-void MercsAppearanceModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsAppearanceModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercEditingMode( MERC_APPEARANCEMODE );
 }
 
-void MercsProfileModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsProfileModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercEditingMode( MERC_PROFILEMODE );
 }
 
-void MercsScheduleModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsScheduleModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercEditingMode( MERC_SCHEDULEMODE );
@@ -1232,27 +1232,27 @@ void MercsScheduleModeCallback( GUI_BUTTON *btn, INT32 reason )
 
 
 //multiple orders buttons
-void MercsSetOrdersCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetOrdersCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercOrders(btn->GetUserData());
 }
 
 //multiple attitude buttons
-void MercsSetAttitudeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetAttitudeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercAttitude(btn->GetUserData());
 }
 
 //multiple direction buttons
-void MercsDirectionSetCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsDirectionSetCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercDirection(btn->GetUserData());
 }
 
-void MercsFindSelectedMercCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsFindSelectedMercCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1262,24 +1262,24 @@ void MercsFindSelectedMercCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsSetRelativeEquipmentCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetRelativeEquipmentCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercRelativeEquipment(btn->GetUserData());
 }
 
-void MercsSetRelativeAttributesCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetRelativeAttributesCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		SetMercRelativeAttributes(btn->GetUserData());
 }
 
-void MouseMovedInMercRegion( MOUSE_REGION *reg, INT32 reason )
+void MouseMovedInMercRegion( MOUSE_REGION *reg, UINT32 reason )
 {
 	HandleMercInventoryPanel( reg->RelativeXPos, reg->RelativeYPos, GUI_MOVE_EVENT );
 }
 
-void MouseClickedInMercRegion( MOUSE_REGION *reg, INT32 reason )
+void MouseClickedInMercRegion( MOUSE_REGION *reg, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		HandleMercInventoryPanel( reg->RelativeXPos, reg->RelativeYPos, GUI_LCLICK_EVENT );
@@ -1288,7 +1288,7 @@ void MouseClickedInMercRegion( MOUSE_REGION *reg, INT32 reason )
 }
 
 //VARIOUS
-void BtnUndoCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnUndoCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1296,7 +1296,7 @@ void BtnUndoCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnEraseCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnEraseCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1309,7 +1309,7 @@ void BtnEraseCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 //ITEM STATS
-void ItemStatsToggleHideCallback( GUI_BUTTON *btn, INT32 reason )
+void ItemStatsToggleHideCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1317,7 +1317,7 @@ void ItemStatsToggleHideCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ItemStatsDeleteCallback( GUI_BUTTON *btn, INT32 reason )
+void ItemStatsDeleteCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		ExecuteItemStatsCmd( ITEMSTATS_DELETE );

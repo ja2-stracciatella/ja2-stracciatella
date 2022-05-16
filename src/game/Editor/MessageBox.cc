@@ -20,8 +20,8 @@ BOOLEAN gfMessageBoxResult = FALSE;
 UINT8 gubMessageBoxStatus = MESSAGEBOX_NONE;
 
 
-static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason);
-static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason);
+static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, UINT32 reason);
+static void MsgBoxOkClkCallback(GUI_BUTTON* butn, UINT32 reason);
 
 
 void CreateMessageBox(const ST::string& msg)
@@ -102,7 +102,7 @@ void RemoveMessageBox( )
 }
 
 
-static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason)
+static void MsgBoxOkClkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -112,7 +112,7 @@ static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason)
+static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

@@ -63,12 +63,12 @@ ST::string gzUserDefinedButton1;
 ST::string gzUserDefinedButton2;
 
 
-static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
+static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void NumberedMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static GUIButtonRef MakeButton(const ST::string& text, INT16 fore_colour, INT16 shadow_colour, INT16 x, INT16 y, GUI_CALLBACK click, UINT16 cursor)
@@ -286,7 +286,7 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 }
 
 
-static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -295,7 +295,7 @@ static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -304,7 +304,7 @@ static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -313,7 +313,7 @@ static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -322,7 +322,7 @@ static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -331,7 +331,7 @@ static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void NumberedMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

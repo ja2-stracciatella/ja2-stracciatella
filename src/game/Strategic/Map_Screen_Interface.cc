@@ -1820,7 +1820,7 @@ static void StopMapScreenHelpText(void)
 }
 
 
-static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void SetUpShutDownMapScreenHelpTextScreenMask(void)
@@ -1842,7 +1842,7 @@ static void SetUpShutDownMapScreenHelpTextScreenMask(void)
 }
 
 
-static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 	{
@@ -2436,8 +2436,8 @@ static void MakeRegionBlank(const INT32 i, const UINT16 x, const UINT16 y, const
 }
 
 
-static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void MoveMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MoveMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void MakeRegion(const INT32 i, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h, const UINT32 val_a, const UINT32 val_b)
@@ -2539,7 +2539,7 @@ static void ClearMouseRegionsForMoveBox(void)
 }
 
 
-static void MoveMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MoveMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for move box line regions
 	INT32 iValue = -1;
@@ -2565,7 +2565,7 @@ static void HandleMoveoutOfSectorMovementTroops(void);
 static void SelectAllOtherSoldiersInList(void);
 
 
-static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for move box line regions
 	INT32 iMoveBoxLine = -1, iRegionType = -1, iListIndex = -1;
@@ -3038,7 +3038,7 @@ void ReBuildMoveBox( void )
 }
 
 
-static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void CreateScreenMaskForMoveBox( void )
@@ -3063,7 +3063,7 @@ void RemoveScreenMaskForMoveBox( void )
 }
 
 
-static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for move box screen mask region
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )  )
@@ -3431,8 +3431,8 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const ST:
 }
 
 
-static void ContinueUpdateButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void StopUpdateButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void ContinueUpdateButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void StopUpdateButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWideMode)
@@ -3566,7 +3566,7 @@ static void RenderSoldierSmallFaceForUpdatePanel(INT32 iIndex, INT32 iX, INT32 i
 }
 
 
-static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3575,7 +3575,7 @@ static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void StopUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void StopUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

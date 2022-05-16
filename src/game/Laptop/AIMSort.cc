@@ -77,14 +77,14 @@ struct AIMSortInfo
 };
 
 
-static void SelectAscendBoxRegionCallBack(    MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectDescendBoxRegionCallBack(   MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectExpBoxRegionCallBack(       MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectExplosiveBoxRegionCallBack( MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectMarkBoxRegionCallBack(      MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectMedicalBoxRegionCallBack(   MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectPriceBoxRegionCallBack(     MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectAscendBoxRegionCallBack(    MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectDescendBoxRegionCallBack(   MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectExpBoxRegionCallBack(       MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectExplosiveBoxRegionCallBack( MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMarkBoxRegionCallBack(      MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMedicalBoxRegionCallBack(   MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectPriceBoxRegionCallBack(     MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static AIMSortInfo g_aim_sort_info[str_aim_sort_list_SIZE] =
@@ -127,9 +127,9 @@ void GameInitAimSort()
 }
 
 
-static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterAimSort()
@@ -272,7 +272,7 @@ void RenderAimSort()
 }
 
 
-static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -281,7 +281,7 @@ static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -290,7 +290,7 @@ static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -308,37 +308,37 @@ static void SetSortCriterion(const UINT8 criterion)
 }
 
 
-static void SelectPriceBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectPriceBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(0);
 }
 
 
-static void SelectExpBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectExpBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(1);
 }
 
 
-static void SelectMarkBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectMarkBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(2);
 }
 
 
-static void SelectMedicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectMedicalBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(3);
 }
 
 
-static void SelectExplosiveBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectExplosiveBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(4);
 }
 
 
-static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(5);
 }
@@ -353,13 +353,13 @@ static void SetSortOrder(const UINT8 order)
 }
 
 
-static void SelectAscendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectAscendBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortOrder(AIM_ASCEND);
 }
 
 
-static void SelectDescendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectDescendBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortOrder(AIM_DESCEND);
 }

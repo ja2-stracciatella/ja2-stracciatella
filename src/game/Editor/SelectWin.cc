@@ -216,11 +216,11 @@ static UINT16 const SelWinHilightFillColor = 0x000D; // A kind of medium dark bl
 
 
 static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing);
-static void CnclClkCallback(GUI_BUTTON* button, INT32 reason);
-static void DwnClkCallback(GUI_BUTTON* button, INT32 reason);
-static void OkClkCallback(GUI_BUTTON* button, INT32 reason);
-static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason);
-static void UpClkCallback(GUI_BUTTON* button, INT32 reason);
+static void CnclClkCallback(GUI_BUTTON* button, UINT32 reason);
+static void DwnClkCallback(GUI_BUTTON* button, UINT32 reason);
+static void OkClkCallback(GUI_BUTTON* button, UINT32 reason);
+static void SelWinClkCallback(GUI_BUTTON* button, UINT32 reason);
+static void UpClkCallback(GUI_BUTTON* button, UINT32 reason);
 
 
 static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBACK click, const ST::string& help)
@@ -727,7 +727,7 @@ static BOOLEAN RemoveFromSelectionList(DisplayList* pNode);
 //	Button callback function for the main selection window. Checks if user clicked on an image,
 //	if so selects or de-selects that object. Also handles the multi-object selection (left-click
 //	and drag to get the selection rectangle)
-static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
+static void SelWinClkCallback(GUI_BUTTON* button, UINT32 reason)
 {
 	DisplayList *pNode;
 	BOOLEAN fDone;
@@ -1054,7 +1054,7 @@ void RestoreSelectionList( void )
 
 
 //	Button callback function for the selection window's OK button
-static void OkClkCallback(GUI_BUTTON* button, INT32 reason)
+static void OkClkCallback(GUI_BUTTON* button, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1068,7 +1068,7 @@ static void OkClkCallback(GUI_BUTTON* button, INT32 reason)
 //
 //	Button callback function for the selection window's CANCEL button
 //
-static void CnclClkCallback(GUI_BUTTON* button, INT32 reason)
+static void CnclClkCallback(GUI_BUTTON* button, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1079,7 +1079,7 @@ static void CnclClkCallback(GUI_BUTTON* button, INT32 reason)
 
 
 //	Button callback function for scrolling the selection window up
-static void UpClkCallback(GUI_BUTTON* button, INT32 reason)
+static void UpClkCallback(GUI_BUTTON* button, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ScrollSelWinUp();
 }
@@ -1113,7 +1113,7 @@ void ScrollSelWinDown(void)
 
 
 //	Button callback function to scroll the selection window down.
-static void DwnClkCallback(GUI_BUTTON* button, INT32 reason)
+static void DwnClkCallback(GUI_BUTTON* button, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ScrollSelWinDown();
 }

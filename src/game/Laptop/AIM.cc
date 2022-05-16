@@ -194,11 +194,11 @@ void GameInitAIM()
 }
 
 
-static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterAIM()
@@ -360,7 +360,7 @@ void RenderAIM()
 }
 
 
-static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -370,7 +370,7 @@ static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -379,7 +379,7 @@ static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -388,7 +388,7 @@ static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -397,7 +397,7 @@ static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void InitAimDefaults()
@@ -445,7 +445,7 @@ void DrawAimDefaults()
 }
 
 
-static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -485,7 +485,7 @@ void DisplayAimCopyright()
 }
 
 
-static void BtnAimBottomButtonsCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnAimBottomButtonsCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 void InitAimMenuBar()
@@ -517,7 +517,7 @@ void ExitAimMenuBar()
 static void ResetAimButtons(GUIButtonRef* Buttons, UINT16 uNumberOfButtons);
 
 
-static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -759,7 +759,7 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 }
 
 
-static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

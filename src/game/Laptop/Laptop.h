@@ -15,7 +15,7 @@ void HandleLapTopESCKey(void);
 void SetBookMark(INT32 iBookId);
 void SetLaptopExitScreen(ScreenID uiExitScreen);
 void SetLaptopNewGameFlag(void);
-void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+void LapTopScreenCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 void HandleRightButtonUpEvent(void);
 void DoLapTopMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void GoToWebPage(INT32 iPageId);

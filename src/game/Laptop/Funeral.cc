@@ -103,8 +103,8 @@ static MOUSE_REGION gSelectedFuneralLinkRegion[FUNERAL_NUMBER_OF_LINKS];
 static MOUSE_REGION gSelectedRipSignRegion;
 
 
-static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterFuneral()
@@ -253,7 +253,7 @@ static void DisplayFuneralRipTombStone(void)
 }
 
 
-static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -273,7 +273,7 @@ static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason
 }
 
 
-static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

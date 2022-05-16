@@ -195,7 +195,7 @@ ScreenID CreditScreenHandle(void)
 
 static void InitCreditEyeBlinking(void);
 static void RenderCreditScreen(void);
-static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static BOOLEAN EnterCreditsScreen(void)
@@ -526,7 +526,7 @@ static void HandleCreditFlags(UINT32 uiFlags)
 }
 
 
-static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{

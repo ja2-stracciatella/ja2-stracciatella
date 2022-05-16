@@ -2816,8 +2816,8 @@ static BOOLEAN HandleRemoveMenu(const INT8 remove_char)
 }
 
 
-static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void CheckAndUpdateTacticalAssignmentPopUpPositions(void);
 static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK);
 static void PositionCursorForTacticalAssignmentBox(void);
@@ -2880,9 +2880,9 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 
 
 static void HandleShadingOfLinesForVehicleMenu(void);
-static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyMouseRegionForVehicleMenu(void)
@@ -2968,7 +2968,7 @@ static void HandleShadingOfLinesForVehicleMenu()
 }
 
 
-static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -3001,7 +3001,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3014,7 +3014,7 @@ static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
@@ -3118,8 +3118,8 @@ static void HandleShadingOfLinesForRepairMenu()
 }
 
 
-static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void MakeRepairRegion(const INT32 idx, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h, const UINT32 data)
@@ -3222,7 +3222,7 @@ static void PreChangeAssignment(SOLDIERTYPE& s)
 static bool AssignMercToAMovementGroup(SOLDIERTYPE&);
 
 
-static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
@@ -3318,7 +3318,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -3633,7 +3633,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 }
 
 
-static void AssignmentScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void AssignmentScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
@@ -3667,7 +3667,7 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
 }
 
 
-static void AssignmentScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void AssignmentScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment screen mask region
 
@@ -3726,8 +3726,8 @@ void ClearScreenMaskForMapScreenExit( void )
 }
 
 
-static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 // Create/destroy mouse regions for the map screen Contract main menu
@@ -3783,8 +3783,8 @@ void CreateDestroyMouseRegionsForContractMenu(void)
 }
 
 
-static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyMouseRegionsForTrainingMenu(void)
@@ -3845,8 +3845,8 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 }
 
 
-static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyMouseRegionsForAttributeMenu(void)
@@ -3912,8 +3912,8 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 }
 
 
-static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyMouseRegionsForRemoveMenu(void)
@@ -3979,8 +3979,8 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 }
 
 
-static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void CreateSquadBox(void);
 
 
@@ -4050,7 +4050,7 @@ static void CreateDestroyMouseRegionsForSquadMenu()
 static BOOLEAN HandleAssignmentExpansionAndHighLightForAssignMenu(SOLDIERTYPE* pSoldier);
 
 
-static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -4100,7 +4100,7 @@ static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -4126,7 +4126,7 @@ static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for Contract region
 	INT32 iValue = -1;
@@ -4154,7 +4154,7 @@ static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -4190,7 +4190,7 @@ static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for contract region
 	INT32 iValue = -1;
@@ -4312,7 +4312,7 @@ static void MercDismissConfirmCallBack(MessageBoxReturnValue const bExitValue)
 }
 
 
-static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for contract region
 	INT32 iValue = -1;
@@ -4411,7 +4411,7 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static BOOLEAN HandleAssignmentExpansionAndHighLightForTrainingMenu(void);
 
 
-static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -4439,7 +4439,7 @@ static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -4463,7 +4463,7 @@ static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason)
+static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, UINT32 const reason)
 {
 	// btn callback handler for assignment region
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -4532,7 +4532,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 }
 
 
-static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
@@ -4710,7 +4710,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
@@ -4774,7 +4774,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static bool DisplayVehicleMenu(SOLDIERTYPE const&);
 
 
-static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;

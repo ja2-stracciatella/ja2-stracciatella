@@ -396,7 +396,7 @@ ScreenID LoadSaveScreenHandle(void)
 
 		case DIALOG_SAVE:
 		{
-			
+
 			auto filename = ExtractFilenameFromFields();
 			auto absolutePath = FileMan::joinPaths(gCurrentDirectory, filename);
 			if (filename == "..") {
@@ -478,13 +478,13 @@ static GUIButtonRef MakeButtonArrow(const char* const gfx, const INT16 y, const 
 }
 
 
-static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason);
+static void FDlgCancelCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgDwnCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgNamesCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgOkCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgUpCallback(GUI_BUTTON* butn, UINT32 reason);
 static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering);
-static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason);
+static void UpdateWorldInfoCallback(GUI_BUTTON* b, UINT32 reason);
 
 
 static void CreateFileDialog(const ST::string& zTitle)
@@ -533,7 +533,7 @@ static void CreateFileDialog(const ST::string& zTitle)
 }
 
 
-static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason)
+static void UpdateWorldInfoCallback(GUI_BUTTON* b, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		gfUpdateSummaryInfo = b->Clicked();
@@ -911,7 +911,7 @@ static ScreenID ProcessFileIO(void)
 			return LOADSAVE_SCREEN;
 		case LOADING_MAP: //load map
 			DisableUndo();
-			
+
 			RemoveMercsInSector( );
 
 			try
@@ -922,7 +922,7 @@ static ScreenID ProcessFileIO(void)
 				} else {
 					LoadWorldAbsolute(gFileForIO);
 				}
-				
+
 				fprintf(stderr, "---> %u\n", SDL_GetTicks() - start);
 			}
 			catch (...)
@@ -1000,7 +1000,7 @@ static ScreenID ProcessFileIO(void)
 
 
 //LOADSCREEN
-static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgNamesCallback(GUI_BUTTON* butn, UINT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1017,7 +1017,7 @@ static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgOkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1026,7 +1026,7 @@ static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgCancelCallback(GUI_BUTTON* butn, UINT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1035,7 +1035,7 @@ static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgUpCallback(GUI_BUTTON* butn, UINT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1045,7 +1045,7 @@ static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgDwnCallback(GUI_BUTTON* butn, UINT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{

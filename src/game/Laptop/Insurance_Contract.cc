@@ -124,11 +124,11 @@ UINT16              gusCurrentInsuranceMercIndex;
 static MOUSE_REGION gSelectedInsuranceContractLinkRegion[2];
 
 static BUTTON_PICS* guiInsContractPrevButtonImage;
-static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiInsContractPrevBackButton;
 
 static BUTTON_PICS* guiInsContractNextButtonImage;
-static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason);
+static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiInsContractNextBackButton;
 
 
@@ -165,7 +165,7 @@ static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT1
 
 static void BuildInsuranceArray(void);
 static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate);
-static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterInsuranceContract()
@@ -358,7 +358,7 @@ void RenderInsuranceContract()
 }
 
 
-static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -369,7 +369,7 @@ static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason)
+static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -584,7 +584,7 @@ catch (...) { return FALSE; }
 static void HandleAcceptButton(SOLDIERTYPE* s);
 
 
-static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -599,7 +599,7 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 rea
 }
 
 
-static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

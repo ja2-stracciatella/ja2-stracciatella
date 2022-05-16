@@ -765,7 +765,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 }
 
 
-static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, const ST::string& text)
@@ -793,7 +793,7 @@ static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY)
 }
 
 
-static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

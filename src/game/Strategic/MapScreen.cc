@@ -1339,12 +1339,12 @@ static void CheckForAndRenderNewMailOverlay(void);
 static void CheckForInventoryModeCancellation(void);
 static void CheckIfPlottingForCharacterWhileAirCraft(void);
 static void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(void);
-static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void ContractButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 static void CreateDestroyMapCharacterScrollButtons(void);
 static void CreateDestroyTrashCanRegion(void);
 static void CreateMouseRegionsForTeamList(void);
 static void DetermineIfContractMenuCanBeShown(void);
-static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void HandleAnimatedCursorsForMapScreen(void);
 static void HandleAssignmentsDoneAndAwaitingFurtherOrders(void);
 static void HandleChangeOfHighLightedLine(void);
@@ -1361,9 +1361,9 @@ static void HandlePreBattleInterfaceWithInventoryPanelUp(void);
 static void HandleSpontanousTalking(void);
 static void InitPreviousPaths(void);
 static void InterruptTimeForMenus(void);
-static void ItemRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void ItemRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void MapScreenMarkRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ItemRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemRegionMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MapScreenMarkRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void MapscreenMarkButtonsDirty(void);
 static void MonitorMapUIMessage(void);
 static void PlotPermanentPaths(void);
@@ -3569,10 +3569,10 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 }
 
 
-static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void MAPInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void MAPInvMoveCamoCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MAPInvClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MAPInvClickCamoCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MAPInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MAPInvMoveCamoCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void CreateDestroyMapInvButton()
@@ -3723,18 +3723,18 @@ static void HandleCursorOverRifleAmmo(void)
 }
 
 
-static void MAPInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MAPInvClickCamoCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 }
 
 
-static void MAPInvMoveCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MAPInvMoveCamoCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 }
 
 
 // this is Map Screen's version of SMInvMoveCallback()
-static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MAPInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	UINT32 uiHandPos;
 
@@ -3780,7 +3780,7 @@ static void MAPBeginItemPointer(SOLDIERTYPE* pSoldier, UINT8 ubHandPos);
 
 
 // this is Map Screen's version of SMInvClickCallback()
-static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MAPInvClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	UINT32 uiHandPos;
 	UINT16	usOldItemIndex, usNewItemIndex;
@@ -4317,16 +4317,16 @@ static void MakeRegion(MOUSE_REGION* r, UINT idx, UINT16 x, UINT16 y, UINT16 w, 
 }
 
 
-static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListContractRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListContractRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListDestinationRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListInfoRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListContractRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListContractRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListDestinationRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListInfoRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateMouseRegionsForTeamList(void)
@@ -4367,7 +4367,7 @@ static void DestroyMouseRegionsForTeamList(void)
 }
 
 
-static void MapScreenMarkRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MapScreenMarkRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -4382,7 +4382,7 @@ static void MapScreenMarkRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void ContractButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (g_dialogue_box) return;
 
@@ -4396,7 +4396,7 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 static BOOLEAN HandleCtrlOrShiftInTeamPanel(INT8 bCharNumber);
 
 
-static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -4477,7 +4477,7 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void TeamListInfoRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListInfoRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -4500,7 +4500,7 @@ static void TeamListInfoRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -4584,7 +4584,7 @@ static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iRe
 }
 
 
-static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -4647,7 +4647,7 @@ static bool CanChangeDestinationForChar(SOLDIERTYPE&);
 static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE*);
 
 
-static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -4744,7 +4744,7 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 }
 
 
-static void TeamListDestinationRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListDestinationRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = -1;
 
@@ -4793,7 +4793,7 @@ static void TeamListDestinationRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iR
 }
 
 
-static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -4865,7 +4865,7 @@ static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = -1;
 
@@ -4908,10 +4908,10 @@ static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
-static void TeamListContractRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListContractRegionBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -4951,7 +4951,7 @@ static void TeamListContractRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReas
 }
 
 
-static void TeamListContractRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void TeamListContractRegionMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32 iValue = -1;
 
@@ -5270,7 +5270,7 @@ static void CheckIfPlottingForCharacterWhileAirCraft(void)
 }
 
 
-static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for contract region
 
@@ -5855,7 +5855,7 @@ static void UpdateCursorIfInLastSector(void)
 }
 
 
-static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// error checking, make sure someone is there
 	if (GetSelectedInfoChar() == NULL) return;
@@ -5875,7 +5875,7 @@ static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void ItemRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemRegionBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// left AND right button are handled the same way
 	if (iReason & ( MSYS_CALLBACK_REASON_RBUTTON_UP | MSYS_CALLBACK_REASON_LBUTTON_UP ) )
@@ -5888,7 +5888,7 @@ static void ItemRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static bool CanToggleSelectedCharInventory();
 
 
-static void ItemRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemRegionMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if ( !CanToggleSelectedCharInventory() )
 	{
@@ -5991,7 +5991,7 @@ static void TrashItemMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 }
 
 
-static void TrashCanBtnCallback(MOUSE_REGION*, INT32 const reason)
+static void TrashCanBtnCallback(MOUSE_REGION*, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -6005,7 +6005,7 @@ static void TrashCanBtnCallback(MOUSE_REGION*, INT32 const reason)
 }
 
 
-static void TrashCanMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TrashCanMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
@@ -6063,7 +6063,7 @@ static void UpdateStatusOfMapSortButtons(void)
 }
 
 
-static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, INT32 reason);
+static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateDestroyTrashCanRegion(void)
@@ -6112,7 +6112,7 @@ static void CreateDestroyTrashCanRegion(void)
 }
 
 
-static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, INT32 reason)
+static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	// prevent inventory from being closed while stack popup up!
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -6368,7 +6368,7 @@ static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void)
 }
 
 
-static void PrevInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason)
+static void PrevInventoryMapBtnCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -6377,7 +6377,7 @@ static void PrevInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void NextInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason)
+static void NextInventoryMapBtnCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -6494,7 +6494,7 @@ void MapScreenDefaultOkBoxCallback(MessageBoxReturnValue const bExitValue)
 }
 
 
-static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
+static void MapSortBtnCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// grab the button index value for the sort buttons
 	INT32 const iValue = btn->GetUserData();

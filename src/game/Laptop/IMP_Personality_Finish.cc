@@ -36,9 +36,9 @@ static BUTTON_PICS* giIMPPersonalityFinishButtonImage[2];
 static GUIButtonRef giIMPPersonalityFinishButton[2];
 
 
-static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, UINT32 reason);
+static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, UINT32 reason);
+static void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn, UINT32 reason);
 
 
 static void CreateIMPPersonalityFinishButtons(void);
@@ -181,7 +181,7 @@ static void DestroyIMPersonalityFinishButtons(void)
 }
 
 
-static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 
@@ -211,7 +211,7 @@ static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 
@@ -255,7 +255,7 @@ static void DestroyPersonalityFinishOkButton(void)
 }
 
 
-static void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 

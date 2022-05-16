@@ -294,7 +294,7 @@ static void RenderCivQuoteBoxOverlay(VIDEO_OVERLAY* pBlitter)
 }
 
 
-static void QuoteOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void QuoteOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 

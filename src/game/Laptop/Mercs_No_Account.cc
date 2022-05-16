@@ -38,12 +38,12 @@ static SGPVObject* guiNoAccountImage;
 
 
 // The Open Account Box button
-static void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static BUTTON_PICS* guiOpenAccountBoxButtonImage;
 GUIButtonRef guiOpenAccountBoxButton;
 
 // The Cancel Account Box button
-static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiCancelBoxButton;
 
 
@@ -99,7 +99,7 @@ void RenderMercsNoAccount()
 }
 
 
-static void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -117,7 +117,7 @@ static void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

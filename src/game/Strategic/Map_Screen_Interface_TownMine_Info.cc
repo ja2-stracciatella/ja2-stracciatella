@@ -55,8 +55,8 @@ static UINT16 sTotalButtonWidth = 0;
 
 
 // callback to turn on sector invneotry list
-static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason);
-static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason);
+static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, UINT32 reason);
+static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, UINT32 reason);
 
 
 void DisplayTownInfo(const SGPSector& sMap)
@@ -527,7 +527,7 @@ static void RemoveInventoryButtonForMapPopUpBox(void)
 }
 
 
-static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason)
+static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -546,7 +546,7 @@ static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
+static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

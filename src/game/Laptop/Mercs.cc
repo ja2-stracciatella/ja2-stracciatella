@@ -194,16 +194,16 @@ static std::map<UINT8, UINT32> gNumberOfTimesQuoteSaid = {};
 //
 
 // The Account Box button
-static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static BUTTON_PICS* guiAccountBoxButtonImage;
 static GUIButtonRef guiAccountBoxButton;
 
 //File Box
-static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiFileBoxButton;
 
 // The 'X' to close the video conf window button
-static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiXToCloseMercVideoButton;
 
 
@@ -498,7 +498,7 @@ void RemoveMercBackGround()
 }
 
 
-static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -516,7 +516,7 @@ static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -611,9 +611,9 @@ static BOOLEAN HasLarryRelapsed(void);
 
 /**
  * Returns the ProfileID of this profile listing.
- * 
- * This method handles LARRY logic (LARRY_NORMAL becoming LARRY_DRUNK once 
- * relapsed), and should always be used instead of directly accessing the 
+ *
+ * This method handles LARRY logic (LARRY_NORMAL becoming LARRY_DRUNK once
+ * relapsed), and should always be used instead of directly accessing the
  * field profileID
  */
 ProfileID GetProfileIDFromMERCListing(const MERCListingModel* listing)
@@ -743,7 +743,7 @@ static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 }
 
 
-static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -900,7 +900,7 @@ static void HandleTalkingSpeck(void)
 }
 
 
-static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void DisplayTextForSpeckVideoPopUp(const ST::string& str)
@@ -1263,7 +1263,7 @@ static UINT8 CountNumberOfMercMercsWhoAreDead(void)
 
 
 //Mouse Call back for the pop up text box
-static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -1638,7 +1638,7 @@ static BOOLEAN CanMercBeAvailableYet(const MERCListingModel* merc)
 }
 
 // update the value of ubLastMercAvailableId for save game compatability
-static void SetLastMercArrival(const MERCListingModel* merc) 
+static void SetLastMercArrival(const MERCListingModel* merc)
 {
 	switch (merc->profileID)
 	{
@@ -1654,10 +1654,10 @@ void SyncLastMercFromSaveGame()
 {
 	// This allows us to load saves from old versions and vanilla
 	//
-	// In the old implementation, the M.E.R.C. list has 2 LARRY profiles (NORMAL and DRUNK), so 
+	// In the old implementation, the M.E.R.C. list has 2 LARRY profiles (NORMAL and DRUNK), so
 	// the index is off by 1 for mercs after LARRY
 	//
-	// But this only accounts version upgrade. If you are downgrading, you may need to wait for 
+	// But this only accounts version upgrade. If you are downgrading, you may need to wait for
 	// a few days before the last merc becomes available again.
 	int iLastMercID = -1;
 	switch (LaptopSaveInfo.ubLastMercAvailableId)
@@ -1667,7 +1667,7 @@ void SyncLastMercFromSaveGame()
 	}
 
 	if (iLastMercID <= 0) return;
-	
+
 	for (const MERCListingModel* merc : GCM->getMERCListings())
 	{
 		// check for exactly the case that we are off by 1 due to LARRY

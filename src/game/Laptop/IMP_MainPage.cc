@@ -38,8 +38,8 @@ static MOUSE_REGION pIMPMainPageMouseRegions[4];
 
 static SGPVObject* guiCHARACTERPORTRAITFORMAINPAGE;
 
-void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, INT32 reason);
-void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason);
+void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, UINT32 reason);
+void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, UINT32 reason);
 
 
 // this is the current state of profiling the player is in.
@@ -143,10 +143,10 @@ static void MakeButton(UINT idx, const char* img_file, const ST::string& text, I
 }
 
 
-static void BtnIMPMainPageAttributesCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPMainPageBackCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPMainPageBeginCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPMainPageAttributesCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPMainPageBackCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPMainPageBeginCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPMainPageButtons(void)
@@ -217,7 +217,7 @@ static void DeleteIMPMainPageButtons(void)
 }
 
 
-static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP Homepage About US button
 
@@ -235,7 +235,7 @@ static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, INT32 reason)
 static void BeginMessageBoxCallBack(MessageBoxReturnValue);
 
 
-static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 
@@ -270,7 +270,7 @@ static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 
@@ -289,7 +289,7 @@ static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 
@@ -308,7 +308,7 @@ static void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, INT32 reason)
+void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 
@@ -327,7 +327,7 @@ void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason)
+void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 
@@ -434,7 +434,7 @@ static void BeginMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 }
 
 
-static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
@@ -463,7 +463,7 @@ static void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 }
 
 
-static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

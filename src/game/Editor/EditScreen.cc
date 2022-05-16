@@ -3062,7 +3062,7 @@ static void HideEntryPoints()
 	if (m.sWestGridNo  != -1) RemoveAllTopmostsOfTypeRange(m.sWestGridNo,  FIRSTPOINTERS, FIRSTPOINTERS);
 }
 
-void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskOptionsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3070,7 +3070,7 @@ void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void TaskTerrainCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskTerrainCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3078,7 +3078,7 @@ void TaskTerrainCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void TaskBuildingCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskBuildingCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3086,7 +3086,7 @@ void TaskBuildingCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void TaskItemsCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskItemsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3094,7 +3094,7 @@ void TaskItemsCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void TaskMercsCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskMercsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3102,7 +3102,7 @@ void TaskMercsCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void TaskMapInfoCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskMapInfoCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
