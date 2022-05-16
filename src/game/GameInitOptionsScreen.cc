@@ -499,7 +499,7 @@ static void GetGIOScreenUserInput(void)
 {
 	InputAtom Event;
 
-	while (DequeueEvent(&Event))
+	while (DequeueSpecificEvent(&Event, KEYBOARD_EVENTS))
 	{
 		if (Event.usEvent == KEY_DOWN)
 		{

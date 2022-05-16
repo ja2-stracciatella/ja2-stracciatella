@@ -2403,7 +2403,7 @@ static void HandleAutoResolveInput(void)
 {
 	InputAtom InputEvent;
 	BOOLEAN fResetAutoResolve = FALSE;
-	while( DequeueEvent( &InputEvent ) )
+	while( DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS) )
 	{
 		if( InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT )
 		{

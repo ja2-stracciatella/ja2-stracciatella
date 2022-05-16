@@ -1052,7 +1052,7 @@ static void GetUserInput(void)
 	InputAtom Event;
 	UINT8	ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse();
 
-	while( DequeueEvent( &Event ) )
+	while( DequeueSpecificEvent(&Event, KEYBOARD_EVENTS) )
 	{
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
 		{

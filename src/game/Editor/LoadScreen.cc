@@ -307,7 +307,7 @@ ScreenID LoadSaveScreenHandle(void)
 	}
 
 	//handle all key input.
-	while( DequeueEvent(&DialogEvent) )
+	while( DequeueSpecificEvent(&DialogEvent, KEYBOARD_EVENTS) )
 	{
 		if( !HandleTextInput(&DialogEvent) && (DialogEvent.usEvent == KEY_DOWN || DialogEvent.usEvent == KEY_REPEAT) )
 		{

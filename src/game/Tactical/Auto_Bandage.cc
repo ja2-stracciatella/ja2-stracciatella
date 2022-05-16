@@ -244,7 +244,7 @@ BOOLEAN HandleAutoBandage( )
 		// Deque all game events
 		DequeAllGameEvents();
 
-		while (DequeueEvent(&InputEvent))
+		while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 		{
 			if ( InputEvent.usEvent == KEY_UP )
 			{

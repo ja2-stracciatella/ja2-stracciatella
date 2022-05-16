@@ -58,7 +58,7 @@ BOOLEAN MessageBoxHandled()
 {
 	InputAtom DummyEvent;
 
-	while( DequeueEvent( &DummyEvent ) )
+	while( DequeueSpecificEvent(&DummyEvent, KEYBOARD_EVENTS) )
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{

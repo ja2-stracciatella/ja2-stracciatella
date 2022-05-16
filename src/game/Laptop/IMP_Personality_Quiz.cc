@@ -772,85 +772,10 @@ static void MoveBackAQuestion(void);
 static void HandleIMPQuizKeyBoard(void)
 {
 	InputAtom InputEvent;
-	BOOLEAN fSkipFrame = FALSE;
 
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
-		if (!fSkipFrame)
-	{
-		// HOOK INTO MOUSE HOOKS
-
-
-		/*
-		if( (InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam >= '1' ) && ( InputEvent.usParam <= '9') )
-		{
-			if( ( UINT16 )( iNumberOfPersonaButtons ) >= InputEvent.usParam - '0' )
-			{
-				// reset buttons
-				ResetQuizAnswerButtons( );
-
-				// ok, check to see if button was disabled, if so, re enable
-				CheckStateOfTheConfirmButton( );
-
-				// toggle this button on
-				giIMPPersonalityQuizAnswerButton[InputEvent.usParam - '1']->uiFlags |= BUTTON_CLICKED_ON;
-
-				iCurrentAnswer = InputEvent.usParam - '1';
-
-				PrintImpText( );
-
-				// the current and last question numbers
-				PrintQuizQuestionNumber( );
-
-				fReDrawCharProfile = TRUE;
-				fSkipFrame = TRUE;
-			}
-		}
-		else if (iCurrentAnswer != -1 && InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN)
-		{
-			// reset all the buttons
-			ResetQuizAnswerButtons( );
-
-			// copy the answer into the list
-			iQuizAnswerList[ giCurrentPersonalityQuizQuestion ] = iCurrentAnswer;
-
-			// reset answer for next question
-			iCurrentAnswer = -1;
-
-			// next question, JOHNNY!
-			giCurrentPersonalityQuizQuestion++;
-			giMaxPersonalityQuizQuestion++;
-
-
-			// OPPS!, done..time to finish up
-			if( giCurrentPersonalityQuizQuestion > 15)
-			{
-				iCurrentImpPage = IMP_PERSONALITY_FINISH;
-				// process
-				CompileQuestionsInStatsAndWhatNot( );
-			}
-
-			fSkipFrame = TRUE;
-		}
-		else if( ( InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam == '=' ) )
-		{
-			MoveAheadAQuestion( );
-			fSkipFrame = TRUE;
-		}
-		else if( ( InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam == '-' ) )
-		{
-			MoveBackAQuestion( );
-			fSkipFrame = TRUE;
-		}
-		else*/
-		{
-			MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
-			HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
-		}
-	}
+		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}
 }
 

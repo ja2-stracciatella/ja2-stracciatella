@@ -523,7 +523,7 @@ ScreenID MessageBoxScreenHandle(void)
 	// carter, need key shortcuts for clearing up message boxes
 	// Check for esc
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		if (InputEvent.usEvent != KEY_UP) continue;
 

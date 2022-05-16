@@ -1207,7 +1207,7 @@ static void RemoveGotoGridNoUI(void);
 static void HandleKeyboardShortcuts(void)
 {
 	static BOOLEAN fShowTrees = TRUE;
-	while( DequeueEvent( &EditorInputEvent ) )
+	while( DequeueSpecificEvent(&EditorInputEvent, KEYBOARD_EVENTS) )
 	{
 		if( !HandleSummaryInput( &EditorInputEvent ) && !HandleTextInput( &EditorInputEvent ) && EditorInputEvent.usEvent == KEY_DOWN )
 		{
@@ -2355,7 +2355,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 
 	fLeaveScreen = FALSE;
 
-	while (DequeueEvent(&DummyEvent))
+	while (DequeueSpecificEvent(&DummyEvent, KEYBOARD_EVENTS))
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{
@@ -2394,7 +2394,7 @@ static ScreenID WaitForSelectionWindowResponse(void)
 {
 	InputAtom DummyEvent;
 
-	while (DequeueEvent(&DummyEvent))
+	while (DequeueSpecificEvent(&DummyEvent, KEYBOARD_EVENTS))
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{

@@ -126,7 +126,7 @@ ScreenID ErrorScreenHandle(void)
 	InvalidateScreen( );
 
 	// Check for esc
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		if( InputEvent.usEvent == KEY_DOWN )
 		{

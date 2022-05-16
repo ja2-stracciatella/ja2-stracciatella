@@ -622,9 +622,8 @@ static void GetSaveLoadScreenUserInput(void)
 	GetMousePos(&mouse_pos);
 
 	InputAtom e;
-	while (DequeueEvent(&e))
+	while (DequeueSpecificEvent(&e, KEYBOARD_EVENTS))
 	{
-		MouseSystemHook(e.usEvent, e.usParam, mouse_pos.iX, mouse_pos.iY);
 		if (HandleTextInput(&e)) continue;
 
 		if (e.usEvent == KEY_REPEAT || e.usEvent == KEY_DOWN) {

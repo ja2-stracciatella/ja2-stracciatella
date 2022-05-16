@@ -1076,7 +1076,7 @@ static void GetShopKeeperInterfaceUserInput(void)
 {
 	InputAtom Event;
 
-	while( DequeueEvent( &Event ) )
+	while( DequeueSpecificEvent(&Event, KEYBOARD_EVENTS) )
 	{
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
 		{

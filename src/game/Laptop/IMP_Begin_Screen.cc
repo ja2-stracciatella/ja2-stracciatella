@@ -324,7 +324,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 	InputAtom InputEvent;
 
 	// handle input events
-	while( DequeueEvent(&InputEvent) )
+	while( DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS) )
 	{
 		if(!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT) )
 		{

@@ -2359,7 +2359,7 @@ static void DisplayAmountOnChar(SOLDIERTYPE const& s)
 static void HandlePersonnelKeyboard(void)
 {
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}

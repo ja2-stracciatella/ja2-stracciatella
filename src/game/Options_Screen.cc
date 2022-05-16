@@ -517,10 +517,8 @@ static void GetOptionsScreenUserInput(void)
 	GetMousePos(&MousePos);
 
 	InputAtom Event;
-	while( DequeueEvent( &Event ) )
+	while( DequeueSpecificEvent(&Event, KEYBOARD_EVENTS) )
 	{
-		MouseSystemHook(Event.usEvent, Event.usParam, MousePos.iX, MousePos.iY);
-
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
 		{
 			switch( Event.usParam )

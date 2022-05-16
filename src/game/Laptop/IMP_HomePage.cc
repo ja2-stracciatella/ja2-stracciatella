@@ -78,7 +78,7 @@ static void ProcessPlayerInputActivationString(void)
 static void GetPlayerKeyBoardInputForIMPHomePage(void)
 {
 	InputAtom					InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		if(!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT || InputEvent.usEvent == KEY_UP ) )
 		{

@@ -3063,12 +3063,8 @@ static void HandleModAlt(UINT32 const key)
 static void GetMapKeyboardInput(MapEvent& new_event)
 {
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
-		SGPPoint MousePos;
-		GetMousePos(&MousePos);
-		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
-
 		if (InputEvent.usEvent == KEY_DOWN)
 		{
 			// if game is paused because of player, unpause with any key

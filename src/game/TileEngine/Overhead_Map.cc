@@ -425,7 +425,7 @@ void GoIntoOverheadMap( )
 static void HandleOverheadUI(void)
 {
 	InputAtom a;
-	while (DequeueEvent(&a))
+	while (DequeueSpecificEvent(&a, KEYBOARD_EVENTS))
 	{
 		if (a.usEvent == KEY_DOWN)
 		{

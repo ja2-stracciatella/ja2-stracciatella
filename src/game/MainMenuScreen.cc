@@ -255,7 +255,7 @@ static void MenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 static void HandleMainMenuInput(void)
 {
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		if (InputEvent.usEvent == KEY_UP)
 		{
