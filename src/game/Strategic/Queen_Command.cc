@@ -1,3 +1,4 @@
+#include <cassert>
 #include <stdexcept>
 
 #include "Creature_Spreading.h"
@@ -814,100 +815,98 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		else
 		{ //basement level (UNDERGROUND_SECTORINFO)
 			UNDERGROUND_SECTORINFO* pSector = FindUnderGroundSector(gWorldSector);
+			assert(pSector);
 			UINT32 ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-			if( pSector )
+			switch (pSoldier->ubSoldierClass)
 			{
-				switch( pSoldier->ubSoldierClass )
-				{
-					case SOLDIER_CLASS_ADMINISTRATOR:
-						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumAdmins != pSector->ubAdminsInBattle) ||
-							!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
-							pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > MAX_STRATEGIC_TEAM_SIZE )
-						{
-							SLOGW("Underground sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
-								Please save game and file a bug.");
-						}
-						if( pSector->ubNumAdmins )
-						{
-							pSector->ubNumAdmins--;
-						}
-						if( pSector->ubAdminsInBattle )
-						{
-							pSector->ubAdminsInBattle--;
-						}
-						break;
-					case SOLDIER_CLASS_ARMY:
-						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumTroops != pSector->ubTroopsInBattle) ||
-							!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
-							pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > MAX_STRATEGIC_TEAM_SIZE )
-						{
-							SLOGW("Underground sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
-								Please save game and file a bug.");
-						}
-						if( pSector->ubNumTroops )
-						{
-							pSector->ubNumTroops--;
-						}
-						if( pSector->ubTroopsInBattle )
-						{
-							pSector->ubTroopsInBattle--;
-						}
-						break;
-					case SOLDIER_CLASS_ELITE:
-						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumElites != pSector->ubElitesInBattle) ||
-							!pSector->ubNumElites || !pSector->ubElitesInBattle ||
-							pSector->ubNumElites > 100 || pSector->ubElitesInBattle > MAX_STRATEGIC_TEAM_SIZE )
-						{
-							SLOGW("Underground sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
-								Please save game and file a bug.");
-						}
-						if( pSector->ubNumElites )
-						{
-							pSector->ubNumElites--;
-						}
-						if( pSector->ubElitesInBattle )
-						{
-							pSector->ubElitesInBattle--;
-						}
-						break;
-					case SOLDIER_CLASS_CREATURE:
-						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle) ||
-							!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
-							pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
-						{
-							SLOGW("Underground sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
-								Please save game and file a bug.");
-						}
-						if( pSector->ubNumCreatures )
-						{
-							pSector->ubNumCreatures--;
-						}
-						if( pSector->ubCreaturesInBattle )
-						{
-							pSector->ubCreaturesInBattle--;
-						}
+				case SOLDIER_CLASS_ADMINISTRATOR:
+					if ((ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumAdmins != pSector->ubAdminsInBattle) ||
+						!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
+						pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > MAX_STRATEGIC_TEAM_SIZE)
+					{
+						SLOGW("Underground sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
+							Please save game and file a bug.");
+					}
+					if (pSector->ubNumAdmins)
+					{
+						pSector->ubNumAdmins--;
+					}
+					if (pSector->ubAdminsInBattle)
+					{
+						pSector->ubAdminsInBattle--;
+					}
+					break;
+				case SOLDIER_CLASS_ARMY:
+					if ((ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumTroops != pSector->ubTroopsInBattle) ||
+						!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
+						pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > MAX_STRATEGIC_TEAM_SIZE)
+					{
+						SLOGW("Underground sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
+							Please save game and file a bug.");
+					}
+					if (pSector->ubNumTroops)
+					{
+						pSector->ubNumTroops--;
+					}
+					if (pSector->ubTroopsInBattle)
+					{
+						pSector->ubTroopsInBattle--;
+					}
+					break;
+				case SOLDIER_CLASS_ELITE:
+					if ((ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumElites != pSector->ubElitesInBattle) ||
+						!pSector->ubNumElites || !pSector->ubElitesInBattle ||
+						pSector->ubNumElites > 100 || pSector->ubElitesInBattle > MAX_STRATEGIC_TEAM_SIZE)
+					{
+						SLOGW("Underground sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
+							Please save game and file a bug.");
+					}
+					if (pSector->ubNumElites)
+					{
+						pSector->ubNumElites--;
+					}
+					if (pSector->ubElitesInBattle)
+					{
+						pSector->ubElitesInBattle--;
+					}
+					break;
+				case SOLDIER_CLASS_CREATURE:
+					if ((ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle) ||
+						!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
+						pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50)
+					{
+						SLOGW("Underground sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
+							Please save game and file a bug.");
+					}
+					if (pSector->ubNumCreatures)
+					{
+						pSector->ubNumCreatures--;
+					}
+					if (pSector->ubCreaturesInBattle)
+					{
+						pSector->ubCreaturesInBattle--;
+					}
 
-						const SGPSector sectorJ9(9, 10);
-						if (!pSector->ubNumCreatures && gWorldSector != sectorJ9)
-						{ //If the player has successfully killed all creatures in ANY underground sector except J9
-							//then cancel any pending creature town attack.
-							DeleteAllStrategicEventsOfType( EVENT_CREATURE_ATTACK );
-						}
+					const SGPSector sectorJ9(9, 10);
+					if (!pSector->ubNumCreatures && gWorldSector != sectorJ9)
+					{ //If the player has successfully killed all creatures in ANY underground sector except J9
+						//then cancel any pending creature town attack.
+						DeleteAllStrategicEventsOfType(EVENT_CREATURE_ATTACK);
+					}
 
-						// a monster has died.  Post an event to immediately check whether a mine has been cleared.
-						AddStrategicEventUsingSeconds( EVENT_CHECK_IF_MINE_CLEARED, GetWorldTotalSeconds() + 15, 0);
+					// a monster has died.  Post an event to immediately check whether a mine has been cleared.
+					AddStrategicEventUsingSeconds(EVENT_CHECK_IF_MINE_CLEARED, GetWorldTotalSeconds() + 15, 0);
 
-						if( pSoldier->ubBodyType == QUEENMONSTER )
-						{
-							//Need to call this, as the queen is really big, and killing her leaves a bunch
-							//of bad tiles in behind her.  Calling this function cleans it up.
-							InvalidateWorldRedundency();
-							//Now that the queen is dead, turn off the creature quest.
-							EndCreatureQuest();
-							EndQuest(QUEST_CREATURES, gWorldSector);
-						}
-						break;
-				}
+					if (pSoldier->ubBodyType == QUEENMONSTER)
+					{
+						//Need to call this, as the queen is really big, and killing her leaves a bunch
+						//of bad tiles in behind her.  Calling this function cleans it up.
+						InvalidateWorldRedundency();
+						//Now that the queen is dead, turn off the creature quest.
+						EndCreatureQuest();
+						EndQuest(QUEST_CREATURES, gWorldSector);
+					}
+					break;
 			}
 		}
 	}
