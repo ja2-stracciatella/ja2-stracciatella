@@ -48,6 +48,7 @@ public:
 
 	bool gui_extras;                      /* graphical user interface cosmetic mod */
 	bool extra_attachments;               // allow more item attachments options
+	bool skip_sleep_explanation;          // skip annoying popups
 
 	bool middle_mouse_look;               // Look cursor with middle mouse button
 	bool can_enter_turnbased;             // 'd' can start turnbased if in real-time
@@ -71,6 +72,12 @@ public:
 	float critical_damage_legs_multiplier;//Legs damage multiplier. Vanilla 0.5
 	int8_t chance_to_hit_minimum;         //Minimum chance to hit (0 - chance_to_hit_maximum) vanilla 1
 	int8_t chance_to_hit_maximum;         //Maximum chance to hit (chance_to_hit_minimum - 100) vanilla 99
+
+	int8_t aim_bonus_per_std_ap;          // Aim bonus % for first 4 AP (aim clicks) spent
+	int8_t aim_bonus_sniperscope;         // Flat bonus after at suitable range
+	int8_t aim_bonus_laserscope;          // Aim bonus in the dark
+	int16_t range_penalty_silencer;        // Absolute penalty to range from silencer
+	int16_t range_bonus_barrel_extender;   // Aim bonus from extender
 
 	bool always_show_cursor_in_tactical;  // Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
 	bool show_hit_chance;                 // Show chance-to-hit when pressing 'F' and next to mouse cursor when preparing an attack

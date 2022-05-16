@@ -725,6 +725,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 {
 	if (!AreAssignmentConditionsMet(s, AC_IMPASSABLE | AC_COMBAT | AC_EPC | AC_IN_HELI_IN_HOSTILE_SECTOR | AC_MOVING | AC_UNDERGROUND)) return false;
 
+	bool explain_why_not_skippable = explain_why_not;
 	ST::string why;
 	if (s.fBetweenSectors) // Traveling?
 	{
@@ -738,6 +739,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 			// If this guy has to drive (because nobody else can)
 			if (SoldierMustDriveVehicle(s, false))
 			{ // Can't sleep while driving a vehicle
+				if (gamepolicy(skip_sleep_explanation)) explain_why_not_skippable = false;
 				why = zMarksMapScreenText[7];
 				goto cannot_sleep;
 			}
@@ -766,6 +768,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 
 	if (s.bBreathMax >= BREATHMAX_FULLY_RESTED) // Not tired?
 	{
+		if (gamepolicy(skip_sleep_explanation)) explain_why_not_skippable = false;
 		why = zMarksMapScreenText[4];
 		goto cannot_sleep;
 	}
@@ -773,7 +776,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 	return true;
 
 cannot_sleep:
-	if (explain_why_not)
+	if (explain_why_not_skippable)
 	{
 		ST::string buf = st_format_printf(why, s.name);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, 0);

@@ -62,9 +62,9 @@
 #define MIN_TANK_RANGE		120 // range at which tank starts really having trouble aiming
 
 // percent reduction in sight range per point of aiming
-#define SNIPERSCOPE_AIM_BONUS	20
+#define SNIPERSCOPE_AIM_BONUS	gamepolicy(aim_bonus_sniperscope)
 // bonus to hit with working laser scope
-#define LASERSCOPE_BONUS	20
+#define LASERSCOPE_BONUS	gamepolicy(aim_bonus_laserscope)
 
 #define CRITICAL_HIT_THRESHOLD	30
 
@@ -178,11 +178,16 @@ UINT16 GunRange(OBJECTTYPE const& o)
 	// return a minimal value of 1 tile
 	if (!(GCM->getItem(o.usItem)->isWeapon())) return CELL_X_SIZE;
 
-	INT8   const attach_pos = FindAttachment(&o, GUN_BARREL_EXTENDER);
-	UINT16       range      = GCM->getWeapon(o.usItem)->usRange;
+	UINT16 range = GCM->getWeapon(o.usItem)->usRange;
+	INT8 attach_pos = FindAttachment(&o, GUN_BARREL_EXTENDER);
 	if (attach_pos != ITEM_NOT_FOUND)
 	{
 		range += GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(o.bAttachStatus[attach_pos]) / 100;
+	}
+	attach_pos = FindAttachment(&o, SILENCER);
+	if (attach_pos != ITEM_NOT_FOUND)
+	{
+		range -= SILENCER_RANGE_PENALTY;
 	}
 	return range;
 }

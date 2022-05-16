@@ -41,6 +41,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
 	gui_extras = gp.getOptionalBool("gui_extras", true);
 	extra_attachments = gp.getOptionalBool("extra_attachments");
+	skip_sleep_explanation = gp.getOptionalBool("skip_sleep_explanation");
 
 	pablo_wont_steal = gp.getOptionalBool("pablo_wont_steal");
 
@@ -48,6 +49,12 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	critical_damage_legs_multiplier = gp.getOptionalDouble("tactical_legs_damage_multiplier", 0.5);
 	chance_to_hit_maximum = gp.getOptionalInt("chance_to_hit_maximum", 99);
 	chance_to_hit_minimum = gp.getOptionalInt("chance_to_hit_minimum", 1);
+
+	aim_bonus_per_std_ap = gp.getOptionalInt("aim_bonus_per_std_ap", 10);
+	aim_bonus_sniperscope = gp.getOptionalInt("aim_bonus_sniperscope", 20);
+	aim_bonus_laserscope = gp.getOptionalInt("aim_bonus_laserscope", 20);
+	range_penalty_silencer = gp.getOptionalInt("range_penalty_silencer", 0);
+	range_bonus_barrel_extender = gp.getOptionalInt("range_bonus_barrel_extender", 100);
 
 	always_show_cursor_in_tactical = gp.getOptionalBool("always_show_cursor_in_tactical", false);
 	show_hit_chance = gp.getOptionalBool("show_hit_chance", false);
