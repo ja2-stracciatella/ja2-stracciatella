@@ -6,6 +6,7 @@
 #include "Game_Init.h"
 #include "GameSettings.h"
 #include "Input.h"
+#include "Cursors.h"
 #include "Intro.h"
 #include "Local.h"
 #include "Line.h"
@@ -29,6 +30,7 @@ static BOOLEAN gfIntroScreenExit;
 
 static ScreenID guiIntroExitScreen = INTRO_SCREEN;
 
+static MOUSE_REGION gIntroBackgroundRegion;
 
 extern	BOOLEAN	gfDoneWithSplashScreen;
 
@@ -128,7 +130,7 @@ ScreenID IntroScreenHandle(void)
 static INT32 GetNextIntroVideo(UINT32 uiCurrentVideo);
 static void PrepareToExitIntroScreen(void);
 static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay);
-
+static void BackgroundRegionCallback(MOUSE_REGION* region, UINT32 reason);
 
 static void EnterIntroScreen(void)
 {
@@ -138,6 +140,8 @@ static void EnterIntroScreen(void)
 
 
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
+
+	MSYS_DefineRegion(&gIntroBackgroundRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, BackgroundRegionCallback);
 
 	// Don't play music....
 	SetMusicMode( MUSIC_NONE );
@@ -168,6 +172,8 @@ static void ExitIntroScreen(void)
 {
 	//shutdown smaker
 	SmkShutdown();
+
+	MSYS_RemoveRegion( &gIntroBackgroundRegion );
 }
 
 
@@ -217,10 +223,10 @@ static void GetIntroScreenUserInput(void)
 			}
 		}
 	}
+}
 
-	// if the user presses either mouse button
-	if( gfLeftButtonState || gfRightButtonState )
-	{
+static void BackgroundRegionCallback(MOUSE_REGION* region, UINT32 reason) {
+	if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN)) {
 		//advance to the next flic
 		SmkCloseFlic( gpSmackFlic );
 	}
