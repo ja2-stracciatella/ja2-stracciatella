@@ -411,7 +411,7 @@ void Launcher::startExecutable(bool asEditor) {
 void Launcher::updateLogs() {
 	RustPointer<char> logPath(Logger_getFilePath("ja2.log"));
 	try {
-		auto logsFd = FileMan::openForReading(logPath.get());
+		AutoSGPFile logsFd (FileMan::openForReading(logPath.get()));
 		auto logs = logsFd->readStringToEnd();
 
 		logsDisplay->buffer()->text(logs.c_str());

@@ -1223,7 +1223,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 			return EvaluateGroupSituation( pEnemyGroup );
 		}
 		ubSectorID = pEnemyGroup->ubSector.AsByte();
-		if (pEnemyGroup && pEnemyGroup->ubSector.y > 1 && EnemyPermittedToAttackSector(&pEnemyGroup, (UINT8)(ubSectorID - 16)))
+		if (pEnemyGroup->ubSector.y > 1 && EnemyPermittedToAttackSector(&pEnemyGroup, (UINT8)(ubSectorID - 16)))
 		{
 			SGPSector up(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y - 1);
 			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(up);

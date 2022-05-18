@@ -1556,11 +1556,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	if(pTempNode==NULL)
 	{
 		pCurrentNode = pPath;
-
-		// set pause flag
-		if(!pCurrentNode)
-			return FALSE;
-
 	}
 
 	// Handle drawing of arrow

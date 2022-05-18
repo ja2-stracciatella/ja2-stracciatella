@@ -765,7 +765,7 @@ void DoSaveLoadMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageB
 	DoSaveLoadMessageBoxWithRect(str, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
-bool compareSaveGames(SaveGameInfo i, SaveGameInfo j) {
+bool compareSaveGames(const SaveGameInfo& i, const SaveGameInfo& j) {
 	auto lastModifiedI = GCM->saveGameFiles()->getLastModifiedTime(GetSaveGamePath(i.name()));
 	auto lastModifiedJ = GCM->saveGameFiles()->getLastModifiedTime(GetSaveGamePath(j.name()));
 	return (lastModifiedI > lastModifiedJ);
