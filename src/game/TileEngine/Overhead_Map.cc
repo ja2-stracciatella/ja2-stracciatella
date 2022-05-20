@@ -854,7 +854,7 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, UINT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// Get new proposed center location.
 		const GridNo pos = GetOverheadMouseGridNo();

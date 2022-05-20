@@ -888,7 +888,7 @@ static size_t CalculateCursorPos(INT32 const click_x)
 //Internally used to continue highlighting text
 static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, UINT32 const reason)
 {
-	if (!gfLeftButtonState) return;
+	if (!gfLeftButtonState && !gfIsMainFingerDown) return;
 
 	if (reason & MSYS_CALLBACK_REASON_MOVE       ||
 			reason & MSYS_CALLBACK_REASON_LOST_MOUSE ||
@@ -917,7 +917,7 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, UINT32 const
 //Internally used to calculate where to place the cursor.
 static void MouseClickedInTextRegionCallback(MOUSE_REGION* const reg, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		SetActiveFieldMouse(reg);
 		//Signifies that we are typing text now.

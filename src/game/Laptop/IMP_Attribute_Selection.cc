@@ -196,7 +196,7 @@ void HandleIMPAttributeSelection(void)
 	if (fReviewStats) return;
 
 	// set the currently selectd slider bar
-	if (gfLeftButtonState && gpCurrentScrollBox != NULL)
+	if ((gfLeftButtonState || gfIsMainFingerDown) && gpCurrentScrollBox != NULL)
 	{
 		//if the user is holding down the mouse cursor to left of the start of the slider bars
 		if (gusMouseXPos < SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X)
@@ -416,7 +416,7 @@ static void DestroyIMPAttributeSelectionButtons(void)
 
 static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//are we done diting, or just reviewing the stats?
 		if (fReviewStats)
@@ -504,7 +504,7 @@ static void DestroyAttributeSliderButtons(void)
 
 static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
+	if (reason & MSYS_CALLBACK_POINTER_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		INT32 const iValue = btn->GetUserData();
@@ -517,7 +517,7 @@ static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
+	if (reason & MSYS_CALLBACK_POINTER_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		INT32 const iValue = btn->GetUserData();
@@ -624,7 +624,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			sOldX = sNewX;
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (fSlideIsActive)
 		{
@@ -675,7 +675,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		// update screen
 		fHasAnySlidingBarMoved = TRUE;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	else if (iReason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		// get mouse positions
 		const INT16 sX = pRegion->MouseXPos;

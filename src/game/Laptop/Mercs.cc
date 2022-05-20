@@ -500,7 +500,7 @@ void RemoveMercBackGround()
 
 static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_NO_ACCOUNT)
 			guiCurrentLaptopMode = LAPTOP_MODE_MERC_NO_ACCOUNT;
@@ -518,7 +518,7 @@ static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_MERC_FILES;
 	}
@@ -745,7 +745,7 @@ static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 
 static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//Stop speck from talking
 		//ShutupaYoFace(g_video_speck_face);
@@ -1265,7 +1265,7 @@ static UINT8 CountNumberOfMercMercsWhoAreDead(void)
 //Mouse Call back for the pop up text box
 static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP || iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		StopSpeckFromTalking( );
 	}

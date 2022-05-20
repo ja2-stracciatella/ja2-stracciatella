@@ -83,7 +83,7 @@ static void DestroyIMPAttributeEntranceButtons(void)
 
 static void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fButtonPendingFlag = TRUE;

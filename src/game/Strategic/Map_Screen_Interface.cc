@@ -1849,7 +1849,7 @@ static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32
 		// stop showing
 		ShutDownUserDefineHelpTextRegions( );
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	else if( iReason & MSYS_CALLBACK_POINTER_UP )
 	{
 		// stop showing
 		ShutDownUserDefineHelpTextRegions( );
@@ -2578,7 +2578,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	iListIndex   = MSYS_GetRegionUserData( pRegion, 2 );
 	uiClickTime   = GetJA2Clock();
 
-	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )  )
+	if( ( iReason & MSYS_CALLBACK_POINTER_UP )  )
 	{
 		if( uiClickTime - guiDblClickTimersForMoveBoxMouseRegions[ iMoveBoxLine ] < DBL_CLICK_DELAY_FOR_MOVE_MENU  )
 		{
@@ -3066,7 +3066,7 @@ void RemoveScreenMaskForMoveBox( void )
 static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for move box screen mask region
-	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )  )
+	if( ( iReason & MSYS_CALLBACK_POINTER_UP )  )
 	{
 		fShowMapScreenMovementList = FALSE;
 	}
@@ -3568,7 +3568,7 @@ static void RenderSoldierSmallFaceForUpdatePanel(INT32 iIndex, INT32 iX, INT32 i
 
 static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		EndUpdateBox(TRUE); // restart time compression
 	}
@@ -3577,7 +3577,7 @@ static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void StopUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		EndUpdateBox(FALSE); // stop time compression
 	}

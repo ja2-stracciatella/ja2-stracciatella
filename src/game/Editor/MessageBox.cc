@@ -104,7 +104,7 @@ void RemoveMessageBox( )
 
 static void MsgBoxOkClkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = TRUE;
@@ -114,7 +114,7 @@ static void MsgBoxOkClkCallback(GUI_BUTTON* butn, UINT32 reason)
 
 static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = FALSE;

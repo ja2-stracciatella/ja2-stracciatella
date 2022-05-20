@@ -1305,7 +1305,7 @@ static void DisplayFactInformation(void)
 
 static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gfQuestDebugExit = TRUE;
 	}
@@ -1381,7 +1381,7 @@ static void DisplayFactList(void)
 
 static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//if there is an old list box active, destroy the new one
 		gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
@@ -1399,7 +1399,7 @@ static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//if there is an old list box active, destroy the new one
 		gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
@@ -1748,7 +1748,7 @@ static void DisplaySelectedItem(void)
 
 static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		UINT8 ubSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1855,7 +1855,7 @@ static void DrawQdsScrollRectangle(void)
 
 static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (iReason & MSYS_CALLBACK_POINTER_UP || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		UINT8 ubSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1893,7 +1893,7 @@ static void CalcPositionOfNewScrollBoxLocation(void);
 
 static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		CalcPositionOfNewScrollBoxLocation();
 	}
@@ -1926,7 +1926,7 @@ static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 	}
 	else if( reason & MSYS_CALLBACK_REASON_MOVE )
 	{
-		if( gfLeftButtonState )
+		if( gfLeftButtonState || gfIsMainFingerDown )
 		{
 			CalcPositionOfNewScrollBoxLocation();
 		}
@@ -2035,7 +2035,7 @@ static void AddNPCToGridNo(INT32 iGridNo);
 
 static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		ST::string zTemp = ST::format("{} where {} will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], gMercProfiles[gNpcListBox.sCurSelectedItem].zNickname);
 		TextEntryBox( zTemp, AddNPCToGridNo );
@@ -2048,7 +2048,7 @@ static void AddItemToGridNo(INT32 iGridNo);
 
 static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		ST::string zTemp = ST::format("{} where the {} will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], GCM->getItem(gItemListBox.sCurSelectedItem)->getShortName());
 		TextEntryBox( zTemp, AddItemToGridNo );
@@ -2058,7 +2058,7 @@ static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, UINT32
 
 static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		OBJECTTYPE		Object;
 
@@ -2087,7 +2087,7 @@ static void ChangeDayNumber(INT32 iDayToChangeTo);
 
 static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		ST::string zTemp = ST::format("{}   Current Day is {}", QuestDebugText[QUEST_DBS_PLEASE_ENTER_DAY], GetWorldDay());
 
@@ -2099,7 +2099,7 @@ static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubNPCInventoryPopupAction = QD_DROP_DOWN_CREATE;
 	}
@@ -2111,7 +2111,7 @@ static void RefreshAllNPCInventory(void);
 
 static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//loop through all the active NPC's and refresh their inventory
 		RefreshAllNPCInventory();
@@ -2121,7 +2121,7 @@ static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 rea
 
 static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		ST::string zName;
 
@@ -2143,7 +2143,7 @@ static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, UINT32 reas
 
 static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		bool  success  = false;
 		UINT8 ubMercID = 0;
@@ -2174,7 +2174,7 @@ static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom);
 
 static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//Ask for the initial quote num to start talking from
 //		DoQDSMessageBox(zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL);
@@ -2294,7 +2294,7 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const ST::string& p
 
 static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
 		CreateDestroyDisplaySelectNpcDropDownBox();
@@ -2311,7 +2311,7 @@ static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion
 
 static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubTextEntryAction = QD_DROP_DOWN_DESTROY;
 	}
@@ -2330,7 +2330,7 @@ static void ChangeQuestState(INT32 iNumber);
 
 static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		ST::string String;
 
@@ -2348,7 +2348,7 @@ static void ChangeFactState(INT32 iNumber);
 
 static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		ST::string String;
 
@@ -2571,7 +2571,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 
 static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubNPCInventoryPopupAction = QD_DROP_DOWN_DESTROY;
 	}
@@ -2583,7 +2583,7 @@ static INT16 IsMercInTheSector(UINT16 usMercID);
 
 static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		if( gfUseLocalNPCs )
 		{
@@ -2677,7 +2677,7 @@ static void ChangeFactState(INT32 iNumber)
 
 static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if( ( gusFactAtTopOfList - QUEST_DBS_NUM_DISPLAYED_FACTS ) >= 0 )
 		{
@@ -2693,7 +2693,7 @@ static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if( ( gusFactAtTopOfList + QUEST_DBS_NUM_DISPLAYED_FACTS ) < NUM_FACTS )
 		{
@@ -3054,7 +3054,7 @@ static void DisplayQDSCurrentlyQuoteNum(void)
 
 static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		if( gfAddNpcToTeam )
 			gfAddNpcToTeam = FALSE;
@@ -3066,7 +3066,7 @@ static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, UINT32 reas
 
 static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		if( gfRpcToSaySectorDesc )
 			gfRpcToSaySectorDesc = FALSE;

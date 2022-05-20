@@ -619,7 +619,7 @@ static void DeletePersonnelButtons(void)
 
 static void LeftButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		fReDrawScreenFlag = TRUE;
 		PrevPersonnelFace();
@@ -631,7 +631,7 @@ static void LeftButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 
 static void RightButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		fReDrawScreenFlag = TRUE;
 		NextPersonnelFace();
@@ -986,7 +986,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	iOldPortraitId = iCurrentPersonSelectedId;
 
 	// callback handler for the minize region that is attatched to the laptop program icon
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// get id of portrait
 		if (fCurrentTeamMode)
@@ -1233,7 +1233,7 @@ static void InventoryDown(void)
 static void InventoryUpButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+			reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		InventoryUp();
 	}
@@ -1243,7 +1243,7 @@ static void InventoryUpButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 static void InventoryDownButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+			reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		InventoryDown();
 	}
@@ -1707,7 +1707,7 @@ static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
 
 static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (fCurrentTeamMode) return;
 		fCurrentTeamMode = TRUE;
@@ -1721,7 +1721,7 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (!fCurrentTeamMode) return;
 		fCurrentTeamMode = FALSE;
@@ -1767,7 +1767,7 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 
 static void DepartedUpCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (giCurrentUpperLeftPortraitNumber - PERSONNEL_PORTRAIT_NUMBER >= 0)
 		{
@@ -1780,7 +1780,7 @@ static void DepartedUpCallBack(GUI_BUTTON *btn, UINT32 reason)
 
 static void DepartedDownCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		INT32 const n_past = GetNumberOfPastMercsOnPlayersTeam();
 		if (n_past - giCurrentUpperLeftPortraitNumber > PERSONNEL_PORTRAIT_NUMBER)
@@ -2183,7 +2183,7 @@ static void FindPositionOfPersInvSlider(void)
 
 static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (iReason & MSYS_CALLBACK_POINTER_DWN || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		const INT32 item_count = GetNumberOfInventoryItemsOnCurrentMerc();
 		if (item_count <= NUMBER_OF_INVENTORY_PERSONNEL) return;
@@ -2225,7 +2225,7 @@ static void RenderSliderBarForPersonnelInventory(void)
 
 static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2238,7 +2238,7 @@ static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2251,7 +2251,7 @@ static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void EmployementInfoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;

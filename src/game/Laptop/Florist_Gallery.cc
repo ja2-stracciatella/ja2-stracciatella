@@ -174,7 +174,7 @@ static void ChangingFloristGallerySubPage(UINT8 ubSubPageNumber);
 
 static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (gubCurFlowerIndex + 3 <= FLOR_GALLERY_NUMBER_FLORAL_IMAGES)
 			gubCurFlowerIndex += 3;
@@ -187,7 +187,7 @@ static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (gubCurFlowerIndex != 0)
 		{
@@ -208,7 +208,7 @@ static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentlySelectedFlower = btn->GetUserData();
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;

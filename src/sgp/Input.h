@@ -87,5 +87,6 @@ extern BOOLEAN   gfX1ButtonState; // TRUE = Pressed, FALSE = Not Pressed
 extern BOOLEAN   gfX2ButtonState; // TRUE = Pressed, FALSE = Not Pressed
 
 extern BOOLEAN gfIsUsingTouch; // TRUE = Last pointer device that was used was a touch device, FALSE = Last pointer device that was used was a mouse
+extern BOOLEAN gfIsMainFingerDown; // TRUE = Main finger is down. Multitouch gesture is not detected, FALSE = Main finger is up or multitouch gesture is in progress
 
 bool _KeyDown(SDL_Keycode);

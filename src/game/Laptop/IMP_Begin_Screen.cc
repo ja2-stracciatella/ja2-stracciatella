@@ -271,7 +271,7 @@ static void CopyFirstNameIntoNickName(void);
 
 static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// back to mainpage
 		pFullNameString = GetStringFromField(0).trim();
@@ -425,7 +425,7 @@ static void DestroyIMPBeginScreenMouseRegions()
 
 static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_MALE;
@@ -436,7 +436,7 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_FEMALE;

@@ -1011,20 +1011,20 @@ static void HandleScrollEvent(INT32 const reason) {
 }
 
 static void BtnScrollUpCallback(GUI_BUTTON* btn, UINT32 reason) {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
+	if (reason & MSYS_CALLBACK_POINTER_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
 		ScrollUp();
 	}
 }
 
 static void BtnScrollDownCallback(GUI_BUTTON* btn, UINT32 reason) {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
+	if (reason & MSYS_CALLBACK_POINTER_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
 		ScrollDown();
 	}
 }
 
 static void BtnSlgCancelCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		LeaveSaveLoadScreen();
 	}
@@ -1034,7 +1034,7 @@ static void BtnSlgCancelCallback(GUI_BUTTON* const btn, UINT32 const reason)
 
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (gfSaveGame && gbSelectedSaveLocation == 0 && gfUserInTextInputMode) {
 			SaveNewSave();
@@ -1064,7 +1064,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 			SaveLoadSelectedSave();
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if(gbSelectedSaveLocation != bSelected ) {
 			gbSelectedSaveLocation = bSelected;

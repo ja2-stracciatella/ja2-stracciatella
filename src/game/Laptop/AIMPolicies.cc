@@ -464,7 +464,7 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iRea
 {
 	if(gfInPolicyToc)
 	{
-		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (iReason & MSYS_CALLBACK_POINTER_UP)
 		{
 			gubCurPageNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -583,7 +583,7 @@ static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 	if (fOnPage)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (reason & MSYS_CALLBACK_POINTER_UP)
 		{
 			UINT8 const ubRetValue = btn->GetUserData();
 
@@ -611,7 +611,7 @@ static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 	if (fOnPage)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (reason & MSYS_CALLBACK_POINTER_UP)
 		{
 			UINT8 const ubRetValue = btn->GetUserData();
 			switch (ubRetValue)

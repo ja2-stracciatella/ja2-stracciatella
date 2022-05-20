@@ -298,12 +298,12 @@ static void QuoteOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (iReason & MSYS_CALLBACK_POINTER_DWN )
 	{
 		fLButtonDown = TRUE;
 	}
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
+	if (iReason & MSYS_CALLBACK_POINTER_UP && fLButtonDown )
 	{
 		// Shutdown quote box....
 		ShutDownQuoteBox( FALSE );

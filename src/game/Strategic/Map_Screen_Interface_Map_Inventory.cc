@@ -532,7 +532,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const UINT32 iReason)
 	{
 		if (gpItemPointer == NULL) fShowMapInventoryPool = FALSE;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// check if item in cursor, if so, then swap, and no item in curor, pick up, if item in cursor but not box, put in box
 		INT32      const slot_idx = MSYS_GetRegionUserData(pRegion, 0);
@@ -949,7 +949,7 @@ void AutoPlaceObjectInInventoryStash(OBJECTTYPE* pItemPtr)
 
 static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		InventoryNextPage();
 	}
@@ -958,7 +958,7 @@ static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, UINT32 reason)
 
 static void MapInventoryPoolPrevBtn(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		InventoryPrevPage();
 	}
@@ -967,7 +967,7 @@ static void MapInventoryPoolPrevBtn(GUI_BUTTON* btn, UINT32 reason)
 
 static void MapInventoryPoolDoneBtn(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		fShowMapInventoryPool = FALSE;
 	}

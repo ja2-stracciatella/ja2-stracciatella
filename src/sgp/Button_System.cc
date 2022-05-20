@@ -812,7 +812,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 	{
 		// Should we play a sound if clicked on while disabled?
 		if (b->ubSoundSchemeID &&
-				reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN))
+				reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			PlayButtonSound(b, BUTTON_SOUND_DISABLED_CLICK);
 		}
@@ -824,7 +824,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 
 	if (b->uiFlags & BUTTON_NEWTOGGLE)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			if (!b->ubToggleButtonActivated)
 			{
@@ -832,7 +832,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 				b->ubToggleButtonActivated = TRUE;
 			}
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			b->ubToggleButtonActivated = FALSE;
 		}
@@ -846,20 +846,20 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 	 */
 	if (b->MoveCallback == DefaultMoveCallback)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			gpAnchoredButton = b;
 			gfAnchoredState = StateBefore;
 			b->uiFlags |= BUTTON_CLICKED_ON;
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			b->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 	}
 	else if (b->uiFlags & BUTTON_CHECKBOX)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			/* The check box button gets anchored, though it doesn't actually use the
 			 * anchoring move callback.  The effect is different, we don't want to
@@ -876,7 +876,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 			StateBefore = !b->Clicked();
 			StateAfter  = !StateBefore;
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			b->uiFlags ^= BUTTON_CLICKED_ON; //toggle the checkbox state upon release inside button area.
 			/* Trick the before state of the button to be different so the sound will
@@ -896,7 +896,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 		 * been.
 		 */
 		gfDelayButtonDeletion = TRUE;
-		if (!(reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ||
+		if (!(reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)) ||
 				b->MoveCallback != DefaultMoveCallback ||
 				gpPrevAnchoredButton == b)
 		{
@@ -904,7 +904,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 		}
 		gfDelayButtonDeletion = FALSE;
 	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 	{
 		// Otherwise, do default action with this button.
 		b->uiFlags ^= BUTTON_CLICKED_ON;
@@ -918,14 +918,14 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 	// Play sounds for this enabled button (disabled sounds have already been done)
 	if (b->ubSoundSchemeID && b->Enabled())
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			if (StateBefore && !StateAfter)
 			{
 				PlayButtonSound(b, BUTTON_SOUND_CLICKED_OFF);
 			}
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			if (!StateBefore && StateAfter)
 			{

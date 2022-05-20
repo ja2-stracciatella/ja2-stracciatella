@@ -2971,7 +2971,7 @@ static void HandleShadingOfLinesForVehicleMenu()
 static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		SOLDIERTYPE& s = *GetSelectedAssignSoldier(FALSE);
 		VEHICLETYPE& v = *pRegion->GetUserPtr<VEHICLETYPE>();
@@ -3003,7 +3003,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		UnHighLightBox(ghAssignmentBox);
 		fShowVehicleMenu         = FALSE;
@@ -3242,7 +3242,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	pSoldier = GetSelectedAssignSoldier( FALSE );
 
 
-	if ( pSoldier && pSoldier->bActive && ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP ) )
+	if ( pSoldier && pSoldier->bActive && ( iReason & MSYS_CALLBACK_POINTER_UP ) )
 	{
 		if( ( iRepairWhat >= REPAIR_MENU_VEHICLE1 ) && ( iRepairWhat <= REPAIR_MENU_VEHICLE3 ) )
 		{
@@ -3671,7 +3671,7 @@ static void AssignmentScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReaso
 {
 	// btn callback handler for assignment screen mask region
 
-	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP ) || ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) )
+	if( ( iReason & MSYS_CALLBACK_POINTER_UP ) || ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) )
 	{
 		if (fFirstClickInAssignmentScreenMask)
 		{
@@ -4201,7 +4201,7 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		switch( iValue )
 		{
@@ -4331,7 +4331,7 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		fOkToClose = TRUE;
 	}
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// not valid?
 		if (GetBoxShadeFlag(ghContractBox, iValue)) return;
@@ -4466,7 +4466,7 @@ static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, UINT32 const reason)
 {
 	// btn callback handler for assignment region
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		INT32 const value = MSYS_GetRegionUserData(pRegion, 0);
 
@@ -4544,7 +4544,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ) || ( iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN ) )
+	if( ( iReason & MSYS_CALLBACK_POINTER_DWN ) || ( iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN ) )
 	{
 		if (fInMapMode && !fShowMapInventoryPool)
 		{
@@ -4552,7 +4552,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		}
 	}
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if( fShowAttributeMenu )
 		{
@@ -4722,7 +4722,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if( iValue == ATTRIB_MENU_CANCEL )
 		{
@@ -4788,7 +4788,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 
 		if( ( fShowAttributeMenu )||( fShowTrainingMenu ) || ( fShowRepairMenu ) || ( fShowVehicleMenu ) ||( fShowSquadMenu ) )

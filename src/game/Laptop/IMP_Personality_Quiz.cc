@@ -336,7 +336,7 @@ static void CheckStateOfTheConfirmButton(void);
 
 static void BtnQuizAnswerCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		ResetQuizAnswerButtons();
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -355,7 +355,7 @@ static void CompileQuestionsInStatsAndWhatNot(void);
 
 static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (iCurrentAnswer != -1)
 		{
@@ -385,7 +385,7 @@ static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 r
 
 static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
 		giMaxPersonalityQuizQuestion = 0;
@@ -839,7 +839,7 @@ static void ToggleQuestionNumberButtonOn(INT32 iAnswerNumber)
 
 static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		MoveBackAQuestion( );
 	}
@@ -848,7 +848,7 @@ static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason)
 
 static void NextQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		MoveAheadAQuestion( );
 	}

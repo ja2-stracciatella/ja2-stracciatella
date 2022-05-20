@@ -152,7 +152,7 @@ void RenderInsuranceComments()
 
 static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		UINT32 uiInsuranceLink = MSYS_GetRegionUserData( pRegion, 0 );
 

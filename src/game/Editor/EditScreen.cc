@@ -3064,7 +3064,7 @@ static void HideEntryPoints()
 
 void TaskOptionsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iTaskMode = TASK_OPTIONS;
 	}
@@ -3072,7 +3072,7 @@ void TaskOptionsCallback(GUI_BUTTON *btn,UINT32 reason)
 
 void TaskTerrainCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iTaskMode = TASK_TERRAIN;
 	}
@@ -3080,7 +3080,7 @@ void TaskTerrainCallback(GUI_BUTTON *btn,UINT32 reason)
 
 void TaskBuildingCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iTaskMode = TASK_BUILDINGS;
 	}
@@ -3088,7 +3088,7 @@ void TaskBuildingCallback(GUI_BUTTON *btn,UINT32 reason)
 
 void TaskItemsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iTaskMode = TASK_ITEMS;
 	}
@@ -3096,7 +3096,7 @@ void TaskItemsCallback(GUI_BUTTON *btn,UINT32 reason)
 
 void TaskMercsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iTaskMode = TASK_MERCS;
 	}
@@ -3104,7 +3104,7 @@ void TaskMercsCallback(GUI_BUTTON *btn,UINT32 reason)
 
 void TaskMapInfoCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iTaskMode = TASK_MAPINFO;
 	}

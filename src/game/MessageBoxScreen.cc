@@ -288,7 +288,7 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 
 static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_OK;
 	}
@@ -297,7 +297,7 @@ static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_YES;
 	}
@@ -306,7 +306,7 @@ static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_NO;
 	}
@@ -315,7 +315,7 @@ static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_CONTRACT;
 	}
@@ -324,7 +324,7 @@ static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_LIE;
 	}
@@ -333,7 +333,7 @@ static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void NumberedMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gMsgBox.bHandled = static_cast<MessageBoxReturnValue>(btn->GetUserData());
 	}

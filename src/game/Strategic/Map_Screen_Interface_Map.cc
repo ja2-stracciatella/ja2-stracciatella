@@ -2972,7 +2972,7 @@ static bool IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue);
 
 static void MilitiaRegionClickCallback(MOUSE_REGION* const r, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		INT16 const val = MSYS_GetRegionUserData(r, 0);
 		sSectorMilitiaMapSector =
@@ -3089,7 +3089,7 @@ static void MilitiaButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	INT16 sBaseSectorValue = GetBaseSectorForCurrentTown();
 	INT16 sGlobalMapSector = sBaseSectorValue + sSectorMilitiaMapSector % MILITIA_BOX_ROWS + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * 16;
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		DropAPersonInASector(iValue, sGlobalMapSector);
 	}
@@ -3362,7 +3362,7 @@ static void DeleteMilitiaPanelBottomButton(void)
 
 static void MilitiaAutoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// distribute troops over all the sectors under control
 		HandleEveningOutOfTroopsAmongstSectors();
@@ -3373,7 +3373,7 @@ static void MilitiaAutoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void MilitiaDoneButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// reset fact we are in the box
 		sSelectedMilitiaTown = 0;

@@ -750,7 +750,7 @@ void RemoveSectorExitMenu(BOOLEAN const fOk)
 
 static void CheckLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		gExitDialog.fGotoSector =!gExitDialog.fGotoSector;
 	}
@@ -813,7 +813,7 @@ static void AllMoveAction(void)
 
 static void SingleMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if(reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		SingleMoveAction();
 	}
@@ -822,7 +822,7 @@ static void SingleMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void AllMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if(reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		AllMoveAction();
 	}
@@ -831,7 +831,7 @@ static void AllMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void OKCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// OK, exit
 		RemoveSectorExitMenu( TRUE );
@@ -841,7 +841,7 @@ static void OKCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void CancelCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// OK, exit
 		RemoveSectorExitMenu( FALSE );
@@ -856,7 +856,7 @@ static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SingleRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		SingleMoveAction();
 	}
@@ -865,7 +865,7 @@ static void SingleRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void AllRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		AllMoveAction();
 	}
@@ -874,7 +874,7 @@ static void AllRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void LoadRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gExitDialog.fGotoSector =!gExitDialog.fGotoSector;
 	}

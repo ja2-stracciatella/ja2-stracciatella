@@ -96,7 +96,7 @@ static void DeleteIMPAboutUsButtons(void)
 
 static void BtnIMPBackCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_HOME_PAGE;
 	}

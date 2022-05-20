@@ -340,7 +340,7 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iRe
 {
 	if(gfInToc)
 	{
-		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (iReason & MSYS_CALLBACK_POINTER_UP)
 		{
 			gubCurPageNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 			ChangingAimHistorySubPage( gubCurPageNum );
@@ -358,7 +358,7 @@ static void BtnHistoryMenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	UINT8	const ubRetValue = btn->GetUserData();
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		ResetAimHistoryButtons();
 

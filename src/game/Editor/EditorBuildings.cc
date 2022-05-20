@@ -647,7 +647,7 @@ void KillDoorEditing()
 
 static void DoorOkayCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		ExtractAndUpdateDoorInfo();
 		KillDoorEditing();
@@ -657,7 +657,7 @@ static void DoorOkayCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void DoorCancelCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		KillDoorEditing();
 	}

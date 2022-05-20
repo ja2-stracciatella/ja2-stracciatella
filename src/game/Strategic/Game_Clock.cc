@@ -821,7 +821,7 @@ void RemoveMouseRegionForPauseOfClock( void )
 
 static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		HandlePlayerPauseUnPauseOfGame(  );
 	}
@@ -911,7 +911,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 
 static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// unpause the game
 		HandlePlayerPauseUnPauseOfGame( );

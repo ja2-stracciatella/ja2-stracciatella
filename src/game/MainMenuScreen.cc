@@ -236,7 +236,7 @@ static void ExitMainMenu(void)
 
 static void MenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		INT8 const bID = btn->GetUserData();
 

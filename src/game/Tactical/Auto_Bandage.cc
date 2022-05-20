@@ -795,7 +795,7 @@ static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY)
 
 static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		fEndAutoBandage = TRUE;
 	}

@@ -62,6 +62,15 @@ static MOUSE_REGION* MSYS_CurrRegion = NULL;
 
 static const INT16 gsFastHelpDelay = 600; // In timer ticks
 
+const UINT32 longTapMinLength = 1000;
+
+// State for tapping
+static MOUSE_REGION* lastFingerDownRegion = NULL;
+static MOUSE_REGION* lastFingerUpRegion   = NULL;
+UINT32 lastFingerDownTime;
+
+INT16 lastFingerDownX;
+INT16 lastFingerDownY;
 
 static BOOLEAN gfRefreshUpdate = FALSE;
 
@@ -210,7 +219,7 @@ void MouseSystemHook(UINT16 type, UINT32 button, UINT16 x, UINT16 y)
 			break;
 
 		default:
-			STLOGW("Unknown event type {} in mouse system event queue", type);
+			SLOGW("Unknown event type {} in mouse system event queue", type);
 			return;
 	}
 
@@ -481,13 +490,11 @@ static void MSYS_UpdateMouseRegion(void)
 					// Touch emulates left click
 					if (MSYS_Action & MSYS_DO_TFINGER_UP)
 					{
-						ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_UP;
 						ButtonReason |= MSYS_CALLBACK_REASON_TFINGER_UP;
 						g_clicked_region = 0;
 					}
 					if (MSYS_Action & MSYS_DO_TFINGER_DOWN)
 					{
-						ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_DWN;
 						ButtonReason |= MSYS_CALLBACK_REASON_TFINGER_DWN;
 						g_clicked_region = cur;
 					}
@@ -538,9 +545,32 @@ static void MSYS_UpdateMouseRegion(void)
 							cur->FastHelpTimer = gsFastHelpDelay;
 						}
 
-						//Kris: Nov 31, 1999 -- Added support for double click events.
+
+						// This is where we detect tap gestures
+						if (ButtonReason & MSYS_CALLBACK_REASON_TFINGER_DWN) {
+							UINT32 uiCurrTime = GetClock();
+
+							lastFingerDownX = MSYS_CurrentMX;
+							lastFingerDownY = MSYS_CurrentMX;
+							lastFingerDownTime = uiCurrTime;
+							lastFingerDownRegion = cur;
+						}
+						if (ButtonReason & MSYS_CALLBACK_REASON_TFINGER_UP) {
+							UINT32 uiCurrTime = GetClock();
+
+							if (lastFingerDownRegion == cur) {
+								if (uiCurrTime - lastFingerDownTime > longTapMinLength) {
+									ButtonReason |= MSYS_CALLBACK_REASON_LONG_TAP;
+									ButtonReason |= MSYS_CALLBACK_REASON_RBUTTON_UP;
+								} else {
+									ButtonReason |= MSYS_CALLBACK_REASON_TAP;
+									ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_UP;
+								}
+							}
+						}
+
 						//This is where double clicks are checked and passed down.
-						if (ButtonReason == MSYS_CALLBACK_REASON_LBUTTON_DWN)
+						if (ButtonReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 						{
 							UINT32 uiCurrTime = GetClock();
 							if (gpRegionLastLButtonDown == cur &&
@@ -563,7 +593,7 @@ static void MSYS_UpdateMouseRegion(void)
 								guiRegionLastLButtonDownTime = GetClock();
 							}
 						}
-						else if (ButtonReason == MSYS_CALLBACK_REASON_LBUTTON_UP)
+						else if (ButtonReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 						{
 							UINT32 uiCurrTime = GetClock();
 							if (gpRegionLastLButtonDown == cur &&

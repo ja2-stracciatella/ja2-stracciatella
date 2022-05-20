@@ -188,7 +188,7 @@ static void FinishMessageBoxCallBack(MessageBoxReturnValue);
 
 static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pImpPopUpStrings[1], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, FinishMessageBoxCallBack);
 	}
@@ -198,7 +198,7 @@ static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
 static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_CONFIRM;
 		CreateACharacterFromPlayerEnteredStats();
@@ -219,13 +219,13 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 
 	INT32 iDifference = 0;
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		uiBaseTime = GetJA2Clock();
 		btn->SpecifyText(pImpButtonText[23]);
 		fAnimateFlag = TRUE;
 	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		fButtonPendingFlag = TRUE;
 		uiBaseTime = 0;
@@ -268,7 +268,7 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fButtonPendingFlag = TRUE;

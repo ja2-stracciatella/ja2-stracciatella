@@ -789,7 +789,7 @@ static void SelectFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//if the merc is not dead, video conference with the merc
 		if (!IsMercDead(GetProfile(gbCurrentSoldier)))
@@ -930,7 +930,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 
 static void BtnPreviousButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		DeleteAimPopUpBox();
 
@@ -946,7 +946,7 @@ static void BtnPreviousButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnContactButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// if we are not already in the video conferemce mode, go in to it
 		if (gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE)
@@ -963,7 +963,7 @@ static void BtnContactButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		DeleteAimPopUpBox();
 
@@ -1103,11 +1103,11 @@ static void DisplaySelectLights();
 
 static void BtnContractLengthButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		DisplaySelectLights();
 	}
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubContractLength = btn->GetUserData();
 		DisplaySelectLights();
@@ -1119,11 +1119,11 @@ static void BtnContractLengthButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		DisplaySelectLights();
 	}
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gfBuyEquipment = btn->GetUserData();
 		DisplaySelectLights();
@@ -1142,7 +1142,7 @@ static void    CreateAimPopUpBox(const ST::string& sString1, const ST::string& s
 //Transfer funds button callback
 static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		UINT8	ubRetValue = btn->GetUserData();
 
@@ -1540,7 +1540,7 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 	if (fInCallback)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (reason & MSYS_CALLBACK_POINTER_UP)
 		{
 			UINT8 const ubCurPageNum = btn->GetUserData();
 
@@ -1571,7 +1571,7 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 // we first contact merc.  We either go to hire him or cancel the call
 static void BtnFirstContactButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		UINT8	const ubRetValue = btn->GetUserData();
 
@@ -1597,7 +1597,7 @@ static void BtnFirstContactButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		UINT8	const ubRetValue = btn->GetUserData();
 
@@ -1627,7 +1627,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnHangUpButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 		gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
@@ -1764,7 +1764,7 @@ void DisplayTextForMercFaceVideoPopUp(const ST::string& str)
 
 static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_RBUTTON_UP))
+	if (iReason & (MSYS_CALLBACK_POINTER_UP | MSYS_CALLBACK_REASON_RBUTTON_UP))
 	{
 		gfStopMercFromTalking = TRUE;
 	}
@@ -2284,7 +2284,7 @@ static void StopMercTalking(void)
 
 static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
 		//gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;

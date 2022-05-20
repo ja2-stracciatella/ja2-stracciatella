@@ -349,7 +349,7 @@ void CreateSummaryWindow()
 
 void AutoLoadMap()
 {
-	SummaryLoadMapCallback(iSummaryButton[SUMMARY_LOAD], MSYS_CALLBACK_REASON_LBUTTON_UP);
+	SummaryLoadMapCallback(iSummaryButton[SUMMARY_LOAD], MSYS_CALLBACK_POINTER_UP);
 	if( gfWorldLoaded )
 		DestroySummaryWindow();
 	gfAutoLoadA9 = FALSE;
@@ -1520,7 +1520,7 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 
 static void SummaryOkayCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		DestroySummaryWindow();
 	}
@@ -1529,7 +1529,7 @@ static void SummaryOkayCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummaryToggleGridCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		gfRenderGrid = btn->Clicked();
 		gfRenderMap  = TRUE;
@@ -1539,7 +1539,7 @@ static void SummaryToggleGridCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummaryToggleAlternateCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		if (btn->Clicked())
 		{
@@ -1558,7 +1558,7 @@ static void SummaryToggleAlternateCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummarySciFiCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
 		iSummaryButton[SUMMARY_REAL ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -1573,7 +1573,7 @@ static void SummarySciFiCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummaryRealCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		iSummaryButton[SUMMARY_SCIFI]->uiFlags &= ~BUTTON_CLICKED_ON;
 		iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_DIRTY;
@@ -1588,7 +1588,7 @@ static void SummaryRealCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummaryEnemyCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		iSummaryButton[SUMMARY_SCIFI]->uiFlags &= ~BUTTON_CLICKED_ON;
 		iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_DIRTY;
@@ -1603,7 +1603,7 @@ static void SummaryEnemyCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummaryToggleProgressCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		gfRenderProgress = btn->Clicked();
 		gfRenderMap      = TRUE;
@@ -1766,7 +1766,7 @@ static void MapClickCallback(MOUSE_REGION* reg, UINT32 reason)
 {
 	static SGPSector sLast(-1, -1);
 	//calc current sector selected.
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		if( GetActiveFieldID() == 1 )
 		{
@@ -1851,7 +1851,7 @@ static void MapClickCallback(MOUSE_REGION* reg, UINT32 reason)
 static void SummaryToggleLevelCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	INT8 i;
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		if( GetActiveFieldID() == 1 )
 			SelectNextField();
@@ -1892,7 +1892,7 @@ static void SummaryToggleLevelCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummaryLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		ST::string str;
 		gfRenderSummary = TRUE;
@@ -1935,7 +1935,7 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummarySaveMapCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		gfSummaryWindowSaveRequested = TRUE;
 		gfRenderSummary = TRUE;
@@ -1945,7 +1945,7 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SummaryOverrideCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		gfOverride ^= TRUE;
 		gfRenderSummary = TRUE;
@@ -2266,7 +2266,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 
 static void SummaryUpdateCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_POINTER_UP )
 	{
 		CreateProgressBar(0, 20, 100, 280, 12); //slave (individual)
 		DefineProgressBarPanel( 0, 65, 79, 94, 10, 80, 310, 132 );
@@ -2460,7 +2460,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	{	//Don't have one, so generate them
 		if( gpCurrentSectorSummary->ubSummaryVersion == GLOBAL_SUMMARY_VERSION )
 			gusNumEntriesWithOutdatedOrNoSummaryInfo++;
-		SummaryUpdateCallback(iSummaryButton[SUMMARY_UPDATE], MSYS_CALLBACK_REASON_LBUTTON_UP);
+		SummaryUpdateCallback(iSummaryButton[SUMMARY_UPDATE], MSYS_CALLBACK_POINTER_UP);
 		gpCurrentSectorSummary = gpSectorSummary[gsSelSector.x - 1][gsSelSector.y - 1][ giCurrLevel ];
 	}
 	//Open the original map for the sector

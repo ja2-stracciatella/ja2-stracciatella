@@ -535,7 +535,7 @@ template<typename T> static inline void SelectCheckbox(T& array, GUI_BUTTON cons
 
 static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		SelectCheckbox(guiDifficultySettingsToggles, *btn);
 	}
@@ -544,7 +544,7 @@ static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		SelectCheckbox(guiGameStyleToggles, *btn);
 	}
@@ -553,7 +553,7 @@ static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		SelectCheckbox(guiGameSaveToggles, *btn);
 	}
@@ -562,7 +562,7 @@ static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		SelectCheckbox(guiGunOptionToggles, *btn);
 	}
@@ -572,7 +572,7 @@ static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 #if 0 // JA2Gold: no more timed turns setting
 static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		SelectCheckbox(guiTimedTurnToggles, *btn);
 	}
@@ -582,7 +582,7 @@ static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnGIODoneCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		//if the user doesnt have IRON MAN mode selected
 		if (!DisplayMessageToUserAboutIronManMode())
@@ -596,7 +596,7 @@ static void BtnGIODoneCallback(GUI_BUTTON *btn,UINT32 reason)
 
 static void BtnGIOCancelCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gubGameOptionScreenHandler = GIO_CANCEL;
 	}

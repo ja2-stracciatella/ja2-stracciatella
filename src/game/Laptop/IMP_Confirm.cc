@@ -201,7 +201,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (LaptopSaveInfo.fIMPCompletedFlag)
 		{
@@ -257,7 +257,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 // fixed? by CJC Nov 28 2002
 static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_FINISH;
 

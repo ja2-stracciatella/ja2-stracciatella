@@ -221,7 +221,7 @@ static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP Homepage About US button
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_HOME_PAGE;
 		fButtonPendingFlag = TRUE;
@@ -241,7 +241,7 @@ static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, UINT32 reason)
 
 	// too far along to change gender
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// are we going to change name, or do we have to start over from scratch
 		if (iCurrentProfileMode > 2)
@@ -281,7 +281,7 @@ static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_PERSONALITY;
 		fButtonPendingFlag = TRUE;
@@ -300,7 +300,7 @@ static void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_ENTRANCE;
 		fButtonPendingFlag = TRUE;
@@ -319,7 +319,7 @@ void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, UINT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_PORTRAIT;
 		fButtonPendingFlag = TRUE;
@@ -338,7 +338,7 @@ void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, UINT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_VOICE;
 		fButtonPendingFlag = TRUE;
@@ -465,7 +465,7 @@ static void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 
 static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 4 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, BeginMessageBoxCallBack);
 	}

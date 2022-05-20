@@ -157,7 +157,7 @@ static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	// check if we are allowed to do anything?
 	if (!fRenderRadarScreen) return;
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (iReason & MSYS_CALLBACK_POINTER_DWN)
 	{
 		if ( !InOverheadMap( ) )
 		{
@@ -498,7 +498,7 @@ static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		// find out if this squad is valid and on this map..if so, set as selected
 		if (IsSquadOnCurrentTacticalMap(iValue))

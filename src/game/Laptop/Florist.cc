@@ -227,7 +227,7 @@ void RemoveFloristDefaults()
 
 static void BtnGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 	}
@@ -236,7 +236,7 @@ static void BtnGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
 	}

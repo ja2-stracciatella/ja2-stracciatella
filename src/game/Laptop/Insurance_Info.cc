@@ -231,7 +231,7 @@ static void ChangingInsuranceInfoSubPage(UINT8 ubSubPageNumber);
 
 static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (gubCurrentInsInfoSubPage > 0) gubCurrentInsInfoSubPage--;
 		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
@@ -242,7 +242,7 @@ static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnInsNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		if (gubCurrentInsInfoSubPage < INS_INFO_LAST_PAGE - 1) gubCurrentInsInfoSubPage++;
 		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
@@ -253,7 +253,7 @@ static void BtnInsNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE_CONTRACT;
 	}
@@ -262,7 +262,7 @@ static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iRea
 
 static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}

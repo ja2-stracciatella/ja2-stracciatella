@@ -226,7 +226,7 @@ static void GetIntroScreenUserInput(void)
 }
 
 static void BackgroundRegionCallback(MOUSE_REGION* region, UINT32 reason) {
-	if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN)) {
+	if (reason & (MSYS_CALLBACK_POINTER_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN)) {
 		//advance to the next flic
 		SmkCloseFlic( gpSmackFlic );
 	}

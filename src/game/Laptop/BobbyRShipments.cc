@@ -201,7 +201,7 @@ void RenderBobbyRShipments()
 
 static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R_MAILORDER;
 	}
@@ -210,7 +210,7 @@ static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}
@@ -328,7 +328,7 @@ static void RemovePreviousShipmentsMouseRegions(void)
 
 static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		INT32 iSlotID = MSYS_GetRegionUserData( pRegion, 0 );
 

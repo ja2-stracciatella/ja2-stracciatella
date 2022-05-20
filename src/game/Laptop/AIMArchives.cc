@@ -268,7 +268,7 @@ void RenderAimArchives()
 
 static void SelectAlumniFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gfDrawPopUpBox = TRUE;
 		gfReDrawScreen = TRUE;
@@ -286,7 +286,7 @@ static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	UINT8	const ubRetValue = btn->GetUserData();
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_POINTER_UP)
 	{
 		RemoveAimAlumniFaceRegion();
 		ChangingAimArchiveSubPage(ubRetValue);
@@ -437,7 +437,7 @@ static void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 
 static void SelectAlumniDoneRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		gfDestroyPopUpBox = TRUE;
 		gfDrawPopUpBox = FALSE;

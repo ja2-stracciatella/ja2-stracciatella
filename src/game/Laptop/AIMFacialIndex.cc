@@ -184,7 +184,7 @@ void RenderAimFacialIndex()
 
 static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS;
 		gbCurrentIndex = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
