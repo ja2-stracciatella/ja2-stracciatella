@@ -944,13 +944,13 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 					gMixBuffer[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 				}
 
-				if (samples < want_samples) {
+				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
+				if (samples < want_samples || rbResult == MA_AT_END) {
 					Sound->State = CHANNEL_DEAD;
 				}
 
-				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
-				if (rbResult != MA_SUCCESS) {
-					SLOGE("Could not commit read pointer for channel %d: %s", Sound - pSoundList, ma_result_description(rbResult));
+				if (rbResult != MA_SUCCESS && rbResult != MA_AT_END) {
+					SLOGE("Could not commit read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
 				} else {
 					ringBuffersNeedService |= DoesChannelRingBufferNeedService(Sound);
 				}
