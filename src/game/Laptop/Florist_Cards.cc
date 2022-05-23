@@ -169,7 +169,7 @@ void RenderFloristCards()
 
 static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gbCurrentlySelectedCard = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -180,7 +180,7 @@ static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReas
 
 static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
 	}

@@ -529,7 +529,7 @@ static void RemoveInventoryButtonForMapPopUpBox(void)
 
 static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fShowMapInventoryPool = TRUE;
 		fMapPanelDirty = TRUE;
@@ -548,7 +548,7 @@ static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 
 static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;

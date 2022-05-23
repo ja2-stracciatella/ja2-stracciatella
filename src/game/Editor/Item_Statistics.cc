@@ -540,7 +540,7 @@ void UpdateItemStatsPanel()
 
 static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_POINTER_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		giRealisticCheckboxButton->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
 		giSciFiCheckboxButton->uiFlags     &= ~BUTTON_CLICKED_ON;
@@ -556,7 +556,7 @@ static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_POINTER_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		giRealisticCheckboxButton->uiFlags &= ~BUTTON_CLICKED_ON;
 		giRealisticCheckboxButton->uiFlags |= BUTTON_DIRTY;
@@ -572,7 +572,7 @@ static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BothModesCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_POINTER_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		giRealisticCheckboxButton->uiFlags &= ~BUTTON_CLICKED_ON;
 		giRealisticCheckboxButton->uiFlags |= BUTTON_DIRTY;
@@ -780,7 +780,7 @@ static void ToggleAttachment(AttachmentInfo& a)
 
 static void ToggleItemAttachment(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		ToggleAttachment(*btn->GetUserPtr<AttachmentInfo>());
 	}
@@ -999,7 +999,7 @@ static void SetupOwnershipGUI(void)
 
 static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_POINTER_DWN )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		InitPopupMenu(btn, OWNERSHIPGROUP_POPUP, DIR_UPLEFT);
 	}
@@ -1114,7 +1114,7 @@ static void RemoveActionItemsGUI(void)
 
 static void AlarmTriggerCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_POINTER_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		if (btn->Clicked())
 			gpItem->fFlags |= OBJECT_ALARM_TRIGGER;
@@ -1180,7 +1180,7 @@ static void RemoveTriggersGUI(void)
 
 static void ToggleWeaponAttachment(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		ToggleAttachment(*btn->GetUserPtr<AttachmentInfo>());
 		ReEvaluateAttachmentStatii();
@@ -1190,7 +1190,7 @@ static void ToggleWeaponAttachment(GUI_BUTTON* const btn, UINT32 const reason)
 
 static void ActionItemCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_POINTER_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		InitPopupMenu( guiActionItemButton, ACTIONITEM_POPUP, DIR_UPLEFT );
 	}

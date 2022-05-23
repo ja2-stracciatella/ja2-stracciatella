@@ -229,7 +229,7 @@ try
 		UINT16        const  y = f.sY + STD_SCREEN_Y;
 		UINT16        const  w = f.sWidth;
 		UINT16        const  h = f.sHeight;
-		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, MSYS_NO_CALLBACK);
 		MSYS_SetRegionUserData(r, 0, i);
 	}
 

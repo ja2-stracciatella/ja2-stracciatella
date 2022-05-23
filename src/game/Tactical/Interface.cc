@@ -598,7 +598,7 @@ void CancelMovementMenu( )
 
 static void BtnMovementCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if ( reason & MSYS_CALLBACK_POINTER_UP )
+	if ( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -1548,7 +1548,7 @@ static void DoorAction(INT16 const ap, INT16 const bp, HandleDoor const action)
 
 static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -2073,7 +2073,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 
 static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if ( iReason & MSYS_CALLBACK_POINTER_UP )
+	if ( iReason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		CancelMovementMenu( );
 	}
@@ -2082,7 +2082,7 @@ static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason
 
 static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if ( iReason & MSYS_CALLBACK_POINTER_UP )
+	if ( iReason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		CancelOpenDoorMenu( );
 	}

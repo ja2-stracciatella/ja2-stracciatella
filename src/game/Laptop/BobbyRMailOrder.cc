@@ -310,7 +310,8 @@ static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x
 
 static void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 static void SelectCloseDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
-static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectConfirmOrderRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectConfirmOrderRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
@@ -403,7 +404,7 @@ void EnterBobbyRMailOrder()
 	//s on screen.  When user clicks anywhere the graphic disappears
 	MSYS_DefineRegion(&gSelectedConfirmOrderRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y ,
 				LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH+1,
-				CURSOR_WWW, MSYS_NO_CALLBACK, SelectConfirmOrderRegionCallBack);
+				CURSOR_WWW, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectConfirmOrderRegionCallBackPrimary, SelectConfirmOrderRegionCallBackSecondary));
 	gSelectedConfirmOrderRegion.Disable();
 
 	//click on the shipping location to activate the drop down menu
@@ -598,7 +599,7 @@ void RenderBobbyRMailOrder()
 
 static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 		gubSelectedLight = 0;
@@ -620,7 +621,7 @@ static void ConfirmBobbyRPurchaseMessageBoxCallBack(MessageBoxReturnValue);
 
 static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if( guiSubTotal && gfCanAcceptOrder )
 		{
@@ -853,7 +854,7 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 
 static void BtnBobbyRBackCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = guiLastBobbyRayPage;
 	}
@@ -862,7 +863,7 @@ static void BtnBobbyRBackCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode  = LAPTOP_MODE_BOBBY_R;
 	}
@@ -871,7 +872,7 @@ static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubSelectedLight = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		DrawShippingSpeedLights( gubSelectedLight );
@@ -897,33 +898,30 @@ static void DrawShippingSpeedLights(UINT8 ubSelected)
 }
 
 
-static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
+static void SelectConfirmOrderRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
-	{
-		//Remove the items for Boby Rqys Inventory
-		RemovePurchasedItemsFromBobbyRayInventory();
+	//Remove the items for Boby Rqys Inventory
+	RemovePurchasedItemsFromBobbyRayInventory();
 
-		//delete the order
-		std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
-		gubSelectedLight = 0;
-		gfDestroyConfirmGrphiArea = TRUE;
+	//delete the order
+	std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
+	gubSelectedLight = 0;
+	gfDestroyConfirmGrphiArea = TRUE;
 
-		//Goto The homepage
-		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
+	//Goto The homepage
+	guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
+}
 
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		//Remove the items for Boby Rqys Inventory
-		RemovePurchasedItemsFromBobbyRayInventory();
+static void SelectConfirmOrderRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	//Remove the items for Boby Rqys Inventory
+	RemovePurchasedItemsFromBobbyRayInventory();
 
-		//delete the order
-		std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
-		gubSelectedLight = 0;
-		gfDestroyConfirmGrphiArea = TRUE;
+	//delete the order
+	std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
+	gubSelectedLight = 0;
+	gfDestroyConfirmGrphiArea = TRUE;
 
-	}
 }
 
 
@@ -1151,7 +1149,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 
 static void SelectDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UINT8 ubSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		gbSelectedCity = ubSelected + gubCityAtTopOfList ;
@@ -1165,7 +1163,7 @@ static void SelectDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubDropDownAction = BR_DROP_DOWN_CREATE;
 	}
@@ -1286,7 +1284,7 @@ static void DisplayShippingLocationCity(void)
 
 static void SelectCloseDroDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubDropDownAction = BR_DROP_DOWN_DESTROY;
 	}
@@ -1321,7 +1319,7 @@ static bool IsAnythingPurchasedFromBobbyRayPage()
 
 static void SelectTitleLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if(iReason & MSYS_CALLBACK_POINTER_UP)
+	if(iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}
@@ -1330,7 +1328,7 @@ static void SelectTitleLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UINT8 ubCityNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1350,7 +1348,7 @@ static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32
 
 		gubDropDownAction = BR_DROP_DOWN_DISPLAY;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	else if (iReason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		UINT8	ubCityNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1411,7 +1409,7 @@ static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, UINT
 
 static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP || iReason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		UINT8	ubUpArrow = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1746,7 +1744,7 @@ static void DisplayPackageWeight(void)
 
 static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode  = LAPTOP_MODE_BOBBYR_SHIPMENTS;
 	}

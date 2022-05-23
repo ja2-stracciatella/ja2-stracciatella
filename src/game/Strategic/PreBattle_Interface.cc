@@ -277,7 +277,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 
 	/* Define the blanket region to cover all of the other regions used underneath
 	 * the panel. */
-	MSYS_DefineRegion(&PBInterfaceBlanket, STD_SCREEN_X + 0, STD_SCREEN_Y + 0, STD_SCREEN_X + 261, STD_SCREEN_Y + 359, MSYS_PRIORITY_HIGHEST - 5, 0, 0, 0);
+	MSYS_DefineRegion(&PBInterfaceBlanket, STD_SCREEN_X + 0, STD_SCREEN_Y + 0, STD_SCREEN_X + 261, STD_SCREEN_Y + 359, MSYS_PRIORITY_HIGHEST - 5, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Create the panel
 	char const* const panel_file = GetMLGFilename(MLG_PREBATTLEPANEL);
@@ -964,7 +964,7 @@ static void AutoResolveBattleCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
-		if( reason & MSYS_CALLBACK_POINTER_UP )
+		if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 		{
 				if( _KeyDown( ALT ) && CHEATER_CHEAT_LEVEL() )
 				{
@@ -1001,7 +1001,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
-		if( reason & MSYS_CALLBACK_POINTER_UP )
+		if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 		{
 				if( _KeyDown( ALT ) && CHEATER_CHEAT_LEVEL() )
 				{
@@ -1072,7 +1072,7 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
-		if( reason & MSYS_CALLBACK_POINTER_UP )
+		if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 		{
 			// get them outta here!
 			RetreatAllInvolvedPlayerGroups();
@@ -1139,7 +1139,7 @@ void ActivatePreBattleAutoresolveAction()
 {
 	if (iPBButton[0]->Enabled())
 	{ //Feign call the autoresolve button using the callback
-		AutoResolveBattleCallback(iPBButton[0], MSYS_CALLBACK_POINTER_UP);
+		AutoResolveBattleCallback(iPBButton[0], MSYS_CALLBACK_REASON_POINTER_UP);
 	}
 }
 
@@ -1147,7 +1147,7 @@ void ActivatePreBattleEnterSectorAction()
 {
 	if (iPBButton[1]->Enabled())
 	{ //Feign call the enter sector button using the callback
-		GoToSectorCallback(iPBButton[1], MSYS_CALLBACK_POINTER_UP);
+		GoToSectorCallback(iPBButton[1], MSYS_CALLBACK_REASON_POINTER_UP);
 	}
 }
 
@@ -1155,7 +1155,7 @@ void ActivatePreBattleRetreatAction()
 {
 	if (iPBButton[2]->Enabled())
 	{ //Feign call the retreat button using the callback
-		RetreatMercsCallback(iPBButton[2], MSYS_CALLBACK_POINTER_UP);
+		RetreatMercsCallback(iPBButton[2], MSYS_CALLBACK_REASON_POINTER_UP);
 	}
 }
 
@@ -1164,7 +1164,7 @@ static void ActivateAutomaticAutoResolveStart()
 {
 	iPBButton[0]->uiFlags |= BUTTON_CLICKED_ON;
 	gfIgnoreAllInput = FALSE;
-	AutoResolveBattleCallback(iPBButton[0], MSYS_CALLBACK_POINTER_UP);
+	AutoResolveBattleCallback(iPBButton[0], MSYS_CALLBACK_REASON_POINTER_UP);
 }
 
 

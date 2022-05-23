@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include "JA2Types.h"
 #include "Types.h"
 
@@ -32,7 +34,7 @@
 
 struct MOUSE_REGION;
 
-typedef void (*MOUSE_CALLBACK)(MOUSE_REGION*, UINT32);
+typedef std::function<void(MOUSE_REGION*, UINT32)> MOUSE_CALLBACK;
 
 struct MOUSE_REGION
 {
@@ -115,6 +117,7 @@ struct MOUSE_REGION
 #define MSYS_DO_TFINGER_MOVE   			(1 << 18)
 #define MSYS_DO_TFINGER_DOWN   			(1 << 19)
 #define MSYS_DO_TFINGER_UP     			(1 << 20)
+#define MSYS_DO_TFINGER_REPEAT  		(1 << 21)
 
 #define MSYS_DO_BUTTONS					(MSYS_DO_LBUTTON_DWN | MSYS_DO_LBUTTON_UP | MSYS_DO_RBUTTON_DWN | MSYS_DO_RBUTTON_UP | MSYS_DO_RBUTTON_REPEAT | MSYS_DO_LBUTTON_REPEAT | MSYS_DO_WHEEL_UP | MSYS_DO_WHEEL_DOWN | MSYS_DO_MBUTTON_DWN | MSYS_DO_MBUTTON_UP | MSYS_DO_MBUTTON_REPEAT | MSYS_DO_X1BUTTON_DWN | MSYS_DO_X1BUTTON_UP | MSYS_DO_X1BUTTON_REPEAT | MSYS_DO_X2BUTTON_DWN | MSYS_DO_X2BUTTON_UP | MSYS_DO_X2BUTTON_REPEAT)
 
@@ -126,7 +129,7 @@ struct MOUSE_REGION
 #define MSYS_X2_BUTTON				(1 << 4)
 
 // Mouse system special values
-#define MSYS_NO_CALLBACK				NULL
+#define MSYS_NO_CALLBACK				nullptr
 #define MSYS_NO_CURSOR					65534
 
 // Mouse system callback reasons
@@ -134,9 +137,7 @@ struct MOUSE_REGION
 #define MSYS_CALLBACK_REASON_MOVE					(1 << 0)
 #define MSYS_CALLBACK_REASON_LBUTTON_DWN			(1 << 1)
 #define MSYS_CALLBACK_REASON_LBUTTON_UP				(1 << 2)
-// TODO: Repeat for touch
 #define MSYS_CALLBACK_REASON_LBUTTON_REPEAT			(1 << 3)
-// TODO: Double tap
 #define MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK	(1 << 4)
 #define MSYS_CALLBACK_REASON_RBUTTON_DWN			(1 << 5)
 #define MSYS_CALLBACK_REASON_RBUTTON_UP				(1 << 6)
@@ -156,12 +157,17 @@ struct MOUSE_REGION
 #define MSYS_CALLBACK_REASON_WHEEL_DOWN				(1 << 20)
 #define MSYS_CALLBACK_REASON_TFINGER_DWN	   		(1 << 21)
 #define MSYS_CALLBACK_REASON_TFINGER_UP     		(1 << 22)
-#define MSYS_CALLBACK_REASON_TAP     				(1 << 23)
-#define MSYS_CALLBACK_REASON_LONG_TAP     			(1 << 24)
+#define MSYS_CALLBACK_REASON_TFINGER_REPEAT 		(1 << 23)
+#define MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP 		(1 << 24)
 
 // Composites
-#define MSYS_CALLBACK_POINTER_DWN (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN)
-#define MSYS_CALLBACK_POINTER_UP (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)
+
+#define MSYS_CALLBACK_REASON_POINTER_DWN (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN)
+#define MSYS_CALLBACK_REASON_POINTER_UP (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)
+#define MSYS_CALLBACK_REASON_POINTER_REPEAT (MSYS_CALLBACK_REASON_LBUTTON_REPEAT | MSYS_CALLBACK_REASON_TFINGER_REPEAT)
+#define MSYS_CALLBACK_REASON_POINTER_DOUBLECLICK (MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK | MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP)
+#define MSYS_CALLBACK_REASON_ANY_BUTTON_DWN (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN | MSYS_CALLBACK_REASON_MBUTTON_DWN | MSYS_CALLBACK_REASON_X1BUTTON_DWN | MSYS_CALLBACK_REASON_X2BUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN)
+#define MSYS_CALLBACK_REASON_ANY_BUTTON_UP (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_RBUTTON_UP | MSYS_CALLBACK_REASON_MBUTTON_UP | MSYS_CALLBACK_REASON_X1BUTTON_UP | MSYS_CALLBACK_REASON_X2BUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)
 
 // Internal Functions
 void MSYS_SetCurrentCursor(UINT16 Cursor);
@@ -178,6 +184,59 @@ void MSYS_SetRegionUserData(MOUSE_REGION*, UINT32 index, INT32 userdata);
 
 /* Retrieve one of the user data entries in a mouse region */
 INT32 MSYS_GetRegionUserData(MOUSE_REGION const*, UINT32 index);
+
+// Create a callback with primary and secondary and all actions callbacks
+// Primary action will be triggered on left mouse button up (or mouse button down if triggerOnMouseDown is true), or short touch
+// Secondary action will be triggered on right mouse button up, or first touch repeat event
+// The all events callback will be triggered for all events (useful to add other behavior, such as scrolling)
+// This function works for mouse and button callbacks via a template parameter
+template<typename T>
+std::function<void(T*, UINT32)> MouseCallbackPrimarySecondary(
+	std::function<void(T*, UINT32)> primaryAction,
+	std::function<void(T*, UINT32)> secondaryAction,
+	std::function<void(T*, UINT32)> allEvents = nullptr,
+	bool triggerPrimaryOnMouseDown = false
+)
+{
+	BOOLEAN fTouchRepeatHandled = FALSE;
+	BOOLEAN fPointerDown = FALSE;
+	BOOLEAN fRightMouseButtonDown = FALSE;
+	UINT32 mouseReason = triggerPrimaryOnMouseDown ? MSYS_CALLBACK_REASON_LBUTTON_DWN : MSYS_CALLBACK_REASON_LBUTTON_UP;
+
+	return [fTouchRepeatHandled, fPointerDown, fRightMouseButtonDown, mouseReason, primaryAction, secondaryAction, allEvents](T* r, UINT32 reason) mutable {
+		if (reason & MSYS_CALLBACK_REASON_POINTER_DWN) {
+			fTouchRepeatHandled = FALSE;
+			fPointerDown = TRUE;
+			fRightMouseButtonDown = FALSE;
+		}
+		if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN) {
+			fTouchRepeatHandled = FALSE;
+			fPointerDown = FALSE;
+			fRightMouseButtonDown = TRUE;
+		}
+		if (((reason & mouseReason) && fPointerDown) || ((reason & MSYS_CALLBACK_REASON_TFINGER_UP) && fPointerDown && !fTouchRepeatHandled))
+		{
+			if (primaryAction) {
+				primaryAction(r, reason);
+			}
+		}
+		if (((reason & MSYS_CALLBACK_REASON_RBUTTON_UP) && fRightMouseButtonDown) || ((reason & MSYS_CALLBACK_REASON_TFINGER_REPEAT) && fPointerDown && !fTouchRepeatHandled))
+		{
+			if (reason & MSYS_CALLBACK_REASON_TFINGER_REPEAT) {
+				fTouchRepeatHandled = TRUE;
+			}
+			if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP) {
+				fRightMouseButtonDown = FALSE;
+			}
+			if (secondaryAction) {
+				secondaryAction(r, reason);
+			}
+		}
+		if (allEvents) {
+			allEvents(r, reason);
+		}
+	};
+}
 
 // This function will force a re-evaluation of mous regions
 // Usually used to force change of mouse cursor if panels switch, etc

@@ -174,7 +174,7 @@ static void DestroyIMPPortraitButtons(void)
 
 static void BtnIMPPortraitNextCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		IncrementPictureIndex();
 		fReDrawPortraitScreenFlag = TRUE;
@@ -184,7 +184,7 @@ static void BtnIMPPortraitNextCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		DecrementPicture();
 		fReDrawPortraitScreenFlag = TRUE;
@@ -194,7 +194,7 @@ static void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_MAIN_PAGE;
 

@@ -617,7 +617,7 @@ static void DestroyIMPButtons(void)
 
 static void BtnIMPCancelCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// back to the main page, otherwise, back to home page
 		switch (iCurrentImpPage)

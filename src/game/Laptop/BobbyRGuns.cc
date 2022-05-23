@@ -313,7 +313,7 @@ void DeleteBobbyBrTitle()
 
 static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}
@@ -391,7 +391,7 @@ void DeleteBobbyMenuBar()
 
 static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UpdateButtonText(guiCurrentLaptopMode);
 		guiCurrentLaptopMode = static_cast<LaptopMode>(btn->GetUserData());
@@ -411,7 +411,7 @@ static void NextPage()
 
 static void BtnBobbyRNextPageCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		NextPage();
 	}
@@ -430,7 +430,7 @@ static void PrevPage()
 
 static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		PrevPage();
 	}
@@ -1076,7 +1076,7 @@ static void UnPurchaseBobbyRayItem(UINT16 usItemNumber);
 
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1090,6 +1090,22 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 
 		UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
+		fReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = TRUE;
+	}
+	if (iReason & MSYS_CALLBACK_REASON_TFINGER_UP)
+	{
+		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
+
+		// For touch: Upper half increases, lower half decreases
+		auto relY = FLOAT(gusMouseYPos - pRegion->Y()) / FLOAT(pRegion->H());
+
+		if (relY <= 0.5) {
+			PurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
+		} else {
+			UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
+		}
+
 		fReDrawScreenFlag = TRUE;
 		fPausedReDrawScreenFlag = TRUE;
 	}
@@ -1254,7 +1270,7 @@ static void UnPurchaseBobbyRayItem(UINT16 usItemNumber)
 
 static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R_MAILORDER;
 	}
@@ -1263,7 +1279,7 @@ static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}

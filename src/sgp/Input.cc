@@ -24,6 +24,7 @@ static UINT32 guiRightButtonRepeatTimer;
 static UINT32 guiMiddleButtonRepeatTimer;
 static UINT32 guiX1ButtonRepeatTimer;
 static UINT32 guiX2ButtonRepeatTimer;
+static UINT32 guiFingerRepeatTimer;
 
 BOOLEAN gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
@@ -89,6 +90,7 @@ void SetSafeMousePosition(int x, int y) {
 	gusMouseYPos = y;
 }
 
+void HandleSingleClicksAndButtonRepeats();
 
 BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 {
@@ -105,14 +107,8 @@ BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 	return FALSE;
 }
 
-
-static void HandleSingleClicksAndButtonRepeats(void);
-
-
 BOOLEAN DequeueEvent(InputAtom* Event)
 {
-	HandleSingleClicksAndButtonRepeats();
-
 	if (gusQueueCount == 0) return FALSE;
 
 	*Event = gEventQueue[gusHeadIndex];
@@ -264,6 +260,7 @@ void FingerDown(const SDL_TouchFingerEvent* event) {
 	gMainFingerId = event->fingerId;
 	gfIsUsingTouch = true;
 	gfIsMainFingerDown = true;
+	guiFingerRepeatTimer = GetClock() + TOUCH_REPEAT_TIMEOUT;
 
 	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
 
@@ -543,9 +540,20 @@ void DequeueAllKeyBoardEvents(void)
 }
 
 
-static void HandleSingleClicksAndButtonRepeats(void)
+void HandleSingleClicksAndButtonRepeats()
 {
 	UINT32 uiTimer = GetClock();
+
+	// Is there a touch finger to repeat
+	if (gfIsMainFingerDown) {
+		if ((guiFingerRepeatTimer > 0)&&(guiFingerRepeatTimer <= uiTimer))
+		{
+			QueuePointerEvent(TOUCH_FINGER_REPEAT, 0);
+			guiFingerRepeatTimer = uiTimer + TOUCH_REPEAT_TIME;
+		}
+	} else {
+		guiFingerRepeatTimer = 0;
+	}
 
 	// Is there a LEFT mouse button repeat
 	if (gfLeftButtonState)

@@ -122,6 +122,7 @@ try
 	MouseSystemHook(MOUSE_POS, 0, MousePos.iX, MousePos.iY);
 	MusicPoll();
 
+	HandleSingleClicksAndButtonRepeats();
 	while (DequeueSpecificEvent(&InputEvent, MOUSE_EVENTS))
 	{
 		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);

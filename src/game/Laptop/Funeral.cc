@@ -255,7 +255,7 @@ static void DisplayFuneralRipTombStone(void)
 
 static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UINT32	uiUserData;
 
@@ -275,7 +275,7 @@ static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReaso
 
 static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gSelectedRipSignRegion.Disable();
 		fPausedReDrawScreenFlag = TRUE;

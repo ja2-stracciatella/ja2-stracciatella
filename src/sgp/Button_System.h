@@ -39,7 +39,7 @@ extern SGPVSurface* ButtonDestBuffer;
 struct GUI_BUTTON;
 
 // GUI_BUTTON callback function type
-typedef void (*GUI_CALLBACK)(GUI_BUTTON*, UINT32);
+typedef std::function<void(GUI_BUTTON*, UINT32)> GUI_CALLBACK;
 
 // GUI_BUTTON structure definitions.
 struct GUI_BUTTON

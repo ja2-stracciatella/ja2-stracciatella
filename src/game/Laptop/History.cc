@@ -297,12 +297,12 @@ static void DestroyHistoryButtons(void)
 
 static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 	}
 
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		LoadPreviousHistoryPage();
 	}
@@ -311,12 +311,12 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 	}
 
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		LoadNextHistoryPage();
 	}

@@ -555,7 +555,7 @@ static void SetOptionsExitScreen(ScreenID const uiExitScreen)
 
 static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SetOptionsExitScreen( SAVE_LOAD_SCREEN );
 		gfSaveGame = TRUE;
@@ -565,7 +565,7 @@ static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SetOptionsExitScreen( SAVE_LOAD_SCREEN );
 		gfSaveGame = FALSE;
@@ -579,7 +579,7 @@ static void DoOptionsMessageBox(const ST::string& str, ScreenID uiExitScreen, Me
 
 static void BtnOptQuitCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//Confirm the Exit to the main menu screen
 		DoOptionsMessageBox(zOptionsText[OPT_RETURN_TO_MAIN], OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmQuitToMainMenuMessageBoxCallBack);
@@ -589,7 +589,7 @@ static void BtnOptQuitCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnDoneCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SetOptionsExitScreen(guiPreviousOptionScreen);
 	}
@@ -602,11 +602,11 @@ static void HandleOptionToggle(UINT8 button_id, bool state, bool down, bool play
 static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	bool down;
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		down = false;
 	}
-	else if (reason & MSYS_CALLBACK_POINTER_DWN)
+	else if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		down = true;
 	}
@@ -773,12 +773,12 @@ static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReas
 {
 	UINT8	ubButton = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		HandleOptionToggle(ubButton, !gGameSettings.fOptions[ubButton], FALSE, true);
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
-	else if( iReason & MSYS_CALLBACK_POINTER_DWN )
+	else if( iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		HandleOptionToggle(ubButton, gGameSettings.fOptions[ubButton], TRUE, true);
 	}

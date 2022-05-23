@@ -416,7 +416,7 @@ static void DestroyIMPAttributeSelectionButtons(void)
 
 static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//are we done diting, or just reviewing the stats?
 		if (fReviewStats)
@@ -504,8 +504,8 @@ static void DestroyAttributeSliderButtons(void)
 
 static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_DWN ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN ||
+			reason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		INT32 const iValue = btn->GetUserData();
 		DecrementStat(iValue);
@@ -517,8 +517,8 @@ static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_DWN ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN ||
+			reason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		INT32 const iValue = btn->GetUserData();
 		IncrementStat(iValue);
@@ -562,7 +562,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	if (gpCurrentScrollBox != pRegion && gpCurrentScrollBox != NULL)
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		if (!fSlideIsActive) return;
 
@@ -624,7 +624,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			sOldX = sNewX;
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_POINTER_UP)
+	else if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (fSlideIsActive)
 		{
@@ -675,7 +675,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		// update screen
 		fHasAnySlidingBarMoved = TRUE;
 	}
-	else if (iReason & MSYS_CALLBACK_POINTER_DWN)
+	else if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		// get mouse positions
 		const INT16 sX = pRegion->MouseXPos;

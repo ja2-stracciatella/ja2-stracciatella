@@ -1166,7 +1166,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 
 static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//Get the btn id
 		INT8 const bRetValue = btn->GetUserData();
@@ -1256,7 +1256,7 @@ static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16
 
 static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 /*
 		if( gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen & ( 1 << gHelpScreen.bCurrentHelpScreen ) )
@@ -1284,7 +1284,7 @@ void NewScreenSoResetHelpScreen( )
 
 static void BtnHelpScreenExitCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		PrepareToExitHelpScreen();
 	}
@@ -2058,12 +2058,12 @@ static void CalculateHeightAndPositionForHelpScreenScrollBox(INT32* piHeightOfSc
 
 static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gfScrollBoxIsScrolling = FALSE;
 		gHelpScreen.iLastMouseClickY = -1;
 	}
-	else if( iReason & MSYS_CALLBACK_POINTER_DWN )
+	else if( iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		gfScrollBoxIsScrolling = TRUE;
 		HelpScreenMouseMoveScrollBox( pRegion->MouseYPos );
@@ -2118,8 +2118,8 @@ static void HelpScreenMouseMoveScrollBox(INT32 const mouse_y)
 
 static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_DWN ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN ||
+			reason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		INT32 const iButtonID = btn->GetUserData();
 

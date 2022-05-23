@@ -194,7 +194,7 @@ static void CommonBtnCallbackBtnDownChecks(void);
 
 static void BtnMilitiaCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_POINTER_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowMilitiaMode( );
@@ -208,7 +208,7 @@ static void BtnMilitiaCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnTeamCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_POINTER_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowTeamsMode();
@@ -222,7 +222,7 @@ static void BtnTeamCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnTownCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_POINTER_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowTownsMode();
@@ -236,7 +236,7 @@ static void BtnTownCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnMineCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_POINTER_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowMinesMode();
@@ -250,7 +250,7 @@ static void BtnMineCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnAircraftCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_POINTER_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 
@@ -265,7 +265,7 @@ static void BtnAircraftCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void BtnItemCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_POINTER_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 
@@ -535,7 +535,7 @@ static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 	iCounter = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if( ( iReason & MSYS_CALLBACK_POINTER_UP ) )
+	if( ( iReason & MSYS_CALLBACK_REASON_POINTER_UP ) )
 	{
 		JumpToLevel( iCounter );
 	}

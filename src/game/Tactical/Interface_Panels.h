@@ -75,7 +75,7 @@ void DisableTacticalTeamPanelButtons(BOOLEAN fDisable);
 void RenderTownIDString(void);
 
 void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason);
-void KeyRingSlotInvClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+extern MOUSE_CALLBACK KeyRingSlotInvClickCallback;
 
 
 void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed);

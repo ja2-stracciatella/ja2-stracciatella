@@ -317,8 +317,8 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* r, UINT32 iReason)
 	//if we already have an anchored slider bar
 	if (gpCurrentSlider != NULL) return;
 
-	if (iReason & MSYS_CALLBACK_POINTER_DWN ||
-			iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN ||
+			iReason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		SLIDER* const s = r->GetUserPtr<SLIDER>();
 		const UINT16 pos = s->uiFlags & SLIDER_VERTICAL ? r->RelativeYPos : r->RelativeXPos;

@@ -103,7 +103,7 @@ static void DestroyAttributeFinishButtons(void)
 
 static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// gone far enough
 		iCurrentImpPage = IMP_MAIN_PAGE;
@@ -126,7 +126,7 @@ static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// if no, return to attribute
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;

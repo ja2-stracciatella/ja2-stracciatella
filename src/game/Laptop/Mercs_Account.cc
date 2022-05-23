@@ -188,7 +188,7 @@ static void MercAuthorizePaymentMessageBoxCallBack(MessageBoxReturnValue);
 
 static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		ST::string wzAuthorizeString;
 		ST::string wzDollarAmount;
@@ -205,7 +205,7 @@ static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnMercBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_MERC;
 		gubArrivedFromMercSubSite = MERC_CAME_FROM_ACCOUNTS_PAGE;

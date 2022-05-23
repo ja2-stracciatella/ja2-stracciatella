@@ -307,7 +307,7 @@ void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,UINT32 reason)
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
-	if( reason & MSYS_CALLBACK_POINTER_DWN )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 //		btn->uiFlags|=(BUTTON_CLICKED_ON);
 
@@ -517,7 +517,7 @@ void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,UINT32 reason)
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
-	if( reason & MSYS_CALLBACK_POINTER_DWN )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
 

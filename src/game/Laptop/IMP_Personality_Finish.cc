@@ -185,7 +185,7 @@ static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 
-	if (reason & MSYS_CALLBACK_POINTER_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		// confirm flag set, get out of HERE!
 		if (fConfirmHasBeenSelectedFlag)
@@ -195,7 +195,7 @@ static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 			return;
 		}
 	}
-	else if (reason & MSYS_CALLBACK_POINTER_UP)
+	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// set fact yes was selected
 		fConfirmIsYesFlag = TRUE;
@@ -215,7 +215,7 @@ static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 
-	if (reason & MSYS_CALLBACK_POINTER_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		// confirm flag set, get out of HERE!
 		if (fConfirmHasBeenSelectedFlag)
@@ -225,7 +225,7 @@ static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 			return;
 		}
 	}
-	else if (reason & MSYS_CALLBACK_POINTER_UP)
+	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// set fact yes was selected
 		fConfirmIsYesFlag = FALSE;
@@ -259,7 +259,7 @@ static void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (iCurrentProfileMode < 2)
 		{

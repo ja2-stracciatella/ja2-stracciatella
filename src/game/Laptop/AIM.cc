@@ -362,7 +362,7 @@ void RenderAIM()
 
 static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if(!fFirstTimeIn)
 			guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
@@ -372,7 +372,7 @@ static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason
 
 static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_POLICIES;
 	}
@@ -381,7 +381,7 @@ static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if(iReason & MSYS_CALLBACK_POINTER_UP)
+	if(iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_HISTORY;
 	}
@@ -390,7 +390,7 @@ static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_LINKS;
 	}
@@ -447,7 +447,7 @@ void DrawAimDefaults()
 
 static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM;
 	}
@@ -519,7 +519,7 @@ static void ResetAimButtons(GUIButtonRef* Buttons, UINT16 uNumberOfButtons);
 
 static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		ResetAimButtons(guiBottomButtons, NUM_AIM_BOTTOMBUTTONS);
 		guiCurrentLaptopMode = static_cast<LaptopMode>(btn->GetUserData());
@@ -761,7 +761,7 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 
 static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if( gubCurrentAdvertisment == AIM_AD_FLOWER_SHOP )
 			GoToWebPage( FLORIST_BOOKMARK );

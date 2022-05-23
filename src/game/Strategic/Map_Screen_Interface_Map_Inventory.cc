@@ -438,14 +438,14 @@ static void InventoryPrevPage()
 
 
 // the screen mask bttn callaback...to disable the inventory and lock out the map itself
-static void MapInvenPoolScreenMaskCallback(MOUSE_REGION* pRegion, UINT32 iReason)
+static void MapInvenPoolScreenMaskCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
+	fShowMapInventoryPool = FALSE;
+}
 
-	if( ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) )
-	{
-		fShowMapInventoryPool = FALSE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+static void MapInvenPoolScreenMaskCallbackScroll(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
 		InventoryPrevPage();
 	}
@@ -456,7 +456,9 @@ static void MapInvenPoolScreenMaskCallback(MOUSE_REGION* pRegion, UINT32 iReason
 }
 
 
-static void MapInvenPoolSlots(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MapInvenPoolSlotsPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MapInvenPoolSlotsSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MapInvenPoolSlotsScroll(MOUSE_REGION* pRegion, UINT32 iReason);
 static void MapInvenPoolSlotsMove(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
@@ -468,7 +470,7 @@ static void CreateMapInventoryPoolSlots(void)
 		UINT16        const y       = STD_SCREEN_Y + inv_box->y;
 		UINT16        const w       = inv_box->w;
 		UINT16        const h       = inv_box->h;
-		MSYS_DefineRegion(&MapInventoryPoolMask, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallback);
+		MSYS_DefineRegion(&MapInventoryPoolMask, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallbackSecondary, MapInvenPoolScreenMaskCallbackScroll));
 	}
 
 	const SGPBox* const slot_box = &g_sector_inv_slot_box;
@@ -482,7 +484,7 @@ static void CreateMapInventoryPoolSlots(void)
 		UINT16        const w  = reg_box->w;
 		UINT16        const h  = reg_box->h;
 		MOUSE_REGION* const r  = &MapInventoryPoolSlots[i];
-		MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MapInvenPoolSlotsMove, MapInvenPoolSlots);
+		MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MapInvenPoolSlotsMove, MouseCallbackPrimarySecondary<MOUSE_REGION>(MapInvenPoolSlotsPrimary, MapInvenPoolSlotsSecondary, MapInvenPoolSlotsScroll));
 		MSYS_SetRegionUserData(r, 0, i);
 	}
 }
@@ -525,103 +527,104 @@ static BOOLEAN CanPlayerUseSectorInventory(void);
 static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr);
 
 
-static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const UINT32 iReason)
+static void MapInvenPoolSlotsPrimary(MOUSE_REGION* const pRegion, const UINT32 iReason)
 {
-	// btn callback handler for assignment screen mask region
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	// check if item in cursor, if so, then swap, and no item in curor, pick up, if item in cursor but not box, put in box
+	INT32      const slot_idx = MSYS_GetRegionUserData(pRegion, 0);
+	WORLDITEM& slot = pInventoryPoolList[iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT + slot_idx];
+
+	// Return if empty
+	if (gpItemPointer == NULL && slot.o.usItem == NOTHING) return;
+
+	// is this item reachable
+	if (slot.o.usItem != NOTHING && !(slot.usFlags & WORLD_ITEM_REACHABLE))
 	{
-		if (gpItemPointer == NULL) fShowMapInventoryPool = FALSE;
+		// not reachable
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_38], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
 	}
-	else if (iReason & MSYS_CALLBACK_POINTER_UP)
+
+	// Valid character?
+	const SOLDIERTYPE* const s = GetSelectedInfoChar();
+	if (s == NULL)
 	{
-		// check if item in cursor, if so, then swap, and no item in curor, pick up, if item in cursor but not box, put in box
-		INT32      const slot_idx = MSYS_GetRegionUserData(pRegion, 0);
-		WORLDITEM& slot = pInventoryPoolList[iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT + slot_idx];
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[0], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
 
-		// Return if empty
-		if (gpItemPointer == NULL && slot.o.usItem == NOTHING) return;
+	// Check if selected merc is in this sector, if not, warn them and leave
+	if (s->sSector.x != sSelMap.x           ||
+			s->sSector.y != sSelMap.y           ||
+			s->sSector.z != iCurrentMapSectorZ ||
+			s->fBetweenSectors)
+	{
+		ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4]);
+		ST::string buf = st_format_printf(msg, s->name);
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, buf, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
 
-		// is this item reachable
-		if (slot.o.usItem != NOTHING && !(slot.usFlags & WORLD_ITEM_REACHABLE))
+	// If in battle inform player they will have to do this in tactical
+	if (!CanPlayerUseSectorInventory())
+	{
+		ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[3]);
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
+
+	// If we do not have an item in hand, start moving it
+	if (gpItemPointer == NULL)
+	{
+		sObjectSourceGridNo = slot.sGridNo;
+		BeginInventoryPoolPtr(&slot.o);
+	}
+	else
+	{
+		const INT32 iOldNumberOfObjects = slot.o.ubNumberOfObjects;
+
+		// Else, try to place here
+		if (PlaceObjectInInventoryStash(&slot.o, gpItemPointer))
 		{
-			// not reachable
-			DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_38], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			return;
-		}
-
-		// Valid character?
-		const SOLDIERTYPE* const s = GetSelectedInfoChar();
-		if (s == NULL)
-		{
-			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[0], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			return;
-		}
-
-		// Check if selected merc is in this sector, if not, warn them and leave
-		if (s->sSector.x != sSelMap.x           ||
-				s->sSector.y != sSelMap.y           ||
-				s->sSector.z != iCurrentMapSectorZ ||
-				s->fBetweenSectors)
-		{
-			ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4]);
-			ST::string buf = st_format_printf(msg, s->name);
-			DoMapMessageBox(MSG_BOX_BASIC_STYLE, buf, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			return;
-		}
-
-		// If in battle inform player they will have to do this in tactical
-		if (!CanPlayerUseSectorInventory())
-		{
-			ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[3]);
-			DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			return;
-		}
-
-		// If we do not have an item in hand, start moving it
-		if (gpItemPointer == NULL)
-		{
-			sObjectSourceGridNo = slot.sGridNo;
-			BeginInventoryPoolPtr(&slot.o);
-		}
-		else
-		{
-			const INT32 iOldNumberOfObjects = slot.o.ubNumberOfObjects;
-
-			// Else, try to place here
-			if (PlaceObjectInInventoryStash(&slot.o, gpItemPointer))
+			// nothing here before, then place here
+			if (iOldNumberOfObjects == 0)
 			{
-				// nothing here before, then place here
-				if (iOldNumberOfObjects == 0)
-				{
-					slot.sGridNo                  = sObjectSourceGridNo;
-					slot.ubLevel                  = s->bLevel;
-					slot.usFlags                  = 0;
-					slot.bRenderZHeightAboveLevel = 0;
+				slot.sGridNo                  = sObjectSourceGridNo;
+				slot.ubLevel                  = s->bLevel;
+				slot.usFlags                  = 0;
+				slot.bRenderZHeightAboveLevel = 0;
 
-					if (sObjectSourceGridNo == NOWHERE)
-					{
-						slot.usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
-					}
-				}
-
-				slot.usFlags |= WORLD_ITEM_REACHABLE;
-
-				// Check if it's the same now!
-				if (gpItemPointer->ubNumberOfObjects == 0)
+				if (sObjectSourceGridNo == NOWHERE)
 				{
-					MAPEndItemPointer();
-				}
-				else
-				{
-					SetMapCursorItem();
+					slot.usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 				}
 			}
-		}
 
-		// dirty region, force update
-		fMapPanelDirty = TRUE;
+			slot.usFlags |= WORLD_ITEM_REACHABLE;
+
+			// Check if it's the same now!
+			if (gpItemPointer->ubNumberOfObjects == 0)
+			{
+				MAPEndItemPointer();
+			}
+			else
+			{
+				SetMapCursorItem();
+			}
+		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+
+	// dirty region, force update
+	fMapPanelDirty = TRUE;
+}
+
+static void MapInvenPoolSlotsSecondary(MOUSE_REGION* const pRegion, const UINT32 iReason)
+{
+	if (gpItemPointer == NULL) fShowMapInventoryPool = FALSE;
+}
+
+static void MapInvenPoolSlotsScroll(MOUSE_REGION* const pRegion, const UINT32 iReason)
+{
+	if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
 		InventoryPrevPage();
 	}
@@ -949,7 +952,7 @@ void AutoPlaceObjectInInventoryStash(OBJECTTYPE* pItemPtr)
 
 static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		InventoryNextPage();
 	}
@@ -958,7 +961,7 @@ static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, UINT32 reason)
 
 static void MapInventoryPoolPrevBtn(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		InventoryPrevPage();
 	}
@@ -967,7 +970,7 @@ static void MapInventoryPoolPrevBtn(GUI_BUTTON* btn, UINT32 reason)
 
 static void MapInventoryPoolDoneBtn(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fShowMapInventoryPool = FALSE;
 	}

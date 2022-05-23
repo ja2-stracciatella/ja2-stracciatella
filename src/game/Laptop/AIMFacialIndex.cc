@@ -64,8 +64,10 @@ static MOUSE_REGION gScreenMouseRegions;
 
 
 static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, UINT32 reason);
-static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
-static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMercFaceRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMercFaceRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectScreenRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectScreenRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterAimFacialIndex()
@@ -89,7 +91,7 @@ void EnterAimFacialIndex()
 						(INT16)(usPosY + AIM_FI_PORTRAIT_HEIGHT),
 						MSYS_PRIORITY_HIGH,
 						CURSOR_WWW, SelectMercFaceMoveRegionCallBack,
-						SelectMercFaceRegionCallBack);
+						MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectMercFaceRegionCallBackPrimary, SelectMercFaceRegionCallBackSecondary));
 			MSYS_SetRegionUserData( &gMercFaceMouseRegions[ i ], 0, i);
 
 			guiAimFiFace[i] = LoadSmallPortrait(GetProfile(AimMercArray[i]));
@@ -103,7 +105,7 @@ void EnterAimFacialIndex()
 
 	MSYS_DefineRegion(&gScreenMouseRegions, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y,
 				LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
-				CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectScreenRegionCallBack);
+				CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(MSYS_NO_CALLBACK, SelectScreenRegionCallBackSecondary));
 
 	InitAimMenuBar();
 	InitAimDefaults();
@@ -182,26 +184,21 @@ void RenderAimFacialIndex()
 }
 
 
-static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
+static void SelectMercFaceRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
-	{
-		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS;
-		gbCurrentIndex = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
-	}
+	guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS;
+	gbCurrentIndex = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
+}
+
+static void SelectMercFaceRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
 }
 
 
-static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
+static void SelectScreenRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
-	}
+	guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
 }
 
 

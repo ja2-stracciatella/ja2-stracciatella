@@ -374,7 +374,7 @@ static void InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPo
 
 static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = static_cast<LaptopMode>(MSYS_GetRegionUserData(pRegion, 0));
 	}

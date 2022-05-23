@@ -467,7 +467,7 @@ void RenderFloristOrderForm()
 
 static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 	}
@@ -476,7 +476,7 @@ static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//add an entry in the finacial page for the medical deposit
 		AddTransactionToPlayersBook(PURCHASED_FLOWERS, 0, GetWorldTotalMin(), -(INT32)guiFlowerPrice);
@@ -506,7 +506,7 @@ static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
 		InitFloristOrderForm();
@@ -516,7 +516,7 @@ static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 		//reset the gallery back to page 0
@@ -527,7 +527,7 @@ static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UINT32	uiUserData;
 
@@ -605,7 +605,7 @@ static void DisplayFloristCheckBox(void)
 
 static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_CARD_GALLERY;
 	}
@@ -663,7 +663,7 @@ static void DisplayFlowerDynamicItems(void)
 
 static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 	}
@@ -672,7 +672,7 @@ static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32
 
 static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_CREATE;
 	}
@@ -681,7 +681,7 @@ static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iR
 
 static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_DESTROY;
 	}
@@ -693,7 +693,7 @@ static void FlowerOrderDrawSelectedCity(UINT8 ubNumber);
 
 static void SelectFlowerDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubCurrentlySelectedFlowerLocation = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		FlowerOrderDrawSelectedCity( gubCurrentlySelectedFlowerLocation );

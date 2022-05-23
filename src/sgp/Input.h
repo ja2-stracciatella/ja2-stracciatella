@@ -12,17 +12,18 @@
 #define TEXT_INPUT						1 << 3
 #define MOUSE_BUTTON_DOWN				1 << 4
 #define MOUSE_BUTTON_UP					1 << 5
-#define MOUSE_BUTTON_REPEAT				1 << 7
-#define MOUSE_POS						1 << 8
-#define MOUSE_WHEEL_UP      			1 << 9
-#define MOUSE_WHEEL_DOWN    			1 << 10
-#define TOUCH_FINGER_MOVE		    	1 << 11
-#define TOUCH_FINGER_UP		    		1 << 12
-#define TOUCH_FINGER_DOWN		    	1 << 13
+#define MOUSE_BUTTON_REPEAT				1 << 6
+#define MOUSE_POS						1 << 7
+#define MOUSE_WHEEL_UP      			1 << 8
+#define MOUSE_WHEEL_DOWN    			1 << 9
+#define TOUCH_FINGER_MOVE		    	1 << 10
+#define TOUCH_FINGER_UP		    		1 << 11
+#define TOUCH_FINGER_DOWN		    	1 << 12
+#define TOUCH_FINGER_REPEAT		    	1 << 13
 
 #define KEYBOARD_EVENTS					(KEY_DOWN | KEY_UP | KEY_REPEAT | TEXT_INPUT)
 #define MOUSE_EVENTS        			(MOUSE_BUTTON_DOWN | MOUSE_BUTTON_UP | MOUSE_BUTTON_REPEAT | MOUSE_POS | MOUSE_WHEEL_UP | MOUSE_WHEEL_DOWN)
-#define TOUCH_EVENTS 					(TOUCH_FINGER_MOVE | TOUCH_FINGER_UP | TOUCH_FINGER_DOWN)
+#define TOUCH_EVENTS 					(TOUCH_FINGER_MOVE | TOUCH_FINGER_UP | TOUCH_FINGER_DOWN | TOUCH_FINGER_REPEAT)
 
 #define MOUSE_BUTTON_LEFT SDL_BUTTON_LEFT
 #define MOUSE_BUTTON_MIDDLE SDL_BUTTON_MIDDLE
@@ -35,7 +36,9 @@
 #define ALT_DOWN								0x04
 
 #define BUTTON_REPEAT_TIMEOUT		250
-#define BUTTON_REPEAT_TIME		50
+#define BUTTON_REPEAT_TIME			50
+#define TOUCH_REPEAT_TIMEOUT		750
+#define TOUCH_REPEAT_TIME 			100
 
 struct InputAtom
 {
@@ -76,6 +79,7 @@ extern void					GetRestrictedClipCursor( SGPRect *pRectangle );
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 
 void DequeueAllKeyBoardEvents(void);
+void HandleSingleClicksAndButtonRepeats();
 
 
 extern UINT16    gusMouseXPos;       // X position of the mouse on screen
@@ -88,5 +92,6 @@ extern BOOLEAN   gfX2ButtonState; // TRUE = Pressed, FALSE = Not Pressed
 
 extern BOOLEAN gfIsUsingTouch; // TRUE = Last pointer device that was used was a touch device, FALSE = Last pointer device that was used was a mouse
 extern BOOLEAN gfIsMainFingerDown; // TRUE = Main finger is down. Multitouch gesture is not detected, FALSE = Main finger is up or multitouch gesture is in progress
+extern SDL_FingerID gMainFingerId; // FingerID of the current main finger
 
 bool _KeyDown(SDL_Keycode);

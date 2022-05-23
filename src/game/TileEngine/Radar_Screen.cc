@@ -62,7 +62,8 @@ BOOLEAN		gfRadarCurrentGuyFlash = FALSE;
 static MOUSE_REGION gRadarRegionSquadList[NUMBER_OF_SQUADS];
 
 
-static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void RadarRegionButtonCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void RadarRegionButtonCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
@@ -74,7 +75,7 @@ void InitRadarScreen()
 	UINT16        const w = RADAR_WINDOW_WIDTH;
 	UINT16        const h = RADAR_WINDOW_HEIGHT;
 	MOUSE_REGION* const r = &gRadarRegion;
-	MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, 0, RadarRegionMoveCallback, RadarRegionButtonCallback);
+	MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, 0, RadarRegionMoveCallback, MouseCallbackPrimarySecondary<MOUSE_REGION>(RadarRegionButtonCallbackPrimary, RadarRegionButtonCallbackSecondary));
 	r->Disable();
 }
 
@@ -150,38 +151,37 @@ static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 }
 
 
-static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
+static void RadarRegionButtonCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	INT16 sRadarX, sRadarY;
-
 	// check if we are allowed to do anything?
 	if (!fRenderRadarScreen) return;
 
-	if (iReason & MSYS_CALLBACK_POINTER_DWN)
+	if ( !InOverheadMap( ) )
 	{
-		if ( !InOverheadMap( ) )
-		{
-			// Use relative coordinates to set center of viewport
-			sRadarX = pRegion->RelativeXPos - ( RADAR_WINDOW_WIDTH / 2 );
-			sRadarY = pRegion->RelativeYPos - ( RADAR_WINDOW_HEIGHT / 2 );
+		// Use relative coordinates to set center of viewport
+		INT16 sRadarX = pRegion->RelativeXPos - ( RADAR_WINDOW_WIDTH / 2 );
+		INT16 sRadarY = pRegion->RelativeYPos - ( RADAR_WINDOW_HEIGHT / 2 );
 
-			AdjustWorldCenterFromRadarCoords( sRadarX, sRadarY );
-		}
-		else
-		{
-			KillOverheadMap();
-		}
+		AdjustWorldCenterFromRadarCoords( sRadarX, sRadarY );
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	else
 	{
-		if ( !InOverheadMap( ) )
-		{
-			GoIntoOverheadMap( );
-		}
-		else
-		{
-			KillOverheadMap();
-		}
+		KillOverheadMap();
+	}
+}
+
+static void RadarRegionButtonCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	// check if we are allowed to do anything?
+	if (!fRenderRadarScreen) return;
+
+	if ( !InOverheadMap( ) )
+	{
+		GoIntoOverheadMap( );
+	}
+	else
+	{
+		KillOverheadMap();
 	}
 }
 
@@ -498,7 +498,7 @@ static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// find out if this squad is valid and on this map..if so, set as selected
 		if (IsSquadOnCurrentTacticalMap(iValue))

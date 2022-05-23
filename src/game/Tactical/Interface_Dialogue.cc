@@ -503,7 +503,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 
 static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// OK, pickup item....
 		gTalkPanel.fHandled = TRUE;
@@ -805,7 +805,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
 
 
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// Donot do this if we are talking already
 		if (!gTalkPanel.face->fTalking)
@@ -876,12 +876,12 @@ static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReas
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
-	if (iReason & MSYS_CALLBACK_POINTER_DWN )
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		fLButtonDown = TRUE;
 	}
 
-	if (iReason & MSYS_CALLBACK_POINTER_UP && fLButtonDown )
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP && fLButtonDown )
 	{
 		// Only do this if we are talking already
 		if (gTalkPanel.face->fTalking)
@@ -901,7 +901,7 @@ static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReas
 
 static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// Donot do this if we are talking already
 		if (!gTalkPanel.face->fTalking)
@@ -4667,12 +4667,12 @@ static void TextRegionClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
-	if (iReason & MSYS_CALLBACK_POINTER_DWN )
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		fLButtonDown = TRUE;
 	}
 
-	if (iReason & MSYS_CALLBACK_POINTER_UP && fLButtonDown )
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP && fLButtonDown )
 	{
 		InternalShutupaYoFace(gTalkPanel.face, FALSE);
 	}

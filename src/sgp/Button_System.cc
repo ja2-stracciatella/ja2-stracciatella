@@ -569,7 +569,6 @@ GUI_BUTTON::~GUI_BUTTON()
 	}
 }
 
-
 static void DefaultMoveCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
@@ -669,7 +668,7 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, 
 
 GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
-	GUIButtonRef const btn = CreateTextButton(str, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
+	GUIButtonRef const btn = CreateTextButton(str, font, forecolor, shadowcolor, x, y, w, h, priority, MSYS_NO_CALLBACK);
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 	DisableButton(btn);
 	return btn;
@@ -838,13 +837,22 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 		}
 	}
 
+	// Check if we are using the default move callback
+	bool isDefaultCallback = false;
+	if (b->MoveCallback) {
+		auto moveCallbackPtr = b->MoveCallback.target<void(*)(GUI_BUTTON*, UINT32)>();
+		if (moveCallbackPtr != NULL) {
+			isDefaultCallback = *moveCallbackPtr == DefaultMoveCallback;
+
+		}
+	}
 	/* Kris:
 	 * Set the anchored button incase the user moves mouse off region while still
 	 * holding down the button, but only if the button is up.  In Win95, buttons
 	 * that are already down, and anchored never change state, unless you release
 	 * the mouse in the button area.
 	 */
-	if (b->MoveCallback == DefaultMoveCallback)
+	if (isDefaultCallback)
 	{
 		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
@@ -888,7 +896,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 	}
 
 	// If there is a callback function with this button, call it
-	if (b->ClickCallback != NULL)
+	if (b->ClickCallback)
 	{
 		/* Kris:  January 6, 1998
 		 * Added these checks to avoid a case where it was possible to process a
@@ -897,7 +905,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 		 */
 		gfDelayButtonDeletion = TRUE;
 		if (!(reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)) ||
-				b->MoveCallback != DefaultMoveCallback ||
+				!isDefaultCallback ||
 				gpPrevAnchoredButton == b)
 		{
 			b->ClickCallback(b, reason);
@@ -1657,7 +1665,6 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 		InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 	}
 }
-
 
 void ReleaseAnchorMode(void)
 {

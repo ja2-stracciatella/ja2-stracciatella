@@ -1333,13 +1333,14 @@ static void FilesRegionButtonCallback(    GUI_BUTTON* btn, UINT32 reason);
 static void FinancialRegionButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 static void HistoryRegionButtonCallback(  GUI_BUTTON* btn, UINT32 reason);
 static void PersonnelRegionButtonCallback(GUI_BUTTON* btn, UINT32 reason);
-static void WWWRegionButtonCallback(      GUI_BUTTON* btn, UINT32 reason);
+static void WWWRegionButtonCallbackPrimary(GUI_BUTTON* btn, UINT32 reason);
+static void WWWRegionButtonCallbackSecondary(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateLaptopButtons(void)
 {
 	MakeButton(0,  66, EmailRegionButtonCallback,     30, pLaptopIcons[0], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_EMAIL]);
-	MakeButton(1,  98, WWWRegionButtonCallback,       30, pLaptopIcons[1], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES]);
+	MakeButton(1,  98, MouseCallbackPrimarySecondary<GUI_BUTTON>(WWWRegionButtonCallbackPrimary, WWWRegionButtonCallbackSecondary), 30, pLaptopIcons[1], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES]);
 	MakeButton(2, 130, FilesRegionButtonCallback,     30, pLaptopIcons[5], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FILES_AND_EMAIL_ATTACHMENTS]);
 	MakeButton(3, 194, PersonnelRegionButtonCallback, 30, pLaptopIcons[3], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_TEAM_INFO]);
 	MakeButton(4, 162, HistoryRegionButtonCallback,   30, pLaptopIcons[4], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_READ_LOG_OF_EVENTS]);
@@ -1359,7 +1360,7 @@ static BOOLEAN HandleExit(void);
 
 static void BtnOnCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (HandleExit()) fExitingLaptopFlag = TRUE;
 	}
@@ -1510,7 +1511,7 @@ static void UpdateListToReflectNewProgramOpened(INT32 iOpenedProgram);
 
 static void FinancialRegionButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gfShowBookmarks)
 		{
@@ -1526,7 +1527,7 @@ static void FinancialRegionButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 
 static void PersonnelRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_PERSONNEL;
 		if (gfShowBookmarks)
@@ -1543,7 +1544,7 @@ static void PersonnelRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void EmailRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_EMAIL;
 		gfShowBookmarks = FALSE;
@@ -1553,50 +1554,48 @@ static void EmailRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 }
 
 
-static void WWWRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
+static void WWWRegionButtonCallbackPrimary(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	// reset show bookmarks
+	if (guiCurrentLaptopMode < LAPTOP_MODE_WWW)
 	{
-		// reset show bookmarks
-		if (guiCurrentLaptopMode < LAPTOP_MODE_WWW)
-		{
-			gfShowBookmarks = FALSE;
-			fShowBookmarkInfo = TRUE;
-		}
-		else
-		{
-			gfShowBookmarks = !gfShowBookmarks;
-		}
-
-		if (fNewWWW)
-		{
-			// no longer a new WWW mode
-			fNewWWW = FALSE;
-
-			// make sure program is maximized
-			if (gLaptopProgramStates[LAPTOP_PROGRAM_WEB_BROWSER] == LAPTOP_PROGRAM_OPEN)
-			{
-				RenderLapTopImage();
-				DrawDeskTopBackground();
-			}
-		}
-
-		guiCurrentLaptopMode = (guiCurrentWWWMode == LAPTOP_MODE_NONE ? LAPTOP_MODE_WWW : guiCurrentWWWMode);
-
-		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_WEB_BROWSER);
-		fReDrawScreenFlag = TRUE;
+		gfShowBookmarks = FALSE;
+		fShowBookmarkInfo = TRUE;
 	}
-	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	else
 	{
-		guiCurrentLaptopMode = (guiCurrentWWWMode == LAPTOP_MODE_NONE ? LAPTOP_MODE_WWW : guiCurrentWWWMode);
-		fReDrawScreenFlag = TRUE;
+		gfShowBookmarks = !gfShowBookmarks;
 	}
+
+	if (fNewWWW)
+	{
+		// no longer a new WWW mode
+		fNewWWW = FALSE;
+
+		// make sure program is maximized
+		if (gLaptopProgramStates[LAPTOP_PROGRAM_WEB_BROWSER] == LAPTOP_PROGRAM_OPEN)
+		{
+			RenderLapTopImage();
+			DrawDeskTopBackground();
+		}
+	}
+
+	guiCurrentLaptopMode = (guiCurrentWWWMode == LAPTOP_MODE_NONE ? LAPTOP_MODE_WWW : guiCurrentWWWMode);
+
+	UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_WEB_BROWSER);
+	fReDrawScreenFlag = TRUE;
+}
+
+static void WWWRegionButtonCallbackSecondary(GUI_BUTTON *btn, UINT32 reason)
+{
+	guiCurrentLaptopMode = (guiCurrentWWWMode == LAPTOP_MODE_NONE ? LAPTOP_MODE_WWW : guiCurrentWWWMode);
+	fReDrawScreenFlag = TRUE;
 }
 
 
 static void HistoryRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gfShowBookmarks)
 		{
@@ -1612,7 +1611,7 @@ static void HistoryRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void FilesRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gfShowBookmarks)
 		{
@@ -1766,7 +1765,7 @@ static void BookmarkCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 	// we are in process of loading
 	if (fLoadPendingFlag) return;
 
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		INT32 const i   = MSYS_GetRegionUserData(pRegion, 0);
 		INT32 const idx = LaptopSaveInfo.iBookMarkList[i];
@@ -2163,18 +2162,17 @@ static void HandleLeftButtonUpEvent(void)
 	}
 }
 
-void LapTopScreenCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
+void LapTopScreenCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
-	{
-		HandleLeftButtonUpEvent();
-	}
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		HandleRightButtonUpEvent();
-	}
+	HandleLeftButtonUpEvent();
 }
 
+void LapTopScreenCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	HandleRightButtonUpEvent();
+}
+
+MOUSE_CALLBACK LapTopScreenCallBack = MouseCallbackPrimarySecondary<MOUSE_REGION>(LapTopScreenCallBackPrimary, LapTopScreenCallBackSecondary);
 
 void DoLapTopMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {
@@ -2571,7 +2569,7 @@ static void SetCurrentToLastProgramOpened(void);
 
 static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UINT           prog;
 		ST::string title;
@@ -2919,7 +2917,7 @@ static void DestroyMinimizeRegionsForLaptopProgramIcons(void)
 static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// callback handler for the minize region that is attatched to the laptop program icon
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		switch (guiCurrentLaptopMode)
 		{
@@ -3030,7 +3028,7 @@ static void CreateDestroyMouseRegionForNewMailIcon(void)
 
 static void NewEmailIconCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (fUnReadMailFlag)
 		{
@@ -3043,7 +3041,7 @@ static void NewEmailIconCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void NewFileIconCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_POINTER_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (fNewFilesInFileViewer)
 		{

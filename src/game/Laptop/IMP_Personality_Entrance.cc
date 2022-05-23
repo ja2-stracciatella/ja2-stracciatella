@@ -92,7 +92,7 @@ static void BtnIMPPersonalityEntranceDoneCallback(GUI_BUTTON *btn, UINT32 reason
 {
 	// btn callback for IMP Begin Screen done button
 
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// done with begin screen, next screen
 		iCurrentImpPage = gamepolicy(imp_pick_skills_directly) ? IMP_SKILLTRAITS : IMP_PERSONALITY_QUIZ;

@@ -1844,12 +1844,7 @@ static void SetUpShutDownMapScreenHelpTextScreenMask(void)
 
 static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
-	{
-		// stop showing
-		ShutDownUserDefineHelpTextRegions( );
-	}
-	else if( iReason & MSYS_CALLBACK_POINTER_UP )
+	if( iReason & MSYS_CALLBACK_REASON_ANY_BUTTON_UP )
 	{
 		// stop showing
 		ShutDownUserDefineHelpTextRegions( );
@@ -2578,7 +2573,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	iListIndex   = MSYS_GetRegionUserData( pRegion, 2 );
 	uiClickTime   = GetJA2Clock();
 
-	if( ( iReason & MSYS_CALLBACK_POINTER_UP )  )
+	if( ( iReason & MSYS_CALLBACK_REASON_POINTER_UP )  )
 	{
 		if( uiClickTime - guiDblClickTimersForMoveBoxMouseRegions[ iMoveBoxLine ] < DBL_CLICK_DELAY_FOR_MOVE_MENU  )
 		{
@@ -3038,7 +3033,8 @@ void ReBuildMoveBox( void )
 }
 
 
-static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MoveScreenMaskBtnCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void MoveScreenMaskBtnCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void CreateScreenMaskForMoveBox( void )
@@ -3046,7 +3042,7 @@ void CreateScreenMaskForMoveBox( void )
 	if (!fScreenMaskForMoveCreated)
 	{
 		// set up the screen mask
-		MSYS_DefineRegion(&gMoveBoxScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MoveScreenMaskBtnCallback);
+		MSYS_DefineRegion(&gMoveBoxScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(MoveScreenMaskBtnCallbackPrimary, MoveScreenMaskBtnCallbackSecondary));
 
 		fScreenMaskForMoveCreated = TRUE;
 	}
@@ -3063,22 +3059,19 @@ void RemoveScreenMaskForMoveBox( void )
 }
 
 
-static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
+static void MoveScreenMaskBtnCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	// btn callback handler for move box screen mask region
-	if( ( iReason & MSYS_CALLBACK_POINTER_UP )  )
-	{
-		fShowMapScreenMovementList = FALSE;
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
-	{
-		sSelectedMilitiaTown = 0;
+	fShowMapScreenMovementList = FALSE;
+}
 
-		// are we showing the update box
-		if( fShowUpdateBox )
-		{
-			fShowUpdateBox = FALSE;
-		}
+static void MoveScreenMaskBtnCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	sSelectedMilitiaTown = 0;
+
+	// are we showing the update box
+	if( fShowUpdateBox )
+	{
+		fShowUpdateBox = FALSE;
 	}
 }
 
@@ -3568,7 +3561,7 @@ static void RenderSoldierSmallFaceForUpdatePanel(INT32 iIndex, INT32 iX, INT32 i
 
 static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		EndUpdateBox(TRUE); // restart time compression
 	}
@@ -3577,7 +3570,7 @@ static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void StopUpdateButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_POINTER_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		EndUpdateBox(FALSE); // stop time compression
 	}
