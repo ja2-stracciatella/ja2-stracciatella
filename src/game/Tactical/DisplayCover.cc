@@ -329,7 +329,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 	{
 		bPercentCoverForGridno = iTotalCoverPoints / bNumEnemies;
 		INT32 const iTemp = bPercentCoverForGridno - (iHighestValue / bNumEnemies) + iHighestValue;
-		bPercentCoverForGridno = std::min(0, 100 - iTemp);
+		bPercentCoverForGridno = std::clamp(100 - iTemp, 0, 100);
 	}
 	return bPercentCoverForGridno;
 }
