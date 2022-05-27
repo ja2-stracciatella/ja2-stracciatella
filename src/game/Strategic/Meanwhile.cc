@@ -357,7 +357,6 @@ static void StartMeanwhile(void)
 
 
 static void DoneFadeInMeanwhile(void);
-static void LocateMeanWhileGrid(void);
 
 
 static void DoneFadeOutMeanwhile(void)
@@ -365,8 +364,8 @@ static void DoneFadeOutMeanwhile(void)
 	// OK, insertion data found, enter sector!
 	SetCurrentWorldSector(gCurrentMeanwhileDef.sSector);
 
-	//LocateToMeanwhileCharacter( );
-	LocateMeanWhileGrid( );
+	// go to the approp. gridno
+	InternalLocateGridNo(gusMeanWhileGridNo[ubCurrentMeanWhileId], TRUE);
 
 	gFadeInDoneCallback = DoneFadeInMeanwhile;
 
@@ -620,17 +619,6 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 static void DoneFadeInMeanwhileOnceDone(void)
 {
 
-}
-
-
-static void LocateMeanWhileGrid(void)
-{
-	INT16 sGridNo = 0;
-
-	// go to the approp. gridno
-	sGridNo = gusMeanWhileGridNo[ ubCurrentMeanWhileId ];
-
-	InternalLocateGridNo( sGridNo, TRUE );
 }
 
 void LocateToMeanwhileCharacter( )

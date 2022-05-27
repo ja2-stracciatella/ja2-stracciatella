@@ -497,9 +497,8 @@ UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::u
 			default:
 				// get the length (in pixels) of this word
 				UINT16 word_w = 0;
-				// each character goes towards building a new word
-				const char32_t* word_start = i;
 
+				// each character goes towards building a new word
 				do
 				{
 					word_w += GetCharWidth(cur_font, *i);
