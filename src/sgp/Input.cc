@@ -497,6 +497,11 @@ BOOLEAN IsCursorRestricted(void)
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
+	// Never move mouse on touch (it's useless and will cause a mouse event which we dont want on touch devices)
+	if (gfIsUsingTouch) {
+		return;
+	}
+
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(GAME_WINDOW, &windowWidth, &windowHeight);
 

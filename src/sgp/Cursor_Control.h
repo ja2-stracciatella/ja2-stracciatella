@@ -60,6 +60,7 @@ struct CursorData
 	UINT16		usWidth;
 	UINT8		bFlags;
 	UINT8		bFlashIndex;
+	BOOLEAN 	fHideOnTouch;
 };
 
 extern INT16 gsGlobalCursorYOffset;

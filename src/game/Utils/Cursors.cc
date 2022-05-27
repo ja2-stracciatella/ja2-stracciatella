@@ -112,7 +112,7 @@ static CursorData CursorDatabase[] =
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	0,  0, 0, 0									, 0, 0, TRUE },
 
 	{ SUBHIDE(C_TRINGS,     6), //SUBCENT(C_TRINGS, 6),
 		SUBCENT(C_ACTIONMODE, 0),
@@ -472,14 +472,14 @@ static CursorData CursorDatabase[] =
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	4,  0, 0, 0									, 0, 0 },
+		1,	4,  0, 0, 0									, 0, 0, TRUE },
 
 	{ SUBNORM(C_LAPTOPSCREEN,        0),
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	0,  0, 0, 0									, 0, 0, TRUE },
 
 	{ SUBNORM(C_IBEAM,               0),
 		SUBNONE(),

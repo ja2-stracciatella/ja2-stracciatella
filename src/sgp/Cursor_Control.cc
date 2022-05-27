@@ -4,6 +4,7 @@
 #include "Debug.h"
 #include "GameInstance.h"
 #include "HImage.h"
+#include "Input.h"
 #include "Timer.h"
 #include "VObject.h"
 #include "Video.h"
@@ -195,7 +196,7 @@ void CursorDatabaseClear(void)
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 {
 	uiCursorIndex = ModifyCursorIndex(uiCursorIndex);
-	
+
 	if (uiCursorIndex == VIDEO_NO_CURSOR)
 	{
 		SetMouseCursorProperties(0, 0, 0, 0);
@@ -222,6 +223,14 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 		else
 		{
 			const CursorData* pCurData = &gpCursorDatabase[uiCursorIndex];
+
+			// Disable specific pointing cursors on touch devices
+			if (pCurData->fHideOnTouch && gfIsUsingTouch) {
+				uiCursorIndex = VIDEO_NO_CURSOR;
+				guiOldSetCursor = VIDEO_NO_CURSOR;
+				SetMouseCursorProperties(0, 0, 0, 0);
+				return TRUE;
+			}
 
 			// First check if we are a differnet curosr...
 			if (uiCursorIndex != guiOldSetCursor)
