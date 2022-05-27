@@ -63,6 +63,12 @@ pub fn rename<P: AsRef<Path>>(from: P, to: P) -> Result<(), io::Error> {
         Err(e) if e.raw_os_error() == Some(libc::EXDEV) => {
             std::fs::copy(&from, &to).and_then(|_| remove_file(&from))
         }
+        #[cfg(target_family = "windows")]
+        Err(e)
+            if e.raw_os_error() == Some(winapi::shared::winerror::ERROR_NOT_SAME_DEVICE as i32) =>
+        {
+            std::fs::copy(&from, &to).and_then(|_| remove_file(&from))
+        }
         Err(e) => Err(e),
     }
 }
