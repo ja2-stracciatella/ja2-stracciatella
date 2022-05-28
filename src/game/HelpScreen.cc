@@ -447,7 +447,7 @@ void HelpScreenHandler()
 	RenderButtons( );
 
 	SaveBackgroundRects( );
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
@@ -594,7 +594,7 @@ static void HandleHelpScreen(void)
 
 	if( gfScrollBoxIsScrolling )
 	{
-		if( gfLeftButtonState || gfIsMainFingerDown )
+		if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMainFingerDown() )
 		{
 			HelpScreenMouseMoveScrollBox( gusMouseYPos );
 		}
@@ -2083,7 +2083,7 @@ static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, UINT32 i
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
-		if( gfLeftButtonState || gfIsMainFingerDown )
+		if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMainFingerDown() )
 		{
 			HelpScreenMouseMoveScrollBox( pRegion->MouseYPos );
 		}

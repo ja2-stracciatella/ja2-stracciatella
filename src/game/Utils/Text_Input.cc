@@ -888,7 +888,7 @@ static size_t CalculateCursorPos(INT32 const click_x)
 //Internally used to continue highlighting text
 static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, UINT32 const reason)
 {
-	if (!gfLeftButtonState && !gfIsMainFingerDown) return;
+	if (!IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !IsMainFingerDown()) return;
 
 	if (reason & MSYS_CALLBACK_REASON_MOVE       ||
 			reason & MSYS_CALLBACK_REASON_LOST_MOUSE ||

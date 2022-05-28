@@ -514,7 +514,7 @@ static void SetBackgroundTexture(void)
 static BOOLEAN DoWindowSelection(void)
 {
 	RenderSelectionWindow( );
-	RenderButtonsFastHelp( );
+	RenderFastHelp( );
 	if ( fAllDone )
 	{
 		switch ( iDrawMode )
@@ -2372,7 +2372,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 	}
 
 
-	if ( (gfLeftButtonState) || (gfRightButtonState) || fLeaveScreen )
+	if ( (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) || fLeaveScreen )
 	{
 		fHelpScreen = FALSE;
 
@@ -2765,7 +2765,7 @@ static void HandleMouseClicksInGameScreen()
 
 	BOOLEAN const prev_state = gfRenderWorld;
 
-	if (gfLeftButtonState)
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
 	{
 		gfRenderWorld = TRUE;
 		// Are we trying to erase something?
@@ -2920,7 +2920,7 @@ static void HandleMouseClicksInGameScreen()
 				break;
 		}
 	}
-	else if (gfRightButtonState)
+	else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
 	{
 		gfRenderWorld = TRUE;
 		switch (iDrawMode)
@@ -3296,13 +3296,13 @@ ScreenID EditScreenHandle(void)
 
 	HandleMouseClicksInGameScreen();
 
-	if( !gfFirstPlacement && !gfLeftButtonState )
+	if( !gfFirstPlacement && !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
 		gfFirstPlacement = TRUE;
 
 	//If we are copying or moving a building, we process, then delete the building layout immediately
 	//after releasing the mouse button.  If released in the world, then the building would have been
 	//processed in above function, HandleMouseClicksInGameScreen().
-	if( !gfLeftButtonState && gpBuildingLayoutList )
+	if( !IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gpBuildingLayoutList )
 		DeleteBuildingLayout();
 
 	fShowingCursor = DoIRenderASpecialMouseCursor();

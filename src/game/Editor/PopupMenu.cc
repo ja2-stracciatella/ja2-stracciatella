@@ -373,7 +373,7 @@ static void PopupMenuHandle(void)
 
 			return;
 		}
-		else if( !gfLeftButtonState )
+		else if( !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
 		{	//left button has been released before entering region -- persistant
 			gPopup.ubActiveType = POPUP_ACTIVETYPE_PERSISTANT;
 			return;
@@ -392,10 +392,10 @@ static void PopupMenuHandle(void)
 		gPopup.ubSelectedIndex = GetPopupIndexFromMousePosition();
 	}
 	//Check terminating conditions for persistant states.
-	if( gfLeftButtonState && gPopup.ubActiveType == POPUP_ACTIVETYPE_PERSISTANT )
+	if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gPopup.ubActiveType == POPUP_ACTIVETYPE_PERSISTANT )
 		fWaitingForLButtonRelease = TRUE;
-	if( (gfLeftButtonState && gPopup.ubActiveType == POPUP_ACTIVETYPE_PERSISTANT)
-		|| (!gfLeftButtonState && gPopup.ubActiveType == POPUP_ACTIVETYPE_NONPERSISTANT) )
+	if( (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gPopup.ubActiveType == POPUP_ACTIVETYPE_PERSISTANT)
+		|| (!IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gPopup.ubActiveType == POPUP_ACTIVETYPE_NONPERSISTANT) )
 	{
 		//Selection conditions via mouse have been met whether the mouse is in the
 		//menu region or not.
@@ -494,7 +494,7 @@ BOOLEAN ProcessPopupMenuIfActive( )
 		return FALSE;
 	if( fWaitingForLButtonRelease )
 	{
-		if( !gfLeftButtonState )
+		if( !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
 		{
 			fWaitingForLButtonRelease = FALSE;
 			return FALSE;

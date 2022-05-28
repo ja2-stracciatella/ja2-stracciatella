@@ -196,7 +196,7 @@ void HandleIMPAttributeSelection(void)
 	if (fReviewStats) return;
 
 	// set the currently selectd slider bar
-	if ((gfLeftButtonState || gfIsMainFingerDown) && gpCurrentScrollBox != NULL)
+	if ((IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMainFingerDown()) && gpCurrentScrollBox != NULL)
 	{
 		//if the user is holding down the mouse cursor to left of the start of the slider bars
 		if (gusMouseXPos < SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X)

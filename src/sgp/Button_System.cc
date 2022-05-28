@@ -11,10 +11,7 @@
 #include "Video.h"
 #include "WCheck.h"
 #include "WordWrap.h"
-
-#ifdef _JA2_RENDER_DIRTY
-#	include "Font_Control.h"
-#endif
+#include "Font_Control.h"
 
 #include <string_theory/string>
 
@@ -1161,18 +1158,6 @@ static void DrawShadeOnButton(const GUI_BUTTON* b)
 }
 
 
-void GUI_BUTTON::DrawCheckBoxOnOff(BOOLEAN const on)
-{
-	BOOLEAN const fLeftButtonState = gfLeftButtonState;
-
-	gfLeftButtonState = on;
-	Area.uiFlags |= MSYS_MOUSE_IN_AREA;
-	Draw();
-
-	gfLeftButtonState = fLeftButtonState;
-}
-
-
 static void DrawCheckBoxButton(const GUI_BUTTON *b)
 {
 	const BUTTON_PICS* const pics = b->image;
@@ -1185,7 +1170,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 			// Is the mouse over this area, and we have a hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
-					gfLeftButtonState &&
+					IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
 					pics->OnHilite != -1)
 			{
 				UseImage = pics->OnHilite;
@@ -1200,7 +1185,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 			// Is the mouse over the button, and do we have hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
-					gfLeftButtonState &&
+					IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
 					pics->OffHilite != -1)
 			{
 				UseImage = pics->OffHilite;

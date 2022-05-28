@@ -2287,7 +2287,7 @@ void InitializeTEAMPanel()
 	{
 		INT32 const face_x = dx + TM_FACE_X;
 		INT32 const face_y = dy + TM_FACE_Y;
-		MOUSE_CALLBACK mercFacePanelCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(MercFacePanelCallbackPrimary, MercFacePanelCallbackSecondary, MSYS_NO_ACTION, true);
+		MOUSE_CALLBACK mercFacePanelCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(MercFacePanelCallbackPrimary, MercFacePanelCallbackSecondary, MSYS_NO_CALLBACK, true);
 
 		MakeRegion(tp, tp.face, face_x, face_y, TM_FACE_WIDTH, TM_FACE_HEIGHT,
 				MercFacePanelMoveCallback, mercFacePanelCallback);

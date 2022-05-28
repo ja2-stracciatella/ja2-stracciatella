@@ -1379,7 +1379,7 @@ void RenderSummaryWindow()
 		}
 	}
 	//Check to see if the user clicked on one of the hot spot mode change areas.
-	if( gfLeftButtonState )
+	if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
 	{
 		if( !gfItemDetailsMode )
 		{

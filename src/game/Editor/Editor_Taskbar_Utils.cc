@@ -907,7 +907,7 @@ void ProcessEditorRendering()
 	//rendered with hilites, in case the mouse is over one.
 	gfRenderHilights = TRUE;
 
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 }
 

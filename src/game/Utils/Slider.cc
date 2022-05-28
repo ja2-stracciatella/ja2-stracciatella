@@ -170,7 +170,7 @@ static void RenderSelectedSliderBar(SLIDER* s);
 void RenderAllSliderBars(void)
 {
 	// set the currently selectd slider bar
-	if ((gfLeftButtonState || gfIsMainFingerDown) && gpCurrentSlider != NULL)
+	if ((IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMainFingerDown()) && gpCurrentSlider != NULL)
 	{
 		SLIDER* const s = gpCurrentSlider;
 		const UINT16 pos = gusMouseYPos < s->usPosY ? 0 : gusMouseYPos - s->usPosY;
@@ -277,7 +277,7 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, UINT32 reason)
 	//if we already have an anchored slider bar
 	if (gpCurrentSlider != NULL) return;
 
-	if (!gfLeftButtonState && !gfIsMainFingerDown) return;
+	if (!IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !IsMainFingerDown()) return;
 
 	SLIDER* s;
 	if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE)

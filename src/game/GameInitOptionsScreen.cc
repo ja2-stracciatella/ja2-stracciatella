@@ -209,7 +209,6 @@ ScreenID GameInitOptionsScreenHandle(void)
 #if 0 // XXX was commented out
 	// render help
 	RenderFastHelp();
-	RenderButtonsFastHelp();
 #endif
 
 	ExecuteBaseDirtyRectQueue();

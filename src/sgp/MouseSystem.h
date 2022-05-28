@@ -19,9 +19,6 @@
 
 #include <string_theory/string>
 
-
-#define _JA2_RENDER_DIRTY // Undef this if not using the JA2 Dirty Rectangle System.
-
 // Mouse Region Flags
 #define MSYS_NO_FLAGS                0x00000000
 #define MSYS_MOUSE_IN_AREA           0x00000001
@@ -93,33 +90,6 @@ struct MOUSE_REGION
 #define MSYS_PRIORITY_NORMAL			31
 #define MSYS_PRIORITY_HIGH				63
 #define MSYS_PRIORITY_HIGHEST			127
-
-// Mouse system defines used during updates
-#define MSYS_NO_ACTION					0
-#define MSYS_DO_MOVE					(1 << 0)
-#define MSYS_DO_LBUTTON_DWN				(1 << 1)
-#define MSYS_DO_LBUTTON_UP				(1 << 2)
-#define MSYS_DO_LBUTTON_REPEAT			(1 << 3)
-#define MSYS_DO_RBUTTON_DWN				(1 << 4)
-#define MSYS_DO_RBUTTON_UP				(1 << 5)
-#define MSYS_DO_RBUTTON_REPEAT			(1 << 6)
-#define MSYS_DO_MBUTTON_DWN				(1 << 7)
-#define MSYS_DO_MBUTTON_UP				(1 << 8)
-#define MSYS_DO_MBUTTON_REPEAT			(1 << 9)
-#define MSYS_DO_X1BUTTON_DWN			(1 << 10)
-#define MSYS_DO_X1BUTTON_UP				(1 << 11)
-#define MSYS_DO_X1BUTTON_REPEAT			(1 << 12)
-#define MSYS_DO_X2BUTTON_DWN			(1 << 13)
-#define MSYS_DO_X2BUTTON_UP				(1 << 14)
-#define MSYS_DO_X2BUTTON_REPEAT			(1 << 15)
-#define MSYS_DO_WHEEL_UP       			(1 << 16)
-#define MSYS_DO_WHEEL_DOWN     			(1 << 17)
-#define MSYS_DO_TFINGER_MOVE   			(1 << 18)
-#define MSYS_DO_TFINGER_DOWN   			(1 << 19)
-#define MSYS_DO_TFINGER_UP     			(1 << 20)
-#define MSYS_DO_TFINGER_REPEAT  		(1 << 21)
-
-#define MSYS_DO_BUTTONS					(MSYS_DO_LBUTTON_DWN | MSYS_DO_LBUTTON_UP | MSYS_DO_RBUTTON_DWN | MSYS_DO_RBUTTON_UP | MSYS_DO_RBUTTON_REPEAT | MSYS_DO_LBUTTON_REPEAT | MSYS_DO_WHEEL_UP | MSYS_DO_WHEEL_DOWN | MSYS_DO_MBUTTON_DWN | MSYS_DO_MBUTTON_UP | MSYS_DO_MBUTTON_REPEAT | MSYS_DO_X1BUTTON_DWN | MSYS_DO_X1BUTTON_UP | MSYS_DO_X1BUTTON_REPEAT | MSYS_DO_X2BUTTON_DWN | MSYS_DO_X2BUTTON_UP | MSYS_DO_X2BUTTON_REPEAT)
 
 // Mouse system button masks
 #define MSYS_LEFT_BUTTON			(1 << 0)

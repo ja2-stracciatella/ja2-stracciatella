@@ -205,7 +205,7 @@ ScreenID OptionsScreenHandle()
 
 	// ATE: Put here to save RECTS before any fast help being drawn...
 	SaveBackgroundRects( );
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 
 	ExecuteBaseDirtyRectQueue();
@@ -628,7 +628,7 @@ static void HandleOptionToggle(UINT8 const button_id, bool const state, bool con
 	b.uiFlags &= ~BUTTON_CLICKED_ON;
 	b.uiFlags |= state ? BUTTON_CLICKED_ON : 0;
 
-	if (down) b.DrawCheckBoxOnOff(state);
+	if (down) b.Draw();
 
 	/* Check if the user is unselecting either the spech or subtitles toggle.
 	 * Make sure that at least one of the toggles is still enabled. */

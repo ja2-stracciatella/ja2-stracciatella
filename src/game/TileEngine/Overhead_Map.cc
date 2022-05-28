@@ -363,7 +363,7 @@ void HandleOverheadMap(void)
 
 	RenderButtons();
 	SaveBackgroundRects();
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 	fInterfacePanelDirty = DIRTYLEVEL0;

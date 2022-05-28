@@ -2038,7 +2038,7 @@ try
 	}
 
 
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 	// execute dirty
 	ExecuteBaseDirtyRectQueue( );

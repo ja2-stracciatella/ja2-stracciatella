@@ -487,7 +487,7 @@ ScreenID ShopKeeperScreenHandle()
 
 	// render help
 	SaveBackgroundRects( );
-	RenderButtonsFastHelp( );
+	RenderFastHelp( );
 
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();

@@ -381,7 +381,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	//render the autoresolve panel
 	RenderAutoResolve();
 	RenderButtons();
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 	//save it
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, x, y, w, h);
 
@@ -512,7 +512,7 @@ ScreenID AutoResolveScreenHandle()
 
 	SaveBackgroundRects();
 	RenderButtons();
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 	return AUTORESOLVE_SCREEN;

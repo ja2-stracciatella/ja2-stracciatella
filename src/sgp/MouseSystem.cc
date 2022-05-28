@@ -33,19 +33,98 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+// Mouse system defines used during updates
+#define MSYS_NO_ACTION					0
+#define MSYS_DO_MOVE					(1 << 0)
+#define MSYS_DO_LBUTTON_DWN				(1 << 1)
+#define MSYS_DO_LBUTTON_UP				(1 << 2)
+#define MSYS_DO_LBUTTON_REPEAT			(1 << 3)
+#define MSYS_DO_RBUTTON_DWN				(1 << 4)
+#define MSYS_DO_RBUTTON_UP				(1 << 5)
+#define MSYS_DO_RBUTTON_REPEAT			(1 << 6)
+#define MSYS_DO_MBUTTON_DWN				(1 << 7)
+#define MSYS_DO_MBUTTON_UP				(1 << 8)
+#define MSYS_DO_MBUTTON_REPEAT			(1 << 9)
+#define MSYS_DO_X1BUTTON_DWN			(1 << 10)
+#define MSYS_DO_X1BUTTON_UP				(1 << 11)
+#define MSYS_DO_X1BUTTON_REPEAT			(1 << 12)
+#define MSYS_DO_X2BUTTON_DWN			(1 << 13)
+#define MSYS_DO_X2BUTTON_UP				(1 << 14)
+#define MSYS_DO_X2BUTTON_REPEAT			(1 << 15)
+#define MSYS_DO_WHEEL_UP       			(1 << 16)
+#define MSYS_DO_WHEEL_DOWN     			(1 << 17)
+#define MSYS_DO_TFINGER_MOVE   			(1 << 18)
+#define MSYS_DO_TFINGER_DOWN   			(1 << 19)
+#define MSYS_DO_TFINGER_UP     			(1 << 20)
+#define MSYS_DO_TFINGER_REPEAT  		(1 << 21)
 
-//Kris:	Nov 31, 1999 -- Added support for double clicking
-//
+#define MSYS_DO_BUTTONS					(MSYS_DO_LBUTTON_DWN | MSYS_DO_LBUTTON_UP | MSYS_DO_RBUTTON_DWN | MSYS_DO_RBUTTON_UP | MSYS_DO_RBUTTON_REPEAT | MSYS_DO_LBUTTON_REPEAT | MSYS_DO_WHEEL_UP | MSYS_DO_WHEEL_DOWN | MSYS_DO_MBUTTON_DWN | MSYS_DO_MBUTTON_UP | MSYS_DO_MBUTTON_REPEAT | MSYS_DO_X1BUTTON_DWN | MSYS_DO_X1BUTTON_UP | MSYS_DO_X1BUTTON_REPEAT | MSYS_DO_X2BUTTON_DWN | MSYS_DO_X2BUTTON_UP | MSYS_DO_X2BUTTON_REPEAT)
+
 //Max double click delay (in milliseconds) to be considered a double click
 #define MSYS_DOUBLECLICK_DELAY		400
+//Max double tap delay (in milliseconds) to be considered a double tap. Double taps are slower than double clicks
 #define MSYS_DOUBLETAP_DELAY		600
-//
-//Records and stores the last place the user clicked.  These values are compared to the current
-//click to determine if a double click event has been detected.
-static MOUSE_REGION* gpRegionLastLButtonDown      = NULL;
-static MOUSE_REGION* gpRegionLastLButtonUp        = NULL;
-static UINT32        guiRegionLastLButtonDownTime = 0;
 
+//Records and stores the last place the user clicked.  These values are compared to the current
+//click to determine if a double click or tap event has been detected.
+template <UINT32 DOWN_REASON, UINT32 UP_REASON, UINT32 DOUBLE_DELAY>
+struct DoubleDetectionState {
+	MOUSE_REGION* lastDownRegion;
+	MOUSE_REGION* lastUpRegion;
+	UINT32 lastDownTime;
+
+	// Detect double click or tap event
+	BOOLEAN isDouble(MOUSE_REGION* cur, UINT32 reason) {
+		UINT32 uiCurrTime = GetClock();
+
+		if (reason & DOWN_REASON)
+		{
+			if (lastDownRegion == cur &&
+					lastUpRegion   == cur &&
+					uiCurrTime <= lastDownTime + DOUBLE_DELAY)
+			{
+				/* Sequential left tap on same button within the maximum time
+					* allowed for a double click.  Double click check succeeded,
+					* set flag and reset double click globals. */
+				lastDownRegion = NULL;
+				lastUpRegion   = NULL;
+				lastDownTime = 0;
+				return TRUE;
+			}
+			else
+			{
+				/* First tap, record time and region pointer (to check if 2nd
+					* tap detected later) */
+				lastDownRegion = cur;
+				lastDownTime = uiCurrTime;
+			}
+		}
+		else if (reason & UP_REASON)
+		{
+			UINT32 uiCurrTime = GetClock();
+			if (lastDownRegion == cur &&
+					uiCurrTime <= lastDownTime + DOUBLE_DELAY)
+			{
+				/* Double tap is down, then up, then down.  We
+					* have just detected the up here (step 2). */
+				lastUpRegion = cur;
+			}
+			else
+			{
+				/* User released touch outside of current button, so kill any
+					* chance of a double tap happening. */
+				lastDownRegion = NULL;
+				lastUpRegion   = NULL;
+				lastDownTime = 0;
+			}
+		}
+
+		return FALSE;
+	}
+};
+
+static DoubleDetectionState<MSYS_CALLBACK_REASON_LBUTTON_DWN, MSYS_CALLBACK_REASON_LBUTTON_UP, MSYS_DOUBLECLICK_DELAY> gLeftButtonDoubleClickState = {};
+static DoubleDetectionState<MSYS_CALLBACK_REASON_TFINGER_DWN, MSYS_CALLBACK_REASON_TFINGER_UP, MSYS_DOUBLETAP_DELAY> gFingerDoubleTapState = {};
 
 INT16 MSYS_CurrentMX=0;
 INT16 MSYS_CurrentMY=0;
@@ -63,27 +142,10 @@ static MOUSE_REGION* MSYS_CurrRegion = NULL;
 
 static const INT16 gsFastHelpDelay = 600; // In timer ticks
 
-const UINT32 longTapMinLength = 1000;
-
-// State for tapping
-static MOUSE_REGION* gpRegionLastFingerDown = NULL;
-static MOUSE_REGION* gpRegionLastFingerUp   = NULL;
-UINT32 guiRegionLastFingerDownTime;
-
 INT16 lastFingerDownX;
 INT16 lastFingerDownY;
 
 static BOOLEAN gfRefreshUpdate = FALSE;
-
-//Kris:  December 3, 1997
-//Special internal debugging utilities that will ensure that you don't attempt to delete
-//an already deleted region.  It will also ensure that you don't create an identical region
-//that already exists.
-//TO REMOVE ALL DEBUG FUNCTIONALITY:  simply comment out MOUSESYSTEM_DEBUGGING definition
-#if defined _DEBUG && !defined BOUNDS_CHECKER
-#	define MOUSESYSTEM_DEBUGGING
-#endif
-
 
 static void MSYS_TrashRegList(void);
 
@@ -124,9 +186,11 @@ static void MSYS_UpdateMouseRegion(void);
 void UpdateButtons()
 {
 	MSYS_CurrentButtons &= ~(MSYS_LEFT_BUTTON | MSYS_RIGHT_BUTTON | MSYS_MIDDLE_BUTTON | MSYS_X1_BUTTON | MSYS_X2_BUTTON);
-	MSYS_CurrentButtons |= (gfLeftButtonState  ? MSYS_LEFT_BUTTON  : 0);
-	MSYS_CurrentButtons |= (gfRightButtonState ? MSYS_RIGHT_BUTTON : 0);
-	MSYS_CurrentButtons |= (gfMiddleButtonState ? MSYS_MIDDLE_BUTTON : 0);
+	MSYS_CurrentButtons |= (IsMouseButtonDown(MOUSE_BUTTON_LEFT)  ? MSYS_LEFT_BUTTON  : 0);
+	MSYS_CurrentButtons |= (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) ? MSYS_RIGHT_BUTTON : 0);
+	MSYS_CurrentButtons |= (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE) ? MSYS_MIDDLE_BUTTON : 0);
+	MSYS_CurrentButtons |= (IsMouseButtonDown(MOUSE_BUTTON_X1) ? MSYS_X1_BUTTON : 0);
+	MSYS_CurrentButtons |= (IsMouseButtonDown(MOUSE_BUTTON_X2) ? MSYS_X2_BUTTON : 0);
 }
 
 void MouseSystemHook(UINT16 type, UINT32 button, UINT16 x, UINT16 y)
@@ -364,12 +428,10 @@ static void MSYS_UpdateMouseRegion(void)
 			 * displayed. */
 			if (!prev->FastHelpText.empty())
 			{
-#ifdef _JA2_RENDER_DIRTY
 				if (prev->HasFastHelp())
 				{
 					FreeBackgroundRectPending(prev->FastHelpRect);
 				}
-#endif
 				prev->uiFlags &= ~MSYS_FASTHELP_RESET;
 			}
 
@@ -395,12 +457,10 @@ static void MSYS_UpdateMouseRegion(void)
 			{
 				if (!cur->FastHelpText.empty() && !(cur->uiFlags & MSYS_FASTHELP_RESET))
 				{
-#ifdef _JA2_RENDER_DIRTY
 					if (cur->HasFastHelp())
 					{
 						FreeBackgroundRectPending(cur->FastHelpRect);
 					}
-#endif
 					cur->uiFlags |= MSYS_FASTHELP_RESET;
 				}
 				if (cur->uiFlags & MSYS_REGION_ENABLED)
@@ -557,104 +617,22 @@ static void MSYS_UpdateMouseRegion(void)
 						{
 							// Button was clicked so remove any FastHelp text
 							cur->uiFlags &= ~MSYS_FASTHELP;
-#ifdef _JA2_RENDER_DIRTY
 							if (cur->HasFastHelp())
 							{
 								FreeBackgroundRectPending(cur->FastHelpRect);
 							}
-#endif
 							cur->uiFlags &= ~MSYS_FASTHELP_RESET;
 
 							cur->FastHelpTimer = gsFastHelpDelay;
 						}
 
 
-						// This is where we detect double tap gestures
-						if (ButtonReason & MSYS_CALLBACK_REASON_TFINGER_DWN)
-						{
-							UINT32 uiCurrTime = GetClock();
-							if (gpRegionLastFingerDown == cur &&
-									gpRegionLastFingerUp   == cur &&
-									uiCurrTime <= guiRegionLastFingerDownTime + MSYS_DOUBLETAP_DELAY)
-							{
-								/* Sequential left tap on same button within the maximum time
-								 * allowed for a double click.  Double click check succeeded,
-								 * set flag and reset double click globals. */
-								ButtonReason |= MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP;
-								gpRegionLastFingerDown = NULL;
-								gpRegionLastFingerUp   = NULL;
-								guiRegionLastFingerDownTime = 0;
-							}
-							else
-							{
-								/* First tap, record time and region pointer (to check if 2nd
-								 * tap detected later) */
-								gpRegionLastFingerDown = cur;
-								guiRegionLastFingerDownTime = uiCurrTime;
-							}
-						}
-						else if (ButtonReason & MSYS_CALLBACK_REASON_TFINGER_UP)
-						{
-							UINT32 uiCurrTime = GetClock();
-							if (gpRegionLastFingerDown == cur &&
-									uiCurrTime <= guiRegionLastFingerDownTime + MSYS_DOUBLETAP_DELAY)
-							{
-								/* Double tap is down, then up, then down.  We
-								 * have just detected the up here (step 2). */
-								gpRegionLastFingerUp = cur;
-							}
-							else
-							{
-								/* User released touch outside of current button, so kill any
-								 * chance of a double tap happening. */
-								gpRegionLastFingerDown = NULL;
-								gpRegionLastFingerUp   = NULL;
-								guiRegionLastFingerDownTime = 0;
-							}
-						}
-
-						//This is where double clicks are checked and passed down.
-						if (ButtonReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-						{
-							UINT32 uiCurrTime = GetClock();
-							if (gpRegionLastLButtonDown == cur &&
-									gpRegionLastLButtonUp   == cur &&
-									uiCurrTime <= guiRegionLastLButtonDownTime + MSYS_DOUBLECLICK_DELAY)
-							{
-								/* Sequential left click on same button within the maximum time
-								 * allowed for a double click.  Double click check succeeded,
-								 * set flag and reset double click globals. */
+						// This is where we detect double click & tap gestures
+						if (gLeftButtonDoubleClickState.isDouble(cur, ButtonReason)) {
 								ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK;
-								gpRegionLastLButtonDown = NULL;
-								gpRegionLastLButtonUp   = NULL;
-								guiRegionLastLButtonDownTime = 0;
-							}
-							else
-							{
-								/* First click, record time and region pointer (to check if 2nd
-								 * click detected later) */
-								gpRegionLastLButtonDown = cur;
-								guiRegionLastLButtonDownTime = GetClock();
-							}
 						}
-						else if (ButtonReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-						{
-							UINT32 uiCurrTime = GetClock();
-							if (gpRegionLastLButtonDown == cur &&
-									uiCurrTime <= guiRegionLastLButtonDownTime + MSYS_DOUBLECLICK_DELAY)
-							{
-								/* Double click is Left down, then left up, then left down.  We
-								 * have just detected the left up here (step 2). */
-								gpRegionLastLButtonUp = cur;
-							}
-							else
-							{
-								/* User released mouse outside of current button, so kill any
-								 * chance of a double click happening. */
-								gpRegionLastLButtonDown = NULL;
-								gpRegionLastLButtonUp   = NULL;
-								guiRegionLastLButtonDownTime = 0;
-							}
+						if (gFingerDoubleTapState.isDouble(cur, ButtonReason)) {
+							ButtonReason |= MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP;
 						}
 
 						cur->ButtonCallback(cur, ButtonReason);
@@ -700,9 +678,7 @@ static void MSYS_UpdateMouseRegion(void)
 /* Inits a MOUSE_REGION structure for use with the mouse system */
 void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly, UINT16 const brx, UINT16 const bry, INT8 priority, UINT16 const crsr, MOUSE_CALLBACK const movecallback, MOUSE_CALLBACK const buttoncallback)
 {
-#ifdef MOUSESYSTEM_DEBUGGING
-	AssertMsg(!(r->uiFlags & MSYS_REGION_EXISTS), "Attempting to define a region that already exists.");
-#endif
+	AssertMsg(!(r->uiFlags & MSYS_REGION_EXISTS), "Attempting to define a mouse region that already exists.");
 
 	if (priority <= MSYS_PRIORITY_LOWEST) priority = MSYS_PRIORITY_LOWEST;
 
@@ -743,20 +719,16 @@ void MOUSE_REGION::ChangeCursor(UINT16 const crsr)
 
 void MSYS_RemoveRegion(MOUSE_REGION* const r)
 {
-#ifdef MOUSESYSTEM_DEBUGGING
-	AssertMsg(r, "Attempting to remove a NULL region.");
-#endif
-	if (!r) return;
-#ifdef MOUSESYSTEM_DEBUGGING
-	AssertMsg(r->uiFlags & MSYS_REGION_EXISTS, "Attempting to remove an already removed region.");
-#endif
+	AssertMsg(r, "Attempting to remove a NULL mouse region.");
 
-#ifdef _JA2_RENDER_DIRTY
+	if (!r) return;
+
+	AssertMsg(r->uiFlags & MSYS_REGION_EXISTS, "Attempting to remove an already removed mouse region.");
+
 	if (r->HasFastHelp())
 	{
 		FreeBackgroundRectPending(r->FastHelpRect);
 	}
-#endif
 
 	r->FastHelpText = ST::null;
 
@@ -802,7 +774,6 @@ void RefreshMouseRegions( )
 	MSYS_Action|=MSYS_DO_MOVE;
 
 	MSYS_UpdateMouseRegion( );
-
 }
 
 
@@ -821,9 +792,7 @@ void MOUSE_REGION::SetFastHelpText(const ST::string& str)
 
 	if (guiCurrentScreen == MAP_SCREEN) return;
 
-#ifdef _JA2_RENDER_DIRTY
 	if (HasFastHelp()) FreeBackgroundRectPending(FastHelpRect);
-#endif
 
 	uiFlags &= ~MSYS_FASTHELP_RESET;
 }
@@ -964,7 +933,7 @@ void RenderFastHelp()
 	MOUSE_REGION* const r = MSYS_CurrRegion;
 	if (!r || r->FastHelpText.empty()) return;
 
-	if (r->uiFlags & (MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED) && !gfIsUsingTouch)
+	if (r->uiFlags & (MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED) && !IsUsingTouch())
 	{
 		if (r->FastHelpTimer == 0)
 		{

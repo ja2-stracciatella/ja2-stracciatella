@@ -650,7 +650,7 @@ ScreenID QuestDebugScreenHandle()
 	ExecuteVideoOverlays();
 
 	SaveBackgroundRects( );
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
@@ -1922,7 +1922,7 @@ static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 	}
 	else if( reason & MSYS_CALLBACK_REASON_MOVE )
 	{
-		if( gfLeftButtonState || gfIsMainFingerDown )
+		if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMainFingerDown() )
 		{
 			CalcPositionOfNewScrollBoxLocation();
 		}

@@ -1381,7 +1381,7 @@ static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, UINT
 	}
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		if( gfLeftButtonState || gfIsMainFingerDown )
+		if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMainFingerDown() )
 		{
 			UINT8	ubCityNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 

@@ -267,7 +267,7 @@ ScreenID SaveLoadScreenHandle()
 
 	// ATE: Put here to save RECTS before any fast help being drawn...
 	SaveBackgroundRects( );
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 	ExecuteBaseDirtyRectQueue( );
 	EndFrameBufferRender( );
@@ -617,9 +617,6 @@ static void GetSaveLoadScreenUserInput(void)
 {
 	// If we are going to be instantly leaving the screen, dont draw the numbers
 	if (gfLoadGameUponEntry) return;
-
-	SGPPoint mouse_pos;
-	GetMousePos(&mouse_pos);
 
 	InputAtom e;
 	while (DequeueSpecificEvent(&e, KEYBOARD_EVENTS))

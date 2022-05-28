@@ -225,7 +225,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			const CursorData* pCurData = &gpCursorDatabase[uiCursorIndex];
 
 			// Disable specific pointing cursors on touch devices
-			if (pCurData->fHideOnTouch && gfIsUsingTouch) {
+			if (pCurData->fHideOnTouch && IsUsingTouch()) {
 				uiCursorIndex = VIDEO_NO_CURSOR;
 				guiOldSetCursor = VIDEO_NO_CURSOR;
 				SetMouseCursorProperties(0, 0, 0, 0);
