@@ -2300,17 +2300,9 @@ static INT32 HandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pStruc
 
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ LOCK_HAS_BEEN_HIT ] );
 
-				pDoor->bLockDamage+= sLockDamage;
-
 				// Check if it has been shot!
-				if ( pDoor->bLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty )
+				if (pDoor->damageLock(sLockDamage))
 				{
-					// Display message!
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ LOCK_HAS_BEEN_DESTROYED ] );
-
-					// succeeded! door can never be locked again, so remove from door list...
-					RemoveDoorInfoFromTable( pDoor->sGridNo );
-
 					// MARKSMANSHIP GAIN (marksPts): Opened/Damaged a door
 					StatChange(*pBullet->pFirer, MARKAMT, 10, FROM_SUCCESS);
 				}

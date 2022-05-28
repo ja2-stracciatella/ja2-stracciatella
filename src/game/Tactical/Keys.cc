@@ -646,12 +646,9 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 		// Not sure if this makes sense, but the explosive is small.
 		// Double the damage here as we are damaging a lock rather than a person
-		pDoor->bLockDamage += Explosive[GCM->getItem(SHAPED_CHARGE)->getClassIndex()].ubDamage * 2;
-		if (pDoor->bLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty )
+		if (pDoor->damageLock(Explosive[GCM->getItem(SHAPED_CHARGE)->getClassIndex()].ubDamage * 2))
 		{
-			// succeeded! door can never be locked again, so remove from door list...
-			RemoveDoorInfoFromTable( pDoor->sGridNo );
-			// award experience points?
+			// Lock destroyed, award experience points?
 			return( TRUE );
 		}
 	}
@@ -668,6 +665,21 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		IgniteExplosionXY(NULL, pSoldier->sX, pSoldier->sY, gpWorldLevelData[pSoldier->sGridNo].sHeight, pSoldier->sGridNo, SHAPED_CHARGE, 0);
 	}
 	return( FALSE );
+}
+
+bool DOOR::damageLock(int const additionalDamage)
+{
+	bLockDamage = std::min<int>(INT8_MAX, bLockDamage + additionalDamage);
+	if (bLockDamage > LockTable[ubLockID].ubSmashDifficulty)
+	{
+		// Display message!
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[LOCK_HAS_BEEN_DESTROYED]);
+
+		// succeeded! door can never be locked again, so remove from door list...
+		RemoveDoorInfoFromTable(sGridNo);
+		return true;
+	}
+	return false;
 }
 
 //File I/O for loading the door information from the map.  This automatically allocates

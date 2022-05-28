@@ -61,6 +61,11 @@ struct DOOR
 	INT8    bPerceivedTrapped; // See above, but with respect to traps rather than locked status
 	INT8    bLockDamage; // Damage to the lock
 	INT8    bPadding[4]; // extra bytes // XXX HACK000B
+
+	// Damage the door's lock by the given amount. Removes the door from the door table
+	// and displays a message if the lock was destroyed.
+	// Returns true if the lock was destroyed, false otherwise.
+	bool damageLock(int const additionalDamage);
 };
 
 
