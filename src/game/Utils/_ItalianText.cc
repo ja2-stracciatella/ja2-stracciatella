@@ -3247,7 +3247,7 @@ static const ST::string s_it_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	"%s non ha abbastanza energia per cambiare posizione.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"Il %s ha esaurito la benzina e ora è rimasto a piedi a %c%d.",
+	"Il {} ha esaurito la benzina e ora è rimasto a piedi a {}.",
 
 	//6-10
 

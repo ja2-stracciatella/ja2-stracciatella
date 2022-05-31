@@ -3243,7 +3243,7 @@ static const ST::string s_pl_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	"%s ma zbyt mało energii, aby zmienić pozycję.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"%s nie ma paliwa i stoi w sektorze %c%d.",
+	"{} nie ma paliwa i stoi w sektorze {}.",
 
 	//6-10
 

@@ -3300,7 +3300,7 @@ static const ST::string s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"%s без сил и не может поменять положение.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"У %sа кончилось топливо и он остается в %c%d.",///TRNSL Assumes that all vehicle names are male gender words
+	"У {}а кончилось топливо и он остается в {}.",///TRNSL Assumes that all vehicle names are male gender words
 
 	//6-10
 

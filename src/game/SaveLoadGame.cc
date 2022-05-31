@@ -1,4 +1,5 @@
 #include "AI.h"
+#include "Ambient_Control.h"
 #include "Animated_ProgressBar.h"
 #include "Animation_Data.h"
 #include "Arms_Dealer_Init.h"
@@ -747,6 +748,8 @@ void LoadSavedGame(const ST::string &saveName)
 		SGPSector sector = SaveGameHeader.sSector;
 		gubLastLoadingScreenID = sector.IsValid() ? GetLoadScreenID(sector) : LOADINGSCREEN_HELI;
 
+		// Ensure we have a ambient sound set loaded
+		HandleNewSectorAmbience(0);
 		BeginLoadScreen();
 	}
 

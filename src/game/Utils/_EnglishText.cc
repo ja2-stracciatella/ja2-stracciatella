@@ -3240,7 +3240,7 @@ static const ST::string s_eng_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"%s does not have enough energy to change stance.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"The %s has run out of gas and is now stranded in %c%d.",
+	"The {} has run out of gas and is now stranded in {}.",
 
 	//6-10
 
