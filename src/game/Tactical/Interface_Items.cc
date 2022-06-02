@@ -2877,7 +2877,7 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 	}
 	else
 	{
-		RemoveKeyFromSlot( pSoldier, ubKeyRingPosition, &gItemPointer );
+		RemoveKeysFromSlot( pSoldier, ubKeyRingPosition, 1, &gItemPointer );
 		fOk = (gItemPointer.ubNumberOfObjects == 1);
 	}
 
@@ -4081,12 +4081,12 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 
 		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, x, y);
 
-		const KEY_ON_RING* const key = &key_ring[i];
-		if (key->ubKeyID == INVALID_KEY_NUMBER || key->ubNumber == 0) continue;
+		const KEY_ON_RING& key = key_ring[i];
+		if (!key.isValid()) continue;
 
-		o.ubNumberOfObjects = key->ubNumber;
+		o.ubNumberOfObjects = key.ubNumber;
 
-		auto keyId = LockTable[key->ubKeyID].usKeyItem;
+		auto keyId = LockTable[key.ubKeyID].usKeyItem;
 		auto item = GCM->getKeyItemForKeyId(keyId);
 		if (item == NULL) {
 			throw std::runtime_error(ST::format("Could not find key item for key id `{}` when rendering key popup", keyId).to_std_string());

@@ -2342,65 +2342,22 @@ BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pO
 	}
 }
 
-BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj )
-{
-	UINT8 ubItem = 0;
-
-	CHECKF( pObj );
-
-	if( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 ) || ( pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID == INVALID_KEY_NUMBER ) )
-	{
-		return( FALSE );
-	}
-	else
-	{
-		//*pObj = pSoldier->inv[bPos];
-
-		// create an object
-		ubItem = pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID;
-
-		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber > 1 )
-		{
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber--;
-		}
-		else
-		{
-
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = 0;
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = INVALID_KEY_NUMBER;
-		}
-
-		CreateKeyObject(pObj, 1, ubItem);
-		return TRUE;
-	}
-}
-
-
 BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8 ubNumberOfKeys ,OBJECTTYPE * pObj )
 {
-	UINT8 ubItems = 0;
-
 	CHECKF( pObj );
 
-
-	if( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 ) || ( pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID == INVALID_KEY_NUMBER ) )
+	if (pSoldier->pKeyRing[bKeyRingPosition].isValid())
 	{
-		return( FALSE );
-	}
-	else
-	{
-		//*pObj = pSoldier->inv[bPos];
-
 		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber < ubNumberOfKeys )
 		{
 			ubNumberOfKeys = pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber;
 		}
 
 
-		ubItems = pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID;
+		UINT8 const ubItems = pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID;
 		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber - ubNumberOfKeys > 0 )
 		{
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber--;
+			pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber -= ubNumberOfKeys;
 		}
 		else
 		{
@@ -2411,6 +2368,7 @@ BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8
 		CreateKeyObject(pObj, ubNumberOfKeys, ubItems);
 		return TRUE;
 	}
+	return FALSE;
 }
 
 

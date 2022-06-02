@@ -127,7 +127,7 @@ bool SoldierHasKey(SOLDIERTYPE const& s, UINT8 const key_id)
 
 bool KeyExistsInKeyRing(SOLDIERTYPE const& s, UINT8 const key_id)
 {
-	if (!s.pKeyRing) return FALSE; // No key ring
+	if (!s.pKeyRing) return false; // No key ring
 
 	KEY_ON_RING const* const end = s.pKeyRing + NUM_KEYS;
 	for (KEY_ON_RING const* i = s.pKeyRing; i != end; ++i)

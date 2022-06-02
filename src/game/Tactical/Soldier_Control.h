@@ -8,6 +8,7 @@
 
 #include "Animation_Cache.h"
 #include "JA2Types.h"
+#include "Keys.h"
 #include "Overhead_Types.h"
 #include "Item_Types.h"
 
@@ -269,8 +270,10 @@ enum SoldierClass
 
 struct KEY_ON_RING
 {
-	UINT8 ubKeyID;
-	UINT8 ubNumber;
+	UINT8 ubKeyID{INVALID_KEY_NUMBER};
+	UINT8 ubNumber{0};
+
+	bool isValid() const { return ubKeyID != INVALID_KEY_NUMBER && ubNumber != 0; }
 };
 
 

@@ -88,10 +88,7 @@ void CreateKeyObject(OBJECTTYPE*, UINT8 ubNumberOfKeys, UINT8 ubKeyIdValue);
 BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj );
 void    AllocateObject(OBJECTTYPE** pObj);
 
-// removes a key from a *KEYRING* slot
-BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
-
-// take several
+// remove one or more keys from a *KEYRING* slot
 BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8 ubNumberOfKeys ,OBJECTTYPE * pObj );
 
 // add the keys to an inventory slot

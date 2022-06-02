@@ -601,10 +601,6 @@ try
 	if (IsOnOurTeam(s))
 	{
 		s.pKeyRing = new KEY_ON_RING[NUM_KEYS]{};
-		for (UINT32 i = 0; i < NUM_KEYS; ++i)
-		{
-			s.pKeyRing[i].ubKeyID = INVALID_KEY_NUMBER;
-		}
 	}
 	else
 	{
@@ -2252,9 +2248,6 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 		}
 	}
 }
-
-//gAnimControl[ pSoldier->usAnimState ].ubEndHeight
-//					ChangeSoldierState( pSoldier, SHOOT_RIFLE_STAND, 0 , FALSE );
 
 
 static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
