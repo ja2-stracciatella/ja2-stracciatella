@@ -2862,30 +2862,20 @@ void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 
 void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 {
-	BOOLEAN fOk;
-
 	// If not null return
 	if ( gpItemPointer != NULL )
 	{
 		return;
 	}
 
-	if (_KeyDown( SHIFT ))
-	{
-		// Remove all from soldier's slot
-		fOk = RemoveKeysFromSlot( pSoldier, ubKeyRingPosition, pSoldier->pKeyRing[ ubKeyRingPosition ].ubNumber, &gItemPointer );
-	}
-	else
-	{
-		RemoveKeysFromSlot( pSoldier, ubKeyRingPosition, 1, &gItemPointer );
-		fOk = (gItemPointer.ubNumberOfObjects == 1);
-	}
-
+	// With shift down, remove all keys from this slot
+	// With shift up, remove only one key
+	BOOLEAN const fOk = RemoveKeysFromSlot( pSoldier, ubKeyRingPosition,
+		_KeyDown( SHIFT ) ? pSoldier->pKeyRing[ ubKeyRingPosition ].ubNumber : 1,
+		&gItemPointer );
 
 	if (fOk)
 	{
-		// ATE: Look if we are a BLOODIED KNIFE, and change if so, making guy scream...
-
 		// Dirty interface
 		fInterfacePanelDirty = DIRTYLEVEL2;
 		SetItemPointer(&gItemPointer, pSoldier);
@@ -2893,12 +2883,6 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 
 		if (fInMapMode) SetMapCursorItem();
 	}
-	else
-	{
-		//Debug mesg
-	}
-
-
 
 	gfItemPointerDifferentThanDefault = FALSE;
 }
