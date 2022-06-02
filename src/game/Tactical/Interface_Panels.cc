@@ -3435,7 +3435,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		if ( gpItemPointer == NULL )
 		{
 			// Return if empty
-			if( ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER ) || ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubNumber == 0 ) )
+			if (!gpItemPopupSoldier->pKeyRing[uiKeyRing].isValid())
 				return;
 
 			// If our flags are set to do this, gofoit!
@@ -3588,7 +3588,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		fRightDown = FALSE;
 
 		// Return if empty
-		if( ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER ) || ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubNumber == 0 ) )
+		if (!gpItemPopupSoldier->pKeyRing[uiKeyRing].isValid())
 		{
 			DeleteKeyRingPopup( );
 			fTeamPanelDirty = TRUE;

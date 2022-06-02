@@ -2862,30 +2862,20 @@ void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 
 void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 {
-	BOOLEAN fOk;
-
 	// If not null return
 	if ( gpItemPointer != NULL )
 	{
 		return;
 	}
 
-	if (_KeyDown( SHIFT ))
-	{
-		// Remove all from soldier's slot
-		fOk = RemoveKeysFromSlot( pSoldier, ubKeyRingPosition, pSoldier->pKeyRing[ ubKeyRingPosition ].ubNumber, &gItemPointer );
-	}
-	else
-	{
-		RemoveKeyFromSlot( pSoldier, ubKeyRingPosition, &gItemPointer );
-		fOk = (gItemPointer.ubNumberOfObjects == 1);
-	}
-
+	// With shift down, remove all keys from this slot
+	// With shift up, remove only one key
+	BOOLEAN const fOk = RemoveKeysFromSlot( pSoldier, ubKeyRingPosition,
+		_KeyDown( SHIFT ) ? pSoldier->pKeyRing[ ubKeyRingPosition ].ubNumber : 1,
+		&gItemPointer );
 
 	if (fOk)
 	{
-		// ATE: Look if we are a BLOODIED KNIFE, and change if so, making guy scream...
-
 		// Dirty interface
 		fInterfacePanelDirty = DIRTYLEVEL2;
 		SetItemPointer(&gItemPointer, pSoldier);
@@ -2893,12 +2883,6 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 
 		if (fInMapMode) SetMapCursorItem();
 	}
-	else
-	{
-		//Debug mesg
-	}
-
-
 
 	gfItemPointerDifferentThanDefault = FALSE;
 }
@@ -4081,12 +4065,12 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 
 		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, x, y);
 
-		const KEY_ON_RING* const key = &key_ring[i];
-		if (key->ubKeyID == INVALID_KEY_NUMBER || key->ubNumber == 0) continue;
+		const KEY_ON_RING& key = key_ring[i];
+		if (!key.isValid()) continue;
 
-		o.ubNumberOfObjects = key->ubNumber;
+		o.ubNumberOfObjects = key.ubNumber;
 
-		auto keyId = LockTable[key->ubKeyID].usKeyItem;
+		auto keyId = LockTable[key.ubKeyID].usKeyItem;
 		auto item = GCM->getKeyItemForKeyId(keyId);
 		if (item == NULL) {
 			throw std::runtime_error(ST::format("Could not find key item for key id `{}` when rendering key popup", keyId).to_std_string());
