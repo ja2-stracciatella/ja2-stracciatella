@@ -3255,7 +3255,7 @@ static const ST::string s_dut_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"%s heeft niet genoeg energie om standpunt te wisselen.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"%s heeft geen brandstof en is gestrand in %c%d.",
+	"{} heeft geen brandstof en is gestrand in {}.",
 
 	//6-10
 

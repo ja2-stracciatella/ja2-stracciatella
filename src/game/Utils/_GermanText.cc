@@ -3065,7 +3065,7 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Sie können den Zeitraffer jetzt nicht benutzen. Warten Sie das Feuerwerk ab!",
 	"%s will sich nicht bewegen.",
 	"%s hat nicht genug Energie, um die Position zu ändern.",
-	"%s hat kein Benzin mehr und steckt in %c%d fest.",
+	"{} hat kein Benzin mehr und steckt in {} fest.",
 
 	//6-10
 

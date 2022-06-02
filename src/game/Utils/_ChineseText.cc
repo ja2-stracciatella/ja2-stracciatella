@@ -3266,7 +3266,7 @@ static const ST::string s_cn_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	"%s精力不足, 无法改变姿势.",	//"%s does not have enough energy to change stance.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"%s汽油耗尽, 在%c%d抛锚了.",	//"The %s has run out of gas and is now stranded in %c%d.",
+	"{}汽油耗尽, 在{}抛锚了.",	//Originally "The %s has run out of gas and is now stranded in %c%d.",
 
 	//6-10
 

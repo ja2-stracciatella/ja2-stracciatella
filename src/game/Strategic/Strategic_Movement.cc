@@ -3109,7 +3109,7 @@ void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 static void ReportVehicleOutOfGas(VEHICLETYPE const& v, const SGPSector& sMap)
 {
 	// Report that the vehicle that just arrived is out of gas
-	ST::string str = st_format_printf(gzLateLocalizedString[STR_LATE_05], pVehicleStrings[v.ubVehicleType], sMap.AsShortString());
+	ST::string str = ST::format(gzLateLocalizedString[STR_LATE_05].c_str(), pVehicleStrings[v.ubVehicleType], sMap.AsShortString());
 	DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, 0);
 }
 
