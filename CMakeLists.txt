@@ -214,7 +214,6 @@ endif()
 if(BUILD_LAUNCHER)
     set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR} ${SDL2_INCLUDE_DIR})
     set(LAUNCHER_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/Logger.cc"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.cc"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/SGPFile.cc"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/SGPStrings.cc"

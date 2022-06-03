@@ -14,7 +14,6 @@
 #include "Game_Events.h"
 #include "GameInstance.h"
 #include "GameSettings.h"
-#include "Logger.h"
 #include "Overhead.h"
 #include "Quests.h"
 #include "StrategicMap.h"
@@ -259,7 +258,7 @@ static void LogLuaMessage(LogLevel level, std::string msg) {
 	// Stack position 1 is the calling lua script
 	lua_getstack(lua, 1, &info);
 	lua_getinfo(lua, "S", &info);
-	LogMessage(false, level, info.short_src, msg);
+	Logger_log(level, msg.c_str(), info.short_src);
 }
 
 static void RegisterLogger()

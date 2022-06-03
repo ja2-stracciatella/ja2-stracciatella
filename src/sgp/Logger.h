@@ -8,8 +8,6 @@
 #include <string_theory/string>
 #include <stracciatella.h>
 
-void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str);
-
 /** Get filename relative to src directory */
 constexpr size_t GetSourcePathSize(const char* filename)
 {
@@ -33,8 +31,16 @@ template <size_t p> constexpr const char* ToRelativePath(const char* filename)
 template<typename... Args>
 constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Args... args)
 {
-	LogMessage(isAssert, level, file, ST::format(args...));
+	Logger_log(level, ST::format(args...).c_str(), file);
+
+	#ifdef ENABLE_ASSERTS
+	if (isAssert)
+	{
+		abort();
+	}
+	#endif
 }
+
 /** Print debug message macro. */
 #define SLOGD(...) LogMessageST(false, LogLevel::Debug, __FILENAME__, ##__VA_ARGS__)
 
