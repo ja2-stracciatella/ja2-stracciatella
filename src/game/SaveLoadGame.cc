@@ -571,7 +571,7 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
  * This function does only a basic check.  It might not detect all problems. */
 bool isValidSavedGameHeader(SAVED_GAME_HEADER& h)
 {
-	if (!h.sSector.IsValid())
+	if((h.sSector.x == 0) && (h.sSector.y == 0) && (h.sSector.z == -1))
 	{
 		// Special case: sector N/A at the game start
 		if((h.uiDay == 0)
