@@ -31,7 +31,9 @@ template <size_t p> constexpr const char* ToRelativePath(const char* filename)
 template<typename... Args>
 constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Args... args)
 {
-	Logger_log(level, ST::format(args...).c_str(), file);
+	if (level <= Logger_getLevel()) {
+		Logger_log(level, ST::format(args...).c_str(), file);
+	}
 
 	#ifdef ENABLE_ASSERTS
 	if (isAssert)

@@ -14,6 +14,7 @@
 #include "Game_Events.h"
 #include "GameInstance.h"
 #include "GameSettings.h"
+#include "Logger.h"
 #include "Overhead.h"
 #include "Quests.h"
 #include "StrategicMap.h"
