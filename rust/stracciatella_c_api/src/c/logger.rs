@@ -28,6 +28,12 @@ pub extern "C" fn Logger_setLevel(level: LogLevel) {
     Logger::set_level(level)
 }
 
+/// Set log level
+#[no_mangle]
+pub extern "C" fn Logger_getLevel() -> LogLevel {
+    Logger::get_level()
+}
+
 /// Log with custom metadata
 #[no_mangle]
 pub extern "C" fn Logger_log(level: LogLevel, message: *const c_char, target: *const c_char) {

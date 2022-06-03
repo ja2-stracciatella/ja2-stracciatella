@@ -39,6 +39,18 @@ impl From<LogLevel> for Level {
     }
 }
 
+impl From<Level> for LogLevel {
+    fn from(other: Level) -> LogLevel {
+        match other {
+            Level::Debug => LogLevel::Debug,
+            Level::Error => LogLevel::Error,
+            Level::Info => LogLevel::Info,
+            Level::Trace => LogLevel::Trace,
+            Level::Warn => LogLevel::Warn,
+        }
+    }
+}
+
 impl From<LogLevel> for usize {
     fn from(other: LogLevel) -> usize {
         other as usize
@@ -79,6 +91,10 @@ impl RuntimeLevelFilter {
     fn get_global_log_level() -> Level {
         let current_level = GLOBAL_LOG_LEVEL.load(Ordering::Relaxed);
         LogLevel::from(current_level).into()
+    }
+
+    fn set_global_log_level(level: Level) {
+        GLOBAL_LOG_LEVEL.store(LogLevel::from(level).into(), Ordering::Relaxed);
     }
 }
 
@@ -165,7 +181,12 @@ impl Logger {
 
     /// Sets the global log level to a specific value
     pub fn set_level(level: LogLevel) {
-        GLOBAL_LOG_LEVEL.store(level.into(), Ordering::Relaxed);
+        RuntimeLevelFilter::set_global_log_level(level.into())
+    }
+
+    /// Sets the global log level to a specific value
+    pub fn get_level() -> LogLevel {
+        RuntimeLevelFilter::get_global_log_level().into()
     }
 
     /// Logs message with specific metadata
