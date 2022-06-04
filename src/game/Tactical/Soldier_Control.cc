@@ -6364,90 +6364,29 @@ INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc )
 }
 
 
-#if 0
-UINT8  atan8( INT16 x1, INT16 y1, INT16 x2, INT16 y2 )
-{
-	static int trig[8] = { 2, 3, 4, 5, 6, 7, 8, 1 };
-	// returned values are N=1, NE=2, E=3, SE=4, S=5, SW=6, W=7, NW=8
-	double dx=(x2-x1);
-	double dy=(y2-y1);
-	double a;
-	int i,k;
-	if (dx==0)
-		dx=0.00390625; // 1/256th
-#define PISLICES (8)
-	a=(atan2(dy,dx) + PI/PISLICES)/(PI/(PISLICES/2));
-	i=(int)a;
-	if (a>0)
-		k=i; else
-	if (a<0)
-		k=i+(PISLICES-1); else
-		k=0;
-	return(trig[k]);
-}
-#endif
-
-//#if 0
+// Returns the direction (in enum WorldDirections terms) from point 1 to point 2.
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
 {
-	DOUBLE test_x = sXPos2 - sXPos;
-	DOUBLE test_y = sYPos2 - sYPos;
-	UINT8  mFacing = WEST;
-	DOUBLE angle;
+	const double x = sXPos2 - sXPos;
 
-	if ( test_x == 0 )
+	// Negate y because in screen coordinates smaller y values are to the north
+	// but in the coordinate systen used by atan2 larger values are to the "north".
+	const double y = -(sYPos2 - sYPos);
+
+	// The result of atan2(0, 0) is implementation dependant, ensure we always
+	// return the same result for this case.
+	if (x == 0.0 && y == 0.0) return EAST;
+
+	double theta = std::atan2(y, x);  // theta now ∈ [-π, +π] = [-180°, 180°]
+	if (theta < 0) theta += 2 * M_PI; // theta now ∈ [0, +2π] = [0°, 360°]
+
+	const int directionIndex = static_cast<int>((8 * theta + M_PI) / (2 * M_PI)) % 8;
+	static const UINT8 directionTable[8]
 	{
-		test_x = 0.04;
-	}
+		EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST
+	};
 
-	angle = atan2( test_x, test_y );
-
-	do
-	{
-		if ( angle >=-PI*.375 && angle <= -PI*.125 )
-		{
-			mFacing = SOUTHWEST;
-			break;
-		}
-
-		if ( angle <= PI*.375 && angle >= PI*.125 )
-		{
-			mFacing = SOUTHEAST;
-			break;
-		}
-
-		if ( angle >=PI*.623 && angle <= PI*.875 )
-		{
-			mFacing = NORTHEAST;
-			break;
-		}
-
-		if ( angle <=-PI*.623 && angle >= -PI*.875 )
-		{
-			mFacing = NORTHWEST;
-			break;
-		}
-
-		if ( angle >-PI*0.125 && angle < PI*0.125 )
-		{
-			mFacing = SOUTH;
-		}
-		if ( angle > PI*0.375 && angle < PI*0.623 )
-		{
-			mFacing = EAST;
-		}
-		if ( ( angle > PI*0.875 && angle <= PI ) || ( angle > -PI && angle < -PI*0.875 ) )
-		{
-			mFacing = NORTH;
-		}
-		if ( angle > -PI*0.623 && angle < -PI*0.375 )
-		{
-			mFacing = WEST;
-		}
-
-	} while( FALSE );
-
-	return( mFacing );
+	return directionTable[directionIndex];
 }
 
 
