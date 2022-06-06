@@ -3790,7 +3790,7 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 	BOOLEAN fOk = FALSE;
 
 	// start by trying to turn in quickest direction
-	bTurningIncrement = (INT8) QuickestDirection( bStartDirection, bDesiredDirection );
+	bTurningIncrement = QuickestDirection( bStartDirection, bDesiredDirection );
 
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, pSoldier->usUIMovementMode );
 
@@ -3960,7 +3960,7 @@ static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* const pSoldier
 		}
 		else
 		{
-			pSoldier->bTurningIncrement = (INT8) QuickestDirection( pSoldier->bDirection, pSoldier->bDesiredDirection );
+			pSoldier->bTurningIncrement = QuickestDirection( pSoldier->bDirection, pSoldier->bDesiredDirection );
 		}
 	}
 

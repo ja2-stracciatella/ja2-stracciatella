@@ -2114,7 +2114,7 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 	INT8    bLoop;
 	BOOLEAN fFound;
 
-	bDirChange = (INT8) QuickestDirection( pCreature->bDirection, bNewDirection );
+	bDirChange = QuickestDirection( pCreature->bDirection, bNewDirection );
 
 	for( bLoop = 0; bLoop < 2; bLoop++ )
 	{
