@@ -82,10 +82,7 @@ INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest);
 bool FindHigherLevel(SOLDIERTYPE const*, UINT8* out_direction = 0);
 bool FindLowerLevel(SOLDIERTYPE const*, UINT8* out_direction = 0);
 
-template<UINT8 maxDistance = 4>
-INT8 QuickestDirection(UINT8 origin, UINT8 dest);
-INT8 ExtQuickestDirection(UINT8 origin, UINT8 dest);
-
+INT8 QuickestDirection(UINT8 origin, UINT8 dest, UINT8 maxDistance = 4);
 
 // Returns the (center ) cell coordinates in X
 INT16 CenterX( INT16 sGridno );

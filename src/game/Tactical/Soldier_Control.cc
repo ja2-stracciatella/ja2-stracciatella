@@ -3950,7 +3950,7 @@ static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* const pSoldier
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		const UINT8 hires_desired_dir = Dir2ExtDir(pSoldier->bDesiredDirection);
-		pSoldier->bTurningIncrement = ExtQuickestDirection(pSoldier->ubHiResDirection, hires_desired_dir);
+		pSoldier->bTurningIncrement = QuickestDirection(pSoldier->ubHiResDirection, hires_desired_dir, 16);
 	}
 	else
 	{

@@ -557,20 +557,11 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 }
 
 
-template<UINT8 maxDistance>
-INT8 QuickestDirection(UINT8 const origin, UINT8 const dest)
+INT8 QuickestDirection(UINT8 const origin, UINT8 const dest, UINT8 maxDistance)
 {
 	if (origin == dest) return 0;
 	if (origin > dest) return origin - dest >= maxDistance ? 1 : -1;
 	return dest - origin > maxDistance ? -1 : 1;
-}
-// Force instantiation
-template INT8 QuickestDirection<4>(UINT8 const origin, UINT8 const dest);
-
-
-INT8 ExtQuickestDirection(UINT8 const origin, UINT8 const dest)
-{
-	return QuickestDirection<16>(origin, dest);
 }
 
 
@@ -770,8 +761,15 @@ TEST(Isometric_Utils, QuickestDirection)
 		if (a == 4) ; else EXPECT_EQ(QuickestDirection(0,a), -QuickestDirection(a,0));
 }
 
+// Verify that QuickestDirection works with a MaxDistance of 16,
+// equivalent to the removed function ExtQuickestDirection
 TEST(Isometric_Utils, ExtQuickestDirection)
 {
+	auto ExtQuickestDirection = [](UINT8 a, UINT8 b)
+	{
+		return QuickestDirection(a, b, 16);
+	};
+
 	EXPECT_EQ(ExtQuickestDirection(1,3), 1);
 	EXPECT_EQ(ExtQuickestDirection(0,6), 1);
 	EXPECT_EQ(ExtQuickestDirection(0,25), -1);
