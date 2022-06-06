@@ -557,73 +557,20 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 }
 
 
-INT16 QuickestDirection(INT16 origin, INT16 dest)
+template<UINT8 maxDistance>
+INT8 QuickestDirection(UINT8 const origin, UINT8 const dest)
 {
-	INT16 v1,v2;
-
-	if (origin==dest)
-		return(0);
-
-	if ((std::abs(origin - dest)) == 4)
-	{
-		return(1);		// this could be made random
-	}
-	else
-	{
-		if (origin > dest)
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (8 - origin) + dest;
-			if (v1 > v2)
-				return(1);
-			else
-				return(-1);
-		}
-		else
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (8 - dest) + origin;
-			if (v1 > v2)
-				return(-1);
-			else
-				return(1);
-		}
-	}
+	if (origin == dest) return 0;
+	if (origin > dest) return origin - dest >= maxDistance ? 1 : -1;
+	return dest - origin > maxDistance ? -1 : 1;
 }
+// Force instantiation
+template INT8 QuickestDirection<4>(UINT8 const origin, UINT8 const dest);
 
 
-INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
+INT8 ExtQuickestDirection(UINT8 const origin, UINT8 const dest)
 {
-	INT16 v1,v2;
-
-	if (origin==dest)
-		return(0);
-
-	if ((std::abs(origin - dest)) == 16)
-	{
-		return(1);		// this could be made random
-	}
-	else
-	{
-		if (origin > dest)
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (32 - origin) + dest;
-			if (v1 > v2)
-				return(1);
-			else
-				return(-1);
-		}
-		else
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (32 - dest) + origin;
-			if (v1 > v2)
-				return(-1);
-			else
-				return(1);
-		}
-	}
+	return QuickestDirection<16>(origin, dest);
 }
 
 
