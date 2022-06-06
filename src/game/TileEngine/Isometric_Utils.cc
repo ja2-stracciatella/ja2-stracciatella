@@ -482,46 +482,10 @@ INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
 }
 
 
-static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
+static UINT8 FindNumTurnsBetweenDirs(const UINT8 sDir1, const UINT8 sDir2)
 {
-	INT16 sDirection;
-	INT16 sNumTurns = 0;
-
-	sDirection = sDir1;
-
-	do
-	{
-
-		sDirection = sDirection + QuickestDirection( sDir1, sDir2 );
-
-		if (sDirection > 7)
-		{
-			sDirection = 0;
-		}
-		else
-		{
-			if ( sDirection < 0 )
-			{
-				sDirection = 7;
-			}
-		}
-
-		if ( sDirection == sDir2 )
-		{
-			break;
-		}
-
-		sNumTurns++;
-
-		// SAFEGUARD ! - if we (somehow) do not get to were we want!
-		if ( sNumTurns > 100 )
-		{
-			sNumTurns = 0;
-			break;
-		}
-	} while( TRUE );
-
-	return( (INT8)sNumTurns );
+	const UINT8 steps = sDir1 > sDir2 ? sDir1 - sDir2 : sDir2 - sDir1;
+	return steps <= 4 ? steps : 8 - steps;
 }
 
 
@@ -535,9 +499,9 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 
 	bool       found         = false;
 	UINT8      min_turns     = 100;
-	INT8       min_direction = 0;
-	INT8 const starting_dir  = s->bDirection;
-	for (INT32 cnt = 0; cnt != 8; cnt += 2)
+	UINT8      min_direction = 0;
+	UINT8 const starting_dir = s->bDirection;
+	for (UINT8 cnt = 0; cnt != 8; cnt += 2)
 	{
 		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(cnt));
 		if (!NewOKDestination(s, new_grid_no, TRUE, 1)) continue;
@@ -546,7 +510,7 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 		if (!IsHeigherLevel(new_grid_no)) continue;
 
 		// FInd how many turns we should go to get here
-		INT8 const n_turns =  FindNumTurnsBetweenDirs(cnt, starting_dir);
+		UINT8 const n_turns = FindNumTurnsBetweenDirs(cnt, starting_dir);
 		if (min_turns <= n_turns) continue;
 
 		found         = true;
@@ -567,10 +531,10 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 
 	bool         found         = false;
 	UINT8        min_turns     = 100;
-	INT8         min_direction = 0;
+	UINT8        min_direction = 0;
 	GridNo const grid_no       = s->sGridNo;
-	INT8   const starting_dir  = s->bDirection;
-	for (INT32 dir = 0; dir != 8; dir += 2)
+	UINT8  const starting_dir  = s->bDirection;
+	for (UINT8 dir = 0; dir != 8; dir += 2)
 	{
 		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(dir));
 		if (!NewOKDestination(s, new_grid_no, TRUE, 0)) continue;
@@ -578,7 +542,7 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 		if (FindStructure(new_grid_no, STRUCTURE_ROOF)) continue;
 
 		// Find how many turns we should go to get here
-		INT8 const n_turns = FindNumTurnsBetweenDirs(dir, starting_dir);
+		UINT8 const n_turns = FindNumTurnsBetweenDirs(dir, starting_dir);
 		if (min_turns <= n_turns) continue;
 
 		found         = true;
@@ -593,73 +557,11 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 }
 
 
-INT16 QuickestDirection(INT16 origin, INT16 dest)
+INT8 QuickestDirection(UINT8 const origin, UINT8 const dest, UINT8 maxDistance)
 {
-	INT16 v1,v2;
-
-	if (origin==dest)
-		return(0);
-
-	if ((std::abs(origin - dest)) == 4)
-	{
-		return(1);		// this could be made random
-	}
-	else
-	{
-		if (origin > dest)
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (8 - origin) + dest;
-			if (v1 > v2)
-				return(1);
-			else
-				return(-1);
-		}
-		else
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (8 - dest) + origin;
-			if (v1 > v2)
-				return(-1);
-			else
-				return(1);
-		}
-	}
-}
-
-
-INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
-{
-	INT16 v1,v2;
-
-	if (origin==dest)
-		return(0);
-
-	if ((std::abs(origin - dest)) == 16)
-	{
-		return(1);		// this could be made random
-	}
-	else
-	{
-		if (origin > dest)
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (32 - origin) + dest;
-			if (v1 > v2)
-				return(1);
-			else
-				return(-1);
-		}
-		else
-		{
-			v1 = std::abs(origin - dest);
-			v2 = (32 - dest) + origin;
-			if (v1 > v2)
-				return(-1);
-			else
-				return(1);
-		}
-	}
+	if (origin == dest) return 0;
+	if (origin > dest) return origin - dest >= maxDistance ? 1 : -1;
+	return dest - origin > maxDistance ? -1 : 1;
 }
 
 
@@ -756,11 +658,9 @@ BOOLEAN IsFacingClimableWindow( SOLDIERTYPE const* const pSoldier )
 
 BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const out_direction)
 {
-	UINT8   cnt;
-	INT16   sNewGridNo, sOtherSideOfFence;
+	GridNo  sNewGridNo, sOtherSideOfFence;
 	BOOLEAN fFound = FALSE;
 	UINT8   bMinNumTurns = 100;
-	INT8    bNumTurns;
 	UINT8   bMinDirection = 0;
 
 	GridNo const sGridNo = pSoldier->sGridNo;
@@ -771,12 +671,12 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const o
 	}
 
 	// LOOP THROUGH ALL 8 DIRECTIONS
-	INT8 const bStartingDir = pSoldier->bDirection;
-	for ( cnt = 0; cnt < 8; cnt+= 2 )
+	UINT8 const bStartingDir = pSoldier->bDirection;
+	for ( UINT8 cnt = 0; cnt < 8; cnt += 2 )
 	{
 		// go out *2* tiles
-		sNewGridNo = NewGridNo( (UINT16)sGridNo, DirectionInc( cnt ) );
-		sOtherSideOfFence = NewGridNo( (UINT16)sNewGridNo, DirectionInc( cnt ) );
+		sNewGridNo = NewGridNo( sGridNo, DirectionInc( cnt ) );
+		sOtherSideOfFence = NewGridNo( sNewGridNo, DirectionInc( cnt ) );
 
 		if ( NewOKDestination( pSoldier, sOtherSideOfFence, TRUE, 0 ) )
 		{
@@ -789,7 +689,7 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const o
 				fFound = TRUE;
 
 				// FInd how many turns we should go to get here
-				bNumTurns =  FindNumTurnsBetweenDirs( (INT8)cnt, bStartingDir );
+				UINT8 bNumTurns = FindNumTurnsBetweenDirs( cnt, bStartingDir );
 
 				if ( bNumTurns < bMinNumTurns )
 				{
@@ -821,3 +721,70 @@ INT16 RandomGridNo()
 	} while( !GridNoOnVisibleWorldTile( (INT16)iMapIndex ) );
 	return (INT16)iMapIndex;
 }
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(Isometric_Utils, FindNumTurnsBetweenDirs)
+{
+	// Same direction for both arguments must always return 0
+	for (UINT8 a = 0; a < 8; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(a, a), 0);
+
+	// Order of arguments must not matter
+	for (UINT8 a = 0; a < 8; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(3, a), FindNumTurnsBetweenDirs(a, 3));
+
+	// Expected results for this loop: 1, 2, 3, 4
+	for (UINT8 a = 1; a <= 4; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(0, a), a);
+
+	// Expected results for this loop: 3, 2, 1
+	for (UINT8 a = 5; a <= 7; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(0, a), 8 - a);
+}
+
+TEST(Isometric_Utils, QuickestDirection)
+{
+	EXPECT_EQ(QuickestDirection(1,3), 1);
+	EXPECT_EQ(QuickestDirection(0,6), -1);
+	EXPECT_EQ(QuickestDirection(5,0), 1);
+
+	for (UINT a = 0; a <= 7; ++a)
+		EXPECT_EQ(QuickestDirection(a,a), 0);
+
+	// For opposite directions we want to go clockwise (1)
+	for (UINT a = 0; a <= 3; ++a)
+		EXPECT_EQ(QuickestDirection(a,a+4), 1);
+
+	for (UINT a = 1; a <= 7; ++a)
+		if (a == 4) ; else EXPECT_EQ(QuickestDirection(0,a), -QuickestDirection(a,0));
+}
+
+// Verify that QuickestDirection works with a MaxDistance of 16,
+// equivalent to the removed function ExtQuickestDirection
+TEST(Isometric_Utils, ExtQuickestDirection)
+{
+	auto ExtQuickestDirection = [](UINT8 a, UINT8 b)
+	{
+		return QuickestDirection(a, b, 16);
+	};
+
+	EXPECT_EQ(ExtQuickestDirection(1,3), 1);
+	EXPECT_EQ(ExtQuickestDirection(0,6), 1);
+	EXPECT_EQ(ExtQuickestDirection(0,25), -1);
+	EXPECT_EQ(ExtQuickestDirection(5,0), -1);
+	EXPECT_EQ(ExtQuickestDirection(24,0), 1);
+
+	for (UINT a = 0; a <= 31; ++a)
+		EXPECT_EQ(ExtQuickestDirection(a,a), 0);
+
+	// For opposite directions we want to go clockwise (1)
+	for (UINT a = 0; a <= 15; ++a)
+		EXPECT_EQ(ExtQuickestDirection(a,a+16), 1);
+
+	for (UINT a = 1; a <= 31; ++a)
+		if (a == 16) ; else EXPECT_EQ(ExtQuickestDirection(0,a), -ExtQuickestDirection(a,0));
+}
+
+#endif
