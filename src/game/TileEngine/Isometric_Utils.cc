@@ -806,4 +806,40 @@ TEST(Isometric_Utils, FindNumTurnsBetweenDirs)
 		EXPECT_EQ(FindNumTurnsBetweenDirs(0, a), 8 - a);
 }
 
+TEST(Isometric_Utils, QuickestDirection)
+{
+	EXPECT_EQ(QuickestDirection(1,3), 1);
+	EXPECT_EQ(QuickestDirection(0,6), -1);
+	EXPECT_EQ(QuickestDirection(5,0), 1);
+
+	for (UINT a = 0; a <= 7; ++a)
+		EXPECT_EQ(QuickestDirection(a,a), 0);
+
+	// For opposite directions we want to go clockwise (1)
+	for (UINT a = 0; a <= 3; ++a)
+		EXPECT_EQ(QuickestDirection(a,a+4), 1);
+
+	for (UINT a = 1; a <= 7; ++a)
+		if (a == 4) ; else EXPECT_EQ(QuickestDirection(0,a), -QuickestDirection(a,0));
+}
+
+TEST(Isometric_Utils, ExtQuickestDirection)
+{
+	EXPECT_EQ(ExtQuickestDirection(1,3), 1);
+	EXPECT_EQ(ExtQuickestDirection(0,6), 1);
+	EXPECT_EQ(ExtQuickestDirection(0,25), -1);
+	EXPECT_EQ(ExtQuickestDirection(5,0), -1);
+	EXPECT_EQ(ExtQuickestDirection(24,0), 1);
+
+	for (UINT a = 0; a <= 31; ++a)
+		EXPECT_EQ(ExtQuickestDirection(a,a), 0);
+
+	// For opposite directions we want to go clockwise (1)
+	for (UINT a = 0; a <= 15; ++a)
+		EXPECT_EQ(ExtQuickestDirection(a,a+16), 1);
+
+	for (UINT a = 1; a <= 31; ++a)
+		if (a == 16) ; else EXPECT_EQ(ExtQuickestDirection(0,a), -ExtQuickestDirection(a,0));
+}
+
 #endif
