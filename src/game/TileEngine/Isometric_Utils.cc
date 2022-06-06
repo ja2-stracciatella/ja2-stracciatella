@@ -821,3 +821,27 @@ INT16 RandomGridNo()
 	} while( !GridNoOnVisibleWorldTile( (INT16)iMapIndex ) );
 	return (INT16)iMapIndex;
 }
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(Isometric_Utils, FindNumTurnsBetweenDirs)
+{
+	// Same direction for both arguments must always return 0
+	for (UINT8 a = 0; a < 8; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(a, a), 0);
+
+	// Order of arguments must not matter
+	for (UINT8 a = 0; a < 8; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(3, a), FindNumTurnsBetweenDirs(a, 3));
+
+	// Expected results for this loop: 1, 2, 3, 4
+	for (UINT8 a = 1; a <= 4; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(0, a), a);
+
+	// Expected results for this loop: 3, 2, 1
+	for (UINT8 a = 5; a <= 7; ++a)
+		EXPECT_EQ(FindNumTurnsBetweenDirs(0, a), 8 - a);
+}
+
+#endif
