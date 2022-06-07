@@ -9031,4 +9031,107 @@ TEST(SoldierControl, asserts)
 	EXPECT_EQ(sizeof(KEY_ON_RING), 2u);
 }
 
+UINT8 oldatan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
+{
+	DOUBLE  test_x =  sXPos2 - sXPos;
+	DOUBLE  test_y =  sYPos2 - sYPos;
+	UINT8	  mFacing = WEST;
+	DOUBLE angle;
+
+	if ( test_x == 0 )
+	{
+		test_x = 0.04;
+	}
+
+	angle = atan2( test_x, test_y );
+
+	do
+	{
+		if ( angle >=-PI*.375 && angle <= -PI*.125 )
+		{
+			mFacing = SOUTHWEST;
+			break;
+		}
+
+		if ( angle <= PI*.375 && angle >= PI*.125 )
+		{
+			mFacing = SOUTHEAST;
+			break;
+		}
+
+		if ( angle >=PI*.623 && angle <= PI*.875 )
+		{
+			mFacing = NORTHEAST;
+			break;
+		}
+
+		if ( angle <=-PI*.623 && angle >= -PI*.875 )
+		{
+			mFacing = NORTHWEST;
+			break;
+		}
+
+		if ( angle >-PI*0.125 && angle < PI*0.125 )
+		{
+			mFacing = SOUTH;
+		}
+		if ( angle > PI*0.375 && angle < PI*0.623 )
+		{
+			mFacing = EAST;
+		}
+		if ( ( angle > PI*0.875 && angle <= PI ) || ( angle > -PI && angle < -PI*0.875 ) )
+		{
+			mFacing = NORTH;
+		}
+		if ( angle > -PI*0.623 && angle < -PI*0.375 )
+		{
+			mFacing = WEST;
+		}
+
+	} while( FALSE );
+
+	return( mFacing );
+}
+
+TEST(SoldierControl, atan8)
+{
+	struct {
+		INT16 x2, y2;
+		UINT8 expectedResult;
+	} TestTable[]
+	{
+		{ 50, 0, EAST },
+		{ 50, 50, SOUTHEAST },
+		{ 0, 50, SOUTH },
+		{ -50, 50, SOUTHWEST },
+		{ -50, 0, WEST },
+		{ -50, -50, NORTHWEST },
+		{ 0, -50, NORTH },
+		{ 50, -50, NORTHEAST},
+	};
+
+	for (auto t : TestTable)
+	{
+		EXPECT_EQ(atan8(0, 0, t.x2, t.y2), t.expectedResult);
+		// Shifting both points equally must not make a difference
+		EXPECT_EQ(atan8(5000, 5000, 5000 + t.x2, 5000 + t.y2), t.expectedResult);
+		EXPECT_EQ(atan8(-5000, -5000, -5000 + t.x2, -5000 + t.y2), t.expectedResult);
+	}
+
+	// Calling atan8 with point 1 and point 2 must always return the opposite direction
+	for (INT16 x1 = -500; x1 < 500; x1 += 11)
+		for (INT16 y1 = -500; y1 < 500; y1 += 3)
+			EXPECT_EQ(std::abs((int)atan8(0, 0, x1, y1) - (int)atan8(x1, y1, 0, 0)), 4);
+
+	// Verify that both versions produce the same result when the points are identical
+	EXPECT_EQ(atan8(10, 10, 10, 10), oldatan8(10, 10, 10, 10));
+
+	// Old and new must produce the same result for these values
+	for (INT16 x1 = -500; x1 < 500; x1++)
+		EXPECT_EQ(atan8(10, 10, x1, 5), oldatan8(10, 10, x1, 5));
+
+	// This is one point where the old and new versions differ
+	EXPECT_NE(atan8(0, 0, 500, -205), oldatan8(0, 0, 500, -205));
+}
+
 #endif
