@@ -359,6 +359,8 @@ static INT8         gbNumHeliSeatsOccupied = 0;
 static BOOLEAN gfFirstGuyDown = FALSE;
 
 static UINT32 uiSoundSample;
+static UINT32 uiSoundVolume;
+
 static INT16  gsGridNoSweetSpot;
 static INT16  gsHeliXPos;
 static INT16  gsHeliYPos;
@@ -433,7 +435,8 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 	guiHeliLastUpdate = GetJA2Clock( );
 
 	// Start sound
-	uiSoundSample = PlayJA2Sample(HELI_1, 0, 10000, MIDDLEPAN);
+	uiSoundVolume = 0;
+	uiSoundSample = PlayJA2Sample(HELI_1, uiSoundVolume, 10000, MIDDLEPAN);
 	fFadingHeliIn = TRUE;
 
 	gfHandleHeli = TRUE;
@@ -451,7 +454,6 @@ void HandleHeliDrop( )
 {
 	UINT8 ubScriptCode;
 	UINT32 uiClock;
-	INT32 iVol;
 	INT32 cnt;
 	ANITILE_PARAMS	AniParams;
 
@@ -521,10 +523,9 @@ void HandleHeliDrop( )
 			{
 				if( uiSoundSample!=NO_SAMPLE )
 				{
-					iVol=SoundGetVolume( uiSoundSample );
-					iVol = std::min(HIGHVOLUME, iVol + 5);
-					SoundSetVolume(uiSoundSample, iVol);
-					if(iVol==HIGHVOLUME)
+					uiSoundVolume = std::min(UINT32(HIGHVOLUME), uiSoundVolume + 5);
+					SoundSetVolume(uiSoundSample, CalculateSoundEffectsVolume(uiSoundVolume));
+					if(uiSoundVolume == HIGHVOLUME)
 							fFadingHeliIn=FALSE;
 				}
 				else
@@ -536,11 +537,9 @@ void HandleHeliDrop( )
 			{
 				if( uiSoundSample!=NO_SAMPLE )
 				{
-					iVol=SoundGetVolume(uiSoundSample);
-					iVol = std::max(0, iVol - 5);
-
-					SoundSetVolume(uiSoundSample, iVol);
-					if(iVol==0)
+					uiSoundVolume = std::max(0, INT32(uiSoundVolume) - 5);
+					SoundSetVolume(uiSoundSample, CalculateSoundEffectsVolume(uiSoundVolume));
+					if(uiSoundVolume == 0)
 					{
 						// Stop sound
 						SoundStop( uiSoundSample );
