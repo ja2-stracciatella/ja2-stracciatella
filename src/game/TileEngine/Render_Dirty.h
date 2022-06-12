@@ -3,6 +3,7 @@
 
 #include "JA2Types.h"
 
+#include <memory>
 #include <string_theory/string>
 
 
@@ -33,7 +34,7 @@ struct VIDEO_OVERLAY
 	BOOLEAN          fActivelySaving;
 	BOOLEAN          fDeletionPending;
 	BACKGROUND_SAVE* background;
-	UINT16*          pSaveArea;
+	std::unique_ptr<UINT16 []> pSaveArea;
 	SGPFont          uiFontID;
 	INT16            sX;
 	INT16            sY;

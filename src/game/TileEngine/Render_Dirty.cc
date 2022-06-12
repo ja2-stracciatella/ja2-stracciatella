@@ -475,9 +475,6 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 
 		FreeBackgroundRect(v->background);
 
-		if (v->pSaveArea != NULL) delete v->pSaveArea;
-		v->pSaveArea = NULL;
-
 		VIDEO_OVERLAY* const prev = v->prev;
 		VIDEO_OVERLAY* const next = v->next;
 		*(prev ? &prev->next : &gVideoOverlays) = next;
@@ -528,7 +525,7 @@ static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 	UINT32                 const buf_size = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
 	v->fActivelySaving = TRUE;
-	v->pSaveArea       = new UINT16[buf_size]{};
+	v->pSaveArea.reset(new UINT16[buf_size]{});
 }
 
 
@@ -558,7 +555,7 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 
 		// Save data from frame buffer!
 		const BACKGROUND_SAVE* const b = v->background;
-		Blt16BPPTo16BPP(v->pSaveArea, b->sWidth * 2, pSrcBuf, uiSrcPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+		Blt16BPPTo16BPP(v->pSaveArea.get(), b->sWidth * 2, pSrcBuf, uiSrcPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 	}
 }
 
@@ -567,8 +564,7 @@ void DeleteVideoOverlaysArea(void)
 {
 	FOR_EACH_VIDEO_OVERLAY_SAFE(v)
 	{
-		if (v->pSaveArea != NULL) delete[] v->pSaveArea;
-		v->pSaveArea       = NULL;
+		v->pSaveArea.reset();
 		v->fActivelySaving = FALSE;
 		if (v->fDeletionPending) RemoveVideoOverlay(v);
 	}
@@ -622,7 +618,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 		usHeight = sBottom - sTop;
 		usWidth  = sRight -  sLeft;
 
-		Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, v->pSaveArea, b->sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
+		Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, v->pSaveArea.get(), b->sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
 
 		// Once done, check for pending deletion
 		if (v->fDeletionPending) RemoveVideoOverlay(v);

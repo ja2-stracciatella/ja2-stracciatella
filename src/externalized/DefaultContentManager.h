@@ -193,7 +193,7 @@ protected:
 	std::map<ST::string, const WeaponModel*> m_weaponMap;
 	std::map<ST::string, const ItemModel*> m_itemMap;
 	std::map<uint16_t, uint16_t> m_mapItemReplacements;
-	std::map<MusicMode, const std::vector<const ST::string*>*> m_musicMap;
+	std::map<MusicMode, std::unique_ptr<const std::vector<ST::string>>> m_musicMap;
 
 	std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
 	std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
