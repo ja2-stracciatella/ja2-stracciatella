@@ -608,7 +608,7 @@ try
 	}
 
 	// Create frame cache
-	InitAnimationCache(s.ubID, &s.AnimCache);
+	s.AnimCache.init(s.ubID);
 
 	UINT16 ani_state = s.usAnimState;
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
@@ -696,8 +696,7 @@ void DeleteSoldier(SOLDIERTYPE& s)
 	}
 
 	// Free any animations we may have locked...
-	UnLoadCachedAnimationSurfaces(s.ubID, &s.AnimCache);
-	DeleteAnimationCache(s.ubID, &s.AnimCache);
+	s.AnimCache.free();
 
 	DeleteSoldierLight(&s);
 	UnMarkMovementReserved(s);
