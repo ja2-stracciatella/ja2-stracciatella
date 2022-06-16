@@ -340,7 +340,7 @@ void HandleAllReachAbleItemsInTheSector(const SGPSector& sector)
 	if (grid_no == -1) grid_no = m.sEastGridNo;
 	if (grid_no == -1) grid_no = m.sSouthGridNo;
 	if (grid_no == -1) grid_no = m.sWestGridNo;
-	AssertMsg(grid_no != -1, ST::format("Map {} does not have any entry points!", sector.AsLongString()));
+	AssertMsg(grid_no != -1, ST::format("Map {} does not have any entry points!", sector));
 	if (grid_no == -1) return;
 
 	GridNo       grid_no2 = NOWHERE;

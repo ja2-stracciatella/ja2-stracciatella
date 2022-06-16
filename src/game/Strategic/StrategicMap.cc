@@ -1187,7 +1187,7 @@ check_entry:
 	// If no insertion direction exists, this is bad!
 	if (gridno == -1)
 	{
-		SLOGW("Insertion gridno for direction {} not added to map sector {}", s.ubStrategicInsertionCode, sSector.AsShortString());
+		SLOGW("Insertion gridno for direction {} not added to map sector {}", s.ubStrategicInsertionCode, sSector);
 place_in_center:
 		gridno = WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2;
 	}

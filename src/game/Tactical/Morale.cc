@@ -406,11 +406,11 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 	// Those that do need it have Asserts on a case by case basis below
 	if (pSoldier == NULL)
 	{
-		SLOGD("Handling morale event {} at {}", bMoraleEvent, sMap.AsLongString());
+		SLOGD("Handling morale event {} at {}", bMoraleEvent, sMap);
 	}
 	else
 	{
-		SLOGD("Handling morale event {} for {} at {}", bMoraleEvent, pSoldier->name, sMap.AsLongString());
+		SLOGD("Handling morale event {} for {} at {}", bMoraleEvent, pSoldier->name, sMap);
 	}
 
 

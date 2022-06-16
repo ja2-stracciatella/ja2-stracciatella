@@ -147,6 +147,9 @@ public:
 	ST::string AsLongString(bool file = false) const;
 };
 
+// String formatting for SGP sector
+void format_type(const ST::format_spec &format, ST::format_writer &output, const SGPSector &value);
+
 struct SDL_Color;
 typedef SDL_Color SGPPaletteEntry;
 

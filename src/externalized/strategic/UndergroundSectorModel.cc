@@ -95,7 +95,7 @@ void UndergroundSectorModel::validateData(const std::vector<const UndergroundSec
 		auto iter = std::find_if(ugSectors.begin(), ugSectors.end(), [sectorId, sectorZ](const UndergroundSectorModel* s) { return (s->sectorId == sectorId && s->sectorZ == sectorZ); });
 		if (iter == ugSectors.end())
 		{
-			ST::string err = ST::format("An underground sector is expected at ({}), but is not defined.", basement.AsLongString());
+			ST::string err = ST::format("An underground sector is expected at ({}), but is not defined.", basement);
 			throw std::runtime_error(err.to_std_string());
 		}
 	}
