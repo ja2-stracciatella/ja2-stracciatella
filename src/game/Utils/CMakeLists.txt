@@ -17,7 +17,6 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/STIConvert.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Slider.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Sound_Control.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Text.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Text_Input.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Text_Utils.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Timer_Control.cc

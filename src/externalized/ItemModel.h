@@ -1,5 +1,6 @@
 #pragma once
 #include "Item_Types.h"
+#include "ItemStrings.h"
 #include "InventoryGraphicsModel.h"
 #include "TilesetTileIndexModel.h"
 #include <string_theory/string>
@@ -21,6 +22,9 @@ struct ItemModel
 	ItemModel(
 		uint16_t   itemIndex,
 		ST::string internalName,
+		ST::string shortName,
+		ST::string name,
+		ST::string description,
 		uint32_t   usItemClass,
 		uint8_t    ubClassIndex,
 		ItemCursor ubCursor,
@@ -38,6 +42,9 @@ struct ItemModel
 	virtual ~ItemModel();
 
 	const virtual ST::string& getInternalName() const;
+	const virtual ST::string& getShortName() const;
+	const virtual ST::string& getName() const;
+	const virtual ST::string& getDesciption() const;
 
 	virtual uint16_t        getItemIndex() const;
 	virtual uint32_t        getItemClass() const;
@@ -84,11 +91,14 @@ struct ItemModel
 	virtual bool canBeAttached(uint16_t attachment) const;
 
 	virtual void serializeTo(JsonObject &obj) const;
-	static const ItemModel* deserialize(JsonObjectReader &obj);
+	static const ItemModel* deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
 
 protected:
 	uint16_t   itemIndex;
 	ST::string internalName;
+	ST::string shortName;
+	ST::string name;
+	ST::string description;
 	uint32_t   usItemClass;
 	uint8_t    ubClassIndex;
 	ItemCursor ubCursor;

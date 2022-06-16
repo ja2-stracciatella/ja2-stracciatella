@@ -31,6 +31,9 @@ ItemModel::ItemModel(uint16_t itemIndex,
 
 ItemModel::ItemModel(uint16_t   itemIndex,
 			ST::string internalName,
+			ST::string shortName,
+			ST::string name,
+			ST::string description,
 			uint32_t   usItemClass,
 			uint8_t    ubClassIndex,
 			ItemCursor ubCursor,
@@ -46,6 +49,9 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 {
 	this->itemIndex             = itemIndex;
 	this->internalName          = internalName;
+	this->shortName             = shortName;
+	this->name                  = name;
+	this->description           = description;
 	this->usItemClass           = usItemClass;
 	this->ubClassIndex          = ubClassIndex;
 	this->ubCursor              = ubCursor;
@@ -60,7 +66,11 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 
 ItemModel::~ItemModel() = default;
 
-const ST::string& ItemModel::getInternalName() const  { return internalName;          }
+const ST::string& ItemModel::getInternalName() const   { return internalName;          }
+
+const ST::string& ItemModel::getShortName() const      { return shortName; }
+const ST::string& ItemModel::getName() const           { return name; }
+const ST::string& ItemModel::getDesciption() const     { return description; }
 
 uint16_t        ItemModel::getItemIndex() const        { return itemIndex;             }
 uint32_t        ItemModel::getItemClass() const        { return usItemClass;           }
@@ -167,8 +177,9 @@ void ItemModel::serializeTo(JsonObject &obj) const
     serializeFlags(obj);
 }
 
-const ItemModel* ItemModel::deserialize(JsonObjectReader &obj)
+const ItemModel* ItemModel::deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings)
 {
+	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
 	JsonObjectReader igGreader(igSource);
 	auto inventoryGraphics = InventoryGraphicsModel::deserialize(igGreader);
@@ -178,8 +189,11 @@ const ItemModel* ItemModel::deserialize(JsonObjectReader &obj)
 	auto tileGraphic = TilesetTileIndexModel::deserialize(tgReader);
 
 	auto* item = new ItemModel(
-		obj.GetUInt("itemIndex"),
+		itemIndex,
 		obj.GetString("internalName"),
+		vanillaItemStrings.getShortName(itemIndex),
+		vanillaItemStrings.getName(itemIndex),
+		vanillaItemStrings.getDesciption(itemIndex),
 		obj.GetUInt("usItemClass"),
 		obj.GetUInt("ubClassIndex"),
 		(ItemCursor)obj.GetUInt("ubCursor"),

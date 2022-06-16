@@ -1694,11 +1694,11 @@ static bool DoRepair(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner
 	{ // report it as fixed
 		if (repairer == owner)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_REPAIRED], repairer->name, ItemNames[item]));
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_REPAIRED], repairer->name, GCM->getItem(item)->getName()));
 		}
 		else
 		{ // NOTE: may need to be changed for localized versions
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_35], repairer->name, owner->name, ItemNames[item]));
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_35], repairer->name, owner->name, GCM->getItem(item)->getName()));
 		}
 	}
 	return true;
@@ -7043,14 +7043,15 @@ static BOOLEAN UnjamGunsOnSoldier(SOLDIERTYPE* pOwnerSoldier, SOLDIERTYPE* pRepa
 				StatChange(*pRepairSoldier, DEXTAMT,   5, FROM_SUCCESS);
 
 				// report it as unjammed
+				auto& itemName = GCM->getItem(pOwnerSoldier->inv[bPocket].usItem)->getName();
 				if ( pRepairSoldier == pOwnerSoldier )
 				{
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_53], pRepairSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]));
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_53], pRepairSoldier->name, itemName));
 				}
 				else
 				{
 					// NOTE: may need to be changed for localized versions
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_54], pRepairSoldier->name, pOwnerSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]));
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_54], pRepairSoldier->name, pOwnerSoldier->name, itemName));
 				}
 
 				fAnyGunsWereUnjammed = TRUE;

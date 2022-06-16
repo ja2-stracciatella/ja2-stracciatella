@@ -4186,7 +4186,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			break;
 		case NPC_ACTION_BUY_LEATHER_KEVLAR_VEST:
 			zTemp2 = ST::format("${}", GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice());
-			zTemp = st_format_printf(TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2);
+			zTemp = st_format_printf(TacticalStr[ BUY_VEST_PROMPT ], GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getName(), zTemp2);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_PROMPT_PLAYER_TO_LIE:

@@ -840,7 +840,7 @@ static void EnterQuestDebugSystem(void)
 
 	if( giHaveSelectedItem != -1 )
 	{
-		ST::string zItemDesc = ST::format("{} - {}", giHaveSelectedItem, ShortItemNames[giHaveSelectedItem]);
+		ST::string zItemDesc = ST::format("{} - {}", giHaveSelectedItem, GCM->getItem(giHaveSelectedItem)->getShortName());
 		guiQuestDebugCurItemButton->SpecifyText(zItemDesc);
 
 		gItemListBox.sCurSelectedItem = (INT16)giHaveSelectedItem;
@@ -1714,7 +1714,7 @@ static void DisplaySelectedItem(void)
 		// display the names of the NPC's
 	for( i=gpActiveListBox->usItemDisplayedOnTopOfList; i< gpActiveListBox->usItemDisplayedOnTopOfList+gpActiveListBox->usNumDisplayedItems; i++)
 	{
-		ST::string ItemName = ShortItemNames[i];
+		auto ItemName = GCM->getItem(i)->getShortName();
 		if (ItemName.empty()) ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
 		DrawTextToScreen(ItemName, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -1731,7 +1731,7 @@ static void DisplaySelectedItem(void)
 
 		SetFontShadow(NO_SHADOW);
 
-		ST::string ItemName = ShortItemNames[gpActiveListBox->sCurSelectedItem];
+		ST::string ItemName = GCM->getItem(gpActiveListBox->sCurSelectedItem)->getShortName();
 		if (ItemName.empty()) ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
 		DrawTextToScreen(ItemName, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -2050,7 +2050,7 @@ static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, INT32 
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		ST::string zTemp = ST::format("{} where the {} will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], ShortItemNames[gItemListBox.sCurSelectedItem]);
+		ST::string zTemp = ST::format("{} where the {} will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], GCM->getItem(gItemListBox.sCurSelectedItem)->getShortName());
 		TextEntryBox( zTemp, AddItemToGridNo );
 	}
 }
@@ -2557,7 +2557,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 					DrawTextToScreen(PocketText[i], QUEST_DBS_NPC_INV_POPUP_X+10, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 					//Display the contents of the pocket
-					DrawTextToScreen(ShortItemNames[s->inv[i].usItem], QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+					DrawTextToScreen(GCM->getItem(s->inv[i].usItem)->getShortName(), QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 					usPosY += usFontHeight;
 				}
 			}

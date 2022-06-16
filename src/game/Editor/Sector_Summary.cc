@@ -673,7 +673,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, ShortItemNames[index]);
+				MPrint(xp, yp, GCM->getItem(index)->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
@@ -778,7 +778,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, ShortItemNames[index]);
+				MPrint(xp, yp, GCM->getItem(index)->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
@@ -845,7 +845,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, ShortItemNames[index]);
+				MPrint(xp, yp, GCM->getItem(index)->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;

@@ -267,12 +267,12 @@ static bool isHeadPosition(int8_t pos)
 
 static void showGearEquipMessage(const SOLDIERTYPE* s, uint16_t usItem)
 {
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM), s->name, ItemNames[usItem]));
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM), s->name, GCM->getItem(usItem)->getName()));
 }
 
 static void showGearRemoveMessage(const SOLDIERTYPE* s, uint16_t usItem)
 {
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_REMOVES_ITEM), s->name, ItemNames[usItem]));
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_REMOVES_ITEM), s->name, GCM->getItem(usItem)->getName()));
 }
 
 const std::vector<ITEMDEFINE> HEAD_GEARS_DAY   { SUNGOGGLES };

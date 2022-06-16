@@ -412,7 +412,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
 				{
-					pStr = ItemNames[usCounter];
+					pStr = item->getName();
 				}
 				else
 				{
@@ -1464,6 +1464,6 @@ void DisplayItemStatistics()
 	INT16          const highlited  = eInfo.sHilitedItemIndex;
 	INT16          const idx        = highlited != -1 ? highlited : eInfo.sSelItemIndex;
 	UINT8          const foreground = idx == highlited ? FONT_LTRED : FONT_YELLOW;
-	ST::string item_name  = ItemNames[eInfo.pusItemIndex[idx]];
+	ST::string item_name  = GCM->getItem(eInfo.pusItemIndex[idx])->getName();
 	DisplayWrappedString(2, EDITOR_TASKBAR_POS_Y + 41, 97, 2, SMALLCOMPFONT, foreground, item_name, FONT_BLACK, CENTER_JUSTIFIED);
 }

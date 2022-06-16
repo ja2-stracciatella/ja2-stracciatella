@@ -1768,7 +1768,7 @@ static void SetAttachmentTooltips(void)
 	for (UINT i = 0; i < MAX_ATTACHMENTS; ++i)
 	{
 		const UINT16 attachment = gpItemDescObject->usAttachItem[i];
-		ST::string tip = (attachment != NOTHING ? ItemNames[attachment] : g_langRes->Message[STR_ATTACHMENTS]);
+		ST::string tip = (attachment != NOTHING ? GCM->getItem(attachment)->getName() : g_langRes->Message[STR_ATTACHMENTS]);
 		gItemDescAttachmentRegions[i].SetFastHelpText(tip);
 	}
 }
@@ -1985,7 +1985,10 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 static void ReloadItemDesc(void)
 {
-	auto graphic = GetBigInventoryGraphicForItem(GCM->getItem(gpItemDescObject->usItem));
+	auto itemId = gpItemDescObject->usItem;
+	auto item = GCM->getItem(itemId);
+	auto graphic = GetBigInventoryGraphicForItem(item);
+
 	guiItemGraphic = graphic.first;
 	guiItemGraphicIndex = graphic.second;
 
@@ -1994,13 +1997,13 @@ static void ReloadItemDesc(void)
 	//
 
 	//if the player is extracting money from the players account, use a different item name and description
-	UINT16 Item = gpItemDescObject->usItem;
-	if (Item == MONEY && gfAddingMoneyToMercFromPlayersAccount)
+	if (itemId == MONEY && gfAddingMoneyToMercFromPlayersAccount)
 	{
-		Item = MONEY_FOR_PLAYERS_ACCOUNT;
+		itemId = MONEY_FOR_PLAYERS_ACCOUNT;
 	}
-	gzItemName = ItemNames[Item];
-	gzItemDesc = LoadItemInfo(Item);
+	item = GCM->getItem(itemId);
+	gzItemName = item->getName();
+	gzItemDesc = item->getDesciption();
 }
 
 
@@ -3573,7 +3576,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					// try to auto place object....
 					if ( AutoPlaceObject( pSoldier, gpItemPointer, TRUE ) )
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usItem ], pSoldier->name) );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], GCM->getItem(usItem)->getShortName(), pSoldier->name) );
 
 						// Check if it's the same now!
 						if ( gpItemPointer->ubNumberOfObjects == 0 )
@@ -3612,7 +3615,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					}
 					else
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_NO_ROOM_TO_PASS_ITEM ], ShortItemNames[ usItem ], pSoldier->name) );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_NO_ROOM_TO_PASS_ITEM ], GCM->getItem(usItem)->getShortName(), pSoldier->name) );
 						return( FALSE );
 					}
 				}
@@ -3820,7 +3823,7 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
 
 		//OK, for each item, set dirty text if applicable!
-		gItemPopupRegions[cnt].SetFastHelpText(ItemNames[pSoldier->inv[ubPosition].usItem]);
+		gItemPopupRegions[cnt].SetFastHelpText(GCM->getItem(pSoldier->inv[ubPosition].usItem)->getName());
 		gfItemPopupRegionCallbackEndFix = FALSE;
 	}
 
@@ -4825,11 +4828,11 @@ void RenderItemPickupMenu()
 			if (item->getItemClass() == IC_MONEY)
 			{
 				ST::string pStr2 = SPrintMoney(o.uiMoneyAmount);
-				pStr = ST::format("{} ({})", ItemNames[o.usItem], pStr2);
+				pStr = ST::format("{} ({})", GCM->getItem(o.usItem)->getName(), pStr2);
 			}
 			else
 			{
-				pStr = ShortItemNames[o.usItem];
+				pStr = GCM->getItem(o.usItem)->getShortName();
 			}
 			INT16 sFontX;
 			INT16 sFontY;
@@ -5240,7 +5243,7 @@ ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 	{
 		// alternate money like silver or gold
 		ST::string pStr2 = SPrintMoney(obj.uiMoneyAmount);
-		dst = ST::format("{} ({})", ItemNames[usItem], pStr2);
+		dst = ST::format("{} ({})", GCM->getItem(usItem)->getName(), pStr2);
 	}
 	else if (usItem == NOTHING)
 	{
@@ -5248,7 +5251,7 @@ ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 	}
 	else
 	{
-		dst = ST::format("{}", ItemNames[usItem]);
+		dst = ST::format("{}", GCM->getItem(usItem)->getName());
 		if (!gGameOptions.fGunNut && GCM->getItem(usItem)->getItemClass() == IC_GUN)
 		{
 			const CalibreModel * calibre = GCM->getWeapon(usItem)->calibre;
@@ -5273,7 +5276,7 @@ ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 			UINT16 const attachment = *i;
 			if (attachment == NOTHING) continue;
 
-			dst += ST::format("{}{}", prefix, ItemNames[attachment]);
+			dst += ST::format("{}{}", prefix, GCM->getItem(attachment)->getName());
 			prefix = ",\n";
 		}
 		if (prefix != first_prefix)

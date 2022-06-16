@@ -906,7 +906,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		}
 
 		// If this will only be a single line, center it in the box
-		ST::string item_name = ShortItemNames[usItem];
+		auto& item_name = GCM->getItem(usItem)->getShortName();
 		UINT16  const        tx        = x - 1;
 		UINT16  const        ty        = AIM_MEMBER_WEAPON_NAME_Y;
 		UINT16  const        tw        = AIM_MEMBER_WEAPON_NAME_WIDTH;

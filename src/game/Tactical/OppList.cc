@@ -2827,8 +2827,8 @@ void DebugSoldierPage2()
 
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "FlashInd:",    s->fFlashLocator);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ShowInd:",     s->fShowLocator);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Main hand:",   ShortItemNames[s->inv[HANDPOS].usItem]);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Second hand:", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Main hand:",   GCM->getItem(s->inv[HANDPOS].usItem)->getShortName());
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Second hand:", GCM->getItem(s->inv[SECONDHANDPOS].usItem)->getShortName());
 
 		const GridNo map_pos = GetMouseMapPos();
 		if (map_pos != NOWHERE)
@@ -3127,7 +3127,7 @@ static void PrintItem(INT32 y, const ST::string& header, const OBJECTTYPE* o)
 {
 	MHeader(DEBUG_PAGE_FIRST_COLUMN, y, header);
 	if (!o->usItem) return;
-	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{}", ShortItemNames[o->usItem]));
+	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{}", GCM->getItem(o->usItem)->getShortName()));
 	WriteQuantityAndAttachments(o, y);
 }
 

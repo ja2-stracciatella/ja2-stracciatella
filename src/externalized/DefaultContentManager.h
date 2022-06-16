@@ -7,6 +7,7 @@
 #include "IGameDataLoader.h"
 #include "StringEncodingTypes.h"
 #include "RustInterface.h"
+#include "ItemStrings.h"
 
 #include "rapidjson/document.h"
 #include <string_theory/string>
@@ -63,8 +64,6 @@ public:
 
 	/** Load encrypted string from game resource file. */
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const override;
-
-	virtual ST::string loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const override;
 
 	/** Load dialogue quote from file. */
 	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
@@ -246,9 +245,9 @@ protected:
 
 	RustPointer<Vfs> m_vfs;
 
-	bool loadWeapons();
-	bool loadItems();
-	bool loadMagazines();
+	bool loadWeapons(const VanillaItemStrings& vanillaItemStrings);
+	bool loadItems(const VanillaItemStrings& vanillaItemStrings);
+	bool loadMagazines(const VanillaItemStrings& vanillaItemStrings);
 	bool loadCalibres();
 	bool loadAmmoTypes();
 	bool loadArmyData();

@@ -6,11 +6,6 @@
 
 #include <string_theory/string>
 
-
-extern ST::string ShortItemNames[MAXITEMS];
-extern ST::string ItemNames[MAXITEMS];
-
-extern void LoadAllExternalText( void );
 extern ST::string GetWeightUnitString( void );
 extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 

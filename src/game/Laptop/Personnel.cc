@@ -1164,7 +1164,7 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 
 		SetFontDestBuffer(FRAME_BUFFER);
 
-		sString = ItemNames[item_idx];
+		sString = item->getName();
 		sString = ReduceStringLength(sString, 171 - 75, FONT10ARIAL);
 		MPrint(PosX + 65, PosY + 3, sString);
 

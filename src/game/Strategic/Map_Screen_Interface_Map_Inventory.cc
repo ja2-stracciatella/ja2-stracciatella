@@ -230,8 +230,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 
 	// the name
 	const SGPBox* const name_box = &g_sector_inv_name_box;
-	ST::string sString = ShortItemNames[item.o.usItem];
-	sString = ReduceStringLength(sString, name_box->w, MAP_IVEN_FONT);
+	auto sString = ReduceStringLength(GCM->getItem(item.o.usItem)->getShortName(), name_box->w, MAP_IVEN_FONT);
 
 	SetFontAttributes(MAP_IVEN_FONT, FONT_WHITE);
 

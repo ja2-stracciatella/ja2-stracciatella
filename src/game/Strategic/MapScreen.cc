@@ -3924,7 +3924,8 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				// if item came from another merc
 				if ( gpItemPointerSoldier != pSoldier )
 				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], pSoldier->name) );
+					auto& itemName = GCM->getItem(usNewItemIndex)->getShortName();
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], itemName, pSoldier->name) );
 				}
 
 			}
