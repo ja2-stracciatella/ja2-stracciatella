@@ -594,8 +594,8 @@ static const ST::string s_ger_pDirectionStr[pDirectionStr_SIZE] =
 
 static const ST::string s_ger_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%s wurden entdeckt in Sektor %c%d und ein weiterer Trupp wird gleich ankommen.",	//STR_DETECTED_SINGULAR
-	"%s wurden entdeckt in Sektor %c%d und weitere Trupps werden gleich ankommen.",	//STR_DETECTED_PLURAL
+	"%s wurden entdeckt in Sektor %s und ein weiterer Trupp wird gleich ankommen.",	//STR_DETECTED_SINGULAR
+	"%s wurden entdeckt in Sektor %s und weitere Trupps werden gleich ankommen.",	//STR_DETECTED_PLURAL
 	"Gleichzeitige Ankunft koordinieren?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -710,11 +710,11 @@ static const ST::string s_ger_gpStrategicString[gpStrategicString_SIZE] =
 
 	//various popup messages for battle conditions.
 
-	//%c%d is the sector -- ex: A9
-	"Feinde attackieren Ihre Miliz im Sektor %c%d.",
-	//%c%d is the sector -- ex: A9
-	"Monster attackieren Ihre Miliz im Sektor %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters, %c%d is the sector -- ex: A9
+	//%s -- ex: A9
+	"Feinde attackieren Ihre Miliz im Sektor %s.",
+	//%s -- ex: A9
+	"Monster attackieren Ihre Miliz im Sektor %s.",
+	//1st %d refers to the number of civilians eaten by monsters, %s -- ex: A9
 	//Note: the minimum number of civilians eaten will be two.
 	"Monster attackieren und töten %d Zivilisten im Sektor %s.",
 	//%s is the sector -- ex: A9

@@ -610,8 +610,8 @@ static const ST::string s_rus_pDirectionStr[pDirectionStr_SIZE] =
 
 static const ST::string s_rus_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%s обнаружены в секторе %c%d и вот-вот прибудет еще один отряд.", //STR_DETECTED_SINGULAR
-	"%s обнаружены в секторе %c%d и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
+	"%s обнаружены в секторе %s и вот-вот прибудет еще один отряд.", //STR_DETECTED_SINGULAR
+	"%s обнаружены в секторе %s и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
 	"Хотите координировать одновременное прибытие?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -726,11 +726,11 @@ static const ST::string s_rus_gpStrategicString[gpStrategicString_SIZE] =
 //!!!What about repeated "R" as hotkey?
 	//various popup messages for battle conditions.
 
-	//%c%d is the sector -- ex:  A9
-	"Враги атакуют ваше ополчение в секторе %c%d.",
+	//%s -- ex:  A9
+	"Враги атакуют ваше ополчение в секторе %s.",
 	//%c%d сектор -- напр:  A9
-	"Существа напали на ополчение в секторе %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	"Существа напали на ополчение в секторе %s.",
+	//1st %d refers to the number of civilians eaten by monsters,  %s -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
 	"Существа напали на гражданских, убито %d в секторе %s.",
 	//%s is the sector location -- ex:  A9: Omerta

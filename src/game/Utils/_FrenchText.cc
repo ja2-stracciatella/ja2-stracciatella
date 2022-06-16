@@ -610,8 +610,8 @@ static const ST::string s_fr_pDirectionStr[pDirectionStr_SIZE] =
 
 static const ST::string s_fr_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%s détecté dans le secteur %c%d et une autre escouade est en route.",	//STR_DETECTED_SINGULAR
-	"%s détecté dans le secteur %c%d et d'autres escouades sont en route.",	//STR_DETECTED_PLURAL
+	"%s détecté dans le secteur %s et une autre escouade est en route.",	//STR_DETECTED_SINGULAR
+	"%s détecté dans le secteur %s et d'autres escouades sont en route.",	//STR_DETECTED_PLURAL
 	"Voulez-vous coordonner vos mouvements de troupe ?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -726,11 +726,11 @@ static const ST::string s_fr_gpStrategicString[gpStrategicString_SIZE] =
 
 	//various popup messages for battle conditions.
 
-	//%c%d is the sector -- ex:  A9
-	"L'ennemi attaque votre milice dans le secteur %c%d.",
-	//%c%d is the sector -- ex:  A9
-	"Les créatures attaquent votre milice dans le secteur %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	//%s -- ex:  A9
+	"L'ennemi attaque votre milice dans le secteur %s.",
+	//%s -- ex:  A9
+	"Les créatures attaquent votre milice dans le secteur %s.",
+	//1st %d refers to the number of civilians eaten by monsters,  %s -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
 	"Les créatures ont tué %d civils dans le secteur %s.",
 	//%s is the sector location -- ex:  A9: Omerta

@@ -624,8 +624,8 @@ static const ST::string s_dut_pDirectionStr[pDirectionStr_SIZE] =
 
 static const ST::string s_dut_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%s zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
-	"%s zijn ontdekt in sector %c%d en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
+	"%s zijn ontdekt in sector %s en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
+	"%s zijn ontdekt in sector %s en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
 	"Wil je een gezamenlijke aankomst coördineren?",					//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -740,11 +740,11 @@ static const ST::string s_dut_gpStrategicString[gpStrategicString_SIZE] =
 
 	//various popup messages for battle conditions.
 
-	//%c%d is the sector -- ex:  A9
-	"Vijanden vallen je militie aan in sector %c%d.",
-	//%c%d is the sector -- ex:  A9
-	"Beesten vallen je militie aan in sector %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	//%s -- ex:  A9
+	"Vijanden vallen je militie aan in sector %s.",
+	//%s -- ex:  A9
+	"Beesten vallen je militie aan in sector %s.",
+	//1st %d refers to the number of civilians eaten by monsters,  %s -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
 	"Beesten vallen aan en doden %d burgers in sector %s.",
 	//%s is the sector location -- ex:  A9: Omerta

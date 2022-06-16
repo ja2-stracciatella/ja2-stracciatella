@@ -610,8 +610,8 @@ static const ST::string s_cn_pDirectionStr[pDirectionStr_SIZE] =
 
 static const ST::string s_cn_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%s在%c%d区域被发现了, 另一小队即将到达.",	//STR_DETECTED_SINGULAR
-	"%s在%c%d区域被发现了, 其它几个小队即将到达.",	//STR_DETECTED_PLURAL
+	"%s在%s区域被发现了, 另一小队即将到达.",	//STR_DETECTED_SINGULAR
+	"%s在%s区域被发现了, 其它几个小队即将到达.",	//STR_DETECTED_PLURAL
 	"您想调整为同时到达吗?",												//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -726,11 +726,11 @@ static const ST::string s_cn_gpStrategicString[gpStrategicString_SIZE] =
 
 	//various popup messages for battle conditions.
 
-	//%c%d is the sector -- ex:  A9
-	"敌军向您在%c%d区域的民兵发起了攻击.",
-	//%c%d is the sector -- ex:  A9
-	"异形向您在%c%d区域的民兵发起了攻击.",
-	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	//%s -- ex:  A9
+	"敌军向您在%s区域的民兵发起了攻击.",
+	//%s -- ex:  A9
+	"异形向您在%s区域的民兵发起了攻击.",
+	//1st %d refers to the number of civilians eaten by monsters,  %s -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
 	"异形攻击了区域%s, 吃掉了%d名平民.",
 	//%s is the sector location -- ex:  A9: Omerta
