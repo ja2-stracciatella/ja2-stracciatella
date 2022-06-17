@@ -109,9 +109,9 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 	WeaponModel *wep = NULL;
 	int itemIndex = obj.GetInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");
-	ST::string shortName = vanillaItemStrings.getShortName(itemIndex);
-	ST::string name = vanillaItemStrings.getName(itemIndex);
-	ST::string description = vanillaItemStrings.getDesciption(itemIndex);
+	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
+	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
+	auto description = ItemModel::deserializeDescription(obj, vanillaItemStrings);
 	ST::string internalType = obj.GetString("internalType");
 
 	if (internalType == WEAPON_TYPE_NOWEAPON)

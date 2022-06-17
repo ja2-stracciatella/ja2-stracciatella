@@ -12,7 +12,7 @@ class VanillaItemStrings {
 
 		const ST::string& getShortName(uint32_t itemIndex) const;
 		const ST::string& getName(uint32_t itemIndex) const;
-		const ST::string& getDesciption(uint32_t itemIndex) const;
+		const ST::string& getDescription(uint32_t itemIndex) const;
 
 		static VanillaItemStrings deserialize(SGPFile* file);
 		static ST::string filename();

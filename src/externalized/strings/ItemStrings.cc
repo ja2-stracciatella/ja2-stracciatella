@@ -9,16 +9,31 @@
 
 VanillaItemStrings::VanillaItemStrings() {}
 
+// Needed to be able to return a reference to an empty string which is not local
+const ST::string EMPTY_STRING = "";
+
 const ST::string& VanillaItemStrings::getShortName(uint32_t itemIndex) const {
-	return items.at(itemIndex).shortName;
+	auto found = items.find(itemIndex);
+	if (found == items.end()) {
+		return EMPTY_STRING;
+	}
+	return (*found).second.shortName;
 }
 
 const ST::string& VanillaItemStrings::getName(uint32_t itemIndex) const {
-	return items.at(itemIndex).name;
+	auto found = items.find(itemIndex);
+	if (found == items.end()) {
+		return EMPTY_STRING;
+	}
+	return (*found).second.name;
 }
 
-const ST::string& VanillaItemStrings::getDesciption(uint32_t itemIndex) const {
-	return items.at(itemIndex).description;
+const ST::string& VanillaItemStrings::getDescription(uint32_t itemIndex) const {
+	auto found = items.find(itemIndex);
+	if (found == items.end()) {
+		return EMPTY_STRING;
+	}
+	return (*found).second.description;
 };
 
 ST::string VanillaItemStrings::filename() {
@@ -37,11 +52,7 @@ VanillaItemStrings VanillaItemStrings::deserialize(SGPFile* file) {
 			auto name = LoadEncryptedString(file, seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
 			auto description = LoadEncryptedString(file, seek + SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME, SIZE_ITEM_INFO);
 
-			itemStrings.items.emplace(std::make_pair(index, VanillaItem{
-				shortName: shortName,
-				name: name,
-				description: description
-			}));
+			itemStrings.items.emplace(std::make_pair(index, VanillaItem{shortName, name, description}));
 
 			index++;
 		} catch (const std::runtime_error& error) {

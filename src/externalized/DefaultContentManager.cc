@@ -810,20 +810,20 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<co
 /** Load the game data. */
 bool DefaultContentManager::loadGameData()
 {
-	VanillaItemStrings s = {};
+	VanillaItemStrings vanillaItemStrings = {};
 	try {
 		AutoSGPFile f(openGameResForReading(VanillaItemStrings::filename()));
-		s = VanillaItemStrings::deserialize(f);
+		vanillaItemStrings = VanillaItemStrings::deserialize(f);
 	} catch (const std::runtime_error& err) {
 		SLOGE("Could not read vanilla item strings from {}: {}", VanillaItemStrings::filename(), err.what());
 	}
 
 	m_items.resize(MAXITEMS);
-	bool result = loadItems(s)
+	bool result = loadItems(vanillaItemStrings)
 		&& loadCalibres()
 		&& loadAmmoTypes()
-		&& loadMagazines(s)
-		&& loadWeapons(s)
+		&& loadMagazines(vanillaItemStrings)
+		&& loadWeapons(vanillaItemStrings)
 		&& loadArmyData()
 		&& loadMusic();
 

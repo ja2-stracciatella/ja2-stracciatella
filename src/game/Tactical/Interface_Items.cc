@@ -2003,7 +2003,7 @@ static void ReloadItemDesc(void)
 	}
 	item = GCM->getItem(itemId);
 	gzItemName = item->getName();
-	gzItemDesc = item->getDesciption();
+	gzItemDesc = item->getDescription();
 }
 
 

@@ -5,7 +5,7 @@ description: |
   **Limitations**: Some items are still referenced in source code, so they should not be changed.
 items:
   title: Item
-  description: | 
+  description: |
     An item defines item properties of an item available in the game.
 
     Note that weapons and magazines are not part of this list, but have their own definitions.
@@ -17,6 +17,15 @@ items:
     internalName:
       title: Internal name
       $ref: types/id.schema.yaml
+    shortName:
+      title: Short name
+      type: string
+    name:
+      title: Name
+      type: string
+    description:
+      title: Description
+      type: string
     usItemClass:
       title: Item class
       $ref: types/uint32.schema.yaml

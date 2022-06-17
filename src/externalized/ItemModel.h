@@ -44,7 +44,7 @@ struct ItemModel
 	const virtual ST::string& getInternalName() const;
 	const virtual ST::string& getShortName() const;
 	const virtual ST::string& getName() const;
-	const virtual ST::string& getDesciption() const;
+	const virtual ST::string& getDescription() const;
 
 	virtual uint16_t        getItemIndex() const;
 	virtual uint32_t        getItemClass() const;
@@ -91,8 +91,11 @@ struct ItemModel
 	virtual bool canBeAttached(uint16_t attachment) const;
 
 	virtual void serializeTo(JsonObject &obj) const;
-	static const ItemModel* deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
 
+	static ST::string deserializeShortName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
+	static ST::string deserializeName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
+	static ST::string deserializeDescription(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
+	static const ItemModel* deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
 protected:
 	uint16_t   itemIndex;
 	ST::string internalName;

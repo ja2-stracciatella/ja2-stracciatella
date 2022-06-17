@@ -20,6 +20,9 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 	calibre(calibre_), capacity(capacity_), ammoType(ammoType_),
 	dontUseAsDefaultMagazine(dontUseAsDefaultMagazine_)
 {
+	this->shortName = shortName_;
+	this->name = name_;
+	this->description = description_;
 }
 
 #include "ContentManager.h"
@@ -67,12 +70,15 @@ MagazineModel* MagazineModel::deserialize(
 	uint16_t capacity             = obj.GetInt("capacity");
 	const AmmoTypeModel *ammoType = getAmmoType(obj.GetString("ammoType"), ammoTypeMap);
 	bool dontUseAsDefaultMagazine = obj.getOptionalBool("dontUseAsDefaultMagazine");
+	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
+	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
+	auto description = ItemModel::deserializeDescription(obj, vanillaItemStrings);
 	MagazineModel *mag = new MagazineModel(
 		itemIndex,
 		internalName,
-		vanillaItemStrings.getShortName(itemIndex),
-		vanillaItemStrings.getName(itemIndex),
-		vanillaItemStrings.getDesciption(itemIndex),
+		shortName,
+		name,
+		description,
 		itemClass,
 		calibre,
 		capacity,
