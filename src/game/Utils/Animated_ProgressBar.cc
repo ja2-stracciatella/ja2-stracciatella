@@ -2,7 +2,6 @@
 #include "HImage.h"
 #include "Types.h"
 #include "Animated_ProgressBar.h"
-#include "MemMan.h"
 #include "Debug.h"
 #include "Font_Control.h"
 #include "VObject.h"

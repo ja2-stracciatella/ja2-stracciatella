@@ -19,7 +19,6 @@
 #include "Message.h"
 #include "GameSettings.h"
 #include "Smell.h"
-#include "MemMan.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

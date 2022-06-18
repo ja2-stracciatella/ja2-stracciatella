@@ -3,7 +3,6 @@
 #include "Buffer.h"
 #include "HImage.h"
 #include "PCX.h"
-#include "MemMan.h"
 #include "FileMan.h"
 
 #include "ContentManager.h"

@@ -5,7 +5,6 @@
 #include "Debug.h"
 #include "VObject.h"
 #include "Video.h"
-#include "MemMan.h"
 #include "VSurface.h"
 #include "UILayout.h"
 

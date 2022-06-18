@@ -69,7 +69,6 @@
 #include "MercProfile.h"
 #include "Mercs.h"
 #include "MercTextBox.h"
-#include "MemMan.h"
 #include "Message.h"
 #include "Music_Control.h"
 #include "NPC.h"

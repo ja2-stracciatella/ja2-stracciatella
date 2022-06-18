@@ -13,7 +13,6 @@
 #include "game/GameMode.h"
 
 #include "sgp/FileMan.h"
-#include "sgp/MemMan.h"
 
 #include "AmmoTypeModel.h"
 #include "CacheSectorsModel.h"

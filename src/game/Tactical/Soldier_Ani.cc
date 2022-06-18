@@ -6,7 +6,6 @@
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "Debug.h"
-#include "MemMan.h"
 #include "Overhead_Types.h"
 #include "Soldier_Control.h"
 #include "Animation_Cache.h"

@@ -83,7 +83,6 @@
 #include "Queen_Command.h"
 #include "PreBattle_Interface.h"
 #include "VSurface.h"
-#include "MemMan.h"
 #include "Button_System.h"
 #include "Items.h"
 #include "GameRes.h"

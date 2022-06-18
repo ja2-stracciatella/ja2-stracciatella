@@ -32,7 +32,6 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
-#include "MemMan.h"
 #include "Button_System.h"
 #include "UILayout.h"
 

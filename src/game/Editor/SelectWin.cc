@@ -13,7 +13,6 @@
 #include "SelectWin.h"
 #include "EditorDefines.h"
 #include "Editor_Taskbar_Utils.h"
-#include "MemMan.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "WorldDef.h"

@@ -29,7 +29,6 @@
 #include "LoadSaveExplosionType.h"
 #include "Logger.h"
 #include "Map_Information.h"
-#include "MemMan.h"
 #include "Message.h"
 #include "Morale.h"
 #include "OppList.h"
