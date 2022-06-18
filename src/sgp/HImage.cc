@@ -9,7 +9,6 @@
 #include "STCI.h"
 #include "WCheck.h"
 #include "VObject.h"
-#include "MemMan.h"
 
 #include "Logger.h"
 

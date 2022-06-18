@@ -10,7 +10,6 @@
 #include "WordWrap.h"
 #include "Render_Dirty.h"
 #include "Video.h"
-#include "MemMan.h"
 #include "UILayout.h"
 
 #include <string_theory/string>

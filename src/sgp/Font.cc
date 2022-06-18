@@ -2,7 +2,6 @@
 #include "HImage.h"
 #include "Local.h"
 #include "Types.h"
-#include "MemMan.h"
 #include "Font.h"
 #include "Debug.h"
 #include "VSurface.h"

@@ -56,7 +56,6 @@
 #include "LOS.h"
 #include "Button_System.h"
 #include "Video.h"
-#include "MemMan.h"
 #include "Debug.h"
 #include "Items.h"
 #include "UILayout.h"

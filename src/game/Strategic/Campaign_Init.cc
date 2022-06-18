@@ -6,7 +6,6 @@
 #include "GameInstance.h"
 #include "GamePolicy.h"
 #include "GameSettings.h"
-#include "MemMan.h"
 #include "Overhead.h"
 #include "Queen_Command.h"
 #include "Quests.h"

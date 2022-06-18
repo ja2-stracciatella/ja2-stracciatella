@@ -38,7 +38,6 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "VSurface.h"
-#include "MemMan.h"
 #include "ShopKeeper_Interface.h"
 #include "ArmsDealerInvInit.h"
 

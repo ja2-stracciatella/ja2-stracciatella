@@ -1,7 +1,6 @@
 #include <stdexcept>
 
 #include "Buffer.h"
-#include "MemMan.h"
 #include "FileMan.h"
 #include "ImgFmt.h"
 #include "HImage.h"

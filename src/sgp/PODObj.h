@@ -1,9 +1,6 @@
 #ifndef PODOBJ_H
 #define PODOBJ_H
 
-#include "MemMan.h"
-
-
 namespace SGP
 {
 	template<typename T> class PODObj

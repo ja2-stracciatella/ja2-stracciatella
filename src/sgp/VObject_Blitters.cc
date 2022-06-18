@@ -2,7 +2,6 @@
 #include "Debug.h"
 #include "HImage.h"
 #include "Local.h"
-#include "MemMan.h"
 #include "Shading.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"

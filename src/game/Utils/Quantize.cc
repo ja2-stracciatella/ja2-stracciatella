@@ -1,5 +1,4 @@
 #include "HImage.h"
-#include "MemMan.h"
 #include "Quantize.h"
 
 #include <algorithm>

@@ -6,7 +6,6 @@
 #include "LoadSaveLightSprite.h"
 #include "ScreenIDs.h"
 #include "Sys_Globals.h"
-#include "MemMan.h"
 
 void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 {

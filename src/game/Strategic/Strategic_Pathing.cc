@@ -18,7 +18,6 @@
 #include "Game_Event_Hook.h"
 #include "Strategic_AI.h"
 #include "Debug.h"
-#include "MemMan.h"
 
 #include <algorithm>
 #include <iterator>

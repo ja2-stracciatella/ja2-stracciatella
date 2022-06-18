@@ -37,7 +37,6 @@
 #include "Meanwhile.h"
 #include "Soldier_Macros.h"
 #include "Morale.h"
-#include "MemMan.h"
 #include "FileMan.h"
 #include "Vehicles.h"
 #include "Logger.h"

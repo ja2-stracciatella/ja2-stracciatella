@@ -33,7 +33,6 @@
 #include "World_Items.h"
 #include "Text.h"
 #include "Debug.h"
-#include "MemMan.h"
 #include "Soldier_Create.h"
 #include "Video.h"
 #include "UILayout.h"
@@ -401,9 +400,11 @@ void DestroySummaryWindow()
 	EnableAllTextFields();
 
 	gpWorldItemsSummaryArray.clear();
-	FreeNullArray(gpPEnemyItemsSummaryArray);
+	delete[] gpPEnemyItemsSummaryArray;
+	gpPEnemyItemsSummaryArray = nullptr;
 	gusPEnemyItemsSummaryArraySize = 0;
-	FreeNullArray(gpNEnemyItemsSummaryArray);
+	delete[] gpNEnemyItemsSummaryArray;
+	gpNEnemyItemsSummaryArray = nullptr;
 	gusNEnemyItemsSummaryArraySize = 0;
 
 	if (gfWorldLoaded) gfConfirmExitFirst = TRUE;

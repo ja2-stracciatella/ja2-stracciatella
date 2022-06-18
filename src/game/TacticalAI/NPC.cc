@@ -43,6 +43,14 @@
 #define NUM_CIVQUOTE_SECTORS   20
 #define MINERS_CIV_QUOTE_INDEX 16
 
+template<typename T> static inline void FreeNullArray(T*& r) throw()
+{
+	T* const p = r;
+	if (!p) return;
+	r = 0;
+	delete[] p;
+}
+
 static const SGPSector gsCivQuoteSector[NUM_CIVQUOTE_SECTORS] =
 {
 	{  2, MAP_ROW_A },
