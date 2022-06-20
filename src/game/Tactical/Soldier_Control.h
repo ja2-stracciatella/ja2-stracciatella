@@ -308,6 +308,15 @@ enum
 };
 
 
+enum WeaponModes : INT8
+{
+	WM_NORMAL = 0,
+	WM_BURST,
+	WM_ATTACHED,
+	NUM_WEAPON_MODES
+};
+
+
 #define SOLDIERTYPE_NAME_LENGTH 10
 
 
@@ -691,7 +700,7 @@ struct SOLDIERTYPE
 	INT8 bBlockedByAnotherMercDirection;
 	UINT16 usAttackingWeapon;
 	SOLDIERTYPE* target;
-	INT8 bWeaponMode;
+	WeaponModes bWeaponMode;
 	INT8 bAIScheduleProgress;
 	INT16 sOffWorldGridNo;
 	ANITILE* pAniTile;
@@ -828,14 +837,6 @@ struct SOLDIERTYPE
 
 #define LVL_INCREASE					0x0400
 
-
-enum WeaponModes
-{
-	WM_NORMAL = 0,
-	WM_BURST,
-	WM_ATTACHED,
-	NUM_WEAPON_MODES
-};
 
 // TYPEDEFS FOR ANIMATION PROFILES
 struct ANIM_PROF_TILE

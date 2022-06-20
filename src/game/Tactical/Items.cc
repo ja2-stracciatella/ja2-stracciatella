@@ -2100,6 +2100,29 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		UpdateRobotControllerGivenController( pSoldier );
 	}
 
+	// Ensure the main hand item is in sync with the soldier's weapon mode.
+	if (pSoldier->bWeaponMode == WM_BURST)
+	{
+		pSoldier->bDoBurst = TRUE;
+		if (!IsGunBurstCapable(pSoldier, HANDPOS))
+		{
+			pSoldier->bDoBurst = FALSE;
+			pSoldier->bWeaponMode = WM_NORMAL;
+		}
+	}
+	else if (pSoldier->bWeaponMode == WM_ATTACHED)
+	{
+		if (!HasLauncher(pSoldier))
+		{
+			pSoldier->bDoBurst = FALSE;
+			pSoldier->bWeaponMode = WM_NORMAL;
+		}
+	}
+	else // WM_NORMAL
+	{
+		pSoldier->bDoBurst = FALSE;
+	}
+
 	return( TRUE );
 }
 

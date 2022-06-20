@@ -3808,7 +3808,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 }
 
 
-static BOOLEAN HasLauncher(const SOLDIERTYPE* const s)
+bool HasLauncher(const SOLDIERTYPE* const s)
 {
 	OBJECTTYPE const& o = s->inv[HANDPOS];
 	return FindAttachment(&o, UNDER_GLAUNCHER) != ITEM_NOT_FOUND &&
@@ -3821,7 +3821,7 @@ void ChangeWeaponMode(SOLDIERTYPE* const s)
 	// ATE: Don't do this if in a fire amimation.....
 	if (gAnimControl[s->usAnimState].uiFlags & ANIM_FIRE) return;
 
-	INT8 mode = s->bWeaponMode;
+	WeaponModes& mode = s->bWeaponMode;
 	switch (mode)
 	{
 		case WM_NORMAL:
@@ -3845,7 +3845,6 @@ void ChangeWeaponMode(SOLDIERTYPE* const s)
 		case WM_ATTACHED: mode = WM_NORMAL; break;
 	}
 
-	s->bWeaponMode = mode;
 	s->bDoBurst    = (mode == WM_BURST);
 	DirtyMercPanelInterface(s, DIRTYLEVEL2);
 	gfUIForceReExamineCursorData = TRUE;
