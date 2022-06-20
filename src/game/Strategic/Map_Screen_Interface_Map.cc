@@ -2386,8 +2386,8 @@ static void DisplayDestinationOfHelicopter(void)
 		UINT32 x = MAP_VIEW_START_X + ( MAP_GRID_X * sMap.x ) + 1;
 		UINT32 y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMap.y ) + 3;
 
-		AssertMsg(x < SCREEN_WIDTH, ST::format("DisplayDestinationOfHelicopter: Invalid x = {}.  Dest {}", x, sMap.AsShortString()));
-		AssertMsg(y < SCREEN_HEIGHT, ST::format("DisplayDestinationOfHelicopter: Invalid y = {}.  Dest {}", y, sMap.AsShortString()));
+		AssertMsg(x < SCREEN_WIDTH, ST::format("DisplayDestinationOfHelicopter: Invalid x = {}.  Dest {}", x, sMap));
+		AssertMsg(y < SCREEN_HEIGHT, ST::format("DisplayDestinationOfHelicopter: Invalid y = {}.  Dest {}", y, sMap));
 
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );

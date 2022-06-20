@@ -107,7 +107,7 @@ static UINT8 AddGroupToList(GROUP* pGroup);
 //step before adding waypoints and members to the player group.
 GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap)
 {
-	AssertMsg(sMap.IsValid(), ST::format("CreateNewPlayerGroup with out of range sector values of {}", sMap.AsShortString()));
+	AssertMsg(sMap.IsValid(), ST::format("CreateNewPlayerGroup with out of range sector values of {}", sMap));
 	GROUP* const pNew = new GROUP{};
 	pNew->pPlayerList = NULL;
 	pNew->pWaypoints = NULL;
@@ -128,7 +128,7 @@ GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap)
 
 GROUP* CreateNewVehicleGroupDepartingFromSector(const SGPSector& sMap)
 {
-	AssertMsg(sMap.IsValid(), ST::format("CreateNewVehicleGroupDepartingFromSector with out of range sector values of {}", sMap.AsShortString()));
+	AssertMsg(sMap.IsValid(), ST::format("CreateNewVehicleGroupDepartingFromSector with out of range sector values of {}", sMap));
 	GROUP* const pNew = new GROUP{};
 	pNew->pWaypoints = NULL;
 	pNew->ubSector = pNew->ubNext = sMap;
@@ -353,7 +353,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup);
  * horizontal or vertical level as the last waypoint added. */
 BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 {
-	AssertMsg(sMap.IsValid(), ST::format("AddWaypointToPGroup with out of range sector values of {}", sMap.AsShortString()));
+	AssertMsg(sMap.IsValid(), ST::format("AddWaypointToPGroup with out of range sector values of {}", sMap));
 	if (!g) return FALSE;
 
 	/* At this point, we have the group, and a valid coordinate. Now we must
@@ -1582,7 +1582,7 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 	/* header, sector, singular/plural str, confirmation string.
 	 * Ex:  Enemies have been detected in sector J9 and another squad is about to
 	 *      arrive.  Do you wish to coordinate a simultaneous arrival? */
-	ST::string str = st_format_printf(pStr, enemy_type, first_group->ubSector.AsShortString());
+	ST::string str = st_format_printf(pStr, enemy_type, first_group->ubSector);
 	str += ST::format(" {}", gpStrategicString[STR_COORDINATE]);
 	DoMapMessageBox(MSG_BOX_BASIC_STYLE, str, guiCurrentScreen, MSG_BOX_FLAG_YESNO, PlanSimultaneousGroupArrivalCallback);
 	gfWaitingForInput = TRUE;
@@ -1715,7 +1715,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 
 	AssertMsg(pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, ST::format("Group {} ({}) attempting illegal move from {} to {} ({}).",
 			pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
-			pGroup->ubSector.AsShortString(), pGroup->ubNext.AsShortString(),
+			pGroup->ubSector, pGroup->ubNext,
 			gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
 
 	// add sleep, if any
@@ -2702,7 +2702,7 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	}
 	else
 	{
-		SLOGA("Player group cannot retreat from sector {} ", pGroup->ubSector.AsShortString());
+		SLOGA("Player group cannot retreat from sector {} ", pGroup->ubSector);
 		return;
 	}
 	if( pGroup->fPlayer )
@@ -2733,7 +2733,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		else if (delta.x == -1 && delta.y ==  0) direction = WEST_STRATEGIC_MOVE;
 		else
 		{
-			throw std::runtime_error(ST::format("Player group attempting illegal retreat from {} to {}.", g.ubSector.AsShortString(), g.ubNext.AsShortString()).to_std_string());
+			throw std::runtime_error(ST::format("Player group attempting illegal retreat from {} to {}.", g.ubSector, g.ubNext).to_std_string());
 		}
 	}
 	else
@@ -2746,7 +2746,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	// Calc time to get to next waypoint
 	UINT8 const sector = g.ubSector.AsByte();
 	g.uiTraverseTime = GetSectorMvtTimeForGroup(sector, direction, &g);
-	AssertMsg(g.uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, ST::format("Group {} ({}) attempting illegal move from {} to {} ({}).", g.ubGroupID, g.fPlayer ? "Player" : "AI", g.ubSector.AsShortString(), g.ubNext.AsShortString(), gszTerrain[SectorInfo[sector].ubTraversability[direction]]));
+	AssertMsg(g.uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, ST::format("Group {} ({}) attempting illegal move from {} to {} ({}).", g.ubGroupID, g.fPlayer ? "Player" : "AI", g.ubSector, g.ubNext, gszTerrain[SectorInfo[sector].ubTraversability[direction]]));
 
 	// Because we are in the strategic layer, don't make the arrival instantaneous (towns)
 	if (g.uiTraverseTime == 0) g.uiTraverseTime = 5;
@@ -2983,7 +2983,7 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 	if (pGroup->ubMoveType != ONE_WAY)
 	{
 		SLOGA("GroupWillMoveThroughSector() -- Attempting to test group with an invalid move type.  ubGroupID: {}, ubMoveType: {}, sector: {} -- KM:0",
-			pGroup->ubGroupID, pGroup->ubMoveType, pGroup->ubSector.AsShortString());
+			pGroup->ubGroupID, pGroup->ubMoveType, pGroup->ubSector);
 	}
 
 	//Preserve the original sector values, as we will be temporarily modifying the group's ubSectorX/Y values
@@ -3015,14 +3015,13 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 			if (delta.x && delta.y)
 			{ //Can't move diagonally!
 				SLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {}",
-					   pGroup->ubSector.AsShortString(), wp->sSector.AsShortString(), ubOrig.AsShortString());
+					   pGroup->ubSector, wp->sSector, ubOrig);
 				pGroup->ubSector = ubOrig;
 				return TRUE;
 			}
 			if (!delta.x && !delta.y) //Can't move to position currently at!
 			{
-				SLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {}",
-					wp->sSector.AsShortString(), ubOrig.AsShortString());
+				SLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {}", wp->sSector, ubOrig);
 				pGroup->ubSector = ubOrig;
 				return TRUE;
 			}

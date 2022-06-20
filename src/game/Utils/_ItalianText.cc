@@ -610,8 +610,8 @@ static const ST::string s_it_pDirectionStr[pDirectionStr_SIZE] =
 
 static const ST::string s_it_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%s sono stati individuati nel settore %c%d e un'altra squadra sta per arrivare.",	//STR_DETECTED_SINGULAR
-	"%s sono stati individuati nel settore %c%d e un'altra squadra sta per arrivare.",	//STR_DETECTED_PLURAL
+	"%s sono stati individuati nel settore %s e un'altra squadra sta per arrivare.",	//STR_DETECTED_SINGULAR
+	"%s sono stati individuati nel settore %s e un'altra squadra sta per arrivare.",	//STR_DETECTED_PLURAL
 	"Volete coordinare un attacco simultaneo?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -726,11 +726,11 @@ static const ST::string s_it_gpStrategicString[gpStrategicString_SIZE] =
 
 	//various popup messages for battle conditions.
 
-	//%c%d is the sector -- ex:  A9
-	"I nemici attaccano il vostro esercito nel settore %c%d.",
-	//%c%d is the sector -- ex:  A9
-	"Le creature attaccano il vostro esercito nel settore %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	//%s -- ex:  A9
+	"I nemici attaccano il vostro esercito nel settore %s.",
+	//%s -- ex:  A9
+	"Le creature attaccano il vostro esercito nel settore %s.",
+	//1st %d refers to the number of civilians eaten by monsters,  %s -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
 	"Le creature attaccano e uccidono %d civili nel settore %s.",
 	//%s is the sector location -- ex:  A9: Omerta

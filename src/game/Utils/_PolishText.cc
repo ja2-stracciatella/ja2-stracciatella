@@ -610,8 +610,8 @@ static const ST::string s_pl_pDirectionStr[pDirectionStr_SIZE] =
 
 static const ST::string s_pl_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%s wykryto w sektorze %c%d, a inny oddział jest w drodze.",	//STR_DETECTED_SINGULAR
-	"%s wykryto w sektorze %c%d, a inne oddziały są w drodze.",	//STR_DETECTED_PLURAL
+	"%s wykryto w sektorze %s, a inny oddział jest w drodze.",	//STR_DETECTED_SINGULAR
+	"%s wykryto w sektorze %s, a inne oddziały są w drodze.",	//STR_DETECTED_PLURAL
 	"Chcesz skoordynować jednoczesne przybycie?",			//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -726,16 +726,16 @@ static const ST::string s_pl_gpStrategicString[gpStrategicString_SIZE] =
 
 	//various popup messages for battle conditions.
 
-	//%c%d is the sector -- ex:  A9
-	"Nieprzyjaciel zatakował oddziały samoobrony w sektorze %c%d.",
-	//%c%d is the sector -- ex:  A9
-	"Stworzenia zaatakowały oddziały samoobrony w sektorze %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	//%s -- ex:  A9
+	"Nieprzyjaciel zatakował oddziały samoobrony w sektorze %s.",
+	//%s -- ex:  A9
+	"Stworzenia zaatakowały oddziały samoobrony w sektorze %s.",
+	//1st %d refers to the number of civilians eaten by monsters,  %s -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
 	"Stworzenia zatakowały i zabiły %d cywili w sektorze %s.",
-	//%c%d is the sector -- ex:  A9
+	//%s -- ex:  A9
 	"Nieprzyjaciel zatakował twoich najemników w sektorze %s.  Żaden z twoich najemników nie może walczyć!",
-	//%c%d is the sector -- ex:  A9
+	//%s -- ex:  A9
 	"Stworzenia zatakowały twoich najemników w sektorze %s.  Żaden z twoich najemników nie może walczyć!",
 
 };

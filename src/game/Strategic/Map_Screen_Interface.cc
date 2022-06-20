@@ -1043,11 +1043,11 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo 
 		ProfileID      const id   = guiLeaveListOwnerProfileId[slot_idx];
 		if (id != NO_PROFILE)
 		{
-			sString = st_format_printf(str_left_equipment, GetProfile(id).zNickname, town, sMap.AsShortString());
+			sString = st_format_printf(str_left_equipment, GetProfile(id).zNickname, town, sMap);
 		}
 		else
 		{
-			sString = ST::format("A departing merc has left their equipment in {} ({}).", town, sMap.AsShortString());
+			sString = ST::format("A departing merc has left their equipment in {} ({}).", town, sMap);
 		}
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
 

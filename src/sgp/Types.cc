@@ -141,3 +141,13 @@ ST::string SGPSector::AsLongString(bool file) const
 	if (file) return ST::format("{c}{}_b{}", y + 'A' - 1, x, z);
 	return ST::format("{c}{}-{}", y + 'A' - 1, x, z);
 }
+
+// ST::format definition for SGPSector
+void format_type(const ST::format_spec &format, ST::format_writer &output, const SGPSector &value)
+{
+    if (value.z > 0) {
+		ST::format_type(format, output, value.AsLongString());
+	} else {
+		ST::format_type(format, output, value.AsShortString());
+	}
+}
