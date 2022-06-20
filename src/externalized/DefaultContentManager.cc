@@ -637,17 +637,13 @@ bool DefaultContentManager::loadAmmoTypes()
 
 bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::Value &array)
 {
-	std::vector<const ST::string*>* musicModeList = new std::vector<const ST::string*>();
-
 	std::vector<ST::string> utf8_encoded;
 	JsonUtility::parseListStrings(array, utf8_encoded);
 	for (const ST::string &str : utf8_encoded)
 	{
-		musicModeList->push_back(new ST::string(str));
+		m_musicMap.insert(std::make_pair(mode, str));
 		SLOGD("Loaded music {}", str);
 	}
-
-	m_musicMap[mode] = musicModeList;
 
 	return true;
 }
@@ -1119,11 +1115,13 @@ const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) c
 }
 
 const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
-	const uint32_t index = Random((uint32_t)m_musicMap.find(mode)->second->size());
-	const ST::string* chosen = m_musicMap.find(mode)->second->at(index);
+	uint32_t const count = static_cast<uint32_t>(m_musicMap.count(mode));
+	uint32_t const index = Random(count);
+	auto lower = m_musicMap.lower_bound(mode);
+	std::advance(lower, index);
 
-	SLOGD("Choosing music index {} of {} for: '{}'", index, m_musicMap.find(mode)->second->size(), chosen);
-	return chosen;
+	SLOGD("Choosing music index {} of {} : '{}'", index, count, lower->second);
+	return &lower->second;
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const

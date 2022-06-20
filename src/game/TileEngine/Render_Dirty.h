@@ -3,6 +3,7 @@
 
 #include "JA2Types.h"
 
+#include <memory>
 #include <string_theory/string>
 
 
@@ -33,7 +34,7 @@ struct VIDEO_OVERLAY
 	BOOLEAN          fActivelySaving;
 	BOOLEAN          fDeletionPending;
 	BACKGROUND_SAVE* background;
-	UINT16*          pSaveArea;
+	std::unique_ptr<UINT16 []> pSaveArea;
 	SGPFont          uiFontID;
 	INT16            sX;
 	INT16            sY;
@@ -56,7 +57,6 @@ void ExecuteBaseDirtyRectQueue(void);
 
 // BACKGROUND RECT BUFFERING STUFF
 void             InitializeBackgroundRects(void);
-void             ShutdownBackgroundRects(void);
 BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags, INT16 x, INT16 y, INT16 w, INT16 h);
 void             FreeBackgroundRect(BACKGROUND_SAVE*);
 void             FreeBackgroundRectPending(BACKGROUND_SAVE*);

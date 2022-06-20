@@ -16,12 +16,12 @@ std::map<SGPSector, LandType> SectorLandTypes::deserialize(const rapidjson::Docu
 			throw std::runtime_error(err.to_std_string());
 		}
 		const uint8_t sectorLevel = reader.getOptionalUInt("sectorLevel");
-		const SGPSector& sectorKey = SGPSector::FromShortString(sector, sectorLevel);
+		const SGPSector sectorKey = SGPSector::FromShortString(sector, sectorLevel);
 
 		const ST::string &landTypeString = reader.GetString("landType");
 		const uint8_t landType = travMap.at(landTypeString);
 
-		landTypes[sectorKey] = landType;
+		landTypes.emplace(std::make_pair(sectorKey, landType));
 	}
 
 	return landTypes;
