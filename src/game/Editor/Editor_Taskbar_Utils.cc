@@ -750,7 +750,7 @@ static void RenderSelectedItemBlownUp(void)
 	}
 	else
 	{
-		item_name = ItemNames[o.usItem];
+		item_name = item->getName();
 	}
 	x  = screen_x - (StringPixLength(item_name, FONT10ARIAL) - 40) / 2;
 	y -= 10;

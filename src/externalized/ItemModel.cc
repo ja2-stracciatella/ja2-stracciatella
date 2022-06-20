@@ -31,6 +31,9 @@ ItemModel::ItemModel(uint16_t itemIndex,
 
 ItemModel::ItemModel(uint16_t   itemIndex,
 			ST::string internalName,
+			ST::string shortName,
+			ST::string name,
+			ST::string description,
 			uint32_t   usItemClass,
 			uint8_t    ubClassIndex,
 			ItemCursor ubCursor,
@@ -46,6 +49,9 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 {
 	this->itemIndex             = itemIndex;
 	this->internalName          = internalName;
+	this->shortName             = shortName;
+	this->name                  = name;
+	this->description           = description;
 	this->usItemClass           = usItemClass;
 	this->ubClassIndex          = ubClassIndex;
 	this->ubCursor              = ubCursor;
@@ -60,7 +66,11 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 
 ItemModel::~ItemModel() = default;
 
-const ST::string& ItemModel::getInternalName() const  { return internalName;          }
+const ST::string& ItemModel::getInternalName() const   { return internalName;          }
+
+const ST::string& ItemModel::getShortName() const      { return shortName; }
+const ST::string& ItemModel::getName() const           { return name; }
+const ST::string& ItemModel::getDescription() const     { return description; }
 
 uint16_t        ItemModel::getItemIndex() const        { return itemIndex;             }
 uint32_t        ItemModel::getItemClass() const        { return usItemClass;           }
@@ -167,8 +177,37 @@ void ItemModel::serializeTo(JsonObject &obj) const
     serializeFlags(obj);
 }
 
-const ItemModel* ItemModel::deserialize(JsonObjectReader &obj)
+ST::string ItemModel::deserializeShortName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings) {
+	uint16_t itemIndex = obj.GetUInt("itemIndex");
+	ST::string shortName = vanillaItemStrings.getShortName(itemIndex);
+	if (obj.getOptionalString("shortName")) {
+		shortName = obj.getOptionalString("shortName");
+	}
+	return shortName;
+}
+
+ST::string ItemModel::deserializeName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings) {
+	uint16_t itemIndex = obj.GetUInt("itemIndex");
+	ST::string name = vanillaItemStrings.getName(itemIndex);
+	if (obj.getOptionalString("name")) {
+		name = obj.getOptionalString("name");
+	}
+	return name;
+}
+
+ST::string ItemModel::deserializeDescription(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings) {
+	uint16_t itemIndex = obj.GetUInt("itemIndex");
+	ST::string description = vanillaItemStrings.getDescription(itemIndex);
+	if (obj.getOptionalString("description")) {
+		description = obj.getOptionalString("description");
+	}
+	return description;
+}
+
+const ItemModel* ItemModel::deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings)
 {
+	uint16_t itemIndex = obj.GetUInt("itemIndex");
+	ST::string internalName = obj.GetString("internalName");
 	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
 	JsonObjectReader igGreader(igSource);
 	auto inventoryGraphics = InventoryGraphicsModel::deserialize(igGreader);
@@ -177,9 +216,16 @@ const ItemModel* ItemModel::deserialize(JsonObjectReader &obj)
 	JsonObjectReader tgReader(tgSource);
 	auto tileGraphic = TilesetTileIndexModel::deserialize(tgReader);
 
+	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
+	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
+	auto description = ItemModel::deserializeDescription(obj, vanillaItemStrings);
+
 	auto* item = new ItemModel(
-		obj.GetUInt("itemIndex"),
-		obj.GetString("internalName"),
+		itemIndex,
+		internalName,
+		shortName,
+		name,
+		description,
 		obj.GetUInt("usItemClass"),
 		obj.GetUInt("ubClassIndex"),
 		(ItemCursor)obj.GetUInt("ubCursor"),

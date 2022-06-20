@@ -719,7 +719,7 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 			if ( fAttemptingAttachment && ValidAttachmentClass( usAttachment, pObj->usItem ) )
 			{
 				// well, maybe the player thought he could
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_ATTACH], ItemNames[usAttachment], ItemNames[pObj->usItem]));
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_ATTACH], GCM->getItem(usAttachment)->getName(), GCM->getItem(pObj->usItem)->getName()));
 			}
 
 			return( FALSE );
@@ -772,7 +772,7 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 		}
 		else if (fSimilarItems)
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ usSimilarItem ], ItemNames[ usAttachment ]) );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[ STR_CANT_USE_TWO_ITEMS ], GCM->getItem(usSimilarItem)->getName(), GCM->getItem(usAttachment)->getName()) );
 			return( FALSE );
 		}
 	}
@@ -1921,7 +1921,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD2POS ].usItem ) )
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
-					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD2POS].usItem]));
+					GCM->getItem(pObj->usItem)->getName(), GCM->getItem(pSoldier->inv[HEAD2POS].usItem)->getName()));
 			return( FALSE );
 		}
 	}
@@ -1930,7 +1930,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD1POS ].usItem ) )
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
-					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD1POS].usItem]));
+					GCM->getItem(pObj->usItem)->getName(), GCM->getItem(pSoldier->inv[HEAD1POS].usItem)->getName()));
 			return( FALSE );
 		}
 	}

@@ -53,9 +53,6 @@ try
 {
 	gfWorldLoaded = FALSE;
 
-	// Load external text
-	LoadAllExternalText();
-
 	gsRenderCenterX = 805;
 	gsRenderCenterY = 805;
 

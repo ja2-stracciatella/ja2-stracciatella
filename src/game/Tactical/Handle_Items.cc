@@ -2062,7 +2062,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 		}
 
 		WORLDITEM const& wi  = GetWorldItem(i->iItemIndex);
-		ST::string txt = ShortItemNames[wi.o.usItem];
+		ST::string txt = GCM->getItem(wi.o.usItem)->getShortName();
 		ST::string buf;
 		if (wi.o.ubNumberOfObjects > 1)
 		{
@@ -2112,7 +2112,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 		}
 
 		WORLDITEM const&       wi  = GetWorldItem(i->iItemIndex);
-		ST::string txt = ShortItemNames[wi.o.usItem];
+		ST::string txt = GCM->getItem(wi.o.usItem)->getShortName();
 		if (wi.o.ubNumberOfObjects > 1)
 		{
 			GDirtyPrint(x, y, ST::format("{} ({})", txt, wi.o.ubNumberOfObjects));
@@ -2311,7 +2311,7 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 			AddItemToPool(pSoldier->sGridNo, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0 , -1);
 
 			// Place it on the ground!
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ pSoldier->pTempObject->usItem ]) );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], GCM->getItem(pSoldier->pTempObject->usItem)->getShortName()) );
 
 			// OK, disengage buddy
 			pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
@@ -2467,7 +2467,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 				// We could not place it!
 				// Drop it on the ground?
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ usItemNum ]) );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], GCM->getItem(usItemNum)->getShortName()) );
 
 				// OK, disengage buddy
 				pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
@@ -2483,7 +2483,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 				}
 
 				// OK, it's given, display message!
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_GIVEN_TO_STR ], ShortItemNames[ usItemNum ], pTSoldier->name) );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_GIVEN_TO_STR ], GCM->getItem(usItemNum)->getShortName(), pTSoldier->name) );
 				if (usItemNum == MONEY)
 				{
 					// are we giving money to an NPC, to whom we owe money?

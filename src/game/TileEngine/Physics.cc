@@ -2114,7 +2114,7 @@ static BOOLEAN DoCatchObject(REAL_OBJECT* pObject)
 	{
 		pObject->fDropItem = FALSE;
 
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_MERC_CAUGHT_ITEM ], pSoldier->name, ShortItemNames[ usItem ]) );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_MERC_CAUGHT_ITEM ], pSoldier->name, GCM->getItem(usItem)->getShortName()) );
 	}
 
 	return( TRUE );

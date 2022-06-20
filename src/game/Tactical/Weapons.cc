@@ -1248,7 +1248,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				if ( iDiceRoll <= iHitChance )
 				{
 					// Was a good steal!
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ]) );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[ STR_STOLE_SOMETHING ], pSoldier->name, GCM->getItem(pTargetSoldier->inv[HANDPOS].usItem)->getShortName()) );
 
 					usOldItem = pTargetSoldier->inv[HANDPOS].usItem;
 
@@ -1304,7 +1304,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				{
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
 						st_format_printf(g_langRes->Message[ STR_FAILED_TO_STEAL_SOMETHING ],
-						pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ]) );
+						pSoldier->name, pSoldier->name, GCM->getItem(pTargetSoldier->inv[HANDPOS].usItem)->getShortName()) );
 					if ( pSoldier->bTeam == OUR_TEAM )
 					{
 						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );

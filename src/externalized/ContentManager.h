@@ -98,8 +98,6 @@ public:
 	/** Load encrypted string from game resource file. */
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const = 0;
 
-	virtual ST::string loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const = 0;
-
 	/** Load dialogue quote from file. */
 	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) = 0;
 

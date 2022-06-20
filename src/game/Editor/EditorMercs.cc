@@ -297,7 +297,7 @@ void ProcessMercEditing(void)
 			ubType        = EDIT_COLOR_PANTS;
 			soldier_pal   = &s.PantsPal;
 			placement_pal = &gpSelected->pDetailedPlacement->PantsPal;
-			break; 
+			break;
 
 		default:
 			iEditMercMode = EDIT_MERC_NONE;
@@ -2056,8 +2056,7 @@ static void RenderSelectedMercsInventory(void)
 				ubFontColor = FONT_YELLOW;
 			else
 				ubFontColor = FONT_WHITE;
-			ST::string ItemName = ItemNames[gpMercSlotItem[i]->usItem];
-			DisplayWrappedString(xp, yp, 60, 2, SMALLCOMPFONT, ubFontColor, ItemName, 0, LEFT_JUSTIFIED);
+			DisplayWrappedString(xp, yp, 60, 2, SMALLCOMPFONT, ubFontColor, GCM->getItem(gpMercSlotItem[i]->usItem)->getName(), 0, LEFT_JUSTIFIED);
 		}
 	}
 }

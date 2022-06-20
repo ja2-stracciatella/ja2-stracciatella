@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ItemModel.h"
+#include "ItemStrings.h"
 
 #include <string_theory/string>
 
@@ -16,6 +17,9 @@ struct MagazineModel : ItemModel
 {
 	MagazineModel(uint16_t itemIndex,
 			ST::string internalName,
+			ST::string shortName,
+			ST::string name,
+			ST::string description,
 			uint32_t  itemClass,
 			const CalibreModel *calibre,
 			uint16_t capacity,
@@ -29,7 +33,8 @@ struct MagazineModel : ItemModel
 
 	static MagazineModel* deserialize(JsonObjectReader &obj,
 						const std::map<ST::string, const CalibreModel*> &calibreMap,
-						const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap);
+						const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
+						const VanillaItemStrings& vanillaItemStrings);
 
 
 	/** Get standard replacement ammo name. */

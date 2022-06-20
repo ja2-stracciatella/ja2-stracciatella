@@ -7,6 +7,9 @@
 
 MagazineModel::MagazineModel(uint16_t itemIndex_,
 				ST::string internalName_,
+				ST::string shortName_,
+				ST::string name_,
+				ST::string description_,
 				uint32_t itemClass_,
 				const CalibreModel *calibre_,
 				uint16_t capacity_,
@@ -17,6 +20,9 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 	calibre(calibre_), capacity(capacity_), ammoType(ammoType_),
 	dontUseAsDefaultMagazine(dontUseAsDefaultMagazine_)
 {
+	this->shortName = shortName_;
+	this->name = name_;
+	this->description = description_;
 }
 
 #include "ContentManager.h"
@@ -54,7 +60,8 @@ void MagazineModel::serializeTo(JsonObject &obj) const
 MagazineModel* MagazineModel::deserialize(
 	JsonObjectReader &obj,
 	const std::map<ST::string, const CalibreModel*> &calibreMap,
-	const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap)
+	const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
+	const VanillaItemStrings& vanillaItemStrings)
 {
 	int itemIndex                 = obj.GetInt("itemIndex");
 	ST::string internalName       = obj.GetString("internalName");
@@ -63,8 +70,21 @@ MagazineModel* MagazineModel::deserialize(
 	uint16_t capacity             = obj.GetInt("capacity");
 	const AmmoTypeModel *ammoType = getAmmoType(obj.GetString("ammoType"), ammoTypeMap);
 	bool dontUseAsDefaultMagazine = obj.getOptionalBool("dontUseAsDefaultMagazine");
-	MagazineModel *mag = new MagazineModel(itemIndex, internalName, itemClass, calibre, capacity, ammoType,
-						dontUseAsDefaultMagazine);
+	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
+	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
+	auto description = ItemModel::deserializeDescription(obj, vanillaItemStrings);
+	MagazineModel *mag = new MagazineModel(
+		itemIndex,
+		internalName,
+		shortName,
+		name,
+		description,
+		itemClass,
+		calibre,
+		capacity,
+		ammoType,
+		dontUseAsDefaultMagazine
+	);
 
 	mag->fFlags = mag->deserializeFlags(obj);
 

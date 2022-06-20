@@ -9,6 +9,15 @@ items:
     internalName:
       title: Internal name
       $ref: types/id.schema.yaml
+    shortName:
+      title: Short name
+      type: string
+    name:
+      title: Name
+      type: string
+    description:
+      title: Description
+      type: string
     calibre:
       title: Calibre
       $ref: types/id.schema.yaml

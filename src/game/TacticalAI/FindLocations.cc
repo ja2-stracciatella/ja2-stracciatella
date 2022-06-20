@@ -1661,7 +1661,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 	if (best_spot == NOWHERE) return AI_ACTION_NONE;
 
 	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
-	SLOGD("{} decides to pick up {}", s.ubID, ItemNames[o.usItem]);
+	SLOGD("{} decides to pick up {}", s.ubID, GCM->getItem(o.usItem)->getName());
 	if (GCM->getItem(o.usItem)->getItemClass() == IC_GUN &&
 		!FindBetterSpotForItem(s, HANDPOS))
 	{
@@ -1671,13 +1671,13 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 		}
 		if (s.inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
 		{ // Destroy this item
-			SLOGD("{} decides he must drop {} first so destroys it", s.ubID, ItemNames[s.inv[HANDPOS].usItem]);
+			SLOGD("{} decides he must drop {} first so destroys it", s.ubID, GCM->getItem(s.inv[HANDPOS].usItem)->getName());
 			DeleteObj(&s.inv[HANDPOS]);
 			DeductPoints(&s, AP_PICKUP_ITEM, 0);
 		}
 		else
 		{ // We want to drop this item
-			SLOGD("{} decides he must drop {} first", s.ubID, ItemNames[s.inv[HANDPOS].usItem]);
+			SLOGD("{} decides he must drop {} first", s.ubID, GCM->getItem(s.inv[HANDPOS].usItem)->getName());
 			s.bNextAction            = AI_ACTION_PICKUP_ITEM;
 			s.usNextActionData       = best_spot;
 			s.iNextActionSpecialData = best_item_idx;

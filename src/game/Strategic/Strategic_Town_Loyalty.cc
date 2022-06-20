@@ -8,6 +8,8 @@
 #include "Animation_Data.h"
 #include "Quests.h"
 #include "Message.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 #include "LOS.h"
 #include "World_Items.h"
 #include "Tactical_Save.h"
@@ -649,7 +651,7 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 			somethingWasStolen = true;
 			wi.fExists = FALSE;
 
-			SLOGD("{} stolen in {}!", ItemNames[wi.o.usItem], wSectorName);
+			SLOGD("{} stolen in {}!", GCM->getItem(wi.o.usItem)->getName(), wSectorName);
 		}
 
 		// only save if something was stolen
@@ -666,7 +668,7 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 			if (wi.bVisible != VISIBLE) continue;
 			if (Random(100) >= ubChance) continue;
 
-			SLOGD("{} stolen in {}!", ItemNames[wi.o.usItem], wSectorName);
+			SLOGD("{} stolen in {}!", GCM->getItem(wi.o.usItem)->getName(), wSectorName);
 			RemoveItemFromPool(wi);
 		}
 	}

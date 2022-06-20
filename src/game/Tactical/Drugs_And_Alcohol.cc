@@ -2,6 +2,8 @@
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
 #include "Drugs_And_Alcohol.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 #include "Items.h"
 #include "Morale.h"
 #include "Points.h"
@@ -198,7 +200,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 
 	if ( ubDrugType == DRUG_TYPE_ALCOHOL )
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_DRANK_SOME ], pSoldier->name, ShortItemNames[ usItem ]) );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_DRANK_SOME ], pSoldier->name, GCM->getItem(usItem)->getShortName()) );
 	}
 	else
 	{
