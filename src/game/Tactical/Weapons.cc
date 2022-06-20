@@ -3816,36 +3816,46 @@ bool HasLauncher(const SOLDIERTYPE* const s)
 }
 
 
+// Ensure the main hand item is in sync with the soldier's weapon mode.
+void EnsureConsistentWeaponMode(SOLDIERTYPE* const s)
+{
+	if (s->bWeaponMode == WM_BURST)
+	{
+		if (!IsGunBurstCapable(s, HANDPOS))
+		{
+			s->bWeaponMode = WM_NORMAL;
+		}
+	}
+	else if (s->bWeaponMode == WM_ATTACHED)
+	{
+		if (!HasLauncher(s))
+		{
+			s->bWeaponMode = WM_NORMAL;
+		}
+	}
+
+	s->bDoBurst = s->bWeaponMode == WM_BURST;
+}
+
+
+// Change the soldier's weapon mode to the next possible in
+// the cycle NORMAL ➔ BURST ➔ ATTACHED
 void ChangeWeaponMode(SOLDIERTYPE* const s)
 {
 	// ATE: Don't do this if in a fire amimation.....
 	if (gAnimControl[s->usAnimState].uiFlags & ANIM_FIRE) return;
 
 	WeaponModes& mode = s->bWeaponMode;
-	switch (mode)
+	WeaponModes previousMode = mode;
+	mode = mode == WM_ATTACHED ? WM_NORMAL : static_cast<WeaponModes>(mode + 1);
+
+	EnsureConsistentWeaponMode(s);
+
+	if (previousMode == mode)
 	{
-		case WM_NORMAL:
-			if (IsGunBurstCapable(s, HANDPOS))
-			{
-				mode = WM_BURST;
-			}
-			else if (HasLauncher(s))
-			{
-				mode = WM_ATTACHED;
-			}
-			else
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_NOT_BURST_CAPABLE], s->name));
-			}
-			break;
-
-		case WM_BURST: mode = (HasLauncher(s) ? WM_ATTACHED : WM_NORMAL); break;
-
-		default:
-		case WM_ATTACHED: mode = WM_NORMAL; break;
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_NOT_BURST_CAPABLE], s->name));
 	}
 
-	s->bDoBurst    = (mode == WM_BURST);
 	DirtyMercPanelInterface(s, DIRTYLEVEL2);
 	gfUIForceReExamineCursorData = TRUE;
 }
