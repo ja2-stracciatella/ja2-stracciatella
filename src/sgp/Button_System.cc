@@ -5,7 +5,6 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Input.h"
-#include "MemMan.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"

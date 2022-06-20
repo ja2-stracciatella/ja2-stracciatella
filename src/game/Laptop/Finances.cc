@@ -16,7 +16,6 @@
 #include "Campaign_Types.h"
 #include "StrategicMap.h"
 #include "VSurface.h"
-#include "MemMan.h"
 #include "Button_System.h"
 #include "Font_Control.h"
 #include "FileMan.h"

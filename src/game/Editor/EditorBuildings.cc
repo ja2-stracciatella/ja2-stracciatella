@@ -23,7 +23,6 @@
 #include "SelectWin.h"
 #include "Simple_Render_Utils.h"
 #include "Debug.h"
-#include "MemMan.h"
 #include "TileDat.h"
 #include "Video.h"
 #include "UILayout.h"

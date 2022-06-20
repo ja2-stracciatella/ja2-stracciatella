@@ -8,6 +8,7 @@
 #include "SysUtil.h"
 #include "Video.h"
 #include "VObject_Blitters.h"
+#include <stdarg.h>
 #include "Debug.h"
 #include "UILayout.h"
 

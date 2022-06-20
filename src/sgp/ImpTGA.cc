@@ -6,7 +6,6 @@
 #include "Types.h"
 #include "FileMan.h"
 #include "ImpTGA.h"
-#include "MemMan.h"
 #include "Debug.h"
 
 #include "ContentManager.h"

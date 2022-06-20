@@ -40,7 +40,6 @@
 #include "Strategic.h"
 #include "QArray.h"
 #include "Interface.h"
-#include "MemMan.h"
 #include "WorldMan.h"
 
 #include "FileMan.h"

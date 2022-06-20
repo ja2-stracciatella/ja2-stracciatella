@@ -27,7 +27,6 @@
 #include "Meanwhile.h"
 #include "GameSettings.h"
 #include "Strategic_Status.h"
-#include "MemMan.h"
 #include "Debug.h"
 #include "FileMan.h"
 #include "Logger.h"

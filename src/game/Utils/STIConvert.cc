@@ -5,7 +5,6 @@
 #include "HImage.h"
 #include "STIConvert.h"
 #include "WCheck.h"
-#include "MemMan.h"
 #include "FileMan.h"
 
 #include <vector>

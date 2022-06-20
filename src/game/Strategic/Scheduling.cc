@@ -25,7 +25,6 @@
 #include "Animation_Control.h"
 #include "Soldier_Profile.h"
 #include "Quests.h"
-#include "MemMan.h"
 #include "ScreenIDs.h"
 #include "GameMode.h"
 #include "Logger.h"

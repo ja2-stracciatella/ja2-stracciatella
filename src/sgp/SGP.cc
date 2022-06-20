@@ -8,7 +8,6 @@
 #include "Input.h"
 #include "Intro.h"
 #include "JA2_Splash.h"
-#include "MemMan.h"
 #include "Random.h"
 #include "SGP.h"
 #include "SaveLoadGame.h" // XXX should not be used in SGP
@@ -166,8 +165,6 @@ static void shutdownGame()
 	ShutdownVideoObjectManager();
 	SLOGD("Shutting Down Video Manager");
 	ShutdownVideoManager();
-	SLOGD("Shutting Down Memory Manager");
-	ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
 
 	SLOGD("Shutting Down SDL");
 	SDL_Quit();
@@ -440,10 +437,6 @@ int main(int argc, char* argv[])
 		freopen("CON", "w", stdout);
 		freopen("CON", "w", stderr);
 	#endif
-
-		// this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
-		SLOGD("Initializing Memory Manager");
-		InitializeMemoryManager();
 
 		SLOGD("Initializing Game Resources");
 

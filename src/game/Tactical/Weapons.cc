@@ -43,7 +43,6 @@
 #include "SmokeEffects.h"
 #include "Auto_Resolve.h"
 #include "SoundMan.h"
-#include "MemMan.h"
 #include "Debug.h"
 
 #include "CalibreModel.h"

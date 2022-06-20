@@ -14,7 +14,6 @@
 #include "Environment.h"
 #include "TileDef.h"
 #include "WorldMan.h"
-#include "MemMan.h"
 #include "FileMan.h"
 
 #include "Message.h"

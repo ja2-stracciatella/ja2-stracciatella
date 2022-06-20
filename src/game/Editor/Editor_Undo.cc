@@ -12,7 +12,6 @@
 #include "Render_Fun.h"  //for access to gubWorldRoomInfo;
 #include "Cursor_Modes.h"
 #include "Exit_Grids.h"
-#include "MemMan.h"
 
 
 /*

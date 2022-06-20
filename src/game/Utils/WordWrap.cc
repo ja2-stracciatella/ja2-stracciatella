@@ -3,7 +3,6 @@
 #include "Render_Dirty.h"
 #include "Font_Control.h"
 #include "Video.h"
-#include "MemMan.h"
 #include "VSurface.h"
 
 #include <string_theory/string>

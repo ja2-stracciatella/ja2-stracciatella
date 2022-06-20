@@ -11,7 +11,6 @@
 #include "Sys_Globals.h"
 #include "WorldDef.h"
 #include "FileMan.h"
-#include "MemMan.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

@@ -9,7 +9,6 @@
 #include "Font_Control.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"
-#include "MemMan.h"
 #include "Overhead_Types.h"
 #include "Soldier_Control.h"
 #include "Animation_Cache.h"

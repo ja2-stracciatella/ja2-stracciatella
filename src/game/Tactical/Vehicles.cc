@@ -32,7 +32,6 @@
 #include "Soldier_Macros.h"
 #include "OppList.h"
 #include "Soldier_Ani.h"
-#include "MemMan.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "FileMan.h"

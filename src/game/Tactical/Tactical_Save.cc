@@ -5,7 +5,6 @@
 #include "MapScreen.h"
 #include "Soldier_Init_List.h"
 #include "Types.h"
-#include "MemMan.h"
 #include "Message.h"
 #include "Item_Types.h"
 #include "Items.h"
