@@ -385,7 +385,7 @@ static void BtnHistoryMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 				break;
 
 			case 4: //Next Page
-				if (gubCurPageNum + 1 < NUM_AIM_HISTORY_PAGES)
+				if (gubCurPageNum < NUM_AIM_HISTORY_PAGES)
 				{
 					gubCurPageNum++;
 					ChangingAimHistorySubPage(gubCurPageNum);
