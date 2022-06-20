@@ -1426,6 +1426,10 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 		{
 			s->next_to_previous_attacker = NULL;
 		}
+
+		// Just in case this save encountered a rare bug or comes
+		// from a mod with a different weapon configuration.
+		EnsureConsistentWeaponMode(s);
 	}
 
 	// Fix robot

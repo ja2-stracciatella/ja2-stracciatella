@@ -1791,48 +1791,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 							}
 						}
 					}
-
-					// Setup a timer....
-					//guiMouseOverItemTime = GetJA2Clock( );
-					//gfCheckForMouseOverItem = TRUE;
-					//gbCheckForMouseOverItemPos = (INT8)uiHandPos;
 				}
-
-				/*
-				// Try to place here
-				if ( PlaceObject( gpSMCurrentMerc, (UINT8)uiHandPos, gpItemPointer ) )
-				{
-
-					if ( fDeductPoints )
-					{
-						// Deduct points
-						if ( gpItemPointerSoldier->bLife >= CONSCIOUSNESS )
-						{
-							DeductPoints( gpItemPointerSoldier,  2, 0 );
-						}
-						if ( gpSMCurrentMerc->bLife >= CONSCIOUSNESS )
-						{
-							DeductPoints( gpSMCurrentMerc,  2, 0 );
-						}
-					}
-
-					HandleTacticalEffectsOfEquipmentChange( gpSMCurrentMerc, uiHandPos, usOldItemIndex, usNewItemIndex );
-
-					// Dirty
-					fInterfacePanelDirty = DIRTYLEVEL2;
-
-					// Check if it's the same now!
-					if ( gpItemPointer->ubNumberOfObjects == 0 )
-					{
-						EndItemPointer( );
-					}
-
-					// Setup a timer....
-					guiMouseOverItemTime = GetJA2Clock( );
-					gfCheckForMouseOverItem = TRUE;
-					gbCheckForMouseOverItemPos = (INT8)uiHandPos;
-
-				}*/
 			}
 		}
 	}
@@ -3815,16 +3774,6 @@ void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvP
 			// Could be because of GOGGLES change...  Re-create light...
 			DeleteSoldierLight( pSoldier );
 			PositionSoldierLight( pSoldier );
-		}
-	}
-	else
-	{
-		// as a minimum
-		if ((GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isWeapon()) &&
-			GCM->getWeapon(pSoldier->inv[HANDPOS].usItem)->ubShotsPerBurst == 0)
-		{
-			pSoldier->bDoBurst = FALSE;
-			pSoldier->bWeaponMode = WM_NORMAL;
 		}
 	}
 }

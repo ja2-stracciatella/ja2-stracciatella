@@ -2100,6 +2100,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		UpdateRobotControllerGivenController( pSoldier );
 	}
 
+	EnsureConsistentWeaponMode(pSoldier);
 	return( TRUE );
 }
 

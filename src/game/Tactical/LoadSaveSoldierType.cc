@@ -421,7 +421,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_BOOL(d, s->fBlockedByAnotherMerc)
 	EXTR_I8(d, s->bBlockedByAnotherMercDirection)
 	EXTR_U16(d, s->usAttackingWeapon)
-	EXTR_I8(d, s->bWeaponMode)
+	s->bWeaponMode = d.read<WeaponModes>();
 	EXTR_SOLDIER(d, s->target)
 	EXTR_I8(d, s->bAIScheduleProgress)
 	EXTR_SKIP(d, 1)
