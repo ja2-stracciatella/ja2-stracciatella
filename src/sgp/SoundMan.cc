@@ -466,6 +466,12 @@ static BOOLEAN DoesChannelRingBufferNeedService(SOUNDTAG* channel) {
 	return bytesToWrite >= SOUND_RING_BUFFER_SIZE / 2;
 }
 
+void maResultToRuntimeError(ma_result result, const char* functionName) {
+		if (result != MA_SUCCESS) {
+			throw std::runtime_error(ST::format("{}: {}", functionName, ma_result_description(result)).c_str());
+		}
+}
+
 static void FillRingBuffer(SOUNDTAG* channel) {
 	auto sample = channel->pSample;
 
@@ -479,44 +485,42 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 		}
 
 		void* pFramesInClientFormat;
-		auto result = ma_pcm_rb_acquire_write(channel->pRingBuffer, &bytesToWrite, &pFramesInClientFormat);
-		if (result != MA_SUCCESS) {
-			throw std::runtime_error(ST::format("ma_pcm_rb_acquire_write: {}", ma_result_description(result)).c_str());
-		}
+		maResultToRuntimeError(ma_pcm_rb_acquire_write(channel->pRingBuffer, &bytesToWrite, &pFramesInClientFormat), "ma_pcm_rb_acquire_write");
 		ma_uint64 framesRead = 0;
 		if (sample->pDecoder != NULL) {
-			auto result = ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->Pos);
-			if (result != MA_SUCCESS) {
-				throw std::runtime_error(ST::format("ma_decoder_seek_to_pcm_frame: {}", ma_result_description(result)).c_str());
-			}
+			maResultToRuntimeError(ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->Pos), "ma_decoder_seek_to_pcm_frame");
 			// We stream from file
-			framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite);
+			auto result = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite, &framesRead);
+			if (result != MA_SUCCESS && result != MA_AT_END) {
+				throw std::runtime_error(ST::format("ma_decoder_read_pcm_frames: {}", ma_result_description(result)).c_str());
+			}
 		} else if (sample->pDataConverter != NULL) {
 			auto bytesPerFrame = ma_get_bytes_per_frame(sample->eInMemoryFormat, sample->uiInMemoryChannels);
-			auto posInBytes = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos) * bytesPerFrame;
-			auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
+
+			ma_uint64 posInBytes;
+			maResultToRuntimeError(ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos, &posInBytes), "ma_data_converter_get_required_input_frame_count");
+			posInBytes *= bytesPerFrame;
+
+			ma_uint64 requiredInputFrameCount;
+			maResultToRuntimeError(ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite, &requiredInputFrameCount), "ma_data_converter_get_required_input_frame_count");
 			// We might not have as many bytes available
 			auto availableFrames = std::min(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
-			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames);
 
-			auto result = ma_data_converter_process_pcm_frames(
+			ma_uint64 expectedOutputFrameCount;
+			maResultToRuntimeError(ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames, &expectedOutputFrameCount), "ma_data_converter_get_expected_output_frame_count");
+
+			maResultToRuntimeError(ma_data_converter_process_pcm_frames(
 				sample->pDataConverter,
 				sample->pInMemoryBuffer + posInBytes,
 				&availableFrames,
 				pFramesInClientFormat,
 				&expectedOutputFrameCount
-			);
-			if (result != MA_SUCCESS) {
-				throw std::runtime_error(ST::format("ma_data_converter_process_pcm_frames: {}", ma_result_description(result)).c_str());
-			}
+			), "ma_data_converter_process_pcm_frames");
 			framesRead = expectedOutputFrameCount;
 		} else {
 			throw std::runtime_error("Dont know how to process ring buffer");
 		}
-		result = ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead, pFramesInClientFormat);
-		if (result != MA_SUCCESS) {
-			throw std::runtime_error(ST::format("ma_pcm_rb_commit_write: {}", ma_result_description(result)).c_str());
-		}
+		maResultToRuntimeError(ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead), "ma_pcm_rb_commit_write");
 
 		channel->Pos += framesRead;
 		if (framesRead < bytesToWrite) {
@@ -667,10 +671,7 @@ static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma
 			gTargetAudioSpec.freq
 		);
 		ma_data_converter* converter = (ma_data_converter*)ma_malloc(sizeof(ma_data_converter), NULL);
-		auto result = ma_data_converter_init(&config, converter);
-		if (result != MA_SUCCESS) {
-			throw std::runtime_error(ST::format("ma_data_converter_init: {}", ma_result_description(result)).c_str());
-		}
+		maResultToRuntimeError(ma_data_converter_init(&config, NULL, converter), "ma_data_converter_init");
 
 		s->pInMemoryBuffer = inMemoryBuffer;
 		s->uiBufferSize = uiBufferSize;
@@ -688,12 +689,17 @@ static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma
 	}
 }
 
-size_t MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead) {
+ma_result MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead, size_t *bytesRead) {
 	auto rwOps = (SDL_RWops*)pDecoder->pUserData;
-	return SDL_RWread(rwOps, pBufferOut, sizeof(UINT8), bytesToRead);
+
+	*bytesRead = SDL_RWread(rwOps, pBufferOut, sizeof(UINT8), bytesToRead);
+	if (*bytesRead != 0) {
+		return MA_SUCCESS;
+	}
+	return MA_ERROR;
 }
 
-ma_bool32 MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_origin origin) {
+ma_result MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_origin origin) {
 	auto rwOps = (SDL_RWops*)pDecoder->pUserData;
 	auto sdlOrigin = RW_SEEK_SET;
 	if (origin == ma_seek_origin::ma_seek_origin_current) {
@@ -703,7 +709,11 @@ ma_bool32 MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_o
 		sdlOrigin = RW_SEEK_END;
 	}
 
-	return SDL_RWseek(rwOps, byteOffset, sdlOrigin) != -1;
+	if (SDL_RWseek(rwOps, byteOffset, sdlOrigin) != -1) {
+		return MA_SUCCESS;
+	}
+
+	return MA_ERROR;
 }
 
 
@@ -755,6 +765,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		// Initialize decoder to convert WAV/MP3/OGG data to raw sample data
 		decoder = (ma_decoder*)ma_malloc(sizeof(ma_decoder), NULL);
 		auto result = ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, rwOps, &gTargetDecoderConfig, decoder);
+
 		if (result != MA_SUCCESS) {
 			throw std::runtime_error(ST::format("Error initializing sound decoder for file \"{}\"- {}", pFilename, ma_result_description(result)).c_str());
 		}
@@ -861,7 +872,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 		ma_free(s->pDecoder, NULL);
 	}
 	if (s->pDataConverter != NULL) {
-		ma_data_converter_uninit(s->pDataConverter);
+		ma_data_converter_uninit(s->pDataConverter, NULL);
 		ma_free(s->pDataConverter, NULL);
 	}
 	if (s->pRWOps != NULL) {
@@ -941,7 +952,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 					gMixBuffer[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 				}
 
-				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
+				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples);
 				if (samples < want_samples || rbResult == MA_AT_END) {
 					Sound->State = CHANNEL_DEAD;
 				}
