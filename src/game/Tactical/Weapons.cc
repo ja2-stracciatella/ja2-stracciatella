@@ -1669,11 +1669,14 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 }
 
 
-void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
+void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
 {
+	const INT16 sXPos = FIXEDPT_TO_INT32(pBullet->qCurrX);
+	const INT16 sYPos = FIXEDPT_TO_INT32(pBullet->qCurrY);
+	const INT16 sZPos = CONVERT_HEIGHTUNITS_TO_PIXELS(FIXEDPT_TO_INT32(pBullet->qCurrZ));
+
 	BOOLEAN        fDoMissForGun = FALSE;
 	ANITILE        *pNode;
-	INT16          sGridNo;
 	ANITILE_PARAMS AniParams;
 	UINT32         uiMissVolume = MIDVOLUME;
 
@@ -1690,7 +1693,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 
 	const BOOLEAN fHitSameStructureAsBefore = (usStructureID == pBullet->usLastStructureHit);
 
-	sGridNo = MAPROWCOLTOPOS( (sYPos/CELL_Y_SIZE), (sXPos/CELL_X_SIZE) );
+	const GridNo sGridNo = pBullet->sGridNo;
 	if ( !fHitSameStructureAsBefore )
 	{
 		const INT8 level = (sZPos > WALL_HEIGHT ? 1 : 0);
