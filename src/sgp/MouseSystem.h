@@ -27,8 +27,7 @@
 #define MSYS_REGION_EXISTS           0x00000010
 #define MSYS_REGION_ENABLED          0x00000040
 #define MSYS_FASTHELP                0x00000080
-#define MSYS_GOT_BACKGROUND          0x00000100
-#define MSYS_HAS_BACKRECT            0x00000200
+// 0x100 and 0x200 removed, were used to check if this region has a background save.
 #define MSYS_FASTHELP_RESET          0x00000400
 #define MSYS_ALLOW_DISABLED_FASTHELP 0x00000800
 
@@ -50,6 +49,8 @@ struct MOUSE_REGION
 	void SetUserPtr(void* ptr) { user.ptr = ptr; }
 
 	template<typename T> T* GetUserPtr() const { return static_cast<T*>(user.ptr); }
+
+	bool HasFastHelp() { return FastHelpRect != nullptr; }
 
 	INT16 X() const { return RegionTopLeftX; }
 	INT16 Y() const { return RegionTopLeftY; }
@@ -205,6 +206,7 @@ class MouseRegion : private MOUSE_REGION
 		using MOUSE_REGION::RelativeXPos;
 		using MOUSE_REGION::RelativeYPos;
 		using MOUSE_REGION::SetFastHelpText;
+		using MOUSE_REGION::HasFastHelp;
 		using MOUSE_REGION::SetUserPtr;
 		using MOUSE_REGION::uiFlags;
 };

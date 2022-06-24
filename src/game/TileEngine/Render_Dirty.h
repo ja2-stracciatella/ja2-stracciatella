@@ -58,8 +58,10 @@ void ExecuteBaseDirtyRectQueue(void);
 // BACKGROUND RECT BUFFERING STUFF
 void             InitializeBackgroundRects(void);
 BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags, INT16 x, INT16 y, INT16 w, INT16 h);
-void             FreeBackgroundRect(BACKGROUND_SAVE*);
-void             FreeBackgroundRectPending(BACKGROUND_SAVE*);
+// This function will invalidate your BACKGROUND_SAVE pointer!
+void             FreeBackgroundRect(BACKGROUND_SAVE*&);
+// This function will invalidate your BACKGROUND_SAVE pointer!
+void             FreeBackgroundRectPending(BACKGROUND_SAVE*&);
 void             FreeBackgroundRectType(BackgroundFlags);
 void             RestoreBackgroundRects(void);
 void             SaveBackgroundRects(void);

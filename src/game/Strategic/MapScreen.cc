@@ -4397,7 +4397,7 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 #endif
 
 		// redraw region
-		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fCharacterInfoPanelDirty = TRUE;
+		if (btn->HasFastHelp()) fCharacterInfoPanelDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

@@ -289,12 +289,11 @@ static void MSYS_UpdateMouseRegion(void)
 			if (!prev->FastHelpText.empty())
 			{
 #ifdef _JA2_RENDER_DIRTY
-				if (prev->uiFlags & MSYS_GOT_BACKGROUND)
+				if (prev->HasFastHelp())
 				{
 					FreeBackgroundRectPending(prev->FastHelpRect);
 				}
 #endif
-				prev->uiFlags &= ~MSYS_GOT_BACKGROUND;
 				prev->uiFlags &= ~MSYS_FASTHELP_RESET;
 			}
 
@@ -321,12 +320,11 @@ static void MSYS_UpdateMouseRegion(void)
 				if (!cur->FastHelpText.empty() && !(cur->uiFlags & MSYS_FASTHELP_RESET))
 				{
 #ifdef _JA2_RENDER_DIRTY
-					if (cur->uiFlags & MSYS_GOT_BACKGROUND)
+					if (cur->HasFastHelp())
 					{
 						FreeBackgroundRectPending(cur->FastHelpRect);
 					}
 #endif
-					cur->uiFlags &= ~MSYS_GOT_BACKGROUND;
 					cur->uiFlags |= MSYS_FASTHELP_RESET;
 				}
 				if (cur->uiFlags & MSYS_REGION_ENABLED)
@@ -446,12 +444,11 @@ static void MSYS_UpdateMouseRegion(void)
 							// Button was clicked so remove any FastHelp text
 							cur->uiFlags &= ~MSYS_FASTHELP;
 #ifdef _JA2_RENDER_DIRTY
-							if (cur->uiFlags & MSYS_GOT_BACKGROUND)
+							if (cur->HasFastHelp())
 							{
 								FreeBackgroundRectPending(cur->FastHelpRect);
 							}
 #endif
-							cur->uiFlags &= ~MSYS_GOT_BACKGROUND;
 							cur->uiFlags &= ~MSYS_FASTHELP_RESET;
 
 							cur->FastHelpTimer = gsFastHelpDelay;
@@ -564,6 +561,7 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 	r->ButtonCallback     = buttoncallback;
 	r->FastHelpTimer      = 0;
 	r->FastHelpText       = ST::null;
+	r->FastHelpRect       = nullptr;
 	r->next               = 0;
 	r->prev               = 0;
 
@@ -593,10 +591,9 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 #endif
 
 #ifdef _JA2_RENDER_DIRTY
-	if (r->uiFlags & MSYS_HAS_BACKRECT)
+	if (r->HasFastHelp())
 	{
 		FreeBackgroundRectPending(r->FastHelpRect);
-		r->uiFlags &= ~MSYS_HAS_BACKRECT;
 	}
 #endif
 
@@ -665,10 +662,9 @@ void MOUSE_REGION::SetFastHelpText(const ST::string& str)
 	if (guiCurrentScreen == MAP_SCREEN) return;
 
 #ifdef _JA2_RENDER_DIRTY
-	if (uiFlags & MSYS_GOT_BACKGROUND) FreeBackgroundRectPending(FastHelpRect);
+	if (HasFastHelp()) FreeBackgroundRectPending(FastHelpRect);
 #endif
 
-	uiFlags &= ~MSYS_GOT_BACKGROUND;
 	uiFlags &= ~MSYS_FASTHELP_RESET;
 }
 
@@ -703,10 +699,9 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 	if (y <  0)                 y = 0;
 	if (y >= SCREEN_HEIGHT - h) y = SCREEN_HEIGHT - h - 15;
 
-	if (!(r->uiFlags & MSYS_GOT_BACKGROUND))
+	if (!r->HasFastHelp())
 	{
 		r->FastHelpRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, x, y, w, h);
-		r->uiFlags |= MSYS_GOT_BACKGROUND | MSYS_HAS_BACKRECT;
 	}
 	else
 	{

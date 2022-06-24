@@ -318,7 +318,7 @@ static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// redraw region
-		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -332,7 +332,7 @@ static void BtnTacticalCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// redraw region
-		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -346,7 +346,7 @@ static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -389,7 +389,7 @@ static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (CommonTimeCompressionChecks()) return;
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -409,7 +409,7 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (CommonTimeCompressionChecks()) return;
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -430,13 +430,13 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// redraw region
-		if (btn ->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollDown(1);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
@@ -450,13 +450,13 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollDown(MAX_MESSAGES_ON_MAP_BOTTOM);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_REPEAT)
@@ -477,13 +477,13 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// redraw region
-		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollUp(1);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
@@ -497,13 +497,13 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		// redraw region
-		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
+		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollUp(MAX_MESSAGES_ON_MAP_BOTTOM);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_REPEAT)
