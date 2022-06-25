@@ -315,12 +315,7 @@ static void DestroyButtonsForMapScreenInterfaceBottom()
 
 static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LAPTOP);
 	}
@@ -329,12 +324,7 @@ static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void BtnTacticalCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
 	}
@@ -343,14 +333,8 @@ static void BtnTacticalCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		fMapScreenBottomDirty = TRUE;
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_OPTIONS);
 	}
 }
@@ -388,8 +372,6 @@ static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		if (CommonTimeCompressionChecks()) return;
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -408,8 +390,6 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		if (CommonTimeCompressionChecks()) return;
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -429,14 +409,10 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollDown(1);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
@@ -449,14 +425,10 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollDown(MAX_MESSAGES_ON_MAP_BOTTOM);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_REPEAT)
@@ -476,14 +448,10 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollUp(1);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
@@ -496,14 +464,10 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		// redraw region
-		if (btn->HasFastHelp()) fMapScreenBottomDirty = TRUE;
 		MapScreenMsgScrollUp(MAX_MESSAGES_ON_MAP_BOTTOM);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_REPEAT)

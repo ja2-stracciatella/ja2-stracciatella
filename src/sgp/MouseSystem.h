@@ -206,7 +206,6 @@ class MouseRegion : private MOUSE_REGION
 		using MOUSE_REGION::RelativeXPos;
 		using MOUSE_REGION::RelativeYPos;
 		using MOUSE_REGION::SetFastHelpText;
-		using MOUSE_REGION::HasFastHelp;
 		using MOUSE_REGION::SetUserPtr;
 		using MOUSE_REGION::uiFlags;
 };

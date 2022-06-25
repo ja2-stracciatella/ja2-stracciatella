@@ -78,7 +78,6 @@ struct GUI_BUTTON
 	void SpecifyTextWrappedWidth(INT16 wrapped_width);
 
 	void AllowDisabledFastHelp();
-	bool HasFastHelp() { return Area.HasFastHelp(); }
 
 	enum DisabledStyle
 	{
