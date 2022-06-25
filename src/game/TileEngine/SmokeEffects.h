@@ -38,7 +38,7 @@ struct SMOKEEFFECT
 SmokeEffectKind GetSmokeEffectOnTile(INT16 sGridNo, INT8 bLevel);
 
 // Decays all smoke effects...
-void DecaySmokeEffects( UINT32 uiTime );
+void DecaySmokeEffects(UINT32 uiTime, bool trashingWorld = false);
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
