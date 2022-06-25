@@ -121,7 +121,7 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 }
 
 
-void DecayLightEffects( UINT32 uiTime )
+void DecayLightEffects(const UINT32 uiTime, const bool trashingWorld)
 {
 	// age all active tear gas clouds, deactivate those that are just dispersing
 	FOR_EACH_LIGHTEFFECT(l)
@@ -165,7 +165,7 @@ void DecayLightEffects( UINT32 uiTime )
 		}
 
 		// Handle sight here....
-		AllTeamsLookForAll(FALSE);
+		if(!trashingWorld) AllTeamsLookForAll(FALSE);
 	}
 }
 
