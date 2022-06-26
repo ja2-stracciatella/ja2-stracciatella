@@ -12,8 +12,8 @@
 #include "Debug.h"
 #include "UILayout.h"
 
+#include <forward_list>
 #include <memory>
-#include <vector>
 
 
 // Struct for backgrounds
@@ -34,8 +34,7 @@ struct BACKGROUND_SAVE
 	INT16           sHeight;
 };
 
-// 80 is the number of background saves required by the map screen plus a little reserve.
-static std::vector<BACKGROUND_SAVE> gBackSaves(80);
+static std::forward_list<BACKGROUND_SAVE> gBackSaves;
 
 static VIDEO_OVERLAY* gVideoOverlays;
 
@@ -95,13 +94,14 @@ void ExecuteBaseDirtyRectQueue(void)
 
 static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 {
+	auto before{gBackSaves.before_begin()};
 	for (auto & b : gBackSaves)
 	{
 		if (!b.fAllocated && !b.fFilled) return &b;
+		++before;
 	}
 
-	SLOGD("Must allocate new BACKGROUND_SAVE, now {} in total", gBackSaves.size() + 1);
-	return &gBackSaves.emplace_back(BACKGROUND_SAVE{});
+	return &*gBackSaves.emplace_after(before);
 }
 
 
@@ -209,8 +209,6 @@ void EmptyBackgroundRects(void)
 		BACKGROUND_SAVE* const b = &backsave;
 		if (b->fFilled)
 		{
-			b->fFilled = FALSE;
-
 			if (!b->fAllocated)
 			{
 				b->pSaveArea.reset();
@@ -223,9 +221,10 @@ void EmptyBackgroundRects(void)
 			b->pSaveArea.reset();
 			b->pZSaveArea.reset();
 			b->fAllocated     = FALSE;
-			b->fFilled        = FALSE;
 			b->fPendingDelete = FALSE;
 		}
+
+		b->fFilled = FALSE;
 	}
 }
 
