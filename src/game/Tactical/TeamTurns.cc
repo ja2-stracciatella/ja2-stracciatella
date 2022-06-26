@@ -212,6 +212,9 @@ void EndTurn( UINT8 ubNextTeam )
 		// Loop through all mercs and set to moved
 		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
+			// Only do this for mercs that are actually in this sector
+			if (!s->bInSector) continue;
+
 			s->bMoved = TRUE;
 			// Cancel merc movement if continue path was not used
 			const INT16 sAPCost = PtsToMoveDirection(s, s->ubPathingData[0]);
