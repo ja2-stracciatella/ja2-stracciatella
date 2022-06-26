@@ -2538,8 +2538,8 @@ void TrashWorld(void)
 	TrashWorldItems();
 	TrashOverheadMap();
 
-	DecaySmokeEffects(0xffffff);
-	DecayLightEffects(0xffffff);
+	DecaySmokeEffects(0xffffff, true);
+	DecayLightEffects(0xffffff, true);
 	ResetSmokeEffects();
 	ResetLightEffects();
 

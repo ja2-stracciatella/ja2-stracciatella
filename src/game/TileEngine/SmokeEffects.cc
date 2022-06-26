@@ -327,7 +327,7 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 }
 
 
-void DecaySmokeEffects( UINT32 uiTime )
+void DecaySmokeEffects(const UINT32 uiTime, const bool trashingWorld)
 {
 	BOOLEAN fUpdate = FALSE;
 	BOOLEAN fSpreadEffect;
@@ -446,7 +446,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 		}
 	}
 
-	AllTeamsLookForAll( TRUE );
+	if (!trashingWorld) AllTeamsLookForAll( TRUE );
 }
 
 
