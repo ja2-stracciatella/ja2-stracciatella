@@ -258,19 +258,21 @@ void SaveBackgroundRects(void)
 }
 
 
-void FreeBackgroundRect(BACKGROUND_SAVE* const b)
+void FreeBackgroundRect(BACKGROUND_SAVE*& b)
 {
 	if (b == NULL) return;
 
 	b->fAllocated = FALSE;
+	b = nullptr;
 }
 
 
-void FreeBackgroundRectPending(BACKGROUND_SAVE* const b)
+void FreeBackgroundRectPending(BACKGROUND_SAVE*& b)
 {
 	if(b)
 	{
 		b->fPendingDelete = TRUE;
+		b = nullptr;
 	}
 }
 

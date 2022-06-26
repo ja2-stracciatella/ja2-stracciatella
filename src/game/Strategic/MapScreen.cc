@@ -4386,20 +4386,7 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (g_dialogue_box) return;
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-#if 0 // XXX was commented out
-		if (bSelectedDestChar != -1 || fPlotForHelicopter)
-		{
-			AbortMovementPlottingMode();
-			return;
-		}
-#endif
-
-		// redraw region
-		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fCharacterInfoPanelDirty = TRUE;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		RequestContractMenu();
 	}
