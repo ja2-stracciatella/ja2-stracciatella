@@ -1206,11 +1206,7 @@ BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pub
 
 StructureDamageResult DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason const reason, GridNo const grid_no, INT16 const x, INT16 const y, SOLDIERTYPE* const owner)
 {	// Do damage to a structure; returns TRUE if the structure should be removed
-	if (!s)
-	{
-		SLOGW("Structure is not defined");
-		return STRUCTURE_NOT_DAMAGED;
-	}
+	Assert(s);
 
 	if (s->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE))
 	{ // Don't hurt this structure, it's used for hit detection only
