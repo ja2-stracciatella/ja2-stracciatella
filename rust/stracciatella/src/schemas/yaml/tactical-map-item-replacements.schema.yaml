@@ -9,11 +9,11 @@ items:
     replace items with something else, or ignore totally. This does not affect
     items created from other means.
 
-    This is intended for compatibility and for maps that was originally built 
+    This is intended for compatibility and for maps that were originally built
     for different item sets (e.g. Wildfire maps).
 
-    Items are identified by either item index (if given integer), or internal 
-    name (if given string). Items mapped to 0 ("Nothing") are removed from map 
+    Items are identified by either item index (if given integer), or internal
+    name (if given string). Items mapped to 0 ("Nothing") are removed from map
     placements.
   properties:
     from:
@@ -21,13 +21,13 @@ items:
         - title: Internal ID
           $ref: types/id.schema.yaml
         - title: Internal numeric ID
-          $ref: types/uint8.schema.yaml
+          $ref: types/uint16.schema.yaml
     to:
       oneOf:
         - title: Internal ID
           $ref: types/id.schema.yaml
         - title: Internal numeric ID
-          $ref: types/uint8.schema.yaml
+          $ref: types/uint16.schema.yaml
   required:
   - from
   - to
