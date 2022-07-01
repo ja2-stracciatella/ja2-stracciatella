@@ -7,7 +7,7 @@ items:
   properties:
     itemIndex:
       title: Item index
-      $ref: types/uint8.schema.yaml
+      $ref: types/uint16.schema.yaml
     internalName:
       title: Internal name
       $ref: types/id.schema.yaml
@@ -45,6 +45,7 @@ items:
     sound:
       title: Shot sound
       description: Path to sound that is played when a single shot is fired.
+      $ref: types/resource-path.schema.yaml
     burstSound:
       title: Burst sound
       description: |
@@ -55,13 +56,14 @@ items:
     silencedSound:
       title: Silenced shot sound
       description: Path to sound that is played when a single shot is fired and gun is silenced somehow.
-      $ref: types/int32.schema.yaml
+      $ref: types/resource-path.schema.yaml
     silencedBurstSound:
       title: Silenced burst sound
       description: |
         Path to sounds that are played as burst sounds for this calibre when the gun is silenced somehow.
 
         %d will replaced with the amount of bullets left in the gun.
+      $ref: types/resource-path.schema.yaml
     inventoryGraphics:
       title: Inventory Graphics
       description: Graphics that are used in the inventory interface for this item
