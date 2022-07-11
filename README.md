@@ -7,11 +7,11 @@
 
 This is continuation of venerable JA2-Stracciatella project.
 
-The goal of the project was to make Jagged Alliance 2 available on a wide range of platforms, improve its stability, fix bugs and provide a stable platform for mod development.  At the moment the goal mostly to fix bugs.
+The goal of the project is to make Jagged Alliance 2 available on a wide range of platforms, improve its stability, fix bugs and provide a stable platform for mod development.  At the moment the goal is mostly to fix bugs.
 
 Official Homepage: http://ja2-stracciatella.github.io/
 
-To get in touch with the developers you can use the [#ja2-stracciatella Discord channel on The Bear's Pit](https://discord.gg/8yKBrCANpY).
+To get in touch with the developers you can use the [#ja2-stracciatella Discord channel on The Bear's Pit](https://discord.com/invite/GqrVZUM).
 
 ## How to start the game
 
