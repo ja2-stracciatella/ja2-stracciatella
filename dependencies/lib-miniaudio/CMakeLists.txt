@@ -22,18 +22,24 @@ if (NOT LOCAL_MINIAUDIO_LIB)
     endif()
 
     include(CheckCXXSourceCompiles)
+
+    # miniaudio doesn't do semver properly, check if any miniaudio-related build
+    # failures have something to do with ABI changes that the semver doesn't
+    # suggest.
     CHECK_CXX_SOURCE_COMPILES(
         "
             #include <miniaudio.h>
             int main() {
                 static_assert(MA_VERSION_MAJOR == 0);
                 static_assert(MA_VERSION_MINOR == 10);
+                static_assert(MA_VERSION_REVISION >= 43);
             }
         "
         HAVE_MA_VERSION
     )
     if (NOT HAVE_MA_VERSION)
-        message(FATAL_ERROR "miniaudio does not have correct version, should be 0.10.x")
+        message(FATAL_ERROR "miniaudio does not have correct version, should be
+        >= 0.10.43")
     endif()
 
     set(MINIAUDIO_INCLUDE_DIRS "${MINIAUDIO_INCLUDE_DIR}" PARENT_SCOPE)

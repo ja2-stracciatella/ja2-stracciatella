@@ -106,7 +106,7 @@ struct SAMPLETAG
 	UINT32 uiBufferSize; // The size of the in-memory buffer
 	ma_format eInMemoryFormat;
 	UINT32 uiInMemoryChannels;
-	
+
 	ma_data_converter* pDataConverter; // pointer to a data converter that decodes the data from pData
 
 	SGPFile* pFile;  // pointer to a SDL_RWops representing the file that we stream from
@@ -498,7 +498,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			// We might not have as many bytes available
 			auto availableFrames = MIN(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
 			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames);
-			
+
 			auto result = ma_data_converter_process_pcm_frames(
 				sample->pDataConverter,
 				sample->pInMemoryBuffer + posInBytes,
@@ -696,7 +696,7 @@ size_t MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToR
 	return SDL_RWread(rwOps, pBufferOut, sizeof(UINT8), bytesToRead);
 }
 
-ma_bool32 MiniaudioSeekProc(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin) {
+ma_bool32 MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_origin origin) {
 	auto rwOps = (SDL_RWops*)pDecoder->pUserData;
 	auto sdlOrigin = RW_SEEK_SET;
 	if (origin == ma_seek_origin::ma_seek_origin_current) {
@@ -733,7 +733,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	{
 		auto isStreamed = TRUE;
 		SAMPLETAG* s = SoundGetEmptySample();
-		
+
 		// if we don't have a sample slot
 		if (s == NULL)
 		{
@@ -1027,7 +1027,7 @@ static BOOLEAN SoundInitHardware(void)
 
 		SDL_PauseAudio(0);
 		return TRUE;
-		
+
 	} catch (const std::runtime_error& err) {
 		SLOGE(ST::format(
 			"SoundInitHardware: {}",
