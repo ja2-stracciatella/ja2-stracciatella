@@ -3,7 +3,7 @@
 
 #include "Types.h"
 #include "World_Tileset_Enums.h"
-
+#include <array>
 #include <string_theory/string>
 
 struct ANITILE;
@@ -242,10 +242,24 @@ struct TILE_SURFACE_RESOURCE
 };
 
 // World Data
+#ifdef NDEBUG
 extern MAP_ELEMENT* gpWorldLevelData;
+#else
+// Wrap the world level data in a helper class to catch out of bounds accesses in debug builds
+struct WorldLevelData_t
+{
+	std::array<MAP_ELEMENT, WORLD_MAX> mapElements;
+
+	constexpr MAP_ELEMENT& operator[](size_t const pos) { return mapElements.at(pos); }
+	// Needed by various Assert(gpWorldLevelData != NULL) throughout the codebase.
+	constexpr bool operator!=(void *p) const { return p == nullptr; }
+};
+
+extern WorldLevelData_t gpWorldLevelData;
+#endif
 
 #define FOR_EACH_WORLD_TILE(iter) \
-	for (MAP_ELEMENT* iter = gpWorldLevelData, * const iter##__end = gpWorldLevelData + WORLD_MAX; iter != iter##__end; ++iter)
+	for (MAP_ELEMENT* iter = &gpWorldLevelData[0], * const iter##__end = &gpWorldLevelData[0] + WORLD_MAX; iter != iter##__end; ++iter)
 
 // World Movement Costs
 extern UINT8 gubWorldMovementCosts[WORLD_MAX][MAXDIR][2];

@@ -97,7 +97,12 @@ void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 
 
 // Global Variables
+#ifdef NDEBUG
 MAP_ELEMENT			*gpWorldLevelData;
+#else
+WorldLevelData_t gpWorldLevelData;
+#endif
+
 UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
 
 // set to nonzero (locs of base gridno of structure are good) to have it defined by structure code
@@ -172,9 +177,11 @@ void InitializeWorld()
 
 
 	// Initialize world data
-
+#ifdef NDEBUG
 	gpWorldLevelData = new MAP_ELEMENT[WORLD_MAX]{};
-
+#else
+	gpWorldLevelData.mapElements.fill({});
+#endif
 	// Init room database
 	InitRoomDatabase( );
 
@@ -190,11 +197,13 @@ void DeinitializeWorld( )
 {
 	TrashWorld();
 
+#ifdef NDEBUG
 	if ( gpWorldLevelData != NULL )
 	{
 		delete[] gpWorldLevelData;
 		gpWorldLevelData = nullptr;
 	}
+#endif
 
 	DestroyTileSurfaces( );
 	FreeAllStructureFiles( );
@@ -1377,13 +1386,11 @@ try
 	// Remove world visibility tiles
 	RemoveWorldWireFrameTiles();
 
-	MAP_ELEMENT const* const world_data = gpWorldLevelData;
-
 	{ // Write out height values
 		UINT8 heights[2 * WORLD_MAX];
 		for (INT32 i = 0; i != WORLD_MAX; ++i)
 		{
-			heights[2 * i]     = world_data[i].sHeight;
+			heights[2 * i]     = gpWorldLevelData[i].sHeight;
 			heights[2 * i + 1] = 0; // Filler byte
 		}
 		f->write(heights, sizeof(heights));
@@ -1394,7 +1401,7 @@ try
 	UINT8  ubCombine;
 	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{
-		MAP_ELEMENT const& e = world_data[cnt];
+		MAP_ELEMENT const& e = gpWorldLevelData[cnt];
 
 		// Determine # of land
 		UINT8 n_layers = 0;
@@ -2101,7 +2108,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 	f->seek(4, FILE_SEEK_FROM_CURRENT);
 
 	{ // Read height values
-		MAP_ELEMENT* world = gpWorldLevelData;
+		MAP_ELEMENT* world = &gpWorldLevelData[0];
 		for (UINT32 row = 0; row != WORLD_ROWS; ++row)
 		{
 			BYTE height[WORLD_COLS * 2];
@@ -2119,7 +2126,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 	UINT8 bCounts[WORLD_MAX][6];
 	{ // Read layer counts
 		UINT8        (*cnt)[6] = bCounts;
-		MAP_ELEMENT* world     = gpWorldLevelData;
+		MAP_ELEMENT* world     = &gpWorldLevelData[0];
 		for (UINT32 row = 0; row != WORLD_ROWS; ++row)
 		{
 			BYTE combine[WORLD_COLS][4];
@@ -2593,7 +2600,11 @@ void TrashWorld(void)
 	}
 
 	// Zero world
+#ifdef NDEBUG
 	std::fill_n(gpWorldLevelData, WORLD_MAX, MAP_ELEMENT{});
+#else
+	gpWorldLevelData.mapElements.fill({});
+#endif
 
 	// Set some default flags
 	FOR_EACH_WORLD_TILE(i)
