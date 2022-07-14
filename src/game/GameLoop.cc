@@ -221,8 +221,8 @@ catch (std::exception const& e)
 {
 	guiPreviousOptionScreen = guiCurrentScreen;
 	char const* what;
-	char const* success = "failed";
-	char const* attach  = "";
+	ST::string success = "failed";
+	char const* attach = "";
 
 	if (gfEditMode && GameMode::getInstance()->isEditorMode())
 	{
@@ -239,7 +239,7 @@ catch (std::exception const& e)
 		auto saveName = GetErrorSaveName();
 		if (SaveGame(saveName, "error savegame"))
 		{
-			success = ST::format("succeeded ({}.sav)", saveName).c_str();
+			success = ST::format("succeeded ({}.sav)", saveName);
 			attach  = " Do not forget to attach the savegame.";
 		}
 	}
@@ -248,7 +248,7 @@ catch (std::exception const& e)
 		"%s\n"
 		"Creating an emergency %s %s.\n"
 		"Please report this error with a description of the circumstances.%s",
-		e.what(), what, success, attach
+		e.what(), what, success.c_str(), attach
 	);
 	throw std::runtime_error(msg);
 }
