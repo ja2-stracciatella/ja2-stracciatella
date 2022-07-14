@@ -61,7 +61,8 @@ static SGPVObject* guiContentButton;
 static UINT8   gubCurPageNum;
 static BOOLEAN gfInToc =  FALSE;
 static BOOLEAN gfExitingAimHistory;
-static BOOLEAN AimHistorySubPagesVisitedFlag[NUM_AIM_HISTORY_PAGES];
+// This flag gets set for the TOC and the actual history pages, therefore we need one more
+static BOOLEAN AimHistorySubPagesVisitedFlag[NUM_AIM_HISTORY_PAGES + 1];
 
 
 static MOUSE_REGION gSelectedHistoryTocMenuRegion[NUM_AIM_HISTORY_PAGES];
@@ -99,7 +100,7 @@ enum AimHistoryTextLocations
 
 void EnterInitAimHistory()
 {
-	std::fill_n(AimHistorySubPagesVisitedFlag, NUM_AIM_HISTORY_PAGES, 0);
+	std::fill(std::begin(AimHistorySubPagesVisitedFlag), std::end(AimHistorySubPagesVisitedFlag), 0);
 }
 
 
