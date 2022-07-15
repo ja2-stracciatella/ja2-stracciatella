@@ -1510,11 +1510,12 @@ const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 int16_t DefaultContentManager::getSectorLandType(uint8_t const sectorID, uint8_t const sectorLevel) const
 {
 	SGPSector key = SGPSector::FromSectorID(sectorID, sectorLevel);
-	if (m_sectorLandTypes.find(key) == m_sectorLandTypes.end())
+	auto result = m_sectorLandTypes.find(key);
+	if (result == m_sectorLandTypes.end())
 	{
 		return -1;
 	}
-	return m_sectorLandTypes.at(key);
+	return result->second;
 }
 
 const CacheSectorsModel* DefaultContentManager::getCacheSectors() const
