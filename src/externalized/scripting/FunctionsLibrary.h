@@ -342,6 +342,7 @@ std::vector<SOLDIERTYPE*> ListSoldiersFromTeam(UINT8 ubTeamID);
 void CenterAtGridNo(INT16 sGridNo, bool fForce);
 INT16 PythSpacesAway(INT16 sGridNo1, INT16 sGridNo2);
 void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, UINT16 item, INT8 level);
+void SetOffBombsByFrequency(SOLDIERTYPE* s, INT8 bFrequency);
 
 void TriggerNPCRecord(UINT8 ubTriggerNPC, UINT8 record);
 void StrategicNPCDialogue(UINT8 ubProfileID, UINT16 usQuoteNum);

@@ -410,6 +410,8 @@ static void RegisterGlobals()
 	lua.set_function("DoMercBattleSound", DoMercBattleSound_);
 
 	lua.set_function("IgniteExplosion", IgniteExplosion);
+	lua.set_function("SetOffBombsByFrequency", SetOffBombsByFrequency);
+
 	lua.set_function("ChangeSoldierStance", ChangeSoldierStance);
 	lua.set_function("ChangeSoldierState", ChangeSoldierState);
 
