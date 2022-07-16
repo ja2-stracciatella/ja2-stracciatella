@@ -14,6 +14,9 @@
 #include "SaveLoadGameStates.h"
 #include "Soldier_Profile.h"
 #include "StrategicMap.h"
+#include "Exit_Grids.h"
+#include "WorldMan.h"
+#include "SaveLoadMap.h"
 #include <stdexcept>
 #include <string>
 #include <string_theory/format>
@@ -253,4 +256,29 @@ void SetLaptopModes(UINT32 uiLaptopMode, UINT32 uiWWWMode)
 {
 	guiCurrentLaptopMode = static_cast<LaptopMode>(uiLaptopMode);
 	guiCurrentWWWMode = static_cast<LaptopMode>(uiWWWMode);
+}
+
+void AddExitGridToWorld(INT32 iMapIndex, EXITGRID *pExitGrid);
+void AddExitGridToWorld_(INT32 iMapIndex, UINT16 gridNo, UINT8 destX, UINT8 destY, UINT8 destZ)
+{
+	SGPSector s{destX, destY, static_cast<INT8>(destZ)};
+	EXITGRID exitGrid {gridNo, s};
+	AddExitGridToWorld(iMapIndex, &exitGrid);
+}
+
+UINT16 GetTileIndexFromTypeSubIndex(UINT32, UINT16);
+void AddStructToHead(UINT32, UINT16);
+void RemoveStruct(UINT32, UINT16);
+void RemoveStructFromMap(UINT16 gridNo, UINT32 tileType, UINT16 tileSubIndex)
+{
+	ApplyMapChangesToMapTempFile app;
+	UINT16 tileIndex = GetTileIndexFromTypeSubIndex(tileType, tileSubIndex);
+	RemoveStruct(gridNo, tileIndex);
+}
+
+void AddStructToMap(UINT16 gridNo, UINT32 tileType, UINT16 tileSubIndex)
+{
+	ApplyMapChangesToMapTempFile app;
+	UINT16 tileIndex = GetTileIndexFromTypeSubIndex(tileType, tileSubIndex);
+	AddStructToHead(gridNo, tileIndex);
 }

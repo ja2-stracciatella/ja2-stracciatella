@@ -482,3 +482,8 @@ void DoBasicMessageBox(ST::string text);
  * @ingroup ui-control
  */
 void ExecuteTacticalTextBox_(INT16 sLeftPosition, INT16 sTopPosition, ST::string pString);
+
+void AddExitGridToWorld_(INT32 mapIndex, UINT16 gridNo, UINT8 x, UINT8 y, UINT8 z);
+void RemoveExitGridFromWorld(INT32 iMapIndex);
+void RemoveStructFromMap(UINT16 gridNo, UINT32 tileType, UINT16 tileSubIndex);
+void AddStructToMap(UINT16 gridNo, UINT32 tileType, UINT16 tileSubIndex);

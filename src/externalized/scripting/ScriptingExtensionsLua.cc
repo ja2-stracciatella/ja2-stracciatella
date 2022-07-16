@@ -413,6 +413,11 @@ static void RegisterGlobals()
 	lua.set_function("IgniteExplosion", IgniteExplosion);
 	lua.set_function("SetOffBombsByFrequency", SetOffBombsByFrequency);
 
+	lua.set_function("AddExitGridToWorld", AddExitGridToWorld_);
+	lua.set_function("RemoveExitGridFromWorld", RemoveExitGridFromWorld);
+	lua.set_function("RemoveStructFromMap", RemoveStructFromMap);
+	lua.set_function("AddStructToMap", AddStructToMap);
+
 	lua.set_function("ChangeSoldierStance", ChangeSoldierStance);
 	lua.set_function("ChangeSoldierState", ChangeSoldierState);
 
