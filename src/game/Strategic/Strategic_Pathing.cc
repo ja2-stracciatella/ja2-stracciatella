@@ -673,7 +673,7 @@ static PathSt* MoveToEndOfPathList(PathSt* pList)
 }
 
 
-static PathSt* RemoveTailFromStrategicPath(PathSt* pHeadOfList)
+static PathSt* RemoveTailFromStrategicPath(PathSt* const pHeadOfList)
 {
 	// remove the tail section from the strategic path
 	PathSt* pNode = pHeadOfList;
@@ -699,9 +699,8 @@ static PathSt* RemoveTailFromStrategicPath(PathSt* pHeadOfList)
 	// now remove old last node
 	delete pNode;
 
-	// return head of new list
-	return( pHeadOfList );
-
+	// return head of new list or null if this was the only section of this path
+	return pHeadOfList == pNode ? nullptr : pHeadOfList;
 }
 
 
@@ -789,35 +788,6 @@ PathSt* CopyPaths(PathSt* src)
 }
 
 
-#ifdef BETA_VERSION
-static void VerifyAllMercsInGroupAreOnSameSquad(GROUP const& g)
-{
-	SOLDIERTYPE *pSoldier;
-	INT8 bSquad = -1;
-
-	// Let's choose somebody in group.....
-	CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
-	{
-		pSoldier = pPlayer->pSoldier;
-		Assert( pSoldier );
-
-		if ( pSoldier->bAssignment < ON_DUTY )
-		{
-			if ( bSquad == -1 )
-			{
-				bSquad = pSoldier->bAssignment;
-			}
-			else
-			{
-				// better be the same squad!
-				Assert( pSoldier->bAssignment == bSquad );
-			}
-		}
-	}
-}
-#endif
-
-
 void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 {
 	INT32 iDelta = 0;
@@ -834,10 +804,6 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 
 	if (g.fPlayer)
 	{
-#ifdef BETA_VERSION
-	VerifyAllMercsInGroupAreOnSameSquad(g);
-#endif
-
 		// update the destination(s) in the team list
 		fTeamPanelDirty = TRUE;
 
@@ -968,7 +934,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, const SGP
 	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
-	pNode = ClearStrategicPathList( pNode, -1 );
+	ClearStrategicPathList( pNode, -1 );
 
 	return( TRUE );
 }
@@ -999,7 +965,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, con
 	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
-	pNode = ClearStrategicPathList( pNode, -1 );
+	ClearStrategicPathList( pNode, -1 );
 
 	return( TRUE );
 }
@@ -1033,7 +999,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
-	pNode = ClearStrategicPathList( pNode, -1 );
+	ClearStrategicPathList( pNode, -1 );
 
 	return( TRUE );
 }
