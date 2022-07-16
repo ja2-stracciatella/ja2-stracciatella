@@ -399,13 +399,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					uiJumpAddress = NO_JUMP;
 
-					if ( anAniFrame == 999 )
-					{
-						// Fail jump, re-load old anim
-						ChangeSoldierState( pSoldier, usOldAnimState, 0, FALSE );
-						return( TRUE );
-					}
-					break;
+					// Fail jump, re-load old anim
+					ChangeSoldierState( pSoldier, usOldAnimState, 0, FALSE );
+					return( TRUE );
 
 				case 437:
 
