@@ -111,6 +111,7 @@ TEST(ExternalizedData, readAllData)
 {
 	DefaultContentManager* cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	ASSERT_TRUE(cm->loadGameData());
+	delete cm;
 }
 
 TEST(ExternalizedData, readEveryFile)
@@ -126,5 +127,7 @@ TEST(ExternalizedData, readEveryFile)
 		auto json = cm->_readJsonDataFile(relativePath.c_str());
 		ASSERT_FALSE(json.get() == NULL);
 	}
+
+	delete cm;
 }
 #endif
