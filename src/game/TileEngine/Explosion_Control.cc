@@ -359,6 +359,9 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 
 static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const grid_no, INT16 const wound_amt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const only_walls, SOLDIERTYPE* const owner, INT8 const level)
 {
+	//Ja25: Since explosions can take a while to go through, reset the time to prevent a deadlock
+	gTacticalStatus.uiTimeSinceMercAIStart = GetJA2Clock();
+
 	BOOLEAN_S skipDamage = false;
 	BeforeStructureDamaged(gWorldSector.x, gWorldSector.y, gWorldSector.z, grid_no, pCurrent, uiDist, &skipDamage);
 	if (skipDamage)

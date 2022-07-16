@@ -106,6 +106,9 @@ void FindPanicBombsAndTriggers(void)
 			case PANIC_FREQUENCY:   bPanicIndex = 0; break;
 			case PANIC_FREQUENCY_2: bPanicIndex = 1; break;
 			case PANIC_FREQUENCY_3: bPanicIndex = 2; break;
+			case PANIC_FREQUENCY_4: bPanicIndex = 3; break;
+			case PANIC_FREQUENCY_5: bPanicIndex = 5; break;
+			case PANIC_FREQUENCY_6: bPanicIndex = 5; break;
 			default:                continue;
 		}
 

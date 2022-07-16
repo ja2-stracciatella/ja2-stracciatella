@@ -1296,9 +1296,11 @@ static void HandleNPCTrigger(void);
 
 void HandleNPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, BOOLEAN const fShowDialogueMenu, Approach const ubTargetApproach)
 {
+	SLOGI("Handle NPC trigger {} {}", ubTargetNPC, ubTargetRecord);
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 	if ( pSoldier == NULL )
 	{
+		SLOGI("soldier null");
 		return;
 	}
 
@@ -1322,8 +1324,10 @@ void HandleNPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, BO
 	// IF WE ARE TO DISPLAY MENU AS WELL....
 	if ( gfInTalkPanel )
 	{
+		SLOGI("talk panel");
 		if ( gpDestSoldier == pSoldier && fShowDialogueMenu )
 		{
+			SLOGI("immeidately");
 			HandleNPCTrigger( );
 			return;
 		}
@@ -1331,7 +1335,7 @@ void HandleNPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, BO
 
 	if ( fShowDialogueMenu )
 	{
-
+		SLOGI("wait ?");
 		// ALRIGHTY, NOW DO THIS!
 		// WAIT IN NON-INTERACTIVE MODE UNTIL TIMER IS DONE
 		// SO WE CAN SEE NPC RADIO LOCATOR
@@ -1346,11 +1350,13 @@ void HandleNPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, BO
 		// If he's visible, locate...
 		if (pSoldier->bVisible != -1) LocateSoldier(pSoldier, FALSE);
 
+		SLOGI("lock UI");
 		guiPendingOverrideEvent = LU_BEGINUILOCK;
 
 	}
 	else
 	{
+		SLOGI("handle now");
 		HandleNPCTrigger( );
 	}
 
@@ -1452,7 +1458,7 @@ void HandleWaitTimerForNPCTrigger( )
 static void HandleNPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, UINT8 const ubQuoteNum)
 {
 	// OK, Move to gridNo!
-
+	SLOGI("OK, Move to gridNo {}", usGridNo);
 	// Shotdown any panel we had up...
 	DeleteTalkingMenu( );
 
@@ -1460,6 +1466,7 @@ static void HandleNPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, 
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 	if ( !pSoldier )
 	{
+		SLOGW("can't find soldier");
 		return;
 	}
 
@@ -1500,6 +1507,7 @@ static void HandleNPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, 
 
 	// handle this guy's AI right away so that we can get him moving
 	pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
+	SLOGI("set AbsoluteFinalDestination to {}", usGridNo);
 }
 
 
@@ -1874,6 +1882,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					// trigger quote!
 					//TriggerNPCWithIHateYouQuote( pSoldier->ubProfile );
 					AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
+					DeleteTalkingMenu();
 				}
 				break;
 			}

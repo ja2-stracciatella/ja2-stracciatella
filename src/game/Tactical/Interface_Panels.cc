@@ -3149,7 +3149,8 @@ void InitTEAMSlots()
 	if (NUM_TEAM_SLOTS < gamepolicy(squad_size))
 	{
 		SLOGW("The team panel does not have enough space to display all soldiers in a squad. "
-		      "You should either increase the game resolution or decrease the squad size");
+		      "You should either increase the game resolution or decrease the squad size. (Slots:{}, Size:{})",
+		      NUM_TEAM_SLOTS, gamepolicy(squad_size));
 	}
 	gTeamPanel.resize(NUM_TEAM_SLOTS);
 	std::fill_n(gTeamPanel.begin(), NUM_TEAM_SLOTS, TeamPanelSlot{NULL});

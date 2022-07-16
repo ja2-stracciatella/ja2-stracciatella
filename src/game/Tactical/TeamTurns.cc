@@ -917,6 +917,12 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		return( FALSE );
 	}
 
+	if ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )
+	{
+		SLOGI("No interrupt https://github.com/ja2-derek/ja2-ub-comparison/commit/c1c9ce86");
+		return( FALSE );
+	}
+
 	if (pOpponent == NULL)
 	{
 		// no opponent, so controller of 'ptr' makes the call instead

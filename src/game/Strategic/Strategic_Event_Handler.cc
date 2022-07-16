@@ -709,12 +709,13 @@ void HandleEarlyMorningEvents( void )
 	{
 		if (!profile->isNPCorRPC()) continue;
 
-		MERCPROFILESTRUCT& p = profile->getStruct();
+		MERCPROFILESTRUCT &p = profile->getStruct();
 		p.bFriendlyOrDirectDefaultResponseUsedRecently = FALSE;
 		p.bRecruitDefaultResponseUsedRecently = FALSE;
 		p.bThreatenDefaultResponseUsedRecently = FALSE;
 		p.ubMiscFlags2 &= (~PROFILE_MISC_FLAG2_BANDAGED_TODAY);
 	}
+	return; // UB: disabled NPC-specific logic
 	// reset Father Walker's drunkenness level!
 	gMercProfiles[ FATHER ].bNPCData = (INT8) Random( 4 );
 	// set Walker's location
