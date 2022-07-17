@@ -19,8 +19,8 @@ namespace ST
 }
 enum LogLevel { X };
 
-
-void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str)
+template<typename... Args>
+constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Args... args)
 {
 	if (isAssert)
 	{
