@@ -36,6 +36,7 @@
 #include "Text.h"
 #include "NPC.h"
 #include "Logger.h"
+#include <algorithm>
 
 #define NEXT_TILE_CHECK_DELAY 700
 
@@ -661,26 +662,27 @@ bool TeleportSoldier(SOLDIERTYPE& s, GridNo const gridno, bool const force)
 void SwapMercPositions(SOLDIERTYPE& s1, SOLDIERTYPE& s2)
 {
 	// Save positions
-	GridNo const gridno1 = s1.sGridNo;
-	GridNo const gridno2 = s2.sGridNo;
+	GridNo gridno1 = s1.sGridNo;
+	GridNo gridno2 = s2.sGridNo;
 
 	// Remove each
 	RemoveSoldierFromGridNo(s1);
 	RemoveSoldierFromGridNo(s2);
 
 	// Test OK destination for each
-	if (NewOKDestination(&s1, gridno2, TRUE, 0) && NewOKDestination(&s2, gridno1, TRUE, 0))
+	bool const canSwap = NewOKDestination(&s1, gridno2, TRUE, 0) && NewOKDestination(&s2, gridno1, TRUE, 0);
+	if (canSwap)
 	{
-		// Call teleport function for each
-		TeleportSoldier(s1, gridno2, false);
-		TeleportSoldier(s2, gridno1, false);
+		std::swap(gridno1, gridno2);
 	}
-	else
-	{
-		// Place back
-		TeleportSoldier(s1, gridno1, true);
-		TeleportSoldier(s2, gridno2, true);
-	}
+	// else both soldiers will be reinserted at their old position
+
+	// We must first call EVENT_SetSoldierPosition for one soldier because we currently have
+	// two soldiers at NOWHERE and cannot call HandleSight in TeleportSoldier (#1607)
+	EVENT_SetSoldierPosition(&s2, gridno2, SSP_NONE);
+	TeleportSoldier(s1, gridno1, !canSwap);
+	// Now both soldiers have a valid gridno and we can fully update the status of the second
+	TeleportSoldier(s2, gridno2, !canSwap);
 }
 
 
