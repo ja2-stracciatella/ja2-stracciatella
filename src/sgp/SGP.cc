@@ -510,7 +510,12 @@ int main(int argc, char* argv[])
 
 		return EXIT_SUCCESS;
 	} catch (...) {
-		TerminationHandler();
+		try {
+			TerminationHandler();
+		} catch (...) {
+			// If you ever see return code 27, try to set a breakpoint here
+			return 27;
+		}
 		return EXIT_FAILURE;
 	}
 }

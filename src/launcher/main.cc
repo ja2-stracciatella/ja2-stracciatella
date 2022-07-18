@@ -4,6 +4,7 @@
 #include <string_theory/string>
 
 int main(int argc, char* argv[])
+try
 {
 	Logger_initialize("ja2-launcher.log");
 
@@ -17,4 +18,9 @@ int main(int argc, char* argv[])
 	launcher.loadJa2Json();
 	launcher.show();
 	return Fl::run();
+}
+catch (...)
+{
+	// If you ever see return code 27, try to set a breakpoint here
+	return 27;
 }

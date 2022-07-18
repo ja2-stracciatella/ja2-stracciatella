@@ -58,7 +58,7 @@ struct GARRISON_GROUP;
 class ContentManager : public ItemSystem, public MercSystem
 {
 public:
-	virtual ~ContentManager() {};
+	virtual ~ContentManager() noexcept(false) {};
 
 	virtual void logConfiguration() const = 0;
 
