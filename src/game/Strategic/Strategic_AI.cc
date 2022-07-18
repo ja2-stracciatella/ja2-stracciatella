@@ -3464,9 +3464,11 @@ static void SendGroupToPool(GROUP** pGroup)
 
 static void ReassignAIGroup(GROUP** pGroup)
 {
+	constexpr size_t NO_LAST_INDEX = static_cast<size_t>(-1);
+
 	INT32 iWeight, iRandom;
 	UINT16 usDefencePoints;
-	size_t uiReloopLastIndex = -1;
+	size_t uiReloopLastIndex = NO_LAST_INDEX;
 	UINT8 ubSectorID;
 
 	ubSectorID = (*pGroup)->ubSector.AsByte();
@@ -3510,7 +3512,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 						return;
 					}
 				}
-				if( uiReloopLastIndex == (size_t)-1 )
+				if( uiReloopLastIndex == NO_LAST_INDEX )
 				{ //go to the next garrison and clear the iRandom value so it attempts to use all subsequent groups.
 					uiReloopLastIndex = i - 1;
 					iRandom = 0;
@@ -3521,7 +3523,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 			iRandom -= iWeight;
 		}
 	}
-	if( uiReloopLastIndex >= 0 )
+	if( uiReloopLastIndex != NO_LAST_INDEX )
 	{ //Process the loop again to the point where the original random slot started considering, and consider
 		//all of the garrisons.  If this fails, all patrol groups will be considered next.
 		for (size_t i = 0; i <= uiReloopLastIndex; i++)
@@ -3543,7 +3545,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 			}
 		}
 	}
-	if( uiReloopLastIndex == (size_t)-1 )
+	if( uiReloopLastIndex == NO_LAST_INDEX )
 	{
 		//go through the patrol groups
 		for (size_t i = 0; i < gPatrolGroup.size(); i++)
@@ -3560,7 +3562,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 						return;
 					}
 				}
-				if( uiReloopLastIndex == (size_t)-1 )
+				if( uiReloopLastIndex == NO_LAST_INDEX )
 				{
 					uiReloopLastIndex = i - 1;
 					iRandom = 0;
