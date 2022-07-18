@@ -199,6 +199,8 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE&, BOOLEAN fRemoveVehicle);
 void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp );
 extern BOOLEAN gfProfiledEnemyAdded; //needs to be saved (used by the above function)
 
-void TrashAllSoldiers(void);
+// If team is -1, delete all tactical soldiers
+// Otherwise delete all soldiers of the given team
+void TrashAllSoldiers(int team = -1);
 
 #endif
