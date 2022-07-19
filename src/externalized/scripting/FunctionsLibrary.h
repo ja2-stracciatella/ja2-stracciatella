@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Arms_Dealer.h"
+#include "Item_Types.h"
 #include "Types.h"
 #include "Observable.h"
 #include <variant>
@@ -23,6 +25,13 @@ struct SOLDIERTYPE;
 /*! \struct STRUCTURE
     \brief An structure element on the tactical map */
 struct STRUCTURE;
+
+/*! \defgroup funclib-dealers Shops and arms dealers
+    \brief Manage behavior, inventory and prices of dealers */
+
+/*! \struct DEALER_ITEM_HEADER
+    \brief An item in dealer's inventory */
+struct DEALER_ITEM_HEADER;
 
 /**
  * @defgroup observables Observables
@@ -76,16 +85,45 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStruc
 
 /**
  * When the game about to be saved. This is the place to persist mod game states.
+ * @ingroup observables
  */
 extern Observable<> BeforeGameSaved;
 
 /**
  * Right after a game is loaded. This is the place to restore game states from a saved game.
+ * @ingroup observables
  */
 extern Observable<> OnGameLoaded;
 
+/**
+ * When a dealer/shopkeeper's inventory has been updated
+ * @ingroup observables
+ */
+extern Observable<> OnDealerInventoryUpdated;
+
+/**
+ * Calls for each item transferred from a dealer in a transaction
+ * @param bSelectedArmsDealerID ID of the dealer
+ * @param sItemIndex ID of the item being transacted
+ * @param fDealerSelling TRUE if the dealer is selling to the player. FALSE if the dealer is buying
+ * @ingroup observables
+ */
+extern Observable<INT8, UINT16, BOOLEAN> OnItemTransacted;
+
+/**
+ * Called when an item is being priced by a shopkeeper.
+ * The basic calculation already done at this point, and this gives an opportunity to modify the
+ * final unit price, to give special discounts, etc.
+ * @param gbSelectedArmsDealerID ID of the dealer
+ * @param usItemID ID of the item being priced
+ * @param fDealerSelling TRUE if the dealer is selling to the player. FALSE if the dealer is buying
+ * @param uiUnitPriceAdjusted The observer can override this value to change the item price
+ * @ingroup observables
+ */
+extern Observable<INT8, UINT16, BOOLEAN, UINT32_S*> OnItemPriced;
+
 /** @defgroup funclib-sectors Map sectors
- *  @brief Access and alter sectors' stratgic-level data
+ *  @brief Access and alter sectors' strategic-level data
  */
 
 /**
@@ -155,3 +193,30 @@ ExtraGameStatesTable GetGameStates(std::string key);
  * @param states a map of primitive types (string, numeric or boolean)
  */
 void PutGameStates(std::string key, ExtraGameStatesTable states);
+
+/**
+ * Refreshes the stocks and cash of all dealers.
+ * @ingroup funclib-dealers
+ */
+void DailyCheckOnItemQuantities();
+
+/**
+ * Make at least X number of the given item available to buy.
+ * @param bDealerID The ID of the dealer to update
+ * @param usItemIndex The index of the Item
+ * @param ubNumItems At least this Number of items will exist in the dealer's inventory
+ * @ingroup funclib-dealers
+ */
+void GuaranteeAtLeastXItemsOfIndex_(INT8, UINT16, UINT8);
+
+/** @ingroup funclib-dealers */
+void RemoveRandomItemFromDealerInventory(INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubHowMany);
+
+/** @ingroup funclib-dealers */
+std::vector<DEALER_ITEM_HEADER*> GetDealerInventory(UINT8 ubDealerID);
+
+/** @ingroup funclib-dealers */
+BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum);
+
+/** @ingroup funclib-dealers */
+void EnterShopKeeperInterfaceScreen(UINT8 ubArmsDealer);

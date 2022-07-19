@@ -1,4 +1,5 @@
 #include "FunctionsLibrary.h"
+#include "Arms_Dealer_Init.h"
 #include "Campaign_Types.h"
 #include "Handle_Items.h"
 #include "Item_Types.h"
@@ -102,4 +103,26 @@ void PutGameStates(const std::string key, ExtraGameStatesTable const states)
 		else if (auto *f = std::get_if<float>(&v)) storables[k] = *f;
 	}
 	g_gameStates.Set(ST::format("scripts:{}", key), storables);
+}
+
+void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, UINT16, UINT8);
+void GuaranteeAtLeastXItemsOfIndex_(INT8 const bDealerID, UINT16 const usItemIndex, UINT8 const ubNumItems)
+{
+	GuaranteeAtLeastXItemsOfIndex((ArmsDealerID)bDealerID, usItemIndex, ubNumItems);
+}
+
+void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID, UINT16, UINT8);
+void RemoveRandomItemFromDealerInventory(INT8 bDealerID, UINT16 usItemIndex, UINT8 ubHowMany)
+{
+	RemoveRandomItemFromArmsDealerInventory((ArmsDealerID)bDealerID, usItemIndex, ubHowMany);
+}
+
+std::vector<DEALER_ITEM_HEADER*> GetDealerInventory(UINT8 ubDealerID)
+{
+	std::vector<DEALER_ITEM_HEADER*> items{};
+	for (DEALER_ITEM_HEADER& i : gArmsDealersInventory[ubDealerID])
+	{
+		items.push_back(&i);
+	}
+	return items;
 }
