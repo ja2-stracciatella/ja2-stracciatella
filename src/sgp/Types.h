@@ -207,5 +207,6 @@ namespace _Types
 
 typedef _Types::BoxedValue<BOOLEAN> BOOLEAN_S;
 typedef _Types::BoxedValue<UINT8>   UINT8_S;
+typedef _Types::BoxedValue<UINT32>  UINT32_S;
 
 #endif

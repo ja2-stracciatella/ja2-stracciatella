@@ -66,6 +66,7 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
+#include "Observable.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -306,6 +307,9 @@ static BOOLEAN gfPerformTransactionInProgress = FALSE;
 
 static BOOLEAN gfCommonQuoteUsedThisSession[NUM_COMMON_SK_QUOTES];
 
+
+Observable<INT8, UINT16, BOOLEAN> OnItemTransacted = {};
+Observable<INT8, UINT16, BOOLEAN, UINT32_S*> OnItemPriced = {};
 
 // Enums for possible evaluation results
 enum
@@ -2560,6 +2564,9 @@ static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPrice
 		}
 	}
 
+	UINT32_S uiUnitPriceAdjusted = uiUnitPrice;
+	OnItemPriced((INT8)gbSelectedArmsDealerID, usItemID, fDealerSelling, &uiUnitPriceAdjusted);
+	uiUnitPrice = uiUnitPriceAdjusted.val;
 
 	// if it's the dealer selling this, make sure the item is worth at least $1
 	// if he is buying this from a player, then we allow a value of 0, since that has a special "worthless" quote #18
@@ -3147,7 +3154,7 @@ static BOOLEAN IsMoneyTheOnlyItemInThePlayersOfferArea(void);
 static void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea(void);
 static void MovePlayerOfferedItemsOfValueToArmsDealersInventory(void);
 static void MovePlayersItemsToBeRepairedToArmsDealersInventory(void);
-static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum);
+BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum);
 
 
 static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
@@ -3399,6 +3406,8 @@ static void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea(void)
 					// set a special flag
 					gArmsDealerStatus[ gbSelectedArmsDealerID ].ubSpecificDealerFlags |= ARMS_DEALER_FLAG__FRANZ_HAS_SOLD_VIDEO_CAMERA_TO_PLAYER;
 				}
+
+				OnItemTransacted((INT8)gbSelectedArmsDealerID, a->sItemIndex, TRUE);
 			}
 
 			//Remove the items out of the dealers inventory
@@ -3470,6 +3479,7 @@ static void MovePlayerOfferedItemsOfValueToArmsDealersInventory(void)
 						AddObjectToArmsDealerInventory(gbSelectedArmsDealerID, &o->ItemObject);
 					}
 				}
+				OnItemTransacted((INT8)gbSelectedArmsDealerID, o->sItemIndex, FALSE);
 
 				//erase the item from the player's offer area
 				ClearPlayersOfferSlot( uiCnt );
@@ -4063,7 +4073,7 @@ static void HandleShopKeeperDialog(UINT8 ubInit)
 }
 
 
-static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
+BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 {
 	// if already in the process of leaving, don't start any additional quotes
 	if ( gfSKIScreenExit || gfRemindedPlayerToPickUpHisStuff || gfUserHasRequestedToLeave )

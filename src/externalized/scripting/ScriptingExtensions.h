@@ -8,7 +8,7 @@
  *
  * # Example
  * 
- * Lua scripting engine is enabled if your mod must provide scripts/main.lua
+ * Lua scripting engine is enabled if your mod provides scripts/main.lua
  * 
  * ```lua
  * -- Imports the enums.lua provided by the base game
