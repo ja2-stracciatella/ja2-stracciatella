@@ -401,11 +401,11 @@ void GenerateBuildings( void )
 	// search through world
 	// for each location in a room try to find building info
 
-	for (UINT32 uiLoop = 0; uiLoop < WORLD_MAX; ++uiLoop)
+	for (GridNo loop = 0; loop < WORLD_MAX; ++loop)
 	{
-		if ( (gubWorldRoomInfo[ uiLoop ] != NO_ROOM) && (gubBuildingInfo[ uiLoop ] == NO_BUILDING) && (FindStructure( (INT16) uiLoop, STRUCTURE_NORMAL_ROOF ) != NULL) )
+		if ( (gubWorldRoomInfo[ loop ] != NO_ROOM) && (gubBuildingInfo[ loop ] == NO_BUILDING) && (FindStructure( loop, STRUCTURE_NORMAL_ROOF ) != NULL) )
 		{
-			GenerateBuilding( (INT16) uiLoop );
+			GenerateBuilding( loop );
 		}
 	}
 }
