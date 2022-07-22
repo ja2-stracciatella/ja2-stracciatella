@@ -2494,6 +2494,8 @@ void LoadWorldFromSGPFile(SGPFile *f)
 
 	gfWorldLoaded = TRUE;
 
+	GenerateBuildings();
+
 	RenderProgressBar(0, 100);
 	DequeueAllKeyBoardEvents();
 }
