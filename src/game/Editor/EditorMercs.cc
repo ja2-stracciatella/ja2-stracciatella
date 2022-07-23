@@ -746,7 +746,6 @@ void DisplayWayPoints(void)
 	INT16 sScreenX,sScreenY;
 	FLOAT ScrnX,ScrnY,dOffsetX,dOffsetY;
 	INT8	bPoint;
-	INT16 sGridNo;
 
 	const SOLDIERTYPE* const pSoldier = g_selected_merc;
 	if (pSoldier == NULL || pSoldier->ubID <= gTacticalStatus.Team[OUR_TEAM].bLastID || pSoldier->ubID >= MAXMERCS)
@@ -756,13 +755,13 @@ void DisplayWayPoints(void)
 	for ( bPoint = 1; bPoint <= pSoldier->bPatrolCnt; bPoint++ )
 	{
 		// Get the next point
-		sGridNo = (INT16)pSoldier->usPatrolGrid[bPoint];
+		GridNo const sGridNo = pSoldier->usPatrolGrid[bPoint];
+
+		if (sGridNo < 0 || sGridNo >= WORLD_MAX)
+			continue;
 
 		// Can we see it?
 		if ( !GridNoOnVisibleWorldTile( sGridNo ) )
-			continue;
-
-		if((sGridNo < 0) || (sGridNo > WORLD_MAX))
 			continue;
 
 		// Convert it's location to screen coordinates

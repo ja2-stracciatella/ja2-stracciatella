@@ -443,7 +443,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 { // Verifies whether a structure is blocked from being added to the map at a particular point
 	DB_STRUCTURE_TILE const* const* const ppTile = pDBStructureRef->ppTile;
 	INT16 const sGridNo = sBaseGridNo + ppTile[ubTileIndex]->sPosRelToBase;
-	if (sGridNo < 0 || WORLD_MAX < sGridNo) return FALSE;
+	if (sGridNo < 0 || WORLD_MAX <= sGridNo) return FALSE;
 
 	if (gpWorldLevelData[sBaseGridNo].sHeight != gpWorldLevelData[sGridNo].sHeight)
 	{
