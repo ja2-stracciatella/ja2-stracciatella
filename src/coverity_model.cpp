@@ -29,3 +29,8 @@ constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Arg
 		__coverity_panic__();
 	}
 }
+
+inline void VerboseAssert(bool condition, ST::string msg, ST::string file, uint16_t line)
+{
+    if (!condition) __coverity_panic__();
+}
