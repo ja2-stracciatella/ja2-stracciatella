@@ -76,13 +76,12 @@ static const SGPSector gsCivQuoteSector[NUM_CIVQUOTE_SECTORS] =
 	{  0, 0         },
 };
 
-#define NO_FACT                 (MAX_FACTS - 1)
-#define NO_QUEST                255
-#define QUEST_NOT_STARTED_NUM   100
-#define QUEST_DONE_NUM          200
-#define NO_QUOTE                255
-#define IRRELEVANT              255
-#define MUST_BE_NEW_DAY         254
+constexpr UINT8 NO_QUEST              = 255;
+constexpr UINT8 QUEST_NOT_STARTED_NUM = 100;
+constexpr UINT8 QUEST_DONE_NUM        = 200;
+constexpr UINT8 NO_QUOTE              = 255;
+constexpr UINT8 IRRELEVANT            = 255;
+constexpr UINT8 MUST_BE_NEW_DAY       = 254;
 #define NO_MOVE                 65535
 #define INITIATING_FACTOR       30
 
@@ -1190,7 +1189,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	}
 
 	// if there are facts to be checked, check them
-	if (pNPCQuoteInfo->usFactMustBeTrue != NO_FACT)
+	if (pNPCQuoteInfo->usFactMustBeTrue != FACT_NONE)
 	{
 		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeTrue, ubNPC);
 		if (ubApproach != NPC_INITIATING_CONV)
@@ -1202,7 +1201,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		if (!fTrue) return FALSE;
 	}
 
-	if (pNPCQuoteInfo->usFactMustBeFalse != NO_FACT)
+	if (pNPCQuoteInfo->usFactMustBeFalse != FACT_NONE)
 	{
 		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeFalse, ubNPC);
 		if (ubApproach != NPC_INITIATING_CONV)
@@ -1424,6 +1423,7 @@ static void ReturnItemToPlayer(ProfileID const merc, OBJECTTYPE* const o)
 	if (!o) return;
 
 	SOLDIERTYPE* const s = FindSoldierByProfileID(merc);
+	if (!s) return;
 
 	// Try to auto place object and then if it fails, put into cursor
 	if (!AutoPlaceObject(s, o, FALSE))
@@ -1729,11 +1729,14 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				if ( pQuotePtr->sActionData <= -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					if (pSoldier)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						ZEROTIMECOUNTER( pSoldier->AICounter );
+						if (pSoldier->bNextAction == AI_ACTION_WAIT)
+						{
+							pSoldier->bNextAction = AI_ACTION_NONE;
+							pSoldier->usNextActionData = 0;
+						}
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );
 				}
@@ -1766,7 +1769,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 						// Is this one of us?
-						if ( pSoldier->bTeam == OUR_TEAM )
+						if (pSoldier && pSoldier->bTeam == OUR_TEAM)
 						{
 							INT8 const bSlot = FindExactObj(pSoldier, o);
 							if (bSlot != NO_SLOT)
@@ -1805,7 +1808,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				}
 
 				// Set things
-				if (pQuotePtr->usSetFactTrue != NO_FACT)
+				if (pQuotePtr->usSetFactTrue != FACT_NONE)
 				{
 					SetFactTrue((Fact)pQuotePtr->usSetFactTrue);
 				}
@@ -1876,38 +1879,43 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				else if ( pQuotePtr->usGiftItem != 0 )
 				{
 					{
-						INT8 bInvPos;
-
 						SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
+						if (pSoldier)
+						{
+							// Look for item....
+							INT8 const bInvPos = FindObj( pSoldier, pQuotePtr->usGiftItem );
+							if (bInvPos == NO_SLOT) throw std::logic_error("NPC.cc: Gift item does not exist in NPC.");
 
-						// Look for item....
-						bInvPos = FindObj( pSoldier, pQuotePtr->usGiftItem );
-
-						AssertMsg( bInvPos != NO_SLOT, "NPC.C:  Gift item does not exist in NPC." );
-
-						TalkingMenuGiveItem( ubNPC, &(pSoldier->inv[ bInvPos ] ), bInvPos );
+							TalkingMenuGiveItem( ubNPC, &(pSoldier->inv[ bInvPos ] ), bInvPos );
+						}
 					}
 				}
 				// Action before movement?
 				if ( pQuotePtr->sActionData < 0 && pQuotePtr->sActionData > -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					if (pSoldier)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						ZEROTIMECOUNTER( pSoldier->AICounter );
+						if (pSoldier->bNextAction == AI_ACTION_WAIT)
+						{
+							pSoldier->bNextAction = AI_ACTION_NONE;
+							pSoldier->usNextActionData = 0;
+						}
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );
 				}
 				else if ( pQuotePtr->usGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					if (pSoldier)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						ZEROTIMECOUNTER( pSoldier->AICounter );
+						if (pSoldier->bNextAction == AI_ACTION_WAIT)
+						{
+							pSoldier->bNextAction = AI_ACTION_NONE;
+							pSoldier->usNextActionData = 0;
+						}
 					}
 					NPCDoAction( ubNPC, (UINT16) (pQuotePtr->sActionData), ubRecordNum );
 				}
@@ -2226,6 +2234,7 @@ void PCsNearNPC( UINT8 ubNPC )
 	// Clear values!
 	// Get value for NPC
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
+	if (!pSoldier) return;
 	pSoldier->ubQuoteRecord = 0;
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
@@ -2255,6 +2264,7 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 	if (!pNPCQuoteInfoArray) return FALSE; // error
 
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
+	if (!pSoldier) return FALSE;
 	// Clear values!
 	pSoldier->ubQuoteRecord = 0;
 
@@ -2284,6 +2294,7 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 	UINT8	ubNumMercs = 0;
 
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
+	if (!pSoldier) return;
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[40];

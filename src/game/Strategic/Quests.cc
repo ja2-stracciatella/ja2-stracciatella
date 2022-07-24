@@ -614,7 +614,8 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			gubFact[FACT_BRENDA_DEAD] = (GetProfile(BRENDA).bMercStatus == MERC_IS_DEAD);
 			break;
 		case FACT_NPC_IS_ENEMY:
-			gubFact[FACT_NPC_IS_ENEMY] = CheckNPCIsEnemy( ubProfileID ) || gMercProfiles[ ubProfileID ].ubMiscFlags2 & PROFILE_MISC_FLAG2_NEEDS_TO_SAY_HOSTILE_QUOTE;
+			gubFact[FACT_NPC_IS_ENEMY] = (ubProfileID != NO_PROFILE) && (CheckNPCIsEnemy(ubProfileID) ||
+				gMercProfiles[ubProfileID].ubMiscFlags2 & PROFILE_MISC_FLAG2_NEEDS_TO_SAY_HOSTILE_QUOTE);
 			break;
 			/*
 		case FACT_SKYRIDER_CLOSE_TO_CHOPPER:
