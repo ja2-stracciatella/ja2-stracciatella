@@ -19,8 +19,8 @@ namespace ST
 }
 enum LogLevel { X };
 
-
-void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str)
+template<typename... Args>
+constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Args... args)
 {
 	if (isAssert)
 	{
@@ -28,4 +28,9 @@ void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::strin
 		// Right now only Debug builds panic, other builds log the message and continue execution.
 		__coverity_panic__();
 	}
+}
+
+inline void VerboseAssert(bool condition, ST::string msg, ST::string file, uint16_t line)
+{
+    if (!condition) __coverity_panic__();
 }

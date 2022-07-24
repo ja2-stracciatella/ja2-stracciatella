@@ -7,21 +7,13 @@
 #define DEBUG_PRINT_FPS                         (0)             /**< Flag telling to print FPS (Frames per second) counter. */
 #define DEBUG_PRINT_GAME_CYCLE_TIME             (0)             /**< Flag telling to print how much time every game cycle takes. */
 
-// Don't ever define __COVERITY__. It is needed to avoid false positives during
-// a coverity scan from patterns like
-//
-//   Assert(p);
-//   p->something = 0;
-//
-// https://community.synopsys.com/s/question/0D534000046YuzbCAC/suppressing-assertsideeffect-for-functions-that-allow-for-sideeffects
+// NOTE: on switching to c++20 investigate if this can be simplified in favour of std::source_location
+#define Assert(a) VerboseAssert(static_cast<bool>(a), "", __FILE__, __LINE__)
+#define AssertMsg(a, b) VerboseAssert(static_cast<bool>(a), b, __FILE__, __LINE__)
 
-#ifndef __COVERITY__
-#define Assert(a)       (a) ? (void)0 : SLOGA("Assertion failed in {}, line {}", __FILE__, __LINE__)
-#define AssertMsg(a, b) (a) ? (void)0 : SLOGA("Assertion failed in {}, line {}:\n{}", __FILE__, __LINE__, b)
-#else
-extern void __coverity_panic__(void);
-#define Assert(condition)         (condition) ? (void)0 : __coverity_panic__()
-#define AssertMsg(condition, msg) (condition) ? (void)0 : __coverity_panic__()
-#endif
+inline void VerboseAssert(bool condition, ST::string msg, ST::string file, uint16_t line)
+{
+	if (!condition) SLOGA("Assertion failed in {}, line {}:\n{}", file, line, msg);
+}
 
 #endif
