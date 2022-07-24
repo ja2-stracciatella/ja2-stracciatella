@@ -2071,9 +2071,15 @@ void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp )
 }
 
 
-void TrashAllSoldiers( )
+void TrashAllSoldiers(int const team)
 {
-	FOR_EACH_SOLDIER(i) TacticalRemoveSoldier(*i);
+	int const begin = team == -1 ? 0 : gTacticalStatus.Team[team].bFirstID;
+	int const end   = team == -1 ? MAX_NUM_SOLDIERS : gTacticalStatus.Team[team].bLastID + 1;
+
+	for (int i = begin; i != end; ++i)
+	{
+		if (Menptr[i].bActive) InternalTacticalRemoveSoldier(Menptr[i], TRUE);
+	}
 }
 
 

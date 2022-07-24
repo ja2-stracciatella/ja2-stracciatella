@@ -22,7 +22,7 @@ class DefaultContentManager : public ContentManager, public IGameDataLoader
 public:
 	DefaultContentManager(RustPointer<EngineOptions> engineOptions);
 
-	virtual ~DefaultContentManager() override;
+	virtual ~DefaultContentManager() noexcept(false) override;
 
 	void logConfiguration() const override;
 

@@ -1340,7 +1340,7 @@ static void SaveSoldierStructure(HWFILE const f)
 static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool stracLinuxFormat)
 {
 	// Loop through all the soldier and delete them all
-	FOR_EACH_SOLDIER(i) TacticalRemoveSoldier(*i);
+	TrashAllSoldiers();
 
 	// Loop through all the soldier structs to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
