@@ -6,19 +6,10 @@
 #include "Overhead.h"
 #include <climits>
 
-#define EMPTY_CACHE_ENTRY 65000
 
-
-void AnimationSurfaceCacheType::init(ProfileID const pid)
+void AnimationSurfaceCacheType::init(UINT8 const pid)
 {
 	mPid = pid;
-
-	// Zero entries
-	for ( int cnt = 0; cnt < ANIM_CACHE_SIZE; cnt++ )
-	{
-		usCachedSurfaces[ cnt ] = EMPTY_CACHE_ENTRY;
-		sCacheHits[ cnt ] = 0;
-	}
 
 	// Zero surface database history for this soldier
 	ClearAnimationSurfacesUsageHistory( pid );
