@@ -999,10 +999,10 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 
 		DeleteSoldier(s);
 	}
-	else
+	else if (gfPersistantPBI)
 	{
-		if (gfPersistantPBI) DeleteSoldier(s);
-		delete &s;
+		DeleteSoldier(s);
+		// Auto_Resolve.cc is now responsible for freeing the memory allocated for its soldiers
 	}
 }
 
