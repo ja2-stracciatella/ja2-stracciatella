@@ -530,7 +530,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	iOriginationX = iOriginationY = 0;
 	iOrigination = (INT32) s->sGridNo;
 
-	if (iOrigination < 0 || iOrigination > WORLD_MAX)
+	if (iOrigination < 0 || iOrigination >= WORLD_MAX)
 	{
 		SLOGE("Trying to calculate path from off-world gridno {} to {}",
 			iOrigination, sDestination );
@@ -1961,7 +1961,7 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 		for ( iX = -bRadius; iX <= bRadius; iX++ )
 		{
 			iCurrentGridNo = sStartGridNo + iX + iY * MAXCOL;
-			if ( iCurrentGridNo >= 0 && iCurrentGridNo <= WORLD_MAX )
+			if (iCurrentGridNo >= 0 && iCurrentGridNo < WORLD_MAX)
 			{
 				gpWorldLevelData[ iCurrentGridNo ].uiFlags &= ~( MAPELEMENT_REACHABLE );
 			}

@@ -146,7 +146,7 @@ void ExamineGridNoForSlantRoofExtraGraphic(GridNo const check_grid_no)
 	for (DB_STRUCTURE_TILE* const* i = tile; i != end; ++i)
 	{
 		GridNo const grid_no = base_grid_no + (*i)->sPosRelToBase;
-		if (grid_no < 0 || WORLD_MAX < grid_no) continue;
+		if (grid_no < 0 || WORLD_MAX <= grid_no) continue;
 
 		if (gpWorldLevelData[grid_no].uiFlags & MAPELEMENT_REVEALED)
 		{ // Remove any slant roof items if they exist

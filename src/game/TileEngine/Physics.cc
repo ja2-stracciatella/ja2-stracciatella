@@ -129,6 +129,21 @@ static void RecountObjectSlots(void)
 }
 
 
+static GridNo vector_3ToGridNo(vector_3 const& v)
+{
+
+	int16_t const row    = static_cast<int16_t>(v.y) / CELL_Y_SIZE;
+	int16_t const column = static_cast<int16_t>(v.x) / CELL_X_SIZE;
+
+	if (row >= 0 && row < WORLD_ROWS && column >= 0 && column < WORLD_COLS)
+	{
+		return row * WORLD_COLS + column;
+	}
+
+	return NOWHERE;
+}
+
+
 REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const dLifeLength, float const xPos, float const yPos, float const zPos, float const xForce, float const yForce, float const zForce, SOLDIERTYPE* const owner, UINT8 const ubActionCode, SOLDIERTYPE* const target)
 {
 	REAL_OBJECT* const o = GetFreeObjectSlot();
@@ -136,19 +151,11 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const 
 
 	o->Obj = *pGameObj;
 
-	FLOAT mass = CALCULATE_OBJECT_MASS(GCM->getItem(pGameObj->usItem)->getWeight());
-	if (mass == 0) mass = 10;
-
-	// OK, mass determines the smoothness of the physics integration
-	// For gameplay, we will use mass for maybe max throw distance
-	mass = 60;
-
 	o->dLifeLength             = dLifeLength;
 	o->fAllocated              = TRUE;
 	o->fAlive                  = TRUE;
 	o->fApplyFriction          = FALSE;
 	o->uiSoundID               = NO_SAMPLE;
-	o->OneOverMass             = 1 / mass;
 	o->Position.x              = xPos;
 	o->Position.y              = yPos;
 	o->Position.z              = zPos;
@@ -163,7 +170,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const 
 	o->InitialForce.y          = SCALE_VERT_VAL_TO_HORZ(yForce);
 	o->InitialForce.z          = zForce;
 	o->InitialForce            = VMultScalar(&o->InitialForce, (float)(1.5 / TIME_MULTI));
-	o->sGridNo                 = MAPROWCOLTOPOS(((INT16)yPos / CELL_Y_SIZE), ((INT16)xPos / CELL_X_SIZE));
+	o->sGridNo                 = vector_3ToGridNo(o->Position);
 	o->pNode                   = 0;
 	o->pShadow                 = 0;
 
@@ -174,8 +181,11 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const 
 		o->Position.z                   += h;
 		o->EndedWithCollisionPosition.z += h;
 	}
+	else
+	{
+		SLOGW("Physics object created at invalid gridno");
+	}
 
-	SLOGD("NewPhysics Object");
 	return o;
 }
 
@@ -470,7 +480,7 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
 		pObject->TestTargetPosition = pObject->Position;
 	}
 
-	vTemp = VMultScalar( &(pObject->Force), ( DeltaTime * pObject->OneOverMass ) );
+	vTemp = VMultScalar( &(pObject->Force), ( DeltaTime / 60.0f ) );
 	pObject->Velocity = VAdd( &(pObject->Velocity), &vTemp );
 
 	if ( pObject->fPotentialForDebug )
@@ -833,7 +843,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 				// Break window!
 				SLOGD("Object {}: Collision Window", REALOBJ2ID(pObject));
 
-				sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
+				sGridNo = vector_3ToGridNo(pObject->Position);
 
 				WindowHit(sGridNo, usStructureID, FALSE, TRUE);
 			}
@@ -879,7 +889,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 			pObject->fApplyFriction = TRUE;
 			pObject->AppliedMu = (float)(1.54 * TIME_MULTI );
 
-			sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
+			sGridNo = vector_3ToGridNo(pObject->Position);
 
 			// Make thing unalive...
 			pObject->fAlive = FALSE;
@@ -1076,10 +1086,9 @@ static BOOLEAN CheckForCatchObject(REAL_OBJECT* pObject);
 static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 {
 	LEVELNODE *pNode;
-	INT16     sNewGridNo;
 
 	//Determine new gridno
-	sNewGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
+	GridNo const sNewGridNo = vector_3ToGridNo(pObject->Position);
 
 	if ( pObject->fFirstTimeMoved )
 	{
@@ -1088,7 +1097,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 	}
 
 	// CHECK FOR RANGE< IF INVALID, REMOVE!
-	if ( sNewGridNo == -1 )
+	if (sNewGridNo == NOWHERE)
 	{
 		PhysicsDeleteObject( pObject );
 		return( FALSE );
@@ -1455,7 +1464,6 @@ static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16
 static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo)
 {
 	FLOAT dDiffX, dDiffY;
-	INT16 sGridNo;
 
 	if ( psFinalGridNo )
 	{
@@ -1477,7 +1485,7 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 	}
 
 	// Calculate gridno from last position
-	sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
+	GridNo const sGridNo = vector_3ToGridNo(pObject->Position);
 
 	PhysicsDeleteObject( pObject );
 
@@ -1518,15 +1526,7 @@ static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE
 		// Calculate gridno from last position
 
 		// If NOT from UI, use exact collision position
-		if ( fFromUI )
-		{
-			(*psNewGridNo) = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
-		}
-		else
-		{
-			(*psNewGridNo) = MAPROWCOLTOPOS( ( (INT16)pObject->EndedWithCollisionPosition.y / CELL_Y_SIZE ), ( (INT16)pObject->EndedWithCollisionPosition.x / CELL_X_SIZE ) );
-		}
-
+		*psNewGridNo = vector_3ToGridNo(fFromUI ? pObject->Position : pObject->EndedWithCollisionPosition);
 		(*pbLevel) = GET_OBJECT_LEVEL( pObject->EndedWithCollisionPosition.z - CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ (*psNewGridNo) ].sHeight ) );
 	}
 
