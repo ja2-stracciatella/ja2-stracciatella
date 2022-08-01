@@ -176,7 +176,7 @@ else()
     set(RAPIDJSON_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include")
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR ENABLE_ASSERTS)
     add_definitions(-DENABLE_ASSERTS)
 endif()
 
