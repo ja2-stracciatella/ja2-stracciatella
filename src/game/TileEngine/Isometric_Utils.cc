@@ -452,11 +452,10 @@ BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRec
 
 INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
-	INT16 sRows = std::abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
-	INT16 sCols = std::abs((sOrigin % MAXROW) - (sDest % MAXROW));
+	INT16 const sRows = (sOrigin / MAXCOL) - (sDest / MAXCOL);
+	INT16 const sCols = (sOrigin % MAXROW) - (sDest % MAXROW);
 
-	// apply Pythagoras's theorem for right-handed triangle:
-	return (INT16) std::hypot(sRows, sCols);
+	return static_cast<INT16>(std::hypot(sRows, sCols));
 }
 
 
