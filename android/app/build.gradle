@@ -6,7 +6,7 @@ apply plugin: 'kotlinx-serialization'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
-    ndkVersion "21.0.6113669"
+    ndkVersion "25.0.8775105"
 
     lintOptions {
         disable 'NewApi'
@@ -32,7 +32,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                 "-std=c++11"
+                 "-std=c++17"
                 arguments '-DBUILD_SDL_LIB=ON',
                           '-DBUILD_LAUNCHER=OFF',
                           '-DWITH_UNITTESTS=OFF',
@@ -71,7 +71,6 @@ android {
     externalNativeBuild {
         cmake {
             path "../../CMakeLists.txt"
-            version "3.10.2"
         }
     }
 

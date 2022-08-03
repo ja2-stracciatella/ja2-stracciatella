@@ -90,7 +90,7 @@ elif [[ "$CI_TARGET" == "android" ]]; then
     unix-install-rustup armv7-linux-androideabi aarch64-linux-android i686-linux-android x86_64-linux-android
 
     # Specific version of Android NDK
-    linux-install-via-android-sdkmanager "ndk;21.0.6113669"
+    linux-install-via-android-sdkmanager "ndk;25.0.8775105"
 
     linux-setup-android-signing-keys
 else
