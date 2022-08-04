@@ -35,6 +35,7 @@
 #include "WeaponModels.h"
 
 #include <algorithm>
+#include <map>
 
 #ifdef _DEBUG
 	INT16 gsCoverValue[WORLD_MAX];
@@ -1769,70 +1770,31 @@ INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 	return( sClosestSpot );
 }
 
-INT16 FindNearestEdgePoint( INT16 sGridNo )
+GridNo FindNearestEdgePoint(GridNo const sGridNo)
 {
-	INT16 sScreenX, sScreenY, sMaxScreenX, sMaxScreenY;
-	INT16 sDist[5], sMinDist;
-	INT32 iLoop;
-	INT8  bMinIndex;
-	std::vector<INT16>* pEdgepoints;
-	INT16 sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
-
+	int16_t sScreenX, sScreenY;
 	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
-	sMaxScreenX = gsRightX - gsLeftX;
-	sMaxScreenY = gsBottomY - gsTopY;
+	int16_t const sMaxScreenX = gsRightX - gsLeftX;
+	int16_t const sMaxScreenY = gsBottomY - gsTopY;
 
-	sDist[0] = 0x7FFF;
-	sDist[1] = sScreenX;			// west
-	sDist[2] = sMaxScreenX - sScreenX;	// east
-	sDist[3] = sScreenY;			// north
-	sDist[4] = sMaxScreenY - sScreenY;	// south
-
-	sMinDist = sDist[0];
-	bMinIndex = 0;
-	for( iLoop = 1; iLoop < 5; iLoop++)
+	// Generate a map of the directions sorted by the distance from the given grid
+	std::multimap<int16_t, int8_t> const directionMap
 	{
-		if ( sDist[ iLoop ] < sMinDist )
-		{
-			sMinDist = sDist[ iLoop ];
-			bMinIndex = (INT8) iLoop;
-		}
+		{ sScreenX, WEST_EDGEPOINT_SEARCH },
+		{ sMaxScreenX - sScreenX, EAST_EDGEPOINT_SEARCH },
+		{ sScreenY, NORTH_EDGEPOINT_SEARCH },
+		{ sMaxScreenY - sScreenY, SOUTH_EDGEPOINT_SEARCH }
+	};
+
+	for (auto const& edgeDirection : directionMap)
+	{
+		GridNo const result = FindNearestEdgepointOnSpecifiedEdge(sGridNo, edgeDirection.second);
+		if (result != NOWHERE) return result;
 	}
 
-	switch( bMinIndex )
-	{
-		case 1:
-			pEdgepoints = &gps1stWestEdgepointArray;
-			break;
-		case 2:
-			pEdgepoints = &gps1stEastEdgepointArray;
-			break;
-		case 3:
-			pEdgepoints = &gps1stNorthEdgepointArray;
-			break;
-		case 4:
-			pEdgepoints = &gps1stSouthEdgepointArray;
-			break;
-		default:
-			// WTF???
-			return( NOWHERE );
-	}
-
-	// Do a 2D search to find the closest map edgepoint and
-	// try to create a path there
-
-	for (INT16 edgepoint : *pEdgepoints)
-	{
-		sTempDist = PythSpacesAway(sGridNo, edgepoint);
-		if ( sTempDist < sClosestDist )
-		{
-			sClosestDist = sTempDist;
-			sClosestSpot = edgepoint;
-		}
-	}
-
-	return( sClosestSpot );
+	SLOGE("No suitable edgepoint found, returning NOWHERE");
+	return NOWHERE;
 }
 
 #define EDGE_OF_MAP_SEARCH 5
