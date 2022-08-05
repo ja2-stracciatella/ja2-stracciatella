@@ -2806,7 +2806,6 @@ void DebugSoldierPage2()
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Visible:",     s->bVisible);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Direction:",   gzDirectionStr[s->bDirection]);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "DesDirection", gzDirectionStr[s->bDesiredDirection]);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "GridNo:",      s->sGridNo);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Dest:",        s->sFinalDestination);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Path Size:",   s->ubPathDataSize);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Path Index:",  s->ubPathIndex);
@@ -2988,7 +2987,6 @@ void DebugSoldierPage3()
 
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "PrevAnimation:",      gAnimControl[s->usOldAniState].zAnimStr);
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "PrevAniCode:",        gusAnimInst[s->usOldAniState][s->sOldAniCode]);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "GridNo:",             s->sGridNo);
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "AniCode:",            gusAnimInst[s->usAnimState][s->usAniCode]);
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "No APS To fin Move:", s->fNoAPToFinishMove);
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Bullets out:",        s->bBulletsLeft);
