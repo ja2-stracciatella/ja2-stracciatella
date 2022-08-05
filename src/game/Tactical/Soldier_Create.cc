@@ -2110,11 +2110,7 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 		default:
 			// how far is this sector from the palace ?
 			// the distance returned is in sectors, and the possible range is about 0-20
-			ubPalaceDistance = GetPythDistanceFromPalace(sSector);
-			if ( ubPalaceDistance > MAX_PALACE_DISTANCE )
-			{
-				ubPalaceDistance = MAX_PALACE_DISTANCE;
-			}
+			ubPalaceDistance = std::min<UINT8>(GetPythDistanceFromPalace(sSector), MAX_PALACE_DISTANCE);
 	}
 
 	// adjust for distance from Queen's palace (P3) (0 to +30)
@@ -2124,30 +2120,15 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 }
 
 
-
 // grab the distance from the palace
 UINT8 GetPythDistanceFromPalace(const SGPSector& sSector)
 {
-	UINT8 ubDistance = 0;
-	INT16 sRows = 0, sCols = 0;
-	float fValue = 0.0;
-
 	// grab number of rows and cols
-	sRows =(INT16)(std::abs(sSector.x - PALACE_SECTOR_X));
-	sCols =(INT16)(std::abs(sSector.y - PALACE_SECTOR_Y));
+	INT16 const sCols = sSector.x - PALACE_SECTOR_X;
+	INT16 const sRows = sSector.y - PALACE_SECTOR_Y;
 
-	// apply Pythagoras's theorem for right-handed triangle:
-	fValue = (float) std::hypot(sRows, sCols);
-	if(  fmod( fValue, 1.0f ) >= 0.50 )
-	{
-		ubDistance = (UINT8)( 1 + fValue );
-	}
-	else
-	{
-		ubDistance = ( UINT8 )fValue;
-	}
-
-	return( ubDistance );
+	double const distance = std::hypot(sRows, sCols);
+	return static_cast<UINT8>(std::round(distance));
 }
 
 
