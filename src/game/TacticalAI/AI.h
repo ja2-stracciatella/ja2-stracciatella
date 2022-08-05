@@ -158,7 +158,7 @@ INT8  ExecuteAction(SOLDIERTYPE *pSoldier);
 INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *pPercentBetter);
 INT16 FindClosestDoor( SOLDIERTYPE * pSoldier );
 INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection );
-INT16 FindNearestEdgePoint( INT16 sGridNo );
+GridNo FindNearestEdgePoint(GridNo);
 
 //Kris:  Added these as I need specific searches on certain sides.
 enum
