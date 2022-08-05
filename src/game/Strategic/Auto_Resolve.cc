@@ -3454,6 +3454,7 @@ static BOOLEAN IsBattleOver(void)
 				pRobot->bLife = 0;
 				gpAR->ubAliveMercs--;
 				iNumInvolvedMercs = 0;
+				fOnlyEPCsLeft = TRUE;
 			}
 		}
 	}
@@ -3472,11 +3473,11 @@ static BOOLEAN IsBattleOver(void)
 		{ //Kill the EPCs.
 			FOR_EACH_AR_MERC(i)
 			{
-				if (!(i->uiFlags & CELL_EPC)) continue;
+				if (!(i->uiFlags & CELL_EPC) || i->pSoldier->bLife == 0) continue;
 				DoMercBattleSound(i->pSoldier, BATTLE_SOUND_DIE1);
 				i->pSoldier->bLife = 0;
-				gpAR->ubAliveMercs--;
 			}
+			gpAR->ubAliveMercs = 0;
 		}
 		FOR_EACH_AR_ENEMY(i)
 		{
