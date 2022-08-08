@@ -1114,17 +1114,19 @@ void LoadSavedGame(const ST::string &saveName)
 		if (s) TacticalRemoveSoldier(*s);
 
 		// add the pilot at a random location!
-		SGPSector sMap;
+		// use B15 as fallback sector just in case we can't get a placement sector from GCM.
+		SGPSector sMap{SEC_B15};
 		auto placement = GCM->getNpcPlacement(SKYRIDER);
 		if (placement)
 		{
 			auto sector = placement->pickPlacementSector();
-
-			if (placement->useAlternateMap) SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
-			sMap = SGPSector(sector);
+			if (sector != -1)
+			{
+				if (placement->useAlternateMap) SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
+				sMap = SGPSector(sector);
+			}
 		}
-		MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-		p.sSector = sMap;
+		GetProfile(SKYRIDER).sSector = sMap;
 	}
 
 	if (version < 68)
