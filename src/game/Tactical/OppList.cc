@@ -621,9 +621,17 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent);
 
 void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 {
+	extern INT32 iHelicopterVehicleId; 	// I don't want to include a map screen header file for this
 	if (!s.bActive)                     return;
 	if (!s.bInSector)                   return;
 	if (s.uiStatusFlags & SOLDIER_DEAD) return;
+	if (s.bAssignment == VEHICLE && s.iVehicleId == iHelicopterVehicleId) return;
+
+	if (s.sGridNo == NOWHERE)
+	{
+		SLOGE("HandleSight: {} ({}) is NOWHERE", s.ubID, s.name);
+		return;
+	}
 
 	gubSightFlags = sight_flags;
 

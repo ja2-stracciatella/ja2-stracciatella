@@ -428,7 +428,13 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			bp->ubSoldierClass      = dp->ubSoldierClass;
 			bp->ubCivilianGroup     = dp->ubCivilianGroup;
 			bp->fHasKeys            = dp->fHasKeys;
-			bp->usStartingGridNo    = dp->sInsertionGridNo;
+			// This tempfile might have been corrupted by a bug, in which case
+			// we would overwrite a valid insertion gridno with NOWHERE here.
+			// In that case we keep the original instead.
+			if (dp->sInsertionGridNo >= 0 && dp->sInsertionGridNo < WORLD_MAX)
+			{
+				bp->usStartingGridNo = dp->sInsertionGridNo;
+			}
 			bp->bPatrolCnt          = dp->bPatrolCnt;
 			memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
 
@@ -439,6 +445,9 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 				// Hacker has modified the stats on the enemy placements.
 				throw std::runtime_error("Invalid checksum for placement");
 			}
+
+			// Ensure both starting grids are consistent, must do this after the checksum calculation.
+			dp->sInsertionGridNo = bp->usStartingGridNo;
 
 			// Add preserved placements as long as they don't exceed the actual
 			// population.
@@ -586,7 +595,10 @@ void NewWayOfLoadingCiviliansFromTempFile()
 			bp->ubSoldierClass     = dp->ubSoldierClass;
 			bp->ubCivilianGroup    = dp->ubCivilianGroup;
 			bp->fHasKeys           = dp->fHasKeys;
-			bp->usStartingGridNo   = dp->sInsertionGridNo;
+			if (dp->sInsertionGridNo >= 0 && dp->sInsertionGridNo < WORLD_MAX)
+			{
+				bp->usStartingGridNo = dp->sInsertionGridNo;
+			}
 			bp->bPatrolCnt         = dp->bPatrolCnt;
 			memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
 
@@ -597,6 +609,9 @@ void NewWayOfLoadingCiviliansFromTempFile()
 				// Hacker has modified the stats on the civilian placements.
 				throw std::runtime_error("Invalid checksum for placement");
 			}
+
+			// Ensure both starting grids are consistent, must do this after the checksum calculation.
+			dp->sInsertionGridNo = bp->usStartingGridNo;
 
 			if (dp->bLife < dp->bLifeMax)
 			{
