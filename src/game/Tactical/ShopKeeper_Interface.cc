@@ -5109,7 +5109,7 @@ static void InitShopKeeperItemDescBox(OBJECTTYPE* pObject, UINT8 ubPocket, UINT8
 
 	pShopKeeperItemDescObject = pObject;
 
-	InitItemDescriptionBox( gpSMCurrentMerc, 255, sPosX, sPosY, 0 );
+	InternalInitItemDescriptionBox(pObject, sPosX, sPosY, 0, gpSMCurrentMerc);
 
 	StartSKIDescriptionBox( );
 }

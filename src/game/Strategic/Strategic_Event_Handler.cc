@@ -389,10 +389,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 					// 3 in 10 chance of a stun grenade
 					CreateItem( STUN_GRENADE, (INT8) (70 + Random( 10 )), &Object );
 					break;
-				case 6:
-				case 7:
-				case 8:
-				case 9:
+				default: // cases 6-9
 					// 4 in 10 chance of two 38s!
 					CreateItems( SW38, (INT8) (90 + Random( 10 )), 2, &Object );
 					break;

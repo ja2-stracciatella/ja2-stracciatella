@@ -4,6 +4,7 @@
 #include "SaveLoadGame.h"
 #include "FileMan.h"
 #include "externalized/TestUtils.h"
+#include <algorithm>
 
 const uint8_t s_savedGameHeaderVanilla[] = {
 	0x63,0x00,0x00,0x00,0x42,0x75,0x69,0x6c,0x64,0x20,0x30,0x34,0x2e,0x31,0x32,0x2e,
@@ -163,7 +164,10 @@ TEST(SaveLoadGameTest, savedGameHeaderValidityCheck)
 	EXPECT_EQ(isValidSavedGameHeader(header), true);
 
 	// parse vanilla header with "strac linux" parser; should be invalid
-	ParseSavedGameHeader(s_savedGameHeaderVanilla, header, true);
+	// this needs some padding bytes at the end to avoid a buffer overrun
+	uint8_t paddedVanillaHeader[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN]{};
+	std::copy_n(s_savedGameHeaderVanilla, SAVED_GAME_HEADER_ON_DISK_SIZE, paddedVanillaHeader);
+	ParseSavedGameHeader(paddedVanillaHeader, header, true);
 	EXPECT_EQ(isValidSavedGameHeader(header), false);
 
 	// parse "strac linux" header with vanilla parser; should be invalid

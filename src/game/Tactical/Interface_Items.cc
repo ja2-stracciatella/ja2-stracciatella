@@ -1732,22 +1732,7 @@ void CycleItemDescriptionItem( )
 
 void InitItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex)
 {
-	OBJECTTYPE *pObject;
-
-	//DEF:
-	//if we are in the shopkeeper screen, and we are to use the
-	if( guiCurrentScreen == SHOPKEEPER_SCREEN && ubPosition == 255 )
-	{
-		pObject = pShopKeeperItemDescObject;
-	}
-
-	//else use item from the hand position
-	else
-	{
-		pObject = &(pSoldier->inv[ ubPosition ] );
-	}
-
-	InternalInitItemDescriptionBox(pObject, sX, sY, ubStatusIndex, pSoldier);
+	InternalInitItemDescriptionBox(&pSoldier->inv[ubPosition], sX, sY, ubStatusIndex, pSoldier);
 }
 
 

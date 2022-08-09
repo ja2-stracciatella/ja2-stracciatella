@@ -1425,6 +1425,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		else
 		{
 			RemoveGroup(g);
+			return;
 		}
 	}
 
