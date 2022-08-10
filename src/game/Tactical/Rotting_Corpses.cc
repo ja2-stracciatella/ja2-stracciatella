@@ -1352,7 +1352,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 	ROTTING_CORPSE *pCorpse;
 	INT8            bToleranceThreshold = 0;
 
-	if ( QuoteExp_HeadShotOnly[ pSoldier->ubProfile ] == 1 )
+	if (pSoldier->ubProfile >= QuoteExp_HeadShotOnly.size() || QuoteExp_HeadShotOnly[pSoldier->ubProfile] == 1)
 	{
 		return;
 	}
