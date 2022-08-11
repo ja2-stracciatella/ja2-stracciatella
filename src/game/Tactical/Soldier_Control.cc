@@ -85,6 +85,7 @@
 #include "Weapons.h"
 #include "WorldMan.h"
 #include "enums.h"
+#include <array>
 #include <cmath>
 #include <stdexcept>
 #include <string_theory/string>
@@ -173,20 +174,6 @@ UINT8	bHealthStrRanges[] =
 	101
 };
 
-
-static const INT16 gsTerrainTypeSpeedModifiers[] =
-{
-	5, // Flat ground
-	5, // Floor
-	5, // Paved road
-	5, // Dirt road
-	10, // LOW GRASS
-	15, // HIGH GRASS
-	20, // TRAIN TRACKS
-	20, // LOW WATER
-	25, // MID WATER
-	30 // DEEP WATER
-};
 
 
 struct PaletteSubRangeType
@@ -4788,7 +4775,6 @@ static void AdjustAniSpeed(SOLDIERTYPE* pSoldier)
 static void CalculateSoldierAniSpeed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pStatsSoldier)
 {
 	UINT32 uiTerrainDelay;
-	UINT32 uiSpeed = 0;
 
 	INT8 bBreathDef, bLifeDef, bAgilDef;
 	INT8 bAdditional = 0;
@@ -4880,9 +4866,22 @@ static void CalculateSoldierAniSpeed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pStatsS
 	// figure out movement speed (terrspeed)
 	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_MOVING )
 	{
-		uiSpeed = gsTerrainTypeSpeedModifiers[ pStatsSoldier->bOverTerrainType ];
+		static std::array<uint8_t, NUM_TERRAIN_TYPES> const terrainTypeSpeedModifiers
+		{
+			5, // Nothing,
+			5, // Flat ground
+			5, // Floor
+			5, // Paved road
+			5, // Dirt road
+			10, // LOW GRASS
+			15, // HIGH GRASS
+			20, // TRAIN TRACKS
+			20, // LOW WATER
+			25, // MID WATER
+			30 // DEEP WATER
+		};
 
-		uiTerrainDelay = uiSpeed;
+		uiTerrainDelay = terrainTypeSpeedModifiers[pStatsSoldier->bOverTerrainType];
 	}
 	else
 	{

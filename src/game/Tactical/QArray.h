@@ -2,10 +2,10 @@
 #define __Q_ARRAY_H
 
 #include "Types.h"
+#include <array>
 
 
-extern BOOLEAN QuoteExp_HeadShotOnly[75];
-extern BOOLEAN QuoteExp_TeamSpecific[75];
+extern std::array<INT8, 75> const QuoteExp_HeadShotOnly;
 extern BOOLEAN QuoteExp_GenderCode[75];
 extern BOOLEAN QuoteExp_GotGunOrUsedGun[75];
 extern BOOLEAN QuoteExp_PassingDislike[75];
