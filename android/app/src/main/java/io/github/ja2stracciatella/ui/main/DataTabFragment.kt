@@ -11,14 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.codekidlabs.storagechooser.StorageChooser
 import io.github.ja2stracciatella.ConfigurationModel
-import io.github.ja2stracciatella.R
-import kotlinx.android.synthetic.main.fragment_launcher_data_tab.view.*
+import io.github.ja2stracciatella.databinding.FragmentLauncherDataTabBinding
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class DataTabFragment : Fragment() {
+    private var _binding: FragmentLauncherDataTabBinding? = null
+    private val binding get() = _binding!!
+
     // Request permissions for game dir
     private val requestPermissionsCodeGameDir = 1001
     // Request permissions for save dir
@@ -27,37 +29,42 @@ class DataTabFragment : Fragment() {
     private lateinit var configurationModel: ConfigurationModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        configurationModel = ViewModelProvider(requireActivity()).get(ConfigurationModel::class.java)
+        configurationModel = ViewModelProvider(requireActivity())[ConfigurationModel::class.java]
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val tab = inflater.inflate(R.layout.fragment_launcher_data_tab, container, false)
+    ): View {
+        _binding = FragmentLauncherDataTabBinding.inflate(inflater, container, false)
 
         configurationModel.vanillaGameDir.observe(
             viewLifecycleOwner
         ) { vanillaGameDir ->
             if (vanillaGameDir.isNotEmpty()) {
-                tab.gameDirValueText.text = vanillaGameDir
+                binding.gameDirValueText.text = vanillaGameDir
             }
         }
         configurationModel.saveGameDir.observe(
             viewLifecycleOwner
         ) { saveGameDir ->
             if (saveGameDir.isNotEmpty()) {
-                tab.saveGameDirValueText.text = saveGameDir
+                binding.saveGameDirValueText.text = saveGameDir
             }
         }
-        tab.gameDirChooseButton?.setOnClickListener { _ ->
+        binding.gameDirChooseButton.setOnClickListener {
             showGameDirChooser()
         }
-        tab.saveGameDirChooseButton?.setOnClickListener { _ ->
+        binding.saveGameDirChooseButton.setOnClickListener {
             showSaveGameDirChooser()
         }
-        return tab
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showGameDirChooser() {
@@ -70,7 +77,7 @@ class DataTabFragment : Fragment() {
                 .withFragmentManager(activity?.fragmentManager)
                 .allowCustomPath(true)
                 .setType(StorageChooser.DIRECTORY_CHOOSER)
-                .build();
+                .build()
             directoryChooser.setOnSelectListener { path ->
                 configurationModel.apply {
                     setVanillaGameDir(path)
@@ -90,7 +97,7 @@ class DataTabFragment : Fragment() {
                 .withFragmentManager(activity?.fragmentManager)
                 .allowCustomPath(true)
                 .setType(StorageChooser.DIRECTORY_CHOOSER)
-                .build();
+                .build()
             directoryChooser.setOnSelectListener { path ->
                 configurationModel.apply {
                     setSaveGameDir(path)
