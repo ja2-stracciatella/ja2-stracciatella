@@ -27,7 +27,7 @@ struct LIGHTEFFECT
 
 
 // Decays all light effects...
-void DecayLightEffects(UINT32 uiTime, bool trashingWorld = false);
+void DecayLightEffects(UINT32 uiTime, bool updateSightings);
 
 LIGHTEFFECT* NewLightEffect(INT16 sGridNo, INT8 bType);
 
