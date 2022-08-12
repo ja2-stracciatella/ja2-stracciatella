@@ -625,6 +625,7 @@ static bool IsSoldierValidForSightings(SOLDIERTYPE const& s)
 	return !(!s.bActive
 	      || !s.bInSector
 	      || s.uiStatusFlags & SOLDIER_DEAD
+	      || s.bLife <= 0 // should be redundant, but who knows?
 	      || (s.bAssignment == VEHICLE && s.iVehicleId == iHelicopterVehicleId));
 }
 
