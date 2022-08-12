@@ -8,15 +8,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import io.github.ja2stracciatella.databinding.ActivityLauncherBinding
 import io.github.ja2stracciatella.ui.main.SectionsPagerAdapter
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
@@ -24,6 +22,8 @@ import java.io.IOException
 
 
 class LauncherActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLauncherBinding
+
     private val activityLogTag = "LauncherActivity"
     private val requestPermissionsCode = 1000
     private val jsonFormat = Json {
@@ -36,17 +36,21 @@ class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ActivityLauncherBinding.inflate(layoutInflater)
+        val view = binding.root
+
         loadJA2Json()
 
-        setContentView(R.layout.activity_launcher)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        setContentView(view)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this)
+        binding.viewPager.adapter = sectionsPagerAdapter
 
-        fab.setOnClickListener {
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.text =
+                applicationContext.resources.getString(SectionsPagerAdapter.getTabTitle(position))
+        }.attach()
+
+        binding.fab.setOnClickListener {
             startGame()
         }
     }
@@ -59,7 +63,7 @@ class LauncherActivity : AppCompatActivity() {
         if (exception != null) {
             Toast.makeText(
                 this,
-                "A exception occured when running the game: $exception",
+                "A exception occurred when running the game: $exception",
                 Toast.LENGTH_LONG
             ).show()
             NativeExceptionContainer.resetException()
@@ -107,6 +111,7 @@ class LauncherActivity : AppCompatActivity() {
         try {
             getPermissionsIfNecessaryForAction {
                 saveJA2Json()
+                NativeExceptionContainer.resetException()
                 val intent = Intent(this@LauncherActivity, StracciatellaActivity::class.java)
                 startActivity(intent)
             }
@@ -123,23 +128,23 @@ class LauncherActivity : AppCompatActivity() {
         }
 
     private fun loadJA2Json() {
-        val configurationModel = ViewModelProvider(this).get(ConfigurationModel::class.java)
+        val configurationModel = ViewModelProvider(this)[ConfigurationModel::class.java]
         try {
-            val json = File(ja2JsonPath).readText();
+            val json = File(ja2JsonPath).readText()
             // For some reason it is not possible to decode to Any, so we decode to JsonElement instead
-            val jsonMap: Map<String, JsonElement> = jsonFormat.decodeFromString(json);
+            val jsonMap: Map<String, JsonElement> = jsonFormat.decodeFromString(json)
 
             Log.i(activityLogTag, "Loaded ja2.json: $jsonMap")
 
-            val vanillaGameDir = jsonMap[gameDirKey];
+            val vanillaGameDir = jsonMap[gameDirKey]
             if (vanillaGameDir is JsonPrimitive && vanillaGameDir.isString) {
-                configurationModel.setVanillaGameDir(vanillaGameDir.content);
+                configurationModel.setVanillaGameDir(vanillaGameDir.content)
             } else {
                 throw SerializationException("$gameDirKey is not a string")
             }
-            val saveGameDir = jsonMap[saveGameDirKey];
+            val saveGameDir = jsonMap[saveGameDirKey]
             if (saveGameDir is JsonPrimitive && saveGameDir.isString) {
-                configurationModel.setSaveGameDir(saveGameDir.content);
+                configurationModel.setSaveGameDir(saveGameDir.content)
             } else {
                 throw SerializationException("$saveGameDirKey is not a string")
             }
@@ -151,10 +156,10 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun saveJA2Json() {
-        val configurationModel = ViewModelProvider(this).get(ConfigurationModel::class.java)
+        val configurationModel = ViewModelProvider(this)[ConfigurationModel::class.java]
         var jsonMap: MutableMap<String, JsonElement> = mutableMapOf()
         try {
-            val json = File(ja2JsonPath).readText();
+            val json = File(ja2JsonPath).readText()
             // For some reason it is not possible to decode to Any, so we decode to JsonElement instead
             jsonMap = jsonFormat.decodeFromString(json)
         } catch (e: SerializationException) {
@@ -165,7 +170,7 @@ class LauncherActivity : AppCompatActivity() {
         jsonMap[gameDirKey] = JsonPrimitive(configurationModel.vanillaGameDir.value)
         jsonMap[saveGameDirKey] = JsonPrimitive(configurationModel.saveGameDir.value)
         Log.i(activityLogTag, "Starting with ja2.json: $jsonMap")
-        val parentDir = File(ja2JsonPath).parentFile;
+        val parentDir = File(ja2JsonPath).parentFile
         if (parentDir?.exists() != true) {
             parentDir?.mkdirs()
         }
