@@ -619,13 +619,20 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* about);
 static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent);
 
 
-void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
+static bool IsSoldierValidForSightings(SOLDIERTYPE const& s)
 {
 	extern INT32 iHelicopterVehicleId; 	// I don't want to include a map screen header file for this
-	if (!s.bActive)                     return;
-	if (!s.bInSector)                   return;
-	if (s.uiStatusFlags & SOLDIER_DEAD) return;
-	if (s.bAssignment == VEHICLE && s.iVehicleId == iHelicopterVehicleId) return;
+	return !(!s.bActive
+	      || !s.bInSector
+	      || s.uiStatusFlags & SOLDIER_DEAD
+	      || s.bLife <= 0 // should be redundant, but who knows?
+	      || (s.bAssignment == VEHICLE && s.iVehicleId == iHelicopterVehicleId));
+}
+
+
+void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
+{
+	if (!IsSoldierValidForSightings(s)) return;
 
 	if (s.sGridNo == NOWHERE)
 	{
@@ -734,7 +741,7 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE& them = **i;
-			if (them.bLife < OKLIFE) continue;
+			if (!IsSoldierValidForSightings(them) || them.bLife < OKLIFE) continue;
 
 			// if this merc is on the same team as the target soldier
 			if (them.bTeam == s.bTeam) continue; // he doesn't look (he ALWAYS knows about him)
@@ -779,7 +786,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 	{
 		// if this merc is in this sector, and well enough to look, then put him on
 		// our list
-		if (s->bInSector && s->bLife >= OKLIFE)
+		if (IsSoldierValidForSightings(*s) && s->bLife >= OKLIFE)
 			radio_men[radio_cnt++] = s;
 	}
 
@@ -818,7 +825,7 @@ static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponen
 			continue; // skip him, he's no teammate at all!
 
 		// if this merc is at base, on assignment, dead, unconscious
-		if (!pMate->bInSector || pMate->bLife < OKLIFE)
+		if (!IsSoldierValidForSightings(*pMate) || pMate->bLife < OKLIFE)
 			continue; // next merc
 
 		// if this teammate currently sees this opponent
@@ -1242,7 +1249,7 @@ static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
-		if (pOpponent->bLife)
+		if (IsSoldierValidForSightings(*pOpponent))
 		{
 			// and if he's on another team...
 			if (pSoldier->bTeam != pOpponent->bTeam)
@@ -1369,7 +1376,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	}
 
 	// if we're somehow looking while inactive, at base, dead or dying
-	if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
+	if (!IsSoldierValidForSightings(*pSoldier) || pSoldier->bLife < OKLIFE)
 	{
 		SLOGD("ManLooksForMan - WE are inactive/dead etc ID {}({})to ID {}",
 			pSoldier->ubID, pSoldier->name, pOpponent->ubID);
@@ -1379,8 +1386,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
 
 	// if we're somehow looking for a guy who is inactive, at base, or already dead
-	if (!pOpponent->bActive || !pOpponent->bInSector || pOpponent->bLife <= 0 ||
-		pOpponent->sGridNo == NOWHERE )
+	if (!IsSoldierValidForSightings(*pOpponent) || pOpponent->sGridNo == NOWHERE)
 	{
 		return(FALSE);
 	}
@@ -1531,14 +1537,11 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 	if (opponent.ubID >= MAX_NUM_SOLDIERS) return;
 
 	// if we're somehow looking while inactive, at base, dying or already dead
-	if (!s.bActive)       return;
-	if (!s.bInSector)     return;
+	if (!IsSoldierValidForSightings(s)) return;
 	if (s.bLife < OKLIFE) return;
 
 	// if we're somehow seeing a guy who is inactive, at base, or already dead
-	if (!opponent.bActive)   return;
-	if (!opponent.bInSector) return;
-	if (opponent.bLife <= 0) return;
+	if (!IsSoldierValidForSightings(opponent)) return;
 
 	// If we're somehow seeing a guy who is on the same team
 	if (s.bTeam == opponent.bTeam) return;
@@ -1988,7 +1991,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 		SOLDIERTYPE* const pSoldier = *i;
 
 		// if this merc is active, in this sector, and well enough to look
-		if (pSoldier->bLife >= OKLIFE  && (pSoldier->ubBodyType != LARVAE_MONSTER))
+		if (IsSoldierValidForSightings(*pSoldier) && pSoldier->bLife >= OKLIFE  && (pSoldier->ubBodyType != LARVAE_MONSTER))
 		{
 			// if this merc is on the same team as the target soldier
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -2167,7 +2170,7 @@ static void UpdatePublic(const UINT8 ubTeam, SOLDIERTYPE* const s, const INT8 bN
 		FOR_EACH_IN_TEAM(pSoldier, ubTeam)
 		{
 			// if this soldier is active, in this sector, and well enough to look
-			if (pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->uiStatusFlags & SOLDIER_GASSED))
+			if (IsSoldierValidForSightings(*pSoldier) && pSoldier->bLife >= OKLIFE && !(pSoldier->uiStatusFlags & SOLDIER_GASSED))
 			{
 				// if soldier isn't aware of guynum, give him another chance to see
 				if (pSoldier->bOppList[s->ubID] == NOT_HEARD_OR_SEEN)
@@ -2298,8 +2301,7 @@ void BetweenTurnsVisibilityAdjustments()
 	FOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE& s = *i;
-		if (!s.bInSector)            continue;
-		if (s.bLife == 0)            continue;
+		if (!IsSoldierValidForSightings(s)) continue;
 		if (IsOnOurTeam(s))          continue;
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 		if (s.bTeam == MILITIA_TEAM) continue;
@@ -2540,7 +2542,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 
 		// make sure this merc is active, here & still alive (unconscious OK)
-		if (!pOpponent->bActive || !pOpponent->bInSector || !pOpponent->bLife)
+		if (!IsSoldierValidForSightings(*pOpponent))
 		{
 			SLOGD("RS: inactive/notInSector/life {}", pOpponent->ubID);
 			continue; // skip to the next merc
@@ -3620,7 +3622,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 		FOR_EACH_IN_TEAM(pSoldier, bTeam)
 		{
 			// if this "listener" is in no condition to care
-			if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_DEAD ||
+			if (!IsSoldierValidForSightings(*pSoldier) ||
 				(pSoldier->bLife < OKLIFE) || pSoldier->ubBodyType == LARVAE_MONSTER)
 			{
 				continue; // skip him!
@@ -4330,7 +4332,7 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 		// if this merc is active, here, and alive
-		if (pOpponent->bLife)
+		if (IsSoldierValidForSightings(*pOpponent))
 		{
 			// if this merc is on the same team, he's no opponent, so skip him
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -4418,7 +4420,7 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 	{
 		const SOLDIERTYPE* const pOpponent = *i;
 		// if this merc is active, here, and alive
-		if (pOpponent->bLife)
+		if (IsSoldierValidForSightings(*pOpponent))
 		{
 			// if this merc is on the same team, he's no opponent, so skip him
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -4468,7 +4470,7 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 		BOOLEAN bOpponentStillSeen = FALSE;
 
 		// if this opponent is active, here, and alive
-		if (pOpponent->bLife)
+		if (IsSoldierValidForSightings(*pOpponent))
 		{
 			// if this opponent is on the same team, he's no opponent, so skip him
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -4489,7 +4491,7 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 				{
 					const SOLDIERTYPE* const pTeamMate = *j;
 					// if this teammate is active, here, and alive
-					if (pTeamMate->bLife)
+					if (IsSoldierValidForSightings(*pTeamMate))
 					{
 						// if this opponent is NOT on the same team, then skip him
 						if (pTeamMate->bTeam != pSoldier->bTeam)
@@ -4833,8 +4835,8 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 
 	FOR_EACH_IN_TEAM(pSoldier, pDyingSoldier->bTeam)
 	{
-		if (pSoldier->bInSector && pSoldier != pDyingSoldier && pSoldier->bLife >= OKLIFE &&
-			pSoldier->bAlertStatus < STATUS_RED)
+		if (IsSoldierValidForSightings(*pSoldier) && pSoldier != pDyingSoldier &&
+		    pSoldier->bLife >= OKLIFE && pSoldier->bAlertStatus < STATUS_RED)
 		{
 			// this guy might have seen the man die
 
@@ -4997,7 +4999,7 @@ static void CommunicateWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 
 	CFOR_EACH_IN_TEAM(s, bTeam)
 	{
 		if (s == watcher) continue;
-		if (!s->bInSector || s->bLife < OKLIFE)
+		if (!IsSoldierValidForSightings(*s) || s->bLife < OKLIFE)
 		{
 			continue;
 		}
@@ -5151,7 +5153,7 @@ static void MakeBloodcatsHostile(void)
 {
 	FOR_EACH_IN_TEAM(s, CREATURE_TEAM)
 	{
-		if (s->ubBodyType == BLOODCAT && s->bInSector && s->bLife > 0)
+		if (s->ubBodyType == BLOODCAT && IsSoldierValidForSightings(*s))
 		{
 			SetSoldierNonNeutral(s);
 			RecalculateOppCntsDueToNoLongerNeutral(s);

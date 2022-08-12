@@ -99,8 +99,8 @@ void HandleTacticalEndTurn()
 	}
 
 	DecayBombTimers();
-	DecaySmokeEffects(now);
-	DecayLightEffects(now);
+	DecaySmokeEffects(now, true);
+	DecayLightEffects(now, true);
 	DecayBloodAndSmells(now);
 	DecayRottingCorpseAIWarnings();
 
