@@ -43,7 +43,7 @@
 
 #include <string_theory/format>
 #include <string_theory/string>
-
+#include <memory>
 #include <stdexcept>
 
 
@@ -56,11 +56,11 @@ struct MERCPLACEMENT
 	BOOLEAN				fPlaced;
 };
 
-static MERCPLACEMENT* gMercPlacement = 0;
-static INT32          giPlacements   = 0;
+static std::unique_ptr<MERCPLACEMENT[]> gMercPlacement;
+static INT32 giPlacements;
 
 #define FOR_EACH_MERC_PLACEMENT(iter) \
-	for (MERCPLACEMENT* iter = gMercPlacement, * const iter##__end = gMercPlacement + giPlacements; iter != iter##__end; ++i)
+	for (MERCPLACEMENT* iter = &gMercPlacement[0], * const iter##__end = &gMercPlacement[giPlacements]; iter != iter##__end; ++iter)
 
 enum
 {
@@ -156,11 +156,11 @@ void InitTacticalPlacementGUI()
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;
-		if (s->sSector.z != 0)                   continue;
+		if (s->sSector.z != 0)                  continue;
 		++n;
 	}
 	// Allocate the array based on how many mercs there are.
-	gMercPlacement = new MERCPLACEMENT[n]{};
+	gMercPlacement.reset(new MERCPLACEMENT[n]);
 
 	// Second pass: Assign the mercs to their respective slots.
 	giPlacements = 0;
@@ -176,7 +176,7 @@ void InitTacticalPlacementGUI()
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;
-		if (s->sSector.z != 0)                   continue;
+		if (s->sSector.z != 0)                  continue;
 
 		if (s->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
 				s->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)
@@ -364,8 +364,6 @@ static void RenderTacticalPlacementGUI()
 static void EnsureDoneButtonStatus(void)
 {
 	bool enable = true;
-	//static BOOLEAN fInside = FALSE;
-	//BOOLEAN fChanged = FALSE;
 	FOR_EACH_MERC_PLACEMENT(i)
 	{
 		if (i->fPlaced) continue;
@@ -538,6 +536,7 @@ static void KillTacticalPlacementGUI(void)
 
 	FOR_EACH_MERC_PLACEMENT(i) PickUpMercPiece(*i);
 
+	gMercPlacement.reset();
 	PrepareLoadedSector();
 	EnableScrollMessages();
 }
