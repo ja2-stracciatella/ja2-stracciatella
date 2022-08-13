@@ -1,9 +1,10 @@
 #ifndef FACTS_H
 #define FACTS_H
+#include <cstdint>
 
-enum Fact
+enum Fact : uint16_t
 {
-	FACT_NONE = -1,
+	FACT_NONE = UINT16_MAX,
 	// city liberations
 	FACT_OMERTA_LIBERATED = 0,
 	FACT_DRASSEN_LIBERATED, // 1
