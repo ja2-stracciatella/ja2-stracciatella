@@ -1425,6 +1425,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		else
 		{
 			RemoveGroup(g);
+			return;
 		}
 	}
 
@@ -1822,8 +1823,8 @@ void RemoveGroup(GROUP& g)
 	if (g.fPersistant && !gfRemovingAllGroups)
 	{
 		CancelEmptyPersistentGroupMovement(g);
+		SLOGW("Strategic Info Warning: Attempting to delete a persistant group.");
 		return;
-		DoScreenIndependantMessageBox("Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL);
 	}
 
 	RemoveGroupWaypoints(g);
@@ -2720,8 +2721,13 @@ void RetreatGroupToPreviousSector(GROUP& g)
 {
 	AssertMsg(!g.fBetweenSectors, "Can't retreat a group when between sectors!");
 
-	UINT8 direction = 255;
-	if (g.ubPrev.x != 16 || g.ubPrev.y != 16)
+	if (g.ubPrev.x == 16 && g.ubPrev.y == 16)
+	{
+		// Group doesn't have a previous sector. Create one first.
+		CalculateGroupRetreatSector(&g);
+	}
+
+	UINT8 direction;
 	{ // Group has a previous sector
 		g.ubNext = g.ubPrev;
 
@@ -2735,12 +2741,6 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		{
 			throw std::runtime_error(ST::format("Player group attempting illegal retreat from {} to {}.", g.ubSector, g.ubNext).to_std_string());
 		}
-	}
-	else
-	{ // Group doesn't have a previous sector. Create one, then recurse
-		CalculateGroupRetreatSector(&g);
-		RetreatGroupToPreviousSector(g);
-		// XXX direction is invalid, causes out-of-bounds access below
 	}
 
 	// Calc time to get to next waypoint

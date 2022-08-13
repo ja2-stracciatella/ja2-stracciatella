@@ -1639,6 +1639,15 @@ static bool IsAnybodyWounded()
 }
 
 
+static void DeleteAutoResolveSoldier(SOLDIERTYPE *const s)
+{
+	// All Auto Resolve soldiers created in Soldier_Create have id #255
+	if (s->ubID != 255) throw std::logic_error("Trying to delete a non-AR soldier");
+	TacticalRemoveSoldier(*s);
+	delete s;
+}
+
+
 static void RemoveAutoResolveInterface(bool const delete_for_good)
 {
 	AUTORESOLVE_STRUCT& ar = *gpAR;
@@ -1671,7 +1680,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			SOLDIERTYPE& s = *gpMercs[i].pSoldier;
 			if (i >= ar.iActualMercFaces)
 			{
-				TacticalRemoveSoldier(s);
+				DeleteAutoResolveSoldier(&s);
 			}
 			else
 			{ // Record finishing information for our mercs
@@ -1781,7 +1790,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 				}
 			}
 		}
-		TacticalRemoveSoldier(s);
+		DeleteAutoResolveSoldier(&s);
 		gpCivs[i] = SOLDIERCELL{};
 	}
 
@@ -1823,7 +1832,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 	{
 		SOLDIERCELL& slot = gpEnemies[i];
 		if (!slot.pSoldier) continue;
-		TacticalRemoveSoldier(*slot.pSoldier);
+		DeleteAutoResolveSoldier(slot.pSoldier);
 		slot = SOLDIERCELL{};
 	}
 
@@ -2212,7 +2221,7 @@ static void ResetAutoResolveInterface(void)
 	while( gpAR->iNumMercFaces > gpAR->ubMercs && gpAR->iNumMercFaces > gpAR->iActualMercFaces )
 	{ //Removing temp mercs
 		gpAR->iNumMercFaces--;
-		TacticalRemoveSoldier(*gpMercs[gpAR->iNumMercFaces].pSoldier);
+		DeleteAutoResolveSoldier(gpMercs[gpAR->iNumMercFaces].pSoldier);
 		gpMercs[gpAR->iNumMercFaces].pSoldier = NULL;
 	}
 	while( gpAR->iNumMercFaces < gpAR->ubMercs && gpAR->iNumMercFaces >= gpAR->iActualMercFaces )
@@ -3445,6 +3454,7 @@ static BOOLEAN IsBattleOver(void)
 				pRobot->bLife = 0;
 				gpAR->ubAliveMercs--;
 				iNumInvolvedMercs = 0;
+				fOnlyEPCsLeft = TRUE;
 			}
 		}
 	}
@@ -3463,11 +3473,11 @@ static BOOLEAN IsBattleOver(void)
 		{ //Kill the EPCs.
 			FOR_EACH_AR_MERC(i)
 			{
-				if (!(i->uiFlags & CELL_EPC)) continue;
+				if (!(i->uiFlags & CELL_EPC) || i->pSoldier->bLife == 0) continue;
 				DoMercBattleSound(i->pSoldier, BATTLE_SOUND_DIE1);
 				i->pSoldier->bLife = 0;
-				gpAR->ubAliveMercs--;
 			}
+			gpAR->ubAliveMercs = 0;
 		}
 		FOR_EACH_AR_ENEMY(i)
 		{

@@ -452,15 +452,12 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 }
 
 
+// Return the line of the length from origin to dest, truncated to the nearest integer
 static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	SGPSector delta = SGPSector::FromStrategicIndex(sOrigin) - SGPSector::FromStrategicIndex(sDest);
 
-	delta.x = std::abs(delta.x);
-	delta.y = std::abs(delta.y);
-
-	// apply Pythagoras's theorem for right-handed triangle:
-	return (INT16) std::hypot(delta.x, delta.y);
+	return static_cast<INT16>(std::hypot(delta.x, delta.y));
 }
 
 

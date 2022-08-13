@@ -1,7 +1,7 @@
 #include "QArray.h"
 
 
-BOOLEAN QuoteExp_HeadShotOnly[75] =
+std::array<INT8, 75> const QuoteExp_HeadShotOnly
 {
 	// this is for quote 33 (0=generic grossout, 1=headshot specific)
 	/* 0	Barry  	*/	1,
@@ -81,89 +81,6 @@ BOOLEAN QuoteExp_HeadShotOnly[75] =
 	/* 73	RPC73	*/      0,
 	/* 74	RPC74	*/      0
 };
-
-
-BOOLEAN QuoteExp_TeamSpecific[75] =
-{
-	// this is for quote 41 (0=refers to anyone, 1=team specific)
-	/* 0	Barry  	*/	1,
-	/* 1	Blood  	*/     	1,
-	/* 2	Lynx	*/	1,
-	/* 3	Grizzly	*/     	1,
-	/* 4	Vicki  	*/     	1,
-	/* 5	Trevor	*/	1,
-	/* 6	Grunty	*/	1,
-	/* 7	Ivan	*/	0,
-	/* 8	Steroid	*/	1,
-	/* 9	Igor	*/	1,
-	/* 10	Shadow	*/	1,
-	/* 11	Red	*/	0,
-	/* 12	Reaper	*/	1,
-	/* 13	Fidel	*/	1,
-	/* 14	Fox	*/	1,
-	/* 15	Sidney	*/	1,
-	/* 16	Gus	*/	0,
-	/* 17	Buns	*/	1,
-	/* 18	Ice	*/	1,
-	/* 19	Spider	*/	1,
-	/* 20	Cliff	*/	1,
-	/* 21	Bull	*/	1,
-	/* 22	Hitman	*/	1,
-	/* 23	Buzz	*/	1,
-	/* 24	Raider	*/	1,
-	/* 25	Raven	*/	1,
-	/* 26	Static	*/	1,
-	/* 27	Len	*/	1,
-	/* 28	Danny	*/	0,
-	/* 29	Magic	*/	1,
-	/* 30	Stephan	*/	1,
-	/* 31	Scully	*/	1,
-	/* 32	Malice	*/	0,
-	/* 33	Dr. Q	*/	1,
-	/* 34	Nails	*/	1,
-	/* 35	Thor	*/	1,
-	/* 36	Scope	*/	1,
-	/* 37	Wolf	*/	0,
-	/* 38	MD	*/	1,
-	/* 39	Meltdown*/	0,
-	/* 40	Biff	*/	1,
-	/* 41	Haywire	*/	1,
-	/* 42	Gasket	*/	1,
-	/* 43	Razor	*/	1,
-	/* 44	Flo	*/	0,
-	/* 45	Gumpy	*/	1,
-	/* 46	Larryok	*/	1,
-	/* 47	Larryold*/	0,
-	/* 48	Cougar	*/	1,
-	/* 49	Numb	*/	1,
-	/* 50	Bubba	*/	0,
-	/* 51	PGmale1	*/	1,
-	/* 52	PGmale2	*/	1,
-	/* 53	PGmale3	*/	1,
-	/* 54	PGLady1	*/	1,
-	/* 55	PGLady2	*/	1,
-	/* 56	PGLady3	*/	1,
-
-	/* 57	Miguel	*/	0, // these RPC's don't have quotes written yet
-	/* 58	Carlos	*/      0, // so this data is temporary.
-	/* 59	Ira	*/      0,
-	/* 60	Dimitri	*/      0,
-	/* 61	Devin	*/      0,
-	/* 62	Rat	*/      0,
-	/* 63	Madlab	*/      0,
-	/* 64	Slay	*/      0,
-	/* 65	Nanchuk	*/      0,
-	/* 66	Dynamo	*/      0,
-	/* 67	Prisoner*/      0,
-	/* 68	Iggy	*/      0,
-	/* 69	Doctor	*/      0,
-	/* 70	MTI	*/      0,
-	/* 71	RPC71	*/      0,
-	/* 72	Junkson	*/      0,
-	/* 73	RPC73	*/      0,
-	/* 74	RPC74	*/      0
-};
-
 
 
 BOOLEAN QuoteExp_GenderCode[75] =

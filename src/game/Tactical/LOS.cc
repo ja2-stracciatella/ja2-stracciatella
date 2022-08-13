@@ -4294,12 +4294,8 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	STRUCTURE * pStructure, *pTempStructure;
 
 	SOLDIERTYPE * pTarget;
-	//FLOAT dTargetX;
-	//FLOAT dTargetY;
 	FLOAT dTargetZMin;
 	FLOAT dTargetZMax;
-
-	//INT8 iImpactReduction;
 
 	INT16 sX, sY;
 
@@ -4311,15 +4307,10 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	sX = (INT16)( dX / CELL_X_SIZE );
 	sY = (INT16)( dY / CELL_Y_SIZE );
 
-	// Check if gridno is in bounds....
-	if ( !GridNoOnVisibleWorldTile( (INT16) (sX + sY * WORLD_COLS) ) )
+	if (sX < 0 || sX >= WORLD_COLS || sY < 0 || sY >= WORLD_ROWS)
 	{
-		//return( COLLISION_NONE );
-	}
-
-	if ( sX < 0 || sX > WORLD_COLS || sY < 0 || sY > WORLD_COLS )
-	{
-		//return( COLLISION_NONE );
+		SLOGW("CheckForCollision coordinates out of bounds");
+		return COLLISION_NONE;
 	}
 
 	// check a particular tile

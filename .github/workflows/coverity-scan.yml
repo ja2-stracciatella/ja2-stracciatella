@@ -39,7 +39,7 @@ jobs:
           cd ${COV_BUILD_DIR}
           cmake ${CMAKE_BUILD_OPTIONS} ..
         env:
-          CMAKE_BUILD_OPTIONS: "-DCMAKE_BUILD_TYPE=Release -DUSE_SCCACHE=OFF"
+          CMAKE_BUILD_OPTIONS: "-DCMAKE_BUILD_TYPE=Release -DUSE_SCCACHE=OFF -DENABLE_ASSERTS=1"
 
       - name: Run Coverity Scan Analysis Tool
         run: |

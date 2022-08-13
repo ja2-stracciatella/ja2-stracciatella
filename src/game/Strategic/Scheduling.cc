@@ -660,14 +660,17 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 			break;
 		case SCHEDULE_ACTION_LEAVESECTOR:
 		{
-			INT16 sGridNo;
-			sGridNo = FindNearestEdgePoint( pSoldier->sGridNo );
-			BumpAnyExistingMerc( sGridNo );
-			EVENT_SetSoldierPositionNoCenter(pSoldier, sGridNo, SSP_FORCE_DELETE);
-
-			sGridNo = FindNearbyPointOnEdgeOfMap( pSoldier, &bDirection );
-			BumpAnyExistingMerc( sGridNo );
-			EVENT_SetSoldierPositionNoCenter(pSoldier, sGridNo, SSP_FORCE_DELETE);
+			GridNo sGridNo = FindNearestEdgePoint(pSoldier->sGridNo);
+			if (sGridNo != NOWHERE)
+			{
+				BumpAnyExistingMerc(sGridNo);
+				EVENT_SetSoldierPositionNoCenter(pSoldier, sGridNo, SSP_FORCE_DELETE);
+			}
+			else
+			{
+				// Stay in place
+				sGridNo = pSoldier->sGridNo;
+			}
 
 			// ok, that tells us where the civ will return
 			pSoldier->sOffWorldGridNo = sGridNo;

@@ -58,7 +58,7 @@ ST::string st_buffer_escape(const ST::utf32_buffer& buf);
 
 /// Converts a buffer to a string.
 template<typename T>
-ST::string st_checked_buffer_to_string(ST::string& err_msg, const ST::buffer<T>& buf) noexcept
+ST::string st_checked_buffer_to_string(ST::string& err_msg, const ST::buffer<T>& buf)
 {
 	err_msg = ST::null;
 	try

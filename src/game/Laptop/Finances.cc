@@ -35,7 +35,7 @@
 struct FinanceUnit
 {
 	UINT8 ubCode; // the code index in the finance code table
-	UINT8 ubSecondCode; // secondary code
+	UINT8 ubSecondCode; // secondary code: Profile ID or sector ID
 	UINT32 uiDate; // time in the world in global time
 	INT32 iAmount; // the amount of the transaction
 	INT32 iBalanceToDate;
@@ -145,7 +145,7 @@ static BUTTON_PICS* giFinanceButtonImage[4];
 static MOUSE_REGION g_scroll_region;
 
 // internal functions
-static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
+static void ProcessAndEnterAFinancialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
 static void LoadFinances(void);
 static void RemoveFinances(void);
 static void ClearFinanceList(void);
@@ -194,7 +194,7 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 	// update balance
 	LaptopSaveInfo.iCurrentBalance += iAmount;
 
-	ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, LaptopSaveInfo.iCurrentBalance);
+	ProcessAndEnterAFinancialRecord(ubCode, uiDate, iAmount, ubSecondCode, LaptopSaveInfo.iCurrentBalance);
 
 	// write balance to disk
 	WriteBalanceToDisk( );
@@ -704,7 +704,7 @@ static void ClearFinanceList(void)
 }
 
 
-static void ProcessAndEnterAFinacialRecord(const UINT8 ubCode, const UINT32 uiDate, const INT32 iAmount, const UINT8 ubSecondCode, const INT32 iBalanceToDate)
+static void ProcessAndEnterAFinancialRecord(const UINT8 ubCode, const UINT32 uiDate, const INT32 iAmount, const UINT8 ubSecondCode, const INT32 iBalanceToDate)
 {
 	FinanceUnit* const fu = new FinanceUnit{};
 	fu->Next           = NULL;
@@ -813,7 +813,6 @@ static void DestroyFinanceButtons(void)
 static ST::string ProcessTransactionString(const FinanceUnit* f)
 {
 	UINT8 code = f->ubCode;
-	SGPSector ubSector(code);
 	switch (code)
 	{
 		case DEPOSIT_FROM_SILVER_MINE:
@@ -852,7 +851,7 @@ static ST::string ProcessTransactionString(const FinanceUnit* f)
 
 		case TRAIN_TOWN_MILITIA:
 		{
-			return st_format_printf(pTransactionText[TRAIN_TOWN_MILITIA], GetSectorIDString(ubSector, TRUE));
+			return st_format_printf(pTransactionText[TRAIN_TOWN_MILITIA], GetSectorIDString(f->ubSecondCode, TRUE));
 		}
 
 		default:
@@ -983,7 +982,7 @@ static void LoadInRecords(UINT32 const page)
 		EXTR_I32(d, balance_to_date);
 		Assert(d.getConsumed() == lengthof(data));
 
-		ProcessAndEnterAFinacialRecord(code, date, amount, second_code, balance_to_date);
+		ProcessAndEnterAFinancialRecord(code, date, amount, second_code, balance_to_date);
 	}
 }
 

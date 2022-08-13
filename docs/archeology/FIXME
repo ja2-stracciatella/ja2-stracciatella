@@ -218,9 +218,6 @@ ubOwnershipUnused
 ubWeight: only one reader
 fUsed
 
-REAL_OBJECT
-OneOverMass: always 1/60.f
-
 SOLDIERCREATESTRUCT
 fStatic: strange
 fCopyProfileItemsOver: strange

@@ -277,8 +277,8 @@ void HandleOverheadMap(void)
 	// clear for broken saves before TrashWorld took care of this
 	if (!gfEditMode && gfTacticalPlacementGUIActive)
 	{
-		DecaySmokeEffects(GetWorldTotalSeconds());
-		DecayLightEffects(GetWorldTotalSeconds());
+		DecaySmokeEffects(GetWorldTotalSeconds(), false);
+		DecayLightEffects(GetWorldTotalSeconds(), false);
 	}
 
 	RenderOverheadMap(0, WORLD_COLS / 2, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 320, FALSE);

@@ -306,11 +306,7 @@ static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoral
 			default:
 				break;
 		}
-		if (bMoraleMod < 0)
-		{
-			// can't change a positive event into a negative one!
-			bMoraleMod = 0;
-		}
+		// bMoraleMod is always >= 0 at this point
 	}
 	else
 	{
@@ -722,12 +718,14 @@ void HourlyMoraleUpdate()
 			if (opinion == HATED_OPINION)
 			{
 				INT8 const hated = WhichHated(s->ubProfile, other->ubProfile);
-				Assert(hated >= 0);
-				if (hated >= 2 || // Learn to hate which has become full-blown hatred, full strength
-					p.bHatedCount[hated] <= p.bHatedTime[hated] / 2)
+				if (hated < 0) SLOGW("Unexpected WhichHated() result");
+				else found_hated = hated >=2 ||
+					 // Learn to hate which has become full-blown hatred, full strength
+					 p.bHatedCount[hated] <= p.bHatedTime[hated];
+
+				if (found_hated)
 				{
 					// We're teamed with someone we hate! We HATE this! Ignore everyone else!
-					found_hated = true;
 					break;
 				}
 				// Otherwise just mix this opinion in with everyone else

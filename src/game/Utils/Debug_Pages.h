@@ -22,6 +22,7 @@ void MPageHeader(const ST::string& header);
 void MHeader(INT32 x, INT32 y, const ST::string& header);
 void MPrintStat(INT32 x, INT32 y, const ST::string& header, INT32 val);
 void MPrintStat(INT32 x, INT32 y, const ST::string& header, const ST::string& val);
+void MPrintStat(INT32 x, INT32 y, const ST::string& header, char const* val);
 void MPrintStat(INT32 x, INT32 y, const ST::string& header, const void* val);
 void MPrintStat(INT32 x, INT32 y, const ST::string& header, INT32 val, INT32 effective_val);
 

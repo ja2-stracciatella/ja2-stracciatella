@@ -583,7 +583,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_NPC_OWED_MONEY:
-			gubFact[FACT_NPC_OWED_MONEY] = (ubProfileID != NO_PROFILE && gMercProfiles[ubProfileID].iBalance < 0);
+			gubFact[FACT_NPC_OWED_MONEY] = ubProfileID < NUM_PROFILES && gMercProfiles[ubProfileID].iBalance < 0;
 			break;
 
 		case FACT_FATHER_DRUNK:

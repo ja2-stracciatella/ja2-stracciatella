@@ -1114,17 +1114,19 @@ void LoadSavedGame(const ST::string &saveName)
 		if (s) TacticalRemoveSoldier(*s);
 
 		// add the pilot at a random location!
-		SGPSector sMap;
+		// use B15 as fallback sector just in case we can't get a placement sector from GCM.
+		SGPSector sMap{SEC_B15};
 		auto placement = GCM->getNpcPlacement(SKYRIDER);
 		if (placement)
 		{
 			auto sector = placement->pickPlacementSector();
-
-			if (placement->useAlternateMap) SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
-			sMap = SGPSector(sector);
+			if (sector != -1)
+			{
+				if (placement->useAlternateMap) SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
+				sMap = SGPSector(sector);
+			}
 		}
-		MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-		p.sSector = sMap;
+		GetProfile(SKYRIDER).sSector = sMap;
 	}
 
 	if (version < 68)
@@ -1340,7 +1342,7 @@ static void SaveSoldierStructure(HWFILE const f)
 static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool stracLinuxFormat)
 {
 	// Loop through all the soldier and delete them all
-	FOR_EACH_SOLDIER(i) TacticalRemoveSoldier(*i);
+	TrashAllSoldiers();
 
 	// Loop through all the soldier structs to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?

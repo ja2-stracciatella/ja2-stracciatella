@@ -942,7 +942,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	if (item->getCursor() == INVALIDCURS)
 	{
 		// Found detonator...
-		OBJECTTYPE& obj = s->inv[usHandItem];
+		OBJECTTYPE& obj = s->inv[HANDPOS];
 		if (FindAttachment(&obj, DETONATOR) != ITEM_NOT_FOUND || FindAttachment(&obj, REMDETONATOR))
 		{
 			StartBombMessageBox(s, usGridNo);
