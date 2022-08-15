@@ -151,7 +151,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 		if (sel != NULL && sel->pTempObject != NULL) return;
 
 		const GridNo usMapPos = guiCurrentCursorGridNo;
-		if (usMapPos == NOWHERE && !gfUIShowExitSouth) return;
+		if (usMapPos == NOWHERE && !(gfScrolledToBottom && gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS)) return;
 
 		if ( gViewportRegion.ButtonState & MSYS_LEFT_BUTTON )
 		{
@@ -1288,7 +1288,7 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 
 		case CONFIRM_MOVE_MODE:
 
-			if ( usMapPos != usOldMapPos )
+			if ( !gfIsUsingTouch && usMapPos != usOldMapPos )
 			{
 				// Switch event out of confirm mode
 				// Set off ALL move....
@@ -1354,4 +1354,115 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 	}
 
 	usOldMapPos = usMapPos;
+}
+
+void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
+	static GridNo gLastUpGridNo = NOWHERE;
+	static SOLDIERTYPE* gLastDownUIFullTarget = NULL;
+
+	if (reason & MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP) {
+		if (gLastUpGridNo != NOWHERE && gLastUpGridNo == guiCurrentCursorGridNo) {
+			switch( gCurrentUIMode )
+			{
+				case CONFIRM_MOVE_MODE:
+				case MOVE_MODE:
+					guiPendingOverrideEvent = C_MOVE_MERC;
+					break;
+				default:
+					break;
+			}
+		}
+	} else if (reason & MSYS_CALLBACK_REASON_TFINGER_DWN) {
+		gUIFingersDown += 1;
+		if (gUIFingersDown == 1) {
+			gLastDownUIFullTarget = gUIFullTarget;
+
+			switch( gCurrentUIMode )
+			{
+				case CONFIRM_MOVE_MODE:
+					gfPlotNewMovement = TRUE;
+					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+					break;
+				default:
+					break;
+			}
+		}
+		if (gUIFingersDown >= 2) {
+			switch( gCurrentUIMode )
+			{
+				case MOVE_MODE:
+				case CONFIRM_MOVE_MODE:
+					guiPendingOverrideEvent = P_PANMODE;
+					break;
+				default:
+					break;
+			}
+		}
+	} else if (reason & MSYS_CALLBACK_REASON_TFINGER_UP) {
+		auto selected = GetSelectedMan();
+
+		if (gUIFingersDown == 1) {
+			gLastUpGridNo = guiCurrentCursorGridNo;
+		}
+
+		if (guiCurrentCursorGridNo == NOWHERE || selected == NULL) return;
+
+		if ( gpItemPointer != NULL ) {
+			// If we went up with item in hand change to confirm mode
+			gfPlotNewMovement = TRUE;
+			guiPendingOverrideEvent = C_WAIT_FOR_CONFIRM;
+		} else {
+			switch( gCurrentUIMode )
+			{
+				case MOVE_MODE:
+				case CONFIRM_MOVE_MODE:
+				case ACTION_MODE:
+				case CONFIRM_ACTION_MODE:
+				case LOOKCURSOR_MODE:
+				case HANDCURSOR_MODE:
+				case TALKCURSOR_MODE:
+					if (gUIFullTarget != NULL && gUIFullTarget == gLastDownUIFullTarget &&
+							(guiUIFullTargetFlags & OWNED_MERC) &&
+							!(guiUIFullTargetFlags & UNCONSCIOUS_MERC))
+					{
+						// If we went down and up on the same merc select it
+						guiPendingOverrideEvent = I_SELECT_MERC;
+					} else if (gCurrentUIMode == MOVE_MODE) {
+						if ( !HandleCheckForExitArrowsInput(TRUE) )
+						{
+							// If we went up in movement mode, change to confirm movement mode
+							gfPlotNewMovement = TRUE;
+							guiPendingOverrideEvent = C_WAIT_FOR_CONFIRM;
+						}
+					}
+					break;
+				case ADJUST_STANCE_MODE:
+					guiPendingOverrideEvent = PADJ_ADJUST_STANCE;
+					break;
+				case PAN_MODE:
+					// If we are in pan mode, end pan mode
+					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+					break;
+				default:
+					break;
+			}
+		}
+		// We dont get the second up event, so reset here
+		gUIFingersDown = 0;
+		gLastDownUIFullTarget = NULL;
+	} else if (reason & MSYS_CALLBACK_REASON_TFINGER_REPEAT) {
+		auto selected = GetSelectedMan();
+
+		if (selected == gUIFullTarget && selected == gLastDownUIFullTarget) {
+			switch( gCurrentUIMode )
+			{
+				case MOVE_MODE:
+				case CONFIRM_MOVE_MODE:
+					guiPendingOverrideEvent = M_CHANGE_TO_ADJPOS_MODE;
+					break;
+				default:
+					break;
+			}
+		}
+	}
 }

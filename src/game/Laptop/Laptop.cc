@@ -341,9 +341,6 @@ void SetLaptopNewGameFlag(void)
 
 static void GetLaptopKeyboardInput(void)
 {
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-
 	fTabHandled = FALSE;
 
 	InputAtom InputEvent;

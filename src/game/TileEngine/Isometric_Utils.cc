@@ -1,4 +1,4 @@
-#include "MouseSystem.h"
+#include "Cursor_Control.h"
 #include "Structure.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
@@ -184,8 +184,10 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 		return( FALSE );
 	}
 
-	sOffsetX = gViewportRegion.MouseXPos - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
-	sOffsetY = gViewportRegion.MouseYPos - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
+	SGPPoint cursorPosition;
+	GetCursorPos(cursorPosition);
+	sOffsetX = cursorPosition.iX - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
+	sOffsetY = cursorPosition.iY - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
 
 	// OK, Let's offset by a value if our interfac level is changed!
 	if ( gsInterfaceLevel != 0 )

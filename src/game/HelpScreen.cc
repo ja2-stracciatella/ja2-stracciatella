@@ -884,9 +884,6 @@ static void PrepareToExitHelpScreen(void);
 
 static void GetHelpScreenUserInput(void)
 {
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-
 	InputAtom Event;
 	while( DequeueSpecificEvent(&Event, KEYBOARD_EVENTS) )
 	{

@@ -69,6 +69,13 @@ extern INT16 gsGlobalCursorYOffset;
 extern UINT16 gsCurMouseHeight;
 extern UINT16 gsCurMouseWidth;
 
+void GetCursorPos(SGPPoint& Point);
+
+// Sets an override for the cursor position
+void SetManualCursorPos(SGPPoint Point);
+// Clears the override for the cursor position
+void ClearManualCursorPos();
+
 void SetExternMouseCursor(SGPVObject const&, UINT16 region_idx);
 
 typedef void (*MOUSEBLT_HOOK)(void);

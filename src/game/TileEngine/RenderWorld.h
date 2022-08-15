@@ -63,6 +63,15 @@ enum RenderLayerFlags
 };
 ENUM_BITSET(RenderLayerFlags)
 
+// Offset that we want to scroll by in the next frame
+extern INT16 gsScrollXOffset;
+extern INT16 gsScrollYOffset;
+
+// Flags to indicate whether we have scrolled fully into a direction
+extern BOOLEAN gfScrolledToLeft;
+extern BOOLEAN gfScrolledToRight;
+extern BOOLEAN gfScrolledToTop;
+extern BOOLEAN gfScrolledToBottom;
 
 extern INT16 gsScrollXIncrement;
 extern INT16 gsScrollYIncrement;

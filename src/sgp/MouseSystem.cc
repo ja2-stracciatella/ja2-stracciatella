@@ -418,6 +418,10 @@ static void MSYS_UpdateMouseRegion(void)
 	MSYS_CurrRegion = cur;
 
 	MOUSE_REGION* prev = MSYS_PrevRegion;
+	if (cur != NULL && cur != prev && cur->uiFlags & MSYS_REGION_ENABLED) {
+		// Maintain values before calling any callbacks
+		cur->uiFlags |= MSYS_MOUSE_IN_AREA;
+	}
 	if (prev)
 	{
 		prev->uiFlags &= ~MSYS_MOUSE_IN_AREA;

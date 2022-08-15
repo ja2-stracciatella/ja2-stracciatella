@@ -1,0 +1,231 @@
+#include "Touch_UI.h"
+#include "Animation_Control.h"
+#include "Button_System.h"
+#include "Cursor_Control.h"
+#include "Font_Control.h"
+#include "Handle_UI.h"
+#include "Interface.h"
+#include "Interface_Cursors.h"
+#include "Interface_Items.h"
+#include "Isometric_Utils.h"
+#include "Overhead.h"
+#include "UI_Cursors.h"
+#include "RenderWorld.h"
+#include "Weapons.h"
+#include "Items.h"
+
+#include <memory>
+
+#define TACTICAL_TOUCH_UI_BUTTON_SIZE 32
+
+void TacticalTouchUIConfirmCallback(GUI_BUTTON*, UINT32);
+void TacticalTouchUICancelCallback(GUI_BUTTON*, UINT32);
+
+// For modifying attacks
+void TacticalTouchUIIncreaseAimCallback(GUI_BUTTON*, UINT32);
+void TacticalTouchUIBurstCallback(GUI_BUTTON*, UINT32);
+
+// For modifying move
+void TacticalTouchUIRunCallback(GUI_BUTTON*, UINT32);
+
+class TacticalTouchUI {
+	public:
+		TacticalTouchUI(TacticalTouchUIMode mode);
+		~TacticalTouchUI();
+		void changeMode(TacticalTouchUIMode mode);
+		void changeCursor(UINT16 const crsr);
+		bool isPointerOver() const;
+	private:
+		TacticalTouchUIMode mode;
+		std::vector<GUIButtonRef> buttons;
+
+		void rebuiltButtons();
+};
+
+TacticalTouchUI::TacticalTouchUI(TacticalTouchUIMode mode) {
+	this->mode = mode;
+	rebuiltButtons();
+}
+
+TacticalTouchUI::~TacticalTouchUI() {
+	for (auto& button : buttons) {
+		RemoveButton(button);
+	}
+	SetRenderFlags(RENDER_FLAG_FULL);
+}
+
+bool TacticalTouchUI::isPointerOver() const {
+	for (auto const& button : buttons) {
+		if (button->Area.uiFlags & MSYS_MOUSE_IN_AREA) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void TacticalTouchUI::changeMode(TacticalTouchUIMode mode) {
+	if (this->mode != mode) {
+		this->mode = mode;
+		// If we change the mode rebuild buttons
+		rebuiltButtons();
+	}
+}
+
+void TacticalTouchUI::changeCursor(UINT16 const crsr) {
+	for (auto& button : buttons) {
+		button->SetCursor(crsr);
+	}
+}
+
+void TacticalTouchUI::rebuiltButtons() {
+	for (auto& button : buttons) {
+		RemoveButton(button);
+	}
+	buttons.clear();
+	auto const x = gViewportRegion.RegionBottomRightX - TACTICAL_TOUCH_UI_BUTTON_SIZE;
+	auto y = gViewportRegion.RegionBottomRightY - TACTICAL_TOUCH_UI_BUTTON_SIZE;
+
+	buttons.push_back(CreateTextButton("Do", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIConfirmCallback));
+	y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+	switch (mode) {
+		case TacticalTouchUIMode::ConfirmShoot: {
+			buttons.push_back(CreateTextButton("AIM", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIIncreaseAimCallback));
+			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+			buttons.push_back(CreateTextButton("Burst", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIBurstCallback));
+			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+			break;
+		}
+		case TacticalTouchUIMode::ConfirmMove: {
+			buttons.push_back(CreateTextButton("Run", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIRunCallback));
+			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+		}
+		default:
+			break;
+	}
+	buttons.push_back(CreateTextButton("Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUICancelCallback));
+}
+
+std::unique_ptr<TacticalTouchUI> gTacticalTouchUI = nullptr;
+SGPPoint gLastViewPortCursorPosition = SGPPoint{};
+
+void ShowTacticalTouchUI(TacticalTouchUIMode mode) {
+	// Never show touch ui on non-touch devices
+	if (!gfIsUsingTouch) return;
+
+	if (gTacticalTouchUI) {
+		gTacticalTouchUI->changeMode(mode);
+		gTacticalTouchUI->changeCursor(gUICursors[guiCurrentUICursor].usFreeCursorName);
+	} else {
+		gTacticalTouchUI.reset(new TacticalTouchUI(mode));
+		gTacticalTouchUI->changeCursor(gUICursors[guiCurrentUICursor].usFreeCursorName);
+	}
+	SetManualCursorPos(gLastViewPortCursorPosition);
+}
+
+void HideTacticalTouchUI() {
+	if (gTacticalTouchUI) {
+		gTacticalTouchUI.reset();
+		ClearManualCursorPos();
+	}
+}
+
+bool IsPointerOnTacticalTouchUI() {
+	if (!gTacticalTouchUI) {
+		return false;
+	}
+	return gTacticalTouchUI->isPointerOver();
+}
+
+void RegisterViewPortPointerPosition(INT16 x, INT16 y) {
+	gLastViewPortCursorPosition.iX = x;
+	gLastViewPortCursorPosition.iY = y;
+}
+
+void TacticalTouchUIConfirmCallback(GUI_BUTTON*, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+		auto const& selected = GetSelectedMan();
+
+		if (guiCurrentCursorGridNo == NOWHERE || selected == NULL) return;
+
+		if ( gpItemPointer != NULL ) {
+			if ( HandleItemPointerClick( guiCurrentCursorGridNo ) )
+			{
+				// getout of mode
+				EndItemPointer( );
+
+				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+			}
+		} else {
+			switch( gCurrentUIMode )
+			{
+				case CONFIRM_MOVE_MODE:
+					guiPendingOverrideEvent = C_MOVE_MERC;
+					break;
+				case CONFIRM_ACTION_MODE:
+					guiPendingOverrideEvent = CA_MERC_SHOOT;
+					break;
+				case LOOKCURSOR_MODE:
+					guiPendingOverrideEvent = LC_LOOK;
+					break;
+				case TALKCURSOR_MODE:
+					if ( HandleTalkInit( ) )
+					{
+						guiPendingOverrideEvent = TA_TALKINGMENU;
+					}
+					break;
+				case HANDCURSOR_MODE:
+					HandleHandCursorClick( guiCurrentCursorGridNo, &guiPendingOverrideEvent );
+			}
+		}
+	}
+}
+
+void TacticalTouchUICancelCallback(GUI_BUTTON*, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+		ResetCurrentCursorTarget();
+		guiPendingOverrideEvent = I_CHANGE_TO_IDLE;
+	}
+}
+
+void TacticalTouchUIIncreaseAimCallback(GUI_BUTTON*, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+		auto const& selected = GetSelectedMan();
+
+		if (guiCurrentCursorGridNo == NOWHERE || selected == NULL) return;
+
+		HandleRightClickAdjustCursor(selected, guiCurrentCursorGridNo);
+	}
+}
+
+void TacticalTouchUIBurstCallback(GUI_BUTTON*, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+		auto const& selected = GetSelectedMan();
+
+		if (guiCurrentCursorGridNo == NOWHERE || selected == NULL) return;
+
+		bool const enable_burst = IsGunBurstCapable(selected, HANDPOS) || FindAttachment(&(selected->inv[HANDPOS]), UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
+
+		ChangeWeaponMode(selected);
+	}
+}
+
+void TacticalTouchUIRunCallback(GUI_BUTTON*, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+		auto const& sel = GetSelectedMan();
+
+		if (guiCurrentCursorGridNo == NOWHERE || sel == NULL) return;
+		if (MercInWater(sel) || (sel->uiStatusFlags & SOLDIER_ROBOT)) return;
+
+		// Change selected merc to run
+		if (sel->usUIMovementMode != WALKING && sel->usUIMovementMode != RUNNING)
+		{
+			UIHandleSoldierStanceChange(sel, ANIM_STAND);
+		}
+		else
+		{
+			sel->usUIMovementMode = RUNNING;
+			gfPlotNewMovement     = TRUE;
+		}
+		sel->fUIMovementFast = 1;
+	}
+}

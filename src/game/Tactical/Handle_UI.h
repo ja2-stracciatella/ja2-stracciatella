@@ -7,6 +7,7 @@
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
 #include "Soldier_Find.h"
+#include <magic_enum.hpp>
 
 
 #define UIEVENT_SINGLEEVENT		0x00000002
@@ -64,6 +65,7 @@ enum	UI_MODE
 	EXITSECTORMENU_MODE,
 	RUBBERBAND_MODE,
 	JUMPOVER_MODE,
+	PAN_MODE,
 };
 
 struct UI_EVENT
@@ -153,6 +155,8 @@ enum UIEventKind
 	JP_ON_TERRAIN,
 	JP_JUMP,
 
+	P_PANMODE,
+
 	NUM_UI_EVENTS
 };
 
@@ -167,7 +171,8 @@ extern UIEventKind guiPendingOverrideEvent;
 extern UICursorID		guiCurrentUICursor;
 // GridNo of the tile the mouse cursor is currently over, or NOWHERE if outside of the viewport
 extern GridNo			guiCurrentCursorGridNo;
-
+// The number of fingers currently down
+extern UINT8 gUIFingersDown;
 
 extern INT16       gsSelectedLevel;
 extern BOOLEAN     gfPlotNewMovement;
@@ -229,6 +234,9 @@ void GetKeyboardInput(UIEventKind* puiNewEvent);
 void GetPolledKeyboardInput(UIEventKind* puiNewEvent);
 
 void TacticalViewPortMovementCallback(MOUSE_REGION* region, UINT32 reason);
+void TacticalViewPortTouchCallback(MOUSE_REGION* region, UINT32 reason);
+void ResetCurrentCursorTarget();
+
 void GetTBMouseButtonInput(UIEventKind* puiNewEvent);
 void GetTBMousePositionInput(UIEventKind* puiNewEvent);
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
@@ -299,11 +307,6 @@ extern MOUSE_REGION    gUserTurnRegion;
 extern BOOLEAN         gfUserTurnRegionActive;
 extern UIKEYBOARD_HOOK gUIKeyboardHook;
 extern BOOLEAN         gfResetUIMovementOptimization;
-
-extern BOOLEAN gfUIShowExitEast;
-extern BOOLEAN gfUIShowExitWest;
-extern BOOLEAN gfUIShowExitNorth;
-extern BOOLEAN gfUIShowExitSouth;
 
 BOOLEAN ValidQuickExchangePosition(void);
 

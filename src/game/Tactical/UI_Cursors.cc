@@ -467,6 +467,9 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 
 	if (recalc)
 	{
+		SGPPoint cursorPosition{};
+		GetCursorPos(cursorPosition);
+
 		// Always set aim location to nothing
 		s->bAimShotLocation = AIM_SHOT_RANDOM;
 
@@ -529,7 +532,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 			}
 
 			// Check if mouse is in bounding box of soldier
-			if (!IsPointInSoldierBoundingBox(potential_tgt, gusMouseXPos, gusMouseYPos))
+			if (!IsPointInSoldierBoundingBox(potential_tgt, cursorPosition.iX, cursorPosition.iY))
 			{
 				continue;
 			}
@@ -544,7 +547,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 			SOLDIERTYPE* const potential_tgt = gUIFullTarget;
 			if (potential_tgt)
 			{
-				flags = FindRelativeSoldierPosition(potential_tgt, gusMouseXPos, gusMouseYPos);
+				flags = FindRelativeSoldierPosition(potential_tgt, cursorPosition.iX, cursorPosition.iY);
 				if (flags != 0) tgt = potential_tgt;
 			}
 		}

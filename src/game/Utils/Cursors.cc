@@ -1,6 +1,7 @@
 #include "Cursors.h"
 #include "Directories.h"
 #include "Timer_Control.h"
+#include "Touch_UI.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "Handle_UI.h"
@@ -1227,7 +1228,7 @@ static void DrawMouseText(void);
 
 static void BltJA2CursorData(void)
 {
-	if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
+	if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA || IsPointerOnTacticalTouchUI())
 	{
 		DrawMouseText();
 	}

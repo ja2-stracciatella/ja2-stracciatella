@@ -208,9 +208,6 @@ static void HandleIntroScreen(void)
 
 static void GetIntroScreenUserInput(void)
 {
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-
 	InputAtom Event;
 	while( DequeueSpecificEvent(&Event, KEYBOARD_EVENTS) )
 	{

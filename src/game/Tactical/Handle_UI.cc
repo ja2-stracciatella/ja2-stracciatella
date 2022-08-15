@@ -5,6 +5,8 @@
 #include "Local.h"
 #include "Merc_Hiring.h"
 #include "Real_Time_Input.h"
+#include "Turn_Based_Input.h"
+#include "Touch_UI.h"
 #include "Soldier_Find.h"
 #include "Debug.h"
 #include "JAScreens.h"
@@ -189,6 +191,8 @@ static ScreenID UIHandleOpenDoorMenu(UI_EVENT*);
 
 static ScreenID UIHandleEXExitSectorMenu(UI_EVENT*);
 
+static ScreenID UIHandlePPanMode(UI_EVENT*);
+
 
 static SOLDIERTYPE* gpRequesterMerc        = NULL;
 static SOLDIERTYPE* gpRequesterTargetMerc  = NULL;
@@ -266,7 +270,8 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 	M(0,                   EXITSECTORMENU_MODE, UIHandleEXExitSectorMenu      ),
 	M(0,                   RUBBERBAND_MODE,     UIHandleRubberBandOnTerrain   ),
 	M(0,                   JUMPOVER_MODE,       UIHandleJumpOverOnTerrain     ),
-	M(0,                   MOVE_MODE,           UIHandleJumpOver              )
+	M(0,                   MOVE_MODE,           UIHandleJumpOver              ),
+	M(0,                   PAN_MODE,            UIHandlePPanMode               )
 };
 
 #undef M
@@ -278,6 +283,7 @@ UIEventKind guiCurrentEvent = I_DO_NOTHING;
 static UIEventKind guiOldEvent = I_DO_NOTHING;
 UICursorID guiCurrentUICursor = NO_UICURSOR;
 GridNo guiCurrentCursorGridNo = NOWHERE;
+UINT8 gUIFingersDown = 0;
 static UICursorID guiNewUICursor = NORMAL_SNAPUICURSOR;
 UIEventKind guiPendingOverrideEvent = I_DO_NOTHING;
 static UINT16 gusSavedMouseX;
@@ -354,10 +360,6 @@ UINT32 guiShowUPDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 static INT8    gbAdjustStanceDiff      = 0;
 static INT8    gbClimbID               = 0;
 
-BOOLEAN        gfUIShowExitEast     = FALSE;
-BOOLEAN        gfUIShowExitWest     = FALSE;
-BOOLEAN        gfUIShowExitNorth    = FALSE;
-BOOLEAN        gfUIShowExitSouth    = FALSE;
 static BOOLEAN gfUIShowExitExitGrid = FALSE;
 
 static BOOLEAN gfUINewStateForIntTile = FALSE;
@@ -604,21 +606,24 @@ ScreenID HandleTacticalUI(void)
 	return( ReturnVal );
 }
 
-void TacticalViewPortMovementCallback(MOUSE_REGION* region, UINT32 reason) {
-	// Update cursor state
-	if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE) {
+void ResetCurrentCursorTarget() {
+	ErasePath();
+
+	guiCurrentCursorGridNo = NOWHERE;
+	gUIFullTarget = NULL;
+	guiUIFullTargetFlags = NO_MERC;
+}
+
+void UpdateCurrentCursorTarget() {
+	INT16  sWorldX;
+	INT16  sWorldY;
+	if (GetMouseXY(&sWorldX, &sWorldY))
+	{
+		guiCurrentCursorGridNo = MAPROWCOLTOPOS(sWorldY, sWorldX);
+	}
+	else
+	{
 		guiCurrentCursorGridNo = NOWHERE;
-	} else if (reason & (MSYS_CALLBACK_REASON_MOVE | MSYS_CALLBACK_REASON_GAIN_MOUSE)) {
-		INT16  sWorldX;
-		INT16  sWorldY;
-		if (GetMouseXY(&sWorldX, &sWorldY))
-		{
-			guiCurrentCursorGridNo = MAPROWCOLTOPOS(sWorldY, sWorldX);
-		}
-		else
-		{
-			guiCurrentCursorGridNo = NOWHERE;
-		}
 	}
 
 	if (guiCurrentCursorGridNo != NOWHERE) {
@@ -627,8 +632,42 @@ void TacticalViewPortMovementCallback(MOUSE_REGION* region, UINT32 reason) {
 		gUIFullTarget        = s;
 		guiUIFullTargetFlags = s ? GetSoldierFindFlags(*s) : NO_MERC;
 	} else {
-		gUIFullTarget = NULL;
-		guiUIFullTargetFlags = NO_MERC;
+		ResetCurrentCursorTarget();
+	}
+}
+
+void TacticalViewPortMovementCallback(MOUSE_REGION* region, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_MOVE && !(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)) {
+		RegisterViewPortPointerPosition(region->MouseXPos, region->MouseYPos);
+	}
+	// Update cursor state
+	if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE) {
+		gUIFingersDown = 0;
+		if (!IsPointerOnTacticalTouchUI()) {
+			if (gCurrentUIMode == PAN_MODE) {
+				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+			}
+			ResetCurrentCursorTarget();
+		} else {
+			SetManualCursorPos(SGPPoint {(UINT16)region->MouseXPos, (UINT16)region->MouseYPos});
+			// Dont update target soldier when clicking on touch ui
+			return;
+		}
+	} else if (reason & (MSYS_CALLBACK_REASON_MOVE | MSYS_CALLBACK_REASON_GAIN_MOUSE)) {
+		UpdateCurrentCursorTarget();
+	}
+}
+
+void TacticalViewPortTouchCallback(MOUSE_REGION* region, UINT32 reason) {
+	UpdateCurrentCursorTarget();
+
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
+	{
+		TacticalViewPortTouchCallbackRT(region, reason);
+	}
+	else
+	{
+		TacticalViewPortTouchCallbackTB(region, reason);
 	}
 }
 
@@ -654,7 +693,7 @@ static void SetUIMouseCursor(void)
 		}
 
 
-		if ( gfUIShowExitEast )
+		if ( gfScrolledToRight && gusMouseXPos >= SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS )
 		{
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
@@ -674,14 +713,9 @@ static void SetUIMouseCursor(void)
 			{
 				guiNewUICursor = NOEXIT_EAST_UICURSOR;
 			}
-
-			if (gusMouseXPos < SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)
-			{
-				gfUIShowExitEast = FALSE;
-			}
 		}
 
-		if ( gfUIShowExitWest )
+		if ( gfScrolledToLeft && gusMouseXPos < NO_PX_SHOW_EXIT_CURS )
 		{
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
@@ -701,14 +735,9 @@ static void SetUIMouseCursor(void)
 			{
 				guiNewUICursor = NOEXIT_WEST_UICURSOR;
 			}
-
-			if ( gusMouseXPos > NO_PX_SHOW_EXIT_CURS )
-			{
-				gfUIShowExitWest = FALSE;
-			}
 		}
 
-		if ( gfUIShowExitNorth )
+		if ( gfScrolledToTop && gusMouseYPos <  NO_PX_SHOW_EXIT_CURS )
 		{
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
@@ -728,15 +757,11 @@ static void SetUIMouseCursor(void)
 			{
 				guiNewUICursor = NOEXIT_NORTH_UICURSOR;
 			}
-
-			if ( gusMouseYPos > NO_PX_SHOW_EXIT_CURS )
-			{
-				gfUIShowExitNorth = FALSE;
-			}
 		}
 
 
-		if ( gfUIShowExitSouth )
+		auto comp = !gfIsUsingTouch ? SCREEN_HEIGHT : gViewportRegion.RegionBottomRightY;
+		if ( gfScrolledToBottom && gusMouseYPos >= comp - NO_PX_SHOW_EXIT_CURS )
 		{
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
@@ -757,28 +782,26 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_SOUTH_UICURSOR;
 			}
 
-			if (gusMouseYPos < SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS)
+			if (gusMouseYPos < comp - NO_PX_SHOW_EXIT_CURS)
 			{
-				gfUIShowExitSouth = FALSE;
-
 				// Define region for viewport
 				MSYS_RemoveRegion( &gViewportRegion );
 
 				MSYS_DefineRegion(&gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y,
 							MSYS_PRIORITY_NORMAL,
-							VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, MSYS_NO_CALLBACK);
+							VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 
 				// Adjust where we blit our cursor!
 				gsGlobalCursorYOffset = 0;
 				SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 			}
-			else if (!gfScrollPending && !g_scroll_inertia)
+			else if (!gfScrollPending && !g_scroll_inertia && !gfIsUsingTouch)
 			{
 				// Adjust viewport to edge of screen!
 				// Define region for viewport
 				MSYS_RemoveRegion(&gViewportRegion);
-				MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, MSYS_NO_CALLBACK);
+				MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 				gsGlobalCursorYOffset = SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y;
 				SetCurrentCursorFromDatabase(gUICursors[guiNewUICursor].usFreeCursorName);
@@ -795,7 +818,7 @@ static void SetUIMouseCursor(void)
 
 				MSYS_DefineRegion(&gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y,
 							MSYS_PRIORITY_NORMAL,
-							VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, MSYS_NO_CALLBACK);
+							VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 
 				// Adjust where we blit our cursor!
@@ -911,6 +934,9 @@ void EndMenuEvent( UINT32 uiEvent )
 static ScreenID UIHandleIDoNothing(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_SNAPUICURSOR;
+
+	HideTacticalTouchUI();
+	if (gfIsUsingTouch) ResetCurrentCursorTarget();
 
 	return( GAME_SCREEN );
 }
@@ -1042,6 +1068,10 @@ ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 {
 	// ATE: If we have an item pointer end it!
 	CancelItemPointer( );
+
+	// If we show tactical touch ui hide it and reset cursor target
+	HideTacticalTouchUI();
+	if (gfIsUsingTouch) ResetCurrentCursorTarget();
 
 	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ENDING_TURN ] );
 
@@ -1182,6 +1212,8 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 	static INT8				bLevelForItemsOver;
 	static UINT32			uiItemsOverTimer;
 	static BOOLEAN		fOverItems;
+
+	HideTacticalTouchUI();
 
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
@@ -1530,7 +1562,7 @@ static ScreenID UIHandleAChangeToMove(UI_EVENT* pUIEvent)
 static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMove);
 
 
-static ScreenID UIHandleCWait(UI_EVENT*)
+static ScreenID UIHandleCWait(UI_EVENT* event)
 {
 	GridNo const map_pos = guiCurrentCursorGridNo;
 	if (map_pos == NOWHERE) return GAME_SCREEN;
@@ -1547,6 +1579,8 @@ static ScreenID UIHandleCWait(UI_EVENT*)
 	}
 
 	MouseMoveState const cursor_state = GetCursorMovementFlags();
+
+	ShowTacticalTouchUI(TacticalTouchUIMode::ConfirmMove);
 
 	if (int_tile)
 	{
@@ -1570,7 +1604,7 @@ static ScreenID UIHandleCWait(UI_EVENT*)
 	SetConfirmMovementModeCursor(sel, FALSE);
 
 	// If we are not in combat, draw path here!
-	if (!(gTacticalStatus.uiFlags & INCOMBAT))
+	if (gfIsUsingTouch || !(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		HandleUIMovementCursor(sel, cursor_state, map_pos, MOVEUI_TARGET_NONE);
 	}
@@ -2064,10 +2098,21 @@ static ScreenID UIHandleCAOnTerrain(UI_EVENT* pUIEvent)
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel != NULL)
-	{
-		guiNewUICursor = GetProperItemCursor(sel, usMapPos, TRUE);
-		UIHandleOnMerc( FALSE );
+	if (sel == NULL) return GAME_SCREEN;
+
+	guiNewUICursor = GetProperItemCursor(sel, usMapPos, TRUE);
+	UIHandleOnMerc( FALSE );
+
+	switch (GetActionModeCursor(sel)) {
+		case TARGETCURS:
+			ShowTacticalTouchUI(TacticalTouchUIMode::ConfirmShoot);
+			break;
+		case INVALIDCURS:
+			HideTacticalTouchUI();
+			break;
+		default:
+			ShowTacticalTouchUI(TacticalTouchUIMode::ConfirmAction);
+			break;
 	}
 
 	return( GAME_SCREEN );
@@ -2500,6 +2545,7 @@ static ScreenID UIHandleHCOnTerrain(UI_EVENT* pUIEvent)
 		}
 		else
 		{
+			ShowTacticalTouchUI(TacticalTouchUIMode::ConfirmAction);
 			guiNewUICursor = NORMALHANDCURSOR_UICURSOR;
 			UIHandleInteractiveTilesAndItemsOnTerrain(sel, usMapPos, TRUE, FALSE);
 		}
@@ -2520,6 +2566,8 @@ static ScreenID UIHandleTATalkingMenu(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
+	HideTacticalTouchUI();
+
 	return( GAME_SCREEN );
 }
 
@@ -2528,6 +2576,8 @@ static ScreenID UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
+	HideTacticalTouchUI();
+
 	return( GAME_SCREEN );
 }
 
@@ -2535,6 +2585,8 @@ static ScreenID UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent)
 static ScreenID UIHandleOpenDoorMenu(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_FREEUICURSOR;
+
+	HideTacticalTouchUI();
 
 	return( GAME_SCREEN );
 }
@@ -2612,7 +2664,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 							// Don't do this unless we want to
 
 							// Check if buddy is stationary!
-							if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY || pSoldier->fNoAPToFinishMove )
+							if ( !gfIsUsingTouch && (gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY || pSoldier->fNoAPToFinishMove) )
 							{
 								guiShowUPDownArrows = ARROWS_SHOW_DOWN_BESIDE |
 											ARROWS_SHOW_UP_BESIDE;
@@ -3739,6 +3791,8 @@ static ScreenID UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
 	const SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
 
+	ShowTacticalTouchUI(TacticalTouchUIMode::ConfirmAction);
+
 	gfUIDisplayActionPoints = TRUE;
 
 	gUIDisplayActionPointsOffX = 14;
@@ -3838,6 +3892,8 @@ static ScreenID UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 {
 	INT16 sTargetGridNo;
 
+	ShowTacticalTouchUI(TacticalTouchUIMode::ConfirmMove);
+
 	const SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
 
@@ -3927,6 +3983,8 @@ static ScreenID UIHandleTChangeToTalking(UI_EVENT* pUIEvent)
 {
 	ErasePath();
 
+	HideTacticalTouchUI();
+
 	return( GAME_SCREEN );
 }
 
@@ -3945,6 +4003,10 @@ static ScreenID UIHandleLUIBeginLock(UI_EVENT* pUIEvent)
 	// Don't let both versions of the locks to happen at the same time!
 	// ( They are mutually exclusive )!
 	UIHandleLAEndLockOurTurn( NULL );
+
+	// Hide touch ui
+	HideTacticalTouchUI();
+	if (gfIsUsingTouch) ResetCurrentCursorTarget();
 
 	if ( !gfDisableRegionActive )
 	{
@@ -3981,7 +4043,7 @@ ScreenID UIHandleLUIEndLock(UI_EVENT* pUIEvent)
 
 		UIHandleMOnTerrain( NULL );
 
-		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+		if ( !gfIsUsingTouch && gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
 			SetCurrentCursorFromDatabase( gUICursors[ guiNewUICursor ].usFreeCursorName );
 		}
@@ -4404,8 +4466,8 @@ static ScreenID UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
 		gfUIInterfaceSetBusy = TRUE;
 		guiUIInterfaceBusyTime = GetJA2Clock( );
 
-		//guiNewUICursor = NO_UICURSOR;
-		//SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
+		HideTacticalTouchUI();
+		if (gfIsUsingTouch) ResetCurrentCursorTarget();
 
 		MSYS_DefineRegion(&gUserTurnRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_WAIT, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
@@ -4439,7 +4501,7 @@ static ScreenID UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
 
 		UIHandleMOnTerrain( NULL );
 
-		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+		if ( !gfIsUsingTouch && gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
 			SetCurrentCursorFromDatabase( gUICursors[ guiNewUICursor ].usFreeCursorName );
 		}
@@ -4454,6 +4516,33 @@ static ScreenID UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
 	}
 
 	return( GAME_SCREEN );
+}
+
+// Pan mode is for scrolling the screen by pointer movement
+static ScreenID UIHandlePPanMode(UI_EVENT* pUIEvent) {
+	static INT16 lastPointerXPos, lastPointerYPos;
+
+	if (pUIEvent->fFirstTime) {
+		lastPointerXPos = -1;
+		lastPointerYPos = -1;
+	}
+
+	HideTacticalTouchUI();
+	guiNewUICursor = NO_UICURSOR;
+
+	if (lastPointerXPos != -1 && lastPointerYPos != -1) {
+		auto diffX = gusMouseXPos - lastPointerXPos;
+		auto diffY = gusMouseYPos - lastPointerYPos;
+
+		gsScrollXOffset += diffX;
+		gsScrollYOffset += diffY;
+	}
+	if (gusMouseXPos != lastPointerXPos || gusMouseYPos != lastPointerYPos) {
+		lastPointerXPos = gusMouseXPos;
+		lastPointerYPos = gusMouseYPos;
+	}
+
+	return GAME_SCREEN;
 }
 
 

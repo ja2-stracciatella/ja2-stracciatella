@@ -12,6 +12,8 @@
 
 #include "policy/GamePolicy.h"
 
+#include <optional>
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -34,6 +36,25 @@ static UINT32 guiDelayTimer = 0;
 
 static MOUSEBLT_HOOK gMouseBltOverride = NULL;
 
+std::optional<SGPPoint> gManualCursorPos = std::nullopt;
+
+void GetCursorPos(SGPPoint& point)
+{
+	if (gManualCursorPos) {
+		point.iX = gManualCursorPos->iX;
+		point.iY = gManualCursorPos->iY;
+		return;
+	}
+	GetMousePos(&point);
+}
+
+void SetManualCursorPos(SGPPoint point) {
+	gManualCursorPos = std::make_optional(point);
+}
+
+void ClearManualCursorPos() {
+	gManualCursorPos = std::nullopt;
+}
 
 static void EraseMouseCursor(void)
 {
