@@ -2160,7 +2160,7 @@ void LoadStrategicAI(HWFILE const hFile)
 
 	// resize gArmyComp, ensuring all army compositions referenced by Garrison Groups exist
 	size_t numArmyCompositions = NUM_ARMY_COMPOSITIONS;
-	for (auto gGroup : gGarrisonGroup)
+	for (auto const& gGroup : gGarrisonGroup)
 	{
 		numArmyCompositions = std::max<size_t>(numArmyCompositions, gGroup.ubComposition + 1);
 	}
@@ -3323,10 +3323,8 @@ static void UpgradeAdminsToTroops()
 	// Check all garrisons for administrators.
 	UINT                  const cur = GetWorldSector();
 	//GARRISON_GROUP const* const end = gGarrisonGroup + gGarrisonGroup.size();
-	for (auto i = gGarrisonGroup.begin(); i != gGarrisonGroup.end(); ++i)
+	for (auto const& g : gGarrisonGroup)
 	{
-		GARRISON_GROUP const& g = *i;
-
 		// Skip sector if it's currently loaded, we'll never upgrade guys in those.
 		if (cur == g.ubSectorID) continue;
 

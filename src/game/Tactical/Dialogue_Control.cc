@@ -71,8 +71,6 @@ struct MercPopUpBox;
 
 typedef std::queue<DialogueEvent*>DialogueQueue;
 
-BOOLEAN fExternFacesLoaded = FALSE;
-
 static std::map<ProfileID, FACETYPE*> externalNPCFaces;
 
 const ProfileID preloadedExternalNPCFaces[] = {
@@ -195,9 +193,7 @@ void PreloadExternalNPCFaces()
 {
 	// go and grab all external NPC faces that are needed for the game who won't exist as soldiertypes
 
-	if (fExternFacesLoaded) return;
-
-	fExternFacesLoaded = TRUE;
+	if (!externalNPCFaces.empty()) return;
 
 	for (size_t i = 0; i < lengthof(preloadedExternalNPCFaces); i++)
 	{
@@ -208,14 +204,13 @@ void PreloadExternalNPCFaces()
 
 void UnloadExternalNPCFaces()
 {
-	if (!fExternFacesLoaded) return;
-	fExternFacesLoaded = FALSE;
-
 	// Remove all external NPC faces.
-	for (auto entry : externalNPCFaces)
+	for (auto const& entry : externalNPCFaces)
 	{
 		DeleteFace(entry.second);
 	}
+
+	externalNPCFaces.clear();
 }
 
 

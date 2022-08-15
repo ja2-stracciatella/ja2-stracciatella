@@ -740,7 +740,7 @@ static void RenderItemDetails(void)
 			}
 		}
 	}
-	else if( gubSummaryItemMode == ITEMMODE_ENEMY )
+	else // gubSummaryItemMode is ITEMMODE_ENEMY
 	{
 
 		SetFontForeground( FONT_YELLOW );
@@ -863,14 +863,6 @@ static void RenderItemDetails(void)
 				}
 			}
 		}
-
-
-
-	}
-	else
-	{
-		SetFontForeground( FONT_RED );
-		MPrint(5, 50, "ERROR:  Can't load the items for this map.  Reason unknown.");
 	}
 }
 

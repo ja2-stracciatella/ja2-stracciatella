@@ -70,7 +70,7 @@ public:
 			SLOGD("Observable has no listeners");
 		}
 
-		for (auto l : listeners)
+		for (auto const& l : listeners)
 		{
 			l.second(arg1, args...);
 		}

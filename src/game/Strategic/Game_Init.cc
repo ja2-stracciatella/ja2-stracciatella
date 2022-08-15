@@ -71,7 +71,7 @@ UINT8			gubScreenCount=0;
 
 static void InitNPCs()
 {
-	for (auto p : GCM->listNpcPlacements())
+	for (auto const& p : GCM->listNpcPlacements())
 	{
 		const NpcPlacementModel* placement = p.second;
 		if (placement->isSciFiOnly && !gGameOptions.fSciFi)

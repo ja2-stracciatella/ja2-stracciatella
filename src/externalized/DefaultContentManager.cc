@@ -1421,7 +1421,7 @@ const MineModel* DefaultContentManager::getMineForSector(const SGPSector& sector
 	for (auto m : m_mines)
 	{
 		if (sector.z == 0 && sectorId == m->entranceSector) return m;
-		for (auto s : m->mineSectors)
+		for (auto const& s : m->mineSectors)
 		{
 			if (s[0] == sectorId && s[1] == sector.z) return m;
 		}

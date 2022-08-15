@@ -22,7 +22,7 @@ bool MERCListingModel::isAvailableAtStart() const
 std::vector<SpeckQuote> MERCListingModel::getQuotesByType(SpeckQuoteType type) const
 {
 	std::vector<SpeckQuote> filtered;
-	for (auto q : quotes)
+	for (auto const& q : quotes)
 	{
 		if (q->type == type) filtered.push_back(q);
 	}

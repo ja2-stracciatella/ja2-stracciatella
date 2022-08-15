@@ -79,7 +79,7 @@ public:
 	void SetVector(const ST::string& key, std::vector<T> vec)
 	{
 		std::vector<PRIMITIVE_VALUE> stored;
-		for (auto v : vec)
+		for (auto const& v : vec)
 		{
 			PRIMITIVE_VALUE var{std::in_place_type<T>, v};
 			stored.push_back(var);
