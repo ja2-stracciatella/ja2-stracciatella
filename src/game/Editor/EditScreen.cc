@@ -639,7 +639,7 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 			break;
 	}
 
-	const GridNo pos = GetMouseMapPos();
+	const GridNo pos = guiCurrentCursorGridNo;
 	if (pos == NOWHERE) return FALSE;
 
 	iCurBankMapIndex = pos;
@@ -866,9 +866,8 @@ void ShowCurrentDrawingMode( void )
 			break;
 		case DRAW_MODE_SMART_WALLS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcWallInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcWallInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartWallDefault(&usObjIndex, &usUseIndex);
 			}
@@ -877,9 +876,8 @@ void ShowCurrentDrawingMode( void )
 
 		case DRAW_MODE_SMART_DOORS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcDoorInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcDoorInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartDoorDefault(&usObjIndex, &usUseIndex);
 			}
@@ -888,9 +886,8 @@ void ShowCurrentDrawingMode( void )
 
 		case DRAW_MODE_SMART_WINDOWS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcWindowInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcWindowInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartWindowDefault(&usObjIndex, &usUseIndex);
 			}
@@ -899,9 +896,8 @@ void ShowCurrentDrawingMode( void )
 
 		case DRAW_MODE_SMART_BROKEN_WALLS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcBrokenWallInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcBrokenWallInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartBrokenWallDefault(&usObjIndex, &usUseIndex);
 			}
@@ -1791,8 +1787,7 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_SET_WAYPOINT:
 		{
-			const GridNo pos = GetMouseMapPos();
-			AddMercWaypoint(pos);
+			AddMercWaypoint(guiCurrentCursorGridNo);
 			break;
 		}
 
@@ -1807,13 +1802,9 @@ static ScreenID PerformSelectedAction(void)
 			break;
 
 		case ACTION_QUICK_ERASE:
-			if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
+			if (guiCurrentCursorGridNo != NOWHERE)
 			{
-				const UINT32 pos = GetMouseMapPos();
-				if (pos != NOWHERE && pos < GRIDSIZE)
-				{
-					QuickEraseMapTile(pos);
-				}
+				QuickEraseMapTile(guiCurrentCursorGridNo);
 			}
 			break;
 
@@ -2060,15 +2051,19 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_COPY_MERC_PLACEMENT:
 		{
-			const GridNo pos = GetMouseMapPos();
-			CopyMercPlacement(pos);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				CopyMercPlacement(guiCurrentCursorGridNo);
+			}
 			break;
 		}
 
 		case ACTION_PASTE_MERC_PLACEMENT:
 		{
-			const GridNo pos = GetMouseMapPos();
-			PasteMercPlacement(pos);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				PasteMercPlacement(guiCurrentCursorGridNo);
+			}
 			break;
 		}
 
@@ -2133,15 +2128,19 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_WALL_PASTE1:	// Doors		//** Changes needed
 		{
-			const GridNo pos = GetMouseMapPos();
-			AddWallToStructLayer(pos, FIRSTWALL18, TRUE);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL18, TRUE);
+			}
 			break;
 		}
 
 		case ACTION_WALL_PASTE2:	// Windows	//** Changes Needed
 		{
-			const GridNo pos = GetMouseMapPos();
-			AddWallToStructLayer(pos, FIRSTWALL19, TRUE);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL19, TRUE);
+			}
 			break;
 		}
 
@@ -2753,7 +2752,7 @@ static void DrawObjectsBasedOnSelectionRegion(void);
 
 static void HandleMouseClicksInGameScreen()
 {
-	GridNo const map_idx = GetMouseMapPos();
+	GridNo const map_idx = guiCurrentCursorGridNo;
 	if (map_idx == NOWHERE) return;
 
 	// If in taskbar modes which don't process clicks in the world

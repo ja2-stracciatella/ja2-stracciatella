@@ -2966,7 +2966,7 @@ void DrawItemTileCursor( )
 	INT16 sDist;
 	INT8 bLevel;
 
-	GridNo usMapPos = GetMouseMapPos();
+	GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos != NOWHERE)
 	{
 		// Force mouse position to guy...

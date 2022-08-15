@@ -158,14 +158,19 @@ enum UIEventKind
 
 typedef BOOLEAN (*UIKEYBOARD_HOOK)( InputAtom *pInputEvent );
 
-
 // GLOBAL STATUS VARS
 extern UI_MODE     gCurrentUIMode;
 extern UIEventKind guiCurrentEvent;
-extern UICursorID  guiCurrentUICursor;
+extern UIEventKind guiPendingOverrideEvent;
+
+// Currently used cursor
+extern UICursorID		guiCurrentUICursor;
+// GridNo of the tile the mouse cursor is currently over, or NOWHERE if outside of the viewport
+extern GridNo			guiCurrentCursorGridNo;
+
+
 extern INT16       gsSelectedLevel;
 extern BOOLEAN     gfPlotNewMovement;
-extern UIEventKind guiPendingOverrideEvent;
 
 
 // GLOBALS
@@ -223,6 +228,7 @@ extern BOOLEAN gfUIForceReExamineCursorData;
 void GetKeyboardInput(UIEventKind* puiNewEvent);
 void GetPolledKeyboardInput(UIEventKind* puiNewEvent);
 
+void TacticalViewPortMovementCallback(MOUSE_REGION* region, UINT32 reason);
 void GetTBMouseButtonInput(UIEventKind* puiNewEvent);
 void GetTBMousePositionInput(UIEventKind* puiNewEvent);
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );

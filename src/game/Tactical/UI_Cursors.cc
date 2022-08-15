@@ -254,7 +254,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 				CalcChanceToHitGun(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation, false);
 			giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, gsInterfaceLevel, s->bTargetCubeLevel, 0) / 100.0f;
 		}
-	
+
 		// Attach chance-to-hit to mouse cursor
 		if(giHitChance != -1)
 		{
@@ -470,7 +470,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 		// Always set aim location to nothing
 		s->bAimShotLocation = AIM_SHOT_RANDOM;
 
-		GridNo const map_pos = GetMouseMapPos();
+		GridNo const map_pos = guiCurrentCursorGridNo;
 		if (map_pos == NOWHERE) return;
 
 		SOLDIERTYPE* tgt = 0;
@@ -687,7 +687,7 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 
 		// Calculate chance to hit
 		if (gamepolicy(show_hit_chance) && gUIFullTarget)
-		{ 
+		{
 			UINT32 uiHitChance = CalcChanceToPunch(s, gUIFullTarget, s->bShownAimTime / 2, true);
 			SetChanceToHitText(st_format_printf("%d%%", uiHitChance));
 		}
@@ -980,7 +980,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	const GridNo sGridNo = GetMouseMapPos();
+	const GridNo sGridNo = guiCurrentCursorGridNo;
 	if (sGridNo == NOWHERE) return;
 
 	gfUIForceReExamineCursorData = TRUE;

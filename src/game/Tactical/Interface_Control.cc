@@ -455,7 +455,7 @@ void RenderTopmostTacticalInterface()
 	}
 
 	// CHECK IF OUR CURSOR IS OVER AN INV POOL
-	GridNo       const usMapPos = GetMouseMapPos();
+	GridNo       const usMapPos = guiCurrentCursorGridNo;
 	SOLDIERTYPE* const sel      = GetSelectedMan();
 	if (usMapPos != NOWHERE && gfUIOverItemPoolGridNo != NOWHERE && sel)
 	{

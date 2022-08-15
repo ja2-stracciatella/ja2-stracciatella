@@ -82,7 +82,7 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		const GridNo usMapPos = GetMouseMapPos();
+		const GridNo usMapPos = guiCurrentCursorGridNo;
 		if (usMapPos == NOWHERE) return;
 
 		// MIDDLE MOUSE BUTTON
@@ -150,7 +150,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 	{
 		if (sel != NULL && sel->pTempObject != NULL) return;
 
-		const GridNo usMapPos = GetMouseMapPos();
+		const GridNo usMapPos = guiCurrentCursorGridNo;
 		if (usMapPos == NOWHERE && !gfUIShowExitSouth) return;
 
 		if ( gViewportRegion.ButtonState & MSYS_LEFT_BUTTON )
@@ -288,7 +288,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 						case CONFIRM_MOVE_MODE:
 						{
 							// First check if we clicked on a guy, if so, make selected if it's ours
-							const SOLDIERTYPE* const s = FindSoldierFromMouse();
+							const SOLDIERTYPE* const s = gUIFullTarget;
 							if (s != NULL)
 							{
 								// Select guy
@@ -484,7 +484,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 														case IDLE_MODE:
 														{
 															// First check if we clicked on a guy, if so, make selected if it's ours
-															const SOLDIERTYPE* const s = FindSoldierFromMouse();
+															const SOLDIERTYPE* const s = gUIFullTarget;
 															if (s && IsOwnedMerc(*s))
 															{
 																*puiNewEvent = I_SELECT_MERC;
@@ -647,7 +647,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																		if (sel != NULL)
 																		{
 																			// First check if we clicked on a guy, if so, make selected if it's ours
-																			const SOLDIERTYPE* const s = FindSoldierFromMouse();
+																			const SOLDIERTYPE* const s = gUIFullTarget;
 																			if (s && IsOwnedMerc(*s))
 																			{
 																				// Select guy
@@ -813,7 +813,7 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		const GridNo usMapPos = GetMouseMapPos();
+		const GridNo usMapPos = guiCurrentCursorGridNo;
 		if (usMapPos == NOWHERE) return;
 
 		// RIGHT MOUSE BUTTON
@@ -1103,260 +1103,255 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 {
 	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
+	static GridNo usOldMapPos = NOWHERE;
 
-	static UINT16 usOldMapPos = 0;
-
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return;
 
-	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+	// Check if we have an item in our hands...
+	if ( gpItemPointer != NULL )
 	{
-		// Check if we have an item in our hands...
-		if ( gpItemPointer != NULL )
-		{
-			*puiNewEvent = A_ON_TERRAIN;
-			return;
-		}
+		*puiNewEvent = A_ON_TERRAIN;
+		return;
+	}
 
-		// Switch on modes
-		switch( gCurrentUIMode )
-		{
-			case RUBBERBAND_MODE:
-				// ATE: Make sure!
-				if (!gRubberBandActive)
-				{
-					*puiNewEvent = M_ON_TERRAIN;
-				}
-				else
-				{
-					*puiNewEvent = RB_ON_TERRAIN;
-				}
-				break;
-
-			case JUMPOVER_MODE:
-
-				// ATE: Make sure!
-				if ( gsJumpOverGridNo != usMapPos )
-				{
-					*puiNewEvent = A_CHANGE_TO_MOVE;
-				}
-				else
-				{
-					*puiNewEvent = JP_ON_TERRAIN;
-				}
-				break;
-
-			case LOCKUI_MODE:
-				*puiNewEvent = LU_ON_TERRAIN;
-				break;
-
-			case IDLE_MODE:
-				*puiNewEvent = I_ON_TERRAIN;
-				break;
-
-			case ENEMYS_TURN_MODE:
-				*puiNewEvent = ET_ON_TERRAIN;
-				break;
-
-			case LOOKCURSOR_MODE:
-				*puiNewEvent = LC_ON_TERRAIN;
-				break;
-
-			case TALKCURSOR_MODE:
-				if (MoveTargetSoldier != NULL && gUIFullTarget != MoveTargetSoldier)
-				{
-					*puiNewEvent = A_CHANGE_TO_MOVE;
-					return;
-				}
-				*puiNewEvent = T_ON_TERRAIN;
-				break;
-
-			case GETTINGITEM_MODE:
-
-				break;
-
-			case TALKINGMENU_MODE:
-
-				if ( HandleTalkingMenu( ) )
-				{
-					*puiNewEvent = A_CHANGE_TO_MOVE;
-				}
-				break;
-
-			case EXITSECTORMENU_MODE:
-
-				if ( HandleSectorExitMenu( ) )
-				{
-					*puiNewEvent = A_CHANGE_TO_MOVE;
-				}
-				break;
-
-			case OPENDOOR_MENU_MODE:
-
-				if ( HandleOpenDoorMenu( ) )
-				{
-					*puiNewEvent = A_CHANGE_TO_MOVE;
-				}
-				break;
-
-			case HANDCURSOR_MODE:
-
-				*puiNewEvent = HC_ON_TERRAIN;
-				break;
-
-			case MOVE_MODE:
+	// Switch on modes
+	switch( gCurrentUIMode )
+	{
+		case RUBBERBAND_MODE:
+			// ATE: Make sure!
+			if (!gRubberBandActive)
 			{
-				if ( usMapPos != usOldMapPos )
-				{
-					// Set off ALL move....
-					gfUIAllMoveOn = FALSE;
-				}
-
-				MoveTargetSoldier = NULL;
-
-				// Check for being on terrain
-				const SOLDIERTYPE* const sel = GetSelectedMan();
-				if (sel != NULL)
-				{
-					// get cursor for item
-					ItemCursor const ubItemCursor = GetActionModeCursor(sel);
-
-					if (IsValidJumpLocation(sel, usMapPos, TRUE))
-					{
-						*puiNewEvent = JP_ON_TERRAIN;
-						gsJumpOverGridNo = usMapPos;
-						return;
-					}
-					else
-					{
-						const SOLDIERTYPE* const tgt = gUIFullTarget;
-						if (tgt != NULL)
-						{
-							if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) &&
-								!AM_AN_EPC(sel) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
-							{
-								MoveTargetSoldier = gUIFullTarget;
-								*puiNewEvent = T_CHANGE_TO_TALKING;
-								return;
-							}
-							else if (ubItemCursor != AIDCURS)
-							{
-								// IF it's an ememy, goto confirm action mode
-								if ( ( guiUIFullTargetFlags & ENEMY_MERC ) &&
-									( guiUIFullTargetFlags & VISIBLE_MERC ) &&
-									!( guiUIFullTargetFlags & DEAD_MERC ) )
-								{
-									MoveTargetSoldier = gUIFullTarget;
-									*puiNewEvent = A_ON_TERRAIN;
-									return;
-								}
-							}
-						}
-					}
-				}
 				*puiNewEvent = M_ON_TERRAIN;
-				break;
+			}
+			else
+			{
+				*puiNewEvent = RB_ON_TERRAIN;
+			}
+			break;
+
+		case JUMPOVER_MODE:
+
+			// ATE: Make sure!
+			if ( gsJumpOverGridNo != usMapPos )
+			{
+				*puiNewEvent = A_CHANGE_TO_MOVE;
+			}
+			else
+			{
+				*puiNewEvent = JP_ON_TERRAIN;
+			}
+			break;
+
+		case LOCKUI_MODE:
+			*puiNewEvent = LU_ON_TERRAIN;
+			break;
+
+		case IDLE_MODE:
+			*puiNewEvent = I_ON_TERRAIN;
+			break;
+
+		case ENEMYS_TURN_MODE:
+			*puiNewEvent = ET_ON_TERRAIN;
+			break;
+
+		case LOOKCURSOR_MODE:
+			*puiNewEvent = LC_ON_TERRAIN;
+			break;
+
+		case TALKCURSOR_MODE:
+			if (MoveTargetSoldier != NULL && gUIFullTarget != MoveTargetSoldier)
+			{
+				*puiNewEvent = A_CHANGE_TO_MOVE;
+				return;
+			}
+			*puiNewEvent = T_ON_TERRAIN;
+			break;
+
+		case GETTINGITEM_MODE:
+
+			break;
+
+		case TALKINGMENU_MODE:
+
+			if ( HandleTalkingMenu( ) )
+			{
+				*puiNewEvent = A_CHANGE_TO_MOVE;
+			}
+			break;
+
+		case EXITSECTORMENU_MODE:
+
+			if ( HandleSectorExitMenu( ) )
+			{
+				*puiNewEvent = A_CHANGE_TO_MOVE;
+			}
+			break;
+
+		case OPENDOOR_MENU_MODE:
+
+			if ( HandleOpenDoorMenu( ) )
+			{
+				*puiNewEvent = A_CHANGE_TO_MOVE;
+			}
+			break;
+
+		case HANDCURSOR_MODE:
+
+			*puiNewEvent = HC_ON_TERRAIN;
+			break;
+
+		case MOVE_MODE:
+		{
+			if ( usMapPos != usOldMapPos )
+			{
+				// Set off ALL move....
+				gfUIAllMoveOn = FALSE;
 			}
 
-			case ACTION_MODE:
-			{
-				// First check if we are on a guy, if so, make selected if it's ours
-				// Check if the guy is visible
-				gUITargetSoldier = NULL;
+			MoveTargetSoldier = NULL;
 
-				const SOLDIERTYPE* const tgt = gUIFullTarget;
-				if (tgt != NULL)
+			// Check for being on terrain
+			const SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel != NULL)
+			{
+				// get cursor for item
+				ItemCursor const ubItemCursor = GetActionModeCursor(sel);
+
+				if (IsValidJumpLocation(sel, usMapPos, TRUE))
 				{
-					if (IsValidTargetMerc(tgt))
-					{
-						gUITargetSoldier = tgt;
-						if (tgt->bTeam == OUR_TEAM && gUIActionModeChangeDueToMouseOver)
-						{
-							*puiNewEvent = A_CHANGE_TO_MOVE;
-							return;
-						}
-					}
+					*puiNewEvent = JP_ON_TERRAIN;
+					gsJumpOverGridNo = usMapPos;
+					return;
 				}
 				else
 				{
-					if ( gUIActionModeChangeDueToMouseOver )
+					const SOLDIERTYPE* const tgt = gUIFullTarget;
+					if (tgt != NULL)
+					{
+						if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) &&
+							!AM_AN_EPC(sel) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
+						{
+							MoveTargetSoldier = gUIFullTarget;
+							*puiNewEvent = T_CHANGE_TO_TALKING;
+							return;
+						}
+						else if (ubItemCursor != AIDCURS)
+						{
+							// IF it's an ememy, goto confirm action mode
+							if ( ( guiUIFullTargetFlags & ENEMY_MERC ) &&
+								( guiUIFullTargetFlags & VISIBLE_MERC ) &&
+								!( guiUIFullTargetFlags & DEAD_MERC ) )
+							{
+								MoveTargetSoldier = gUIFullTarget;
+								*puiNewEvent = A_ON_TERRAIN;
+								return;
+							}
+						}
+					}
+				}
+			}
+			*puiNewEvent = M_ON_TERRAIN;
+			break;
+		}
+
+		case ACTION_MODE:
+		{
+			// First check if we are on a guy, if so, make selected if it's ours
+			// Check if the guy is visible
+			gUITargetSoldier = NULL;
+
+			const SOLDIERTYPE* const tgt = gUIFullTarget;
+			if (tgt != NULL)
+			{
+				if (IsValidTargetMerc(tgt))
+				{
+					gUITargetSoldier = tgt;
+					if (tgt->bTeam == OUR_TEAM && gUIActionModeChangeDueToMouseOver)
 					{
 						*puiNewEvent = A_CHANGE_TO_MOVE;
 						return;
 					}
 				}
-				*puiNewEvent = A_ON_TERRAIN;
-				break;
+			}
+			else
+			{
+				if ( gUIActionModeChangeDueToMouseOver )
+				{
+					*puiNewEvent = A_CHANGE_TO_MOVE;
+					return;
+				}
+			}
+			*puiNewEvent = A_ON_TERRAIN;
+			break;
+		}
+
+		case CONFIRM_MOVE_MODE:
+
+			if ( usMapPos != usOldMapPos )
+			{
+				// Switch event out of confirm mode
+				// Set off ALL move....
+				gfUIAllMoveOn = FALSE;
+
+				*puiNewEvent = A_CHANGE_TO_MOVE;
+			}
+			break;
+
+		case CONFIRM_ACTION_MODE:
+		{
+			// DONOT CANCEL IF BURST
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel != NULL && sel->bDoBurst)
+			{
+				sel->sEndGridNo = usMapPos;
+
+				if (sel->sEndGridNo != sel->sStartGridNo && fLeftButtonDown)
+				{
+					sel->fDoSpread             = TRUE;
+					gfBeginBurstSpreadTracking = TRUE;
+				}
+
+				if (sel->fDoSpread)
+				{
+					// Accumulate gridno
+					AccumulateBurstLocation(usMapPos);
+					*puiNewEvent = CA_ON_TERRAIN;
+					break;
+				}
 			}
 
-			case CONFIRM_MOVE_MODE:
-
-				if ( usMapPos != usOldMapPos )
+			// First check if we are on a guy, if so, make selected if it's ours
+			if (gUIFullTarget != NULL)
+			{
+				if (gUITargetSoldier != gUIFullTarget)
 				{
 					// Switch event out of confirm mode
-					// Set off ALL move....
-					gfUIAllMoveOn = FALSE;
-
-					*puiNewEvent = A_CHANGE_TO_MOVE;
-				}
-				break;
-
-			case CONFIRM_ACTION_MODE:
-			{
-				// DONOT CANCEL IF BURST
-				SOLDIERTYPE* const sel = GetSelectedMan();
-				if (sel != NULL && sel->bDoBurst)
-				{
-					sel->sEndGridNo = usMapPos;
-
-					if (sel->sEndGridNo != sel->sStartGridNo && fLeftButtonDown)
-					{
-						sel->fDoSpread             = TRUE;
-						gfBeginBurstSpreadTracking = TRUE;
-					}
-
-					if (sel->fDoSpread)
-					{
-						// Accumulate gridno
-						AccumulateBurstLocation(usMapPos);
-						*puiNewEvent = CA_ON_TERRAIN;
-						break;
-					}
-				}
-
-				// First check if we are on a guy, if so, make selected if it's ours
-				if (gUIFullTarget != NULL)
-				{
-					if (gUITargetSoldier != gUIFullTarget)
-					{
-						// Switch event out of confirm mode
-						*puiNewEvent = CA_END_CONFIRM_ACTION;
-					}
-					else
-					{
-						*puiNewEvent = CA_ON_TERRAIN;
-					}
+					*puiNewEvent = CA_END_CONFIRM_ACTION;
 				}
 				else
 				{
-					if ( usMapPos != usOldMapPos )
-					{
-						// Switch event out of confirm mode
-						*puiNewEvent = CA_END_CONFIRM_ACTION;
-
-					}
-					else
-					{
-						*puiNewEvent = CA_ON_TERRAIN;
-					}
+					*puiNewEvent = CA_ON_TERRAIN;
 				}
-				break;
 			}
-			default:
-				break;
+			else
+			{
+				if ( usMapPos != usOldMapPos )
+				{
+					// Switch event out of confirm mode
+					*puiNewEvent = CA_END_CONFIRM_ACTION;
+
+				}
+				else
+				{
+					*puiNewEvent = CA_ON_TERRAIN;
+				}
+			}
+			break;
 		}
-
-		usOldMapPos = usMapPos;
-
+		default:
+			break;
 	}
+
+	usOldMapPos = usMapPos;
 }

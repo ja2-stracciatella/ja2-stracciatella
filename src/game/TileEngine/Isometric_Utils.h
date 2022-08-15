@@ -49,11 +49,6 @@ INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno);
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
 
-/* Returns the GridNo of the tile the mouse cursor is currently over or NOWHERE
-	* if the cursor is not over any tile. */
-GridNo GetMouseMapPos(void);
-
-
 void   GetAbsoluteScreenXYFromMapPos(GridNo pos, INT16* psWorldScreenX, INT16* psWorldScreenY);
 GridNo GetMapPosFromAbsoluteScreenXY(INT16 sWorldScreenX, INT16 sWorldScreenY);
 
@@ -95,8 +90,6 @@ BOOLEAN IsFacingClimableWindow(SOLDIERTYPE const*);
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
 INT16 RandomGridNo(void);
-
-extern UINT32 guiForceRefreshMousePositionCalculation;
 
 extern const INT16 DirIncrementer[8];
 

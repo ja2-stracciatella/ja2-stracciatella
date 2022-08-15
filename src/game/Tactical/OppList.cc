@@ -2727,7 +2727,7 @@ void DebugSoldierPage1()
 {
 	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 
-	const SOLDIERTYPE* const s = FindSoldierFromMouse();
+	const SOLDIERTYPE* const s = gUIFullTarget;
 	if (s != NULL)
 	{
 		MPageHeader(ST::format("DEBUG SOLDIER PAGE ONE, GRIDNO {}", s->sGridNo));
@@ -2765,7 +2765,7 @@ void DebugSoldierPage1()
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Hangover Side Effects:", s->bDrugSideEffect[1]);
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "AI has Keys:",           s->bHasKeys);
 	}
-	else if (GetMouseMapPos() != NOWHERE)
+	else if (guiCurrentCursorGridNo != NOWHERE)
 	{
 		MPageHeader("DEBUG LAND PAGE ONE");
 	}
@@ -2787,7 +2787,7 @@ void DebugSoldierPage2()
 
 	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 
-	const SOLDIERTYPE* const s = FindSoldierFromMouse();
+	const SOLDIERTYPE* const s = gUIFullTarget;
 	if (s != NULL)
 	{
 		MPageHeader(ST::format("DEBUG SOLDIER PAGE TWO, GRIDNO {}", s->sGridNo));
@@ -2841,7 +2841,7 @@ void DebugSoldierPage2()
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Main hand:",   GCM->getItem(s->inv[HANDPOS].usItem)->getShortName());
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Second hand:", GCM->getItem(s->inv[SECONDHANDPOS].usItem)->getShortName());
 
-		const GridNo map_pos = GetMouseMapPos();
+		const GridNo map_pos = guiCurrentCursorGridNo;
 		if (map_pos != NOWHERE)
 		{
 			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "CurrGridNo:", map_pos);
@@ -2849,7 +2849,7 @@ void DebugSoldierPage2()
 	}
 	else
 	{
-		const GridNo map_pos = GetMouseMapPos();
+		const GridNo map_pos = guiCurrentCursorGridNo;
 		if (map_pos == NOWHERE) return;
 
 		MPageHeader("DEBUG LAND PAGE TWO");
@@ -2924,7 +2924,7 @@ void DebugSoldierPage3()
 
 	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 
-	const SOLDIERTYPE* const s = FindSoldierFromMouse();
+	const SOLDIERTYPE* const s = gUIFullTarget;
 	if (s != NULL)
 	{
 		MPageHeader(ST::format("DEBUG SOLDIER PAGE THREE, GRIDNO {}", s->sGridNo));
@@ -3018,7 +3018,7 @@ void DebugSoldierPage3()
 	}
 	else
 	{
-		const GridNo map_pos = GetMouseMapPos();
+		const GridNo map_pos = guiCurrentCursorGridNo;
 		if (map_pos == NOWHERE) return;
 
 		MPageHeader("DEBUG LAND PAGE THREE");
@@ -3144,7 +3144,7 @@ static void PrintItem(INT32 y, const ST::string& header, const OBJECTTYPE* o)
 
 void DebugSoldierPage4()
 {
-	const SOLDIERTYPE* const s = FindSoldierFromMouse();
+	const SOLDIERTYPE* const s = gUIFullTarget;
 
 	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 

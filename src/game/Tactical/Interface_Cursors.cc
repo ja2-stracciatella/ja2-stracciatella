@@ -231,7 +231,7 @@ void DrawUICursor()
 		return;
 	}
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos != NOWHERE)
 	{
 		gusCurMousePos = usMapPos;

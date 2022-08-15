@@ -14,8 +14,6 @@
 #include "UILayout.h"
 
 
-UINT32 guiForceRefreshMousePositionCalculation = 0;
-
 // GLOBALS
 const INT16 DirIncrementer[8] =
 {
@@ -219,37 +217,6 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 
 	return( TRUE );
 }
-
-
-GridNo GetMouseMapPos(void)
-{
-	static GridNo sSameCursorPos   = NOWHERE;
-	static UINT32 uiOldFrameNumber = 99999;
-
-	// Check if this is the same frame as before, return already calculated value if so!
-	if (uiOldFrameNumber == guiGameCycleCounter && !guiForceRefreshMousePositionCalculation)
-	{
-		return sSameCursorPos;
-	}
-
-	uiOldFrameNumber                        = guiGameCycleCounter;
-	guiForceRefreshMousePositionCalculation = FALSE;
-
-	GridNo pos;
-	INT16  sWorldX;
-	INT16  sWorldY;
-	if (GetMouseXY(&sWorldX, &sWorldY))
-	{
-		pos = MAPROWCOLTOPOS(sWorldY, sWorldX);
-	}
-	else
-	{
-		pos = NOWHERE;
-	}
-	sSameCursorPos = pos;
-	return pos;
-}
-
 
 void GetAbsoluteScreenXYFromMapPos(const GridNo pos, INT16* const psWorldScreenX, INT16* const psWorldScreenY)
 {

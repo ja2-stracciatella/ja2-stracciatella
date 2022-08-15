@@ -277,6 +277,7 @@ static UI_MODE gOldUIMode = IDLE_MODE;
 UIEventKind guiCurrentEvent = I_DO_NOTHING;
 static UIEventKind guiOldEvent = I_DO_NOTHING;
 UICursorID guiCurrentUICursor = NO_UICURSOR;
+GridNo guiCurrentCursorGridNo = NOWHERE;
 static UICursorID guiNewUICursor = NORMAL_SNAPUICURSOR;
 UIEventKind guiPendingOverrideEvent = I_DO_NOTHING;
 static UINT16 gusSavedMouseX;
@@ -491,16 +492,6 @@ ScreenID HandleTacticalUI(void)
 	// Set Current event to new one!
 	guiCurrentEvent = uiNewEvent;
 
-	//ATE: New! Get flags for over soldier or not...
-	const GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos != NOWHERE)
-	{
-		// Look for soldier full
-		SOLDIERTYPE* const s = FindSoldier(usMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
-		gUIFullTarget        = s;
-		guiUIFullTargetFlags = s ? GetSoldierFindFlags(*s) : NO_MERC;
-	}
-
 	// Check if current event has changed and clear event if so, to prepare it for execution
 	// Clearing it does things like set first time flag, param variavles, etc
 	if ( uiNewEvent != guiOldEvent )
@@ -611,6 +602,34 @@ ScreenID HandleTacticalUI(void)
 	}
 
 	return( ReturnVal );
+}
+
+void TacticalViewPortMovementCallback(MOUSE_REGION* region, UINT32 reason) {
+	// Update cursor state
+	if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE) {
+		guiCurrentCursorGridNo = NOWHERE;
+	} else if (reason & (MSYS_CALLBACK_REASON_MOVE | MSYS_CALLBACK_REASON_GAIN_MOUSE)) {
+		INT16  sWorldX;
+		INT16  sWorldY;
+		if (GetMouseXY(&sWorldX, &sWorldY))
+		{
+			guiCurrentCursorGridNo = MAPROWCOLTOPOS(sWorldY, sWorldX);
+		}
+		else
+		{
+			guiCurrentCursorGridNo = NOWHERE;
+		}
+	}
+
+	if (guiCurrentCursorGridNo != NOWHERE) {
+		// Update pointed on soldier state
+		SOLDIERTYPE* const s = FindSoldier(guiCurrentCursorGridNo, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
+		gUIFullTarget        = s;
+		guiUIFullTargetFlags = s ? GetSoldierFindFlags(*s) : NO_MERC;
+	} else {
+		gUIFullTarget = NULL;
+		guiUIFullTargetFlags = NO_MERC;
+	}
 }
 
 
@@ -747,7 +766,7 @@ static void SetUIMouseCursor(void)
 
 				MSYS_DefineRegion(&gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y,
 							MSYS_PRIORITY_NORMAL,
-							VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+							VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, MSYS_NO_CALLBACK);
 
 
 				// Adjust where we blit our cursor!
@@ -759,7 +778,7 @@ static void SetUIMouseCursor(void)
 				// Adjust viewport to edge of screen!
 				// Define region for viewport
 				MSYS_RemoveRegion(&gViewportRegion);
-				MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+				MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, MSYS_NO_CALLBACK);
 
 				gsGlobalCursorYOffset = SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y;
 				SetCurrentCursorFromDatabase(gUICursors[guiNewUICursor].usFreeCursorName);
@@ -776,7 +795,7 @@ static void SetUIMouseCursor(void)
 
 				MSYS_DefineRegion(&gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y,
 							MSYS_PRIORITY_NORMAL,
-							VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+							VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, MSYS_NO_CALLBACK);
 
 
 				// Adjust where we blit our cursor!
@@ -792,7 +811,7 @@ static void SetUIMouseCursor(void)
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
 
-			const GridNo usMapPos = GetMouseMapPos();
+			const GridNo usMapPos = guiCurrentCursorGridNo;
 			if (usMapPos != NOWHERE)
 			{
 				const SOLDIERTYPE* const sel = GetSelectedMan();
@@ -903,7 +922,7 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 	MERC_HIRE_STRUCT HireMercStruct;
 	INT8 bReturnCode;
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos != NOWHERE)
 	{
 		ubTemp+= 2;
@@ -949,7 +968,7 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 {
 	// Get map postion and place the enemy there
-	GridNo const map_pos = GetMouseMapPos();
+	GridNo const map_pos = guiCurrentCursorGridNo;
 	if (map_pos == NOWHERE) return GAME_SCREEN;
 
 	// Are we an OK dest?
@@ -1164,7 +1183,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 	static UINT32			uiItemsOverTimer;
 	static BOOLEAN		fOverItems;
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	gUIActionModeChangeDueToMouseOver = FALSE;
@@ -1409,7 +1428,7 @@ static ScreenID UIHandlePositionMenu(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 {
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	if ( gpItemPointer != NULL )
@@ -1513,7 +1532,7 @@ static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMov
 
 static ScreenID UIHandleCWait(UI_EVENT*)
 {
-	GridNo const map_pos = GetMouseMapPos();
+	GridNo const map_pos = guiCurrentCursorGridNo;
 	if (map_pos == NOWHERE) return GAME_SCREEN;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
@@ -1584,7 +1603,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 		fAllMove = gfUIAllMoveOn;
 		gfUIAllMoveOn = FALSE;
 
-		const GridNo usMapPos = GetMouseMapPos();
+		const GridNo usMapPos = guiCurrentCursorGridNo;
 		if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 		// ERASE PATH
@@ -2041,7 +2060,7 @@ static ScreenID UIHandleAChangeToConfirmAction(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleCAOnTerrain(UI_EVENT* pUIEvent)
 {
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
@@ -2219,7 +2238,7 @@ static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 	// are coming after this line and put the value to true
 	sel->fDontChargeTurningAPs = FALSE;
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	SOLDIERTYPE* const tgt = gUIFullTarget;
@@ -2250,7 +2269,7 @@ static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleAEndAction(UI_EVENT* pUIEvent)
 {
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
@@ -2279,7 +2298,7 @@ static ScreenID UIHandleCAEndConfirmAction(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleIOnTerrain(UI_EVENT* pUIEvent)
 {
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	if ( !UIHandleOnMerc( TRUE ) )
@@ -2395,7 +2414,7 @@ BOOLEAN SelectedMercCanAffordAttack( )
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return FALSE;
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	// Get cursor value
@@ -2428,7 +2447,7 @@ BOOLEAN SelectedMercCanAffordMove(  )
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return FALSE;
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	// IF WE ARE OVER AN INTERACTIVE TILE, GIVE GRIDNO OF POSITION
@@ -2461,7 +2480,7 @@ static void RemoveTacticalCursor(void)
 
 static ScreenID UIHandleHCOnTerrain(UI_EVENT* pUIEvent)
 {
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
@@ -2560,7 +2579,7 @@ void ToggleLookCursorMode()
 
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 {
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	SoldierFindFlags const uiMercFlags = guiUIFullTargetFlags;
@@ -2843,7 +2862,7 @@ MouseMoveState GetCursorMovementFlags()
 		return uiSameFrameCursorFlags;
 	}
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 
 	MouseMoveState cursor_flags;
 	if (gusMouseXPos == usOldMouseXPos && gusMouseYPos == usOldMouseYPos)
@@ -3394,7 +3413,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 
 bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 {
-	GridNo map_pos = GetMouseMapPos();
+	GridNo map_pos = guiCurrentCursorGridNo;
 	if (map_pos == NOWHERE) return false;
 
 	OBJECTTYPE const& o           = s->inv[HANDPOS];
@@ -3725,7 +3744,7 @@ static ScreenID UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
 	gUIDisplayActionPointsOffX = 14;
 	gUIDisplayActionPointsOffY = 7;
 
-	const GridNo pos = GetMouseMapPos();
+	const GridNo pos = guiCurrentCursorGridNo;
 
 	// Get direction from mouse pos
 	const INT16 sFacingDir = GetDirectionFromGridNo(pos, sel);
@@ -3790,7 +3809,7 @@ static BOOLEAN MakeSoldierTurn(SOLDIERTYPE* const pSoldier, const GridNo pos)
 
 static ScreenID UIHandleLCLook(UI_EVENT* pUIEvent)
 {
-	const GridNo pos = GetMouseMapPos();
+	const GridNo pos = guiCurrentCursorGridNo;
 	if (pos == NOWHERE) return GAME_SCREEN;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
@@ -3822,7 +3841,7 @@ static ScreenID UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 	const SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	if( ValidQuickExchangePosition( ) )
@@ -3960,7 +3979,6 @@ ScreenID UIHandleLUIEndLock(UI_EVENT* pUIEvent)
 
 		//SetCurrentCursorFromDatabase( guiCurrentUICursor );
 
-		guiForceRefreshMousePositionCalculation = TRUE;
 		UIHandleMOnTerrain( NULL );
 
 		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -4315,7 +4333,7 @@ static ScreenID UIHandleJumpOverOnTerrain(UI_EVENT* pUIEvent)
 	if (sel == NULL)
 		return GAME_SCREEN;
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE)
 		return GAME_SCREEN;
 
@@ -4346,7 +4364,7 @@ static ScreenID UIHandleJumpOver(UI_EVENT* pUIEvent)
 
 	SoldierSP selSoldier = GetSoldier(sel);
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE)
 		return GAME_SCREEN;
 
@@ -4419,7 +4437,6 @@ static ScreenID UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
 
 		gfPlotNewMovement = TRUE;
 
-		guiForceRefreshMousePositionCalculation = TRUE;
 		UIHandleMOnTerrain( NULL );
 
 		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -4551,7 +4568,7 @@ BOOLEAN HandleTalkInit(  )
 
 	SoldierSP selSoldier = GetSoldier(sel);
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE)
 		return FALSE;
 
