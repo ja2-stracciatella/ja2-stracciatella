@@ -207,27 +207,29 @@ INT8 gbLightSighting[1][16] =
 
 SightFlags gubSightFlags;
 
-#define DECAY_OPPLIST_VALUE( value )\
-{\
-	if ( (value) >= SEEN_THIS_TURN)\
-	{\
-		(value)++;\
-		if ( (value) > OLDEST_SEEN_VALUE )\
-		{\
-			(value) = NOT_HEARD_OR_SEEN;\
-		}\
-	}\
-	else\
-	{\
-		if ( (value) <= HEARD_THIS_TURN)\
-		{\
-			(value)--;\
-			if ( (value) < OLDEST_HEARD_VALUE)\
-			{\
-				(value) = NOT_HEARD_OR_SEEN;\
-			}\
-		}\
-	}\
+
+// Returns whether the new value was out of the acceptable range.
+static bool DecayOppListValue(int8_t& value)
+{
+	// if this person has been SEEN recently, but is not currently visible
+	if (value >= SEEN_THIS_TURN)
+	{
+		++value; // increment how long it's been
+	}
+	// if this person has been only HEARD recently
+	else if (value <= HEARD_THIS_TURN)
+	{
+		--value; // increment how long it's been
+	}
+
+	// if it's been longer than the maximum we care to remember
+	if (value < OLDEST_HEARD_VALUE || value > OLDEST_SEEN_VALUE)
+	{
+		value = NOT_HEARD_OR_SEEN;
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -811,7 +813,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 }
 
 
-static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponent, const SOLDIERTYPE* const exclude, const INT8 bIteration)
+static bool TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponent, const SOLDIERTYPE* const exclude, const INT8 bIteration)
 {
 	// look for all mercs on the same team, check opplists for this soldier
 	CFOR_EACH_IN_TEAM(pMate, ubTeam)
@@ -830,7 +832,7 @@ static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponen
 
 		// if this teammate currently sees this opponent
 		if (pMate->bOppList[pOpponent->ubID] == SEEN_CURRENTLY)
-			return(FALSE); // that's all I need to know, get out of here
+			return false; // that's all I need to know, get out of here
 	}
 
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
@@ -850,7 +852,7 @@ static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponen
 #endif
 
 	// none of my friends is currently seeing the guy, so return success
-	return(TRUE);
+	return true;
 }
 
 
@@ -4349,31 +4351,8 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 				ManLooksForMan(pSoldier,pOpponent,VERIFYANDDECAYOPPLIST);
 
 				// decay opplist value if necessary
-				DECAY_OPPLIST_VALUE( *pPersOL );
-				/*
-				// if opponent was SEEN recently but is NOT visible right now
-				if (*pPersOL >= SEEN_THIS_TURN)
-				{
-					(*pPersOL)++; // increment #turns it's been since last seen
-
-					// if it's now been longer than the maximum we care to remember
-					if (*pPersOL > SEEN_2_TURNS_AGO)
-						*pPersOL = 0; // forget that we knew this guy
-				}
-				else
-				{
-					// if opponent was merely HEARD recently, not actually seen
-					if (*pPersOL <= HEARD_THIS_TURN)
-					{
-						(*pPersOL)--; // increment #turns it's been since last heard
-
-						// if it's now been longer than the maximum we care to remember
-						if (*pPersOL < HEARD_2_TURNS_AGO)
-							*pPersOL = 0; // forget that we knew this guy
-					}
-				}*/
+				DecayOppListValue(*pPersOL);
 			}
-
 		}
 	}
 
@@ -4518,7 +4497,7 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 			// if no witnesses for this opponent, then decay the Public Opplist
 			if ( !bOpponentStillSeen )
 			{
-				DECAY_OPPLIST_VALUE( gbPublicOpplist[pSoldier->bTeam][pOpponent->ubID] );
+				DecayOppListValue(gbPublicOpplist[pSoldier->bTeam][pOpponent->ubID]);
 			}
 		}
 	}
@@ -4530,9 +4509,6 @@ static void DecayWatchedLocs(INT8 bTeam);
 
 void DecayPublicOpplist(INT8 bTeam)
 {
-	INT8 bNoPubliclyKnownOpponents = TRUE;
-	INT8 *pbPublOL;
-
 	// decay the team's public noise volume, forget public noise gridno if <= 0
 	// used to be -1 per turn but that's not fast enough!
 	if (gubPublicNoiseVolume[bTeam] > 0)
@@ -4553,6 +4529,7 @@ void DecayPublicOpplist(INT8 bTeam)
 	}
 
 	// decay the team's Public Opplist
+	bool bNoPubliclyKnownOpponents = true;
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pSoldier = *i;
@@ -4560,32 +4537,18 @@ void DecayPublicOpplist(INT8 bTeam)
 		if (pSoldier->bLife && pSoldier->bTeam != bTeam)
 		{
 			// hang a pointer to the byte holding team's public opplist for this merc
-			pbPublOL = &gbPublicOpplist[bTeam][pSoldier->ubID];
+			INT8& pbPublOL = gbPublicOpplist[bTeam][pSoldier->ubID];
 
-			if (*pbPublOL == NOT_HEARD_OR_SEEN)
+			if (pbPublOL == NOT_HEARD_OR_SEEN)
 			{
 				continue;
 			}
 
 			// well, that make this a "publicly known opponent", so nuke that flag
-			bNoPubliclyKnownOpponents = FALSE;
-
-			// if this person has been SEEN recently, but is not currently visible
-			if (*pbPublOL >= SEEN_THIS_TURN)
-			{
-				(*pbPublOL)++; // increment how long it's been
-			}
-			else
-			{
-				// if this person has been only HEARD recently
-				if (*pbPublOL <= HEARD_THIS_TURN)
-				{
-					(*pbPublOL)--; // increment how long it's been
-				}
-			}
+			bNoPubliclyKnownOpponents = false;
 
 			// if it's been longer than the maximum we care to remember
-			if ((*pbPublOL > OLDEST_SEEN_VALUE) || (*pbPublOL < OLDEST_HEARD_VALUE))
+			if (DecayOppListValue(pbPublOL))
 			{
 				// forget about him,
 				// and also forget where he was last seen (it's been too long)
