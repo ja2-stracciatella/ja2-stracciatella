@@ -97,7 +97,7 @@ std::vector<CreatureAttackSector> readAttackSectors(const rapidjson::Value& json
 bool CreatureLairModel::isSectorInLair(const SGPSector& sector) const
 {
 	uint8_t sectorId = sector.AsByte();
-	for (auto sec : lairSectors)
+	for (auto const& sec : lairSectors)
 	{
 		if (sec.sectorId == sectorId && sec.sectorLevel == sector.z)
 		{
@@ -110,13 +110,13 @@ bool CreatureLairModel::isSectorInLair(const SGPSector& sector) const
 const CreatureAttackSector* CreatureLairModel::chooseTownSectorToAttack() const
 {
 	unsigned int totalChance = 0;
-	for (auto sec : attackSectors)
+	for (auto const& sec : attackSectors)
 	{
 		totalChance += sec.chance;
 	}
 
 	int random = Random(totalChance);
-	for (auto& sec : attackSectors)
+	for (auto const& sec : attackSectors)
 	{
 		random -= sec.chance;
 		if (random < 0)
@@ -201,7 +201,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		// all lair sectors should be adjacent and defined as underground sector
 		SGPSector prev(0, 0, -1);
 		SGPSector curr;
-		for (auto sec : lair->lairSectors)
+		for (auto const& sec : lair->lairSectors)
 		{
 			curr = SGPSector::FromSectorID(sec.sectorId, sec.sectorLevel);
 			if (prev.z != -1)
@@ -216,7 +216,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		}
 
 		// all underground sectors must also be defined with UndergroundSectorModel
-		for (auto sec : lair->lairSectors)
+		for (auto const& sec : lair->lairSectors)
 		{
 			if (sec.sectorLevel == 0)
 			{

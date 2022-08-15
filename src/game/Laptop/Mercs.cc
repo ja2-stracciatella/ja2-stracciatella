@@ -1314,7 +1314,7 @@ static void HandlePlayerHiringMerc(const MERCListingModel* hired)
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
 	auto quotes = hired->getQuotesByType(SpeckQuoteType::CROSS_SELL);
-	for (SpeckQuote quote : quotes)
+	for (SpeckQuote const& quote : quotes)
 	{
 		if (IsMercMercAvailable(quote->relatedMercID))
 		{

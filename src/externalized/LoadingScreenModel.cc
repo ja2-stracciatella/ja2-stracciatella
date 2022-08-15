@@ -46,7 +46,7 @@ LoadingScreenModel::LoadingScreenModel(std::vector<LoadingScreen> screensList_, 
 
 const LoadingScreen* LoadingScreenModel::getScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
 {
-	for (auto screen : screensMapping)
+	for (auto const& screen : screensMapping)
 	{
 		if (screen.sectorId == sectorId && screen.sectorLevel == sectorLevel)
 		{

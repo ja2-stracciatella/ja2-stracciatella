@@ -148,7 +148,7 @@ static void InitCreatureLair(const CreatureLairModel* lairModel)
 	giLairID = lairModel->lairId;
 
 	//initialize the linked list of lairs
-	for (auto sec : lairModel->lairSectors)
+	for (auto const& sec : lairModel->lairSectors)
 	{
 		auto next = NewDirective(sec.sectorId, sec.sectorLevel, sec.habitatType);
 		if (sec.habitatType == QUEEN_LAIR && !next->pLevel->ubNumCreatures)
