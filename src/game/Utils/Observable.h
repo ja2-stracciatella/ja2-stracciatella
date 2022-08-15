@@ -8,7 +8,7 @@
 
 namespace _observable
 {
-	// placeholder struct for a no-args callback function to satisfy class template 
+	// placeholder struct for a no-args callback function to satisfy class template
 	struct Nil {};
 }
 
@@ -44,7 +44,7 @@ public:
 
 	/**
 	 * @brief Un-registers a listen identified by the given key
-	 * @param key 
+	 * @param key
 	 * @return the current instance for method chaining
 	*/
 	Observable<ARG1, ARGS...> removeListener(const ST::string key)
@@ -62,7 +62,7 @@ public:
 	/**
 	 * @brief Notifies all the registered callbacks, in lexical order of the listener keys
 	 * @tparam ARG1 first argument to the callback; uses default value if skipped
-	 * @tparam ...ARGS the remaining arguments to pass to the callback 
+	 * @tparam ...ARGS the remaining arguments to pass to the callback
 	 */
 	void notify(ARG1 arg1 = ARG1(), ARGS... args) const
 	{
@@ -70,7 +70,7 @@ public:
 			SLOGD("Observable has no listeners");
 		}
 
-		for (auto l : listeners)
+		for (const auto& l : listeners)
 		{
 			l.second(arg1, args...);
 		}

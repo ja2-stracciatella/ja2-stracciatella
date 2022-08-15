@@ -53,7 +53,7 @@ void MercProfileInfo::validateData(const std::map<uint8_t, const MercProfileInfo
 	{
 		throw std::runtime_error("Too many merc profiles");
 	}
-	for (auto p : models)
+	for (const auto& p : models)
 	{
 		if (p.first != p.second->profileID)
 		{

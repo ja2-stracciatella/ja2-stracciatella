@@ -613,9 +613,9 @@ static BOOLEAN HasLarryRelapsed(void);
 
 /**
  * Returns the ProfileID of this profile listing.
- * 
- * This method handles LARRY logic (LARRY_NORMAL becoming LARRY_DRUNK once 
- * relapsed), and should always be used instead of directly accessing the 
+ *
+ * This method handles LARRY logic (LARRY_NORMAL becoming LARRY_DRUNK once
+ * relapsed), and should always be used instead of directly accessing the
  * field profileID
  */
 ProfileID GetProfileIDFromMERCListing(const MERCListingModel* listing)
@@ -1575,7 +1575,7 @@ static std::vector<UINT8> GetAvailableRandomQuotes()
 	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
 		if (!IsMercMercAvailable(GetProfileIDFromMERCListing(m))) continue;
-		for (auto q : m->getQuotesByType(SpeckQuoteType::ADVERTISE))
+		for (const auto& q : m->getQuotesByType(SpeckQuoteType::ADVERTISE))
 		{
 			quotes.push_back(q->quoteID);
 		}
@@ -1657,7 +1657,7 @@ static BOOLEAN CanMercBeAvailableYet(const MERCListingModel* merc)
 }
 
 // update the value of ubLastMercAvailableId for save game compatability
-static void SetLastMercArrival(const MERCListingModel* merc) 
+static void SetLastMercArrival(const MERCListingModel* merc)
 {
 	switch (merc->profileID)
 	{
@@ -1673,10 +1673,10 @@ void SyncLastMercFromSaveGame()
 {
 	// This allows us to load saves from old versions and vanilla
 	//
-	// In the old implementation, the M.E.R.C. list has 2 LARRY profiles (NORMAL and DRUNK), so 
+	// In the old implementation, the M.E.R.C. list has 2 LARRY profiles (NORMAL and DRUNK), so
 	// the index is off by 1 for mercs after LARRY
 	//
-	// But this only accounts version upgrade. If you are downgrading, you may need to wait for 
+	// But this only accounts version upgrade. If you are downgrading, you may need to wait for
 	// a few days before the last merc becomes available again.
 	int iLastMercID = -1;
 	switch (LaptopSaveInfo.ubLastMercAvailableId)
@@ -1686,7 +1686,7 @@ void SyncLastMercFromSaveGame()
 	}
 
 	if (iLastMercID <= 0) return;
-	
+
 	for (const MERCListingModel* merc : GCM->getMERCListings())
 	{
 		// check for exactly the case that we are off by 1 due to LARRY

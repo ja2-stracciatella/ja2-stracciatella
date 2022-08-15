@@ -148,7 +148,7 @@ static void InitCreatureLair(const CreatureLairModel* lairModel)
 	giLairID = lairModel->lairId;
 
 	//initialize the linked list of lairs
-	for (auto sec : lairModel->lairSectors)
+	for (const auto& sec : lairModel->lairSectors)
 	{
 		auto next = NewDirective(sec.sectorId, sec.sectorLevel, sec.habitatType);
 		if (sec.habitatType == QUEEN_LAIR && !next->pLevel->ubNumCreatures)
@@ -696,7 +696,7 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 			SLOGE("Attempting to check if mine is clear but mine index is invalid ({}).", ubMineIndex);
 			return true;
 		}
-		for (auto sector : mine->mineSectors)
+		for (const auto& sector : mine->mineSectors)
 		{
 			if (CreaturesInUndergroundSector(sector[0], sector[1]))
 			{

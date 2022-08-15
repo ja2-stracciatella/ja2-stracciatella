@@ -1418,7 +1418,7 @@ const CreatureLairModel* DefaultContentManager::getCreatureLairByMineId(uint8_t 
 const MineModel* DefaultContentManager::getMineForSector(const SGPSector& sector) const
 {
 	auto sectorId = sector.AsByte();
-	for (auto m : m_mines)
+	for (const auto& m : m_mines)
 	{
 		if (sector.z == 0 && sectorId == m->entranceSector) return m;
 		for (auto s : m->mineSectors)

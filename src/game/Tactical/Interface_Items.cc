@@ -5398,7 +5398,7 @@ void LoadInterfaceItemsGraphics()
 	guiSmallInventoryGraphicMissingSmallPocket = AddVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-sp.sti");
 	guiSmallInventoryGraphicMissingBigPocket = AddVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-bp.sti");
 
-	for (auto item : GCM->getAllSmallInventoryGraphicPaths()) {
+	for (const auto& item : GCM->getAllSmallInventoryGraphicPaths()) {
 		auto path = item.to_lower();
 		if (allInventoryGraphics.find(path) == allInventoryGraphics.end()) {
 			try {
@@ -5428,7 +5428,7 @@ void DeleteInterfaceItemsGraphics()
 	DeleteVideoObject(guiSecItemHiddenVO);
 	DeleteVideoObject(guiSmallInventoryGraphicMissingSmallPocket);
 	DeleteVideoObject(guiSmallInventoryGraphicMissingBigPocket);
-	for (auto v : allInventoryGraphics) {
+	for (const auto& v : allInventoryGraphics) {
 		DeleteVideoObject(v.second);
 	}
 	allInventoryGraphics.clear();

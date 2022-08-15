@@ -8,8 +8,8 @@
 
 
 CreatureLairModel::CreatureLairModel(const uint8_t lairId_, const uint8_t associatedMineId_, const uint8_t entranceSector_, const uint8_t entranceSectorLevel_, const std::vector<CreatureLairSector> lairSectors_, const std::vector<CreatureAttackSector> attackSectors_, const uint8_t warpExitSector_, const uint16_t warpExitGridNo_)
-	: lairId(lairId_), associatedMineId(associatedMineId_), 
-	entranceSector(entranceSector_), entranceSectorLevel(entranceSectorLevel_), 
+	: lairId(lairId_), associatedMineId(associatedMineId_),
+	entranceSector(entranceSector_), entranceSectorLevel(entranceSectorLevel_),
 	lairSectors(lairSectors_), attackSectors(attackSectors_),
 	warpExitSector(warpExitSector_), warpExitGridNo(warpExitGridNo_) {}
 
@@ -97,7 +97,7 @@ std::vector<CreatureAttackSector> readAttackSectors(const rapidjson::Value& json
 bool CreatureLairModel::isSectorInLair(const SGPSector& sector) const
 {
 	uint8_t sectorId = sector.AsByte();
-	for (auto sec : lairSectors)
+	for (const auto& sec : lairSectors)
 	{
 		if (sec.sectorId == sectorId && sec.sectorLevel == sector.z)
 		{
@@ -110,7 +110,7 @@ bool CreatureLairModel::isSectorInLair(const SGPSector& sector) const
 const CreatureAttackSector* CreatureLairModel::chooseTownSectorToAttack() const
 {
 	unsigned int totalChance = 0;
-	for (auto sec : attackSectors)
+	for (const auto& sec : attackSectors)
 	{
 		totalChance += sec.chance;
 	}
@@ -131,9 +131,9 @@ const CreatureAttackSector* CreatureLairModel::chooseTownSectorToAttack() const
 
 const CreatureAttackSector* CreatureLairModel::getTownAttackDetails(uint8_t sectorId) const
 {
-	for (auto& sec : attackSectors)
+	for (const auto& sec : attackSectors)
 	{
-		if (sec.sectorId == sectorId) 
+		if (sec.sectorId == sectorId)
 		{
 			return &sec;
 		}
@@ -191,7 +191,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 			ST::string err = ST::format("Invalid mineId {}", lair->associatedMineId);
 			throw std::runtime_error(err.to_std_string());
 		}
-		
+
 		// The first lair sector in list should be QUEEN_LAIR
 		if (lair->lairSectors.size() < 1 || lair->lairSectors[0].habitatType != QUEEN_LAIR)
 		{
@@ -201,7 +201,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		// all lair sectors should be adjacent and defined as underground sector
 		SGPSector prev(0, 0, -1);
 		SGPSector curr;
-		for (auto sec : lair->lairSectors)
+		for (const auto& sec : lair->lairSectors)
 		{
 			curr = SGPSector::FromSectorID(sec.sectorId, sec.sectorLevel);
 			if (prev.z != -1)

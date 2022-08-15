@@ -212,7 +212,7 @@ void UnloadExternalNPCFaces()
 	fExternFacesLoaded = FALSE;
 
 	// Remove all external NPC faces.
-	for (auto entry : externalNPCFaces)
+	for (const auto& entry : externalNPCFaces)
 	{
 		DeleteFace(entry.second);
 	}

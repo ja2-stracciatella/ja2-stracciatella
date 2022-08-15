@@ -2160,7 +2160,7 @@ void LoadStrategicAI(HWFILE const hFile)
 
 	// resize gArmyComp, ensuring all army compositions referenced by Garrison Groups exist
 	size_t numArmyCompositions = NUM_ARMY_COMPOSITIONS;
-	for (auto gGroup : gGarrisonGroup)
+	for (const auto& gGroup : gGarrisonGroup)
 	{
 		numArmyCompositions = std::max<size_t>(numArmyCompositions, gGroup.ubComposition + 1);
 	}
