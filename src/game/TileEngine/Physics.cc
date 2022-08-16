@@ -1813,16 +1813,14 @@ static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, FLOAT dDegree
 }
 
 
-#define MAX_MISS_BY	30
-#define MIN_MISS_BY	1
-#define MAX_MISS_RADIUS	5
-
-
 static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius);
 
 
 void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubLevel, const INT16 sEndZ, OBJECTTYPE* const pItem, INT8 bMissBy, const UINT8 ubActionCode, SOLDIERTYPE* const target)
 {
+	constexpr INT8 MAX_MISS_BY = 30;
+	constexpr INT8 MIN_MISS_BY = 1;
+
 	FLOAT    dForce, dDegrees;
 	INT16    sDestX, sDestY, sSrcX, sSrcY;
 	vector_3 vForce, vDirNormal;
@@ -1847,20 +1845,10 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 		bMissBy = 0;
 	}
 
-	//if ( 0 )
 	if ( bMissBy > 0 )
 	{
-		// Max the miss variance
-		if ( bMissBy > MAX_MISS_BY )
-		{
-			bMissBy = MAX_MISS_BY;
-		}
-
-		// Min the miss varience...
-		if ( bMissBy < MIN_MISS_BY )
-		{
-			bMissBy = MIN_MISS_BY;
-		}
+		// Min/Max the miss variance
+		bMissBy = std::clamp(bMissBy, MIN_MISS_BY, MAX_MISS_BY);
 
 		// Adjust position, force, angle
 		SLOGD("Throw miss by: {}", bMissBy);

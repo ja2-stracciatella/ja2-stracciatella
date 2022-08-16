@@ -645,6 +645,7 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 						usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
 						// Get structure ref...
 						const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
+						Assert(pStructureFileRef);
 
 						// Check each struct in each direction
 						for( cnt3 = 0; cnt3 < 8; cnt3++ )
@@ -660,7 +661,6 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 					else
 					{
 						fDirectionFound = TRUE;
-						cnt3 = (UINT8)Random( 8 );
 					}
 
 					if ( fDirectionFound )

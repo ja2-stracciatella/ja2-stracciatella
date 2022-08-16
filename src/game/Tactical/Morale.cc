@@ -566,6 +566,9 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 			break;
 
 		case MORALE_MERC_MARRIED:
+			// needs specific soldier!
+			Assert(pSoldier);
+
 			// Female mercs get unhappy based on how sexist they are (=hate men),
 			// gentlemen males get unhappy too
 			FOR_EACH_IN_TEAM(i, OUR_TEAM)
