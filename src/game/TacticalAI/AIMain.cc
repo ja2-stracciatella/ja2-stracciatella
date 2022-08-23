@@ -1784,6 +1784,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 								pSoldier->ubID, sDoorGridNo );
 					CancelAIAction(pSoldier);
 					EndAIGuysTurn(*pSoldier);
+					break;
 				}
 
 				StartInteractiveObject(sDoorGridNo, *pStructure, *pSoldier, bDirection);

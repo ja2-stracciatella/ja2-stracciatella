@@ -12,6 +12,8 @@
 #include "Soldier_Macros.h"
 #include "Render_Fun.h"
 #include "Debug.h"
+#include <algorithm>
+#include <array>
 
 //
 // CJC's DG->JA2 conversion notes
@@ -302,7 +304,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	INT16 sTempDest,sGoToGrid;
 	INT16 sOrigin;
 	UINT16 usMaxDist;
-	UINT8 ubDirection,ubDirsLeft,ubDirChecked[8],fFound = FALSE;
 	INT8 fPathFlags;
 
 	INT8 bAPsLeft = -1; // XXX HACK000E
@@ -390,32 +391,18 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		else
 		{
 			// else look at the 8 nearest gridnos to sDesGrid for a valid destination
-
-			// clear ubDirChecked flag for all 8 directions
-			for (ubDirection = 0; ubDirection < 8; ubDirection++)
-				ubDirChecked[ubDirection] = FALSE;
-
-			ubDirsLeft = 8;
+			bool fFound = false;
 
 			// examine all 8 spots around 'sDesGrid'
 			// keep looking while directions remain and a satisfactory one not found
-			for (ubDirsLeft = 8; ubDirsLeft != 0; ubDirsLeft--)
+			// randomly select a direction which hasn't been 'checked' yet
+			std::array<UINT8, 8> directions{ 0, 1, 2, 3, 4, 5, 6, 7 };
+			std::shuffle(directions.begin(), directions.end(), gRandomEngine);
+
+			for (UINT8 const ubDirection : directions)
 			{
-				if (fFound)
-				{
-					break;
-				}
-				// randomly select a direction which hasn't been 'checked' yet
-				do
-				{
-					ubDirection = (UINT8) Random(8);
-				}
-				while (ubDirChecked[ubDirection]);
-
-				ubDirChecked[ubDirection] = TRUE;
-
 				// determine the gridno 1 tile away from current friend in this direction
-				sTempDest = NewGridNo(sDesGrid,DirectionInc( ubDirection + 1 ));
+				sTempDest = NewGridNo(sDesGrid, DirectionInc(ubDirection));
 
 				// if that's out of bounds, ignore it & check next direction
 				if (sTempDest == sDesGrid)
@@ -423,7 +410,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 
 				if (LegalNPCDestination(pSoldier,sTempDest,ENSURE_PATH,NOWATER,0))
 				{
-					fFound = TRUE;            // found a spot
+					fFound = true;           // found a spot
 					break;                   // stop checking in other directions
 				}
 			}

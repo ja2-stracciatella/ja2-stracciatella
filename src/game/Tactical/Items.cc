@@ -2704,7 +2704,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 	BOOLEAN fRemote = FALSE;
 	BOOLEAN fPressure = FALSE;
 	BOOLEAN fTimed = FALSE;
-	BOOLEAN	fSwitch = FALSE;
+	[[maybe_unused]] BOOLEAN fSwitch = FALSE; // only used as a code hint to improve readability
 
 	if (pObj->usItem == ACTION_ITEM)
 	{
@@ -2774,14 +2774,10 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 		}
 
 	}
-	else if (fSwitch)
+	else // this must be a switch, fSwitch == TRUE
 	{
 		pObj->bDetonatorType = BOMB_SWITCH;
 		pObj->bFrequency = bSetting;
-	}
-	else
-	{
-		return( FALSE );
 	}
 
 	pObj->fFlags |= OBJECT_ARMED_BOMB;

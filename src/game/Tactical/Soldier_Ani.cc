@@ -85,7 +85,7 @@ static const DOUBLE gHopFenceForwardNWDist[NUMSOLDIERBODYTYPES]     = { 2.7, 1.0
 static const DOUBLE gHopFenceForwardFullSEDist[NUMSOLDIERBODYTYPES] = { 1.1, 1.0, 2.1, 1.1 };
 static const DOUBLE gHopFenceForwardFullNWDist[NUMSOLDIERBODYTYPES] = { 0.8, 0.2, 2.7, 0.8 };
 static const DOUBLE gFalloffBackwardsDist[NUMSOLDIERBODYTYPES]      = { 1, 0.8, 1, 1 };
-static const DOUBLE gClimbUpRoofDist[NUMSOLDIERBODYTYPES]           = { 2, 0.1, 2, 2 };
+static const float  gClimbUpRoofDist[NUMSOLDIERBODYTYPES]           = { 2.0f, 0.1f, 2.0f, 2.0f };
 static const DOUBLE gClimbUpRoofLATDist[NUMSOLDIERBODYTYPES]        = { 0.7, 0.5, 0.7, 0.5 };
 static const DOUBLE gClimbDownRoofStartDist[NUMSOLDIERBODYTYPES]    = { 5.0, 1.0, 1, 1 };
 static const DOUBLE gClimbUpRoofDistGoingLower[NUMSOLDIERBODYTYPES] = { 0.9, 0.1, 1, 1 };
@@ -802,14 +802,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CODE: HANDLE CLIMBING ROOF,
 					// Move merc up
-					if ( pSoldier->bDirection == NORTH )
-					{
-						SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment + gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
-					}
-					else
-					{
-						SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment + gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
-					}
+					SetSoldierHeight(pSoldier, pSoldier->dHeightAdjustment + gClimbUpRoofDist[pSoldier->ubBodyType]);
 					break;
 
 				case 455:
@@ -826,14 +819,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CODE: HANDLE CLIMBING ROOF,
 					// Move merc DOWN
-					if ( pSoldier->bDirection == NORTH )
-					{
-						SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment - gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
-					}
-					else
-					{
-						SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment - gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
-					}
+					SetSoldierHeight(pSoldier, pSoldier->dHeightAdjustment - gClimbUpRoofDist[pSoldier->ubBodyType]);
 					break;
 
 				case 457:
@@ -2538,13 +2524,6 @@ no_cry:
 			}
 			// Adjust frame control pos, and try again
 			pSoldier->usAniCode++;
-		}
-		else if ( sNewAniFrame == 999 )
-		{
-
-			// Go to start, by default
-			pSoldier->usAniCode = 0;
-
 		}
 
 	// Loop here until we break on a real item!
