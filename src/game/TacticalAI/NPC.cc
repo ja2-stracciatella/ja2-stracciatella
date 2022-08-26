@@ -185,7 +185,9 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		EXTR_U16( d, i->fFlags)
 		EXTR_I16( d, i->sRequiredItem)
 		EXTR_U16( d, i->usFactMustBeTrue)
+		if (i->usFactMustBeTrue > FACT_PLAYER_KILLED_BOXERS) i->usFactMustBeTrue = FACT_NONE;
 		EXTR_U16( d, i->usFactMustBeFalse)
+		if (i->usFactMustBeFalse > FACT_PLAYER_KILLED_BOXERS) i->usFactMustBeFalse = FACT_NONE;
 		EXTR_U8(  d, i->ubQuest)
 		EXTR_U8(  d, i->ubFirstDay)
 		EXTR_U8(  d, i->ubLastDay)

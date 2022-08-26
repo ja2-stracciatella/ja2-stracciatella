@@ -721,21 +721,32 @@ void HourlyMoraleUpdate()
 			if (opinion == HATED_OPINION)
 			{
 				INT8 const hated = WhichHated(s->ubProfile, other->ubProfile);
-				if (hated < 0) SLOGW("Unexpected WhichHated() result");
-				else found_hated = hated >=2 ||
-					 // Learn to hate which has become full-blown hatred, full strength
-					 p.bHatedCount[hated] <= p.bHatedTime[hated];
-
-				if (found_hated)
+				INT8 hated_time = 0;
+				if (hated > 2)
 				{
-					// We're teamed with someone we hate! We HATE this! Ignore everyone else!
+					// Learn to hate which has become full-blown hatred, full strength
+					found_hated = true;
 					break;
 				}
+				else if (hated >= 0)
+				{
+					hated_time = p.bHatedTime[hated];
+					if (p.bHatedCount[hated] <= hated_time)
+					{
+						// We're teamed with someone we hate! We HATE this! Ignore everyone else!
+						found_hated = true;
+						break;
+					}
+				}
+				else
+				{
+					SLOGW("Unexpected WhichHated() result");
+				}
+
 				// Otherwise just mix this opinion in with everyone else
 
 				// Scale according to how close to we are to snapping
 				//KM : Divide by 0 error found.  Wrapped into an if statement.
-				INT8 const hated_time = p.bHatedTime[hated];
 				if (hated_time != 0)
 				{
 					opinion = (INT32)opinion * (hated_time - p.bHatedCount[hated]) / hated_time;
