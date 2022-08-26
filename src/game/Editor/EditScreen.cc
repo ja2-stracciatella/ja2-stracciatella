@@ -3194,6 +3194,8 @@ static void DrawObjectsBasedOnSelectionRegion(void)
 			if( fSkipTest || PerformDensityTest() )
 			{
 				iMapIndex = MAPROWCOLTOPOS( y, x );
+				if (iMapIndex < 0 || iMapIndex >= WORLD_MAX) continue;
+
 				switch( iDrawMode )
 				{
 					case DRAW_MODE_EXITGRID:

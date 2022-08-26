@@ -11,6 +11,7 @@
 #include "GamePolicy.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include <utility>
 
 TEST(Items, weaponsLoading)
 {
@@ -133,12 +134,11 @@ TEST(Items, GetLauncherFromLaunchable)
 
 TEST(Items, ValidAttachment)
 {
-	auto const oldGCM{GCM};
-	std::unique_ptr<DefaultContentManager> const cm(DefaultContentManagerUT::createDefaultCMForTesting());
+	std::unique_ptr<DefaultContentManager> cm(DefaultContentManagerUT::createDefaultCMForTesting());
 	ASSERT_TRUE(cm->loadGameData());
-	GCM = cm.get();
+	auto const oldGCM = std::exchange(GCM, cm.release());
 
-	bool& extra_attachments = const_cast<GamePolicy *>(cm->getGamePolicy())->extra_attachments;
+	bool& extra_attachments = const_cast<GamePolicy *>(GCM->getGamePolicy())->extra_attachments;
 
 	extra_attachments = false;
 	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::DETONATOR, ITEMDEFINE::HMX));
@@ -171,6 +171,7 @@ TEST(Items, ValidAttachment)
 	EXPECT_FALSE(ValidAttachment(ITEMDEFINE::AUTO_ROCKET_RIFLE, ITEMDEFINE::BRASS_KNUCKLES));
 	EXPECT_FALSE(ValidAttachment(0xf083, 0x8c12));
 
+	delete GCM;
 	GCM = oldGCM;
 }
 

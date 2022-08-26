@@ -1013,7 +1013,7 @@ static void InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculate_d
 		}
 
 		// Override calculated direction if we were told to....
-		if (s->ubInsertionDirection > 100)
+		if (s->ubInsertionDirection >= 100)
 		{
 			s->ubInsertionDirection -= 100;
 			calculate_direction      = FALSE;
@@ -1044,6 +1044,7 @@ static void InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculate_d
 	}
 
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) direction = s->bDirection;
+	if (direction >= 100) direction -= 100;
 	AddSoldierToSectorGridNo(s, gridno, direction, use_animation, anim_state, anim_code);
 
 	CheckForPotentialAddToBattleIncrement(s);
