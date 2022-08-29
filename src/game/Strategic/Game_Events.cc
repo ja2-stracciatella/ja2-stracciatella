@@ -67,7 +67,7 @@ static void AdjustClockToEventStamp(STRATEGICEVENT* pEvent, UINT32* puiAdjustmen
 void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 {
 	STRATEGICEVENT *curr, *pEvent, *prev, *temp;
-	BOOLEAN fDeleteEvent = FALSE, fDeleteQueuedEvent = FALSE;
+	BOOLEAN fDeleteEvent = FALSE;
 
 	gfTimeInterrupt = FALSE;
 	gfProcessingGameEvents = TRUE;
@@ -96,12 +96,10 @@ void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 			{ //make sure that we are processing the last event for that second
 				AdjustClockToEventStamp( curr, &uiAdjustment );
 
-				fDeleteEvent = ExecuteStrategicEvent( curr );
+				fDeleteEvent = ExecuteStrategicEvent(curr);
 
-				if( curr && prev && fDeleteQueuedEvent )
-				{ //The only case where we are deleting a node in the middle of the list
-					prev->next = curr->next;
-				}
+				//The only case where we are deleting a node in the middle of the list
+				//This will happen down below in the if (fDeleteEvent) block
 			}
 			else
 			{ //We are at the current target warp time however, there are still other events following in this time cycle.

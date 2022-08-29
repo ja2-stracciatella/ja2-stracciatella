@@ -727,7 +727,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 	switch (tempObject.usItem)
 	{
 		case MINE:
-			if (bVisibility == BURIED) usFlags |= WORLD_ITEM_ARMED_BOMB;
+			// Nothing to do here?
 			break;
 
 		case MONEY:

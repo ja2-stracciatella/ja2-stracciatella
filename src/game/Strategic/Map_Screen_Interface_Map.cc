@@ -1695,15 +1695,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow = EAST_ARROW;
 				iArrowSector += eastOffset;
 			}
-			else if((iDeltaA==1)&&(iDeltaB==-1))
-			{
-				iDirection=EAST_LINE;
-				if(!ubCounter)
-					iArrow=W_EAST_ARROW;
-				else
-					iArrow=EAST_ARROW;
-				iArrowSector += eastOffset;
-			}
 			else if((iDeltaA==-WORLD_MAP_X)&&(iDeltaB==WORLD_MAP_X))
 			{
 				iDirection=NORTH_LINE;
