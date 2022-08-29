@@ -14,9 +14,6 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
-INT16									gsNumAmbData = 0;
-
 
 static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 try
@@ -26,16 +23,10 @@ try
 
 	// READ #
 	hFile->read(&gsNumAmbData, sizeof(INT16));
+	Assert(gsNumAmbData <= MAX_AMBIENT_SOUNDS && gsNumAmbData >= 0);
 
-	// LOOP FOR OTHERS
-	for (INT32 cnt = 0; cnt < gsNumAmbData; cnt++)
-	{
-		hFile->read(&gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT));
-
-		zFilename = ST::format("{}/{}", AMBIENTDIR, gAmbData[cnt].zFilename);
-		if (zFilename.size() > SGPFILENAME_LEN) throw std::runtime_error("ambient file name too long");
-		strcpy(gAmbData[cnt].zFilename, zFilename.c_str());
-	}
+	// Read all ambient data
+	hFile->read(gAmbData, sizeof(AMBIENTDATA_STRUCT) * gsNumAmbData);
 
 	return TRUE;
 }
@@ -78,9 +69,16 @@ void DeleteAllAmbients()
 
 UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 {
+	if (static_cast<INT16>(uiAmbientID) >= gsNumAmbData)
+	{
+		return NO_SAMPLE;
+	}
+
 	const AMBIENTDATA_STRUCT* const a   = &gAmbData[uiAmbientID];
 	const UINT32                    vol = CalculateSoundEffectsVolume(a->uiVol);
-	return SoundPlayRandom(a->zFilename, a->uiMinTime, a->uiMaxTime, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
+	const auto filename = ST::format("{}/{}", AMBIENTDIR, a->zFilename);
+
+	return SoundPlayRandom(filename.c_str(), a->uiMinTime, a->uiMaxTime, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
 }
 
 

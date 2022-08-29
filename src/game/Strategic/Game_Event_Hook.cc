@@ -110,7 +110,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		//Called once a day to update the number of days that a hired merc from M.E.R.C. has been on contract.
 		// Also if the player hasn't paid for a while Specks will start sending e-mails to the player
 		case EVENT_DAILY_UPDATE_OF_MERC_SITE:
-			DailyUpdateOfMercSite( (UINT16)GetWorldDay() );
+			DailyUpdateOfMercSite();
 			break;
 		case EVENT_DAY3_ADD_EMAIL_FROM_SPECK:
 			AddEmail(MERC_INTRO, MERC_INTRO_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin( ) );
