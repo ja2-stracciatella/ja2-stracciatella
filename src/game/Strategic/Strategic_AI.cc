@@ -125,7 +125,6 @@ BOOLEAN gfUseAlternateQueenPosition = FALSE;
 
 //padding for generic globals
 #define SAI_PADDING_BYTES		97
-INT8		gbPadding[SAI_PADDING_BYTES]; // XXX HACK000B
 //patrol group info plus padding
 std::vector<PATROL_GROUP> gPatrolGroup;
 //army composition info plus padding
@@ -2073,7 +2072,7 @@ void SaveStrategicAI(HWFILE const hFile)
 	hFile->write(&gubHoursGracePeriod,                1);
 	hFile->write(&gusPlayerBattleVictories,           2);
 	hFile->write(&gfUseAlternateQueenPosition,        1);
-	hFile->write(gbPadding,           SAI_PADDING_BYTES);
+	hFile->seek(SAI_PADDING_BYTES, FileSeekMode::FILE_SEEK_FROM_CURRENT);
 	//Save the army composition (which does get modified)
 	hFile->write(gArmyComp.data(), gArmyComp.size() * sizeof(ARMY_COMPOSITION));
 	i = SAVED_ARMY_COMPOSITIONS - gArmyComp.size();
@@ -2131,7 +2130,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	hFile->read(&gubHoursGracePeriod,                1);
 	hFile->read(&gusPlayerBattleVictories,           2);
 	hFile->read(&gfUseAlternateQueenPosition,        1);
-	hFile->read(gbPadding,           SAI_PADDING_BYTES);
+	hFile->seek(SAI_PADDING_BYTES, FileSeekMode::FILE_SEEK_FROM_CURRENT);
 	//Restore the army composition
 	gArmyComp.clear();
 	gArmyComp.assign(SAVED_ARMY_COMPOSITIONS, ARMY_COMPOSITION{});
@@ -2260,12 +2259,12 @@ void LoadStrategicAI(HWFILE const hFile)
 	{
 		UNDERGROUND_SECTORINFO *pSector;
 		pSector = FindUnderGroundSector(SGPSector(4, 11, 1));
-		if( pSector->ubNumTroops + pSector->ubNumElites > 20 )
+		if (pSector && pSector->ubNumTroops + pSector->ubNumElites > 20)
 		{
 			pSector->ubNumTroops -= 2;
 		}
 		pSector = FindUnderGroundSector(SGPSector(3, 15, 1));
-		if( pSector->ubNumTroops + pSector->ubNumElites > 20 )
+		if (pSector && pSector->ubNumTroops + pSector->ubNumElites > 20)
 		{
 			pSector->ubNumTroops -= 2;
 		}
