@@ -54,7 +54,7 @@
 #include "Render_Dirty.h"
 #include "VSurface.h"
 #include "UILayout.h"
-
+#include <optional>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -1253,7 +1253,7 @@ static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 
 static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOOLEAN fExitVehicles)
 {
-	INT8 bUniqueVehicleSquad = -1;
+	std::optional<INT8> bUniqueVehicleSquad;
 	if (pGroup->fVehicle)
 	{
 		// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
@@ -1275,7 +1275,7 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 		// if involved, but off-duty (includes mercs inside vehicles!)
 
 		// if in a vehicle, pull him out
-		if (s.bAssignment == VEHICLE)
+		if (bUniqueVehicleSquad)
 		{
 			if (fExitVehicles)
 			{
@@ -1286,8 +1286,7 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 				 * group attack, the mercs could be coming from different sides, and the
 				 * placement screen can't handle mercs on the same squad arriving from
 				 * different edges! */
-				BOOLEAN const fSuccess = AddCharacterToSquad(&s, bUniqueVehicleSquad);
-				(void)fSuccess;
+				BOOLEAN const fSuccess = AddCharacterToSquad(&s, *bUniqueVehicleSquad);
 				Assert(fSuccess);
 			}
 		}

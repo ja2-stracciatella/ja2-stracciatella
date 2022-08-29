@@ -394,7 +394,6 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 	BOOLEAN bCivLowLoyalty = FALSE;
 	BOOLEAN bCivHighLoyalty = FALSE;
 	INT8    bCivHint;
-	INT8    bMineId;
 	BOOLEAN bMiners = FALSE;
 
 	(*pubCivHintToUse) = 0;
@@ -601,7 +600,8 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 			// Not done yet.
 
 			// Are they working for us?
-			bMineId = GetIdOfMineForSector(gWorldSector);
+			INT8 const bMineId = GetIdOfMineForSector(gWorldSector);
+			Assert(bMineId >= 0);
 
 			if ( PlayerControlsMine( bMineId ) )
 			{
