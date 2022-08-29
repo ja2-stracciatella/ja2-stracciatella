@@ -806,6 +806,8 @@ void IssueHeadMinerQuote(UINT8 const mine_idx, HeadMinerQuote const quote_type)
 
 UINT8 GetHeadMinersMineIndex( UINT8 ubMinerProfileId)
 {
+	Assert(ubMinerProfileId < NUM_PROFILES);
+
 	// find which mine this guy represents
 	for (auto mine : GCM->getMines())
 	{
@@ -816,7 +818,7 @@ UINT8 GetHeadMinersMineIndex( UINT8 ubMinerProfileId)
 	}
 
 	// not found!
-	SLOGA("Illegal profile id receieved or something is very wrong");
+	SLOGE("Illegal profile id receieved or something is very wrong");
 	return 0;
 }
 

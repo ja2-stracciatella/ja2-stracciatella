@@ -36,6 +36,7 @@
 #include "Text.h"
 #include "Timer_Control.h"
 #include "WeaponModels.h"
+#include <memory>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -43,7 +44,7 @@
 #define NUM_CIVQUOTE_SECTORS   20
 #define MINERS_CIV_QUOTE_INDEX 16
 
-template<typename T> static inline void FreeNullArray(T*& r) throw()
+template<typename T> static inline void FreeNullArray(T*& r)
 {
 	T* const p = r;
 	if (!p) return;
@@ -167,8 +168,8 @@ static UINT8 const gubAlternateNPCFileNumsForElliotMeanwhiles[] = { 180, 181, 18
 
 static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 {
-	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
-	for (NPCQuoteInfo* i = buf; i != buf + NUM_NPC_QUOTE_RECORDS; ++i)
+	auto buf = std::make_unique<NPCQuoteInfo[]>(NUM_NPC_QUOTE_RECORDS);
+	for (NPCQuoteInfo* i = &buf[0]; i != &buf[NUM_NPC_QUOTE_RECORDS]; ++i)
 	{
 		BYTE data[32];
 		f->read(data, sizeof(data));
@@ -210,7 +211,7 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		}
 		Assert(d.getConsumed() == lengthof(data));
 	}
-	return buf.Release();
+	return buf.release();
 }
 
 
@@ -1159,34 +1160,36 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		return( FALSE );
 	}
 
+	/* quest ∈ [0, MAX_QUESTS) : Quest in progress
+	 * quest ∈ [100, MAX_QUESTS + 100) : Quest not started
+	 * quest ∈ [200, MAX_QUESTS + 200) : Quest done */
+	UINT8 const quest = pNPCQuoteInfo->ubQuest;
+
 	// if the quote is quest-specific, is the player on that quest?
-	if (pNPCQuoteInfo->ubQuest != NO_QUEST)
+	if (quest != NO_QUEST)
 	{
-		if (pNPCQuoteInfo->ubQuest > QUEST_DONE_NUM && (pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM) < MAX_QUESTS)
+		if (quest % 100 >= MAX_QUESTS)
 		{
-			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM] != QUESTDONE)
+			throw std::out_of_range(ST::format("invalid quest index: {}", quest).c_str());
+		}
+
+		if (quest > QUEST_DONE_NUM)
+		{
+			if (gubQuest[quest - QUEST_DONE_NUM] != QUESTDONE)
 			{
 				return( FALSE );
 			}
 		}
-		else if (pNPCQuoteInfo->ubQuest > QUEST_NOT_STARTED_NUM && (pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM) < MAX_QUESTS)
+		else if (quest > QUEST_NOT_STARTED_NUM)
 		{
-			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM] != QUESTNOTSTARTED)
+			if (gubQuest[quest - QUEST_NOT_STARTED_NUM] != QUESTNOTSTARTED)
 			{
 				return( FALSE );
 			}
 		}
-		else if (pNPCQuoteInfo->ubQuest < MAX_QUESTS)
+		else if (gubQuest[quest] != QUESTINPROGRESS)
 		{
-			if (gubQuest[pNPCQuoteInfo->ubQuest] != QUESTINPROGRESS)
-			{
-				return( FALSE );
-			}
-		}
-		else
-		{
-			ST::string err = ST::format("invalid quest index: {}", pNPCQuoteInfo->ubQuest);
-			throw std::runtime_error(err.to_std_string());
+			return( FALSE );
 		}
 	}
 
