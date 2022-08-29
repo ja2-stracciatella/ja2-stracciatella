@@ -384,12 +384,10 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 	UINT32 *puiStatTimerPtr = NULL;
 	BOOLEAN fChangeTypeIncrease;
 	BOOLEAN fChangeSalary;
-	UINT32 uiLevelCnt;
 	UINT8 ubMercMercIdValue = 0;
 	UINT16 usIncreaseValue = 0;
-	UINT16 usSubpointsPerPoint;
 
-	usSubpointsPerPoint = SubpointsPerPoint(ubStat, p.bExpLevel);
+	UINT16 const usSubpointsPerPoint = SubpointsPerPoint(ubStat, p.bExpLevel);
 
 	// build ptrs to appropriate profiletype stat fields
 	switch( ubStat )
@@ -461,7 +459,8 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 			break;
 
 		default:
-			break;
+			// SubpointsPerPoint() already logs an error for invalid ubStat values
+			return;
 	}
 
 
@@ -720,7 +719,7 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 			if (fChangeSalary)
 			{
 				// increase all salaries and medical deposits, once for each level gained
-				for (uiLevelCnt = 0; uiLevelCnt < (UINT32) sPtsChanged; uiLevelCnt++)
+				for (INT16 levelCnt = 0; levelCnt < sPtsChanged; ++levelCnt)
 				{
 					p.sSalary = (INT16) CalcNewSalary(p.sSalary, fChangeTypeIncrease,
 										MAX_DAILY_SALARY);
