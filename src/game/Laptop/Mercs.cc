@@ -1575,7 +1575,7 @@ static std::vector<UINT8> GetAvailableRandomQuotes()
 	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
 		if (!IsMercMercAvailable(GetProfileIDFromMERCListing(m))) continue;
-		for (auto q : m->getQuotesByType(SpeckQuoteType::ADVERTISE))
+		for (auto const& q : m->getQuotesByType(SpeckQuoteType::ADVERTISE))
 		{
 			quotes.push_back(q->quoteID);
 		}

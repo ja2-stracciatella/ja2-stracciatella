@@ -696,7 +696,7 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 			SLOGE("Attempting to check if mine is clear but mine index is invalid ({}).", ubMineIndex);
 			return true;
 		}
-		for (auto sector : mine->mineSectors)
+		for (auto const& sector : mine->mineSectors)
 		{
 			if (CreaturesInUndergroundSector(sector[0], sector[1]))
 			{
