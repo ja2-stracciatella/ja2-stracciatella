@@ -57,7 +57,7 @@ void RenderMercs(void);
 void InitMercBackGround(void);
 void DrawMecBackGround(void);
 void RemoveMercBackGround(void);
-void DailyUpdateOfMercSite( UINT16 usDate);
+void DailyUpdateOfMercSite();
 ProfileID GetProfileIDFromMERCListingIndex(UINT8 ubMercIndex);
 ProfileID GetProfileIDFromMERCListing(const MERCListingModel* listing);
 void DisplayTextForSpeckVideoPopUp(const ST::string& str);

@@ -2519,12 +2519,12 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			// Now intiate conv
 			InitiateConversationFull(pTSoldier, pSoldier, APPROACH_GIVINGITEM, 0, &TempObject);
 		}
+
+		pTSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
 	}
 
 	// OK, disengage buddy
 	pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
-	pTSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
-
 }
 
 

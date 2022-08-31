@@ -9,7 +9,7 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID );
 void StopAmbients(void);
 void DeleteAllAmbients(void);
 
-extern AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
-extern INT16								gsNumAmbData;
+inline AMBIENTDATA_STRUCT gAmbData[MAX_AMBIENT_SOUNDS];
+inline INT16 gsNumAmbData = 0;
 
 #endif

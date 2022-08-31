@@ -82,7 +82,7 @@ UINT16 SearchForRoofType(UINT32 const map_idx)
 				for (LEVELNODE const* i = gpWorldLevelData[grid_no].pRoofHead; i; i = i->pNext)
 				{
 					UINT32 const tile_type = GetTileType(i->usIndex);
-					if (tile_type < FIRSTROOF && LASTROOF < tile_type) continue;
+					if (tile_type < FIRSTROOF || tile_type > LASTROOF) continue;
 					// found a roof, so return its type.
 					return tile_type;
 				}

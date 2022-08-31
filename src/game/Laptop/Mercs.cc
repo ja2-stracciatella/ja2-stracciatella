@@ -529,15 +529,13 @@ static void ScheduleNewMercsToBeAvailable();
 static BOOLEAN ShouldTheMercSiteServerGoDown(void);
 
 
-void DailyUpdateOfMercSite( UINT16 usDate)
+void DailyUpdateOfMercSite()
 {
-	INT32 iNumDays;
-
 	//if its the first day, leave
-	if( usDate == 1 )
+	if (GetWorldDay() == 1)
 		return;
 
-	iNumDays = 0;
+	INT32 iNumDays = 0;
 
 	//loop through all of the hired mercs from M.E.R.C.
 	for (const MERCListingModel* m : GCM->getMERCListings())
@@ -977,7 +975,6 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 {
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 	BOOLEAN	fCanSayLackOfPaymentQuote = TRUE;
-	BOOLEAN fCanUseIdleTag = FALSE;
 
 	//If we just entered the screen, reset some variables
 	if( fJustEnteredScreen )
@@ -1008,12 +1005,13 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 	else if( LaptopSaveInfo.ubPlayerBeenToMercSiteStatus == MERC_SITE_SECOND_VISIT )
 	{
 		StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_1_TOUGH_START );
-		fCanUseIdleTag = TRUE;
 	}
 
 	// We have been here at least 2 times before, Check which quote we should use
 	else
 	{
+		BOOLEAN fCanUseIdleTag = FALSE;
+
 		//if the player has not hired any MERC mercs before
 		// CJC Dec 1 2002: fixing this, so near-bankrupt msg will play
 		if( !IsAnyMercMercsHired( ) && CalcMercDaysServed() == 0)
@@ -1097,29 +1095,12 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 
 		if( fCanUseIdleTag )
 		{
-			UINT8 ubRandom = Random( 100 );
-
-			if( ubRandom < 50 )
+			if (Chance(50))
 			{
-				ubRandom = Random( 4 );
-
-				switch( ubRandom )
-				{
-					case 0:
-						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_1 );
-						break;
-					case 1:
-						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_2 );
-						break;
-					case 2:
-						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_3 );
-						break;
-					case 3:
-						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_4 );
-						break;
-					default:
-						SLOGA("GetSpeckConditionalOpening: Problem with random");
-				}
+				// Ensure these quotes are contiguous
+				static_assert(SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_1 ==
+				              SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_4 - 3);
+				StartSpeckTalking(SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_1 + Random(4));
 			}
 		}
 	}
@@ -1575,7 +1556,7 @@ static std::vector<UINT8> GetAvailableRandomQuotes()
 	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
 		if (!IsMercMercAvailable(GetProfileIDFromMERCListing(m))) continue;
-		for (auto q : m->getQuotesByType(SpeckQuoteType::ADVERTISE))
+		for (auto const& q : m->getQuotesByType(SpeckQuoteType::ADVERTISE))
 		{
 			quotes.push_back(q->quoteID);
 		}

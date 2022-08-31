@@ -993,8 +993,6 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 	else
 	{
 		uiMedcost = uiActual;
-		if ( uiMedcost == 0 && uiActual > 0)
-			uiMedcost = 1;
 		if ( uiMedcost > (UINT32)sKitPts)		// can't afford it
 			uiMedcost = uiActual = sKitPts;   	// recalc cost AND aid
 	}
