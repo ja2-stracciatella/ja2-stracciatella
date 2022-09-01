@@ -58,18 +58,16 @@
 #include "WordWrap.h"
 #include "WorldMan.h"
 #include <map>
+#include <memory>
 #include <queue>
 #include <string_theory/format>
-struct MercPopUpBox;
 
-
-#define QUOTE_MESSAGE_SIZE			520
 
 #define DIALOGUE_DEFAULT_SUBTITLE_WIDTH	200
 #define TEXT_DELAY_MODIFIER			60
 
 
-typedef std::queue<DialogueEvent*>DialogueQueue;
+using DialogueQueue = std::queue<std::unique_ptr<DialogueEvent>>;
 
 static std::map<ProfileID, FACETYPE*> externalNPCFaces;
 
@@ -458,12 +456,11 @@ void HandleDialogue()
 	}
 
 	// If here, pick current one from queue and play
-	DialogueEvent*const d = ghDialogueQ.front();
+	auto const& d = ghDialogueQ.front();
 
 	// If we are in auto bandage, ignore any quotes!
 	if (gTacticalStatus.fAutoBandageMode || !d->Execute())
 	{
-		delete d;
 		if(!ghDialogueQ.empty()) ghDialogueQ.pop();
 	}
 }
@@ -473,7 +470,7 @@ void DialogueEvent::Add(DialogueEvent* const d)
 {
 	try
 	{
-		ghDialogueQ.push(d);
+		ghDialogueQ.emplace(d);
 	}
 	catch (...)
 	{
