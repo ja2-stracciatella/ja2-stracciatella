@@ -3,12 +3,7 @@
 
 #include "GameScreen.h"
 #include "JA2Types.h"
-#include "Types.h"
 #include <string_theory/string>
-struct FACETYPE;
-struct MERCPROFILESTRUCT;
-struct MercPopUpBox;
-struct SOLDIERTYPE;
 
 
 // An enumeration for dialog quotes
