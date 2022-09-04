@@ -20,7 +20,7 @@ static inline MERCPROFILESTRUCT& GetProfile(ProfileID const id)
 }
 
 //enums for the mercs
-enum NPCIDs
+enum NPCIDs : ProfileID
 {
 	BARRY   =  0,
 	BLOOD   =  1,
@@ -186,6 +186,8 @@ enum NPCIDs
 	NPC167,
 	NPC168,
 	NPC169
+
+	// 200 is NO_PROFILE, defined in Soldier_Control.h
 };
 
 BOOLEAN IsProfileIdAnAimOrMERCMerc(UINT8 ubProfileID);

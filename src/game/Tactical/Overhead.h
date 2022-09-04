@@ -136,8 +136,6 @@ static inline SOLDIERTYPE& GetMan(UINT const idx)
 	return Menptr[idx];
 }
 
-typedef UINT8 SoldierID;
-
 static inline SoldierID Soldier2ID(const SOLDIERTYPE* const s)
 {
 	return s != NULL ? s->ubID : NOBODY;

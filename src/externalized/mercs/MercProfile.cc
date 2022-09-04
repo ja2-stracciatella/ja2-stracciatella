@@ -3,14 +3,14 @@
 #include "Soldier_Profile.h"
 #include "Soldier_Profile_Type.h"
 
-MercProfile::MercProfile(ProfileID profileID)
-	: m_profileID(profileID), m_profile(&gMercProfiles[profileID])
+MercProfile::MercProfile(ProfileID profileID) : m_profileID(profileID)
 {
-	if (m_profileID >= lengthof(gMercProfiles))
+	if (m_profileID >= NUM_PROFILES)
 	{
 		ST::string err = ST::format("invalid m_profileID '{}'", m_profileID);
-		throw std::runtime_error(err.to_std_string());
+		throw std::out_of_range(err.c_str());
 	}
+	m_profile = &gMercProfiles[profileID];
 }
 
 MercProfile::MercProfile(const MercProfileInfo* info)

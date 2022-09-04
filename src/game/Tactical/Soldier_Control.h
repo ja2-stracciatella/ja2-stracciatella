@@ -23,7 +23,7 @@
 
 #define LOCKED_NO_NEWGRIDNO				2
 
-#define NO_PROFILE					200
+constexpr ProfileID NO_PROFILE = 200;
 
 #define BATTLE_SND_LOWER_VOLUME			1
 
@@ -316,6 +316,7 @@ enum WeaponModes : INT8
 	NUM_WEAPON_MODES
 };
 
+using SoldierID = UINT8;
 
 #define SOLDIERTYPE_NAME_LENGTH 10
 
@@ -323,7 +324,7 @@ enum WeaponModes : INT8
 struct SOLDIERTYPE
 {
 	// ID
-	UINT8 ubID;
+	SoldierID ubID;
 
 	// DESCRIPTION / STATS, ETC
 	UINT8 ubBodyType;
@@ -374,8 +375,6 @@ struct SOLDIERTYPE
 
 	UINT8 ubMovementNoiseHeard;// 8 flags by direction
 
-	// 23 bytes so far
-
 	// WORLD POSITION STUFF
 	FLOAT dXPos;
 	FLOAT dYPos;
@@ -389,8 +388,6 @@ struct SOLDIERTYPE
 
 	INT8 bCollapsed; // collapsed due to being out of APs
 	INT8 bBreathCollapsed; // collapsed due to being out of APs
-	// 50 bytes so far
-
 
 	UINT8 ubDesiredHeight;
 	UINT16 usPendingAnimation;
@@ -400,8 +397,6 @@ struct SOLDIERTYPE
 	BOOLEAN fPausedMove;
 	BOOLEAN fUIdeadMerc; // UI Flags for removing a newly dead merc
 	BOOLEAN fUICloseMerc; // UI Flags for closing panels
-
-
 
 	TIMECOUNTER UpdateCounter;
 	TIMECOUNTER DamageCounter;
@@ -426,8 +421,7 @@ struct SOLDIERTYPE
 
 	BOOLEAN fContinueMoveAfterStanceChange;
 
-	// 60
-	AnimationSurfaceCacheType AnimCache; // will be 9 bytes once changed to pointers
+	AnimationSurfaceCacheType AnimCache;
 
 	INT8 bLife; // current life (hit points or health)
 	UINT8 bSide;
@@ -479,7 +473,7 @@ struct SOLDIERTYPE
 	ST::string SkinPal;
 
 	UINT16 *pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
-	UINT16 *pGlowShades[ 20 ]; //
+	UINT16 *pGlowShades[20];
 	INT8 bMedical;
 	BOOLEAN fBeginFade;
 	UINT8 ubFadeLevel;
@@ -607,7 +601,7 @@ struct SOLDIERTYPE
 	TIMECOUNTER BlinkSelCounter;
 	TIMECOUNTER PortraitFlashCounter;
 	BOOLEAN fDeadSoundPlayed;
-	UINT8 ubProfile;
+	ProfileID ubProfile;
 	UINT8 ubQuoteRecord;
 	UINT8 ubQuoteActionID;
 	UINT8 ubBattleSoundID;
