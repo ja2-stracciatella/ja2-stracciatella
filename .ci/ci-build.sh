@@ -67,9 +67,6 @@ elif [[ "$CI_TARGET" == "android" ]]; then
   export BUILD_TOOL_ARGS="-p ../android assemble$ANDROID_BUILD_TYPE -PbuildDir=$(pwd)/ci-build"
   export RUN_TESTS=false
   export PACKAGE_NAME="ja2-stracciatella_$(./android/gradlew -q -p ./android projectVersion)-$VERSION_TAG+$(git rev-parse --short HEAD)_android.apk"
-
-  # Gradle requires at least java 11
-  export JAVA_HOME="$JAVA_HOME_17_X64"
 else
   echo "unexpected target ${CI_TARGET}"
   exit 1
