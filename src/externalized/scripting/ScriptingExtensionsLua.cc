@@ -132,6 +132,12 @@ void InitScriptingEngine()
 
 static void RegisterUserTypes()
 {
+	lua.new_usertype<SGPSector>("SGPSector",
+		"x", &SGPSector::x,
+		"y", &SGPSector::y,
+		"z", &SGPSector::z
+		);
+
 	lua.new_usertype<SECTORINFO>("SECTORINFO",
 		"ubNumAdmins", &SECTORINFO::ubNumAdmins,
 		"ubNumTroops", &SECTORINFO::ubNumTroops,
