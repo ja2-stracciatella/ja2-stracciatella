@@ -10,7 +10,6 @@ StracciatellaLauncher::StracciatellaLauncher() {
       { Fl_Group* o = new Fl_Group(0, 50, 520, 300, "@> Play  ");
         o->labelsize(16);
         o->labelcolor((Fl_Color)24);
-        o->hide();
         { editorButton = new Fl_Button(160, 150, 200, 25, "Start Map Editor");
         } // Fl_Button* editorButton
         { playButton = new Fl_Button(160, 185, 200, 55, "Play Ja2 Stracciatella");
@@ -99,6 +98,7 @@ le from the mod with the highest priority is used.");
       } // Fl_Group* o
       { Fl_Group* o = new Fl_Group(0, 50, 520, 300, "@menu Settings ");
         o->labelcolor((Fl_Color)24);
+        o->hide();
         { Fl_Group* o = new Fl_Group(10, 60, 500, 45);
           { gameSettingsOutput = new Fl_Output(20, 75, 480, 30, "Game Settings:");
             gameSettingsOutput->align(Fl_Align(FL_ALIGN_TOP_LEFT));

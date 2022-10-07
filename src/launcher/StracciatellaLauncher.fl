@@ -14,8 +14,8 @@ class StracciatellaLauncher {open
         xywh {0 0 520 350} align 9 resizable
       } {
         Fl_Group {} {
-          label {@> Play  }
-          xywh {0 50 520 300} labelsize 16 labelcolor 24 hide
+          label {@> Play  } selected
+          xywh {0 50 520 300} labelsize 16 labelcolor 24
         } {
           Fl_Button editorButton {
             label {Start Map Editor}
@@ -109,13 +109,13 @@ class StracciatellaLauncher {open
         }
         Fl_Group {} {
           label {@menu Settings } open
-          xywh {0 50 520 300} labelcolor 24
+          xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {open
             xywh {10 60 500 45}
           } {
             Fl_Output gameSettingsOutput {
-              label {Game Settings:} selected
+              label {Game Settings:}
               xywh {20 75 480 30} align 5 resizable
             }
           }
