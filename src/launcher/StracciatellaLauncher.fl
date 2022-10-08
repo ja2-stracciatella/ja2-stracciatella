@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0308
+version 1.0305
 header_name {.h}
 code_name {.cc}
 class StracciatellaLauncher {open
@@ -8,7 +8,7 @@ class StracciatellaLauncher {open
   } {
     Fl_Window stracciatellaLauncher {
       label {JA2 Stracciatella Launcher} open
-      xywh {555 168 520 380} type Double resizable size_range {520 390 0 0} visible
+      xywh {586 89 520 380} type Double resizable size_range {520 390 0 0} visible
     } {
       Fl_Tabs tabs {open
         xywh {0 0 520 350} align 9 resizable
@@ -108,7 +108,7 @@ class StracciatellaLauncher {open
           }
         }
         Fl_Group {} {
-          label {@menu Settings }
+          label {@menu Settings } open
           xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {open
@@ -120,60 +120,52 @@ class StracciatellaLauncher {open
             }
           }
           Fl_Group {} {open
-            xywh {10 115 500 45}
-          } {
-            Fl_Choice scalingModeChoice {
-              label {Scaling Mode:} open
-              xywh {20 130 480 30} down_box BORDER_BOX align 5 resizable
-            } {}
-          }
-          Fl_Group {} {
-            xywh {10 170 500 45}
+            tooltip {Specify the resolution for tactical screen rendering. Texts and sprites become very small at higher internal resolutions. Note that menus and the strategic map screen are always rendered at 640x480.} xywh {10 115 500 52}
           } {
             Fl_Value_Input resolutionXInput {
-              label {Resolution:}
-              xywh {20 185 75 30} align 5 minimum 640 maximum 0 value 640
+              label {Internal Resolution:}
+              xywh {20 130 75 30} align 5 minimum 640 maximum 0 value 640
             }
             Fl_Box {} {
               label x
-              xywh {95 185 20 30}
+              xywh {95 130 20 30}
             }
             Fl_Value_Input resolutionYInput {
-              xywh {115 185 75 30} labeltype NO_LABEL align 5 minimum 480 maximum 0 value 480
+              xywh {115 130 75 30} labeltype NO_LABEL align 5 minimum 480 maximum 0 value 480
             }
             Fl_Menu_Button predefinedResolutionMenuButton {
               label Predefined open
-              xywh {210 185 110 30}
+              xywh {210 130 110 30}
             } {}
             Fl_Group {} {
               label resizable open
-              xywh {415 170 30 30} labeltype NO_LABEL align 17 resizable
+              xywh {415 115 30 30} labeltype NO_LABEL align 17 resizable
             } {}
             Fl_Box invalidResolutionLabel {
               label {invalid!}
-              tooltip {the resolution must be at least 640x480, the original game resolution} xywh {340 185 160 30} labelfont 1 labelcolor 1 align 20
+              tooltip {the resolution must be at least 640x480, the original game resolution} xywh {340 130 160 30} labelfont 1 labelcolor 1 align 20
             }
+          }
+          Fl_Group {} {open
+            tooltip {Choose a scaling mode to stretch the game video to fit the screen. Linear and Near-Perfect modes stretch the video to match any window sizes, but the image may look blurred. Pixel-Perfect can only scale up by integer (1x, 2x and so on) but gives sharp images.} xywh {10 170 500 55}
+          } {
+            Fl_Choice scalingModeChoice {
+              label {Scaling Mode:} open
+              xywh {20 185 480 30} down_box BORDER_BOX align 5 resizable
+            } {}
           }
           Fl_Group {} {open
             xywh {10 220 500 65}
           } {
             Fl_Check_Button fullscreenCheckbox {
               label Fullscreen
-              xywh {20 225 95 30} down_box DOWN_BOX
+              tooltip {Check to run in a borderless full-screen window} xywh {20 225 95 30} down_box DOWN_BOX
             }
             Fl_Check_Button playSoundsCheckbox {
               label {Play Sounds}
               xywh {20 255 109 30} down_box DOWN_BOX value 1
             }
-            Fl_Group {} {
-              label resizable open
-              xywh {415 220 30 30} labeltype NO_LABEL align 17 resizable
-            } {}
           }
-          Fl_Group {} {
-            label resizable open
-            xywh {10 285 445 30} labeltype NO_LABEL align 17 resizable
-          } {}
         }
         Fl_Group logsTab {
           label {@square Logs} open
