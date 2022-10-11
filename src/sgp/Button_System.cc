@@ -11,10 +11,7 @@
 #include "Video.h"
 #include "WCheck.h"
 #include "WordWrap.h"
-
-#ifdef _JA2_RENDER_DIRTY
-#	include "Font_Control.h"
-#endif
+#include "Font_Control.h"
 
 #include <string_theory/string>
 
@@ -500,8 +497,8 @@ static INT32 GetNextButtonNumber(void)
 }
 
 
-static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason);
-static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason);
+static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason);
+static void QuickButtonCallbackMMove(MOUSE_REGION* reg, UINT32 reason);
 
 
 GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, INT16 const width, INT16 const height, INT8 const priority, GUI_CALLBACK const click, GUI_CALLBACK const move) :
@@ -569,8 +566,7 @@ GUI_BUTTON::~GUI_BUTTON()
 	}
 }
 
-
-static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason);
+static void DefaultMoveCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
@@ -669,7 +665,7 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, 
 
 GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
-	GUIButtonRef const btn = CreateTextButton(str, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
+	GUIButtonRef const btn = CreateTextButton(str, font, forecolor, shadowcolor, x, y, w, h, priority, MSYS_NO_CALLBACK);
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 	DisableButton(btn);
 	return btn;
@@ -774,7 +770,7 @@ void GUI_BUTTON::SetFastHelpText(const ST::string& str)
 /* Dispatches all button callbacks for mouse movement. This function gets
  * called by the Mouse System. *DO NOT CALL DIRECTLY*
  */
-static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
+static void QuickButtonCallbackMMove(MOUSE_REGION* reg, UINT32 reason)
 {
 	Assert(reg != NULL);
 	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
@@ -802,7 +798,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 /* Dispatches all button callbacks for button presses. This function is called
  * by the Mouse System. *DO NOT CALL DIRECTLY*
  */
-static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
+static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 {
 	Assert(reg != NULL);
 	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
@@ -812,7 +808,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	{
 		// Should we play a sound if clicked on while disabled?
 		if (b->ubSoundSchemeID &&
-				reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN))
+				reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			PlayButtonSound(b, BUTTON_SOUND_DISABLED_CLICK);
 		}
@@ -824,7 +820,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 
 	if (b->uiFlags & BUTTON_NEWTOGGLE)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			if (!b->ubToggleButtonActivated)
 			{
@@ -832,34 +828,43 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 				b->ubToggleButtonActivated = TRUE;
 			}
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			b->ubToggleButtonActivated = FALSE;
 		}
 	}
 
+	// Check if we are using the default move callback
+	bool isDefaultCallback = false;
+	if (b->MoveCallback) {
+		auto moveCallbackPtr = b->MoveCallback.target<void(*)(GUI_BUTTON*, UINT32)>();
+		if (moveCallbackPtr != NULL) {
+			isDefaultCallback = *moveCallbackPtr == DefaultMoveCallback;
+
+		}
+	}
 	/* Kris:
 	 * Set the anchored button incase the user moves mouse off region while still
 	 * holding down the button, but only if the button is up.  In Win95, buttons
 	 * that are already down, and anchored never change state, unless you release
 	 * the mouse in the button area.
 	 */
-	if (b->MoveCallback == DefaultMoveCallback)
+	if (isDefaultCallback)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			gpAnchoredButton = b;
 			gfAnchoredState = StateBefore;
 			b->uiFlags |= BUTTON_CLICKED_ON;
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			b->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 	}
 	else if (b->uiFlags & BUTTON_CHECKBOX)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			/* The check box button gets anchored, though it doesn't actually use the
 			 * anchoring move callback.  The effect is different, we don't want to
@@ -876,7 +881,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 			StateBefore = !b->Clicked();
 			StateAfter  = !StateBefore;
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			b->uiFlags ^= BUTTON_CLICKED_ON; //toggle the checkbox state upon release inside button area.
 			/* Trick the before state of the button to be different so the sound will
@@ -888,7 +893,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	}
 
 	// If there is a callback function with this button, call it
-	if (b->ClickCallback != NULL)
+	if (b->ClickCallback)
 	{
 		/* Kris:  January 6, 1998
 		 * Added these checks to avoid a case where it was possible to process a
@@ -896,15 +901,15 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		 * been.
 		 */
 		gfDelayButtonDeletion = TRUE;
-		if (!(reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ||
-				b->MoveCallback != DefaultMoveCallback ||
+		if (!(reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)) ||
+				!isDefaultCallback ||
 				gpPrevAnchoredButton == b)
 		{
 			b->ClickCallback(b, reason);
 		}
 		gfDelayButtonDeletion = FALSE;
 	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 	{
 		// Otherwise, do default action with this button.
 		b->uiFlags ^= BUTTON_CLICKED_ON;
@@ -918,14 +923,14 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	// Play sounds for this enabled button (disabled sounds have already been done)
 	if (b->ubSoundSchemeID && b->Enabled())
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
 			if (StateBefore && !StateAfter)
 			{
 				PlayButtonSound(b, BUTTON_SOUND_CLICKED_OFF);
 			}
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 		{
 			if (!StateBefore && StateAfter)
 			{
@@ -1153,18 +1158,6 @@ static void DrawShadeOnButton(const GUI_BUTTON* b)
 }
 
 
-void GUI_BUTTON::DrawCheckBoxOnOff(BOOLEAN const on)
-{
-	BOOLEAN const fLeftButtonState = gfLeftButtonState;
-
-	gfLeftButtonState = on;
-	Area.uiFlags |= MSYS_MOUSE_IN_AREA;
-	Draw();
-
-	gfLeftButtonState = fLeftButtonState;
-}
-
-
 static void DrawCheckBoxButton(const GUI_BUTTON *b)
 {
 	const BUTTON_PICS* const pics = b->image;
@@ -1177,7 +1170,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 			// Is the mouse over this area, and we have a hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
-					gfLeftButtonState &&
+					IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
 					pics->OnHilite != -1)
 			{
 				UseImage = pics->OnHilite;
@@ -1192,7 +1185,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 			// Is the mouse over the button, and do we have hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
-					gfLeftButtonState &&
+					IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
 					pics->OffHilite != -1)
 			{
 				UseImage = pics->OffHilite;
@@ -1630,7 +1623,7 @@ GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 
 /* Generic Button Movement Callback to reset the mouse button if the mouse is no
  * longer in the button region.
  */
-static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
+static void DefaultMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	// If the button isn't the anchored button, then we don't want to modify the button state.
 	if (btn != gpAnchoredButton) return;
@@ -1657,7 +1650,6 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 		InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 	}
 }
-
 
 void ReleaseAnchorMode(void)
 {

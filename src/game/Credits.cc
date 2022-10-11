@@ -195,7 +195,7 @@ ScreenID CreditScreenHandle(void)
 
 static void InitCreditEyeBlinking(void);
 static void RenderCreditScreen(void);
-static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static BOOLEAN EnterCreditsScreen(void)
@@ -229,7 +229,7 @@ try
 		UINT16        const  y = f.sY + STD_SCREEN_Y;
 		UINT16        const  w = f.sWidth;
 		UINT16        const  h = f.sHeight;
-		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, MSYS_NO_CALLBACK);
 		MSYS_SetRegionUserData(r, 0, i);
 	}
 
@@ -307,7 +307,7 @@ static void RenderCreditScreen(void)
 static void GetCreditScreenUserInput(void)
 {
 	InputAtom Event;
-	while (DequeueEvent(&Event))
+	while (DequeueSpecificEvent(&Event, KEYBOARD_EVENTS))
 	{
 		if (Event.usEvent == KEY_DOWN)
 		{
@@ -526,7 +526,7 @@ static void HandleCreditFlags(UINT32 uiFlags)
 }
 
 
-static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{

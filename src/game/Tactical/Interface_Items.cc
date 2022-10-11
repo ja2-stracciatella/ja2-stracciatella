@@ -1758,11 +1758,16 @@ static void SetAttachmentTooltips(void)
 }
 
 
-static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void ItemDescAmmoCallback(GUI_BUTTON* btn, INT32 reason);
-static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void ItemDescDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnMoneyButtonCallbackPrimary(GUI_BUTTON* btn, UINT32 reason);
+static void BtnMoneyButtonCallbackSecondary(GUI_BUTTON* btn, UINT32 reason);
+static void BtnMoneyButtonCallbackOther(GUI_BUTTON* btn, UINT32 reason);
+static void ItemDescAmmoCallback(GUI_BUTTON* btn, UINT32 reason);
+static void ItemDescAttachmentsCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemDescAttachmentsCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemDescCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemDescCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemDescDoneButtonCallbackPrimary(GUI_BUTTON* btn, UINT32 reason);
+static void ItemDescDoneButtonCallbackSecondary(GUI_BUTTON* btn, UINT32 reason);
 static void ReloadItemDesc(void);
 
 
@@ -1779,19 +1784,20 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	gubItemDescStatusIndex = ubStatusIndex;
 	gpItemDescSoldier      = s;
 	fItemDescDelete        = FALSE;
+	MOUSE_CALLBACK itemDescCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemDescCallbackPrimary, ItemDescCallbackSecondary);
 
 	// Build a mouse region here that is over any others.....
 	if (in_map)
 	{
-		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback);
+		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, itemDescCallback);
 
-		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ItemDescDoneButtonCallback);
+		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, MouseCallbackPrimarySecondary<GUI_BUTTON>(ItemDescDoneButtonCallbackPrimary, ItemDescDoneButtonCallbackSecondary));
 
 		fShowDescriptionFlag = TRUE;
 	}
 	else
 	{
-		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + ITEMDESC_WIDTH, gsInvDescY + ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
+		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + ITEMDESC_WIDTH, gsInvDescY + ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, itemDescCallback);
 	}
 
 	if (GCM->getItem(o->usItem)->isGun()&& o->usItem != ROCKET_LAUNCHER)
@@ -1848,7 +1854,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		{
 			// Add region for pros/cons help text
 			MOUSE_REGION* const r = &gProsAndConsRegions[i];
-			MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
+			MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, itemDescCallback);
 			y += box->h;
 
 			ST::string label;
@@ -1885,13 +1891,15 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			const UINT16        w = agi->item_box.w;
 			const UINT16        h = agi->item_box.h;
 			MOUSE_REGION* const r = &gItemDescAttachmentRegions[i];
-			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescAttachmentsCallback);
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemDescAttachmentsCallbackPrimary, ItemDescAttachmentsCallbackSecondary));
 			MSYS_SetRegionUserData(r, 0, i);
 		}
 		SetAttachmentTooltips();
 	}
 	else
 	{
+		GUI_CALLBACK btnMoneyButtonCallback = MouseCallbackPrimarySecondary<GUI_BUTTON>(BtnMoneyButtonCallbackPrimary, BtnMoneyButtonCallbackSecondary, BtnMoneyButtonCallbackOther);
+
 		gRemoveMoney = REMOVE_MONEY{};
 		gRemoveMoney.uiTotalAmount    = o->uiMoneyAmount;
 		gRemoveMoney.uiMoneyRemaining = o->uiMoneyAmount;
@@ -1910,7 +1918,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 				5, DEFAULT_SHADOW,
 				5, DEFAULT_SHADOW,
 				loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
-				BtnMoneyButtonCallback
+				btnMoneyButtonCallback
 			);
 			guiMoneyButtonBtn[i]->SetUserData(i);
 		}
@@ -1925,7 +1933,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			5, DEFAULT_SHADOW,
 			5, DEFAULT_SHADOW,
 			loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
-			BtnMoneyButtonCallback
+			btnMoneyButtonCallback
 		);
 		guiMoneyButtonBtn[i]->SetUserData(i);
 	}
@@ -1991,9 +1999,9 @@ static void ReloadItemDesc(void)
 }
 
 
-static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, INT32 const reason)
+static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gpItemPointer) return;
 		if (!EmptyWeaponMagazine(gpItemDescObject, &gItemPointer)) return;
@@ -2085,112 +2093,109 @@ static void PermanantAttachmentMessageBoxCallBack(MessageBoxReturnValue const ub
 }
 
 
-static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemDescAttachmentsCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	UINT32 uiItemPos;
-	static BOOLEAN fRightDown = FALSE;
-
 	if ( gfItemDescObjectIsAttachment )
 	{
 		// screen out completely
 		return;
 	}
 
-	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
+	UINT32 uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	// if the item being described belongs to a shopkeeper, ignore attempts to pick it up / replace it
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN && pShopKeeperItemDescObject)
 	{
-		// if the item being described belongs to a shopkeeper, ignore attempts to pick it up / replace it
+		return;
+	}
+
+	// Try to place attachment if something is in our hand
+	// require as many APs as to reload
+	if ( gpItemPointer != NULL )
+	{
+		// nb pointer could be NULL because of inventory manipulation in mapscreen from sector inv
+		if ( !gpItemPointerSoldier || EnoughPoints( gpItemPointerSoldier, AP_RELOAD_GUN, 0, TRUE ) )
+		{
+			if ( (GCM->getItem(gpItemPointer->usItem)->getFlags() & ITEM_INSEPARABLE) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
+			{
+				DoScreenIndependantMessageBox(g_langRes->Message[STR_PERMANENT_ATTACHMENT], MSG_BOX_FLAG_YESNO, PermanantAttachmentMessageBoxCallBack);
+				return;
+			}
+
+			DoAttachment();
+		}
+	}
+	else
+	{
+		// ATE: Make sure we have enough AP's to drop it if we pick it up!
+		if ( EnoughPoints( gpItemDescSoldier, ( AP_RELOAD_GUN + AP_PICKUP_ITEM ), 0, TRUE ) )
+		{
+			// Get attachment if there is one
+			// The follwing function will handle if no attachment is here
+			if ( RemoveAttachment( gpItemDescObject, (UINT8)uiItemPos, &gItemPointer ) )
+			{
+				SetItemPointer(&gItemPointer, gpItemDescSoldier);
+
+				//if( guiCurrentScreen == MAP_SCREEN )
+				if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+				{
+					SetMapCursorItem();
+					fTeamPanelDirty=TRUE;
+				}
+
+				//if we are currently in the shopkeeper interface
+				else if (guiCurrentScreen == SHOPKEEPER_SCREEN)
+				{
+					// pick up attachment from item into cursor (don't try to sell)
+					BeginSkiItemPointer( PLAYERS_INVENTORY, -1, FALSE );
+				}
+
+				//Dirty interface
+				fInterfacePanelDirty = DIRTYLEVEL2;
+
+				// re-evaluate repairs
+				gfReEvaluateEveryonesNothingToDo = TRUE;
+
+				UpdateItemHatches();
+				SetAttachmentTooltips();
+			}
+		}
+	}
+}
+
+static void ItemDescAttachmentsCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	if ( gfItemDescObjectIsAttachment )
+	{
+		// screen out completely
+		return;
+	}
+
+	UINT32 uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
+
+	static OBJECTTYPE Object2;
+
+	if ( gpItemDescObject->usAttachItem[ uiItemPos ] != NOTHING )
+	{
+		BOOLEAN fShopkeeperItem = FALSE;
+
+		// remember if this is a shopkeeper's item we're viewing ( pShopKeeperItemDescObject will get nuked on deletion )
 		if (guiCurrentScreen == SHOPKEEPER_SCREEN && pShopKeeperItemDescObject)
 		{
-			return;
+			fShopkeeperItem = TRUE;
 		}
 
-		// Try to place attachment if something is in our hand
-		// require as many APs as to reload
-		if ( gpItemPointer != NULL )
+		DeleteItemDescriptionBox( );
+
+		CreateItem(gpItemDescObject->usAttachItem[uiItemPos], gpItemDescObject->bAttachStatus[uiItemPos], &Object2);
+
+		gfItemDescObjectIsAttachment = TRUE;
+		InternalInitItemDescriptionBox(&Object2, gsInvDescX, gsInvDescY, 0, gpItemDescSoldier);
+
+		if (fShopkeeperItem)
 		{
-			// nb pointer could be NULL because of inventory manipulation in mapscreen from sector inv
-			if ( !gpItemPointerSoldier || EnoughPoints( gpItemPointerSoldier, AP_RELOAD_GUN, 0, TRUE ) )
-			{
-				if ( (GCM->getItem(gpItemPointer->usItem)->getFlags() & ITEM_INSEPARABLE) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
-				{
-					DoScreenIndependantMessageBox(g_langRes->Message[STR_PERMANENT_ATTACHMENT], MSG_BOX_FLAG_YESNO, PermanantAttachmentMessageBoxCallBack);
-					return;
-				}
-
-				DoAttachment();
-			}
-		}
-		else
-		{
-			// ATE: Make sure we have enough AP's to drop it if we pick it up!
-			if ( EnoughPoints( gpItemDescSoldier, ( AP_RELOAD_GUN + AP_PICKUP_ITEM ), 0, TRUE ) )
-			{
-				// Get attachment if there is one
-				// The follwing function will handle if no attachment is here
-				if ( RemoveAttachment( gpItemDescObject, (UINT8)uiItemPos, &gItemPointer ) )
-				{
-					SetItemPointer(&gItemPointer, gpItemDescSoldier);
-
-					//if( guiCurrentScreen == MAP_SCREEN )
-					if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
-					{
-						SetMapCursorItem();
-						fTeamPanelDirty=TRUE;
-					}
-
-					//if we are currently in the shopkeeper interface
-					else if (guiCurrentScreen == SHOPKEEPER_SCREEN)
-					{
-						// pick up attachment from item into cursor (don't try to sell)
-						BeginSkiItemPointer( PLAYERS_INVENTORY, -1, FALSE );
-					}
-
-					//Dirty interface
-					fInterfacePanelDirty = DIRTYLEVEL2;
-
-					// re-evaluate repairs
-					gfReEvaluateEveryonesNothingToDo = TRUE;
-
-					UpdateItemHatches();
-					SetAttachmentTooltips();
-				}
-			}
-		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
-	{
-		fRightDown = TRUE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP && fRightDown )
-	{
-		static OBJECTTYPE Object2;
-
-		fRightDown = FALSE;
-
-		if ( gpItemDescObject->usAttachItem[ uiItemPos ] != NOTHING )
-		{
-			BOOLEAN fShopkeeperItem = FALSE;
-
-			// remember if this is a shopkeeper's item we're viewing ( pShopKeeperItemDescObject will get nuked on deletion )
-			if (guiCurrentScreen == SHOPKEEPER_SCREEN && pShopKeeperItemDescObject)
-			{
-				fShopkeeperItem = TRUE;
-			}
-
-			DeleteItemDescriptionBox( );
-
-			CreateItem(gpItemDescObject->usAttachItem[uiItemPos], gpItemDescObject->bAttachStatus[uiItemPos], &Object2);
-
-			gfItemDescObjectIsAttachment = TRUE;
-			InternalInitItemDescriptionBox(&Object2, gsInvDescX, gsInvDescY, 0, gpItemDescSoldier);
-
-			if (fShopkeeperItem)
-			{
-				pShopKeeperItemDescObject = &Object2;
-				StartSKIDescriptionBox();
-			}
+			pShopKeeperItemDescObject = &Object2;
+			StartSKIDescriptionBox();
 		}
 	}
 }
@@ -2961,7 +2966,7 @@ void DrawItemTileCursor( )
 	INT16 sDist;
 	INT8 bLevel;
 
-	GridNo usMapPos = GetMouseMapPos();
+	GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos != NOWHERE)
 	{
 		// Force mouse position to guy...
@@ -3709,8 +3714,10 @@ BOOLEAN InKeyRingPopup( )
 }
 
 
-static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ItemPopupFullRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemPopupFullRegionCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemPopupRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemPopupRegionCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT16 const sInvX, INT16 const sInvY, INT16 const sInvWidth, INT16 const sInvHeight)
@@ -3803,7 +3810,8 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 		UINT32 col = cnt % MAX_STACK_POPUP_WIDTH;
 
 		// Build a mouse region here that is over any others.....
-		MSYS_DefineRegion(&gItemPopupRegions[cnt], sCenX + col * usPopupWidth, sCenY + row * usPopupHeight, sCenX + (col + 1) * usPopupWidth, sCenY + (row+1) * usPopupHeight, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback);
+		MOUSE_CALLBACK itemPopupRegionCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemPopupRegionCallbackPrimary, ItemPopupRegionCallbackSecondary, MSYS_NO_CALLBACK, true);
+		MSYS_DefineRegion(&gItemPopupRegions[cnt], sCenX + col * usPopupWidth, sCenY + row * usPopupHeight, sCenX + (col + 1) * usPopupWidth, sCenY + (row+1) * usPopupHeight, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, itemPopupRegionCallback);
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
 
 		//OK, for each item, set dirty text if applicable!
@@ -3813,7 +3821,7 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth, gsItemPopupInvY + gsItemPopupInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupFullRegionCallback);
+	MSYS_DefineRegion(&gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth, gsItemPopupInvY + gsItemPopupInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemPopupFullRegionCallbackPrimary, ItemPopupFullRegionCallbackSecondary));
 
 
 	//Disable all faces
@@ -3979,7 +3987,7 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPopupRegion, sInvX, sInvY, sInvX + sInvWidth, sInvY + sInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupFullRegionCallback);
+	MSYS_DefineRegion(&gItemPopupRegion, sInvX, sInvY, sInvX + sInvWidth, sInvY + sInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemPopupFullRegionCallbackPrimary, ItemPopupFullRegionCallbackSecondary));
 
 
 	//Disable all faces
@@ -4161,43 +4169,21 @@ std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel * it
 }
 
 
-static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemDescCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	static BOOLEAN fRightDown = FALSE, fLeftDown = FALSE;
-
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	//Only exit the screen if we are NOT in the money interface.  Only the DONE button should exit the money interface.
+	if( gpItemDescObject->usItem != MONEY )
 	{
-		fLeftDown = TRUE;
+		DeleteItemDescriptionBox( );
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if ( fLeftDown )
-		{
-			fLeftDown = FALSE;
+}
 
-			//Only exit the screen if we are NOT in the money interface.  Only the DONE button should exit the money interface.
-			if( gpItemDescObject->usItem != MONEY )
-			{
-				DeleteItemDescriptionBox( );
-			}
-		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+static void ItemDescCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	//Only exit the screen if we are NOT in the money interface.  Only the DONE button should exit the money interface.
+	//if( gpItemDescObject->usItem != MONEY )
 	{
-		fRightDown = TRUE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		if ( fRightDown )
-		{
-			fRightDown = FALSE;
-
-			//Only exit the screen if we are NOT in the money interface.  Only the DONE button should exit the money interface.
-			//if( gpItemDescObject->usItem != MONEY )
-			{
-				DeleteItemDescriptionBox( );
-			}
-		}
+		DeleteItemDescriptionBox( );
 	}
 }
 
@@ -4205,169 +4191,165 @@ static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void RemoveMoney(void);
 
 
-static void ItemDescDoneButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void ItemDescDoneButtonCallbackPrimary(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if (gpItemDescObject->usItem == MONEY) RemoveMoney();
-		DeleteItemDescriptionBox();
-	}
+	if (gpItemDescObject->usItem == MONEY) RemoveMoney();
+	DeleteItemDescriptionBox();
+}
 
-	if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		DeleteItemDescriptionBox();
-	}
+static void ItemDescDoneButtonCallbackSecondary(GUI_BUTTON *btn, UINT32 reason)
+{
+	DeleteItemDescriptionBox();
 }
 
 
-static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemPopupRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	UINT32 uiItemPos;
-
-	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-
 	// TO ALLOW ME TO DELETE REGIONS IN CALLBACKS!
 	if ( gfItemPopupRegionCallbackEndFix )
 	{
 		return;
 	}
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	UINT32 uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
+
+	//If one in our hand, place it
+	if ( gpItemPointer != NULL )
 	{
-
-		//If one in our hand, place it
-		if ( gpItemPointer != NULL )
+		if ( !PlaceObjectAtObjectIndex( gpItemPointer, gpItemPopupObject, (UINT8)uiItemPos ) )
 		{
-			if ( !PlaceObjectAtObjectIndex( gpItemPointer, gpItemPopupObject, (UINT8)uiItemPos ) )
+			if (fInMapMode)
 			{
-				if (fInMapMode)
-				{
-					MAPEndItemPointer( );
-				}
-				else
-				{
-					gpItemPointer = NULL;
-					gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
-					SetCurrentCursorFromDatabase( CURSOR_NORMAL );
-
-					if (guiCurrentScreen == SHOPKEEPER_SCREEN)
-					{
-						gMoveingItem = INVENTORY_IN_SLOT{};
-						SetSkiCursor( CURSOR_NORMAL );
-					}
-				}
-
-				// re-evaluate repairs
-				gfReEvaluateEveryonesNothingToDo = TRUE;
-			}
-
-			//Dirty interface
-			//fInterfacePanelDirty = DIRTYLEVEL2;
-			//RenderItemStackPopup( FALSE );
-		}
-		else
-		{
-			if ( uiItemPos < gpItemPopupObject->ubNumberOfObjects )
-			{
-				// Here, grab an item and put in cursor to swap
-				//RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
-				GetObjFrom( gpItemPopupObject, (UINT8)uiItemPos, &gItemPointer );
-
-				if (fInMapMode)
-				{
-					// pick it up
-					InternalMAPBeginItemPointer( gpItemPopupSoldier );
-				}
-				else
-				{
-					SetItemPointer(&gItemPointer, gpItemPopupSoldier);
-				}
-
-				//if we are in the shop keeper interface
-				if (guiCurrentScreen == SHOPKEEPER_SCREEN)
-				{
-					// pick up stacked item into cursor and try to sell it ( unless CTRL is held down )
-					BeginSkiItemPointer(PLAYERS_INVENTORY, -1, !_KeyDown(CTRL));
-
-					// if we've just removed the last one there
-					if ( gpItemPopupObject->ubNumberOfObjects == 0 )
-					{
-						// we must immediately get out of item stack popup, because the item has been deleted
-						// (memset to 0), and errors like a right bringing up an item description for item 0
-						// could happen then.  ARM.
-						DeleteItemStackPopup( );
-					}
-				}
-
-				// re-evaluate repairs
-				gfReEvaluateEveryonesNothingToDo = TRUE;
-
-				//Dirty interface
-				//RenderItemStackPopup( FALSE );
-				//fInterfacePanelDirty = DIRTYLEVEL2;
-			}
-		}
-
-		UpdateItemHatches();
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		// Get Description....
-		// Some global stuff here - for esc, etc
-		//Remove
-		gfItemPopupRegionCallbackEndFix = TRUE;
-
-
-		DeleteItemStackPopup( );
-
-		if ( !InItemDescriptionBox( ) )
-		{
-			// RESTORE BACKGROUND
-			RestoreExternBackgroundRect( gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvWidth, gsItemPopupInvHeight );
-			if ( guiCurrentItemDescriptionScreen == MAP_SCREEN )
-			{
-				MAPInternalInitItemDescriptionBox( gpItemPopupObject, (UINT8)uiItemPos, gpItemPopupSoldier );
+				MAPEndItemPointer( );
 			}
 			else
 			{
-				InternalInitItemDescriptionBox( gpItemPopupObject, (INT16) ITEMDESC_START_X, (INT16) ITEMDESC_START_Y, (UINT8)uiItemPos, gpItemPopupSoldier );
+				gpItemPointer = NULL;
+				gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
+				SetCurrentCursorFromDatabase( CURSOR_NORMAL );
+
+				if (guiCurrentScreen == SHOPKEEPER_SCREEN)
+				{
+					gMoveingItem = INVENTORY_IN_SLOT{};
+					SetSkiCursor( CURSOR_NORMAL );
+				}
 			}
+
+			// re-evaluate repairs
+			gfReEvaluateEveryonesNothingToDo = TRUE;
 		}
 
+		//Dirty interface
+		//fInterfacePanelDirty = DIRTYLEVEL2;
+		//RenderItemStackPopup( FALSE );
+	}
+	else
+	{
+		if ( uiItemPos < gpItemPopupObject->ubNumberOfObjects )
+		{
+			// Here, grab an item and put in cursor to swap
+			//RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
+			GetObjFrom( gpItemPopupObject, (UINT8)uiItemPos, &gItemPointer );
 
+			if (fInMapMode)
+			{
+				// pick it up
+				InternalMAPBeginItemPointer( gpItemPopupSoldier );
+			}
+			else
+			{
+				SetItemPointer(&gItemPointer, gpItemPopupSoldier);
+			}
+
+			//if we are in the shop keeper interface
+			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
+			{
+				// pick up stacked item into cursor and try to sell it ( unless CTRL is held down )
+				BeginSkiItemPointer(PLAYERS_INVENTORY, -1, !_KeyDown(CTRL));
+
+				// if we've just removed the last one there
+				if ( gpItemPopupObject->ubNumberOfObjects == 0 )
+				{
+					// we must immediately get out of item stack popup, because the item has been deleted
+					// (memset to 0), and errors like a right bringing up an item description for item 0
+					// could happen then.  ARM.
+					DeleteItemStackPopup( );
+				}
+			}
+
+			// re-evaluate repairs
+			gfReEvaluateEveryonesNothingToDo = TRUE;
+
+			//Dirty interface
+			//RenderItemStackPopup( FALSE );
+			//fInterfacePanelDirty = DIRTYLEVEL2;
+		}
+	}
+
+	UpdateItemHatches();
+}
+
+static void ItemPopupRegionCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	// TO ALLOW ME TO DELETE REGIONS IN CALLBACKS!
+	if ( gfItemPopupRegionCallbackEndFix )
+	{
+		return;
+	}
+
+	UINT32 uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
+
+	// Get Description....
+	// Some global stuff here - for esc, etc
+	//Remove
+	gfItemPopupRegionCallbackEndFix = TRUE;
+
+
+	DeleteItemStackPopup( );
+
+	if ( !InItemDescriptionBox( ) )
+	{
+		// RESTORE BACKGROUND
+		RestoreExternBackgroundRect( gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvWidth, gsItemPopupInvHeight );
+		if ( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+		{
+			MAPInternalInitItemDescriptionBox( gpItemPopupObject, (UINT8)uiItemPos, gpItemPopupSoldier );
+		}
+		else
+		{
+			InternalInitItemDescriptionBox( gpItemPopupObject, (INT16) ITEMDESC_START_X, (INT16) ITEMDESC_START_Y, (UINT8)uiItemPos, gpItemPopupSoldier );
+		}
 	}
 }
 
 
-static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemPopupFullRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if ( InItemStackPopup( ) )
 	{
-		if ( InItemStackPopup( ) )
-		{
-			// End stack popup and retain pointer
-			EndItemStackPopupWithItemInHand( );
-		}
-		else if( InKeyRingPopup() )
-		{
-			// end pop up with key in hand
-			DeleteKeyRingPopup( );
-			fTeamPanelDirty = TRUE;
-
-		}
+		// End stack popup and retain pointer
+		EndItemStackPopupWithItemInHand( );
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	else if( InKeyRingPopup() )
 	{
-		if ( InItemStackPopup( ) )
-		{
-			DeleteItemStackPopup( );
-			fTeamPanelDirty = TRUE;
-		}
-		else
-		{
-			DeleteKeyRingPopup( );
-			fTeamPanelDirty = TRUE;
-		}
+		// end pop up with key in hand
+		DeleteKeyRingPopup( );
+		fTeamPanelDirty = TRUE;
+
+	}
+}
+
+static void ItemPopupFullRegionCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	if ( InItemStackPopup( ) )
+	{
+		DeleteItemStackPopup( );
+		fTeamPanelDirty = TRUE;
+	}
+	else
+	{
+		DeleteKeyRingPopup( );
+		fTeamPanelDirty = TRUE;
 	}
 }
 
@@ -4446,13 +4428,13 @@ void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel )
 
 
 static void CalculateItemPickupMenuDimensions(void);
-static void ItemPickMenuMouseClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason);
-static void ItemPickupCancel(GUI_BUTTON* btn, INT32 reason);
-static void ItemPickupOK(GUI_BUTTON* btn, INT32 reason);
-static void ItemPickupScrollDown(GUI_BUTTON* btn, INT32 reason);
-static void ItemPickupScrollUp(GUI_BUTTON* btn, INT32 reason);
+static void ItemPickMenuMouseClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void ItemPickupAll(GUI_BUTTON* btn, UINT32 reason);
+static void ItemPickupCancel(GUI_BUTTON* btn, UINT32 reason);
+static void ItemPickupOK(GUI_BUTTON* btn, UINT32 reason);
+static void ItemPickupScrollDown(GUI_BUTTON* btn, UINT32 reason);
+static void ItemPickupScrollUp(GUI_BUTTON* btn, UINT32 reason);
 static void SetupPickupPage(INT8 bPage);
 
 
@@ -4908,29 +4890,29 @@ void RemoveItemPickupMenu( )
 }
 
 
-static void ItemPickupScrollUp(GUI_BUTTON* btn, INT32 reason)
+static void ItemPickupScrollUp(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SetupPickupPage( (UINT8)( gItemPickupMenu.bScrollPage - 1 ) );
 	}
 }
 
 
-static void ItemPickupScrollDown(GUI_BUTTON* btn, INT32 reason)
+static void ItemPickupScrollDown(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SetupPickupPage( (UINT8)( gItemPickupMenu.bScrollPage + 1 ) );
 	}
 }
 
 
-static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason)
+static void ItemPickupAll(GUI_BUTTON* btn, UINT32 reason)
 {
 	INT32 cnt;
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gItemPickupMenu.fAllSelected = !gItemPickupMenu.fAllSelected;
 
@@ -4949,9 +4931,9 @@ static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ItemPickupOK(GUI_BUTTON* btn, INT32 reason)
+static void ItemPickupOK(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// OK, pickup item....
 		gItemPickupMenu.fHandled = TRUE;
@@ -4962,9 +4944,9 @@ static void ItemPickupOK(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ItemPickupCancel(GUI_BUTTON* btn, INT32 reason)
+static void ItemPickupCancel(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// OK, pickup item....
 		gItemPickupMenu.fHandled = TRUE;
@@ -4972,7 +4954,7 @@ static void ItemPickupCancel(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, INT32 const iReason)
+static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, UINT32 const iReason)
 {
 	static BOOLEAN bChecked = FALSE;
 
@@ -5014,9 +4996,9 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, INT32 con
 }
 
 
-static void ItemPickMenuMouseClickCallback(MOUSE_REGION* const pRegion, INT32 const iReason)
+static void ItemPickMenuMouseClickCallback(MOUSE_REGION* const pRegion, UINT32 const iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		INT32 const item_pos = MSYS_GetRegionUserData(pRegion, 0) + gItemPickupMenu.ubScrollAnchor;
 		if (item_pos >= gItemPickupMenu.ubTotalItems) return;
@@ -5067,74 +5049,74 @@ BOOLEAN HandleItemPickupMenu( )
 }
 
 
-static void BtnMoneyButtonCallback(GUI_BUTTON* const btn, INT32 const reason)
+static void BtnMoneyButtonCallbackPrimary(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	UINT32      amount   = 0;
+	UINT8 const ubButton = btn->GetUserData();
+	switch (ubButton)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		case M_1000: amount = 1000; break;
+		case M_100:  amount =  100; break;
+		case M_10:   amount =   10; break;
+
+		case M_DONE:
+			RemoveMoney();
+			DeleteItemDescriptionBox();
+			break;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (amount != 0 && gRemoveMoney.uiMoneyRemaining >= amount)
 	{
-		UINT32      amount   = 0;
-		UINT8 const ubButton = btn->GetUserData();
-		switch (ubButton)
+		if (gfAddingMoneyToMercFromPlayersAccount && gRemoveMoney.uiMoneyRemoving + amount > MAX_MONEY_PER_SLOT)
 		{
-			case M_1000: amount = 1000; break;
-			case M_100:  amount =  100; break;
-			case M_10:   amount =   10; break;
-
-			case M_DONE:
-				RemoveMoney();
-				DeleteItemDescriptionBox();
-				break;
+			ScreenID const exit_screen = guiCurrentScreen == SHOPKEEPER_SCREEN ?
+				SHOPKEEPER_SCREEN : GAME_SCREEN;
+			DoMessageBox(MSG_BOX_BASIC_STYLE, gzMoneyWithdrawMessageText[MONEY_TEXT_WITHDRAW_MORE_THEN_MAXIMUM], exit_screen, MSG_BOX_FLAG_OK, NULL, NULL);
+			return;
 		}
 
-		if (amount != 0 && gRemoveMoney.uiMoneyRemaining >= amount)
-		{
-			if (gfAddingMoneyToMercFromPlayersAccount && gRemoveMoney.uiMoneyRemoving + amount > MAX_MONEY_PER_SLOT)
-			{
-				ScreenID const exit_screen = guiCurrentScreen == SHOPKEEPER_SCREEN ?
-					SHOPKEEPER_SCREEN : GAME_SCREEN;
-				DoMessageBox(MSG_BOX_BASIC_STYLE, gzMoneyWithdrawMessageText[MONEY_TEXT_WITHDRAW_MORE_THEN_MAXIMUM], exit_screen, MSG_BOX_FLAG_OK, NULL, NULL);
-				return;
-			}
+		gRemoveMoney.uiMoneyRemaining -= amount;
+		gRemoveMoney.uiMoneyRemoving  += amount;
 
-			gRemoveMoney.uiMoneyRemaining -= amount;
-			gRemoveMoney.uiMoneyRemoving  += amount;
-
-			RenderItemDescriptionBox( );
-			for (INT8 i = 0; i < MAX_ATTACHMENTS; ++i)
-			{
-				MarkAButtonDirty(guiMoneyButtonBtn[i]);
-			}
-		}
-	}
-
-	if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		btn->uiFlags &= ~BUTTON_CLICKED_ON;
-
-		UINT32      amount   = 0;
-		UINT8 const ubButton = btn->GetUserData();
-		switch (ubButton)
-		{
-			case M_1000: amount = 1000; break;
-			case M_100:  amount =  100; break;
-			case M_10:   amount =   10; break;
-		}
-
-		if (amount != 0 && gRemoveMoney.uiMoneyRemoving >= amount)
-		{
-			gRemoveMoney.uiMoneyRemaining += amount;
-			gRemoveMoney.uiMoneyRemoving  -= amount;
-		}
-
-		RenderItemDescriptionBox();
+		RenderItemDescriptionBox( );
 		for (INT8 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
 			MarkAButtonDirty(guiMoneyButtonBtn[i]);
 		}
+	}
+}
+
+static void BtnMoneyButtonCallbackSecondary(GUI_BUTTON* const btn, UINT32 const reason)
+{
+	btn->uiFlags &= ~BUTTON_CLICKED_ON;
+
+	UINT32      amount   = 0;
+	UINT8 const ubButton = btn->GetUserData();
+	switch (ubButton)
+	{
+		case M_1000: amount = 1000; break;
+		case M_100:  amount =  100; break;
+		case M_10:   amount =   10; break;
+	}
+
+	if (amount != 0 && gRemoveMoney.uiMoneyRemoving >= amount)
+	{
+		gRemoveMoney.uiMoneyRemaining += amount;
+		gRemoveMoney.uiMoneyRemoving  -= amount;
+	}
+
+	RenderItemDescriptionBox();
+	for (INT8 i = 0; i < MAX_ATTACHMENTS; ++i)
+	{
+		MarkAButtonDirty(guiMoneyButtonBtn[i]);
+	}
+}
+
+static void BtnMoneyButtonCallbackOther(GUI_BUTTON* const btn, UINT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	{
+		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 

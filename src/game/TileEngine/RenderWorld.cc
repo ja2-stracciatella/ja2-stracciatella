@@ -173,10 +173,15 @@ static INT16 gsLStartPointY_M;
 static INT16 gsLEndXS;
 static INT16 gsLEndYS;
 
-
+INT16 gsScrollXOffset = 0;
+INT16 gsScrollYOffset = 0;
 INT16 gsScrollXIncrement;
 INT16 gsScrollYIncrement;
 
+BOOLEAN gfScrolledToLeft;
+BOOLEAN gfScrolledToRight;
+BOOLEAN gfScrolledToTop;
+BOOLEAN gfScrolledToBottom;
 
 // Rendering flags (full, partial, etc.)
 static RenderFlags gRenderFlags = RENDER_FLAG_NONE;
@@ -2115,15 +2120,18 @@ void ScrollWorld(void)
 				RESETCOUNTER(STARTSCROLL);
 			}
 
-			if (gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_UP;
-			if (gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_DOWN;
-			if (gusMouseXPos >= SCREEN_WIDTH  - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_RIGHT;
-			if (gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_LEFT;
+			if (!gfIsUsingTouch) {
+				if (gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_UP;
+				if (gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_DOWN;
+				if (gusMouseXPos >= SCREEN_WIDTH  - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_RIGHT;
+				if (gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_LEFT;
+			}
 		}
 	}
 	while (FALSE);
 
 
+	BOOLEAN fIsScrollingByOffset = gsScrollXOffset != 0 || gsScrollYOffset != 0;
 	BOOLEAN fAGoodMove   = FALSE;
 	INT16   sScrollXStep = -1;
 	INT16   sScrollYStep = -1;
@@ -2135,12 +2143,33 @@ void ScrollWorld(void)
 		sScrollYStep = speed / 2;
 
 		fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
+	} else if (fIsScrollingByOffset) {
+		if (std::abs(gsScrollXOffset) >= CELL_X_SIZE || std::abs(gsScrollYOffset) >= CELL_Y_SIZE) {
+			sScrollXStep = (gsScrollXOffset / CELL_X_SIZE) * CELL_X_SIZE;
+			sScrollYStep = (gsScrollYOffset / CELL_Y_SIZE) * CELL_Y_SIZE;
+			if (sScrollXStep != 0) {
+				ScrollFlags |= (sScrollXStep > 0) ? SCROLL_LEFT : SCROLL_RIGHT;
+			}
+			if (sScrollYStep != 0) {
+				ScrollFlags |= (sScrollYStep > 0) ? SCROLL_UP : SCROLL_DOWN;
+			}
+			sScrollXStep = std::abs(sScrollXStep);
+			sScrollYStep = std::abs(sScrollYStep);
+
+			fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
+
+			if (fAGoodMove) {
+				SetRenderFlags(RENDER_FLAG_FULL);
+				gsScrollXOffset %= CELL_X_SIZE;
+				gsScrollYOffset %= CELL_Y_SIZE;
+			}
+		}
 	}
 
 	// Has this been an OK scroll?
 	if (fAGoodMove)
 	{
-		if (COUNTERDONE(NEXTSCROLL))
+		if (COUNTERDONE(NEXTSCROLL) || fIsScrollingByOffset)
 		{
 			RESETCOUNTER(NEXTSCROLL);
 
@@ -2333,12 +2362,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	// If in editor, anything goes
 	if (gfEditMode && _KeyDown(SHIFT)) fScrollGood = TRUE;
 
-	// Reset some UI flags
-	gfUIShowExitEast  = FALSE;
-	gfUIShowExitWest  = FALSE;
-	gfUIShowExitNorth = FALSE;
-	gfUIShowExitSouth = FALSE;
-
 	if (!fScrollGood)
 	{
 		if (fForceAdjust)
@@ -2381,13 +2404,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 			sTempRenderCenterY = sTempPosY_W;
 			fScrollGood = TRUE;
 		}
-		else
-		{
-			if (fOutRight  && gusMouseXPos >= SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)  gfUIShowExitEast  = TRUE;
-			if (fOutLeft   && gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitWest  = TRUE;
-			if (fOutTop    && gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitNorth = TRUE;
-			if (fOutBottom && gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) gfUIShowExitSouth = TRUE;
-		}
 	}
 
 	if (fScrollGood && !fCheckOnly)
@@ -2401,6 +2417,11 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
 		gsBottomRightWorldX = sBottomRightWorldX - gsLeftX;
 		gsBottomRightWorldY = sBottomRightWorldY - gsTopY;
+
+		gfScrolledToLeft   = std::abs(sTopLeftWorldX  - gsLeftX) <= std::abs(SCROLL_LEFT_PADDING);
+		gfScrolledToRight  = std::abs(sBottomRightWorldX  - gsRightX) <= std::abs(SCROLL_RIGHT_PADDING) + CELL_X_SIZE;
+		gfScrolledToTop    = std::abs(sTopLeftWorldY  - gsTopY) <= std::abs(SCROLL_TOP_PADDING);
+		gfScrolledToBottom = std::abs(sBottomRightWorldY  - gsBottomY) <= std::abs(SCROLL_BOTTOM_PADDING) + CELL_Y_SIZE;
 
 		SetPositionSndsVolumeAndPanning();
 	}

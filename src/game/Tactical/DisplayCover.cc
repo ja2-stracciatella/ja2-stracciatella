@@ -81,7 +81,7 @@ void DisplayCoverOfSelectedGridNo()
 	if (!sel) return;
 
 	//if the cursor is in a the tactical map
-	GridNo const sGridNo = GetMouseMapPos();
+	GridNo const sGridNo = guiCurrentCursorGridNo;
 	if (sGridNo == NOWHERE) return;
 
 	INT8 const bStance = GetCurrentMercForDisplayCoverStance();
@@ -450,7 +450,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 		return;
 
 	//if the cursor is in a the tactical map
-	const GridNo sGridNo = GetMouseMapPos();
+	const GridNo sGridNo = guiCurrentCursorGridNo;
 	if (sGridNo != NOWHERE)
 	{
 		//if the gridno is different then the last one that was displayed

@@ -267,7 +267,7 @@ ScreenID SaveLoadScreenHandle()
 
 	// ATE: Put here to save RECTS before any fast help being drawn...
 	SaveBackgroundRects( );
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 	ExecuteBaseDirtyRectQueue( );
 	EndFrameBufferRender( );
@@ -352,17 +352,17 @@ static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x
 	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
 }
 
-static void BtnScrollUpCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnScrollDownCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnScrollUpCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnScrollDownCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnSlgCancelCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, UINT32 reason);
 static void ClearSelectedSaveSlot(void);
 static void InitSaveGameArray(void);
-static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason);
 static void StartFadeOutForSaveLoadScreen(void);
 
 static void EnterSaveLoadScreen()
@@ -618,13 +618,9 @@ static void GetSaveLoadScreenUserInput(void)
 	// If we are going to be instantly leaving the screen, dont draw the numbers
 	if (gfLoadGameUponEntry) return;
 
-	SGPPoint mouse_pos;
-	GetMousePos(&mouse_pos);
-
 	InputAtom e;
-	while (DequeueEvent(&e))
+	while (DequeueSpecificEvent(&e, KEYBOARD_EVENTS))
 	{
-		MouseSystemHook(e.usEvent, mouse_pos.iX, mouse_pos.iY);
 		if (HandleTextInput(&e)) continue;
 
 		if (e.usEvent == KEY_REPEAT || e.usEvent == KEY_DOWN) {
@@ -1011,21 +1007,21 @@ static void HandleScrollEvent(INT32 const reason) {
 	}
 }
 
-static void BtnScrollUpCallback(GUI_BUTTON* btn, INT32 reason) {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
+static void BtnScrollUpCallback(GUI_BUTTON* btn, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN || reason & MSYS_CALLBACK_REASON_POINTER_REPEAT) {
 		ScrollUp();
 	}
 }
 
-static void BtnScrollDownCallback(GUI_BUTTON* btn, INT32 reason) {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
+static void BtnScrollDownCallback(GUI_BUTTON* btn, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN || reason & MSYS_CALLBACK_REASON_POINTER_REPEAT) {
 		ScrollDown();
 	}
 }
 
-static void BtnSlgCancelCallback(GUI_BUTTON* const btn, INT32 const reason)
+static void BtnSlgCancelCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		LeaveSaveLoadScreen();
 	}
@@ -1033,9 +1029,9 @@ static void BtnSlgCancelCallback(GUI_BUTTON* const btn, INT32 const reason)
 }
 
 
-static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gfSaveGame && gbSelectedSaveLocation == 0 && gfUserInTextInputMode) {
 			SaveNewSave();
@@ -1051,21 +1047,21 @@ static void DisableSelectedSlot(void);
 static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue);
 
 
-static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	INT32	bSelected = gCurrentScrollTop + MSYS_GetRegionUserData( pRegion, 0 );
 	if (bSelected >= INT32(gSavedGamesList.size())) {
 		bSelected = -1;
 	}
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK) {
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_DOUBLECLICK) {
 		if (bSelected == -1) {
 			DisableButton(guiSlgSaveLoadBtn);
 		} else if (gbSelectedSaveLocation == bSelected && !gfUserInTextInputMode) {
 			SaveLoadSelectedSave();
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if(gbSelectedSaveLocation != bSelected ) {
 			gbSelectedSaveLocation = bSelected;
@@ -1099,7 +1095,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1258,7 +1254,7 @@ static void DoneFadeInForSaveLoadScreen(void)
 }
 
 
-static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{

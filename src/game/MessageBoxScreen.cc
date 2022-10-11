@@ -63,12 +63,12 @@ ST::string gzUserDefinedButton1;
 ST::string gzUserDefinedButton2;
 
 
-static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
+static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void NumberedMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
+static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static GUIButtonRef MakeButton(const ST::string& text, INT16 fore_colour, INT16 shadow_colour, INT16 x, INT16 y, GUI_CALLBACK click, UINT16 cursor)
@@ -286,54 +286,54 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 }
 
 
-static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_OK;
 	}
 }
 
 
-static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_YES;
 	}
 }
 
 
-static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_NO;
 	}
 }
 
 
-static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_CONTRACT;
 	}
 }
 
 
-static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gMsgBox.bHandled = MSG_BOX_RETURN_LIE;
 	}
 }
 
 
-static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
+static void NumberedMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gMsgBox.bHandled = static_cast<MessageBoxReturnValue>(btn->GetUserData());
 	}
@@ -523,7 +523,7 @@ ScreenID MessageBoxScreenHandle(void)
 	// carter, need key shortcuts for clearing up message boxes
 	// Check for esc
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		if (InputEvent.usEvent != KEY_UP) continue;
 

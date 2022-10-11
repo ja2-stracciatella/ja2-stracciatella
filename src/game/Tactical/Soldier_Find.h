@@ -26,8 +26,6 @@ ENUM_BITSET(SoldierFindFlags)
 
 #define FINDSOLDIERSAMELEVEL(l)	(FIND_SOLDIER_SAMELEVEL | (l) << 16)
 
-
-SOLDIERTYPE* FindSoldierFromMouse(void);
 SOLDIERTYPE* FindSoldier(GridNo, UINT32 flags);
 
 bool IsOwnedMerc(SOLDIERTYPE const&);

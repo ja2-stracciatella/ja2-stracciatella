@@ -244,7 +244,9 @@ static INT32 iTotalHeight = 0;
 
 
 static void CreateNextPreviousEmailPageButtons(void);
-static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void EmailBtnCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void EmailBtnCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void EmailBtnCallBackScroll(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void InitializeMouseRegions(void)
@@ -257,7 +259,7 @@ static void InitializeMouseRegions(void)
 		const UINT16 w = LINE_WIDTH;
 		const UINT16 h = MIDDLE_WIDTH;
 		MOUSE_REGION* const r = &pEmailRegions[i];
-		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, NULL, EmailBtnCallBack);
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(EmailBtnCallBackPrimary, EmailBtnCallBackSecondary, EmailBtnCallBackScroll));
 		MSYS_SetRegionUserData(r, 0, i);
 	}
 
@@ -837,59 +839,67 @@ static void NextListPage()
 }
 
 
-static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void EmailBtnCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	INT32 iCount;
 	if(fDisplayMessageFlag)
 		return;
-	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+
+	Page* pPage = GetCurrentPage();
+	if (pPage == NULL) return;
+
+	// error check
+	INT32 iCount = MSYS_GetRegionUserData(pRegion, 0);
+
+	Email* Mail = pPage->Mail[iCount];
+
+	// invalid message
+	if (Mail == NULL)
 	{
-		Page* pPage = GetCurrentPage();
-		if (pPage == NULL) return;
-
-		// error check
-		iCount=MSYS_GetRegionUserData(pRegion, 0);
-
-		Email* Mail = pPage->Mail[iCount];
-
-		// invalid message
-		if (Mail == NULL)
-		{
-			fDisplayMessageFlag=FALSE;
-			return;
-		}
-		// Get email and display
-		fDisplayMessageFlag=TRUE;
-		giMessagePage = 0;
-		PreviousMail = CurrentMail;
-		CurrentMail = Mail;
+		fDisplayMessageFlag=FALSE;
+		return;
 	}
-	else if(iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	// Get email and display
+	fDisplayMessageFlag=TRUE;
+	giMessagePage = 0;
+	PreviousMail = CurrentMail;
+	CurrentMail = Mail;
+}
+
+static void EmailBtnCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	if(fDisplayMessageFlag)
+		return;
+
+	Page* pPage = GetCurrentPage();
+	if (pPage == NULL)
 	{
-		Page* pPage = GetCurrentPage();
-		if (pPage == NULL)
-		{
-			HandleRightButtonUpEvent();
-			return;
-		}
-
-		iCount=MSYS_GetRegionUserData(pRegion, 0);
-
-		giMessagePage = 0;
-
-		Email* Mail = pPage->Mail[iCount];
-		if (Mail == NULL)
-		{
-			// no mail here, handle right button up event
-			HandleRightButtonUpEvent( );
-			return;
-		}
-		else
-		{
-			MailToDelete = Mail;
-		}
+		HandleRightButtonUpEvent();
+		return;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+
+	INT32 iCount = MSYS_GetRegionUserData(pRegion, 0);
+
+	giMessagePage = 0;
+
+	Email* Mail = pPage->Mail[iCount];
+	if (Mail == NULL)
+	{
+		// no mail here, handle right button up event
+		HandleRightButtonUpEvent( );
+		return;
+	}
+	else
+	{
+		MailToDelete = Mail;
+	}
+}
+
+static void EmailBtnCallBackScroll(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	if(fDisplayMessageFlag)
+		return;
+
+	if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
 		PrevListPage();
 	}
@@ -900,9 +910,9 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void BtnMessageXCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMessageXCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP || reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_ANY_BUTTON_UP)
 	{
 		// X button has been pressed and let up, this means to stop displaying the currently displayed message
 
@@ -1048,9 +1058,9 @@ static INT32 DisplayEmailMessage(Email* const m)
 }
 
 
-static void BtnNewOkback(GUI_BUTTON *btn, INT32 reason)
+static void BtnNewOkback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fNewMailFlag=FALSE;
 	}
@@ -1083,7 +1093,7 @@ static void NextMailPage()
 }
 
 
-static void MailScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+static void MailScrollRegionCallback(MOUSE_REGION* const, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
@@ -1096,9 +1106,9 @@ static void MailScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 }
 
 
-static void BtnDeleteCallback(GUI_BUTTON* btn, INT32 iReason);
-static void BtnNextEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnPreviousEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnDeleteCallback(GUI_BUTTON* btn, UINT32 iReason);
+static void BtnNextEmailPageCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnPreviousEmailPageCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
@@ -1128,7 +1138,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 				UINT16 const y = VIEWER_MESSAGE_BODY_START_Y + iViewerPositionY;
 				UINT16 const w = MESSAGE_WIDTH + 3;
 				UINT16 const h = 227;
-				MSYS_DefineRegion(&g_mail_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, NULL, MailScrollRegionCallback);
+				MSYS_DefineRegion(&g_mail_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MailScrollRegionCallback);
 			}
 			gfPageButtonsWereCreated = TRUE;
 		}
@@ -1252,45 +1262,45 @@ void ReDrawNewMailBox(void)
 }
 
 
-static void NextRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void NextRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		NextListPage();
 	}
 }
 
 
-static void BtnPreviousEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnPreviousEmailPageCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		PrevMailPage();
 	}
 }
 
 
-static void BtnNextEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnNextEmailPageCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		NextMailPage();
 	}
 }
 
 
-static void PreviousRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void PreviousRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		PrevListPage();
 	}
 }
 
 
-static void BtnDeleteNoback(GUI_BUTTON* btn, INT32 reason)
+static void BtnDeleteNoback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		MailToDelete = NULL;
 		fReDrawScreenFlag = TRUE;
@@ -1301,9 +1311,9 @@ static void BtnDeleteNoback(GUI_BUTTON* btn, INT32 reason)
 static void DeleteEmail(void);
 
 
-static void BtnDeleteYesback(GUI_BUTTON* btn, INT32 reason)
+static void BtnDeleteYesback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fReDrawScreenFlag = TRUE;
 		DeleteEmail();
@@ -1423,9 +1433,9 @@ static void DeleteEmail(void)
 }
 
 
-static void FromCallback(GUI_BUTTON *btn, INT32 iReason)
+static void FromCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// sort messages based on sender name, then replace into pages of email
 		fSortSenderUpwards = !fSortSenderUpwards;
@@ -1435,9 +1445,9 @@ static void FromCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void SubjectCallback(GUI_BUTTON *btn, INT32 iReason)
+static void SubjectCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// sort message on subject and reorder list
 		fSortSubjectUpwards = !fSortSubjectUpwards;
@@ -1447,18 +1457,18 @@ static void SubjectCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void BtnDeleteCallback(GUI_BUTTON *btn, INT32 iReason)
+static void BtnDeleteCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		MailToDelete = CurrentMail;
 	}
 }
 
 
-static void DateCallback(GUI_BUTTON *btn, INT32 iReason)
+static void DateCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// sort messages based on date recieved and reorder lsit
 		fSortDateUpwards = !fSortDateUpwards;
@@ -1468,9 +1478,9 @@ static void DateCallback(GUI_BUTTON *btn, INT32 iReason)
 }
 
 
-static void ReadCallback(GUI_BUTTON *btn, INT32 iReason)
+static void ReadCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// sort messages based on date recieved and reorder lsit
 		SortMessages(READ);

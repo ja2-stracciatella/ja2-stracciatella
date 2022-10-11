@@ -134,8 +134,8 @@ SGPVObject* guiIST_GreyGoldBox;
 //
 //*******************************************************************
 
-void		BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason);
-void		BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,INT32 reason);
+void		BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,UINT32 reason);
+void		BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,UINT32 reason);
 void		AddImpSkillTraitButtons();
 void		HandleSkillTraitButtonStates( );
 void		HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons );
@@ -271,7 +271,7 @@ void AddImpSkillTraitButtons()
 
 
 		giIMPSkillTraitAnswerButton[iCnt] = QuickCreateButtonToggle(giIMPSkillTraitAnswerButtonImage[iCnt], usPosX, usPosY,
-									MSYS_PRIORITY_HIGHEST - 3, 
+									MSYS_PRIORITY_HIGHEST - 3,
 									(GUI_CALLBACK)BtnIMPSkillTraitAnswerCallback);
 		//Set the button data
 		giIMPSkillTraitAnswerButton[iCnt]->SetUserData(iCnt);
@@ -301,13 +301,13 @@ void AddImpSkillTraitButtons()
 }
 
 
-void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 //		btn->uiFlags|=(BUTTON_CLICKED_ON);
 
@@ -511,13 +511,13 @@ void IMPSkillTraitDisplaySkills()
 }
 
 
-void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,UINT32 reason)
 {
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
 

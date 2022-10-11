@@ -403,7 +403,7 @@ void HandleInterfaceBackgrounds( )
 }
 
 
-static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnMovementCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void MakeButtonMove(UINT const idx, UINT const gfx, INT16 const x, INT16 const y, UI_EVENT* const event, const ST::string& help, bool const disabled)
@@ -416,7 +416,7 @@ static void MakeButtonMove(UINT const idx, UINT const gfx, INT16 const x, INT16 
 }
 
 
-static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void PopupMovementMenu(UI_EVENT* const ev)
@@ -596,9 +596,9 @@ void CancelMovementMenu( )
 }
 
 
-static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnMovementCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if ( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -1387,7 +1387,7 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 }
 
 
-static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16 bp, BOOLEAN disable, const ST::string& help)
@@ -1410,7 +1410,7 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 }
 
 
-static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
@@ -1546,9 +1546,9 @@ static void DoorAction(INT16 const ap, INT16 const bp, HandleDoor const action)
 }
 
 
-static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -2071,18 +2071,18 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 }
 
 
-static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if ( iReason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		CancelMovementMenu( );
 	}
 }
 
 
-static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if ( iReason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		CancelOpenDoorMenu( );
 	}

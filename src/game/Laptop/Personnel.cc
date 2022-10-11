@@ -598,8 +598,8 @@ static GUIButtonRef MakeButton(char const* const gfx, INT32 const off_normal, IN
 }
 
 
-static void LeftButtonCallBack(GUI_BUTTON* btn, INT32 reason);
-static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason);
+static void LeftButtonCallBack(GUI_BUTTON* btn, UINT32 reason);
+static void RightButtonCallBack(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreatePersonnelButtons(void)
@@ -617,9 +617,9 @@ static void DeletePersonnelButtons(void)
 }
 
 
-static void LeftButtonCallBack(GUI_BUTTON* btn, INT32 reason)
+static void LeftButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fReDrawScreenFlag = TRUE;
 		PrevPersonnelFace();
@@ -629,9 +629,9 @@ static void LeftButtonCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason)
+static void RightButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fReDrawScreenFlag = TRUE;
 		NextPersonnelFace();
@@ -904,7 +904,8 @@ static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void)
 }
 
 
-static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void PersonnelPortraitCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void PersonnelPortraitCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
@@ -921,7 +922,7 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 			const UINT16 tly = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
 			const UINT16 brx = tlx + SMALL_PORTRAIT_WIDTH;
 			const UINT16 bry = tly + SMALL_PORTRAIT_HEIGHT;
-			MSYS_DefineRegion(&gPortraitMouseRegions[i], tlx, tly, brx, bry, MSYS_PRIORITY_HIGHEST, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelPortraitCallback);
+			MSYS_DefineRegion(&gPortraitMouseRegions[i], tlx, tly, brx, bry, MSYS_PRIORITY_HIGHEST, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(PersonnelPortraitCallbackPrimary, PersonnelPortraitCallbackSecondary));
 			MSYS_SetRegionUserData(&gPortraitMouseRegions[i], 0, i);
 		}
 
@@ -977,88 +978,82 @@ catch (...) { /* XXX ignore */ }
 static SOLDIERTYPE const& GetSoldierOfCurrentSlot(void);
 
 
-static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void PersonnelPortraitCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	INT32 iPortraitId = 0;
-	INT32 iOldPortraitId;
+	INT32 iPortraitId = MSYS_GetRegionUserData(pRegion, 0);
+	INT32 iOldPortraitId = iCurrentPersonSelectedId;
 
-	iPortraitId = MSYS_GetRegionUserData(pRegion, 0);
-	iOldPortraitId = iCurrentPersonSelectedId;
-
-	// callback handler for the minize region that is attatched to the laptop program icon
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (fCurrentTeamMode)
 	{
-		// get id of portrait
-		if (fCurrentTeamMode)
+		// valid portrait, set up id
+		if (iPortraitId >= GetNumberOfMercsDeadOrAliveOnPlayersTeam())
 		{
-			// valid portrait, set up id
-			if (iPortraitId >= GetNumberOfMercsDeadOrAliveOnPlayersTeam())
-			{
-				// not a valid id, leave
-				return;
-			}
-
-			iCurrentPersonSelectedId = iPortraitId;
-			fReDrawScreenFlag = TRUE;
-
-			if (iCurrentPersonSelectedId != -1 &&
-					GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW &&
-					gubPersonnelInfoState == PRSNL_INV)
-			{
-				gubPersonnelInfoState = PRSNL_STATS;
-			}
-		}
-		else
-		{
-			if (iPortraitId >= GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
-			{
-				return;
-			}
-			iCurrentPersonSelectedId = iPortraitId;
-			fReDrawScreenFlag = TRUE;
+			// not a valid id, leave
+			return;
 		}
 
-		if (iOldPortraitId != iPortraitId)
+		iCurrentPersonSelectedId = iPortraitId;
+		fReDrawScreenFlag = TRUE;
+
+		if (iCurrentPersonSelectedId != -1 &&
+				GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW &&
+				gubPersonnelInfoState == PRSNL_INV)
 		{
-			uiCurrentInventoryIndex = 0;
-			guiSliderPosition = 0;
+			gubPersonnelInfoState = PRSNL_STATS;
 		}
 	}
-
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	else
 	{
-		if (fCurrentTeamMode)
+		if (iPortraitId >= GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
 		{
-			// valid portrait, set up id
-			if (iPortraitId >= GetNumberOfMercsDeadOrAliveOnPlayersTeam())
-			{
-				// not a valid id, leave
-				return;
-			}
+			return;
+		}
+		iCurrentPersonSelectedId = iPortraitId;
+		fReDrawScreenFlag = TRUE;
+	}
 
-			//if the user is rigt clicking on the same face
-			if (iCurrentPersonSelectedId == iPortraitId)
-			{
-				//increment the info page when the user right clicks
-				if (gubPersonnelInfoState < PRSNL_INV)
-					gubPersonnelInfoState++;
-				else
-					gubPersonnelInfoState = PRSNL_STATS;
-			}
+	if (iOldPortraitId != iPortraitId)
+	{
+		uiCurrentInventoryIndex = 0;
+		guiSliderPosition = 0;
+	}
+}
 
-			iCurrentPersonSelectedId = iPortraitId;
-			fReDrawScreenFlag = TRUE;
+static void PersonnelPortraitCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
+{
+	INT32 iPortraitId = MSYS_GetRegionUserData(pRegion, 0);
 
-			uiCurrentInventoryIndex = 0;
-			guiSliderPosition = 0;
+	if (fCurrentTeamMode)
+	{
+		// valid portrait, set up id
+		if (iPortraitId >= GetNumberOfMercsDeadOrAliveOnPlayersTeam())
+		{
+			// not a valid id, leave
+			return;
+		}
 
-			//if the selected merc is valid, and they are a POW, change to the inventory display
-			if (iCurrentPersonSelectedId != -1 &&
-					GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW &&
-					gubPersonnelInfoState == PRSNL_INV)
-			{
+		//if the user is rigt clicking on the same face
+		if (iCurrentPersonSelectedId == iPortraitId)
+		{
+			//increment the info page when the user right clicks
+			if (gubPersonnelInfoState < PRSNL_INV)
+				gubPersonnelInfoState++;
+			else
 				gubPersonnelInfoState = PRSNL_STATS;
-			}
+		}
+
+		iCurrentPersonSelectedId = iPortraitId;
+		fReDrawScreenFlag = TRUE;
+
+		uiCurrentInventoryIndex = 0;
+		guiSliderPosition = 0;
+
+		//if the selected merc is valid, and they are a POW, change to the inventory display
+		if (iCurrentPersonSelectedId != -1 &&
+				GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW &&
+				gubPersonnelInfoState == PRSNL_INV)
+		{
+			gubPersonnelInfoState = PRSNL_STATS;
 		}
 	}
 }
@@ -1230,20 +1225,20 @@ static void InventoryDown(void)
 }
 
 
-static void InventoryUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void InventoryUpButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_REPEAT ||
+			reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		InventoryUp();
 	}
 }
 
 
-static void InventoryDownButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void InventoryDownButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_REPEAT ||
+			reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		InventoryDown();
 	}
@@ -1298,7 +1293,7 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 }
 
 
-static void HandleInventoryCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void HandleInventoryCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
@@ -1314,7 +1309,7 @@ static void HandleInventoryCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static MOUSE_REGION InventoryRegion;
 
 
-static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyPersonnelInventoryScrollButtons(void)
@@ -1669,8 +1664,8 @@ static void DisplayStateOfPastTeamMembers(void)
 }
 
 
-static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
@@ -1705,9 +1700,9 @@ static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
 }
 
 
-static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (fCurrentTeamMode) return;
 		fCurrentTeamMode = TRUE;
@@ -1719,9 +1714,9 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (!fCurrentTeamMode) return;
 		fCurrentTeamMode = FALSE;
@@ -1737,8 +1732,8 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void DepartedDownCallBack(GUI_BUTTON* btn, INT32 reason);
-static void DepartedUpCallBack(GUI_BUTTON* btn, INT32 reason);
+static void DepartedDownCallBack(GUI_BUTTON* btn, UINT32 reason);
+static void DepartedUpCallBack(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
@@ -1765,9 +1760,9 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 }
 
 
-static void DepartedUpCallBack(GUI_BUTTON *btn, INT32 reason)
+static void DepartedUpCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (giCurrentUpperLeftPortraitNumber - PERSONNEL_PORTRAIT_NUMBER >= 0)
 		{
@@ -1778,9 +1773,9 @@ static void DepartedUpCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
+static void DepartedDownCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		INT32 const n_past = GetNumberOfPastMercsOnPlayersTeam();
 		if (n_past - giCurrentUpperLeftPortraitNumber > PERSONNEL_PORTRAIT_NUMBER)
@@ -2139,9 +2134,9 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const ST::string& 
 }
 
 
-static void EmployementInfoButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PersonnelINVStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void EmployementInfoButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PersonnelINVStartButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateDestroyStartATMButton(const BOOLEAN create)
@@ -2181,9 +2176,9 @@ static void FindPositionOfPersInvSlider(void)
 }
 
 
-static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN || iReason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		const INT32 item_count = GetNumberOfInventoryItemsOnCurrentMerc();
 		if (item_count <= NUMBER_OF_INVENTORY_PERSONNEL) return;
@@ -2223,9 +2218,9 @@ static void RenderSliderBarForPersonnelInventory(void)
 }
 
 
-static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2236,9 +2231,9 @@ static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2249,9 +2244,9 @@ static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void EmployementInfoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2359,7 +2354,7 @@ static void DisplayAmountOnChar(SOLDIERTYPE const& s)
 static void HandlePersonnelKeyboard(void)
 {
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}

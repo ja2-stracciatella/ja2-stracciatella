@@ -301,10 +301,10 @@ void NormalizeStructureTiles(DB_STRUCTURE_TILE** pTiles, UINT8 ubNumTiles)
 {
 	/**
 	 * In #1107, it was discovered that some of the Copter structures do not
-	 * have a base tile. RemoveStruct will not work without a base tile, as 
+	 * have a base tile. RemoveStruct will not work without a base tile, as
 	 * it tries to find a non-existent base structure.
 	 *
-	 * This function attempts to correct such issues with JSD data, by 
+	 * This function attempts to correct such issues with JSD data, by
 	 * ensuring there is a tile with (0, 0) position relative to base.
 	 */
 	int minDistFromBase = INT_MAX;
@@ -1284,7 +1284,7 @@ void DebugStructurePage1()
 		"Outside right"
 	};
 
-	GridNo const grid_no = GetMouseMapPos();
+	GridNo const grid_no = guiCurrentCursorGridNo;
 	if (grid_no == NOWHERE) {
 		MPageHeader("DEBUG STRUCTURES PAGE ONE");
 		return;

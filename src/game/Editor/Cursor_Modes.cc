@@ -284,8 +284,8 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 	//When the user releases the left button, then clear and process the area.
 	if( fAnchored )
 	{
-		if( (!gfLeftButtonState  && !gfCurrentSelectionWithRightButton) ||
-			(!gfRightButtonState &&  gfCurrentSelectionWithRightButton) )
+		if( (!IsMouseButtonDown(MOUSE_BUTTON_LEFT)  && !gfCurrentSelectionWithRightButton) ||
+			(!IsMouseButtonDown(MOUSE_BUTTON_RIGHT) &&  gfCurrentSelectionWithRightButton) )
 		{
 			fAnchored = FALSE;
 			ProcessAreaSelection(!gfCurrentSelectionWithRightButton);
@@ -296,9 +296,9 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 	//When the user first clicks, anchor the area.
 	if( !fAnchored )
 	{
-		if( gfLeftButtonState || (gfRightButtonState && gfAllowRightButtonSelections) )
+		if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) || (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && gfAllowRightButtonSelections) )
 		{
-			if( gfRightButtonState && !gfLeftButtonState )
+			if( IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
 				gfCurrentSelectionWithRightButton = TRUE;
 			else
 				gfCurrentSelectionWithRightButton = FALSE;

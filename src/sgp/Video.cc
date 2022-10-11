@@ -1,4 +1,5 @@
 #include "ContentManager.h"
+#include "Cursor_Control.h"
 #include "Debug.h"
 #include "Fade_Screen.h"
 #include "FileMan.h"
@@ -177,14 +178,14 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 	}
 
 
-	if (ScaleQuality == VideoScaleQuality::PERFECT) 
+	if (ScaleQuality == VideoScaleQuality::PERFECT)
 	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 #if SDL_VERSION_ATLEAST(2,0,5)
 		if (!IsDesktopLargeEnough())
 		{
-			// Pixel-perfect mode cannot handle scaling down, and will 
-			// result in a empty black screen if the window size is 
+			// Pixel-perfect mode cannot handle scaling down, and will
+			// result in a empty black screen if the window size is
 			// smaller than logical render resolution.
 			throw std::runtime_error("Game resolution must not be larger than desktop size. "
 				"Please reduce game resolution or choose another scaling mode.");
@@ -196,7 +197,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 		ScaleQuality = VideoScaleQuality::NEAR_PERFECT;
 #endif
 	}
-	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) 
+	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT)
 	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
@@ -204,14 +205,14 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 			SDL_TEXTUREACCESS_TARGET,
 			SCREEN_WIDTH * OVERSAMPLING_SCALE, SCREEN_HEIGHT * OVERSAMPLING_SCALE);
 
-		if (ScaledScreenTexture == NULL) 
+		if (ScaledScreenTexture == NULL)
 		{
 			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: {}\n", SDL_GetError());
 		}
 
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	}
-	else 
+	else
 	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	}
@@ -598,16 +599,16 @@ void RefreshScreen(void)
 		guiFrameBufferState = BUFFER_READY;
 	}
 
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
+	SGPPoint cursorPos;
+	GetCursorPos(cursorPos);
 	SDL_Rect src;
 	src.x = 0;
 	src.y = 0;
 	src.w = gusMouseCursorWidth;
 	src.h = gusMouseCursorHeight + gsMouseSizeYModifier;
 	SDL_Rect dst;
-	dst.x = MousePos.iX - gsMouseCursorXOffset;
-	dst.y = MousePos.iY - gsMouseCursorYOffset;
+	dst.x = cursorPos.iX - gsMouseCursorXOffset;
+	dst.y = cursorPos.iY - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
 	MouseBackground = dst;
 

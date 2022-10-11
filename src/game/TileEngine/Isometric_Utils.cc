@@ -1,4 +1,4 @@
-#include "MouseSystem.h"
+#include "Cursor_Control.h"
 #include "Structure.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
@@ -13,8 +13,6 @@
 #include "PathAI.h"
 #include "UILayout.h"
 
-
-UINT32 guiForceRefreshMousePositionCalculation = 0;
 
 // GLOBALS
 const INT16 DirIncrementer[8] =
@@ -186,8 +184,10 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 		return( FALSE );
 	}
 
-	sOffsetX = gViewportRegion.MouseXPos - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
-	sOffsetY = gViewportRegion.MouseYPos - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
+	SGPPoint cursorPosition;
+	GetCursorPos(cursorPosition);
+	sOffsetX = cursorPosition.iX - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
+	sOffsetY = cursorPosition.iY - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
 
 	// OK, Let's offset by a value if our interfac level is changed!
 	if ( gsInterfaceLevel != 0 )
@@ -219,37 +219,6 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 
 	return( TRUE );
 }
-
-
-GridNo GetMouseMapPos(void)
-{
-	static GridNo sSameCursorPos   = NOWHERE;
-	static UINT32 uiOldFrameNumber = 99999;
-
-	// Check if this is the same frame as before, return already calculated value if so!
-	if (uiOldFrameNumber == guiGameCycleCounter && !guiForceRefreshMousePositionCalculation)
-	{
-		return sSameCursorPos;
-	}
-
-	uiOldFrameNumber                        = guiGameCycleCounter;
-	guiForceRefreshMousePositionCalculation = FALSE;
-
-	GridNo pos;
-	INT16  sWorldX;
-	INT16  sWorldY;
-	if (GetMouseXY(&sWorldX, &sWorldY))
-	{
-		pos = MAPROWCOLTOPOS(sWorldY, sWorldX);
-	}
-	else
-	{
-		pos = NOWHERE;
-	}
-	sSameCursorPos = pos;
-	return pos;
-}
-
 
 void GetAbsoluteScreenXYFromMapPos(const GridNo pos, INT16* const psWorldScreenX, INT16* const psWorldScreenY)
 {

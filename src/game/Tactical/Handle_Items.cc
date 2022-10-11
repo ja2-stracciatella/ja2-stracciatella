@@ -508,7 +508,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	if (item->getItemClass() == IC_MEDKIT)
 	{
 		// ATE: AI CANNOT GO THROUGH HERE!
-		const INT16 usMapPos = (gTacticalStatus.fAutoBandageMode ? usGridNo : GetMouseMapPos());
+		const INT16 usMapPos = (gTacticalStatus.fAutoBandageMode ? usGridNo : guiCurrentCursorGridNo);
 
 		// See if we can get there to stab
 		BOOLEAN	fHadToUseCursorPos = FALSE;

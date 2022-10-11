@@ -139,37 +139,37 @@ static SGPVObject* guiGIOMainBackGroundImage;
 
 
 // Done Button
-static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnGIODoneCallback(GUI_BUTTON *btn,UINT32 reason);
 static GUIButtonRef guiGIODoneButton;
 static BUTTON_PICS* giGIODoneBtnImage;
 
 // Cancel Button
-static void BtnGIOCancelCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnGIOCancelCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiGIOCancelButton;
 static BUTTON_PICS* giGIOCancelBtnImage;
 
 
 //checkbox to toggle the Diff level
 static GUIButtonRef guiDifficultySettingsToggles[NUM_DIF_LEVELS];
-static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 
 //checkbox to toggle Game style
 static GUIButtonRef guiGameStyleToggles[NUM_GAME_STYLES];
-static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn,UINT32 reason);
 
 //checkbox to toggle Gun options
 static GUIButtonRef guiGunOptionToggles[NUM_GUN_OPTIONS];
-static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 
 #if 0// JA2Gold: no more timed turns setting
 //checkbox to toggle Timed turn option on or off
 static UINT32 guiTimedTurnToggles[GIO_NUM_TIMED_TURN_OPTIONS];
-static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 #endif
 
 //checkbox to toggle Save style
 static GUIButtonRef guiGameSaveToggles[NUM_SAVE_OPTIONS];
-static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, UINT32 reason);
 
 
 static void EnterGIOScreen();
@@ -209,7 +209,6 @@ ScreenID GameInitOptionsScreenHandle(void)
 #if 0 // XXX was commented out
 	// render help
 	RenderFastHelp();
-	RenderButtonsFastHelp();
 #endif
 
 	ExecuteBaseDirtyRectQueue();
@@ -499,7 +498,7 @@ static void GetGIOScreenUserInput(void)
 {
 	InputAtom Event;
 
-	while (DequeueEvent(&Event))
+	while (DequeueSpecificEvent(&Event, KEYBOARD_EVENTS))
 	{
 		if (Event.usEvent == KEY_DOWN)
 		{
@@ -533,36 +532,36 @@ template<typename T> static inline void SelectCheckbox(T& array, GUI_BUTTON cons
 }
 
 
-static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SelectCheckbox(guiDifficultySettingsToggles, *btn);
 	}
 }
 
 
-static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SelectCheckbox(guiGameStyleToggles, *btn);
 	}
 }
 
 
-static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SelectCheckbox(guiGameSaveToggles, *btn);
 	}
 }
 
 
-static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SelectCheckbox(guiGunOptionToggles, *btn);
 	}
@@ -570,9 +569,9 @@ static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 
 
 #if 0 // JA2Gold: no more timed turns setting
-static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SelectCheckbox(guiTimedTurnToggles, *btn);
 	}
@@ -580,9 +579,9 @@ static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 #endif
 
 
-static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnGIODoneCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//if the user doesnt have IRON MAN mode selected
 		if (!DisplayMessageToUserAboutIronManMode())
@@ -594,9 +593,9 @@ static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-static void BtnGIOCancelCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnGIOCancelCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubGameOptionScreenHandler = GIO_CANCEL;
 	}

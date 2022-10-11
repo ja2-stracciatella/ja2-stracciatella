@@ -254,7 +254,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 				CalcChanceToHitGun(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation, false);
 			giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, gsInterfaceLevel, s->bTargetCubeLevel, 0) / 100.0f;
 		}
-	
+
 		// Attach chance-to-hit to mouse cursor
 		if(giHitChance != -1)
 		{
@@ -467,10 +467,13 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 
 	if (recalc)
 	{
+		SGPPoint cursorPosition{};
+		GetCursorPos(cursorPosition);
+
 		// Always set aim location to nothing
 		s->bAimShotLocation = AIM_SHOT_RANDOM;
 
-		GridNo const map_pos = GetMouseMapPos();
+		GridNo const map_pos = guiCurrentCursorGridNo;
 		if (map_pos == NOWHERE) return;
 
 		SOLDIERTYPE* tgt = 0;
@@ -529,7 +532,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 			}
 
 			// Check if mouse is in bounding box of soldier
-			if (!IsPointInSoldierBoundingBox(potential_tgt, gusMouseXPos, gusMouseYPos))
+			if (!IsPointInSoldierBoundingBox(potential_tgt, cursorPosition.iX, cursorPosition.iY))
 			{
 				continue;
 			}
@@ -544,7 +547,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 			SOLDIERTYPE* const potential_tgt = gUIFullTarget;
 			if (potential_tgt)
 			{
-				flags = FindRelativeSoldierPosition(potential_tgt, gusMouseXPos, gusMouseYPos);
+				flags = FindRelativeSoldierPosition(potential_tgt, cursorPosition.iX, cursorPosition.iY);
 				if (flags != 0) tgt = potential_tgt;
 			}
 		}
@@ -687,7 +690,7 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 
 		// Calculate chance to hit
 		if (gamepolicy(show_hit_chance) && gUIFullTarget)
-		{ 
+		{
 			UINT32 uiHitChance = CalcChanceToPunch(s, gUIFullTarget, s->bShownAimTime / 2, true);
 			SetChanceToHitText(st_format_printf("%d%%", uiHitChance));
 		}
@@ -980,7 +983,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	const GridNo sGridNo = GetMouseMapPos();
+	const GridNo sGridNo = guiCurrentCursorGridNo;
 	if (sGridNo == NOWHERE) return;
 
 	gfUIForceReExamineCursorData = TRUE;

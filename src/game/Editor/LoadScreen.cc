@@ -307,7 +307,7 @@ ScreenID LoadSaveScreenHandle(void)
 	}
 
 	//handle all key input.
-	while( DequeueEvent(&DialogEvent) )
+	while( DequeueSpecificEvent(&DialogEvent, KEYBOARD_EVENTS) )
 	{
 		if( !HandleTextInput(&DialogEvent) && (DialogEvent.usEvent == KEY_DOWN || DialogEvent.usEvent == KEY_REPEAT) )
 		{
@@ -396,7 +396,7 @@ ScreenID LoadSaveScreenHandle(void)
 
 		case DIALOG_SAVE:
 		{
-			
+
 			auto filename = ExtractFilenameFromFields();
 			auto absolutePath = FileMan::joinPaths(gCurrentDirectory, filename);
 			if (filename == "..") {
@@ -478,13 +478,13 @@ static GUIButtonRef MakeButtonArrow(const char* const gfx, const INT16 y, const 
 }
 
 
-static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason);
-static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason);
+static void FDlgCancelCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgDwnCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgNamesCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgOkCallback(GUI_BUTTON* butn, UINT32 reason);
+static void FDlgUpCallback(GUI_BUTTON* butn, UINT32 reason);
 static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering);
-static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason);
+static void UpdateWorldInfoCallback(GUI_BUTTON* b, UINT32 reason);
 
 
 static void CreateFileDialog(const ST::string& zTitle)
@@ -495,7 +495,7 @@ static void CreateFileDialog(const ST::string& zTitle)
 
 	DisableEditorTaskbar();
 
-	MSYS_DefineRegion( &BlanketRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, basePriority, 0, 0, 0 );
+	MSYS_DefineRegion( &BlanketRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, basePriority, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
 	//Title button
 	iFileDlgButtons[FILEDIALOG_TITLE] = CreateLabel(zTitle, FONT16ARIAL, FONT_LTKHAKI, FONT_DKKHAKI, 179, 44, 281, 30, basePriority+1);
@@ -533,9 +533,9 @@ static void CreateFileDialog(const ST::string& zTitle)
 }
 
 
-static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason)
+static void UpdateWorldInfoCallback(GUI_BUTTON* b, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 		gfUpdateSummaryInfo = b->Clicked();
 }
 
@@ -607,7 +607,7 @@ static void DrawFileDialog(void)
 			iFileDlgButtons[i]->Draw();
 		}
 	}
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 
 	SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI, FONT_DKKHAKI);
 	MPrint(185, 80, "Directory");
@@ -911,7 +911,7 @@ static ScreenID ProcessFileIO(void)
 			return LOADSAVE_SCREEN;
 		case LOADING_MAP: //load map
 			DisableUndo();
-			
+
 			RemoveMercsInSector( );
 
 			try
@@ -922,7 +922,7 @@ static ScreenID ProcessFileIO(void)
 				} else {
 					LoadWorldAbsolute(gFileForIO);
 				}
-				
+
 				fprintf(stderr, "---> %u\n", SDL_GetTicks() - start);
 			}
 			catch (...)
@@ -1000,9 +1000,9 @@ static ScreenID ProcessFileIO(void)
 
 
 //LOADSCREEN
-static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgNamesCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
+	if( reason & (MSYS_CALLBACK_REASON_POINTER_UP) )
 	{
 		SelectFileDialogYPos(butn->RelativeY());
 	}
@@ -1017,27 +1017,27 @@ static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgOkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
+	if( reason & (MSYS_CALLBACK_REASON_POINTER_UP) )
 	{
 		iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
 	}
 }
 
 
-static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgCancelCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
+	if( reason & (MSYS_CALLBACK_REASON_POINTER_UP) )
 	{
 		iFDlgState = DIALOG_CANCEL;
 	}
 }
 
 
-static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgUpCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
+	if( reason & (MSYS_CALLBACK_REASON_POINTER_UP) )
 	{
 		if(iTopFileShown > 0)
 			iTopFileShown--;
@@ -1045,9 +1045,9 @@ static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
+static void FDlgDwnCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
+	if( reason & (MSYS_CALLBACK_REASON_POINTER_UP) )
 	{
 		if( (iTopFileShown+7) < (INT32)gFileList.size() )
 			iTopFileShown++;

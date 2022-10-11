@@ -175,7 +175,7 @@ static BOOLEAN gfOnUsedPage;
 static UINT16 gusOldItemNumOnTopOfPage = 65535;
 
 //The menu bar at the bottom that changes to different pages
-static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyRPageMenuImage;
 static GUIButtonRef guiBobbyRPageMenu[NUM_CATALOGUE_BUTTONS];
 
@@ -193,12 +193,12 @@ static MOUSE_REGION g_scroll_region;
 static MOUSE_REGION gSelectedBigImageRegion[BOBBYR_NUM_WEAPONS_ON_PAGE];
 
 // The order form button
-static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyROrderFormImage;
 static GUIButtonRef guiBobbyROrderForm;
 
 // The Home button
-static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyRHomeImage;
 static GUIButtonRef guiBobbyRHome;
 
@@ -284,7 +284,7 @@ void DisplayBobbyRBrTitle()
 }
 
 
-static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void InitBobbyBrTitle()
@@ -311,9 +311,9 @@ void DeleteBobbyBrTitle()
 }
 
 
-static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}
@@ -329,8 +329,8 @@ static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x
 }
 
 
-static void BtnBobbyRNextPageCallback(GUI_BUTTON*, INT32 reason);
-static void BtnBobbyRPreviousPageCallback(GUI_BUTTON*, INT32 reason);
+static void BtnBobbyRNextPageCallback(GUI_BUTTON*, UINT32 reason);
+static void BtnBobbyRPreviousPageCallback(GUI_BUTTON*, UINT32 reason);
 
 
 void InitBobbyMenuBar()
@@ -389,9 +389,9 @@ void DeleteBobbyMenuBar()
 }
 
 
-static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UpdateButtonText(guiCurrentLaptopMode);
 		guiCurrentLaptopMode = static_cast<LaptopMode>(btn->GetUserData());
@@ -409,9 +409,9 @@ static void NextPage()
 }
 
 
-static void BtnBobbyRNextPageCallback(GUI_BUTTON* const btn, INT32 const reason)
+static void BtnBobbyRNextPageCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		NextPage();
 	}
@@ -428,9 +428,9 @@ static void PrevPage()
 }
 
 
-static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, INT32 const reason)
+static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		PrevPage();
 	}
@@ -998,7 +998,7 @@ void SetFirstLastPagesForUsed()
 }
 
 
-static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+static void ScrollRegionCallback(MOUSE_REGION* const, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
@@ -1012,7 +1012,7 @@ static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 
 
 static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const ItemModel* ammo);
-static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const ItemModel* const items[])
@@ -1074,7 +1074,7 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber);
 static void UnPurchaseBobbyRayItem(UINT16 usItemNumber);
 
 
-static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1090,6 +1090,22 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 
 		UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
+		fReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = TRUE;
+	}
+	if (iReason & MSYS_CALLBACK_REASON_TFINGER_UP)
+	{
+		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
+
+		// For touch: Upper half increases, lower half decreases
+		auto relY = FLOAT(gusMouseYPos - pRegion->Y()) / FLOAT(pRegion->H());
+
+		if (relY <= 0.5) {
+			PurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
+		} else {
+			UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
+		}
+
 		fReDrawScreenFlag = TRUE;
 		fPausedReDrawScreenFlag = TRUE;
 	}
@@ -1252,18 +1268,18 @@ static void UnPurchaseBobbyRayItem(UINT16 usItemNumber)
 }
 
 
-static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R_MAILORDER;
 	}
 }
 
 
-static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}

@@ -241,8 +241,8 @@ static TEXTINPUTNODE* AllocateTextInputNode(BOOLEAN const start_editing)
 }
 
 
-static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
-static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
+static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, UINT32 reason);
+static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, UINT32 reason);
 
 
 /* After calling InitTextInputMode, you want to define one or more text input
@@ -886,9 +886,9 @@ static size_t CalculateCursorPos(INT32 const click_x)
 
 
 //Internally used to continue highlighting text
-static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, INT32 const reason)
+static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, UINT32 const reason)
 {
-	if (!gfLeftButtonState) return;
+	if (!IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !IsMainFingerDown()) return;
 
 	if (reason & MSYS_CALLBACK_REASON_MOVE       ||
 			reason & MSYS_CALLBACK_REASON_LOST_MOUSE ||
@@ -915,9 +915,9 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, INT32 const 
 
 
 //Internally used to calculate where to place the cursor.
-static void MouseClickedInTextRegionCallback(MOUSE_REGION* const reg, INT32 const reason)
+static void MouseClickedInTextRegionCallback(MOUSE_REGION* const reg, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		SetActiveFieldMouse(reg);
 		//Signifies that we are typing text now.

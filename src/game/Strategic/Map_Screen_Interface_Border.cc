@@ -136,12 +136,12 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const ST
 }
 
 
-static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnMineCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnTeamCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnTownCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnAircraftCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnItemCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnMilitiaCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnMineCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnTeamCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnTownCallback(GUI_BUTTON* btn, UINT32 reason);
 static void InitializeMapBorderButtonStates(void);
 
 
@@ -192,9 +192,9 @@ void DeleteMapBorderButtons( void )
 static void CommonBtnCallbackBtnDownChecks(void);
 
 
-static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnMilitiaCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowMilitiaMode( );
@@ -206,9 +206,9 @@ static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnTeamCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnTeamCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowTeamsMode();
@@ -220,9 +220,9 @@ static void BtnTeamCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnTownCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnTownCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowTownsMode();
@@ -234,9 +234,9 @@ static void BtnTownCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnMineCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnMineCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowMinesMode();
@@ -248,9 +248,9 @@ static void BtnMineCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnAircraftCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 
@@ -263,9 +263,9 @@ static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnItemCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 
@@ -500,7 +500,7 @@ static void DisplayCurrentLevelMarker(void)
 }
 
 
-static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void CreateMouseRegionsForLevelMarkers(void)
@@ -528,14 +528,14 @@ void DeleteMouseRegionsForLevelMarkers()
 }
 
 
-static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
 
 	iCounter = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP ) )
+	if( ( iReason & MSYS_CALLBACK_REASON_POINTER_UP ) )
 	{
 		JumpToLevel( iCounter );
 	}

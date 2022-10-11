@@ -234,9 +234,9 @@ static void ExitMainMenu(void)
 }
 
 
-static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void MenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		INT8 const bID = btn->GetUserData();
 
@@ -255,7 +255,7 @@ static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static void HandleMainMenuInput(void)
 {
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		if (InputEvent.usEvent == KEY_UP)
 		{

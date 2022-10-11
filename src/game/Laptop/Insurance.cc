@@ -94,7 +94,7 @@ static MOUSE_REGION gSelectedInsuranceLinkRegion[3];
 static MOUSE_REGION gSelectedInsuranceTitleLinkRegion;
 
 
-static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterInsurance()
@@ -209,7 +209,7 @@ void RenderInsurance()
 }
 
 
-static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void InitInsuranceDefaults()
@@ -331,9 +331,9 @@ ST::string GetInsuranceText(const UINT8 ubNumber)
 }
 
 
-static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UINT32 uiInsuranceLink = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -347,9 +347,9 @@ static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}

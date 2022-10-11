@@ -20,8 +20,8 @@ BOOLEAN gfMessageBoxResult = FALSE;
 UINT8 gubMessageBoxStatus = MESSAGEBOX_NONE;
 
 
-static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason);
-static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason);
+static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, UINT32 reason);
+static void MsgBoxOkClkCallback(GUI_BUTTON* butn, UINT32 reason);
 
 
 void CreateMessageBox(const ST::string& msg)
@@ -58,7 +58,7 @@ BOOLEAN MessageBoxHandled()
 {
 	InputAtom DummyEvent;
 
-	while( DequeueEvent( &DummyEvent ) )
+	while( DequeueSpecificEvent(&DummyEvent, KEYBOARD_EVENTS) )
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{
@@ -102,9 +102,9 @@ void RemoveMessageBox( )
 }
 
 
-static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason)
+static void MsgBoxOkClkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = TRUE;
@@ -112,9 +112,9 @@ static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason)
 }
 
 
-static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason)
+static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = FALSE;

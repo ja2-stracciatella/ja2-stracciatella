@@ -235,7 +235,7 @@ void HandleIMPBeginScreen( void )
 }
 
 
-static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPBeginScreenButtons(void)
@@ -269,9 +269,9 @@ static void RemoveIMPBeginScreenButtons(void)
 static void CopyFirstNameIntoNickName(void);
 
 
-static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// back to mainpage
 		pFullNameString = GetStringFromField(0).trim();
@@ -324,7 +324,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 	InputAtom InputEvent;
 
 	// handle input events
-	while( DequeueEvent(&InputEvent) )
+	while( DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS) )
 	{
 		if(!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT) )
 		{
@@ -385,8 +385,8 @@ static void CopyFirstNameIntoNickName(void)
 	}
 }
 
-static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 static void CreateIMPBeginScreenMouseRegions(void)
 {
@@ -399,7 +399,7 @@ static void CreateIMPBeginScreenMouseRegions(void)
 		MALE_BOX_Y + MALE_BOX_HEIGHT,
 		MSYS_PRIORITY_HIGH,
 		CURSOR_WWW,
-		NULL,
+		MSYS_NO_CALLBACK,
 		SelectMaleRegionCallBack
 	);
 
@@ -412,7 +412,7 @@ static void CreateIMPBeginScreenMouseRegions(void)
 		MALE_BOX_Y + MALE_BOX_HEIGHT,
 		MSYS_PRIORITY_HIGH,
 		CURSOR_WWW,
-		NULL,
+		MSYS_NO_CALLBACK,
 		SelectFemaleRegionCallBack
 	);
 }
@@ -423,9 +423,9 @@ static void DestroyIMPBeginScreenMouseRegions()
 	FOR_EACH(MOUSE_REGION, i, gIMPBeginScreenMouseRegions) MSYS_RemoveRegion(&*i);
 }
 
-static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_MALE;
@@ -434,9 +434,9 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_FEMALE;

@@ -43,8 +43,8 @@ SGPVObject* guiCHARACTERPORTRAIT;
 extern INT32 iCurrentVoices;
 
 
-extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON* btn, INT32 reason);
-extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON* btn, INT32 reason);
+extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON* btn, UINT32 reason);
+extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPFinishButtons(void);
@@ -115,10 +115,10 @@ static void MakeButton(UINT idx, const char* img_file, const ST::string& text, I
 }
 
 
-static void BtnIMPFinishAttributesCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishDoneCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishPersonalityCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPFinishAttributesCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPFinishDoneCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPFinishPersonalityCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPFinishButtons(void)
@@ -186,19 +186,19 @@ static void DeleteIMPFinishButtons(void)
 static void FinishMessageBoxCallBack(MessageBoxReturnValue);
 
 
-static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pImpPopUpStrings[1], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, FinishMessageBoxCallBack);
 	}
 }
 
 
-static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_CONFIRM;
 		CreateACharacterFromPlayerEnteredStats();
@@ -210,7 +210,7 @@ static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 	static BOOLEAN fAnimateFlag = FALSE;
@@ -219,13 +219,13 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 
 	INT32 iDifference = 0;
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		uiBaseTime = GetJA2Clock();
 		btn->SpecifyText(pImpButtonText[23]);
 		fAnimateFlag = TRUE;
 	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		fButtonPendingFlag = TRUE;
 		uiBaseTime = 0;
@@ -257,7 +257,7 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 
@@ -268,7 +268,7 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fButtonPendingFlag = TRUE;

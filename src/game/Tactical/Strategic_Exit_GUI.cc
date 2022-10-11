@@ -105,18 +105,18 @@ static GUIButtonRef MakeButton(const ST::string& text, INT16 dx, GUI_CALLBACK cl
 }
 
 
-static void AllMoveCallback(GUI_BUTTON* btn, INT32 reason);
-static void AllRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void AllRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void CancelCallback(GUI_BUTTON* btn, INT32 reason);
-static void CheckLoadMapCallback(GUI_BUTTON* btn, INT32 reason);
-static void LoadRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void LoadRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void OKCallback(GUI_BUTTON* btn, INT32 reason);
-static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void SingleMoveCallback(GUI_BUTTON* btn, INT32 reason);
-static void SingleRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void AllMoveCallback(GUI_BUTTON* btn, UINT32 reason);
+static void AllRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void AllRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void CancelCallback(GUI_BUTTON* btn, UINT32 reason);
+static void CheckLoadMapCallback(GUI_BUTTON* btn, UINT32 reason);
+static void LoadRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void LoadRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void OKCallback(GUI_BUTTON* btn, UINT32 reason);
+static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SingleMoveCallback(GUI_BUTTON* btn, UINT32 reason);
+static void SingleRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 //KM:  New method is coded for more sophistocated rules.  All the information is stored within the gExitDialog struct
@@ -618,7 +618,7 @@ void RenderSectorExitMenu()
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
 	InputAtom Event;
-	while (DequeueEvent(&Event))
+	while (DequeueSpecificEvent(&Event, KEYBOARD_EVENTS))
 	{
 		if (Event.usEvent == KEY_DOWN)
 		{
@@ -748,9 +748,9 @@ void RemoveSectorExitMenu(BOOLEAN const fOk)
 }
 
 
-static void CheckLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
+static void CheckLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gExitDialog.fGotoSector =!gExitDialog.fGotoSector;
 	}
@@ -811,27 +811,27 @@ static void AllMoveAction(void)
 }
 
 
-static void SingleMoveCallback(GUI_BUTTON* btn, INT32 reason)
+static void SingleMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		SingleMoveAction();
 	}
 }
 
 
-static void AllMoveCallback(GUI_BUTTON* btn, INT32 reason)
+static void AllMoveCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		AllMoveAction();
 	}
 }
 
 
-static void OKCallback(GUI_BUTTON* btn, INT32 reason)
+static void OKCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// OK, exit
 		RemoveSectorExitMenu( TRUE );
@@ -839,9 +839,9 @@ static void OKCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void CancelCallback(GUI_BUTTON* btn, INT32 reason)
+static void CancelCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// OK, exit
 		RemoveSectorExitMenu( FALSE );
@@ -849,39 +849,39 @@ static void CancelCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 }
 
 
-static void SingleRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void SingleRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SingleMoveAction();
 	}
 }
 
 
-static void AllRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void AllRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		AllMoveAction();
 	}
 }
 
 
-static void LoadRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void LoadRegionCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gExitDialog.fGotoSector =!gExitDialog.fGotoSector;
 	}
 }
 
 
-static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
@@ -894,7 +894,7 @@ static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void AllRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void AllRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
@@ -907,7 +907,7 @@ static void AllRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void LoadRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void LoadRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{

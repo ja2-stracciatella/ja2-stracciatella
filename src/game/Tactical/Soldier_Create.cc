@@ -1923,7 +1923,7 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 //This function shouldn't be called outside of tactical
 void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 {
-	const GridNo pos = GetMouseMapPos();
+	const GridNo pos = guiCurrentCursorGridNo;
 	if (pos == NOWHERE) return;
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;

@@ -501,9 +501,9 @@ static GUIButtonRef iDoorButton[NUM_DOOR_BUTTONS];
 static MOUSE_REGION DoorRegion;
 
 
-static void DoorCancelCallback(GUI_BUTTON* btn, INT32 reason);
-static void DoorOkayCallback(GUI_BUTTON* btn, INT32 reason);
-static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason);
+static void DoorCancelCallback(GUI_BUTTON* btn, UINT32 reason);
+static void DoorOkayCallback(GUI_BUTTON* btn, UINT32 reason);
+static void DoorToggleLockedCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 void InitDoorEditing(INT32 const map_idx)
@@ -645,9 +645,9 @@ void KillDoorEditing()
 }
 
 
-static void DoorOkayCallback(GUI_BUTTON* btn, INT32 reason)
+static void DoorOkayCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		ExtractAndUpdateDoorInfo();
 		KillDoorEditing();
@@ -655,16 +655,16 @@ static void DoorOkayCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void DoorCancelCallback(GUI_BUTTON* btn, INT32 reason)
+static void DoorCancelCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		KillDoorEditing();
 	}
 }
 
 
-static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason)
+static void DoorToggleLockedCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	//handled in ExtractAndUpdateDoorInfo();
 }

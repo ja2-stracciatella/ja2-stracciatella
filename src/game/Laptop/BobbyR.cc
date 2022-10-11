@@ -351,7 +351,7 @@ void DrawBobbyRWoodBackground()
 }
 
 
-static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion)
@@ -372,9 +372,9 @@ static void InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPo
 }
 
 
-static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = static_cast<LaptopMode>(MSYS_GetRegionUserData(pRegion, 0));
 	}

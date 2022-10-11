@@ -196,7 +196,7 @@ void HandleIMPAttributeSelection(void)
 	if (fReviewStats) return;
 
 	// set the currently selectd slider bar
-	if (gfLeftButtonState && gpCurrentScrollBox != NULL)
+	if ((IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMainFingerDown()) && gpCurrentScrollBox != NULL)
 	{
 		//if the user is holding down the mouse cursor to left of the start of the slider bars
 		if (gusMouseXPos < SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X)
@@ -387,7 +387,7 @@ static void DecrementStat(INT32 iStatToDecrement)
 }
 
 
-static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateIMPAttributeSelectionButtons(void)
@@ -414,9 +414,9 @@ static void DestroyIMPAttributeSelectionButtons(void)
 }
 
 
-static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//are we done diting, or just reviewing the stats?
 		if (fReviewStats)
@@ -458,8 +458,8 @@ void RenderAttributeBoxes(void)
 }
 
 
-static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateAttributeSliderButtons(void)
@@ -502,10 +502,10 @@ static void DestroyAttributeSliderButtons(void)
 }
 
 
-static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN ||
+			reason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		INT32 const iValue = btn->GetUserData();
 		DecrementStat(iValue);
@@ -515,10 +515,10 @@ static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
-			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN ||
+			reason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		INT32 const iValue = btn->GetUserData();
 		IncrementStat(iValue);
@@ -528,7 +528,7 @@ static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreateSlideRegionMouseRegions()
@@ -553,7 +553,7 @@ static void DestroySlideRegionMouseRegions()
 }
 
 
-static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	static INT16 sOldX      = -1; // Changed from relative (to skill bar) to absolute position.
 	static INT32 iAttribute = -1;
@@ -562,7 +562,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (gpCurrentScrollBox != pRegion && gpCurrentScrollBox != NULL)
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_REPEAT)
 	{
 		if (!fSlideIsActive) return;
 
@@ -624,7 +624,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			sOldX = sNewX;
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	else if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (fSlideIsActive)
 		{
@@ -675,7 +675,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// update screen
 		fHasAnySlidingBarMoved = TRUE;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	else if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		// get mouse positions
 		const INT16 sX = pRegion->MouseXPos;

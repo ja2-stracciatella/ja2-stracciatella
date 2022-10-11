@@ -10,6 +10,10 @@
 
 #include <bitset>
 
+#define BUTTON_REPEAT_TIMEOUT		250
+#define BUTTON_REPEAT_TIME			50
+#define TOUCH_REPEAT_TIMEOUT		750
+#define TOUCH_REPEAT_TIME 			100
 
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.  true = pressed, false = not pressed.
@@ -17,20 +21,68 @@ static std::bitset<2 * SDL_NUM_SCANCODES> gfKeyState;
 static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
+static void QueuePointerEvent(UINT16 eventType, UINT32 param);
 
-// These data structure are used to track the mouse while polling
+// Bitset to keep track of current mouse buttons and touch finger
+static std::bitset<6> ButtonStates = 0;
 
-static UINT32 guiSingleClickTimer;
+// Struct to keep track of a single button or touch state and emit its events
+// The first template parameter indexes into button state
+template<
+	size_t StateIndex,
+	UINT32 BUTTON,
+	UINT16 DOWN_EVENT = MOUSE_BUTTON_DOWN,
+	UINT16 UP_EVENT = MOUSE_BUTTON_UP,
+	UINT16 REPEAT_EVENT = MOUSE_BUTTON_REPEAT,
+	UINT32 REPEAT_TIMEOUT = BUTTON_REPEAT_TIMEOUT,
+	UINT32 REPEAT_TIME = BUTTON_REPEAT_TIME
+>
+struct ButtonState {
+	private:
+		UINT32 repeatTimer;
 
-static UINT32 guiLeftButtonRepeatTimer;
-static UINT32 guiRightButtonRepeatTimer;
-static UINT32 guiMiddleButtonRepeatTimer;
+	public:
+		void handleDown() {
+			repeatTimer = GetClock() + REPEAT_TIMEOUT;
+			ButtonStates[StateIndex] = TRUE;
+			QueuePointerEvent(DOWN_EVENT, BUTTON);
+		}
 
-BOOLEAN gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
-BOOLEAN gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
-BOOLEAN gfMiddleButtonState;// TRUE = Pressed, FALSE = Not Pressed
+		void handleUp() {
+			repeatTimer = 0;
+			ButtonStates[StateIndex] = FALSE;
+			QueuePointerEvent(UP_EVENT, BUTTON);
+		}
+
+		void detectRepeat(UINT32 uiTimer) {
+			if (isDown()) {
+				if (repeatTimer > 0 && repeatTimer <= uiTimer)
+				{
+					QueuePointerEvent(REPEAT_EVENT, BUTTON);
+					repeatTimer = uiTimer + REPEAT_TIME;
+				}
+			} else {
+				repeatTimer = 0;
+			}
+		}
+
+		BOOLEAN isDown() const {
+			return ButtonStates[StateIndex];
+		}
+};
+
+static ButtonState<0, MOUSE_BUTTON_LEFT> gLeftButtonState;
+static ButtonState<1, MOUSE_BUTTON_RIGHT> gRightButtonState;
+static ButtonState<2, MOUSE_BUTTON_MIDDLE> gMiddleButtonState;
+static ButtonState<3, MOUSE_BUTTON_X1> gX1ButtonState;
+static ButtonState<4, MOUSE_BUTTON_X2> gX2ButtonState;
+static ButtonState<5, 0, TOUCH_FINGER_DOWN, TOUCH_FINGER_UP, TOUCH_FINGER_REPEAT, TOUCH_REPEAT_TIMEOUT, TOUCH_REPEAT_TIME> gMainFingerState;
+
 UINT16  gusMouseXPos;       // X position of the mouse on screen
 UINT16  gusMouseYPos;       // y position of the mouse on screen
+
+BOOLEAN gfIsUsingTouch;
+SDL_FingerID gMainFingerId;
 
 // The queue structures are used to track input events using queued events
 
@@ -40,12 +92,13 @@ static UINT16    gusHeadIndex;
 static UINT16    gusTailIndex;
 
 
-static void QueueMouseEvent(UINT16 ubInputEvent)
+static void QueuePointerEvent(UINT16 eventType, UINT32 param)
 {
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == lengthof(gEventQueue)) return;
 
-	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
+	gEventQueue[gusTailIndex].usEvent = eventType;
+	gEventQueue[gusTailIndex].usParam = param;
 
 	gusQueueCount++;
 
@@ -82,6 +135,7 @@ void SetSafeMousePosition(int x, int y) {
 	gusMouseYPos = y;
 }
 
+void HandleSingleClicksAndButtonRepeats();
 
 BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 {
@@ -98,14 +152,8 @@ BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 	return FALSE;
 }
 
-
-static void HandleSingleClicksAndButtonRepeats(void);
-
-
 BOOLEAN DequeueEvent(InputAtom* Event)
 {
-	HandleSingleClicksAndButtonRepeats();
-
 	if (gusQueueCount == 0) return FALSE;
 
 	*Event = gEventQueue[gusHeadIndex];
@@ -114,21 +162,23 @@ BOOLEAN DequeueEvent(InputAtom* Event)
 	return TRUE;
 }
 
-
-static void UpdateMousePos(const SDL_MouseButtonEvent* BtnEv)
-{
-	SetSafeMousePosition(BtnEv->x, BtnEv->y);
-}
-
-
 #if defined(WITH_MAEMO) || defined __APPLE__
 static BOOLEAN g_down_right;
 #endif
 
+void MouseMove(const SDL_MouseMotionEvent* event) {
+	if (event->which == SDL_TOUCH_MOUSEID) return;
+	gfIsUsingTouch = FALSE;
+
+	SetSafeMousePosition(event->x, event->y);
+}
 
 void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 {
-	UpdateMousePos(BtnEv);
+	if (BtnEv->which == SDL_TOUCH_MOUSEID) return;
+	gfIsUsingTouch = FALSE;
+
+	SetSafeMousePosition(BtnEv->x, BtnEv->y);
 	switch (BtnEv->button)
 	{
 		case SDL_BUTTON_LEFT:
@@ -145,9 +195,7 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 			g_down_right = key_state[SDL_SCANCODE_LGUI] || key_state[SDL_SCANCODE_RGUI];
 			if (g_down_right) goto right_button;
 #endif
-			guiLeftButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
-			gfLeftButtonState = TRUE;
-			QueueMouseEvent(LEFT_BUTTON_DOWN);
+			gLeftButtonState.handleDown();
 			break;
 		}
 
@@ -155,15 +203,19 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 #if defined(WITH_MAEMO) || defined(__APPLE__)
 right_button:
 #endif
-			guiRightButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
-			gfRightButtonState = TRUE;
-			QueueMouseEvent(RIGHT_BUTTON_DOWN);
+			gRightButtonState.handleDown();
 			break;
 
 		case SDL_BUTTON_MIDDLE:
-			guiMiddleButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
-			gfMiddleButtonState = TRUE;
-			QueueMouseEvent(MIDDLE_BUTTON_DOWN);
+			gMiddleButtonState.handleDown();
+			break;
+
+		case SDL_BUTTON_X1:
+			gX1ButtonState.handleDown();
+			break;
+
+		case SDL_BUTTON_X2:
+			gX2ButtonState.handleDown();
 			break;
 	}
 }
@@ -171,7 +223,10 @@ right_button:
 
 void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 {
-	UpdateMousePos(BtnEv);
+	if (BtnEv->which == SDL_TOUCH_MOUSEID) return;
+	gfIsUsingTouch = false;
+
+	SetSafeMousePosition(BtnEv->x, BtnEv->y);
 	switch (BtnEv->button)
 	{
 		case SDL_BUTTON_LEFT:
@@ -179,18 +234,7 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 #if defined(WITH_MAEMO) || defined(__APPLE__)
 			if (g_down_right) goto right_button;
 #endif
-			guiLeftButtonRepeatTimer = 0;
-			gfLeftButtonState = FALSE;
-			QueueMouseEvent(LEFT_BUTTON_UP);
-			UINT32 uiTimer = GetClock();
-			if (uiTimer - guiSingleClickTimer < DBL_CLK_TIME)
-			{
-				QueueMouseEvent(LEFT_BUTTON_DBL_CLK);
-			}
-			else
-			{
-				guiSingleClickTimer = uiTimer;
-			}
+			gLeftButtonState.handleUp();
 			break;
 		}
 
@@ -198,29 +242,62 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 #if defined WITH_MAEMO || defined(__APPLE__)
 right_button:
 #endif
-			guiRightButtonRepeatTimer = 0;
-			gfRightButtonState = FALSE;
-			QueueMouseEvent(RIGHT_BUTTON_UP);
+			gRightButtonState.handleUp();
 			break;
 
 		case SDL_BUTTON_MIDDLE:
-			guiMiddleButtonRepeatTimer = 0;
-			gfMiddleButtonState = FALSE;
-			QueueMouseEvent(MIDDLE_BUTTON_UP);
+			gMiddleButtonState.handleUp();
+			break;
+
+		case SDL_BUTTON_X1:
+			gX1ButtonState.handleUp();
+			break;
+
+		case SDL_BUTTON_X2:
+			gX2ButtonState.handleUp();
 			break;
 	}
 }
 
 void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
 {
+	gfIsUsingTouch = false;
+
 	if (WheelEv->y > 0)
 	{
-		QueueMouseEvent(MOUSE_WHEEL_UP);
+		QueuePointerEvent(MOUSE_WHEEL_UP, 0);
 	}
 	else
 	{
-		QueueMouseEvent(MOUSE_WHEEL_DOWN);
+		QueuePointerEvent(MOUSE_WHEEL_DOWN, 0);
 	}
+}
+
+void FingerMove(const SDL_TouchFingerEvent* event) {
+	if (event->fingerId != gMainFingerId) return;
+	gfIsUsingTouch = true;
+
+	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
+
+	QueuePointerEvent(TOUCH_FINGER_MOVE, 0);
+}
+
+void FingerDown(const SDL_TouchFingerEvent* event) {
+	gMainFingerId = event->fingerId;
+	gfIsUsingTouch = true;
+
+	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
+
+	gMainFingerState.handleDown();
+}
+
+void FingerUp(const SDL_TouchFingerEvent* event) {
+	if (event->fingerId != gMainFingerId) return;
+	gfIsUsingTouch = true;
+
+	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
+
+	gMainFingerState.handleUp();
 }
 
 
@@ -389,6 +466,31 @@ void GetMousePos(SGPPoint* Point)
 	Point->iY = gusMouseYPos;
 }
 
+bool IsMouseButtonDown(UINT32 mouseButton) {
+	switch (mouseButton) {
+		case MOUSE_BUTTON_LEFT:
+			return gLeftButtonState.isDown();
+		case MOUSE_BUTTON_RIGHT:
+			return gRightButtonState.isDown();
+		case MOUSE_BUTTON_MIDDLE:
+			return gMiddleButtonState.isDown();
+		case MOUSE_BUTTON_X1:
+			return gX1ButtonState.isDown();
+		case MOUSE_BUTTON_X2:
+			return gX1ButtonState.isDown();
+		default:
+			SLOGE("Unknown button checked in IsMouseButtonDown: {}", mouseButton);
+			return false;
+	}
+}
+
+bool IsMainFingerDown() {
+	return gMainFingerState.isDown();
+}
+
+bool IsUsingTouch() {
+	return gfIsUsingTouch;
+}
 
 void RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2)
 {
@@ -443,6 +545,11 @@ BOOLEAN IsCursorRestricted(void)
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
+	// Never move mouse on touch (it's useless and will cause a mouse event which we dont want on touch devices)
+	if (gfIsUsingTouch) {
+		return;
+	}
+
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(GAME_WINDOW, &windowWidth, &windowHeight);
 
@@ -486,50 +593,15 @@ void DequeueAllKeyBoardEvents(void)
 }
 
 
-static void HandleSingleClicksAndButtonRepeats(void)
+void HandleSingleClicksAndButtonRepeats()
 {
 	UINT32 uiTimer = GetClock();
 
-	// Is there a LEFT mouse button repeat
-	if (gfLeftButtonState)
-	{
-		if ((guiLeftButtonRepeatTimer > 0)&&(guiLeftButtonRepeatTimer <= uiTimer))
-		{
-			QueueMouseEvent(LEFT_BUTTON_REPEAT);
-			guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
-		}
-	}
-	else
-	{
-		guiLeftButtonRepeatTimer = 0;
-	}
-
-
-	// Is there a RIGHT mouse button repeat
-	if (gfRightButtonState)
-	{
-		if ((guiRightButtonRepeatTimer > 0)&&(guiRightButtonRepeatTimer <= uiTimer))
-		{
-			QueueMouseEvent(RIGHT_BUTTON_REPEAT);
-			guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
-		}
-	}
-	else
-	{
-		guiRightButtonRepeatTimer = 0;
-	}
-
-	// Is there a MIDDLE mouse button repeat
-	if (gfMiddleButtonState)
-	{
-		if ((guiMiddleButtonRepeatTimer > 0)&&(guiMiddleButtonRepeatTimer <= uiTimer))
-		{
-			QueueMouseEvent(MIDDLE_BUTTON_REPEAT);
-			guiMiddleButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
-		}
-	}
-	else
-	{
-		guiMiddleButtonRepeatTimer = 0;
-	}
+	// Is there a touch finger to repeat
+	gMainFingerState.detectRepeat(uiTimer);
+	gLeftButtonState.detectRepeat(uiTimer);
+	gRightButtonState.detectRepeat(uiTimer);
+	gMiddleButtonState.detectRepeat(uiTimer);
+	gX1ButtonState.detectRepeat(uiTimer);
+	gX2ButtonState.detectRepeat(uiTimer);
 }

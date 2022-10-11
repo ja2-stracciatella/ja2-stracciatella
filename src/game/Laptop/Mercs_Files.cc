@@ -116,20 +116,20 @@ static SGPVObject* guiBioBox;
 //
 
 // The Prev button
-static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static BUTTON_PICS* guiButtonImage;
 GUIButtonRef guiPrevButton;
 
 // The Next button
-static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercNextButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiNextButton;
 
 // The Hire button
-static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercHireButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiHireButton;
 
 // The Back button
-static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 GUIButtonRef guiMercBackButton;
 
 
@@ -231,9 +231,9 @@ void RenderMercsFiles()
 }
 
 
-static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gubCurMercIndex > 0) gubCurMercIndex--;
 		fReDrawScreenFlag = TRUE;
@@ -242,9 +242,9 @@ static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex - 1) gubCurMercIndex++;
 		fReDrawScreenFlag = TRUE;
@@ -256,9 +256,9 @@ static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static BOOLEAN MercFilesHireMerc(UINT8 ubMercID);
 
 
-static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercHireButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//if the players accont is suspended, go back to the main screen and have Speck inform the players
 		if (LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_SUSPENDED)
@@ -480,9 +480,9 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 }
 
 
-static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_MERC;
 		gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;

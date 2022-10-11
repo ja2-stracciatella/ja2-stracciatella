@@ -363,7 +363,7 @@ void HandleOverheadMap(void)
 
 	RenderButtons();
 	SaveBackgroundRects();
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 	fInterfacePanelDirty = DIRTYLEVEL0;
@@ -376,7 +376,8 @@ BOOLEAN InOverheadMap( )
 }
 
 
-static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
+static void ClickOverheadRegionCallbackPrimary(MOUSE_REGION* reg, UINT32 reason);
+static void ClickOverheadRegionCallbackSecondary(MOUSE_REGION* reg, UINT32 reason);
 
 
 void GoIntoOverheadMap( )
@@ -385,7 +386,7 @@ void GoIntoOverheadMap( )
 
 	MSYS_DefineRegion(&OverheadBackgroundRegion, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	MSYS_DefineRegion(&OverheadRegion, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 320, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, ClickOverheadRegionCallback);
+	MSYS_DefineRegion(&OverheadRegion, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 320, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(ClickOverheadRegionCallbackPrimary, ClickOverheadRegionCallbackSecondary));
 
 	// LOAD CLOSE ANIM
 	uiOVERMAP = AddVideoObjectFromFile(INTERFACEDIR "/map_bord.sti");
@@ -425,7 +426,7 @@ void GoIntoOverheadMap( )
 static void HandleOverheadUI(void)
 {
 	InputAtom a;
-	while (DequeueEvent(&a))
+	while (DequeueSpecificEvent(&a, KEYBOARD_EVENTS))
 	{
 		if (a.usEvent == KEY_DOWN)
 		{
@@ -846,7 +847,7 @@ static void RenderOverheadOverlays(void)
 }
 
 
-static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
+static void ClickOverheadRegionCallbackPrimary(MOUSE_REGION* reg, UINT32 reason)
 {
 	if( gfTacticalPlacementGUIActive )
 	{
@@ -854,22 +855,26 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		return;
 	}
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		// Get new proposed center location.
-		const GridNo pos = GetOverheadMouseGridNo();
-		INT16 cell_x;
-		INT16 cell_y;
-		ConvertGridNoToCenterCellXY(pos, &cell_x, &cell_y);
+	// Get new proposed center location.
+	const GridNo pos = GetOverheadMouseGridNo();
+	INT16 cell_x;
+	INT16 cell_y;
+	ConvertGridNoToCenterCellXY(pos, &cell_x, &cell_y);
 
-		SetRenderCenter(cell_x, cell_y);
+	SetRenderCenter(cell_x, cell_y);
 
-		KillOverheadMap();
-	}
-	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	KillOverheadMap();
+}
+
+static void ClickOverheadRegionCallbackSecondary(MOUSE_REGION* reg, UINT32 reason)
+{
+	if( gfTacticalPlacementGUIActive )
 	{
-		KillOverheadMap();
+		HandleTacticalPlacementClicksInOverheadMap(reason);
+		return;
 	}
+
+	KillOverheadMap();
 }
 
 

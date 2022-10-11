@@ -4,12 +4,15 @@
 #include "Debug.h"
 #include "GameInstance.h"
 #include "HImage.h"
+#include "Input.h"
 #include "Timer.h"
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
 
 #include "policy/GamePolicy.h"
+
+#include <optional>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +36,25 @@ static UINT32 guiDelayTimer = 0;
 
 static MOUSEBLT_HOOK gMouseBltOverride = NULL;
 
+std::optional<SGPPoint> gManualCursorPos = std::nullopt;
+
+void GetCursorPos(SGPPoint& point)
+{
+	if (gManualCursorPos) {
+		point.iX = gManualCursorPos->iX;
+		point.iY = gManualCursorPos->iY;
+		return;
+	}
+	GetMousePos(&point);
+}
+
+void SetManualCursorPos(SGPPoint point) {
+	gManualCursorPos = std::make_optional(point);
+}
+
+void ClearManualCursorPos() {
+	gManualCursorPos = std::nullopt;
+}
 
 static void EraseMouseCursor(void)
 {
@@ -195,7 +217,7 @@ void CursorDatabaseClear(void)
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 {
 	uiCursorIndex = ModifyCursorIndex(uiCursorIndex);
-	
+
 	if (uiCursorIndex == VIDEO_NO_CURSOR)
 	{
 		SetMouseCursorProperties(0, 0, 0, 0);
@@ -222,6 +244,14 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 		else
 		{
 			const CursorData* pCurData = &gpCursorDatabase[uiCursorIndex];
+
+			// Disable specific pointing cursors on touch devices
+			if (pCurData->fHideOnTouch && IsUsingTouch()) {
+				uiCursorIndex = VIDEO_NO_CURSOR;
+				guiOldSetCursor = VIDEO_NO_CURSOR;
+				SetMouseCursorProperties(0, 0, 0, 0);
+				return TRUE;
+			}
 
 			// First check if we are a differnet curosr...
 			if (uiCursorIndex != guiOldSetCursor)

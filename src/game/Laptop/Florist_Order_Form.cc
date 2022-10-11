@@ -191,16 +191,16 @@ static BUTTON_PICS* guiFlowerOrderButtonImage;
 
 static UINT8 const gubFlowerOrder_AdditioanalServicePrices[] = { 10, 20, 10, 10 };
 
-static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiFlowerOrderBackButton;
 
-static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiFlowerOrderSendButton;
 
-static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiFlowerOrderClearButton;
 
-static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiFlowerOrderGalleryButton;
 
 
@@ -235,11 +235,11 @@ static GUIButtonRef MakeButton(const ST::string& text, INT16 x, INT16 y, GUI_CAL
 
 
 static void InitFlowerOrderTextInputBoxes(void);
-static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterFloristOrderForm()
@@ -465,18 +465,18 @@ void RenderFloristOrderForm()
 }
 
 
-static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 	}
 }
 
 
-static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		//add an entry in the finacial page for the medical deposit
 		AddTransactionToPlayersBook(PURCHASED_FLOWERS, 0, GetWorldTotalMin(), -(INT32)guiFlowerPrice);
@@ -504,9 +504,9 @@ static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
 		InitFloristOrderForm();
@@ -514,9 +514,9 @@ static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 		//reset the gallery back to page 0
@@ -525,9 +525,9 @@ static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		UINT32	uiUserData;
 
@@ -603,9 +603,9 @@ static void DisplayFloristCheckBox(void)
 }
 
 
-static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_CARD_GALLERY;
 	}
@@ -661,27 +661,27 @@ static void DisplayFlowerDynamicItems(void)
 }
 
 
-static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 	}
 }
 
 
-static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_CREATE;
 	}
 }
 
 
-static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_DESTROY;
 	}
@@ -691,9 +691,9 @@ static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, IN
 static void FlowerOrderDrawSelectedCity(UINT8 ubNumber);
 
 
-static void SelectFlowerDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectFlowerDropDownRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubCurrentlySelectedFlowerLocation = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		FlowerOrderDrawSelectedCity( gubCurrentlySelectedFlowerLocation );
@@ -702,7 +702,7 @@ static void SelectFlowerDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 }
 
 
-static void SelectFlowerDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectFlowerDropDownMovementCallBack(MOUSE_REGION* pRegion, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -951,7 +951,7 @@ static void DestroyFlowerOrderTextInputBoxes(void)
 static void HandleFloristOrderKeyBoardInput(void)
 {
 	InputAtom InputEvent;
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
 		if( !HandleTextInput( &InputEvent ) && InputEvent.usEvent == KEY_DOWN )
 		{

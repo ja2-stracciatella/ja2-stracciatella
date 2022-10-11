@@ -514,7 +514,7 @@ static void SetBackgroundTexture(void)
 static BOOLEAN DoWindowSelection(void)
 {
 	RenderSelectionWindow( );
-	RenderButtonsFastHelp( );
+	RenderFastHelp( );
 	if ( fAllDone )
 	{
 		switch ( iDrawMode )
@@ -639,7 +639,7 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 			break;
 	}
 
-	const GridNo pos = GetMouseMapPos();
+	const GridNo pos = guiCurrentCursorGridNo;
 	if (pos == NOWHERE) return FALSE;
 
 	iCurBankMapIndex = pos;
@@ -866,9 +866,8 @@ void ShowCurrentDrawingMode( void )
 			break;
 		case DRAW_MODE_SMART_WALLS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcWallInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcWallInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartWallDefault(&usObjIndex, &usUseIndex);
 			}
@@ -877,9 +876,8 @@ void ShowCurrentDrawingMode( void )
 
 		case DRAW_MODE_SMART_DOORS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcDoorInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcDoorInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartDoorDefault(&usObjIndex, &usUseIndex);
 			}
@@ -888,9 +886,8 @@ void ShowCurrentDrawingMode( void )
 
 		case DRAW_MODE_SMART_WINDOWS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcWindowInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcWindowInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartWindowDefault(&usObjIndex, &usUseIndex);
 			}
@@ -899,9 +896,8 @@ void ShowCurrentDrawingMode( void )
 
 		case DRAW_MODE_SMART_BROKEN_WALLS:
 		{
-			const GridNo pos = GetMouseMapPos();
-			if (pos == NOWHERE ||
-					!CalcBrokenWallInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
+			if (guiCurrentCursorGridNo == NOWHERE ||
+					!CalcBrokenWallInfoUsingSmartMethod(guiCurrentCursorGridNo, &usObjIndex, &usUseIndex))
 			{
 				CalcSmartBrokenWallDefault(&usObjIndex, &usUseIndex);
 			}
@@ -1207,7 +1203,7 @@ static void RemoveGotoGridNoUI(void);
 static void HandleKeyboardShortcuts(void)
 {
 	static BOOLEAN fShowTrees = TRUE;
-	while( DequeueEvent( &EditorInputEvent ) )
+	while( DequeueSpecificEvent(&EditorInputEvent, KEYBOARD_EVENTS) )
 	{
 		if( !HandleSummaryInput( &EditorInputEvent ) && !HandleTextInput( &EditorInputEvent ) && EditorInputEvent.usEvent == KEY_DOWN )
 		{
@@ -1791,8 +1787,7 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_SET_WAYPOINT:
 		{
-			const GridNo pos = GetMouseMapPos();
-			AddMercWaypoint(pos);
+			AddMercWaypoint(guiCurrentCursorGridNo);
 			break;
 		}
 
@@ -1807,13 +1802,9 @@ static ScreenID PerformSelectedAction(void)
 			break;
 
 		case ACTION_QUICK_ERASE:
-			if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
+			if (guiCurrentCursorGridNo != NOWHERE)
 			{
-				const UINT32 pos = GetMouseMapPos();
-				if (pos != NOWHERE && pos < GRIDSIZE)
-				{
-					QuickEraseMapTile(pos);
-				}
+				QuickEraseMapTile(guiCurrentCursorGridNo);
 			}
 			break;
 
@@ -2060,15 +2051,19 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_COPY_MERC_PLACEMENT:
 		{
-			const GridNo pos = GetMouseMapPos();
-			CopyMercPlacement(pos);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				CopyMercPlacement(guiCurrentCursorGridNo);
+			}
 			break;
 		}
 
 		case ACTION_PASTE_MERC_PLACEMENT:
 		{
-			const GridNo pos = GetMouseMapPos();
-			PasteMercPlacement(pos);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				PasteMercPlacement(guiCurrentCursorGridNo);
+			}
 			break;
 		}
 
@@ -2133,15 +2128,19 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_WALL_PASTE1:	// Doors		//** Changes needed
 		{
-			const GridNo pos = GetMouseMapPos();
-			AddWallToStructLayer(pos, FIRSTWALL18, TRUE);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL18, TRUE);
+			}
 			break;
 		}
 
 		case ACTION_WALL_PASTE2:	// Windows	//** Changes Needed
 		{
-			const GridNo pos = GetMouseMapPos();
-			AddWallToStructLayer(pos, FIRSTWALL19, TRUE);
+			if (guiCurrentCursorGridNo != NOWHERE)
+			{
+				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL19, TRUE);
+			}
 			break;
 		}
 
@@ -2355,7 +2354,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 
 	fLeaveScreen = FALSE;
 
-	while (DequeueEvent(&DummyEvent))
+	while (DequeueSpecificEvent(&DummyEvent, KEYBOARD_EVENTS))
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{
@@ -2372,7 +2371,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 	}
 
 
-	if ( (_LeftButtonDown) || (_RightButtonDown) || fLeaveScreen )
+	if ( (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) || fLeaveScreen )
 	{
 		fHelpScreen = FALSE;
 
@@ -2394,7 +2393,7 @@ static ScreenID WaitForSelectionWindowResponse(void)
 {
 	InputAtom DummyEvent;
 
-	while (DequeueEvent(&DummyEvent))
+	while (DequeueSpecificEvent(&DummyEvent, KEYBOARD_EVENTS))
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{
@@ -2753,7 +2752,7 @@ static void DrawObjectsBasedOnSelectionRegion(void);
 
 static void HandleMouseClicksInGameScreen()
 {
-	GridNo const map_idx = GetMouseMapPos();
+	GridNo const map_idx = guiCurrentCursorGridNo;
 	if (map_idx == NOWHERE) return;
 
 	// If in taskbar modes which don't process clicks in the world
@@ -2765,7 +2764,7 @@ static void HandleMouseClicksInGameScreen()
 
 	BOOLEAN const prev_state = gfRenderWorld;
 
-	if (_LeftButtonDown)
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
 	{
 		gfRenderWorld = TRUE;
 		// Are we trying to erase something?
@@ -2920,7 +2919,7 @@ static void HandleMouseClicksInGameScreen()
 				break;
 		}
 	}
-	else if (_RightButtonDown)
+	else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
 	{
 		gfRenderWorld = TRUE;
 		switch (iDrawMode)
@@ -3062,49 +3061,49 @@ static void HideEntryPoints()
 	if (m.sWestGridNo  != -1) RemoveAllTopmostsOfTypeRange(m.sWestGridNo,  FIRSTPOINTERS, FIRSTPOINTERS);
 }
 
-void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskOptionsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iTaskMode = TASK_OPTIONS;
 	}
 }
 
-void TaskTerrainCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskTerrainCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iTaskMode = TASK_TERRAIN;
 	}
 }
 
-void TaskBuildingCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskBuildingCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iTaskMode = TASK_BUILDINGS;
 	}
 }
 
-void TaskItemsCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskItemsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iTaskMode = TASK_ITEMS;
 	}
 }
 
-void TaskMercsCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskMercsCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iTaskMode = TASK_MERCS;
 	}
 }
 
-void TaskMapInfoCallback(GUI_BUTTON *btn,INT32 reason)
+void TaskMapInfoCallback(GUI_BUTTON *btn,UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iTaskMode = TASK_MAPINFO;
 	}
@@ -3296,13 +3295,13 @@ ScreenID EditScreenHandle(void)
 
 	HandleMouseClicksInGameScreen();
 
-	if( !gfFirstPlacement && !gfLeftButtonState )
+	if( !gfFirstPlacement && !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
 		gfFirstPlacement = TRUE;
 
 	//If we are copying or moving a building, we process, then delete the building layout immediately
 	//after releasing the mouse button.  If released in the world, then the building would have been
 	//processed in above function, HandleMouseClicksInGameScreen().
-	if( !_LeftButtonDown && gpBuildingLayoutList )
+	if( !IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gpBuildingLayoutList )
 		DeleteBuildingLayout();
 
 	fShowingCursor = DoIRenderASpecialMouseCursor();

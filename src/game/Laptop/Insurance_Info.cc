@@ -70,11 +70,11 @@ static BOOLEAN InsuranceInfoSubPagesVisitedFlag[INS_INFO_LAST_PAGE];
 
 
 static BUTTON_PICS* guiInsPrevButtonImage;
-static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiInsPrevBackButton;
 
 static BUTTON_PICS* guiInsNextButtonImage;
-static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnInsNextButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static GUIButtonRef guiInsNextBackButton;
 
 
@@ -101,8 +101,8 @@ static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT1
 }
 
 
-static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 void EnterInsuranceInfo()
@@ -229,9 +229,9 @@ void RenderInsuranceInfo()
 static void ChangingInsuranceInfoSubPage(UINT8 ubSubPageNumber);
 
 
-static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gubCurrentInsInfoSubPage > 0) gubCurrentInsInfoSubPage--;
 		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
@@ -240,9 +240,9 @@ static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnInsNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gubCurrentInsInfoSubPage < INS_INFO_LAST_PAGE - 1) gubCurrentInsInfoSubPage++;
 		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
@@ -251,18 +251,18 @@ static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE_CONTRACT;
 	}
 }
 
 
-static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}

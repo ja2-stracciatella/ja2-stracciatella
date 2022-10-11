@@ -129,9 +129,9 @@ void RenderTerrainTileButtons()
 
 //This callback is used for each of the terrain tile buttons.  The userData[0] field
 //contains the terrain button's index value.
-void TerrainTileButtonRegionCallback(MOUSE_REGION *reg,INT32 reason)
+void TerrainTileButtonRegionCallback(MOUSE_REGION *reg, UINT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gfRenderTaskbar = TRUE;
 		TerrainTileSelected = MSYS_GetRegionUserData(reg,0);

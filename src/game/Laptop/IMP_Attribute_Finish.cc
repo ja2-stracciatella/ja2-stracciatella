@@ -24,8 +24,8 @@ GUIButtonRef giIMPAttributeFinishButton[2];
 extern void SetGeneratedCharacterAttributes( void );
 
 
-static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, UINT32 reason);
+static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, UINT32 reason);
 
 
 static void CreateAttributeFinishButtons(void);
@@ -101,9 +101,9 @@ static void DestroyAttributeFinishButtons(void)
 }
 
 
-static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// gone far enough
 		iCurrentImpPage = IMP_MAIN_PAGE;
@@ -124,9 +124,9 @@ static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// if no, return to attribute
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;

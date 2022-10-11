@@ -381,7 +381,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	//render the autoresolve panel
 	RenderAutoResolve();
 	RenderButtons();
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 	//save it
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, x, y, w, h);
 
@@ -512,7 +512,7 @@ ScreenID AutoResolveScreenHandle()
 
 	SaveBackgroundRects();
 	RenderButtons();
-	RenderButtonsFastHelp();
+	RenderFastHelp();
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 	return AUTORESOLVE_SCREEN;
@@ -623,8 +623,8 @@ static void AssociateEnemiesWithStrategicGroups(void)
 }
 
 
-static void MercCellMouseClickCallback(MOUSE_REGION* reg, INT32 reason);
-static void MercCellMouseMoveCallback(MOUSE_REGION* reg, INT32 reason);
+static void MercCellMouseClickCallback(MOUSE_REGION* reg, UINT32 reason);
+static void MercCellMouseMoveCallback(MOUSE_REGION* reg, UINT32 reason);
 
 
 static void CalculateSoldierCells(BOOLEAN fReset)
@@ -1462,15 +1462,15 @@ static SOLDIERCELL* MakeCreatures(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUC
 }
 
 
-static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason);
-static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void FastButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void FinishButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PauseButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PlayButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void RejectSurrenderCallback(GUI_BUTTON* btn, INT32 reason);
-static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void AcceptSurrenderCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BandageButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void DoneButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void FastButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void FinishButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PauseButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void PlayButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void RejectSurrenderCallback(GUI_BUTTON* btn, UINT32 reason);
+static void RetreatButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
 static void CreateAutoResolveInterface(void)
@@ -1884,18 +1884,18 @@ static void DepressAutoButton(UINT btn)
 }
 
 
-static void PauseButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void PauseButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		DepressAutoButton(PAUSE_BUTTON);
 	}
 }
 
 
-static void PlayButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void PlayButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		DepressAutoButton(PLAY_BUTTON);
 		gpAR->uiTimeSlice = 1000 * gpAR->ubTimeModifierPercentage / 100;
@@ -1903,9 +1903,9 @@ static void PlayButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void FastButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void FastButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		DepressAutoButton(FAST_BUTTON);
 		gpAR->uiTimeSlice = 4000;
@@ -1913,9 +1913,9 @@ static void FastButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void FinishButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void FinishButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		DepressAutoButton(FINISH_BUTTON);
 		gpAR->uiTimeSlice = 0xffffffff;
@@ -1925,9 +1925,9 @@ static void FinishButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void RetreatButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		FOR_EACH_AR_MERC(i)
 		{
@@ -2002,9 +2002,9 @@ static void DetermineBandageButtonState(void)
 static void SetupDoneInterface(void);
 
 
-static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BandageButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		AutoBandageMercs();
 		SetupDoneInterface();
@@ -2012,9 +2012,9 @@ static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void DoneButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gpAR->fExitAutoResolve = TRUE;
 	}
@@ -2033,7 +2033,7 @@ static SOLDIERCELL* GetCell(MOUSE_REGION const* const reg)
 }
 
 
-static void MercCellMouseMoveCallback(MOUSE_REGION* reg, INT32 reason)
+static void MercCellMouseMoveCallback(MOUSE_REGION* reg, UINT32 reason)
 {
 	SOLDIERCELL* const pCell = GetCell(reg);
 	if( gpAR->fPendingSurrender )
@@ -2058,9 +2058,9 @@ static void MercCellMouseMoveCallback(MOUSE_REGION* reg, INT32 reason)
 }
 
 
-static void MercCellMouseClickCallback(MOUSE_REGION* reg, INT32 reason)
+static void MercCellMouseClickCallback(MOUSE_REGION* reg, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		if( gpAR->fPendingSurrender )
 		{ //Can't setup retreats when pending surrender.
@@ -2403,7 +2403,7 @@ static void HandleAutoResolveInput(void)
 {
 	InputAtom InputEvent;
 	BOOLEAN fResetAutoResolve = FALSE;
-	while( DequeueEvent( &InputEvent ) )
+	while( DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS) )
 	{
 		if( InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT )
 		{
@@ -3651,9 +3651,9 @@ static void HideSurrenderInterface(void)
 }
 
 
-static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason)
+static void AcceptSurrenderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		BeginCaptureSquence( );
 
@@ -3664,9 +3664,9 @@ static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void RejectSurrenderCallback(GUI_BUTTON* btn, INT32 reason)
+static void RejectSurrenderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gpAR->fPlayerRejectedSurrenderOffer = TRUE;
 		HideSurrenderInterface();

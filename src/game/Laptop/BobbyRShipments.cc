@@ -70,12 +70,12 @@ static BOOLEAN gfBobbyRShipmentsDirty = FALSE;
 static INT32 giBobbyRShipmentSelectedShipment = -1;
 
 //Back Button
-static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiBobbyRShipmentBackImage;
 static GUIButtonRef guiBobbyRShipmetBack;
 
 //Home Button
-static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* giBobbyRShipmentHomeImage;
 static GUIButtonRef guiBobbyRShipmentHome;
 
@@ -199,18 +199,18 @@ void RenderBobbyRShipments()
 }
 
 
-static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R_MAILORDER;
 	}
 }
 
 
-static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}
@@ -288,7 +288,7 @@ static void DisplayPreviousShipments(void)
 }
 
 
-static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void CreatePreviousShipmentsMouseRegions(void)
@@ -326,9 +326,9 @@ static void RemovePreviousShipmentsMouseRegions(void)
 }
 
 
-static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		INT32 iSlotID = MSYS_GetRegionUserData( pRegion, 0 );
 

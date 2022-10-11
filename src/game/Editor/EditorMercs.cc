@@ -573,9 +573,9 @@ static SOLDIERTYPE* IsMercHere(INT32 iMapIndex)
 //----------------------------------------------------------------------------------------------
 
 
-void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsToggleColorModeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		if (btn->Clicked())
 		{
@@ -596,10 +596,10 @@ void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetColorsCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	INT32 iBtn;
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iEditWhichStat = -1;
 		for ( iBtn = FIRST_MERCS_COLOR_BUTTON; iBtn <= LAST_MERCS_COLOR_BUTTON; iBtn++ )
@@ -619,9 +619,9 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
 static void ChangeBodyType(INT8 bOffset);
 
 
-void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
+void MercsSetBodyTypeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gfRenderMercInfo = TRUE;
 		if (btn == iEditorButton[MERCS_BODYTYPE_DOWN])

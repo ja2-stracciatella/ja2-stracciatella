@@ -39,7 +39,7 @@ extern SGPVSurface* ButtonDestBuffer;
 struct GUI_BUTTON;
 
 // GUI_BUTTON callback function type
-typedef void (*GUI_CALLBACK)(GUI_BUTTON*, INT32);
+typedef std::function<void(GUI_BUTTON*, UINT32)> GUI_CALLBACK;
 
 // GUI_BUTTON structure definitions.
 struct GUI_BUTTON
@@ -96,8 +96,6 @@ struct GUI_BUTTON
 
 	// will simply set the cursor for the mouse region the button occupies
 	void SetCursor(UINT16 const cursor) { Area.ChangeCursor(cursor); }
-
-	void DrawCheckBoxOnOff(BOOLEAN on);
 
 	// Coordinates where button is on the screen
 	INT16 X()            const { return Area.RegionTopLeftX; }
@@ -197,13 +195,6 @@ void InitButtonSystem(void);
  * function.
  */
 void ShutdownButtonSystem(void);
-
-#if defined _JA2_RENDER_DIRTY
-
-void RenderButtonsFastHelp(void);
-#	define RenderButtonsFastHelp() RenderFastHelp()
-
-#endif
 
 // Loads an image file for use as a button icon.
 INT16 LoadGenericButtonIcon(const char* filename);

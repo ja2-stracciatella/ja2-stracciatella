@@ -162,10 +162,10 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const ST::string& text, c
 }
 
 
-static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason);
-static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
-static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 reason);
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, UINT32 reason);
+static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason);
+static void NextQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason);
 
 
 static void CreateIMPPersonalityQuizButtons(void)
@@ -294,7 +294,7 @@ static void DestroyPersonalityQuizButtons(void)
 }
 
 
-static void BtnQuizAnswerCallback(GUI_BUTTON*, INT32 reason);
+static void BtnQuizAnswerCallback(GUI_BUTTON*, UINT32 reason);
 
 
 static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
@@ -334,9 +334,9 @@ static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 static void CheckStateOfTheConfirmButton(void);
 
 
-static void BtnQuizAnswerCallback(GUI_BUTTON* const btn, INT32 const reason)
+static void BtnQuizAnswerCallback(GUI_BUTTON* const btn, UINT32 const reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
 		ResetQuizAnswerButtons();
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -353,9 +353,9 @@ static void CheckAndUpdateNextPreviousIMPQuestionButtonStates(void);
 static void CompileQuestionsInStatsAndWhatNot(void);
 
 
-static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (iCurrentAnswer != -1)
 		{
@@ -383,9 +383,9 @@ static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 re
 }
 
 
-static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
 		giMaxPersonalityQuizQuestion = 0;
@@ -772,85 +772,10 @@ static void MoveBackAQuestion(void);
 static void HandleIMPQuizKeyBoard(void)
 {
 	InputAtom InputEvent;
-	BOOLEAN fSkipFrame = FALSE;
 
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-
-	while (DequeueEvent(&InputEvent))
+	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
 	{
-		if (!fSkipFrame)
-	{
-		// HOOK INTO MOUSE HOOKS
-
-
-		/*
-		if( (InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam >= '1' ) && ( InputEvent.usParam <= '9') )
-		{
-			if( ( UINT16 )( iNumberOfPersonaButtons ) >= InputEvent.usParam - '0' )
-			{
-				// reset buttons
-				ResetQuizAnswerButtons( );
-
-				// ok, check to see if button was disabled, if so, re enable
-				CheckStateOfTheConfirmButton( );
-
-				// toggle this button on
-				giIMPPersonalityQuizAnswerButton[InputEvent.usParam - '1']->uiFlags |= BUTTON_CLICKED_ON;
-
-				iCurrentAnswer = InputEvent.usParam - '1';
-
-				PrintImpText( );
-
-				// the current and last question numbers
-				PrintQuizQuestionNumber( );
-
-				fReDrawCharProfile = TRUE;
-				fSkipFrame = TRUE;
-			}
-		}
-		else if (iCurrentAnswer != -1 && InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN)
-		{
-			// reset all the buttons
-			ResetQuizAnswerButtons( );
-
-			// copy the answer into the list
-			iQuizAnswerList[ giCurrentPersonalityQuizQuestion ] = iCurrentAnswer;
-
-			// reset answer for next question
-			iCurrentAnswer = -1;
-
-			// next question, JOHNNY!
-			giCurrentPersonalityQuizQuestion++;
-			giMaxPersonalityQuizQuestion++;
-
-
-			// OPPS!, done..time to finish up
-			if( giCurrentPersonalityQuizQuestion > 15)
-			{
-				iCurrentImpPage = IMP_PERSONALITY_FINISH;
-				// process
-				CompileQuestionsInStatsAndWhatNot( );
-			}
-
-			fSkipFrame = TRUE;
-		}
-		else if( ( InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam == '=' ) )
-		{
-			MoveAheadAQuestion( );
-			fSkipFrame = TRUE;
-		}
-		else if( ( InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam == '-' ) )
-		{
-			MoveBackAQuestion( );
-			fSkipFrame = TRUE;
-		}
-		else*/
-		{
-			MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
-			HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
-		}
-	}
+		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}
 }
 
@@ -912,18 +837,18 @@ static void ToggleQuestionNumberButtonOn(INT32 iAnswerNumber)
 }
 
 
-static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason)
+static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		MoveBackAQuestion( );
 	}
 }
 
 
-static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason)
+static void NextQuestionButtonCallback(GUI_BUTTON *btn, UINT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		MoveAheadAQuestion( );
 	}

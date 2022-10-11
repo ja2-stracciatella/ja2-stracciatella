@@ -142,7 +142,7 @@ enum AimPolicyTextLocations
 static MOUSE_REGION gSelectedPolicyTocMenuRegion[NUM_AIM_POLICY_TOC_BUTTONS];
 
 //Agree/Disagree menu Buttons regions
-static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static BUTTON_PICS* guiPoliciesButtonImage;
 static GUIButtonRef guiPoliciesAgreeButton[2];
 
@@ -359,7 +359,7 @@ void RenderAimPolicies()
 }
 
 
-static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 
 
 static void InitAimPolicyMenuBar()
@@ -428,7 +428,7 @@ static void DrawAimPolicyMenu(void)
 }
 
 
-static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
 static void InitAimPolicyTocMenu()
@@ -460,11 +460,11 @@ static void ChangingAimPoliciesSubPage(UINT8 ubSubPageNumber);
 static void ResetAimPolicyButtons();
 
 
-static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if(gfInPolicyToc)
 	{
-		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 		{
 			gubCurPageNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -577,13 +577,13 @@ static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT
 }
 
 
-static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	static BOOLEAN fOnPage = TRUE;
 
 	if (fOnPage)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 		{
 			UINT8 const ubRetValue = btn->GetUserData();
 
@@ -605,13 +605,13 @@ static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	static BOOLEAN fOnPage = TRUE;
 
 	if (fOnPage)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 		{
 			UINT8 const ubRetValue = btn->GetUserData();
 			switch (ubRetValue)

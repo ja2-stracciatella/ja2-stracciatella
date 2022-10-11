@@ -1,6 +1,7 @@
 #include "MouseSystem.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
+#include "Touch_UI.h"
 #include "Input.h"
 #include "Handle_UI.h"
 #include "Cursors.h"
@@ -220,7 +221,7 @@ void DrawUICursor()
 		gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 		// Check if we are in the viewport region...
-		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA || IsPointerOnTacticalTouchUI())
 		{
 			DrawItemTileCursor( );
 		}
@@ -231,7 +232,7 @@ void DrawUICursor()
 		return;
 	}
 
-	const GridNo usMapPos = GetMouseMapPos();
+	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos != NOWHERE)
 	{
 		gusCurMousePos = usMapPos;
@@ -404,7 +405,7 @@ void HideUICursor()
 	if ( gpItemPointer != NULL )
 	{
 		// Check if we are in the viewport region...
-		if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA) return;
+		if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA || IsPointerOnTacticalTouchUI()) return;
 	}
 
 	if (guiCurUICursor == NO_UICURSOR) return; //Do nothing here

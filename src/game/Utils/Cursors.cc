@@ -1,6 +1,7 @@
 #include "Cursors.h"
 #include "Directories.h"
 #include "Timer_Control.h"
+#include "Touch_UI.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "Handle_UI.h"
@@ -112,7 +113,7 @@ static CursorData CursorDatabase[] =
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	0,  0, 0, 0									, 0, 0, TRUE },
 
 	{ SUBHIDE(C_TRINGS,     6), //SUBCENT(C_TRINGS, 6),
 		SUBCENT(C_ACTIONMODE, 0),
@@ -472,14 +473,14 @@ static CursorData CursorDatabase[] =
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	4,  0, 0, 0									, 0, 0 },
+		1,	4,  0, 0, 0									, 0, 0, TRUE },
 
 	{ SUBNORM(C_LAPTOPSCREEN,        0),
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	0,  0, 0, 0									, 0, 0, TRUE },
 
 	{ SUBNORM(C_IBEAM,               0),
 		SUBNONE(),
@@ -1227,7 +1228,7 @@ static void DrawMouseText(void);
 
 static void BltJA2CursorData(void)
 {
-	if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
+	if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA || IsPointerOnTacticalTouchUI())
 	{
 		DrawMouseText();
 	}
