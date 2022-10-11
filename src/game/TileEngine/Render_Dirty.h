@@ -47,7 +47,7 @@ struct VIDEO_OVERLAY
 
 
 // GLOBAL VARIABLES
-extern SGPRect gDirtyClipRect;
+inline SGPRect gDirtyClipRect;
 
 
 // DIRTY QUEUE
