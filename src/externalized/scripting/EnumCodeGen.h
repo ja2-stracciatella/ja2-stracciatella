@@ -1,7 +1,16 @@
 #pragma once
-#include <stdexcept>
 
+#ifndef NO_MAGICENUM_LIB
 #include <magic_enum.hpp>
+#ifdef MAGIC_ENUM_SUPPORTED
+#ifdef MAGIC_ENUM_SUPPORTED_ALIASES
+#define HAS_ENUMGEN_SUPPORT (1)
+#endif
+#endif
+#endif
+
+
+#include <stdexcept>
 #include <ostream>
 #include <string_theory/format>
 
@@ -14,10 +23,7 @@
 template<typename E>
 void PrintEnum(std::ostream& os, const ST::string& zTypeName = ST::null)
 {
-#ifdef MAGIC_ENUM_SUPPORTED
-#ifndef MAGIC_ENUM_SUPPORTED_ALIASES
-	throw std::runtime_error("enum alias support is required")
-#endif
+#ifdef HAS_ENUMGEN_SUPPORT
 	os << (zTypeName.empty() ? magic_enum::enum_type_name<E>() : zTypeName.to_std_string())
 	   << " = {" << std::endl;
 
@@ -31,7 +37,7 @@ void PrintEnum(std::ostream& os, const ST::string& zTypeName = ST::null)
 	}
 	os << "}" << std::endl << std::endl;
 #else
-	throw std::runtime_error("magic_enum is not available");
+	throw std::runtime_error("For this to work, the build must have magic_enum with alias support");
 #endif
 }
 
