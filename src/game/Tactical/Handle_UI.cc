@@ -1081,8 +1081,7 @@ ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 	}
 	else
 	{
-		auto autosavePls = GCM->userPrivateFiles()->resolveExistingComponents("AutoSave.pls");
-		if( GCM->userPrivateFiles()->isFile(autosavePls) && CanGameBeSaved() )
+		if (CanGameBeSaved())
 		{
 			//Save the game
 			guiPreviousOptionScreen = guiCurrentScreen;
