@@ -1,4 +1,30 @@
-# \file dependencies/lib-sol2/CMakeLists.txt
+# \file dependencies/lib-magic_enum/CMakeLists.txt
+
+option(LOCAL_MAGICENUM_LIB "Download and build magic_enum instead of searching the system" ON)
+
+if (NOT WITH_MAGICENUM)
+    return()
+endif()
+
+if (NOT LOCAL_MAGICENUM_LIB)
+    message(STATUS "Using system magic_enum")
+
+    if (NOT DEFINED MAGICENUM_INCLUDE_DIR)
+        message(FATAL_ERROR "MAGICENUM_INCLUDE_DIR var not set")
+    endif()
+
+    include(CheckIncludeFileCXX)
+    set (CMAKE_REQUIRED_INCLUDES "${MAGICENUM_INCLUDE_DIR}")
+
+    CHECK_INCLUDE_FILE_CXX("magic_enum.hpp" MAGICENUM_FOUND)
+    if (NOT MAGICENUM_FOUND)
+        message(FATAL_ERROR "magic_enum.hpp not found")
+    endif()
+
+    set(MAGICENUM_INCLUDE_DIR "${MAGICENUM_INCLUDE_DIR}" PARENT_SCOPE)
+
+    return()
+endif()
 
 message(STATUS "<magic_enum>")
 

@@ -1,7 +1,7 @@
 #include "EnumCodeGen.h"
 #include <iostream>
 
-#ifdef MAGIC_ENUM_SUPPORTED
+#ifdef HAS_ENUMGEN_SUPPORT
 #include "Animation_Data.h"
 #include "Campaign_Types.h"
 #include "Game_Events.h"
