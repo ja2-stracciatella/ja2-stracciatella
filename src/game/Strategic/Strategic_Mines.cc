@@ -463,12 +463,10 @@ static INT32 GetCurrentWorkRateOfMineForEnemy(UINT8 ubMineIndex)
 
 
 // mine this mine
+// Returns the amount mined if the mine is player controlled, 0 otherwise
 static INT32 MineAMine(UINT8 ubMineIndex)
 {
 	// will extract ore based on available workforce, and increment players income based on amount
-	INT32 iAmtExtracted = 0;
-
-
 	Assert(ubMineIndex < gMineStatus.size());
 
 	// is mine is empty
@@ -483,18 +481,17 @@ static INT32 MineAMine(UINT8 ubMineIndex)
 		return 0;
 	}
 
-
 	// who controls the PRODUCTION in the mine ?  (Queen receives production unless player has spoken to the head miner)
 	if( PlayerControlsMine(ubMineIndex) )
 	{
 		// player controlled
-		iAmtExtracted = ExtractOreFromMine( ubMineIndex , GetCurrentWorkRateOfMineForPlayer( ubMineIndex ) );
+		UINT32 const amtExtracted = ExtractOreFromMine(ubMineIndex, GetCurrentWorkRateOfMineForPlayer(ubMineIndex));
 
 		// SHOW ME THE MONEY!!!!
-		if( iAmtExtracted > 0 )
+		if (amtExtracted > 0)
 		{
 			// debug message
-			SLOGD("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTownName(GetTownAssociatedWithMine(ubMineIndex)), iAmtExtracted);
+			SLOGD("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTownName(GetTownAssociatedWithMine(ubMineIndex)), amtExtracted);
 
 			// if this is the first time this mine has produced income for the player in the game
 			if ( !gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer )
@@ -505,20 +502,19 @@ static INT32 MineAMine(UINT8 ubMineIndex)
 				gMineStatus[ ubMineIndex ].uiTimePlayerProductionStarted = GetWorldTotalMin();
 			}
 		}
+		return static_cast<INT32>(amtExtracted);
 	}
-	else	// queen controlled
+
+	// Queen controlled
+	// we didn't want mines to run out without player ever even going to them, so now the queen doesn't reduce the
+	// amount remaining until the mine has produced for the player first (so she'd have to capture it).
+	if (gMineStatus[ubMineIndex].fMineHasProducedForPlayer)
 	{
-		// we didn't want mines to run out without player ever even going to them, so now the queen doesn't reduce the
-		// amount remaining until the mine has produced for the player first (so she'd have to capture it).
-		if ( gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer )
-		{
-			// don't actually give her money, just take production away
-			iAmtExtracted = ExtractOreFromMine( ubMineIndex , GetCurrentWorkRateOfMineForEnemy( ubMineIndex ) );
-		}
+		// don't actually give her money, just take production away
+		ExtractOreFromMine(ubMineIndex, GetCurrentWorkRateOfMineForEnemy(ubMineIndex));
 	}
 
-
-	return iAmtExtracted;
+	return 0;
 }
 
 
