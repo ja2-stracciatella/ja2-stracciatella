@@ -48,8 +48,6 @@ static VIDEO_OVERLAY* gVideoOverlays;
 		if (iter##__next = iter->next, iter->fDisabled) continue; else
 
 
-SGPRect gDirtyClipRect;
-
 
 static BOOLEAN gfViewportDirty = FALSE;
 
@@ -92,6 +90,8 @@ void ExecuteBaseDirtyRectQueue(void)
 }
 
 
+// Callers of this function must assume that the returned struct is in a
+// random state and initialise ALL members!
 static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 {
 	auto before{gBackSaves.before_begin()};
@@ -139,10 +139,12 @@ BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLe
 
 	BACKGROUND_SAVE* const b = GetFreeBackgroundBuffer();
 
-	if (uiFlags & BGND_FLAG_SAVERECT) b->pSaveArea.reset(new UINT16[uiBufSize]{});
-	if (uiFlags & BGND_FLAG_SAVE_Z)   b->pZSaveArea.reset(new UINT16[uiBufSize]{});
-
+	b->pSaveArea.reset((uiFlags & BGND_FLAG_SAVERECT) ? new UINT16[uiBufSize] : nullptr);
+	b->pZSaveArea.reset((uiFlags & BGND_FLAG_SAVE_Z) ? new UINT16[uiBufSize] : nullptr);
 	b->fAllocated  = TRUE;
+	b->fFilled     = FALSE;
+	b->fPendingDelete = FALSE;
+	b->fDisabled   = FALSE;
 	b->uiFlags     = uiFlags;
 	b->sLeft       = sLeft;
 	b->sTop        = sTop;
@@ -150,8 +152,6 @@ BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLe
 	b->sBottom     = sBottom;
 	b->sWidth      = sRight  - sLeft;
 	b->sHeight     = sBottom - sTop;
-	b->fFilled     = FALSE;
-	b->fPendingDelete = FALSE;
 
 	return b;
 }
