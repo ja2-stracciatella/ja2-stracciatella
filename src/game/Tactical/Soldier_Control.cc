@@ -8535,6 +8535,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 		soldier->setPendingAction(MERC_STEAL);
 		pSoldier->sPendingActionData2  = pTarget->sGridNo;
 		pSoldier->bPendingActionData3  = ubDirection;
+		pSoldier->bTargetLevel = pTarget->bLevel;
 
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if ( pSoldier->sGridNo != sActionGridNo )
