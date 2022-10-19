@@ -682,8 +682,6 @@ static void MSYS_UpdateMouseRegion(void)
 /* Inits a MOUSE_REGION structure for use with the mouse system */
 void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly, UINT16 const brx, UINT16 const bry, INT8 priority, UINT16 const crsr, MOUSE_CALLBACK const movecallback, MOUSE_CALLBACK const buttoncallback)
 {
-	AssertMsg(!(r->uiFlags & MSYS_REGION_EXISTS), "Attempting to define a mouse region that already exists.");
-
 	if (priority <= MSYS_PRIORITY_LOWEST) priority = MSYS_PRIORITY_LOWEST;
 
 	r->PriorityLevel      = priority;
