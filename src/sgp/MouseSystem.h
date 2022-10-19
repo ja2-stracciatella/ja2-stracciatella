@@ -159,9 +159,9 @@ INT32 MSYS_GetRegionUserData(MOUSE_REGION const*, UINT32 index);
 // Primary action will be triggered on left mouse button up (or mouse button down if triggerOnMouseDown is true), or short touch
 // Secondary action will be triggered on right mouse button up, or first touch repeat event
 // The all events callback will be triggered for all events (useful to add other behavior, such as scrolling)
-// This function works for mouse and button callbacks via a template parameter
-template<typename T>
-std::function<void(T*, UINT32)> MouseCallbackPrimarySecondary(
+// This function needs to be specialized for mouse regions and buttons
+template<typename T, UINT32 EXISTS_FLAG>
+std::function<void(T*, UINT32)> CallbackPrimarySecondary(
 	std::function<void(T*, UINT32)> primaryAction,
 	std::function<void(T*, UINT32)> secondaryAction,
 	std::function<void(T*, UINT32)> allEvents = nullptr,
@@ -186,7 +186,8 @@ std::function<void(T*, UINT32)> MouseCallbackPrimarySecondary(
 		}
 		if (((reason & mouseReason) && fPointerDown) || ((reason & MSYS_CALLBACK_REASON_TFINGER_UP) && fPointerDown && !fTouchRepeatHandled))
 		{
-			if (primaryAction) {
+			// We need to guard against deletions of the mouse region during callbacks
+			if (r->uiFlags & EXISTS_FLAG && primaryAction) {
 				primaryAction(r, reason);
 			}
 		}
@@ -198,15 +199,24 @@ std::function<void(T*, UINT32)> MouseCallbackPrimarySecondary(
 			if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP) {
 				fRightMouseButtonDown = FALSE;
 			}
-			if (secondaryAction) {
+			// We need to guard against deletions of the mouse region during callbacks
+			if (r->uiFlags & EXISTS_FLAG && secondaryAction) {
 				secondaryAction(r, reason);
 			}
 		}
-		if (allEvents) {
+		// We need to guard against deletions of the mouse region during callbacks
+		if (r->uiFlags & EXISTS_FLAG && allEvents) {
 			allEvents(r, reason);
 		}
 	};
 }
+
+MOUSE_CALLBACK MouseCallbackPrimarySecondary(
+	MOUSE_CALLBACK primaryAction,
+	MOUSE_CALLBACK secondaryAction,
+	MOUSE_CALLBACK allEvents = nullptr,
+	bool triggerPrimaryOnMouseDown = false
+);
 
 // This function will force a re-evaluation of mous regions
 // Usually used to force change of mouse cursor if panels switch, etc

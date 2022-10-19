@@ -278,10 +278,6 @@ SOLDIERTYPE *gpItemPopupSoldier;
 // inventory description done button for mapscreen
 GUIButtonRef giMapInvDescButton;
 
-
-static BOOLEAN gfItemPopupRegionCallbackEndFix = FALSE;
-
-
 struct INV_DESC_STATS
 {
 	INT16 sX;
@@ -1784,14 +1780,14 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	gubItemDescStatusIndex = ubStatusIndex;
 	gpItemDescSoldier      = s;
 	fItemDescDelete        = FALSE;
-	MOUSE_CALLBACK itemDescCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemDescCallbackPrimary, ItemDescCallbackSecondary);
+	MOUSE_CALLBACK itemDescCallback = MouseCallbackPrimarySecondary(ItemDescCallbackPrimary, ItemDescCallbackSecondary);
 
 	// Build a mouse region here that is over any others.....
 	if (in_map)
 	{
 		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, itemDescCallback);
 
-		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, MouseCallbackPrimarySecondary<GUI_BUTTON>(ItemDescDoneButtonCallbackPrimary, ItemDescDoneButtonCallbackSecondary));
+		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ButtonCallbackPrimarySecondary(ItemDescDoneButtonCallbackPrimary, ItemDescDoneButtonCallbackSecondary));
 
 		fShowDescriptionFlag = TRUE;
 	}
@@ -1891,14 +1887,14 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			const UINT16        w = agi->item_box.w;
 			const UINT16        h = agi->item_box.h;
 			MOUSE_REGION* const r = &gItemDescAttachmentRegions[i];
-			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemDescAttachmentsCallbackPrimary, ItemDescAttachmentsCallbackSecondary));
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(ItemDescAttachmentsCallbackPrimary, ItemDescAttachmentsCallbackSecondary));
 			MSYS_SetRegionUserData(r, 0, i);
 		}
 		SetAttachmentTooltips();
 	}
 	else
 	{
-		GUI_CALLBACK btnMoneyButtonCallback = MouseCallbackPrimarySecondary<GUI_BUTTON>(BtnMoneyButtonCallbackPrimary, BtnMoneyButtonCallbackSecondary, BtnMoneyButtonCallbackOther);
+		GUI_CALLBACK btnMoneyButtonCallback = ButtonCallbackPrimarySecondary(BtnMoneyButtonCallbackPrimary, BtnMoneyButtonCallbackSecondary, BtnMoneyButtonCallbackOther);
 
 		gRemoveMoney = REMOVE_MONEY{};
 		gRemoveMoney.uiTotalAmount    = o->uiMoneyAmount;
@@ -3810,18 +3806,17 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 		UINT32 col = cnt % MAX_STACK_POPUP_WIDTH;
 
 		// Build a mouse region here that is over any others.....
-		MOUSE_CALLBACK itemPopupRegionCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemPopupRegionCallbackPrimary, ItemPopupRegionCallbackSecondary, MSYS_NO_CALLBACK, true);
+		MOUSE_CALLBACK itemPopupRegionCallback = MouseCallbackPrimarySecondary(ItemPopupRegionCallbackPrimary, ItemPopupRegionCallbackSecondary, MSYS_NO_CALLBACK, true);
 		MSYS_DefineRegion(&gItemPopupRegions[cnt], sCenX + col * usPopupWidth, sCenY + row * usPopupHeight, sCenX + (col + 1) * usPopupWidth, sCenY + (row+1) * usPopupHeight, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, itemPopupRegionCallback);
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
 
 		//OK, for each item, set dirty text if applicable!
 		gItemPopupRegions[cnt].SetFastHelpText(GCM->getItem(pSoldier->inv[ubPosition].usItem)->getName());
-		gfItemPopupRegionCallbackEndFix = FALSE;
 	}
 
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth, gsItemPopupInvY + gsItemPopupInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemPopupFullRegionCallbackPrimary, ItemPopupFullRegionCallbackSecondary));
+	MSYS_DefineRegion(&gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth, gsItemPopupInvY + gsItemPopupInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(ItemPopupFullRegionCallbackPrimary, ItemPopupFullRegionCallbackSecondary));
 
 
 	//Disable all faces
@@ -3982,12 +3977,11 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 			MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingSlotInvClickCallback
 		);
 		MSYS_SetRegionUserData( &gKeyRingRegions[cnt], 0, cnt );
-		//gfItemPopupRegionCallbackEndFix = FALSE;
 	}
 
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPopupRegion, sInvX, sInvY, sInvX + sInvWidth, sInvY + sInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(ItemPopupFullRegionCallbackPrimary, ItemPopupFullRegionCallbackSecondary));
+	MSYS_DefineRegion(&gItemPopupRegion, sInvX, sInvY, sInvX + sInvWidth, sInvY + sInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(ItemPopupFullRegionCallbackPrimary, ItemPopupFullRegionCallbackSecondary));
 
 
 	//Disable all faces
@@ -4205,12 +4199,6 @@ static void ItemDescDoneButtonCallbackSecondary(GUI_BUTTON *btn, UINT32 reason)
 
 static void ItemPopupRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	// TO ALLOW ME TO DELETE REGIONS IN CALLBACKS!
-	if ( gfItemPopupRegionCallbackEndFix )
-	{
-		return;
-	}
-
 	UINT32 uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
 
 	//If one in our hand, place it
@@ -4291,19 +4279,7 @@ static void ItemPopupRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason
 
 static void ItemPopupRegionCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	// TO ALLOW ME TO DELETE REGIONS IN CALLBACKS!
-	if ( gfItemPopupRegionCallbackEndFix )
-	{
-		return;
-	}
-
 	UINT32 uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-
-	// Get Description....
-	// Some global stuff here - for esc, etc
-	//Remove
-	gfItemPopupRegionCallbackEndFix = TRUE;
-
 
 	DeleteItemStackPopup( );
 

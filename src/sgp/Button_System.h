@@ -1,7 +1,6 @@
 // by Kris Morness (originally created by Bret Rowden)
 
-#ifndef BUTTON_SYSTEM_H
-#define BUTTON_SYSTEM_H
+#pragma once
 
 #include "MouseSystem.h"
 
@@ -40,6 +39,13 @@ struct GUI_BUTTON;
 
 // GUI_BUTTON callback function type
 typedef std::function<void(GUI_BUTTON*, UINT32)> GUI_CALLBACK;
+
+GUI_CALLBACK ButtonCallbackPrimarySecondary(
+	GUI_CALLBACK primaryAction,
+	GUI_CALLBACK secondaryAction,
+	GUI_CALLBACK allEvents = nullptr,
+	bool triggerPrimaryOnMouseDown = false
+);
 
 // GUI_BUTTON structure definitions.
 struct GUI_BUTTON
@@ -286,5 +292,3 @@ const ButtonDimensions* GetDimensionsOfButtonPic(const BUTTON_PICS*);
 UINT16 GetGenericButtonFillColor(void);
 
 void ReleaseAnchorMode(void);
-
-#endif

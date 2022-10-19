@@ -404,7 +404,7 @@ void EnterBobbyRMailOrder()
 	//s on screen.  When user clicks anywhere the graphic disappears
 	MSYS_DefineRegion(&gSelectedConfirmOrderRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y ,
 				LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH+1,
-				CURSOR_WWW, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectConfirmOrderRegionCallBackPrimary, SelectConfirmOrderRegionCallBackSecondary));
+				CURSOR_WWW, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(SelectConfirmOrderRegionCallBackPrimary, SelectConfirmOrderRegionCallBackSecondary));
 	gSelectedConfirmOrderRegion.Disable();
 
 	//click on the shipping location to activate the drop down menu

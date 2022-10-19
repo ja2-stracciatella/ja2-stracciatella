@@ -1520,7 +1520,7 @@ ScreenID MapScreenHandle(void)
 		LoadCharacters();
 
 
-		MOUSE_CALLBACK mapViewRegionCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(MapViewRegionPrimaryCallback, MapViewRegionSecondaryCallback);
+		MOUSE_CALLBACK mapViewRegionCallback = MouseCallbackPrimarySecondary(MapViewRegionPrimaryCallback, MapViewRegionSecondaryCallback);
 		// set up regions
 		MSYS_DefineRegion( &gMapViewRegion, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y,MAP_VIEW_START_X + MAP_VIEW_WIDTH+MAP_GRID_X-1, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT-1 + 8, MSYS_PRIORITY_HIGH - 3,
 					MSYS_NO_CURSOR, MapViewRegionMovementCallback, mapViewRegionCallback );
@@ -1532,7 +1532,7 @@ ScreenID MapScreenHandle(void)
 					ItemRegionMvtCallback , ItemRegionBtnCallback );
 
 		MSYS_DefineRegion( &gCharInfoFaceRegion, (INT16) PLAYER_INFO_FACE_START_X, (INT16) PLAYER_INFO_FACE_START_Y, (INT16) PLAYER_INFO_FACE_END_X, (INT16) PLAYER_INFO_FACE_END_Y, MSYS_PRIORITY_HIGH,
-					MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(FaceRegionBtnCallbackPrimary, FaceRegionBtnCallbackSecondary) );
+					MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(FaceRegionBtnCallbackPrimary, FaceRegionBtnCallbackSecondary) );
 
 		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X + INV_REGION_WIDTH, INV_REGION_Y + INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		// screen mask for animated cursors
@@ -3499,7 +3499,7 @@ void CreateDestroyMapInvButton()
 
 		INV_REGION_DESC gSCamoXY = {INV_BODY_X, INV_BODY_Y};
 
-		InitInvSlotInterface(g_ui.m_invSlotPositionMap, &gSCamoXY, MAPInvMoveCallback, MouseCallbackPrimarySecondary<MOUSE_REGION>(MAPInvClickCallbackPrimary, MAPInvClickCallbackSecondary, MAPInvClickCallbackCancelMessage), MAPInvMoveCamoCallback, MAPInvClickCamoCallback);
+		InitInvSlotInterface(g_ui.m_invSlotPositionMap, &gSCamoXY, MAPInvMoveCallback, MouseCallbackPrimarySecondary(MAPInvClickCallbackPrimary, MAPInvClickCallbackSecondary, MAPInvClickCallbackCancelMessage), MAPInvMoveCamoCallback, MAPInvClickCamoCallback);
 		gMPanelRegion.Enable();
 
 		// switch hand region help text to "Exit Inventory"
@@ -4212,13 +4212,13 @@ static void CreateMouseRegionsForTeamList(void)
 
 		const UINT16 w = NAME_WIDTH;
 		CharacterRegions& r = g_character_regions[i];
-		MakeRegion(&r.name,        i, NAME_X,           y, w,                    TeamListInfoRegionMvtCallBack,        MouseCallbackPrimarySecondary<MOUSE_REGION>(TeamListInfoRegionBtnCallBackPrimary, TeamListInfoRegionBtnCallBackSecondary),        pMapScreenMouseRegionHelpText[0]); // name region
-		MakeRegion(&r.assignment,  i, ASSIGN_X,         y, ASSIGN_WIDTH,         TeamListAssignmentRegionMvtCallBack,  MouseCallbackPrimarySecondary<MOUSE_REGION>(TeamListAssignmentRegionBtnCallBackPrimary, TeamListAssignmentRegionBtnCallBackSecondary),  pMapScreenMouseRegionHelpText[1]); // assignment region
-		MakeRegion(&r.sleep,       i, SLEEP_X,          y, SLEEP_WIDTH,          TeamListSleepRegionMvtCallBack,       MouseCallbackPrimarySecondary<MOUSE_REGION>(TeamListSleepRegionBtnCallBackPrimary, TeamListSleepRegionBtnCallBackSecondary),       pMapScreenMouseRegionHelpText[5]); // sleep region
+		MakeRegion(&r.name,        i, NAME_X,           y, w,                    TeamListInfoRegionMvtCallBack,        MouseCallbackPrimarySecondary(TeamListInfoRegionBtnCallBackPrimary, TeamListInfoRegionBtnCallBackSecondary),        pMapScreenMouseRegionHelpText[0]); // name region
+		MakeRegion(&r.assignment,  i, ASSIGN_X,         y, ASSIGN_WIDTH,         TeamListAssignmentRegionMvtCallBack,  MouseCallbackPrimarySecondary(TeamListAssignmentRegionBtnCallBackPrimary, TeamListAssignmentRegionBtnCallBackSecondary),  pMapScreenMouseRegionHelpText[1]); // assignment region
+		MakeRegion(&r.sleep,       i, SLEEP_X,          y, SLEEP_WIDTH,          TeamListSleepRegionMvtCallBack,       MouseCallbackPrimarySecondary(TeamListSleepRegionBtnCallBackPrimary, TeamListSleepRegionBtnCallBackSecondary),       pMapScreenMouseRegionHelpText[5]); // sleep region
 		// same function as name regions, so uses the same callbacks
-		MakeRegion(&r.location,    i, LOC_X,            y, LOC_WIDTH,            TeamListInfoRegionMvtCallBack,        MouseCallbackPrimarySecondary<MOUSE_REGION>(TeamListInfoRegionBtnCallBackPrimary, TeamListInfoRegionBtnCallBackSecondary),        pMapScreenMouseRegionHelpText[0]); // location region
-		MakeRegion(&r.destination, i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       TeamListDestinationRegionMvtCallBack, MouseCallbackPrimarySecondary<MOUSE_REGION>(TeamListDestinationRegionBtnCallBackPrimary, TeamListDestinationRegionBtnCallBackSecondary), pMapScreenMouseRegionHelpText[2]); // destination region
-		MakeRegion(&r.contract,    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, TeamListContractRegionMvtCallBack,    MouseCallbackPrimarySecondary<MOUSE_REGION>(TeamListContractRegionBtnCallBackPrimary, TeamListContractRegionBtnCallBackSecondary),    pMapScreenMouseRegionHelpText[3]); // contract region
+		MakeRegion(&r.location,    i, LOC_X,            y, LOC_WIDTH,            TeamListInfoRegionMvtCallBack,        MouseCallbackPrimarySecondary(TeamListInfoRegionBtnCallBackPrimary, TeamListInfoRegionBtnCallBackSecondary),        pMapScreenMouseRegionHelpText[0]); // location region
+		MakeRegion(&r.destination, i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       TeamListDestinationRegionMvtCallBack, MouseCallbackPrimarySecondary(TeamListDestinationRegionBtnCallBackPrimary, TeamListDestinationRegionBtnCallBackSecondary), pMapScreenMouseRegionHelpText[2]); // destination region
+		MakeRegion(&r.contract,    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, TeamListContractRegionMvtCallBack,    MouseCallbackPrimarySecondary(TeamListContractRegionBtnCallBackPrimary, TeamListContractRegionBtnCallBackSecondary),    pMapScreenMouseRegionHelpText[3]); // contract region
 	}
 }
 

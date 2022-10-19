@@ -1221,7 +1221,7 @@ static void CreateSkiInventorySlotMouseRegions(void)
 		UINT16 const y = SKI_ARMS_DEALERS_INV_START_Y + i / SKI_NUM_ARMS_DEALERS_INV_COLS * SKI_INV_OFFSET_Y;
 		{
 			MOUSE_REGION* const r = &gDealersInventoryMouseRegions[i];
-			MSYS_DefineRegion(r, x, y, x + SKI_INV_SLOT_WIDTH, y + SKI_INV_SLOT_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectDealersInventoryMovementRegionCallBack, MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectDealersInventoryRegionCallBackPrimary, SelectDealersInventoryRegionCallBackSecondary, SelectDealersInventoryRegionCallBackScroll));
+			MSYS_DefineRegion(r, x, y, x + SKI_INV_SLOT_WIDTH, y + SKI_INV_SLOT_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectDealersInventoryMovementRegionCallBack, MouseCallbackPrimarySecondary(SelectDealersInventoryRegionCallBackPrimary, SelectDealersInventoryRegionCallBackSecondary, SelectDealersInventoryRegionCallBackScroll));
 			MSYS_SetRegionUserData(r, 0, i);
 		}
 		if (does_repairs)
@@ -1234,7 +1234,7 @@ static void CreateSkiInventorySlotMouseRegions(void)
 	}
 
 	// Create the mouse regions for the shopkeeper's trading slots
-	MOUSE_CALLBACK selectDealersOfferSlotsRegionCallBack = MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectDealersOfferSlotsRegionCallBackPrimary, SelectDealersOfferSlotsRegionCallBackSecondary);
+	MOUSE_CALLBACK selectDealersOfferSlotsRegionCallBack = MouseCallbackPrimarySecondary(SelectDealersOfferSlotsRegionCallBackPrimary, SelectDealersOfferSlotsRegionCallBackSecondary);
 	for (UINT32 i = 0; i != SKI_NUM_TRADING_INV_SLOTS; ++i)
 	{
 		UINT16 const x = SKI_ARMS_DEALERS_TRADING_INV_X + i % SKI_NUM_TRADING_INV_COLS * SKI_INV_OFFSET_X;
@@ -1254,7 +1254,7 @@ static void CreateSkiInventorySlotMouseRegions(void)
 	}
 
 	// Create the mouse regions for the Players trading slots
-	MOUSE_CALLBACK selectPlayersOfferSlotsRegionCallBack = MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectPlayersOfferSlotsRegionCallBackPrimary, SelectPlayersOfferSlotsRegionCallBackSecondary);
+	MOUSE_CALLBACK selectPlayersOfferSlotsRegionCallBack = MouseCallbackPrimarySecondary(SelectPlayersOfferSlotsRegionCallBackPrimary, SelectPlayersOfferSlotsRegionCallBackSecondary);
 	for (UINT32 i = 0; i != SKI_NUM_TRADING_INV_SLOTS; ++i)
 	{
 		UINT16 const x = SKI_PLAYERS_TRADING_INV_X + i % SKI_NUM_TRADING_INV_COLS * SKI_INV_OFFSET_X;

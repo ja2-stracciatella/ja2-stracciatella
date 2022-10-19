@@ -91,7 +91,7 @@ void EnterAimFacialIndex()
 						(INT16)(usPosY + AIM_FI_PORTRAIT_HEIGHT),
 						MSYS_PRIORITY_HIGH,
 						CURSOR_WWW, SelectMercFaceMoveRegionCallBack,
-						MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectMercFaceRegionCallBackPrimary, SelectMercFaceRegionCallBackSecondary));
+						MouseCallbackPrimarySecondary(SelectMercFaceRegionCallBackPrimary, SelectMercFaceRegionCallBackSecondary));
 			MSYS_SetRegionUserData( &gMercFaceMouseRegions[ i ], 0, i);
 
 			guiAimFiFace[i] = LoadSmallPortrait(GetProfile(AimMercArray[i]));
@@ -105,7 +105,7 @@ void EnterAimFacialIndex()
 
 	MSYS_DefineRegion(&gScreenMouseRegions, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y,
 				LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
-				CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(MSYS_NO_CALLBACK, SelectScreenRegionCallBackSecondary));
+				CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(MSYS_NO_CALLBACK, SelectScreenRegionCallBackSecondary));
 
 	InitAimMenuBar();
 	InitAimDefaults();

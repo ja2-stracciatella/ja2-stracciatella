@@ -2852,7 +2852,7 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghAssignmentBox); ++i)
 		{
 			MOUSE_REGION* const r = &gAssignmentMenuRegion[i];
-			MSYS_DefineRegion(r, x, y, x + w, y + dy, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, MouseCallbackPrimarySecondary<MOUSE_REGION>(AssignmentMenuBtnCallbackPrimary, AssignmentMenuBtnCallbackSecondary));
+			MSYS_DefineRegion(r, x, y, x + w, y + dy, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, MouseCallbackPrimarySecondary(AssignmentMenuBtnCallbackPrimary, AssignmentMenuBtnCallbackSecondary));
 			MSYS_SetRegionUserData(r, 0, i);
 			y += dy;
 		}
@@ -3756,7 +3756,7 @@ void CreateDestroyMouseRegionsForContractMenu(void)
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
 		{
 			MOUSE_REGION* const r = &gContractMenuRegion[i];
-			MSYS_DefineRegion(r, x, y, x + w, y + dy, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, ContractMenuMvtCallback, MouseCallbackPrimarySecondary<MOUSE_REGION>(ContractMenuBtnCallbackPrimary, ContractMenuBtnCallbackSecondary));
+			MSYS_DefineRegion(r, x, y, x + w, y + dy, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, ContractMenuMvtCallback, MouseCallbackPrimarySecondary(ContractMenuBtnCallbackPrimary, ContractMenuBtnCallbackSecondary));
 			MSYS_SetRegionUserData(r, 0, i);
 			y += dy;
 		}
@@ -3818,7 +3818,7 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 		{
 			// add mouse region for each line of text..and set user data
 			MOUSE_REGION* const r = &gTrainingMenuRegion[i];
-			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CURSOR, TrainingMenuMvtCallBack, MouseCallbackPrimarySecondary<MOUSE_REGION>(TrainingMenuBtnCallbackPrimary, TrainingMenuBtnCallbackSecondary, TrainingMenuBtnCallbackMarkDirty));
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CURSOR, TrainingMenuMvtCallBack, MouseCallbackPrimarySecondary(TrainingMenuBtnCallbackPrimary, TrainingMenuBtnCallbackSecondary, TrainingMenuBtnCallbackMarkDirty));
 			MSYS_SetRegionUserData(r, 0, i);
 			y += h;
 		}

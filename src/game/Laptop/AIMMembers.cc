@@ -493,7 +493,7 @@ void EnterAIMMembers()
 	//** Mouse Regions **
 	MSYS_DefineRegion(&gSelectedFaceRegion, PORTRAIT_X, PORTRAIT_Y,
 				PORTRAIT_X + PORTRAIT_WIDTH , PORTRAIT_Y + PORTRAIT_HEIGHT, MSYS_PRIORITY_HIGH,
-				CURSOR_WWW, SelectFaceMovementRegionCallBack, MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectFaceRegionCallBackPrimary, SelectFaceRegionCallBackSecondary));
+				CURSOR_WWW, SelectFaceMovementRegionCallBack, MouseCallbackPrimarySecondary(SelectFaceRegionCallBackPrimary, SelectFaceRegionCallBackSecondary));
 
 	// if user clicks in the area, the merc will shut up!
 	MSYS_DefineRegion(&gSelectedShutUpMercRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y,

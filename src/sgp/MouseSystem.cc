@@ -974,3 +974,13 @@ void MOUSE_REGION::AllowDisabledRegionFastHelp(bool const allow)
 		uiFlags &= ~MSYS_ALLOW_DISABLED_FASTHELP;
 	}
 }
+
+MOUSE_CALLBACK MouseCallbackPrimarySecondary(
+	MOUSE_CALLBACK primaryAction,
+	MOUSE_CALLBACK secondaryAction,
+	MOUSE_CALLBACK allEvents,
+	bool triggerPrimaryOnMouseDown
+)
+{
+	return CallbackPrimarySecondary<MOUSE_REGION, MSYS_REGION_ENABLED>(primaryAction, secondaryAction, allEvents, triggerPrimaryOnMouseDown);
+}
