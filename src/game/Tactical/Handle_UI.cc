@@ -1066,36 +1066,27 @@ static ScreenID UIHandleEnterEditMode(UI_EVENT* pUIEvent)
 
 ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 {
-	// ATE: If we have an item pointer end it!
 	CancelItemPointer( );
 
 	// If we show tactical touch ui hide it and reset cursor target
 	HideTacticalTouchUI();
 	if (gfIsUsingTouch) ResetCurrentCursorTarget();
 
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ENDING_TURN ] );
-
 	if ( CheckForEndOfCombatMode( FALSE ) )
 	{
 		// do nothing...
+		return GAME_SCREEN;
 	}
-	else
+
+	if (CanGameBeSaved())
 	{
-		auto autosavePls = GCM->userPrivateFiles()->resolveExistingComponents("AutoSave.pls");
-		if( GCM->userPrivateFiles()->isFile(autosavePls) && CanGameBeSaved() )
-		{
-			//Save the game
-			guiPreviousOptionScreen = guiCurrentScreen;
-			DoAutoSave();
-		}
-
-		// End our turn!
-		EndTurn( OUR_TEAM + 1 );
+		guiPreviousOptionScreen = guiCurrentScreen;
+		DoAutoSave();
 	}
 
-	return( GAME_SCREEN );
+	EndTurn(OUR_TEAM + 1);
+	return GAME_SCREEN;
 }
-
 
 static ScreenID UIHandleTestHit(UI_EVENT* pUIEvent)
 {
