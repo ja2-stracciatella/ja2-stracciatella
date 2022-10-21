@@ -65,6 +65,38 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/gameVersionInfoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/game_version_title_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/gameVersionInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/game_version_info_text" />
+
+            <Spinner
+                android:id="@+id/gameVersionSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:contentDescription="@string/game_version_empty_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <TextView
                 android:id="@+id/saveGameDirInfoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.codekidlabs.storagechooser.StorageChooser
 import io.github.ja2stracciatella.ConfigurationModel
+import io.github.ja2stracciatella.R
+import io.github.ja2stracciatella.VanillaVersion
 import io.github.ja2stracciatella.databinding.FragmentLauncherDataTabBinding
 
 
@@ -27,9 +31,12 @@ class DataTabFragment : Fragment() {
     private val requestPermissionsCodeSaveGameDir = 1002
 
     private lateinit var configurationModel: ConfigurationModel
+    private lateinit var versions: Array<VanillaVersion>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         configurationModel = ViewModelProvider(requireActivity())[ConfigurationModel::class.java]
+        versions = (VanillaVersion::values)()
+
         super.onCreate(savedInstanceState)
     }
 
@@ -39,23 +46,57 @@ class DataTabFragment : Fragment() {
     ): View {
         _binding = FragmentLauncherDataTabBinding.inflate(inflater, container, false)
 
+        val versionLabels = versions.map { v: VanillaVersion -> v.getLabel() }
+        val spinnerLabels = listOf(getString(R.string.game_version_empty_text)) + versionLabels
+        val adapter: ArrayAdapter<String> = ArrayAdapter(this.requireContext(), R.layout.launcher_spinner_item, spinnerLabels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.gameVersionSpinner.adapter = adapter
+
         configurationModel.vanillaGameDir.observe(
             viewLifecycleOwner
         ) { vanillaGameDir ->
-            if (vanillaGameDir.isNotEmpty()) {
+            if (vanillaGameDir != null) {
                 binding.gameDirValueText.text = vanillaGameDir
+            }
+        }
+        configurationModel.vanillaGameVersion.observe(
+            viewLifecycleOwner
+        ) { vanillaGameVersion ->
+            if (vanillaGameVersion == null) {
+                binding.gameVersionSpinner.setSelection(0)
+            } else {
+                val index = versions.indexOf(vanillaGameVersion)
+                binding.gameVersionSpinner.setSelection(index + 1)
             }
         }
         configurationModel.saveGameDir.observe(
             viewLifecycleOwner
         ) { saveGameDir ->
-            if (saveGameDir.isNotEmpty()) {
+            if (saveGameDir != null) {
                 binding.saveGameDirValueText.text = saveGameDir
             }
         }
         binding.gameDirChooseButton.setOnClickListener {
             showGameDirChooser()
         }
+        binding.gameVersionSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (position == 0) {
+                        configurationModel.setVanillaGameVersion(null)
+                    } else {
+                        configurationModel.setVanillaGameVersion(versions[position-1])
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
         binding.saveGameDirChooseButton.setOnClickListener {
             showSaveGameDirChooser()
         }

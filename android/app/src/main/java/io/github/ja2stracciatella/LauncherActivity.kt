@@ -130,24 +130,12 @@ class LauncherActivity : AppCompatActivity() {
     private fun loadJA2Json() {
         val configurationModel = ViewModelProvider(this)[ConfigurationModel::class.java]
         try {
-            val json = File(ja2JsonPath).readText()
-            // For some reason it is not possible to decode to Any, so we decode to JsonElement instead
-            val jsonMap: Map<String, JsonElement> = jsonFormat.decodeFromString(json)
+            val text = File(ja2JsonPath).readText()
+            val json: Ja2Json = jsonFormat.decodeFromString(text)
 
-            Log.i(activityLogTag, "Loaded ja2.json: $jsonMap")
-
-            val vanillaGameDir = jsonMap[gameDirKey]
-            if (vanillaGameDir is JsonPrimitive && vanillaGameDir.isString) {
-                configurationModel.setVanillaGameDir(vanillaGameDir.content)
-            } else {
-                throw SerializationException("$gameDirKey is not a string")
-            }
-            val saveGameDir = jsonMap[saveGameDirKey]
-            if (saveGameDir is JsonPrimitive && saveGameDir.isString) {
-                configurationModel.setSaveGameDir(saveGameDir.content)
-            } else {
-                throw SerializationException("$saveGameDirKey is not a string")
-            }
+            configurationModel.setVanillaGameDir(json.vanillaGameDir)
+            configurationModel.setVanillaGameVersion(json.vanillaGameVersion)
+            configurationModel.setSaveGameDir(json.saveGameDir)
         } catch (e: SerializationException) {
             Log.w(activityLogTag, "Could not decode ja2.json: ${e.message}")
         } catch (e: IOException) {
@@ -157,23 +145,15 @@ class LauncherActivity : AppCompatActivity() {
 
     private fun saveJA2Json() {
         val configurationModel = ViewModelProvider(this)[ConfigurationModel::class.java]
-        var jsonMap: MutableMap<String, JsonElement> = mutableMapOf()
-        try {
-            val json = File(ja2JsonPath).readText()
-            // For some reason it is not possible to decode to Any, so we decode to JsonElement instead
-            jsonMap = jsonFormat.decodeFromString(json)
-        } catch (e: SerializationException) {
-            Log.w(activityLogTag, "Could not decode ja2.json: ${e.message}")
-        } catch (e: IOException) {
-            Log.w(activityLogTag, "Could not read ${ja2JsonPath}: ${e.message}")
-        }
-        jsonMap[gameDirKey] = JsonPrimitive(configurationModel.vanillaGameDir.value)
-        jsonMap[saveGameDirKey] = JsonPrimitive(configurationModel.saveGameDir.value)
-        Log.i(activityLogTag, "Starting with ja2.json: $jsonMap")
+        val json = Ja2Json(
+            configurationModel.vanillaGameDir.value,
+            configurationModel.vanillaGameVersion.value,
+            configurationModel.saveGameDir.value
+        )
         val parentDir = File(ja2JsonPath).parentFile
         if (parentDir?.exists() != true) {
             parentDir?.mkdirs()
         }
-        File(ja2JsonPath).writeText(jsonFormat.encodeToString(jsonMap))
+        File(ja2JsonPath).writeText(jsonFormat.encodeToString(json))
     }
 }
