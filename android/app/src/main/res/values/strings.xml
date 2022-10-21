@@ -7,8 +7,8 @@
     <string name="select_directory_button_label">Choose</string>
     <string name="game_dir_title_text">Original Jagged Alliance 2 Game Directory</string>
     <string name="game_dir_info_text">
-        In order to get Jagged Alliance 2 Stracciatella to run, you need to copy the original game files
-        to your Android device and select the directory they are residing in here.
+        Jagged Alliance 2 Stracciatella to run needs a copy the original game files.
+        Copy them to your Android device and select the directory here.
         This directory should contain e.g. the .exe files and a Data directory.
     </string>
     <string name="game_dir_empty_text">No directory chosen yet</string>
@@ -17,4 +17,9 @@
         Change the save game directory. This allows e.g. synchronizing your saves with the cloud.
     </string>
     <string name="save_game_dir_empty_text">Use default directory</string>
+    <string name="game_version_title_text">Original Jagged Alliance 2 Game Version</string>
+    <string name="game_version_info_text">
+        Select the game version of you original Jagged Alliance 2 game files.
+    </string>
+    <string name="game_version_empty_text">No version chosen yet</string>
 </resources>

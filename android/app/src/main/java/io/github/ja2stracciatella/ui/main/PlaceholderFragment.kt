@@ -24,8 +24,10 @@ class PlaceholderFragment : Fragment() {
     ): View {
         _binding = FragmentLauncherBinding.inflate(inflater, container, false)
         configurationModel = ViewModelProvider(requireActivity())[ConfigurationModel::class.java]
-        configurationModel.vanillaGameDir.observe(viewLifecycleOwner) {
-            binding.sectionLabel.text = it
+        configurationModel.vanillaGameVersion.observe(viewLifecycleOwner) {
+            if (it != null) {
+                binding.sectionLabel.text = it.getLabel()
+            }
         }
         return binding.root
     }
