@@ -1862,13 +1862,13 @@ void GoToWebPage(INT32 iPageId)
 
 static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason == MSYS_CALLBACK_REASON_MOVE)
-	{
-		iHighLightBookLine=MSYS_GetRegionUserData(pRegion, 0);
-	}
-	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE)
+	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 		iHighLightBookLine = -1;
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_MOVE)
+	{
+		iHighLightBookLine=MSYS_GetRegionUserData(pRegion, 0);
 	}
 }
 

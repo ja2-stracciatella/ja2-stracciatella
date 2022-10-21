@@ -134,7 +134,7 @@ static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	// check if we are allowed to do anything?
 	if (!fRenderRadarScreen) return;
 
-	if (iReason == MSYS_CALLBACK_REASON_MOVE )
+	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
 		if ( pRegion->ButtonState & MSYS_LEFT_BUTTON )
 		{

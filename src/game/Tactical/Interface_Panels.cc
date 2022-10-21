@@ -1401,7 +1401,7 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
 		return;
 
-	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE)
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		if ( gpItemPointer == NULL )
 		{
@@ -1411,7 +1411,7 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			gbCheckForMouseOverItemPos = (INT8)uiHandPos;
 		}
 	}
-	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
+	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		if ( gpItemPointer == NULL )
 		{
@@ -1425,14 +1425,14 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SMInvMoveCamoCallback(MOUSE_REGION* const pRegion, const UINT32 iReason)
 {
-	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		// Setup a timer....
 		guiMouseOverItemTime = GetJA2Clock( );
 		gfCheckForMouseOverItem = TRUE;
 		gbCheckForMouseOverItemPos = NO_SLOT;
 	}
-	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
+	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)NO_SLOT, FALSE );
 		gfCheckForMouseOverItem = FALSE;
@@ -3626,7 +3626,7 @@ static void ConfirmationToDepositMoneyToPlayersAccount(MessageBoxReturnValue);
 
 static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason == MSYS_CALLBACK_REASON_POINTER_DWN )
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		//If the current merc is to far away, dont allow anything to be done
 		if( gfSMDisableForItems )

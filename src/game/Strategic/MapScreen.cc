@@ -3659,15 +3659,14 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	if ( pSoldier->inv[ uiHandPos ].usItem == NOTHING )
 		return;
 
-	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
-	//if( ( iReason == MSYS_CALLBACK_REASON_MOVE ) || ( iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE ) )
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		guiMouseOverItemTime = GetJA2Clock( );
 		gfCheckForMouseOverItem = TRUE;
 		HandleCompatibleAmmoUI( pSoldier, (INT8)uiHandPos, FALSE );
 		gbCheckForMouseOverItemPos = (INT8)uiHandPos;
 	}
-	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
+	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		HandleCompatibleAmmoUI( pSoldier, (INT8)uiHandPos, FALSE );
 		gfCheckForMouseOverItem = FALSE;
