@@ -81,11 +81,10 @@
 
             <Spinner
                 android:id="@+id/gameVersionSpinner"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:contentDescription="@string/game_version_empty_text" />
-
         </LinearLayout>
 
         <LinearLayout
