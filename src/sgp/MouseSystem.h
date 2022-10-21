@@ -233,8 +233,6 @@ class MouseRegion : private MOUSE_REGION
 			MSYS_RemoveRegion(this);
 		}
 
-		MOUSE_REGION const& Base() const { return *this; } // XXX hack
-
 		using MOUSE_REGION::ChangeCursor;
 		using MOUSE_REGION::Disable;
 		using MOUSE_REGION::Enable;

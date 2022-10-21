@@ -682,6 +682,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 			}
 			SOLDIERCELL& c = gpMercs[index];
 			c.pRegion = new MouseRegion(c.xp, c.yp, 50, 44, MSYS_PRIORITY_HIGH, 0, MercCellMouseMoveCallback, MercCellMouseClickCallback);
+			c.pRegion->SetUserPtr(&c);
 			if( fReset )
 				RefreshMerc( gpMercs[ index ].pSoldier );
 			if( !gpMercs[ index ].pSoldier->bLife )
@@ -2021,21 +2022,9 @@ static void DoneButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-// Find the merc with the same region.
-static SOLDIERCELL* GetCell(MOUSE_REGION const* const reg)
-{
-	FOR_EACH_AR_MERC(i)
-	{
-		if (&i->pRegion->Base() != reg) continue;
-		return i;
-	}
-	throw std::logic_error("Region does not belong to a soldier cell");
-}
-
-
 static void MercCellMouseMoveCallback(MOUSE_REGION* reg, UINT32 reason)
 {
-	SOLDIERCELL* const pCell = GetCell(reg);
+	SOLDIERCELL * const pCell = reg->GetUserPtr<SOLDIERCELL>();
 	if( gpAR->fPendingSurrender )
 	{ //Can't setup retreats when pending surrender.
 		pCell->uiFlags &= ~CELL_SHOWRETREATTEXT;
@@ -2067,7 +2056,7 @@ static void MercCellMouseClickCallback(MOUSE_REGION* reg, UINT32 reason)
 			return;
 		}
 
-		SOLDIERCELL* const pCell = GetCell(reg);
+		SOLDIERCELL * const pCell = reg->GetUserPtr<SOLDIERCELL>();
 
 		if( pCell->uiFlags & ( CELL_RETREATING | CELL_RETREATED ) )
 		{ //already retreated/retreating.
