@@ -16,7 +16,7 @@ class SectionsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         }
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment()
+        return SettingsFragment()
     }
 
     override fun getItemCount(): Int {

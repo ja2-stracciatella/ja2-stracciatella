@@ -11,4 +11,8 @@ data class Ja2Json(
     val vanillaGameVersion: VanillaVersion? = null,
     @SerialName("save_game_dir")
     val saveGameDir: String? = null,
+    @SerialName("res")
+    val resolution: Resolution? = null,
+    @SerialName("scaling")
+    val scalingQuality: ScalingQuality? = null
 )

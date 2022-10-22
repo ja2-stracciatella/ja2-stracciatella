@@ -22,4 +22,9 @@
         Select the game version of you original Jagged Alliance 2 game files.
     </string>
     <string name="game_version_empty_text">No version chosen yet</string>
+    <string name="scaling_quality_info_title_text">Scaling Mode</string>
+    <string name="scaling_quality_info_text">Choose a scaling mode to stretch the game video to fit the screen. Linear and Near-Perfect modes stretch the video to match any window sizes, but the image may look blurred. Pixel-Perfect can only scale up by integer (1x, 2x and so on) but gives sharp images.</string>
+    <string name="resolution_info_title_text">Internal Resolution</string>
+    <string name="resolution_info_text">Specify the resolution for tactical screen rendering. Texts and sprites become very small at higher internal resolutions. Note that menus and the strategic map screen are always rendered at 640x480. The launcher can try to detect the best resolution. The result will depend on the selected scaling mode.</string>
+    <string name="resolution_auto_button">Detect</string>
 </resources>
