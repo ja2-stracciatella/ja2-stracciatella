@@ -150,9 +150,13 @@ class LauncherActivity : AppCompatActivity() {
             val json: Ja2Json = jsonFormat.decodeFromString(text)
 
             configurationModel.setVanillaGameDir(json.vanillaGameDir)
-            configurationModel.setVanillaGameVersion(json.vanillaGameVersion)
             configurationModel.setSaveGameDir(json.saveGameDir)
 
+            if (json.vanillaGameVersion != null) {
+                configurationModel.setVanillaGameVersion(json.vanillaGameVersion)
+            } else {
+                configurationModel.setVanillaGameVersion(VanillaVersion.DEFAULT)
+            }
             if (json.scalingQuality != null) {
                 configurationModel.setScalingQuality(json.scalingQuality)
             } else {
@@ -165,10 +169,12 @@ class LauncherActivity : AppCompatActivity() {
             }
         } catch (e: SerializationException) {
             Log.w(activityLogTag, "Could not decode ja2.json: ${e.message}")
+            configurationModel.setVanillaGameVersion(VanillaVersion.ENGLISH)
             configurationModel.setScalingQuality(ScalingQuality.DEFAULT)
             configurationModel.setResolution(getRecommendedResolution())
         } catch (e: IOException) {
             Log.w(activityLogTag, "Could not read $ja2JsonPath: ${e.message}")
+            configurationModel.setVanillaGameVersion(VanillaVersion.ENGLISH)
             configurationModel.setScalingQuality(ScalingQuality.DEFAULT)
             configurationModel.setResolution(getRecommendedResolution())
         }

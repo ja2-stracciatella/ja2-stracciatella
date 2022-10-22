@@ -35,6 +35,10 @@ enum class VanillaVersion(val value: String) {
             SIMPLIFIED_CHINESE -> "Simplified Chinese"
         }
     }
+
+    companion object {
+        val DEFAULT = ENGLISH
+    }
 }
 
 @Serializable(with = ResolutionSerializer::class)
@@ -88,14 +92,14 @@ enum class ScalingQuality(val value: String) {
     }
 
     companion object {
-        val DEFAULT = ScalingQuality.LINEAR
+        val DEFAULT = LINEAR
     }
 }
 
 class ConfigurationModel : ViewModel() {
 
     val vanillaGameDir = MutableLiveData<String?>()
-    val vanillaGameVersion = MutableLiveData<VanillaVersion?>()
+    val vanillaGameVersion = MutableLiveData(VanillaVersion.DEFAULT)
     val saveGameDir = MutableLiveData<String?>()
     val resolution = MutableLiveData(Resolution.DEFAULT)
     val scalingQuality = MutableLiveData(ScalingQuality.DEFAULT)
@@ -104,7 +108,7 @@ class ConfigurationModel : ViewModel() {
         vanillaGameDir.value = vanillaGameDirSet
     }
 
-    fun setVanillaGameVersion(version: VanillaVersion?) {
+    fun setVanillaGameVersion(version: VanillaVersion) {
         vanillaGameVersion.value = version
     }
 

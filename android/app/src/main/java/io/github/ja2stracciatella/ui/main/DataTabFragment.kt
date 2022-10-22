@@ -46,8 +46,7 @@ class DataTabFragment : Fragment() {
     ): View {
         _binding = FragmentLauncherDataTabBinding.inflate(inflater, container, false)
 
-        val versionLabels = versions.map { v: VanillaVersion -> v.getLabel() }
-        val spinnerLabels = listOf(getString(R.string.game_version_empty_text)) + versionLabels
+        val spinnerLabels = versions.map { v: VanillaVersion -> v.getLabel() }
         val adapter: ArrayAdapter<String> = ArrayAdapter(this.requireContext(), R.layout.launcher_spinner_item, spinnerLabels)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.gameVersionSpinner.adapter = adapter
@@ -62,12 +61,8 @@ class DataTabFragment : Fragment() {
         configurationModel.vanillaGameVersion.observe(
             viewLifecycleOwner
         ) { vanillaGameVersion ->
-            if (vanillaGameVersion == null) {
-                binding.gameVersionSpinner.setSelection(0)
-            } else {
-                val index = versions.indexOf(vanillaGameVersion)
-                binding.gameVersionSpinner.setSelection(index + 1)
-            }
+            val index = versions.indexOf(vanillaGameVersion)
+            binding.gameVersionSpinner.setSelection(index)
         }
         configurationModel.saveGameDir.observe(
             viewLifecycleOwner
@@ -87,10 +82,8 @@ class DataTabFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    if (position == 0) {
-                        configurationModel.setVanillaGameVersion(null)
-                    } else {
-                        configurationModel.setVanillaGameVersion(versions[position-1])
+                    if (position >= 0 && position < versions.size) {
+                        configurationModel.setVanillaGameVersion(versions[position])
                     }
                 }
 
