@@ -1709,3 +1709,13 @@ UINT16 GetGenericButtonFillColor(void)
 {
 	return GenericButtonFillColors;
 }
+
+GUI_CALLBACK ButtonCallbackPrimarySecondary(
+	GUI_CALLBACK primaryAction,
+	GUI_CALLBACK secondaryAction,
+	GUI_CALLBACK allEvents,
+	bool triggerPrimaryOnMouseDown
+)
+{
+	return CallbackPrimarySecondary<GUI_BUTTON, BUTTON_ENABLED>(primaryAction, secondaryAction, allEvents, triggerPrimaryOnMouseDown);
+}

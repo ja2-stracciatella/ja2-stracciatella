@@ -259,7 +259,7 @@ static void InitializeMouseRegions(void)
 		const UINT16 w = LINE_WIDTH;
 		const UINT16 h = MIDDLE_WIDTH;
 		MOUSE_REGION* const r = &pEmailRegions[i];
-		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(EmailBtnCallBackPrimary, EmailBtnCallBackSecondary, EmailBtnCallBackScroll));
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(EmailBtnCallBackPrimary, EmailBtnCallBackSecondary, EmailBtnCallBackScroll));
 		MSYS_SetRegionUserData(r, 0, i);
 	}
 

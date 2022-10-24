@@ -924,7 +924,7 @@ void InitializeSMPanel()
 	x = dx + SM_SELMERC_FACE_X;
 	y = dy + SM_SELMERC_FACE_Y;
 
-	MOUSE_CALLBACK selectedMercButtonCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(SelectedMercButtonCallbackPrimary, SelectedMercButtonCallbackSecondary, MSYS_NO_CALLBACK, true);
+	MOUSE_CALLBACK selectedMercButtonCallback = MouseCallbackPrimarySecondary(SelectedMercButtonCallbackPrimary, SelectedMercButtonCallbackSecondary, MSYS_NO_CALLBACK, true);
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion(&gSM_SELMERCPanelRegion, x, y, x + SM_SELMERC_FACE_WIDTH, y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, selectedMercButtonCallback);
 
@@ -948,7 +948,7 @@ void InitializeSMPanel()
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, dx + 62, dy + 2, dx + 85, dy + 51, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, selectedMercButtonCallback);
 
-	MOUSE_CALLBACK smInvClickCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(SMInvClickCallbackPrimary, SMInvClickCallbackSecondary, MSYS_NO_CALLBACK, true);
+	MOUSE_CALLBACK smInvClickCallback = MouseCallbackPrimarySecondary(SMInvClickCallbackPrimary, SMInvClickCallbackSecondary, MSYS_NO_CALLBACK, true);
 	InitInvSlotInterface(g_ui.m_invSlotPositionTac, &g_ui.m_invCamoRegion, SMInvMoveCallback, smInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
 
@@ -1401,7 +1401,7 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
 		return;
 
-	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE)
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		if ( gpItemPointer == NULL )
 		{
@@ -1411,7 +1411,7 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			gbCheckForMouseOverItemPos = (INT8)uiHandPos;
 		}
 	}
-	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
+	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		if ( gpItemPointer == NULL )
 		{
@@ -1425,14 +1425,14 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void SMInvMoveCamoCallback(MOUSE_REGION* const pRegion, const UINT32 iReason)
 {
-	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		// Setup a timer....
 		guiMouseOverItemTime = GetJA2Clock( );
 		gfCheckForMouseOverItem = TRUE;
 		gbCheckForMouseOverItemPos = NO_SLOT;
 	}
-	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
+	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)NO_SLOT, FALSE );
 		gfCheckForMouseOverItem = FALSE;
@@ -2287,7 +2287,7 @@ void InitializeTEAMPanel()
 	{
 		INT32 const face_x = dx + TM_FACE_X;
 		INT32 const face_y = dy + TM_FACE_Y;
-		MOUSE_CALLBACK mercFacePanelCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(MercFacePanelCallbackPrimary, MercFacePanelCallbackSecondary, MSYS_NO_CALLBACK, true);
+		MOUSE_CALLBACK mercFacePanelCallback = MouseCallbackPrimarySecondary(MercFacePanelCallbackPrimary, MercFacePanelCallbackSecondary, MSYS_NO_CALLBACK, true);
 
 		MakeRegion(tp, tp.face, face_x, face_y, TM_FACE_WIDTH, TM_FACE_HEIGHT,
 				MercFacePanelMoveCallback, mercFacePanelCallback);
@@ -2308,9 +2308,9 @@ void InitializeTEAMPanel()
 		INT32 const hand_x = dx + TM_INV_HAND1STARTX;
 		INT32 const hand_y = dy + TM_INV_HAND1STARTY;
 		MakeRegion(tp, tp.first_hand, hand_x, hand_y, TM_INV_WIDTH, TM_INV_HEIGHT,
-				MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(TMClickFirstHandInvCallbackPrimary, TMClickFirstHandInvCallbackSecondary));
+				MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(TMClickFirstHandInvCallbackPrimary, TMClickFirstHandInvCallbackSecondary));
 		MakeRegion(tp, tp.second_hand, hand_x, hand_y + TM_INV_HAND_SEPY, TM_INV_WIDTH,
-				TM_INV_HEIGHT, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(TMClickSecondHandInvCallbackPrimary, TMClickSecondHandInvCallbackSecondary));
+				TM_INV_HEIGHT, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(TMClickSecondHandInvCallbackPrimary, TMClickSecondHandInvCallbackSecondary));
 
 		dx += TM_INV_HAND_SEP;
 	}
@@ -3577,7 +3577,7 @@ void KeyRingSlotInvClickCallbackSecondary( MOUSE_REGION * pRegion, UINT32 iReaso
 	}
 }
 
-MOUSE_CALLBACK KeyRingSlotInvClickCallback = MouseCallbackPrimarySecondary<MOUSE_REGION>(KeyRingSlotInvClickCallbackPrimary, KeyRingSlotInvClickCallbackSecondary, MSYS_NO_CALLBACK, true);
+MOUSE_CALLBACK KeyRingSlotInvClickCallback = MouseCallbackPrimarySecondary(KeyRingSlotInvClickCallbackPrimary, KeyRingSlotInvClickCallbackSecondary, MSYS_NO_CALLBACK, true);
 
 void ShopKeeperInterface_SetSMpanelButtonsState(bool const enabled)
 {
@@ -3626,7 +3626,7 @@ static void ConfirmationToDepositMoneyToPlayersAccount(MessageBoxReturnValue);
 
 static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason == MSYS_CALLBACK_REASON_POINTER_DWN )
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
 		//If the current merc is to far away, dont allow anything to be done
 		if( gfSMDisableForItems )

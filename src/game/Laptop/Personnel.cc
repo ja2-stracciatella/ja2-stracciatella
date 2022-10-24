@@ -922,7 +922,7 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 			const UINT16 tly = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
 			const UINT16 brx = tlx + SMALL_PORTRAIT_WIDTH;
 			const UINT16 bry = tly + SMALL_PORTRAIT_HEIGHT;
-			MSYS_DefineRegion(&gPortraitMouseRegions[i], tlx, tly, brx, bry, MSYS_PRIORITY_HIGHEST, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(PersonnelPortraitCallbackPrimary, PersonnelPortraitCallbackSecondary));
+			MSYS_DefineRegion(&gPortraitMouseRegions[i], tlx, tly, brx, bry, MSYS_PRIORITY_HIGHEST, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(PersonnelPortraitCallbackPrimary, PersonnelPortraitCallbackSecondary));
 			MSYS_SetRegionUserData(&gPortraitMouseRegions[i], 0, i);
 		}
 

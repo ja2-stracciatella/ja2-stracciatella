@@ -1337,7 +1337,7 @@ static void WWWRegionButtonCallbackSecondary(GUI_BUTTON* btn, UINT32 reason);
 static void CreateLaptopButtons(void)
 {
 	MakeButton(0,  66, EmailRegionButtonCallback,     30, pLaptopIcons[0], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_EMAIL]);
-	MakeButton(1,  98, MouseCallbackPrimarySecondary<GUI_BUTTON>(WWWRegionButtonCallbackPrimary, WWWRegionButtonCallbackSecondary), 30, pLaptopIcons[1], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES]);
+	MakeButton(1,  98, ButtonCallbackPrimarySecondary(WWWRegionButtonCallbackPrimary, WWWRegionButtonCallbackSecondary), 30, pLaptopIcons[1], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES]);
 	MakeButton(2, 130, FilesRegionButtonCallback,     30, pLaptopIcons[5], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FILES_AND_EMAIL_ATTACHMENTS]);
 	MakeButton(3, 194, PersonnelRegionButtonCallback, 30, pLaptopIcons[3], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_TEAM_INFO]);
 	MakeButton(4, 162, HistoryRegionButtonCallback,   30, pLaptopIcons[4], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_READ_LOG_OF_EVENTS]);
@@ -1862,13 +1862,13 @@ void GoToWebPage(INT32 iPageId)
 
 static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	if (iReason == MSYS_CALLBACK_REASON_MOVE)
-	{
-		iHighLightBookLine=MSYS_GetRegionUserData(pRegion, 0);
-	}
-	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE)
+	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 		iHighLightBookLine = -1;
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_MOVE)
+	{
+		iHighLightBookLine=MSYS_GetRegionUserData(pRegion, 0);
 	}
 }
 
@@ -2169,7 +2169,7 @@ void LapTopScreenCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
 	HandleRightButtonUpEvent();
 }
 
-MOUSE_CALLBACK LapTopScreenCallBack = MouseCallbackPrimarySecondary<MOUSE_REGION>(LapTopScreenCallBackPrimary, LapTopScreenCallBackSecondary);
+MOUSE_CALLBACK LapTopScreenCallBack = MouseCallbackPrimarySecondary(LapTopScreenCallBackPrimary, LapTopScreenCallBackSecondary);
 
 void DoLapTopMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {

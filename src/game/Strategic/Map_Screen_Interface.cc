@@ -3042,7 +3042,7 @@ void CreateScreenMaskForMoveBox( void )
 	if (!fScreenMaskForMoveCreated)
 	{
 		// set up the screen mask
-		MSYS_DefineRegion(&gMoveBoxScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary<MOUSE_REGION>(MoveScreenMaskBtnCallbackPrimary, MoveScreenMaskBtnCallbackSecondary));
+		MSYS_DefineRegion(&gMoveBoxScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(MoveScreenMaskBtnCallbackPrimary, MoveScreenMaskBtnCallbackSecondary));
 
 		fScreenMaskForMoveCreated = TRUE;
 	}

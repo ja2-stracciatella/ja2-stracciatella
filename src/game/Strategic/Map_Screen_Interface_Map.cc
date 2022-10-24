@@ -2841,7 +2841,7 @@ void CreateDestroyMilitiaPopUPRegions(void)
 			MOUSE_REGION* const r = &gMapScreenMilitiaBoxRegions[i];
 			UINT16        const x = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + i % MILITIA_BOX_ROWS * MILITIA_BOX_BOX_WIDTH;
 			UINT16        const y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + i / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT;
-			MSYS_DefineRegion(r, x, y, x + MILITIA_BOX_BOX_WIDTH, y + MILITIA_BOX_BOX_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CURSOR, MilitiaRegionMoveCallback, MouseCallbackPrimarySecondary<MOUSE_REGION>(MilitiaRegionClickCallbackPrimary, MilitiaRegionClickCallbackSecondary));
+			MSYS_DefineRegion(r, x, y, x + MILITIA_BOX_BOX_WIDTH, y + MILITIA_BOX_BOX_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CURSOR, MilitiaRegionMoveCallback, MouseCallbackPrimarySecondary(MilitiaRegionClickCallbackPrimary, MilitiaRegionClickCallbackSecondary));
 			MSYS_SetRegionUserData(r, 0, i);
 		}
 
@@ -3017,7 +3017,7 @@ void CreateDestroyMilitiaSectorButtons()
 		INT16       y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT + 2;
 		for (INT32 i = 0; i != 3; y += MILITIA_BTN_HEIGHT, ++i)
 		{
-			GUIButtonRef b = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, MouseCallbackPrimarySecondary<GUI_BUTTON>(MilitiaButtonCallbackPrimary, MilitiaButtonCallbackSecondary));
+			GUIButtonRef b = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, ButtonCallbackPrimarySecondary(MilitiaButtonCallbackPrimary, MilitiaButtonCallbackSecondary));
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
 			b->SpecifyGeneralTextAttributes(ST::null, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
