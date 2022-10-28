@@ -1356,7 +1356,6 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 {
 	// heal patient and return the number of healing pts used
 	UINT16 usHealingPtsLeft;
-	UINT16 usTotalFullPtsUsed = 0;
 	UINT16 usTotalHundredthsUsed = 0;
 	INT8 bPointsToUse = 0;
 	INT8 bPointsUsed = 0;
@@ -1402,7 +1401,6 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 
 				bPointsToUse -= bPointsHealed;
 				usHealingPtsLeft -= bPointsHealed;
-				usTotalFullPtsUsed += bPointsHealed;
 
 				// heal person the amount / POINT_COST_PER_HEALTH_BELOW_OKLIFE
 				pPatient -> bLife += (bPointsHealed / POINT_COST_PER_HEALTH_BELOW_OKLIFE);
@@ -1441,7 +1439,6 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 
 				bPointsToUse -= bPointsHealed;
 				usHealingPtsLeft -= bPointsHealed;
-				usTotalFullPtsUsed += bPointsHealed;
 
 				pPatient -> bLife += bPointsHealed;
 

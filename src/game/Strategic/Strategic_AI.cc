@@ -1948,7 +1948,6 @@ void EvaluateQueenSituation()
 	INT32 iRandom, iWeight;
 	UINT32 uiOffset;
 	UINT16 usDefencePoints;
-	INT32 iSumOfAllWeights = 0;
 
 	// figure out how long it shall be before we call this again
 
@@ -1997,9 +1996,6 @@ void EvaluateQueenSituation()
 		iWeight = gGarrisonGroup[ i ].bWeight;
 		if( iWeight > 0 )
 		{	//if group is requesting reinforcements.
-
-			iSumOfAllWeights += iWeight;	// debug only!
-
 			if( iRandom < iWeight && !gGarrisonGroup[ i ].ubPendingGroupID &&
 					EnemyPermittedToAttackSector( NULL, gGarrisonGroup[ i ].ubSectorID ) &&
 					GarrisonRequestingMinimumReinforcements( i ) )
@@ -2026,8 +2022,6 @@ void EvaluateQueenSituation()
 		iWeight = gPatrolGroup[ i ].bWeight;
 		if( iWeight > 0 )
 		{
-			iSumOfAllWeights += iWeight;	// debug only!
-
 			if( iRandom < iWeight && !gPatrolGroup[ i ].ubPendingGroupID && PatrolRequestingMinimumReinforcements( i ) )
 			{ //This is the group that gets the reinforcements!
 				SendReinforcementsForPatrol( i, NULL );

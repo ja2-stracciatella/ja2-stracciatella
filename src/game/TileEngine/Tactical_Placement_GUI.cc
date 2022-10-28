@@ -522,7 +522,7 @@ static void KillTacticalPlacementGUI(void)
 		MSYS_RemoveRegion(&m.region);
 	}
 
-	if( gsCurInterfacePanel < 0 || gsCurInterfacePanel >= NUM_UI_PANELS )
+	if( gsCurInterfacePanel >= NUM_UI_PANELS )
 		gsCurInterfacePanel = TEAM_PANEL;
 
 	SetCurrentInterfacePanel(gsCurInterfacePanel);

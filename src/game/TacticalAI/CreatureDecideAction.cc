@@ -152,7 +152,7 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 
 static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 {
-	INT32 iChance, iSneaky = 10;
+	INT32 iChance = 10;
 	//INT8  bInWater;
 	INT8  bInGas;
 
@@ -262,12 +262,12 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 		// modify chance of patrol (and whether it's a sneaky one) by attitude
 		switch (pSoldier->bAttitude)
 		{
-			case DEFENSIVE:      iChance += -10;                 break;
-			case BRAVESOLO:      iChance +=   5;                 break;
-			case BRAVEAID:                                       break;
-			case CUNNINGSOLO:    iChance +=   5;  iSneaky += 10; break;
-			case CUNNINGAID:                      iSneaky +=  5; break;
-			case AGGRESSIVE:     iChance +=  10;  iSneaky += -5; break;
+			case DEFENSIVE:      iChance += -10;  break;
+			case BRAVESOLO:      iChance +=   5;  break;
+			case BRAVEAID:                        break;
+			case CUNNINGSOLO:    iChance +=   5;  break;
+			case CUNNINGAID:                      break;
+			case AGGRESSIVE:     iChance +=  10;  break;
 		}
 
 		// reduce chance for any injury, less likely to wander around when hurt
@@ -425,7 +425,7 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 	// monster AI - heard something
 	INT16 sNoiseGridNo;
 	INT32 iNoiseValue;
-	INT32 iChance, iSneaky;
+	INT32 iChance;
 	BOOLEAN fClimb;
 	BOOLEAN fReachable;
 	//INT16 sClosestFriend;
@@ -498,7 +498,6 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 
 		// remember that noise value is negative, and closer to 0 => more important!
 		iChance = 75 + iNoiseValue;
-		iSneaky = 30;
 
 		// set base chance according to orders
 		switch (pSoldier->bOrders)
@@ -516,12 +515,12 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 		// modify chance of patrol (and whether it's a sneaky one) by attitude
 		switch (pSoldier->bAttitude)
 		{
-			case DEFENSIVE:      iChance += -10;  iSneaky +=  15;  break;
-			case BRAVESOLO:      iChance +=  10;                   break;
-			case BRAVEAID:       iChance +=   5;                   break;
-			case CUNNINGSOLO:    iChance +=   5;  iSneaky +=  30;  break;
-			case CUNNINGAID:                      iSneaky +=  30;  break;
-			case AGGRESSIVE:     iChance +=  20;  iSneaky += -10;  break;
+			case DEFENSIVE:      iChance += -10;  break;
+			case BRAVESOLO:      iChance +=  10;  break;
+			case BRAVEAID:       iChance +=   5;  break;
+			case CUNNINGSOLO:    iChance +=   5;  break;
+			case CUNNINGAID:                      break;
+			case AGGRESSIVE:     iChance +=  20;  break;
 		}
 
 		// reduce chance if breath is down, less likely to wander around when tired

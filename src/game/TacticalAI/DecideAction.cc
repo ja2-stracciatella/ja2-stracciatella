@@ -641,7 +641,7 @@ static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 
 static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 {
-	INT32 iChance, iSneaky = 10;
+	INT32 iChance = 10;
 	INT8  bInWater,bInGas;
 
 	const BOOLEAN fCivilian =
@@ -905,13 +905,13 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 		// modify chance of patrol (and whether it's a sneaky one) by attitude
 		switch (pSoldier->bAttitude)
 		{
-			case DEFENSIVE:      iChance += -10;                 break;
-			case BRAVESOLO:      iChance +=   5;                 break;
-			case BRAVEAID:                                       break;
-			case CUNNINGSOLO:    iChance +=   5;  iSneaky += 10; break;
-			case CUNNINGAID:                      iSneaky +=  5; break;
-			case AGGRESSIVE:     iChance +=  10;  iSneaky += -5; break;
-			case ATTACKSLAYONLY: iChance +=  10;  iSneaky += -5; break;
+			case DEFENSIVE:      iChance += -10;  break;
+			case BRAVESOLO:      iChance +=   5;  break;
+			case BRAVEAID:                        break;
+			case CUNNINGSOLO:    iChance +=   5;  break;
+			case CUNNINGAID:                      break;
+			case AGGRESSIVE:     iChance +=  10;  break;
+			case ATTACKSLAYONLY: iChance +=  10;  break;
 		}
 
 		// reduce chance for any injury, less likely to wander around when hurt
@@ -1078,7 +1078,7 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 	INT32 iDummy;
 	INT16 sNoiseGridNo;
 	INT32 iNoiseValue;
-	INT32 iChance, iSneaky;
+	INT32 iChance;
 	INT16 sClosestFriend;
 	const BOOLEAN fCivilian =
 		IsOnCivTeam(pSoldier) &&
@@ -1251,7 +1251,6 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 		{
 			// remember that noise value is negative, and closer to 0 => more important!
 			iChance = 95 + (iNoiseValue / 3);
-			iSneaky = 30;
 
 			// increase
 
@@ -1271,13 +1270,13 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 			// modify chance of patrol (and whether it's a sneaky one) by attitude
 			switch (pSoldier->bAttitude)
 			{
-				case DEFENSIVE:      iChance += -10;  iSneaky +=  15;  break;
-				case BRAVESOLO:      iChance +=  10;                   break;
-				case BRAVEAID:       iChance +=   5;                   break;
-				case CUNNINGSOLO:    iChance +=   5;  iSneaky +=  30;  break;
-				case CUNNINGAID:                      iSneaky +=  30;  break;
-				case AGGRESSIVE:     iChance +=  20;  iSneaky += -10;  break;
-				case ATTACKSLAYONLY:	iChance +=  20;  iSneaky += -10;  break;
+				case DEFENSIVE:      iChance += -10;     break;
+				case BRAVESOLO:      iChance +=  10;     break;
+				case BRAVEAID:       iChance +=   5;     break;
+				case CUNNINGSOLO:    iChance +=   5;     break;
+				case CUNNINGAID:                         break;
+				case AGGRESSIVE:     iChance +=  20;     break;
+				case ATTACKSLAYONLY:	iChance +=  20;  break;
 			}
 
 
@@ -1314,7 +1313,6 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 		{
 			// there a chance enemy soldier choose to go "help" his friend
 			iChance = 50 - SpacesAway(pSoldier->sGridNo,sClosestFriend);
-			iSneaky = 10;
 
 			// set base chance according to orders
 			switch (pSoldier->bOrders)
@@ -1332,13 +1330,13 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 			// modify chance of patrol (and whether it's a sneaky one) by attitude
 			switch (pSoldier->bAttitude)
 			{
-				case DEFENSIVE:      iChance += -10;  iSneaky +=  15;        break;
-				case BRAVESOLO:                                              break;
-				case BRAVEAID:       iChance +=  20;  iSneaky += -10;        break;
-				case CUNNINGSOLO:                     iSneaky +=  30;        break;
-				case CUNNINGAID:     iChance +=  20;  iSneaky +=  20;        break;
-				case AGGRESSIVE:     iChance += -20;  iSneaky += -20;        break;
-				case ATTACKSLAYONLY: iChance += -20;  iSneaky += -20;        break;
+				case DEFENSIVE:      iChance += -10;  break;
+				case BRAVESOLO:                       break;
+				case BRAVEAID:       iChance +=  20;  break;
+				case CUNNINGSOLO:                     break;
+				case CUNNINGAID:     iChance +=  20;  break;
+				case AGGRESSIVE:     iChance += -20;  break;
+				case ATTACKSLAYONLY: iChance += -20;  break;
 			}
 
 			// reduce chance if breath is down, less likely to wander around when tired
@@ -1370,7 +1368,6 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 		{
 			// remember that noise value is negative, and closer to 0 => more important!
 			iChance = 25;
-			iSneaky = 30;
 
 			// set base chance according to orders
 			switch (pSoldier->bOrders)
@@ -1388,13 +1385,13 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 			// modify chance (and whether it's sneaky) by attitude
 			switch (pSoldier->bAttitude)
 			{
-				case DEFENSIVE:      iChance +=  10;  iSneaky +=  15;  break;
-				case BRAVESOLO:      iChance += -15;  iSneaky += -20;  break;
-				case BRAVEAID:       iChance += -20;  iSneaky += -20;  break;
-				case CUNNINGSOLO:    iChance +=  20;  iSneaky +=  30;  break;
-				case CUNNINGAID:     iChance +=  15;  iSneaky +=  30;  break;
-				case AGGRESSIVE:     iChance += -10;  iSneaky += -10;  break;
-				case ATTACKSLAYONLY: iChance += -10;  iSneaky += -10;  break;
+				case DEFENSIVE:      iChance +=  10; break;
+				case BRAVESOLO:      iChance += -15; break;
+				case BRAVEAID:       iChance += -20; break;
+				case CUNNINGSOLO:    iChance +=  20; break;
+				case CUNNINGAID:     iChance +=  15; break;
+				case AGGRESSIVE:     iChance += -10; break;
+				case ATTACKSLAYONLY: iChance += -10; break;
 			}
 
 

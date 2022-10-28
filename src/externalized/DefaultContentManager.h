@@ -275,10 +275,10 @@ protected:
 	 * @param profileID
 	 * @return pointer to a MercProfileInfo. Never returns null. A pointer to the empty instance is returned if not defined in JSON.
 	 */
-	const MercProfileInfo* getMercProfileInfo(uint8_t profileID) const;
+	const MercProfileInfo* getMercProfileInfo(uint8_t profileID) const override;
 	/**
 	 * @param profile
 	 * @return pointer to a MercProfileInfo. Returns null if not defined in JSON
 	 */
-	const MercProfileInfo* getMercProfileInfoByName(const ST::string& profile) const;
+	const MercProfileInfo* getMercProfileInfoByName(const ST::string& profile) const override;
 };
