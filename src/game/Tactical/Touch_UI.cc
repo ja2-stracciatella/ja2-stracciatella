@@ -175,6 +175,8 @@ void TacticalTouchUIConfirmCallback(GUI_BUTTON*, UINT32 reason) {
 					break;
 				case HANDCURSOR_MODE:
 					HandleHandCursorClick( guiCurrentCursorGridNo, &guiPendingOverrideEvent );
+				default:
+					break;
 			}
 		}
 	}
@@ -202,8 +204,6 @@ void TacticalTouchUIBurstCallback(GUI_BUTTON*, UINT32 reason) {
 		auto const& selected = GetSelectedMan();
 
 		if (guiCurrentCursorGridNo == NOWHERE || selected == NULL) return;
-
-		bool const enable_burst = IsGunBurstCapable(selected, HANDPOS) || FindAttachment(&(selected->inv[HANDPOS]), UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
 
 		ChangeWeaponMode(selected);
 	}

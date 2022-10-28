@@ -4294,7 +4294,6 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	STRUCTURE * pStructure, *pTempStructure;
 
 	SOLDIERTYPE * pTarget;
-	FLOAT dTargetZMin;
 	FLOAT dTargetZMax;
 
 	INT16 sX, sY;
@@ -4340,15 +4339,7 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	{
 		// a merc! that isn't us :-)
 		pTarget = pMapElement->pMercHead->pSoldier;
-		//dTargetX = pTarget->dXPos;
-		//dTargetY = pTarget->dYPos;
-		dTargetZMin = 0.0f;
 		CalculateSoldierZPos( pTarget, HEIGHT, &dTargetZMax );
-		if (pTarget->bLevel > 0)
-		{
-			// on roof
-			dTargetZMin += WALL_HEIGHT_UNITS;
-		}
 	}
 	else
 	{

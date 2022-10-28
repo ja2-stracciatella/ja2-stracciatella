@@ -163,7 +163,7 @@ void deleteElements(std::map<K, const V*> map)
 	map.clear();
 }
 
-DefaultContentManager::~DefaultContentManager()
+DefaultContentManager::~DefaultContentManager() noexcept(false)
 {
 	SLOGD("Shutting Down Content Manager");
 	for (const ItemModel* item : m_items)

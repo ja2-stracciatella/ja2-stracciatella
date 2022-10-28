@@ -465,15 +465,8 @@ static void GenerateProsString(ST::string& zItemPros, const OBJECTTYPE& o, UINT3
 	UINT32 uiStringLength = 0;
 	ST::string zTemp;
 	UINT16 usItem = o.usItem;
-	UINT8 ubWeight;
 
 	zItemPros = ST::null;
-
-	ubWeight = GCM->getItem(usItem)->getWeight();
-	if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
-	{
-		ubWeight += GCM->getItem(o.usGunAmmoItem)->getWeight();
-	}
 
 	if (GCM->getItem(usItem)->getWeight() <= EXCEPTIONAL_WEIGHT)
 	{

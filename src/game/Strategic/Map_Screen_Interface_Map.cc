@@ -2185,8 +2185,6 @@ static void ShowPeopleInMotion(const SGPSector& sSector)
 void DisplayDistancesForHelicopter()
 {
 	static INT16 sOldYPosition = 0;
-
-	SGPSector sMap;
 	INT16 const sYPosition = gsHighlightSector.IsValid() && gsHighlightSector.y >= 13 ?
 			MAP_HELICOPTER_UPPER_ETA_POPUP_Y : MAP_HELICOPTER_ETA_POPUP_Y;
 
