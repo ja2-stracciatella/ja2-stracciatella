@@ -95,6 +95,7 @@ option(WITH_MAGICENUM "Build with magic_enum library" ON)
 option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 option(WITH_RUST_BINARIES "Include rust binaries in build" ON)
+option(WITH_ASAN "Build with address sanitizer" OFF)
 # @see LOCAL_LUA_LIB in dependencies/lib-lua/CMakeLists.txt
 # @see LOCAL_SOL_LIB in dependencies/lib-sol2/CMakeLists.txt
 # @see LOCAL_MINIAUDIO_LIB in dependencies/lib-miniaudio/CMakeLists.txt
@@ -299,6 +300,11 @@ else()
     add_executable(${JA2_BINARY} ${JA2_SOURCES})
 endif()
 target_link_libraries(${JA2_BINARY} ${JA2_LIBRARIES})
+
+if (ASAN)
+    target_compile_options(${JA2_BINARY} PRIVATE -fsanitize=address)
+    target_link_options(${JA2_BINARY} PRIVATE -fsanitize=address)
+endif()
 
 add_dependencies(${JA2_BINARY} stracciatella)
 set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game/GameVersion.cc APPEND PROPERTY COMPILE_DEFINITIONS "GAME_VERSION=v${ja2-stracciatella_VERSION}")
