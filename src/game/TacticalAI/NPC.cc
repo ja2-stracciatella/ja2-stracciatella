@@ -1912,14 +1912,13 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				}
 				else if ( pQuotePtr->usGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
-					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
-					if (pSoldier)
+					if (pNPC)
 					{
-						ZEROTIMECOUNTER( pSoldier->AICounter );
-						if (pSoldier->bNextAction == AI_ACTION_WAIT)
+						ZEROTIMECOUNTER(pNPC->AICounter);
+						if (pNPC->bNextAction == AI_ACTION_WAIT)
 						{
-							pSoldier->bNextAction = AI_ACTION_NONE;
-							pSoldier->usNextActionData = 0;
+							pNPC->bNextAction = AI_ACTION_NONE;
+							pNPC->usNextActionData = 0;
 						}
 					}
 					NPCDoAction( ubNPC, (UINT16) (pQuotePtr->sActionData), ubRecordNum );
@@ -1928,37 +1927,38 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				// Movement?
 				if ( pQuotePtr->usGoToGridno != NO_MOVE )
 				{
-					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
-
 					// stupid hack CC
-					if (pSoldier && ubNPC == KYLE)
+					if (pNPC && ubNPC == KYLE)
 					{
 						// make sure he has keys
-						pSoldier->bHasKeys = TRUE;
+						pNPC->bHasKeys = TRUE;
 					}
-					if (pSoldier && pSoldier->sGridNo == pQuotePtr->usGoToGridno )
+					if (pNPC && pNPC->sGridNo == pQuotePtr->usGoToGridno )
 					{
 						// search for quotes to trigger immediately!
-						pSoldier->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
-						NPCReachedDestination( pSoldier, TRUE );
+						pNPC->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
+						NPCReachedDestination(pNPC, TRUE);
 					}
 					else
 					{
 						// turn off cowering
-						if ( pNPC->uiStatusFlags & SOLDIER_COWERING)
+						if (pNPC)
 						{
-							//pNPC->uiStatusFlags &= ~SOLDIER_COWERING;
-							EVENT_InitNewSoldierAnim( pNPC, STANDING, 0 , FALSE );
+							if (pNPC->uiStatusFlags & SOLDIER_COWERING)
+							{
+								//pNPC->uiStatusFlags &= ~SOLDIER_COWERING;
+								EVENT_InitNewSoldierAnim(pNPC, STANDING, 0 , FALSE);
+							}
+
+							pNPC->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
 						}
 
-						pSoldier->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
-
-						if (pQuotePtr->sActionData == NPC_ACTION_TELEPORT_NPC)
+						if (pNPC && pQuotePtr->sActionData == NPC_ACTION_TELEPORT_NPC)
 						{
 							BumpAnyExistingMerc( pQuotePtr->usGoToGridno );
-							TeleportSoldier(*pSoldier, pQuotePtr->usGoToGridno, false);
+							TeleportSoldier(*pNPC, pQuotePtr->usGoToGridno, false);
 							// search for quotes to trigger immediately!
-							NPCReachedDestination( pSoldier, FALSE );
+							NPCReachedDestination(pNPC, FALSE);
 						}
 						else
 						{
