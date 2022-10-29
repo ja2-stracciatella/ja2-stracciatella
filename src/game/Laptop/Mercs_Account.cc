@@ -17,7 +17,7 @@
 #include "LaptopSave.h"
 #include "Text.h"
 #include "Speck_Quotes.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"

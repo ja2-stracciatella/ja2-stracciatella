@@ -20,7 +20,7 @@
 #include "Line.h"
 #include "Text.h"
 #include "Campaign_Types.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "StrategicMap.h"
 #include "Button_System.h"
 #include "Video.h"

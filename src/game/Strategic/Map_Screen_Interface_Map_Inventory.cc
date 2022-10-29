@@ -28,7 +28,7 @@
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "English.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "MapScreen.h"
 #include "Radar_Screen.h"
 #include "Message.h"

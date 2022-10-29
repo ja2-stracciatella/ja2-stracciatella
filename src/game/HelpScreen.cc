@@ -12,7 +12,7 @@
 #include "Render_Dirty.h"
 #include "Text.h"
 #include "WordWrap.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "HelpScreen.h"
 #include "HelpScreenText.h"
 #include "Line.h"

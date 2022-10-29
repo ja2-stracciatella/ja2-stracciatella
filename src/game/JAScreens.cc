@@ -34,7 +34,7 @@
 #include "GameScreen.h"
 #include "English.h"
 #include "Random.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "Text.h"
 #include "Video.h"
 #include "Debug.h"

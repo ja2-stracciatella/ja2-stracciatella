@@ -32,7 +32,7 @@
 #include "Exit_Grids.h"
 #include "Text.h"
 #include "Message.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "Map_Information.h"
 #include "SmokeEffects.h"
 #include "Button_System.h"

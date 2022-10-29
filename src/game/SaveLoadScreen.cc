@@ -32,7 +32,7 @@
 #include "Text.h"
 #include "Message.h"
 #include "Map_Screen_Interface.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "Campaign_Types.h"
 #include "Button_System.h"
 #include "Debug.h"
