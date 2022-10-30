@@ -161,6 +161,7 @@ extern PopUpBox* ghMoveBox;
 extern BOOLEAN fShownContractMenu;
 extern BOOLEAN fShownAssignmentMenu;
 extern BOOLEAN fShowRepairMenu;
+extern SOLDIERTYPE* gAssignmentTargetSoldier;
 
 extern BOOLEAN fFirstClickInAssignmentScreenMask;
 

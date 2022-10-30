@@ -446,9 +446,6 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	// ok to start training, ask player
-
-
 	if( iNumberOfSectors > 1 )
 	{
 		sString = st_format_printf(pMilitiaConfirmStrings[6], iNumberOfSectors, giTotalCostOfTraining, pMilitiaConfirmStrings[1]);
@@ -530,7 +527,6 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	sString = st_format_printf(pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining);
 
 	// ask player whether he'd like to continue training
-	//DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
 	DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
 }
 
@@ -820,7 +816,7 @@ static void BuildListOfUnpaidTrainableSectors()
 	}
 	else
 	{ // Handle for tactical
-		AddIfTrainingUnpaidSector(*gUIFullTarget);
+		AddIfTrainingUnpaidSector(*pMilitiaTrainerSoldier);
 	}
 }
 
