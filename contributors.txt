@@ -27,6 +27,7 @@ Flávio J. Saraiva
 Gennady Trafimenkov
 Greg Kennedy
 Gregor Zorc
+Guilherme Janczak
 Jaka Kranjc
 JAsmine-ja2
 JRF-github
@@ -36,10 +37,12 @@ mgl from The Bear's Pit Forum
 Michał Janiszewski
 Mladen Milinkovic
 Momoko Hanasaki
+MrMaggot
 Nils Reuße
 noword
 oldlaptop
 Oliver Jankowski
+Pavel Timofeev
 Peinthor Rene
 Peter Piwowarski
 Poncho
@@ -56,6 +59,7 @@ stefan
 Stefan Lau
 Stephan Bauroth
 sunshine from The Bear's Pit Forum
+Trenton Schulz
 tron
 vancv
 vxx
