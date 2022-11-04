@@ -118,10 +118,10 @@ class LauncherActivity : AppCompatActivity() {
             val scalingInt = scaling.toInt()
             val width = Resolution.DEFAULT.width + ((screenWidth - Resolution.DEFAULT.width.toInt() * scalingInt) / scalingInt).toUInt()
             val height = Resolution.DEFAULT.height + ((screenHeight - Resolution.DEFAULT.height.toInt() * scalingInt) / scalingInt).toUInt()
-            return Resolution(width, height)
+            return Resolution(width - (width % 2u), height - (height % 2u))
         }
         val width = Resolution.DEFAULT.width + ((screenWidth - Resolution.DEFAULT.width.toInt() * scaling) / scaling).toUInt()
-        return Resolution(width, Resolution.DEFAULT.height)
+        return Resolution(width - (width % 2u), Resolution.DEFAULT.height)
     }
 
     private fun startGame() {
