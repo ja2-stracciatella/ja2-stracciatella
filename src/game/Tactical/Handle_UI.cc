@@ -1459,6 +1459,8 @@ static ScreenID UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 		return( GAME_SCREEN );
 	}
 
+	HideTacticalTouchUI();
+
 	// Get soldier to determine range
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;

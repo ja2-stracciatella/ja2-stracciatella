@@ -26,6 +26,7 @@ void TacticalTouchUIIncreaseAimCallback(GUI_BUTTON*, UINT32);
 void TacticalTouchUIBurstCallback(GUI_BUTTON*, UINT32);
 
 // For modifying move
+void TacticalTouchUIItemCallback(GUI_BUTTON*, UINT32);
 void TacticalTouchUIRunCallback(GUI_BUTTON*, UINT32);
 
 class TacticalTouchUI {
@@ -89,20 +90,28 @@ void TacticalTouchUI::rebuiltButtons() {
 	y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
 	switch (mode) {
 		case TacticalTouchUIMode::ConfirmShoot: {
-			buttons.push_back(CreateTextButton("AIM", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIIncreaseAimCallback));
+			buttons.push_back(CreateTextButton("Aim", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIIncreaseAimCallback));
 			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
-			buttons.push_back(CreateTextButton("Burst", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIBurstCallback));
+			buttons.push_back(CreateTextButton("Mode", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIBurstCallback));
+			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+			break;
+		}
+		case TacticalTouchUIMode::ConfirmAction: {
+			buttons.push_back(CreateTextButton("Run", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIRunCallback));
 			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
 			break;
 		}
 		case TacticalTouchUIMode::ConfirmMove: {
+			buttons.push_back(CreateTextButton("Item", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIItemCallback));
+			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
 			buttons.push_back(CreateTextButton("Run", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIRunCallback));
 			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+			break;
 		}
 		default:
 			break;
 	}
-	buttons.push_back(CreateTextButton("Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUICancelCallback));
+	buttons.push_back(CreateTextButton("X", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUICancelCallback));
 }
 
 std::unique_ptr<TacticalTouchUI> gTacticalTouchUI = nullptr;
@@ -206,6 +215,16 @@ void TacticalTouchUIBurstCallback(GUI_BUTTON*, UINT32 reason) {
 		if (guiCurrentCursorGridNo == NOWHERE || selected == NULL) return;
 
 		ChangeWeaponMode(selected);
+	}
+}
+
+void TacticalTouchUIItemCallback(GUI_BUTTON*, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+		auto const& sel = GetSelectedMan();
+
+		if (sel == NULL || gpItemPointer != NULL) return;
+
+		guiPendingOverrideEvent = A_ON_TERRAIN;
 	}
 }
 
