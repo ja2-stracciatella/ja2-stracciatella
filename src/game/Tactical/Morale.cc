@@ -169,9 +169,9 @@ void DecayTacticalMoraleModifiers(void)
 				if (s->bMorale < 50)
 				{
 					BOOLEAN handle_nervous;
-					if (s->ubGroupID != 0 && PlayerIDGroupInMotion(s->ubGroupID))
+					if (s->ubGroupID != 0 && s->bAssignment <= SQUAD_20 && PlayerIDGroupInMotion(s->ubGroupID))
 					{
-						handle_nervous = NumberOfPeopleInSquad(s->ubGroupID) == 1;
+						handle_nervous = NumberOfPeopleInSquad(s->bAssignment) == 1;
 					}
 					else if (s->bInSector)
 					{
