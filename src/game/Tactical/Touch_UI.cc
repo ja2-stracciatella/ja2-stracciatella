@@ -13,6 +13,10 @@
 #include "RenderWorld.h"
 #include "Weapons.h"
 #include "Items.h"
+#include "Turn_Based_Input.h"
+#include "Interactive_Tiles.h"
+#include "Message.h"
+#include "Text.h"
 
 #include <memory>
 
@@ -167,9 +171,69 @@ void TacticalTouchUIConfirmCallback(GUI_BUTTON*, UINT32 reason) {
 		} else {
 			switch( gCurrentUIMode )
 			{
-				case CONFIRM_MOVE_MODE:
-					guiPendingOverrideEvent = C_MOVE_MERC;
+				case CONFIRM_MOVE_MODE: {
+					auto returnCode = HandleMoveModeInteractiveClick(guiCurrentCursorGridNo);
+					if (gTacticalStatus.uiFlags & INCOMBAT) {
+						if ( returnCode == -2 )
+						{
+							if ( SelectedMercCanAffordMove(  )  )
+							{
+								guiPendingOverrideEvent = C_MOVE_MERC;
+							}
+						}
+						else if ( returnCode == 0 )
+						{
+							if ( gsCurrentActionPoints == 0 )
+							{
+								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+							}
+							else if ( SelectedMercCanAffordMove(  )  )
+							{
+								const BOOLEAN fResult = UIOKMoveDestination(selected, guiCurrentCursorGridNo);
+								if (fResult == 1)
+								{
+									// ATE: CHECK IF WE CAN GET TO POSITION
+									// Check if we are not in combat
+									if ( gsCurrentActionPoints == 0 )
+									{
+										ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
+									}
+									else
+									{
+										guiPendingOverrideEvent = C_MOVE_MERC;
+									}
+								}
+								else if (fResult == 2)
+								{
+									ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NOBODY_USING_REMOTE_STR]);
+								}
+							}
+						}
+					} else {
+						if (returnCode == -2) {
+							BeginDisplayTimedCursor(GetInteractiveTileCursor( guiCurrentUICursor, TRUE ), 300);
+
+							if (selected->usAnimState != RUNNING)
+							{
+								guiPendingOverrideEvent = C_MOVE_MERC;
+							}
+							else if (GetCurInteractiveTile() != NULL)
+							{
+								selected->fUIMovementFast = TRUE;
+								guiPendingOverrideEvent = C_MOVE_MERC;
+							}
+						} else if (returnCode == 0) {
+							if (UIOKMoveDestination(selected, guiCurrentCursorGridNo) == 1)
+							{
+								if ( gsCurrentActionPoints != 0 )
+								{
+									guiPendingOverrideEvent = C_MOVE_MERC;
+								}
+							}
+						}
+					}
 					break;
+				}
 				case CONFIRM_ACTION_MODE:
 					guiPendingOverrideEvent = CA_MERC_SHOOT;
 					break;
