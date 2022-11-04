@@ -5,7 +5,7 @@
 #include "JsonObject.h"
 #include <utility>
 
-MagazineModel::MagazineModel(uint16_t itemIndex_,
+MagazineModel::MagazineModel(ItemId itemIndex_,
 				ST::string internalName_,
 				ST::string shortName_,
 				ST::string name_,
@@ -31,7 +31,7 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 
 void MagazineModel::serializeTo(JsonObject &obj) const
 {
-	obj.AddMember("itemIndex",            itemIndex);
+	obj.AddMember("itemIndex",            itemIndex.inner());
 	obj.AddMember("internalName",         internalName.c_str());
 	obj.AddMember("calibre",              calibre->internalName);
 	obj.AddMember("capacity",             capacity);
@@ -63,7 +63,7 @@ MagazineModel* MagazineModel::deserialize(
 	const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
 	const VanillaItemStrings& vanillaItemStrings)
 {
-	int itemIndex                 = obj.GetInt("itemIndex");
+	auto itemIndex                 = ItemId(obj.GetInt("itemIndex"));
 	ST::string internalName       = obj.GetString("internalName");
 	const CalibreModel *calibre   = getCalibre(obj.GetString("calibre"), calibreMap);
 	uint32_t itemClass            = (calibre->index != NOAMMO) ? IC_AMMO : IC_NONE;

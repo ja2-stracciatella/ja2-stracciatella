@@ -3693,7 +3693,7 @@ static void MAPBeginItemPointer(SOLDIERTYPE* pSoldier, UINT8 ubHandPos);
 static void MAPInvClickCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	UINT32 uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
-	UINT16	usOldItemIndex, usNewItemIndex;
+	ItemId usOldItemIndex, usNewItemIndex;
 
 	SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 	Assert(MapCharacterHasAccessibleInventory(*pSoldier));

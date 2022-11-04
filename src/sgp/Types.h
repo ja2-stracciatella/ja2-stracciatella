@@ -1,5 +1,4 @@
-#ifndef __TYPES_
-#define __TYPES_
+#pragma once
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -209,4 +208,45 @@ typedef _Types::BoxedValue<BOOLEAN> BOOLEAN_S;
 typedef _Types::BoxedValue<UINT8>   UINT8_S;
 typedef _Types::BoxedValue<UINT32>  UINT32_S;
 
-#endif
+// Template for a typed id for specific type "For" that has the same size
+// as the type Inner an can be explicitly converted from / to it.
+template <typename For, typename Inner> struct TypedId {
+public:
+  constexpr TypedId() : m_id(0) {}
+  explicit constexpr TypedId(Inner id) : m_id(id) {}
+
+  constexpr Inner inner() const noexcept { return m_id; }
+
+  bool operator<(const TypedId<For, Inner> rhs) const noexcept {
+	return m_id < rhs.m_id;
+  }
+
+  bool operator<=(const TypedId<For, Inner> rhs) const noexcept {
+	return m_id <= rhs.m_id;
+  }
+
+  bool operator>(const TypedId<For, Inner> rhs) const noexcept {
+	return m_id > rhs.m_id;
+  }
+
+  bool operator>=(const TypedId<For, Inner> rhs) const noexcept {
+	return m_id >= rhs.m_id;
+  }
+
+  bool operator==(const TypedId<For, Inner> rhs) const noexcept {
+	return m_id == rhs.m_id;
+  }
+
+  bool operator!=(const TypedId<For, Inner> rhs) const noexcept {
+	return m_id != rhs.m_id;
+  }
+
+  TypedId<For, Inner> operator++(int i) {
+	auto copy = TypedId<For, Inner>(this->m_id);
+	this->m_id++;
+	return copy;
+  }
+
+private:
+  Inner m_id;
+};

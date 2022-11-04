@@ -4,6 +4,7 @@
 #include "Button_System.h"
 #include "Local.h"
 #include "Types.h"
+#include "Item_Types.h"
 #include "Button_Defines.h"
 
 enum ToolbarMode

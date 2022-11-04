@@ -441,13 +441,13 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
 static UINT32 CalculateTotalPurchasePrice();
 static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const ItemModel* const items[]);
 static void DisableBobbyRButtons(void);
-static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayAmmoInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayArmourInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayBigItemImage(const ItemModel* item, UINT16 PosY);
-static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
-static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static void DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayGunInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayItemNameAndInfo(UINT16 usPosY, ItemId usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
+static void DisplayMiscInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayNonGunWeaponInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 
 
 void DisplayItemInfo(UINT32 uiItemClass)
@@ -455,7 +455,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 	UINT16  i;
 	UINT8   ubCount=0;
 	UINT16  PosY, usTextPosY;
-	UINT16  usItemIndex;
+	ItemId  usItemIndex;
 	ST::string sDollarTemp;
 	ST::string sTemp;
 
@@ -625,15 +625,15 @@ void DisplayItemInfo(UINT32 uiItemClass)
 }
 
 
-static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
-static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight, UINT16 usBobbyIndex, BOOLEAN fUsed);
-static UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
-static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
-static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
-static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
+static UINT16 DisplayCaliber(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight);
+static UINT16 DisplayCostAndQty(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight, UINT16 usBobbyIndex, BOOLEAN fUsed);
+static UINT16 DisplayDamage(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight);
+static UINT16 DisplayMagazine(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight);
+static UINT16 DisplayRange(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight);
+static UINT16 DisplayRof(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight);
 
 
-static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayGunInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
 	UINT16 usFontHeight;
@@ -665,7 +665,7 @@ static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UIN
 }
 
 
-static void DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayNonGunWeaponInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
 	UINT16 usFontHeight;
@@ -685,7 +685,7 @@ static void DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN f
 }
 
 
-static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayAmmoInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
 	UINT16 usFontHeight;
@@ -732,7 +732,7 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 }
 
 
-static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayArmourInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16 usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -741,7 +741,7 @@ static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, 
 }
 
 
-static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayMiscInfo(ItemId usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
@@ -757,7 +757,7 @@ static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UI
 static UINT8 CheckIfItemIsPurchased(UINT16 usItemNumber);
 
 
-static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight, UINT16 usBobbyIndex, BOOLEAN fUsed)
+static UINT16 DisplayCostAndQty(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
 	ST::string sTemp;
 	//UINT8	ubPurchaseNumber;
@@ -801,7 +801,7 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 }
 
 
-static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
+static UINT16 DisplayRof(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight)
 {
 	ST::string sTemp;
 
@@ -816,7 +816,7 @@ static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 }
 
 
-static UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
+static UINT16 DisplayDamage(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight)
 {
 	ST::string sTemp;
 
@@ -828,7 +828,7 @@ static UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 }
 
 
-static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
+static UINT16 DisplayRange(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight)
 {
 	ST::string sTemp;
 
@@ -840,7 +840,7 @@ static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 }
 
 
-static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
+static UINT16 DisplayMagazine(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight)
 {
 	ST::string sTemp;
 
@@ -852,7 +852,7 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 }
 
 
-static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
+static UINT16 DisplayCaliber(UINT16 usPosY, ItemId usIndex, UINT16 usFontHeight)
 {
 	const ItemModel * item = GCM->getItem(usIndex);
 	ST::string zTemp;
@@ -870,7 +870,7 @@ static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 }
 
 
-static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
+static void DisplayItemNameAndInfo(UINT16 usPosY, ItemId usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
 	ST::string sTemp;
 	UINT32 uiStartLoc;
@@ -878,7 +878,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 
 	{
 		//Display Items Name
-		uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;
+		uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex.inner();
 		ST::string sText = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 		sText = ReduceStringLength(sText, BOBBYR_GRID_PIC_WIDTH - 6, BOBBYR_ITEM_NAME_TEXT_FONT);
 		DrawTextToScreen(sText, BOBBYR_ITEM_NAME_X, usPosY + BOBBYR_ITEM_NAME_Y_OFFSET, 0, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -920,26 +920,26 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 //Loops through Bobby Rays Inventory to find the first and last index
 void SetFirstLastPagesForNew( UINT32 uiClassMask )
 {
-	UINT16 i;
-	INT16	sFirst = -1;
-	INT16	sLast = -1;
+	ItemId i;
+	INT32	sFirst = -1;
+	INT32	sLast = -1;
 	UINT8	ubNumItems=0;
 
 	gubCurPage = 0;
 
 	//First loop through to get the first and last index indexs
-	for(i=0; i<MAXITEMS; i++)
+	for(i=ItemId(0); i<MAXITEMS; i++)
 	{
 		//If we have some of the inventory on hand
-		if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand != 0 )
+		if( LaptopSaveInfo.BobbyRayInventory[ i.inner() ].ubQtyOnHand != 0 )
 		{
-			if( GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex)->getItemClass() & uiClassMask )
+			if( GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ i.inner() ].usItemIndex)->getItemClass() & uiClassMask )
 			{
 				ubNumItems++;
 
 				if( sFirst == -1 )
-					sFirst = i;
-				sLast = i;
+					sFirst = i.inner();
+				sLast = i.inner();
 			}
 		}
 	}
@@ -962,24 +962,24 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 //Loops through Bobby Rays Used Inventory to find the first and last index
 void SetFirstLastPagesForUsed()
 {
-	UINT16 i;
-	INT16	sFirst = -1;
-	INT16	sLast = -1;
+	ItemId i;
+	INT32	sFirst = -1;
+	INT32	sLast = -1;
 	UINT8	ubNumItems=0;
 
 	gubCurPage = 0;
 
 	//First loop through to get the first and last index indexs
-	for(i=0; i<MAXITEMS; i++)
+	for(i=ItemId(0); i<MAXITEMS; i++)
 	{
 		//If we have some of the inventory on hand
-		if( LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnHand != 0 )
+		if( LaptopSaveInfo.BobbyRayUsedInventory[ i.inner() ].ubQtyOnHand != 0 )
 		{
 			ubNumItems++;
 
 			if( sFirst == -1 )
-				sFirst = i;
-			sLast = i;
+				sFirst = i.inner();
+			sLast = i.inner();
 		}
 	}
 	if( sFirst == -1 )
@@ -1313,7 +1313,7 @@ void UpdateButtonText(UINT32	uiCurPage)
 }
 
 
-UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
+UINT16 CalcBobbyRayCost( ItemId usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
 	DOUBLE value;
 	if( fUsed )

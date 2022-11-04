@@ -612,7 +612,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	UINT16 usItemFlags = 0; //WORLD_ITEM_DONTRENDER;
 	UINT8  ubNumGoo;
 	INT16  sNewGridNo;
-	OBJECTTYPE ItemObject;
+	OBJECTTYPE ItemObject = {};
 
 
 	if (s.sGridNo == NOWHERE)
@@ -803,7 +803,7 @@ INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier )
 
 static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 {
-	SOLDIERCREATE_STRUCT MercCreateStruct;
+	SOLDIERCREATE_STRUCT MercCreateStruct = {};
 	INT8 bBodyType = CROW;
 
 	// No crows inside :(
@@ -1069,7 +1069,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 		if ( pCorpse->def.bLevel == 0 )
 		{
 			// Set some blood......
-			SpreadEffect(sBaseGridNo, 2, 0, NULL, BLOOD_SPREAD_EFFECT, 0, NULL);
+			SpreadEffect(sBaseGridNo, 2, NOTHING, NULL, BLOOD_SPREAD_EFFECT, 0, NULL);
 		}
 	}
 
@@ -1089,7 +1089,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	INT16 sLowestGridNo=0;
 	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 	STRUCTURE_FILE_REF *pStructureFileRef = NULL;
@@ -1246,7 +1246,7 @@ ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 
 void DecapitateCorpse(const INT16 sGridNo, const INT8 bLevel)
 {
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 	ROTTING_CORPSE *pCorpse;
 	ROTTING_CORPSE_DEFINITION CorpseDef;
 
@@ -1277,7 +1277,7 @@ void DecapitateCorpse(const INT16 sGridNo, const INT8 bLevel)
 		// Add head item.....
 
 		// Pick the head based on profile type...
-		UINT16 head_index;
+		ItemId head_index;
 		switch (pCorpse->def.ubProfile)
 		{
 			case CHRIS:    head_index = HEAD_2; break;
@@ -1303,7 +1303,7 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 {
 	const ROTTING_CORPSE* const pCorpse = ID2CORPSE(pSoldier->uiPendingActionData4);
 	INT8 bObjSlot;
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 
 	bObjSlot = FindObj( pSoldier, JAR );
 

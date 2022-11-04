@@ -112,7 +112,7 @@ static void ValidateMapEdge(SOLDIERTYPE& s, UINT16& middle_idx, std::vector<INT1
 	* edge, but a fence blocks it from direct access to the edge of the map. */
 static void ValidateEdgepoints()
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s = {};
 	s = SOLDIERTYPE{};
 	s.bTeam = ENEMY_TEAM;
 
@@ -264,7 +264,7 @@ static void InternallyClassifyEdgepoints(SOLDIERTYPE* pSoldier, INT16 sGridNo, s
 
 static void ClassifyEdgepoints(void)
 {
-	SOLDIERTYPE Soldier;
+	SOLDIERTYPE Soldier = {};
 	INT16 sGridNo = -1;
 
 	Soldier = SOLDIERTYPE{};
@@ -1331,7 +1331,7 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 
 UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 {
-	SOLDIERTYPE Soldier;
+	SOLDIERTYPE Soldier = {};
 	std::vector<INT16>* pEdgepoints1 = nullptr;
 	std::vector<INT16>* pEdgepoints2 = nullptr;
 	INT16			sClosestSpot1 = NOWHERE, sClosestDist1 = 0x7FFF, sTempDist;

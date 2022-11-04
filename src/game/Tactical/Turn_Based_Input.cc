@@ -2060,7 +2060,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 
 			if (SOLDIERTYPE* const robot = FindSoldierByProfileID(ROBOT))
 			{
-				OBJECTTYPE o;
+				OBJECTTYPE o = {};
 				CreateItem(G41, 100, &o);
 				AutoPlaceObject(robot, &o, FALSE);
 			}
@@ -2681,11 +2681,11 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 
 static void CreateRandomItem(void)
 {
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos != NOWHERE)
 	{
-		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &Object );
+		CreateItem( ItemId(Random( 35 ) + 1), 100, &Object );
 		AddItemToPool(usMapPos, &Object, INVISIBLE, 0, 0, 0);
 	}
 }
@@ -2713,13 +2713,13 @@ static void CycleSelectedMercsItem(void)
 	SOLDIERTYPE* const tgt = gUIFullTarget;
 	if (tgt != NULL)
 	{
-		UINT16 usOldItem = tgt->inv[HANDPOS].usItem;
+		ItemId usOldItem = tgt->inv[HANDPOS].usItem;
 
 		usOldItem++;
 
-		if ( usOldItem > MAX_WEAPONS )
+		if ( usOldItem > ItemId(MAX_WEAPONS) )
 		{
-			usOldItem = 0;
+			usOldItem = NOTHING;
 		}
 
 		CreateItem(usOldItem, 100, &tgt->inv[HANDPOS]);
@@ -2903,7 +2903,7 @@ static void CreateNextCivType(void)
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return;
 
-	SOLDIERCREATE_STRUCT MercCreateStruct;
+	SOLDIERCREATE_STRUCT MercCreateStruct = {};
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile  = NO_PROFILE;
 	MercCreateStruct.sSector    = gWorldSector;
@@ -2948,7 +2948,7 @@ static void GrenadeTest1(void)
 	INT16 sX, sY;
 	if ( GetMouseXY( &sX, &sY ) )
 	{
-		OBJECTTYPE Object;
+		OBJECTTYPE Object = {};
 		DeleteObj(&Object);
 		Object.usItem = MUSTARD_GRENADE;
 		Object.bStatus[ 0 ] = 100;
@@ -2964,7 +2964,7 @@ static void GrenadeTest2(void)
 	INT16 sX, sY;
 	if ( GetMouseXY( &sX, &sY ) )
 	{
-		OBJECTTYPE Object;
+		OBJECTTYPE Object = {};
 		DeleteObj(&Object);
 		Object.usItem = HAND_GRENADE;
 		Object.bStatus[ 0 ] = 100;
@@ -2979,7 +2979,7 @@ static void CreatePlayerControlledMonster(void)
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return;
 
-	SOLDIERCREATE_STRUCT MercCreateStruct;
+	SOLDIERCREATE_STRUCT MercCreateStruct = {};
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile        = NO_PROFILE;
 	MercCreateStruct.sSector          = gWorldSector;
@@ -3418,7 +3418,7 @@ void HandleTBSwapHands()
 	SOLDIERTYPE* const pSoldier = GetSelectedMan();
 	if (pSoldier && !AM_A_ROBOT(pSoldier))
 	{
-		UINT16 usOldItem = pSoldier->inv[HANDPOS].usItem;
+		ItemId usOldItem = pSoldier->inv[HANDPOS].usItem;
 		if(pSoldier->inv[SECONDHANDPOS].usItem==NOTHING)
 		{
 			pSoldier->inv[SECONDHANDPOS]=pSoldier->inv[HANDPOS];

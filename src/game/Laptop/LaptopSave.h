@@ -38,7 +38,7 @@ struct LAST_HIRED_MERC_STRUCT
 
 struct BobbyRayPurchaseStruct
 {
-	UINT16  usItemIndex;
+	ItemId  usItemIndex;
 	UINT8   ubNumberPurchased;
 	INT8    bItemQuality;
 	UINT16  usBobbyItemIndex; //Item number in the BobbyRayInventory structure
@@ -95,8 +95,8 @@ struct LaptopSaveInfoStruct
 
 
 	// BobbyRay Site
-	STORE_INVENTORY BobbyRayInventory[ MAXITEMS ];
-	STORE_INVENTORY BobbyRayUsedInventory[ MAXITEMS ];
+	STORE_INVENTORY BobbyRayInventory[ MAXITEMS.inner() ];
+	STORE_INVENTORY BobbyRayUsedInventory[ MAXITEMS.inner() ];
 
 	std::vector<BobbyRayOrderStruct> BobbyRayOrdersOnDeliveryArray;
 	UINT8 usNumberOfBobbyRayOrderUsed; // The number of items in the array that are used

@@ -172,7 +172,7 @@ INT32 RangeChangeDesire( const SOLDIERTYPE * pSoldier );
 UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier );
 void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 bPermanent);
 void RTHandleAI( SOLDIERTYPE * pSoldier );
-INT8  SearchForItems(SOLDIERTYPE&, ItemSearchReason, UINT16 usItem);
+INT8  SearchForItems(SOLDIERTYPE&, ItemSearchReason, ItemId usItem);
 UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 bDesiredDirection );
 UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost );
 INT16 TrackScent( SOLDIERTYPE * pSoldier );

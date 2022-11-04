@@ -1682,7 +1682,7 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 
 void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 {
-	SOLDIERCREATE_STRUCT CreateStruct;
+	SOLDIERCREATE_STRUCT CreateStruct = {};
 
 	CreateStruct = SOLDIERCREATE_STRUCT{};
 	CreateStruct.ubProfile = ubProfileID;
@@ -1755,7 +1755,7 @@ SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const sc)
 	bp.bBodyType      = BODY_RANDOM;
 	bp.ubSoldierClass = sc;
 
-	SOLDIERCREATE_STRUCT pp;
+	SOLDIERCREATE_STRUCT pp = {};
 	pp = SOLDIERCREATE_STRUCT{};
 	CreateDetailedPlacementGivenBasicPlacementInfo(&pp, &bp);
 
@@ -1786,7 +1786,7 @@ SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const sc)
 SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
-	SOLDIERCREATE_STRUCT pp;
+	SOLDIERCREATE_STRUCT pp = {};
 
 	bp = BASIC_SOLDIERCREATE_STRUCT{};
 	pp = SOLDIERCREATE_STRUCT{};
@@ -1805,7 +1805,7 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
-	SOLDIERCREATE_STRUCT pp;
+	SOLDIERCREATE_STRUCT pp = {};
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
@@ -1927,7 +1927,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	const GridNo pos = guiCurrentCursorGridNo;
 	if (pos == NOWHERE) return;
 
-	SOLDIERCREATE_STRUCT MercCreateStruct;
+	SOLDIERCREATE_STRUCT MercCreateStruct = {};
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam            = bTeam;
 	MercCreateStruct.ubProfile        = ubProfileID;
@@ -1972,7 +1972,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 	{
 		for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
 		{
-			UINT16      const item = p.inv[i];
+			ItemId      const item = p.inv[i];
 			OBJECTTYPE* const slot = &s.inv[i];
 			if (item != NOTHING)
 			{
@@ -2038,7 +2038,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 		{
 			if (p.inv[i] == NOTHING) continue;
 
-			OBJECTTYPE o;
+			OBJECTTYPE o = {};
 			CreateItems(p.inv[i], p.bInvStatus[i], p.bInvNumber[i], &o);
 			if (!TryToAttach(&s, &o)) AutoPlaceObject(&s, &o, FALSE);
 		}

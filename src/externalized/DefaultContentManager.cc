@@ -457,7 +457,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const S
 }
 
 /** Get weapons with the give index. */
-const WeaponModel* DefaultContentManager::getWeapon(uint16_t itemIndex)
+const WeaponModel* DefaultContentManager::getWeapon(ItemId itemIndex)
 {
 	return getItem(itemIndex)->asWeapon();
 }
@@ -483,7 +483,7 @@ const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &
 	return m_magazineMap[internalName];
 }
 
-const MagazineModel* DefaultContentManager::getMagazineByItemIndex(uint16_t itemIndex)
+const MagazineModel* DefaultContentManager::getMagazineByItemIndex(ItemId itemIndex)
 {
 	return getItem(itemIndex)->asAmmo();
 }
@@ -525,13 +525,13 @@ bool DefaultContentManager::loadWeapons(const VanillaItemStrings& vanillaItemStr
 			WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap, vanillaItemStrings);
 			SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
-			if (w->getItemIndex() > MAX_WEAPONS)
+			if (w->getItemIndex().inner() > MAX_WEAPONS)
 			{
 				SLOGE("Weapon index must be in the interval 0 - {}", MAX_WEAPONS);
 				return false;
 			}
 
-			m_items[w->getItemIndex()] = w;
+			m_items[w->getItemIndex().inner()] = w;
 			m_weaponMap.insert(std::make_pair(w->getInternalName(), w));
 		}
 	}
@@ -546,13 +546,13 @@ bool DefaultContentManager::loadItems(const VanillaItemStrings& vanillaItemStrin
 	{
 		JsonObjectReader obj(el);
 		auto* item = ItemModel::deserialize(obj, vanillaItemStrings);
-		if (item->getItemIndex() <= MAX_WEAPONS || item->getItemIndex() > MAXITEMS)
+		if (item->getItemIndex().inner() <= MAX_WEAPONS || item->getItemIndex().inner() > MAXITEMS.inner())
 		{
 			ST::string err = ST::format("Item index must be in the interval {} - {}", MAX_WEAPONS+1, MAXITEMS);
 			throw DataError(err);
 		}
 
-		m_items[item->getItemIndex()] = item;
+		m_items[item->getItemIndex().inner()] = item;
 	}
 
 	return true;
@@ -571,7 +571,7 @@ bool DefaultContentManager::loadMagazines(const VanillaItemStrings& vanillaItemS
 			SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
 
 			m_magazines.push_back(mag);
-			m_items[mag->getItemIndex()] = mag;
+			m_items[mag->getItemIndex().inner()] = mag;
 			m_magazineMap.insert(std::make_pair(mag->getInternalName(), mag));
 		}
 	}
@@ -813,7 +813,7 @@ bool DefaultContentManager::loadGameData()
 		SLOGE("Could not read vanilla item strings from {}: {}", VanillaItemStrings::filename(), err.what());
 	}
 
-	m_items.resize(MAXITEMS);
+	m_items.resize(MAXITEMS.inner());
 	bool result = loadItems(vanillaItemStrings)
 		&& loadCalibres()
 		&& loadAmmoTypes()
@@ -1059,13 +1059,13 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 	return true;
 }
 
-const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
+const ItemModel* DefaultContentManager::getItem(ItemId itemIndex) const
 {
-	if(itemIndex >= m_items.size())
+	if(itemIndex.inner() >= m_items.size())
 	{
 		return nullptr;
 	}
-	return m_items[itemIndex];
+	return m_items[itemIndex.inner()];
 }
 
 const ItemModel* DefaultContentManager::getItemByName(const ST::string &internalName) const
@@ -1104,7 +1104,7 @@ std::vector<ST::string> DefaultContentManager::getAllSmallInventoryGraphicPaths(
 	return v;
 }
 
-const std::map<uint16_t, uint16_t> DefaultContentManager::getMapItemReplacements() const
+const std::map<ItemId, ItemId> DefaultContentManager::getMapItemReplacements() const
 {
 	return m_mapItemReplacements;
 }

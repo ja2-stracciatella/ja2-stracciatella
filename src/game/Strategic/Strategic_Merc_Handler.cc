@@ -432,7 +432,7 @@ void RPCWhineAboutNoPay(SOLDIERTYPE& s)
 // OK loop through and check!
 BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 {
-	UINT16 usItem;
+	ItemId usItem;
 	INT8   bBestArmour = -1;
 	INT8   bBestGun = -1;
 

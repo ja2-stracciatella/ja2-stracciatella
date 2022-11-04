@@ -157,12 +157,12 @@ static void HourlyQuestUpdate(void)
 UINT16	LarryItems[ NUM_LARRY_ITEMS ][ 3 ] =
 {
 	// item, temptation, points to use
-	{ ADRENALINE_BOOSTER,		5, 100 },
-	{	ALCOHOL,							BAR_TEMPTATION, 25  },
-	{ MEDICKIT,							4, 10  },
-	{	WINE,									3, 50  },
-	{ REGEN_BOOSTER,				3, 100 },
-	{	BEER,									2, 100 },
+	{ ADRENALINE_BOOSTER.inner(),		5, 100 },
+	{	ALCOHOL.inner(),							BAR_TEMPTATION, 25  },
+	{ MEDICKIT.inner(),							4, 10  },
+	{	WINE.inner(),									3, 50  },
+	{ REGEN_BOOSTER.inner(),				3, 100 },
+	{	BEER.inner(),									2, 100 },
 };
 
 #define LARRY_FALLS_OFF_WAGON 8
@@ -199,7 +199,7 @@ static void HourlyLarryUpdate(void)
 		// look for items in Larry's inventory to maybe use
 		for ( bLarryItemLoop = 0; bLarryItemLoop < NUM_LARRY_ITEMS; bLarryItemLoop++ )
 		{
-			bSlot = FindObj( pSoldier, LarryItems[ bLarryItemLoop ][ 0 ] );
+			bSlot = FindObj( pSoldier, ItemId(LarryItems[ bLarryItemLoop ][ 0 ]) );
 			if ( bSlot != NO_SLOT )
 			{
 				usTemptation = LarryItems[ bLarryItemLoop ][ 1 ];

@@ -2011,7 +2011,7 @@ bool FindBetterSpotForItem(SOLDIERTYPE& s, INT8 const slot)
 	 * and move it there. */
 	if (slot >= BIGPOCK1POS) return false;
 
-	UINT16 const item = s.inv[slot].usItem;
+	ItemId const item = s.inv[slot].usItem;
 	if (item == NOTHING) return true; // That's just fine
 
 	INT8 new_slot;

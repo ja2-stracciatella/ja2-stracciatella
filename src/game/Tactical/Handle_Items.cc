@@ -190,7 +190,7 @@ static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot);
 static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
 
-ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const UINT16 usHandItem, const BOOLEAN fFromUI)
+ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const ItemId usHandItem, const BOOLEAN fFromUI)
 {
 	SoldierSP soldier = GetSoldier(s);
 
@@ -1677,7 +1677,7 @@ static BOOLEAN ItemExistsAtLocation(INT16 const sGridNo, INT32 const iItemIndex,
 }
 
 
-BOOLEAN ItemTypeExistsAtLocation(INT16 const sGridNo, UINT16 const usItem, UINT8 const ubLevel, INT32* const piItemIndex)
+BOOLEAN ItemTypeExistsAtLocation(INT16 const sGridNo, ItemId const usItem, UINT8 const ubLevel, INT32* const piItemIndex)
 {
 	for (ITEM_POOL const* i = GetItemPool(sGridNo, ubLevel); i; i = i->pNext)
 	{
@@ -2334,9 +2334,9 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 {
 	INT8 bInvPos;
-	OBJECTTYPE TempObject;
+	OBJECTTYPE TempObject = {};
 
-	UINT16 usItemNum;
+	ItemId usItemNum;
 	BOOLEAN fToTargetPlayer = FALSE;
 
 	// Get items from pending data
@@ -2986,7 +2986,7 @@ static void BoobyTrapInMapScreenMessageBoxCallBack(MessageBoxReturnValue const u
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		INT32 iCheckResult;
-		OBJECTTYPE Object;
+		OBJECTTYPE Object = {};
 
 		iCheckResult = SkillCheck( gpBoobyTrapSoldier, DISARM_TRAP_CHECK, 0 );
 
@@ -3446,7 +3446,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 	INT16   sLowestGridNo=0;
 	INT32   leftmost;
 	BOOLEAN fFound = FALSE;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 	UINT8   ubSaveNPCAPBudget;
 	UINT8   ubSaveNPCDistLimit;
 

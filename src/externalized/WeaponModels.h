@@ -29,7 +29,7 @@ struct WeaponModel : ItemModel
 	WeaponModel(uint32_t itemClass,
 			uint8_t weaponType,
 			uint8_t cursor,
-			uint16_t itemIndex,
+			ItemId itemIndex,
 			ST::string internalName,
 			ST::string shortName,
 			ST::string name,
@@ -49,7 +49,7 @@ struct WeaponModel : ItemModel
 	bool isSameMagCapacity(const MagazineModel *mag) const;
 
 	/** Check if the given attachment can be attached to the item. */
-	virtual bool canBeAttached(uint16_t attachment) const;
+	virtual bool canBeAttached(ItemId attachment) const;
 
 	/** Get standard replacement gun name. */
 	virtual const ST::string & getStandardReplacement() const;
@@ -89,7 +89,7 @@ struct WeaponModel : ItemModel
 	UINT8    ubHitVolume;
 	SoundID  sReloadSound;
 	SoundID  sLocknLoadSound;
-	UINT16   usSmokeEffect;    // item index of the smoke effect on ammo miss
+	ItemId   usSmokeEffect;    // item index of the smoke effect on ammo miss
 
 protected:
 	void serializeAttachments(JsonObject &obj) const;
@@ -97,16 +97,16 @@ protected:
 
 struct NoWeapon : WeaponModel
 {
-	NoWeapon(uint16_t indexIndex, const ST::string& internalName);
+	NoWeapon(ItemId indexIndex, const ST::string& internalName);
 
-	NoWeapon(uint16_t itemIndex, const ST::string& internalName, uint32_t itemClass, uint8_t cursor);
+	NoWeapon(ItemId itemIndex, const ST::string& internalName, uint32_t itemClass, uint8_t cursor);
 
 	virtual void serializeTo(JsonObject &obj) const;
 };
 
 struct Pistol : WeaponModel
 {
-	Pistol(uint16_t indexIndex,
+	Pistol(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -131,7 +131,7 @@ struct Pistol : WeaponModel
 
 struct MPistol : WeaponModel
 {
-	MPistol(uint16_t indexIndex,
+	MPistol(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -160,7 +160,7 @@ struct MPistol : WeaponModel
 
 struct SMG : WeaponModel
 {
-	SMG(uint16_t indexIndex,
+	SMG(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -188,7 +188,7 @@ struct SMG : WeaponModel
 
 struct SniperRifle : WeaponModel
 {
-	SniperRifle(uint16_t indexIndex,
+	SniperRifle(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -212,7 +212,7 @@ struct SniperRifle : WeaponModel
 
 struct Rifle : WeaponModel
 {
-	Rifle(uint16_t indexIndex,
+	Rifle(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -236,7 +236,7 @@ struct Rifle : WeaponModel
 
 struct AssaultRifle : WeaponModel
 {
-	AssaultRifle(uint16_t indexIndex,
+	AssaultRifle(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -264,7 +264,7 @@ struct AssaultRifle : WeaponModel
 
 struct Shotgun : WeaponModel
 {
-	Shotgun(uint16_t indexIndex,
+	Shotgun(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -292,7 +292,7 @@ struct Shotgun : WeaponModel
 
 struct LMG : WeaponModel
 {
-	LMG(uint16_t indexIndex,
+	LMG(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -320,7 +320,7 @@ struct LMG : WeaponModel
 
 struct Blade : WeaponModel
 {
-	Blade(uint16_t indexIndex,
+	Blade(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -338,7 +338,7 @@ struct Blade : WeaponModel
 
 struct ThrowingBlade : WeaponModel
 {
-	ThrowingBlade(uint16_t indexIndex,
+	ThrowingBlade(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -356,7 +356,7 @@ struct ThrowingBlade : WeaponModel
 
 struct PunchWeapon : WeaponModel
 {
-	PunchWeapon(uint16_t indexIndex,
+	PunchWeapon(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -373,7 +373,7 @@ struct PunchWeapon : WeaponModel
 
 struct Launcher : WeaponModel
 {
-	Launcher(uint16_t indexIndex,
+	Launcher(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -393,7 +393,7 @@ struct Launcher : WeaponModel
 
 struct LAW : WeaponModel
 {
-	LAW(uint16_t indexIndex,
+	LAW(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -413,7 +413,7 @@ struct LAW : WeaponModel
 
 struct Cannon : WeaponModel
 {
-	Cannon(uint16_t indexIndex,
+	Cannon(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -433,7 +433,7 @@ struct Cannon : WeaponModel
 
 struct MonsterSpit : WeaponModel
 {
-	MonsterSpit(uint16_t indexIndex,
+	MonsterSpit(ItemId indexIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -447,7 +447,7 @@ struct MonsterSpit : WeaponModel
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
 		ST::string Sound,
-		uint16_t smokeEffect);
+		ItemId smokeEffect);
 
 	void serializeTo(JsonObject &obj) const override;
 };

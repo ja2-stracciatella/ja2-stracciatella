@@ -1794,7 +1794,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	BOOLEAN fStopped = TRUE;
 	INT8 bSlot;
 	INT8 bHeadSlot = NO_SLOT;
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 	INT16 sNewGridNo;
 	BOOLEAN fCanSpewBlood = FALSE;
 	INT8 bSpewBloodLevel;
@@ -3221,7 +3221,7 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 }
 
 
-INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const FLOAT dEndY, const FLOAT dEndZ, const UINT16 usHandItem, INT16 sHitBy, const BOOLEAN fBuckshot, const BOOLEAN fFake)
+INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const FLOAT dEndY, const FLOAT dEndZ, const ItemId usHandItem, INT16 sHitBy, const BOOLEAN fBuckshot, const BOOLEAN fFake)
 {
 	// fFake indicates that we should set things up for a call to ChanceToGetThrough
 	FLOAT dStartZ;
@@ -3457,7 +3457,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 
 static INT8 ChanceToGetThrough(SOLDIERTYPE* const pFirer, const GridNo end_pos, const FLOAT dEndZ)
 {
-	UINT16  weapon = pFirer->usAttackingWeapon;
+	ItemId  weapon = pFirer->usAttackingWeapon;
 	BOOLEAN buck_shot;
 	if (GCM->getItem(weapon)->getItemClass() == IC_GUN ||
 		GCM->getItem(weapon)->getItemClass() == IC_THROWING_KNIFE)
@@ -4050,7 +4050,7 @@ void MoveBullet(BULLET* const pBullet)
 											if ( iRemainingImpact <= 0 )
 											{
 												// check angle of knife and place on ground appropriately
-												OBJECTTYPE Object;
+												OBJECTTYPE Object = {};
 												INT32 iKnifeGridNo;
 
 												// Add item

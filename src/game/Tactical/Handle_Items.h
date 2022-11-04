@@ -52,7 +52,7 @@ struct ITEM_POOL
 };
 
 
-ItemHandleResult HandleItem(SOLDIERTYPE* pSoldier, INT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI);
+ItemHandleResult HandleItem(SOLDIERTYPE* pSoldier, INT16 usGridNo, INT8 bLevel, ItemId usHandItem, BOOLEAN fFromUI);
 
 // iItemIndex is ignored for player soldiers
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
@@ -118,7 +118,7 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 
 void RefreshItemPools(const std::vector<WORLDITEM>& pItemList);
 
-BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex );
+BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, ItemId usItem, UINT8 ubLevel, INT32 * piItemIndex );
 
 INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius );
 

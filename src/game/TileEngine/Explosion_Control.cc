@@ -117,7 +117,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 
 
 // GENERATE EXPLOSION
-void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const BOOLEAN fLocate, const INT8 bLevel)
+void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const ItemId usItem, const BOOLEAN fLocate, const INT8 bLevel)
 {
 	// Double check that we are using an explosive!
 	if ( !( GCM->getItem(usItem)->isExplosive() ) )
@@ -158,7 +158,7 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 }
 
 
-void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 z, const INT16 sGridNo, const UINT16 item, const INT8 level)
+void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 z, const INT16 sGridNo, const ItemId item, const INT8 level)
 {
 	INT16 x;
 	INT16 y;
@@ -167,7 +167,7 @@ void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 z, const INT16 sGridN
 }
 
 
-void IgniteExplosionXY(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel)
+void IgniteExplosionXY(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const ItemId usItem, const INT8 bLevel)
 {
 	InternalIgniteExplosion(owner, sX, sY, sZ, sGridNo, usItem, TRUE, bLevel);
 }
@@ -745,7 +745,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 }
 
 
-static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const owner, const INT16 sBombGridNo, const INT16 sWoundAmt, const INT16 sBreathAmt, const UINT32 uiDist, const UINT16 usItem)
+static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const owner, const INT16 sBombGridNo, const INT16 sWoundAmt, const INT16 sBreathAmt, const UINT32 uiDist, const ItemId usItem)
 {
 	INT16 sNewWoundAmt = 0;
 	UINT8		ubDirection;
@@ -932,7 +932,7 @@ static void HandleBuldingDestruction(INT16 sGridNo, const SOLDIERTYPE* owner);
 
 
 // Spreads the effects of explosions...
-static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, SOLDIERTYPE* const owner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
+static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const ItemId usItem, SOLDIERTYPE* const owner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
 	BOOLEAN fRecompileMovementCosts = FALSE;
@@ -951,37 +951,37 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 	else
 	{
 		// Turn off blast effect if some types of items...
-		switch( usItem )
+		switch( usItem.inner() )
 		{
-			case MUSTARD_GRENADE:
+			case MUSTARD_GRENADE.inner():
 				fSmokeEffect = TRUE;
 				bSmokeEffectType = MUSTARDGAS_SMOKE_EFFECT;
 				fBlastEffect = FALSE;
 				break;
 
-			case TEARGAS_GRENADE:
-			case GL_TEARGAS_GRENADE:
-			case BIG_TEAR_GAS:
+			case TEARGAS_GRENADE.inner():
+			case GL_TEARGAS_GRENADE.inner():
+			case BIG_TEAR_GAS.inner():
 				fSmokeEffect = TRUE;
 				bSmokeEffectType = TEARGAS_SMOKE_EFFECT;
 				fBlastEffect = FALSE;
 				break;
 
-			case SMOKE_GRENADE:
-			case GL_SMOKE_GRENADE:
+			case SMOKE_GRENADE.inner():
+			case GL_SMOKE_GRENADE.inner():
 				fSmokeEffect = TRUE;
 				bSmokeEffectType = NORMAL_SMOKE_EFFECT;
 				fBlastEffect = FALSE;
 				break;
 
-			case STUN_GRENADE:
-			case GL_STUN_GRENADE:
+			case STUN_GRENADE.inner():
+			case GL_STUN_GRENADE.inner():
 				fStunEffect = TRUE;
 				break;
 
-			case SMALL_CREATURE_GAS:
-			case LARGE_CREATURE_GAS:
-			case VERY_SMALL_CREATURE_GAS:
+			case SMALL_CREATURE_GAS.inner():
+			case LARGE_CREATURE_GAS.inner():
+			case VERY_SMALL_CREATURE_GAS.inner():
 				fSmokeEffect = TRUE;
 				bSmokeEffectType = CREATURE_SMOKE_EFFECT;
 				fBlastEffect = FALSE;
@@ -1515,7 +1515,7 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 }
 
 
-void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem, SOLDIERTYPE* const owner, const BOOLEAN fSubsequent, const INT8 bLevel, const SMOKEEFFECT* const smoke)
+void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const ItemId usItem, SOLDIERTYPE* const owner, const BOOLEAN fSubsequent, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
 	INT32   uiNewSpot, uiTempSpot, uiBranchSpot, branchCnt;
 	INT32   uiTempRange, ubBranchRange;
@@ -1525,17 +1525,17 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	BOOLEAN fAnyMercHit = FALSE;
 	BOOLEAN fSmokeEffect = FALSE;
 
-	switch( usItem )
+	switch( usItem.inner() )
 	{
-		case MUSTARD_GRENADE:
-		case TEARGAS_GRENADE:
-		case GL_TEARGAS_GRENADE:
-		case BIG_TEAR_GAS:
-		case SMOKE_GRENADE:
-		case GL_SMOKE_GRENADE:
-		case SMALL_CREATURE_GAS:
-		case LARGE_CREATURE_GAS:
-		case VERY_SMALL_CREATURE_GAS:
+		case MUSTARD_GRENADE.inner():
+		case TEARGAS_GRENADE.inner():
+		case GL_TEARGAS_GRENADE.inner():
+		case BIG_TEAR_GAS.inner():
+		case SMOKE_GRENADE.inner():
+		case GL_SMOKE_GRENADE.inner():
+		case SMALL_CREATURE_GAS.inner():
+		case LARGE_CREATURE_GAS.inner():
+		case VERY_SMALL_CREATURE_GAS.inner():
 			fSmokeEffect = TRUE;
 			break;
 	}
@@ -2072,7 +2072,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 		case ACTION_ITEM_SEX:
 			if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 			{
-				OBJECTTYPE DoorCloser;
+				OBJECTTYPE DoorCloser = {};
 				INT16		sTeleportSpot;
 				INT16		sDoorSpot;
 				UINT8		ubDirection;

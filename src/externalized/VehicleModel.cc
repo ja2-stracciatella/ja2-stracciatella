@@ -7,7 +7,7 @@
 
 VehicleModel::VehicleModel(ST::string enterSound, ST::string movementSound,
                            ProfileID profile, VehicleMovementType movementType,
-                           uint16_t armourType, uint8_t seats_)
+                           ItemId armourType, uint8_t seats_)
     : enter_sound(enterSound), move_sound(movementSound), profile(profile),
       movement_type(movementType), armour_type(armourType), seats(seats_) {}
 

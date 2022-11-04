@@ -29,7 +29,7 @@ static UINT32 MercChecksum(SOLDIERTYPE const& s)
 
 	CFOR_EACH_SOLDIER_INV_SLOT(i, s)
 	{
-		sum += i->usItem;
+		sum += i->usItem.inner();
 		sum += i->ubNumberOfObjects;
 	}
 
@@ -420,7 +420,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I32(d, s->NextTileCounter)
 	EXTR_BOOL(d, s->fBlockedByAnotherMerc)
 	EXTR_I8(d, s->bBlockedByAnotherMercDirection)
-	EXTR_U16(d, s->usAttackingWeapon)
+	s->usAttackingWeapon = d.read<ItemId>();
 	s->bWeaponMode = d.read<WeaponModes>();
 	EXTR_SOLDIER(d, s->target)
 	EXTR_I8(d, s->bAIScheduleProgress)
@@ -930,7 +930,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I32(d, s->NextTileCounter)
 	INJ_BOOL(d, s->fBlockedByAnotherMerc)
 	INJ_I8(d, s->bBlockedByAnotherMercDirection)
-	INJ_U16(d, s->usAttackingWeapon)
+	d.write<ItemId>(s->usAttackingWeapon);
 	INJ_I8(d, s->bWeaponMode)
 	INJ_SOLDIER(d, s->target)
 	INJ_I8(d, s->bAIScheduleProgress)

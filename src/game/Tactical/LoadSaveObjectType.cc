@@ -7,7 +7,7 @@
 #include "ItemModel.h"
 
 
-static void ReplaceInvalidItem(UINT16 & usItem)
+static void ReplaceInvalidItem(ItemId & usItem)
 {
 	const ItemModel* item = GCM->getItem(usItem);
 	if (!item)
@@ -20,7 +20,7 @@ static void ReplaceInvalidItem(UINT16 & usItem)
 void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 {
 	size_t start = d.getConsumed();
-	EXTR_U16(d, o->usItem)
+	o->usItem = d.read<ItemId>();
 	EXTR_U8(d, o->ubNumberOfObjects)
 	EXTR_SKIP(d, 1)
 
@@ -38,7 +38,7 @@ void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 			EXTR_U8(d, o->ubGunAmmoType)
 			EXTR_U8(d, o->ubGunShotsLeft)
 			EXTR_SKIP(d, 1)
-			EXTR_U16(d, o->usGunAmmoItem)
+			o->usGunAmmoItem = d.read<ItemId>();
 			EXTR_I8(d, o->bGunAmmoStatus)
 			EXTR_U8A(d, o->ubGunUnused, lengthof(o->ubGunUnused))
 			EXTR_SKIP(d, 3)
@@ -60,12 +60,12 @@ void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 			break;
 
 		case IC_MISC:
-			switch (o->usItem)
+			switch (o->usItem.inner())
 			{
-				case ACTION_ITEM:
+				case ACTION_ITEM.inner():
 					EXTR_I8(d, o->bBombStatus)
 					EXTR_I8(d, o->bDetonatorType)
-					EXTR_U16(d, o->usBombItem)
+					o->usBombItem = d.read<ItemId>();
 					EXTR_I8(d, o->bFrequency) // XXX unclear when to use bDelay
 					EXTR_U8(d, o->ubBombOwner)
 					EXTR_U8(d, o->bActionValue)
@@ -73,17 +73,17 @@ void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 					EXTR_SKIP(d, 4)
 					break;
 
-				case OWNERSHIP:
+				case OWNERSHIP.inner():
 					EXTR_U8(d, o->ubOwnerProfile)
 					EXTR_U8(d, o->ubOwnerCivGroup)
 					EXTR_U8A(d, o->ubOwnershipUnused, lengthof(o->ubOwnershipUnused))
 					EXTR_SKIP(d, 4)
 					break;
 
-				case SWITCH:
+				case SWITCH.inner():
 					EXTR_I8(d, o->bBombStatus)
 					EXTR_I8(d, o->bDetonatorType)
-					EXTR_U16(d, o->usBombItem)
+					o->usBombItem = d.read<ItemId>();
 					EXTR_I8(d, o->bFrequency)
 					EXTR_U8(d, o->ubBombOwner)
 					EXTR_U8(d, o->bActionValue)
@@ -101,7 +101,7 @@ extract_status:
 			EXTR_SKIP(d, 4)
 			break;
 	}
-	EXTR_U16A(d, o->usAttachItem, lengthof(o->usAttachItem))
+	d.readArray<ItemId>(o->usAttachItem, lengthof(o->usAttachItem));
 	EXTR_I8A(d, o->bAttachStatus, lengthof(o->bAttachStatus))
 	EXTR_I8(d, o->fFlags)
 	EXTR_U8(d, o->ubMission)
@@ -113,7 +113,7 @@ extract_status:
 	Assert(d.getConsumed() == start + 36);
 
 	// Check and remove invalid items in attachment slots
-	for (UINT16 & i : o->usAttachItem)
+	for (ItemId & i : o->usAttachItem)
 	{
 		ReplaceInvalidItem(i);
 	}
@@ -123,7 +123,7 @@ extract_status:
 void InjectObject(DataWriter& d, const OBJECTTYPE* o)
 {
 	size_t start = d.getConsumed();
-	INJ_U16(d, o->usItem)
+	d.write<ItemId>(o->usItem);
 	INJ_U8(d, o->ubNumberOfObjects)
 	INJ_SKIP(d, 1)
 	switch (GCM->getItem(o->usItem)->getItemClass())
@@ -138,7 +138,7 @@ void InjectObject(DataWriter& d, const OBJECTTYPE* o)
 			INJ_U8(d, o->ubGunAmmoType)
 			INJ_U8(d, o->ubGunShotsLeft)
 			INJ_SKIP(d, 1)
-			INJ_U16(d, o->usGunAmmoItem)
+			d.write<ItemId>(o->usGunAmmoItem);
 			INJ_I8(d, o->bGunAmmoStatus)
 			INJ_U8A(d, o->ubGunUnused, lengthof(o->ubGunUnused))
 			INJ_SKIP(d, 3)
@@ -160,12 +160,12 @@ void InjectObject(DataWriter& d, const OBJECTTYPE* o)
 			break;
 
 		case IC_MISC:
-			switch (o->usItem)
+			switch (o->usItem.inner())
 			{
-				case ACTION_ITEM:
+				case ACTION_ITEM.inner():
 					INJ_I8(d, o->bBombStatus)
 					INJ_I8(d, o->bDetonatorType)
-					INJ_U16(d, o->usBombItem)
+					d.write<ItemId>(o->usBombItem);
 					INJ_I8(d, o->bFrequency) // XXX unclear when to use bDelay
 					INJ_U8(d, o->ubBombOwner)
 					INJ_U8(d, o->bActionValue)
@@ -173,17 +173,17 @@ void InjectObject(DataWriter& d, const OBJECTTYPE* o)
 					INJ_SKIP(d, 4)
 					break;
 
-				case OWNERSHIP:
+				case OWNERSHIP.inner():
 					INJ_U8(d, o->ubOwnerProfile)
 					INJ_U8(d, o->ubOwnerCivGroup)
 					INJ_U8A(d, o->ubOwnershipUnused, lengthof(o->ubOwnershipUnused))
 					INJ_SKIP(d, 4)
 					break;
 
-				case SWITCH:
+				case SWITCH.inner():
 					INJ_I8(d, o->bBombStatus)
 					INJ_I8(d, o->bDetonatorType)
-					INJ_U16(d, o->usBombItem)
+					d.write<ItemId>(o->usBombItem);
 					INJ_I8(d, o->bFrequency)
 					INJ_U8(d, o->ubBombOwner)
 					INJ_U8(d, o->bActionValue)
@@ -201,7 +201,7 @@ inject_status:
 			INJ_SKIP(d, 4)
 			break;
 	}
-	INJ_U16A(d, o->usAttachItem, lengthof(o->usAttachItem))
+	d.writeArray<ItemId>(o->usAttachItem, lengthof(o->usAttachItem));
 	INJ_I8A(d, o->bAttachStatus, lengthof(o->bAttachStatus))
 	INJ_I8(d, o->fFlags)
 	INJ_U8(d, o->ubMission)

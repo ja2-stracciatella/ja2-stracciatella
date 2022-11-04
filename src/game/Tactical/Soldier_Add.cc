@@ -52,7 +52,7 @@ UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sS
 	INT16 sGridNo;
 	INT32 uiRange, uiLowestRange = 999999;
 	INT32 leftmost;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 
@@ -144,7 +144,7 @@ UINT16 FindGridNoFromSweetSpotThroughPeople(const SOLDIERTYPE* const pSoldier, c
 	INT16 sGridNo;
 	INT32 uiRange, uiLowestRange = 999999;
 	INT32 leftmost;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 
@@ -235,7 +235,7 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 	INT16 sLowestGridNo=-1;
 	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 	UINT8 ubBestDirection=0;
@@ -394,7 +394,7 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 	INT16 sLowestGridNo = -1;
 	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 	UINT8 ubBestDirection = 0;
@@ -566,7 +566,7 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 	INT16 sSweetGridNo;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 
 	sSweetGridNo = pSrcSoldier->sGridNo;
 
@@ -851,7 +851,7 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 	INT32   leftmost;
 	BOOLEAN fFound = FALSE;
 	UINT32  cnt = 0;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier = {};
 	UINT8   ubSaveNPCAPBudget;
 	UINT8   ubSaveNPCDistLimit;
 	INT16   sTop, sBottom;

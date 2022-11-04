@@ -875,7 +875,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 	UINT8       n_items = 0;
 	for (UINT8 i = 0; i < NUM_INV_SLOTS; ++i)
 	{
-		UINT16 const usItem = p.inv[i];
+		ItemId const usItem = p.inv[i];
 		if (usItem == NOTHING) continue;
 
 		const ItemModel * item = GCM->getItem(usItem);

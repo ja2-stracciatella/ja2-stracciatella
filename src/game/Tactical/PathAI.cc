@@ -1916,7 +1916,7 @@ ENDOFLOOP:
 
 void GlobalReachableTest( INT16 sStartGridNo )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s = {};
 
 	s = SOLDIERTYPE{};
 	s.sGridNo = sStartGridNo;
@@ -1936,7 +1936,7 @@ void GlobalReachableTest( INT16 sStartGridNo )
 
 void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s = {};
 	INT32 iCurrentGridNo = 0;
 	INT32 iX, iY;
 
@@ -1978,7 +1978,7 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 
 void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s = {};
 
 	s = SOLDIERTYPE{};
 	s.sGridNo = sStartGridNo1;
@@ -2003,7 +2003,7 @@ void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 
 void RoofReachableTest( INT16 sStartGridNo, UINT8 ubBuildingID )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s = {};
 
 	s = SOLDIERTYPE{};
 	s.sGridNo = sStartGridNo;

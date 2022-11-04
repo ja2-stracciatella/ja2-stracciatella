@@ -72,11 +72,11 @@ public:
 	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& filename, std::vector<ST::string*> &quotes) const;
 
 	/** Get weapons with the give index. */
-	virtual const WeaponModel* getWeapon(uint16_t index) override;
+	virtual const WeaponModel* getWeapon(ItemId index) override;
 	virtual const WeaponModel* getWeaponByName(const ST::string &internalName) override;
 
 	virtual const MagazineModel* getMagazineByName(const ST::string &internalName) override;
-	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) override;
+	virtual const MagazineModel* getMagazineByItemIndex(ItemId itemIndex) override;
 	virtual const std::vector<const MagazineModel*>& getMagazines() const override;
 
 	virtual const CalibreModel* getCalibre(uint8_t index) override;
@@ -85,11 +85,11 @@ public:
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) override;
 
-	virtual const ItemModel* getItem(uint16_t index) const override;
+	virtual const ItemModel* getItem(ItemId index) const override;
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
 	virtual const ItemModel* getKeyItemForKeyId(uint16_t usKeyItem) const override;
 	virtual std::vector<ST::string> getAllSmallInventoryGraphicPaths() const override;
-	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const override;
+	virtual const std::map<ItemId, ItemId> getMapItemReplacements() const override;
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const override;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const override;
@@ -191,7 +191,7 @@ protected:
 	std::map<ST::string, const MagazineModel*> m_magazineMap;
 	std::map<ST::string, const WeaponModel*> m_weaponMap;
 	std::map<ST::string, const ItemModel*> m_itemMap;
-	std::map<uint16_t, uint16_t> m_mapItemReplacements;
+	std::map<ItemId, ItemId> m_mapItemReplacements;
 	std::multimap<MusicMode, const ST::string> m_musicMap;
 
 	std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;

@@ -125,12 +125,12 @@ void EntryInitEditorItemsInfo()
 		eInfo.uiItemType = TBAR_MODE_ITEM_WEAPONS;
 		//Pre-calculate the number of each item type.
 		eInfo.sNumTriggers = NUMBER_TRIGGERS;
-		for( i=0; i < MAXITEMS; i++ )
+		for( i=0; i < MAXITEMS.inner(); i++ )
 		{
-			const ItemModel* item = GCM->getItem(i);
-			if( GCM->getItem(i)->getFlags() & ITEM_NOT_EDITOR )
+			const ItemModel* item = GCM->getItem(ItemId(i));
+			if( item->getFlags() & ITEM_NOT_EDITOR )
 				continue;
-			if( i == SWITCH || i == ACTION_ITEM )
+			if( i == SWITCH.inner() || i == ACTION_ITEM.inner() )
 			{
 
 			}
@@ -144,7 +144,7 @@ void EntryInitEditorItemsInfo()
 					eInfo.sNumWeapons++;
 					break;
 				case IC_PUNCH:
-					if ( i != NOTHING )
+					if ( i != NOTHING.inner() )
 					{
 						eInfo.sNumWeapons++;
 					}
@@ -197,7 +197,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 {
 	SGPRect	SaveRect, NewRect;
 	INT16 i, x, y;
-	UINT16 usCounter;
+	ItemId usCounter;
 	ST::string pStr;
 	BOOLEAN fTypeMatch;
 	INT32 iEquipCount = 0;
@@ -277,7 +277,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 			return;
 	}
 	//Allocate memory to store all the item pointers.
-	eInfo.pusItemIndex = new UINT16[eInfo.sNumItems]{};
+	eInfo.pusItemIndex = new ItemId[eInfo.sNumItems]{};
 
 	//Disable the appropriate scroll buttons based on the saved scroll index if applicable
 	//Left most scroll position
@@ -301,7 +301,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 
 	x = 0;
 	y = 0;
-	usCounter = 0;
+	usCounter = ItemId(0);
 	NewRect.iTop    = 0;
 	NewRect.iBottom = h;
 	NewRect.iLeft   = 0;
@@ -312,7 +312,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	{ //Keys use a totally different method for determining
 		for( i = 0; i < eInfo.sNumItems; i++ )
 		{
-			UINT16 const item_id = KEY_1 + LockTable[i].usKeyItem;
+			ItemId const item_id = ItemId(KEY_1.inner() + LockTable[i].usKeyItem);
 
 			//Store these item pointers for later when rendering selected items.
 			eInfo.pusItemIndex[i] = item_id;
@@ -342,8 +342,8 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 		fTypeMatch = FALSE;
 		while( usCounter<MAXITEMS && !fTypeMatch )
 		{
-			const ItemModel * item = GCM->getItem(usCounter);
-			if( GCM->getItem(usCounter)->getFlags() & ITEM_NOT_EDITOR )
+			const ItemModel* item = GCM->getItem(ItemId(usCounter));
+			if( item->getFlags() & ITEM_NOT_EDITOR )
 			{
 				usCounter++;
 				continue;
@@ -355,7 +355,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 				else
 					usCounter = ACTION_ITEM;
 				fTypeMatch = TRUE;
-				item = GCM->getItem(usCounter);
+				item = GCM->getItem(ItemId(usCounter));
 			}
 			else switch( item->getItemClass() )
 			{
@@ -367,7 +367,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 					fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_WEAPONS;
 					break;
 				case IC_PUNCH:
-					if ( i != NOTHING )
+					if ( i != 0 )
 					{
 						fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_WEAPONS;
 					}
@@ -405,7 +405,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 			if( fTypeMatch )
 			{
 				//Store these item pointers for later when rendering selected items.
-				eInfo.pusItemIndex[i] = usCounter;
+				eInfo.pusItemIndex[i] = ItemId(usCounter);
 
 				SetFontDestBuffer(eInfo.uiBuffer);
 
@@ -657,7 +657,7 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 			if( gfMercGetItem )
 			{
 				gfMercGetItem = FALSE;
-				gusMercsNewItemIndex = 0xffff;
+				gusMercsNewItemIndex = ItemId(0xffff);
 				SetMercEditingMode( MERC_INVENTORYMODE );
 				ClearEditorItemsInfo();
 			}
@@ -712,7 +712,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 	// Extract the currently selected item.
 	SpecifyItemToEdit(NULL, -1);
 
-	OBJECTTYPE tempObject;
+	OBJECTTYPE tempObject = {};
 	if (eInfo.uiItemType == TBAR_MODE_ITEM_KEYS)
 	{
 		CreateKeyObject(&tempObject, 1, (UINT8)eInfo.sSelItemIndex);
@@ -724,25 +724,25 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 
 	Visibility bVisibility = INVISIBLE;
 	UINT16     usFlags     = 0;
-	switch (tempObject.usItem)
+	switch (tempObject.usItem.inner())
 	{
-		case MINE:
+		case MINE.inner():
 			// Nothing to do here?
 			break;
 
-		case MONEY:
-		case SILVER:
-		case GOLD:
+		case MONEY.inner():
+		case SILVER.inner():
+		case GOLD.inner():
 			tempObject.bStatus[0]    = 100;
 			tempObject.uiMoneyAmount = 100 + Random(19901);
 			break;
 
-		case OWNERSHIP:
+		case OWNERSHIP.inner():
 			tempObject.ubOwnerProfile = NO_PROFILE;
 			bVisibility = BURIED;
 			break;
 
-		case SWITCH:
+		case SWITCH.inner():
 			// Restricted to one action per gridno.
 			if (TriggerAtGridNo(sGridNo)) return;
 			bVisibility = BURIED;
@@ -752,7 +752,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 			usFlags |= WORLD_ITEM_ARMED_BOMB;
 			break;
 
-		case ACTION_ITEM:
+		case ACTION_ITEM.inner():
 			bVisibility = BURIED;
 			tempObject.bStatus[0]  = 100;
 			tempObject.ubBombOwner = 1;
@@ -1023,17 +1023,17 @@ void SelectPrevItemInPool()
 }
 
 
-static void SelectNextItemOfType(UINT16 usItem);
+static void SelectNextItemOfType(ItemId usItem);
 static void SelectNextKeyOfType(UINT8 ubKeyID);
 static void SelectNextPressureAction(void);
-static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency);
+static void SelectNextTriggerWithFrequency(ItemId usItem, INT8 bFrequency);
 
 
 /* Finds and selects the next item when right clicking on an item type.
  * Only works if the item actually exists in the world. */
 static void FindNextItemOfSelectedType(void)
 {
-	UINT16 usItem;
+	ItemId usItem;
 	usItem = eInfo.pusItemIndex[ eInfo.sSelItemIndex ];
 	if( usItem == ACTION_ITEM || usItem == SWITCH )
 	{
@@ -1058,7 +1058,7 @@ static void FindNextItemOfSelectedType(void)
 }
 
 
-static void SelectNextItemOfType(UINT16 usItem)
+static void SelectNextItemOfType(ItemId usItem)
 {
 	IPListNode *curr;
 	if( gpItemPool )
@@ -1192,7 +1192,7 @@ static void SelectNextKeyOfType(UINT8 ubKeyID)
 }
 
 
-static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency)
+static void SelectNextTriggerWithFrequency(ItemId usItem, INT8 bFrequency)
 {
 	IPListNode *curr;
 	if( gpItemPool )
@@ -1326,7 +1326,7 @@ static void SelectNextPressureAction(void)
 }
 
 
-static UINT16 CountNumberOfItemPlacementsInWorld(UINT16 usItem, UINT16* pusQuantity)
+static UINT16 CountNumberOfItemPlacementsInWorld(ItemId usItem, UINT16* pusQuantity)
 {
 	IPListNode *pIPCurr;
 	INT16 num = 0;
@@ -1351,7 +1351,7 @@ static UINT16 CountNumberOfItemPlacementsInWorld(UINT16 usItem, UINT16* pusQuant
 }
 
 
-static UINT16 CountNumberOfItemsWithFrequency(UINT16 usItem, INT8 bFrequency)
+static UINT16 CountNumberOfItemsWithFrequency(ItemId usItem, INT8 bFrequency)
 {
 	IPListNode *pIPCurr;
 	UINT16 num = 0;

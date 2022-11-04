@@ -165,7 +165,7 @@ static void UpdateOldVersionMap(void)
 				INT32 i;
 				for( i = 0; i < NUM_INV_SLOTS; i++ )
 				{
-					if( !curr->pDetailedPlacement->Inv[ i ].usItem )
+					if( curr->pDetailedPlacement->Inv[ i ].usItem == NOTHING )
 					{
 						if( curr->pDetailedPlacement->Inv[ i ].fFlags & OBJECT_UNDROPPABLE )
 						{

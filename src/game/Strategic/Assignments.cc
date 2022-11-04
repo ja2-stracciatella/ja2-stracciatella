@@ -419,7 +419,7 @@ static BOOLEAN HasCharacterFinishedRepairing(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pOtherSoldier);
 static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* pSoldier, UINT8 ubPassType);
-static bool IsItemRepairable(UINT16 item_id, INT8 status);
+static bool IsItemRepairable(ItemId item_id, INT8 status);
 
 
 static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldier, INT8 const bHighestPass)
@@ -1626,7 +1626,7 @@ static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* const pSoldier, 
 }
 
 
-static void DoActualRepair(SOLDIERTYPE* pSoldier, UINT16 usItem, INT8* pbStatus, UINT8* pubRepairPtsLeft)
+static void DoActualRepair(SOLDIERTYPE* pSoldier, ItemId usItem, INT8* pbStatus, UINT8* pubRepairPtsLeft)
 {
 	INT16		sRepairCostAdj;
 	UINT16	usDamagePts, usPtsFixed;
@@ -1682,7 +1682,7 @@ static void DoActualRepair(SOLDIERTYPE* pSoldier, UINT16 usItem, INT8* pbStatus,
 }
 
 
-static bool DoRepair(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner, UINT16 const item, INT8& status, UINT8* const repair_pts_left)
+static bool DoRepair(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner, ItemId const item, INT8& status, UINT8* const repair_pts_left)
 {
 	// if it's repairable and NEEDS repairing
 	if (!IsItemRepairable(item, status)) return false;
@@ -1709,7 +1709,7 @@ static bool RepairObject(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const o
 	UINT8 const n_items = pObj->ubNumberOfObjects;
 	for (UINT8 i = 0; i != n_items; ++i)
 	{
-		UINT16 const item   = pObj->usItem;
+		ItemId const item   = pObj->usItem;
 		INT8&        status = pObj->bStatus[i];
 		if (!DoRepair(repairer, owner, item, status, repair_pts_left)) continue;
 		something_was_repaired = true;
@@ -1719,7 +1719,7 @@ static bool RepairObject(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const o
 	// now check for attachments
 	for (UINT8 i = 0; i != MAX_ATTACHMENTS; ++i)
 	{
-		UINT16 const item = pObj->usAttachItem[i];
+		ItemId const item = pObj->usAttachItem[i];
 		if (item == NOTHING) continue;
 		INT8& status = pObj->bAttachStatus[i];
 		if (!DoRepair(repairer, owner, item, status, repair_pts_left)) continue;
@@ -1871,7 +1871,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE& s)
 
 
 // can item be repaired?
-static bool IsItemRepairable(UINT16 const item_id, INT8 const status)
+static bool IsItemRepairable(ItemId const item_id, INT8 const status)
 {
 	return status < 100 && GCM->getItem(item_id)->getFlags() & ITEM_REPAIRABLE;
 }

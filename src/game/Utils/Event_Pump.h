@@ -2,6 +2,8 @@
 #define EVENT_PROCESSOR_H
 
 #include "Types.h"
+#include "Item_Types.h"
+
 #include <variant>
 
 // This definition is used to denote events with a special delay value;
@@ -48,7 +50,7 @@ struct EV_S_FIREWEAPON
 struct EV_S_WEAPONHIT
 {
 	UINT16 usSoldierID;
-	UINT16 usWeaponIndex;
+	ItemId usWeaponIndex;
 	INT16  sDamage;
 	INT16  sBreathLoss;
 	UINT16 usDirection;

@@ -96,7 +96,7 @@ struct ARMS_DEALER_STATUS
 
 struct SPECIAL_ITEM_INFO
 {
-	UINT16 usAttachment[MAX_ATTACHMENTS]; // item index of any attachments on the item
+	ItemId usAttachment[MAX_ATTACHMENTS]; // item index of any attachments on the item
 
 	INT8   bItemCondition;	// if 0, no item is stored
 				// from 1 to 100 indicates an item with that status
@@ -145,7 +145,7 @@ struct DEALER_ITEM_HEADER
 };
 
 extern ARMS_DEALER_STATUS gArmsDealerStatus[ NUM_ARMS_DEALERS ];
-extern DEALER_ITEM_HEADER gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
+extern DEALER_ITEM_HEADER gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS.inner() ];
 
 
 
@@ -161,8 +161,8 @@ UINT16 CountTotalItemsRepairDealerHasInForRepairs(ArmsDealerID);
 
 void AddObjectToArmsDealerInventory(ArmsDealerID, OBJECTTYPE*);
 
-void RemoveItemFromArmsDealerInventory(ArmsDealerID, UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, UINT8 ubHowMany);
-void RemoveSpecialItemFromArmsDealerInventoryAtElement(ArmsDealerID, UINT16 usItemIndex, UINT8 ubElement);
+void RemoveItemFromArmsDealerInventory(ArmsDealerID, ItemId usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, UINT8 ubHowMany);
+void RemoveSpecialItemFromArmsDealerInventoryAtElement(ArmsDealerID, ItemId usItemIndex, UINT8 ubElement);
 
 BOOLEAN      IsMercADealer( UINT8 ubMercID );
 ArmsDealerID GetArmsDealerIDFromMercID(UINT8 ubMercID);
@@ -178,12 +178,12 @@ ArmsDealerType GetTypeOfArmsDealer( UINT8 ubDealerID );
 BOOLEAN	DoesDealerDoRepairs(ArmsDealerID);
 BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID );
 
-BOOLEAN CanDealerTransactItem(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer);
-BOOLEAN CanDealerRepairItem(ArmsDealerID, UINT16 usItemIndex);
+BOOLEAN CanDealerTransactItem(ArmsDealerID, ItemId usItemIndex, BOOLEAN fPurchaseFromPlayer);
+BOOLEAN CanDealerRepairItem(ArmsDealerID, ItemId usItemIndex);
 
 BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const*);
 
-void		MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject, UINT8 ubHowMany );
+void		MakeObjectOutOfDealerItems( ItemId usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject, UINT8 ubHowMany );
 
 void GiveObjectToArmsDealerForRepair(ArmsDealerID, OBJECTTYPE const* pObject, UINT8 ubOwnerProfileId);
 
@@ -195,15 +195,15 @@ UINT32 CalculateObjectItemRepairCost(ArmsDealerID, OBJECTTYPE const* pItemObject
 void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo );
 void SetSpecialItemInfoFromObject(SPECIAL_ITEM_INFO* pSpclItemInfo, const OBJECTTYPE* pObject);
 
-UINT16 CalcValueOfItemToDealer(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fDealerSelling);
+UINT16 CalcValueOfItemToDealer(ArmsDealerID, ItemId usItemIndex, BOOLEAN fDealerSelling);
 
-BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex );
+BOOLEAN DealerItemIsSafeToStack( ItemId usItemIndex );
 
 UINT32 CalculateOvernightRepairDelay(ArmsDealerID, UINT32 uiTimeWhenFreeToStartIt, UINT32 uiMinutesToFix);
 UINT32 CalculateMinutesClosedBetween(ArmsDealerID, UINT32 uiStartTime, UINT32 uiEndTime);
 
-void    GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, UINT16 usItemIndex, UINT8 ubHowMany);
-BOOLEAN ItemIsARocketRifle(INT16 sItemIndex);
+void    GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, ItemId usItemIndex, UINT8 ubHowMany);
+BOOLEAN ItemIsARocketRifle(ItemId sItemIndex);
 
 extern UINT8 gubLastSpecialItemAddedAtElement;
 

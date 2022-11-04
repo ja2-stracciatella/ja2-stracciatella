@@ -560,7 +560,7 @@ void QuestDebugScreenInit()
 
 	gItemListBox.usItemDisplayedOnTopOfList			= 1;
 	gItemListBox.usStartIndex										= 1;
-	gItemListBox.usMaxArrayIndex								= MAXITEMS;
+	gItemListBox.usMaxArrayIndex								= MAXITEMS.inner();
 	gItemListBox.usNumDisplayedItems						= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
 	gItemListBox.usMaxNumDisplayedItems				= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
 
@@ -840,7 +840,7 @@ static void EnterQuestDebugSystem(void)
 
 	if( giHaveSelectedItem != -1 )
 	{
-		ST::string zItemDesc = ST::format("{} - {}", giHaveSelectedItem, GCM->getItem(giHaveSelectedItem)->getShortName());
+		ST::string zItemDesc = ST::format("{} - {}", giHaveSelectedItem, GCM->getItem(ItemId(giHaveSelectedItem))->getShortName());
 		guiQuestDebugCurItemButton->SpecifyText(zItemDesc);
 
 		gItemListBox.sCurSelectedItem = (INT16)giHaveSelectedItem;
@@ -1714,7 +1714,7 @@ static void DisplaySelectedItem(void)
 		// display the names of the NPC's
 	for( i=gpActiveListBox->usItemDisplayedOnTopOfList; i< gpActiveListBox->usItemDisplayedOnTopOfList+gpActiveListBox->usNumDisplayedItems; i++)
 	{
-		auto ItemName = GCM->getItem(i)->getShortName();
+		auto ItemName = GCM->getItem(ItemId(i))->getShortName();
 		if (ItemName.empty()) ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
 		DrawTextToScreen(ItemName, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -1731,7 +1731,7 @@ static void DisplaySelectedItem(void)
 
 		SetFontShadow(NO_SHADOW);
 
-		ST::string ItemName = GCM->getItem(gpActiveListBox->sCurSelectedItem)->getShortName();
+		ST::string ItemName = GCM->getItem(ItemId(gpActiveListBox->sCurSelectedItem))->getShortName();
 		if (ItemName.empty()) ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
 		DrawTextToScreen(ItemName, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -2046,7 +2046,7 @@ static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, UINT32
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		ST::string zTemp = ST::format("{} where the {} will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], GCM->getItem(gItemListBox.sCurSelectedItem)->getShortName());
+		ST::string zTemp = ST::format("{} where the {} will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], GCM->getItem(ItemId(gItemListBox.sCurSelectedItem))->getShortName());
 		TextEntryBox( zTemp, AddItemToGridNo );
 	}
 }
@@ -2056,9 +2056,9 @@ static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, UINT32 rea
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		OBJECTTYPE		Object;
+		OBJECTTYPE		Object = {};
 
-		CreateItem( gItemListBox.sCurSelectedItem, 100, &Object );
+		CreateItem( ItemId(gItemListBox.sCurSelectedItem), 100, &Object );
 
 		//if the selected merc is created
 		const ProfileID    pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem] : gNpcListBox.sCurSelectedItem);
@@ -2385,7 +2385,7 @@ static void DestroyQuestDebugTextInputBoxes(void)
 
 static void AddNPCToGridNo(INT32 iGridNo)
 {
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
+	SOLDIERCREATE_STRUCT		MercCreateStruct = {};
 
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam				= CIV_TEAM;
@@ -2413,12 +2413,12 @@ static void AddNPCToGridNo(INT32 iGridNo)
 
 static void AddItemToGridNo(INT32 iGridNo)
 {
-	OBJECTTYPE		Object;
+	OBJECTTYPE		Object = {};
 
 	gsQdsEnteringGridNo = (INT16)iGridNo;
 
 
-	if( GCM->getItem(gItemListBox.sCurSelectedItem)->getItemClass() == IC_KEY )
+	if( GCM->getItem(ItemId(gItemListBox.sCurSelectedItem))->getItemClass() == IC_KEY )
 	{
 		gfAddKeyNextPass = TRUE;
 //		ST::string zTemp = "Please enter the Key ID";
@@ -2426,7 +2426,7 @@ static void AddItemToGridNo(INT32 iGridNo)
 	}
 	else
 	{
-		CreateItem( gItemListBox.sCurSelectedItem, (UINT8)( gfDropDamagedItems ? ( 20 + Random( 60 ) ) : 100 ), &Object );
+		CreateItem( ItemId(gItemListBox.sCurSelectedItem), (UINT8)( gfDropDamagedItems ? ( 20 + Random( 60 ) ) : 100 ), &Object );
 
 		//add the item to the world
 		AddItemToPool(iGridNo, &Object, INVISIBLE, 0, 0, 0);
@@ -2436,7 +2436,7 @@ static void AddItemToGridNo(INT32 iGridNo)
 
 static void AddKeyToGridNo(INT32 iKeyID)
 {
-	OBJECTTYPE		Object;
+	OBJECTTYPE		Object = {};
 
 	if( iKeyID < NUM_KEYS )
 	{
@@ -2803,8 +2803,8 @@ static INT16 IsMercInTheSector(UINT16 usMercID)
 static void RefreshAllNPCInventory(void)
 {
 	UINT16	usItemCnt;
-	OBJECTTYPE	TempObject;
-	UINT16		usItem;
+	OBJECTTYPE	TempObject = {};
+	ItemId		usItem;
 
 	FOR_EACH_SOLDIER(s)
 	{

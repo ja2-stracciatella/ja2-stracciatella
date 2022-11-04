@@ -42,7 +42,7 @@
 
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 {
-	UINT16 usInHand;
+	ItemId usInHand;
 	INT8 bPayloadPocket;
 
 	usInHand = pSoldier->inv[HANDPOS].usItem;
@@ -399,7 +399,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	UINT8 ubSearchRange;
 	UINT16 usOppDist;
 	BOOLEAN fFriendsNearby;
-	UINT16 usInHand, usGrenade;
+	ItemId usInHand, usGrenade;
 	UINT8 ubOppsInRange, ubOppsAdjacent;
 	BOOLEAN fSkipLocation;
 	INT8  bPayloadPocket;
@@ -706,26 +706,26 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 
 				// if considering a gas/smoke grenade, check to see if there is such stuff already there!
-				if ( usGrenade )
+				if ( usGrenade != NOTHING )
 				{
-					switch( usGrenade )
+					switch( usGrenade.inner() )
 					{
-						case SMOKE_GRENADE:
-						case GL_SMOKE_GRENADE:
+						case SMOKE_GRENADE.inner():
+						case GL_SMOKE_GRENADE.inner():
 							// skip smoke
 							if ( gpWorldLevelData[ sGridNo ].ubExtFlags[ bOpponentLevel[ubLoop] ] & MAPELEMENT_EXT_SMOKE )
 							{
 								continue;
 							}
 							break;
-						case TEARGAS_GRENADE:
+						case TEARGAS_GRENADE.inner():
 							// skip tear and mustard gas
 							if ( gpWorldLevelData[ sGridNo ].ubExtFlags[ bOpponentLevel[ubLoop] ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) )
 							{
 								continue;
 							}
 							break;
-						case MUSTARD_GRENADE:
+						case MUSTARD_GRENADE.inner():
 							// skip mustard gas
 							if ( gpWorldLevelData[ sGridNo ].ubExtFlags[ bOpponentLevel[ubLoop] ] & MAPELEMENT_EXT_MUSTARDGAS )
 							{
@@ -1375,7 +1375,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 						(100 - iPowerLost + ubBonus)) / 100;
 
 	// if opponent is wearing a helmet
-	if (pOpponent->inv[HELMETPOS].usItem)
+	if (pOpponent->inv[HELMETPOS].usItem != NOTHING)
 	{
 		iHeadProt += (INT32) Armour[GCM->getItem(pOpponent->inv[HELMETPOS].usItem)->getClassIndex()].ubProtection *
 				(INT32) pOpponent->inv[HELMETPOS].bStatus[0] / 100;
@@ -1385,7 +1385,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	if (ubAmmoType != AMMO_MONSTER && ubAmmoType != AMMO_KNIFE)
 	{
 		// monster spit and knives ignore kevlar vests
-		if (pOpponent->inv[VESTPOS].usItem)
+		if (pOpponent->inv[VESTPOS].usItem != NOTHING)
 		{
 			iTorsoProt += (INT32) Armour[GCM->getItem(pOpponent->inv[VESTPOS].usItem)->getClassIndex()].ubProtection *
 					(INT32) pOpponent->inv[VESTPOS].bStatus[0] / 100;
@@ -1404,7 +1404,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	// if opponent is wearing armoured leggings (LEGPOS)
 	if (ubAmmoType != AMMO_MONSTER && ubAmmoType != AMMO_KNIFE)
 	{	// monster spit and knives ignore kevlar leggings
-		if (pOpponent->inv[LEGPOS].usItem)
+		if (pOpponent->inv[LEGPOS].usItem != NOTHING)
 		{
 			iLegProt += (INT32) Armour[GCM->getItem(pOpponent->inv[LEGPOS].usItem)->getClassIndex()].ubProtection *
 					(INT32) pOpponent->inv[LEGPOS].bStatus[0] / 100;
@@ -1441,12 +1441,12 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	{
 		// cheat and emphasize shots
 		//iDamage = (iDamage * 15) / 10;
-		UINT32 gas;
-		switch (pSoldier->inv[pSoldier->ubAttackingHand].usItem)
+		ItemId gas;
+		switch (pSoldier->inv[pSoldier->ubAttackingHand].usItem.inner())
 		{
 			// explosive damage is 100-200% that of the rated, so multiply by 3/2s here
-			case CREATURE_QUEEN_SPIT:    gas = LARGE_CREATURE_GAS;      break;
-			case CREATURE_OLD_MALE_SPIT: gas = SMALL_CREATURE_GAS;      break;
+			case CREATURE_QUEEN_SPIT.inner():    gas = LARGE_CREATURE_GAS;      break;
+			case CREATURE_OLD_MALE_SPIT.inner(): gas = SMALL_CREATURE_GAS;      break;
 			default:                     gas = VERY_SMALL_CREATURE_GAS; break;
 		}
 		const EXPLOSIVETYPE* const e = &Explosive[GCM->getItem(gas)->getClassIndex()];
@@ -1466,15 +1466,15 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 	INT32 iExplosDamage, iBreathDamage, iArmourAmount, iDamage = 0;
 	INT8  bSlot;
 
-	switch ( pSoldier->inv[ ubItemPos ].usItem )
+	switch ( pSoldier->inv[ ubItemPos ].usItem.inner() )
 	{
-		case GL_SMOKE_GRENADE:
-		case SMOKE_GRENADE:
+		case GL_SMOKE_GRENADE.inner():
+		case SMOKE_GRENADE.inner():
 			// Don't want to value throwing smoke very much.  This value is based relative
 			// to the value for knocking somebody down, which was giving values that were
 			// too high
 			return( 5 );
-		case ROCKET_LAUNCHER:
+		case ROCKET_LAUNCHER.inner():
 			ubExplosiveIndex = GCM->getItem(C1)->getClassIndex();
 			break;
 		default:
@@ -1552,7 +1552,7 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	else
 	{
 		// NB martial artists don't get a bonus for using brass knuckles!
-		if (pSoldier->usAttackingWeapon && !( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) ) )
+		if (pSoldier->usAttackingWeapon != NOTHING && !( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) ) )
 		{
 			iImpact = GCM->getWeapon( pSoldier->usAttackingWeapon )->ubImpact;
 		}

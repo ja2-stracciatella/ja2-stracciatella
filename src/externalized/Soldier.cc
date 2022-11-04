@@ -265,18 +265,18 @@ static bool isHeadPosition(int8_t pos)
 	return (pos == HEAD1POS) || (pos == HEAD2POS);
 }
 
-static void showGearEquipMessage(const SOLDIERTYPE* s, uint16_t usItem)
+static void showGearEquipMessage(const SOLDIERTYPE* s, ItemId usItem)
 {
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM), s->name, GCM->getItem(usItem)->getName()));
 }
 
-static void showGearRemoveMessage(const SOLDIERTYPE* s, uint16_t usItem)
+static void showGearRemoveMessage(const SOLDIERTYPE* s, ItemId usItem)
 {
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_REMOVES_ITEM), s->name, GCM->getItem(usItem)->getName()));
 }
 
-const std::vector<ITEMDEFINE> HEAD_GEARS_DAY   { SUNGOGGLES };
-const std::vector<ITEMDEFINE> HEAD_GEARS_NIGHT { UVGOGGLES, NIGHTGOGGLES };
+const std::vector<ItemId> HEAD_GEARS_DAY   { SUNGOGGLES };
+const std::vector<ItemId> HEAD_GEARS_NIGHT { UVGOGGLES, NIGHTGOGGLES };
 
 #define SWITCH_TO_NIGHT_GEAR 0
 #define SWITCH_TO_DAY_GEAR   1
@@ -299,14 +299,14 @@ void Soldier::switchHeadGear(int switchDirection)
 		return;
 	}
 
-	const std::vector<ITEMDEFINE>& fromGears = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_DAY : HEAD_GEARS_NIGHT;
-	const std::vector<ITEMDEFINE>& toGears   = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_NIGHT : HEAD_GEARS_DAY;
+	const std::vector<ItemId>& fromGears = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_DAY : HEAD_GEARS_NIGHT;
+	const std::vector<ItemId>& toGears   = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_NIGHT : HEAD_GEARS_DAY;
 	OBJECTTYPE* helmet = &mSoldier->inv[HELMETPOS];
 	OBJECTTYPE  detachedGear{};
 
 	// find the gear we want to wear
 	OBJECTTYPE* optimalEyeGear = NULL;
-	for (ITEMDEFINE ic : fromGears)
+	for (ItemId ic : fromGears)
 	{
 		INT8 slot = FindObj(mSoldier, ic);
 		if (slot != NO_SLOT)
@@ -326,7 +326,7 @@ void Soldier::switchHeadGear(int switchDirection)
 
 	// find the eye gear we are currently wearing
 	OBJECTTYPE* currentEyeGear = NULL;
-	for (ITEMDEFINE ic : toGears)
+	for (ItemId ic : toGears)
 	{
 		if (mSoldier->inv[HEAD1POS].usItem == ic) currentEyeGear = &mSoldier->inv[HEAD1POS];
 		if (mSoldier->inv[HEAD2POS].usItem == ic) currentEyeGear = &mSoldier->inv[HEAD2POS];
@@ -354,7 +354,7 @@ void Soldier::switchHeadGear(int switchDirection)
 
 		if (detachedGear.usItem != NONE)
 		{
-			// the gear we want had been detached from helmet and put on; 
+			// the gear we want had been detached from helmet and put on;
 			// now after the object swap, we attach the gear we just put off
 			AttachObject(mSoldier, helmet, &detachedGear);
 		}
@@ -373,7 +373,7 @@ void Soldier::switchHeadGear(int switchDirection)
 		else if (canAttachToHelmet)
 		{
 			// attach to helmet
-			UINT8 currentItem = currentEyeGear->usItem;
+			ItemId currentItem = currentEyeGear->usItem;
 			BOOLEAN fSuccess = AttachObject(mSoldier, helmet, currentEyeGear);
 			if (fSuccess) showGearRemoveMessage(mSoldier, currentItem);
 		}

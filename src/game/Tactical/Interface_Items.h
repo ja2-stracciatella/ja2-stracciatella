@@ -140,7 +140,7 @@ extern GUIButtonRef giMapInvDescButton;
 void    HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* pObject);
 BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pTestObject, BOOLEAN fOn);
 
-void SetMouseCursorFromItem(UINT16 item_idx);
+void SetMouseCursorFromItem(ItemId item_idx);
 void SetMouseCursorFromCurrentItem();
 
 void SetItemPointer(OBJECTTYPE*, SOLDIERTYPE*);

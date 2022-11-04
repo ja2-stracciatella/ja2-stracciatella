@@ -3271,7 +3271,7 @@ void ClearOutTempLaptopFiles(void)
 static void InjectStoreInvetory(DataWriter& d, STORE_INVENTORY const& i)
 {
 	size_t start = d.getConsumed();
-	INJ_U16( d, i.usItemIndex)
+	INJ_U16( d, i.usItemIndex.inner())
 	INJ_U8(  d, i.ubQtyOnHand)
 	INJ_U8(  d, i.ubQtyOnOrder)
 	INJ_U8(  d, i.ubItemQuality)
@@ -3284,7 +3284,9 @@ static void InjectStoreInvetory(DataWriter& d, STORE_INVENTORY const& i)
 static void ExtractStoreInvetory(DataReader& d, STORE_INVENTORY& i)
 {
 	size_t start = d.getConsumed();
-	EXTR_U16( d, i.usItemIndex)
+	UINT16 usItemIndex;
+	EXTR_U16( d, usItemIndex);
+	i.usItemIndex = ItemId(usItemIndex);
 	EXTR_U8(  d, i.ubQtyOnHand)
 	EXTR_U8(  d, i.ubQtyOnOrder)
 	EXTR_U8(  d, i.ubItemQuality)

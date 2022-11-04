@@ -118,7 +118,7 @@ static UINT8 FromSmokeTypeToWorldFlags(SmokeEffectKind const bType)
 }
 
 
-void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel, SOLDIERTYPE* const owner)
+void NewSmokeEffect(const INT16 sGridNo, const ItemId usItem, const INT8 bLevel, SOLDIERTYPE* const owner)
 {
 	INT8				bSmokeEffectType=0;
 	UINT8				ubDuration=0;
@@ -141,49 +141,49 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 	}
 
 
-	switch( usItem )
+	switch( usItem.inner() )
 	{
-		case MUSTARD_GRENADE:
+		case MUSTARD_GRENADE.inner():
 
 			bSmokeEffectType	=	MUSTARDGAS_SMOKE_EFFECT;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
 
-		case TEARGAS_GRENADE:
-		case GL_TEARGAS_GRENADE:
+		case TEARGAS_GRENADE.inner():
+		case GL_TEARGAS_GRENADE.inner():
 			bSmokeEffectType	=	TEARGAS_SMOKE_EFFECT;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
 
-		case BIG_TEAR_GAS:
+		case BIG_TEAR_GAS.inner():
 			bSmokeEffectType	=	TEARGAS_SMOKE_EFFECT;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
 
-		case SMOKE_GRENADE:
-		case GL_SMOKE_GRENADE:
+		case SMOKE_GRENADE.inner():
+		case GL_SMOKE_GRENADE.inner():
 
 			bSmokeEffectType	=	NORMAL_SMOKE_EFFECT;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
 
-		case SMALL_CREATURE_GAS:
+		case SMALL_CREATURE_GAS.inner():
 			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
 			ubDuration				= 3;
 			ubStartRadius			= 1;
 			break;
 
-		case LARGE_CREATURE_GAS:
+		case LARGE_CREATURE_GAS.inner():
 			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
 			ubDuration				= 3;
 			ubStartRadius			= Explosive[ GCM->getItem(LARGE_CREATURE_GAS)->getClassIndex() ].ubRadius;
 			break;
 
-		case VERY_SMALL_CREATURE_GAS:
+		case VERY_SMALL_CREATURE_GAS.inner():
 
 			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
 			ubDuration				= 2;

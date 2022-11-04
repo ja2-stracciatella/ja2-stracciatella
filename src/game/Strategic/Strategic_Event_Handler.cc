@@ -155,9 +155,9 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	for (UINT8 i = 0; i < shipment->ubNumberPurchases; ++i)
 	{
 		const BobbyRayPurchaseStruct* const purchase = &shipment->BobbyRayPurchase[i];
-		UINT16                        const usItem   = purchase->usItemIndex;
+		ItemId                        const usItem   = purchase->usItemIndex;
 
-		OBJECTTYPE Object;
+		OBJECTTYPE Object = {};
 		CreateItem(usItem, purchase->bItemQuality, &Object);
 
 		if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
@@ -354,7 +354,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	// (or items that were delayed) to the arrival location for new shipments,
 	INT16			sStartGridNo;
 	UINT8			ubLoop;
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 	auto shippingDest = GCM->getPrimaryShippingDestination();
 
 	if (uiReason == NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS )
@@ -701,7 +701,6 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 
 void HandleEarlyMorningEvents( void )
 {
-	UINT32					cnt;
 	UINT32					uiAmount;
 
 	// loop through all *NPCs* and reset "default response used recently" flags
@@ -832,9 +831,9 @@ void HandleEarlyMorningEvents( void )
 			SetMoneyInSoldierProfile( CARMEN, uiAmount );
 			gMercProfiles[ CARMEN ].bNPCData2 = 0;
 
-			for ( cnt = HEAD_1; cnt <= HEAD_7; cnt++ )
+			for ( ItemId cnt = HEAD_1; cnt.inner() <= HEAD_7.inner(); cnt++ )
 			{
-				RemoveObjectFromSoldierProfile( CARMEN, (UINT8) cnt );
+				RemoveObjectFromSoldierProfile( CARMEN, cnt );
 			}
 
 		}
@@ -947,10 +946,11 @@ void CheckForMissingHospitalSupplies( void )
 
 static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinationModel* shippingDest)
 {
-	OBJECTTYPE		Object;
+	OBJECTTYPE		Object = {};
 	UINT32	uiCount = 0;
 	OBJECTTYPE	*pObject=NULL;
-	UINT16	usNumberOfItems=0, usItem;
+	UINT16	usNumberOfItems=0;
+	ItemId usItem;
 	UINT8		ubItemsDelivered, ubTempNumItems;
 	UINT32	i;
 

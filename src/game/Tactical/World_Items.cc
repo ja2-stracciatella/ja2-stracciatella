@@ -259,7 +259,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 	{
 		// Add all of the items to the world indirectly through AddItemToPool, but
 		// only if the chance associated with them succeed.
-		WORLDITEM wi;
+		WORLDITEM wi = {};
 		f->read(&wi, sizeof(wi));
 		OBJECTTYPE& o = wi.o;
 
@@ -276,7 +276,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			if (itemReplacements.find(o.usItem) != itemReplacements.end())
 			{
 				auto item = itemReplacements.at(o.usItem);
-				if (item == 0)
+				if (item == NOTHING)
 				{
 					SLOGW("Map item #{} removed", o.usItem);
 					continue;
@@ -327,9 +327,9 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			}
 		}
 
-		switch (o.usItem)
+		switch (o.usItem.inner())
 		{
-			case ACTION_ITEM:
+			case ACTION_ITEM.inner():
 				// If we are loading a pit, they are typically loaded without being armed.
 				if (o.bActionValue == ACTION_ITEM_SMALL_PIT ||
 					o.bActionValue == ACTION_ITEM_LARGE_PIT)
@@ -340,9 +340,9 @@ void LoadWorldItemsFromMap(HWFILE const f)
 				}
 				break;
 
-			case MINE:
-			case TRIP_FLARE:
-			case TRIP_KLAXON:
+			case MINE.inner():
+			case TRIP_FLARE.inner():
+			case TRIP_KLAXON.inner():
 				if (wi.bVisible == HIDDEN_ITEM && o.bTrap > 0)
 				{
 					ArmBomb(&o, BOMB_PRESSURE);
@@ -430,9 +430,9 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 			if (item.ubLevel != ubLevel) continue;
 
 			// Upgrade equipment
-			switch (item.o.usItem)
+			switch (item.o.usItem.inner())
 			{
-				case AUTO_ROCKET_RIFLE:
+				case AUTO_ROCKET_RIFLE.inner():
 				{
 					// Give her auto rifle
 					INT8 const bSlot = FindObjectInSoldierProfile(q, ROCKET_RIFLE);
@@ -440,9 +440,9 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 					break;
 				}
 
-				case SPECTRA_HELMET_18:   q.inv[HELMETPOS] = SPECTRA_HELMET_18;   break;
-				case SPECTRA_VEST_18:     q.inv[VESTPOS]   = SPECTRA_VEST_18;     break;
-				case SPECTRA_LEGGINGS_18: q.inv[LEGPOS]    = SPECTRA_LEGGINGS_18; break;
+				case SPECTRA_HELMET_18.inner():   q.inv[HELMETPOS] = SPECTRA_HELMET_18;   break;
+				case SPECTRA_VEST_18.inner():     q.inv[VESTPOS]   = SPECTRA_VEST_18;     break;
+				case SPECTRA_LEGGINGS_18.inner(): q.inv[LEGPOS]    = SPECTRA_LEGGINGS_18; break;
 
 				default: break;
 			}

@@ -7,7 +7,7 @@
 #include "WeaponModels.h"
 
 
-ItemModel::ItemModel(uint16_t itemIndex,
+ItemModel::ItemModel(ItemId itemIndex,
 			ST::string internalName,
 			uint32_t usItemClass,
 			uint8_t classIndex,
@@ -29,7 +29,7 @@ ItemModel::ItemModel(uint16_t itemIndex,
 	this->fFlags                = 0;
 }
 
-ItemModel::ItemModel(uint16_t   itemIndex,
+ItemModel::ItemModel(ItemId   itemIndex,
 			ST::string internalName,
 			ST::string shortName,
 			ST::string name,
@@ -72,7 +72,7 @@ const ST::string& ItemModel::getShortName() const      { return shortName; }
 const ST::string& ItemModel::getName() const           { return name; }
 const ST::string& ItemModel::getDescription() const     { return description; }
 
-uint16_t        ItemModel::getItemIndex() const        { return itemIndex;             }
+ItemId          ItemModel::getItemIndex() const        { return itemIndex;             }
 uint32_t        ItemModel::getItemClass() const        { return usItemClass;           }
 uint8_t         ItemModel::getClassIndex() const       { return ubClassIndex;          }
 ItemCursor      ItemModel::getCursor() const           { return ubCursor;              }
@@ -153,14 +153,14 @@ uint32_t ItemModel::deserializeFlags(JsonObjectReader &obj) const
 }
 
 /** Check if the given attachment can be attached to the item. */
-bool ItemModel::canBeAttached(uint16_t attachment) const
+bool ItemModel::canBeAttached(ItemId attachment) const
 {
 	return false;
 }
 
 void ItemModel::serializeTo(JsonObject &obj) const
 {
-    obj.AddMember("itemIndex", itemIndex);
+    obj.AddMember("itemIndex", itemIndex.inner());
     obj.AddMember("internalName", internalName);
     obj.AddMember("usItemClass", (uint32_t)getItemClass());
     obj.AddMember("ubClassIndex", getClassIndex());
@@ -206,7 +206,7 @@ ST::string ItemModel::deserializeDescription(JsonObjectReader &obj, const Vanill
 
 const ItemModel* ItemModel::deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings)
 {
-	uint16_t itemIndex = obj.GetUInt("itemIndex");
+	auto itemIndex = ItemId(obj.GetUInt("itemIndex"));
 	ST::string internalName = obj.GetString("internalName");
 	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
 	JsonObjectReader igGreader(igSource);

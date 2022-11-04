@@ -13,14 +13,14 @@ struct WeaponModel;
 struct ItemModel
 {
 	ItemModel(
-		uint16_t itemIndex,
+		ItemId itemIndex,
 		ST::string internalName,
 		uint32_t usItemClass,
 		uint8_t classIndex=0,
 		ItemCursor cursor=INVALIDCURS);
 
 	ItemModel(
-		uint16_t   itemIndex,
+		ItemId   itemIndex,
 		ST::string internalName,
 		ST::string shortName,
 		ST::string name,
@@ -46,7 +46,7 @@ struct ItemModel
 	const virtual ST::string& getName() const;
 	const virtual ST::string& getDescription() const;
 
-	virtual uint16_t        getItemIndex() const;
+	virtual ItemId          getItemIndex() const;
 	virtual uint32_t        getItemClass() const;
 	virtual uint8_t         getClassIndex() const;
 	virtual ItemCursor      getCursor() const;
@@ -88,7 +88,7 @@ struct ItemModel
 	virtual const MagazineModel* asAmmo() const   { return NULL; }
 
 	/** Check if the given attachment can be attached to the item. */
-	virtual bool canBeAttached(uint16_t attachment) const;
+	virtual bool canBeAttached(ItemId attachment) const;
 
 	virtual void serializeTo(JsonObject &obj) const;
 
@@ -97,7 +97,7 @@ struct ItemModel
 	static ST::string deserializeDescription(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
 	static const ItemModel* deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
 protected:
-	uint16_t   itemIndex;
+	ItemId     itemIndex;
 	ST::string internalName;
 	ST::string shortName;
 	ST::string name;

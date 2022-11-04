@@ -537,7 +537,7 @@ static INT32 CalcThreateningEffectiveness(UINT8 const ubMerc)
 	SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMerc);
 	if (!s) return 0;
 
-	UINT16 const item_idx = s->inv[HANDPOS].usItem;
+	ItemId const item_idx = s->inv[HANDPOS].usItem;
 	INT32 deadliness =
 		GCM->getItem(item_idx)->isWeapon() ? GCM->getWeapon(item_idx)->ubDeadliness :
 		0;
@@ -679,7 +679,7 @@ static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, Approach 
 		// Check if we have the item / are in right spot
 		if (pNPCQuoteInfo->sRequiredItem > 0)
 		{
-			if (FindObjectInSoldierProfile(GetProfile(ubNPC), pNPCQuoteInfo->sRequiredItem) == NO_SLOT)
+			if (FindObjectInSoldierProfile(GetProfile(ubNPC), ItemId(pNPCQuoteInfo->sRequiredItem)) == NO_SLOT)
 			{
 				continue;
 			}
@@ -752,30 +752,31 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 	// How much do we want to talk with this merc?
 	UINT8 const ubTalkDesire = CalcDesireToTalk(ubNPC, ubMerc, APPROACH_GIVINGITEM);
 
-	UINT16 item_to_consider = o->usItem;
+	ItemId item_to_consider = o->usItem;
 	if (GCM->getItem(item_to_consider)->getItemClass() == IC_GUN && item_to_consider != ROCKET_LAUNCHER)
 	{
 		UINT8 const weapon_class = GCM->getWeapon(item_to_consider)->ubWeaponClass;
 		if (weapon_class == RIFLECLASS || weapon_class == MGCLASS)
 		{
-			item_to_consider = ANY_RIFLE; // treat all rifles the same
+			// FIXME(ItemId): ANY_RIFLE is not a ItemId
+			item_to_consider = ItemId(ANY_RIFLE); // treat all rifles the same
 		}
 	}
-	switch (item_to_consider)
+	switch (item_to_consider.inner())
 	{
-		case HEAD_2:
-		case HEAD_3:
-		//case HEAD_4: // NOT Slay's head; it's different
-		case HEAD_5:
-		case HEAD_6:
-		case HEAD_7:
+		case HEAD_2.inner():
+		case HEAD_3.inner():
+		//case HEAD_4.inner(): // NOT Slay's head; it's different
+		case HEAD_5.inner():
+		case HEAD_6.inner():
+		case HEAD_7.inner():
 			// all treated the same in the NPC code
 			item_to_consider = HEAD_2;
 			break;
 
-		case MONEY:
-		case SILVER:
-		case GOLD:
+		case MONEY.inner():
+		case SILVER.inner():
+		case GOLD.inner():
 		{
 			Fact const fact =
 				o->uiMoneyAmount < LARGE_AMOUNT_MONEY ? FACT_SMALL_AMOUNT_OF_MONEY :
@@ -785,8 +786,8 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 			break;
 		}
 
-		case WINE:
-		case BEER:
+		case WINE.inner():
+		case BEER.inner():
 			item_to_consider = ALCOHOL;
 			break;
 
@@ -808,9 +809,10 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 		NPCQuoteInfo& q = pNPCQuoteInfoArray[i];
 
 		// First see if we want that item....
-		INT16 const req_item = q.sRequiredItem;
-		if (req_item <= 0) continue;
-		if (req_item != item_to_consider && req_item != ACCEPT_ANY_ITEM) continue;
+		ItemId const req_item = ItemId(q.sRequiredItem);
+		if (req_item == NOTHING) continue;
+		// FIXME(ItemId): ACCEPT_ANY_ITEM is not an ItemId
+		if (req_item != item_to_consider && req_item != ItemId(ACCEPT_ANY_ITEM)) continue;
 
 		// Now see if everyhting else is OK
 		if (!NPCConsiderQuote(ubNPC, ubMerc, APPROACH_GIVINGITEM, i, ubTalkDesire, pNPCQuoteInfoArray)) continue;
@@ -1888,7 +1890,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						if (pSoldier)
 						{
 							// Look for item....
-							INT8 const bInvPos = FindObj( pSoldier, pQuotePtr->usGiftItem );
+							INT8 const bInvPos = FindObj( pSoldier, ItemId(pQuotePtr->usGiftItem) );
 							if (bInvPos == NO_SLOT) throw std::logic_error("NPC.cc: Gift item does not exist in NPC.");
 
 							TalkingMenuGiveItem( ubNPC, &(pSoldier->inv[ bInvPos ] ), bInvPos );
