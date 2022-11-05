@@ -13,6 +13,10 @@
 #include "RenderWorld.h"
 #include "Weapons.h"
 #include "Items.h"
+#include "Turn_Based_Input.h"
+#include "Interactive_Tiles.h"
+#include "Message.h"
+#include "Text.h"
 
 #include <memory>
 
@@ -26,6 +30,7 @@ void TacticalTouchUIIncreaseAimCallback(GUI_BUTTON*, UINT32);
 void TacticalTouchUIBurstCallback(GUI_BUTTON*, UINT32);
 
 // For modifying move
+void TacticalTouchUIItemCallback(GUI_BUTTON*, UINT32);
 void TacticalTouchUIRunCallback(GUI_BUTTON*, UINT32);
 
 class TacticalTouchUI {
@@ -89,20 +94,28 @@ void TacticalTouchUI::rebuiltButtons() {
 	y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
 	switch (mode) {
 		case TacticalTouchUIMode::ConfirmShoot: {
-			buttons.push_back(CreateTextButton("AIM", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIIncreaseAimCallback));
+			buttons.push_back(CreateTextButton("Aim", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIIncreaseAimCallback));
 			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
-			buttons.push_back(CreateTextButton("Burst", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIBurstCallback));
+			buttons.push_back(CreateTextButton("Mode", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIBurstCallback));
+			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+			break;
+		}
+		case TacticalTouchUIMode::ConfirmAction: {
+			buttons.push_back(CreateTextButton("Run", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIRunCallback));
 			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
 			break;
 		}
 		case TacticalTouchUIMode::ConfirmMove: {
+			buttons.push_back(CreateTextButton("Item", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIItemCallback));
+			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
 			buttons.push_back(CreateTextButton("Run", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUIRunCallback));
 			y -= TACTICAL_TOUCH_UI_BUTTON_SIZE;
+			break;
 		}
 		default:
 			break;
 	}
-	buttons.push_back(CreateTextButton("Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUICancelCallback));
+	buttons.push_back(CreateTextButton("X", FONT12POINT1, FONT_BLACK, FONT_BLACK, x, y, TACTICAL_TOUCH_UI_BUTTON_SIZE, TACTICAL_TOUCH_UI_BUTTON_SIZE, MSYS_PRIORITY_HIGH, TacticalTouchUICancelCallback));
 }
 
 std::unique_ptr<TacticalTouchUI> gTacticalTouchUI = nullptr;
@@ -158,9 +171,69 @@ void TacticalTouchUIConfirmCallback(GUI_BUTTON*, UINT32 reason) {
 		} else {
 			switch( gCurrentUIMode )
 			{
-				case CONFIRM_MOVE_MODE:
-					guiPendingOverrideEvent = C_MOVE_MERC;
+				case CONFIRM_MOVE_MODE: {
+					auto returnCode = HandleMoveModeInteractiveClick(guiCurrentCursorGridNo);
+					if (gTacticalStatus.uiFlags & INCOMBAT) {
+						if ( returnCode == -2 )
+						{
+							if ( SelectedMercCanAffordMove(  )  )
+							{
+								guiPendingOverrideEvent = C_MOVE_MERC;
+							}
+						}
+						else if ( returnCode == 0 )
+						{
+							if ( gsCurrentActionPoints == 0 )
+							{
+								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+							}
+							else if ( SelectedMercCanAffordMove(  )  )
+							{
+								const BOOLEAN fResult = UIOKMoveDestination(selected, guiCurrentCursorGridNo);
+								if (fResult == 1)
+								{
+									// ATE: CHECK IF WE CAN GET TO POSITION
+									// Check if we are not in combat
+									if ( gsCurrentActionPoints == 0 )
+									{
+										ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
+									}
+									else
+									{
+										guiPendingOverrideEvent = C_MOVE_MERC;
+									}
+								}
+								else if (fResult == 2)
+								{
+									ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NOBODY_USING_REMOTE_STR]);
+								}
+							}
+						}
+					} else {
+						if (returnCode == -2) {
+							BeginDisplayTimedCursor(GetInteractiveTileCursor( guiCurrentUICursor, TRUE ), 300);
+
+							if (selected->usAnimState != RUNNING)
+							{
+								guiPendingOverrideEvent = C_MOVE_MERC;
+							}
+							else if (GetCurInteractiveTile() != NULL)
+							{
+								selected->fUIMovementFast = TRUE;
+								guiPendingOverrideEvent = C_MOVE_MERC;
+							}
+						} else if (returnCode == 0) {
+							if (UIOKMoveDestination(selected, guiCurrentCursorGridNo) == 1)
+							{
+								if ( gsCurrentActionPoints != 0 )
+								{
+									guiPendingOverrideEvent = C_MOVE_MERC;
+								}
+							}
+						}
+					}
 					break;
+				}
 				case CONFIRM_ACTION_MODE:
 					guiPendingOverrideEvent = CA_MERC_SHOOT;
 					break;
@@ -206,6 +279,16 @@ void TacticalTouchUIBurstCallback(GUI_BUTTON*, UINT32 reason) {
 		if (guiCurrentCursorGridNo == NOWHERE || selected == NULL) return;
 
 		ChangeWeaponMode(selected);
+	}
+}
+
+void TacticalTouchUIItemCallback(GUI_BUTTON*, UINT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+		auto const& sel = GetSelectedMan();
+
+		if (sel == NULL || gpItemPointer != NULL) return;
+
+		guiPendingOverrideEvent = A_ON_TERRAIN;
 	}
 }
 

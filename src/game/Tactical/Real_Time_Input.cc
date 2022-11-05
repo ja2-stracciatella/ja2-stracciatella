@@ -1383,6 +1383,9 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 					gfPlotNewMovement = TRUE;
 					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 					break;
+				case CONFIRM_ACTION_MODE:
+					gfPlotNewMovement = TRUE;
+					guiPendingOverrideEvent = M_CHANGE_TO_ACTION;
 				default:
 					break;
 			}
@@ -1416,8 +1419,6 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 			{
 				case MOVE_MODE:
 				case CONFIRM_MOVE_MODE:
-				case ACTION_MODE:
-				case CONFIRM_ACTION_MODE:
 				case LOOKCURSOR_MODE:
 				case HANDCURSOR_MODE:
 				case TALKCURSOR_MODE:
@@ -1435,6 +1436,12 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 							guiPendingOverrideEvent = C_WAIT_FOR_CONFIRM;
 						}
 					}
+					break;
+				case ACTION_MODE:
+				case CONFIRM_ACTION_MODE:
+					// If we went up in action mode, change to confirm action mode
+					gfPlotNewMovement = TRUE;
+					guiPendingOverrideEvent = CA_ON_TERRAIN;
 					break;
 				case ADJUST_STANCE_MODE:
 					guiPendingOverrideEvent = PADJ_ADJUST_STANCE;

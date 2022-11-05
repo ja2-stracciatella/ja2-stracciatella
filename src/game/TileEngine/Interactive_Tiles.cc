@@ -1,4 +1,5 @@
 #include "Animation_Data.h"
+#include "Cursor_Control.h"
 #include "Cursors.h"
 #include "Font_Control.h"
 #include "HImage.h"
@@ -323,8 +324,8 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 	ConvertGridNoToCellXY(sGridNo, &sXMapPos, &sYMapPos);
 
 	// Set mouse stuff
-	INT16 const sScreenX = gusMouseXPos;
-	INT16 const sScreenY = gusMouseYPos;
+	SGPPoint cursorPosition = {};
+	GetCursorPos(cursorPosition);
 
 	for (LEVELNODE const* n = gpWorldLevelData[sGridNo].pStructHead; n; n = n->pNext)
 	{
@@ -332,9 +333,9 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 		GetLevelNodeScreenRect(*n, aRect, sXMapPos, sYMapPos, sGridNo);
 
 		// Make sure we are always on guy if we are on same gridno
-		if (!IsPointInScreenRect(sScreenX, sScreenY, aRect)) continue;
+		if (!IsPointInScreenRect(cursorPosition.iX, cursorPosition.iY, aRect)) continue;
 
-		if (!RefinePointCollisionOnStruct(sScreenX, sScreenY, aRect.iLeft, aRect.iBottom, *n)) continue;
+		if (!RefinePointCollisionOnStruct(cursorPosition.iX, cursorPosition.iY, aRect.iLeft, aRect.iBottom, *n)) continue;
 
 		if (!RefineLogicOnStruct(sGridNo, *n)) continue;
 
