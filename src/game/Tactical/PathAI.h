@@ -41,6 +41,25 @@ extern BOOLEAN gfEstimatePath;
 extern BOOLEAN	gfPathAroundObstacles;
 extern UINT8 gubGlobalPathFlags;
 
+class SaveNPCBudgetAndDistLimit
+{
+	UINT8 mNPCAPBudget{gubNPCAPBudget};
+	UINT8 mNPCDistLimit{gubNPCDistLimit};
+
+public:
+	SaveNPCBudgetAndDistLimit(UINT8 const newBudget, UINT8 const newDistLimit)
+	{
+		gubNPCAPBudget = newBudget;
+		gubNPCDistLimit = newDistLimit;
+	}
+
+	~SaveNPCBudgetAndDistLimit()
+	{
+		gubNPCAPBudget = mNPCAPBudget;
+		gubNPCDistLimit = mNPCDistLimit;
+	}
+};
+
 // Ian's terrain values for travelling speed/pathing purposes
 // Fixed by CJC March 4, 1998.  Please do not change these unless familiar
 // with how this will affect the path code!

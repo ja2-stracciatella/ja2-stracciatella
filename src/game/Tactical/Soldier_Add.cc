@@ -236,16 +236,11 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
 	UINT8 ubBestDirection=0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.
-	ubSaveNPCAPBudget = gubNPCAPBudget;
-	ubSaveNPCDistLimit = gubNPCDistLimit;
-	gubNPCAPBudget = 0;
-	gubNPCDistLimit = ubRadius;
+	SaveNPCBudgetAndDistLimit const savePathAIvars(0, ubRadius);
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
@@ -368,8 +363,7 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 			}
 		}
 	}
-	gubNPCAPBudget = ubSaveNPCAPBudget;
-	gubNPCDistLimit = ubSaveNPCDistLimit;
+
 	if ( fFound )
 	{
 		// Set direction we chose...
@@ -395,16 +389,11 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
 	UINT8 ubBestDirection = 0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.
-	ubSaveNPCAPBudget = gubNPCAPBudget;
-	ubSaveNPCDistLimit = gubNPCDistLimit;
-	gubNPCAPBudget = 0;
-	gubNPCDistLimit = ubRadius;
+	SaveNPCBudgetAndDistLimit const savePathAIvars(0, ubRadius);
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
@@ -539,8 +528,7 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 			}
 		}
 	}
-	gubNPCAPBudget = ubSaveNPCAPBudget;
-	gubNPCDistLimit = ubSaveNPCDistLimit;
+
 	if ( fFound )
 	{
 		// Set direction we chose...
@@ -852,18 +840,13 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 	BOOLEAN fFound = FALSE;
 	UINT32  cnt = 0;
 	SOLDIERTYPE soldier;
-	UINT8   ubSaveNPCAPBudget;
-	UINT8   ubSaveNPCDistLimit;
 	INT16   sTop, sBottom;
 	INT16   sLeft, sRight;
 	INT16   cnt1, cnt2;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.
-	ubSaveNPCAPBudget = gubNPCAPBudget;
-	ubSaveNPCDistLimit = gubNPCDistLimit;
-	gubNPCAPBudget = 0;
-	gubNPCDistLimit = ubRadius;
+	SaveNPCBudgetAndDistLimit const savePathAIvars(0, ubRadius);
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
@@ -935,9 +918,6 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 		}
 
 	} while( !fFound );
-
-	gubNPCAPBudget = ubSaveNPCAPBudget;
-	gubNPCDistLimit = ubSaveNPCDistLimit;
 
 	return( sGridNo );
 }
