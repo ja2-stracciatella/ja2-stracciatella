@@ -3446,20 +3446,14 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 	INT16   sLowestGridNo=0;
 	INT32   leftmost;
 	BOOLEAN fFound = FALSE;
-	SOLDIERTYPE soldier;
-	UINT8   ubSaveNPCAPBudget;
-	UINT8   ubSaveNPCDistLimit;
+	SOLDIERTYPE soldier{};
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.
-	ubSaveNPCAPBudget = gubNPCAPBudget;
-	ubSaveNPCDistLimit = gubNPCDistLimit;
-	gubNPCAPBudget = 0;
-	gubNPCDistLimit = ubRadius;
+	SaveNPCBudgetAndDistLimit const savePathAIvars(0, ubRadius);
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	soldier = SOLDIERTYPE{};
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
@@ -3513,8 +3507,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 			}
 		}
 	}
-	gubNPCAPBudget = ubSaveNPCAPBudget;
-	gubNPCDistLimit = ubSaveNPCDistLimit;
+
 	if ( fFound )
 	{
 		return sLowestGridNo;
