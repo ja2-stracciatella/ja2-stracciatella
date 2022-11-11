@@ -2421,7 +2421,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 		gfScrolledToLeft   = std::abs(sTopLeftWorldX  - gsLeftX) <= std::abs(SCROLL_LEFT_PADDING);
 		gfScrolledToRight  = std::abs(sBottomRightWorldX  - gsRightX) <= std::abs(SCROLL_RIGHT_PADDING) + CELL_X_SIZE;
 		gfScrolledToTop    = std::abs(sTopLeftWorldY  - gsTopY) <= std::abs(SCROLL_TOP_PADDING);
-		gfScrolledToBottom = std::abs(sBottomRightWorldY  - gsBottomY) <= std::abs(SCROLL_BOTTOM_PADDING) + CELL_Y_SIZE;
+		gfScrolledToBottom = std::abs(sBottomRightWorldY  - gsBottomY) <= std::abs(SCROLL_BOTTOM_PADDING) + CELL_Y_SIZE * 2;
 
 		SetPositionSndsVolumeAndPanning();
 	}
