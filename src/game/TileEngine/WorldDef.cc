@@ -2610,26 +2610,6 @@ void TrashWorld(void)
 	gfWorldLoaded = FALSE;
 }
 
-static void TrashMapTile(const INT16 MapTile)
-{
-	MAP_ELEMENT* const me = &gpWorldLevelData[MapTile];
-
-	// Free the memory associated with the map tile link lists
-	me->pLandStart = NULL;
-	FreeLevelNodeList(&me->pLandHead);
-	FreeLevelNodeList(&me->pObjectHead);
-	FreeLevelNodeList(&me->pStructHead);
-	FreeLevelNodeList(&me->pShadowHead);
-	FreeLevelNodeList(&me->pMercHead);
-	FreeLevelNodeList(&me->pRoofHead);
-	FreeLevelNodeList(&me->pOnRoofHead);
-	FreeLevelNodeList(&me->pTopmostHead);
-
-	while (me->pStructureHead != NULL)
-	{
-		DeleteStructureFromWorld(me->pStructureHead);
-	}
-}
 
 void LoadMapTileset(TileSetID const id)
 {
