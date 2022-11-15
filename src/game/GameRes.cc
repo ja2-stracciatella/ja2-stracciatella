@@ -6,7 +6,6 @@
 #include "sgp/FileMan.h"
 
 #include "Directories.h"
-#include "Multi_Language_Graphic_Utils.h"
 #include "Text.h"
 #include "GameMode.h"
 #include "EncodingCorrectors.h"

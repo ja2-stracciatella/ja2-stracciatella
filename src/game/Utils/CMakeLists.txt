@@ -13,7 +13,6 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Music_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Observable.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/PopUpBox.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Quantize.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/STIConvert.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Slider.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Sound_Control.cc

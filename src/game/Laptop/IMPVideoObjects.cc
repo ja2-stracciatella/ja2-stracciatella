@@ -4,7 +4,7 @@
 #include "VObject.h"
 #include "Render_Dirty.h"
 #include "Laptop.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "IMP_Attribute_Selection.h"
 #include "Button_System.h"
 #include "Video.h"

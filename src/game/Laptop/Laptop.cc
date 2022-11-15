@@ -77,7 +77,7 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "Cursor_Control.h"
 #include "Quests.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "BrokenLink.h"
 #include "BobbyRShipments.h"
 #include "Dialogue_Control.h"

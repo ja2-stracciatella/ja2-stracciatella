@@ -34,7 +34,7 @@
 #include "GameSettings.h"
 #include "Random.h"
 #include "Creature_Spreading.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "Map_Screen_Helicopter.h"
 #include "MapScreen.h"
 #include "Quests.h"

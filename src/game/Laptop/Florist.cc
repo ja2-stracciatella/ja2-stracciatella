@@ -8,7 +8,7 @@
 #include "Cursors.h"
 #include "Florist_Cards.h"
 #include "Text.h"
-#include "Multi_Language_Graphic_Utils.h"
+#include "GameRes.h"
 #include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"

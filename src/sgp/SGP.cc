@@ -48,8 +48,6 @@
 #include "jni.h"
 #endif
 
-#include "Multi_Language_Graphic_Utils.h"
-
 #include <string_theory/format>
 
 #include <exception>
