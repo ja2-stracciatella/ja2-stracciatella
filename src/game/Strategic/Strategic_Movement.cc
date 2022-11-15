@@ -1081,7 +1081,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		if (g.fVehicle)
 		{
 			VEHICLETYPE const& v = GetVehicleFromMvtGroup(g);
-			if (!IsHelicopter(v) && !g.pPlayerList)
+			// Group size of 1 means the vehicle is the only member of this group.
+			if (!IsHelicopter(v) && g.ubGroupSize <= 1)
 			{ /* Nobody here, better just get out now. With vehicles, arriving empty
 				* is probably ok, since passengers might have been killed but vehicle
 				* lived. */
@@ -1120,18 +1121,13 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	{ /* Queue battle! Delay arrival by a random value ranging from 3-5 minutes,
 		* so it doesn't get the player too suspicious after it happens to him a few
 		* times, which, by the way, is a rare occurrence. */
-		if (AreInMeanwhile())
-		{ /* Tack on only 1 minute if we are in a meanwhile scene. This effectively
-			* prevents any battle from occurring while inside a meanwhile scene. */
-			++g.uiArrivalTime;
-		}
-		else
-		{
-			g.uiArrivalTime += Random(3) + 3;
-		}
+
+		/* Tack on only 1 minute if we are in a meanwhile scene. This effectively
+		 * prevents any battle from occurring while inside a meanwhile scene. */
+		g.setArrivalTime(g.uiArrivalTime + (AreInMeanwhile() ? 1 : (Random(3) + 3)));
 
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-			SLOGA("Failed to add movement event.");
+			SLOGA("GroupArrivedAtSector: Failed to add movement event.");
 
 		if (g.fPlayer && g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
 		{
@@ -1627,7 +1623,7 @@ static void DelayEnemyGroupsIfPathsCross(GROUP& player_group)
 		 * values to figure out how far along its route a group is! */
 		g.setArrivalTime(player_group.uiArrivalTime + 1 + Random(10));
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-			SLOGA("Failed to add movement event.");
+			SLOGA("DelayEnemyGroupsIfPathsCross: Failed to add movement event.");
 	}
 }
 
@@ -1770,7 +1766,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 
 	//Post the event!
 	if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
-		SLOGA("Failed to add movement event.");
+		SLOGA("InitiateGroupMovementToNextSector: Failed to add movement event.");
 
 	//For the case of player groups, we need to update the information of the soldiers.
 	if( pGroup->fPlayer )
@@ -2762,7 +2758,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	}
 
 	if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-		SLOGA("Failed to add movement event.");
+		SLOGA("RetreatGroupToPreviousSector: Failed to add movement event.");
 
 	// For the case of player groups, we need to update the information of the soldiers.
 	if (g.fPlayer)
