@@ -965,7 +965,7 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const&, GridNo, bool add_turning_cost);
 UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add_turning_cost)
 {
 	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
-	UINT16            item    = in_hand.usItem;
+	ItemId            item    = in_hand.usItem;
 	if (s->bWeaponMode == WM_ATTACHED)
 	{ // Look for an attached grenade launcher
 		INT8 const attach_slot = FindAttachment(&in_hand, UNDER_GLAUNCHER);
@@ -987,7 +987,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add
 }
 
 
-static INT8 CalcAimSkill(SOLDIERTYPE const& s, UINT16 const weapon)
+static INT8 CalcAimSkill(SOLDIERTYPE const& s, ItemId const weapon)
 {
 	switch (GCM->getItem(weapon)->getItemClass())
 	{
@@ -1064,8 +1064,7 @@ void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo gr
 UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_cost)
 {
 	OBJECTTYPE const& in_hand = s.inv[HANDPOS];
-	UINT16     const  item =
-	s.bWeaponMode == WM_ATTACHED ? UNDER_GLAUNCHER : in_hand.usItem;
+	ItemId     const  item = s.bWeaponMode == WM_ATTACHED ? UNDER_GLAUNCHER : in_hand.usItem;
 
 	BOOLEAN	adding_turning_cost;
 	BOOLEAN	adding_raise_gun_cost;
@@ -1135,7 +1134,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 		INT8 const attach_slot = FindAttachment(&in_hand, UNDER_GLAUNCHER);
 		INT8 const status      = attach_slot != NO_SLOT ? in_hand.bAttachStatus[attach_slot] :
 						100; // Fake it, use a 100 status
-		OBJECTTYPE grenade_launcher;
+		OBJECTTYPE grenade_launcher = {};
 		CreateItem(UNDER_GLAUNCHER, status, &grenade_launcher);
 
 		ap_cost += BaseAPsToShootOrStab(full_aps, aim_skill, grenade_launcher);
@@ -1307,7 +1306,7 @@ INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode)
 BOOLEAN EnoughAmmo(SOLDIERTYPE* const s, BOOLEAN const fDisplay, INT8 const inv_pos)
 {
 	OBJECTTYPE const& o        = s->inv[inv_pos];
-	UINT16     const  item_idx = o.usItem;
+	ItemId     const  item_idx = o.usItem;
 	if (item_idx == NOTHING) return FALSE;
 
 	if (s->bWeaponMode == WM_ATTACHED) return TRUE;
@@ -1596,7 +1595,7 @@ BOOLEAN CheckForMercContMove(SOLDIERTYPE* const s)
 
 INT16 GetAPsToReadyWeapon(const SOLDIERTYPE* const pSoldier, const UINT16 usAnimState)
 {
-	UINT16 usItem;
+	ItemId usItem;
 
 	// If this is a dwel pistol anim
 	// ATE: What was I thinking, hooking into animations like this....
@@ -1679,7 +1678,7 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 	INT32 ap = AP_MIN_AIM_ATTACK;
 
 	// Make sure the guy's actually got a throwable item in his hand
-	UINT16 const in_hand = s.inv[HANDPOS].usItem;
+	ItemId const in_hand = s.inv[HANDPOS].usItem;
 	const ItemModel *item = GCM->getItem(in_hand);
 	if (!item)
 	{

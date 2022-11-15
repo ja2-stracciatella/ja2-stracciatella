@@ -102,11 +102,11 @@ public:
 	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) = 0;
 
 	/** Get weapons with the give index. */
-	virtual const WeaponModel* getWeapon(uint16_t index) = 0;
+	virtual const WeaponModel* getWeapon(ItemId index) = 0;
 	virtual const WeaponModel* getWeaponByName(const ST::string &internalName) = 0;
 
 	virtual const MagazineModel* getMagazineByName(const ST::string &internalName) = 0;
-	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) = 0;
+	virtual const MagazineModel* getMagazineByItemIndex(ItemId itemIndex) = 0;
 	virtual const std::vector<const MagazineModel*>& getMagazines() const = 0;
 
 	virtual const CalibreModel* getCalibre(uint8_t index) = 0;

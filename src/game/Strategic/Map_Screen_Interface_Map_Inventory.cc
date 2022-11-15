@@ -1384,8 +1384,8 @@ static INT32 MapScreenSectorInventoryCompare(const void* pNum1, const void* pNum
 {
 	WORLDITEM *pFirst = (WORLDITEM *)pNum1;
 	WORLDITEM *pSecond = (WORLDITEM *)pNum2;
-	UINT16	usItem1Index;
-	UINT16	usItem2Index;
+	ItemId	usItem1Index;
+	ItemId	usItem2Index;
 	UINT8		ubItem1Quality;
 	UINT8		ubItem2Quality;
 

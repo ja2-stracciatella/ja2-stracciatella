@@ -59,9 +59,9 @@ SGPSector g_merc_arrive_sector;
 Observable<SOLDIERTYPE*> OnMercHired{};
 
 
-void CreateSpecialItem(SOLDIERTYPE* const s, UINT16 item)
+void CreateSpecialItem(SOLDIERTYPE* const s, ItemId item)
 {
-	OBJECTTYPE o;
+	OBJECTTYPE o = {};
 	CreateItem(item, 100, &o);
 	BOOLEAN fReturn = AutoPlaceObject(s, &o, FALSE);
 	if (!fReturn) {
@@ -96,7 +96,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		h.sSector = g_merc_arrive_sector;
 	}
 
-	SOLDIERCREATE_STRUCT MercCreateStruct;
+	SOLDIERCREATE_STRUCT MercCreateStruct = {};
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile             = pid;
 	MercCreateStruct.sSector               = h.sSector;

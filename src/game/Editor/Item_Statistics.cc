@@ -110,28 +110,28 @@ ST::string GetActionItemName(const OBJECTTYPE* pItem)
 			default:																	return ST::null;
 		}
 	}
-	else switch( pItem->usBombItem )
+	else switch( pItem->usBombItem.inner() )
 	{
-		case STUN_GRENADE:			return gszActionItemDesc[ ACTIONITEM_STUN ];
-		case SMOKE_GRENADE:			return gszActionItemDesc[ ACTIONITEM_SMOKE ];
-		case TEARGAS_GRENADE:		return gszActionItemDesc[ ACTIONITEM_TEARGAS ];
-		case MUSTARD_GRENADE:		return gszActionItemDesc[ ACTIONITEM_MUSTARD ];
-		case HAND_GRENADE:			return gszActionItemDesc[ ACTIONITEM_SMALL ];
-		case TNT:								return gszActionItemDesc[ ACTIONITEM_MEDIUM ];
-		case C4:								return gszActionItemDesc[ ACTIONITEM_LARGE ];
-		case MINE:							return gszActionItemDesc[ ACTIONITEM_MINE ];
-		case TRIP_FLARE:				return gszActionItemDesc[ ACTIONITEM_FLARE ];
-		case TRIP_KLAXON:				return gszActionItemDesc[ ACTIONITEM_TRIP_KLAXON ];
-		case BIG_TEAR_GAS:			return gszActionItemDesc[ ACTIONITEM_BIG_TEAR_GAS ];
+		case STUN_GRENADE.inner():			return gszActionItemDesc[ ACTIONITEM_STUN ];
+		case SMOKE_GRENADE.inner():			return gszActionItemDesc[ ACTIONITEM_SMOKE ];
+		case TEARGAS_GRENADE.inner():		return gszActionItemDesc[ ACTIONITEM_TEARGAS ];
+		case MUSTARD_GRENADE.inner():		return gszActionItemDesc[ ACTIONITEM_MUSTARD ];
+		case HAND_GRENADE.inner():			return gszActionItemDesc[ ACTIONITEM_SMALL ];
+		case TNT.inner():								return gszActionItemDesc[ ACTIONITEM_MEDIUM ];
+		case C4.inner():								return gszActionItemDesc[ ACTIONITEM_LARGE ];
+		case MINE.inner():							return gszActionItemDesc[ ACTIONITEM_MINE ];
+		case TRIP_FLARE.inner():				return gszActionItemDesc[ ACTIONITEM_FLARE ];
+		case TRIP_KLAXON.inner():				return gszActionItemDesc[ ACTIONITEM_TRIP_KLAXON ];
+		case BIG_TEAR_GAS.inner():			return gszActionItemDesc[ ACTIONITEM_BIG_TEAR_GAS ];
 		default:								return ST::null;
 	}
 }
 
 struct AttachmentInfo
 {
-	AttachmentInfo(UINT16 const a, const ST::string& l) : attachment(a), label(l), attached(false) {}
+	AttachmentInfo(ItemId const a, const ST::string& l) : attachment(a), label(l), attached(false) {}
 
-	UINT16         const attachment;
+	ItemId         const attachment;
 	const ST::string     label;
 	GUIButtonRef         button;
 	bool                 attached;
@@ -761,7 +761,7 @@ static void ExtractAndUpdateAmmoGUI(void)
 static void ToggleAttachment(AttachmentInfo& a)
 {
 	OBJECTTYPE& o = *gpItem;
-	OBJECTTYPE  temp;
+	OBJECTTYPE  temp = {};
 	a.attached = !a.attached;
 	if (a.attached)
 	{
@@ -1198,134 +1198,134 @@ static void ActionItemCallback(GUI_BUTTON* btn, UINT32 reason)
 
 void ChangeActionItem( OBJECTTYPE *pItem, INT8 bActionItemIndex )
 {
-	pItem->usItem = ACTION_ITEM;
+	pItem->usItem = ItemId(ACTION_ITEM);
 	pItem->bActionValue = ACTION_ITEM_BLOW_UP;
 	switch( bActionItemIndex )
 	{
 		case ACTIONITEM_TRIP_KLAXON:
-			pItem->usBombItem = TRIP_KLAXON;
+			pItem->usBombItem = ItemId(TRIP_KLAXON);
 			break;
 		case ACTIONITEM_FLARE:
-			pItem->usBombItem = TRIP_FLARE;
+			pItem->usBombItem = ItemId(TRIP_FLARE);
 			break;
 		case ACTIONITEM_TEARGAS:
-			pItem->usBombItem = TEARGAS_GRENADE;
+			pItem->usBombItem = ItemId(TEARGAS_GRENADE);
 			break;
 		case ACTIONITEM_STUN:
-			pItem->usBombItem = STUN_GRENADE;
+			pItem->usBombItem = ItemId(STUN_GRENADE);
 			break;
 		case ACTIONITEM_SMOKE:
-			pItem->usBombItem = SMOKE_GRENADE;
+			pItem->usBombItem = ItemId(SMOKE_GRENADE);
 			break;
 		case ACTIONITEM_MUSTARD:
-			pItem->usBombItem = MUSTARD_GRENADE;
+			pItem->usBombItem = ItemId(MUSTARD_GRENADE);
 			break;
 		case ACTIONITEM_MINE:
-			pItem->usBombItem = MINE;
+			pItem->usBombItem = ItemId(MINE);
 			break;
 		case ACTIONITEM_OPEN:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_OPEN_DOOR;
 			break;
 		case ACTIONITEM_CLOSE:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_CLOSE_DOOR;
 			break;
 		case ACTIONITEM_UNLOCK_DOOR:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_UNLOCK_DOOR;
 			break;
 		case ACTIONITEM_TOGGLE_LOCK:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_TOGGLE_LOCK;
 			break;
 		case ACTIONITEM_UNTRAP_DOOR:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_UNTRAP_DOOR;
 			break;
 		case ACTIONITEM_TOGGLE_PRESSURE_ITEMS:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_TOGGLE_PRESSURE_ITEMS;
 			break;
 		case ACTIONITEM_SMPIT:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_SMALL_PIT;
 			break;
 		case ACTIONITEM_LGPIT:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_LARGE_PIT;
 			break;
 		case ACTIONITEM_TOGGLE_DOOR:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_TOGGLE_DOOR;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION1:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_TOGGLE_ACTION1;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION2:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_TOGGLE_ACTION2;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION3:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_TOGGLE_ACTION3;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION4:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_TOGGLE_ACTION4;
 			break;
 		case ACTIONITEM_ENTER_BROTHEL:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_ENTER_BROTHEL;
 			break;
 		case ACTIONITEM_EXIT_BROTHEL:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_EXIT_BROTHEL;
 			break;
 		case ACTIONITEM_KINGPIN_ALARM:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_KINGPIN_ALARM;
 			break;
 		case ACTIONITEM_SEX:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_SEX;
 			break;
 		case ACTIONITEM_REVEAL_ROOM:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_REVEAL_ROOM;
 			break;
 		case ACTIONITEM_LOCAL_ALARM:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_LOCAL_ALARM;
 			break;
 		case ACTIONITEM_GLOBAL_ALARM:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_GLOBAL_ALARM;
 			break;
 		case ACTIONITEM_KLAXON:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_KLAXON;
 			break;
 		case ACTIONITEM_SMALL:
-			pItem->usBombItem = HAND_GRENADE;
+			pItem->usBombItem = ItemId(HAND_GRENADE);
 			break;
 		case ACTIONITEM_MEDIUM:
-			pItem->usBombItem = TNT;
+			pItem->usBombItem = ItemId(TNT);
 			break;
 		case ACTIONITEM_LARGE:
-			pItem->usBombItem = C4;
+			pItem->usBombItem = ItemId(C4);
 			break;
 		case ACTIONITEM_MUSEUM_ALARM:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_MUSEUM_ALARM;
 			break;
 		case ACTIONITEM_BLOODCAT_ALARM:
-			pItem->usBombItem = NOTHING;
+			pItem->usBombItem = ItemId(NOTHING);
 			pItem->bActionValue = ACTION_ITEM_BLOODCAT_ALARM;
 			break;
 		case ACTIONITEM_BIG_TEAR_GAS:
-			pItem->usBombItem = BIG_TEAR_GAS;
+			pItem->usBombItem = ItemId(BIG_TEAR_GAS);
 			break;
 
 	}

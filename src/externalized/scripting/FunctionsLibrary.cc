@@ -55,7 +55,7 @@ UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
 OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 bStatus)
 {
 	OBJECTTYPE* o = new OBJECTTYPE{};
-	CreateItem(usItem, bStatus, o);
+	CreateItem(ItemId(usItem), bStatus, o);
 	return o;
 }
 
@@ -113,16 +113,16 @@ void PutGameStates(const std::string key, ExtraGameStatesTable const states)
 	g_gameStates.Set(ST::format("scripts:{}", key), storables);
 }
 
-void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, UINT16, UINT8);
+void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, ItemId, UINT8);
 void GuaranteeAtLeastXItemsOfIndex_(INT8 const bDealerID, UINT16 const usItemIndex, UINT8 const ubNumItems)
 {
-	GuaranteeAtLeastXItemsOfIndex((ArmsDealerID)bDealerID, usItemIndex, ubNumItems);
+	GuaranteeAtLeastXItemsOfIndex((ArmsDealerID)bDealerID, ItemId(usItemIndex), ubNumItems);
 }
 
-void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID, UINT16, UINT8);
+void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID, ItemId, UINT8);
 void RemoveRandomItemFromDealerInventory(INT8 bDealerID, UINT16 usItemIndex, UINT8 ubHowMany)
 {
-	RemoveRandomItemFromArmsDealerInventory((ArmsDealerID)bDealerID, usItemIndex, ubHowMany);
+	RemoveRandomItemFromArmsDealerInventory((ArmsDealerID)bDealerID, ItemId(usItemIndex), ubHowMany);
 }
 
 std::vector<DEALER_ITEM_HEADER*> GetDealerInventory(UINT8 ubDealerID)

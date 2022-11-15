@@ -1146,7 +1146,7 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		const INT16 PosX = STD_SCREEN_X + 397 + 3;
 		const INT16 PosY = STD_SCREEN_Y +  200 + 8 + item_count * 29;
 
-		UINT16  const  item_idx = o.usItem;
+		ItemId  const  item_idx = o.usItem;
 		const ItemModel * item = GCM->getItem(item_idx);
 
 		auto graphic = GetSmallInventoryGraphicForItem(item);

@@ -23,8 +23,8 @@ enum
 	GUN_SHOTGUN
 };
 
-WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor, uint16_t itemIndex, ST::string internalName_, ST::string shortName_, ST::string name_, ST::string description_, ST::string internalType_)
-	:ItemModel(itemIndex, std::move(internalName_), itemClass, itemIndex, (ItemCursor)cursor),
+WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor, ItemId itemIndex, ST::string internalName_, ST::string shortName_, ST::string name_, ST::string description_, ST::string internalType_)
+	:ItemModel(itemIndex, std::move(internalName_), itemClass, itemIndex.inner(), (ItemCursor)cursor),
 	sound(NO_WEAPON_SOUND_STR),
 	burstSound(NO_WEAPON_SOUND_STR),
 	attachSilencer(false),
@@ -63,7 +63,7 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
 
 void WeaponModel::serializeTo(JsonObject &obj) const
 {
-	obj.AddMember("itemIndex",            itemIndex);
+	obj.AddMember("itemIndex",            itemIndex.inner());
 	obj.AddMember("internalName",         internalName);
 	obj.AddMember("internalType",         internalType);
 	obj.AddMember("inventoryGraphics",    inventoryGraphics.serialize(obj.getAllocator()).getValue());
@@ -107,7 +107,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 					const VanillaItemStrings& vanillaItemStrings)
 {
 	WeaponModel *wep = NULL;
-	int itemIndex = obj.GetInt("itemIndex");
+	auto itemIndex = ItemId(obj.GetInt("itemIndex"));
 	ST::string internalName = obj.GetString("internalName");
 	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
 	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
@@ -539,7 +539,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		ST::string Sound         = obj.getOptionalString("sound");
-		uint16_t smokeEffect     = obj.GetInt("usSmokeEffect");
+		auto smokeEffect     = ItemId(obj.GetUInt("usSmokeEffect"));
 		wep = new MonsterSpit(itemIndex, internalName, shortName, name, description,
 					calibre,
 					Impact,
@@ -615,7 +615,7 @@ bool WeaponModel::isSameMagCapacity(const MagazineModel *mag) const
 }
 
 /** Check if the given attachment can be attached to the item. */
-bool WeaponModel::canBeAttached(uint16_t attachment) const
+bool WeaponModel::canBeAttached(ItemId attachment) const
 {
 	return (attachSilencer && (attachment == SILENCER))
 		|| (attachSniperScope && (attachment == SNIPERSCOPE))
@@ -642,12 +642,12 @@ int WeaponModel::getRateOfFire() const
 //
 ////////////////////////////////////////////////////////////
 
-NoWeapon::NoWeapon(uint16_t itemIndex, const ST::string& internalName)
+NoWeapon::NoWeapon(ItemId itemIndex, const ST::string& internalName)
 	:NoWeapon(itemIndex, internalName, IC_NONE, INVALIDCURS)
 {
 }
 
-NoWeapon::NoWeapon(uint16_t itemIndex, const ST::string& internalName, uint32_t itemClass, uint8_t cursor)
+NoWeapon::NoWeapon(ItemId itemIndex, const ST::string& internalName, uint32_t itemClass, uint8_t cursor)
 	: WeaponModel(itemClass, NOT_GUN, cursor, itemIndex, internalName, ST::string(), ST::string(), ST::string(), WEAPON_TYPE_NOWEAPON)
 {
 }
@@ -661,7 +661,7 @@ void NoWeapon::serializeTo(JsonObject &obj) const
 }
 
 
-Pistol::Pistol(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+Pistol::Pistol(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -713,7 +713,7 @@ void Pistol::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-MPistol::MPistol(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+MPistol::MPistol(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 			const CalibreModel *calibre,
 			uint8_t BulletSpeed,
 			uint8_t Impact,
@@ -777,7 +777,7 @@ void MPistol::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-SMG::SMG(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+SMG::SMG(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -841,7 +841,7 @@ void SMG::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-SniperRifle::SniperRifle(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+SniperRifle::SniperRifle(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 				const CalibreModel *calibre,
 				uint8_t BulletSpeed,
 				uint8_t Impact,
@@ -893,7 +893,7 @@ void SniperRifle::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-Rifle::Rifle(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+Rifle::Rifle(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -945,7 +945,7 @@ void Rifle::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+AssaultRifle::AssaultRifle(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 				const CalibreModel *calibre,
 				uint8_t BulletSpeed,
 				uint8_t Impact,
@@ -1009,7 +1009,7 @@ void AssaultRifle::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-Shotgun::Shotgun(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+Shotgun::Shotgun(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 			const CalibreModel *calibre,
 			uint8_t BulletSpeed,
 			uint8_t Impact,
@@ -1073,7 +1073,7 @@ void Shotgun::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-LMG::LMG(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+LMG::LMG(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -1137,7 +1137,7 @@ void LMG::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-Blade::Blade(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+Blade::Blade(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 		uint8_t Impact,
 		uint8_t ShotsPer4Turns,
 		uint8_t Deadliness,
@@ -1170,7 +1170,7 @@ void Blade::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-ThrowingBlade::ThrowingBlade(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+ThrowingBlade::ThrowingBlade(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 				uint8_t Impact,
 				uint8_t ShotsPer4Turns,
 				uint8_t Deadliness,
@@ -1203,7 +1203,7 @@ void ThrowingBlade::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-PunchWeapon::PunchWeapon(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+PunchWeapon::PunchWeapon(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 				uint8_t Impact,
 				uint8_t ShotsPer4Turns,
 				uint8_t Deadliness,
@@ -1234,7 +1234,7 @@ void PunchWeapon::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-Launcher::Launcher(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+Launcher::Launcher(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 			uint8_t BulletSpeed,
 			uint8_t ReadyTime,
 			uint8_t ShotsPer4Turns,
@@ -1273,7 +1273,7 @@ void Launcher::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-LAW::LAW(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+LAW::LAW(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
 		uint8_t ShotsPer4Turns,
@@ -1313,7 +1313,7 @@ void LAW::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-Cannon::Cannon(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+Cannon::Cannon(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
 		uint8_t ShotsPer4Turns,
@@ -1353,7 +1353,7 @@ void Cannon::serializeTo(JsonObject &obj) const
 	serializeFlags(obj);
 }
 
-MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+MonsterSpit::MonsterSpit(ItemId itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
 				const CalibreModel *calibre,
 				uint8_t Impact,
 				uint8_t ShotsPer4Turns,
@@ -1363,7 +1363,7 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string internalName, ST::string
 				uint8_t AttackVolume,
 				uint8_t HitVolume,
 				ST::string Sound,
-				uint16_t smokeEffect)
+				ItemId smokeEffect)
 	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName, shortName, name, description, "MONSTSPIT")
 {
 	ubWeaponClass        = MONSTERCLASS;
@@ -1394,7 +1394,7 @@ void MonsterSpit::serializeTo(JsonObject &obj) const
 	obj.AddMember("ubAttackVolume",       ubAttackVolume);
 	obj.AddMember("ubHitVolume",          ubHitVolume);
 	obj.AddMember("sound",                sound);
-	obj.AddMember("ubSmokeEffect",        usSmokeEffect);
+	obj.AddMember("ubSmokeEffect",        usSmokeEffect.inner());
 	serializeAttachments(obj);
 	serializeFlags(obj);
 }

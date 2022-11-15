@@ -692,7 +692,7 @@ struct SOLDIERTYPE
 	TIMECOUNTER NextTileCounter;
 	BOOLEAN fBlockedByAnotherMerc;
 	INT8 bBlockedByAnotherMercDirection;
-	UINT16 usAttackingWeapon;
+	ItemId usAttackingWeapon;
 	SOLDIERTYPE* target;
 	WeaponModes bWeaponMode;
 	INT8 bAIScheduleProgress;
@@ -899,7 +899,7 @@ void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
 void EVENT_SetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
 void EVENT_SetSoldierDesiredDirectionForward(SOLDIERTYPE* s, UINT16 new_direction);
 void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
-void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, SOLDIERTYPE* att, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sLocationGrid);
+void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, ItemId usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, SOLDIERTYPE* att, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sLocationGrid);
 void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
@@ -969,7 +969,7 @@ void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usD
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy );
-void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 usOldItem, UINT16 usNewItem );
+void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, ItemId usOldItem, ItemId usNewItem );
 
 bool CheckForBreathCollapse(SOLDIERTYPE&);
 
@@ -1052,7 +1052,7 @@ extern BOOLEAN gfGetNewPathThroughPeople;
 
 void FlashSoldierPortrait(SOLDIERTYPE*);
 
-static inline bool IsWearingHeadGear(SOLDIERTYPE const& s, UINT16 const item)
+static inline bool IsWearingHeadGear(SOLDIERTYPE const& s, ItemId const item)
 {
 	return s.inv[HEAD1POS].usItem == item || s.inv[HEAD2POS].usItem == item;
 }

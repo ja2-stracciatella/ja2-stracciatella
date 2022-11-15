@@ -4,6 +4,7 @@
 #include "Button_System.h"
 #include "Interface.h"
 #include "JA2Types.h"
+#include "Item_Types.h"
 #include "MouseSystem.h"
 
 
@@ -100,7 +101,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* s);
 
 void GoToMapScreenFromTactical(void);
 
-void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* s, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem);
+void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* s, UINT32 uiInvPos, ItemId usOldItem, ItemId usNewItem);
 
 void FinishAnySkullPanelAnimations(void);
 
@@ -112,7 +113,7 @@ void UpdateForContOverPortrait(SOLDIERTYPE* s, BOOLEAN fOn);
 
 void HandleLocateSelectMerc(SOLDIERTYPE*, bool force_select);
 
-BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem);
+BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* pSoldier, UINT32 uiHandPos, ItemId usReplaceItem);
 
 extern SOLDIERTYPE* gpSMCurrentMerc;
 extern GUIButtonRef iSMPanelButtons[NUM_SM_BUTTONS];
@@ -121,8 +122,8 @@ extern GUIButtonRef giSMStealthButton;
 extern SOLDIERTYPE* gSelectSMPanelToMerc;
 extern MOUSE_REGION gSM_SELMERCMoneyRegion;
 extern UINT8        gubHandPos;
-extern UINT16       gusOldItemIndex;
-extern UINT16       gusNewItemIndex;
+extern ItemId       gusOldItemIndex;
+extern ItemId       gusNewItemIndex;
 extern BOOLEAN      gfDeductPoints;
 extern BOOLEAN      gfSMDisableForItems;
 

@@ -3062,14 +3062,14 @@ void DebugSoldierPage3()
 }
 
 
-static void AppendAttachmentCode(UINT16 item, ST::string& str)
+static void AppendAttachmentCode(ItemId item, ST::string& str)
 {
-	switch (item)
+	switch (item.inner())
 	{
-		case SILENCER:    str += " Sil"; break;
-		case SNIPERSCOPE: str += " Scp"; break;
-		case BIPOD:       str += " Bip"; break;
-		case LASERSCOPE:  str += " Las"; break;
+		case SILENCER.inner():    str += " Sil"; break;
+		case SNIPERSCOPE.inner(): str += " Scp"; break;
+		case BIPOD.inner():       str += " Bip"; break;
+		case LASERSCOPE.inner():  str += " Las"; break;
 	}
 }
 
@@ -3102,10 +3102,10 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 	{
 		// Build attachment string
 		ST::string attachments;
-		if (o->usAttachItem[0] ||
-				o->usAttachItem[1] ||
-				o->usAttachItem[2] ||
-				o->usAttachItem[3])
+		if (o->usAttachItem[0] != NOTHING ||
+				o->usAttachItem[1] != NOTHING ||
+				o->usAttachItem[2] != NOTHING ||
+				o->usAttachItem[3] != NOTHING)
 		{
 			attachments = "  (";
 			AppendAttachmentCode(o->usAttachItem[0], attachments);
@@ -3136,7 +3136,7 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 static void PrintItem(INT32 y, const ST::string& header, const OBJECTTYPE* o)
 {
 	MHeader(DEBUG_PAGE_FIRST_COLUMN, y, header);
-	if (!o->usItem) return;
+	if (o->usItem == NOTHING) return;
 	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{}", GCM->getItem(o->usItem)->getShortName()));
 	WriteQuantityAndAttachments(o, y);
 }

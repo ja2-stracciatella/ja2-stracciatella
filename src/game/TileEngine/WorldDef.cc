@@ -1887,7 +1887,7 @@ try
 				case 4:	++pTeam->ubGreatE; break;
 			}
 
-			SOLDIERCREATE_STRUCT priority;
+			SOLDIERCREATE_STRUCT priority = {};
 			if (basic.fDetailedPlacement)
 			{ //skip static priority placement
 

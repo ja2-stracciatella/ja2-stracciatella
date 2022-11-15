@@ -107,7 +107,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	UINT32 cnt;
 	UINT8 ubDiceRoll; // Percentile dice roll
 	UINT8 ubRandomHandIndex; // Index value into random animation table to use base don what is in the guys hand...
-	UINT16 usItem;
+	ItemId usItem;
 	RANDOM_ANI_DEF *pAnimDef;
 	UINT8 ubDesiredHeight;
 	BOOLEAN bOKFireWeapon;
@@ -1982,7 +1982,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// PLay lock n' load sound for gun....
 					// Get LNL sound for current gun
 				{
-					UINT16	usItem;
+					ItemId	usItem;
 
 					usItem = pSoldier->inv[ HANDPOS ].usItem;
 
@@ -2295,7 +2295,8 @@ no_cry:
 
 				case 761:
 					// Dish out damage!
-					EVENT_SoldierGotHit(&GetMan(pSoldier->uiPendingActionData4), TAKE_DAMAGE_BLADE, 25, 25, OppositeDirection(pSoldier->bDirection), 50, pSoldier, 0, ANIM_PRONE, 0);
+					// FIXME(ItemId): What to pass here?
+					EVENT_SoldierGotHit(&GetMan(pSoldier->uiPendingActionData4), ItemId(TAKE_DAMAGE_BLADE), 25, 25, OppositeDirection(pSoldier->bDirection), 50, pSoldier, 0, ANIM_PRONE, 0);
 					break;
 
 				case 762:

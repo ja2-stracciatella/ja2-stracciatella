@@ -13,7 +13,7 @@ struct EXPLOSIONTYPE
 	SOLDIERTYPE* owner;
 	UINT8        ubTypeID;
 
-	UINT16       usItem;
+	ItemId       usItem;
 
 	INT16        sX;      // World X ( optional )
 	INT16        sY;      // World Y ( optional )
@@ -62,12 +62,12 @@ extern BOOLEAN gfExplosionQueueActive;
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> BeforeStructureDamaged;
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
 
-void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, UINT16 item, INT8 level);
-void IgniteExplosionXY(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel);
-void InternalIgniteExplosion(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel);
+void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, ItemId item, INT8 level);
+void IgniteExplosionXY(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, ItemId usItem, INT8 bLevel);
+void InternalIgniteExplosion(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, ItemId usItem, BOOLEAN fLocate, INT8 bLevel);
 
 
-void SpreadEffect(INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, SOLDIERTYPE* owner, BOOLEAN fSubsequent, INT8 bLevel, const SMOKEEFFECT* s);
+void SpreadEffect(INT16 sGridNo, UINT8 ubRadius, ItemId usItem, SOLDIERTYPE* owner, BOOLEAN fSubsequent, INT8 bLevel, const SMOKEEFFECT* s);
 void SpreadEffectSmoke(const SMOKEEFFECT* s, BOOLEAN subsequent, INT8 level);
 
 void DecayBombTimers( void );

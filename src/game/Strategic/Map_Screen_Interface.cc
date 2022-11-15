@@ -1192,7 +1192,7 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE& s)
 	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
 	std::fill(std::begin(p.bInvStatus), std::end(p.bInvStatus), 0);
 	std::fill(std::begin(p.bInvNumber), std::end(p.bInvNumber), 0);
-	std::fill(std::begin(p.inv), std::end(p.inv), 0);
+	std::fill(std::begin(p.inv), std::end(p.inv), ItemId(0));
 
 	return slot;
 }

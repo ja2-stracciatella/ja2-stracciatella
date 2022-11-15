@@ -159,7 +159,7 @@ INT8 gbCurrSelect = -1;
 
 //internal merc variables
 BASIC_SOLDIERCREATE_STRUCT gTempBasicPlacement;
-SOLDIERCREATE_STRUCT gTempDetailedPlacement;
+SOLDIERCREATE_STRUCT gTempDetailedPlacement = {};
 
 SOLDIERTYPE*     g_selected_merc;
 INT16						gsSelectedMercGridNo;
@@ -200,7 +200,7 @@ BOOLEAN					gfMercGetItem										= FALSE;
 //As soon as an item is selected, the items index is stored here, so the item can be copied into the
 //slot for editing and rendering purposes.  This is a temp store value only when leaving the editor items
 //mode.
-UINT16 gusMercsNewItemIndex												= 0xffff;
+ItemId gusMercsNewItemIndex												= ItemId(0xffff);
 
 INT32 iEditWhichStat = -1;
 INT32 iEditMercMode = EDIT_MERC_NONE;
@@ -2064,7 +2064,7 @@ void DeleteSelectedMercsItem()
 {
 	if( gbCurrSelect != -1 )
 	{
-		gusMercsNewItemIndex = 0;
+		gusMercsNewItemIndex = ItemId(0);
 		AddNewItemToSelectedMercsInventory( TRUE );
 	}
 }
@@ -2090,7 +2090,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 			return;
 		}
 		*/
-		if( gusMercsNewItemIndex == 0xffff )
+		if( gusMercsNewItemIndex == ItemId(0xffff) )
 		{ //User selected no item, so ignore.
 			return;
 		}
@@ -2114,7 +2114,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 		if( !(GCM->getItem(gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].usItem)->isAmmo()) )
 			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].bStatus[0] = (INT8)(80 + Random( 21 ));
 
-		if( gusMercsNewItemIndex )
+		if( gusMercsNewItemIndex != ItemId(NOTHING) )
 		{
 			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].fFlags |= OBJECT_NO_OVERWRITE;
 		}
@@ -2158,7 +2158,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	ColorFillVideoSurfaceArea( uiDstID, DstRect.iLeft, DstRect.iTop, DstRect.iRight, DstRect.iBottom, 0 );
 
 	//if the index is 0, then there is no item.
-	if( !gusMercsNewItemIndex )
+	if( gusMercsNewItemIndex == ItemId(NOTHING) )
 		return;
 
 	//now draw the fullsize item into the temp buffer
@@ -2229,7 +2229,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	BltStretchVideoSurface(uiDstID, uiSrcID, &src_rect, &dst_rect);
 
 	//invalidate the mercs new item index
-	gusMercsNewItemIndex = 0xffff;
+	gusMercsNewItemIndex = ItemId(0xffff);
 }
 
 
@@ -2440,7 +2440,7 @@ void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )
 	}
 	if( gbCurrSelect != -1 && uiSlot == (UINT32)gbMercSlotTypes[ gbCurrSelect ] )
 	{
-		if( gpMercSlotItem[ gbCurrSelect ]->usItem == NOTHING )
+		if( gpMercSlotItem[ gbCurrSelect ]->usItem == ItemId(NOTHING) )
 			SpecifyItemToEdit( gpMercSlotItem[ gbCurrSelect ], -1 );
 	}
 }
@@ -2894,7 +2894,7 @@ static void UpdateScheduleInfo(void)
 
 static BOOLEAN                    gfSaveBuffer = FALSE;
 static BASIC_SOLDIERCREATE_STRUCT gSaveBufferBasicPlacement;
-static SOLDIERCREATE_STRUCT       gSaveBufferDetailedPlacement;
+static SOLDIERCREATE_STRUCT       gSaveBufferDetailedPlacement = {};
 
 
 void CopyMercPlacement( INT32 iMapIndex )
@@ -2915,7 +2915,7 @@ void CopyMercPlacement( INT32 iMapIndex )
 
 void PasteMercPlacement( INT32 iMapIndex )
 {
-	SOLDIERCREATE_STRUCT tempDetailedPlacement;
+	SOLDIERCREATE_STRUCT tempDetailedPlacement = {};
 	INT32 i;
 
 	if( !gfSaveBuffer )

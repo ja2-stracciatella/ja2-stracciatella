@@ -19,8 +19,8 @@ TEST(Items, weaponsLoading)
 	ASSERT_TRUE(cm != NULL);
 	ASSERT_TRUE(cm->loadGameData());
 	EXPECT_TRUE(cm->getWeaponByName("MP5K") != NULL);
-	EXPECT_TRUE(cm->getWeapon(9 /* MP5K */) != NULL);
-	EXPECT_EQ(cm->getWeaponByName("MP5K"), cm->getWeapon(9 /* MP5K */));
+	EXPECT_TRUE(cm->getWeapon(ItemId(9) /* MP5K */) != NULL);
+	EXPECT_EQ(cm->getWeaponByName("MP5K"), cm->getWeapon(ItemId(9) /* MP5K */));
 	delete cm;
 }
 
@@ -117,7 +117,7 @@ TEST(Items, ValidLaunchable)
 
 	// Check if the function handles some random garbage input
 	EXPECT_FALSE(ValidLaunchable(BATTERIES, WINE));
-	EXPECT_FALSE(ValidLaunchable(0xf123, 0x97b2));
+	EXPECT_FALSE(ValidLaunchable(ItemId(0xf123), ItemId(0x97b2)));
 }
 
 TEST(Items, GetLauncherFromLaunchable)
@@ -129,7 +129,7 @@ TEST(Items, GetLauncherFromLaunchable)
 
 	// Check if the function handles some random garbage input
 	EXPECT_EQ(GetLauncherFromLaunchable(G11), NOTHING);
-	EXPECT_EQ(GetLauncherFromLaunchable(0xe941), NOTHING);
+	EXPECT_EQ(GetLauncherFromLaunchable(ItemId(0xe941)), NOTHING);
 }
 
 TEST(Items, ValidAttachment)
@@ -141,35 +141,35 @@ TEST(Items, ValidAttachment)
 	bool& extra_attachments = const_cast<GamePolicy *>(GCM->getGamePolicy())->extra_attachments;
 
 	extra_attachments = false;
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::DETONATOR, ITEMDEFINE::HMX));
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::DETONATOR, ITEMDEFINE::TNT));
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::CHEWING_GUM, ITEMDEFINE::FUMBLE_PAK));
-	EXPECT_FALSE(ValidAttachment(ITEMDEFINE::UVGOGGLES, ITEMDEFINE::SPECTRA_HELMET));;
-	EXPECT_FALSE(ValidAttachment(ITEMDEFINE::SUNGOGGLES, ITEMDEFINE::SPECTRA_HELMET));;
-	EXPECT_FALSE(ValidAttachment(ITEMDEFINE::ADRENALINE_BOOSTER, ITEMDEFINE::KEVLAR_LEGGINGS_Y));
-	EXPECT_FALSE(ValidAttachment(ITEMDEFINE::AUTO_ROCKET_RIFLE, ITEMDEFINE::BRASS_KNUCKLES));
-	EXPECT_FALSE(ValidAttachment(0xf083, 0x8c12)); // Random junk crashes the old version of ValidAttachment
+	EXPECT_TRUE(ValidAttachment(DETONATOR, HMX));
+	EXPECT_TRUE(ValidAttachment(DETONATOR, TNT));
+	EXPECT_TRUE(ValidAttachment(CHEWING_GUM, FUMBLE_PAK));
+	EXPECT_FALSE(ValidAttachment(UVGOGGLES, SPECTRA_HELMET));;
+	EXPECT_FALSE(ValidAttachment(SUNGOGGLES, SPECTRA_HELMET));;
+	EXPECT_FALSE(ValidAttachment(ADRENALINE_BOOSTER, KEVLAR_LEGGINGS_Y));
+	EXPECT_FALSE(ValidAttachment(AUTO_ROCKET_RIFLE, BRASS_KNUCKLES));
+	EXPECT_FALSE(ValidAttachment(ItemId(0xf083), ItemId(0x8c12))); // Random junk crashes the old version of ValidAttachment
 
 	// Next test relies on a certain order of the vests
-	static_assert(ITEMDEFINE::SPECTRA_VEST_Y - ITEMDEFINE::FLAK_JACKET == 8);
+	static_assert(SPECTRA_VEST_Y.inner() - FLAK_JACKET.inner() == 8);
 	int count = 0;
-	for (int i = ITEMDEFINE::FLAK_JACKET; i <= ITEMDEFINE::SPECTRA_VEST_Y; ++i)
+	for (int i = FLAK_JACKET.inner(); i <= SPECTRA_VEST_Y.inner(); i++)
 	{
-		if (ValidAttachment(ITEMDEFINE::CERAMIC_PLATES, i)) ++count;
+		if (ValidAttachment(CERAMIC_PLATES, ItemId(i))) ++count;
 	}
 	EXPECT_EQ(count, 9);
 
 	extra_attachments = true;
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::DETONATOR, ITEMDEFINE::HMX));
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::DETONATOR, ITEMDEFINE::TNT));
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::CHEWING_GUM, ITEMDEFINE::FUMBLE_PAK));
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::UVGOGGLES, ITEMDEFINE::SPECTRA_HELMET));;
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::UVGOGGLES, ITEMDEFINE::KEVLAR_HELMET_18));;
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::SUNGOGGLES, ITEMDEFINE::SPECTRA_HELMET));;
-	EXPECT_TRUE(ValidAttachment(ITEMDEFINE::ADRENALINE_BOOSTER, ITEMDEFINE::KEVLAR_LEGGINGS_Y));
-	EXPECT_FALSE(ValidAttachment(ITEMDEFINE::SUNGOGGLES, ITEMDEFINE::SPECTRA_VEST));;
-	EXPECT_FALSE(ValidAttachment(ITEMDEFINE::AUTO_ROCKET_RIFLE, ITEMDEFINE::BRASS_KNUCKLES));
-	EXPECT_FALSE(ValidAttachment(0xf083, 0x8c12));
+	EXPECT_TRUE(ValidAttachment(DETONATOR, HMX));
+	EXPECT_TRUE(ValidAttachment(DETONATOR, TNT));
+	EXPECT_TRUE(ValidAttachment(CHEWING_GUM, FUMBLE_PAK));
+	EXPECT_TRUE(ValidAttachment(UVGOGGLES, SPECTRA_HELMET));;
+	EXPECT_TRUE(ValidAttachment(UVGOGGLES, KEVLAR_HELMET_18));;
+	EXPECT_TRUE(ValidAttachment(SUNGOGGLES, SPECTRA_HELMET));;
+	EXPECT_TRUE(ValidAttachment(ADRENALINE_BOOSTER, KEVLAR_LEGGINGS_Y));
+	EXPECT_FALSE(ValidAttachment(SUNGOGGLES, SPECTRA_VEST));;
+	EXPECT_FALSE(ValidAttachment(AUTO_ROCKET_RIFLE, BRASS_KNUCKLES));
+	EXPECT_FALSE(ValidAttachment(ItemId(0xf083), ItemId(0x8c12)));
 
 	delete GCM;
 	GCM = oldGCM;
@@ -177,16 +177,16 @@ TEST(Items, ValidAttachment)
 
 TEST(Items, CompatibleFaceItem)
 {
-	EXPECT_TRUE(CompatibleFaceItem(ITEMDEFINE::NIGHTGOGGLES, ITEMDEFINE::EXTENDEDEAR));
-	EXPECT_TRUE(CompatibleFaceItem(ITEMDEFINE::EXTENDEDEAR, ITEMDEFINE::NIGHTGOGGLES));
-	EXPECT_FALSE(CompatibleFaceItem(ITEMDEFINE::EXTENDEDEAR, ITEMDEFINE::EXTENDEDEAR));
-	EXPECT_TRUE(CompatibleFaceItem(ITEMDEFINE::WALKMAN, ITEMDEFINE::GASMASK));
-	EXPECT_FALSE(CompatibleFaceItem(ITEMDEFINE::UVGOGGLES, ITEMDEFINE::RDX));
-	EXPECT_TRUE(CompatibleFaceItem(0xda83, NOTHING)); // item2 == NOTHING is a special case
-	EXPECT_FALSE(CompatibleFaceItem(0x75e4, 0xcafe));
+	EXPECT_TRUE(CompatibleFaceItem(NIGHTGOGGLES, EXTENDEDEAR));
+	EXPECT_TRUE(CompatibleFaceItem(EXTENDEDEAR, NIGHTGOGGLES));
+	EXPECT_FALSE(CompatibleFaceItem(EXTENDEDEAR, EXTENDEDEAR));
+	EXPECT_TRUE(CompatibleFaceItem(WALKMAN, GASMASK));
+	EXPECT_FALSE(CompatibleFaceItem(UVGOGGLES, RDX));
+	EXPECT_TRUE(CompatibleFaceItem(ItemId(0xda83), NOTHING)); // item2 == NOTHING is a special case
+	EXPECT_FALSE(CompatibleFaceItem(ItemId(0x75e4), ItemId(0xcafe)));
 	for (int i = 0; i <= 0xffff; ++i)
 	{
-		EXPECT_FALSE(CompatibleFaceItem(i, ITEMDEFINE::STEEL_HELMET));
+		EXPECT_FALSE(CompatibleFaceItem(ItemId(i), STEEL_HELMET));
 	}
 }
 

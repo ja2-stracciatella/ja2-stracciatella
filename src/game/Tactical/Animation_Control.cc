@@ -2603,7 +2603,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 {
 	UINT16 usAnimSurface;
 	UINT16 usAltAnimSurface;
-	UINT16 usItem;
+	ItemId usItem;
 	UINT8 ubWaterHandIndex = 1;
 	BOOLEAN fAdjustedForItem = FALSE;
 

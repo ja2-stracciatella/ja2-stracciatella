@@ -2,6 +2,7 @@
 #define	_ARMS_DEALER_INV_INIT__H_
 
 #include "Arms_Dealer.h"
+#include "Item_Types.h"
 
 
 #define LAST_DEALER_ITEM		-1
@@ -18,17 +19,17 @@
 #define DEALER_SELLING			1
 
 
-INT8 GetDealersMaxItemAmount(ArmsDealerID, UINT16 usItemIndex);
+INT8 GetDealersMaxItemAmount(ArmsDealerID, ItemId usItemIndex);
 
-UINT8   ChanceOfItemTransaction(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed);
-BOOLEAN ItemTransactionOccurs(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed);
-UINT8 DetermineInitialInvItems(ArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed);
-UINT8 HowManyItemsAreSold(ArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed);
+UINT8   ChanceOfItemTransaction(ArmsDealerID, ItemId usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed);
+BOOLEAN ItemTransactionOccurs(ArmsDealerID, ItemId usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed);
+UINT8 DetermineInitialInvItems(ArmsDealerID, ItemId usItemIndex, UINT8 ubChances, BOOLEAN fUsed);
+UINT8 HowManyItemsAreSold(ArmsDealerID, ItemId usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed);
 UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave);
 
 int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2);
 int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2);
-int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality );
-BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex );
+int CompareItemsForSorting( ItemId usItem1Index, ItemId usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality );
+BOOLEAN CanDealerItemBeSoldUsed( ItemId usItemIndex );
 
 #endif

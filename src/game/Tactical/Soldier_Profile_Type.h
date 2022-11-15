@@ -2,6 +2,7 @@
 #define __SOLDER_PROFILE_TYPE_H
 
 #include "Overhead_Types.h"
+#include "Item_Types.h"
 #include "Types.h"
 
 #include <string_theory/string>
@@ -266,7 +267,7 @@ struct MERCPROFILESTRUCT
 
 	UINT8 ubInvUndroppable;
 	UINT8 ubRoomRangeStart[2];
-	UINT16 inv[19];
+	ItemId inv[19];
 
 	UINT16 usStatChangeChances[ 12 ]; // used strictly for balancing, never shown!
 	UINT16 usStatChangeSuccesses[ 12 ]; // used strictly for balancing, never shown!

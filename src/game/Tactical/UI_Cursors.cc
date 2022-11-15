@@ -110,7 +110,7 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 	// for CTGH algorithms
 	if (gTacticalStatus.ubAttackBusyCount == 0)
 	{
-		UINT16 const in_hand = s->inv[HANDPOS].usItem;
+		ItemId const in_hand = s->inv[HANDPOS].usItem;
 		if (GCM->getItem(in_hand)->isWeapon()) s->usAttackingWeapon = in_hand;
 	}
 
@@ -842,7 +842,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 			// Do we have a launchable?
 			for (INT8 i = 0; i != MAX_ATTACHMENTS; ++i)
 			{
-				UINT16 const attach_item = o.usAttachItem[i];
+				ItemId const attach_item = o.usAttachItem[i];
 				if (attach_item == NOTHING) continue;
 				if (!(GCM->getItem(attach_item)->isExplosive())) continue;
 				CreateItem(attach_item, o.bAttachStatus[i], &TempObject);
@@ -1215,7 +1215,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 ItemCursor GetActionModeCursor(SOLDIERTYPE const* const pSoldier)
 {
-	UINT16 usInHand;
+	ItemId usInHand;
 
 	// If we are an EPC, do nothing....
 	//if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )

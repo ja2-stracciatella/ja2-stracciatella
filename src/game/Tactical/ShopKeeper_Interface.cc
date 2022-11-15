@@ -242,7 +242,7 @@ static ArmsDealerID gbSelectedArmsDealerID = ARMS_DEALER_INVALID; //Contains the
 //the quote that is in progress, in certain circumstances, we don't want queuing of related but different quotes
 static INT32 giShopKeepDialogueEventinProgress = -1;
 
-INVENTORY_IN_SLOT gMoveingItem;
+INVENTORY_IN_SLOT gMoveingItem = {};
 
 const OBJECTTYPE* gpHighLightedItemObject = NULL;
 
@@ -266,10 +266,10 @@ static SELECTED_ARMS_DEALERS_STATS gSelectArmsDealerInfo;
 //This pointer is used to store the inventory the arms dealer has for sale
 static INVENTORY_IN_SLOT* gpTempDealersInventory = NULL;
 
-static INVENTORY_IN_SLOT ArmsDealerOfferArea[SKI_NUM_TRADING_INV_SLOTS];
-static INVENTORY_IN_SLOT PlayersOfferArea[SKI_NUM_TRADING_INV_SLOTS];
+static INVENTORY_IN_SLOT ArmsDealerOfferArea[SKI_NUM_TRADING_INV_SLOTS] = {};
+static INVENTORY_IN_SLOT PlayersOfferArea[SKI_NUM_TRADING_INV_SLOTS] = {};
 
-static OBJECTTYPE gSubObject[MAX_SUBOBJECTS_PER_OBJECT];
+static OBJECTTYPE gSubObject[MAX_SUBOBJECTS_PER_OBJECT] = {};
 
 static BOOLEAN gfDealerHasSaidTheEvaluateQuoteOnceThisSession = FALSE;
 static BOOLEAN gfAlreadySaidTooMuchToRepair                   = FALSE;
@@ -337,7 +337,7 @@ struct ITEM_TO_ADD_AFTER_SKI_OPEN
 	OBJECTTYPE ItemObject;
 	INT8 bPreviousInvPos;
 };
-static ITEM_TO_ADD_AFTER_SKI_OPEN gItemToAdd;
+static ITEM_TO_ADD_AFTER_SKI_OPEN gItemToAdd = {};
 
 
 //Page up buttons for the merchants
@@ -1706,7 +1706,7 @@ static void SelectPlayersOfferSlotsRegionCallBackPrimary(MOUSE_REGION* pRegion, 
 			SetSkiCursor( EXTERN_CURSOR );
 
 			//if the item we are adding is money
-			if (GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY)
+			if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY)
 			{
 				//Since money is always evaluated
 				o->uiFlags     |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
@@ -1866,7 +1866,7 @@ static void CalculateFirstItemIndexOnPage(void)
 }
 
 
-static UINT32 DisplayInvSlot(UINT8 slot_num, UINT16 usItemIndex, UINT16 x, UINT16 y, OBJECTTYPE const& pItemObject, bool hatched_out, UINT8 ubItemArea);
+static UINT32 DisplayInvSlot(UINT8 slot_num, ItemId usItemIndex, UINT16 x, UINT16 y, OBJECTTYPE const& pItemObject, bool hatched_out, UINT8 ubItemArea);
 static void HatchOutInvSlot(UINT16 usPosX, UINT16 usPosY);
 static void SetSkiFaceRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
 static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
@@ -1940,7 +1940,7 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 
 				// Display the inventory slot
 				INVENTORY_IN_SLOT const& inv = gpTempDealersInventory[usCnt];
-				DisplayInvSlot(usCnt, inv.sItemIndex, usPosX, usPosY, inv.ItemObject, fDisplayHatchOnItem, ARMS_DEALER_INVENTORY);
+				DisplayInvSlot(usCnt, ItemId(inv.sItemIndex), usPosX, usPosY, inv.ItemObject, fDisplayHatchOnItem, ARMS_DEALER_INVENTORY);
 
 				if( gubSkiDirtyLevel == SKI_DIRTY_LEVEL2 )
 				{
@@ -2002,13 +2002,13 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 }
 
 
-static ST::string BuildDoneWhenTimeString(ArmsDealerID, UINT16 usItemIndex, UINT8 ubElement);
-static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject);
+static ST::string BuildDoneWhenTimeString(ArmsDealerID, ItemId usItemIndex, UINT8 ubElement);
+static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, ItemId usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject);
 static INT8 GetSlotNumberForMerc(UINT8 ubProfile);
 static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const&);
 
 
-static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16 const x, UINT16 const y, OBJECTTYPE const& item_o, bool const hatched_out, UINT8 const item_area)
+static UINT32 DisplayInvSlot(UINT8 const slot_num, ItemId const item_idx, UINT16 const x, UINT16 const y, OBJECTTYPE const& item_o, bool const hatched_out, UINT8 const item_area)
 {
 	ST::string buf;
 
@@ -2163,7 +2163,7 @@ static int RepairmanItemQsortCompare(void const* pArg1, void const* pArg2)
 	Assert(inv_slot1.sSpecialItemElement != -1);
 	Assert(inv_slot2.sSpecialItemElement != -1);
 
-	DEALER_ITEM_HEADER const (& dih)[MAXITEMS] = gArmsDealersInventory[gbSelectedArmsDealerID];
+	DEALER_ITEM_HEADER const (& dih)[MAXITEMS.inner()] = gArmsDealersInventory[gbSelectedArmsDealerID];
 	UINT32             const repair_time1      = dih[inv_slot1.sItemIndex].SpecialItem[inv_slot1.sSpecialItemElement].uiRepairDoneTime;
 	UINT32             const repair_time2      = dih[inv_slot2.sItemIndex].SpecialItem[inv_slot2.sSpecialItemElement].uiRepairDoneTime;
 
@@ -2174,13 +2174,13 @@ static int RepairmanItemQsortCompare(void const* pArg1, void const* pArg2)
 }
 
 
-static void AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner);
-static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement);
+static void AddItemsToTempDealerInventory(ItemId usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner);
+static BOOLEAN RepairIsDone(ItemId usItemIndex, UINT8 ubElement);
 
 
 static void DetermineArmsDealersSellingInventory(void)
 {
-	UINT16  usItemIndex;
+	ItemId  usItemIndex;
 	UINT8   ubElement;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	BOOLEAN fAddSpecialItem;
@@ -2198,26 +2198,26 @@ static void DetermineArmsDealersSellingInventory(void)
 	guiNextFreeInvSlot     = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
-	for( usItemIndex=1; usItemIndex<MAXITEMS; usItemIndex++)
+	for( usItemIndex= ItemId(1); usItemIndex<MAXITEMS; usItemIndex++)
 	{
 		//if the arms dealer has some of the inventory
-		if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubTotalItems > 0)
+		if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].ubTotalItems > 0)
 		{
 			// if there are any items in perfect condition
-			if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubPerfectItems > 0 )
+			if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].ubPerfectItems > 0 )
 			{
 				// create just ONE dealer inventory box for them all.
 				// create item info describing a perfect item
 				SetSpecialItemInfoToDefaults( &SpclItemInfo );
 				// no special element index - it's "perfect"
-				AddItemsToTempDealerInventory(usItemIndex, &SpclItemInfo, -1, gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubPerfectItems, NO_PROFILE );
+				AddItemsToTempDealerInventory(usItemIndex, &SpclItemInfo, -1, gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].ubPerfectItems, NO_PROFILE );
 			}
 
 			// add all active special items
-			Assert(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
-			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem.size()); ubElement++)
+			Assert(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].SpecialItem.size()); ubElement++)
 			{
-				pSpecialItem = &(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ]);
+				pSpecialItem = &(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].SpecialItem[ ubElement ]);
 
 				if ( pSpecialItem->fActive )
 				{
@@ -2285,10 +2285,10 @@ static void DetermineArmsDealersSellingInventory(void)
 }
 
 
-static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner);
+static void StoreObjectsInNextFreeDealerInvSlot(ItemId usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner);
 
 
-static void AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner)
+static void AddItemsToTempDealerInventory(ItemId usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner)
 {
 	UINT8 ubCnt;
 
@@ -2325,7 +2325,7 @@ static void AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO*
 }
 
 
-static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner)
+static void StoreObjectsInNextFreeDealerInvSlot(ItemId usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner)
 {
 	INVENTORY_IN_SLOT *pDealerInvSlot;
 
@@ -2337,7 +2337,7 @@ static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM
 	guiNextFreeInvSlot++;
 
 	pDealerInvSlot->fActive = TRUE;
-	pDealerInvSlot->sItemIndex = usItemIndex;
+	pDealerInvSlot->sItemIndex = usItemIndex.inner();
 	pDealerInvSlot->sSpecialItemElement = sSpecialItemElement;
 	pDealerInvSlot->ubIdOfMercWhoOwnsTheItem = ubOwner;
 	pDealerInvSlot->bSlotIdInOtherLocation = -1;
@@ -2361,9 +2361,9 @@ static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM
 static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, const INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation);
 
 
-static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
+static BOOLEAN RepairIsDone(ItemId usItemIndex, UINT8 ubElement)
 {
-	INVENTORY_IN_SLOT RepairItem;
+	INVENTORY_IN_SLOT RepairItem = {};
 	INT8  bSlotNum;
 	UINT8 ubCnt;
 
@@ -2372,14 +2372,14 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 	RepairItem = INVENTORY_IN_SLOT{};
 
 	RepairItem.fActive = TRUE;
-	RepairItem.sItemIndex = usItemIndex;
+	RepairItem.sItemIndex = usItemIndex.inner();
 
 	// set the owner of the item.  Slot is always -1 of course.
-	RepairItem.ubIdOfMercWhoOwnsTheItem = gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].ubOwnerProfileId;
+	RepairItem.ubIdOfMercWhoOwnsTheItem = gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].SpecialItem[ ubElement ].ubOwnerProfileId;
 	RepairItem.bSlotIdInOtherLocation = -1;
 
 	// Create the item object
-	MakeObjectOutOfDealerItems( usItemIndex, &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].Info ), &RepairItem.ItemObject, 1 );
+	MakeObjectOutOfDealerItems( usItemIndex, &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ].SpecialItem[ ubElement ].Info ), &RepairItem.ItemObject, 1 );
 
 	if ( CanDealerRepairItem( gbSelectedArmsDealerID, RepairItem.ItemObject.usItem ) )
 	{
@@ -2447,10 +2447,10 @@ void DrawHatchOnInventory(SGPVSurface* const uiSurface, const UINT16 usPosX, con
 }
 
 
-static FLOAT ItemConditionModifier(UINT16 usItemIndex, INT8 bStatus);
+static FLOAT ItemConditionModifier(ItemId usItemIndex, INT8 bStatus);
 
 
-static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject)
+static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, ItemId usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject)
 {
 	UINT8  ubCnt;
 	UINT32 uiUnitPrice = 0;
@@ -2573,7 +2573,7 @@ static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPrice
 	}
 
 	UINT32_S uiUnitPriceAdjusted = uiUnitPrice;
-	OnItemPriced((INT8)gbSelectedArmsDealerID, usItemID, fDealerSelling, &uiUnitPriceAdjusted);
+	OnItemPriced((INT8)gbSelectedArmsDealerID, usItemID.inner(), fDealerSelling, &uiUnitPriceAdjusted);
 	uiUnitPrice = uiUnitPriceAdjusted.val;
 
 	// if it's the dealer selling this, make sure the item is worth at least $1
@@ -2605,7 +2605,7 @@ static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPrice
 }
 
 
-static FLOAT ItemConditionModifier(UINT16 usItemIndex, INT8 bStatus)
+static FLOAT ItemConditionModifier(ItemId usItemIndex, INT8 bStatus)
 {
 	FLOAT dConditionModifier = 1.0f;
 
@@ -2680,7 +2680,7 @@ static void DisplayArmsDealerOfferArea(void)
 				fDisplayHatchOnItem = FALSE;
 
 			// Display the inventory slot
-			uiTotalCost += DisplayInvSlot(sCnt, a->sItemIndex, usPosX, usPosY, a->ItemObject, fDisplayHatchOnItem, ARMS_DEALER_OFFER_AREA);
+			uiTotalCost += DisplayInvSlot(sCnt, ItemId(a->sItemIndex), usPosX, usPosY, a->ItemObject, fDisplayHatchOnItem, ARMS_DEALER_OFFER_AREA);
 		}
 		else	// empty
 		{
@@ -2865,7 +2865,7 @@ static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, const INVENTORY_IN_SLOT
 
 
 			//if the item we are adding is money
-			if( GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY )
+			if( GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY )
 			{
 				//Since money is always evaluated
 				o->uiFlags     |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
@@ -2938,7 +2938,7 @@ static void DisplayPlayersOfferArea(void)
 		if (o->fActive)
 		{
 			//if the item is money
-			if (GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY)
+			if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY)
 			{
 				//get an updated status from the amount in the pocket
 				if (o->bSlotIdInOtherLocation != -1 && o->ubIdOfMercWhoOwnsTheItem != NO_PROFILE)
@@ -2971,7 +2971,7 @@ static void DisplayPlayersOfferArea(void)
 			//fDisplayHatchOnItem = (o->uiFlags & (ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED | ARMS_INV_JUST_PURCHASED)) == 0;
 
 			// Display the inventory slot
-			DisplayInvSlot(sCnt, o->sItemIndex, usPosX, usPosY, o->ItemObject, fDisplayHatchOnItem, PLAYERS_OFFER_AREA);
+			DisplayInvSlot(sCnt, ItemId(o->sItemIndex), usPosX, usPosY, o->ItemObject, fDisplayHatchOnItem, PLAYERS_OFFER_AREA);
 
 			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 			{
@@ -3067,7 +3067,7 @@ static UINT32 CalculateTotalArmsDealerCost(void)
 			}
 			else
 			{
-				uiTotal += CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, a->sItemIndex, SelectedArmsDealer()->sellingPrice, &a->ItemObject);
+				uiTotal += CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, ItemId(a->sItemIndex), SelectedArmsDealer()->sellingPrice, &a->ItemObject);
 			}
 		}
 	}
@@ -3086,7 +3086,7 @@ static UINT32 CalculateTotalPlayersValue(void)
 		if (o->fActive && o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 		{
 			//Calculate a price for the item
-			if (GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY)
+			if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY)
 			{
 				uiTotal += o->ItemObject.uiMoneyAmount;
 			}
@@ -3409,7 +3409,7 @@ static void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea(void)
 				PlayersOfferArea[ bSlotID ].uiFlags |= ARMS_INV_JUST_PURCHASED;
 
 				//if the player has just purchased a VIDEO_CAMERA from Franz Hinkle
-				if (gbSelectedArmsDealerID == ARMS_DEALER_FRANZ && a->sItemIndex == VIDEO_CAMERA)
+				if (gbSelectedArmsDealerID == ARMS_DEALER_FRANZ && a->sItemIndex == VIDEO_CAMERA.inner())
 				{
 					// set a special flag
 					gArmsDealerStatus[ gbSelectedArmsDealerID ].ubSpecificDealerFlags |= ARMS_DEALER_FLAG__FRANZ_HAS_SOLD_VIDEO_CAMERA_TO_PLAYER;
@@ -3440,14 +3440,14 @@ static void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea(void)
 static void RemoveItemFromDealersInventory(const INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlot)
 {
 	INT16 sInvSlot;
-	INT16 sItemID;
+	ItemId sItemID;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
 	sInvSlot = ubSlot;
 	//sInvSlot = ( gSelectArmsDealerInfo.ubCurrentPage - 1 ) * SKI_NUM_ARMS_DEALERS_INV_SLOTS + ubSlot;
 
 	//Remove all of this item out of the specified inventory slot
-	sItemID = gpTempDealersInventory[ sInvSlot ].sItemIndex;
+	sItemID = ItemId(gpTempDealersInventory[ sInvSlot ].sItemIndex);
 	SetSpecialItemInfoFromObject( &SpclItemInfo, &(pInvSlot->ItemObject) );
 	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, &SpclItemInfo, pInvSlot->ItemObject.ubNumberOfObjects );
 
@@ -3473,7 +3473,7 @@ static void MovePlayerOfferedItemsOfValueToArmsDealersInventory(void)
 				IfMercOwnedRemoveItemFromMercInv(o);
 
 				//if the item is money
-				if (GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY)
+				if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY)
 				{
 					//add the money to the dealers 'cash'
 					gArmsDealerStatus[gbSelectedArmsDealerID].uiArmsDealersCash += o->ItemObject.uiMoneyAmount;
@@ -3520,7 +3520,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 {
 	BOOLEAN fRestrictMouseToRect = FALSE;
 	SGPRect Rect;
-	OBJECTTYPE TempObject;
+	OBJECTTYPE TempObject = {};
 
 	/*
 	// If we are already moving an item
@@ -3631,7 +3631,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 				gMoveingItem.ItemObject = TempObject;
 
 				gMoveingItem.fActive = TRUE;
-				gMoveingItem.sItemIndex = TempObject.usItem;
+				gMoveingItem.sItemIndex = TempObject.usItem.inner();
 				gMoveingItem.ubLocationOfObject = ubSource;
 
 				// By necessity, these items don't belong to a slot (so you can't return them via a right click),
@@ -3716,7 +3716,7 @@ void SetSkiCursor( UINT16 usCursor )
 			ReevaluateItemHatches( gpSMCurrentMerc, FALSE );
 		}
 
-		SetMouseCursorFromItem(gMoveingItem.sItemIndex);
+		SetMouseCursorFromItem(ItemId(gMoveingItem.sItemIndex));
 
 		gSMPanelRegion.ChangeCursor(usCursor);
 		gSKI_EntireScreenMouseRegions.ChangeCursor(usCursor);
@@ -3862,7 +3862,7 @@ static INT8 AddInventoryToSkiLocation(const INVENTORY_IN_SLOT* pInv, UINT8 ubSpo
 				IfMercOwnedCopyItemToMercInv( pInv );
 
 				//if the item is money
-				if (GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY)
+				if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY)
 				{
 					//Since money is always evaluated
 					o->uiFlags     |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
@@ -4344,11 +4344,11 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 			{
 				//if the item isnt money ( which is always evaluated )
-				if (GCM->getItem(o->sItemIndex)->getItemClass() != IC_MONEY)
+				if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() != IC_MONEY)
 				{
 					fItemEvaluated = TRUE;
 				}
-				else if (!DoesDealerDoRepairs(gbSelectedArmsDealerID) && GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY)
+				else if (!DoesDealerDoRepairs(gbSelectedArmsDealerID) && GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY)
 				{
 					//else if it is not a repair dealer, and the item is money
 					fItemEvaluated = TRUE;
@@ -4470,7 +4470,7 @@ static BOOLEAN IsMoneyTheOnlyItemInThePlayersOfferArea(void)
 		//if there is an item here
 		if (o->fActive)
 		{
-			if (GCM->getItem(o->sItemIndex)->getItemClass() != IC_MONEY) return FALSE;
+			if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() != IC_MONEY) return FALSE;
 			fFoundMoney = TRUE;
 		}
 	}
@@ -4510,7 +4510,7 @@ static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea()
 	{
 		INVENTORY_IN_SLOT const& o = *i;
 		if (!o.fActive)                                 continue;
-		if (GCM->getItem(o.sItemIndex)->getItemClass() != IC_MONEY) continue;
+		if (GCM->getItem(ItemId(o.sItemIndex))->getItemClass() != IC_MONEY) continue;
 		total += o.ItemObject.uiMoneyAmount;
 	}
 	return total;
@@ -4638,7 +4638,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 	Assert(o->fActive);
 
 	//if money is the item being evaluated, leave
-	if (GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY) return;
+	if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY) return;
 
 	// if already evaluated, don't do it again
 	if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED) return;
@@ -4677,7 +4677,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 			}
 
 			//if the item is a rocket rifle
-			if (ItemIsARocketRifle(o->sItemIndex)) fRocketRifleWasEvaluated = TRUE;
+			if (ItemIsARocketRifle(ItemId(o->sItemIndex))) fRocketRifleWasEvaluated = TRUE;
 
 			//if the item is damaged, or is a rocket rifle (which always "need repairing" even at 100%, to reset imprinting)
 			if (o->ItemObject.bStatus[0] < 100 || fRocketRifleWasEvaluated)
@@ -4705,7 +4705,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 					ubNumberOfItemsAddedToRepairDuringThisEvaluation++;
 
 					// check if the item is really badly damaged
-					if (GCM->getItem(a->sItemIndex)->getItemClass() != IC_AMMO &&
+					if (GCM->getItem(ItemId(a->sItemIndex))->getItemClass() != IC_AMMO &&
 						a->ItemObject.bStatus[0] < REALLY_BADLY_DAMAGED_THRESHOLD)
 					{
 						uiEvalResult = EVAL_RESULT_OK_BUT_REALLY_DAMAGED;
@@ -4743,7 +4743,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 		if (DoesDealerDoRepairs(gbSelectedArmsDealerID))
 		{
 			// only otherwise repairable items count as actual rejections
-			if (GCM->getItem(o->sItemIndex)->getFlags() & ITEM_REPAIRABLE)
+			if (GCM->getItem(ItemId(o->sItemIndex))->getFlags() & ITEM_REPAIRABLE)
 			{
 				uiEvalResult = EVAL_RESULT_DONT_HANDLE;
 			}
@@ -4912,11 +4912,11 @@ static BOOLEAN WillShopKeeperRejectObjectsFromPlayer(INT8 bDealerId, INT8 bSlotI
 	BOOLEAN fRejected = TRUE;
 
 	const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[bSlotId];
-	if (GCM->getItem(o->sItemIndex)->getItemClass() == IC_MONEY)
+	if (GCM->getItem(ItemId(o->sItemIndex))->getItemClass() == IC_MONEY)
 	{
 		fRejected = FALSE;
 	}
-	else if (CanDealerTransactItem(gbSelectedArmsDealerID, o->sItemIndex, TRUE))
+	else if (CanDealerTransactItem(gbSelectedArmsDealerID, ItemId(o->sItemIndex), TRUE))
 	{
 		fRejected = FALSE;
 	}
@@ -5490,14 +5490,14 @@ static void CountSubObjectsInObject(OBJECTTYPE* pComplexObject, UINT8* pubTotalS
 
 static BOOLEAN AddObjectForEvaluation(OBJECTTYPE* pObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId, BOOLEAN fFirstOne)
 {
-	INVENTORY_IN_SLOT InvSlot;
+	INVENTORY_IN_SLOT InvSlot = {};
 	INT8 bAddedToSlotID;
 
 	// Make a new inv slot out of the subobject
 	InvSlot = INVENTORY_IN_SLOT{};
 	InvSlot.ItemObject = *pObject;
 
-	InvSlot.sItemIndex = pObject->usItem;
+	InvSlot.sItemIndex = pObject->usItem.inner();
 	InvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
 	InvSlot.ubIdOfMercWhoOwnsTheItem = ubOwnerProfileId;
 
@@ -5522,7 +5522,7 @@ static BOOLEAN AddObjectForEvaluation(OBJECTTYPE* pObject, UINT8 ubOwnerProfileI
 // This is because the OBJECTTYPEs used within Shopkeeper may contain an illegal ubNumberOfObjects
 static BOOLEAN ShopkeeperAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObject, BOOLEAN fNewItem)
 {
-	OBJECTTYPE CopyOfObject;
+	OBJECTTYPE CopyOfObject = {};
 	UINT8 ubObjectsLeftToPlace;
 
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
@@ -5557,7 +5557,7 @@ static BOOLEAN ShopkeeperAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj
 // This is because the OBJECTTYPEs used within Shopkeeper may contain an illegal ubNumberOfObjects
 static void ShopkeeperAddItemToPool(INT16 const sGridNo, OBJECTTYPE* const pObject, UINT8 const ubLevel)
 {
-	OBJECTTYPE CopyOfObject;
+	OBJECTTYPE CopyOfObject = {};
 	UINT8 ubObjectsLeftToPlace;
 
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
@@ -5613,7 +5613,7 @@ static void IfMercOwnedRemoveItemFromMercInv(const INVENTORY_IN_SLOT* pInv)
 static void IfMercOwnedRemoveItemFromMercInv2(UINT8 ubOwnerProfileId, INT8 bOwnerSlotId)
 {
 	BOOLEAN fSuccess;
-	OBJECTTYPE ObjectToRemove;
+	OBJECTTYPE ObjectToRemove = {};
 
 	//if this item was in a previous location, and that location is on a merc's inventory
 	if ( ( bOwnerSlotId != -1 ) && ( ubOwnerProfileId != NO_PROFILE ) )
@@ -5682,7 +5682,7 @@ static BOOLEAN SKITryToAddInvToMercsInventory(INVENTORY_IN_SLOT* pInv, SOLDIERTY
 
 
 	//if the item is money
-	if( GCM->getItem(pInv->sItemIndex)->getItemClass() == IC_MONEY )
+	if( GCM->getItem(ItemId(pInv->sItemIndex))->getItemClass() == IC_MONEY )
 	{
 		// search through the merc's inventory for a pocket of money which isn't full already
 		bMoneyInvPos = GetInvSlotOfUnfullMoneyInMercInventory( pSoldier );
@@ -5907,12 +5907,12 @@ static void ReturnItemToPlayerSomehow(INVENTORY_IN_SLOT* pInvSlot, SOLDIERTYPE* 
 
 static void GivePlayerSomeChange(UINT32 uiAmount)
 {
-	INVENTORY_IN_SLOT MoneyInvSlot;
+	INVENTORY_IN_SLOT MoneyInvSlot = {};
 
 	MoneyInvSlot = INVENTORY_IN_SLOT{};
 
 	CreateMoney( uiAmount, &MoneyInvSlot.ItemObject );
-	MoneyInvSlot.sItemIndex = MoneyInvSlot.ItemObject.usItem;
+	MoneyInvSlot.sItemIndex = MoneyInvSlot.ItemObject.usItem.inner();
 	MoneyInvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
 	MoneyInvSlot.ubIdOfMercWhoOwnsTheItem = NO_PROFILE;
 
@@ -6003,7 +6003,7 @@ static void HandlePossibleRepairDelays(void)
 
 static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceOldestItemRepaired)
 {
-	UINT16 usItemIndex;
+	ItemId usItemIndex;
 	UINT8  ubElement;
 	DEALER_ITEM_HEADER *pDealerItem;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
@@ -6020,9 +6020,9 @@ static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceO
 	*puiHoursSinceOldestItemRepaired = 0;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+	for( usItemIndex = ItemId(1); usItemIndex < MAXITEMS; usItemIndex++ )
 	{
-		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
+		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ] );
 
 		//if there is some items in stock
 		if( pDealerItem->ubTotalItems )
@@ -6070,7 +6070,7 @@ static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceO
 
 static void DelayRepairsInProgressBy(UINT32 uiMinutesDelayed)
 {
-	UINT16 usItemIndex;
+	ItemId usItemIndex;
 	UINT8  ubElement;
 	DEALER_ITEM_HEADER *pDealerItem;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
@@ -6082,9 +6082,9 @@ static void DelayRepairsInProgressBy(UINT32 uiMinutesDelayed)
 		return;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+	for( usItemIndex = ItemId(1); usItemIndex < MAXITEMS; usItemIndex++ )
 	{
-		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
+		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex.inner() ] );
 
 		//if there is some items in stock
 		if( pDealerItem->ubTotalItems )
@@ -6221,14 +6221,14 @@ static UINT32 EvaluateInvSlot(INVENTORY_IN_SLOT* pInvSlot)
 
 
 	// Calculate dealer's buying price for the item
-	uiBuyingPrice = CalcShopKeeperItemPrice( DEALER_BUYING, FALSE, pInvSlot->sItemIndex, dPriceModifier, &( pInvSlot->ItemObject ) );
+	uiBuyingPrice = CalcShopKeeperItemPrice( DEALER_BUYING, FALSE, ItemId(pInvSlot->sItemIndex), dPriceModifier, &( pInvSlot->ItemObject ) );
 
 	pInvSlot->uiItemPrice = uiBuyingPrice;
 
 	if ( uiBuyingPrice > 0 )
 	{
 		// check if the item is really badly damaged
-		if( GCM->getItem(pInvSlot->sItemIndex)->getItemClass() != IC_AMMO )
+		if( GCM->getItem(ItemId(pInvSlot->sItemIndex))->getItemClass() != IC_AMMO )
 		{
 			if( pInvSlot->ItemObject.bStatus[ 0 ] < REALLY_BADLY_DAMAGED_THRESHOLD )
 			{
@@ -6292,7 +6292,7 @@ static ST::string BuildRepairTimeString(UINT32 uiTimeInMinutesToFixItem)
 }
 
 
-static ST::string BuildDoneWhenTimeString(ArmsDealerID ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement)
+static ST::string BuildDoneWhenTimeString(ArmsDealerID ubArmsDealer, ItemId usItemIndex, UINT8 ubElement)
 {
 	UINT32 uiDoneTime;
 	UINT32 uiDay, uiHour, uiMin;
@@ -6301,19 +6301,19 @@ static ST::string BuildDoneWhenTimeString(ArmsDealerID ubArmsDealer, UINT16 usIt
 	//dealer must be a repair dealer
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
 	// element index must be valid
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() );
+	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex.inner() ].SpecialItem.size() );
 	// that item must be active
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive );
+	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex.inner() ].SpecialItem[ ubElement ].fActive );
 	// that item must be in repair
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 );
+	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex.inner() ].SpecialItem[ ubElement ].Info.bItemCondition < 0 );
 
 	//if the item has already been repaired
-	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
+	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex.inner() ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
 	{
 		return ST::null;
 	}
 
-	uiDoneTime = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime;
+	uiDoneTime = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex.inner() ].SpecialItem[ ubElement ].uiRepairDoneTime;
 
 	// round off to next higher 15 minutes
 	if ( ( uiDoneTime % REPAIR_MINUTES_INTERVAL ) > 0 )

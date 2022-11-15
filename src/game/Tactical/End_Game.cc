@@ -411,7 +411,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 			//if (!s->bNeutral && s->bSide != OUR_TEAM)
 			{
 				gTacticalStatus.ubAttackBusyCount++;
-				EVENT_SoldierGotHit(s, 0, 10000, 0, s->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
+				EVENT_SoldierGotHit(s, ItemId(0), 10000, 0, s->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
 			}
 		}
 	}

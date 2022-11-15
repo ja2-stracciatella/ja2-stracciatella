@@ -297,8 +297,8 @@ static BOOLEAN gfReEvaluateDisabledINVPanelButtons = FALSE;
 
 
 UINT8 gubHandPos;
-UINT16 gusOldItemIndex;
-UINT16 gusNewItemIndex;
+ItemId gusOldItemIndex;
+ItemId gusNewItemIndex;
 BOOLEAN gfDeductPoints;
 
 
@@ -1495,19 +1495,19 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 }
 
 
-BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* const s, const UINT32 uiHandPos, const UINT16 usReplaceItem)
+BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* const s, const UINT32 uiHandPos, const ItemId usReplaceItem)
 {
 	if (s->ubProfile != NAILS) return FALSE;
 	if (uiHandPos != VESTPOS)  return FALSE;
 
-	switch (usReplaceItem)
+	switch (usReplaceItem.inner())
 	{
-		case LEATHER_JACKET:
-		case LEATHER_JACKET_W_KEVLAR:
-		case LEATHER_JACKET_W_KEVLAR_18:
-		case LEATHER_JACKET_W_KEVLAR_Y:
-		case COMPOUND18:
-		case JAR_QUEEN_CREATURE_BLOOD:
+		case LEATHER_JACKET.inner():
+		case LEATHER_JACKET_W_KEVLAR.inner():
+		case LEATHER_JACKET_W_KEVLAR_18.inner():
+		case LEATHER_JACKET_W_KEVLAR_Y.inner():
+		case COMPOUND18.inner():
+		case JAR_QUEEN_CREATURE_BLOOD.inner():
 			return FALSE;
 
 		default:
@@ -1517,7 +1517,7 @@ BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* const s, const UINT32 uiHandPos
 }
 
 
-static BOOLEAN UIHandleItemPlacement(UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 usNewItemIndex, BOOLEAN fDeductPoints)
+static BOOLEAN UIHandleItemPlacement(UINT8 ubHandPos, ItemId usOldItemIndex, ItemId usNewItemIndex, BOOLEAN fDeductPoints)
 {
 	if ( _KeyDown(CTRL) )
 	{
@@ -1589,8 +1589,8 @@ static void MergeMessageBoxCallBack(MessageBoxReturnValue);
 static void SMInvClickCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// Copyies of values
-	UINT16 usOldItemIndex, usNewItemIndex;
-	UINT16 usItemPrevInItemPointer;
+	ItemId usOldItemIndex, usNewItemIndex;
+	ItemId usItemPrevInItemPointer;
 	BOOLEAN fNewItem = FALSE;
 
 	UINT32 uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
@@ -3074,7 +3074,7 @@ static void TMClickFirstHandInvCallbackSecondary(MOUSE_REGION* pRegion, UINT32 i
 
 	if (!AM_A_ROBOT(s))
 	{
-		const UINT16 usOldHandItem = s->inv[HANDPOS].usItem;
+		const ItemId usOldHandItem = s->inv[HANDPOS].usItem;
 		SwapHandItems(s);
 		ReLoadSoldierAnimationDueToHandItemChange(s, usOldHandItem, s->inv[HANDPOS].usItem);
 		fInterfacePanelDirty = DIRTYLEVEL2;
@@ -3100,7 +3100,7 @@ static void TMClickSecondHandInvCallbackSecondary(MOUSE_REGION* pRegion, UINT32 
 
 	if (!(s->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER)) && !AM_A_ROBOT(s))
 	{
-		const UINT16 usOldHandItem = s->inv[HANDPOS].usItem;
+		const ItemId usOldHandItem = s->inv[HANDPOS].usItem;
 		SwapHandItems(s);
 		ReLoadSoldierAnimationDueToHandItemChange(s, usOldHandItem, s->inv[HANDPOS].usItem);
 		fInterfacePanelDirty = DIRTYLEVEL2;
@@ -3367,7 +3367,7 @@ void KeyRingSlotInvClickCallbackPrimary( MOUSE_REGION * pRegion, UINT32 iReason 
 	//if we are in the shop keeper interface
 	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 	{
-		INVENTORY_IN_SLOT InvSlot;
+		INVENTORY_IN_SLOT InvSlot = {};
 
 		if( gMoveingItem.sItemIndex == 0 )
 		{
@@ -3752,7 +3752,7 @@ void GoToMapScreenFromTactical(void)
 }
 
 
-void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem)
+void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvPos, ItemId usOldItem, ItemId usNewItem)
 {
 	// if in attached weapon mode and don't have weapon with GL attached in hand, reset weapon mode
 	if (pSoldier->bWeaponMode == WM_ATTACHED &&

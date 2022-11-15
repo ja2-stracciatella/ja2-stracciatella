@@ -213,7 +213,7 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 {
 	INT32 iVest, iHelmet, iLeg;
 
-	if (pSoldier->inv[VESTPOS].usItem)
+	if (pSoldier->inv[VESTPOS].usItem != NOTHING)
 	{
 		iVest = EffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -224,7 +224,7 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 		iVest = 0;
 	}
 
-	if (pSoldier->inv[HELMETPOS].usItem)
+	if (pSoldier->inv[HELMETPOS].usItem != NOTHING)
 	{
 		iHelmet = EffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -235,7 +235,7 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 		iHelmet = 0;
 	}
 
-	if (pSoldier->inv[LEGPOS].usItem)
+	if (pSoldier->inv[LEGPOS].usItem != NOTHING)
 	{
 		iLeg = EffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -284,7 +284,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	// returns the % damage reduction from grenades
 	INT32 iVest, iHelmet, iLeg;
 
-	if (pSoldier->inv[VESTPOS].usItem)
+	if (pSoldier->inv[VESTPOS].usItem != NOTHING)
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -295,7 +295,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 		iVest = 0;
 	}
 
-	if (pSoldier->inv[HELMETPOS].usItem)
+	if (pSoldier->inv[HELMETPOS].usItem != NOTHING)
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -306,7 +306,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 		iHelmet = 0;
 	}
 
-	if (pSoldier->inv[LEGPOS].usItem)
+	if (pSoldier->inv[LEGPOS].usItem != NOTHING)
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -708,7 +708,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	FLOAT   dTargetX;
 	FLOAT   dTargetY;
 	FLOAT   dTargetZ;
-	UINT16  usItemNum;
+	ItemId  usItemNum;
 	BOOLEAN fBuckshot;
 	UINT8   ubVolume;
 	INT8    bSilencerPos;
@@ -1184,7 +1184,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 	INT16          sAPCost;
 	EV_S_WEAPONHIT SWeaponHit;
 	INT32          iImpact;
-	UINT16         usOldItem;
+	ItemId         usOldItem;
 
 	// Deduct points!
 	// August 13 2002: unless stealing - APs already deducted elsewhere
@@ -1445,7 +1445,7 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 	// OK, goto throw animation
 	HandleSoldierThrowItem( pSoldier, pSoldier->sTargetGridNo );
 
-	UINT16 const thrown_item=pSoldier->inv[HANDPOS].usItem;
+	ItemId const thrown_item=pSoldier->inv[HANDPOS].usItem;
 	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
 	if(pSoldier->inv[HANDPOS].usItem == NOTHING)
 	{
@@ -1466,9 +1466,9 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	UINT32     uiHitChance, uiDiceRoll;
 	INT16      sAPCost = 0;
 	INT8       bAttachPos;
-	OBJECTTYPE Launchable;
+	OBJECTTYPE Launchable = {};
 	OBJECTTYPE *pObj;
-	UINT16     usItemNum;
+	ItemId     usItemNum;
 
 	usItemNum = pSoldier->usAttackingWeapon;
 
@@ -1568,7 +1568,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 {
 	ANITILE_PARAMS AniParams;
 	UINT8          ubAmmoType;
-	UINT16         usItem;
+	ItemId         usItem;
 
 	ubAmmoType = attacker->inv[attacker->ubAttackingHand].ubGunAmmoType;
 	usItem     = attacker->inv[attacker->ubAttackingHand].usItem;
@@ -1611,7 +1611,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 	}
 	else if (ubAmmoType == AMMO_MONSTER)
 	{
-		UINT16 gas = GCM->getWeapon(usItem)->usSmokeEffect;
+		ItemId gas = GCM->getWeapon(usItem)->usSmokeEffect;
 		if (gas == NONE)
 		{
 			return FALSE;
@@ -1630,7 +1630,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 }
 
 
-void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, const INT16 sDamage,
+void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const ItemId usWeaponIndex, const INT16 sDamage,
 		const INT16 sBreathLoss, const UINT16 usDirection, const INT16 sXPos, const INT16 sYPos,
 		const INT16 sZPos, const INT16 sRange, SOLDIERTYPE* const attacker, const UINT8 ubSpecial,
 		const UINT8 ubHitLocation)
@@ -1641,7 +1641,7 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 	if ( EXPLOSIVE_GUN( usWeaponIndex ) )
 	{
 		// Reduce attacker count!
-		const UINT16 item = (usWeaponIndex == ROCKET_LAUNCHER ? C1 : TANK_SHELL);
+		const ItemId item = (usWeaponIndex == ROCKET_LAUNCHER ? C1 : TANK_SHELL);
 		IgniteExplosionXY(attacker, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS(sYPos, sXPos), item, pTargetSoldier->bLevel);
 
 		SLOGD("Freeing up attacker - end of LAW fire");
@@ -1681,7 +1681,7 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 	UINT32         uiMissVolume = MIDVOLUME;
 
 	SOLDIERTYPE* const attacker      = pBullet->pFirer;
-	const UINT16       usWeaponIndex = attacker->usAttackingWeapon;
+	const ItemId       usWeaponIndex = attacker->usAttackingWeapon;
 	const INT8         bWeaponStatus = pBullet->ubItemStatus;
 
 	if (fStopped)
@@ -1772,7 +1772,7 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 			// When it hits the ground, leave on map...
 			if ( GCM->getItem(usWeaponIndex)->getItemClass() == IC_THROWING_KNIFE )
 			{
-				OBJECTTYPE Object;
+				OBJECTTYPE Object = {};
 
 				// OK, have we hit ground?
 				if ( usStructureID == INVALID_STRUCTURE_ID )
@@ -2028,7 +2028,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
 	INT16  sRange;
-	UINT16 usInHand;
+	ItemId usInHand;
 
 	usInHand = pSoldier->inv[HANDPOS].usItem;
 
@@ -2063,7 +2063,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	INT32 iChance, iRange, iSightRange, iMaxRange, iScopeBonus, iBonus; //, minRange;
 	INT32 iGunCondition, iMarksmanship;
 	INT32 iPenalty;
-	UINT16 usInHand;
+	ItemId usInHand;
 	OBJECTTYPE *pInHand;
 	INT8 bAttachPos;
 	INT8 bBandaged;
@@ -2289,7 +2289,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			if ( pInHand->bAttachStatus[ bAttachPos ] - Random( 35 ) - Random( 35 ) < USABLE )
 			{
 				// barrel extender falls off!
-				OBJECTTYPE Temp;
+				OBJECTTYPE Temp = {};
 
 				// since barrel extenders are not removable we cannot call RemoveAttachment here
 				// and must create the item by hand
@@ -3189,7 +3189,7 @@ INT32 HTHImpact(const SOLDIERTYPE* const att, const SOLDIERTYPE* const tgt, cons
 {
 	INT32        impact   = EffectiveExpLevel(att) / 2; // 0 to 4 for level
 	const INT8   strength = EffectiveStrength(att);
-	const UINT16 weapon   = att->usAttackingWeapon;
+	const ItemId weapon   = att->usAttackingWeapon;
 	if (fBladeAttack)
 	{
 		impact += strength / 20; // 0 to 5 for strength, adjusted by damage taken
@@ -3202,7 +3202,7 @@ INT32 HTHImpact(const SOLDIERTYPE* const att, const SOLDIERTYPE* const tgt, cons
 		impact += strength / 5; // 0 to 20 for strength, adjusted by damage taken
 
 		// NB martial artists don't get a bonus for using brass knuckles!
-		if (weapon && !HAS_SKILL_TRAIT(att, MARTIALARTS))
+		if (weapon != NOTHING && !HAS_SKILL_TRAIT(att, MARTIALARTS))
 		{
 			impact += GCM->getWeapon(weapon)->ubImpact;
 			if (AM_A_ROBOT(tgt)) impact /= 2;
@@ -3283,7 +3283,7 @@ void ShotMiss(const BULLET* const b)
 
 static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime, UINT8 ubMode, bool skipSafetyCheck = false)
 {
-	UINT16 usInHand;
+	ItemId usInHand;
 	UINT8  ubBandaged;
 	INT32  iAttRating, iDefRating;
 	INT32  iChance;
@@ -3592,16 +3592,16 @@ void ReloadWeapon(SOLDIERTYPE* const s, UINT8 const inv_pos)
 
 bool IsGunBurstCapable(SOLDIERTYPE const* const s, UINT8 const inv_pos)
 {
-	UINT16 const item = s->inv[inv_pos].usItem;
+	ItemId const item = s->inv[inv_pos].usItem;
 	return GCM->getItem(item)->isWeapon() &&
 		GCM->getWeapon(item)->ubShotsPerBurst > 0;
 }
 
 
-INT32 CalcMaxTossRange(const SOLDIERTYPE* pSoldier, UINT16 usItem, BOOLEAN fArmed)
+INT32 CalcMaxTossRange(const SOLDIERTYPE* pSoldier, ItemId usItem, BOOLEAN fArmed)
 {
 	INT32  iRange;
-	UINT16 usSubItem;
+	ItemId usSubItem;
 
 	if ( EXPLOSIVE_GUN( usItem ) )
 	{
@@ -3661,7 +3661,7 @@ INT32 CalcMaxTossRange(const SOLDIERTYPE* pSoldier, UINT16 usItem, BOOLEAN fArme
 UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
 	INT32  iChance, iMaxRange, iRange;
-	UINT16 usHandItem;
+	ItemId usHandItem;
 	INT8   bPenalty, bBandaged;
 
 	if ( pSoldier->bWeaponMode == WM_ATTACHED)

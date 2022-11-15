@@ -8,7 +8,7 @@ struct EditorItemsInfo
 {
 	BOOLEAN fGameInit;	//Used for initializing save variables the first time.
 	BOOLEAN fActive;		//currently active
-	UINT16 *pusItemIndex;		//a dynamic array of Item indices
+	ItemId *pusItemIndex;		//a dynamic array of Item indices
 	SGPVSurface* uiBuffer;
 	ToolbarMode  uiItemType; //Weapons, ammo, armour, explosives, equipment
 	INT16   sNumItems;	//total number of items in the current class of item.

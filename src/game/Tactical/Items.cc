@@ -56,7 +56,7 @@ constexpr UINT8 ANY_MAGSIZE = 255; // magic number for FindAmmo's mag_size param
 
 struct AttachmentInfoStruct
 {
-	UINT16 usItem;
+	ItemId usItem;
 	UINT32 uiItemClass;
 	INT8   bAttachmentSkillCheck;
 	INT8   bAttachmentSkillCheckMod;
@@ -93,7 +93,7 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{BREAK_LIGHT,				IC_ARMOUR,	NO_CHECK,								0},
 };
 
-static std::map<UINT16, std::set<UINT16> const> const g_attachments
+static std::map<ItemId, std::set<ItemId> const> const g_attachments
 {
 	{DETONATOR, {TNT, HMX, C1, C4}},
 	{REMDETONATOR, {TNT, HMX, C1, C4}},
@@ -109,9 +109,9 @@ static std::map<UINT16, std::set<UINT16> const> const g_attachments
 };
 
 // additional possible attachments if the extra_attachments game policy is set
-static std::set<UINT16> const g_helmets {STEEL_HELMET, KEVLAR_HELMET, KEVLAR_HELMET_18, KEVLAR_HELMET_Y, SPECTRA_HELMET, SPECTRA_HELMET_18, SPECTRA_HELMET_Y};
-static std::set<UINT16> const g_leggings {KEVLAR_LEGGINGS, KEVLAR_LEGGINGS_18, KEVLAR_LEGGINGS_Y, SPECTRA_LEGGINGS, SPECTRA_LEGGINGS_18, SPECTRA_LEGGINGS_Y};
-static std::map<UINT16, decltype(g_helmets) *> const g_attachments_mod
+static std::set<ItemId> const g_helmets {STEEL_HELMET, KEVLAR_HELMET, KEVLAR_HELMET_18, KEVLAR_HELMET_Y, SPECTRA_HELMET, SPECTRA_HELMET_18, SPECTRA_HELMET_Y};
+static std::set<ItemId> const g_leggings {KEVLAR_LEGGINGS, KEVLAR_LEGGINGS_18, KEVLAR_LEGGINGS_Y, SPECTRA_LEGGINGS, SPECTRA_LEGGINGS_18, SPECTRA_LEGGINGS_Y};
+static std::map<ItemId, decltype(g_helmets) *> const g_attachments_mod
 {
 	{NIGHTGOGGLES, &g_helmets},
 	{UVGOGGLES, &g_helmets},
@@ -123,7 +123,7 @@ static std::map<UINT16, decltype(g_helmets) *> const g_attachments_mod
 	{ADRENALINE_BOOSTER, &g_leggings}
 };
 
-static std::map<UINT16, std::set<UINT16> const> const Launchable
+static std::map<ItemId, std::set<ItemId> const> const Launchable
 {
 	{GL_HE_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
 	{GL_TEARGAS_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
@@ -133,7 +133,7 @@ static std::map<UINT16, std::set<UINT16> const> const Launchable
 	{TANK_SHELL, {TANK_CANNON}}
 };
 
-static std::initializer_list<std::array<UINT16, 2> const> const CompatibleFaceItems
+static std::initializer_list<std::array<ItemId, 2> const> const CompatibleFaceItems
 {
 	{ NIGHTGOGGLES, EXTENDEDEAR },
 	{ NIGHTGOGGLES, WALKMAN     },
@@ -159,9 +159,9 @@ enum MergeType
 
 struct MergeInfo
 {
-	UINT16 item1;
-	UINT16 item2;
-	UINT16 result;
+	ItemId item1;
+	ItemId item2;
+	ItemId result;
 	MergeType action;
 };
 
@@ -232,9 +232,9 @@ static MergeInfo const Merge[] =
 
 struct ComboMergeInfoStruct
 {
-	UINT16 usItem;
-	UINT16 usAttachment[2];
-	UINT16 usResult;
+	ItemId usItem;
+	ItemId usAttachment[2];
+	ItemId usResult;
 };
 
 
@@ -248,7 +248,7 @@ static ComboMergeInfoStruct const AttachmentComboMerge[] =
 };
 
 
-BOOLEAN ItemIsLegal( UINT16 usItemIndex )
+BOOLEAN ItemIsLegal( ItemId usItemIndex )
 {
 	//if the user has selected the reduced gun list
 	if( !gGameOptions.fGunNut )
@@ -300,7 +300,7 @@ BOOLEAN WeaponInHand(const SOLDIERTYPE* const pSoldier)
 	return( FALSE );
 }
 
-UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot )
+UINT8 ItemSlotLimit( ItemId usItem, INT8 bSlot )
 {
 	UINT8 ubSlotLimit;
 
@@ -332,7 +332,7 @@ UINT32 MoneySlotLimit( INT8 bSlot )
 }
 
 
-INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem)
+INT8 FindObj(const SOLDIERTYPE* pSoldier, ItemId usItem)
 {
 	INT8 bLoop;
 
@@ -346,7 +346,7 @@ INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem)
 	return( NO_SLOT );
 }
 
-INT8 FindUsableObj( const SOLDIERTYPE * pSoldier, UINT16 usItem )
+INT8 FindUsableObj( const SOLDIERTYPE * pSoldier, ItemId usItem )
 {
 	INT8 bLoop;
 
@@ -361,7 +361,7 @@ INT8 FindUsableObj( const SOLDIERTYPE * pSoldier, UINT16 usItem )
 }
 
 
-static INT8 FindObjExcludingSlot(const SOLDIERTYPE* pSoldier, UINT16 usItem, INT8 bExcludeSlot)
+static INT8 FindObjExcludingSlot(const SOLDIERTYPE* pSoldier, ItemId usItem, INT8 bExcludeSlot)
 {
 	INT8 bLoop;
 
@@ -391,7 +391,7 @@ INT8 FindExactObj( const SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 }
 
 
-INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUpper )
+INT8 FindObjWithin( SOLDIERTYPE * pSoldier, ItemId usItem, INT8 bLower, INT8 bUpper )
 {
 	INT8 bLoop;
 
@@ -406,10 +406,10 @@ INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUp
 }
 
 
-INT8 FindObjInObjRange(const SOLDIERTYPE* const pSoldier, UINT16 usItem1, UINT16 usItem2)
+INT8 FindObjInObjRange(const SOLDIERTYPE* const pSoldier, ItemId usItem1, ItemId usItem2)
 {
 	INT8   bLoop;
-	UINT16 usTemp;
+	ItemId usTemp;
 
 	if (usItem1 > usItem2 )
 	{
@@ -500,7 +500,7 @@ INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper
 
 	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
 	{
-		if (pSoldier->inv[bLoop].usItem == 0)
+		if (pSoldier->inv[bLoop].usItem == ItemId(0))
 		{
 			if (bLoop == SECONDHANDPOS && GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isTwoHanded())
 			{
@@ -518,12 +518,12 @@ INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper
 
 static BOOLEAN GLGrenadeInSlot(const SOLDIERTYPE* pSoldier, INT8 bSlot)
 {
-	switch (pSoldier->inv[bSlot].usItem)
+	switch (pSoldier->inv[bSlot].usItem.inner())
 	{
-		case GL_HE_GRENADE:
-		case GL_TEARGAS_GRENADE:
-		case GL_STUN_GRENADE:
-		case GL_SMOKE_GRENADE:
+		case GL_HE_GRENADE.inner():
+		case GL_TEARGAS_GRENADE.inner():
+		case GL_STUN_GRENADE.inner():
+		case GL_SMOKE_GRENADE.inner():
 			return(TRUE);
 		default:
 			return(FALSE);
@@ -582,7 +582,7 @@ INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 }
 
 
-INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
+INT8 FindAttachment(const OBJECTTYPE* pObj, ItemId usItem)
 {
 	INT8 bLoop;
 
@@ -611,7 +611,7 @@ INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClas
 	return( ITEM_NOT_FOUND );
 }
 
-INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon )
+INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, ItemId usWeapon )
 {
 	INT8 bLoop;
 
@@ -626,7 +626,7 @@ INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 }
 
 
-INT8 FindLaunchableAttachment(const OBJECTTYPE* const pObj, const UINT16 usWeapon)
+INT8 FindLaunchableAttachment(const OBJECTTYPE* const pObj, const ItemId usWeapon)
 {
 	INT8 bLoop;
 
@@ -653,7 +653,7 @@ bool ItemHasAttachments(OBJECTTYPE const& o)
 
 // Determine if it is possible to add this attachment to the CLASS of this item
 // (i.e. to any item in the class)
-static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
+static BOOLEAN ValidAttachmentClass(ItemId usAttachment, ItemId usItem)
 {
 	for (auto const& ai : AttachmentInfo)
 	{
@@ -669,7 +669,7 @@ static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 }
 
 
-static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
+static const AttachmentInfoStruct* GetAttachmentInfo(const ItemId usItem)
 {
 	for (auto const& ai : AttachmentInfo)
 	{
@@ -679,7 +679,7 @@ static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 }
 
 
-bool ValidAttachment(UINT16 const attachment, UINT16 const item)
+bool ValidAttachment(ItemId const attachment, ItemId const item)
 {
 	const ItemModel *itemModel = GCM->getItem(item);
 	if (itemModel && itemModel->canBeAttached(attachment))
@@ -702,10 +702,10 @@ bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 }
 
 
-BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachment, const BOOLEAN fAttemptingAttachment)
+BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const ItemId usAttachment, const BOOLEAN fAttemptingAttachment)
 {
 	BOOLEAN fSameItem = FALSE, fSimilarItems = FALSE;
-	UINT16  usSimilarItem = NOTHING;
+	ItemId  usSimilarItem = NOTHING;
 
 	if ( !ValidAttachment( usAttachment, pObj->usItem ) )
 	{
@@ -733,29 +733,29 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 	}
 
 	// special code for items which won't attach if X is present
-	switch( usAttachment )
+	switch( usAttachment.inner() )
 	{
-		case BIPOD:
+		case BIPOD.inner():
 			if ( FindAttachment( pObj, UNDER_GLAUNCHER) != ITEM_NOT_FOUND )
 			{
 				fSimilarItems = TRUE;
 				usSimilarItem = UNDER_GLAUNCHER;
 			}
 			break;
-		case UNDER_GLAUNCHER:
+		case UNDER_GLAUNCHER.inner():
 			if ( FindAttachment( pObj, BIPOD ) != ITEM_NOT_FOUND )
 			{
 				fSimilarItems = TRUE;
 				usSimilarItem = BIPOD;
 			}
 			break;
-		case DETONATOR:
+		case DETONATOR.inner():
 			if( FindAttachment( pObj, REMDETONATOR ) != ITEM_NOT_FOUND )
 			{
 				fSameItem = TRUE;
 			}
 			break;
-		case REMDETONATOR:
+		case REMDETONATOR.inner():
 			if( FindAttachment( pObj, DETONATOR ) != ITEM_NOT_FOUND )
 			{
 				fSameItem = TRUE;
@@ -781,7 +781,7 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 }
 
 //Determines if it is possible to equip this weapon with this ammo.
-bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
+bool ValidAmmoType( ItemId usItem, ItemId usAmmoType )
 {
 	if (GCM->getItem(usItem)->getItemClass() == IC_GUN && GCM->getItem(usAmmoType)->getItemClass() == IC_AMMO)
 	{
@@ -791,7 +791,7 @@ bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
 }
 
 
-BOOLEAN CompatibleFaceItem(UINT16 const item1, UINT16 const item2)
+BOOLEAN CompatibleFaceItem(ItemId const item1, ItemId const item2)
 {
 	if (item2 == NOTHING) return TRUE;
 	for (auto const& i : CompatibleFaceItems)
@@ -803,7 +803,7 @@ BOOLEAN CompatibleFaceItem(UINT16 const item1, UINT16 const item2)
 }
 
 
-BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
+BOOLEAN ValidLaunchable( ItemId usLaunchable, ItemId usItem )
 {
 	auto const it = Launchable.find(usLaunchable);
 	if (it != Launchable.end())
@@ -815,14 +815,14 @@ BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
 }
 
 
-UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
+ItemId GetLauncherFromLaunchable( ItemId usLaunchable )
 {
 	auto const it = Launchable.find(usLaunchable);
 	return it != Launchable.end() ? *it->second.begin() : NOTHING;
 }
 
 
-static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UINT16* const pusResult, UINT8* const pubType)
+static BOOLEAN EvaluateValidMerge(ItemId const usMerge, ItemId const usItem, ItemId* const pusResult, UINT8* const pubType)
 {
 	// NB "usMerge" is the object being merged with (e.g. compound 18)
 	// "usItem" is the item being merged "onto" (e.g. kevlar vest)
@@ -847,9 +847,9 @@ static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UIN
 	return FALSE;
 }
 
-BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
+BOOLEAN ValidMerge( ItemId usMerge, ItemId usItem )
 {
-	UINT16 usIgnoreResult;
+	ItemId usIgnoreResult;
 	UINT8  ubIgnoreType;
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &ubIgnoreType ) );
 }
@@ -863,7 +863,7 @@ UINT8 CalculateObjectWeight(OBJECTTYPE const* const o)
 	if (item->getPerPocket() <= 1)
 	{
 		// Account for any attachments
-		FOR_EACH(UINT16 const, i, o->usAttachItem)
+		FOR_EACH(ItemId const, i, o->usAttachItem)
 		{
 			if (*i == NOTHING) continue;
 			weight += GCM->getItem(*i)->getWeight();
@@ -1130,14 +1130,14 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 
 BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
 {
-	OBJECTTYPE OldAmmo;
+	OBJECTTYPE OldAmmo = {};
 	UINT8   ubBulletsToMove;
 	BOOLEAN fSameAmmoType;
 	BOOLEAN fSameMagazineSize;
 	BOOLEAN fReloadingWithStack;
 	BOOLEAN fEmptyGun;
 	INT8    bReloadType;
-	UINT16  usNewAmmoItem;
+	ItemId  usNewAmmoItem;
 
 	if (pGun->usItem == ROCKET_LAUNCHER) return( FALSE ); // IC_GUN but uses no ammo (LAW)
 
@@ -1234,7 +1234,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		}
 		else if (GCM->getItem(pAmmo->usItem)->asAmmo()->capacity > GCM->getWeapon(pGun->usItem)->ubMagSize)
 		{
-			usNewAmmoItem = pAmmo->usItem - 1;
+			usNewAmmoItem = ItemId(pAmmo->usItem.inner() - 1);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
 				ubBulletsToMove = std::min(int(pAmmo->ubShotsLeft[0]), GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft);
@@ -1246,7 +1246,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		}
 		else // mag is smaller than weapon mag
 		{
-			usNewAmmoItem = pAmmo->usItem + 1;
+			usNewAmmoItem = ItemId(pAmmo->usItem.inner() + 1);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
 				ubBulletsToMove = std::min(int(pAmmo->ubShotsLeft[0]), GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft);
@@ -1446,14 +1446,14 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 	}
 	else
 	{
-		switch( pObj->usItem )
+		switch( pObj->usItem.inner() )
 		{
-			case MORTAR:
+			case MORTAR.inner():
 				return( FindObj( pSoldier, MORTAR_SHELL ) );
-			case TANK_CANNON:
+			case TANK_CANNON.inner():
 				return( FindObj( pSoldier, TANK_SHELL ) );
-			case GLAUNCHER:
-			case UNDER_GLAUNCHER:
+			case GLAUNCHER.inner():
+			case UNDER_GLAUNCHER.inner():
 				return( FindObjInObjRange( pSoldier, GL_HE_GRENADE, GL_SMOKE_GRENADE ) );
 			default:
 				return( NO_SLOT );
@@ -1517,9 +1517,9 @@ static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 		if (m.usItem != o.usItem) continue;
 
 		// Search for all the appropriate attachments
-		FOR_EACH(UINT16 const, k, m.usAttachment)
+		FOR_EACH(ItemId const, k, m.usAttachment)
 		{
-			UINT16 const attachment = *k;
+			ItemId const attachment = *k;
 			if (attachment == NOTHING) continue;
 			if (FindAttachment(&o, attachment) == -1) return nullptr; // Didn't find something required
 		}
@@ -1539,7 +1539,7 @@ static void PerformAttachmentComboMerge(OBJECTTYPE& o, ComboMergeInfoStruct cons
 	// - Change object
 	UINT32 total_status          = o.bStatus[0];
 	INT8   n_status_contributors = 1;
-	FOR_EACH(UINT16 const, i, m.usAttachment)
+	FOR_EACH(ItemId const, i, m.usAttachment)
 	{
 		if (*i == NOTHING) continue;
 
@@ -1623,7 +1623,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 			}
 		}
 
-		UINT16 const temp_item   = target.usAttachItem[attach_pos];
+		ItemId const temp_item   = target.usAttachItem[attach_pos];
 		UINT16 const temp_status = target.bAttachStatus[attach_pos];
 
 		target.usAttachItem[attach_pos]  = attachment.usItem;
@@ -1674,7 +1674,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 	}
 
 	// check for merges
-	UINT16 merge_result;
+	ItemId merge_result;
 	UINT8  merge_kind;
 	if (!EvaluateValidMerge(attachment.usItem, target.usItem, &merge_result, &merge_kind)) return false;
 
@@ -1975,7 +1975,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			{
 				// We just performed a successful drop of a two-handed object into the
 				// main hand
-				if (pSoldier->inv[SECONDHANDPOS].usItem != 0)
+				if (pSoldier->inv[SECONDHANDPOS].usItem != NOTHING)
 				{
 					// swap what WAS in the second hand into the cursor
 					SwapObjs( pObj, &(pSoldier->inv[SECONDHANDPOS]));
@@ -2071,7 +2071,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 			if ( (GCM->getItem(pObj->usItem)->isTwoHanded()) && (bPos == HANDPOS) )
 			{
-				if (pSoldier->inv[SECONDHANDPOS].usItem != 0)
+				if (pSoldier->inv[SECONDHANDPOS].usItem != NOTHING)
 				{
 					// both pockets have something in them, so we can't swap
 					return( FALSE );
@@ -2474,7 +2474,7 @@ UINT16 UseKitPoints(OBJECTTYPE& o, UINT16 const original_points, SOLDIERTYPE con
 	return original_points - points;
 }
 
-UINT16 DefaultMagazine(UINT16 const gun)
+ItemId DefaultMagazine(ItemId const gun)
 {
 	if (!(GCM->getItem(gun)->isGun()))
 	{
@@ -2496,9 +2496,9 @@ UINT16 DefaultMagazine(UINT16 const gun)
 }
 
 
-UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
+ItemId FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
 {
-	UINT16 default_mag = NOTHING;
+	ItemId default_mag = NOTHING;
 	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
 	for (const MagazineModel* mag : magazines)
 	{
@@ -2517,7 +2517,7 @@ UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_siz
 }
 
 
-UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 const old_ammo_id, const WeaponModel *new_gun)
+ItemId FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, ItemId const old_ammo_id, const WeaponModel *new_gun)
 {
 	const MagazineModel * old_mag = GCM->getMagazineByItemIndex(old_ammo_id);
 	if (old_mag->calibre->index != old_gun->calibre->index) return NOTHING;
@@ -2526,14 +2526,14 @@ UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 con
 }
 
 
-UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
+ItemId RandomMagazine( ItemId usItem, UINT8 ubPercentStandard )
 {
 	std::vector<const MagazineModel*> possibleMags;
 	UINT8 ubMagChosen;
 
 	if (!(GCM->getItem(usItem)->isGun()))
 	{
-		return( 0 );
+		return NOTHING;
 	}
 
 	const WeaponModel *pWeapon = GCM->getWeapon(usItem);
@@ -2551,7 +2551,7 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 	// no matches?
 	if (possibleMags.size() == 0)
 	{
-		return( 0 );
+		return NOTHING;
 	}
 	else if (possibleMags.size() == 1)
 	{
@@ -2577,9 +2577,9 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 }
 
 
-static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
+static void CreateGun(ItemId usItem, INT8 bStatus, OBJECTTYPE* pObj)
 {
-	UINT16 usAmmo;
+	ItemId usAmmo;
 
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
@@ -2617,7 +2617,7 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 }
 
 
-static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
+static void CreateMagazine(ItemId usItem, OBJECTTYPE* pObj)
 {
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
@@ -2626,7 +2626,7 @@ static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 }
 
 
-void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
+void CreateItem(ItemId const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 {
 	*pObj = OBJECTTYPE{};
 	if (usItem >= MAXITEMS)
@@ -2667,7 +2667,7 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 }
 
 
-void CreateItems(UINT16 const usItem, INT8 const bStatus, UINT8 ubNumber, OBJECTTYPE* const pObj)
+void CreateItems(ItemId const usItem, INT8 const bStatus, UINT8 ubNumber, OBJECTTYPE* const pObj)
 {
 	UINT8 ubLoop;
 
@@ -2895,7 +2895,7 @@ void SetNewItem(SOLDIERTYPE* pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem)
 BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 {
 	INT8    bLoop, bLoop2;
-	UINT16  usItem;
+	ItemId  usItem;
 	INT8    bStatus;
 	BOOLEAN fReturnVal = FALSE;
 
@@ -2950,7 +2950,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 				if ( pSoldier->ubProfile == MADLAB )
 				{
 					// remove attachments and drop them
-					OBJECTTYPE			Attachment;
+					OBJECTTYPE			Attachment = {};
 
 					for ( bLoop2 = MAX_ATTACHMENTS - 1; bLoop2 >= 0; bLoop2-- )
 					{
@@ -2972,10 +2972,10 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 }
 
 
-static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem);
+static void RemoveInvObject(SOLDIERTYPE* pSoldier, ItemId usItem);
 
 
-BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
+BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, ItemId usItem )
 {
 	INT8 bLoop;
 	BOOLEAN	fReturnVal = FALSE;
@@ -3014,7 +3014,7 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 
 void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 {
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 	BOOLEAN fRet;
 
 	// remove all money from soldier
@@ -3035,7 +3035,7 @@ void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 }
 
 
-INT8 FindObjectInSoldierProfile(MERCPROFILESTRUCT const& p, UINT16 const item_id)
+INT8 FindObjectInSoldierProfile(MERCPROFILESTRUCT const& p, ItemId const item_id)
 {
 	for (INT8 i = 0; i != NUM_INV_SLOTS; ++i)
 	{
@@ -3047,7 +3047,7 @@ INT8 FindObjectInSoldierProfile(MERCPROFILESTRUCT const& p, UINT16 const item_id
 }
 
 
-static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
+static void RemoveInvObject(SOLDIERTYPE* pSoldier, ItemId usItem)
 {
 	INT8 bInvPos;
 
@@ -3066,7 +3066,7 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 }
 
 
-static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
+static INT8 CheckItemForDamage(ItemId usItem, INT32 iMaxDamage)
 {
 	INT8 bDamage = 0;
 
@@ -3093,7 +3093,7 @@ static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 }
 
 
-static BOOLEAN CheckForChainReaction(UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEAN fOnGround)
+static BOOLEAN CheckForChainReaction(ItemId usItem, INT8 bStatus, INT8 bDamage, BOOLEAN fOnGround)
 {
 	INT32 iChance;
 
@@ -3135,12 +3135,12 @@ static BOOLEAN DamageItem(OBJECTTYPE* pObject, INT32 iDamage, BOOLEAN fOnGround)
 			if (pObject->usItem != NOTHING && pObject->bStatus[bLoop] > 0)
 			{
 				bDamage = CheckItemForDamage( pObject->usItem, iDamage );
-				switch( pObject->usItem )
+				switch( pObject->usItem.inner() )
 				{
-					case JAR_CREATURE_BLOOD:
-					case JAR:
-					case JAR_HUMAN_BLOOD:
-					case JAR_ELIXIR:
+					case JAR_CREATURE_BLOOD.inner():
+					case JAR.inner():
+					case JAR_HUMAN_BLOOD.inner():
+					case JAR_ELIXIR.inner():
 						if ( PreRandom( bDamage ) > 5 )
 						{
 							// smash!
@@ -3246,12 +3246,12 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 
 	FOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
-		switch (i->usItem)
+		switch (i->usItem.inner())
 		{
-			case JAR_CREATURE_BLOOD:
-			case JAR:
-			case JAR_HUMAN_BLOOD:
-			case JAR_ELIXIR:
+			case JAR_CREATURE_BLOOD.inner():
+			case JAR.inner():
+			case JAR_HUMAN_BLOOD.inner():
+			case JAR_ELIXIR.inner():
 				ubNumberOfObjects = i->ubNumberOfObjects;
 				DamageItem(i, iDamage, FALSE);
 				if (!fPlayedGlassBreak && ubNumberOfObjects != i->ubNumberOfObjects)
@@ -3339,7 +3339,7 @@ void WaterDamage(SOLDIERTYPE& s)
 		FOR_EACH_SOLDIER_INV_SLOT(i, s)
 		{
 			// if there's an item here that can get water damaged...
-			if (i->usItem && GCM->getItem(i->usItem)->getFlags() & ITEM_WATER_DAMAGES)
+			if (i->usItem != NOTHING && GCM->getItem(i->usItem)->getFlags() & ITEM_WATER_DAMAGES)
 			{
 				// roll the 'ol 100-sided dice
 				uiRoll = PreRandom(100);

@@ -2,6 +2,7 @@
 #define LOADSAVEDATA_H
 
 #include "Types.h"
+#include "Item_Types.h"
 #include "IEncodingCorrector.h"
 
 #include <string_theory/string>

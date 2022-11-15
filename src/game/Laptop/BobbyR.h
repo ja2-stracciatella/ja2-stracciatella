@@ -29,10 +29,10 @@ void DeleteBobbyRWoodBackground(void);
 void InitBobbyRWoodBackground(void);
 void DailyUpdateOfBobbyRaysNewInventory(void);
 void DailyUpdateOfBobbyRaysUsedInventory(void);
-void AddFreshBobbyRayInventory( UINT16 usItemIndex );
+void AddFreshBobbyRayInventory( ItemId usItemIndex );
 void InitBobbyRayInventory(void);
 void CancelAllPendingBRPurchaseOrders(void);
-INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemIndex, BOOLEAN fUsed);
+INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, ItemId usItemIndex, BOOLEAN fUsed);
 
 
 #endif

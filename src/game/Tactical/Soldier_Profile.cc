@@ -154,7 +154,7 @@ void LoadMercProfiles()
 			if (!gGameOptions.fGunNut)
 			{
 				// CJC: replace guns in profile if they aren't available
-				FOR_EACH(UINT16, k, p.inv)
+				FOR_EACH(ItemId, k, p.inv)
 				{
 					const ItemModel *item = GCM->getItem(*k);
 					if (!item->isGun() || !item->isInBigGunList()) continue;
@@ -165,11 +165,11 @@ void LoadMercProfiles()
 					*k = newWeapon->getItemIndex();
 
 					// Search through inventory and replace ammo accordingly
-					FOR_EACH(UINT16, l, p.inv)
+					FOR_EACH(ItemId, l, p.inv)
 					{
-						UINT16 const ammo = *l;
+						ItemId const ammo = *l;
 						if (!(GCM->getItem(ammo)->isAmmo())) continue;
-						UINT16 const new_ammo = FindReplacementMagazineIfNecessary(oldWeapon, ammo, newWeapon);
+						ItemId const new_ammo = FindReplacementMagazineIfNecessary(oldWeapon, ammo, newWeapon);
 						if (new_ammo == NOTHING) continue;
 						// Found a new magazine, replace
 						*l = new_ammo;
@@ -182,9 +182,9 @@ void LoadMercProfiles()
 			p.bMainGunAttractiveness = -1;
 			p.bArmourAttractiveness  = -1;
 			p.usOptionalGearCost     =  0;
-			FOR_EACH(UINT16 const, k, p.inv)
+			FOR_EACH(ItemId const, k, p.inv)
 			{
-				UINT16 const item_id = *k;
+				ItemId const item_id = *k;
 				if (item_id == NOTHING) continue;
 				const ItemModel * item = GCM->getItem(item_id);
 
@@ -305,8 +305,8 @@ void MakeRemainingTerroristsTougher()
 		default: break;
 	}
 
-	UINT16 old_item;
-	UINT16 new_item;
+	ItemId old_item;
+	ItemId new_item;
 	if (remaining_difficulty < 14)
 	{
 		// nothing
@@ -343,7 +343,7 @@ void MakeRemainingTerroristsTougher()
 		new_item = HAND_GRENADE;
 	}
 
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 	DeleteObj(&Object);
 	Object.usItem     = new_item;
 	Object.bStatus[0] = 100;
@@ -412,8 +412,8 @@ void MakeRemainingAssassinsTougher()
 		default: break;
 	}
 
-	UINT16 new_item;
-	UINT16 old_item;
+	ItemId new_item;
+	ItemId old_item;
 	if (difficulty < 14)
 	{
 		// Nothing
@@ -450,7 +450,7 @@ void MakeRemainingAssassinsTougher()
 		new_item = HAND_GRENADE;
 	}
 
-	OBJECTTYPE o;
+	OBJECTTYPE o = {};
 	CreateItem(new_item, 100, &o);
 	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
@@ -587,7 +587,7 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	InternalTacticalRemoveSoldier(*old_s, FALSE);
 
 	// Create a new one.
-	SOLDIERCREATE_STRUCT c;
+	SOLDIERCREATE_STRUCT c = {};
 	c = SOLDIERCREATE_STRUCT{};
 	c.bTeam            = team;
 	c.ubProfile        = old_s->ubProfile;

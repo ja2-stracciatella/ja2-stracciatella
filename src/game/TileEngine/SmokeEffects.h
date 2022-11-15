@@ -28,7 +28,7 @@ struct SMOKEEFFECT
 	INT8		bAge;             // the number of turns gas has been around
 	BOOLEAN	fAllocated;
 	INT8		bType;
-	UINT16	usItem;
+	ItemId	usItem;
 	SOLDIERTYPE* owner;
 	UINT32	uiTimeOfLastUpdate;
 };
@@ -46,7 +46,7 @@ void AddSmokeEffectToTile(SMOKEEFFECT const*, SmokeEffectKind, INT16 sGridNo, IN
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel );
 
-void NewSmokeEffect(INT16 sGridNo, UINT16 usItem, INT8 bLevel, SOLDIERTYPE* owner);
+void NewSmokeEffect(INT16 sGridNo, ItemId usItem, INT8 bLevel, SOLDIERTYPE* owner);
 
 
 void LoadSmokeEffectsFromLoadGameFile(HWFILE, UINT32 savegame_version);

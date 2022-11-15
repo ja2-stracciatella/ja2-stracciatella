@@ -131,7 +131,7 @@ BOOLEAN gfSurrendered = FALSE;
 
 
 // Soldier List used for all soldier overhead interaction
-SOLDIERTYPE  Menptr[TOTAL_SOLDIERS];
+SOLDIERTYPE  Menptr[TOTAL_SOLDIERS] = {};
 
 SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
 UINT32       guiNumMercSlots = 0;

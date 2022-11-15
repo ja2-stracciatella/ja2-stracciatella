@@ -76,7 +76,7 @@
 
 
 #define NUM_OBJECT_SLOTS			50
-static REAL_OBJECT ObjectSlots[NUM_OBJECT_SLOTS];
+static REAL_OBJECT ObjectSlots[NUM_OBJECT_SLOTS] = {};
 UINT32  guiNumObjectSlots = 0;
 BOOLEAN fDampingActive = FALSE;
 //real   Kdl = (float)0.5; // LINEAR DAMPENING ( WIND RESISTANCE )
@@ -1560,7 +1560,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 
 	// Are we armed, and are we throwing a LAUNCHABLE?
 
-	UINT16 const usLauncher = GetLauncherFromLaunchable(pItem->usItem);
+	ItemId const usLauncher = GetLauncherFromLaunchable(pItem->usItem);
 
 	if ( fArmed && ( usLauncher == MORTAR || pItem->usItem == MORTAR ) )
 	{
@@ -1737,7 +1737,7 @@ static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees)
 {
 	FLOAT      dMagForce;
 	INT16      sSrcGridNo, sDestGridNo;
-	OBJECTTYPE Object;
+	OBJECTTYPE Object = {};
 	INT16      sFinalGridNo;
 
 	// OK, use a fake gridno, find the new gridno based on range, use height of merc, end height of ground,
@@ -1782,7 +1782,7 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 	vector_3 vForce, vDirNormal;
 	INT16    sFinalGridNo;
 	BOOLEAN  fArmed = FALSE;
-	UINT16   usLauncher;
+	ItemId   usLauncher;
 	INT16    sStartZ;
 	INT8     bMinMissRadius, bMaxMissRadius, bMaxRadius;
 	FLOAT    fScale;
@@ -2016,7 +2016,7 @@ static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 static BOOLEAN DoCatchObject(REAL_OBJECT* pObject)
 {
 	BOOLEAN fGoodCatch = FALSE;
-	UINT16  usItem;
+	ItemId  usItem;
 
 	// Get intended target
 	SOLDIERTYPE* const pSoldier = pObject->target;

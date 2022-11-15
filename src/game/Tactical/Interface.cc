@@ -471,7 +471,7 @@ void PopupMovementMenu(UI_EVENT* const ev)
 	else
 	{
 		// Create button based on what is in our hands at the moment!
-		UINT16 const item = s->inv[HANDPOS].usItem;
+		ItemId const item = s->inv[HANDPOS].usItem;
 		if (item == TOOLKIT)
 		{
 			action_image = TOOLKITACTIONC_IMAGES;

@@ -876,7 +876,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 }
 
 
-static bool IsRifle(UINT16 const item_id)
+static bool IsRifle(ItemId const item_id)
 {
 	return item_id != NOTHING &&
 		item_id != ROCKET_LAUNCHER &&
@@ -2198,11 +2198,11 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 				}
 
 				// Check if our weapon has no intermediate anim...
-				switch( pSoldier->inv[ HANDPOS ].usItem )
+				switch( pSoldier->inv[ HANDPOS ].usItem.inner() )
 				{
-					case ROCKET_LAUNCHER:
-					case MORTAR:
-					case GLAUNCHER:
+					case ROCKET_LAUNCHER.inner():
+					case MORTAR.inner():
+					case GLAUNCHER.inner():
 						fDoFireRightAway = TRUE;
 						break;
 				}
@@ -2634,13 +2634,13 @@ UINT16 PickSoldierReadyAnimation(SOLDIERTYPE* pSoldier, BOOLEAN fEndReady)
 static UINT8 CalcScreamVolume(SOLDIERTYPE* pSoldier, UINT8 ubCombinedLoss);
 static UINT32 SleepDartSuccumbChance(const SOLDIERTYPE* pSoldier);
 static void SoldierGotHitBlade(SOLDIERTYPE* pSoldier);
-static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, UINT16 bDirection, UINT16 sRange);
+static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, ItemId usWeaponIndex, UINT16 bDirection, UINT16 sRange);
 static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 bDirection, SOLDIERTYPE* att, UINT8 ubSpecial);
 static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier);
 
 
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
-void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, const UINT16 bDirection, const UINT16 sRange, SOLDIERTYPE* const att, const UINT8 ubSpecial, const UINT8 ubHitLocation, const INT16 sLocationGrid)
+void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const ItemId usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, const UINT16 bDirection, const UINT16 sRange, SOLDIERTYPE* const att, const UINT8 ubSpecial, const UINT8 ubHitLocation, const INT16 sLocationGrid)
 {
 	UINT8 ubCombinedLoss, ubVolume, ubReason;
 	SOLDIERTYPE *pNewSoldier;
@@ -3253,7 +3253,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 bDire
 }
 
 
-static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const UINT16 usWeaponIndex, const UINT16 bDirection, const UINT16 sRange)
+static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const ItemId usWeaponIndex, const UINT16 bDirection, const UINT16 sRange)
 {
 	INT16 sNewGridNo;
 
@@ -6745,7 +6745,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//UINT32 uiMercFlags;
 	UINT8 ubTDirection;
 	BOOLEAN fChangeDirection = FALSE;
-	UINT16	usItem;
+	ItemId	usItem;
 
 	// Get item in hand...
 	usItem = pSoldier->inv[ HANDPOS ].usItem;
@@ -7447,7 +7447,7 @@ void EVENT_StopMerc(SOLDIERTYPE* const s, GridNo const grid_no, INT8 const direc
 }
 
 
-void ReLoadSoldierAnimationDueToHandItemChange(SOLDIERTYPE* const s, UINT16 const usOldItem, UINT16 const usNewItem)
+void ReLoadSoldierAnimationDueToHandItemChange(SOLDIERTYPE* const s, ItemId const usOldItem, ItemId const usNewItem)
 {
 	// DON'T continue aiming!
 	// GOTO STANCE
@@ -7808,7 +7808,7 @@ static void SetSoldierLocatorOffsets(SOLDIERTYPE* const s)
 
 static BOOLEAN SoldierCarriesTwoHandedWeapon(SOLDIERTYPE* pSoldier)
 {
-	UINT16 usItem;
+	ItemId usItem;
 
 	usItem = pSoldier->inv[ HANDPOS ].usItem;
 
@@ -8552,7 +8552,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 		// OK, set UI
 		gTacticalStatus.ubAttackBusyCount++;
 		// reset attacking item (hand)
-		pSoldier->usAttackingWeapon = 0;
+		pSoldier->usAttackingWeapon = NOTHING;
 		SLOGD("Starting STEAL attack, attack count now {}",
 			gTacticalStatus.ubAttackBusyCount);
 

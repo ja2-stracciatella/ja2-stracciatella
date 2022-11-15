@@ -19,7 +19,6 @@
 
 namespace magic_enum::customize
 {
-	template<> struct enum_range<ITEMDEFINE>	{ static constexpr int min = 0;	static constexpr int max = 400; };
 	template<> struct enum_range<SectorIndex>	{ static constexpr int min = 0;	static constexpr int max = 256; };
 	template<> struct enum_range<NPCIDs>	{ static constexpr int min = 0;	static constexpr int max = 200; };
 	template<> struct enum_range<Quests>	{ static constexpr int min = 0;	static constexpr int max = 500; };
@@ -49,7 +48,6 @@ void PrintAllJA2Enums(std::ostream& os)
 	PrintEnum<MilitiaLevel>(os);
 
 	PrintEnum<InvSlotPos>(os);
-	PrintEnum<ITEMDEFINE>(os, "Item");
 
 	PrintEnum<Quests>(os, "Quest");
 	PrintEnum<Fact>(os);

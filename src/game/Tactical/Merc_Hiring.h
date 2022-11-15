@@ -2,6 +2,7 @@
 #define _MERC_HIRING_H_
 
 #include "JA2Types.h"
+#include "Item_Types.h"
 
 
 //
@@ -40,7 +41,7 @@ struct MERC_HIRE_STRUCT
 extern SGPSector g_merc_arrive_sector;
 
 
-void CreateSpecialItem(SOLDIERTYPE* const, UINT16);
+void CreateSpecialItem(SOLDIERTYPE* const, ItemId index);
 INT8 HireMerc(MERC_HIRE_STRUCT&);
 void MercArrivesCallback(SOLDIERTYPE&);
 bool IsMercHireable(MERCPROFILESTRUCT const&);

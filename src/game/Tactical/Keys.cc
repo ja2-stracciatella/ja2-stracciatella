@@ -1263,7 +1263,7 @@ void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Vi
 		KEY_ON_RING& k = *i;
 		if (k.ubNumber == 0) continue;
 
-		OBJECTTYPE o;
+		OBJECTTYPE o = {};
 		CreateKeyObject(&o, k.ubNumber, k.ubKeyID);
 
 		// Zero out entry

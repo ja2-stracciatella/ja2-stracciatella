@@ -1488,7 +1488,7 @@ static bool IsGunUsable(OBJECTTYPE const& o, SOLDIERTYPE const& s)
 
 #define MINIMUM_REQUIRED_STATUS 70
 
-INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const usItem)
+INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, ItemId const usItem)
 {
 	if (s.bActionPoints < AP_PICKUP_ITEM) return AI_ACTION_NONE;
 

@@ -25,7 +25,7 @@ UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)
 	sum += 1 + p.bExplosive;
 	sum *= 1 + p.bExpLevel;
 
-	FOR_EACH(UINT16 const, i, p.inv)        sum += *i;
+	FOR_EACH(ItemId const, i, p.inv)        sum += i->inner();
 	FOR_EACH(UINT8  const, i, p.bInvNumber) sum += *i;
 
 	return sum;
@@ -142,7 +142,7 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 	EXTR_U8(S, p.ubInvUndroppable)
 	EXTR_U8A(S, p.ubRoomRangeStart, lengthof(p.ubRoomRangeStart))
 	EXTR_SKIP(S, 1)
-	EXTR_U16A(S, p.inv, lengthof(p.inv))
+	S.readArray<ItemId>(p.inv, lengthof(p.inv));
 	EXTR_SKIP(S, 20)
 	EXTR_U16A(S, p.usStatChangeChances, lengthof(p.usStatChangeChances))
 	EXTR_U16A(S, p.usStatChangeSuccesses, lengthof(p.usStatChangeSuccesses))
@@ -345,7 +345,7 @@ void InjectMercProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p)
 	INJ_U8(D, p.ubInvUndroppable)
 	INJ_U8A(D, p.ubRoomRangeStart, lengthof(p.ubRoomRangeStart))
 	INJ_SKIP(D, 1)
-	INJ_U16A(D, p.inv, lengthof(p.inv))
+	D.writeArray<ItemId>(p.inv, lengthof(p.inv));
 	INJ_SKIP(D, 20)
 	INJ_U16A(D, p.usStatChangeChances, lengthof(p.usStatChangeChances))
 	INJ_U16A(D, p.usStatChangeSuccesses, lengthof(p.usStatChangeSuccesses))

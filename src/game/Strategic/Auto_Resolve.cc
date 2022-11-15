@@ -2533,7 +2533,7 @@ static UINT8 GetUnusedMercProfileID(void)
 
 static void CreateTempPlayerMerc(void)
 {
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
+	SOLDIERCREATE_STRUCT		MercCreateStruct = {};
 
 	//Init the merc create structure with basic information
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
@@ -3120,7 +3120,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 		ubAccuracy = (UINT8)((usAttack - usDefence + PreRandom( usDefence - pTarget->usDefence ) )/10);
 
 		//Determine attacking weapon.
-		pAttacker->pSoldier->usAttackingWeapon = 0;
+		pAttacker->pSoldier->usAttackingWeapon = NOTHING;
 		if( pAttacker->bWeaponSlot != -1 )
 		{
 			pItem = &pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ];

@@ -15,7 +15,7 @@ struct CalibreModel;
 
 struct MagazineModel : ItemModel
 {
-	MagazineModel(uint16_t itemIndex,
+	MagazineModel(ItemId itemIndex,
 			ST::string internalName,
 			ST::string shortName,
 			ST::string name,

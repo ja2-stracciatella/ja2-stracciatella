@@ -1359,7 +1359,7 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 		if (!active) continue;
 
 		//Read in the saved soldier info into a Temp structure
-		SOLDIERTYPE SavedSoldierInfo;
+		SOLDIERTYPE SavedSoldierInfo = {};
 		if(stracLinuxFormat)
 		{
 			BYTE Data[2352];

@@ -1,7 +1,7 @@
 #ifndef __BOBBYRGUNS_H
 #define __BOBBYRGUNS_H
 
-//#include "LaptopSave.h"
+#include "Item_Types.h"
 
 
 #define BOBBYRDESCFILE BINARYDATADIR "/braydesc.edt"
@@ -48,7 +48,7 @@ void DeleteBobbyMenuBar();
 void DisplayItemInfo(UINT32 uiItemClass);
 void DeleteMouseRegionForBigImage(void);
 void UpdateButtonText(UINT32	uiCurPage);
-UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
+UINT16 CalcBobbyRayCost( ItemId usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 void SetFirstLastPagesForUsed(void);
 void SetFirstLastPagesForNew( UINT32 uiClass );
 

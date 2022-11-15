@@ -272,8 +272,8 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason)
 }
 
 
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT&, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT&, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
+static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT&, ItemId usItem, UINT8 ubStatus, UINT8 ubHowMany);
+static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT&, UINT32 uiPos, ItemId usItem, UINT8 ubStatus, UINT8 ubHowMany);
 
 
 static void GiveItemsToPC(UINT8 ubProfileId)
@@ -375,10 +375,10 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 }
 
 
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const&, UINT16 usItem);
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const&, ItemId usItem);
 
 
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT& p, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
+static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT& p, ItemId const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
 {
 	INT32 const iSlot = FirstFreeBigEnoughPocket(p, usItem);
 	if (iSlot == -1)
@@ -392,7 +392,7 @@ static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT& p, UINT16 const usItem,
 }
 
 
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT& p, UINT32 const uiPos, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
+static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT& p, UINT32 const uiPos, ItemId const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
 {
 	p.inv[uiPos]        = usItem;
 	p.bInvStatus[uiPos] = ubStatus;
@@ -400,7 +400,7 @@ static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT& p, UINT32 const uiPos,
 }
 
 
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const usItem)
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, ItemId const usItem)
 {
 	UINT32 uiPos;
 

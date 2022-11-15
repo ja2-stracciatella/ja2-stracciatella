@@ -442,14 +442,14 @@ void InitBobbyRayInventory()
 
 static void InitBobbyRayNewInventory(void)
 {
-	UINT16	i;
+	ItemId	i;
 	UINT16	usBobbyrIndex = 0;
 
 
-	std::fill_n(LaptopSaveInfo.BobbyRayInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
+	std::fill_n(LaptopSaveInfo.BobbyRayInventory, static_cast<size_t>(MAXITEMS.inner()), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
-	for( i = 0; i < MAXITEMS; i++ )
+	for( i = ItemId(0); i < MAXITEMS; i++ )
 	{
 		const ItemModel *item = GCM->getItem(i);
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
@@ -470,20 +470,20 @@ static void InitBobbyRayNewInventory(void)
 	// remember how many entries in the list are valid
 	LaptopSaveInfo.usInventoryListLength[ BOBBY_RAY_NEW ] = usBobbyrIndex;
 	// also mark the end of the list of valid item entries
-	LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = BOBBYR_NO_ITEMS;
+	LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = ItemId(BOBBYR_NO_ITEMS);
 }
 
 
 static void InitBobbyRayUsedInventory(void)
 {
-	UINT16	i;
+	ItemId	i;
 	UINT16	usBobbyrIndex = 0;
 
 
-	std::fill_n(LaptopSaveInfo.BobbyRayUsedInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
+	std::fill_n(LaptopSaveInfo.BobbyRayUsedInventory, static_cast<size_t>(MAXITEMS.inner()), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
-	for( i = 0; i < MAXITEMS; i++ )
+	for( i = ItemId(0); i < MAXITEMS; i++ )
 	{
 		const ItemModel *item = GCM->getItem(i);
 
@@ -508,19 +508,19 @@ static void InitBobbyRayUsedInventory(void)
 	// remember how many entries in the list are valid
 	LaptopSaveInfo.usInventoryListLength[BOBBY_RAY_USED] = usBobbyrIndex;
 	// also mark the end of the list of valid item entries
-	LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyrIndex ].usItemIndex = BOBBYR_NO_ITEMS;
+	LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyrIndex ].usItemIndex = ItemId(BOBBYR_NO_ITEMS);
 }
 
 
-static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed);
-static void OrderBobbyRItem(UINT16 usItemIndex);
+static UINT8 HowManyBRItemsToOrder(ItemId usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed);
+static void OrderBobbyRItem(ItemId usItemIndex);
 static void SimulateBobbyRayCustomer(STORE_INVENTORY* pInventoryArray, BOOLEAN fUsed);
 
 
 void DailyUpdateOfBobbyRaysNewInventory()
 {
 	INT16 i;
-	UINT16 usItemIndex;
+	ItemId usItemIndex;
 	BOOLEAN fPrevElig;
 
 
@@ -578,7 +578,7 @@ void DailyUpdateOfBobbyRaysNewInventory()
 void DailyUpdateOfBobbyRaysUsedInventory()
 {
 	INT16 i;
-	UINT16 usItemIndex;
+	ItemId usItemIndex;
 	BOOLEAN fPrevElig;
 
 
@@ -621,7 +621,7 @@ void DailyUpdateOfBobbyRaysUsedInventory()
 					}
 					else
 					{
-						OrderBobbyRItem((INT16) (usItemIndex + BOBBY_R_USED_PURCHASE_OFFSET));
+						OrderBobbyRItem(ItemId(usItemIndex.inner() + BOBBY_R_USED_PURCHASE_OFFSET));
 					}
 				}
 			}
@@ -631,7 +631,7 @@ void DailyUpdateOfBobbyRaysUsedInventory()
 
 
 //returns the number of items to order
-static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed)
+static UINT8 HowManyBRItemsToOrder(ItemId usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed)
 {
 	UINT8	ubItemsOrdered = 0;
 
@@ -668,18 +668,18 @@ static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, 
 }
 
 
-static void OrderBobbyRItem(UINT16 usItemIndex)
+static void OrderBobbyRItem(ItemId usItemIndex)
 {
 	UINT32 uiArrivalTime;
 
 	//add the new item to the queue.  The new item will arrive in 'uiArrivalTime' minutes.
 	uiArrivalTime = BOBBY_R_NEW_PURCHASE_ARRIVAL_TIME + Random( BOBBY_R_NEW_PURCHASE_ARRIVAL_TIME / 2 );
 	uiArrivalTime += GetWorldTotalMin();
-	AddStrategicEvent( EVENT_UPDATE_BOBBY_RAY_INVENTORY, uiArrivalTime, usItemIndex);
+	AddStrategicEvent( EVENT_UPDATE_BOBBY_RAY_INVENTORY, uiArrivalTime, usItemIndex.inner());
 }
 
 
-void AddFreshBobbyRayInventory( UINT16 usItemIndex )
+void AddFreshBobbyRayInventory( ItemId usItemIndex )
 {
 	INT16 sInventorySlot;
 	STORE_INVENTORY *pInventoryArray;
@@ -687,9 +687,9 @@ void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 	UINT8 ubItemQuality;
 
 
-	if( usItemIndex >= BOBBY_R_USED_PURCHASE_OFFSET )
+	if( usItemIndex.inner() >= BOBBY_R_USED_PURCHASE_OFFSET )
 	{
-		usItemIndex -= BOBBY_R_USED_PURCHASE_OFFSET;
+		usItemIndex = ItemId(usItemIndex.inner() - BOBBY_R_USED_PURCHASE_OFFSET);
 		pInventoryArray = LaptopSaveInfo.BobbyRayUsedInventory;
 		fUsed = BOBBY_RAY_USED;
 		ubItemQuality = 20 + (UINT8) Random( 60 );
@@ -719,7 +719,7 @@ void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 }
 
 
-INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemIndex, BOOLEAN fUsed)
+INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, ItemId usItemIndex, BOOLEAN fUsed)
 {
 	INT16 i;
 
@@ -757,16 +757,16 @@ static void SimulateBobbyRayCustomer(STORE_INVENTORY* pInventoryArray, BOOLEAN f
 
 void CancelAllPendingBRPurchaseOrders(void)
 {
-	INT16 i;
+	ItemId i;
 
 	// remove all the BR-Order events off the event queue
 	DeleteAllStrategicEventsOfType( EVENT_UPDATE_BOBBY_RAY_INVENTORY );
 
 	// zero out all the quantities on order
-	for(i = 0; i < MAXITEMS; i++)
+	for(i = ItemId(0); i < MAXITEMS; i++)
 	{
-		LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnOrder = 0;
-		LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnOrder = 0;
+		LaptopSaveInfo.BobbyRayInventory[ i.inner() ].ubQtyOnOrder = 0;
+		LaptopSaveInfo.BobbyRayUsedInventory[ i.inner() ].ubQtyOnOrder = 0;
 	}
 
 	// do an extra daily update immediately to create new reorders ASAP

@@ -1321,7 +1321,7 @@ static void HandleKeyboardShortcuts(void)
 					else if( gfMercGetItem )
 					{ //cancel getting an item for the merc.
 						gfMercGetItem = FALSE;
-						gusMercsNewItemIndex = 0xffff;
+						gusMercsNewItemIndex = ItemId(0xffff);
 						SetMercEditingMode( MERC_INVENTORYMODE );
 						ClearEditorItemsInfo();
 					}

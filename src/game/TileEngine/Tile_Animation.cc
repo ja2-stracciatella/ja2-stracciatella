@@ -314,7 +314,7 @@ void UpdateAniTiles( )
 							{
 								Assert(pNode->uiFlags & ANITILE_EXPLOSION);
 								const EXPLOSIONTYPE* const e    = pNode->v.explosion;
-								const UINT16               item = e->usItem;
+								const ItemId               item = e->usItem;
 								const UINT8 ubExpType = Explosive[GCM->getItem(item)->getClassIndex()].ubType;
 
 								if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||

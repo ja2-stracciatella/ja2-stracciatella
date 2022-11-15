@@ -198,7 +198,7 @@ BOOLEAN gfAddingMoneyToMercFromPlayersAccount;
 MOUSE_REGION gInvDesc;
 
 OBJECTTYPE *gpItemPointer;
-OBJECTTYPE gItemPointer;
+OBJECTTYPE gItemPointer = {};
 BOOLEAN gfItemPointerDifferentThanDefault = FALSE;
 SOLDIERTYPE *gpItemPointerSoldier;
 INT8 gbItemPointerSrcSlot;
@@ -237,7 +237,7 @@ static GUIButtonRef guiMoneyButtonBtn[MAX_ATTACHMENTS];
 static BUTTON_PICS *guiMoneyButtonImage;
 static BUTTON_PICS *guiMoneyDoneButtonImage;
 
-static UINT16 gusOriginalAttachItem[MAX_ATTACHMENTS];
+static ItemId gusOriginalAttachItem[MAX_ATTACHMENTS];
 static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
 static SOLDIERTYPE *gpAttachSoldier;
 
@@ -460,7 +460,7 @@ static void GenerateProsString(ST::string& zItemPros, const OBJECTTYPE& o, UINT3
 {
 	UINT32 uiStringLength = 0;
 	ST::string zTemp;
-	UINT16 usItem = o.usItem;
+	ItemId usItem = o.usItem;
 
 	zItemPros = ST::null;
 
@@ -561,7 +561,7 @@ static void GenerateConsString(ST::string& zItemCons, const OBJECTTYPE& o, UINT3
 	UINT32 uiStringLength = 0;
 	ST::string zTemp;
 	UINT8 ubWeight;
-	UINT16 usItem = o.usItem;
+	ItemId usItem = o.usItem;
 
 	zItemCons = ST::null;
 
@@ -918,20 +918,20 @@ static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* const test)
 	// ATE: If in mapscreen, return false always....
 	if (fInMapMode) return FALSE;
 
-	switch (test->usItem)
+	switch (test->usItem.inner())
 	{
 		// ATE: Would be nice to have flag here to check for these types....
-		case CAMOUFLAGEKIT:
-		case ADRENALINE_BOOSTER:
-		case REGEN_BOOSTER:
-		case SYRINGE_3:
-		case SYRINGE_4:
-		case SYRINGE_5:
-		case ALCOHOL:
-		case WINE:
-		case BEER:
-		case CANTEEN:
-		case JAR_ELIXIR:
+		case CAMOUFLAGEKIT.inner():
+		case ADRENALINE_BOOSTER.inner():
+		case REGEN_BOOSTER.inner():
+		case SYRINGE_3.inner():
+		case SYRINGE_4.inner():
+		case SYRINGE_5.inner():
+		case ALCOHOL.inner():
+		case WINE.inner():
+		case BEER.inner():
+		case CANTEEN.inner():
+		case JAR_ELIXIR.inner():
 			return TRUE;
 
 		default: return FALSE;
@@ -1068,8 +1068,8 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 				continue;
 			}
 
-			UINT16 const a = o.usItem;
-			UINT16 const b = pTestObject->usItem;
+			ItemId const a = o.usItem;
+			ItemId const b = pTestObject->usItem;
 			if (ValidAttachment(a, b) ||
 				ValidAttachment(b, a) ||
 				ValidLaunchable(b, a) ||
@@ -1288,8 +1288,8 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 			continue;
 		}
 
-		UINT16 const a = o.usItem;
-		UINT16 const b = pTestObject->usItem;
+		ItemId const a = o.usItem;
+		ItemId const b = pTestObject->usItem;
 		if (ValidAttachment(a, b) ||
 			ValidAttachment(b, a) ||
 			ValidLaunchable(b, a) ||
@@ -1692,7 +1692,7 @@ void CycleItemDescriptionItem( )
 	DeleteItemDescriptionBox( );
 
 	// Make new item....
-	usOldItem = gpItemDescSoldier->inv[ HANDPOS ].usItem;
+	usOldItem = gpItemDescSoldier->inv[ HANDPOS ].usItem.inner();
 
 	if ( _KeyDown( SHIFT ) )
 	{
@@ -1700,20 +1700,20 @@ void CycleItemDescriptionItem( )
 
 		if ( usOldItem < 0 )
 		{
-			usOldItem = MAXITEMS-1;
+			usOldItem = MAXITEMS.inner()-1;
 		}
 	}
 	else
 	{
 		usOldItem++;
 
-		if ( usOldItem > MAXITEMS )
+		if ( usOldItem > MAXITEMS.inner() )
 		{
 			usOldItem = 0;
 		}
 	}
 
-	CreateItem( (UINT16)usOldItem, 100, &( gpItemDescSoldier->inv[ HANDPOS ] ) );
+	CreateItem( ItemId(usOldItem), 100, &( gpItemDescSoldier->inv[ HANDPOS ] ) );
 
 	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), INTERFACE_START_X + 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
 }
@@ -1740,7 +1740,7 @@ static void SetAttachmentTooltips(void)
 {
 	for (UINT i = 0; i < MAX_ATTACHMENTS; ++i)
 	{
-		const UINT16 attachment = gpItemDescObject->usAttachItem[i];
+		const ItemId attachment = gpItemDescObject->usAttachItem[i];
 		ST::string tip = (attachment != NOTHING ? GCM->getItem(attachment)->getName() : g_langRes->Message[STR_ATTACHMENTS]);
 		gItemDescAttachmentRegions[i].SetFastHelpText(tip);
 	}
@@ -2162,7 +2162,7 @@ static void ItemDescAttachmentsCallbackSecondary(MOUSE_REGION* pRegion, UINT32 i
 
 	UINT32 uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
 
-	static OBJECTTYPE Object2;
+	static OBJECTTYPE Object2 = {};
 
 	if ( gpItemDescObject->usAttachItem[ uiItemPos ] != NOTHING )
 	{
@@ -2820,7 +2820,7 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
 	BOOLEAN fOk;
-	OBJECTTYPE pObject;
+	OBJECTTYPE pObject = {};
 
 	pObject = OBJECTTYPE{};
 
@@ -3247,11 +3247,11 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 {
 	// Determine what to do
 	UINT8 ubDirection;
-	UINT16 usItem;
+	ItemId usItem;
 	INT16 sAPCost;
 	UINT8 ubThrowActionCode=0;
 	INT16 sEndZ = 0;
-	OBJECTTYPE TempObject;
+	OBJECTTYPE TempObject = {};
 	INT16 sGridNo;
 	INT16 sDist;
 	INT16 sDistVisible;
@@ -4015,7 +4015,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		}
 	}
 
-	OBJECTTYPE o;
+	OBJECTTYPE o = {};
 	o = OBJECTTYPE{};
 	o.bStatus[0] = 100;
 
@@ -4385,7 +4385,7 @@ struct ITEM_PICKUP_MENU_STRUCT
 #define ITEMPICK_TEXT_WIDTH				109
 
 
-static ITEM_PICKUP_MENU_STRUCT gItemPickupMenu;
+static ITEM_PICKUP_MENU_STRUCT gItemPickupMenu = {};
 BOOLEAN gfInItemPickupMenu = FALSE;
 
 
@@ -5097,12 +5097,12 @@ static void RemoveMoney(void)
 		//if we are in the shop keeper interface
 		if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 		{
-			INVENTORY_IN_SLOT InvSlot;
+			INVENTORY_IN_SLOT InvSlot = {};
 
 			InvSlot = INVENTORY_IN_SLOT{};
 
 			InvSlot.fActive = TRUE;
-			InvSlot.sItemIndex = MONEY;
+			InvSlot.sItemIndex = MONEY.inner();
 			InvSlot.bSlotIdInOtherLocation = -1;
 
 			//Remove the money from the money in the pocket
@@ -5169,7 +5169,7 @@ static void RemoveMoney(void)
 ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 {
 	ST::string dst;
-	UINT16 const usItem = obj.usItem;
+	ItemId const usItem = obj.usItem;
 	if (usItem == MONEY)
 	{
 		dst = SPrintMoney(obj.uiMoneyAmount);
@@ -5206,9 +5206,9 @@ ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 		// Add attachment string....
 		ST::string first_prefix = " (";
 		ST::string prefix       = first_prefix;
-		FOR_EACH(UINT16 const, i, obj.usAttachItem)
+		FOR_EACH(ItemId const, i, obj.usAttachItem)
 		{
-			UINT16 const attachment = *i;
+			ItemId const attachment = *i;
 			if (attachment == NOTHING) continue;
 
 			dst += ST::format("{}{}", prefix, GCM->getItem(attachment)->getName());
@@ -5319,7 +5319,7 @@ void UpdateItemHatches(void)
 }
 
 
-void SetMouseCursorFromItem(UINT16 const item_idx)
+void SetMouseCursorFromItem(ItemId const item_idx)
 {
 	const ItemModel * item = GCM->getItem(item_idx);
 	auto graphic = GetSmallInventoryGraphicForItem(item);

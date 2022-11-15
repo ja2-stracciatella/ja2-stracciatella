@@ -1117,7 +1117,7 @@ static ScreenID UIHandleTestHit(UI_EVENT* pUIEvent)
 
 		gTacticalStatus.ubAttackBusyCount++;
 
-		EVENT_SoldierGotHit(tgt, 1, bDamage, 10, tgt->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, tgt->bAimShotLocation, NOWHERE);
+		EVENT_SoldierGotHit(tgt, ItemId(1), bDamage, 10, tgt->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, tgt->bAimShotLocation, NOWHERE);
 	}
 	return( GAME_SCREEN );
 }

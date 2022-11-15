@@ -50,7 +50,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 	INT16		sWallGridNo;
 	INT8		bDesiredOrientation;
 	INT8		bSkipSpots = 0;
-	SOLDIERTYPE 	FakeSoldier;
+	SOLDIERTYPE 	FakeSoldier = {};
 	BUILDING *		pBuilding;
 	UINT8					ubBuildingID = 0;
 

@@ -172,7 +172,7 @@ static SOLDIERTYPE* gpPendingDestSoldier;
 static SOLDIERTYPE* gpPendingSrcSoldier;
 static Approach     gbPendingApproach;
 static UINT8        g_pending_approach_record;
-static OBJECTTYPE   g_pending_approach_object;
+static OBJECTTYPE   g_pending_approach_object = {};
 
 INT32 giHospitalTempBalance; // stores amount of money for current doctoring
 INT32 giHospitalRefund; // stores amount of money given to hospital for doctoring that wasn't used
@@ -1716,7 +1716,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				if (pSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
-					UINT16	usGun;
+					ItemId	usGun;
 					INT8		bNewSlot;
 
 					usGun = pSoldier->inv[HANDPOS].usItem;
@@ -2188,7 +2188,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// add a money item with $10000 to the tile in front of Kyle
 				// and then have him pick it up
 				{
-					OBJECTTYPE Object;
+					OBJECTTYPE Object = {};
 					INT16      sGridNo  = params->getGridNo(14952);
 					UINT32     uiAmount = params->getAmount(10000);
 					SLOGI("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo);
@@ -2222,7 +2222,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier)
 				{
 					DeleteTalkingMenu();
-					EVENT_SoldierGotHit(pSoldier, 1, 100, 10, pSoldier->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, NOWHERE);
+					EVENT_SoldierGotHit(pSoldier, ItemId(1), 100, 10, pSoldier->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, NOWHERE);
 				}
 				break;
 			}
@@ -3072,7 +3072,7 @@ action_punch_pc:
 						pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
 
 						// Add gun to inventory.....
-						CreateItem( (UINT16) (DESERTEAGLE), 100, &( pSoldier->inv[ HANDPOS ] ) );
+						CreateItem( DESERTEAGLE, 100, &( pSoldier->inv[ HANDPOS ] ) );
 
 						// Make shoot
 						pSoldier->bNextAction = AI_ACTION_FIRE_GUN;
@@ -4478,7 +4478,7 @@ static void DialogueMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 				pSoldier = FindSoldierByProfileID(DARYL);
 				if ( pSoldier )
 				{
-					OBJECTTYPE Key;
+					OBJECTTYPE Key = {};
 
 					CreateKeyObject( &Key, 1, 38 );
 					AutoPlaceObject( pSoldier, &Key, FALSE );

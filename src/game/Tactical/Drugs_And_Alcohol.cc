@@ -33,7 +33,7 @@ INT32	giDrunkModifier[] =
 #define HANGOVER_BP_REDUCE	200
 
 
-static UINT8 GetDrugType(UINT16 usItem)
+static UINT8 GetDrugType(ItemId usItem)
 {
 	if ( usItem == ADRENALINE_BOOSTER )
 	{
@@ -59,7 +59,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 {
 	UINT8 ubDrugType;
 	UINT8 ubKitPoints;
-	UINT16 usItem;
+	ItemId usItem;
 
 	usItem = pObject->usItem;
 

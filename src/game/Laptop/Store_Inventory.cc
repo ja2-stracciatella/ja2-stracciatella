@@ -16,7 +16,7 @@
 void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 {
 	UINT16 i;
-	UINT16 usItemIndex;
+	ItemId usItemIndex;
 	UINT8 ubNumBought;
 
 	//loop through all items BR can stock to init a starting quantity on hand

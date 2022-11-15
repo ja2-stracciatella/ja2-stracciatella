@@ -58,13 +58,13 @@ static ITEM_SORT_ENTRY const DealerItemSortInfo[] =
 };
 
 
-INT8 GetDealersMaxItemAmount(ArmsDealerID const ubDealerID, UINT16 const usItemIndex)
+INT8 GetDealersMaxItemAmount(ArmsDealerID const ubDealerID, ItemId const usItemIndex)
 {
 	return GCM->getDealerInventory(ubDealerID)->getMaxItemAmount(GCM->getItem(usItemIndex));
 }
 
 
-static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, UINT16 const usItemIndex)
+static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, ItemId const usItemIndex)
 {
 	UINT8 ubItemCoolness;
 	UINT8 ubMinCoolness, ubMaxCoolness;
@@ -95,34 +95,34 @@ static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, UINT16
 	}
 
 	// the following staple items are always deemed highly suitable regardless of player's progress:
-	switch (usItemIndex)
+	switch (usItemIndex.inner())
 	{
-		case CLIP38_6:
-		case CLIP9_15:
-		case CLIP9_30:
-		case CLIP357_6:
-		case CLIP357_9:
-		case CLIP45_7:
-		case CLIP45_30:
-		case CLIP12G_7:
-		case CLIP12G_7_BUCKSHOT:
-		case CLIP545_30_HP:
-		case CLIP556_30_HP:
-		case CLIP762W_10_HP:
-		case CLIP762W_30_HP:
-		case CLIP762N_5_HP:
-		case CLIP762N_20_HP:
+		case CLIP38_6.inner():
+		case CLIP9_15.inner():
+		case CLIP9_30.inner():
+		case CLIP357_6.inner():
+		case CLIP357_9.inner():
+		case CLIP45_7.inner():
+		case CLIP45_30.inner():
+		case CLIP12G_7.inner():
+		case CLIP12G_7_BUCKSHOT.inner():
+		case CLIP545_30_HP.inner():
+		case CLIP556_30_HP.inner():
+		case CLIP762W_10_HP.inner():
+		case CLIP762W_30_HP.inner():
+		case CLIP762N_5_HP.inner():
+		case CLIP762N_20_HP.inner():
 
-		case FIRSTAIDKIT:
-		case MEDICKIT:
-		case TOOLKIT:
-		case LOCKSMITHKIT:
+		case FIRSTAIDKIT.inner():
+		case MEDICKIT.inner():
+		case TOOLKIT.inner():
+		case LOCKSMITHKIT.inner():
 
-		case CANTEEN:
-		case CROWBAR:
-		case JAR:
-		case JAR_ELIXIR:
-		case JAR_CREATURE_BLOOD:
+		case CANTEEN.inner():
+		case CROWBAR.inner():
+		case JAR.inner():
+		case JAR_ELIXIR.inner():
+		case JAR_CREATURE_BLOOD.inner():
 
 			return(ITEM_SUITABILITY_ALWAYS);
 	}
@@ -187,7 +187,7 @@ static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, UINT16
 }
 
 
-UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, UINT16 const usItemIndex, BOOLEAN const fDealerIsSelling, BOOLEAN const fUsed)
+UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, ItemId const usItemIndex, BOOLEAN const fDealerIsSelling, BOOLEAN const fUsed)
 {
 	UINT8 ubItemCoolness;
 	UINT8 ubChance = 0;
@@ -271,7 +271,7 @@ UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, UINT16 const usIte
 }
 
 
-BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usItemIndex, BOOLEAN const fDealerIsSelling, BOOLEAN const fUsed)
+BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, ItemId const usItemIndex, BOOLEAN const fDealerIsSelling, BOOLEAN const fUsed)
 {
 	UINT8 ubChance;
 	INT16 sInventorySlot;
@@ -295,7 +295,7 @@ BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usIte
 		}
 		else
 		{
-			gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].fPreviouslyEligible = TRUE;
+			gArmsDealersInventory[ bArmsDealer ][ usItemIndex.inner() ].fPreviouslyEligible = TRUE;
 		}
 	}
 
@@ -311,7 +311,7 @@ BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usIte
 }
 
 
-UINT8 DetermineInitialInvItems(ArmsDealerID const bArmsDealerID, UINT16 const usItemIndex, UINT8 const ubChances, BOOLEAN const fUsed)
+UINT8 DetermineInitialInvItems(ArmsDealerID const bArmsDealerID, ItemId const usItemIndex, UINT8 const ubChances, BOOLEAN const fUsed)
 {
 	UINT8 ubNumBought;
 	UINT8 ubCnt;
@@ -330,7 +330,7 @@ UINT8 DetermineInitialInvItems(ArmsDealerID const bArmsDealerID, UINT16 const us
 }
 
 
-UINT8 HowManyItemsAreSold(ArmsDealerID const bArmsDealerID, UINT16 const usItemIndex, UINT8 const ubNumInStock, BOOLEAN const fUsed)
+UINT8 HowManyItemsAreSold(ArmsDealerID const bArmsDealerID, ItemId const usItemIndex, UINT8 const ubNumInStock, BOOLEAN const fUsed)
 {
 	UINT8 ubNumSold;
 	UINT8 ubCnt;
@@ -376,8 +376,8 @@ UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 
 int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 {
-	UINT16 usItem1Index;
-	UINT16 usItem2Index;
+	ItemId usItem1Index;
+	ItemId usItem2Index;
 	UINT8  ubItem1Quality;
 	UINT8  ubItem2Quality;
 
@@ -394,13 +394,13 @@ int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 
 int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
 {
-	UINT16 usItem1Index;
-	UINT16 usItem2Index;
+	ItemId usItem1Index;
+	ItemId usItem2Index;
 	UINT8  ubItem1Quality;
 	UINT8  ubItem2Quality;
 
-	usItem1Index = ( ( INVENTORY_IN_SLOT * ) pArg1 ) -> sItemIndex;
-	usItem2Index = ( ( INVENTORY_IN_SLOT * ) pArg2 ) -> sItemIndex;
+	usItem1Index = ItemId(( ( INVENTORY_IN_SLOT * ) pArg1 ) -> sItemIndex);
+	usItem2Index = ItemId(( ( INVENTORY_IN_SLOT * ) pArg2 ) -> sItemIndex);
 
 	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 ) -> ItemObject.bStatus[ 0 ];
 	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 ) -> ItemObject.bStatus[ 0 ];
@@ -409,10 +409,10 @@ int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
 }
 
 
-static UINT8 GetDealerItemCategoryNumber(UINT16 usItemIndex);
+static UINT8 GetDealerItemCategoryNumber(ItemId usItemIndex);
 
 
-int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, UINT8 const item_quality1, UINT8 const item_quality2)
+int CompareItemsForSorting(ItemId const item_index1, ItemId const item_index2, UINT8 const item_quality1, UINT8 const item_quality2)
 {
 	// lower category first
 	UINT8 const category1 = GetDealerItemCategoryNumber(item_index1);
@@ -472,12 +472,12 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 }
 
 
-static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
+static UINT8 GetDealerItemCategoryNumber(ItemId const usItemIndex)
 {
 	UINT32 const item_class = GCM->getItem(usItemIndex)->getItemClass();
 
 	// If it's not a weapon, set no weapon class, as this won't be needed
-	UINT8 const weapon_class = usItemIndex < MAX_WEAPONS ?
+	UINT8 const weapon_class = usItemIndex < ItemId(MAX_WEAPONS) ?
 		GCM->getWeapon(usItemIndex)->ubWeaponClass : NOGUNCLASS;
 
 	// search table until end-of-list marker is encountered
@@ -499,7 +499,7 @@ static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 
 
 
-BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
+BOOLEAN CanDealerItemBeSoldUsed( ItemId usItemIndex )
 {
 	if ( !( GCM->getItem(usItemIndex)->getFlags() & ITEM_DAMAGEABLE ) )
 		return(FALSE);

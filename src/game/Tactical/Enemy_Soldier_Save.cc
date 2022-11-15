@@ -147,7 +147,7 @@ void LoadEnemySoldiersFromTempFile()
 	UINT8 ubNumCreatures = 0;
 	for (INT32 i = 0; i < slots; ++i)
 	{
-		SOLDIERCREATE_STRUCT tempDetailedPlacement;
+		SOLDIERCREATE_STRUCT tempDetailedPlacement = {};
 		UINT16 saved_checksum;
 		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
@@ -397,7 +397,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	for (INT32 i = 0; i != slots; ++i)
 	{
 		UINT16 saved_checksum;
-		SOLDIERCREATE_STRUCT tempDetailedPlacement;
+		SOLDIERCREATE_STRUCT tempDetailedPlacement = {};
 		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
@@ -557,7 +557,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 		bp->fPriorityExistance = FALSE;
 	}
 
-	SOLDIERCREATE_STRUCT tempDetailedPlacement;
+	SOLDIERCREATE_STRUCT tempDetailedPlacement = {};
 	for (INT32 i = 0; i != slots; ++i)
 	{
 		UINT16 saved_checksum;
@@ -896,7 +896,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	for (INT32 i = 0; i != slots; ++i)
 	{
 		UINT16 saved_checksum;
-		SOLDIERCREATE_STRUCT tempDetailedPlacement;
+		SOLDIERCREATE_STRUCT tempDetailedPlacement = {};
 		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		// Increment the current type of soldier
 		switch (tempDetailedPlacement.ubSoldierClass)

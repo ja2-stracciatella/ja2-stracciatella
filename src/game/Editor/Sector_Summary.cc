@@ -588,7 +588,8 @@ static void RenderItemDetails(void)
 {
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
-	INT32 index, i;
+	INT32 i;
+	ItemId index;
 	UINT32 uiQuantity, uiExistChance, uiStatus;
 	UINT32 xp, yp;
 	INT8 bFreqIndex;
@@ -604,7 +605,7 @@ static void RenderItemDetails(void)
 		UINT32 uiActionQuantity[8] {};
 		UINT32 uiTriggerExistChance[8] {};
 		UINT32 uiActionExistChance[8] {};
-		for( index = 1; index < MAXITEMS; index++ )
+		for( index = ItemId(1); index < MAXITEMS; index++ )
 		{
 			uiQuantity = 0;
 			uiExistChance = 0;
@@ -754,7 +755,7 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		else for( index = 1; index < MAXITEMS; index++ )
+		else for( index = ItemId(1); index < MAXITEMS; index++ )
 		{
 			uiQuantity = 0;
 			uiExistChance = 0;
@@ -821,7 +822,7 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		for( index = 1; index < MAXITEMS; index++ )
+		for( index = ItemId(1); index < MAXITEMS; index++ )
 		{
 			uiQuantity = 0;
 			uiExistChance = 0;
@@ -2435,7 +2436,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 {
 	UINT32 uiNumItems;
-	SOLDIERCREATE_STRUCT priority;
+	SOLDIERCREATE_STRUCT priority = {};
 	INT32 i, j;
 	UINT16 usNumItems;
 	OBJECTTYPE *pItem;
