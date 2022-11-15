@@ -201,13 +201,13 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	s->usAttackingWeapon = usHandItem;
 
 	// Find soldier flags depend on if it's our own merc firing or a NPC
-	INT16        sGridNo;
 	SOLDIERTYPE* tgt = WhoIsThere2(usGridNo, bLevel);
 	if (tgt != NULL && fFromUI)
 	{
 		// ATE: Check if we are targeting an interactive tile, and adjust gridno accordingly...
 		STRUCTURE* pStructure;
-		LEVELNODE* const pIntNode = GetCurInteractiveTileGridNoAndStructure(&sGridNo, &pStructure);
+		GridNo unused;
+		LEVELNODE* const pIntNode = GetCurInteractiveTileGridNoAndStructure(&unused, &pStructure);
 		if (pIntNode != NULL && tgt == s)
 		{
 			// Truncate target soldier
@@ -864,7 +864,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	{
 		gTacticalStatus.ubAttackBusyCount++;
 		SLOGD("Starting swipe attack, incrementing a.b.c in HandleItems to {}", gTacticalStatus.ubAttackBusyCount);
-		const INT16 sAPCost = CalcTotalAPsToAttack(s, sGridNo, FALSE, s->bAimTime);
+		const INT16 sAPCost = CalcTotalAPsToAttack(s, usGridNo, FALSE, s->bAimTime);
 		DeductPoints(s, sAPCost, 0);
 		EVENT_InitNewSoldierAnim(s, QUEEN_SWIPE, 0, FALSE);
 		s->bAction = AI_ACTION_KNIFE_STAB;
@@ -882,7 +882,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		if (usHandItem == MORTAR)
 		{
 			const UINT8 ubDirection  = (UINT8)GetDirectionFromGridNo(sTargetGridNo, s);
-			const INT16 sCheckGridNo = NewGridNo((UINT16)s->sGridNo, DirectionInc(ubDirection));
+			const GridNo sCheckGridNo = NewGridNo(s->sGridNo, DirectionInc(ubDirection));
 			if (!OKFallDirection(s, sCheckGridNo, s->bLevel, ubDirection, s->usAnimState))
 			{
 				return ITEM_HANDLE_NOROOM;
