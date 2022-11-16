@@ -114,8 +114,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	BOOLEAN bWeaponJammed;
 	UINT16 usUIMovementMode;
 
-	SoldierSP soldier = GetSoldier(pSoldier);
-
 	do
 	{
 		// Get new frame code
@@ -1544,7 +1542,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						// DROP ITEM
 						HandleSoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, (INT16)(pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
 						// EVENT HAS BEEN HANDLED
-						soldier->removePendingAction();
+						Soldier{pSoldier}.removePendingAction();
 
 					//}
 					//else
@@ -1562,7 +1560,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						SoldierHandleInteractiveObject(*pSoldier);
 
 						// EVENT HAS BEEN HANDLED
-						soldier->removePendingAction();
+						Soldier{pSoldier}.removePendingAction();
 
 					//}
 					//else
@@ -1576,7 +1574,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if (pSoldier->bAction == AI_ACTION_UNLOCK_DOOR || (pSoldier->bAction == AI_ACTION_LOCK_DOOR && !(pSoldier->fAIFlags & AI_LOCK_DOOR_INCLUDES_CLOSE) ) )
 					{
 						// EVENT HAS BEEN HANDLED
-						soldier->removePendingAction();
+						Soldier{pSoldier}.removePendingAction();
 
 						// do nothing here
 					}
@@ -1602,8 +1600,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						}
 
 						// EVENT HAS BEEN HANDLED
-						soldier->removePendingAction();
-
+						Soldier{pSoldier}.removePendingAction();
 					}
 
 
