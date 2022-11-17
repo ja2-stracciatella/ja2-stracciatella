@@ -1221,7 +1221,7 @@ bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 	return fexists;
 }
 
-SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname)
+SGPFile* IMPSavedProfileOpenFileForRead(const ST::string& nickname)
 {
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
 		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
@@ -1230,7 +1230,7 @@ SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname)
 	return f;
 }
 
-SGPFile* const IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
+static SGPFile* IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
 	SGPFile *f = GCM->saveGameFiles()->openForWriting(profile_filename, true);

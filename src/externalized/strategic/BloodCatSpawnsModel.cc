@@ -9,7 +9,7 @@ BloodCatSpawnsModel::BloodCatSpawnsModel(uint8_t sectorId_,
 			isLair(isLair_), isArena(isArena_),
 			bloodCatsSpawnsEasy(bloodCatsSpawnsEasy_), bloodCatsSpawnsMedium(bloodCatsSpawnsMedium_), bloodCatsSpawnsHard(bloodCatsSpawnsHard_) {}
 
-const int8_t BloodCatSpawnsModel::getSpawnsByDifficulty(uint8_t difficultyLevel) const
+int8_t BloodCatSpawnsModel::getSpawnsByDifficulty(uint8_t const difficultyLevel) const
 {
 	switch (difficultyLevel) {
 		case DIF_LEVEL_EASY:

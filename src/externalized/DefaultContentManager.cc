@@ -67,6 +67,7 @@
 #include <string_theory/string>
 
 #include <stdexcept>
+#include <utility>
 
 #define BASEDATADIR    "data"
 
@@ -84,7 +85,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
 	m_vfs(Vfs_create())
 {
-	m_engineOptions = move(engineOptions);
+	m_engineOptions = std::move(engineOptions);
 	m_modManager.reset(ModManager_create(m_engineOptions.get()));
 	if (m_modManager.get() == NULL) {
 		RustPointer<char> err{ getRustError() };
@@ -119,7 +120,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 		auto error = ST::format("Failed to create temporary directory: {}", err.get());
 		throw std::runtime_error(error.c_str());
 	}
-	m_tempDir = move(tempDir);
+	m_tempDir = std::move(tempDir);
 	RustPointer<char> tempDirPath(TempDir_path(m_tempDir.get()));
 	m_tempFiles = std::make_unique<DirFs>(tempDirPath.get());
 
@@ -1451,7 +1452,7 @@ const std::vector<const SamSiteModel*>& DefaultContentManager::getSamSites() con
 	return m_samSites;
 }
 
-const int8_t DefaultContentManager::findSamIDBySector(uint8_t sectorId) const
+int8_t DefaultContentManager::findSamIDBySector(uint8_t sectorId) const
 {
 	for (size_t i = 0; i < m_samSites.size(); i++)
 	{
@@ -1469,7 +1470,7 @@ const SamSiteModel* DefaultContentManager::findSamSiteBySector(uint8_t sectorId)
 	return (i > -1) ? m_samSites[i] : NULL;
 }
 
-const int8_t DefaultContentManager::getControllingSamSite(uint8_t sectorId) const
+int8_t DefaultContentManager::getControllingSamSite(uint8_t sectorId) const
 {
 	return m_samSitesAirControl->getControllingSamSiteID(sectorId);
 }

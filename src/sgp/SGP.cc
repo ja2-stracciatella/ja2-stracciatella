@@ -445,11 +445,11 @@ int main(int argc, char* argv[])
 		uint32_t n = EngineOptions_getModsLength(params.get());
 		if(n > 0)
 		{
-			cm = new ModPackContentManager(move(params));
+			cm = new ModPackContentManager(std::move(params));
 		}
 		else
 		{
-			cm = new DefaultContentManager(move(params));
+			cm = new DefaultContentManager(std::move(params));
 		}
 
 		cm->logConfiguration();
