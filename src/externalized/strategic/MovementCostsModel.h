@@ -12,10 +12,10 @@ class MovementCostsModel
 public:
 	MovementCostsModel(IntIntVector traverseWE_, IntIntVector traverseNS_, IntIntVector traverseThrough_, IntIntVector travelRatings_);
 
-	const uint8_t getTraversibilityWestEast(const SGPSector& sSector) const;
-	const uint8_t getTraversibilityNorthSouth(const SGPSector& sSector) const;
-	const uint8_t getTraversibilityThrough(const SGPSector& sSector) const;
-	const uint8_t getTravelRating(const SGPSector& sSector) const;
+	uint8_t getTraversibilityWestEast(const SGPSector& sSector) const;
+	uint8_t getTraversibilityNorthSouth(const SGPSector& sSector) const;
+	uint8_t getTraversibilityThrough(const SGPSector& sSector) const;
+	uint8_t getTravelRating(const SGPSector& sSector) const;
 	static MovementCostsModel* deserialize(const rapidjson::Document& root, const TraversibilityMap& mapping);
 
 protected:

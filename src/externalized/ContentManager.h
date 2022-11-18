@@ -148,12 +148,12 @@ public:
 	virtual const MineModel* getMine(uint8_t mineId) const = 0;
 	virtual const std::vector<const MineModel*>& getMines() const = 0;
 	virtual const std::vector<const SamSiteModel*>& getSamSites() const = 0;
-	virtual const int8_t findSamIDBySector(uint8_t sectorId) const = 0;
+	virtual       int8_t findSamIDBySector(uint8_t sectorId) const = 0;
 	virtual const SamSiteModel* findSamSiteBySector(uint8_t sectorId) const = 0;
 	virtual const std::vector<const StrategicMapSecretModel*>& getMapSecrets() const = 0;
 
 	/* returns the index of the controlling SAM site , or -1 if sector is not covered */
-	virtual const int8_t getControllingSamSite(uint8_t sectorId) const = 0;
+	virtual       int8_t getControllingSamSite(uint8_t sectorId) const = 0;
 
 	virtual const TownModel* getTown(int8_t townId) const = 0;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const = 0;
@@ -163,7 +163,7 @@ public:
 	virtual const CacheSectorsModel* getCacheSectors() const = 0;
 	virtual const MovementCostsModel* getMovementCosts() const = 0;
 	/* Returns land type index for special sectors. Return -1 if no special land type is defined */
-	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const = 0;
+	virtual       int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const = 0;
 	virtual const std::map<uint8_t, const NpcPlacementModel*>& listNpcPlacements() const = 0;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const = 0;
 

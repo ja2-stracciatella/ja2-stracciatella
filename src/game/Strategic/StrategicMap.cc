@@ -2056,7 +2056,6 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	BOOLEAN     fOnlySelectedGuy = FALSE;
 	SOLDIERTYPE *pValidSoldier = NULL;
 	UINT8       ubReturnVal = FALSE;
-	UINT8       ubNumControllableMercs = 0;
 	UINT8       ubNumMercs = 0, ubNumEPCs = 0;
 	UINT8       ubPlayerControllableMercsInSquad = 0;
 
@@ -2095,8 +2094,6 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			//not more than once.
 			pValidSoldier = pSoldier;
 
-			ubNumControllableMercs++;
-
 			//We need to keep track of the number of EPCs and mercs in this squad.  If we have
 			//only one merc and one or more EPCs, then we can't allow the merc to tactically traverse,
 			//if he is the only merc near enough to traverse.
@@ -2108,7 +2105,6 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 				if( AM_A_ROBOT( pSoldier ) && !CanRobotBeControlled( pSoldier ) )
 				{
 					gfRobotWithoutControllerAttemptingTraversal = TRUE;
-					ubNumControllableMercs--;
 					continue;
 				}
 			}

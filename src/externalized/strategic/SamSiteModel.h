@@ -7,7 +7,7 @@ class SamSiteModel
 {
 public:
 	SamSiteModel(uint8_t sectorId_, std::array<GridNo, 2> gridNos_);
-	const bool doesSamExistHere(const SGPSector& sector, GridNo const gridno) const;
+	bool doesSamExistHere(const SGPSector& sector, GridNo const gridno) const;
 
 	static SamSiteModel* deserialize(const rapidjson::Value& obj);
 	static void validateData(const std::vector<const SamSiteModel*>& models);

@@ -5,9 +5,10 @@
 
 #include "Debug.h"
 #include "Logger.h"
+#include <utility>
 
 ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOptions)
-	:DefaultContentManager(move(engineOptions))
+	:DefaultContentManager(std::move(engineOptions))
 {
 	uint32_t nMods = EngineOptions_getModsLength(m_engineOptions.get());
 	std::vector<ST::string> modNames;
