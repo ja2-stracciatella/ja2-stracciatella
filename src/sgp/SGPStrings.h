@@ -4,7 +4,6 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <cwchar>
 #include <stdexcept>
 #include <stdio.h>
 #include <string.h>
