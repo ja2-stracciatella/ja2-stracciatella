@@ -95,7 +95,7 @@ struct SUMMARYFILE
 
 extern BOOLEAN gfAutoLoadA9;
 
-extern BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel);
+extern BOOLEAN EvaluateWorld(const ST::string& pSector, UINT8 ubLevel);
 void WriteSectorSummaryUpdate(const ST::string &filename, UINT8 ubLevel, SUMMARYFILE*);
 
 extern BOOLEAN gfMustForceUpdateAllMaps;

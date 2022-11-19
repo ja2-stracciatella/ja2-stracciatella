@@ -1704,7 +1704,7 @@ extern BOOLEAN gfUpdatingNow;
  * generates summary information for use within the summary editor.  The header
  * is defined in Summary Info.h, not worlddef.h -- though it's not likely this
  * is going to be used anywhere where it would matter. */
-BOOLEAN EvaluateWorld(const char* const pSector, const UINT8 ubLevel)
+BOOLEAN EvaluateWorld(const ST::string& pSector, const UINT8 ubLevel)
 try
 {
 	// Make sure the file exists... if not, then return false
