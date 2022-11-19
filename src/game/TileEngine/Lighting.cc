@@ -71,7 +71,7 @@ struct LightTemplate
 {
 	std::vector<LIGHT_NODE> lights;
 	std::vector<UINT16> rays;
-	char*       name;
+	ST::string name;
 };
 
 static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
@@ -464,14 +464,8 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 	if (t->lights.empty()) return FALSE;
 
 	t->lights.clear();
-
 	t->rays.clear();
-
-	if (t->name != NULL)
-	{
-		delete[] t->name;
-		t->name = NULL;
-	}
+	t->name = ""; // clear() before ST 3.4
 
 	return TRUE;
 }
@@ -1487,10 +1481,7 @@ LightTemplate* LightCreateOmni(const UINT8 ubIntensity, const INT16 iRadius)
 
 	LightGenerateElliptical(t, ubIntensity, iRadius * DISTANCE_SCALE, iRadius * DISTANCE_SCALE);
 
-	char usName[14];
-	sprintf(usName, "LTO%d.LHT", iRadius);
-	t->name = new char[strlen(usName) + 1]{};
-	strcpy(t->name, usName);
+	t->name = ST::format("LTO{}.LHT", iRadius);
 
 	return t;
 }
@@ -1788,7 +1779,7 @@ void LightSave(LightTemplate const* const t, const ST::string& pFilename)
 {
 	if (t->lights.empty()) throw std::logic_error("Tried to save invalid light template");
 
-	const char* const pName = (pFilename.empty() ? t->name : pFilename.c_str());
+	const ST::string& pName = (pFilename.empty() ? t->name : pFilename);
 	AutoSGPFile f(FileMan::openForWriting(pName));
 	Assert(t->lights.size() <= UINT16_MAX);
 	UINT16 numLights = static_cast<UINT16>(t->lights.size());
@@ -1820,7 +1811,7 @@ static LightTemplate* LightLoad(const ST::string& pFilename)
 	LightTemplate* const t = LightGetFree();
 	t->lights   = std::move(lights);
 	t->rays     = std::move(rays);
-	t->name     = pFilename.c_str();
+	t->name     = pFilename;
 	return t;
 }
 
@@ -2123,7 +2114,7 @@ void CreateTilePaletteTables(const HVOBJECT pObj)
 
 const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 {
-	return l->light_template->name;
+	return l->light_template->name.c_str();
 }
 
 
