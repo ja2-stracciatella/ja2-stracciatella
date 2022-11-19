@@ -1205,7 +1205,7 @@ static void FaceRestoreSavedBackgroundRect(FACETYPE const& f, INT16 const sDestL
 }
 
 
-void SetFaceTalking(FACETYPE& f, const char* zSoundFile, const ST::string& zTextString)
+void SetFaceTalking(FACETYPE& f, const ST::string& zSoundFile, const ST::string& zTextString)
 {
 	// Set face to talking
 	f.fTalking          = TRUE;

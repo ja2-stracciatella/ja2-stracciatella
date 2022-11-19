@@ -180,7 +180,7 @@ void RenderAutoFace(FACETYPE&);
 
 // If you want to setup the face to talking, ( most times this call is done in JA2 by other functions, not
 //directly), you call
-void SetFaceTalking(FACETYPE& f, const char* zSoundFile, const ST::string& zTextString);
+void SetFaceTalking(FACETYPE& f, const ST::string& zSoundFile, const ST::string& zTextString);
 // This function will setup appropriate face data and begin the speech process. It can fail if the sound
 //cannot be played for any reason.
 

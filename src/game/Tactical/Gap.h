@@ -6,6 +6,6 @@
 
 void    AudioGapListDone(AudioGapList* pGapList);
 BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList);
-UINT32  PlayJA2GapSample(const char* zSoundFile, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData);
+UINT32  PlayJA2GapSample(const ST::string& zSoundFile, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData);
 
 #endif
