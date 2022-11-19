@@ -274,6 +274,9 @@ void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
 }
 
 void FingerMove(const SDL_TouchFingerEvent* event) {
+	#ifdef SDL_MOUSE_TOUCHID
+	if (event->touchId == SDL_MOUSE_TOUCHID) return;
+	#endif
 	if (event->fingerId != gMainFingerId) return;
 	gfIsUsingTouch = true;
 
@@ -283,6 +286,10 @@ void FingerMove(const SDL_TouchFingerEvent* event) {
 }
 
 void FingerDown(const SDL_TouchFingerEvent* event) {
+	#ifdef SDL_MOUSE_TOUCHID
+	if (event->touchId == SDL_MOUSE_TOUCHID) return;
+	#endif
+
 	gMainFingerId = event->fingerId;
 	gfIsUsingTouch = true;
 
@@ -292,6 +299,9 @@ void FingerDown(const SDL_TouchFingerEvent* event) {
 }
 
 void FingerUp(const SDL_TouchFingerEvent* event) {
+	#ifdef SDL_MOUSE_TOUCHID
+	if (event->touchId == SDL_MOUSE_TOUCHID) return;
+	#endif
 	if (event->fingerId != gMainFingerId) return;
 	gfIsUsingTouch = true;
 
