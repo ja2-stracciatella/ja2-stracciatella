@@ -1727,7 +1727,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						SLOGD(zTempString );
+						SLOGD(zTempString.c_str());
 
 
 						zTempString = "";
@@ -1744,7 +1744,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						SLOGD(zTempString );
+						SLOGD(zTempString.c_str());
 
 						zTempString = "";
 						bTemp = pQueueHead->bLevel;
@@ -1766,7 +1766,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						SLOGD(zTempString );
+						SLOGD(zTempString.c_str());
 						SLOGD("------" );
 					}
 #endif

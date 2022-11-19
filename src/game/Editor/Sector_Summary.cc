@@ -2194,7 +2194,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 	for (sMap.y = 1; sMap.y <= 16; sMap.y++) for(sMap.x = 1; sMap.x <= 16; sMap.x++)
 	{
 		INT32 x = sMap.x - 1, y = sMap.y - 1;
-		const ST::string& str = sMap.AsShortString();
+		const ST::string str = sMap.AsShortString();
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
@@ -2329,7 +2329,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 	for (sMap.y = 1; sMap.y <= 16; sMap.y++) for(sMap.x = 1; sMap.x <= 16; sMap.x++)
 	{
 		INT32 x = sMap.x - 1, y = sMap.y - 1;
-		const ST::string& name = sMap.AsShortString();
+		const ST::string name = sMap.AsShortString();
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
