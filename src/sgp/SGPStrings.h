@@ -17,19 +17,6 @@
 [[deprecated("Don't use snprintf, use ST::format instead.")]]
 	int snprintf(char* const s, size_t const n, const char* const fmt, ...);
 
-#ifdef _WIN32
-#ifndef __MINGW32__
-
-#include <stdarg.h>
-
-
-int WINsnprintf(char* s, size_t n, const char* fmt, ...);
-
-#define snprintf  WINsnprintf
-
-#endif
-#endif
-
 /// Converts `std::printf` formatting to `ST::format` formatting.
 /// @see https://en.cppreference.com/w/cpp/io/c/fprintf
 ST::string st_fmt_printf_to_format(const ST::string& fmt_printf);

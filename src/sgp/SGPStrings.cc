@@ -4,24 +4,6 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#ifdef _WIN32
-#ifndef __MINGW32__
-
-int WINsnprintf(char* const s, size_t const n, const char* const fmt, ...)
-{
-	va_list arg;
-	va_start(arg, fmt);
-	int const ret = _vsnprintf(s, n, fmt, arg);
-	va_end(arg);
-	if (n != 0) s[n - 1] = '\0'; // _vsnprintf() does not guarantee NUL termination
-	return ret;
-}
-
-
-#endif
-#endif
-
-
 ST::string st_fmt_printf_to_format(const ST::string& fmt_printf)
 {
 	ST::utf32_buffer codepoints = fmt_printf.to_utf32();
