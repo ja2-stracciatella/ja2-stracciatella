@@ -11,13 +11,10 @@
 
 #include "PlatformStrings.h"
 
-
-#if defined(__linux__) || defined(_WIN32)
-
-size_t strlcpy(char* dst, const char* src, size_t size);
-
+// poison deprecated functions
+#if !defined(__MINGW32__) && defined(__GNUC__)
+size_t strlcpy(char *dst, const char *src, size_t siz) __attribute__ ((deprecated("Don't use strlcpy, but regular ST::string assignment.")));
 #endif
-
 
 #ifdef _WIN32
 #ifndef __MINGW32__
