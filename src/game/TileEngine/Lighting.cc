@@ -1817,13 +1817,10 @@ static LightTemplate* LightLoad(const ST::string& pFilename)
 	rays.assign(numRays, 0);
 	hFile->read(rays.data(), sizeof(UINT16) * numRays);
 
-	SGP::Buffer<char> name(pFilename.size() + 1);
-	strcpy(name, pFilename.c_str());
-
 	LightTemplate* const t = LightGetFree();
 	t->lights   = std::move(lights);
 	t->rays     = std::move(rays);
-	t->name     = name.Release();
+	t->name     = pFilename.c_str();
 	return t;
 }
 
