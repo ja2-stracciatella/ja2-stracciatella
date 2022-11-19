@@ -51,7 +51,7 @@ void InitTileCache(void)
 		tc.rootName = FileMan::getFileNameWithoutExt(file);
 		tc.pStructureFileRef = LoadStructureFile(file.c_str());
 
-		if (strcasecmp(tc.rootName.c_str(), "l_dead1") == 0)
+		if (tc.rootName.compare_i("l_dead1") == 0)
 		{
 			giDefaultStructIndex = (INT32)gpTileCacheStructInfo.size();
 		}
@@ -186,7 +186,7 @@ STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(char const* const file
 	for (size_t i = 0; i != n; ++i)
 	{
 		TILE_CACHE_STRUCT& t = gpTileCacheStructInfo[i];
-		if (strcasecmp(t.rootName.c_str(), filename) == 0) return t.pStructureFileRef;
+		if (t.rootName.compare_i(filename) == 0) return t.pStructureFileRef;
 	}
 	return 0;
 }

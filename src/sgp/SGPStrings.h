@@ -9,8 +9,6 @@
 #include <string.h>
 #include <utility>
 
-#include "PlatformStrings.h"
-
 // poison deprecated functions
 [[deprecated("Don't use strlcpy, but regular ST::string assignment.")]]
 	size_t strlcpy(char *dst, const char *src, size_t size);
