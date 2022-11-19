@@ -154,11 +154,6 @@ static void shutdownGame()
 	SLOGD("Shutting Down Sound Manager");
 	ShutdownSoundManager();
 
-#ifdef SGP_VIDEO_DEBUGGING
-	SLOGD("Dumping Video Info");
-	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
-#endif
-
 	SLOGD("Shutting Down Video Surface Manager");
 	ShutdownVideoSurfaceManager();
 	SLOGD("Shutting Down Video Object Manager");

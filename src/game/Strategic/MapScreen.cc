@@ -2959,15 +2959,6 @@ static void HandleModCtrl(UINT const key)
 
 		case 't': if (CHEATER_CHEAT_LEVEL()) Teleport(); break;
 
-#if defined SGP_VIDEO_DEBUGGING
-		case 'v':
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VObjects:  {}", guiVObjectSize));
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VSurfaces:  {}", guiVSurfaceSize));
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "SGPVideoDump.txt updated...");
-			PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
-			break;
-#endif
-
 		case 'z':
 			if (CHEATER_CHEAT_LEVEL())
 			{

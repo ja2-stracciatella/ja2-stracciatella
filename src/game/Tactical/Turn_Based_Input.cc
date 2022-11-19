@@ -98,10 +98,6 @@
 
 #define DEBUG_CONSOLE_TOPIC "Debug Console"
 
-#ifdef SGP_VIDEO_DEBUGGING
-	#include "VObject.h"
-#endif
-
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -1863,15 +1859,6 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 				}
 			}
 			break;
-
-#ifdef SGP_VIDEO_DEBUGGING
-		case 'v':
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VObjects:  {}", guiVObjectSize));
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VSurfaces:  {}", guiVSurfaceSize));
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "SGPVideoDump.txt updated...");
-			PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
-			break;
-#endif
 
 		case 'w':
 			if (CHEATER_CHEAT_LEVEL())
