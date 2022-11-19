@@ -1018,8 +1018,7 @@ static void AwardExperienceForTravelling(GROUP& g)
 
 static void AddCorpsesToBloodcatLair(const SGPSector& sSector)
 {
-	ROTTING_CORPSE_DEFINITION		Corpse;
-	Corpse = ROTTING_CORPSE_DEFINITION{};
+	ROTTING_CORPSE_DEFINITION Corpse{};
 
 	// Setup some values!
 	Corpse.ubBodyType        = REGMALE;

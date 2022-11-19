@@ -26,9 +26,9 @@ enum StructureDamageResult
 };
 
 // ATE: Increased to allow corpses to not collide with soldiers
-// 100 == MAX_CORPSES
-#define INVALID_STRUCTURE_ID			( TOTAL_SOLDIERS + 100 )
-#define IGNORE_PEOPLE_STRUCTURE_ID		(TOTAL_SOLDIERS+101)
+// 200 == MAX_ROTTING_CORPSES, see Rotting_Corpses.h
+constexpr UINT16 INVALID_STRUCTURE_ID = TOTAL_SOLDIERS + 200;
+constexpr UINT16 IGNORE_PEOPLE_STRUCTURE_ID = INVALID_STRUCTURE_ID + 1;
 
 enum StructureDamageReason
 {

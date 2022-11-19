@@ -685,13 +685,9 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			{
 				usOKToAddStructID = IGNORE_PEOPLE_STRUCTURE_ID;
 			}
-			else if ( s->pLevelNode != NULL && s->pLevelNode->pStructureData != NULL )
-			{
-				usOKToAddStructID = s->pLevelNode->pStructureData->usStructureID;
-			}
 			else
 			{
-				usOKToAddStructID = INVALID_STRUCTURE_ID;
+				usOKToAddStructID = GetStructureID(s);
 			}
 
 		}
