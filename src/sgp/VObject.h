@@ -96,10 +96,8 @@ void InitializeVideoObjectManager(void);
 void ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
-SGPVObject* AddStandardVideoObjectFromHImage(SGPImage*);
-SGPVObject* AddStandardVideoObjectFromFile(const ST::string& ImageFile);
-#define AddVideoObjectFromHImage(a) AddStandardVideoObjectFromHImage(a)
-#define AddVideoObjectFromFile(a)   AddStandardVideoObjectFromFile(a)
+SGPVObject* AddVideoObjectFromHImage(SGPImage*);
+SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile);
 
 // Removes a video object
 static inline void DeleteVideoObject(SGPVObject* const vo)

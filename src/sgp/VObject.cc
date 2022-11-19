@@ -241,15 +241,15 @@ void ShutdownVideoObjectManager(void)
 	}
 }
 
-SGPVObject* AddStandardVideoObjectFromHImage(SGPImage* const img)
+SGPVObject* AddVideoObjectFromHImage(SGPImage* const img)
 {
 	return new SGPVObject(img);
 }
 
-SGPVObject* AddStandardVideoObjectFromFile(const ST::string& ImageFile)
+SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
 {
 	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-	return AddStandardVideoObjectFromHImage(hImage.get());
+	return AddVideoObjectFromHImage(hImage.get());
 }
 
 
