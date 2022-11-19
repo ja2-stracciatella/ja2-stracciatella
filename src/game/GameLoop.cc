@@ -248,14 +248,11 @@ catch (std::exception const& e)
 			attach  = " Do not forget to attach the savegame.";
 		}
 	}
-	char msg[2048];
-	snprintf(msg, lengthof(msg),
-		"%s\n"
-		"Creating an emergency %s %s.\n"
-		"Please report this error with a description of the circumstances.%s",
-		e.what(), what, success.c_str(), attach
+	ST::string msg = ST::format(
+		"{}\nCreating an emergency {} {}.\nPlease report this error with a description of the circumstances. {}",
+		e.what(), what, success, attach
 	);
-	throw std::runtime_error(msg);
+	throw std::runtime_error(msg.c_str());
 }
 
 

@@ -92,10 +92,9 @@ void HandleIMPPortraits( void )
 
 static void RenderPortrait(INT16 const x, INT16 const y)
 { // Render the portrait of the current picture
-	SGPFILENAME filename;
 	INT32 const portrait = (fCharacterIsMale ? 200 : 208) + iCurrentPortrait;
-	snprintf(filename, lengthof(filename), FACESDIR "/bigfaces/%d.sti", portrait);
-	BltVideoObjectOnce(FRAME_BUFFER, filename, 0, LAPTOP_SCREEN_UL_X + x, LAPTOP_SCREEN_WEB_UL_Y + y);
+	ST::string filename = ST::format(FACESDIR "/bigfaces/{}.sti", portrait);
+	BltVideoObjectOnce(FRAME_BUFFER, filename.c_str(), 0, LAPTOP_SCREEN_UL_X + x, LAPTOP_SCREEN_WEB_UL_Y + y);
 }
 
 

@@ -1708,8 +1708,7 @@ BOOLEAN EvaluateWorld(const char* const pSector, const UINT8 ubLevel)
 try
 {
 	// Make sure the file exists... if not, then return false
-	char filename[40];
-	snprintf(filename, lengthof(filename), "%s%s%.0d%s.dat",
+	ST::string filename = ST::format("{}{}{.0d}{}.dat",
 		pSector,
 		ubLevel % 4 != 0 ? "_b" : "",
 		ubLevel % 4,

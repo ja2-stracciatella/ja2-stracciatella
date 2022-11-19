@@ -14,6 +14,7 @@
 // poison deprecated functions
 #if !defined(__MINGW32__) && defined(__GNUC__)
 size_t strlcpy(char *dst, const char *src, size_t siz) __attribute__ ((deprecated("Don't use strlcpy, but regular ST::string assignment.")));
+int snprintf(char* const s, size_t const n, const char* const fmt, ...) __attribute__ ((deprecated("Don't use snprintf, use ST::format instead.")));
 #endif
 
 #ifdef _WIN32
