@@ -56,10 +56,6 @@ typedef void *					PTR;
 typedef UINT8						BYTE;
 typedef CHAR8						STRING512[512];
 
-#define SGPFILENAME_LEN 100
-typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
-
-
 #ifndef TRUE
 #define TRUE 1
 #endif

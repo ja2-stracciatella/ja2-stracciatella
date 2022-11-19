@@ -17,7 +17,7 @@ struct AMBIENTDATA_STRUCT
 	UINT32				uiMinTime;
 	UINT32				uiMaxTime;
 	UINT8					ubTimeCatagory;
-	SGPFILENAME		zFilename;
+	CHAR8				zFilename[100];
 	UINT32				uiVol;
 };
 
