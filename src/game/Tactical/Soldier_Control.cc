@@ -704,7 +704,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 	if (pSoldier->light == NULL)
 	{
 		// ATE: Check for goggles in headpos....
-		char const* light_file = IsWearingHeadGear(*pSoldier, UVGOGGLES)    ? "Light4" :
+		ST::string light_file = IsWearingHeadGear(*pSoldier, UVGOGGLES) ? "Light4" :
 						IsWearingHeadGear(*pSoldier, NIGHTGOGGLES) ? "Light3" :
 						"Light2";
 

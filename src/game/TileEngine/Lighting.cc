@@ -183,7 +183,7 @@ static UINT16 gusShadeLevels[16][3] =
 	{  48, 222,  48 }
 };
 
-static LightTemplate* LightLoad(const char* pFilename);
+static LightTemplate* LightLoad(const ST::string& pFilename);
 
 
 /****************************************************************************************
@@ -1784,11 +1784,11 @@ LightSave
 	filename forces the system to save the light with the internal filename (recommended).
 
 ***************************************************************************************/
-void LightSave(LightTemplate const* const t, char const* const pFilename)
+void LightSave(LightTemplate const* const t, const ST::string& pFilename)
 {
 	if (t->lights.empty()) throw std::logic_error("Tried to save invalid light template");
 
-	const char* const pName = (pFilename != NULL ? pFilename : t->name);
+	const char* const pName = (pFilename.empty() ? t->name : pFilename.c_str());
 	AutoSGPFile f(FileMan::openForWriting(pName));
 	Assert(t->lights.size() <= UINT16_MAX);
 	UINT16 numLights = static_cast<UINT16>(t->lights.size());
@@ -1801,7 +1801,7 @@ void LightSave(LightTemplate const* const t, char const* const pFilename)
 
 /* Loads a light template from disk. The light template is returned, or NULL if
 	* the file wasn't loaded. */
-static LightTemplate* LightLoad(const char* pFilename)
+static LightTemplate* LightLoad(const ST::string& pFilename)
 {
 	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
 
@@ -1817,8 +1817,8 @@ static LightTemplate* LightLoad(const char* pFilename)
 	rays.assign(numRays, 0);
 	hFile->read(rays.data(), sizeof(UINT16) * numRays);
 
-	SGP::Buffer<char> name(strlen(pFilename) + 1);
-	strcpy(name, pFilename);
+	SGP::Buffer<char> name(pFilename.size() + 1);
+	strcpy(name, pFilename.c_str());
 
 	LightTemplate* const t = LightGetFree();
 	t->lights   = std::move(lights);
@@ -1830,11 +1830,11 @@ static LightTemplate* LightLoad(const char* pFilename)
 
 /* Figures out whether a light template is already in memory, or needs to be
 	* loaded from disk. */
-static LightTemplate* LightLoadCachedTemplate(const char* pFilename)
+static LightTemplate* LightLoadCachedTemplate(const ST::string& pFilename)
 {
 	FOR_EACH_LIGHT_TEMPLATE(t)
 	{
-		if (strcasecmp(pFilename, t->name) == 0) return t;
+		if (pFilename.compare_i(t->name) == 0) return t;
 	}
 	return LightLoad(pFilename);
 }
@@ -1889,7 +1889,7 @@ static LIGHT_SPRITE* LightSpriteGetFree(void)
 }
 
 
-LIGHT_SPRITE* LightSpriteCreate(const char* const pName)
+LIGHT_SPRITE* LightSpriteCreate(const ST::string& pName)
 try
 {
 	LIGHT_SPRITE* const l = LightSpriteGetFree();

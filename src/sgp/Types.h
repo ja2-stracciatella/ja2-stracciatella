@@ -54,7 +54,6 @@ typedef char            CHAR8;
 typedef unsigned char		BOOLEAN;
 typedef void *					PTR;
 typedef UINT8						BYTE;
-typedef CHAR8						STRING512[512];
 
 #ifndef TRUE
 #define TRUE 1
