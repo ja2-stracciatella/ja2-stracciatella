@@ -6016,10 +6016,10 @@ no_sub:
 		battle_snd    = &gBattleSndsData[battle_snd_id];
 	}
 
-	char basename[16];
+	ST::string basename;
 	if (s->ubProfile != NO_PROFILE)
 	{
-		sprintf(basename, "%03d", s->ubProfile);
+		basename = ST::format("{03d}", s->ubProfile);
 	}
 	else
 	{
@@ -6028,7 +6028,7 @@ no_sub:
 
 		char const* const prefix = s->ubBodyType == HATKIDCIV ||
 						s->ubBodyType == KIDCIV ? "kid" : "bad";
-		sprintf(basename, "%s%d", prefix, s->ubBattleSoundID);
+		basename = ST::format("{}{d}", prefix, s->ubBattleSoundID);
 	}
 
 	ST::string filename = ST::format(BATTLESNDSDIR "/{}_{}.wav", basename, battle_snd->zName);

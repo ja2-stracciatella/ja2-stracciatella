@@ -85,8 +85,8 @@ class SGPVObject
 
 	public:
 #ifdef SGP_VIDEO_DEBUGGING
-		char*                        name_;
-		char*                        code_;
+		ST::string                   name_;
+		ST::string                   code_;
 #endif
 		SGPVObject*                  next_;
 };

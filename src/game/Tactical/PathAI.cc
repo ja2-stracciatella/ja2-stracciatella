@@ -518,10 +518,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	UINT16  usMovementModeToUseForAPs;
 	INT16   sClosePathLimit = -1; // XXX HACK000E
 
-#ifdef PATHAI_SKIPLIST_DEBUG
-	CHAR8 zTempString[1000], zTS[50];
-#endif
-
 #ifdef PATHAI_VISIBLE_DEBUG
 	UINT16 usCounter = 0;
 #endif
@@ -1711,20 +1707,19 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 #ifdef PATHAI_SKIPLIST_DEBUG
 					// print out contents of queue
 					{
-						INT32 iLoop;
 						INT8  bTemp;
-
-						zTempString[0] = '\0';
+						ST::string zTempString;
+						ST::string zTS;
 						pCurr = pQueueHead;
-						iLoop = 0;
+						INT32 iLoop = 0;
 						while( pCurr )
 						{
-							sprintf( zTS, "\t%ld", pCurr->sPathNdx );
+							zTS = ST::format("\t{d}", pCurr->sPathNdx);
 							if (pCurr == pNewPtr)
 							{
-								strcat( zTS, "*" );
+								zTS += "*";
 							}
-							strcat( zTempString, zTS );
+							zTempString += zTS;
 							pCurr = pCurr->pNext[0];
 							iLoop++;
 							if (iLoop > 50)
@@ -1735,13 +1730,13 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						SLOGD(zTempString );
 
 
-						zTempString[0] = '\0';
+						zTempString = "";
 						pCurr = pQueueHead;
 						iLoop = 0;
 						while( pCurr )
 						{
-							sprintf( zTS, "\t%d", pCurr->bLevel );
-							strcat( zTempString, zTS );
+							zTS = ST::format("\t{d}", pCurr->bLevel);
+							zTempString += zTS;
 							pCurr = pCurr->pNext[0];
 							iLoop++;
 							if (iLoop > 50)
@@ -1751,7 +1746,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						}
 						SLOGD(zTempString );
 
-						zTempString[0] = '\0';
+						zTempString = "";
 						bTemp = pQueueHead->bLevel;
 						pCurr = pQueueHead;
 						iLoop = 0;
@@ -1762,8 +1757,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 							{
 								bTemp--;
 							}
-							sprintf( zTS, "\t%d", bTemp );
-							strcat( zTempString, zTS );
+							zTS = ST::format("\t{d}", bTemp);
+							zTempString += zTS;
 							pCurr = pCurr->pNext[0];
 							iLoop++;
 							if (iLoop > 50)

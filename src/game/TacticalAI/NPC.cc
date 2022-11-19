@@ -449,16 +449,14 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const record)
 
 static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 {
-	char const* filename;
-	char        buf[255];
+	ST::string filename;
 	if (idx == MINERS_CIV_QUOTE_INDEX)
 	{
 		filename = NPCDATADIR "/miners.npc";
 	}
 	else
 	{
-		sprintf(buf, NPCDATADIR "/%s.npc", gsCivQuoteSector[idx].AsShortString().c_str());
-		filename = buf;
+		filename = ST::format(NPCDATADIR "/{}.npc", gsCivQuoteSector[idx].AsShortString());
 	}
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 	return ExtractNPCQuoteInfoArrayFromFile(f);

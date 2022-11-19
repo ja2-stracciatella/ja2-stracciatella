@@ -81,11 +81,6 @@ SGPVSurface::~SGPVSurface()
 	}
 
 	if (p16BPPPalette) delete[] p16BPPPalette;
-
-#ifdef SGP_VIDEO_DEBUGGING
-	if (name_) delete[] name_;
-	if (code_) delete[] code_;
-#endif
 }
 
 
@@ -234,14 +229,10 @@ SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 static void RecordVSurface(SGPVSurface* const vs, char const* const Filename, UINT32 const LineNum, char const* const SourceFile)
 {
 	//record the filename of the vsurface (some are created via memory though)
-	vs->name_ = new char[strlen(Filename) + 1]{};
-	strcpy(vs->name_, Filename);
+	vs->name_ = Filename;
 
 	//record the code location of the calling creating function.
-	char str[256];
-	sprintf(str, "%s -- line(%d)", SourceFile, LineNum);
-	vs->code_ = new char[strlen(str) + 1]{};
-	strcpy(vs->code_, str);
+	vs->code_ = ST::format("{} -- line({})", SourceFile, LineNum);
 }
 
 #	define RECORD(vs, name) RecordVSurface((vs), (name), __LINE__, __FILE__)
@@ -467,12 +458,12 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	UINT32 uiUniqueID = 0;
 	for (SGPVSurface const* i = gpVSurfaceHead; i; i = i->next_)
 	{
-		char const* const Name = i->name_;
-		char const* const Code = i->code_;
+		char ST::string& Name = i->name_;
+		char ST::string& Code = i->code_;
 		BOOLEAN fFound = FALSE;
 		for (UINT32 i = 0; i < uiUniqueID; i++)
 		{
-			if (strcasecmp(Name, Info[i].Name) == 0 && strcasecmp(Code, Info[i].Code) == 0)
+			if (Name == Info[i].Name && Code == Info[i].Code)
 			{ //same string
 				fFound = TRUE;
 				Info[i].Counter++;
@@ -481,8 +472,8 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 		}
 		if (!fFound)
 		{
-			strcpy(Info[uiUniqueID].Name, Name);
-			strcpy(Info[uiUniqueID].Code, Code);
+			Info[uiUniqueID].Name = Name;
+			Info[uiUniqueID].Code = Code;
 			Info[uiUniqueID].Counter++;
 			uiUniqueID++;
 		}

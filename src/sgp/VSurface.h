@@ -68,8 +68,8 @@ class SGPVSurface
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
 #ifdef SGP_VIDEO_DEBUGGING
-		char*                        name_;
-		char*                        code_;
+		ST::string                   name_;
+		ST::string                   code_;
 #endif
 		SGPVSurface*                 next_;
 

@@ -221,7 +221,6 @@ static void InitFlowerButtons(void)
 {
 	UINT16 i,j, count;
 	UINT16 usPosY;
-	char		sTemp[40];
 
 	if( (FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex) >= 3 )
 		gubCurNumberOfFlowers = 3;
@@ -235,7 +234,7 @@ static void InitFlowerButtons(void)
 	for(i=0; i<gubCurNumberOfFlowers; i++)
 	{
 		// load the handbullet graphic and add it
-		sprintf(sTemp, LAPTOPDIR "/flower_%d.sti", count);
+		ST::string sTemp = ST::format(LAPTOPDIR "/flower_{}.sti", count);
 		guiFlowerImages[i] = AddVideoObjectFromFile(sTemp);
 		count++;
 	}

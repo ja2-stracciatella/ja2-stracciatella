@@ -280,9 +280,8 @@ void Launcher::populateChoices() {
 		gameVersionInput->add(resourceVersionString.get());
 	}
 	for (std::pair<int,int> res : predefinedResolutions) {
-		char resolutionString[255];
-		sprintf(resolutionString, "%dx%d", res.first, res.second);
-		predefinedResolutionMenuButton->insert(-1, resolutionString, 0, setPredefinedResolution, this, 0);
+		ST::string resolutionString = ST::format("{d}x{d}", res.first, res.second);
+		predefinedResolutionMenuButton->insert(-1, resolutionString.c_str(), 0, setPredefinedResolution, this, 0);
 	}
 
 	for (VideoScaleQuality scalingMode : scalingModes) {
