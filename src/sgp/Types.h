@@ -63,8 +63,6 @@ typedef UINT8						BYTE;
 #define FALSE 0
 #endif
 
-#define BAD_INDEX -1
-
 #define PI 3.1415926
 
 struct SGPBox
