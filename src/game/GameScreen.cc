@@ -174,9 +174,6 @@ void EnterTacticalScreen(void)
 	// Set pending screen
 	SetPendingNewScreen( GAME_SCREEN );
 
-	// Set as active...
-	gTacticalStatus.uiFlags |= ACTIVE;
-
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
 	//Disable all faces
@@ -272,9 +269,6 @@ void InternalLeaveTacticalScreen(ScreenID const uiNewScreen)
 	}
 
 	SetPositionSndsInActive( );
-
-	// Turn off active flag
-	gTacticalStatus.uiFlags &= ( ~ACTIVE );
 
 	fFirstTimeInGameScreen = TRUE;
 

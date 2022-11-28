@@ -343,14 +343,6 @@ void UpdateAniTiles( )
 					{
 						pNode->sCurrentFrame = SetFrameByDir(pNode->sStartFrame, pNode);
 					}
-					else if ( pNode->uiFlags & ANITILE_REVERSE_LOOPING )
-					{
-						// Turn off backwards flag
-						pNode->uiFlags &= (~ANITILE_FORWARD );
-
-						// Turn onn forwards flag
-						pNode->uiFlags |= ANITILE_BACKWARD;
-					}
 					else
 					{
 						// Delete from world!
@@ -409,14 +401,6 @@ void UpdateAniTiles( )
 					else if ( pNode->uiFlags & ANITILE_LOOPING )
 					{
 						pNode->sCurrentFrame = SetFrameByDir(pNode->sStartFrame, pNode);
-					}
-					else if ( pNode->uiFlags & ANITILE_REVERSE_LOOPING )
-					{
-						// Turn off backwards flag
-						pNode->uiFlags &= (~ANITILE_BACKWARD );
-
-						// Turn onn forwards flag
-						pNode->uiFlags |= ANITILE_FORWARD;
 					}
 					else
 					{

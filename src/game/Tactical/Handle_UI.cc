@@ -3443,14 +3443,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 		sAPCost += UIPlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, fPlot, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 	}
 
-	if ( gTacticalStatus.uiFlags & SHOW_AP_LEFT )
-	{
-		gsCurrentActionPoints = pSoldier->bActionPoints - sAPCost;
-	}
-	else
-	{
-		gsCurrentActionPoints = sAPCost;
-	}
+	gsCurrentActionPoints = sAPCost;
 
 	return( bReturnCode );
 }

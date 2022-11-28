@@ -33,6 +33,7 @@ struct WORLDITEM
 	//This check is only performed the first time a map is loaded.  Later, it is entirely skipped.
 	UINT8      ubNonExistChance;
 };
+static_assert(sizeof(WORLDITEM) == 52);
 
 
 // items in currently loaded sector

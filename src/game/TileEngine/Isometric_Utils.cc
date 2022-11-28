@@ -204,7 +204,7 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 
 
 	// check if we are out of bounds..
-	if ( sStartPointX_W < 0 || sStartPointX_W >= WORLD_COORD_ROWS || sStartPointY_W < 0 || sStartPointY_W >= WORLD_COORD_COLS )
+	if (sStartPointX_W < 0 || sStartPointX_W >= WORLD_COORD_COLS || sStartPointY_W < 0 || sStartPointY_W >= WORLD_COORD_ROWS)
 	{
 		*psMouseX = 0;
 		*psMouseY = 0;

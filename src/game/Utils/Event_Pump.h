@@ -58,7 +58,6 @@ struct EV_S_WEAPONHIT
 	INT16  sRange;
 	UINT8  ubAttackerID;
 	UINT8  ubSpecial;
-	UINT8  ubLocation;
 };
 
 struct EV_S_NOISE

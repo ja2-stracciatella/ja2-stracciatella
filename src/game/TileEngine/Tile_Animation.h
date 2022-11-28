@@ -15,7 +15,7 @@ enum AnimationFlags
 	ANITILE_EXISTINGTILE                   = 0x00000400,
 	ANITILE_LOOPING                        = 0x00020000,
 	ANITILE_NOZBLITTER                     = 0x00040000,
-	ANITILE_REVERSE_LOOPING                = 0x00080000,
+	// 0x80000 was the unused ANITILE_REVERSE_LOOPING
 	ANITILE_ALWAYS_TRANSLUCENT             = 0x00100000,
 	ANITILE_OPTIMIZEFORSLOWMOVING          = 0x00400000,
 	ANITILE_ANIMATE_Z                      = 0x00800000,
