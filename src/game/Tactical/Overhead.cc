@@ -3108,16 +3108,7 @@ INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN f
 			for (INT8 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
 			{
 				// ATE: Only if we have a levelnode...
-				UINT16 usStructureID;
-				if (pCurrSoldier->pLevelNode != NULL &&
-					pCurrSoldier->pLevelNode->pStructureData != NULL)
-				{
-					usStructureID = pCurrSoldier->pLevelNode->pStructureData->usStructureID;
-				}
-				else
-				{
-					usStructureID = INVALID_STRUCTURE_ID;
-				}
+				UINT16 const usStructureID = GetStructureID(pCurrSoldier);
 
 				if (InternalOkayToAddStructureToWorld(sGridNo, bLevel, &pStructureFileRef->pDBStructureRef[i], usStructureID, !fPeopleToo))
 				{
@@ -3171,11 +3162,7 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 			// use the specified direction for checks
 			const INT8 bLoop = bDirection;
 			// ATE: Only if we have a levelnode...
-			UINT16 usStructureID = INVALID_STRUCTURE_ID;
-			if (pCurrSoldier->pLevelNode != NULL && pCurrSoldier->pLevelNode->pStructureData != NULL)
-			{
-				usStructureID = pCurrSoldier->pLevelNode->pStructureData->usStructureID;
-			}
+			UINT16 const usStructureID = GetStructureID(pCurrSoldier);
 
 			if (InternalOkayToAddStructureToWorld(sGridNo, pCurrSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bLoop)], usStructureID, !fPeopleToo))
 			{

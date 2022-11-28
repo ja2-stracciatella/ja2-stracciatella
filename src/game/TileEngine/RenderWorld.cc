@@ -631,7 +631,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									// Position corpse based on it's float position
 									if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
 									{
-										pCorpse     = ID2CORPSE(a.v.user.uiData);
+										pCorpse     = ROTTING_CORPSE::FromID(a.v.user.uiData);
 										pShadeTable = pCorpse->pShades[pNode->ubShadeLevel];
 
 										// OK, if this is a corpse.... stop if not visible

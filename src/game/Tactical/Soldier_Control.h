@@ -951,6 +951,8 @@ UINT16 GetMoveStateBasedOnStance(const SOLDIERTYPE*, UINT8 ubStanceHeight);
 void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
 void ReCreateSoldierLight(SOLDIERTYPE*);
 
+// Returns the soldier's structure ID if he has a levelnode, INVALID_STRUCTURE_ID otherwise
+UINT16 GetStructureID(SOLDIERTYPE const *);
 
 void    MakeCharacterDialogueEventDoBattleSound(SOLDIERTYPE& s, BattleSound, UINT32 delay);
 BOOLEAN DoMercBattleSound(SOLDIERTYPE*, BattleSound);

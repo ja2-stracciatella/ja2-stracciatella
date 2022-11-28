@@ -3772,13 +3772,12 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 	INT8 bTurningIncrement;
 	INT8 bCurrentDirection;
 	INT8 bLoop;
-	UINT16 usStructureID, usAnimSurface;
 	BOOLEAN fOk = FALSE;
 
 	// start by trying to turn in quickest direction
 	bTurningIncrement = QuickestDirection( bStartDirection, bDesiredDirection );
 
-	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, pSoldier->usUIMovementMode );
+	UINT16 const usAnimSurface = DetermineSoldierAnimationSurface(pSoldier, pSoldier->usUIMovementMode);
 
 	const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, pSoldier->usUIMovementMode);
 	if ( !pStructureFileRef )
@@ -3788,14 +3787,7 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 	}
 
 	// ATE: Only if we have a levelnode...
-	if ( pSoldier->pLevelNode != NULL && pSoldier->pLevelNode->pStructureData != NULL )
-	{
-		usStructureID = pSoldier->pLevelNode->pStructureData->usStructureID;
-	}
-	else
-	{
-		usStructureID = INVALID_STRUCTURE_ID;
-	}
+	UINT16 const usStructureID = GetStructureID(pSoldier);
 
 	bLoop = 0;
 	bCurrentDirection = bStartDirection;
@@ -7629,7 +7621,6 @@ bool CheckForBreathCollapse(SOLDIERTYPE& s)
 
 BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8 bNewStance)
 {
-	UINT16 usOKToAddStructID=0;
 	UINT16 usAnimSurface=0;
 	UINT16 usAnimState;
 
@@ -7677,16 +7668,6 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 		}
 	}
 
-	// Check if we can do this....
-	if ( pSoldier->pLevelNode && pSoldier->pLevelNode->pStructureData != NULL )
-	{
-		usOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
-	}
-	else
-	{
-		usOKToAddStructID = INVALID_STRUCTURE_ID;
-	}
-
 	switch( bNewStance )
 	{
 		case ANIM_STAND:
@@ -7718,6 +7699,9 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 	const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
 	if ( pStructureFileRef != NULL )
 	{
+		// Check if we can do this....
+		UINT16 const usOKToAddStructID = GetStructureID(pSoldier);
+
 		// Can we add structure data for this stance...?
 		if (!OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bDirection)], usOKToAddStructID))
 		{
@@ -7790,6 +7774,17 @@ static ETRLEObject const& GetActualSoldierAnimDims(SOLDIERTYPE const* const s)
 	// vary thusly. However, for the uses of this function, we should be able to
 	// use just the first frame...
 	return vo->SubregionProperties(s->usAniFrame);
+}
+
+
+UINT16 GetStructureID(SOLDIERTYPE const * const pSoldier)
+{
+	if (pSoldier->pLevelNode && pSoldier->pLevelNode->pStructureData)
+	{
+		return pSoldier->pLevelNode->pStructureData->usStructureID;
+	}
+
+	return INVALID_STRUCTURE_ID;
 }
 
 
@@ -8336,15 +8331,12 @@ void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 
 void EVENT_SoldierBeginTakeBlood( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
-	ROTTING_CORPSE *pCorpse;
-
-
 	// See if these is a corpse here....
-	pCorpse = GetCorpseAtGridNo( sGridNo , pSoldier->bLevel );
+	ROTTING_CORPSE const * const pCorpse = GetCorpseAtGridNo(sGridNo , pSoldier->bLevel);
 
 	if ( pCorpse != NULL )
 	{
-		pSoldier->uiPendingActionData4 = CORPSE2ID(pCorpse);
+		pSoldier->uiPendingActionData4 = pCorpse->ID();
 
 		// CHANGE DIRECTION AND GOTO ANIMATION NOW
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );

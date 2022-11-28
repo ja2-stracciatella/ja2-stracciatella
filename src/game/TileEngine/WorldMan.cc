@@ -1152,15 +1152,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 		if (pStructFileRef != NULL)
 		{
 			//Try adding struct to this location, if we can it's good!
-			UINT16 usOKToAddStructID;
-			if (pSoldier->pLevelNode && pSoldier->pLevelNode->pStructureData != NULL)
-			{
-				usOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
-			}
-			else
-			{
-				usOKToAddStructID = INVALID_STRUCTURE_ID;
-			}
+			UINT16 const usOKToAddStructID = GetStructureID(pSoldier);
 
 			if (!OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructFileRef->pDBStructureRef[OneCDirection(bDirection)], usOKToAddStructID))
 			{

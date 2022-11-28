@@ -2941,10 +2941,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			}
 		}
 
-		if (TurnSoldierIntoCorpse(*pSoldier))
-		{
-			*pfMadeCorpse = TRUE;
-		}
+		*pfMadeCorpse = TurnSoldierIntoCorpse(*pSoldier);
 
 		// Remove mad as target, one he has died!
 		RemoveManAsTarget( pSoldier );

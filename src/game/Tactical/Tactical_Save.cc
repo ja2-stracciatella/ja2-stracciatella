@@ -901,8 +901,7 @@ void AddDeadSoldierToUnLoadedSector(const SGPSector& sMap, SOLDIERTYPE* const s,
 	DropKeysInKeyRing(*s, grid_no, s->bLevel, VISIBLE, false, 0, true);
 
 	// Convert the soldier into a rotting corpse
-	ROTTING_CORPSE_DEFINITION c;
-	c = ROTTING_CORPSE_DEFINITION{};
+	ROTTING_CORPSE_DEFINITION c{};
 	c.ubBodyType        = s->ubBodyType;
 	c.sGridNo           = grid_no;
 	c.sHeightAdjustment = s->sHeightAdjustment;

@@ -283,24 +283,8 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
 				{
 					BOOLEAN fDirectionFound = FALSE;
-					UINT16  usOKToAddStructID;
+					UINT16 const usOKToAddStructID = GetStructureID(pSoldier);
 					UINT16  usAnimSurface;
-
-					if ( pSoldier->pLevelNode != NULL )
-					{
-						if ( pSoldier->pLevelNode->pStructureData != NULL )
-						{
-							usOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
-						}
-						else
-						{
-							usOKToAddStructID = INVALID_STRUCTURE_ID;
-						}
-					}
-					else
-					{
-						usOKToAddStructID = INVALID_STRUCTURE_ID;
-					}
 
 					// Get animation surface...
 					usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
@@ -437,24 +421,8 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
 				{
 					BOOLEAN fDirectionFound = FALSE;
-					UINT16  usOKToAddStructID;
+					UINT16 const usOKToAddStructID = GetStructureID(pSoldier);
 					UINT16  usAnimSurface;
-
-					if ( pSoldier->pLevelNode != NULL )
-					{
-						if ( pSoldier->pLevelNode->pStructureData != NULL )
-						{
-							usOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
-						}
-						else
-						{
-							usOKToAddStructID = INVALID_STRUCTURE_ID;
-						}
-					}
-					else
-					{
-						usOKToAddStructID = INVALID_STRUCTURE_ID;
-					}
 
 					// Get animation surface...
 					usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
@@ -592,19 +560,11 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
 				{
 					BOOLEAN fDirectionFound = FALSE;
-					UINT16  usOKToAddStructID;
 					UINT16  usAnimSurface;
 
 					if ( fClosestToMerc != 3 )
 					{
-						if ( pSoldier->pLevelNode != NULL && pSoldier->pLevelNode->pStructureData != NULL )
-						{
-							usOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
-						}
-						else
-						{
-							usOKToAddStructID = INVALID_STRUCTURE_ID;
-						}
+						UINT16 const usOKToAddStructID = GetStructureID(pSoldier);
 
 						// Get animation surface...
 						usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
