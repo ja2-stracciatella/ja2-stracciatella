@@ -95,7 +95,7 @@ LightTemplate* LightCreateOmni(UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y
 BOOLEAN LightDraw(const LIGHT_SPRITE* l);
 // Save a light list into a file
-void LightSave(LightTemplate const*, char const* filename);
+void LightSave(LightTemplate const*, const ST::string& filename);
 
 // Sets the light color
 void LightSetColor(const SGPPaletteEntry* pPal);
@@ -108,7 +108,7 @@ const SGPPaletteEntry* LightGetColor(void);
 /* Creates an instance of a light. The template is loaded if it isn't already.
 	* If this function fails (out of sprites, or bad template name) it returns
 	* NULL. */
-LIGHT_SPRITE* LightSpriteCreate(const char* const pName);
+LIGHT_SPRITE* LightSpriteCreate(const ST::string& pName);
 // Removes an instance of a light. If it was on, it is erased from the scene.
 BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* l);
 // Sets the X,Y position (IN TILES) of a light instance.

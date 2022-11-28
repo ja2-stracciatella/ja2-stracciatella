@@ -10,7 +10,7 @@
 
 #include "Logger.h"
 
-static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
+static void AudioGapListInit(const ST::string& zSoundFile, AudioGapList* pGapList)
 {
 	// This procedure will load in the appropriate .gap file, corresponding to
 	// the .wav file in szSoundEffects indexed by uiSampleNum.  The procedure
@@ -123,11 +123,11 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 }
 
 
-UINT32 PlayJA2GapSample(const char* zSoundFile, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData)
+UINT32 PlayJA2GapSample(const ST::string& zSoundFile, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData)
 {
 	// Setup Gap Detection, if it is not null
 	if (pData != NULL) AudioGapListInit(zSoundFile, pData);
 
 	const UINT32 vol = CalculateSpeechVolume(ubVolume);
-	return SoundPlay(zSoundFile, vol, uiPan, ubLoops, NULL, NULL);
+	return SoundPlay(zSoundFile.c_str(), vol, uiPan, ubLoops, NULL, NULL);
 }

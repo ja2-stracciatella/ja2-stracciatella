@@ -111,31 +111,30 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	FACETYPE& f = GetFreeFace();
 
-	const char* face_file;
+	ST::string face_file;
 	// Check if we are a big-face....
 	if (uiInitFlags & FACE_BIGFACE)
 	{
-		face_file = FACESDIR "/b%02d.sti";
+		face_file = FACESDIR "/b{02d}.sti";
 		// ATE: Check for profile - if elliot, use special face :)
 		if (id == ELLIOT && p.bNPCData > 3)
 		{
-			if      (p.bNPCData <   7) face_file = FACESDIR "/b%02da.sti";
-			else if (p.bNPCData <  10) face_file = FACESDIR "/b%02db.sti";
-			else if (p.bNPCData <  13) face_file = FACESDIR "/b%02dc.sti";
-			else if (p.bNPCData <  16) face_file = FACESDIR "/b%02dd.sti";
-			else if (p.bNPCData == 17) face_file = FACESDIR "/b%02de.sti";
+			if      (p.bNPCData <   7) face_file = FACESDIR "/b{02d}a.sti";
+			else if (p.bNPCData <  10) face_file = FACESDIR "/b{02d}b.sti";
+			else if (p.bNPCData <  13) face_file = FACESDIR "/b{02d}c.sti";
+			else if (p.bNPCData <  16) face_file = FACESDIR "/b{02d}d.sti";
+			else if (p.bNPCData == 17) face_file = FACESDIR "/b{02d}e.sti";
 		}
 	}
 	else
 	{
-		face_file = FACESDIR "/%02d.sti";
+		face_file = FACESDIR "/{02d}.sti";
 	}
 
 	// HERVE, PETER, ALBERTO and CARLO all use HERVE's portrait
 	INT32 const face_id = HERVE <= id && id <= CARLO ? HERVE : p.ubFaceIndex;
 
-	SGPFILENAME ImageFile;
-	sprintf(ImageFile, face_file, face_id);
+	ST::string ImageFile = ST::format(face_file.c_str(), face_id);
 	SGPVObject* const vo = AddVideoObjectFromFile(ImageFile);
 
 	f = FACETYPE{};
@@ -1206,7 +1205,7 @@ static void FaceRestoreSavedBackgroundRect(FACETYPE const& f, INT16 const sDestL
 }
 
 
-void SetFaceTalking(FACETYPE& f, const char* zSoundFile, const ST::string& zTextString)
+void SetFaceTalking(FACETYPE& f, const ST::string& zSoundFile, const ST::string& zTextString)
 {
 	// Set face to talking
 	f.fTalking          = TRUE;

@@ -6,8 +6,7 @@
 
 static SGPVObject* LoadPortrait(MERCPROFILESTRUCT const& p, char const* const subdir)
 {
-	SGPFILENAME filename;
-	snprintf(filename, lengthof(filename), FACESDIR "/%s%02d.sti", subdir, p.ubFaceIndex);
+	ST::string filename = ST::format(FACESDIR "/{}{02d}.sti", subdir, p.ubFaceIndex);
 	return AddVideoObjectFromFile(filename);
 }
 

@@ -67,7 +67,6 @@ LoadSavedGameWarningMessageBoxCallBack(): users
 LoadSummary(): filename yuck
 MAPInvClickCamoCallback(): empty
 MAPInvMoveCamoCallback(): empty
-MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
 MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
 MaxDistanceVisible(): inline
 MercDepartEquipmentBoxCallBack(): users
@@ -95,11 +94,9 @@ RenderFaceOverlay(): users
 RenderShopKeeperInterface(): MARK_DIRTY necessary?
 RenderTiles(): SetFontDestBuffer() + mprintf_buffer() strange
 SAIMOVECODE: use enum
-SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
 SF_HAS_ENTERED_TACTICAL: never tested
 SHOW_AP_LEFT: never set
 SLOW_ANIMATION: never set or cleared
-SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
 SOLDIER_QUOTE_SAID_DROWNING: never set
 STRUCTURE_MULTI: never set?
 STRUCTURE_TREE: never set
@@ -148,11 +145,9 @@ gfDrawPathPoints: always FALSE, debug
 gfItemDescHelpTextOffset: once TRUE never gets FALSE again
 gfProgBarActive: once TRUE it never changes anymore
 gszCivGroupNames[]: move declaration
-gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
-gzFilename: wchar_t[] -> char[]?
 pMapErrorString[24]: probably never shown (function is only called when militia is in sector, which means it is a SAM site or town)
 pMapErrorString[4], pMapErrorString[17]: unused
 pMapInventoryErrorString[0]: probably unused

@@ -2445,8 +2445,7 @@ static ScreenID WaitForSelectionWindowResponse(void)
 BOOLEAN PlaceLight(INT16 const radius, GridNo const pos)
 try
 {
-	STRING512 filename;
-	sprintf(filename, "L-R%02d.LHT", radius);
+	ST::string filename = ST::format("L-R{02d}.LHT", radius);
 
 	// Attempt to create light
 	LIGHT_SPRITE* l = LightSpriteCreate(filename);

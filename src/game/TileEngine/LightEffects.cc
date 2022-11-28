@@ -55,10 +55,8 @@ static LIGHTEFFECT* GetFreeLightEffect(void)
 
 static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 {
-	CHAR8 LightName[20];
 	// Build light....
-
-	sprintf( LightName, "Light%d", pLight->bRadius );
+	ST::string LightName = ST::format("Light{}", pLight->bRadius);
 
 	// Delete old one if one exists...
 	if (pLight->light != NULL)

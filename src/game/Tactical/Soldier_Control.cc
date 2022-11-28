@@ -704,7 +704,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 	if (pSoldier->light == NULL)
 	{
 		// ATE: Check for goggles in headpos....
-		char const* light_file = IsWearingHeadGear(*pSoldier, UVGOGGLES)    ? "Light4" :
+		ST::string light_file = IsWearingHeadGear(*pSoldier, UVGOGGLES) ? "Light4" :
 						IsWearingHeadGear(*pSoldier, NIGHTGOGGLES) ? "Light3" :
 						"Light2";
 
@@ -6016,10 +6016,10 @@ no_sub:
 		battle_snd    = &gBattleSndsData[battle_snd_id];
 	}
 
-	char basename[16];
+	ST::string basename;
 	if (s->ubProfile != NO_PROFILE)
 	{
-		sprintf(basename, "%03d", s->ubProfile);
+		basename = ST::format("{03d}", s->ubProfile);
 	}
 	else
 	{
@@ -6028,18 +6028,16 @@ no_sub:
 
 		char const* const prefix = s->ubBodyType == HATKIDCIV ||
 						s->ubBodyType == KIDCIV ? "kid" : "bad";
-		sprintf(basename, "%s%d", prefix, s->ubBattleSoundID);
+		basename = ST::format("{}{d}", prefix, s->ubBattleSoundID);
 	}
 
-	SGPFILENAME filename;
-	sprintf(filename, BATTLESNDSDIR "/%s_%s.wav", basename, battle_snd->zName);
-
+	ST::string filename = ST::format(BATTLESNDSDIR "/{}_{}.wav", basename, battle_snd->zName);
 	if (!GCM->doesGameResExists(filename))
 	{
 		if (battle_snd_id == BATTLE_SOUND_DIE1)
 		{
 			// The "die" sound filenames differs between profiles and languages
-			sprintf(filename, BATTLESNDSDIR "/%s_dying.wav", basename);
+			filename = ST::format(BATTLESNDSDIR "/{}_dying.wav", basename);
 			if (GCM->doesGameResExists(filename)) goto file_exists;
 		}
 
@@ -6047,7 +6045,7 @@ no_sub:
 
 		// Generic replacement voices
 		char const prefix = s->ubBodyType == REGFEMALE ? 'f' : 'm';
-		sprintf(filename, BATTLESNDSDIR "/%c_%s.wav", prefix, battle_snd->zName);
+		filename = ST::format(BATTLESNDSDIR "/{c}_{}.wav", prefix, battle_snd->zName);
 	}
 file_exists:;
 
@@ -6063,7 +6061,7 @@ file_exists:;
 	}
 
 	UINT32 const pan       = SoundDir(s->sGridNo);
-	UINT32 const uiSoundID = SoundPlay(filename, volume, pan, 1, NULL, NULL);
+	UINT32 const uiSoundID = SoundPlay(filename.c_str(), volume, pan, 1, NULL, NULL);
 	if (uiSoundID == SOUND_ERROR) return FALSE;
 	s->uiBattleSoundID = uiSoundID;
 

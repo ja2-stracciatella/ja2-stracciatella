@@ -1509,7 +1509,7 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 		else
 			szCoord = szCoord.left(2);
 		gusNumEntriesWithOutdatedOrNoSummaryInfo++;
-		EvaluateWorld( szCoord.c_str(), (UINT8)giCurrLevel );
+		EvaluateWorld(szCoord, (UINT8)giCurrLevel);
 
 		RemoveProgressBar( 0 );
 	}
@@ -2003,14 +2003,10 @@ static void CalculateOverrideStatus(void)
 
 static BOOLEAN LoadSummary(const SGPSector& sMap, const UINT8 level, const char* const suffix)
 {
-	char summary_filename[40];
-	sprintf(summary_filename, DEVINFO_DIR "/%s%s.sum", sMap.AsShortString().c_str(), suffix);
-
+	ST::string summary_filename = ST::format(DEVINFO_DIR "/{}{}.sum", sMap.AsShortString(), suffix);
 	FLOAT dMajorMapVersion;
 	{
-		char filename[40];
-		sprintf(filename, "%s%s.dat", sMap.AsShortString().c_str(), suffix);
-
+		ST::string filename = ST::format("{}{}.dat", sMap.AsShortString(), suffix);
 		AutoSGPFile f_map;
 		try
 		{
@@ -2162,13 +2158,12 @@ static void UpdateMasterProgress(void)
 }
 
 
-static void ReportError(const char* pSector, UINT8 ubLevel)
+static void ReportError(const ST::string& pSector, UINT8 ubLevel)
 {
 	static INT32 yp = 180;
-	ST::string str;
 
 	//Make sure the file exists... if not, then return false
-	str = ST::format("{}", pSector);
+	ST::string str = pSector;
 	if( ubLevel % 4  )
 	{
 		str += ST::format("_b{}.dat", ubLevel % 4);
@@ -2199,8 +2194,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 	for (sMap.y = 1; sMap.y <= 16; sMap.y++) for(sMap.x = 1; sMap.x <= 16; sMap.x++)
 	{
 		INT32 x = sMap.x - 1, y = sMap.y - 1;
-		char str[40];
-		sprintf(str, "%s", sMap.AsShortString().c_str());
+		const ST::string str = sMap.AsShortString();
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
@@ -2279,7 +2273,7 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, UINT32 reason)
 			gpCurrentSectorSummary = NULL;
 		}
 
-		EvaluateWorld(gsSelSector.AsShortString().c_str(), (UINT8) giCurrLevel);
+		EvaluateWorld(gsSelSector.AsShortString(), (UINT8) giCurrLevel);
 
 		gpSectorSummary[gsSelSector.x][gsSelSector.y][ giCurrLevel ] = gpCurrentSectorSummary;
 
@@ -2335,8 +2329,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 	for (sMap.y = 1; sMap.y <= 16; sMap.y++) for(sMap.x = 1; sMap.x <= 16; sMap.x++)
 	{
 		INT32 x = sMap.x - 1, y = sMap.y - 1;
-		char name[50];
-		sprintf(name, "%s", sMap.AsShortString().c_str());
+		const ST::string name = sMap.AsShortString();
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];

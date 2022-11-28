@@ -712,7 +712,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 
 
 static void CreateTalkingUI(DialogueHandler bUIHandlerID, FACETYPE& f, UINT8 ubCharacterNum, const ST::string& zQuoteStr);
-static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::string& zDialogueText, CHAR8* zSoundString, bool useAlternateDialogueFile);
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::string& zDialogueText, ST::string& zSoundString, bool useAlternateDialogueFile);
 
 
 // execute specific character dialogue
@@ -720,8 +720,6 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 {
 	gpCurrentTalkingFace = face;
 	gubCurrentTalkingID  = ubCharacterNum;
-
-	CHAR8 zSoundString[164];
 
 	// Check if we are dead now or not....( if from a soldier... )
 
@@ -813,6 +811,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	CHECKF(face != NULL);
 
 	ST::string gzQuoteStr;
+	ST::string zSoundString;
 	if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr,
 		zSoundString, useAlternateDialogueFile))
 	{
@@ -885,7 +884,7 @@ static void CreateTalkingUI(DialogueHandler bUIHandlerID, FACETYPE& f, UINT8 ubC
 	}
 }
 
-static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::string& zDialogueText, CHAR8* zSoundString, bool useAlternateDialogueFile)
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::string& zDialogueText, ST::string& zSoundString, bool useAlternateDialogueFile)
 {
 	// first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
 	//if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
@@ -920,7 +919,7 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 		ProfileCurrentlyTalkingInDialoguePanel(profile.getID()),
 		isRussianVersion() || isRussianGoldVersion());
 
-	strcpy(zSoundString, zFilename.c_str());
+	zSoundString = zFilename;
 	return(TRUE);
 }
 

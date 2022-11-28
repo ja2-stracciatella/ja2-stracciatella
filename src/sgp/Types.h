@@ -54,11 +54,6 @@ typedef char            CHAR8;
 typedef unsigned char		BOOLEAN;
 typedef void *					PTR;
 typedef UINT8						BYTE;
-typedef CHAR8						STRING512[512];
-
-#define SGPFILENAME_LEN 100
-typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
-
 
 #ifndef TRUE
 #define TRUE 1
@@ -67,8 +62,6 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 #ifndef FALSE
 #define FALSE 0
 #endif
-
-#define BAD_INDEX -1
 
 #define PI 3.1415926
 

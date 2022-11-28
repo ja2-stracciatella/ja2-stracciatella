@@ -4,7 +4,6 @@ Misan:
 GTr:
 - (#41) replace all CASSERT with unit tests
 - check VS warnings C4390: ';' : empty controlled statement found; is this the intent?
-- replace all SGPFILENAME with std::string
 - replace PODObj.h with one of the standard boost classes
 
 HACK0010

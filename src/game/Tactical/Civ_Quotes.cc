@@ -125,23 +125,23 @@ static UINT16 gusCivQuoteBoxHeight;
 static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, ST::string& zQuote)
 try
 {
-	char zFileName[164];
+	ST::string zFileName;
 
 	// Build filename....
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )
 	{
 		if (gWorldSector.z > 0)
 		{
-			sprintf(zFileName, NPCDATADIR "/civ%02d.edt", CIV_QUOTE_MINERS_NOT_FOR_PLAYER);
+			zFileName = ST::format(NPCDATADIR "/civ{02d}.edt", CIV_QUOTE_MINERS_NOT_FOR_PLAYER);
 		}
 		else
 		{
-			sprintf(zFileName, NPCDATADIR "/%c%d.edt", 'a' + (gWorldSector.y - 1) , gWorldSector.x);
+			zFileName = ST::format(NPCDATADIR "/{}.edt", gWorldSector.AsShortString());
 		}
 	}
 	else
 	{
-		sprintf(zFileName, NPCDATADIR "/civ%02d.edt", ubCivQuoteID);
+		zFileName = ST::format(NPCDATADIR "/civ{02d}.edt", ubCivQuoteID);
 	}
 
 	zQuote = GCM->loadEncryptedString(zFileName, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);

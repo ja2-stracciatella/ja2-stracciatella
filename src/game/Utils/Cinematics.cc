@@ -172,9 +172,8 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 		}
 		else
 		{
-			char name[128];
-			snprintf(name, sizeof(name), "%u@%s", i, filename);
-			sf->sounds[i] = SoundPlayFromSmackBuff(name, audio_channels[i], audio_depth[i], audio_rate[i], audio[i], MAXVOLUME, 64, 1, nullptr, nullptr);
+			ST::string name = ST::format("{}@{}", i, filename);
+			sf->sounds[i] = SoundPlayFromSmackBuff(name.c_str(), audio_channels[i], audio_depth[i], audio_rate[i], audio[i], MAXVOLUME, 64, 1, nullptr, nullptr);
 		}
 	}
 

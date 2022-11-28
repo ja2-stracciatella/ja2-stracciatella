@@ -84,10 +84,6 @@ class SGPVObject
 		UINT8                        bit_depth_;                     // BPP
 
 	public:
-#ifdef SGP_VIDEO_DEBUGGING
-		char*                        name_;
-		char*                        code_;
-#endif
 		SGPVObject*                  next_;
 };
 ENUM_BITSET(SGPVObject::Flags)
@@ -100,20 +96,8 @@ void InitializeVideoObjectManager(void);
 void ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
-#ifdef SGP_VIDEO_DEBUGGING
-extern UINT32 guiVObjectSize;
-
-	void PerformVideoInfoDumpIntoFile(const ST::string& filename, BOOLEAN fAppend);
-	SGPVObject* AddAndRecordVObjectFromHImage(SGPImage*, UINT32 uiLineNum, const ST::string& pSourceFile);
-	SGPVObject* AddAndRecordVObjectFromFile(const ST::string& ImageFile, UINT32 uiLineNum, const ST::string& pSourceFile);
-	#define AddVideoObjectFromHImage(a) AddAndRecordVObjectFromHImage(a, __LINE__, __FILE__)
-	#define AddVideoObjectFromFile(a)   AddAndRecordVObjectFromFile(  a, __LINE__, __FILE__)
-#else
-	SGPVObject* AddStandardVideoObjectFromHImage(SGPImage*);
-	SGPVObject* AddStandardVideoObjectFromFile(const ST::string& ImageFile);
-	#define AddVideoObjectFromHImage(a) AddStandardVideoObjectFromHImage(a)
-	#define AddVideoObjectFromFile(a)   AddStandardVideoObjectFromFile(a)
-#endif
+SGPVObject* AddVideoObjectFromHImage(SGPImage*);
+SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile);
 
 // Removes a video object
 static inline void DeleteVideoObject(SGPVObject* const vo)

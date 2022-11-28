@@ -4,34 +4,16 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <cwchar>
 #include <stdexcept>
 #include <stdio.h>
 #include <string.h>
 #include <utility>
 
-#include "PlatformStrings.h"
-
-
-#if defined(__linux__) || defined(_WIN32)
-
-size_t strlcpy(char* dst, const char* src, size_t size);
-
-#endif
-
-
-#ifdef _WIN32
-#ifndef __MINGW32__
-
-#include <stdarg.h>
-
-
-int WINsnprintf(char* s, size_t n, const char* fmt, ...);
-
-#define snprintf  WINsnprintf
-
-#endif
-#endif
+// poison deprecated functions
+[[deprecated("Don't use strlcpy, but regular ST::string assignment.")]]
+	size_t strlcpy(char *dst, const char *src, size_t size);
+[[deprecated("Don't use snprintf, use ST::format instead.")]]
+	int snprintf(char* const s, size_t const n, const char* const fmt, ...);
 
 /// Converts `std::printf` formatting to `ST::format` formatting.
 /// @see https://en.cppreference.com/w/cpp/io/c/fprintf

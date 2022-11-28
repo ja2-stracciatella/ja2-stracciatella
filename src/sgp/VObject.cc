@@ -35,10 +35,6 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	palette16_(),
 	current_shade_(),
 	ppZStripInfo(),
-#ifdef SGP_VIDEO_DEBUGGING
-	name_(),
-	code_(),
-#endif
 	next_(gpVObjectHead)
 {
 	std::fill(std::begin(pShades), std::end(pShades), nullptr);
@@ -71,9 +67,6 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	}
 
 	gpVObjectHead = this;
-#ifdef SGP_VIDEO_DEBUGGING
-	++guiVObjectSize;
-#endif
 }
 
 
@@ -83,9 +76,6 @@ SGPVObject::~SGPVObject()
 	{
 		if (*anchor != this) continue;
 		*anchor = next_;
-#ifdef SGP_VIDEO_DEBUGGING
-		--guiVObjectSize;
-#endif
 		break;
 	}
 
@@ -106,11 +96,6 @@ SGPVObject::~SGPVObject()
 		}
 		delete[] ppZStripInfo;
 	}
-
-#ifdef SGP_VIDEO_DEBUGGING
-	if (name_) delete[] name_;
-	if (code_) delete[] code_;
-#endif
 }
 
 
@@ -256,23 +241,15 @@ void ShutdownVideoObjectManager(void)
 	}
 }
 
-
-#ifdef SGP_VIDEO_DEBUGGING
-static
-#endif
-SGPVObject* AddStandardVideoObjectFromHImage(SGPImage* const img)
+SGPVObject* AddVideoObjectFromHImage(SGPImage* const img)
 {
 	return new SGPVObject(img);
 }
 
-
-#ifdef SGP_VIDEO_DEBUGGING
-static
-#endif
-SGPVObject* AddStandardVideoObjectFromFile(const ST::string& ImageFile)
+SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
 {
 	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-	return AddStandardVideoObjectFromHImage(hImage.get());
+	return AddVideoObjectFromHImage(hImage.get());
 }
 
 
@@ -335,113 +312,3 @@ void BltVideoObjectOnce(SGPVSurface* const dst, char const* const filename, UINT
 	AutoSGPVObject vo(AddVideoObjectFromFile(filename));
 	BltVideoObject(dst, vo.get(), region, x, y);
 }
-
-
-#ifdef SGP_VIDEO_DEBUGGING
-
-UINT32 guiVObjectSize = 0;
-
-
-struct DUMPINFO
-{
-	UINT32 Counter;
-	char Name[256];
-	char Code[256];
-};
-
-
-static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
-{
-	if (guiVObjectSize == 0) return;
-
-	SGPFile *f;
-	if (fAppend) {
-		f = FileMan::openForAppend(filename);
-	} else {
-		f = FileMan::openForReading(filename);
-	}
-	AutoSGPFile file{f};
-
-	//Allocate enough strings and counters for each node.
-	DUMPINFO* const Info = new DUMPINFO[guiVObjectSize]{};
-
-	//Loop through the list and record every unique filename and count them
-	UINT32 uiUniqueID = 0;
-	for (SGPVObject const* i = gpVObjectHead; i; i = i->next_)
-	{
-		char const* const Name = i->name_;
-		char const* const Code = i->code_;
-		BOOLEAN fFound = FALSE;
-		for (UINT32 i = 0; i < uiUniqueID; i++)
-		{
-			if (strcasecmp(Name, Info[i].Name) == 0 && strcasecmp(Code, Info[i].Code) == 0)
-			{ //same string
-				fFound = TRUE;
-				Info[i].Counter++;
-				break;
-			}
-		}
-		if (!fFound)
-		{
-			strcpy(Info[uiUniqueID].Name, Name);
-			strcpy(Info[uiUniqueID].Code, Code);
-			Info[uiUniqueID].Counter++;
-			uiUniqueID++;
-		}
-	}
-
-	//Now dump the info.
-	ST::string buf;
-	buf += "-----------------------------------------------\n";
-	buf += ST::format(ST::substitute_invalid, "{} unique vObject names exist in {} VObjects\n", uiUniqueID, guiVObjectSize);
-	buf += "-----------------------------------------------\n\n";
-	for (UINT32 i = 0; i < uiUniqueID; i++)
-	{
-		buf += ST::format(ST::substitute_invalid, "{} occurrences of {}\n{}\n\n", Info[i].Counter, Info[i].Name, Info[i].Code);
-	}
-	buf += "\n-----------------------------------------------\n\n";
-
-	//Free all memory associated with this operation.
-	delete[] Info;
-	file->write(reinterpret_cast<const uint8_t*>(buf.c_str()), buf.size())
-}
-
-
-//Debug wrapper for adding vObjects
-static void RecordVObject(SGPVObject* const vo, const char* Filename, UINT32 uiLineNum, const char* pSourceFile)
-{
-	//record the filename of the vObject (some are created via memory though)
-	vo->name_ = new char[strlen(Filename) + 1]{};
-	strcpy(vo->name_, Filename);
-
-	//record the code location of the calling creating function.
-	char str[256];
-	sprintf(str, "%s -- line(%d)", pSourceFile, uiLineNum);
-	vo->code_ = new char[strlen(str) + 1]{};
-	strcpy(vo->code_, str);
-}
-
-
-SGPVObject* AddAndRecordVObjectFromHImage(SGPImage* const img, UINT32 uiLineNum, const char* pSourceFile)
-{
-	SGPVObject* const vo = AddStandardVideoObjectFromHImage(img);
-	RecordVObject(vo, "<IMAGE>", uiLineNum, pSourceFile);
-	return vo;
-}
-
-
-SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile)
-{
-	SGPVObject* const vo = AddStandardVideoObjectFromFile(ImageFile);
-	RecordVObject(vo, ImageFile, uiLineNum, pSourceFile);
-	return vo;
-}
-
-
-void PerformVideoInfoDumpIntoFile(const char* filename, BOOLEAN fAppend)
-{
-	DumpVObjectInfoIntoFile(filename, fAppend);
-	DumpVSurfaceInfoIntoFile(filename, TRUE);
-}
-
-#endif

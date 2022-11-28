@@ -261,8 +261,7 @@ void EnterFloristOrderForm()
 	guiFlowerOrderCheckBoxButtonImage = AddVideoObjectFromFile(LAPTOPDIR "/ordercheckbox.sti");
 
 	// load the currently selected flower bouquet
-	char sTemp[40];
-	sprintf(sTemp, LAPTOPDIR "/flower_%d.sti", guiCurrentlySelectedFlower);
+	ST::string sTemp = ST::format(LAPTOPDIR "/flower_{}.sti", guiCurrentlySelectedFlower);
 	guiCurrentlySelectedFlowerImage = AddVideoObjectFromFile(sTemp);
 
 	guiDropDownBorder = AddVideoObjectFromFile(INTERFACEDIR "/tactpopup.sti");
