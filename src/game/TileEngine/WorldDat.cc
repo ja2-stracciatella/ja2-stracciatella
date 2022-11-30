@@ -68,9 +68,11 @@ try
 			// Read file name
 			ts.zTileSurfaceFilenames[cnt2] = f->readString(TILE_SURFACE_FILENAME_LENGTH);
 		}
+
+		ts.MovementCostFnc = SetTilesetOneTerrainValues;
 	}
 
-	// Set callbacks
+	// Set non-default callbacks
 	gTilesets[CAVES_1      ].MovementCostFnc = SetTilesetTwoTerrainValues;
 	gTilesets[AIRSTRIP     ].MovementCostFnc = SetTilesetThreeTerrainValues;
 	gTilesets[DEAD_AIRSTRIP].MovementCostFnc = SetTilesetThreeTerrainValues;

@@ -22,7 +22,6 @@ DoneFadeInWarp(): empty
 DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
-DropSmell(): ubOldSmell == ubSmell case has no effect
 EVENT_SoldierGotHit(): arguments for parameter ubHitLocation inconsistent
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
@@ -96,12 +95,10 @@ SetClockResolutionPerSecond(): complicated
 SetExclusive24HourTimeValue(): complicated, use swprintf()
 SetInputFieldStringWithNumericStrictValue(): complicated
 SetSelection(): callers
-SetTilesetOneTerrainValues(): set callback to avoid explicit test
 SoldierCanSeeCatchComing(): empty
 SoldierCarriesTwoHandedWeapon(): complicated
 StrategicMap[]: definition not used in file
 StrategicPythSpacesAway(): avoid sqrt()
-TacticalScreenMsg(): no need for format string
 TrashMapTile(), MapOptimize(): investigate if useful
 TurnBasedHandleNPCAI(): lots of commented out stuff
 TurnSoldierIntoCorpse(): one caller
@@ -111,7 +108,6 @@ VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
 ValidateSkillsList(), RemoveSkillFromSkillsList(): complicated
 WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 WillShopKeeperRejectObjectsFromPlayer(): complicated
-WriteSectorSummaryUpdate(): puiFilename yuck
 bBuddy[5], bHated[5]: indices 3 and 4 unused
 fButtonsPresent: once TRUE it never changes anymore
 fPotentialForDebug: ?
@@ -128,19 +124,15 @@ gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfItemDescHelpTextOffset: once TRUE never gets FALSE again
 gszCivGroupNames[]: move declaration
-gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
 pMapErrorString[24]: probably never shown (function is only called when militia is in sector, which means it is a SAM site or town)
 pMapErrorString[4], pMapErrorString[17]: unused
 pMapInventoryErrorString[0]: probably unused
-pSoldier = pSoldier: strange
 pSoldier->pShades[16 ... 31]: unused?
 struct ETRLEData: reorder attributes
-swprintf([^,]*,[^,]*,[^,"]*[,)]: non-fixed format string
 ubMineType: unused?
 ubTravelRating: write-only
-wcscat(): check for overkill
 {Head,Pants,Skin,Vest}Pal: buffer necessary? pointer instead?
 {Lock,Unlock}{Back,Frame,Mouse}Buffer(): SDL_LockSurface()?
 
