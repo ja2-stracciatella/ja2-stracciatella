@@ -7,13 +7,12 @@
 #define SHOW_MIN_FPS	0
 #define SHOW_FULL_FPS	1
 
-extern ST::string gubErrorText;
-extern BOOLEAN gfEditMode;
-extern BOOLEAN fFirstTimeInGameScreen;
-extern INT8    gbFPSDisplay;
-extern BOOLEAN gfGlobalError;
+inline BOOLEAN gfEditMode;
+inline BOOLEAN fFirstTimeInGameScreen;
+inline INT8    gbFPSDisplay;
+inline BOOLEAN gfGlobalError;
 
-extern UINT32  guiGameCycleCounter;
+inline UINT32  guiGameCycleCounter;
 
 void SET_ERROR(const ST::string& msg);
 

@@ -104,6 +104,19 @@ void DisplayFrameRate( )
 	}
 }
 
+
+static ST::string gubErrorText;
+
+void SET_ERROR(const ST::string& msg)
+{
+	gubErrorText = msg;
+
+	SetPendingNewScreen( ERROR_SCREEN );
+
+	gfGlobalError = TRUE;
+}
+
+
 ScreenID ErrorScreenHandle(void)
 {
 	InputAtom  InputEvent;
@@ -518,4 +531,3 @@ ScreenID SexScreenHandle(void)
 
 	return( SEX_SCREEN );
 }
-
