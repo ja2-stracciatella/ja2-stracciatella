@@ -2377,13 +2377,14 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			UINT16 const mod = InputEvent.usKeyState;
 			UINT32 const key = InputEvent.usParam;
 
+			std::string_view const cheatCode{getCheatCode()};
 			if (mod == CTRL_DOWN)
 			{
-				if (gubCheatLevel < strlen(getCheatCode()))
+				if (gubCheatLevel < cheatCode.size())
 				{
-					if (key == static_cast<UINT32>(getCheatCode()[gubCheatLevel]))
+					if (key == static_cast<UINT32>(cheatCode[gubCheatLevel]))
 					{
-						if (++gubCheatLevel == strlen(getCheatCode()))
+						if (++gubCheatLevel == cheatCode.size())
 						{
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CHEAT_LEVEL_TWO]);
 							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
@@ -2391,14 +2392,14 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 						continue;
 					}
 				}
-				else if (gubCheatLevel == strlen(getCheatCode()) && key == 'b')
+				else if (gubCheatLevel == cheatCode.size() && key == 'b')
 				{
 					++gubCheatLevel;
 					continue;
 				}
 			}
 
-			if (gubCheatLevel < strlen(getCheatCode())) RESET_CHEAT_LEVEL();
+			if (gubCheatLevel < cheatCode.size()) RESET_CHEAT_LEVEL();
 
 			switch (mod)
 			{

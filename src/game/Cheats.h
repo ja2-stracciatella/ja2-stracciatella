@@ -3,11 +3,9 @@
 
 #include "Types.h"
 #include "GameMode.h"
+#include <string_view>
 
-extern UINT8 gubCheatLevel;
-
-/** Get cheat code. */
-extern const char * getCheatCode();
+inline UINT8 gubCheatLevel;
 
 bool isGermanVersion();
 
@@ -15,5 +13,11 @@ bool isGermanVersion();
 #define CHEATER_CHEAT_LEVEL( )		( gubCheatLevel >= (isGermanVersion() ? 6 : 5) )
 #define DEBUG_CHEAT_LEVEL( )		( gubCheatLevel >= (isGermanVersion() ? 7 : 6) || GameMode::getInstance()->debugging())
 #define RESET_CHEAT_LEVEL( )		( gubCheatLevel = 0 )
+
+/** Get cheat code. */
+inline std::string_view getCheatCode()
+{
+	return isGermanVersion() ? "iguana" : "gabbi";
+}
 
 #endif
