@@ -344,9 +344,6 @@ static const ST::string PocketText[] = {
 };
 
 
-extern UINT32 guiGameClock;
-
-
 typedef void (*LISTBOX_DISPLAY_FNCTN)();    // Define Display Callback function
 typedef void (*TEXT_ENTRY_CALLBACK)(INT32); // Callback for when the text entry field is finished
 
