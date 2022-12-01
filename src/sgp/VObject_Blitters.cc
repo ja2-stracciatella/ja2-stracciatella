@@ -7,9 +7,8 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "WCheck.h"
+#include <utility>
 
-
-SGPRect	ClippingRect;
 							//555      565
 UINT32	guiTranslucentMask=0x3def; //0x7bef;		// mask for halving 5,6,5
 
@@ -2631,19 +2630,16 @@ void Blt8BPPDataTo16BPPBufferHalf(UINT16* const dst_buf, UINT32 const uiDestPitc
 }
 
 
-void SetClippingRect(SGPRect *clip)
+SGPRect SetClippingRect(SGPRect const clip)
 {
-	Assert(clip!=NULL);
-	Assert(clip->iLeft < clip->iRight);
-	Assert(clip->iTop < clip->iBottom);
-	ClippingRect = *clip;
+	Assert(clip.iLeft < clip.iRight && clip.iTop < clip.iBottom);
+	return std::exchange(ClippingRect, clip);
 }
 
 
-void GetClippingRect(SGPRect *clip)
+SGPRect GetClippingRect()
 {
-	Assert(clip!=NULL);
-	*clip = ClippingRect;
+	return ClippingRect;
 }
 
 

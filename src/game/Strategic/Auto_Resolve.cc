@@ -857,8 +857,6 @@ static void RenderSoldierCellBars(SOLDIERCELL* pCell)
 
 static void BuildInterfaceBuffer(void)
 {
-	SGPRect					ClipRect;
-	SGPRect					DestRect;
 	INT32						x,y;
 
 	//Setup the blitting clip regions, so we don't draw outside of the region (for excess panelling)
@@ -866,6 +864,7 @@ static void BuildInterfaceBuffer(void)
 	gpAR->rect.y = (SCREEN_HEIGHT - gpAR->rect.h) / 2;
 	if (gpAR->rect.y > 120) gpAR->rect.y -= 40;
 
+	SGPRect DestRect;
 	DestRect.iLeft			= 0;
 	DestRect.iTop				= 0;
 	DestRect.iRight			= gpAR->rect.w;
@@ -873,8 +872,7 @@ static void BuildInterfaceBuffer(void)
 
 	gpAR->iInterfaceBuffer = AddVideoSurface(gpAR->rect.w, gpAR->rect.h, PIXEL_DEPTH);
 
-	GetClippingRect( &ClipRect );
-	SetClippingRect( &DestRect );
+	SGPRect const ClipRect = SetClippingRect(DestRect);
 
 	//Blit the back panels...
 	for( y = DestRect.iTop; y < DestRect.iBottom; y += 40 )
@@ -919,7 +917,7 @@ static void BuildInterfaceBuffer(void)
 	y = gpAR->rect.h - 40;
 	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BOT_MIDDLE, x, y);
 
-	SetClippingRect( &ClipRect );
+	SetClippingRect(ClipRect);
 }
 
 

@@ -55,6 +55,7 @@
 #include <stdexcept>
 #include <string_theory/format>
 #include <string_theory/string>
+#include <utility>
 #include <vector>
 
 // // Scroll region width
@@ -1978,17 +1979,14 @@ void RestoreBackgroundForMapGrid(const SGPSector& sMap)
 
 void ClipBlitsToMapViewRegion( void )
 {
-	SGPRect *pRectToUse = &MapScreenRect;
-
-	SetClippingRect( pRectToUse );
-	gOldClipRect = gDirtyClipRect;
-	gDirtyClipRect = *pRectToUse;
+	SetClippingRect(MapScreenRect);
+	gOldClipRect = std::exchange(gDirtyClipRect, MapScreenRect);
 }
 
 void RestoreClipRegionToFullScreen( void )
 {
 	SGPRect FullScreenRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	SetClippingRect( &FullScreenRect );
+	SetClippingRect(FullScreenRect);
 	gDirtyClipRect = gOldClipRect;
 }
 

@@ -220,8 +220,7 @@ void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 c
 
 void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, const UINT16 Color16BPP)
 {
-	SGPRect Clip;
-	GetClippingRect(&Clip);
+	SGPRect const Clip = GetClippingRect();
 
 	if (iDestX1 < Clip.iLeft) iDestX1 = Clip.iLeft;
 	if (iDestX1 > Clip.iRight) return;
