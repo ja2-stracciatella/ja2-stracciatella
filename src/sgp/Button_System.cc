@@ -1248,8 +1248,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	INT32 IconY = NewClip.iTop;
 
 	// Get current clip area
-	SGPRect OldClip;
-	GetClippingRect(&OldClip);
+	SGPRect const OldClip = GetClippingRect();
 
 	// Clip button's viewable area coords to screen
 	if (NewClip.iLeft < OldClip.iLeft) NewClip.iLeft = OldClip.iLeft;
@@ -1314,12 +1313,12 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	}
 
 	// Set the clipping rectangle to the viewable area of the button
-	SetClippingRect(&NewClip);
+	SetClippingRect(NewClip);
 
 	BltVideoObject(ButtonDestBuffer, hvObject, b->usIconIndex, xp, yp);
 
 	// Restore previous clip region
-	SetClippingRect(&OldClip);
+	SetClippingRect(OldClip);
 }
 
 
@@ -1345,8 +1344,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	const INT32 TextY = NewClip.iTop;
 
 	// Get the current clipping area
-	SGPRect OldClip;
-	GetClippingRect(&OldClip);
+	SGPRect const OldClip = GetClippingRect();
 
 	// Clip the button's viewable area to the screen
 	if (NewClip.iLeft < OldClip.iLeft) NewClip.iLeft = OldClip.iLeft;
@@ -1573,8 +1571,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	SGPRect ClipRect;
-	GetClippingRect(&ClipRect);
+	SGPRect const ClipRect = GetClippingRect();
 
 	// Draw the button's borders and corners (horizontally)
 	for (INT32 q = 0; q < NumChunksWide; q++)

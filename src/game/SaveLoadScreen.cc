@@ -576,16 +576,16 @@ static void RenderSaveLoadScreen(void)
 }
 
 static void RenderScrollBar(void) {
-	SGPRect	previousClippingRect, clippingRect;
-	GetClippingRect(&previousClippingRect);
+	SGPRect	clippingRect;
 	clippingRect.set(SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_INNER_POS_Y, SLG_SCROLLBAR_POS_X + SLG_SCROLLBAR_WIDTH, SLG_SCROLLBAR_INNER_POS_Y + SLG_SCROLLBAR_INNER_HEIGHT);
-	SetClippingRect(&clippingRect);
+	SGPRect const previousClippingRect = SetClippingRect(clippingRect);
+
 	auto tileHeight = guiSlgScrollbarStracciatella->SubregionProperties(SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER).usHeight;
 	auto repetitions = uint32_t(ceil(double(SLG_SCROLLBAR_INNER_HEIGHT) / double(tileHeight)));
 	for (uint32_t i = 0; i < repetitions; i++) {
 		BltVideoObject(FRAME_BUFFER, guiSlgScrollbarStracciatella, SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_INNER_POS_Y + i * tileHeight);
 	}
-	SetClippingRect(&previousClippingRect);
+	SetClippingRect(previousClippingRect);
 
 	auto maxTop = gSavedGamesList.size() - NUM_SAVE_GAMES;
 	auto currentTop = gCurrentScrollTop;

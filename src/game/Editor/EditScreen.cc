@@ -695,7 +695,6 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 //Displays the current drawing object in the small, lower left window of the editor's toolbar.
 void ShowCurrentDrawingMode( void )
 {
-	SGPRect			ClipRect, NewRect;
 	INT32				iShowMode;
 	UINT16			usUseIndex;
 	UINT16			usObjIndex;
@@ -707,13 +706,13 @@ void ShowCurrentDrawingMode( void )
 	INT32 const h =  58;
 
 	// Set up a clipping rectangle for the display window.
+	SGPRect NewRect;
 	NewRect.iLeft   = x;
 	NewRect.iTop    = y;
 	NewRect.iRight  = x + w;
 	NewRect.iBottom = y + h;
 
-	GetClippingRect(&ClipRect);
-	SetClippingRect(&NewRect);
+	SGPRect const ClipRect = SetClippingRect(NewRect);
 
 	// Clear it out
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + w, y + h, 0);
@@ -931,7 +930,7 @@ void ShowCurrentDrawingMode( void )
 	}
 
 	InvalidateRegion(x, y, x + w, y + h);
-	SetClippingRect(&ClipRect);
+	SetClippingRect(ClipRect);
 }
 
 

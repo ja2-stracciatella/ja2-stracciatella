@@ -2,11 +2,12 @@
 #define __VOBJECT_BLITTERS
 
 
-extern SGPRect		ClippingRect;
+inline SGPRect		ClippingRect;
 extern UINT32			guiTranslucentMask;
 
-extern void SetClippingRect(SGPRect *clip);
-void GetClippingRect(SGPRect *clip);
+// Sets the clipping rect and returns the replaced rect
+SGPRect SetClippingRect(SGPRect clip);
+SGPRect GetClippingRect();
 
 
 BOOLEAN BltIsClipped(const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, const SGPRect* clipregion);

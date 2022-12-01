@@ -195,7 +195,6 @@ static void DrawItemCentered(const ItemModel * item, SGPVSurface* const vs, INT3
 
 void InitEditorItemsInfo(ToolbarMode const uiItemType)
 {
-	SGPRect	SaveRect, NewRect;
 	INT16 i, x, y;
 	UINT16 usCounter;
 	ST::string pStr;
@@ -302,12 +301,12 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	x = 0;
 	y = 0;
 	usCounter = 0;
+	SGPRect	NewRect;
 	NewRect.iTop    = 0;
 	NewRect.iBottom = h;
 	NewRect.iLeft   = 0;
 	NewRect.iRight  = w;
-	GetClippingRect(&SaveRect);
-	SetClippingRect(&NewRect);
+	SGPRect const SaveRect = SetClippingRect(NewRect);
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_KEYS )
 	{ //Keys use a totally different method for determining
 		for( i = 0; i < eInfo.sNumItems; i++ )
@@ -467,7 +466,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 		}
 	}
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetClippingRect(&SaveRect);
+	SetClippingRect(SaveRect);
 	gfRenderTaskbar = TRUE;
 }
 

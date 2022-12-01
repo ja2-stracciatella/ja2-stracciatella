@@ -1125,15 +1125,14 @@ static void DisplayWindowFunc(DisplayList*, INT16 top_cut_off, SGPBox const* are
 //	Displays the objects in the display list to the selection window.
 static void DrawSelections(void)
 {
-	SGPRect					ClipRect, NewRect;
+	SGPRect NewRect;
 
 	NewRect.iLeft   = g_sel_win_box.x;
 	NewRect.iTop    = g_sel_win_box.y;
 	NewRect.iRight  = g_sel_win_box.x + g_sel_win_box.w - 1;
 	NewRect.iBottom = g_sel_win_box.y + g_sel_win_box.h - 1;
 
-	GetClippingRect(&ClipRect);
-	SetClippingRect(&NewRect);
+	SGPRect const ClipRect = SetClippingRect(NewRect);
 
 	SetFont( gpLargeFontType1 );
 	SetFontShade(LARGEFONT1, FONT_SHADE_GREY_165);
@@ -1142,7 +1141,7 @@ static void DrawSelections(void)
 
 	SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 
-	SetClippingRect(&ClipRect);
+	SetClippingRect(ClipRect);
 }
 
 
