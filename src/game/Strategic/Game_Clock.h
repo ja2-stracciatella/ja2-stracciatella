@@ -116,15 +116,16 @@ enum
 void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode );
 
 
-void AdvanceToNextDay(void);
-
 //This function is called once per cycle in the game loop.  This determine how often the clock should be
 //as well as how much to update the clock by.
 void UpdateClock(void);
 
+// Call this function after modifying guiGameClock.
+void UpdateGameClockGlobals(ST::string const& dayStringToUse);
 
 extern ST::string gswzWorldTimeStr; //Day 99, 23:55
 
+extern	UINT32			guiGameClock;
 extern	UINT32			guiDay;
 extern	UINT32			guiHour;
 extern	UINT32			guiMin;
@@ -141,9 +142,6 @@ extern UINT32				guiTimeCurrentSectorWasLastLoaded;
 
 // is the current pause state due to the player?
 extern BOOLEAN gfPauseDueToPlayerGamePause;
-
-// we've just clued up a pause by the player, the tactical screen will need a full one shot refresh to remove a 2 frame update problem
-extern BOOLEAN gfJustFinishedAPause;
 
 extern BOOLEAN gfResetAllPlayerKnowsEnemiesFlags;
 

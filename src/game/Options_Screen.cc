@@ -513,9 +513,6 @@ static void SetOptionsExitScreen(ScreenID);
 
 static void GetOptionsScreenUserInput(void)
 {
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-
 	InputAtom Event;
 	while( DequeueSpecificEvent(&Event, KEYBOARD_EVENTS) )
 	{

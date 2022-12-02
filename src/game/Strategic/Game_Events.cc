@@ -11,7 +11,6 @@
 
 STRATEGICEVENT									*gpEventList = NULL;
 
-extern UINT32 guiGameClock;
 BOOLEAN gfPreventDeletionOfAnyEvent = FALSE;
 static BOOLEAN gfEventDeletionPending = FALSE;
 
@@ -56,11 +55,7 @@ static void AdjustClockToEventStamp(STRATEGICEVENT* pEvent, UINT32* puiAdjustmen
 	*puiAdjustment -= uiDiff;
 
 	//Calculate the day, hour, and minutes.
-	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
-	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
-	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
-
-	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", gpGameClockString, guiDay, guiHour, guiMin);
+	UpdateGameClockGlobals(gpGameClockString);
 }
 
 

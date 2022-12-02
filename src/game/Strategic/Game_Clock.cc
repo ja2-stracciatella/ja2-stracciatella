@@ -50,9 +50,6 @@ static BOOLEAN fTimeCompressHasOccured = FALSE;
 //enter A9, this value will contain that time.  Used for scheduling purposes.
 UINT32 guiTimeCurrentSectorWasLastLoaded = 0;
 
-// did we JUST finish up a game pause by the player
-BOOLEAN gfJustFinishedAPause = FALSE;
-
 // clock mouse region
 static MOUSE_REGION gClockMouseRegion;
 static MOUSE_REGION gClockScreenMaskMouseRegion;
@@ -107,10 +104,7 @@ void InitNewGameClock( )
 {
 	guiGameClock = STARTING_TIME;
 	guiPreviousGameClock = STARTING_TIME;
-	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
-	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
-	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
-	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", pDayStrings, guiDay, guiHour, guiMin);
+	UpdateGameClockGlobals(pDayStrings);
 	guiTimeCurrentSectorWasLastLoaded = 0;
 	guiGameSecondsPerRealSecond = 0;
 	gubClockResolution = 1;
@@ -217,13 +211,7 @@ static void AdvanceClock(UINT8 ubWarpCode)
 	// store previous game clock value (for error-checking purposes only)
 	guiPreviousGameClock = guiGameClock;
 
-
-	//Calculate the day, hour, and minutes.
-	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
-	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
-	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
-
-	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", gpGameClockString, guiDay, guiHour, guiMin);
+	UpdateGameClockGlobals(gpGameClockString);
 
 	if( gfResetAllPlayerKnowsEnemiesFlags && !gTacticalStatus.fEnemyInSector )
 	{
@@ -234,20 +222,6 @@ static void AdvanceClock(UINT8 ubWarpCode)
 
 	ForecastDayEvents( );
 }
-
-
-void AdvanceToNextDay()
-{
-	INT32  uiDiff;
-	UINT32 uiTomorrowTimeInSec;
-
-	uiTomorrowTimeInSec = (guiDay+1)*NUM_SEC_IN_DAY + 8*NUM_SEC_IN_HOUR + 15*NUM_SEC_IN_MIN;
-	uiDiff = uiTomorrowTimeInSec - guiGameClock;
-	WarpGameTime( uiDiff, WARPTIME_PROCESS_EVENTS_NORMALLY );
-
-	ForecastDayEvents( );
-}
-
 
 
 // set the flag that time compress has occured
@@ -281,7 +255,7 @@ void RenderClock(void)
 	INT16 y = CLOCK_Y;
 	RestoreExternBackgroundRect(x, y, CLOCK_WIDTH, CLOCK_HEIGHT);
 
-	ST::string str = (gfPauseDueToPlayerGamePause ? pPausedGameText[0] : WORLDTIMESTR);
+	ST::string const& str = gfPauseDueToPlayerGamePause ? pPausedGameText[0] : WORLDTIMESTR;
 	FindFontCenterCoordinates(x, y, CLOCK_WIDTH, CLOCK_HEIGHT, str, CLOCK_FONT, &x, &y);
 	MPrint(x, y, str);
 }
@@ -772,12 +746,7 @@ void LoadGameClock(HWFILE const hFile)
 
 	hFile->seek(TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
 
-	//Update the game clock
-	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
-	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
-	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
-
-	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", pDayStrings, guiDay, guiHour, guiMin);
+	UpdateGameClockGlobals(pDayStrings);
 
 	if( !gfBasement && !gfCaves )
 		gfDoLighting = TRUE;
@@ -800,8 +769,7 @@ void CreateMouseRegionForPauseOfClock(void)
 
 		fClockMouseRegionCreated = TRUE;
 
-		ST::string help = gfGamePaused ?
-			pPausedGameText[1] : pPausedGameText[2];
+		ST::string const& help = pPausedGameText[gfGamePaused ? 1 : 2];
 		gClockMouseRegion.SetFastHelpText(help);
 	}
 }
@@ -883,7 +851,6 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 		fTeamPanelDirty = TRUE;
 		fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
-		gfJustFinishedAPause = TRUE;
 		MarkButtonsDirty();
 		SetRenderFlags( RENDER_FLAG_FULL );
 	}
@@ -927,9 +894,6 @@ void RenderPausedGameBox( void )
 		RenderMercPopUpBox(g_paused_popup_box, x, y, FRAME_BUFFER);
 		InvalidateRegion(x, y, x + usPausedActualWidth, y + usPausedActualHeight);
 	}
-
-	// reset we've just finished a pause by the player
-	gfJustFinishedAPause = FALSE;
 }
 
 BOOLEAN DayTime()
@@ -941,7 +905,6 @@ BOOLEAN NightTime()
 {  //before 7AM or after 9PM
 	return ( guiHour < 7 || guiHour >= 21 );
 }
-
 
 
 void ClearTacticalStuffDueToTimeCompression( void )
@@ -960,4 +923,15 @@ void ClearTacticalStuffDueToTimeCompression( void )
 		// clear tactical actions
 		CencelAllActionsForTimeCompression( );
 	}
+}
+
+
+void UpdateGameClockGlobals(ST::string const& dayStringToUse)
+{
+	//Calculate the day, hour, and minutes.
+	guiDay = guiGameClock / NUM_SEC_IN_DAY;
+	guiHour = (guiGameClock - guiDay * NUM_SEC_IN_DAY) / NUM_SEC_IN_HOUR;
+	guiMin = (guiGameClock - (guiDay * NUM_SEC_IN_DAY +  guiHour * NUM_SEC_IN_HOUR)) / NUM_SEC_IN_MIN;
+
+	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", dayStringToUse, guiDay, guiHour, guiMin);
 }
