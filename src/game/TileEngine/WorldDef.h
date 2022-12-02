@@ -16,11 +16,11 @@ struct STRUCTURE;
 #define WORLD_TILE_Y		20
 #define WORLD_COLS		160
 #define WORLD_ROWS		160
-#define WORLD_COORD_COLS	1600
-#define WORLD_COORD_ROWS	1600
 #define WORLD_MAX		25600
 #define CELL_X_SIZE		10
 #define CELL_Y_SIZE		10
+constexpr INT16 WORLD_COORD_COLS = WORLD_COLS * CELL_X_SIZE;
+constexpr INT16 WORLD_COORD_ROWS = WORLD_ROWS * CELL_Y_SIZE;
 
 #define HALF_TILE_WIDTH		((WORLD_TILE_X / CELL_X_SIZE) / 2)	// equals to 2
 #define HALF_TILE_HEIGHT	((WORLD_TILE_Y / CELL_Y_SIZE) / 2)	// equals to 1
@@ -28,11 +28,6 @@ struct STRUCTURE;
 #define CENTER_GRIDNO (WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2)
 
 #define WORLD_CLIFF_HEIGHT	80
-
-//A macro that actually memcpy's over data and increments the pointer automatically
-//based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
-//Used by LoadWorld() and child functions.
-#define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
 
 
 #define LANDHEAD		0

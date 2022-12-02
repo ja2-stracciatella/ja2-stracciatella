@@ -78,7 +78,6 @@ BOOLEAN	gfInMovementMenu = FALSE;
 static INT32 giMenuAnchorX;
 static INT32 giMenuAnchorY;
 
-static BOOLEAN gfProgBarActive   = FALSE;
 static UINT8   gubProgNumEnemies = 0;
 static UINT8   gubProgCurEnemy   = 0;
 
@@ -1989,7 +1988,6 @@ void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies )
 	// OK, set value
 	gubProgNumEnemies = ubNumEnemies + ubDoneEnemies;
 	gubProgCurEnemy = ubDoneEnemies;
-	gfProgBarActive = TRUE;
 
 	gTacticalStatus.usTactialTurnLimitCounter = ubDoneEnemies * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY;
 	gTacticalStatus.usTactialTurnLimitMax = ( (ubNumEnemies + ubDoneEnemies) * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY );
@@ -1998,15 +1996,10 @@ void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies )
 
 void UpdateEnemyUIBar( )
 {
-	// Are we active?
-	if ( gfProgBarActive )
-	{
-		// OK, update team limit counter....
-		gTacticalStatus.usTactialTurnLimitCounter = ( gubProgCurEnemy * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY );
+	// OK, update team limit counter....
+	gTacticalStatus.usTactialTurnLimitCounter = gubProgCurEnemy * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY;
 
-		gubProgCurEnemy++;
-
-	}
+	gubProgCurEnemy++;
 
 	// Do we have an active enemy bar?
 	if (gTacticalStatus.fInTopMessage &&

@@ -474,10 +474,10 @@ BOOLEAN	OKFireWeapon( SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN UseGun(      SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
-static void    UseBlade(    SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
-static void    UseThrown(   SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
-static BOOLEAN UseLauncher( SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
+static void UseGun(     SOLDIERTYPE * pSoldier, GridNo sTargetGridNo);
+static void UseBlade(   SOLDIERTYPE * pSoldier, GridNo sTargetGridNo);
+static void UseThrown(  SOLDIERTYPE * pSoldier, GridNo sTargetGridNo);
+static void UseLauncher(SOLDIERTYPE * pSoldier, GridNo sTargetGridNo);
 
 
 BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
@@ -701,7 +701,7 @@ static UINT16 ModifyExpGainByTarget(const UINT16 exp_gain, const SOLDIERTYPE* co
 static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObj);
 
 
-static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
+static void UseGun(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 {
 	UINT32  uiHitChance, uiDiceRoll;
 	INT16   sAPCost;
@@ -714,7 +714,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	INT8    bSilencerPos;
 	UINT8   ubDirection;
 	INT16   sNewGridNo;
-	BOOLEAN fGonnaHit = FALSE;
 	UINT16  usExpGain = 0;
 	UINT32  uiDepreciateTest;
 
@@ -802,7 +801,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	// ROLL DICE
 	uiDiceRoll = PreRandom( 100 );
 
-	fGonnaHit = uiDiceRoll <= uiHitChance;
+	bool const fGonnaHit = uiDiceRoll <= uiHitChance;
 
 	// ATE; Moved a whole blotch if logic code for finding target positions to a function
 	// so other places can use it
@@ -935,8 +934,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			SLOGD("Freeing up attacker - ATTACK ANIMATION {} ENDED BY BAD EXPLOSIVE CHECK, Now {}",
 				gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount);
 			ReduceAttackBusyCount(pSoldier, FALSE);
-
-			return( FALSE );
 		}
 	}
 
@@ -1016,8 +1013,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	{
 		pSoldier->bMonsterSmell--;
 	}
-
-	return( TRUE );
 }
 
 
@@ -1032,11 +1027,10 @@ static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLD
 }
 
 
-static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
+static void UseBlade(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 {
 	INT32          iHitChance, iDiceRoll;
 	INT16          sAPCost;
-	EV_S_WEAPONHIT SWeaponHit;
 	INT32          iImpact, iImpactForCrits;
 	BOOLEAN        fGonnaHit = FALSE;
 	UINT16         usExpGain = 0;
@@ -1113,7 +1107,7 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			}
 
 			// Send event for getting hit
-			SWeaponHit = EV_S_WEAPONHIT{};
+			EV_S_WEAPONHIT SWeaponHit{};
 			SWeaponHit.usSoldierID = pTargetSoldier->ubID;
 			SWeaponHit.usWeaponIndex = pSoldier->usAttackingWeapon;
 			SWeaponHit.sDamage = (INT16) iImpact;
@@ -1182,7 +1176,6 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 {
 	INT32          iHitChance, iDiceRoll;
 	INT16          sAPCost;
-	EV_S_WEAPONHIT SWeaponHit;
 	INT32          iImpact;
 	UINT16         usOldItem;
 
@@ -1364,7 +1357,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				iImpact = HTHImpact( pSoldier, pTargetSoldier, (iHitChance - iDiceRoll), FALSE );
 
 				// Send event for getting hit
-				SWeaponHit = EV_S_WEAPONHIT{};
+				EV_S_WEAPONHIT SWeaponHit{};
 				SWeaponHit.usSoldierID = pTargetSoldier->ubID;
 				SWeaponHit.usWeaponIndex = pSoldier->usAttackingWeapon;
 				SWeaponHit.sDamage = (INT16) iImpact;
@@ -1393,7 +1386,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 }
 
 
-static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
+static void UseThrown(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 {
 	UINT32 uiHitChance, uiDiceRoll;
 	INT8   bLoop;
@@ -1461,7 +1454,7 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 }
 
 
-static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
+static void UseLauncher(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 {
 	UINT32     uiHitChance, uiDiceRoll;
 	INT16      sAPCost = 0;
@@ -1474,7 +1467,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 	if ( !EnoughAmmo( pSoldier, TRUE, pSoldier->ubAttackingHand ) )
 	{
-		return( FALSE );
+		return;
 	}
 
 	pObj = &(pSoldier->inv[HANDPOS]);
@@ -1491,7 +1484,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	if (bAttachPos == MAX_ATTACHMENTS)
 	{
 		// this should not happen!!
-		return( FALSE );
+		return;
 	}
 
 	CreateItem( pObj->usAttachItem[ bAttachPos ],	pObj->bAttachStatus[ bAttachPos ], &Launchable );
@@ -1522,7 +1515,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		ReduceAttackBusyCount(pSoldier, FALSE);
 
 		// So all's well, should be good from here....
-		return( FALSE );
+		return;
 	}
 
 	if ( !GCM->getWeapon( usItemNum )->sound.empty()  )
@@ -1559,8 +1552,6 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 	delete pSoldier->pThrowParams;
 	pSoldier->pThrowParams = NULL;
-
-	return( TRUE );
 }
 
 

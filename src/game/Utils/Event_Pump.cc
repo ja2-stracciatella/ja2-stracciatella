@@ -262,7 +262,10 @@ static void ExecuteGameEvent(EVENT* pEvent)
 		[](EV_S_WEAPONHIT const& SWeaponHit)
 		{
 			SLOGD("WeaponHit {} Damage", SWeaponHit.sDamage);
-			WeaponHit(&GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, &GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
+			auto & s = GetMan(SWeaponHit.usSoldierID);
+			WeaponHit(&s, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection,
+			          SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, &GetMan(SWeaponHit.ubAttackerID),
+			          SWeaponHit.ubSpecial, s.bAimShotLocation);
 		},
 		[](EV_S_NOISE const& SNoise)
 		{

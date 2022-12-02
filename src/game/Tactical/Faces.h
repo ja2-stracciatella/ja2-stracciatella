@@ -122,7 +122,6 @@ struct FACETYPE
 
 	UINT16   sMouthFrame;
 	UINT32   uiMouthlast;
-	UINT32   uiMouthDelay;
 
 	UINT32   uiLastBlink;
 	UINT32   uiLastExpression;

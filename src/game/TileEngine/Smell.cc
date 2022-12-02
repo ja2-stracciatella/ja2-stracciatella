@@ -302,6 +302,7 @@ void DropSmell(SOLDIERTYPE& s)
 				// plus 1/5 of the smaller
 				ubStrength = std::max( ubStrength, ubOldStrength ) + std::min( ubStrength, ubOldStrength ) / 5;
 				ubStrength = std::max(ubStrength, UINT8(SMELL_STRENGTH_MAX));
+				SET_SMELL(pMapElement->ubSmellInfo, ubStrength, ubSmell);
 			}
 			else
 			{

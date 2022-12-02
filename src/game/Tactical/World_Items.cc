@@ -462,15 +462,3 @@ void RefreshWorldItemsIntoItemPools(const std::vector<WORLDITEM>& items)
 		AddItemToPool(wi.sGridNo, &o, static_cast<Visibility>(wi.bVisible), wi.ubLevel, wi.usFlags, wi.bRenderZHeightAboveLevel);
 	}
 }
-
-
-#ifdef WITH_UNITTESTS
-#undef FAIL
-#include "gtest/gtest.h"
-
-TEST(WorldItems, asserts)
-{
-	EXPECT_EQ(sizeof(WORLDITEM), 52u);
-}
-
-#endif

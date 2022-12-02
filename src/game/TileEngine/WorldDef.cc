@@ -2622,19 +2622,10 @@ void LoadMapTileset(TileSetID const id)
 
 	if (id == giCurrentTilesetID) return;
 
-	TILESET const& t = gTilesets[id];
 	LoadTileSurfaces(id);
 
 	// Set terrain costs
-	if (t.MovementCostFnc)
-	{
-		t.MovementCostFnc();
-	}
-	else
-	{
-		SLOGD("Tileset {} has no callback function for movement costs. Using default.", id);
-		SetTilesetOneTerrainValues();
-	}
+	gTilesets[id].MovementCostFnc();
 
 	DeallocateTileDatabase();
 	CreateTileDatabase();

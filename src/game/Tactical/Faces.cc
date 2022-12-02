@@ -153,7 +153,6 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	f.uiExpressionFrequency = p.uiExpressionFrequency;
 	f.sMouthFrame           = 0;
-	f.uiMouthDelay          = 120;
 	f.uiVideoObject         = vo;
 
 	// Set palette
@@ -570,7 +569,7 @@ static void MouthAutoFace(FACETYPE& f)
 				FaceRestoreSavedBackgroundRect(f, f.usMouthX, f.usMouthY, f.usMouthOffsetX, f.usMouthOffsetY, f.usMouthWidth, f.usMouthHeight);
 			}
 		}
-		else if (GetJA2Clock() - f.uiMouthlast > f.uiMouthDelay)
+		else if (GetJA2Clock() - f.uiMouthlast > 120)
 		{
 			f.uiMouthlast = GetJA2Clock();
 

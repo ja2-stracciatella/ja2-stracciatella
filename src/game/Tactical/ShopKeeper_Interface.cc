@@ -1710,7 +1710,7 @@ static void SelectPlayersOfferSlotsRegionCallBackPrimary(MOUSE_REGION* pRegion, 
 			{
 				//Since money is always evaluated
 				o->uiFlags     |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-				o->uiItemPrice  = o->ItemObject.bMoneyStatus;
+				o->uiItemPrice  = o->ItemObject.uiMoneyAmount;
 			}
 		}
 		else	// slot is empty

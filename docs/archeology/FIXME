@@ -1,5 +1,3 @@
-ACTIVE: never tested
-ANITILE_REVERSE_LOOPING: never set
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 BeginMapUIMessage(): move from tactical to strategic
@@ -24,7 +22,6 @@ DoneFadeInWarp(): empty
 DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
-DropSmell(): ubOldSmell == ubSmell case has no effect
 EVENT_SoldierGotHit(): arguments for parameter ubHitLocation inconsistent
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
@@ -51,9 +48,6 @@ HeliCharacterDialogue(): callers
 HourlyMoraleUpdate(): strategic_morale_update_counter not loaded/saved
 IMPVideoObjects.h: many needlessly called functions?
 I_CHANGELEVEL: unused
-InitializeLibrary(): invalid use of strlen()
-InitializeStrategicMapSectorTownNames(): complicated?
-IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
 IsMapScreenWorldItemVisibleInMapInventory(): complicated
 KeyRingSlotInvClickCallback: one caller
@@ -71,18 +65,13 @@ MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
 MaxDistanceVisible(): inline
 MercDepartEquipmentBoxCallBack(): users
 MergeMessageBoxCallBack(): users
-MinAPsToThrow(): usInHand is INT16, but used as %s
 MoveBullet(): RemoveBullet() before BulletMissed() (twice) and CorpseHit() seems wrong
 MoveGroupFromSectorToSectorButAvoidLastSector(): caller
-MovementNoise(): DeepWater() after Water() is pointless, 20% stealth penalty for deep water does not work
 NPC.h: RUSSIAN quirk
-NPCQuoteInfo: weird preprocessor magic
 NewOKDestination(): boolean parameter with three (four?) values
 OBJECT_ARMED_BOMB: never gets tested
-OBJECT_MODIFIED: unused
 PayMilitiaTrainingYesNoBoxCallback(): users
 PlayerGroupInMotion(): overkill
-ProcessUpdateStats(): pbSoldierStatPtr write-only
 ReadRLEColMapImage(), ReadRLERGBImage(): empty
 RemoveAllOnRoofsOfTypeRange(): O(n^2)
 RemoveAllShadows(): O(n^2)
@@ -94,8 +83,6 @@ RenderFaceOverlay(): users
 RenderShopKeeperInterface(): MARK_DIRTY necessary?
 RenderTiles(): SetFontDestBuffer() + mprintf_buffer() strange
 SAIMOVECODE: use enum
-SF_HAS_ENTERED_TACTICAL: never tested
-SHOW_AP_LEFT: never set
 SLOW_ANIMATION: never set or cleared
 SOLDIER_QUOTE_SAID_DROWNING: never set
 STRUCTURE_MULTI: never set?
@@ -104,18 +91,14 @@ STR_AR_MERC_RETREATING: string too long in German
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
-SectorExitBackgroundCallback(): empty
-SelectPlayersOfferSlotsRegionCallBack(): [...].uiItemPrice = [...].bMoneyStatus seems wrong
 SetClockResolutionPerSecond(): complicated
 SetExclusive24HourTimeValue(): complicated, use swprintf()
 SetInputFieldStringWithNumericStrictValue(): complicated
 SetSelection(): callers
-SetTilesetOneTerrainValues(): set callback to avoid explicit test
 SoldierCanSeeCatchComing(): empty
 SoldierCarriesTwoHandedWeapon(): complicated
 StrategicMap[]: definition not used in file
 StrategicPythSpacesAway(): avoid sqrt()
-TacticalScreenMsg(): no need for format string
 TrashMapTile(), MapOptimize(): investigate if useful
 TurnBasedHandleNPCAI(): lots of commented out stuff
 TurnSoldierIntoCorpse(): one caller
@@ -125,8 +108,6 @@ VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
 ValidateSkillsList(), RemoveSkillFromSkillsList(): complicated
 WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 WillShopKeeperRejectObjectsFromPlayer(): complicated
-WrapString(): Make 1st parameter read-only
-WriteSectorSummaryUpdate(): puiFilename yuck
 bBuddy[5], bHated[5]: indices 3 and 4 unused
 fButtonsPresent: once TRUE it never changes anymore
 fPotentialForDebug: ?
@@ -139,25 +120,19 @@ gTacticalStatus.ubSpottersCalledForBy: once != NOBODY never gets NOBODY again
 gTileTypeLogicalHeight[]: always 1 (memset)?
 gTileTypeLogicalHeight[]: definition not used in file
 gWhoThrewRock: useful?
-gbSAMGraphicList[]: definition not used in file
 gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfItemDescHelpTextOffset: once TRUE never gets FALSE again
-gfProgBarActive: once TRUE it never changes anymore
 gszCivGroupNames[]: move declaration
-gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
 pMapErrorString[24]: probably never shown (function is only called when militia is in sector, which means it is a SAM site or town)
 pMapErrorString[4], pMapErrorString[17]: unused
 pMapInventoryErrorString[0]: probably unused
-pSoldier = pSoldier: strange
 pSoldier->pShades[16 ... 31]: unused?
 struct ETRLEData: reorder attributes
-swprintf([^,]*,[^,]*,[^,"]*[,)]: non-fixed format string
 ubMineType: unused?
 ubTravelRating: write-only
-wcscat(): check for overkill
 {Head,Pants,Skin,Vest}Pal: buffer necessary? pointer instead?
 {Lock,Unlock}{Back,Frame,Mouse}Buffer(): SDL_LockSurface()?
 
@@ -176,10 +151,6 @@ sYPos: determine from usSoldierID
 sZPos: always 20
 sRange: always 1
 ubSpecial: always FIRE_WEAPON_NO_SPECIAL
-ubLocation: read-only (AIM_SHOT_RANDOM)
-
-FACETYPE
-uiMouthDelay: always 120
 
 GROUP // TODO not finished
 ubOriginalSector: write-only, read to write-only
@@ -204,12 +175,7 @@ sMedicalDepositAmount: overwritten after load from data file
 usOptionalGearCost: overwritten after load from data file
 
 OBJECTTYPE
-ubGunUnused
-bMoneyStatus: only one use, which most probably is wrong
-ubMoneyUnused
 bKeyStatus
-ubKeyUnused
-ubOwnershipUnused
 ubWeight: only one reader
 fUsed
 

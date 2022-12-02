@@ -879,8 +879,8 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 			if (pItemPtr->usItem == MONEY)
 			{
 				// always allow money to be combined!
-				// average out the status values using a weighted average...
-				pInventorySlot->bStatus[0] = (INT8) ( ( (UINT32)pInventorySlot->bMoneyStatus * pInventorySlot->uiMoneyAmount + (UINT32)pItemPtr->bMoneyStatus * pItemPtr->uiMoneyAmount )/ (pInventorySlot->uiMoneyAmount + pItemPtr->uiMoneyAmount) );
+				// status of money is always 100
+				pInventorySlot->bMoneyStatus = 100;
 				pInventorySlot->uiMoneyAmount += pItemPtr->uiMoneyAmount;
 
 				DeleteObj( pItemPtr );

@@ -544,9 +544,6 @@ void SetCurrentWorldSector(const SGPSector& sector)
 		// ATE: Check what sector we are in, to show description if we have an RPC
 		HandleRPCDescriptionOfSector(sector);
 
-		// ATE: Set Flag for being visited
-		SetSectorFlag(sector, SF_HAS_ENTERED_TACTICAL);
-
 		ResetMultiSelection();
 
 		gTacticalStatus.fHasEnteredCombatModeSinceEntering = FALSE;
