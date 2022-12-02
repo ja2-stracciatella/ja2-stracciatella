@@ -121,7 +121,7 @@ void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode );
 void UpdateClock(void);
 
 // Call this function after modifying guiGameClock.
-void UpdateGameClockGlobals();
+void UpdateGameClockGlobals(ST::string const& dayStringToUse);
 
 extern ST::string gswzWorldTimeStr; //Day 99, 23:55
 

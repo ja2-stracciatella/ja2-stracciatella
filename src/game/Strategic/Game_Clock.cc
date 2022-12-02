@@ -104,7 +104,7 @@ void InitNewGameClock( )
 {
 	guiGameClock = STARTING_TIME;
 	guiPreviousGameClock = STARTING_TIME;
-	UpdateGameClockGlobals();
+	UpdateGameClockGlobals(pDayStrings);
 	guiTimeCurrentSectorWasLastLoaded = 0;
 	guiGameSecondsPerRealSecond = 0;
 	gubClockResolution = 1;
@@ -211,7 +211,7 @@ static void AdvanceClock(UINT8 ubWarpCode)
 	// store previous game clock value (for error-checking purposes only)
 	guiPreviousGameClock = guiGameClock;
 
-	UpdateGameClockGlobals();
+	UpdateGameClockGlobals(gpGameClockString);
 
 	if( gfResetAllPlayerKnowsEnemiesFlags && !gTacticalStatus.fEnemyInSector )
 	{
@@ -746,7 +746,7 @@ void LoadGameClock(HWFILE const hFile)
 
 	hFile->seek(TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
 
-	UpdateGameClockGlobals();
+	UpdateGameClockGlobals(pDayStrings);
 
 	if( !gfBasement && !gfCaves )
 		gfDoLighting = TRUE;
@@ -926,12 +926,12 @@ void ClearTacticalStuffDueToTimeCompression( void )
 }
 
 
-void UpdateGameClockGlobals()
+void UpdateGameClockGlobals(ST::string const& dayStringToUse)
 {
 	//Calculate the day, hour, and minutes.
 	guiDay = guiGameClock / NUM_SEC_IN_DAY;
 	guiHour = (guiGameClock - guiDay * NUM_SEC_IN_DAY) / NUM_SEC_IN_HOUR;
 	guiMin = (guiGameClock - (guiDay * NUM_SEC_IN_DAY +  guiHour * NUM_SEC_IN_HOUR)) / NUM_SEC_IN_MIN;
 
-	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", gpGameClockString, guiDay, guiHour, guiMin);
+	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", dayStringToUse, guiDay, guiHour, guiMin);
 }

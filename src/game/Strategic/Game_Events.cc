@@ -55,7 +55,7 @@ static void AdjustClockToEventStamp(STRATEGICEVENT* pEvent, UINT32* puiAdjustmen
 	*puiAdjustment -= uiDiff;
 
 	//Calculate the day, hour, and minutes.
-	UpdateGameClockGlobals();
+	UpdateGameClockGlobals(gpGameClockString);
 }
 
 
