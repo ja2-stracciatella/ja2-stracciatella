@@ -45,8 +45,11 @@ struct MOUSE_REGION
 	void AllowDisabledRegionFastHelp(bool allow);
 
 	void SetUserPtr(void* ptr) { user.ptr = ptr; }
-
 	template<typename T> T* GetUserPtr() const { return static_cast<T*>(user.ptr); }
+	template<size_t index>
+	constexpr INT32 GetUserData() const { static_assert(index < 4); return user.data[index]; }
+	template<size_t index>
+	constexpr void SetUserData(INT32 const data) { static_assert(index < 4); user.data[index] = data; }
 
 	bool HasFastHelp() { return FastHelpRect != nullptr; }
 
@@ -150,10 +153,10 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 void MSYS_RemoveRegion(MOUSE_REGION *region);
 
 /* Set one of the user data entries in a mouse region */
-void MSYS_SetRegionUserData(MOUSE_REGION*, UINT32 index, INT32 userdata);
+#define MSYS_SetRegionUserData(region, index, data) ((region)->SetUserData<(index)>((data)))
 
 /* Retrieve one of the user data entries in a mouse region */
-INT32 MSYS_GetRegionUserData(MOUSE_REGION const*, UINT32 index);
+#define MSYS_GetRegionUserData(region, index) ((region)->GetUserData<(index)>())
 
 // Create a callback with primary and secondary and all actions callbacks
 // Primary action will be triggered on left mouse button up (or mouse button down if triggerOnMouseDown is true), or short touch

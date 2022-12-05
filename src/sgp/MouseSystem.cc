@@ -756,19 +756,6 @@ void MSYS_SetCurrentCursor(UINT16 Cursor)
 }
 
 
-void MSYS_SetRegionUserData(MOUSE_REGION* const r, UINT32 const index, INT32 const userdata)
-{
-	if (lengthof(r->user.data) <= index) throw std::logic_error("User data index is out of range");
-	r->user.data[index] = userdata;
-}
-
-
-INT32 MSYS_GetRegionUserData(MOUSE_REGION const* const r, UINT32 const index)
-{
-	if (lengthof(r->user.data) <= index) throw std::logic_error("User data index is out of range");
-	return r->user.data[index];
-}
-
 // This function will force a re-evaluation of mouse regions
 // Usually used to force change of mouse cursor if panels switch, etc
 void RefreshMouseRegions( )
