@@ -66,7 +66,7 @@ static MOUSE_REGION gScreenMouseRegions;
 static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, UINT32 reason);
 static void SelectMercFaceRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
 static void SelectMercFaceRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
-static void SelectScreenRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+// There is no SelectScreenRegionCallBackPrimary
 static void SelectScreenRegionCallBackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 
 

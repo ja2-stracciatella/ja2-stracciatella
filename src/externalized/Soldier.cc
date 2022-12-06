@@ -260,11 +260,6 @@ void Soldier::swapInventorySlots(int8_t firstSlot, int8_t secondSlot)
 	SwapObjs( &(mSoldier->inv[firstSlot]), &(mSoldier->inv[secondSlot]) );
 }
 
-static bool isHeadPosition(int8_t pos)
-{
-	return (pos == HEAD1POS) || (pos == HEAD2POS);
-}
-
 static void showGearEquipMessage(const SOLDIERTYPE* s, uint16_t usItem)
 {
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM), s->name, GCM->getItem(usItem)->getName()));

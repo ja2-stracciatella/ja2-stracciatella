@@ -2699,9 +2699,6 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 }
 
 
-static void RequestHighPriorityGarrisonReinforcements(INT32 iGarrisonID, UINT8 ubSoldiersRequested);
-
-
 void ExecuteStrategicAIAction(UINT16 usActionCode, const SGPSector* sMap)
 {
 	GROUP *pGroup, *pPendingGroup = NULL;
