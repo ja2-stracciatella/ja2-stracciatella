@@ -190,8 +190,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 		gfOverrideInsertionWithExitGrid = TRUE;
 		/* change all current mercs in the loaded sector, and move them to the new
 		 * sector. */
-		SGPSector adjustedSector = gWorldSector;
-		gWorldSector.z = look_for_level;
+		SGPSector const adjustedSector(gWorldSector.x, gWorldSector.y, look_for_level);
 		MoveAllGroupsInCurrentSectorToSector(adjustedSector);
 		if (look_for_level)
 		{
@@ -203,6 +202,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 		}
 		SetCurrentWorldSector(adjustedSector);
 		gfOverrideInsertionWithExitGrid = FALSE;
+		break;
 	}
 }
 
