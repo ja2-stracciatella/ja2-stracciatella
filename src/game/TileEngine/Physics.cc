@@ -1424,41 +1424,6 @@ static float FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 s
 }
 
 
-static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dForce, float dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo)
-{
-	vector_3 vDirNormal, vPosition, vForce;
-	INT16    sDestX, sDestY, sSrcX, sSrcY;
-
-	// Get XY from gridno
-	ConvertGridNoToCenterCellXY( sGridNo, &sDestX, &sDestY );
-	ConvertGridNoToCenterCellXY( sSrcGridNo, &sSrcX, &sSrcY );
-
-	// Set position
-	vPosition.x = sSrcX;
-	vPosition.y = sSrcY;
-	vPosition.z = sStartZ;
-
-	// OK, get direction normal
-	vDirNormal.x = (float)(sDestX - sSrcX);
-	vDirNormal.y = (float)(sDestY - sSrcY);
-	vDirNormal.z = 0;
-
-	// NOmralize
-	vDirNormal = VGetNormal( &vDirNormal );
-
-	// From degrees, calculate Z portion of normal
-	vDirNormal.z = (float)sin( dzDegrees );
-
-	// Now use a force
-	vForce.x = dForce * vDirNormal.x;
-	vForce.y = dForce * vDirNormal.y;
-	vForce.z = dForce * vDirNormal.z;
-
-	CalculateObjectTrajectory( sEndZ, pItem, &vPosition, &vForce, psGridNo );
-}
-
-
-
 // OK, this will, given a target Z, INVTYPE, source, target gridnos, initial force vector, will
 // return range
 static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo)

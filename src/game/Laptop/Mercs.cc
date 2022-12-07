@@ -1445,7 +1445,6 @@ static void HandleSpeckIdleConversation(BOOLEAN fReset)
 }
 
 
-static BOOLEAN CanMercQuoteBeSaid(UINT32 uiQuoteID);
 static std::vector<UINT8> GetAvailableRandomQuotes();
 
 static INT16 GetRandomQuoteThatHasBeenSaidTheLeast()

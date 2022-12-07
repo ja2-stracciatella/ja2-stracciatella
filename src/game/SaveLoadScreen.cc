@@ -204,7 +204,6 @@ static void RenderSaveLoadScreen(void);
 static void RenderScrollBar(void);
 static void SaveLoadSelectedSave();
 static void SaveNewSave();
-static BOOLEAN IsDeadIsDeadTab(INT8 tabNo);
 
 
 ScreenID SaveLoadScreenHandle()
@@ -356,8 +355,6 @@ static void BtnScrollUpCallback(GUI_BUTTON* btn, UINT32 reason);
 static void BtnScrollDownCallback(GUI_BUTTON* btn, UINT32 reason);
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, UINT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, UINT32 reason);
-static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, UINT32 reason);
-static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, UINT32 reason);
 static void ClearSelectedSaveSlot(void);
 static void InitSaveGameArray(void);
 static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
@@ -1044,7 +1041,6 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 static void DisableSelectedSlot(void);
-static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue);
 
 
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
@@ -1445,12 +1441,6 @@ void DoQuickLoad()
 bool AreThereAnySavedGameFiles()
 {
 	return GetValidSaveGames().size() > 0;
-}
-
-
-static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue const bExitValue)
-{
-	gfRedrawSaveLoadScreen = TRUE;
 }
 
 

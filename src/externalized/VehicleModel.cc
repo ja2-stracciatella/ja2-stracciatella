@@ -11,15 +11,6 @@ VehicleModel::VehicleModel(ST::string enterSound, ST::string movementSound,
     : enter_sound(enterSound), move_sound(movementSound), profile(profile),
       movement_type(movementType), armour_type(armourType), seats(seats_) {}
 
-static ProfileID toProfileID(unsigned int profileID)
-{
-	if (profileID >= UINT8_MAX)
-	{
-		throw DataError(ST::format("{} is not a valid ProfileID", profileID));
-	}
-	return static_cast<ProfileID>(profileID);
-}
-
 static VehicleMovementType toMovementType(const std::string& typeName)
 {
 	if (typeName == "FOOT") return FOOT;
