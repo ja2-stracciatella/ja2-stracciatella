@@ -7,6 +7,7 @@
 
 #include "Directories.h"
 #include "Text.h"
+#include "VObject.h"
 #include "GameMode.h"
 #include "EncodingCorrectors.h"
 
@@ -376,6 +377,13 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 
 	throw std::runtime_error(ST::format("Multilanguage resource {} is not found", id).to_std_string());
 }
+
+
+SGPVObject* AddVideoObjectFromFile(MultiLanguageGraphic const mlg)
+{
+	return AddVideoObjectFromFile(GetMLGFilename(mlg));
+}
+
 
 STRING_ENC_TYPE getStringEncType()
 {

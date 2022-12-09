@@ -335,8 +335,7 @@ void EnterBobbyRMailOrder()
 	guiDeliverySpeedGraphic = AddVideoObjectFromFile(LAPTOPDIR "/bobbydeliveryspeed.sti");
 
 	// load the delivery speed graphic and add it
-	const char* const ImageFile = GetMLGFilename(MLG_CONFIRMORDER);
-	guiConfirmGraphic = AddVideoObjectFromFile(ImageFile);
+	guiConfirmGraphic = AddVideoObjectFromFile(MLG_CONFIRMORDER);
 
 	// load the delivery speed graphic and add it
 	guiTotalSaveArea = AddVideoObjectFromFile(LAPTOPDIR "/totalsavearea.sti");

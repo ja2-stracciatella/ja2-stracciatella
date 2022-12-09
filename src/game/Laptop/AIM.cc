@@ -217,34 +217,26 @@ void EnterAIM()
 	// load the Links graphic and add it
 	guiLinks = AddVideoObjectFromFile(LAPTOPDIR "/links.sti");
 
-	const char* ImageFile;
-
 	// load the History graphic and add it
-	ImageFile = GetMLGFilename(MLG_HISTORY);
-	guiHistory = AddVideoObjectFromFile(ImageFile);
+	guiHistory = AddVideoObjectFromFile(MLG_HISTORY);
 
 	// load the Wanring graphic and add it
-	ImageFile = GetMLGFilename(MLG_WARNING);
-	guiWarning = AddVideoObjectFromFile(ImageFile);
+	guiWarning = AddVideoObjectFromFile(MLG_WARNING);
 
 	// load the flower advertisment and add it
 	guiFlowerAdvertisement = AddVideoObjectFromFile(LAPTOPDIR "/flowerad_16.sti");
 
 	// load the your ad advertisment and add it
-	ImageFile = GetMLGFilename(MLG_YOURAD13);
-	guiAdForAdsImages = AddVideoObjectFromFile(ImageFile);
+	guiAdForAdsImages = AddVideoObjectFromFile(MLG_YOURAD13);
 
 	// load the insurance advertisment and add it
-	ImageFile = GetMLGFilename(MLG_INSURANCEAD10);
-	guiInsuranceAdImages = AddVideoObjectFromFile(ImageFile);
+	guiInsuranceAdImages = AddVideoObjectFromFile(MLG_INSURANCEAD10);
 
 	// load the funeral advertisment and add it
-	ImageFile = GetMLGFilename(MLG_FUNERALAD9);
-	guiFuneralAdImages = AddVideoObjectFromFile(ImageFile);
+	guiFuneralAdImages = AddVideoObjectFromFile(MLG_FUNERALAD9);
 
-	// load the funeral advertisment and add it
-	ImageFile = GetMLGFilename(MLG_BOBBYRAYAD21);
-	guiBobbyRAdImages = AddVideoObjectFromFile(ImageFile);
+	// load Bobby Ray's advertisement and add it
+	guiBobbyRAdImages = AddVideoObjectFromFile(MLG_BOBBYRAYAD21);
 
 
 	//** Mouse Regions **
@@ -406,8 +398,7 @@ void InitAimDefaults()
 	guiRustBackGround = AddVideoObjectFromFile(LAPTOPDIR "/rustbackground.sti");
 
 	// load the Aim Symbol graphic and add it
-	const char* const ImageFile = GetMLGFilename(MLG_AIMSYMBOL);
-	guiAimSymbol = AddVideoObjectFromFile(ImageFile);
+	guiAimSymbol = AddVideoObjectFromFile(MLG_AIMSYMBOL);
 
 	//Mouse region for the Links
 	MSYS_DefineRegion(&gSelectedAimLogo, AIM_SYMBOL_X, AIM_SYMBOL_Y,

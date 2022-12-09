@@ -109,12 +109,10 @@ static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 void EnterFuneral()
 {
-	const char* ImageFile;
 	UINT16 usPosX, i;
 
 	// load the Closed graphic and add it
-	ImageFile = GetMLGFilename(MLG_CLOSED);
-	guiClosedSign = AddVideoObjectFromFile(ImageFile);
+	guiClosedSign = AddVideoObjectFromFile(MLG_CLOSED);
 
 	// load the Left column graphic and add it
 	guiLeftColumn = AddVideoObjectFromFile(LAPTOPDIR "/leftcolumn.sti");
@@ -126,12 +124,10 @@ void EnterFuneral()
 	guiMarbleBackground = AddVideoObjectFromFile(LAPTOPDIR "/marble.sti");
 
 	// load the McGillicuttys sign graphic and add it
-	ImageFile = GetMLGFilename(MLG_MCGILLICUTTYS);
-	guiMcGillicuttys = AddVideoObjectFromFile(ImageFile);
+	guiMcGillicuttys = AddVideoObjectFromFile(MLG_MCGILLICUTTYS);
 
 	// load the Mortuary  graphic and add it
-	ImageFile = GetMLGFilename(MLG_MORTUARY);
-	guiMortuary = AddVideoObjectFromFile(ImageFile);
+	guiMortuary = AddVideoObjectFromFile(MLG_MORTUARY);
 
 	// load the right column graphic and add it
 	guiRightColumn = AddVideoObjectFromFile(LAPTOPDIR "/rightcolumn.sti");

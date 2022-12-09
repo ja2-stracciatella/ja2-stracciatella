@@ -102,8 +102,7 @@ void EnterMercsAccount()
 	InitMercBackGround();
 
 	// load the Arrow graphic and add it
-	const char* const ImageFile = GetMLGFilename(MLG_ORDERGRID);
-	guiMercOrderGrid = AddVideoObjectFromFile(ImageFile);
+	guiMercOrderGrid = AddVideoObjectFromFile(MLG_ORDERGRID);
 
 	// load the Arrow graphic and add it
 	guiAccountNumberGrid = AddVideoObjectFromFile(LAPTOPDIR "/accountnumber.sti");

@@ -267,8 +267,7 @@ static void EnterOptionsScreen(void)
 	guiOptionBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/optionscreenbase.sti");
 
 	// load button, title graphic and add it
-	const char* const ImageFile = GetMLGFilename(MLG_OPTIONHEADER);
-	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
+	guiOptionsAddOnImages = AddVideoObjectFromFile(MLG_OPTIONHEADER);
 
 	giOptionsButtonImages = LoadButtonImage(INTERFACEDIR "/optionscreenaddons.sti", 2, 3);
 

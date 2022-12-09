@@ -12,6 +12,8 @@
 
 #include <vector>
 
+class SGPVObject;
+
 /** List of supported game versions (localizations). */
 using GameVersion = VanillaVersion;
 
@@ -54,6 +56,8 @@ enum MultiLanguageGraphic
 };
 
 char const* GetMLGFilename(MultiLanguageGraphic);
+// Shortcut for AddVideoObjectFromFile(GetMLGFilename(id))
+SGPVObject* AddVideoObjectFromFile(MultiLanguageGraphic);
 
 /** Choose game version. */
 void setGameVersion(GameVersion ver);
