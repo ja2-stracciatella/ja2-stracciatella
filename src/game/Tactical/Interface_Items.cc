@@ -3405,9 +3405,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 							// CHECK IF WE ARE AT THIS GRIDNO NOW
 							if ( gpItemPointerSoldier->sGridNo != sActionGridNo )
 							{
-								SoldierSP soldier = GetSoldier(gpItemPointerSoldier);
-
-								soldier->setPendingAction(MERC_RELOADROBOT);
+								Soldier{gpItemPointerSoldier}.setPendingAction(MERC_RELOADROBOT);
 
 								// WALK UP TO DEST FIRST
 								EVENT_InternalGetNewSoldierPath( gpItemPointerSoldier, sActionGridNo, gpItemPointerSoldier->usUIMovementMode, FALSE, FALSE );

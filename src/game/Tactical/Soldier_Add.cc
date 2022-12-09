@@ -1043,15 +1043,13 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* const s, INT16 const sGridNo, 
 {
 	// Add merc to gridno
 
-	SoldierSP soldier = GetSoldier(s);
-
 	// Set reserved location!
 	s->sReservedMovementGridNo = NOWHERE;
 
 	// Save OLD insertion code.. as this can change...
 	UINT8 const insertion_code = s->ubStrategicInsertionCode;
 
-	soldier->removePendingAnimation();
+	Soldier{s}.removePendingAnimation();
 
 	//If we are not loading a saved game
 	SetSoldierPosFlags set_pos_flags = SSP_NONE;

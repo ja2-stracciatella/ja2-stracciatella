@@ -1,17 +1,16 @@
 #pragma once
 
+#include "Soldier_Control.h"
 #include "Types.h"
-
-#include "Tactical/Soldier_Control.h"
-
 #include <memory>
 
-struct SOLDIERTYPE;
 
 class Soldier
 {
 public:
-	Soldier(SOLDIERTYPE* s);
+	Soldier(SOLDIERTYPE* s) : mSoldier{s}
+	{
+	}
 
 	/** Remove pending action. */
 	void removePendingAction();
@@ -40,7 +39,7 @@ protected:
 	void switchHeadGear(int switchDirection);
 
 	/** Get the profile name for the solider **/
-	const ST::string& getPofileName() const;
+	const ST::string& getProfileName() const;
 
 	/** Get free head slot or NO_SLOT if the both are occupied. */
 	int8_t getFreeHeadSlot() const;
@@ -54,11 +53,3 @@ protected:
 private:
 	SOLDIERTYPE* mSoldier;
 };
-
-typedef std::shared_ptr<Soldier> SoldierSP;
-
-/** Get soldier object from the structure. */
-std::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s);
-
-/** Get soldier object from the structure. */
-std::shared_ptr<const Soldier> GetSoldier(const struct SOLDIERTYPE* s);

@@ -192,9 +192,8 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
 ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const UINT16 usHandItem, const BOOLEAN fFromUI)
 {
-	SoldierSP soldier = GetSoldier(s);
-
-	soldier->removePendingAction();
+	Soldier soldier{s};
+	soldier.removePendingAction();
 
 	// here is where we would set a different value if the weapon mode is on
 	// "attached weapon"
@@ -486,7 +485,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sGotLocation && fGotAdjacent)
 		{
-			soldier->setPendingAction(MERC_PUNCH);
+			soldier.setPendingAction(MERC_PUNCH);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
 
@@ -534,7 +533,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier->setPendingAction(MERC_GIVEAID);
+			soldier.setPendingAction(MERC_GIVEAID);
 			if      (fHadToUseCursorPos) s->sPendingActionData2 = usMapPos;
 			else if (tgt != NULL)        s->sPendingActionData2 = tgt->sGridNo;
 			else                         s->sPendingActionData2 = usGridNo;
@@ -568,7 +567,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier->setPendingAction(MERC_CUTFFENCE);
+			soldier.setPendingAction(MERC_CUTFFENCE);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
 
@@ -616,7 +615,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier->setPendingAction(MERC_REPAIR);
+			soldier.setPendingAction(MERC_REPAIR);
 			s->sPendingActionData2      = fVehicle ? sVehicleGridNo : sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
 
@@ -662,8 +661,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier->setPendingAction(MERC_FUEL_VEHICLE);
-			s->sPendingActionData2  = sAdjustedGridNo;
+			soldier.setPendingAction(MERC_FUEL_VEHICLE);
 			s->sPendingActionData2  = sVehicleGridNo;
 			s->bPendingActionData3  = ubDirection;
 
@@ -695,7 +693,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier->setPendingAction(MERC_TAKEBLOOD);
+			soldier.setPendingAction(MERC_TAKEBLOOD);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
 
@@ -733,7 +731,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier->setPendingAction(MERC_ATTACH_CAN);
+			soldier.setPendingAction(MERC_ATTACH_CAN);
 			s->sPendingActionData2      = usGridNo;
 			s->bPendingActionData3      = ubDirection;
 
@@ -790,7 +788,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 
 		if (s->sGridNo != usGridNo)
 		{
-			soldier->setPendingAction(MERC_DROPBOMB);
+			soldier.setPendingAction(MERC_DROPBOMB);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, usGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -835,7 +833,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier->setPendingAction(MERC_KNIFEATTACK);
+			soldier.setPendingAction(MERC_KNIFEATTACK);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
 
@@ -1080,15 +1078,11 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 	INT16 sActionGridNo, sAdjustedGridNo;
 	UINT8 ubDirection;
 
-	SoldierSP soldier = GetSoldier(pSoldier);
-
-	soldier->removePendingAction();
-
 	// See if we can get there to stab
 	sActionGridNo =  FindAdjacentGridEx( pSoldier, pTargetSoldier->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 	if ( sActionGridNo != -1 )
 	{
-		soldier->setPendingAction(MERC_GIVEITEM);
+		Soldier{pSoldier}.setPendingAction(MERC_GIVEITEM);
 
 		pSoldier->bPendingActionData5 = bInvPos;
 		// Copy temp object
@@ -1132,14 +1126,12 @@ void SoldierDropItem(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj)
 
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {
-	INT16 sActionGridNo;
-	SoldierSP soldier = GetSoldier(pSoldier);
+	Soldier soldier{pSoldier};
+	soldier.removePendingAction();
 
-	soldier->removePendingAction();
+	GridNo const sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sGridNo );
 
-	sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sGridNo );
-
-	soldier->setPendingAction(MERC_PICKUPITEM);
+	soldier.setPendingAction(MERC_PICKUPITEM);
 	pSoldier->uiPendingActionData1 = iItemIndex;
 	pSoldier->sPendingActionData2  = sActionGridNo;
 	pSoldier->uiPendingActionData4 = sGridNo;

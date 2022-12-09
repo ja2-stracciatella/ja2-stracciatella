@@ -8,7 +8,7 @@
 #define SHOW_FULL_FPS	1
 
 inline BOOLEAN gfEditMode;
-inline BOOLEAN fFirstTimeInGameScreen;
+inline BOOLEAN fFirstTimeInGameScreen = TRUE;
 inline INT8    gbFPSDisplay;
 inline BOOLEAN gfGlobalError;
 

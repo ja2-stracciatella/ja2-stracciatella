@@ -152,12 +152,11 @@ void HandleAutoBandagePending( )
 		}
 
 		// Do any guys have pending actions...?
-		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
-			std::shared_ptr<const Soldier> soldier = GetSoldier(s);
 			if (s->sSector == gWorldSector &&
 				!s->fBetweenSectors &&
-				soldier->hasPendingAction())
+				Soldier{s}.hasPendingAction())
 			{
 				return;
 			}

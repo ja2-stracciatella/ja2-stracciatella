@@ -22,22 +22,6 @@
 
 #include <vector>
 
-/** Get soldier object from the structure. */
-std::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s)
-{
-	return std::make_shared<Soldier>(s);
-}
-
-/** Get soldier object from the structure. */
-std::shared_ptr<const Soldier> GetSoldier(const struct SOLDIERTYPE* s)
-{
-	return std::make_shared<const Soldier>((struct SOLDIERTYPE*)s);
-}
-
-Soldier:: Soldier(SOLDIERTYPE* s)
-	:mSoldier(s)
-{
-}
 
 /** Remove pending action. */
 void Soldier::removePendingAction()
@@ -45,7 +29,7 @@ void Soldier::removePendingAction()
 	if(mSoldier->ubPendingAction != NO_PENDING_ACTION)
 	{
 		SLOGD("{}: remove pending action {}",
-			getPofileName(),
+			getProfileName(),
 			Internals::getActionName(mSoldier->ubPendingAction));
 
 		mSoldier->ubPendingAction = NO_PENDING_ACTION;
@@ -75,23 +59,20 @@ bool Soldier::hasPendingAction(UINT8 action) const
 
 bool Soldier::anyoneHasPendingAction(UINT8 action, UINT8 team)
 {
-	bool anyone = false;
-	CFOR_EACH_IN_TEAM(s, team)
+	FOR_EACH_IN_TEAM(s, team)
 	{
-		std::shared_ptr<const Soldier> soldier = GetSoldier(s);
-		if (soldier->hasPendingAction(action))
+		if (Soldier{s}.hasPendingAction(action))
 		{
-			anyone = true;
-			break;
+			return true;
 		}
 	}
-	return anyone;
+	return false;
 }
 
 void Soldier::setPendingAction(UINT8 action)
 {
 	SLOGD("{}: set pending action {} (previous {})",
-		getPofileName(),
+		getProfileName(),
 		Internals::getActionName(action),
 		Internals::getActionName(mSoldier->ubPendingAction));
 
@@ -100,7 +81,7 @@ void Soldier::setPendingAction(UINT8 action)
 }
 
 
-const ST::string& Soldier::getPofileName() const
+const ST::string& Soldier::getProfileName() const
 {
 	auto profile = GCM->getMercProfileInfo(mSoldier->ubProfile);
 	return profile->internalName;
@@ -349,7 +330,7 @@ void Soldier::switchHeadGear(int switchDirection)
 
 		if (detachedGear.usItem != NONE)
 		{
-			// the gear we want had been detached from helmet and put on; 
+			// the gear we want had been detached from helmet and put on;
 			// now after the object swap, we attach the gear we just put off
 			AttachObject(mSoldier, helmet, &detachedGear);
 		}

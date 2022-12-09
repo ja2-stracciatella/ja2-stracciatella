@@ -102,6 +102,7 @@
 #include <string_theory/string>
 
 #include <algorithm>
+#include <functional>
 
 static BOOLEAN gfFirstCycleMovementStarted = FALSE;
 
@@ -2856,6 +2857,7 @@ static void SwitchHeadGear(bool dayGear)
 	INT32 squad = CurrentSquad();
 	if (!IsSquadOnCurrentTacticalMap(squad)) return;
 
+	auto memFunToUse = dayGear ? &Soldier::putDayHeadGear : &Soldier::putNightHeadGear;
 	FOR_EACH_IN_SQUAD(k, squad)
 	{
 		SOLDIERTYPE* s = *k;
@@ -2864,16 +2866,7 @@ static void SwitchHeadGear(bool dayGear)
 		if(s->bAssignment == ASSIGNMENT_DEAD) continue;
 		if(s->uiStatusFlags & SOLDIER_VEHICLE) continue;
 
-		SoldierSP sel = GetSoldier(s);
-
-		if(dayGear)
-		{
-			sel->putDayHeadGear();
-		}
-		else
-		{
-			sel->putNightHeadGear();
-		}
+		std::invoke(memFunToUse, Soldier{s});
 	}
 }
 
@@ -2991,7 +2984,6 @@ static void CreatePlayerControlledMonster(void)
 
 static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE& s, BOOLEAN const fMovementMode)
 {
-	SoldierSP soldier = GetSoldier(&s);
 	SOLDIERTYPE const* const tgt = gUIFullTarget;
 	if (!tgt)                          return false;
 	if (!OK_ENTERABLE_VEHICLE(tgt))    return false;
@@ -3014,7 +3006,7 @@ static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE& s, BOOLE
 	// Check if we are at this gridno now
 	if (s.sGridNo != action_pos)
 	{
-		soldier->setPendingAction(MERC_ENTER_VEHICLE);
+		Soldier{&s}.setPendingAction(MERC_ENTER_VEHICLE);
 		s.sPendingActionData2      = tgt->sGridNo;
 		// Walk up to dest first
 		EVENT_InternalGetNewSoldierPath(&s, action_pos, s.usUIMovementMode, 3, s.fNoAPToFinishMove);
