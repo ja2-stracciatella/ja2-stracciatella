@@ -280,8 +280,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 	MSYS_DefineRegion(&PBInterfaceBlanket, STD_SCREEN_X + 0, STD_SCREEN_Y + 0, STD_SCREEN_X + 261, STD_SCREEN_Y + 359, MSYS_PRIORITY_HIGHEST - 5, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Create the panel
-	char const* const panel_file = GetMLGFilename(MLG_PREBATTLEPANEL);
-	uiInterfaceImages = AddVideoObjectFromFile(panel_file);
+	uiInterfaceImages = AddVideoObjectFromFile(MLG_PREBATTLEPANEL);
 
 	// Create the 3 buttons
 	iPBButtonImage[0] = LoadButtonImage(INTERFACEDIR "/prebattlebutton.sti", 0, 1);

@@ -106,8 +106,7 @@ void EnterInsurance()
 	InitInsuranceDefaults();
 
 	// load the Insurance title graphic and add it
-	const char* const ImageFile = GetMLGFilename(MLG_INSURANCETITLE);
-	guiInsuranceTitleImage = AddVideoObjectFromFile(ImageFile);
+	guiInsuranceTitleImage = AddVideoObjectFromFile(MLG_INSURANCETITLE);
 
 	// load the red bar on the side of the page and add it
 	guiInsuranceBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
@@ -227,8 +226,7 @@ void InitInsuranceDefaults()
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
 		// load the small title for the every page other then the first page
-		const char* const ImageFile = GetMLGFilename(MLG_SMALLTITLE);
-		guiInsuranceSmallTitleImage = AddVideoObjectFromFile(ImageFile);
+		guiInsuranceSmallTitleImage = AddVideoObjectFromFile(MLG_SMALLTITLE);
 
 		//create the link to the home page on the small titles
 		MSYS_DefineRegion(&gSelectedInsuranceTitleLinkRegion, INSURANCE_SMALL_TITLE_X+85,

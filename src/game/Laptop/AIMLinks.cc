@@ -55,11 +55,11 @@ void EnterAimLinks()
 	InitAimMenuBar();
 
 	// Load the Bobby link graphic.
-	guiBobbyLink = AddVideoObjectFromFile(GetMLGFilename(MLG_BOBBYRAYLINK));
+	guiBobbyLink = AddVideoObjectFromFile(MLG_BOBBYRAYLINK);
 	// Load the Funeral graphic.
-	guiFuneralLink = AddVideoObjectFromFile(GetMLGFilename(MLG_MORTUARYLINK));
+	guiFuneralLink = AddVideoObjectFromFile(MLG_MORTUARYLINK);
 	// Load the Insurance graphic.
-	guiInsuranceLink = AddVideoObjectFromFile(GetMLGFilename(MLG_INSURANCELINK));
+	guiInsuranceLink = AddVideoObjectFromFile(MLG_INSURANCELINK);
 
 	UINT16 const  x    = STD_SCREEN_X + AIM_LINK_LINK_OFFSET_X;
 	UINT16        y    = AIM_LINK_BOBBY_LINK_Y;

@@ -95,8 +95,7 @@ void RenderProfileBackGround( void )
 void LoadIMPSymbol(void)
 {
 	// this procedure will load the IMP main symbol into memory
-	const char* const ImageFile = GetMLGFilename(MLG_IMPSYMBOL);
-	guiIMPSYMBOL = AddVideoObjectFromFile(ImageFile);
+	guiIMPSYMBOL = AddVideoObjectFromFile(MLG_IMPSYMBOL);
 }
 
 

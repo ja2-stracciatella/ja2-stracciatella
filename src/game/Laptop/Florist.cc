@@ -170,14 +170,12 @@ void InitFloristDefaults()
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
 	{
 		// load the small title graphic and add it
-		const char* const ImageFile = GetMLGFilename(MLG_LARGEFLORISTSYMBOL);
-		guiLargeTitleSymbol = AddVideoObjectFromFile(ImageFile);
+		guiLargeTitleSymbol = AddVideoObjectFromFile(MLG_LARGEFLORISTSYMBOL);
 	}
 	else
 	{
 		// load the leaf back graphic and add it
-		const char* const ImageFile = GetMLGFilename(MLG_SMALLFLORISTSYMBOL);
-		guiSmallTitleSymbol = AddVideoObjectFromFile(ImageFile);
+		guiSmallTitleSymbol = AddVideoObjectFromFile(MLG_SMALLFLORISTSYMBOL);
 
 		//flower title homepage link
 		MSYS_DefineRegion(&gSelectedFloristTitleHomeLinkRegion, FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y,

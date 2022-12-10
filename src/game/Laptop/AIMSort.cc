@@ -145,19 +145,14 @@ void EnterAimSort()
 	// load the SortBy box graphic and add it
 	guiSortByBox = AddVideoObjectFromFile(LAPTOPDIR "/sortby.sti");
 
-	const char* ImageFile;
-
 	// load the ToAlumni graphic and add it
-	ImageFile = GetMLGFilename(MLG_TOALUMNI);
-	guiToAlumni = AddVideoObjectFromFile(ImageFile);
+	guiToAlumni = AddVideoObjectFromFile(MLG_TOALUMNI);
 
 	// load the ToMugShots graphic and add it
-	ImageFile = GetMLGFilename(MLG_TOMUGSHOTS);
-	guiToMugShots = AddVideoObjectFromFile(ImageFile);
+	guiToMugShots = AddVideoObjectFromFile(MLG_TOMUGSHOTS);
 
 	// load the ToStats graphic and add it
-	ImageFile = GetMLGFilename(MLG_TOSTATS);
-	guiToStats = AddVideoObjectFromFile(ImageFile);
+	guiToStats = AddVideoObjectFromFile(MLG_TOSTATS);
 
 	// load the SelectLight graphic and add it
 	guiSelectLight = AddVideoObjectFromFile(LAPTOPDIR "/selectlight.sti");

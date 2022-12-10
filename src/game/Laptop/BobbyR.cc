@@ -188,11 +188,8 @@ void EnterBobbyR()
 
 	InitBobbyRWoodBackground();
 
-	const char* ImageFile;
-
 	// load the Bobbyname graphic and add it
-	ImageFile = GetMLGFilename(MLG_BOBBYNAME);
-	guiBobbyName = AddVideoObjectFromFile(ImageFile);
+	guiBobbyName = AddVideoObjectFromFile(MLG_BOBBYNAME);
 
 	// load the plaque graphic and add it
 	guiPlaque = AddVideoObjectFromFile(LAPTOPDIR "/bobbyplaques.sti");
@@ -204,8 +201,7 @@ void EnterBobbyR()
 	guiBottomHinge = AddVideoObjectFromFile(LAPTOPDIR "/bobbybottomhinge.sti");
 
 	// load the Store Plaque graphic and add it
-	ImageFile = GetMLGFilename(MLG_STOREPLAQUE);
-	guiStorePlaque = AddVideoObjectFromFile(ImageFile);
+	guiStorePlaque = AddVideoObjectFromFile(MLG_STOREPLAQUE);
 
 	// load the Handle graphic and add it
 	guiHandle = AddVideoObjectFromFile(LAPTOPDIR "/bobbyhandle.sti");

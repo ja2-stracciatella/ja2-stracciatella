@@ -403,7 +403,7 @@ static void EnterSaveLoadScreen()
 
 	// Load main background and add ons graphic
 	guiSlgBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/loadscreen.sti");
-	guiBackGroundAddOns   = AddVideoObjectFromFile(GetMLGFilename(MLG_LOADSAVEHEADER));
+	guiBackGroundAddOns = AddVideoObjectFromFile(MLG_LOADSAVEHEADER);
 	guiSlgAddonsStracciatella = AddVideoObjectFromFile("sti/interface/save-load-addons.sti");
 	guiSlgScrollbarStracciatella = AddVideoObjectFromFile("sti/interface/scroll-bar.sti");
 

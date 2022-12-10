@@ -148,8 +148,7 @@ void EnterMercsFiles()
 	InitMercBackGround();
 
 	// load the stats box graphic and add it
-	const char* const ImageFile = GetMLGFilename(MLG_STATSBOX);
-	guiStatsBox = AddVideoObjectFromFile(ImageFile);
+	guiStatsBox = AddVideoObjectFromFile(MLG_STATSBOX);
 
 	// load the Portrait box graphic and add it
 	guiPortraitBox = AddVideoObjectFromFile(LAPTOPDIR "/portraitbox.sti");
