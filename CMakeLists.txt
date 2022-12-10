@@ -271,6 +271,11 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wtype-limits -Wignored-qualifiers")
+    if (LOCAL_RAPIDJSON_LIB)
+        # There has not been an official new RapidJSON release since 2016; some C++ features
+        # it uses have been deprecated since then.
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+    endif()
 endif()
 
 set(

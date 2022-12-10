@@ -105,6 +105,9 @@ static CursorFileData CursorFileDatabase[] =
 #define SUBCNTX(cur, idx) cur, idx, 0, CENTER_SUBCURSOR, 0
 #define SUBHIDE(cur, idx) cur, idx, 0, HIDE_SUBCURSOR,   HIDE_SUBCURSOR
 #define SUBNORM(cur, idx) cur, idx, 0, 0,                0
+// Strictly speaking the CursorDataBrace is missing lots of braces,
+// but globally disabling the warning seems overblown.
+#pragma GCC diagnostic ignored "-Wmissing-braces"
 
 static CursorData CursorDatabase[] =
 {
