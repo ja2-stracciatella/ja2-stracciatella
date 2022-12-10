@@ -170,12 +170,12 @@ typedef SGPFile* HWFILE;
 
 
 #ifdef __cplusplus
-#	define ENUM_BITSET(type)                                                                   \
-		static inline type operator ~  (type  a)         { return     (type)~(int)a;           } \
-		static inline type operator &  (type  a, type b) { return     (type)((int)a & (int)b); } \
-		static inline type operator &= (type& a, type b) { return a = (type)((int)a & (int)b); } \
-		static inline type operator |  (type  a, type b) { return     (type)((int)a | (int)b); } \
-		static inline type operator |= (type& a, type b) { return a = (type)((int)a | (int)b); }
+#	define ENUM_BITSET(type)                                                                 \
+		constexpr type operator ~  (type  a)         { return     (type)~(int)a;           } \
+		constexpr type operator &  (type  a, type b) { return     (type)((int)a & (int)b); } \
+		constexpr type operator &= (type& a, type b) { return a = (type)((int)a & (int)b); } \
+		constexpr type operator |  (type  a, type b) { return     (type)((int)a | (int)b); } \
+		constexpr type operator |= (type& a, type b) { return a = (type)((int)a | (int)b); }
 #else
 #	define ENUM_BITSET(type)
 #endif
