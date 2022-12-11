@@ -81,6 +81,14 @@ void Soldier::setPendingAction(UINT8 action)
 }
 
 
+void Soldier::setPendingAction(UINT8 const action, GridNo const gridno, UINT8 const direction)
+{
+	setPendingAction(action);
+	mSoldier->sPendingActionData2 = gridno;
+	mSoldier->bPendingActionData3 = direction;
+}
+
+
 const ST::string& Soldier::getProfileName() const
 {
 	auto profile = GCM->getMercProfileInfo(mSoldier->ubProfile);

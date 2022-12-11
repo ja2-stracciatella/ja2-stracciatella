@@ -24,6 +24,11 @@ public:
 	void setPendingAction(UINT8 action);
 
 	/**
+	 * As above, for those actions that take a gridno 
+	 * and a direction as the second and third action data. */
+	void setPendingAction(UINT8 action, GridNo, UINT8 direction);
+
+	/**
 	 * Handle pending action.
 	 * Return true, when all further processing should be stopped. */
 	bool handlePendingAction(bool inCombat);

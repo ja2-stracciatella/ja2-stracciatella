@@ -8513,9 +8513,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 	sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 	if ( sActionGridNo != -1 )
 	{
-		Soldier{pSoldier}.setPendingAction(MERC_STEAL);
-		pSoldier->sPendingActionData2  = pTarget->sGridNo;
-		pSoldier->bPendingActionData3  = ubDirection;
+		Soldier{pSoldier}.setPendingAction(MERC_STEAL, pTarget->sGridNo, ubDirection);
 		pSoldier->bTargetLevel = pTarget->bLevel;
 
 		// CHECK IF WE ARE AT THIS GRIDNO NOW

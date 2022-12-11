@@ -485,9 +485,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sGotLocation && fGotAdjacent)
 		{
-			soldier.setPendingAction(MERC_PUNCH);
-			s->sPendingActionData2      = sAdjustedGridNo;
-			s->bPendingActionData3      = ubDirection;
+			soldier.setPendingAction(MERC_PUNCH, sAdjustedGridNo, ubDirection);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sGotLocation, s->usUIMovementMode, FALSE, TRUE);
@@ -567,9 +565,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier.setPendingAction(MERC_CUTFFENCE);
-			s->sPendingActionData2      = sAdjustedGridNo;
-			s->bPendingActionData3      = ubDirection;
+			soldier.setPendingAction(MERC_CUTFFENCE, sAdjustedGridNo, ubDirection);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -615,9 +611,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier.setPendingAction(MERC_REPAIR);
-			s->sPendingActionData2      = fVehicle ? sVehicleGridNo : sAdjustedGridNo;
-			s->bPendingActionData3      = ubDirection;
+			soldier.setPendingAction(MERC_REPAIR, fVehicle ? sVehicleGridNo : sAdjustedGridNo, ubDirection);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -661,9 +655,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier.setPendingAction(MERC_FUEL_VEHICLE);
-			s->sPendingActionData2  = sVehicleGridNo;
-			s->bPendingActionData3  = ubDirection;
+			soldier.setPendingAction(MERC_FUEL_VEHICLE, sVehicleGridNo, ubDirection);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -693,9 +685,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier.setPendingAction(MERC_TAKEBLOOD);
-			s->sPendingActionData2      = sAdjustedGridNo;
-			s->bPendingActionData3      = ubDirection;
+			soldier.setPendingAction(MERC_TAKEBLOOD, sAdjustedGridNo, ubDirection);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -731,9 +721,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier.setPendingAction(MERC_ATTACH_CAN);
-			s->sPendingActionData2      = usGridNo;
-			s->bPendingActionData3      = ubDirection;
+			soldier.setPendingAction(MERC_ATTACH_CAN, usGridNo, ubDirection);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -833,9 +821,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			soldier.setPendingAction(MERC_KNIFEATTACK);
-			s->sPendingActionData2      = sAdjustedGridNo;
-			s->bPendingActionData3      = ubDirection;
+			soldier.setPendingAction(MERC_KNIFEATTACK, sAdjustedGridNo, ubDirection);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
