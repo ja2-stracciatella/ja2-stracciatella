@@ -604,7 +604,6 @@ void ExecuteOverhead(void)
 		for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
 		{
 			SOLDIERTYPE* pSoldier = MercSlots[cnt];
-			SoldierSP soldier = GetSoldier(pSoldier);
 
 			// Syncronize for upcoming soldier counters
 			SYNCTIMECOUNTER();
@@ -799,7 +798,7 @@ void ExecuteOverhead(void)
 							&& (pSoldier->usAnimState == STANDING)
 							&& (pSoldier->ubPendingAction == MERC_GIVEITEM))
 						{
-							soldier->handlePendingAction(gTacticalStatus.uiFlags & INCOMBAT);
+							Soldier{pSoldier}.handlePendingAction(gTacticalStatus.uiFlags & INCOMBAT);
 						}
 						// Update world data with new position, etc
 						// Determine gameworld cells corrds of guy
@@ -910,7 +909,7 @@ void ExecuteOverhead(void)
 											}
 										}
 									}
-									else if (soldier->hasPendingAction())
+									else if (Soldier{pSoldier}.hasPendingAction())
 									{
 										SLOGD("We are inside the IF PENDING Animation with soldier #{}", pSoldier->ubID);
 
@@ -933,7 +932,7 @@ void ExecuteOverhead(void)
 												if (EnoughPoints(pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, TRUE))
 												{
 													// avoid several problems due to a lack of global action queueing
-													if (DialogueQueueIsEmptyAndNobodyIsTalking() && gCurrentUIMode != LOCKUI_MODE && !soldier->anyoneHasPendingAction(MERC_GIVEITEM) && !gTacticalStatus.fAutoBandageMode && !gTacticalStatus.fAutoBandagePending)
+													if (DialogueQueueIsEmptyAndNobodyIsTalking() && gCurrentUIMode != LOCKUI_MODE && !Soldier::anyoneHasPendingAction(MERC_GIVEITEM) && !gTacticalStatus.fAutoBandageMode && !gTacticalStatus.fAutoBandagePending)
 													{
 														InteractWithOpenableStruct(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
 													}
@@ -941,7 +940,7 @@ void ExecuteOverhead(void)
 													{
 														SLOGD("Aborting pending action due to other ongoing activities!");
 														fKeepMoving = FALSE;
-														soldier->removePendingAnimation();
+														Soldier{pSoldier}.removePendingAnimation();
 													}
 												}
 												else
@@ -951,7 +950,7 @@ void ExecuteOverhead(void)
 											}
 										}
 
-										if(soldier->handlePendingAction(gTacticalStatus.uiFlags & INCOMBAT))
+										if(Soldier{pSoldier}.handlePendingAction(gTacticalStatus.uiFlags & INCOMBAT))
 										{
 											continue;
 										}
@@ -1241,10 +1240,9 @@ void ExecuteOverhead(void)
 
 static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE& s)
 {
-	SoldierSP soldier = GetSoldier(&s);
 
 	HaltMoveForSoldierOutOfPoints(s);
-	soldier->removePendingAnimation();
+	Soldier{&s}.removePendingAnimation();
 
 	UnMarkMovementReserved(s);
 
@@ -1822,8 +1820,6 @@ static void HandleJohnArrival(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 {
-	SoldierSP soldier = GetSoldier(pSoldier);
-
 	// ATE; Handle bad guys, as they fade, to cancel it if
 	// too long...
 	// ONLY if fading IN!
@@ -1942,7 +1938,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		// ATE: Cancel only if our final destination
 		if (pSoldier->sGridNo == pSoldier->sFinalDestination)
 		{
-			soldier->removePendingAction();
+			Soldier{pSoldier}.removePendingAction();
 		}
 
 		// this flag is set only to halt the currently moving guy; reset it now
@@ -4064,7 +4060,6 @@ void ExitCombatMode( )
 
 	FOR_EACH_SOLDIER(pSoldier)
 	{
-		SoldierSP soldier = GetSoldier(pSoldier);
 		if ( pSoldier->bInSector )
 		{
 			// Reset some flags
@@ -4074,7 +4069,7 @@ void ExitCombatMode( )
 				SoldierGotoStationaryStance( pSoldier );
 			}
 
-			soldier->removePendingAnimation();
+			Soldier{pSoldier}.removePendingAnimation();
 
 			// Reset moved flag
 			pSoldier->bMoved = FALSE;

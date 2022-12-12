@@ -1465,8 +1465,6 @@ static ScreenID UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
 
-	SoldierSP selSoldier = GetSoldier(sel);
-
 	// ATE: Add stuff here to display a system message if we are targeting smeothing and
 	//  are out of range.
 	// Are we using a gun?
@@ -1506,7 +1504,7 @@ static ScreenID UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 	// If we are in realtime, and in a stationary animation, follow!
 	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		if (gAnimControl[sel->usAnimState].uiFlags & ANIM_STATIONARY && !selSoldier->hasPendingAction())
+		if (gAnimControl[sel->usAnimState].uiFlags & ANIM_STATIONARY && !Soldier{sel}.hasPendingAction())
 		{
 			// Check if we have a shot waiting!
 			if (gUITargetShotWaiting) guiPendingOverrideEvent = CA_MERC_SHOOT;
@@ -1625,8 +1623,6 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel != NULL)
 	{
-		SoldierSP selSoldier = GetSoldier(sel);
-
 		fAllMove = gfUIAllMoveOn;
 		gfUIAllMoveOn = FALSE;
 
@@ -1644,8 +1640,6 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 			// TODO: Only our squad!
 			FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 			{
-				SoldierSP soldier = GetSoldier(pSoldier);
-
 				if (OkControllableMerc(pSoldier) && pSoldier->bAssignment == CurrentSquad() && !pSoldier->fMercAsleep)
 				{
 					// If we can't be controlled, returninvalid...
@@ -1672,7 +1666,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 						pSoldier->usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 					}
 
-					soldier->removePendingAction();
+					Soldier{pSoldier}.removePendingAction();
 
 					//if ( !( gTacticalStatus.uiFlags & INCOMBAT ) && ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_MOVING ) )
 					//{
@@ -1761,7 +1755,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 			{
 				sel->bReverse = gUIUseReverse;
 
-				selSoldier->removePendingAction();
+				Soldier{sel}.removePendingAction();
 
 				EVENT_InternalGetNewSoldierPath(sel, sDestGridNo, sel->usUIMovementMode, TRUE, sel->fNoAPToFinishMove);
 
@@ -4221,7 +4215,6 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 
 	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		SoldierSP soldier = GetSoldier(pSoldier);
 		if (pSoldier->bInSector)
 		{
 			if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
@@ -4249,7 +4242,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 					pSoldier->bReverse = FALSE;
 				}
 
-				soldier->removePendingAction();
+				Soldier{pSoldier}.removePendingAction();
 
 				if ( EVENT_InternalGetNewSoldierPath( pSoldier, sDestGridNo, pSoldier->usUIMovementMode , TRUE, pSoldier->fNoAPToFinishMove ) )
 				{
@@ -4410,8 +4403,6 @@ static ScreenID UIHandleJumpOver(UI_EVENT* pUIEvent)
 	if (sel == NULL)
 		return GAME_SCREEN;
 
-	SoldierSP selSoldier = GetSoldier(sel);
-
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE)
 		return GAME_SCREEN;
@@ -4423,7 +4414,7 @@ static ScreenID UIHandleJumpOver(UI_EVENT* pUIEvent)
 
 	// OK, Start jumping!
 	// Remove any previous actions
-	selSoldier->removePendingAction();
+	Soldier{sel}.removePendingAction();
 
 	// Get direction to goto....
 	const INT8 bDirection = GetDirectionFromGridNo(usMapPos, sel);
@@ -4641,8 +4632,6 @@ BOOLEAN HandleTalkInit(  )
 	if (sel == NULL)
 		return FALSE;
 
-	SoldierSP selSoldier = GetSoldier(sel);
-
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE)
 		return FALSE;
@@ -4800,7 +4789,7 @@ BOOLEAN HandleTalkInit(  )
 				}
 
 				// Now walkup to talk....
-				selSoldier->setPendingAction(MERC_TALK);
+				Soldier{sel}.setPendingAction(MERC_TALK);
 				sel->uiPendingActionData1 = pTSoldier->ubID;
 
 				// WALK UP TO DEST FIRST
