@@ -69,7 +69,7 @@ static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFla
 	if (!(flags & type)) return;
 
 	ST::string const map_name = GetMapTempFileName(type, sMap);
-	SaveFilesToSavedGame(map_name.c_str(), f);
+	SaveFilesToSavedGame(map_name, f);
 }
 
 
@@ -112,7 +112,7 @@ static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, Se
 	if (!(flags & type)) return;
 
 	ST::string const map_name = GetMapTempFileName(type, sector);
-	LoadFilesFromSavedGame(map_name.c_str(), f);
+	LoadFilesFromSavedGame(map_name, f);
 }
 
 

@@ -5353,7 +5353,7 @@ void LoadInterfaceItemsGraphics()
 		auto path = item.to_lower();
 		if (allInventoryGraphics.find(path) == allInventoryGraphics.end()) {
 			try {
-				auto vObject = AddVideoObjectFromFile(item.c_str());
+				auto vObject = AddVideoObjectFromFile(item);
 				allInventoryGraphics.insert_or_assign(path, vObject);
 			} catch (const std::runtime_error &ex) {
 				SLOGE("Error loading small inventory graphic `{}`: {}", item, ex.what());

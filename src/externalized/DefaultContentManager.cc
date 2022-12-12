@@ -320,9 +320,7 @@ const FactParamsModel* DefaultContentManager::getFactParams(Fact fact) const
 /** Get map file path. */
 ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 {
-	ST::string result = MAPSDIR;
-	result += '/';
-	result += mapName.c_str();
+	ST::string const result = MAPSDIR "/" + mapName;
 
 	SLOGD("map file {}", result);
 
@@ -332,9 +330,7 @@ ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 /** Get radar map resource name. */
 ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapName) const
 {
-	ST::string result = RADARMAPSDIR;
-	result += "/";
-	result += mapName;
+	ST::string const result = RADARMAPSDIR "/" + mapName;
 
 	SLOGD("map file {}", result);
 
@@ -794,7 +790,7 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<co
 	}
 
 	fullName += ".json";
-	auto json = readJsonDataFileWithSchema(fullName.c_str());
+	auto json = readJsonDataFileWithSchema(fullName);
 	std::vector<ST::string> utf8_encoded;
 	JsonUtility::parseListStrings(*json, utf8_encoded);
 	for (const ST::string &str : utf8_encoded)
@@ -1053,7 +1049,7 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 	for (auto dealer : m_dealers)
 	{
 		ST::string filename = dealer->getInventoryDataFileName(this);
-		m_dealersInventory[dealer->dealerID] = loadDealerInventory(filename.c_str());
+		m_dealersInventory[dealer->dealerID] = loadDealerInventory(filename);
 	}
 	m_bobbyRayNewInventory                        = loadDealerInventory("bobby-ray-inventory-new.json");
 	m_bobbyRayUsedInventory                       = loadDealerInventory("bobby-ray-inventory-used.json");

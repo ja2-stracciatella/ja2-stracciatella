@@ -15,7 +15,7 @@ AmmoTypeModel::~AmmoTypeModel() = default;
 void AmmoTypeModel::serializeTo(JsonObject &obj) const
 {
 	obj.AddMember("index",                index);
-	obj.AddMember("internalName",         internalName.c_str());
+	obj.AddMember("internalName",         internalName);
 }
 
 AmmoTypeModel* AmmoTypeModel::deserialize(JsonObjectReader &obj)

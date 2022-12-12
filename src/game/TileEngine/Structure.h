@@ -6,6 +6,7 @@
 #include "Structure_Internals.h"
 #include "Overhead_Types.h"
 #include "Sound_Control.h"
+#include "string_theory/string"
 
 #define NOTHING_BLOCKING			0
 #define BLOCKING_REDUCE_RANGE			1
@@ -38,7 +39,7 @@ enum StructureDamageReason
 
 
 // functions at the structure database level
-STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName);
+STRUCTURE_FILE_REF* LoadStructureFile(ST::string const& fileName);
 void FreeAllStructureFiles( void );
 void FreeStructureFile(STRUCTURE_FILE_REF*);
 

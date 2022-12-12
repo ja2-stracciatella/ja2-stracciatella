@@ -155,12 +155,12 @@ static void ChangeDirectory(const ST::string directory, bool resetState) {
 		if (FileMan::getParentPath(gCurrentDirectory, false) != "") {
 			gFileList.push_back(FileDialogEntry { FileType::Parent, ".." });
 		}
-		std::vector<ST::string> dirs = FileMan::findAllDirsInDir(directory.c_str(), true, false, true);
+		std::vector<ST::string> dirs = FileMan::findAllDirsInDir(directory, true, false, true);
 		for (const ST::string &dir : dirs)
 		{
 			gFileList.push_back(FileDialogEntry { FileType::Directory, dir });
 		}
-		std::vector<ST::string> files = FileMan::findAllFilesInDir(directory.c_str(), true, false, true);
+		std::vector<ST::string> files = FileMan::findAllFilesInDir(directory, true, false, true);
 		for (const ST::string &file : files)
 		{
 			gFileList.push_back(FileDialogEntry { FileType::File, file });
@@ -871,7 +871,7 @@ static ScreenID ProcessFileIO(void)
 			if( gfShowPits )
 				RemoveAllPits();
 			OptimizeSchedules();
-			if ( !SaveWorldAbsolute( gFileForIO.c_str() ) )
+			if (!SaveWorldAbsolute(gFileForIO))
 			{
 				if( gfErrorCatch )
 				{

@@ -43,18 +43,18 @@ ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& fil
 	if(it != m_dialogQuotesMap.end())
 	{
 		SLOGD("cached quote {} {}", quote_number, jsonFileName);
-		return new ST::string(it->second[quote_number].c_str());
+		return new ST::string(it->second[quote_number]);
 	}
 	else
 	{
-		if(doesGameResExists(jsonFileName.c_str()))
+		if(doesGameResExists(jsonFileName))
 		{
 			AutoSGPFile f(openGameResForReading(jsonFileName));
 			ST::string jsonQuotes = f->readStringToEnd();
 			std::vector<ST::string> quotes;
 			JsonUtility::parseJsonToListStrings(jsonQuotes.c_str(), quotes);
 			m_dialogQuotesMap[jsonFileName] = quotes;
-			return new ST::string(quotes[quote_number].c_str());
+			return new ST::string(quotes[quote_number]);
 		}
 		else
 		{

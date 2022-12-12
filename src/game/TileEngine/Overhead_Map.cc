@@ -102,13 +102,13 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		SGPVObject* vo;
 		try
 		{
-			vo = AddVideoObjectFromFile(res.resourceFileName.c_str());
+			vo = AddVideoObjectFromFile(res.resourceFileName);
 		}
 		catch (std::exception &e)
 		{
 			SLOGD("{}", e.what());
 			// Load one we know about
-			vo = AddVideoObjectFromFile(GCM->getTilesetResourceName(GetDefaultTileset(), ST::string("t/") + "grass.sti").c_str());
+			vo = AddVideoObjectFromFile(GCM->getTilesetResourceName(GetDefaultTileset(), "t/grass.sti"));
 		}
 
 		gSmTileSurf[i].vo = vo;

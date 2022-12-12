@@ -549,7 +549,7 @@ void InitAnimationSystem()
 	{
 		for ( cnt2 = 0; cnt2 < NUM_STRUCT_IDS; cnt2++ )
 		{
-			const char* Filename = gAnimStructureDatabase[cnt1][cnt2].Filename;
+			ST::string const Filename{gAnimStructureDatabase[cnt1][cnt2].Filename};
 
 			if (GCM->doesGameResExists(Filename))
 			{
