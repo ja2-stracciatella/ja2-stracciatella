@@ -2719,7 +2719,7 @@ void LoadMapScreenInterfaceMapGraphics()
 		const ST::string& path = s->secretMapIcon;
 		if (!path.empty() && gSecretSiteIcons.find(path) == gSecretSiteIcons.end())
 		{
-			gSecretSiteIcons[path] = AddVideoObjectFromFile(path.c_str());
+			gSecretSiteIcons[path] = AddVideoObjectFromFile(path);
 		}
 	}
 }

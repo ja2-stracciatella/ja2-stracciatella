@@ -93,8 +93,8 @@ BOOLEAN SaveGame(const ST::string &saveName, const ST::string& gameDesc);
 void    LoadSavedGame(const ST::string &saveName);
 void BackupSavedGame(const ST::string &saveName);
 
-void SaveFilesToSavedGame(char const* pSrcFileName, HWFILE);
-void LoadFilesFromSavedGame(char const* pSrcFileName, HWFILE);
+void SaveFilesToSavedGame(ST::string const& SrcFileName, HWFILE);
+void LoadFilesFromSavedGame(ST::string const& SrcFileName, HWFILE);
 
 void GetBestPossibleSectorXYZValues(SGPSector& sSector);
 

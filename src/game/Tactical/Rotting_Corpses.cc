@@ -526,7 +526,7 @@ try
 	// Add structure data.....
 	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, ani->sCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
 
-	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename.c_str());
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename);
 	if (pStructureFileRef != NULL)
 	{
 		const UINT16                  usStructIndex   = GetCorpseStructIndex(pCorpseDef, TRUE);
@@ -1074,7 +1074,6 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
 	SOLDIERTYPE soldier{};
-	STRUCTURE_FILE_REF *pStructureFileRef = NULL;
 	UINT8 ubBestDirection=0;
 	BOOLEAN fSetDirection = FALSE;
 
@@ -1084,7 +1083,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	// Used to find struct data for this corpse...
 	ST::string zFilename(FileMan::getFileNameWithoutExt(zCorpseFilenames[pDef->ubType]));
 
-	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename.c_str() );
+	STRUCTURE_FILE_REF const * const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename);
 
 	sSweetGridNo = pDef->sGridNo;
 

@@ -3796,7 +3796,7 @@ void DeleteInterfacePanelGraphics()
 
 static SGPVSurfaceAuto* CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex)
 {
-	SGPVObject* vo = AddVideoObjectFromFile(filename.c_str());
+	SGPVObject* vo = AddVideoObjectFromFile(filename);
 	auto r = vo->SubregionProperties(usRegionIndex);
 	auto* sf = new SGPVSurfaceAuto(r.usWidth, r.usHeight, PIXEL_DEPTH);
 	BltVideoObject(sf, vo, usRegionIndex, 0, 0);

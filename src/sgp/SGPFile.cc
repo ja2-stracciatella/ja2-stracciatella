@@ -138,7 +138,7 @@ void SGPFile::write(void const *const pDest, size_t const uiBytesToWrite)
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::write failed: {}", err.get()).c_str());
+        throw IoException(ST::format("SGPFile::write failed: {}", err.get()));
     }
 }
 
@@ -161,7 +161,7 @@ void SGPFile::seek(INT32 distance, FileSeekMode const how)
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::seek failed: {}", err.get()).c_str());
+        throw IoException(ST::format("SGPFile::seek failed: {}", err.get()));
     }
 }
 
@@ -173,7 +173,7 @@ INT32 SGPFile::pos() const
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::pos failed: {}", err.get()).c_str());
+        throw IoException(ST::format("SGPFile::pos failed: {}", err.get()));
     }
     if (position > INT32_MAX)
     {
@@ -192,7 +192,7 @@ UINT32 SGPFile::size() const
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::size failed: {}", err.get()).c_str());
+        throw IoException(ST::format("SGPFile::size failed: {}", err.get()));
     }
     if (len > UINT32_MAX)
     {

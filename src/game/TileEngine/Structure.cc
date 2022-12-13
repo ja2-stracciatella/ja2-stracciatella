@@ -237,7 +237,7 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
 
 
 // Loads a structure file's data as a honking chunk o' memory
-static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
+static void LoadStructureData(ST::string const& filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
 {
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 
@@ -385,7 +385,7 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 }
 
 
-STRUCTURE_FILE_REF* LoadStructureFile(char const* const filename)
+STRUCTURE_FILE_REF* LoadStructureFile(ST::string const& filename)
 { // NB should be passed in expected number of structures so we can check equality
 	SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFileRef> sfr(new STRUCTURE_FILE_REF{});
 	UINT32 data_size = 0;

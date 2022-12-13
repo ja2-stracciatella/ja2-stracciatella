@@ -32,7 +32,7 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 void MagazineModel::serializeTo(JsonObject &obj) const
 {
 	obj.AddMember("itemIndex",            itemIndex);
-	obj.AddMember("internalName",         internalName.c_str());
+	obj.AddMember("internalName",         internalName);
 	obj.AddMember("calibre",              calibre->internalName);
 	obj.AddMember("capacity",             capacity);
 	obj.AddMember("ammoType",             ammoType->internalName);

@@ -36,7 +36,7 @@ try
 	{
 		SLOGD("loading tile {}", cStructureFilename);
 
-		pStructureFileRef = LoadStructureFile( cStructureFilename.c_str() );
+		pStructureFileRef = LoadStructureFile(cStructureFilename);
 
 		if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
 		{

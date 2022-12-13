@@ -87,7 +87,7 @@ void LoadRadarScreenBitmap(const ST::string& filename)
 	// Grab the Map image
 	ST::string image_filename(GCM->getRadarMapResourceName(FileMan::replaceExtension(FileMan::getFileName(filename), "sti")));
 
-	SGPVObject* const radar = AddVideoObjectFromFile(image_filename.c_str());
+	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
 	gusRadarImage = radar;
 
 	// ATE: Add a shade table!

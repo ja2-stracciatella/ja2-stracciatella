@@ -30,14 +30,14 @@ CalibreModel::~CalibreModel() = default;
 
 void CalibreModel::serializeTo(JsonObject &obj) const
 {
-	obj.AddMember("index",			index);
-	obj.AddMember("internalName",	internalName.c_str());
-	obj.AddMember("sound",			sound.c_str());
-	obj.AddMember("burstSound",		burstSound.c_str());
-	obj.AddMember("silencedSound",		silencedSound.c_str());
-	obj.AddMember("silencedBurstSound",	silencedBurstSound.c_str());
-	obj.AddMember("showInHelpText",       showInHelpText);
-	obj.AddMember("monsterWeapon",        monsterWeapon);
+	obj.AddMember("index",              index);
+	obj.AddMember("internalName",       internalName);
+	obj.AddMember("sound",              sound);
+	obj.AddMember("burstSound",         burstSound);
+	obj.AddMember("silencedSound",      silencedSound);
+	obj.AddMember("silencedBurstSound", silencedBurstSound);
+	obj.AddMember("showInHelpText",     showInHelpText);
+	obj.AddMember("monsterWeapon",      monsterWeapon);
 }
 
 CalibreModel* CalibreModel::deserialize(JsonObjectReader &obj)

@@ -897,7 +897,7 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 		bool success = false;
 		try
 		{
-			ST::string* quote = GCM->loadDialogQuoteFromFile(zFilename.c_str(), usQuoteNum);
+			ST::string* quote = GCM->loadDialogQuoteFromFile(zFilename, usQuoteNum);
 			if(quote)
 			{
 				zDialogueText = *quote;

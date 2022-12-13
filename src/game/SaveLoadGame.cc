@@ -1505,7 +1505,7 @@ static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 	hFile->write(pData, uiFileSize);
 }
 
-void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
+void SaveFilesToSavedGame(ST::string const& pSrcFileName, HWFILE const hFile)
 {
 	AutoSGPFile hSrcFile(GCM->tempFiles()->openForReading(pSrcFileName));
 	SaveFileToSavedGame(hSrcFile, hFile);
@@ -1528,7 +1528,7 @@ static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 	fileToWrite->write(pData, uiFileSize);
 }
 
-void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
+void LoadFilesFromSavedGame(ST::string const& pSrcFileName, HWFILE const hFile)
 {
 	AutoSGPFile hSrcFile(GCM->tempFiles()->openForWriting(pSrcFileName, true));
 	LoadFileFromSavedGame(hSrcFile, hFile);
