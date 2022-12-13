@@ -85,15 +85,13 @@ LoadingScreenModel* LoadingScreenModel::deserialize(const rapidjson::Value& scre
 	for (auto& item : screensList.GetArray())
 	{
 		JsonObjectReader r(item);
-		screens.push_back(
-			LoadingScreen(index++, r.GetString("internalName"), r.GetString("filename"))
-		);
+		screens.emplace_back(static_cast<uint8_t>(index++), r.GetString("internalName"), r.GetString("filename"));
 	}
 
-	std::map<std::string, uint8_t> namesMapping;
+	std::map<ST::string, uint8_t> namesMapping;
 	for (index = 0; index < screens.size(); index++)
 	{
-		std::string name = screens[index].internalName.to_std_string();
+		ST::string const& name = screens[index].internalName;
 		namesMapping[name] = static_cast<uint8_t>(index);
 	}
 

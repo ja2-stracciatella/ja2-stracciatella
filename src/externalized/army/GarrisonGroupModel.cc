@@ -6,7 +6,7 @@ GARRISON_GROUP GarrisonGroupModel::deserialize(JsonObjectReader& obj, const std:
 {
 	auto sector = obj.GetString("sector");
 	uint8_t sectorId = JsonUtility::parseSectorID(sector);
-	uint8_t compositionId = armyCompMapping.at(std::string(obj.GetString("composition")));
+	uint8_t compositionId = armyCompMapping.at(obj.GetString("composition"));
 
 	GARRISON_GROUP group{};
 	group.ubSectorID = sectorId;
