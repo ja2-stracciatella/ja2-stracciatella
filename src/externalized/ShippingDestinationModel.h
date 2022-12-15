@@ -20,7 +20,7 @@ public:
 	uint8_t getDeliverySector() const;
 
 	static ShippingDestinationModel* deserialize(JsonObjectReader& obj);
-	static void validateData(std::vector<const ShippingDestinationModel*> destinations, std::vector<const ST::string*> destinationNames);
+	static void validateData(std::vector<const ShippingDestinationModel*> destinations, std::vector<ST::string> const& destinationNames);
 
 	const uint8_t locationId;
 

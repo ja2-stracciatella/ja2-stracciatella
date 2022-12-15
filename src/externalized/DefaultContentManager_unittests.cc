@@ -1,6 +1,5 @@
 #ifdef WITH_UNITTESTS
 
-#include "DefaultContentManager.h"
 #include "DefaultContentManagerUT.h"
 #include "FileMan.h"
 #include "TestUtils.h"
@@ -124,7 +123,7 @@ TEST(ExternalizedData, readEveryFile)
 	for (ST::string f : results)
 	{
 		ST::string relativePath = f.substr(dataPath.size() + 1);
-		auto json = cm->_readJsonDataFile(relativePath.c_str());
+		auto json = cm->readJsonDataFile(relativePath);
 		ASSERT_FALSE(json.get() == NULL);
 	}
 

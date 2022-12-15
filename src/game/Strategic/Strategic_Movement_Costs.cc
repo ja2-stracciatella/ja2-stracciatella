@@ -2,7 +2,7 @@
 #include "Strategic_Movement.h"
 #include "Strategic_Movement_Costs.h"
 #include "GameInstance.h"
-#include "DefaultContentManager.h"
+#include "ContentManager.h"
 #include "MovementCostsModel.h"
 
 
@@ -66,4 +66,3 @@ bool SectorIsPassable(INT16 const sSector)
 	const UINT8 t = SectorInfo[sSector].ubTraversability[THROUGH_STRATEGIC_MOVE];
 	return t != GROUNDBARRIER && t != EDGEOFWORLD;
 }
-

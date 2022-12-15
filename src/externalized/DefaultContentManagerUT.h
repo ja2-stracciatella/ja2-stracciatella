@@ -7,14 +7,9 @@ struct EngineOptions;
 
 class DefaultContentManagerUT : public DefaultContentManager
 {
-public:
 	DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions);
 
-	// expose this method to unit tests
-	std::unique_ptr<rapidjson::Document> _readJsonDataFile(const char* fileName) const;
-
+public:
 	/** Create DefaultContentManager for usage in unit testing. */
 	static DefaultContentManagerUT* createDefaultCMForTesting();
 };
-
-
