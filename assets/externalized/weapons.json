@@ -1726,6 +1726,7 @@
         "usRange": 500,
         "ubAttackVolume": 82,
         "ubHitVolume": 8,
+        "burstSound": "sounds/weapons/bursttype1.wav",
         "attachment_SniperScope": true,
         "attachment_LaserScope": true,
         "attachment_Bipod": true,
