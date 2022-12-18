@@ -1,5 +1,9 @@
 #pragma once
 
+/* This header is somewhat private, unless you are constructing an instance
+ * of this class or inheriting from it there should not be any reason to
+ * include this file instead of ContentManager.h.
+ */
 #include "game/GameRes.h"
 
 #include "ContentManager.h"
@@ -173,17 +177,17 @@ protected:
 
 	GameVersion m_gameVersion;
 
-	std::vector<const ST::string*> m_newStrings;
-	std::vector<const ST::string*> m_landTypeStrings;
+	std::vector<ST::string> m_newStrings;
+	std::vector<ST::string> m_landTypeStrings;
 
 	std::vector<const ItemModel*> m_items;
 	std::vector<const MagazineModel*> m_magazines;
 
 	std::vector<const CalibreModel*> m_calibres;
-	std::vector<const ST::string*> m_calibreNames;
-	std::vector<const ST::string*> m_calibreNamesBobbyRay;
+	std::vector<ST::string> m_calibreNames;
+	std::vector<ST::string> m_calibreNamesBobbyRay;
 
-	std::vector<AmmoTypeModel*> m_ammoTypes;
+	std::vector<AmmoTypeModel const *> m_ammoTypes;
 
 	/** Mapping of calibre names to objects. */
 	std::map<ST::string, const AmmoTypeModel*> m_ammoTypeMap;
@@ -201,25 +205,25 @@ protected:
 	std::vector<ARMY_COMPOSITION> m_armyCompositions;
 
 	std::vector<const DealerInventory*> m_dealersInventory;
-	const DealerInventory *m_bobbyRayNewInventory;
-	const DealerInventory *m_bobbyRayUsedInventory;
+	std::unique_ptr<DealerInventory const> m_bobbyRayNewInventory;
+	std::unique_ptr<DealerInventory const> m_bobbyRayUsedInventory;
 
 	std::vector<const DealerModel*> m_dealers;
 
 	std::vector<const ShippingDestinationModel*> m_shippingDestinations;
-	std::vector<const ST::string*> m_shippingDestinationNames;
+	std::vector<ST::string> m_shippingDestinationNames;
 
 	std::map<Fact, const FactParamsModel*> m_factParams;
 	std::map<uint16_t, const NpcActionParamsModel*> m_npcActionParams;
 	std::map<uint8_t, const NpcPlacementModel*> m_npcPlacements;
 
-	const IMPPolicy *m_impPolicy;
-	const GamePolicy *m_gamePolicy;
-	const StrategicAIPolicy *m_strategicAIPolicy;
+	std::unique_ptr<IMPPolicy const> m_impPolicy;
+	std::unique_ptr<GamePolicy const> m_gamePolicy;
+	std::unique_ptr<StrategicAIPolicy const> m_strategicAIPolicy;
 
-	const CacheSectorsModel* m_cacheSectors;
-	const LoadingScreenModel* m_loadingScreenModel;
-	const MovementCostsModel* m_movementCosts;
+	std::unique_ptr<CacheSectorsModel const> m_cacheSectors;
+	std::unique_ptr<LoadingScreenModel const> m_loadingScreenModel;
+	std::unique_ptr<MovementCostsModel const> m_movementCosts;
 	std::map<SGPSector, uint8_t> m_sectorLandTypes;
 
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
@@ -227,11 +231,11 @@ protected:
 	std::vector<const CreatureLairModel*> m_creatureLairs;
 	std::vector<const MineModel*> m_mines;
 	std::vector<const SamSiteModel*> m_samSites;
-	const SamSiteAirControlModel* m_samSitesAirControl;
+	std::unique_ptr<SamSiteAirControlModel const> m_samSitesAirControl;
 	std::vector<const StrategicMapSecretModel*> m_mapSecrets;
 	std::map<int8_t, const TownModel*> m_towns;
-	std::vector<const ST::string*> m_townNames;
-	std::vector<const ST::string*> m_townNameLocatives;
+	std::vector<ST::string> m_townNames;
+	std::vector<ST::string> m_townNameLocatives;
 	std::vector<const UndergroundSectorModel*> m_undergroundSectors;
 
 	std::map<uint8_t, const RPCSmallFaceModel*> m_rpcSmallFaces;
@@ -256,7 +260,7 @@ protected:
 
 	const DealerInventory * loadDealerInventory(const ST::string& fileName);
 	bool loadAllDealersAndInventory();
-	void loadStringRes(const ST::string& name, std::vector<const ST::string*> &strings) const;
+	void loadStringRes(const ST::string& name, std::vector<ST::string> &strings) const;
 
 	bool readWeaponTable(
 		const ST::string& fileName,

@@ -102,17 +102,6 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
-	m_bobbyRayNewInventory = NULL;
-	m_bobbyRayUsedInventory = NULL;
-	m_impPolicy = NULL;
-	m_gamePolicy = NULL;
-	m_strategicAIPolicy = NULL;
-
-	m_cacheSectors = NULL;
-	m_movementCosts = NULL;
-	m_loadingScreenModel = NULL;
-	m_samSitesAirControl = NULL;
-
 	// Initialize temp dir
 	RustPointer<TempDir> tempDir(TempDir_create());
 	if (tempDir.get() == NULL) {
@@ -145,79 +134,34 @@ void DefaultContentManager::logConfiguration() const {
 }
 
 template <class T>
-void deleteElements(std::vector<const T*> vec)
+void deleteElements(std::vector<const T*> & vec)
 {
 	for (auto elem : vec)
 	{
 		delete elem;
 	}
-	vec.clear();
 }
 
-template <typename K, class V>
-void deleteElements(std::map<K, const V*> map)
+template <typename K, typename V>
+void deleteElements(std::map<K, const V*> & map)
 {
 	for (auto& kv : map)
 	{
 		delete kv.second;
 	}
-	map.clear();
 }
 
 DefaultContentManager::~DefaultContentManager() noexcept(false)
 {
+	// Deconstruction of vectors containing non-pointer types
+	// is left to the compiler, no need to clear() them.
 	SLOGD("Shutting Down Content Manager");
-	for (const ItemModel* item : m_items)
-	{
-		delete item;
-	}
-	m_items.clear();
-	m_magazineMap.clear();
-	m_magazines.clear();
-	m_weaponMap.clear();
-	m_itemMap.clear();
-	m_mapItemReplacements.clear();
 
-	m_armyCompositions.clear();
-	m_garrisonGroups.clear();
-	m_patrolGroups.clear();
-
-	for (const CalibreModel* calibre : m_calibres)
-	{
-		delete calibre;
-	}
-	m_calibres.clear();
-	m_calibreMap.clear();
-
-	for (const AmmoTypeModel* ammoType : m_ammoTypes)
-	{
-		delete ammoType;
-	}
-	m_ammoTypes.clear();
-	m_ammoTypeMap.clear();
-
+	deleteElements(m_items);
+	deleteElements(m_calibres);
+	deleteElements(m_ammoTypes);
 	deleteElements(m_dealersInventory);
-	delete m_bobbyRayNewInventory;
-	delete m_bobbyRayUsedInventory;
-
 	deleteElements(m_dealers);
-
-	delete m_impPolicy;
-	delete m_gamePolicy;
-	delete m_strategicAIPolicy;
-	delete m_loadingScreenModel;
-
-	deleteElements(m_newStrings);
-	deleteElements(m_landTypeStrings);
-	for (const ST::string *str : m_calibreNames)
-	{
-		delete str;
-	}
-	for (const ST::string *str : m_calibreNamesBobbyRay)
-	{
-		delete str;
-	}
-
 	deleteElements(m_bloodCatPlacements);
 	deleteElements(m_bloodCatSpawns);
 	deleteElements(m_creatureLairs);
@@ -228,22 +172,13 @@ DefaultContentManager::~DefaultContentManager() noexcept(false)
 	deleteElements(m_samSites);
 	deleteElements(m_mapSecrets);
 	deleteElements(m_shippingDestinations);
-	deleteElements(m_shippingDestinationNames);
 	deleteElements(m_towns);
-	deleteElements(m_townNames);
-	deleteElements(m_townNameLocatives);
 	deleteElements(m_undergroundSectors);
 	deleteElements(m_rpcSmallFaces);
 	deleteElements(m_MERCListings);
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
 	deleteElements(m_vehicles);
-
-	m_sectorLandTypes.clear();
-
-	delete m_cacheSectors;
-	delete m_movementCosts;
-	delete m_samSitesAirControl;
 
 	m_vfs.reset();
 	m_tempDir.reset();
@@ -252,12 +187,12 @@ DefaultContentManager::~DefaultContentManager() noexcept(false)
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
 {
-	return m_bobbyRayNewInventory;
+	return m_bobbyRayNewInventory.get();
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
 {
-	return m_bobbyRayUsedInventory;
+	return m_bobbyRayUsedInventory.get();
 }
 
 const DealerModel* DefaultContentManager::getDealer(uint8_t dealerID) const
@@ -294,7 +229,7 @@ const ShippingDestinationModel* DefaultContentManager::getPrimaryShippingDestina
 
 const ST::string* DefaultContentManager::getShippingDestinationName(uint8_t index) const
 {
-	return m_shippingDestinationNames[index];
+	return &m_shippingDestinationNames[index];
 }
 
 const NpcActionParamsModel* DefaultContentManager::getNpcActionParams(uint16_t actionCode) const
@@ -497,12 +432,12 @@ const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
 
 const ST::string* DefaultContentManager::getCalibreName(uint8_t index) const
 {
-	return m_calibreNames[index];
+	return &m_calibreNames[index];
 }
 
 const ST::string* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
 {
-	return m_calibreNamesBobbyRay[index];
+	return &m_calibreNamesBobbyRay[index];
 }
 
 const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
@@ -768,7 +703,7 @@ bool DefaultContentManager::loadArmyData()
 	return true;
 }
 
-void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<const ST::string*> &strings) const
+void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<ST::string> &strings) const
 {
 	ST::string fullName(name);
 
@@ -791,12 +726,7 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<co
 
 	fullName += ".json";
 	auto json = readJsonDataFileWithSchema(fullName);
-	std::vector<ST::string> utf8_encoded;
-	JsonUtility::parseListStrings(*json, utf8_encoded);
-	for (const ST::string &str : utf8_encoded)
-	{
-		strings.push_back(new ST::string(str));
-	}
+	JsonUtility::parseListStrings(*json, strings);
 }
 
 /** Load the game data. */
@@ -833,13 +763,13 @@ bool DefaultContentManager::loadGameData()
 
 	auto game_json = readJsonDataFileWithSchema("game.json");
 
-	m_gamePolicy = new DefaultGamePolicy(game_json.get());
+	m_gamePolicy = std::make_unique<DefaultGamePolicy>(game_json.get());
 
 	auto imp_json = readJsonDataFileWithSchema("imp.json");
-	m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
+	m_impPolicy = std::make_unique<DefaultIMPPolicy>(imp_json.get(), this);
 
 	auto sai_json = readJsonDataFileWithSchema("strategic-ai-policy.json");
-	m_strategicAIPolicy = new DefaultStrategicAIPolicy(sai_json.get());
+	m_strategicAIPolicy = std::make_unique<DefaultStrategicAIPolicy>(sai_json.get());
 
 	loadStringRes("strings/shipping-destinations", m_shippingDestinationNames);
 
@@ -854,7 +784,7 @@ bool DefaultContentManager::loadGameData()
 	auto loadScreensList = readJsonDataFileWithSchema("loading-screens.json");
 	auto loadScreensMapping = readJsonDataFileWithSchema("loading-screens-mapping.json");
 
-	m_loadingScreenModel = LoadingScreenModel::deserialize(*loadScreensList, *loadScreensMapping);
+	m_loadingScreenModel.reset(LoadingScreenModel::deserialize(*loadScreensList, *loadScreensMapping));
 	m_loadingScreenModel->validateData(this);
 
 	loadStringRes("strings/ammo-calibre", m_calibreNames);
@@ -1051,8 +981,8 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 		ST::string filename = dealer->getInventoryDataFileName(this);
 		m_dealersInventory[dealer->dealerID] = loadDealerInventory(filename);
 	}
-	m_bobbyRayNewInventory                        = loadDealerInventory("bobby-ray-inventory-new.json");
-	m_bobbyRayUsedInventory                       = loadDealerInventory("bobby-ray-inventory-used.json");
+	m_bobbyRayNewInventory .reset(loadDealerInventory("bobby-ray-inventory-new.json"));
+	m_bobbyRayUsedInventory.reset(loadDealerInventory("bobby-ray-inventory-used.json"));
 	return true;
 }
 
@@ -1123,17 +1053,17 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const
 {
-	return m_impPolicy;
+	return m_impPolicy.get();
 }
 
 const GamePolicy* DefaultContentManager::getGamePolicy() const
 {
-	return m_gamePolicy;
+	return m_gamePolicy.get();
 }
 
 const StrategicAIPolicy* DefaultContentManager::getStrategicAIPolicy() const
 {
-	return m_strategicAIPolicy;
+	return m_strategicAIPolicy.get();
 }
 
 const ST::string* DefaultContentManager::getNewString(size_t stringId) const
@@ -1146,13 +1076,13 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 	}
 	else
 	{
-		return m_newStrings[stringId];
+		return &m_newStrings[stringId];
 	}
 }
 
 const ST::string& DefaultContentManager::getLandTypeString(size_t index) const
 {
-	return *m_landTypeStrings.at(index);
+	return m_landTypeStrings.at(index);
 }
 
 bool DefaultContentManager::loadStrategicLayerData()
@@ -1209,8 +1139,8 @@ bool DefaultContentManager::loadStrategicLayerData()
 	SamSiteModel::validateData(m_samSites);
 
 	json = readJsonDataFileWithSchema("strategic-map-sam-sites-air-control.json");
-	m_samSitesAirControl = SamSiteAirControlModel::deserialize(*json);
-	SamSiteAirControlModel::validateData(m_samSitesAirControl, m_samSites.size());
+	m_samSitesAirControl.reset(SamSiteAirControlModel::deserialize(*json));
+	SamSiteAirControlModel::validateData(m_samSitesAirControl.get(), m_samSites.size());
 
 	json = readJsonDataFileWithSchema("strategic-map-towns.json");
 	for (auto& element : json->GetArray())
@@ -1234,7 +1164,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	auto travRatingMap = TraversibilityMapping::deserialize(*json);
 
 	json = readJsonDataFileWithSchema("strategic-map-movement-costs.json");
-	m_movementCosts = MovementCostsModel::deserialize(*json, travRatingMap);
+	m_movementCosts.reset(MovementCostsModel::deserialize(*json, travRatingMap));
 
 	json = readJsonDataFileWithSchema("strategic-map-sectors-descriptions.json");
 	m_sectorLandTypes = SectorLandTypes::deserialize(*json, travRatingMap);
@@ -1257,7 +1187,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	CreatureLairModel::validateData(m_creatureLairs, m_undergroundSectors, m_mines.size());
 
 	json = readJsonDataFileWithSchema("strategic-map-cache-sectors.json");
-	m_cacheSectors = CacheSectorsModel::deserialize(*json);
+	m_cacheSectors.reset(CacheSectorsModel::deserialize(*json));
 
 	return true;
 }
@@ -1482,7 +1412,7 @@ const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 		SLOGD("Town name not defined for index {}", townId);
 		return ST::null;
 	}
-	return *m_townNames[townId];
+	return m_townNames[townId];
 }
 
 const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
@@ -1491,7 +1421,7 @@ const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
 		SLOGD("Town name locative not defined for index {}", townId);
 		return ST::null;
 	}
-	return *m_townNameLocatives[townId];
+	return m_townNameLocatives[townId];
 }
 
 const std::vector<const UndergroundSectorModel*>& DefaultContentManager::getUndergroundSectors() const
@@ -1501,7 +1431,7 @@ const std::vector<const UndergroundSectorModel*>& DefaultContentManager::getUnde
 
 const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 {
-	return m_movementCosts;
+	return m_movementCosts.get();
 }
 
 int16_t DefaultContentManager::getSectorLandType(uint8_t const sectorID, uint8_t const sectorLevel) const
@@ -1517,7 +1447,7 @@ int16_t DefaultContentManager::getSectorLandType(uint8_t const sectorID, uint8_t
 
 const CacheSectorsModel* DefaultContentManager::getCacheSectors() const
 {
-	return m_cacheSectors;
+	return m_cacheSectors.get();
 }
 
 const std::vector<const StrategicMapSecretModel*>& DefaultContentManager::getMapSecrets() const

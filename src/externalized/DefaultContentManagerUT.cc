@@ -9,11 +9,6 @@ DefaultContentManagerUT::DefaultContentManagerUT(RustPointer<EngineOptions> engi
 {
 }
 
-std::unique_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const
-{
-	return DefaultContentManager::readJsonDataFile(fileName);
-}
-
 DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 {
 	RustPointer<EngineOptions> engineOptions(EngineOptions_default());
@@ -22,7 +17,5 @@ DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 
 	EngineOptions_setVanillaGameDir(engineOptions.get(), gameResRootPath.c_str());
 
-	DefaultContentManagerUT* cm = new DefaultContentManagerUT(std::move(engineOptions));
-
-	return cm;
+	return new DefaultContentManagerUT(std::move(engineOptions));
 }
