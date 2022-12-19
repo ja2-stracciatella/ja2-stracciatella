@@ -13,7 +13,12 @@
  *        - "RPC": Recruitable characters - NPCs that can be recruited
  *        - "NPC": Non-playing characters, that can never be controlled by the player
  *        - "NOT_USED": Reserved slots that are not used anywhere
- */        
+ *   - weaponSaleModifier: what prices does this character get when buying or selling weapons?
+ *        This is specified in percent of the normal price: when selling, the normal price is
+          multiplied by 100 and divided by this value. When buying, the normal price is multiplied
+          by this value, then divided by 100.
+          In the original game, Flo is the only person who has an unique value.
+ */
 [
      /* A.I.M. soldiers */
      { "profileID": 0,  "internalName": "BARRY", "type": "AIM" }
@@ -61,7 +66,7 @@
     ,{ "profileID": 41, "internalName": "HAYWIRE", "type": "MERC" }
     ,{ "profileID": 42, "internalName": "GASKET", "type": "MERC" }
     ,{ "profileID": 43, "internalName": "RAZOR", "type": "MERC" }
-    ,{ "profileID": 44, "internalName": "FLO", "type": "MERC" }
+    ,{ "profileID": 44, "internalName": "FLO", "type": "MERC", "weaponSaleModifier": 110 }
     ,{ "profileID": 45, "internalName": "GUMPY", "type": "MERC" }
     ,{ "profileID": 46, "internalName": "LARRY_NORMAL", "type": "MERC" }
     ,{ "profileID": 47, "internalName": "LARRY_DRUNK", "type": "MERC" }
