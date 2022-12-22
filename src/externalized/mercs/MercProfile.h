@@ -2,7 +2,7 @@
 #include "JA2Types.h"
 #include <functional>
 
-enum class MercType;
+enum class MercType : int8_t;
 class MercProfileInfo;
 struct MERCPROFILESTRUCT;
 

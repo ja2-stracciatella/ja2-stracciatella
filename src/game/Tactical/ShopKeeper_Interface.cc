@@ -9,6 +9,7 @@
 #include "Timer_Control.h"
 #include "Types.h"
 #include "MercPortrait.h"
+#include "MercProfile.h"
 #include "ShopKeeper_Interface.h"
 #include "Game_Clock.h"
 #include "Render_Dirty.h"
@@ -222,8 +223,6 @@
 #define REALLY_BADLY_DAMAGED_THRESHOLD			30
 
 #define REPAIR_DELAY_IN_HOURS				6
-
-#define FLO_DISCOUNT_PERCENTAGE			10
 
 
 static SGPVObject* guiMainTradeScreenImage;
@@ -2457,9 +2456,6 @@ static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPrice
 	UINT32 uiTotalPrice = 0;
 	UINT8  ubItemsToCount = 0;
 	UINT8  ubItemsNotCounted = 0;
-	UINT32 uiDiscountValue;
-	//UINT32 uiDifFrom10 = 0;
-
 
 	// add up value of the main item(s), exact procedure depends on its item class
 	switch ( GCM->getItem(usItemID)->getItemClass() )
@@ -2541,35 +2537,35 @@ static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPrice
 		}
 	}
 
-
-	// if Flo is doing the dealin' and wheelin'
-	if ( gpSMCurrentMerc->ubProfile == FLO )
+	// if it's a GUN or AMMO (but not Launchers, and all attachments and payload is included)
+	switch (GCM->getItem(usItemID)->getItemClass())
 	{
-		// if it's a GUN or AMMO (but not Launchers, and all attachments and payload is included)
-		switch ( GCM->getItem(usItemID)->getItemClass() )
-		{
-			// start components of IC_WEAPON:
-			case IC_GUN:
-			case IC_BLADE:
-			case IC_THROWING_KNIFE:
-			case IC_LAUNCHER:
-			// end components of IC_WEAPON
-			case IC_AMMO:
-				uiDiscountValue = ( uiUnitPrice * FLO_DISCOUNT_PERCENTAGE ) / 100;
+		// start components of IC_WEAPON:
+		case IC_GUN:
+		case IC_BLADE:
+		case IC_THROWING_KNIFE:
+		case IC_LAUNCHER:
+		// end components of IC_WEAPON
+		case IC_AMMO:
+			// Get the weapons sale multiplicator for this person.
+			// In Vanilla, this was hardcoded to give Flo a 10% bonus.
+			// Now everyone gets at least 10% of the normal price or 1.8 times it at most when selling.
+			int const weaponSaleModifier = MercProfile{gpSMCurrentMerc->ubProfile}.getInfo().weaponSaleModifier;
+			int unitPrice = uiUnitPrice; // need this value signed, discountValue is negative for modifiers < 100
+			int const discountValue = unitPrice * (weaponSaleModifier - 100) / 100;
 
-				// she gets a discount!  Read her M.E.R.C. profile to understand why
-				if ( fDealerSelling )
-				{
-					// she buys for less...
-					uiUnitPrice -= uiDiscountValue;
-				}
-				else
-				{
-					// and sells for more!
-					uiUnitPrice += uiDiscountValue;
-				}
-				break;
-		}
+			// she gets a discount!  Read her M.E.R.C. profile to understand why
+			if (fDealerSelling)
+			{
+				// she buys for less...
+				uiUnitPrice = std::max(1, unitPrice - discountValue);
+			}
+			else
+			{
+				// and sells for more!
+				uiUnitPrice = unitPrice + discountValue;
+			}
+			break;
 	}
 
 	UINT32_S uiUnitPriceAdjusted = uiUnitPrice;

@@ -4,6 +4,7 @@
 #include "Soldier_Profile_Type.h"
 #include <string_theory/format>
 #include <string_theory/string>
+#include <algorithm>
 #include <utility>
 
 
@@ -23,13 +24,13 @@ static MercType MercTypeFromString(const std::string& name)
 	throw std::runtime_error(err.to_std_string());
 }
 
-MercProfileInfo::MercProfileInfo(uint8_t profileID_, ST::string internalName_, MercType mercType_)
-	: profileID(profileID_), internalName(std::move(internalName_)), mercType(mercType_)
+MercProfileInfo::MercProfileInfo(uint8_t profileID_, ST::string internalName_, MercType mercType_, uint8_t weaponSaleModifier_)
+	: internalName(std::move(internalName_)), profileID(profileID_), mercType(mercType_), weaponSaleModifier(weaponSaleModifier_)
 {
 }
 
 MercProfileInfo::MercProfileInfo()
-	: profileID(NO_PROFILE), internalName(""), mercType(MercType::NOT_USED)
+	: internalName(""), weaponSaleModifier(100), profileID(NO_PROFILE), mercType(MercType::NOT_USED)
 {
 }
 
@@ -39,7 +40,8 @@ MercProfileInfo *MercProfileInfo::deserialize(const rapidjson::Value &json)
 	return new MercProfileInfo(
 		r.GetUInt("profileID"),
 		r.GetString("internalName"),
-		MercTypeFromString(r.GetString("type"))
+		MercTypeFromString(r.GetString("type")),
+		std::clamp(r.getOptionalInt("weaponSaleModifier", 100), 10, 180)
 		);
 }
 

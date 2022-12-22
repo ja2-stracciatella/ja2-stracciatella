@@ -38,6 +38,17 @@ items:
       - IMP
       - MERC
       - AIM
+    weaponSaleModifier:
+      title: Weapon Sale Modifier
+      description: |
+        What prices does this character get when buying or selling weapons?
+        This is specified in percent of the normal price: when selling, the normal price is
+        multiplied by 100 and divided by this value. When buying, the normal price is multiplied
+        by this value, then divided by 100.
+        In the original game, Flo is the only person who has an unique value.
+      minimum: 10
+      maximum: 180
+      $ref: types/uint8.schema.yaml
   required:
   - profileID
   - internalName
