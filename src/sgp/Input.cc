@@ -584,22 +584,13 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 }
 
 
-void DequeueAllKeyBoardEvents(void)
+void DequeueAllEvents(void)
 {
-#if 1 // XXX TODO
-	FIXME
-#else
-	//dequeue all the events waiting in the windows queue
-	MSG KeyMessage;
-	while (PeekMessage(&KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE));
-
-	//Deque all the events waiting in the SGP queue
 	InputAtom InputEvent;
 	while (DequeueEvent(&InputEvent))
 	{
 		//dont do anything
 	}
-#endif
 }
 
 

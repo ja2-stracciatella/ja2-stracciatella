@@ -83,7 +83,7 @@ extern BOOLEAN 	 gfIsUsingTouch;
 extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen
 
-void DequeueAllKeyBoardEvents(void);
+void DequeueAllEvents(void);
 void HandleSingleClicksAndButtonRepeats();
 
 bool _KeyDown(SDL_Keycode);
