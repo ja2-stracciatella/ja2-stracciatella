@@ -261,9 +261,8 @@ static void HandleMainMenuInput(void)
 		{
 			switch (InputEvent.usParam)
 			{
-/*
+				case 'q': if (_KeyDown(CTRL)) gbHandledMainMenu = QUIT; break;					
 				case SDLK_ESCAPE: gbHandledMainMenu = QUIT; break;
-*/
 
 				case 'c':
 					if (_KeyDown(ALT)) gfLoadGameUponEntry = TRUE;
