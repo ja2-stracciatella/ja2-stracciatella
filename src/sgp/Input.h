@@ -44,7 +44,7 @@ struct InputAtom
 };
 
 
-extern BOOLEAN			DequeueEvent(InputAtom *Event);
+
 
 void MouseMove(const SDL_MouseMotionEvent*);
 void MouseButtonDown(const SDL_MouseButtonEvent*);
@@ -67,6 +67,8 @@ bool IsMainFingerDown();
 // TRUE = Last pointer device that was used was a touch device, FALSE = Last pointer device that was used was a mouse
 bool IsUsingTouch();
 
+void DequeueAllInputEvents(void);
+extern BOOLEAN DequeueEvent(InputAtom *Event);
 extern BOOLEAN DequeueSpecificEvent(InputAtom *Event, UINT32 uiMaskFlags );
 
 extern void					RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2);
@@ -83,7 +85,6 @@ extern BOOLEAN 	 gfIsUsingTouch;
 extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen
 
-void DequeueAllEvents(void);
 void HandleSingleClicksAndButtonRepeats();
 
 bool _KeyDown(SDL_Keycode);
