@@ -316,15 +316,16 @@ void Soldier::switchHeadGear(int switchDirection)
 		if (mSoldier->inv[HEAD2POS].usItem == ic) currentEyeGear = &mSoldier->inv[HEAD2POS];
 	}
 
-	if (currentEyeGear == NULL && getFreeHeadSlot() != NO_SLOT)
+	if (!currentEyeGear)
 	{
-		// not wearing eye gear but slot available
-		currentEyeGear = &mSoldier->inv[getFreeHeadSlot()];
-	}
-	if (currentEyeGear == NULL)
-	{
-		// no room to wear any eye gear
-		return;
+		// not wearing eye gear but slot available?
+		auto const slot = getFreeHeadSlot();
+		if (slot == NO_SLOT)
+		{
+			// no room to wear any eye gear
+			return;
+		}
+		currentEyeGear = &mSoldier->inv[slot];
 	}
 
 	if (optimalEyeGear != NULL)

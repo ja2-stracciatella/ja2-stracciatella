@@ -1,7 +1,8 @@
 #pragma once
 
-#include <string_theory/string>
+#include <stdint.h>
 #include <stdexcept>
+#include <string_theory/string>
 
 class IoException : public std::runtime_error
 {

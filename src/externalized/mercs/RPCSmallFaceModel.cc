@@ -1,6 +1,6 @@
 #include "Exceptions.h"
 #include "RPCSmallFaceModel.h"
-
+#include <string_theory/format>
 #include <rapidjson/document.h>
 
 RPCSmallFaceModel* RPCSmallFaceModel::deserialize(const rapidjson::Value& json, const MercSystem* mercSystem)

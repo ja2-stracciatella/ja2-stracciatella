@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string_theory/string>
-
+#include "DefaultContentManager.h"
+#include <stdint.h>
 #include <map>
 #include <vector>
+#include <string_theory/string>
 
-#include "DefaultContentManager.h"
 
 class ModPackContentManager : public DefaultContentManager
 {

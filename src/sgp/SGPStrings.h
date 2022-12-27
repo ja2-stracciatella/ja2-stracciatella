@@ -1,13 +1,13 @@
 #ifndef SGPSTRINGS_H
 #define SGPSTRINGS_H
 
-#include <string_theory/format>
-#include <string_theory/string>
-
 #include <stdexcept>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <utility>
+#include <string_theory/string>
+#include <string_theory/format>
 
 // poison deprecated functions
 [[deprecated("Don't use strlcpy, but regular ST::string assignment.")]]

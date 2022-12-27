@@ -450,10 +450,9 @@ bool DefaultContentManager::loadWeapons(const VanillaItemStrings& vanillaItemStr
 	auto document = readJsonDataFileWithSchema("weapons.json");
 	if (document->IsArray())
 	{
-		const rapidjson::Value& a = document->GetArray();
-		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		for (auto const& element : document->GetArray())
 		{
-			JsonObjectReader obj(a[i]);
+			JsonObjectReader obj(element);
 			WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap, vanillaItemStrings);
 			SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
@@ -495,10 +494,9 @@ bool DefaultContentManager::loadMagazines(const VanillaItemStrings& vanillaItemS
 	auto document = readJsonDataFileWithSchema("magazines.json");
 	if(document->IsArray())
 	{
-		const rapidjson::Value& a = document->GetArray();
-		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		for (auto const& element : document->GetArray())
 		{
-			JsonObjectReader obj(a[i]);
+			JsonObjectReader obj(element);
 			MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap, vanillaItemStrings);
 			SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
 
@@ -515,10 +513,9 @@ bool DefaultContentManager::loadCalibres()
 {
 	auto document = readJsonDataFileWithSchema("calibres.json");
 	if (document->IsArray()) {
-		const rapidjson::Value& a = document->GetArray();
-		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		for (auto const& element : document->GetArray())
 		{
-			JsonObjectReader obj(a[i]);
+			JsonObjectReader obj(element);
 			CalibreModel *calibre = CalibreModel::deserialize(obj);
 			SLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
 
@@ -533,7 +530,7 @@ bool DefaultContentManager::loadCalibres()
 
 	for (const CalibreModel* calibre : m_calibres)
 	{
-		m_calibreMap.insert(std::make_pair(ST::string(calibre->internalName), calibre));
+		m_calibreMap.emplace(calibre->internalName, calibre);
 	}
 
 	return true;
@@ -543,10 +540,9 @@ bool DefaultContentManager::loadAmmoTypes()
 {
 	auto document = readJsonDataFileWithSchema("ammo-types.json");
 	if(document->IsArray()) {
-		const rapidjson::Value& a = document->GetArray();
-		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		for (auto const& element : document->GetArray())
 		{
-			JsonObjectReader obj(a[i]);
+			JsonObjectReader obj(element);
 			AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
 			SLOGD("Loaded ammo type {} {}", ammoType->index, ammoType->internalName);
 
@@ -561,7 +557,7 @@ bool DefaultContentManager::loadAmmoTypes()
 
 	for (const AmmoTypeModel* ammoType : m_ammoTypes)
 	{
-		m_ammoTypeMap.insert(std::make_pair(ST::string(ammoType->internalName), ammoType));
+		m_ammoTypeMap.emplace(ammoType->internalName, ammoType);
 	}
 
 	return true;
@@ -620,7 +616,7 @@ bool DefaultContentManager::readWeaponTable(
 	auto document = readJsonDataFileWithSchema(fileName);
 	if(document->IsArray())
 	{
-		const rapidjson::Value& a = document->GetArray();
+		const auto a = document->GetArray();
 		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
 		{
 			std::vector<ST::string> weaponNames;
