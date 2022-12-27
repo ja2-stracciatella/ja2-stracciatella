@@ -221,7 +221,7 @@ void InitMainMenu(void)
 
 	InitGameOptions();
 
-	DequeueAllEvents();
+	DequeueAllInputEvents();
 }
 
 

@@ -584,7 +584,7 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 }
 
 
-void DequeueAllEvents(void)
+void DequeueAllInputEvents(void)
 {
 	InputAtom InputEvent;
 	while (DequeueEvent(&InputEvent))
