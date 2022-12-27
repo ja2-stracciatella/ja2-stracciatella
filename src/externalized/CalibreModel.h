@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string_theory/string>
-
 #include <map>
 #include <stdexcept>
 #include <stdint.h>
+#include <string_theory/string>
 
 class JsonObject;
 class JsonObjectReader;

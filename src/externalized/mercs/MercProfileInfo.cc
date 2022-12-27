@@ -30,7 +30,7 @@ MercProfileInfo::MercProfileInfo(uint8_t profileID_, ST::string internalName_, M
 }
 
 MercProfileInfo::MercProfileInfo()
-	: internalName(""), weaponSaleModifier(100), profileID(NO_PROFILE), mercType(MercType::NOT_USED)
+	: internalName(""), profileID(NO_PROFILE), mercType(MercType::NOT_USED), weaponSaleModifier(100)
 {
 }
 

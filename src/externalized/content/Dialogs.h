@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <string_theory/format>
 
 class MercProfile;

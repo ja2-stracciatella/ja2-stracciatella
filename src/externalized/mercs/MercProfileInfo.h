@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JA2Types.h"
+#include <stdint.h>
 #include <map>
 #include <string_theory/string>
 #include <rapidjson/document.h>
