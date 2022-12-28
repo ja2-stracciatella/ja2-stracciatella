@@ -526,7 +526,6 @@ static void StartInterrupt(void)
 	if (first_interrupter->bTeam == OUR_TEAM)
 	{
 		// start interrupts for everyone on our side at once
-		ST::string sTemp;
 		UINT8   ubInterrupters = 0;
 
 		// build string for display of who gets interrupt
@@ -549,7 +548,7 @@ static void StartInterrupt(void)
 			}
 		}
 
-		sTemp = g_langRes->Message[ STR_INTERRUPT_FOR ];
+		ST::string sTemp = g_langRes->Message[STR_INTERRUPT_FOR];
 
 		// build string in separate loop here, want to linearly process squads...
 		for (INT32 iSquad = 0; iSquad < NUMBER_OF_SQUADS; ++iSquad)
@@ -578,6 +577,11 @@ static void StartInterrupt(void)
 				}
 				sTemp += s->name;
 			}
+		}
+
+		if (!sTemp.empty())
+		{
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sTemp);
 		}
 
 		SLOGD("INTERRUPT: starting interrupt for {}", first_interrupter->ubID);
