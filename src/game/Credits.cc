@@ -309,12 +309,10 @@ static void GetCreditScreenUserInput(void)
 	InputAtom Event;
 	while (DequeueSpecificEvent(&Event, KEYBOARD_EVENTS))
 	{
-		if (Event.usEvent == KEY_DOWN)
+		if (Event.usEvent == KEY_UP && Event.usParam == SDLK_ESCAPE)
 		{
-			switch (Event.usParam)
-			{
-				case SDLK_ESCAPE: g_credits_active = FALSE; break;
-			}
+			g_credits_active = FALSE;
+			// don't break here, dequeue all keyboard events.
 		}
 	}
 }
