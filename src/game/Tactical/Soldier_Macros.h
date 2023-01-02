@@ -30,9 +30,14 @@ static inline bool IsMechanical(SOLDIERTYPE const& s)
 	return s.uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(&s);
 }
 
+constexpr bool IsHostileToOurTeam(SOLDIERTYPE const& s) noexcept
+{
+	return !s.bNeutral && s.bSide != OUR_TEAM;
+}
+
 static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)
 {
-	return !s->bNeutral && s->bSide != OUR_TEAM && s->bLife >= OKLIFE;
+	return IsHostileToOurTeam(*s) && s->bLife >= OKLIFE;
 }
 
 // Checks if our guy can be controllable .... checks bInSector, team, on duty, etc...
