@@ -863,17 +863,14 @@ void GetTBMousePositionInput(UIEventKind* const puiNewEvent)
 				else
 				{
 					const SOLDIERTYPE* const tgt = gUIFullTarget;
-					if (tgt != NULL)
+					if (tgt && !IsHostileToOurTeam(*tgt))
 					{
 						// ATE: Don't do this automatically for enemies......
-						if (tgt->bTeam != ENEMY_TEAM)
+						if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(sel) && !ValidQuickExchangePosition())
 						{
 							MoveTargetSoldier = tgt;
-							if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(sel) && !ValidQuickExchangePosition())
-							{
-								*puiNewEvent = T_CHANGE_TO_TALKING;
-								return;
-							}
+							*puiNewEvent = T_CHANGE_TO_TALKING;
+							return;
 						}
 					}
 				}
@@ -1594,7 +1591,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 				s1->bLife >= OKLIFE && // Check if both OK
 				s2->bLife >= OKLIFE &&
 				CanSoldierReachGridNoInGivenTileLimit(s1, s2->sGridNo, 1, gsInterfaceLevel) &&
-				(s2->bNeutral || s2->bSide == OUR_TEAM) && // Exclude enemies
+				!IsHostileToOurTeam(*s2) && // Exclude enemies
 				CanExchangePlaces(s1, s2, TRUE))
 			{
 				SwapMercPositions(*s1, *s2);
@@ -2891,8 +2888,7 @@ static void CreateNextCivType(void)
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return;
 
-	SOLDIERCREATE_STRUCT MercCreateStruct;
-	MercCreateStruct = SOLDIERCREATE_STRUCT{};
+	SOLDIERCREATE_STRUCT MercCreateStruct{};
 	MercCreateStruct.ubProfile  = NO_PROFILE;
 	MercCreateStruct.sSector    = gWorldSector;
 	MercCreateStruct.bBodyType  = bBodyType;
@@ -2936,8 +2932,7 @@ static void GrenadeTest1(void)
 	INT16 sX, sY;
 	if ( GetMouseXY( &sX, &sY ) )
 	{
-		OBJECTTYPE Object;
-		DeleteObj(&Object);
+		OBJECTTYPE Object{};
 		Object.usItem = MUSTARD_GRENADE;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
@@ -2952,8 +2947,7 @@ static void GrenadeTest2(void)
 	INT16 sX, sY;
 	if ( GetMouseXY( &sX, &sY ) )
 	{
-		OBJECTTYPE Object;
-		DeleteObj(&Object);
+		OBJECTTYPE Object{};
 		Object.usItem = HAND_GRENADE;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
@@ -2967,8 +2961,7 @@ static void CreatePlayerControlledMonster(void)
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos == NOWHERE) return;
 
-	SOLDIERCREATE_STRUCT MercCreateStruct;
-	MercCreateStruct = SOLDIERCREATE_STRUCT{};
+	SOLDIERCREATE_STRUCT MercCreateStruct{};
 	MercCreateStruct.ubProfile        = NO_PROFILE;
 	MercCreateStruct.sSector          = gWorldSector;
 	//Note:  only gets called if Alt and/or Ctrl isn't pressed!
