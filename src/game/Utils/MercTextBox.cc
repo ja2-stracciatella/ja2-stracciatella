@@ -13,8 +13,9 @@
 #include "UILayout.h"
 
 #include <string_theory/string>
-
+#include <memory>
 #include <stdexcept>
+#include <utility>
 
 
 #define TEXT_POPUP_GAP_BN_LINES		10
@@ -59,11 +60,11 @@ static char const* const zMercBackgroundPopupFilenames[] =
 
 struct MercPopUpBox
 {
-	SGPVSurface* uiSourceBufferIndex;
+	std::unique_ptr<SGPVSurface> sourceBuffer;
+	std::unique_ptr<SGPVSurface> mercTextPopUpBackground;
+	std::unique_ptr<SGPVObject>  mercTextPopUpBorder;
 	UINT8        ubBackgroundIndex;
 	UINT8        ubBorderIndex;
-	SGPVSurface* uiMercTextPopUpBackground;
-	SGPVObject*  uiMercTextPopUpBorder;
 };
 
 
@@ -83,19 +84,12 @@ void InitMercPopupBox()
 static void LoadTextMercPopupImages(MercPopUpBox* const box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex)
 {
 	// this function will load the graphics associated with the background and border index values
-	box->uiMercTextPopUpBackground = AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]);
-	box->uiMercTextPopUpBorder     = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
+	box->mercTextPopUpBackground.reset(AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]));
+	box->mercTextPopUpBorder    .reset(AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]));
 
 	// so far so good, return successful
 	box->ubBackgroundIndex = ubBackgroundIndex;
 	box->ubBorderIndex     = ubBorderIndex;
-}
-
-
-static void RemoveTextMercPopupImages(MercPopUpBox* const box)
-{
-	DeleteVideoSurface(box->uiMercTextPopUpBackground);
-	DeleteVideoObject(box->uiMercTextPopUpBorder);
 }
 
 
@@ -104,7 +98,7 @@ void RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16
 	if (!box) return;
 
 	// will render/transfer the image from the buffer in the data structure to the buffer specified by user
-	SGPVSurface* const vs = box->uiSourceBufferIndex;
+	SGPVSurface* const vs = box->sourceBuffer.get();
 	BltVideoSurface(buffer, vs, sDestX, sDestY, NULL);
 
 	//Invalidate!
@@ -115,7 +109,7 @@ void RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16
 }
 
 
-static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor);
+static std::pair<UINT8, UINT8> GetMercPopupBoxFontColors(UINT8 ubBackgroundIndex);
 
 
 MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackgroundIndex, MercPopUpBorder ubBorderIndex, const ST::utf32_buffer& codepoints, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags)
@@ -143,7 +137,6 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 				ubBorderIndex     != box->ubBorderIndex)
 		{
 			//Remove old, set new
-			RemoveTextMercPopupImages(box);
 			LoadTextMercPopupImages(box, ubBackgroundIndex, ubBorderIndex);
 		}
 	}
@@ -187,7 +180,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 
 	// Create a background video surface to blt the face onto
 	SGPVSurface* const vs = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
-	box->uiSourceBufferIndex = vs;
+	box->sourceBuffer.reset(vs);
 
 	*pActualWidth  = usWidth;
 	*pActualHeight = usHeight;
@@ -202,10 +195,10 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 	else
 	{
 		SGPBox const DestRect = { 0, 0, usWidth, usHeight };
-		BltVideoSurface(vs, box->uiMercTextPopUpBackground, 0, 0, &DestRect);
+		BltVideoSurface(vs, box->mercTextPopUpBackground.get(), 0, 0, &DestRect);
 	}
 
-	const SGPVObject* const hImageHandle = box->uiMercTextPopUpBorder;
+	const SGPVObject* const hImageHandle = box->mercTextPopUpBorder.get();
 
 	UINT16 usPosY = 0;
 	//blit top row of images
@@ -246,9 +239,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 	}
 
 	//Get the font and shadow colors
-	UINT8 ubFontColor;
-	UINT8 ubFontShadowColor;
-	GetMercPopupBoxFontColor(ubBackgroundIndex, &ubFontColor, &ubFontShadowColor);
+	auto [ ubFontColor, ubFontShadowColor ] = GetMercPopupBoxFontColors(ubBackgroundIndex);
 
 	SetFontShadow(ubFontShadowColor);
 	SetFontDestBuffer(vs);
@@ -274,46 +265,22 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 //Deletes the surface thats contains the border, background and the text.
 void RemoveMercPopupBox(MercPopUpBox* const box)
 {
-	if (!box) return;
-
-	DeleteVideoSurface(box->uiSourceBufferIndex);
-
-	//DEF Added 5/26
-	//Delete the background and the border
-	RemoveTextMercPopupImages(box);
-
 	delete box;
 }
 
 
-//Pass in the background index, and pointers to the font and shadow color
-static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor)
+//Pass in the background index, and you will get back the font and shadow color
+static std::pair<UINT8, UINT8> GetMercPopupBoxFontColors(UINT8 const ubBackgroundIndex)
 {
 	switch( ubBackgroundIndex )
 	{
-		case BASIC_MERC_POPUP_BACKGROUND:
-			*pubFontColor = TEXT_POPUP_COLOR;
-			*pubFontShadowColor = DEFAULT_SHADOW;
-			break;
-
 		case WHITE_MERC_POPUP_BACKGROUND:
-			*pubFontColor = 2;
-			*pubFontShadowColor = FONT_MCOLOR_WHITE;
-			break;
+			return { 2, FONT_MCOLOR_WHITE };
 
 		case GREY_MERC_POPUP_BACKGROUND:
-			*pubFontColor = 2;
-			*pubFontShadowColor = NO_SHADOW;
-			break;
-
-		case LAPTOP_POPUP_BACKGROUND:
-			*pubFontColor = TEXT_POPUP_COLOR;
-			*pubFontShadowColor = DEFAULT_SHADOW;
-			break;
+			return { 2, NO_SHADOW };
 
 		default:
-			*pubFontColor = TEXT_POPUP_COLOR;
-			*pubFontShadowColor = DEFAULT_SHADOW;
-			break;
+			return { TEXT_POPUP_COLOR, DEFAULT_SHADOW };
 	}
 }

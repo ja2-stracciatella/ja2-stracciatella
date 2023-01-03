@@ -76,6 +76,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <memory>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -306,12 +307,12 @@ GUIButtonRef iSMPanelButtons[NUM_SM_BUTTONS];
 GUIButtonRef iTEAMPanelButtons[NUM_TEAM_BUTTONS];
 
 // Video Surface for Single Merc Panel
-static SGPVSurfaceAuto* guiSMPanel;
+static SGPVSurface* guiSMPanel;
 static SGPVObject* guiSMObjects;
 static SGPVObject* guiSMObjects2;
 
 // Video surface for Team panel
-static SGPVSurfaceAuto* guiTEAMPanel;
+static SGPVSurface* guiTEAMPanel;
 static SGPVObject* guiTEAMObjects;
 static SGPVObject* guiVEHINV;
 
@@ -324,7 +325,7 @@ MOUSE_REGION        gSM_SELMERCMoneyRegion;
 static MOUSE_REGION gSM_SELMERCEnemyIndicatorRegion;
 static MOUSE_REGION gTEAM_PanelRegion;
 
-static SGPVSurfaceAuto* CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex);
+static std::unique_ptr<SGPVSurface> CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex);
 
 // Globals - for one - the current merc here
 SOLDIERTYPE *gpSMCurrentMerc = NULL;
@@ -864,13 +865,11 @@ static void FillEmptySpaceAtBottom()
 /** Fill up some space with a textured space filler */
 static void DrawFillerOnSurface(SGPVSurface* vsSurface, SGPBox const &dest)
 {
-	SGPVSurfaceAuto* vsFiller = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/overheadinterface.sti", 0);
+	auto vsFiller = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/overheadinterface.sti", 0);
 
 	// clip and blit the big panel from the overheadinterface graphics
 	SGPBox const src  = {80, 42, (UINT16) std::min(int(dest.w), 560), (UINT16) std::min(int(dest.h), 112)};
-	BltStretchVideoSurface(vsSurface, vsFiller, &src, &dest);
-
-	delete vsFiller;
+	BltStretchVideoSurface(vsSurface, vsFiller.get(), &src, &dest);
 }
 
 void InitializeSMPanel()
@@ -879,7 +878,7 @@ void InitializeSMPanel()
 	// For visual consistency, the SMPanel should fill up the same width as the TEAMPanel, that the buttons and
 	// minimap are in the bottom-right corner.
 	SGPVObject* voSMPanel = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
-	guiSMPanel = new SGPVSurfaceAuto(g_ui.m_teamPanelWidth, INV_INTERFACE_HEIGHT, PIXEL_DEPTH);
+	guiSMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, INV_INTERFACE_HEIGHT, PIXEL_DEPTH);
 	if (g_ui.m_teamPanelWidth > 640)
 	{
 		// The team panel is longer than default
@@ -2257,17 +2256,16 @@ void InitializeTEAMPanel()
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 	// Create the TEAMpanel from graphic objects.
-	guiTEAMPanel = new SGPVSurfaceAuto(g_ui.m_teamPanelWidth, TEAMPANEL_HEIGHT, PIXEL_DEPTH);
+	guiTEAMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, TEAMPANEL_HEIGHT, PIXEL_DEPTH);
 
-	SGPVSurfaceAuto* vsTEAMPanel = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/bottom_bar.sti", 0);
-	BltVideoSurface(guiTEAMPanel, vsTEAMPanel, 0, 0, NULL);
+	auto vsTEAMPanel = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/bottom_bar.sti", 0);
+	BltVideoSurface(guiTEAMPanel, vsTEAMPanel.get(), 0, 0, NULL);
 	for (int i = 6; i < NUM_TEAM_SLOTS; i++)
 	{	// extend the panel if needed
 		SGPBox const rect = {5 * TEAMPANEL_SLOT_WIDTH, 0,
 					TEAMPANEL_SLOT_WIDTH + TEAMPANEL_BUTTONSBOX_WIDTH, TEAMPANEL_HEIGHT};
-		BltVideoSurface(guiTEAMPanel, vsTEAMPanel, i * TEAMPANEL_SLOT_WIDTH, 0, &rect);
+		BltVideoSurface(guiTEAMPanel, vsTEAMPanel.get(), i * TEAMPANEL_SLOT_WIDTH, 0, &rect);
 	}
-	delete vsTEAMPanel;
 
 	guiTEAMObjects = AddVideoObjectFromFile(INTERFACEDIR "/gold_front.sti");
 	guiVEHINV      = AddVideoObjectFromFile(INTERFACEDIR "/inventor.sti");
@@ -3794,13 +3792,12 @@ void DeleteInterfacePanelGraphics()
 	DeleteVideoObject(guiCLOSE);
 }
 
-static SGPVSurfaceAuto* CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex)
+static std::unique_ptr<SGPVSurface> CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex)
 {
-	SGPVObject* vo = AddVideoObjectFromFile(filename);
+	AutoSGPVObject vo(AddVideoObjectFromFile(filename));
 	auto r = vo->SubregionProperties(usRegionIndex);
-	auto* sf = new SGPVSurfaceAuto(r.usWidth, r.usHeight, PIXEL_DEPTH);
-	BltVideoObject(sf, vo, usRegionIndex, 0, 0);
-	DeleteVideoObject(vo);
+	auto sf = std::make_unique<SGPVSurface>(r.usWidth, r.usHeight, PIXEL_DEPTH);
+	BltVideoObject(sf.get(), vo.get(), usRegionIndex, 0, 0);
 
 	return sf;
 }

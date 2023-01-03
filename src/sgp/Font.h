@@ -61,9 +61,6 @@ void SetFontDestBuffer(SGPVSurface* dst, INT32 x1, INT32 y1, INT32 x2, INT32 y2)
 /* Set the destination buffer for printing while using the whole surface. */
 void SetFontDestBuffer(SGPVSurface* dst);
 
-/** Replace backbuffer if it is used by the font system. */
-void ReplaceFontBackBuffer(SGPVSurface* oldBackbuffer, SGPVSurface* newBackbuffer);
-
 void SetFont(SGPFont);
 
 void SetFontAttributes(SGPFont, UINT8 foreground, UINT8 shadow = DEFAULT_SHADOW, UINT8 background = 0);

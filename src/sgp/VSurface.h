@@ -4,6 +4,7 @@
 #include "AutoObj.h"
 #include "Buffer.h"
 #include "Types.h"
+#include <memory>
 #include <SDL.h>
 
 
@@ -12,23 +13,24 @@
 #define MOUSE_BUFFER g_mouse_buffer
 
 class SGPVSurface;
-class SGPVSurfaceAuto;
-class SGPVSurface;
 
-extern SGPVSurface* g_back_buffer;
-extern SGPVSurfaceAuto* g_frame_buffer;
-extern SGPVSurfaceAuto* g_mouse_buffer;
+inline SGPVSurface* g_back_buffer;
+inline SGPVSurface* g_frame_buffer;
+inline SGPVSurface* g_mouse_buffer;
+
+struct SDLDeleter
+{
+	void operator()(SDL_Surface *p) noexcept { SDL_FreeSurface(p); }
+};
+using SurfaceUniquePtr = std::unique_ptr<SDL_Surface, SDLDeleter>;
+
 
 /** Utility wrapper around SDL_Surface. */
 class SGPVSurface
 {
 	public:
 		SGPVSurface(SDL_Surface*);
-
-	protected:
 		SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
-
-	public:
 		virtual ~SGPVSurface();
 
 		UINT16 Width()  const { return surface_->w; }
@@ -49,6 +51,9 @@ class SGPVSurface
 		void ShadowRect(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
 		void ShadowRectUsingLowPercentTable(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
 
+		/* Allow read access to the underlying SDL_Surface */
+		SDL_Surface const& GetSDLSurface() const noexcept { return *surface_; }
+
 		/* Fills an rectangular area with a specified color value. */
 		friend void ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
 
@@ -59,17 +64,14 @@ class SGPVSurface
 		 * If the 2 images are not 16 Bpp, it returns false. */
 		friend void BltStretchVideoSurface(SGPVSurface* dst, SGPVSurface const* src, SGPBox const* src_rect, SGPBox const* dst_rect);
 
-		// needs read access to *surface_ to initalize z-buffer properly
-		friend void MainGameScreenInit(void);
-
-	protected:
-		SDL_Surface*                               surface_;
+	private:
+		SurfaceUniquePtr                           surface_;
 		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
+	private:
 		SGPVSurface*                 next_;
 
-	private:
 		class LockBase
 		{
 			public:
@@ -94,7 +96,7 @@ class SGPVSurface
 		{
 			public:
 				explicit Lock(SGPVSurface* const vs) :
-					LockBase(vs->surface_)
+					LockBase(vs->surface_.get())
 				{
 					SDL_LockSurface(surface_);
 				}
@@ -118,27 +120,18 @@ class SGPVSurface
 				void Lock(SGPVSurface* const vs)
 				{
 					if (surface_) SDL_UnlockSurface(surface_);
-					surface_ = vs->surface_;
+					surface_ = vs->surface_.get();
 					if (surface_) SDL_LockSurface(surface_);
 				}
 		};
 };
 
-/**
- * Utility wrapper around SDL_Surface which automatically
- * frees SDL_Surface when the object is destroyed. */
-class SGPVSurfaceAuto : public SGPVSurface
+inline SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 {
-	public:
-		SGPVSurfaceAuto(UINT16 w, UINT16 h, UINT8 bpp);
-		SGPVSurfaceAuto(SDL_Surface*);
+	return new SGPVSurface(Width, Height, BitDepth);
+}
 
-		virtual ~SGPVSurfaceAuto();
-};
-
-
-SGPVSurfaceAuto* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
-SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* Filename);
+SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
 
 /* Blits a video surface in half size to another video surface.
  * If SrcRect is NULL the entire source surface is blitted.
