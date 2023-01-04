@@ -19,28 +19,27 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	p16BPPPalette(),
 	next_(gpVSurfaceHead)
 {
-	Assert(w > 0);
-	Assert(h > 0);
+	Assert(w > 0 && h > 0);
 
-	SDL_Surface* s;
+	Uint32 pixelFormat;
 	switch (bpp)
 	{
 		case 8:
-			s = SDL_CreateRGBSurface(0, w, h, bpp, 0, 0, 0, 0);
+			pixelFormat = SDL_PIXELFORMAT_INDEX8;
 			break;
 
 		case 16:
 		{
-			SDL_PixelFormat const* f = SDL_AllocFormat(SDL_PIXELFORMAT_RGB565);
-			s = SDL_CreateRGBSurface(0, w, h, bpp, f->Rmask, f->Gmask, f->Bmask, f->Amask);
+			pixelFormat = SDL_PIXELFORMAT_RGB565;
 			break;
 		}
 
 		default:
 			throw std::logic_error("Tried to create video surface with invalid bpp, must be 8 or 16.");
 	}
+	SDL_Surface * const s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 0, pixelFormat);
 	if (!s) throw std::runtime_error("Failed to create SDL surface");
-	surface_ = s;
+	surface_.reset(s);
 	gpVSurfaceHead = this;
 }
 
@@ -92,31 +91,13 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 
 		default: abort(); // HACK000E
 	}
-	SDL_SetColorKey(surface_, SDL_TRUE, colour_key);
+	SDL_SetColorKey(surface_.get(), SDL_TRUE, colour_key);
 }
 
 
 void SGPVSurface::Fill(const UINT16 colour)
 {
-	SDL_FillRect(surface_, NULL, colour);
-}
-
-SGPVSurfaceAuto::SGPVSurfaceAuto(UINT16 w, UINT16 h, UINT8 bpp)
-	: SGPVSurface(w, h, bpp)
-{
-}
-
-SGPVSurfaceAuto::SGPVSurfaceAuto(SDL_Surface* surface)
-	: SGPVSurface(surface)
-{
-}
-
-SGPVSurfaceAuto::~SGPVSurfaceAuto()
-{
-	if(surface_)
-	{
-		SDL_FreeSurface(surface_);
-	}
+	SDL_FillRect(surface_.get(), NULL, colour);
 }
 
 
@@ -159,27 +140,12 @@ void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1,
 	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, IntensityTable);
 }
 
-SGPVSurface* g_back_buffer;
-SGPVSurfaceAuto* g_frame_buffer;
-SGPVSurfaceAuto* g_mouse_buffer;
 
-
-#undef AddVideoSurface
-#undef AddVideoSurfaceFromFile
-
-
-SGPVSurfaceAuto* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
-{
-	SGPVSurfaceAuto* const vs = new SGPVSurfaceAuto(Width, Height, BitDepth);
-	return vs;
-}
-
-
-SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
+SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 {
 	AutoSGPImage img(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
 
-	SGPVSurfaceAuto* const vs = new SGPVSurfaceAuto(img->usWidth, img->usHeight, img->ubBitDepth);
+	auto vs = std::make_unique<SGPVSurface>(img->usWidth, img->usHeight, img->ubBitDepth);
 
 	UINT8 const dst_bpp = vs->BPP();
 	UINT32      buffer_bpp;
@@ -190,7 +156,7 @@ SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 		default: throw std::logic_error("Invalid bpp");
 	}
 
-	{ SGPVSurface::Lock l(vs);
+	{ SGPVSurface::Lock l(vs.get());
 		UINT8*  const dst   = l.Buffer<UINT8>();
 		UINT16  const pitch = l.Pitch() / (dst_bpp / 8); // pitch in pixels
 		SGPBox  const box   = { 0, 0, img->usWidth, img->usHeight };
@@ -203,7 +169,7 @@ SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 
 	if (img->ubBitDepth == 8) vs->SetPalette(img->pPalette);
 
-	return vs;
+	return vs.release();
 }
 
 void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 const DestX, INT32 const DestY, SGPBox const* const src_rect)
@@ -241,7 +207,7 @@ void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDes
 	Rect.y = iDestY1;
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
-	SDL_FillRect(dst->surface_, &Rect, Color16BPP);
+	SDL_FillRect(dst->surface_.get(), &Rect, Color16BPP);
 }
 
 
@@ -269,7 +235,7 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 		SDL_Rect dstrect;
 		dstrect.x = iDestX;
 		dstrect.y = iDestY;
-		SDL_BlitSurface(src->surface_, src_rect, dst->surface_, &dstrect);
+		SDL_BlitSurface(src->surface_.get(), src_rect, dst->surface_.get(), &dstrect);
 	}
 	else if (src_bpp < dst_bpp)
 	{
@@ -315,8 +281,8 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 {
 	if (dst->BPP() != 16 || src->BPP() != 16) return;
 
-	SDL_Surface const* const ssurface = src->surface_;
-	SDL_Surface*       const dsurface = dst->surface_;
+	SDL_Surface const* const ssurface = src->surface_.get();
+	SDL_Surface*       const dsurface = dst->surface_.get();
 
 	const UINT32  s_pitch = ssurface->pitch >> 1;
 	const UINT32  d_pitch = dsurface->pitch >> 1;
@@ -370,14 +336,14 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 
 void BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, INT32 const x, INT32 const y)
 {
-	std::unique_ptr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
+	std::unique_ptr<SGPVSurface> src(AddVideoSurfaceFromFile(filename));
 	BltVideoSurface(dst, src.get(), x, y, NULL);
 }
 
 /** Draw image on the video surface stretching the image if necessary. */
 void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const filename)
 {
-	std::unique_ptr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
+	std::unique_ptr<SGPVSurface> src(AddVideoSurfaceFromFile(filename));
 	FillVideoSurfaceWithStretch(dst, src.get());
 }
 

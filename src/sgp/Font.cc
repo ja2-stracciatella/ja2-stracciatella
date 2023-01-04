@@ -226,21 +226,6 @@ void SetFontDestBuffer(SGPVSurface* const dst)
 }
 
 
-/** Replace backbuffer if it is used by the font system. */
-void ReplaceFontBackBuffer(SGPVSurface* oldBackbuffer, SGPVSurface* newBackbuffer)
-{
-	if(FontDestBuffer == oldBackbuffer)
-	{
-		FontDestBuffer = newBackbuffer;
-	}
-
-	if(SaveFontDestBuffer == oldBackbuffer)
-	{
-		SaveFontDestBuffer = newBackbuffer;
-	}
-}
-
-
 void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const ST::utf32_buffer& codepoints, SGPFont font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to right justify the text

@@ -834,7 +834,7 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 
 void InitializePalettesForMap(void)
 {
-	std::unique_ptr<SGPVSurfaceAuto> uiTempMap(AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx"));
+	std::unique_ptr<SGPVSurface> uiTempMap(AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx"));
 
 	SGPPaletteEntry const* const pal = uiTempMap->GetPalette();
 

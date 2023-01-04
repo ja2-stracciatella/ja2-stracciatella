@@ -77,7 +77,6 @@ static SDL_Texture* ScaledScreenTexture;
 static Uint32       g_window_flags = 0;
 static VideoScaleQuality ScaleQuality = VideoScaleQuality::LINEAR;
 
-static void RecreateBackBuffer();
 static void DeletePrimaryVideoSurfaces(void);
 
 // returns if desktop resolution larger game resolution
@@ -149,15 +148,14 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
 	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
+	SurfaceUniquePtr windowIcon(SDL_CreateRGBSurfaceWithFormatFrom(
 			(void*)gWindowIconData.pixel_data,
 			gWindowIconData.width,
 			gWindowIconData.height,
-			gWindowIconData.bytes_per_pixel*8,
+			0,
 			gWindowIconData.bytes_per_pixel*gWindowIconData.width,
-			0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-	SDL_SetWindowIcon(g_game_window, windowIcon);
-	SDL_FreeSurface(windowIcon);
+			SDL_PIXELFORMAT_ABGR8888));
+	SDL_SetWindowIcon(g_game_window, windowIcon.get());
 
 
 	ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -268,10 +266,8 @@ void ShutdownVideoManager(void)
 
 	guiVideoManagerState = VIDEO_OFF;
 
-	if (ScreenBuffer != NULL) {
-		SDL_FreeSurface(ScreenBuffer);
-		ScreenBuffer = NULL;
-	}
+	// ScreenBuffer SDL surface freed by its SGPVSurface wrapper.
+	ScreenBuffer = nullptr;
 
 	if (ScreenTexture != NULL) {
 		SDL_DestroyTexture(ScreenTexture);
@@ -414,7 +410,7 @@ void InvalidateScreen(void)
 static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
 	SDL_Surface* Frame  = FrameBuffer;
-	SDL_Surface* Source = SDL_CreateRGBSurface(0, ScreenBuffer->w, ScreenBuffer->h, PIXEL_DEPTH, RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK);
+	SurfaceUniquePtr Source(SDL_CreateRGBSurfaceWithFormat(0, ScreenBuffer->w, ScreenBuffer->h, 0, ScreenBuffer->format->format));
 	SDL_Surface* Dest   = ScreenBuffer; // Back
 	SDL_Rect     SrcRect;
 	SDL_Rect     DstRect;
@@ -424,7 +420,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	const UINT16 usWidth  = SCREEN_WIDTH;
 	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 
-	SDL_BlitSurface(ScreenBuffer, NULL, Source, NULL);
+	SDL_BlitSurface(ScreenBuffer, NULL, Source.get(), NULL);
 
 	if (sScrollXIncrement < 0)
 	{
@@ -484,7 +480,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 		DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 	}
 
-	SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
+	SDL_BlitSurface(Source.get(), &SrcRect, Dest, &DstRect);
 
 #ifdef SCROLL_TEST
 	SDL_FillRect(Dest, NULL, 0);
@@ -523,7 +519,6 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	r.h = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 	SDL_RenderCopy(GameRenderer, screenTexture, &r, &r);
 
-	SDL_FreeSurface(Source);
 	SDL_DestroyTexture(screenTexture);
 }
 
@@ -678,33 +673,14 @@ void EndFrameBufferRender(void)
 	guiFrameBufferState = BUFFER_DIRTY;
 }
 
-
-static void RecreateBackBuffer()
-{
-	// ScreenBuffer should not be automatically removed because it was created
-	// with SDL_SetVideoMode.  So, using SGPVSurface instead of SGPVSurfaceAuto
-	SGPVSurface* newBackbuffer = new SGPVSurface(ScreenBuffer);
-
-	if(g_back_buffer != NULL)
-	{
-		ReplaceFontBackBuffer(g_back_buffer, newBackbuffer);
-
-		delete g_back_buffer;
-		g_back_buffer = NULL;
-	}
-
-	g_back_buffer  = newBackbuffer;
-}
-
 static void SetPrimaryVideoSurfaces(void)
 {
 	// Delete surfaces if they exist
 	DeletePrimaryVideoSurfaces();
 
-	RecreateBackBuffer();
-
-	g_mouse_buffer = new SGPVSurfaceAuto(MouseCursor);
-	g_frame_buffer = new SGPVSurfaceAuto(FrameBuffer);
+	g_back_buffer  = new SGPVSurface(ScreenBuffer);
+	g_mouse_buffer = new SGPVSurface(MouseCursor);
+	g_frame_buffer = new SGPVSurface(FrameBuffer);
 }
 
 static void DeletePrimaryVideoSurfaces(void)
