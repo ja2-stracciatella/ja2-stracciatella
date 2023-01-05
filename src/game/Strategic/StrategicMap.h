@@ -51,7 +51,6 @@ extern Observable<> BeforePrepareSector;
 #define MAP_WORLD_Y				18
 
 // grab the town id value
-UINT8 GetTownIdForSector(UINT8 sector);
 UINT8 GetTownIdForSector(const SGPSector& sSector);
 
 void SetCurrentWorldSector(const SGPSector& sector);

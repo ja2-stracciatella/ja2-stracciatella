@@ -279,12 +279,6 @@ void InitStrategicEngine()
 }
 
 
-UINT8 GetTownIdForSector(UINT8 const sector)
-{
-	// return the name value of the town in this sector
-	return StrategicMap[SGPSector(sector).AsStrategicIndex()].bNameId;
-}
-
 UINT8 GetTownIdForSector(const SGPSector& sSector)
 {
 	return StrategicMap[sSector.AsStrategicIndex()].bNameId;
