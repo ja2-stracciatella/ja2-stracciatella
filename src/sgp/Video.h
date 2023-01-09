@@ -18,10 +18,8 @@ using VideoScaleQuality = ScalingQuality;
 void         VideoSetFullScreen(BOOLEAN enable);
 void         InitializeVideoManager(VideoScaleQuality quality);
 void         ShutdownVideoManager(void);
-void         SuspendVideoManager(void);
 void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 void         InvalidateScreen(void);
-void         GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBitMask, UINT32* BlueBitMask);
 void         EndFrameBufferRender(void);
 
 void VideoSetBrightness(float brightness);

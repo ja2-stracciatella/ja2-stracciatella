@@ -33,7 +33,6 @@
 
 #define VIDEO_OFF         0x00
 #define VIDEO_ON          0x01
-#define VIDEO_SUSPENDED   0x04
 
 #define RED_MASK 0xF800
 #define GREEN_MASK 0x07E0
@@ -54,7 +53,7 @@ static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
 
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
-static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED
+static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF
 
 // Dirty rectangle management variables
 static SDL_Rect DirtyRegions[MAX_DIRTY_REGIONS];
@@ -295,11 +294,6 @@ void ShutdownVideoManager(void)
 	FreeMouseCursor();
 }
 
-
-void SuspendVideoManager(void)
-{
-	guiVideoManagerState = VIDEO_SUSPENDED;
-}
 
 void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
@@ -648,14 +642,6 @@ static void GetRGBDistribution()
 	gusRedShift   = f.Rshift - f.Rloss;
 	gusGreenShift = f.Gshift - f.Gloss;
 	gusBlueShift  = f.Bshift - f.Bloss;
-}
-
-
-void GetPrimaryRGBDistributionMasks(UINT32* const  RedBitMask, UINT32* const GreenBitMask, UINT32* const BlueBitMask)
-{
-	*RedBitMask   = gusRedMask;
-	*GreenBitMask = gusGreenMask;
-	*BlueBitMask  = gusBlueMask;
 }
 
 

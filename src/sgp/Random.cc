@@ -48,7 +48,7 @@ void InitializeRandom(void)
 	UINT32 uiSeed2 = guiDistribution(randomDevice);
 
 	std::seed_seq seed = { uiSeed1, uiSeed2 };
-	gRandomEngine = std::mt19937(seed);
+	gRandomEngine.seed(seed);
 
 	// Pregenerate random numbers.
 	for (guiPreRandomIndex = 0; guiPreRandomIndex < MAX_PREGENERATED_NUMS; ++guiPreRandomIndex)

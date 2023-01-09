@@ -497,7 +497,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 		if ( bTownId == BLANK_SECTOR )
 		{
 			// wilderness SAM site
-			sStringB = GetSectorIDString(sector, TRUE);
+			sStringB = GetSectorIDString(pSoldier->sSector, TRUE);
 			sString = st_format_printf(pMilitiaConfirmStrings[9], sStringB);
 		}
 		else
@@ -523,7 +523,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 
 	// ok to continue, ask player
 
-	sStringB = GetSectorIDString(sector, TRUE);
+	sStringB = GetSectorIDString(pSoldier->sSector, TRUE);
 	sString = st_format_printf(pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining);
 
 	// ask player whether he'd like to continue training

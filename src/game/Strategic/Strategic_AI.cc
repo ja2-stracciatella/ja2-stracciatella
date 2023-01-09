@@ -2943,7 +2943,7 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 			pGroup = GetGroup( gPatrolGroup[ i ].ubGroupID );
 			if( pGroup && pGroup->ubGroupSize >= ubSoldiersRequested )
 			{
-				ubDist = SectorDistance(pGroup->ubSector.AsByte(), gGarrisonGroup[iGarrisonID].ubSectorID);
+				ubDist = SectorDistance(pGroup->ubSector, gGarrisonGroup[iGarrisonID].ubSectorID);
 				if( ubDist < ubBestDist )
 				{
 					ubBestDist = ubDist;
