@@ -721,7 +721,7 @@ void MOUSE_REGION::ChangeCursor(UINT16 const crsr)
 
 void MSYS_RemoveRegion(MOUSE_REGION* const r)
 {
-	AssertMsg(r, "Attempting to remove a NULL mouse region.");
+	Assert(r); // Attempting to remove a NULL mouse region?
 
 	if (!r) return;
 

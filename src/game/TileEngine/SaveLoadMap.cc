@@ -473,7 +473,7 @@ static void SetMapRevealedStatus(void)
 	UINT8		ubBitCnt;
 	UINT16	usMapIndex;
 
-	AssertMsg(gpRevealedMap != NULL, "gpRevealedMap is NULL.  DF 1");
+	Assert(gpRevealedMap);
 
 	ClearSlantRoofs( );
 

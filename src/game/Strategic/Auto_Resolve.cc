@@ -1564,7 +1564,7 @@ static void CreateAutoResolveInterface(void)
 		cell->usIndex     = idx;
 		cell->uiVObjectID = ar->iFaces;
 
-		AssertMsg(s, "Failed to create militia soldier for autoresolve.");
+		Assert(s); // Failed to create militia soldier for autoresolve?
 		s->sSector = ar->ubSector;
 		s->name = gpStrategicString[STR_AR_MILITIA_NAME];
 	}

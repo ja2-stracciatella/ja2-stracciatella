@@ -1153,7 +1153,7 @@ BOOLEAN TextInputMode()
 //calls.
 void SaveAndRemoveCurrentTextInputMode()
 {
-	AssertMsg(pSavedHead == NULL, "Attempting to save text input stack head, when one already exists.");
+	Assert(!pSavedHead); // Attempting to save text input stack head, when one already exists?
 	pSavedHead = gpTextInputHead;
 	pSavedColors = pColors;
 	if( pInputStack )
@@ -1170,7 +1170,7 @@ void SaveAndRemoveCurrentTextInputMode()
 
 void RestoreSavedTextInputMode()
 {
-	AssertMsg(pSavedHead != NULL, "Attempting to restore saved text input stack head, when one doesn't exist.");
+	Assert(pSavedHead); // Attempting to restore saved text input stack head, when one doesn't exist?
 	gpTextInputHead = pSavedHead;
 	pColors = pSavedColors;
 	pSavedHead = NULL;
