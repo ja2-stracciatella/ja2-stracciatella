@@ -5303,12 +5303,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 				{
 					pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_BEING_PUMMELED;
 					// say we're under heavy fire!
-
-					// ATE: For some reason, we forgot #53!
-					if ( pSoldier->ubProfile != 53 )
-					{
-						TacticalCharacterDialogue( pSoldier, QUOTE_UNDER_HEAVY_FIRE );
-					}
+					TacticalCharacterDialogue(pSoldier, QUOTE_UNDER_HEAVY_FIRE);
 				}
 			}
 
