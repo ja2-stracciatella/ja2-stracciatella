@@ -610,7 +610,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	}
 
 	// Pipe up with quote...
-	AssertMsg( pPlayerDialogGroup, "Didn't get a player dialog group for prebattle interface." );
+	Assert(pPlayerDialogGroup); // Didn't get a player dialog group for prebattle interface?
 
 	AssertMsg(pPlayerDialogGroup->pPlayerList, ST::format("Player group {} doesn't have *any* players in it!  (Finding dialog group)", pPlayerDialogGroup->ubGroupID));
 

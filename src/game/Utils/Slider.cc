@@ -71,7 +71,7 @@ void InitSlider(void)
 
 void ShutDownSlider(void)
 {
-	AssertMsg(guiSliderBoxImage != NULL, "Trying to ShutDown the Slider System when it was never inited");
+	Assert(guiSliderBoxImage); // Trying to ShutDown the Slider System when it was never inited?
 
 	//Do a cehck to see if there are still active nodes
 	for (SLIDER* i = pSliderHead; i != NULL;)
@@ -96,7 +96,7 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, UINT32 reason);
 
 SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback)
 {
-	AssertMsg(guiSliderBoxImage != NULL, "Trying to Add a Slider Bar when the Slider System was never inited");
+	if (!guiSliderBoxImage) InitSlider();
 
 	if (ubStyle >= NUM_SLIDER_STYLES) throw std::logic_error("Invalid slider style");
 

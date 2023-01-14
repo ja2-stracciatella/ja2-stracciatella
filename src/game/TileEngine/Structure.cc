@@ -946,7 +946,6 @@ STRUCTURE* SwapStructureForPartnerAndStoreChangeInMap(STRUCTURE* const s)
 
 STRUCTURE* FindStructure(INT16 const sGridNo, StructureFlags const flags)
 {
-	Assert(flags != 0);
 	for (STRUCTURE* i = gpWorldLevelData[sGridNo].pStructureHead;; i = i->pNext)
 	{
 		if (i == NULL || i->fFlags & flags) return i;
@@ -956,7 +955,6 @@ STRUCTURE* FindStructure(INT16 const sGridNo, StructureFlags const flags)
 
 STRUCTURE* FindNextStructure(STRUCTURE const* const s, StructureFlags const flags)
 {
-	Assert(flags != 0);
 	CHECKN(s);
 	for (STRUCTURE* i = s->pNext;; i = i->pNext)
 	{
