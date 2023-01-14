@@ -544,6 +544,11 @@ void RefreshScreen(void)
 
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
 
+	// This variable will hold the union of all modified regions.
+	struct rect : SDL_Rect {
+		void operator+=(SDL_Rect const& r) { SDL_UnionRect(this, &r, this); }
+	} ScreenTextureUpdateRect{ MouseBackground };
+
 	if (guiFrameBufferState == BUFFER_DIRTY)
 	{
 		if (gfFadeInitialized && gfFadeInVideo)
@@ -555,11 +560,13 @@ void RefreshScreen(void)
 			if (gfForceFullScreenRefresh)
 			{
 				SDL_BlitSurface(FrameBuffer, NULL, ScreenBuffer, NULL);
+				ScreenTextureUpdateRect = { 0, 0, ScreenBuffer->w, ScreenBuffer->h };
 			}
 			else
 			{
 				for (UINT32 i = 0; i < guiDirtyRegionCount; i++)
 				{
+					ScreenTextureUpdateRect += DirtyRegions[i];
 					SDL_BlitSurface(FrameBuffer, &DirtyRegions[i], ScreenBuffer, &DirtyRegions[i]);
 				}
 
@@ -574,6 +581,7 @@ void RefreshScreen(void)
 							continue;
 						}
 					}
+					ScreenTextureUpdateRect += *r;
 					SDL_BlitSurface(FrameBuffer, r, ScreenBuffer, r);
 				}
 			}
@@ -599,9 +607,14 @@ void RefreshScreen(void)
 	dst.x = cursorPos.iX - gsMouseCursorXOffset;
 	dst.y = cursorPos.iY - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
+	ScreenTextureUpdateRect += dst;
 	MouseBackground = dst;
 
-	SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
+	uint8_t const * SrcPixels = static_cast<uint8_t *>(ScreenBuffer->pixels)
+		+ ScreenTextureUpdateRect.y * ScreenBuffer->pitch
+		+ ScreenTextureUpdateRect.x * ScreenBuffer->format->BytesPerPixel;
+	SDL_UpdateTexture(ScreenTexture, &ScreenTextureUpdateRect,
+	                  SrcPixels, ScreenBuffer->pitch);
 
 	SDL_RenderClear(GameRenderer);
 
