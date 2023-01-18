@@ -591,6 +591,10 @@ void RefreshScreen(void)
 			ScrollJA2Background(gsScrollXIncrement, gsScrollYIncrement);
 			gsScrollXIncrement = 0;
 			gsScrollYIncrement = 0;
+			ScreenTextureUpdateRect += SDL_Rect{
+				gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y,
+				gsVIEWPORT_END_X - gsVIEWPORT_START_X,
+				gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y };
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 		guiFrameBufferState = BUFFER_READY;
