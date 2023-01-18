@@ -2,10 +2,12 @@
 #define SOLDIER_MACROS_H
 
 // MACROS FOR EASIER SOLDIER CONTROL
-#include "TeamTurns.h"
-#include "Soldier_Profile.h"
-#include "Assignments.h"
+#include "Animation_Control.h"
 #include "Animation_Data.h"
+#include "Assignments.h"
+#include "Soldier_Control.h"
+#include "Soldier_Profile.h"
+#include "TeamTurns.h"
 
 static inline bool RPC_RECRUITED(SOLDIERTYPE const* const s)
 {
@@ -38,6 +40,11 @@ constexpr bool IsHostileToOurTeam(SOLDIERTYPE const& s) noexcept
 static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)
 {
 	return IsHostileToOurTeam(*s) && s->bLife >= OKLIFE;
+}
+
+static inline AnimationHeight GetStance(SOLDIERTYPE const& s)
+{
+	return static_cast<AnimationHeight>(gAnimControl[s.usAnimState].ubEndHeight);
 }
 
 // Checks if our guy can be controllable .... checks bInSector, team, on duty, etc...

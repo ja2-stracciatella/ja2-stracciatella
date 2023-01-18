@@ -66,10 +66,12 @@
 
 
 //ANIMATION HEIGHT VALUES
-#define ANIM_STAND			6
-#define ANIM_CROUCH			3
-#define ANIM_PRONE			1
-
+enum AnimationHeight : UINT8
+{
+	ANIM_STAND  = 6,
+	ANIM_CROUCH = 3,
+	ANIM_PRONE  = 1
+};
 #define INVALID_ANIMATION		0xFFF0
 #define FOUND_INVALID_ANIMATION	0xFFF1
 

@@ -23,6 +23,7 @@
 #include "OppList.h"
 #include "AI.h"
 #include "Faces.h"
+#include "Soldier_Macros.h"
 #include "Soldier_Profile.h"
 #include "Campaign.h"
 #include "Structure_Wrap.h"
@@ -703,6 +704,12 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 			if ( ( gAnimControl[ pSoldier1->usAnimState ].uiFlags & ANIM_MOVING ) && !(gTacticalStatus.uiFlags & INCOMBAT) )
 			{
 				return( FALSE );
+			}
+
+			if (!InternalIsValidStance(pSoldier1, pSoldier2->bDirection, GetStance(*pSoldier2)) ||
+			    !InternalIsValidStance(pSoldier2, pSoldier1->bDirection, GetStance(*pSoldier1)))
+			{
+				return false;
 			}
 
 			if ( pSoldier2->bSide == 0 )
