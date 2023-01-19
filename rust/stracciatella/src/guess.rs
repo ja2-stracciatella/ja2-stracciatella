@@ -25,7 +25,7 @@ use crate::unicode::Nfc;
 pub fn guess_vanilla_version(gamedir: &str) -> Guess {
     let path = Path::new(gamedir);
     let mut logged = Guess::default();
-    if let Err(err) = logged.guess_vanilla_version(&path) {
+    if let Err(err) = logged.guess_vanilla_version(path) {
         error!("Error: {}", err.desc);
     }
     logged
@@ -130,7 +130,7 @@ impl Guess {
     ) -> GuessResult<Option<VanillaVersion>> {
         info!("Getting resources with_archive_slf");
         let resources = ResourcePackBuilder::new()
-            .with_path(&datadir, &datadir)
+            .with_path(datadir, datadir)
             .with_archive("slf")
             .execute("paths")?
             .resources;
@@ -244,9 +244,9 @@ impl Guess {
         datadir: &Path,
         pack_path: &Path,
     ) -> GuessResult<(VanillaVersion, MatchResourcesResult)> {
-        let pack = self.get_pack(&pack_path)?;
+        let pack = self.get_pack(pack_path)?;
         let version = self.get_version(&pack)?;
-        let match_resources = self.match_resources(&pack, &datadir)?;
+        let match_resources = self.match_resources(&pack, datadir)?;
         Ok((version, match_resources))
     }
 
@@ -310,7 +310,7 @@ impl Guess {
         datadir: &Path,
     ) -> GuessResult<MatchResourcesResult> {
         let mut builder = ResourcePackBuilder::new();
-        builder.with_path(&datadir, &datadir);
+        builder.with_path(datadir, datadir);
         if pack.has_file_size() {
             builder.with_file_size();
         }

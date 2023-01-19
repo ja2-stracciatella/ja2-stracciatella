@@ -52,7 +52,7 @@ pub struct Ja2Json {
 }
 
 fn build_json_config_location(stracciatella_home: &Path) -> PathBuf {
-    resolve_existing_components(&Path::new("ja2.json"), Some(stracciatella_home), true)
+    resolve_existing_components(Path::new("ja2.json"), Some(stracciatella_home), true)
 }
 
 impl Ja2Json {
@@ -146,10 +146,10 @@ impl Ja2Json {
         let json = json::ser::to_string(&content)
             .map_err(|x| format!("Error creating contents of ja2.json config file: {}", x))?;
         let mut f = File::create(&self.path)
-            .map_err(|s| format!("Error creating ja2.json config file: {}", s.to_string()))?;
+            .map_err(|s| format!("Error creating ja2.json config file: {}", s))?;
 
         f.write_all(json.as_bytes())
-            .map_err(|s| format!("Error creating ja2.json config file: {}", s.to_string()))
+            .map_err(|s| format!("Error creating ja2.json config file: {}", s))
     }
 
     /// Ensures that the JSON configuration file exists and write a default one if it doesn't
@@ -316,7 +316,7 @@ mod tests {
             .apply_to_engine_options(&mut engine_options)
             .unwrap();
 
-        assert_eq!(engine_options.start_in_fullscreen, true);
+        assert!(engine_options.start_in_fullscreen);
     }
 
     #[test]
@@ -329,7 +329,7 @@ mod tests {
             .apply_to_engine_options(&mut engine_options)
             .unwrap();
 
-        assert_eq!(engine_options.start_in_debug_mode, true);
+        assert!(engine_options.start_in_debug_mode);
     }
 
     #[test]
@@ -342,7 +342,7 @@ mod tests {
             .apply_to_engine_options(&mut engine_options)
             .unwrap();
 
-        assert_eq!(engine_options.start_without_sound, true);
+        assert!(engine_options.start_without_sound);
     }
 
     #[test]
@@ -355,7 +355,7 @@ mod tests {
             .apply_to_engine_options(&mut engine_options)
             .unwrap();
 
-        assert_eq!(engine_options.show_help, false);
+        assert!(!engine_options.show_help);
     }
 
     #[test]
@@ -369,7 +369,7 @@ mod tests {
             .apply_to_engine_options(&mut engine_options)
             .unwrap();
 
-        assert_eq!(engine_options.run_unittests, false);
+        assert!(!engine_options.run_unittests);
     }
 
     #[test]
@@ -383,7 +383,7 @@ mod tests {
             .apply_to_engine_options(&mut engine_options)
             .unwrap();
 
-        assert_eq!(engine_options.run_editor, false);
+        assert!(!engine_options.run_editor);
     }
 
     #[test]
@@ -410,7 +410,7 @@ mod tests {
             .apply_to_engine_options(&mut engine_options)
             .unwrap();
 
-        assert_eq!(engine_options.start_in_debug_mode, true);
+        assert!(engine_options.start_in_debug_mode);
         assert_eq!(engine_options.mods.len(), 2);
     }
 

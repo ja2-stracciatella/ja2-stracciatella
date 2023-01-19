@@ -191,7 +191,7 @@ mod tests {
         }
         let value1;
         let value2;
-        let value99;
+
         // into pointer, must manage the memory
         let ptr = into_ptr(PointerTest { inner: &mut outer });
         {
@@ -207,7 +207,7 @@ mod tests {
             let drop_me = from_ptr(ptr);
             value2 = *drop_me.inner.borrow();
         }
-        value99 = *outer.borrow();
+        let value99 = *outer.borrow();
         assert_eq!(value1, 1); // immutable
         assert_eq!(value2, 2); // mutable
         assert_eq!(value99, 99); // drop
@@ -226,8 +226,8 @@ mod tests {
     #[test]
     fn test_conversions() {
         let c_str = CStr::from_bytes_with_nul(b"123\0").unwrap();
-        assert_eq!(str_from_c_str_or_panic(&c_str), "123");
-        assert_eq!(path_buf_from_c_str_or_panic(&c_str), Path::new("123"));
+        assert_eq!(str_from_c_str_or_panic(c_str), "123");
+        assert_eq!(path_buf_from_c_str_or_panic(c_str), Path::new("123"));
         assert_eq!(
             c_string_from_path_or_panic(Path::new("123")).to_bytes(),
             b"123"
@@ -242,7 +242,7 @@ mod tests {
         {
             // Path supports invalid utf8 on unix
             let c_str = CStr::from_bytes_with_nul(b"123%E1\0").unwrap();
-            let path = path_buf_from_c_str_or_panic(&c_str);
+            let path = path_buf_from_c_str_or_panic(c_str);
             assert_eq!(path.as_os_str().len(), 4);
             assert_eq!(c_string_from_path_or_panic(&path).as_ref(), c_str);
         }
@@ -253,7 +253,7 @@ mod tests {
     fn test_str_from_c_str_panic() {
         if let Ok(c_str) = CStr::from_bytes_with_nul(b"123\xe1\0") {
             // panics, str only supports valid utf8
-            str_from_c_str_or_panic(&c_str);
+            str_from_c_str_or_panic(c_str);
         }
     }
 

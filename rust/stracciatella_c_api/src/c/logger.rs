@@ -11,7 +11,7 @@ use crate::c::common::*;
 #[no_mangle]
 pub extern "C" fn Logger_initialize(log_file_name: *const c_char) {
     let log_file = str_from_c_str_or_panic(unsafe_c_str(log_file_name));
-    Logger::init(&log_file)
+    Logger::init(log_file)
 }
 
 /// Returns the path to the log file specified by `log_file_name`
@@ -40,5 +40,5 @@ pub extern "C" fn Logger_log(level: LogLevel, message: *const c_char, target: *c
     let message = str_from_c_str_or_panic(unsafe_c_str(message));
     let target = str_from_c_str_or_panic(unsafe_c_str(target));
 
-    Logger::log_with_custom_metadata(level, message, &target);
+    Logger::log_with_custom_metadata(level, message, target);
 }

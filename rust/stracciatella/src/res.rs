@@ -114,9 +114,10 @@ impl ResourcePack {
     /// Constructor.
     #[allow(dead_code)]
     fn new(name: &str) -> Self {
-        let mut pack = ResourcePack::default();
-        pack.name = name.to_owned();
-        pack
+        ResourcePack {
+            name: name.to_owned(),
+            ..Default::default()
+        }
     }
 
     /// Get properties that are enabled (true)
@@ -158,9 +159,10 @@ impl Resource {
     // Constructor.
     #[allow(dead_code)]
     fn new(path: &str) -> Self {
-        let mut resource = Resource::default();
-        resource.path = path.to_owned();
-        resource
+        Resource {
+            path: path.to_owned(),
+            ..Default::default()
+        }
     }
 }
 
@@ -242,9 +244,9 @@ impl ResourcePackBuilder {
                 let (base, path) = paths;
                 let metadata = path.metadata()?;
                 if metadata.is_file() {
-                    self.get_resources_for_file(&base, &path)
+                    self.get_resources_for_file(base, path)
                 } else if metadata.is_dir() {
-                    self.get_resources_for_dir(&base, &path)
+                    self.get_resources_for_dir(base, path)
                 } else {
                     Ok(vec![])
                 }
@@ -267,7 +269,7 @@ impl ResourcePackBuilder {
         let files: Vec<_> = FSIterator::new(dir).collect();
         let resources: Result<Vec<Vec<Resource>>, _> = files
             .par_iter()
-            .map(|file| self.get_resources_for_file(base, &file))
+            .map(|file| self.get_resources_for_file(base, file))
             .collect();
         Ok(resources?.into_iter().flatten().collect())
     }
@@ -327,7 +329,7 @@ impl ResourcePackBuilder {
             .map(|entry| {
                 let mut resource = Resource::default();
                 let path = header.library_path.clone() + &entry.file_path;
-                resource.path = path.replace("\\", "/");
+                resource.path = path.replace('\\', "/");
                 resource.set_property("archive_path", &slf.path);
                 // record file size
                 if self.with_file_size {
@@ -351,7 +353,7 @@ impl ResourcePackBuilder {
     fn add_hashes(&self, resource: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
         for algorithm in &self.with_hashes {
             let hash = match algorithm.as_str() {
-                "md5" => hex::encode(Md5::digest(&data)),
+                "md5" => hex::encode(Md5::digest(data)),
                 _ => panic!(), // execute() must be fixed
             };
             let prop = "hash_".to_owned() + algorithm;
@@ -560,7 +562,7 @@ mod tests {
         assert!(resource.get_i64("p").is_none());
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_none());
-        assert_eq!(resource.get_bool("p").unwrap(), true);
+        assert!(resource.get_bool("p").unwrap());
     }
 
     #[test]

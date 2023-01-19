@@ -73,7 +73,7 @@ pub extern "C" fn convertLittleEndianBufferToNativeEndianU16(_buf: *mut u8, _buf
 #[no_mangle]
 pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
     let path = str_from_c_str_or_panic(unsafe_c_str(gamedir));
-    let logged = guess_vanilla_version(&path);
+    let logged = guess_vanilla_version(path);
     let mut result = -1;
     if let Some(version) = logged.vanilla_version {
         result = version as c_int;
@@ -195,7 +195,7 @@ pub extern "C" fn Env_currentExe() -> *mut c_char {
 
 #[cfg(test)]
 mod tests {
-    #![allow(clippy::complexity)]
+    #![allow(clippy::complexity, clippy::bool_assert_comparison)]
 
     use std::ffi::CString;
     use std::fs;

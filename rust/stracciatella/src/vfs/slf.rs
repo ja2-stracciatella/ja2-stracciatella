@@ -59,13 +59,13 @@ impl SlfFs {
     /// Creates a new virtual filesystem.
     pub fn new(mut slf_file: Box<dyn VfsFile>) -> io::Result<Arc<SlfFs>> {
         let header = SlfHeader::from_input(&mut slf_file)?;
-        let prefix = Nfc::caseless_path(&header.library_path.trim_end_matches('/'));
+        let prefix = Nfc::caseless_path(header.library_path.trim_end_matches('/'));
         let entries: HashMap<_, _> = header
             .entries_from_input(&mut slf_file)?
             .into_iter()
             .filter(|x| x.state == SlfEntryState::Ok)
             .map(|x| {
-                let path = Nfc::caseless_path(&x.file_path.trim_start_matches('/'));
+                let path = Nfc::caseless_path(x.file_path.trim_start_matches('/'));
                 let full_path = prefix.clone() + &path;
                 let entry = SlfFsEntry {
                     path,

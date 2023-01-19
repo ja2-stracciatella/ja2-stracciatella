@@ -97,7 +97,7 @@ where
         output.write_u8(sequence_length | IS_COMPRESSED_BIT_MASK)?;
     } else {
         output.write_u8(sequence_length)?;
-        output.write_all(&sequence)?;
+        output.write_all(sequence)?;
     }
 
     Ok(())

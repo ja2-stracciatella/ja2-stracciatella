@@ -136,12 +136,12 @@ impl AnyPath {
     /// Encodes and adds a `[u8]`.
     pub fn push_slice_u8(&mut self, mut data: &[u8]) {
         while !data.is_empty() {
-            let s = match str::from_utf8(&data) {
+            let s = match str::from_utf8(data) {
                 Ok(s) => s,
                 Err(err) => {
                     let len = err.valid_up_to();
                     if len == 0 {
-                        let len = err.error_len().unwrap_or_else(|| data.len());
+                        let len = err.error_len().unwrap_or(data.len());
                         let (invalid, next) = data.split_at(len);
                         data = next;
                         invalid.iter().for_each(|&b| self.push_byte(b));
@@ -280,7 +280,7 @@ impl TryFrom<&str> for AnyPath {
     type Error = String;
 
     fn try_from(path: &str) -> Result<Self, String> {
-        percent_split(&path)?;
+        percent_split(path)?;
         let inner = path.to_owned();
         Ok(Self { inner })
     }
@@ -315,7 +315,7 @@ enum PercentSplit<'a> {
     Str(&'a str),
 }
 
-fn percent_split<'a>(mut s: &'a str) -> Result<Vec<PercentSplit<'a>>, String> {
+fn percent_split(mut s: &str) -> Result<Vec<PercentSplit>, String> {
     if s.bytes().any(|b| b == 0) {
         return Err("unexpected embedded nul".into());
     }
@@ -334,7 +334,7 @@ fn percent_split<'a>(mut s: &'a str) -> Result<Vec<PercentSplit<'a>>, String> {
     }
     while !s.is_empty() {
         if s.starts_with("%u") {
-            if let Some(len) = n_chars_len(6, &s) {
+            if let Some(len) = n_chars_len(6, s) {
                 let (encoded, next) = s.split_at(len);
                 if let Ok(hex_bytes) = hex::decode(&encoded[2..]) {
                     assert!(hex_bytes.len() == 2);
@@ -346,7 +346,7 @@ fn percent_split<'a>(mut s: &'a str) -> Result<Vec<PercentSplit<'a>>, String> {
             }
             return Err(format!("expected '%uXXXX', got {:?}", s));
         } else if s.starts_with('%') {
-            if let Some(len) = n_chars_len(3, &s) {
+            if let Some(len) = n_chars_len(3, s) {
                 let (encoded, next) = s.split_at(len);
                 if let Ok(hex_bytes) = hex::decode(&encoded[1..]) {
                     assert!(hex_bytes.len() == 1);
@@ -358,7 +358,7 @@ fn percent_split<'a>(mut s: &'a str) -> Result<Vec<PercentSplit<'a>>, String> {
             }
             return Err(format!("expected '%XX', got {:?}", s));
         } else {
-            let index = s.find('%').unwrap_or_else(|| s.len());
+            let index = s.find('%').unwrap_or(s.len());
             let (raw, next) = s.split_at(index);
             s = next;
             splits.push(PercentSplit::Str(raw));

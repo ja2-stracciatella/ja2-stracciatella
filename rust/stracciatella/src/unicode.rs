@@ -137,10 +137,9 @@ impl From<String> for Nfc {
     }
 }
 
-/// Unwraps the inner string.
-impl Into<String> for Nfc {
-    fn into(self) -> String {
-        self.inner
+impl From<Nfc> for String {
+    fn from(n: Nfc) -> Self {
+        n.inner
     }
 }
 

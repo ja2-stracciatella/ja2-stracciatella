@@ -87,7 +87,7 @@ impl Vfs {
 
     /// Adds an overlay filesystem backed by a filesystem directory.
     pub fn add_dir(&mut self, path: &Path) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
-        let dir_fs = DirFs::new(&path).map_err(|error| VfsInitError {
+        let dir_fs = DirFs::new(path).map_err(|error| VfsInitError {
             path: path.to_owned(),
             error,
         })?;
@@ -258,7 +258,7 @@ impl Vfs {
 impl VfsLayer for Vfs {
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         for entry in self.entries.iter() {
-            let file_result = entry.open(&file_path);
+            let file_result = entry.open(file_path);
             if let Err(err) = &file_result {
                 if err.kind() == io::ErrorKind::NotFound {
                     continue;
@@ -272,7 +272,7 @@ impl VfsLayer for Vfs {
     fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
         let mut entries = HashSet::new();
         for entry in self.entries.iter() {
-            let layer_result = entry.read_dir(&file_path);
+            let layer_result = entry.read_dir(file_path);
             if let Err(err) = &layer_result {
                 if err.kind() == io::ErrorKind::NotFound {
                     continue;

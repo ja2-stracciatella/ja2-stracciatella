@@ -34,18 +34,15 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
 mod tests {
     use std::path::Path;
 
-    use crate::*;
-
     #[test]
     #[cfg(all(not(windows), not(target_os = "android")))]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
         use crate::config::find_stracciatella_home;
 
-        let mut engine_options = EngineOptions::default();
-        engine_options.stracciatella_home = find_stracciatella_home().unwrap();
+        let stracciatella_home = find_stracciatella_home().unwrap();
         let expected = format!("{}/.ja2", std::env::var("HOME").unwrap());
 
-        assert_eq!(engine_options.stracciatella_home, Path::new(&expected));
+        assert_eq!(stracciatella_home, Path::new(&expected));
     }
 
     #[test]
@@ -54,10 +51,9 @@ mod tests {
         use crate::config::find_stracciatella_home;
         use regex::Regex;
 
-        let mut engine_options = EngineOptions::default();
-        engine_options.stracciatella_home = find_stracciatella_home().unwrap();
+        let stracciatella_home = find_stracciatella_home().unwrap();
 
-        let result = engine_options.stracciatella_home.to_str().unwrap();
+        let result = stracciatella_home.to_str().unwrap();
         let regex = Regex::new(r"^[A-Z]:\\(.*)+\\JA2").unwrap();
         assert!(
             regex.is_match(result),

@@ -79,7 +79,7 @@ pub extern "C" fn Vfs_readDir(
         ))))
     };
     let res = match &extension {
-        Some(ext) => vfs.read_dir_with_extension(&path, &ext),
+        Some(ext) => vfs.read_dir_with_extension(&path, ext),
         None => vfs.read_dir(&path),
     };
     match res {
@@ -104,7 +104,7 @@ pub extern "C" fn VfsFile_open(vfs: *mut Vfs, path: *const c_char) -> *mut VFile
     forget_rust_error();
     let vfs = unsafe_mut(vfs);
     let path = str_from_c_str_or_panic(unsafe_c_str(path));
-    match vfs.open(&Nfc::caseless_path(&path)) {
+    match vfs.open(&Nfc::caseless_path(path)) {
         Err(err) => {
             remember_rust_error(format!("VfsFile_open {:?}: {}", path, err));
             std::ptr::null_mut()

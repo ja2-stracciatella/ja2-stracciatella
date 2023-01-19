@@ -82,10 +82,7 @@ pub extern "C" fn Fs_findAllFilesInDir(
             ptr::null_mut()
         }
         Ok(vec) => {
-            let vec: Vec<_> = vec
-                .iter()
-                .map(|x| c_string_from_path_or_panic(&x))
-                .collect();
+            let vec: Vec<_> = vec.iter().map(|x| c_string_from_path_or_panic(x)).collect();
             let c_vec = VecCString::from(vec);
             into_ptr(c_vec)
         }
@@ -107,10 +104,7 @@ pub extern "C" fn Fs_findAllDirsInDir(
             ptr::null_mut()
         }
         Ok(vec) => {
-            let vec: Vec<_> = vec
-                .iter()
-                .map(|x| c_string_from_path_or_panic(&x))
-                .collect();
+            let vec: Vec<_> = vec.iter().map(|x| c_string_from_path_or_panic(x)).collect();
             let c_vec = VecCString::from(vec);
             into_ptr(c_vec)
         }
