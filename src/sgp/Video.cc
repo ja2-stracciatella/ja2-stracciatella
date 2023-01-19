@@ -620,8 +620,6 @@ void RefreshScreen(void)
 	SDL_UpdateTexture(ScreenTexture, &ScreenTextureUpdateRect,
 	                  SrcPixels, ScreenBuffer->pitch);
 
-	SDL_RenderClear(GameRenderer);
-
 	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
 		SDL_SetRenderTarget(GameRenderer, ScaledScreenTexture);
 		SDL_RenderCopy(GameRenderer, ScreenTexture, nullptr, nullptr);
