@@ -25,7 +25,7 @@
 
 constexpr ProfileID NO_PROFILE = 200;
 
-#define BATTLE_SND_LOWER_VOLUME			1
+constexpr bool BATTLE_SND_LOWER_VOLUME = true;
 
 #define TAKE_DAMAGE_GUNFIRE				1
 #define TAKE_DAMAGE_BLADE				2
@@ -173,7 +173,7 @@ enum
 };
 
 // An enumeration for playing battle sounds
-enum BattleSound
+enum BattleSound : INT8
 {
 	BATTLE_SOUND_OK1,
 	BATTLE_SOUND_OK2,
@@ -187,9 +187,9 @@ enum BattleSound
 	BATTLE_SOUND_HUMM,
 	BATTLE_SOUND_NOTHING,
 	BATTLE_SOUND_GOTIT,
-	BATTLE_SOUND_LOWMARALE_OK1,
-	BATTLE_SOUND_LOWMARALE_OK2,
-	BATTLE_SOUND_LOWMARALE_ATTN1,
+	BATTLE_SOUND_LOWMORALE_OK1,
+	BATTLE_SOUND_LOWMORALE_OK2,
+	BATTLE_SOUND_LOWMORALE_ATTN1,
 	BATTLE_SOUND_LOCKED,
 	BATTLE_SOUND_ENEMY,
 	NUM_MERC_BATTLE_SOUNDS
@@ -713,15 +713,15 @@ struct SOLDIERTYPE
 	INT16 sBoundingBoxOffsetX;
 	INT16 sBoundingBoxOffsetY;
 	UINT32 uiTimeSameBattleSndDone;
-	INT8 bOldBattleSnd;
+	BattleSound bOldBattleSnd;
 	BOOLEAN fContractPriceHasIncreased;
 	UINT32 uiBurstSoundID;
 	BOOLEAN fFixingSAMSite;
 	BOOLEAN fFixingRobot;
 	INT8 bSlotItemTakenFrom;
 	BOOLEAN fSignedAnotherContract;
-	SOLDIERTYPE* auto_bandaging_medic;
 	BOOLEAN fDontChargeTurningAPs;
+	SOLDIERTYPE* auto_bandaging_medic;
 	SOLDIERTYPE* robot_remote_holder;
 	UINT32 uiTimeOfLastContractUpdate;
 	INT8 bTypeOfLastContract;
@@ -956,7 +956,7 @@ UINT16 GetStructureID(SOLDIERTYPE const *);
 
 void    MakeCharacterDialogueEventDoBattleSound(SOLDIERTYPE& s, BattleSound, UINT32 delay);
 BOOLEAN DoMercBattleSound(SOLDIERTYPE*, BattleSound);
-BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE*, BattleSound, INT8 bSpecialCode);
+BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE*, BattleSound, bool lowerVolume);
 
 
 UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKitPts, INT16 sStatus );

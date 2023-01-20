@@ -182,6 +182,9 @@ protected:
 #define INJ_SKIP_U8(D)    (D).skip(1);
 #define INJ_SOLDIER(D, S) (D).write<SoldierID>(Soldier2ID((S)));
 #define INJ_VEC3(D, S) INJ_FLOAT(D, (S).x); INJ_FLOAT(D, (S).y); INJ_FLOAT(D, (S).z);
+// Could use auto as the type of S in C++20
+template<typename T>
+static inline void INJ_AUTO(DataWriter & D, T S) { D.write(S); }
 
 #define EXTR_STR(S, D, Size)  (S).readArray<char>((D), (Size));
 #define EXTR_BOOLA(S, D, Size) (S).readArray<BOOLEAN>((D), (Size));
@@ -207,5 +210,7 @@ protected:
 #define EXTR_SKIP_U8(S)    (S).skip(1);
 #define EXTR_SOLDIER(S, D) (D) = ID2Soldier((S).read<SoldierID>());
 #define EXTR_VEC3(S, D) EXTR_FLOAT(S, (D).x); EXTR_FLOAT(S, (D).y); EXTR_FLOAT(S, (D).z);
+template<typename T>
+static inline void EXTR_AUTO(DataReader & S, T & D) { D = S.read<std::remove_reference_t<decltype(D)>>(); }
 
 #endif
