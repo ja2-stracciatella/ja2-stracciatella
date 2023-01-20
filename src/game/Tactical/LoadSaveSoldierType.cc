@@ -446,7 +446,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I16(d, s->sBoundingBoxOffsetX)
 	EXTR_I16(d, s->sBoundingBoxOffsetY)
 	EXTR_U32(d, s->uiTimeSameBattleSndDone)
-	EXTR_I8(d, s->bOldBattleSnd)
+	EXTR_AUTO(d, s->bOldBattleSnd);
 	EXTR_SKIP(d, 1)
 	EXTR_BOOL(d, s->fContractPriceHasIncreased)
 	EXTR_SKIP(d, 1)
@@ -956,7 +956,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I16(d, s->sBoundingBoxOffsetX)
 	INJ_I16(d, s->sBoundingBoxOffsetY)
 	INJ_U32(d, s->uiTimeSameBattleSndDone)
-	INJ_I8(d, s->bOldBattleSnd)
+	INJ_AUTO(d, s->bOldBattleSnd);
 	INJ_SKIP(d, 1)
 	INJ_BOOL(d, s->fContractPriceHasIncreased)
 	INJ_SKIP(d, 1)

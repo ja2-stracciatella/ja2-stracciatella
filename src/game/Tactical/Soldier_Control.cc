@@ -92,8 +92,6 @@
 
 #define PALETTEFILENAME			BINARYDATADIR "/ja2pal.dat"
 
-#define LOW_MORALE_BATTLE_SND_THREASHOLD	35
-
 
 #define TURNING_FROM_PRONE_OFF			0
 #define TURNING_FROM_PRONE_ON			1
@@ -137,7 +135,7 @@ struct BATTLESNDS_STRUCT
 	UINT8   ubRandomVal;
 	BOOLEAN fBadGuy;
 	BOOLEAN fDontAllowTwoInRow;
-	BOOLEAN fStopDialogue;
+	INT8    stopDialogue;
 };
 
 
@@ -5870,8 +5868,10 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 }
 
 
-BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* s, BattleSound battle_snd_id, INT8 const bSpecialCode)
+BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* s, BattleSound battle_snd_id, bool const lowerVolume)
 {
+	constexpr INT8 LOW_MORALE_BATTLE_SND_THRESHOLD = 35;
+
 	CHECKF (battle_snd_id < NUM_MERC_BATTLE_SOUNDS);
 
 	if (s->uiStatusFlags & SOLDIER_VEHICLE)
@@ -5954,11 +5954,11 @@ BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* s, BattleSound battle_snd_id, INT
 	return TRUE;
 
 no_sub:
-	BATTLESNDS_STRUCT const* battle_snd = &gBattleSndsData[battle_snd_id];
+	auto const& battle_snd = gBattleSndsData[battle_snd_id];
 
 	// Check if this is the same one we just played and we are below the min delay
 	if (s->bOldBattleSnd == battle_snd_id &&
-		battle_snd->fDontAllowTwoInRow &&
+		battle_snd.fDontAllowTwoInRow &&
 		GetJA2Clock() - s->uiTimeSameBattleSndDone < MIN_SUBSEQUENT_SNDS_DELAY)
 	{
 		return TRUE;
@@ -5968,7 +5968,7 @@ no_sub:
 	if (SoundIsPlaying(s->uiBattleSoundID))
 	{
 		// If this is not crucial, skip it
-		if (battle_snd->fStopDialogue != 1) return TRUE;
+		if (battle_snd.stopDialogue != 1) return TRUE;
 
 		// Stop playing original
 		SoundStop(s->uiBattleSoundID);
@@ -5977,7 +5977,7 @@ no_sub:
 	// If we are talking now....
 	if (IsMercSayingDialogue(s->ubProfile))
 	{
-		switch (battle_snd->fStopDialogue)
+		switch (battle_snd.stopDialogue)
 		{
 			case 1: DialogueAdvanceSpeech(); break; // Stop dialogue
 			case 2: return TRUE;                    // Skip battle snd
@@ -5988,18 +5988,6 @@ no_sub:
 	s->bOldBattleSnd           = battle_snd_id;
 	s->uiTimeSameBattleSndDone = GetJA2Clock();
 
-	// Adjust based on morale...
-	if (s->bMorale < LOW_MORALE_BATTLE_SND_THREASHOLD)
-	{
-		switch (battle_snd_id)
-		{
-			case BATTLE_SOUND_OK1:   battle_snd_id = BATTLE_SOUND_LOWMARALE_OK1;   break;
-			case BATTLE_SOUND_ATTN1: battle_snd_id = BATTLE_SOUND_LOWMARALE_ATTN1; break;
-			default:
-				break;
-		}
-	}
-
 	//if the sound to be played is a confirmation, check to see if we are to play it
 	if (battle_snd_id == BATTLE_SOUND_OK1 &&
 		gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
@@ -6007,12 +5995,21 @@ no_sub:
 		return TRUE;
 	}
 
-	// Randomize between sounds, if appropriate
-	if (battle_snd->ubRandomVal != 0)
+	// Adjust based on morale...
+	if (s->bMorale < LOW_MORALE_BATTLE_SND_THRESHOLD)
 	{
-		battle_snd_id = static_cast<BattleSound>(battle_snd_id + Random(battle_snd->ubRandomVal));
-		battle_snd    = &gBattleSndsData[battle_snd_id];
+		switch (battle_snd_id)
+		{
+			case BATTLE_SOUND_OK1:   battle_snd_id = BATTLE_SOUND_LOWMORALE_OK1;   break;
+			case BATTLE_SOUND_ATTN1: battle_snd_id = BATTLE_SOUND_LOWMORALE_ATTN1; break;
+			default:
+				break;
+		}
 	}
+
+	// Randomize between sounds, if applicable (Random(0) returns 0).
+	battle_snd_id = static_cast<BattleSound>(battle_snd_id + Random(battle_snd.ubRandomVal));
+	auto const& adjusted_battle_snd = gBattleSndsData[battle_snd_id];
 
 	ST::string basename;
 	if (s->ubProfile != NO_PROFILE)
@@ -6022,14 +6019,14 @@ no_sub:
 	else
 	{
 		// Check if we can play this!
-		if (!battle_snd->fBadGuy) return FALSE;
+		if (!adjusted_battle_snd.fBadGuy) return FALSE;
 
 		char const* const prefix = s->ubBodyType == HATKIDCIV ||
 						s->ubBodyType == KIDCIV ? "kid" : "bad";
 		basename = ST::format("{}{d}", prefix, s->ubBattleSoundID);
 	}
 
-	ST::string filename = ST::format(BATTLESNDSDIR "/{}_{}.wav", basename, battle_snd->zName);
+	ST::string filename = ST::format(BATTLESNDSDIR "/{}_{}.wav", basename, adjusted_battle_snd.zName);
 	if (!GCM->doesGameResExists(filename))
 	{
 		if (battle_snd_id == BATTLE_SOUND_DIE1)
@@ -6043,13 +6040,13 @@ no_sub:
 
 		// Generic replacement voices
 		char const prefix = s->ubBodyType == REGFEMALE ? 'f' : 'm';
-		filename = ST::format(BATTLESNDSDIR "/{c}_{}.wav", prefix, battle_snd->zName);
+		filename = ST::format(BATTLESNDSDIR "/{c}_{}.wav", prefix, adjusted_battle_snd.zName);
 	}
 file_exists:;
 
 	// ATE: Reduce volume for OK sounds...
 	// (Only for all-moves or multi-selection cases)
-	UINT32 const base_volume = bSpecialCode == BATTLE_SND_LOWER_VOLUME ? MIDVOLUME : HIGHVOLUME;
+	UINT32 const base_volume = lowerVolume == BATTLE_SND_LOWER_VOLUME ? MIDVOLUME : HIGHVOLUME;
 	UINT32       volume      = CalculateSpeechVolume(base_volume);
 
 	// If we are an enemy.....reduce due to volume
@@ -6109,7 +6106,7 @@ void MakeCharacterDialogueEventDoBattleSound(SOLDIERTYPE& s, BattleSound const s
 BOOLEAN DoMercBattleSound(SOLDIERTYPE* const s, BattleSound const battle_snd_id)
 {
 	// We WANT to play some RIGHT AWAY or merc is not saying anything right now
-	if (gBattleSndsData[battle_snd_id].fStopDialogue == 1 ||
+	if (gBattleSndsData[battle_snd_id].stopDialogue == 1 ||
 		s->ubProfile == NO_PROFILE ||
 		InOverheadMap() ||
 		!IsMercSayingDialogue(s->ubProfile))
