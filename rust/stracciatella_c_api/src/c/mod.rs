@@ -263,7 +263,7 @@ mod tests {
     fn test_path_from_c_str_panic_not_unix() {
         if let Ok(c_str) = CStr::from_bytes_with_nul(b"123%E1\0") {
             // panics, Path only supports invalid utf8 on unix
-            path_buf_from_c_str_or_panic(&c_str);
+            path_buf_from_c_str_or_panic(c_str);
         }
     }
 

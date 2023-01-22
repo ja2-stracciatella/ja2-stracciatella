@@ -44,7 +44,7 @@ jobs:
       run: ''
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Compiler cache (sccache)
       uses: actions/cache@v2
@@ -136,3 +136,37 @@ jobs:
       with:
         name: artifacts
         path: ${{ github.workspace }}/artifacts
+
+  ci-lint:
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+        - os: ubuntu-latest
+          target: linux
+
+        - os: macos-latest
+          target: mac
+
+        - os: windows-latest
+          target: windows
+    name: lint ${{ matrix.cfg.target }} ${{ github.ref }}
+    runs-on: ${{ matrix.cfg.os }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install rustup
+      shell: bash
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSfL https://sh.rustup.rs | sh -s -- -y --default-toolchain=$(cat ./rust-toolchain)
+
+    - name: Run cargo fmt
+      shell: bash
+      working-directory: ./rust
+      run: cargo fmt --verbose --all --check
+
+    - name: Run cargo clippy
+      shell: bash
+      working-directory: ./rust
+      run: cargo clippy --all-targets --all-features --verbose -- -D warnings

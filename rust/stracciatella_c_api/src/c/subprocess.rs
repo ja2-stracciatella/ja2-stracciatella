@@ -156,7 +156,7 @@ pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
             if let Some(exit_code) = exit_code {
                 exit_code
             } else {
-                let mut error = "Subprocess terminated by a signal.".to_owned();
+                remember_rust_error("Subprocess terminated by a signal.");
                 #[cfg(target_family = "unix")]
                 {
                     // Include signal details on unix systems
@@ -166,11 +166,13 @@ pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
                         let signal_ptr = libc::strsignal(signal);
                         if !signal_ptr.is_null() {
                             let signal_str = str_from_c_str_or_panic(unsafe_c_str(signal_ptr));
-                            error = format!("Subprocess terminated by signal: {}", signal_str);
+                            remember_rust_error(format!(
+                                "Subprocess terminated by signal: {}",
+                                signal_str
+                            ));
                         }
                     }
                 }
-                remember_rust_error(error);
                 i32::MIN
             }
         }

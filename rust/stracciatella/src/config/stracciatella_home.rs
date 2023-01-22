@@ -32,11 +32,11 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
-
     #[test]
     #[cfg(all(not(windows), not(target_os = "android")))]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
+        use std::path::Path;
+
         use crate::config::find_stracciatella_home;
 
         let stracciatella_home = find_stracciatella_home().unwrap();
