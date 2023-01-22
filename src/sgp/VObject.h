@@ -28,7 +28,8 @@ struct ZStripInfo
 class SGPVObject
 {
 	public:
-		SGPVObject(SGPImage const*);
+		// This modifies the SGPImage: relevant data is moved away from it
+		SGPVObject(SGPImage *);
 		~SGPVObject();
 
 		UINT8 BPP() const { return bit_depth_; }
@@ -66,12 +67,11 @@ class SGPVObject
 
 	private:
 		Flags                        flags_;                         // Special flags
-		UINT32                       pix_data_size_;                 // ETRLE data size
 		SGP::Buffer<SGPPaletteEntry> palette_;                       // 8BPP Palette
 		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
-		UINT8*                       pix_data_;                      // ETRLE pixel data
-		ETRLEObject*                 etrle_object_;                  // Object offset data etc
+		std::unique_ptr<UINT8 const []> pix_data_;                   // ETRLE pixel data
+		std::unique_ptr<ETRLEObject const []> etrle_object_;         // Object offset data etc
 	public:
 		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
 	private:

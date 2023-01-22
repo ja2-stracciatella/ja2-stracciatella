@@ -290,24 +290,6 @@ UINT32 GetRGBColor(UINT16 Value16BPP)
 }
 
 
-void GetETRLEImageData(SGPImage const* const img, ETRLEData* const buf)
-{
-	Assert(img);
-	Assert(buf);
-
-	SGP::Buffer<ETRLEObject> etrle_objs(img->usNumberOfObjects);
-	memcpy(etrle_objs, img->pETRLEObject, sizeof(*etrle_objs) * img->usNumberOfObjects);
-
-	SGP::Buffer<UINT8> pix_data(img->uiSizePixData);
-	memcpy(pix_data, img->pImageData, sizeof(*pix_data) * img->uiSizePixData);
-
-	buf->pPixData          = pix_data.Release();
-	buf->uiSizePixData     = img->uiSizePixData;
-	buf->pETRLEObject      = etrle_objs.Release();
-	buf->usNumberOfObjects = img->usNumberOfObjects;
-}
-
-
 void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
 	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)

@@ -52,7 +52,6 @@ typedef char            CHAR8;
 
 // other
 typedef unsigned char		BOOLEAN;
-typedef void *					PTR;
 typedef UINT8						BYTE;
 
 #ifndef TRUE

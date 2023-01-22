@@ -37,12 +37,12 @@ namespace SGP
 		private:
 			UniqueT ptr_;
 
-			Buffer(const Buffer&) = delete;          /* no copy */
+			Buffer(const Buffer&) = delete;         /* no copy */
 			void operator=(const Buffer&) = delete; /* no assignment */
 
 			// Moving a buffer would actually work, but to discourage use
 			// of this class, these two are deleted as well.
-			Buffer(Buffer &&) = delete;          /* no move */
+			Buffer(Buffer &&) = delete;         /* no move */
 			void operator=(Buffer &&) = delete; /* no move assignment */
 	};
 }

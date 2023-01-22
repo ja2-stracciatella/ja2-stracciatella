@@ -63,13 +63,6 @@ struct ETRLEObject
 	UINT16			usWidth;
 };
 
-struct ETRLEData
-{
-	PTR								pPixData;
-	UINT32						uiSizePixData;
-	ETRLEObject *			pETRLEObject;
-	UINT16						usNumberOfObjects;
-};
 
 // Image header structure
 struct SGPImage
@@ -109,9 +102,6 @@ SGPImage* CreateImage(const ST::string& ImageFile, UINT16 fContents);
 // This function will run the appropriate copy function based on the type of SGPImage object
 BOOLEAN CopyImageToBuffer(SGPImage const*, UINT32 fBufferType, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPBox const* src_rect);
 
-
-// This function will create a buffer in memory of ETRLE data, excluding palette
-void GetETRLEImageData(SGPImage const*, ETRLEData*);
 
 // UTILITY FUNCTIONS
 
