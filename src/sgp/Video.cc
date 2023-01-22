@@ -114,6 +114,7 @@ void VideoToggleFullScreen(void)
 	{
 		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
+	SDL_RenderClear(GameRenderer);
 }
 
 void VideoSetBrightness(float brightness)
@@ -720,5 +721,13 @@ void ShutdownVideoSurfaceManager(void)
 	while (gpVSurfaceHead)
 	{
 		delete gpVSurfaceHead;
+	}
+}
+
+
+void HandleWindowEvent(SDL_Event const& evt)
+{
+	if (evt.window.event == SDL_WINDOWEVENT_RESIZED) {
+		SDL_RenderClear(GameRenderer);
 	}
 }

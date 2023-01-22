@@ -222,6 +222,8 @@ static void MainLoop(int msPerGameCycle)
 				case SDL_FINGERUP:     FingerUp(&event.tfinger); break;
 				case SDL_FINGERDOWN:   FingerDown(&event.tfinger); break;
 
+				case SDL_WINDOWEVENT: HandleWindowEvent(event); break;
+
 				case SDL_QUIT: deinitGameAndExit(); break;
 			}
 		}

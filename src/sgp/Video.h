@@ -1,6 +1,7 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
+#include <SDL_events.h>
 #include <SDL_video.h>
 #include "Types.h"
 #include "stracciatella.h"
@@ -27,6 +28,8 @@ void VideoSetBrightness(float brightness);
 /* Toggle between fullscreen and window mode after initialising the video
  * manager */
 void VideoToggleFullScreen(void);
+
+void HandleWindowEvent(SDL_Event const&);
 
 void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth);
 
