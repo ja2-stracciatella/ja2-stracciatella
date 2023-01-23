@@ -176,7 +176,7 @@ pub fn find_all_dirs_in_dir(
         if entry_result.path().is_dir() {
             vec.push(entry_result.path().to_owned());
             if recursive {
-                let mut subdir_results = find_all_dirs_in_dir(&dir, sort_results, recursive)?;
+                let mut subdir_results = find_all_dirs_in_dir(dir, sort_results, recursive)?;
                 vec.append(&mut subdir_results);
             }
         }

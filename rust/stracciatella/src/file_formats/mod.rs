@@ -45,7 +45,7 @@ pub trait StracciatellaWriteExt: Write {
         if string_bytes.len() >= buffer.len() {
             return Err(Error::new(InvalidInput, "string is too long"));
         }
-        buffer[..string_bytes.len()].copy_from_slice(&string_bytes);
+        buffer[..string_bytes.len()].copy_from_slice(string_bytes);
         self.write_all(&buffer)?;
         Ok(())
     }

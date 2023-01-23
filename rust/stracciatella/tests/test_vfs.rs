@@ -202,7 +202,7 @@ mod vfs {
             .map(|&entry_path| {
                 let offset = file.seek(SeekFrom::Current(0)).expect("seek to entry data");
                 let data = name.as_bytes();
-                file.write_all(&data).expect("write entry data");
+                file.write_all(data).expect("write entry data");
                 SlfEntry {
                     file_path: entry_path.to_owned(),
                     offset: offset as u32,
@@ -236,13 +236,13 @@ mod vfs {
 
     /// The inner file data is "foobar.slf".
     fn create_foobar_slf(dir: &Path) {
-        create_slf(&dir, "foobar.slf", r"foo\bar\", &["baz.txt"]);
+        create_slf(dir, "foobar.slf", r"foo\bar\", &["baz.txt"]);
     }
 
     /// The inner file data is "foo.slf".
     fn create_foo_slf(dir: &Path) {
         create_slf(
-            &dir,
+            dir,
             "foo.slf",
             "foo\\",
             &["bar.txt", "bar\\baz.txt", "bar\\ὈΔΥΣΣΕΎΣ.baz"],
@@ -251,7 +251,7 @@ mod vfs {
 
     /// The inner file data "data.slf".
     fn create_data_slf(dir: &Path) {
-        create_slf(&dir, "data.slf", "", &["foo.txt"]);
+        create_slf(dir, "data.slf", "", &["foo.txt"]);
     }
 
     /// Add an slf to vfs

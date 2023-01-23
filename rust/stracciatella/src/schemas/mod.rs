@@ -109,7 +109,7 @@ mod tests {
         ];
         for path_str in paths {
             let path = Path::new(path_str);
-            assert!(schema_manager.get(&path).is_some(), path_str);
+            assert!(schema_manager.get(path).is_some(), "{}", path_str);
         }
     }
 }

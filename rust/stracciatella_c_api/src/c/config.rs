@@ -58,7 +58,7 @@ pub extern "C" fn EngineOptions_default() -> *mut EngineOptions {
 pub extern "C" fn EngineOptions_write(ptr: *mut EngineOptions) -> bool {
     let engine_options = unsafe_mut(ptr);
     let ja2_json = Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home);
-    ja2_json.write(&engine_options).is_ok()
+    ja2_json.write(engine_options).is_ok()
 }
 
 /// Deletes `EngineOptions`.
@@ -157,7 +157,7 @@ pub extern "C" fn EngineOptions_getMod(ptr: *const EngineOptions, index: u32) ->
     let engine_options = unsafe_ref(ptr);
     match engine_options.mods.get(index as usize) {
         Some(str_mod) => {
-            let c_str_mod = c_string_from_str(&str_mod);
+            let c_str_mod = c_string_from_str(str_mod);
             c_str_mod.into_raw()
         }
         None => {
@@ -365,7 +365,7 @@ mod tests {
         engine_options.stracciatella_home = stracciatella_home;
         engine_options.resolution = Resolution(100, 100);
 
-        assert_eq!(EngineOptions_write(&mut engine_options), true);
+        assert!(EngineOptions_write(&mut engine_options));
 
         let mut got_engine_options = EngineOptions::default();
         Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home)

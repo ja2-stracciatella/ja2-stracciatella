@@ -354,7 +354,7 @@ impl SlfEntry {
         }
 
         output.seek(SeekFrom::Start(u64::from(self.offset)))?;
-        output.write_all(&data)?;
+        output.write_all(data)?;
 
         Ok(())
     }

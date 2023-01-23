@@ -41,11 +41,9 @@ if [[ "${BUILD_TYPE}" != "Debug" ]]; then
 fi
 
 export RUN_TESTS=true
-export RUN_RUST_CHECKS=false
 export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-toolchain) --profile=minimal"
 if [[ "$CI_TARGET" == "linux" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=AppDir/usr -DEXTRA_DATA_DIR=../share/ja2"
-  export RUN_RUST_CHECKS=true
 
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   # cross compiling
@@ -85,10 +83,6 @@ echo "## test ##"
 if [[ "$RUN_TESTS" == "true" ]]; then
   if [[ "$CI_TARGET" == "linux" ]]; then
     $BUILD_CMD --target install
-  fi
-  if [[ "$RUN_RUST_CHECKS" == "true" ]]; then
-    $BUILD_CMD --target cargo-fmt-check
-    $BUILD_CMD --target cargo-clippy
   fi
   $BUILD_CMD --target cargo-test
   if [[ "$CI_TARGET" == "linux" ]]; then

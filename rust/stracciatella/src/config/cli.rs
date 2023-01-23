@@ -271,7 +271,7 @@ mod tests {
             input.apply_to_engine_options(&mut engine_options).err(),
             None
         );
-        assert_eq!(engine_options.start_in_fullscreen, false);
+        assert!(!engine_options.start_in_fullscreen);
     }
 
     #[test]
@@ -282,7 +282,7 @@ mod tests {
             input.apply_to_engine_options(&mut engine_options).err(),
             None
         );
-        assert_eq!(engine_options.start_in_fullscreen, true);
+        assert!(engine_options.start_in_fullscreen);
     }
 
     #[test]
@@ -293,7 +293,7 @@ mod tests {
             input.apply_to_engine_options(&mut engine_options).err(),
             None
         );
-        assert_eq!(engine_options.show_help, true);
+        assert!(engine_options.show_help);
     }
 
     #[test]
@@ -311,7 +311,7 @@ mod tests {
             input.apply_to_engine_options(&mut engine_options).err(),
             None
         );
-        assert_eq!(engine_options.start_in_debug_mode, true);
+        assert!(engine_options.start_in_debug_mode);
         assert_eq!(engine_options.mods.len(), 2);
         assert_eq!(engine_options.mods[0], "a");
         assert_eq!(engine_options.mods[1], "ö");

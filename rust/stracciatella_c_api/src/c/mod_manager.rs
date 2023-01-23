@@ -13,7 +13,7 @@ use super::common::{
 pub extern "C" fn ModManager_create(engine_options: *const EngineOptions) -> *mut ModManager {
     forget_rust_error();
     let engine_options = unsafe_ref(engine_options);
-    let mod_manager = ModManager::new(&engine_options);
+    let mod_manager = ModManager::new(engine_options);
 
     match mod_manager {
         Ok(mod_manager) => into_ptr(mod_manager),
@@ -30,7 +30,7 @@ pub extern "C" fn ModManager_createUnchecked(
     engine_options: *const EngineOptions,
 ) -> *mut ModManager {
     let engine_options = unsafe_ref(engine_options);
-    let mod_manager = ModManager::new_unchecked(&engine_options);
+    let mod_manager = ModManager::new_unchecked(engine_options);
 
     into_ptr(mod_manager)
 }

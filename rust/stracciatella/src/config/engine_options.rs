@@ -113,7 +113,7 @@ impl EngineOptions {
     /// Takes Cli arguments and JSON configuration file into account. It will also
     /// create a default JSON configuration file if it does not exist yet.
     pub fn from_home_and_args(
-        stracciatella_home: &PathBuf,
+        stracciatella_home: &Path,
         args: &[String],
     ) -> Result<EngineOptions, EngineOptionsError> {
         let mut engine_options = EngineOptions::default();
@@ -142,7 +142,7 @@ impl EngineOptions {
     /// Sets the save game folder to default if it is not set and ensures it exists
     fn ensure_save_game_directory(&mut self) -> Result<(), EngineOptionsError> {
         let default_save_game_dir = resolve_existing_components(
-            &Path::new(SAVED_GAME_DIR),
+            Path::new(SAVED_GAME_DIR),
             Some(&self.stracciatella_home),
             true,
         );
@@ -210,7 +210,7 @@ mod tests {
 
         assert_eq!(engine_options.resolution.0, 1100);
         assert_eq!(engine_options.resolution.1, 480);
-        assert_eq!(engine_options.start_in_fullscreen, true);
+        assert!(engine_options.start_in_fullscreen);
     }
 
     #[test]
