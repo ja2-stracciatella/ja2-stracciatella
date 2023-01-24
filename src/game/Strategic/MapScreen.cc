@@ -3097,7 +3097,8 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	MSYS_RemoveRegion( &gMapViewRegion );
 	MSYS_RemoveRegion( &gCharInfoFaceRegion);
 	MSYS_RemoveRegion( &gCharInfoHandRegion );
-	MSYS_RemoveRegion( &gMPanelRegion);
+	if(gMPanelRegion.uiFlags & MSYS_REGION_EXISTS) // FIMXE: maxrd2 - wtf is this?
+		MSYS_RemoveRegion( &gMPanelRegion);
 	MSYS_RemoveRegion( &gMapScreenMaskRegion );
 	fInMapMode = FALSE;
 
