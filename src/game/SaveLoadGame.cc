@@ -1013,7 +1013,7 @@ void LoadSavedGame(const ST::string &saveName)
 		}
 	}
 
-	if (version >= 101)
+	if (version >= 102)
 	{
 		LoadStatesFromSaveFile(f, g_gameStates);
 		AddModInfoToGameStates(g_gameStates);
