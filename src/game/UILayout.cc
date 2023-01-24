@@ -117,6 +117,13 @@ void UILayout::recalculatePositions()
 	m_invSlotPositionMap[SMALLPOCK7POS       ].set(m_stdScreenOffsetX + g_ui.m_stdScreenScale *  60, m_stdScreenOffsetY + g_ui.m_stdScreenScale * 299);
 	m_invSlotPositionMap[SMALLPOCK8POS       ].set(m_stdScreenOffsetX + g_ui.m_stdScreenScale *  60, m_stdScreenOffsetY + g_ui.m_stdScreenScale * 323);
 
+	for(int i = 0; i < NUM_INVENTORY_SLOTS; i++) {
+		INV_REGION_DESC *a = &m_invSlotPositionTac[i];
+		Assert(a->uX < g_ui.m_screenWidth && a->uY < g_ui.m_screenHeight);
+		a = &m_invSlotPositionMap[i];
+		Assert(a->uX < g_ui.m_screenWidth && a->uY < g_ui.m_screenHeight);
+	}
+
 	m_invCamoRegion.set(SM_BODYINV_X, SM_BODYINV_Y);
 
 	m_progress_bar_box.set(STD_SCREEN_X + g_ui.m_stdScreenScale * 5, g_ui.m_stdScreenScale * 2, MIN_INTERFACE_WIDTH - g_ui.m_stdScreenScale * 10, g_ui.m_stdScreenScale * 12);

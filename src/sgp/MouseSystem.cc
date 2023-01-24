@@ -683,6 +683,8 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 {
 	if (priority <= MSYS_PRIORITY_LOWEST) priority = MSYS_PRIORITY_LOWEST;
 
+	Assert(r->RegionBottomRightX < g_ui.m_screenWidth && r->RegionBottomRightY < g_ui.m_screenHeight);
+
 	r->PriorityLevel      = priority;
 	r->uiFlags            = MSYS_REGION_ENABLED | MSYS_REGION_EXISTS;
 	r->RegionTopLeftX     = tlx;

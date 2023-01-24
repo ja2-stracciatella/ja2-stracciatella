@@ -689,6 +689,7 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 			std::min(y + INT16(g_ui.m_stdScreenScale * r.h), g_ui.m_screenHeight - 1),
 			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
 		MSYS_SetRegionUserData(&m, 0, i);
+		Assert(m.RegionBottomRightX < g_ui.m_screenWidth && m.RegionBottomRightY < g_ui.m_screenHeight);
 	}
 
 	std::fill(std::begin(gbCompatibleAmmo), std::end(gbCompatibleAmmo), 0);
@@ -793,6 +794,8 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	bool       const  in_map = guiCurrentScreen == MAP_SCREEN;
 	OBJECTTYPE const& o      = s.inv[pocket];
 	MOUSE_REGION&     r      = gSMInvRegion[pocket];
+
+	Assert(r.RegionBottomRightX < g_ui.m_screenWidth && r.RegionBottomRightY < g_ui.m_screenHeight);
 
 	bool   hatch_out = false;
 	UINT32 outline   = SGP_TRANSPARENT;

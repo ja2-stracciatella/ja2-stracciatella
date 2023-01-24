@@ -242,10 +242,13 @@ void BltVideoObject(SGPVSurface *dst, const SGPVObject *src, const UINT16 usRegi
 	UINT32 *pBuffer = l.Buffer<UINT32>();
 	const UINT32 uiPitch = l.Pitch();
 
-	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect))
+	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect)) {
 		Blt32BPPDataTo32BPPBufferTransparentClip(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex, &ClippingRect);
-	else
+	} else {
+		const ETRLEObject &etrle = src->SubregionProperties(usRegionIndex);
+		Assert(dst->Height() - iDestY >= etrle.usHeight);
 		Blt32BPPDataTo32BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
+	}
 }
 
 
