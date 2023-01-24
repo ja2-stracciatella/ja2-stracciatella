@@ -848,17 +848,24 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, UINT32 iRe
 /** Fill empty space at the bottom of the screen. */
 static void FillEmptySpaceAtBottom()
 {
-	if(g_ui.isBigScreen())
-	{
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
-					  0, g_ui.get_INV_INTERFACE_START_Y(),
-					  INTERFACE_START_X, g_ui.m_screenHeight,
-					  RGB(0, 0, 0));
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
-					  INTERFACE_START_X + g_ui.m_teamPanelWidth, g_ui.get_INV_INTERFACE_START_Y(),
-					  g_ui.m_screenWidth, g_ui.m_screenHeight,
-					  RGB(0, 0, 0));
-	}
+//	if(g_ui.isBigScreen())
+//	{
+//		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+//					  0, g_ui.get_INV_INTERFACE_START_Y(),
+//					  INTERFACE_START_X, g_ui.m_screenHeight,
+//					  RGB(0, 0, 0));
+//		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+//					  INTERFACE_START_X + g_ui.m_teamPanelWidth, g_ui.get_INV_INTERFACE_START_Y(),
+//					  g_ui.m_screenWidth, g_ui.m_screenHeight,
+//					  RGB(0, 0, 0));
+//	}
+
+	// clear whole area
+	ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+				  0, g_ui.get_INV_INTERFACE_START_Y(),
+				  g_ui.m_screenWidth, g_ui.m_screenHeight,
+				  RGB(0, 0, 0));
+
 }
 
 /** Fill up some space with a textured space filler */
@@ -880,12 +887,12 @@ void InitializeSMPanel()
 	guiSMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, std::ceil(INV_INTERFACE_HEIGHT), PIXEL_DEPTH);
 	const UINT16 width640 = g_ui.m_stdScreenScale * 640;
 	const INT16 sFillerWidth = g_ui.m_teamPanelWidth - width640;
-	if (sFillerWidth > 0)
-	{
-		// The team panel is longer than default
-		// need a second blit, and we will start from the right
-		BltVideoObject(guiSMPanel, voSMPanel, 0, sFillerWidth/*g_ui.m_teamPanelWidth - width640*/, 0);
-	}
+//	if (sFillerWidth > 0)
+//	{
+//		// The team panel is longer than default
+//		// need a second blit, and we will start from the right
+//		BltVideoObject(guiSMPanel, voSMPanel, 0, sFillerWidth/*g_ui.m_teamPanelWidth - width640*/, 0);
+//	}
 	// draw the basic Single-Merc panel
 	BltVideoObject(guiSMPanel, voSMPanel, 0, 0, 0);
 	delete voSMPanel;
