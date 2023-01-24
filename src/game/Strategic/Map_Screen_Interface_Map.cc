@@ -320,13 +320,6 @@ SGPSector gsHighlightSector(-1, -1);
 // the current sector Z value of the map being displayed
 INT32 iCurrentMapSectorZ = 0;
 
-// the palettes
-static UINT16* pMapLTRedPalette;
-static UINT16* pMapDKRedPalette;
-static UINT16* pMapLTGreenPalette;
-static UINT16* pMapDKGreenPalette;
-
-
 // heli pop up
 static SGPVObject* guiMapBorderHeliSectors;
 
@@ -815,10 +808,10 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 		guiSAVEBUFFER->ShadowRect(sScreenX, sScreenY, sScreenX + MAP_GRID_X - 1, sScreenY + MAP_GRID_Y - 1);
 		return;
 
-	case MAP_SHADE_LT_GREEN: pal = pMapLTGreenPalette; break;
-	case MAP_SHADE_DK_GREEN: pal = pMapDKGreenPalette; break;
-	case MAP_SHADE_LT_RED:   pal = pMapLTRedPalette;   break;
-	case MAP_SHADE_DK_RED:   pal = pMapDKRedPalette;   break;
+//	case MAP_SHADE_LT_GREEN: pal = pMapLTGreenPalette; break;
+//	case MAP_SHADE_DK_GREEN: pal = pMapDKGreenPalette; break;
+//	case MAP_SHADE_LT_RED:   pal = pMapLTRedPalette;   break;
+//	case MAP_SHADE_DK_RED:   pal = pMapDKRedPalette;   break;
 
 	default: return;
 	}
@@ -831,32 +824,6 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 	BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
 	map->p16BPPPalette = org_pal;
 }
-
-
-static void InitializePalettesForMap(SGPPaletteEntry const * const pal)
-{
-	if (pMapDKGreenPalette) return;
-
-	pMapLTRedPalette   = Create16BPPPaletteShaded(pal, 400,   0, 0, TRUE);
-	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
-	pMapLTGreenPalette = Create16BPPPaletteShaded(pal,   0, 400, 0, TRUE);
-	pMapDKGreenPalette = Create16BPPPaletteShaded(pal,   0, 200, 0, TRUE);
-}
-
-
-static void ShutDownPalettesForMap()
-{
-	delete[] pMapLTRedPalette;
-	delete[] pMapDKRedPalette;
-	delete[] pMapLTGreenPalette;
-	delete[] pMapDKGreenPalette;
-
-	pMapLTRedPalette   = NULL;
-	pMapDKRedPalette   = NULL;
-	pMapLTGreenPalette = NULL;
-	pMapDKGreenPalette = NULL;
-}
-
 
 static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter);
 
@@ -2721,8 +2688,6 @@ void LoadMapScreenInterfaceMapGraphics()
 			gSecretSiteIcons[path] = AddVideoObjectFromFile(path);
 		}
 	}
-
-	InitializePalettesForMap(guiBIGMAP->GetPalette());
 }
 
 
@@ -2751,8 +2716,6 @@ void DeleteMapScreenInterfaceMapGraphics()
 		DeleteVideoObject(pair.second);
 	}
 	gSecretSiteIcons.clear();
-
-	ShutDownPalettesForMap();
 }
 
 

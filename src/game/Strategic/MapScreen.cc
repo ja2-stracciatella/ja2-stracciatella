@@ -25,7 +25,6 @@
 #include "GameRes.h"
 #include "GameSettings.h"
 #include "HelpScreen.h"
-#include "HImage.h"
 #include "Interface_Control.h"
 #include "Interface_Items.h"
 #include "Interface_Panels.h"
