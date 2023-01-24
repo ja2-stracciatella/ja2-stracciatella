@@ -55,9 +55,8 @@ try
 	}
 	else if (hImage->uiAppDataSize == hVObject->SubregionCount() * sizeof(AuxObjectData))
 	{
-		// Valid auxiliary data, so make a copy of it for TileSurf
-		pTileSurf->pAuxData = new AuxObjectData[hVObject->SubregionCount()]{};
-		memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
+		// Valid auxiliary data, so move it to TileSurf
+		pTileSurf->pAuxData = reinterpret_cast<AuxObjectData *>(hImage->pAppData.Release());
 	}
 	else
 	{

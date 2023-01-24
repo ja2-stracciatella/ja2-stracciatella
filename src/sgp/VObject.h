@@ -1,7 +1,6 @@
 #ifndef __VOBJECT_H
 #define __VOBJECT_H
 
-#include "Buffer.h"
 #include "Types.h"
 #include <memory>
 
@@ -34,7 +33,7 @@ class SGPVObject
 
 		UINT8 BPP() const { return bit_depth_; }
 
-		SGPPaletteEntry const* Palette() const { return palette_; }
+		SGPPaletteEntry const* Palette() const { return palette_.get(); }
 
 		UINT16 const* Palette16() const { return palette16_; }
 
@@ -67,7 +66,7 @@ class SGPVObject
 
 	private:
 		Flags                        flags_;                         // Special flags
-		SGP::Buffer<SGPPaletteEntry> palette_;                       // 8BPP Palette
+		std::unique_ptr<SGPPaletteEntry const []> palette_;          // 8BPP Palette
 		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
 		std::unique_ptr<UINT8 const []> pix_data_;                   // ETRLE pixel data

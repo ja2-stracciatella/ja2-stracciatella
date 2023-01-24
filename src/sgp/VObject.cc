@@ -50,14 +50,11 @@ SGPVObject::SGPVObject(SGPImage * const img) :
 
 	if (img->ubBitDepth == 8)
 	{
-		// create palette
-		const SGPPaletteEntry* const src_pal = img->pPalette;
-		Assert(src_pal != NULL);
+		// move palette data over
+		palette_ = img->pPalette.moveToUnique();
+		Assert(palette_);
 
-		SGPPaletteEntry* const pal = palette_.Allocate(256);
-		memcpy(pal, src_pal, sizeof(*pal) * 256);
-
-		palette16_     = Create16BPPPalette(pal);
+		palette16_     = Create16BPPPalette(palette_.get());
 		current_shade_ = palette16_;
 	}
 
