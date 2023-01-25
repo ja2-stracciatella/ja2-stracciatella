@@ -5,7 +5,7 @@
 
 typedef void ScaleCallback(int i, int w, int h, UINT8 *buf);
 
-SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation = true, ScaleCallback callback=nullptr);
-SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor, bool yInterpolation = true);
+SGPImage * ScaleImage(SGPImage *image, DOUBLE factorX, DOUBLE factorY, bool yInterpolation = true, ScaleCallback callback=nullptr);
+SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factorX, DOUBLE factorY, bool yInterpolation = true);
 
 #endif /*__VIDEOSCALE_H_*/

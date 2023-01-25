@@ -208,24 +208,28 @@ SGPVObject* AddVideoObjectFromHImage(SGPImage *img)
 	return new SGPVObject(img);
 }
 
-SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback)
+SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback, double scaleX, double scaleY)
 {
+	if(std::isnan(scaleX))
+		scaleX = g_ui.m_stdScreenScale;
+	if(std::isnan(scaleY))
+		scaleY = g_ui.m_stdScreenScale;
 	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale, true, callback));
+	AutoSGPImage hImage(ScaleImage(img.get(), scaleX, scaleY, true, callback));
 	return AddVideoObjectFromHImage(hImage.get());
 }
 
 SGPVObject* AddScaledOutlineVideoObjectFromFile(const ST::string& ImageFile)
 {
 	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA | IMAGE_REMOVE_PAL254));
-	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale, g_ui.m_stdScreenScale));
 	return AddVideoObjectFromHImage(hImage.get());
 }
 
 SGPVObject* AddScaledAlphaVideoObjectFromFile(const ST::string& ImageFile)
 {
 	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA | IMAGE_REMOVE_PAL1));
-	AutoSGPImage hImage(ScaleAlphaImage(img.get(), g_ui.m_stdScreenScale));
+	AutoSGPImage hImage(ScaleAlphaImage(img.get(), g_ui.m_stdScreenScale, g_ui.m_stdScreenScale));
 	return AddVideoObjectFromHImage(hImage.get());
 }
 

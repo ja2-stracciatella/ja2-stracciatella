@@ -115,7 +115,7 @@ static void LoadCursorData(UINT32 uiCursorIndex)
 			Assert(CFData->Filename != NULL);
 
 			AutoSGPImage img(CreateImage(CFData->Filename, IMAGE_ALLDATA | IMAGE_REMOVE_PAL254));
-			AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
+			AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale, g_ui.m_stdScreenScale));
 
 			CFData->hVObject = AddVideoObjectFromHImage(hImage.get());
 

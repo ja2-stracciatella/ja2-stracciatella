@@ -98,7 +98,7 @@ void ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
 SGPVObject* AddVideoObjectFromHImage(SGPImage *img);
-SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback=nullptr);
+SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback=nullptr, double scaleX=NAN, double scaleY=NAN);
 SGPVObject* AddScaledOutlineVideoObjectFromFile(const ST::string& ImageFile);
 SGPVObject* AddScaledAlphaVideoObjectFromFile(const ST::string& ImageFile);
 

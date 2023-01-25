@@ -656,7 +656,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 			SLOGD("Surface Database: Loading {}", usSurfaceIndex);
 
 			AutoSGPImage img(CreateImage(a->Filename, IMAGE_ALLDATA | IMAGE_HACK254));
-			AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
+			AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_tacticalScreenScale, g_ui.m_tacticalScreenScale));
 			AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage.get()));
 
 			// Get aux data

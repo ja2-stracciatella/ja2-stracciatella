@@ -147,10 +147,14 @@ void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1,
 	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, gIntensityShadePercent);
 }
 
-SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename, ScaleCallback *callback)
+SGPVSurface* AddVideoSurfaceFromFile(const char *Filename, ScaleCallback *callback, double scaleX, double scaleY)
 {
+	if(std::isnan(scaleX))
+		scaleX = g_ui.m_stdScreenScale;
+	if(std::isnan(scaleY))
+		scaleY = g_ui.m_stdScreenScale;
 	AutoSGPImage imgOrig(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
-	AutoSGPImage img(ScaleImage(imgOrig.get(), g_ui.m_stdScreenScale, true, callback));
+	AutoSGPImage img(ScaleImage(imgOrig.get(), scaleX, scaleY, true, callback));
 
 	auto vs = std::make_unique<SGPVSurface>(img->usWidth, img->usHeight, img->ubBitDepth);
 

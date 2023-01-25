@@ -18,9 +18,9 @@ template <class PixelType>
 static inline PixelType pixelFromPalette(const SGPPaletteEntry *pal, const UINT8 src);
 
 
-SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation, ScaleCallback callback)
+SGPImage * ScaleImage(SGPImage *image, DOUBLE factorX, DOUBLE factorY, bool yInterpolation, ScaleCallback callback)
 {
-	AutoSGPImage scaled(new SGPImage(std::ceil(factor * image->usWidth), std::ceil(factor * image->usHeight), 32));
+	AutoSGPImage scaled(new SGPImage(std::ceil(factorX * image->usWidth), std::ceil(factorY * image->usHeight), 32));
 
 	if(image->fFlags & IMAGE_BITMAPDATA) {
 		scaled->fFlags |= IMAGE_BITMAPDATA;
@@ -40,10 +40,10 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation, Scale
 			for(int i = 0; i < scaled->usNumberOfObjects; i++) {
 				ETRLEObject *dst = &scaled->pETRLEObject[i];
 				const ETRLEObject *src = &image->pETRLEObject[i];
-				dst->sOffsetX = std::floor(factor * src->sOffsetX);
-				dst->sOffsetY = std::floor(factor * src->sOffsetY);
-				dst->usWidth = std::ceil(factor * src->usWidth);
-				dst->usHeight = std::ceil(factor * src->usHeight);
+				dst->sOffsetX = std::floor(factorX * src->sOffsetX);
+				dst->sOffsetY = std::floor(factorY * src->sOffsetY);
+				dst->usWidth = std::ceil(factorX * src->usWidth);
+				dst->usHeight = std::ceil(factorY * src->usHeight);
 				dst->uiDataOffset = scaled->uiSizePixData;
 				dst->uiDataLength = dst->usWidth * dst->usHeight * sizeof(UINT32);
 				scaled->uiSizePixData += dst->uiDataLength;
@@ -113,11 +113,11 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation, Scale
 	return scaled.release();
 }
 
-SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor, bool yInterpolation)
+SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factorX, DOUBLE factorY, bool yInterpolation)
 {
 	Assert(image->ubBitDepth == 8);
 
-	AutoSGPImage scaled(new SGPImage(factor * image->usWidth, factor * image->usHeight, 8));
+	AutoSGPImage scaled(new SGPImage(factorX * image->usWidth, factorY * image->usHeight, 8));
 
 	if(image->fFlags & IMAGE_PALETTE) {
 		SGPPaletteEntry *palette = scaled->pPalette.Allocate(256);
@@ -145,10 +145,10 @@ SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor, bool yInterpolation)
 			for(int i = 0; i < scaled->usNumberOfObjects; i++) {
 				ETRLEObject *dst = &scaled->pETRLEObject[i];
 				const ETRLEObject *src = &image->pETRLEObject[i];
-				dst->sOffsetX = factor * src->sOffsetX;
-				dst->sOffsetY = factor * src->sOffsetY;
-				dst->usWidth = factor * src->usWidth;
-				dst->usHeight = factor * src->usHeight;
+				dst->sOffsetX = factorX * src->sOffsetX;
+				dst->sOffsetY = factorY * src->sOffsetY;
+				dst->usWidth = factorX * src->usWidth;
+				dst->usHeight = factorY * src->usHeight;
 				dst->uiDataOffset = scaled->uiSizePixData;
 				dst->uiDataLength = dst->usWidth * dst->usHeight * sizeof(UINT8);
 				scaled->uiSizePixData += dst->uiDataLength;
