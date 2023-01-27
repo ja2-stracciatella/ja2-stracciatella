@@ -1921,10 +1921,10 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 		InternalRemoveSoldierFromGridNo(s, fForceRemove);
 	}
 
+	s.sGridNo = new_grid_no;
+
 	// Check if our new gridno is valid, if not do not set!
 	if (!GridNoOnVisibleWorldTile(new_grid_no)) return;
-
-	s.sGridNo = new_grid_no;
 
 	// Alrighty, update UI for this guy, if he's the selected guy
 	if (GetSelectedMan() == &s && guiCurrentEvent == C_WAIT_FOR_CONFIRM)
@@ -2111,8 +2111,9 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 	// Adjust speed based on terrain, etc
 	SetSoldierAniSpeed(&s);
 
-	if (!gpWorldLevelData[s.sGridNo].pMercHead ||
-	    !gpWorldLevelData[s.sGridNo].pMercHead->pStructureData)
+	if (s.bTeam == ENEMY_TEAM &&
+		(!gpWorldLevelData[s.sGridNo].pMercHead ||
+	     !gpWorldLevelData[s.sGridNo].pMercHead->pStructureData))
 	{
 		// Debug help for issue #1681: set a break point here and check who
 		// is calling this function without calling InternalIsValidStance first.
