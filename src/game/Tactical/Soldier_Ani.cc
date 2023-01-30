@@ -110,8 +110,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	UINT16 usItem;
 	RANDOM_ANI_DEF *pAnimDef;
 	UINT8 ubDesiredHeight;
-	BOOLEAN bOKFireWeapon;
-	BOOLEAN bWeaponJammed;
 	UINT16 usUIMovementMode;
 
 	do
@@ -659,8 +657,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					else if (pSoldier->bDoBurst == 1)
 					{
 						// CHECK FOR GUN JAM
-						bWeaponJammed = CheckForGunJam( pSoldier );
-						if ( bWeaponJammed == TRUE )
+						auto const weaponJammed = CheckForGunJam(pSoldier);
+						if (weaponJammed == FireWeaponResult::JAMMED)
 						{
 							fStop = TRUE;
 							// stop shooting!
@@ -681,7 +679,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							SLOGD("Freeing up attacker - aborting start of attack due to burst gun jam");
 							FreeUpAttacker(pSoldier);
 						}
-						else if ( bWeaponJammed == 255 )
+						else if (weaponJammed == FireWeaponResult::UNJAMMED)
 						{
 							// Play intermediate animation...
 							if ( HandleUnjamAnimation( pSoldier ) )
@@ -743,7 +741,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//CODE: FINISH BURST
 					pSoldier->fDoSpread = FALSE;
 					pSoldier->bDoBurst = 1;
-					//pSoldier->fBurstCompleted = TRUE;
 					break;
 
 				case 450:
@@ -1041,16 +1038,16 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					return( TRUE );
 
 				case 470:
-
+				{
 					// CODE: CHECK FOR OK WEAPON SHOT!
-					bOKFireWeapon =  OKFireWeapon( pSoldier );
-
-					if ( bOKFireWeapon == FALSE )
+					auto const okFireWeapon = OKFireWeapon(pSoldier);
+					if (okFireWeapon == FireWeaponResult::JAMMED)
 					{
 						SLOGD("Fire Weapon: Gun Cannot fire, code 470");
 
 						// OK, SKIP x # OF FRAMES
 						// Skip 3 frames, ( a third ia added at the end of switch.. ) For a total of 4
+						// XXX Code and comment do not match. Should we really skip 5 frames in total?
 						pSoldier->usAniCode += 4;
 
 						// Reduce by a bullet...
@@ -1062,7 +1059,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						SLOGD("Freeing up attacker - gun failed to fire");
 						FreeUpAttacker(pSoldier);
 					}
-					else if ( bOKFireWeapon == 255 )
+					else if (okFireWeapon == FireWeaponResult::UNJAMMED)
 					{
 						// Play intermediate animation...
 						if ( HandleUnjamAnimation( pSoldier ) )
@@ -1071,6 +1068,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						}
 					}
 					break;
+				}
 
 				case 471:
 
