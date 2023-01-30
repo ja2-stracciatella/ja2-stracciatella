@@ -358,21 +358,18 @@ static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32*
 
 // #define TESTGUNJAM
 
-BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
+FireWeaponResult CheckForGunJam(SOLDIERTYPE * const pSoldier)
 {
-	OBJECTTYPE *pObj;
-	INT32      iChance, iResult;
-
 	// should jams apply to enemies?
 	if (pSoldier->uiStatusFlags & SOLDIER_PC)
 	{
 		if ( GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_GUN && !EXPLOSIVE_GUN( pSoldier->usAttackingWeapon ) )
 		{
-			pObj = &(pSoldier->inv[pSoldier->ubAttackingHand]);
-				if (pObj->bGunAmmoStatus > 0)
+			auto & obj = pSoldier->inv[pSoldier->ubAttackingHand];
+			if (obj.bGunAmmoStatus > 0)
 			{
 				// gun might jam, figure out the chance
-				iChance = (80 - pObj->bGunStatus);
+				INT32 iChance = 80 - obj.bGunStatus;
 
 				// CJC: removed reliability from formula...
 
@@ -402,23 +399,23 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 					gfNextFireJam = FALSE;
 
 					// jam! negate the gun ammo status.
-					pObj->bGunAmmoStatus *= -1;
+					obj.bGunAmmoStatus *= -1;
 
 					// Deduct AMMO!
 					DeductAmmo( pSoldier, pSoldier->ubAttackingHand );
 
 					TacticalCharacterDialogue( pSoldier, QUOTE_JAMMED_GUN );
-					return( TRUE );
+					return FireWeaponResult::JAMMED;
 				}
 			}
-			else if (pObj->bGunAmmoStatus < 0)
+			else if (obj.bGunAmmoStatus < 0)
 			{
 				// try to unjam gun
-				iResult = SkillCheck( pSoldier, UNJAM_GUN_CHECK, (INT8) (GCM->getItem(pObj->usItem)->getReliability() * 4) );
-				if (iResult > 0)
+				if (SkillCheck(pSoldier, UNJAM_GUN_CHECK,
+					GCM->getItem(obj.usItem)->getReliability() * 4) > 0)
 				{
 					// yay! unjammed the gun
-					pObj->bGunAmmoStatus *= -1;
+					obj.bGunAmmoStatus *= -1;
 
 					// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
 					StatChange(*pSoldier, MECHANAMT, 5, FROM_SUCCESS);
@@ -427,23 +424,21 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
 					// We unjammed gun, return appropriate value!
-					return( 255 );
+					return FireWeaponResult::UNJAMMED;
 				}
 				else
 				{
-					return( TRUE );
+					return FireWeaponResult::JAMMED;
 				}
 			}
 		}
 	}
-	return( FALSE );
+	return FireWeaponResult::FIREABLE;
 }
 
 
-BOOLEAN	OKFireWeapon( SOLDIERTYPE *pSoldier )
+FireWeaponResult OKFireWeapon(SOLDIERTYPE * const pSoldier)
 {
-	BOOLEAN bGunJamVal;
-
 	// 1) Are we attacking with our second hand?
 	if ( pSoldier->ubAttackingHand == SECONDHANDPOS )
 	{
@@ -452,25 +447,12 @@ BOOLEAN	OKFireWeapon( SOLDIERTYPE *pSoldier )
 			if (pSoldier->bTeam == OUR_TEAM)
 			{
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[ STR_2ND_CLIP_DEPLETED ] );
-				return( FALSE );
+				return FireWeaponResult::FAILED;
 			}
-
 		}
 	}
 
-	bGunJamVal = CheckForGunJam( pSoldier );
-
-	if ( bGunJamVal == 255 )
-	{
-		return( 255 );
-	}
-
-	if ( bGunJamVal )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return CheckForGunJam(pSoldier);
 }
 
 
@@ -480,17 +462,15 @@ static void UseThrown(  SOLDIERTYPE * pSoldier, GridNo sTargetGridNo);
 static void UseLauncher(SOLDIERTYPE * pSoldier, GridNo sTargetGridNo);
 
 
-BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
+FireWeaponResult FireWeapon(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 {
-	// ignore passed in target gridno for now
-
 	// if target gridno is the same as ours, do not fire!
 	if (sTargetGridNo == pSoldier->sGridNo)
 	{
 		// FREE UP NPC!
 		SLOGD("Freeing up attacker - attack on own gridno!");
 		FreeUpAttacker(pSoldier);
-		return( FALSE );
+		return FireWeaponResult::FAILED;
 	}
 
 	// SET ATTACKER TO NOBODY, WILL GET SET EVENTUALLY
@@ -547,7 +527,7 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			UseThrown( pSoldier, sTargetGridNo );
 			break;
 	}
-	return( TRUE );
+	return FireWeaponResult::FIRED;
 }
 
 
