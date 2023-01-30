@@ -147,7 +147,7 @@ impl Logger {
             let mut config = ConfigBuilder::default();
             config.set_target_level(LevelFilter::Error);
             config.set_thread_mode(ThreadLogMode::IDs);
-            config.set_time_format_str("%FT%T");
+            config.set_time_format_rfc3339();
             let config = config.build();
             let logger: Box<dyn SharedLogger> = TermLogger::new(
                 LevelFilter::max(),

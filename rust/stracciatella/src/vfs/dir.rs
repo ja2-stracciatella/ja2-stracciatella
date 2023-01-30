@@ -7,6 +7,7 @@ use std::ffi::OsString;
 use std::fmt;
 use std::io;
 use std::io::SeekFrom;
+use std::num::NonZeroUsize;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -45,7 +46,9 @@ impl DirFs {
         fs::read_dir(&path)?;
         Ok(Arc::new(DirFs {
             dir_path: path.to_owned(),
-            canonicalization_cache: Mutex::new(LruCache::new(CANONICALIZATION_CACHE_SIZE)),
+            canonicalization_cache: Mutex::new(LruCache::new(
+                NonZeroUsize::new(CANONICALIZATION_CACHE_SIZE).unwrap(),
+            )),
         }))
     }
 
