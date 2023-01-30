@@ -657,8 +657,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					else if (pSoldier->bDoBurst == 1)
 					{
 						// CHECK FOR GUN JAM
-						if (auto const weaponJammed = CheckForGunJam(pSoldier);
-						    weaponJammed == FireWeaponResult::JAMMED)
+						auto const weaponJammed = CheckForGunJam(pSoldier);
+						if (weaponJammed == FireWeaponResult::JAMMED)
 						{
 							fStop = TRUE;
 							// stop shooting!
@@ -1038,10 +1038,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					return( TRUE );
 
 				case 470:
-
+				{
 					// CODE: CHECK FOR OK WEAPON SHOT!
-					if (auto const okFireWeapon = OKFireWeapon(pSoldier);
-					    okFireWeapon == FireWeaponResult::JAMMED)
+					auto const okFireWeapon = OKFireWeapon(pSoldier);
+					if (okFireWeapon == FireWeaponResult::JAMMED)
 					{
 						SLOGD("Fire Weapon: Gun Cannot fire, code 470");
 
@@ -1068,6 +1068,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						}
 					}
 					break;
+				}
 
 				case 471:
 
