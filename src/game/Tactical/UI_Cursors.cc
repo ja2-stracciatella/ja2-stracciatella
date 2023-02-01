@@ -1047,9 +1047,6 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 			}
 			else
 			{
-				sGridNo = usMapPos;
-				bTargetLevel = (INT8)gsInterfaceLevel;
-
 				// Look for a target here...
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
 				if (tgt != NULL)

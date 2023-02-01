@@ -4,17 +4,24 @@
 
 #include "Types.h"
 
-
-#define REFINE_AIM_1					0
-#define REFINE_AIM_MID1				1
-#define REFINE_AIM_2					2
-#define REFINE_AIM_MID2				3
-#define REFINE_AIM_3					4
-#define REFINE_AIM_MID3				5
-#define REFINE_AIM_4					6
-#define REFINE_AIM_MID4				7
-#define REFINE_AIM_5					8
-#define REFINE_AIM_BURST				10
+// Possible values for SOLDIERTYPE::bShownAimTime
+enum RefineAim : INT8
+{
+	REFINE_AIM_1 = 0,
+	REFINE_AIM_MID1 = 1,
+	REFINE_AIM_2 = 2,
+	REFINE_AIM_MID2 = 3,
+	REFINE_AIM_3 = 4,
+	REFINE_AIM_MID3 = 5,
+	REFINE_AIM_4 = 6,
+	REFINE_AIM_MID4 = 7,
+	REFINE_AIM_5 = 8,
+	REFINE_AIM_BURST = 10,
+	REFINE_PUNCH_1 = 0,
+	REFINE_PUNCH_2 = 6,
+	REFINE_KNIFE_1 = 0,
+	REFINE_KNIFE_2 = 6
+};
 
 #define AIM_SHOT_RANDOM				0
 #define AIM_SHOT_HEAD					1
