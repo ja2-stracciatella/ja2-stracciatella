@@ -875,11 +875,11 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 		case IC_LAUNCHER:
 		case IC_TENTACLES:
 		case IC_THROWING_KNIFE:
-			ap_cost  = MinAPsToAttack(s, grid_no, ubAddTurningCost);
-			ap_cost +=
-				s->bDoBurst ? CalcAPsToBurst(CalcActionPoints(s), in_hand) :
-				aim_time;
-			break;
+			return MinAPsToAttack(s, grid_no, ubAddTurningCost) +
+				(s->bDoBurst ? CalcAPsToBurst(CalcActionPoints(s), in_hand) :
+				// WM_ATTACHED is already handled by MinAPsToAttack and the
+				// aim time cannot be refined further.
+				s->bWeaponMode == WM_ATTACHED ? 0 : aim_time);
 
 		case IC_GRENADE:
 		case IC_BOMB:
