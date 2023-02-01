@@ -2720,9 +2720,9 @@ static void HandleHealingByNaturalCauses(SOLDIERTYPE* pSoldier)
 		// use high activity level to simulate stress, torture, poor conditions for healing
 		bActivityLevelDivisor = HIGH_ACTIVITY_LEVEL;
 	}
-	if (pSoldier->fMercAsleep            ||
-			pSoldier->bAssignment == PATIENT ||
-			pSoldier->bAssignment == ASSIGNMENT_HOSPITAL)
+	else if (pSoldier->fMercAsleep            ||
+	         pSoldier->bAssignment == PATIENT ||
+	         pSoldier->bAssignment == ASSIGNMENT_HOSPITAL)
 	{
 		bActivityLevelDivisor = LOW_ACTIVITY_LEVEL;
 	}
@@ -3504,11 +3504,12 @@ static BOOLEAN HandleShowingOfMovementBox(void);
 
 void DetermineWhichAssignmentMenusCanBeShown(void)
 {
-	SOLDIERTYPE* s = gAssignmentTargetSoldier ? gAssignmentTargetSoldier : GetSelectedAssignSoldier(TRUE);
 	BOOLEAN fCharacterNoLongerValid = FALSE;
 
 	if (fInMapMode)
 	{
+		SOLDIERTYPE const * const s = gAssignmentTargetSoldier
+			? gAssignmentTargetSoldier : GetSelectedAssignSoldier(TRUE);
 		if (fShowMapScreenMovementList)
 		{
 			if( s == NULL )
@@ -3571,7 +3572,10 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 		return;
 	}
 
-	gAssignmentTargetSoldier = s;
+	if (!gAssignmentTargetSoldier)
+	{
+		gAssignmentTargetSoldier = GetSelectedAssignSoldier(true);
+	}
 
 	// update the assignment positions
 	UpdateMapScreenAssignmentPositions( );
