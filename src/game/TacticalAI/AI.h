@@ -128,7 +128,7 @@ enum QuoteActionType
 extern INT8 gbDiff[MAX_DIFF_PARMS][5];
 
 void ActionDone(SOLDIERTYPE *pSoldier);
-INT16 ActionInProgress(SOLDIERTYPE *pSoldier);
+bool ActionInProgress(SOLDIERTYPE *pSoldier);
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier);
 void CallAvailableEnemiesTo(GridNo);
@@ -171,17 +171,13 @@ enum
 INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode );
 
 INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier);
-BOOLEAN FindRoofClimbingPoints( SOLDIERTYPE * pSoldier, INT16 sDesiredSpot );
 INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier);
-INT16 FindSweetCoverSpot(SOLDIERTYPE *pSoldier);
 
 void FreeUpNPCFromAttacking(SOLDIERTYPE* s);
 void FreeUpNPCFromPendingAction( SOLDIERTYPE * pSoldier );
 void FreeUpNPCFromTurning(SOLDIERTYPE* pSoldier);
 void FreeUpNPCFromStanceChange(SOLDIERTYPE *pSoldier );
 void FreeUpNPCFromRoofClimb(SOLDIERTYPE *pSoldier );
-
-UINT8 GetClosestOpponent( SOLDIERTYPE *pSoldier );
 
 void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert(INT8 bTeam);
@@ -207,8 +203,7 @@ void SetNewSituation( SOLDIERTYPE * pSoldier );
 UINT8 SoldierDifficultyLevel( const SOLDIERTYPE * pSoldier );
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier);
 void StartNPCAI(SOLDIERTYPE&);
-void TempHurt(SOLDIERTYPE *pVictim, SOLDIERTYPE *pAttacker);
-int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno);
+bool TryToResumeMovement(SOLDIERTYPE *pSoldier, GridNo sGridno);
 
 BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection );
 
