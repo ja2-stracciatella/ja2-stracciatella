@@ -7,6 +7,7 @@ use std::ffi::OsString;
 use std::fmt;
 use std::io;
 use std::io::SeekFrom;
+use std::num::NonZeroUsize;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -66,7 +67,9 @@ impl AssetManagerFs {
         Ok(Arc::new(AssetManagerFs {
             base_path: base_path.to_owned(),
             asset_manager,
-            canonicalization_cache: Mutex::new(LruCache::new(CANONICALIZATION_CACHE_SIZE)),
+            canonicalization_cache: Mutex::new(LruCache::new(
+                NonZeroUsize::new(CANONICALIZATION_CACHE_SIZE).unwrap(),
+            )),
         }))
     }
 
