@@ -14,9 +14,12 @@ class SectionsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         if (position == 0) {
             return DataTabFragment()
         }
+        if (position == 1) {
+            return SettingsFragment()
+        }
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return SettingsFragment()
+        return LogsTabFragment()
     }
 
     override fun getItemCount(): Int {
@@ -26,7 +29,8 @@ class SectionsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
     companion object {
         private val TAB_TITLES = arrayOf(
             R.string.tab_text_data,
-            R.string.tab_text_settings
+            R.string.tab_text_settings,
+            R.string.tab_text_logs
         )
 
         fun getTabTitle(position: Int): Int {

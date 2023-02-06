@@ -124,7 +124,7 @@ impl Logger {
         #[cfg(not(target_os = "android"))]
         let dir = std::env::temp_dir();
         #[cfg(target_os = "android")]
-        let dir = PathBuf::default();
+        let dir = crate::android::get_android_cache_dir().expect("cache dir not found");
 
         dir.join(log_file_name)
     }
@@ -134,48 +134,38 @@ impl Logger {
     /// Needs to be called once at start of the game engine. Any log messages send
     /// before will be discarded.
     pub fn init(log_file_name: &str) {
-        #[cfg(not(target_os = "android"))]
-        {
-            use log::warn;
-            use simplelog::{
-                ColorChoice, CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
-                ThreadLogMode, WriteLogger,
-            };
-            use std::fs::File;
+        use log::warn;
+        use simplelog::{
+            ColorChoice, CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
+            ThreadLogMode, WriteLogger,
+        };
+        use std::fs::File;
 
-            let log_file = Self::get_log_file_path(log_file_name);
-            let mut config = ConfigBuilder::default();
-            config.set_target_level(LevelFilter::Error);
-            config.set_thread_mode(ThreadLogMode::IDs);
-            config.set_time_format_rfc3339();
-            let config = config.build();
-            let logger: Box<dyn SharedLogger> = TermLogger::new(
-                LevelFilter::max(),
-                config.clone(),
-                TerminalMode::Mixed,
-                ColorChoice::Auto,
-            );
+        let log_file = Self::get_log_file_path(log_file_name);
+        let mut config = ConfigBuilder::default();
+        config.set_target_level(LevelFilter::Error);
+        config.set_thread_mode(ThreadLogMode::IDs);
+        config.set_time_format_rfc3339();
+        let config = config.build();
+        let logger: Box<dyn SharedLogger> = TermLogger::new(
+            LevelFilter::max(),
+            config.clone(),
+            TerminalMode::Mixed,
+            ColorChoice::Auto,
+        );
 
-            match File::create(&log_file) {
-                Ok(f) => {
-                    RuntimeLevelFilter::init(CombinedLogger::new(vec![
-                        logger,
-                        WriteLogger::new(LevelFilter::max(), config, f),
-                    ]));
-                    log::info!("Logging to file {:?}", &log_file);
-                }
-                Err(err) => {
-                    RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
-                    warn!("Failed to log to {:?}: {}", &log_file, err);
-                }
+        match File::create(&log_file) {
+            Ok(f) => {
+                RuntimeLevelFilter::init(CombinedLogger::new(vec![
+                    logger,
+                    WriteLogger::new(LevelFilter::max(), config, f),
+                ]));
+                log::info!("Logging to file {:?}", &log_file);
             }
-        }
-        #[cfg(target_os = "android")]
-        {
-            let config = android_logger::Config::default()
-                .with_min_level(Level::Trace)
-                .with_tag("JA2");
-            RuntimeLevelFilter::init(Box::new(android_logger::AndroidLogger::new(config)));
+            Err(err) => {
+                RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
+                warn!("Failed to log to {:?}: {}", &log_file, err);
+            }
         }
     }
 
