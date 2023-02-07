@@ -32,4 +32,7 @@
     <string name="logs_copy_to_clipboard_button">Copy all logs to clipboard</string>
     <string name="logs_copied_to_clipboard_name">JA2 Stracciatella logs</string>
     <string name="logs_copied_to_clipboard_toast">Copied logs to clipboard</string>
+    <string name="debug_mode_info_title_text">Debug Mode</string>
+    <string name="debug_mode_info_text">In case you run into issues, you can enable debug mode. This will result in more logs being written in order to be able to debug issues.</string>
+    <string name="debug_mode_label">Enable Debug Mode</string>
 </resources>
