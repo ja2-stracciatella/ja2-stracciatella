@@ -5,13 +5,11 @@
 //! - C style line comments (`// ...`)
 //! - Shell style line comments (`# ...`)
 //!
-//! Shell style line comments should be avoided since RapidJSON does not support them.
 //!
 //! # Links:
 //! - [serde_json](https://crates.io/crates/serde_json)
 //! - [json_comments](https://crates.io/crates/json_comments)
 //! - [JSON](https://json.org/)
-//! - [RapidJSON](http://rapidjson.org/) (used in C++ code)
 
 pub mod de {
     //! Deserialize json with comments.

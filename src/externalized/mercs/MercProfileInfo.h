@@ -1,10 +1,11 @@
 #pragma once
 
 #include "JA2Types.h"
+#include "Json.h"
+
 #include <stdint.h>
 #include <map>
 #include <string_theory/string>
-#include <rapidjson/document.h>
 
 enum class MercType : int8_t
 {
@@ -33,7 +34,7 @@ public:
 	// avoid a circular reference to ContentManager.
 	// This function must be initialized at init
 	static std::function<const MercProfileInfo *(ProfileID)> load;
-	static MercProfileInfo* deserialize(const rapidjson::Value& json);
+	static MercProfileInfo* deserialize(const JsonValue& json);
 	static void validateData(const std::map<uint8_t, const MercProfileInfo*>& models);
 
 protected:

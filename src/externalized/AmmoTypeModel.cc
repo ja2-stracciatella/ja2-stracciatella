@@ -1,5 +1,5 @@
 #include "AmmoTypeModel.h"
-#include "JsonObject.h"
+
 #include <stdint.h>
 #include <stdexcept>
 #include <utility>
@@ -12,14 +12,17 @@ AmmoTypeModel::AmmoTypeModel(uint16_t index_, ST::string && internalName_)
 
 AmmoTypeModel::~AmmoTypeModel() = default;
 
-void AmmoTypeModel::serializeTo(JsonObject &obj) const
+JsonValue AmmoTypeModel::serialize() const
 {
-	obj.AddMember("index",                index);
-	obj.AddMember("internalName",         internalName);
+	auto obj = JsonObject();
+	obj.set("index",                index);
+	obj.set("internalName",         internalName);
+	return obj.toValue();
 }
 
-AmmoTypeModel* AmmoTypeModel::deserialize(JsonObjectReader &obj)
+AmmoTypeModel* AmmoTypeModel::deserialize(const JsonValue &json)
 {
+	auto obj = json.toObject();
 	int index = obj.GetInt("index");
 	return new AmmoTypeModel(index, obj.GetString("internalName"));
 }

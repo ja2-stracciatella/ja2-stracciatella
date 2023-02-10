@@ -12,7 +12,7 @@ TEST(JsonUtilityTest, parseListOfStrings)
 
 	{
 		std::vector<ST::string> strings;
-		ASSERT_FALSE(JsonUtility::parseJsonToListStrings("foo", strings));
+		EXPECT_THROW(JsonUtility::parseJsonToListStrings("foo", strings), std::runtime_error);
 		ASSERT_EQ(strings.size(), 0u);
 	}
 

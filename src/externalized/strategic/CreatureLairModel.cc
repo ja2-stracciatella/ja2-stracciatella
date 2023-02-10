@@ -8,12 +8,12 @@
 
 
 CreatureLairModel::CreatureLairModel(const uint8_t lairId_, const uint8_t associatedMineId_, const uint8_t entranceSector_, const uint8_t entranceSectorLevel_, const std::vector<CreatureLairSector> lairSectors_, const std::vector<CreatureAttackSector> attackSectors_, const uint8_t warpExitSector_, const uint16_t warpExitGridNo_)
-	: lairId(lairId_), associatedMineId(associatedMineId_), 
-	entranceSector(entranceSector_), entranceSectorLevel(entranceSectorLevel_), 
+	: lairId(lairId_), associatedMineId(associatedMineId_),
+	entranceSector(entranceSector_), entranceSectorLevel(entranceSectorLevel_),
 	lairSectors(lairSectors_), attackSectors(attackSectors_),
 	warpExitSector(warpExitSector_), warpExitGridNo(warpExitGridNo_) {}
 
-uint8_t creatureHabitatFromString(const std::string& habitat)
+uint8_t creatureHabitatFromString(const ST::string& habitat)
 {
 	if (habitat == "QUEEN_LAIR") return QUEEN_LAIR;
 	if (habitat == "LAIR") return LAIR;
@@ -27,7 +27,7 @@ uint8_t creatureHabitatFromString(const std::string& habitat)
 	throw std::runtime_error(err.to_std_string());
 }
 
-InsertionCode insertionCodeFromString(const std::string& code)
+InsertionCode insertionCodeFromString(const ST::string& code)
 {
 	if (code == "NORTH") return INSERTION_CODE_NORTH;
 	if (code == "SOUTH") return INSERTION_CODE_SOUTH;
@@ -44,18 +44,18 @@ InsertionCode insertionCodeFromString(const std::string& code)
 	throw std::runtime_error(err.to_std_string());
 }
 
-std::vector<CreatureLairSector> readLairSectors(const rapidjson::Value& json)
+std::vector<CreatureLairSector> readLairSectors(const JsonValue& json)
 {
 	std::vector<CreatureLairSector> sectors;
-	for (auto& el : json.GetArray())
+	for (auto& el : json.toVec())
 	{
-		auto arr = el.GetArray();
-		auto sectorString = arr[0].GetString();
+		auto arr = el.toVec();
+		auto& sectorString = arr[0];
 
 		CreatureLairSector sec = {};
 		sec.sectorId = JsonUtility::parseSectorID(sectorString);
-		sec.sectorLevel = arr[1].GetUint();
-		sec.habitatType = creatureHabitatFromString(arr[2].GetString());
+		sec.sectorLevel = arr[1].toUInt();
+		sec.habitatType = creatureHabitatFromString(arr[2].toString());
 
 		sectors.push_back(sec);
 	}
@@ -69,13 +69,13 @@ std::vector<CreatureLairSector> readLairSectors(const rapidjson::Value& json)
 	return sectors;
 }
 
-std::vector<CreatureAttackSector> readAttackSectors(const rapidjson::Value& json)
+std::vector<CreatureAttackSector> readAttackSectors(const JsonValue& json)
 {
 	std::vector<CreatureAttackSector> attacks;
-	for (auto& el : json.GetArray())
+	for (auto& el : json.toVec())
 	{
-		JsonObjectReader obj(el);
-		auto sectorString = obj.GetString("sector");
+		auto obj = el.toObject();
+		auto sectorString = obj["sector"];
 
 		CreatureAttackSector sectorAttack = {};
 		sectorAttack.chance = obj.GetUInt("chance");
@@ -133,7 +133,7 @@ const CreatureAttackSector* CreatureLairModel::getTownAttackDetails(uint8_t sect
 {
 	for (auto& sec : attackSectors)
 	{
-		if (sec.sectorId == sectorId) 
+		if (sec.sectorId == sectorId)
 		{
 			return &sec;
 		}
@@ -141,17 +141,17 @@ const CreatureAttackSector* CreatureLairModel::getTownAttackDetails(uint8_t sect
 	return NULL;
 }
 
-CreatureLairModel* CreatureLairModel::deserialize(const rapidjson::Value& json)
+CreatureLairModel* CreatureLairModel::deserialize(const JsonValue& json)
 {
-	JsonObjectReader obj(json);
+	auto obj = json.toObject();
 
-	auto entrance = json["entranceSector"].GetArray();
-	auto sectorString = entrance[0].GetString();
+	auto entrance = obj["entranceSector"].toVec();
+	auto& sectorString = entrance[0];
 	uint8_t entranceSector = JsonUtility::parseSectorID(sectorString);
-	uint8_t entranceSectorLevel = entrance[1].GetUint();
+	uint8_t entranceSectorLevel = entrance[1].toUInt();
 
-	auto warpExit = JsonObjectReader(json["warpExit"]);
-	sectorString = warpExit.GetString("sector");
+	auto warpExit = obj["warpExit"].toObject();
+	sectorString = warpExit["sector"];
 	uint8_t warpExitSector = JsonUtility::parseSectorID(sectorString);
 	uint16_t warpExitGridNo = warpExit.GetUInt("gridNo");
 
@@ -159,8 +159,8 @@ CreatureLairModel* CreatureLairModel::deserialize(const rapidjson::Value& json)
 		obj.GetUInt("lairId"),
 		obj.GetUInt("associatedMineId"),
 		entranceSector, entranceSectorLevel,
-		readLairSectors(json["sectors"]),
-		readAttackSectors(json["attackSectors"]),
+		readLairSectors(obj["sectors"]),
+		readAttackSectors(obj["attackSectors"]),
 		warpExitSector, warpExitGridNo
 	);
 }
@@ -191,7 +191,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 			ST::string err = ST::format("Invalid mineId {}", lair->associatedMineId);
 			throw std::runtime_error(err.to_std_string());
 		}
-		
+
 		// The first lair sector in list should be QUEEN_LAIR
 		if (lair->lairSectors.size() < 1 || lair->lairSectors[0].habitatType != QUEEN_LAIR)
 		{

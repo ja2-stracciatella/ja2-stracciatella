@@ -1,8 +1,8 @@
 #pragma once
 
-#include "JsonObject.h"
+#include "Json.h"
+
 #include <array>
-#include <rapidjson/document.h>
 #include <string>
 #include <vector>
 
@@ -13,7 +13,7 @@ public:
 		const bool headMinerAssigned_, const bool noDepletion_, const bool delayDepletion_,
 		const std::vector<std::array<uint8_t, 2>> mineSectors_,
 		const int16_t faceDisplayYOffset);
- 
+
 	bool isAbandoned() const;
 
 	const uint8_t mineId;
@@ -28,7 +28,7 @@ public:
 	const std::vector<std::array<uint8_t, 2>> mineSectors;
 
 	const int16_t faceDisplayYOffset;
-	
-	static MineModel* deserialize(uint8_t index, const rapidjson::Value& json);
+
+	static MineModel* deserialize(uint8_t index, const JsonValue& json);
 	static void validateData(std::vector<const MineModel*>& models);
 };

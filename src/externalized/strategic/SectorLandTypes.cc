@@ -1,14 +1,13 @@
 #include "SectorLandTypes.h"
 #include "Campaign_Types.h"
-#include "JsonObject.h"
 
-std::map<SGPSector, LandType> SectorLandTypes::deserialize(const rapidjson::Document& document, const TraversibilityMap& travMap)
+std::map<SGPSector, LandType> SectorLandTypes::deserialize(const JsonValue& json, const TraversibilityMap& travMap)
 {
 	std::map<SGPSector, LandType> landTypes;
 
-	for (const auto &el : document.GetArray())
+	for (const auto &el : json.toVec())
 	{
-		JsonObjectReader reader(el);
+		auto reader = el.toObject();
 		auto sector = reader.GetString("sector");
 		if (!SGPSector().IsValid(sector))
 		{

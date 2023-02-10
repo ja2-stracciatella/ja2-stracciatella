@@ -24,12 +24,12 @@ ARMY_COMPOSITION ArmyCompositionModel::toArmyComposition() const
 	return composition;
 }
 
-std::vector<const ArmyCompositionModel*> ArmyCompositionModel::deserialize(const rapidjson::Document& root)
+std::vector<const ArmyCompositionModel*> ArmyCompositionModel::deserialize(const JsonValue& root)
 {
 	std::vector<const ArmyCompositionModel*> armyComps;
-	for (auto& item : root.GetArray())
+	for (auto& item : root.toVec())
 	{
-		auto obj = JsonObjectReader(item);
+		JsonObject obj = item.toObject();
 		armyComps.push_back(new ArmyCompositionModel(
 			obj.GetInt("id"),
 			obj.GetString("name"),

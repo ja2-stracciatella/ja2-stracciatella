@@ -1,6 +1,8 @@
 #pragma once
+
 #include "MercSystem.h"
-#include <rapidjson/document.h>
+#include <Json.h>
+
 #include <stdint.h>
 
 struct RPCSmallFaceModel
@@ -12,5 +14,5 @@ public:
 	int8_t bMouthX;
 	int8_t bMouthY;
 
-	static RPCSmallFaceModel* deserialize(const rapidjson::Value& json, const MercSystem* mercSystem);
+	static RPCSmallFaceModel* deserialize(const JsonValue& json, const MercSystem* mercSystem);
 };

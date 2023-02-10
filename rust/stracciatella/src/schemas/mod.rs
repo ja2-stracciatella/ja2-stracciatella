@@ -6,8 +6,9 @@
 //!
 //! `STRACCIATELLA_SCHEMAS` is read at build time and can be accessed using `SchemaManager`
 
-use std::{collections::HashMap, convert::TryFrom, path::Path};
+use std::{collections::HashMap, convert::TryFrom, error::Error, path::Path};
 
+use jsonschema::{Draft, JSONSchema};
 use serde_json::Value;
 
 // This is set by the build script and contains all schemas in resolved json form
@@ -15,6 +16,7 @@ const SCHEMAS: &str = env!("STRACCIATELLA_SCHEMAS");
 
 /// A representation of a json schema
 pub struct Schema {
+    compiled: JSONSchema,
     inner_value: Value,
     inner_str: String,
 }
@@ -32,11 +34,16 @@ impl Schema {
 }
 
 impl TryFrom<Value> for Schema {
-    type Error = serde_json::Error;
+    type Error = Box<dyn Error>;
 
     fn try_from(value: Value) -> Result<Self, Self::Error> {
+        let compiled = JSONSchema::options()
+            .with_draft(Draft::Draft4)
+            .compile(&value)
+            .map_err(|e| e.to_string())?;
         let inner_str = serde_json::to_string(&value)?;
         Ok(Self {
+            compiled,
             inner_value: value,
             inner_str,
         })
@@ -68,6 +75,21 @@ impl SchemaManager {
             return self.schemas.get("strings");
         }
         self.schemas.get(&path)
+    }
+
+    // Validates a value loaded from path and returns validation errors
+    pub fn validate(&self, path: &Path, value: &Value) -> Option<Vec<String>> {
+        if let Some(schema) = self.get(path) {
+            schema.compiled.validate(value).err().map(|e| {
+                e.map(|v| format!("Error at JSON path `{}`: {}", v.instance_path, v))
+                    .collect()
+            })
+        } else {
+            Some(vec![format!(
+                "could not find schema for path `{}`",
+                path.to_string_lossy()
+            )])
+        }
     }
 
     /// Get all json schemas

@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 class JsonObject;
-class JsonObjectReader;
+class JsonObject;
 struct AmmoTypeModel;
 struct CalibreModel;
 
@@ -29,9 +29,9 @@ struct MagazineModel : ItemModel
 
 	virtual const MagazineModel* asAmmo() const   { return this; }
 
-	virtual void serializeTo(JsonObject &obj) const;
+	virtual JsonValue serialize() const;
 
-	static MagazineModel* deserialize(JsonObjectReader &obj,
+	static MagazineModel* deserialize(const JsonValue &json,
 						const std::map<ST::string, const CalibreModel*> &calibreMap,
 						const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
 						const VanillaItemStrings& vanillaItemStrings);

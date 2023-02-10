@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JsonObject.h"
+#include "Json.h"
 
 #include <string_theory/string>
 
@@ -11,8 +11,8 @@ class GraphicModel {
 		const ST::string& getPath() const;
 		uint8_t getSubImageIndex() const;
 
-		static GraphicModel deserialize(JsonObjectReader &obj);
-		JsonObject serialize(rapidjson::Document::AllocatorType& allocator) const;
+		static GraphicModel deserialize(const JsonValue &json);
+		JsonValue serialize() const;
 	private:
 		ST::string path;
 		uint8_t subImageIndex;

@@ -2,9 +2,8 @@
 
 #include "Campaign_Types.h"
 #include "Strategic_AI.h"
+#include "Json.h"
 
-#include "JsonObject.h"
-#include "rapidjson/document.h"
 #include <string_theory/string>
 
 
@@ -18,10 +17,10 @@ public:
 
 	ARMY_COMPOSITION toArmyComposition() const;
 
-	static std::vector<const ArmyCompositionModel*> deserialize(const rapidjson::Document& root);
+	static std::vector<const ArmyCompositionModel*> deserialize(const JsonValue& root);
 
 	static void validateData(const std::vector<const ArmyCompositionModel*> compositions);
-	
+
 	/** Validate the ARMY_COMPOSITION entries loaded from a saved game */
 	static void validateLoadedData(const std::vector<ARMY_COMPOSITION>& armyCompositions);
 

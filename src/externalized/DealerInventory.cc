@@ -7,17 +7,13 @@
 
 #include <stdexcept>
 
-DealerInventory::DealerInventory(rapidjson::Document *json, const ItemSystem *itemSystem)
+DealerInventory::DealerInventory(const JsonValue& json, const ItemSystem *itemSystem)
 {
-	for(rapidjson::Document::MemberIterator it = json->MemberBegin(); it != json->MemberEnd(); it++)
+	auto obj = json.toObject();
+	for (auto& it : obj.keys())
 	{
-		if(!it->value.IsInt())
-		{
-			throw std::runtime_error(ST::format("Property '{}' should have integer value", it->name.GetString()).to_std_string());
-		}
-		const ItemModel *item = itemSystem->getItemByName(it->name.GetString());
-		int count = it->value.GetInt();
-		// printf("%s: %d\n", item->getInternalName().c_str(), count);
+		const ItemModel *item = itemSystem->getItemByName(it.c_str());
+		int count = obj.GetInt(it.c_str());
 		m_inventory.insert(std::make_pair(item, count));
 	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TileDat.h"
-#include "JsonObject.h"
+#include "Json.h"
 
 #include <string_theory/string>
 
@@ -12,6 +12,6 @@ class TilesetTileIndexModel {
 		TileTypeDefines tileType;
 		uint16_t subIndex;
 
-		static TilesetTileIndexModel deserialize(JsonObjectReader &obj);
-		JsonObject serialize(rapidjson::Document::AllocatorType& allocator) const;
+		static TilesetTileIndexModel deserialize(const JsonValue &json);
+		JsonValue serialize() const;
 };

@@ -11,8 +11,6 @@
 #include <map>
 #include <stdint.h>
 
-class JsonObject;
-class JsonObjectReader;
 enum SoundID;
 struct CalibreModel;
 struct MagazineModel;
@@ -36,9 +34,10 @@ struct WeaponModel : ItemModel
 			ST::string description,
 			ST::string internalType);
 
+	virtual JsonValue serialize() const;
 	virtual void serializeTo(JsonObject &obj) const;
 
-	static WeaponModel* deserialize(JsonObjectReader &obj,
+	static WeaponModel* deserialize(const JsonValue &json,
 	const std::map<ST::string, const CalibreModel*> &calibreMap,
 	const VanillaItemStrings& vanillaItemStrings);
 
@@ -101,7 +100,7 @@ struct NoWeapon : WeaponModel
 
 	NoWeapon(uint16_t itemIndex, const ST::string& internalName, uint32_t itemClass, uint8_t cursor);
 
-	virtual void serializeTo(JsonObject &obj) const;
+	virtual JsonValue serialize() const;
 };
 
 struct Pistol : WeaponModel
@@ -124,7 +123,7 @@ struct Pistol : WeaponModel
 		ST::string Sound,
 		ST::string SilencedSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -153,7 +152,7 @@ struct MPistol : WeaponModel
 		ST::string SilencedSound,
 		ST::string SilencedBurstSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -182,7 +181,7 @@ struct SMG : WeaponModel
 		ST::string SilencedSound,
 		ST::string SilencedBurstSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -206,7 +205,7 @@ struct SniperRifle : WeaponModel
 		ST::string Sound,
 		ST::string SilencedSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -230,7 +229,7 @@ struct Rifle : WeaponModel
 		ST::string Sound,
 		ST::string SilencedSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -258,7 +257,7 @@ struct AssaultRifle : WeaponModel
 		ST::string SilencedSound,
 		ST::string SilencedBurstSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -286,7 +285,7 @@ struct Shotgun : WeaponModel
 		ST::string SilencedSound,
 		ST::string SilencedBurstSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -314,7 +313,7 @@ struct LMG : WeaponModel
 		ST::string SilencedSound,
 		ST::string SilencedBurstSound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -332,7 +331,7 @@ struct Blade : WeaponModel
 		uint8_t AttackVolume,
 		ST::string Sound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -350,7 +349,7 @@ struct ThrowingBlade : WeaponModel
 		uint8_t AttackVolume,
 		ST::string Sound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -367,7 +366,7 @@ struct PunchWeapon : WeaponModel
 		uint8_t AttackVolume,
 		ST::string Sound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -387,7 +386,7 @@ struct Launcher : WeaponModel
 		uint8_t HitVolume,
 		ST::string Sound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -407,7 +406,7 @@ struct LAW : WeaponModel
 		uint8_t HitVolume,
 		ST::string Sound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -427,7 +426,7 @@ struct Cannon : WeaponModel
 		uint8_t HitVolume,
 		ST::string Sound);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };
 
 
@@ -449,5 +448,5 @@ struct MonsterSpit : WeaponModel
 		ST::string Sound,
 		uint16_t smokeEffect);
 
-	void serializeTo(JsonObject &obj) const override;
+	JsonValue serialize() const override;
 };

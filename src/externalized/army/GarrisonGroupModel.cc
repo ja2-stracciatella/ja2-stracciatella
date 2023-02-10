@@ -2,10 +2,10 @@
 #include "Campaign_Types.h"
 #include "JsonUtility.h"
 
-GARRISON_GROUP GarrisonGroupModel::deserialize(JsonObjectReader& obj, const std::map<ST::string, uint8_t>& armyCompMapping)
+GARRISON_GROUP GarrisonGroupModel::deserialize(const JsonValue& json, const std::map<ST::string, uint8_t>& armyCompMapping)
 {
-	auto sector = obj.GetString("sector");
-	uint8_t sectorId = JsonUtility::parseSectorID(sector);
+	auto obj = json.toObject();
+	uint8_t sectorId = JsonUtility::parseSectorID(obj["sector"]);
 	uint8_t compositionId = armyCompMapping.at(obj.GetString("composition"));
 
 	GARRISON_GROUP group{};

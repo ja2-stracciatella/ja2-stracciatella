@@ -2,8 +2,8 @@
 
 #include "IMPPolicy.h"
 #include "ItemModel.h"
+#include "Json.h"
 
-#include "rapidjson/document.h"
 #include <string_theory/string>
 #include <vector>
 
@@ -12,7 +12,7 @@ class ItemSystem;
 class DefaultIMPPolicy : public IMPPolicy
 {
 public:
-	DefaultIMPPolicy(rapidjson::Document *json, const ItemSystem *itemSystem);
+	DefaultIMPPolicy(const JsonValue& json, const ItemSystem *itemSystem);
 
 	virtual bool isCodeAccepted(const ST::string& code) const;
 	virtual uint8_t getStartingLevel() const;

@@ -2,10 +2,10 @@
 #include "GameSettings.h"
 #include "JsonUtility.h"
 
-BloodCatSpawnsModel::BloodCatSpawnsModel(uint8_t sectorId_, 
+BloodCatSpawnsModel::BloodCatSpawnsModel(uint8_t sectorId_,
 	bool isLair_, bool isArena_,
 	int8_t bloodCatsSpawnsEasy_, int8_t bloodCatsSpawnsMedium_, int8_t bloodCatsSpawnsHard_)
-		:sectorId(sectorId_), 
+		:sectorId(sectorId_),
 			isLair(isLair_), isArena(isArena_),
 			bloodCatsSpawnsEasy(bloodCatsSpawnsEasy_), bloodCatsSpawnsMedium(bloodCatsSpawnsMedium_), bloodCatsSpawnsHard(bloodCatsSpawnsHard_) {}
 
@@ -23,9 +23,10 @@ int8_t BloodCatSpawnsModel::getSpawnsByDifficulty(uint8_t const difficultyLevel)
 	}
 }
 
-BloodCatSpawnsModel* BloodCatSpawnsModel::deserialize(JsonObjectReader& obj)
+BloodCatSpawnsModel* BloodCatSpawnsModel::deserialize(const JsonValue& json)
 {
-	uint8_t sectorId = JsonUtility::parseSectorID(obj.GetString("sector"));
+	auto obj = json.toObject();
+	uint8_t sectorId = JsonUtility::parseSectorID(obj["sector"]);
 	return new BloodCatSpawnsModel(
 		sectorId,
 		obj.GetBool("isLair"),

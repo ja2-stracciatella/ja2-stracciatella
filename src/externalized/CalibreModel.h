@@ -1,12 +1,11 @@
 #pragma once
 
+#include "Json.h"
+
 #include <map>
 #include <stdexcept>
 #include <stdint.h>
 #include <string_theory/string>
-
-class JsonObject;
-class JsonObjectReader;
 
 #define NOAMMO (0)
 
@@ -27,8 +26,8 @@ struct CalibreModel
 
 	const ST::string* getName() const;
 
-	virtual void serializeTo(JsonObject &obj) const;
-	static CalibreModel* deserialize(JsonObjectReader &obj);
+	virtual JsonValue serialize() const;
+	static CalibreModel* deserialize(const JsonValue &json);
 
 	static const CalibreModel* getNoCalibreObject();
 

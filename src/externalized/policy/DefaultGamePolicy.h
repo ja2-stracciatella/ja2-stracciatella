@@ -1,13 +1,12 @@
 #pragma once
 
 #include "GamePolicy.h"
-
-#include "rapidjson/document.h"
+#include "Json.h"
 
 class DefaultGamePolicy : public GamePolicy
 {
 public:
-	DefaultGamePolicy(rapidjson::Document *json);
+	DefaultGamePolicy(const JsonValue& json);
 
 	/** Check if a hotkey is enabled. */
 	virtual bool isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, uint32_t key) const;

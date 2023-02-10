@@ -4,5 +4,4 @@ title: Translation Table
 description: Translation table for a specific language. Will map characters to subimage indexes in fonts.
 patternProperties:
   ^.$`:
-    type:
-      $ref: types/uint8.schema.yaml
+    $ref: types/uint8.schema.yaml

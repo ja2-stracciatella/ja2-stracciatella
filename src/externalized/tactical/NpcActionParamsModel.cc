@@ -26,8 +26,9 @@ int32_t NpcActionParamsModel::getAmount(const int32_t defaultValue) const
 	return amount;
 }
 
-NpcActionParamsModel* NpcActionParamsModel::deserialize(const JsonObjectReader& obj)
+NpcActionParamsModel* NpcActionParamsModel::deserialize(const JsonValue& json)
 {
+	auto obj = json.toObject();
 	return new NpcActionParamsModel(
 		static_cast<uint16_t>(obj.GetInt("actionCode")),
 		static_cast<int16_t>(obj.getOptionalInt("gridNo", 0)),

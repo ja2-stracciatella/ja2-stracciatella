@@ -16,10 +16,10 @@ int8_t SamSiteAirControlModel::getControllingSamSiteID(uint16_t const sectorId) 
 	return airControlTable[sectorId] - 1;
 }
 
-SamSiteAirControlModel* SamSiteAirControlModel::deserialize(const rapidjson::Value& obj)
+SamSiteAirControlModel* SamSiteAirControlModel::deserialize(const JsonValue& obj)
 {
-	auto table = obj.GetArray();
-	if (table.Size() != 16)
+	auto table = obj.toVec();
+	if (table.size() != 16)
 	{
 		throw std::runtime_error("The SAM control table must have exactly 16 rows");
 	}
@@ -28,14 +28,14 @@ SamSiteAirControlModel* SamSiteAirControlModel::deserialize(const rapidjson::Val
 	std::array<int8_t, NUM_SECTORS> controlTable{};
 	for (auto& el: table)
 	{
-		auto row = el.GetArray();
-		if (row.Size() != 16)
+		auto row = el.toVec();
+		if (row.size() != 16)
 		{
 			throw std::runtime_error("Every row in the SAM control table must have exactly 16 values");
 		}
 		for (auto& col : row)
 		{
-			controlTable[i++] = static_cast<int8_t>(col.GetInt());
+			controlTable[i++] = static_cast<int8_t>(col.toInt());
 		}
 	}
 

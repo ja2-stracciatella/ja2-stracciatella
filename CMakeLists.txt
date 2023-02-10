@@ -85,7 +85,6 @@ set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 # @see CARGO_BUILD_TARGET in dependencies/lib-stracciatella/CMakeLists.txt
 option(BUILD_SDL_LIB "Build SDL from source" OFF)
 option(LOCAL_FLTK_LIB "Build with fltk lib" OFF)
-option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 # @see LOCAL_STRING_THEORY_LIB in dependencies/lib-string_theory/CMakeLists.txt
 option(WITH_UNITTESTS "Build with unittests" ON)
@@ -171,13 +170,6 @@ else()
 endif()
 message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY}; SDL2 Include Dir: ${SDL2_INCLUDE_DIR}")
 
-if (NOT LOCAL_RAPIDJSON_LIB)
-    find_package(RapidJSON REQUIRED)
-else()
-    message(STATUS "Compiling with local RapidJSON libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson")
-    set(RAPIDJSON_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include")
-endif()
-
 if (NOT WITH_MAGICENUM)
     message(STATUS "Compiling without magic_enum. This build will not have enum-gen functionalities")
     add_compile_definitions(NO_MAGICENUM_LIB)
@@ -231,7 +223,6 @@ endif()
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
-    ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${SOL_INCLUDE_DIR}
     ${LUA_INCLUDE_DIRS}
@@ -271,11 +262,6 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wtype-limits -Wignored-qualifiers")
-    if (LOCAL_RAPIDJSON_LIB)
-        # There has not been an official new RapidJSON release since 2016; some C++ features
-        # it uses have been deprecated since then.
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
-    endif()
 endif()
 
 set(

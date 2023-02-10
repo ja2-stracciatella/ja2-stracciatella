@@ -1,6 +1,5 @@
 #include "TownModel.h"
 
-#include "JsonObject.h"
 #include "JsonUtility.h"
 #include <utility>
 
@@ -17,21 +16,20 @@ const SGPSector TownModel::getBaseSector() const
 	return min;
 }
 
-TownModel* TownModel::deserialize(const rapidjson::Value& obj)
+TownModel* TownModel::deserialize(const JsonValue& json)
 {
-	std::vector<uint8_t> sectorIDs = JsonUtility::parseSectorList(obj, "sectors");
+	std::vector<uint8_t> sectorIDs = JsonUtility::parseSectorList(json, "sectors");
+	auto obj = json.toObject();
 
-	Assert( obj.HasMember("townPoint") && obj["townPoint"].IsObject() );
-	auto tp = obj["townPoint"].GetObject();
+	auto tp = obj["townPoint"].toObject();
 	SGPPoint townPoint = SGPPoint();
-	townPoint.iX = tp["x"].GetInt();
-	townPoint.iY = tp["y"].GetInt();
+	townPoint.iX = tp.GetInt("x");
+	townPoint.iY = tp.GetInt("y");
 
-	JsonObjectReader reader(obj);
 	return new TownModel(
-		reader.GetInt("townId"),
+		obj.GetInt("townId"),
 		sectorIDs,
 		townPoint,
-		reader.getOptionalBool("isMilitiaTrainingAllowed")
+		obj.getOptionalBool("isMilitiaTrainingAllowed")
 		);
 }

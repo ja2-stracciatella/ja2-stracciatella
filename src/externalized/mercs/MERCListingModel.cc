@@ -1,5 +1,4 @@
 #include "Exceptions.h"
-#include "JsonObject.h"
 #include "MERCListingModel.h"
 #include "Soldier_Control.h"
 
@@ -8,7 +7,7 @@
 #include <utility>
 
 MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, uint8_t bioIndex_,
-	uint32_t minTotalSpending_, uint32_t minDays_, 
+	uint32_t minTotalSpending_, uint32_t minDays_,
 	std::vector<SpeckQuote> quotes_
 	) : index(index_), profileID(profileID_), bioIndex(bioIndex_),
 	    minTotalSpending(minTotalSpending_), minDays(minDays_),
@@ -29,7 +28,7 @@ std::vector<SpeckQuote> MERCListingModel::getQuotesByType(SpeckQuoteType type) c
 	return filtered;
 }
 
-static SpeckQuoteType SpeckQuoteTypefromString(std::string s)
+static SpeckQuoteType SpeckQuoteTypefromString(const ST::string& s)
 {
 	if (s == "ADVERTISE") return SpeckQuoteType::ADVERTISE;
 	if (s == "MERC_DEAD") return SpeckQuoteType::MERC_DEAD;
@@ -38,9 +37,10 @@ static SpeckQuoteType SpeckQuoteTypefromString(std::string s)
 	throw DataError(ST::format("unknown quote type: {}", s));
 }
 
-MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::Value& json, const MercSystem* mercSystem)
+MERCListingModel* MERCListingModel::deserialize(uint8_t index, const JsonValue& json, const MercSystem* mercSystem)
 {
-	ST::string profileName = json["profile"].GetString();
+	auto reader = json.toObject();
+	ST::string profileName = reader.GetString("profile");
 	auto profile = mercSystem->getMercProfileInfoByName(profileName);
 	if (profile == NULL) {
 		throw DataError(ST::format("'{}' does not refer to a valid profile", profile));
@@ -49,10 +49,11 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 		throw DataError(ST::format("Profile '{}' does not refer to a M.E.R.C. profile", profile));
 	}
 
+	auto jsonQuotes = reader["quotes"];
 	std::vector<SpeckQuote> quotes;
-	for (auto& elem : json["quotes"].GetArray())
+	for (const auto& elem : jsonQuotes.toVec())
 	{
-		JsonObjectReader r(elem);
+		auto r = elem.toObject();
 		auto quoteType = SpeckQuoteTypefromString(r.GetString("type"));
 		ST::string crossSellName = r.getOptionalString("profile");
 
@@ -70,7 +71,7 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 			}
 			crossSellID = crossSellProfile->profileID;
 		}
-		
+
 		auto quote = std::make_shared<MERCSpeckQuote>(
 			r.GetUInt("quoteID"),
 			quoteType,
@@ -79,13 +80,12 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 		quotes.push_back(quote);
 	}
 
-	JsonObjectReader r(json);
 	return new MERCListingModel(
 		index,
 		profile->profileID,
-		r.GetUInt("bioIndex"),
-		r.getOptionalInt("minTotalSpending"), 
-		r.getOptionalInt("minDays"),
+		reader.GetUInt("bioIndex"),
+		reader.getOptionalInt("minTotalSpending"),
+		reader.getOptionalInt("minDays"),
 		quotes
 	);
 

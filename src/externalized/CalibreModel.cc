@@ -1,7 +1,6 @@
 #include "CalibreModel.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "JsonObject.h"
 #include "Text.h"
 #include <string_theory/format>
 #include <string_theory/string>
@@ -28,20 +27,23 @@ CalibreModel::CalibreModel(uint16_t index_,
 
 CalibreModel::~CalibreModel() = default;
 
-void CalibreModel::serializeTo(JsonObject &obj) const
+JsonValue CalibreModel::serialize() const
 {
-	obj.AddMember("index",              index);
-	obj.AddMember("internalName",       internalName);
-	obj.AddMember("sound",              sound);
-	obj.AddMember("burstSound",         burstSound);
-	obj.AddMember("silencedSound",      silencedSound);
-	obj.AddMember("silencedBurstSound", silencedBurstSound);
-	obj.AddMember("showInHelpText",     showInHelpText);
-	obj.AddMember("monsterWeapon",      monsterWeapon);
+	JsonObject obj;
+	obj.set("index",              index);
+	obj.set("internalName",       internalName);
+	obj.set("sound",              sound);
+	obj.set("burstSound",         burstSound);
+	obj.set("silencedSound",      silencedSound);
+	obj.set("silencedBurstSound", silencedBurstSound);
+	obj.set("showInHelpText",     showInHelpText);
+	obj.set("monsterWeapon",      monsterWeapon);
+	return obj.toValue();
 }
 
-CalibreModel* CalibreModel::deserialize(JsonObjectReader &obj)
+CalibreModel* CalibreModel::deserialize(const JsonValue &json)
 {
+	auto obj = json.toObject();
 	int index = obj.GetInt("index");
 	ST::string internalName = obj.GetString("internalName");
 	ST::string sound = obj.getOptionalString("sound");
