@@ -404,52 +404,48 @@ void InvalidateScreen(void)
 
 static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
-	SDL_Surface* Frame  = FrameBuffer;
-	SurfaceUniquePtr Source(SDL_CreateRGBSurfaceWithFormat(0, ScreenBuffer->w, ScreenBuffer->h, 0, ScreenBuffer->format->format));
 	SDL_Surface* Dest   = ScreenBuffer; // Back
 	SDL_Rect     SrcRect;
 	SDL_Rect     DstRect;
 	SDL_Rect     StripRegions[2];
 	UINT16       NumStrips = 0;
 
-	const UINT16 usWidth  = SCREEN_WIDTH;
-	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
-
-	SDL_BlitSurface(ScreenBuffer, NULL, Source.get(), NULL);
+	int const width  = SCREEN_WIDTH;
+	int const height = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 
 	if (sScrollXIncrement < 0)
 	{
 		SrcRect.x = 0;
-		SrcRect.w = usWidth + sScrollXIncrement;
+		SrcRect.w = width + sScrollXIncrement;
 		DstRect.x = -sScrollXIncrement;
 		StripRegions[0].x = gsVIEWPORT_START_X;
 		StripRegions[0].y = gsVIEWPORT_WINDOW_START_Y;
 		StripRegions[0].w = -sScrollXIncrement;
-		StripRegions[0].h = usHeight;
+		StripRegions[0].h = height;
 		++NumStrips;
 	}
 	else if (sScrollXIncrement > 0)
 	{
 		SrcRect.x = sScrollXIncrement;
-		SrcRect.w = usWidth - sScrollXIncrement;
+		SrcRect.w = width - sScrollXIncrement;
 		DstRect.x = 0;
 		StripRegions[0].x = gsVIEWPORT_END_X - sScrollXIncrement;
 		StripRegions[0].y = gsVIEWPORT_WINDOW_START_Y;
 		StripRegions[0].w = sScrollXIncrement;
-		StripRegions[0].h = usHeight;
+		StripRegions[0].h = height;
 		++NumStrips;
 	}
 	else
 	{
 		SrcRect.x = 0;
-		SrcRect.w = usWidth;
+		SrcRect.w = width;
 		DstRect.x = 0;
 	}
 
 	if (sScrollYIncrement < 0)
 	{
 		SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
-		SrcRect.h = usHeight + sScrollYIncrement;
+		SrcRect.h = height + sScrollYIncrement;
 		DstRect.y = gsVIEWPORT_WINDOW_START_Y - sScrollYIncrement;
 		StripRegions[NumStrips].x = DstRect.x;
 		StripRegions[NumStrips].y = gsVIEWPORT_WINDOW_START_Y;
@@ -460,7 +456,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	else if (sScrollYIncrement > 0)
 	{
 		SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-		SrcRect.h = usHeight - sScrollYIncrement;
+		SrcRect.h = height - sScrollYIncrement;
 		DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 		StripRegions[NumStrips].x = DstRect.x;
 		StripRegions[NumStrips].y = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
@@ -471,29 +467,34 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	else
 	{
 		SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
-		SrcRect.h = usHeight;
+		SrcRect.h = height;
 		DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 	}
-
-	SDL_BlitSurface(Source.get(), &SrcRect, Dest, &DstRect);
 
 #ifdef SCROLL_TEST
 	SDL_FillRect(Dest, NULL, 0);
 #endif
 
+	{
+		SurfaceUniquePtr Source(SDL_CreateRGBSurfaceWithFormat(0,
+			ScreenBuffer->w, ScreenBuffer->h, 0, ScreenBuffer->format->format));
+		SDL_BlitSurface(ScreenBuffer, nullptr, Source.get(), nullptr);
+		SDL_BlitSurface(Source.get(), &SrcRect, Dest, &DstRect);
+	}
+
 	for (UINT i = 0; i < NumStrips; i++)
 	{
-		UINT x = StripRegions[i].x;
-		UINT y = StripRegions[i].y;
-		UINT w = StripRegions[i].w;
-		UINT h = StripRegions[i].h;
-		for (UINT j = y; j < y + h; ++j)
+		INT16 const x = static_cast<INT16>(StripRegions[i].x);
+		INT16 const y = static_cast<INT16>(StripRegions[i].y);
+		INT16 const w = static_cast<INT16>(StripRegions[i].w);
+		INT16 const h = static_cast<INT16>(StripRegions[i].h);
+		for (int j = y; j < y + h; ++j)
 		{
 			std::fill_n(gpZBuffer + j * SCREEN_WIDTH + x, w, 0);
 		}
 
 		RenderStaticWorldRect(x, y, x + w, y + h, TRUE);
-		SDL_BlitSurface(Frame, &StripRegions[i], Dest, &StripRegions[i]);
+		SDL_BlitSurface(FrameBuffer, &StripRegions[i], Dest, &StripRegions[i]);
 	}
 
 	// RESTORE SHIFTED
@@ -504,17 +505,6 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 
 	// BLIT NEW
 	ExecuteVideoOverlaysToAlternateBuffer(BACKBUFFER);
-
-	SDL_Texture* screenTexture = SDL_CreateTextureFromSurface(GameRenderer, ScreenBuffer);
-
-	SDL_Rect r;
-	r.x = gsVIEWPORT_START_X;
-	r.y = gsVIEWPORT_WINDOW_START_Y;
-	r.w = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
-	r.h = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
-	SDL_RenderCopy(GameRenderer, screenTexture, &r, &r);
-
-	SDL_DestroyTexture(screenTexture);
 }
 
 
@@ -651,9 +641,9 @@ static void GetRGBDistribution()
 	/* Mask the highest bit of each component. This is used for alpha blending. */
 	guiTranslucentMask = (r & r >> 1) | (g & g >> 1) | (b & b >> 1);
 
-	gusRedMask   = r;
-	gusGreenMask = g;
-	gusBlueMask  = b;
+	gusRedMask   = static_cast<UINT16>(r);
+	gusGreenMask = static_cast<UINT16>(g);
+	gusBlueMask  = static_cast<UINT16>(b);
 
 	gusRedShift   = f.Rshift - f.Rloss;
 	gusGreenShift = f.Gshift - f.Gloss;
