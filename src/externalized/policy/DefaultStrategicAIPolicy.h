@@ -1,11 +1,11 @@
 #pragma once
 
 #include "StrategicAIPolicy.h"
-#include "rapidjson/document.h"
+#include "Json.h"
 
 
 class DefaultStrategicAIPolicy : public StrategicAIPolicy
 {
 public:
-	DefaultStrategicAIPolicy(rapidjson::Document *json);
+	DefaultStrategicAIPolicy(const JsonValue& json);
 };

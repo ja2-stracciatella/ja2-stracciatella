@@ -1,12 +1,14 @@
 #include "TraversibilityMapping.h"
 
 // mapping from traversibility string name to enum
-TraversibilityMap TraversibilityMapping::deserialize(const rapidjson::Document& root)
+TraversibilityMap TraversibilityMapping::deserialize(const JsonValue& root)
 {
+	auto obj = root.toObject();
+	auto keys = obj.keys();
 	TraversibilityMap mapToEnum;
-	for (auto& iter : root.GetObject())
+	for (auto& key : keys)
 	{
-		mapToEnum.insert(std::make_pair(iter.name.GetString(), iter.value.GetInt()));
+		mapToEnum.insert(std::make_pair(key, obj.GetInt(key.c_str())));
 	}
 	return mapToEnum;
 }

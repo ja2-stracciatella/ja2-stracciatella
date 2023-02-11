@@ -1,7 +1,6 @@
 #include "WeaponModels.h"
 #include "CalibreModel.h"
 #include "Items.h"
-#include "JsonObject.h"
 #include "Logger.h"
 #include "MagazineModel.h"
 #include "Points.h"
@@ -63,38 +62,50 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
 
 void WeaponModel::serializeTo(JsonObject &obj) const
 {
-	obj.AddMember("itemIndex",            itemIndex);
-	obj.AddMember("internalName",         internalName);
-	obj.AddMember("internalType",         internalType);
-	obj.AddMember("inventoryGraphics",    inventoryGraphics.serialize(obj.getAllocator()).getValue());
-	obj.AddMember("tileGraphic", tileGraphic.serialize(obj.getAllocator()).getValue());
-	obj.AddMember("ubWeight", getWeight());
-	obj.AddMember("ubPerPocket", getPerPocket());
-	obj.AddMember("usPrice", getPrice());
-	obj.AddMember("ubCoolness", getCoolness());
-	obj.AddMember("bReliability", getReliability());
-	obj.AddMember("bRepairEase", getRepairEase());
-	obj.AddMember("rateOfFire", m_rateOfFire);
+	obj.set("itemIndex",            itemIndex);
+	obj.set("internalName",         internalName);
+	obj.set("internalType",         internalType);
+	obj.set("inventoryGraphics",    inventoryGraphics.serialize());
+	obj.set("tileGraphic", tileGraphic.serialize());
+	obj.set("ubWeight", getWeight());
+	obj.set("ubPerPocket", getPerPocket());
+	obj.set("usPrice", getPrice());
+	obj.set("ubCoolness", getCoolness());
+	obj.set("bReliability", getReliability());
+	obj.set("bRepairEase", getRepairEase());
+	obj.set("rateOfFire", m_rateOfFire);
 
 	if(isInBigGunList())
 	{
-		obj.AddMember("standardReplacement", standardReplacement);
+		obj.set("standardReplacement", standardReplacement);
+	}
+}
+
+JsonValue WeaponModel::serialize() const {
+	JsonObject obj;
+	serializeTo(obj);
+	return obj.toValue();
+}
+
+void addOptionalBool(JsonObject &obj, const char* key, bool val) {
+	if (val) {
+		obj.set(key, val);
 	}
 }
 
 void WeaponModel::serializeAttachments(JsonObject &obj) const
 {
-	obj.addOptionalBool("attachment_Silencer",                 attachSilencer);
-	obj.addOptionalBool("attachment_SniperScope",              attachSniperScope);
-	obj.addOptionalBool("attachment_LaserScope",               attachLaserScope);
-	obj.addOptionalBool("attachment_Bipod",                    attachBipod);
-	obj.addOptionalBool("attachment_Duckbill",                 attachDuckbill);
-	obj.addOptionalBool("attachment_UnderGLauncher",           attachUnderGLauncher);
-	obj.addOptionalBool("attachment_SpringAndBoltUpgrade",     attachSpringAndBoltUpgrade);
-	obj.addOptionalBool("attachment_GunBarrelExtender",        attachGunBarrelExtender);
+	addOptionalBool(obj, "attachment_Silencer",                 attachSilencer);
+	addOptionalBool(obj, "attachment_SniperScope",              attachSniperScope);
+	addOptionalBool(obj, "attachment_LaserScope",               attachLaserScope);
+	addOptionalBool(obj, "attachment_Bipod",                    attachBipod);
+	addOptionalBool(obj, "attachment_Duckbill",                 attachDuckbill);
+	addOptionalBool(obj, "attachment_UnderGLauncher",           attachUnderGLauncher);
+	addOptionalBool(obj, "attachment_SpringAndBoltUpgrade",     attachSpringAndBoltUpgrade);
+	addOptionalBool(obj, "attachment_GunBarrelExtender",        attachGunBarrelExtender);
 }
 
-ST::string readOptionalString(JsonObjectReader &obj, const char* key, const ST::string &default_value) {
+ST::string readOptionalString(JsonObject &obj, const char* key, const ST::string &default_value) {
 	ST::string sound = obj.getOptionalString(key);
 	if (sound.empty()) {
 		return default_value;
@@ -102,10 +113,11 @@ ST::string readOptionalString(JsonObjectReader &obj, const char* key, const ST::
 	return sound;
 }
 
-WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
+WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					const std::map<ST::string, const CalibreModel*> &calibreMap,
 					const VanillaItemStrings& vanillaItemStrings)
 {
+	auto obj = json.toObject();
 	WeaponModel *wep = NULL;
 	int itemIndex = obj.GetInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");
@@ -559,14 +571,10 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 		return wep;
 	}
 
-	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
-	JsonObjectReader igReader(igSource);
-	const auto inventoryGraphics = InventoryGraphicsModel::deserialize(igReader);
-	wep->inventoryGraphics  = inventoryGraphics;
+	const auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);
+	const auto tileGraphic = TilesetTileIndexModel::deserialize(obj["tileGraphic"]);
 
-	const rapidjson::Value& tgSource = obj.GetValue("tileGraphic");
-	JsonObjectReader tgReader(tgSource);
-	const auto tileGraphic = TilesetTileIndexModel::deserialize(tgReader);
+	wep->inventoryGraphics  = inventoryGraphics;
 	wep->tileGraphic = tileGraphic;
 
 	wep->ubWeight         = obj.GetInt("ubWeight");
@@ -652,12 +660,14 @@ NoWeapon::NoWeapon(uint16_t itemIndex, const ST::string& internalName, uint32_t 
 {
 }
 
-void NoWeapon::serializeTo(JsonObject &obj) const
+JsonValue NoWeapon::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("usRange", usRange);
+	obj.set("usRange", usRange);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 
@@ -694,23 +704,25 @@ Pistol::Pistol(uint16_t itemIndex, ST::string internalName, ST::string shortName
 	sLocknLoadSound      = S_LNL_PISTOL;
 }
 
-void Pistol::serializeTo(JsonObject &obj) const
+JsonValue Pistol::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("silencedSound",        silencedSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("silencedSound",        silencedSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 MPistol::MPistol(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -754,27 +766,29 @@ MPistol::MPistol(uint16_t itemIndex, ST::string internalName, ST::string shortNa
 	sLocknLoadSound      = S_LNL_PISTOL;
 }
 
-void MPistol::serializeTo(JsonObject &obj) const
+JsonValue MPistol::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubShotsPerBurst",      ubShotsPerBurst);
-	obj.AddMember("ubBurstPenalty",       ubBurstPenalty);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("burstSound",           burstSound);
-	obj.AddMember("silencedSound",        silencedSound);
-	obj.AddMember("silencedBurstSound",   silencedBurstSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubShotsPerBurst",      ubShotsPerBurst);
+	obj.set("ubBurstPenalty",       ubBurstPenalty);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("burstSound",           burstSound);
+	obj.set("silencedSound",        silencedSound);
+	obj.set("silencedBurstSound",   silencedBurstSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 SMG::SMG(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -818,27 +832,29 @@ SMG::SMG(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::
 	sLocknLoadSound      = S_LNL_SMG;
 }
 
-void SMG::serializeTo(JsonObject &obj) const
+JsonValue SMG::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubShotsPerBurst",      ubShotsPerBurst);
-	obj.AddMember("ubBurstPenalty",       ubBurstPenalty);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("burstSound",           burstSound);
-	obj.AddMember("silencedSound",        silencedSound);
-	obj.AddMember("silencedBurstSound",   silencedBurstSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubShotsPerBurst",      ubShotsPerBurst);
+	obj.set("ubBurstPenalty",       ubBurstPenalty);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("burstSound",           burstSound);
+	obj.set("silencedSound",        silencedSound);
+	obj.set("silencedBurstSound",   silencedBurstSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 SniperRifle::SniperRifle(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -874,23 +890,25 @@ SniperRifle::SniperRifle(uint16_t itemIndex, ST::string internalName, ST::string
 	sLocknLoadSound      = S_LNL_RIFLE;
 }
 
-void SniperRifle::serializeTo(JsonObject &obj) const
+JsonValue SniperRifle::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("silencedSound",        silencedSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("silencedSound",        silencedSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 Rifle::Rifle(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -926,23 +944,25 @@ Rifle::Rifle(uint16_t itemIndex, ST::string internalName, ST::string shortName, 
 	sLocknLoadSound      = S_LNL_RIFLE;
 }
 
-void Rifle::serializeTo(JsonObject &obj) const
+JsonValue Rifle::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("silencedSound",        silencedSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("silencedSound",        silencedSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -986,27 +1006,29 @@ AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string internalName, ST::stri
 	sLocknLoadSound      = S_LNL_RIFLE;
 }
 
-void AssaultRifle::serializeTo(JsonObject &obj) const
+JsonValue AssaultRifle::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubShotsPerBurst",      ubShotsPerBurst);
-	obj.AddMember("ubBurstPenalty",       ubBurstPenalty);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("burstSound",           burstSound);
-	obj.AddMember("silencedSound",        silencedSound);
-	obj.AddMember("silencedBurstSound",   silencedBurstSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubShotsPerBurst",      ubShotsPerBurst);
+	obj.set("ubBurstPenalty",       ubBurstPenalty);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("burstSound",           burstSound);
+	obj.set("silencedSound",        silencedSound);
+	obj.set("silencedBurstSound",   silencedBurstSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 Shotgun::Shotgun(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1050,27 +1072,29 @@ Shotgun::Shotgun(uint16_t itemIndex, ST::string internalName, ST::string shortNa
 	sLocknLoadSound      = S_LNL_SHOTGUN;
 }
 
-void Shotgun::serializeTo(JsonObject &obj) const
+JsonValue Shotgun::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubShotsPerBurst",      ubShotsPerBurst);
-	obj.AddMember("ubBurstPenalty",       ubBurstPenalty);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("burstSound",           burstSound);
-	obj.AddMember("silencedSound",        silencedSound);
-	obj.AddMember("silencedBurstSound",   silencedBurstSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubShotsPerBurst",      ubShotsPerBurst);
+	obj.set("ubBurstPenalty",       ubBurstPenalty);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("burstSound",           burstSound);
+	obj.set("silencedSound",        silencedSound);
+	obj.set("silencedBurstSound",   silencedBurstSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 LMG::LMG(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1114,27 +1138,29 @@ LMG::LMG(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::
 	sLocknLoadSound      = S_LNL_LMG;
 }
 
-void LMG::serializeTo(JsonObject &obj) const
+JsonValue LMG::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubShotsPerBurst",      ubShotsPerBurst);
-	obj.AddMember("ubBurstPenalty",       ubBurstPenalty);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("burstSound",           burstSound);
-	obj.AddMember("silencedSound",        silencedSound);
-	obj.AddMember("silencedBurstSound",   silencedBurstSound);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubShotsPerBurst",      ubShotsPerBurst);
+	obj.set("ubBurstPenalty",       ubBurstPenalty);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("burstSound",           burstSound);
+	obj.set("silencedSound",        silencedSound);
+	obj.set("silencedBurstSound",   silencedBurstSound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 Blade::Blade(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1157,17 +1183,19 @@ Blade::Blade(uint16_t itemIndex, ST::string internalName, ST::string shortName, 
 	this->sound          = Sound;
 }
 
-void Blade::serializeTo(JsonObject &obj) const
+JsonValue Blade::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("sound",                sound);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("sound",                sound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 ThrowingBlade::ThrowingBlade(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1190,17 +1218,19 @@ ThrowingBlade::ThrowingBlade(uint16_t itemIndex, ST::string internalName, ST::st
 	this->sound          = Sound;
 }
 
-void ThrowingBlade::serializeTo(JsonObject &obj) const
+JsonValue ThrowingBlade::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("sound",                sound);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("sound",                sound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 PunchWeapon::PunchWeapon(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1222,16 +1252,18 @@ PunchWeapon::PunchWeapon(uint16_t itemIndex, ST::string internalName, ST::string
 }
 
 
-void PunchWeapon::serializeTo(JsonObject &obj) const
+JsonValue PunchWeapon::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("sound",                sound);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("sound",                sound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 Launcher::Launcher(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1258,19 +1290,21 @@ Launcher::Launcher(uint16_t itemIndex, ST::string internalName, ST::string short
 	this->sound          = Sound;
 }
 
-void Launcher::serializeTo(JsonObject &obj) const
+JsonValue Launcher::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 LAW::LAW(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1298,19 +1332,21 @@ LAW::LAW(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::
 	this->sound          = Sound;
 }
 
-void LAW::serializeTo(JsonObject &obj) const
+JsonValue LAW::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 Cannon::Cannon(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1338,19 +1374,21 @@ Cannon::Cannon(uint16_t itemIndex, ST::string internalName, ST::string shortName
 	this->sound          = Sound;
 }
 
-void Cannon::serializeTo(JsonObject &obj) const
+JsonValue Cannon::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("ubReadyTime",          ubReadyTime);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubBulletSpeed",        ubBulletSpeed);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
+	obj.set("ubReadyTime",          ubReadyTime);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubBulletSpeed",        ubBulletSpeed);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }
 
 MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
@@ -1382,19 +1420,21 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string internalName, ST::string
 	usSmokeEffect        = smokeEffect;
 }
 
-void MonsterSpit::serializeTo(JsonObject &obj) const
+JsonValue MonsterSpit::serialize() const
 {
+	JsonObject obj;
 	WeaponModel::serializeTo(obj);
-	obj.AddMember("calibre",              calibre->internalName);
-	obj.AddMember("ubShotsPer4Turns",     ubShotsPer4Turns);
-	obj.AddMember("ubImpact",             ubImpact);
-	obj.AddMember("ubDeadliness",         ubDeadliness);
-	obj.AddMember("ubMagSize",            ubMagSize);
-	obj.AddMember("usRange",              usRange);
-	obj.AddMember("ubAttackVolume",       ubAttackVolume);
-	obj.AddMember("ubHitVolume",          ubHitVolume);
-	obj.AddMember("sound",                sound);
-	obj.AddMember("ubSmokeEffect",        usSmokeEffect);
+	obj.set("calibre",              calibre->internalName);
+	obj.set("ubShotsPer4Turns",     ubShotsPer4Turns);
+	obj.set("ubImpact",             ubImpact);
+	obj.set("ubDeadliness",         ubDeadliness);
+	obj.set("ubMagSize",            ubMagSize);
+	obj.set("usRange",              usRange);
+	obj.set("ubAttackVolume",       ubAttackVolume);
+	obj.set("ubHitVolume",          ubHitVolume);
+	obj.set("sound",                sound);
+	obj.set("ubSmokeEffect",        usSmokeEffect);
 	serializeAttachments(obj);
 	serializeFlags(obj);
+	return obj.toValue();
 }

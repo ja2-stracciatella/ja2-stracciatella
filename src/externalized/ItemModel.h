@@ -1,12 +1,15 @@
 #pragma once
+
 #include "Item_Types.h"
 #include "ItemStrings.h"
 #include "InventoryGraphicsModel.h"
+#include "Json.h"
 #include "TilesetTileIndexModel.h"
+
 #include <string_theory/string>
 
 class JsonObject;
-class JsonObjectReader;
+class JsonObject;
 struct MagazineModel;
 struct WeaponModel;
 
@@ -90,12 +93,12 @@ struct ItemModel
 	/** Check if the given attachment can be attached to the item. */
 	virtual bool canBeAttached(uint16_t attachment) const;
 
-	virtual void serializeTo(JsonObject &obj) const;
+	virtual JsonValue serialize() const;
 
-	static ST::string deserializeShortName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
-	static ST::string deserializeName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
-	static ST::string deserializeDescription(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
-	static const ItemModel* deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings);
+	static ST::string deserializeShortName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings);
+	static ST::string deserializeName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings);
+	static ST::string deserializeDescription(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings);
+	static const ItemModel* deserialize(const JsonValue &json, const VanillaItemStrings& vanillaItemStrings);
 protected:
 	uint16_t   itemIndex;
 	ST::string internalName;
@@ -116,5 +119,5 @@ protected:
 	uint16_t   fFlags;
 
 	void serializeFlags(JsonObject &obj) const;
-	uint32_t deserializeFlags(JsonObjectReader &obj) const;
+	uint32_t deserializeFlags(JsonObject &obj) const;
 };

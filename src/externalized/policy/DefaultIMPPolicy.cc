@@ -1,14 +1,13 @@
 #include "DefaultIMPPolicy.h"
 
 #include "ItemSystem.h"
-#include "JsonObject.h"
 #include "JsonUtility.h"
 
 #include <string_theory/string>
 
 struct ItemModel;
 
-static void readListOfItems(rapidjson::Value &value, std::vector<const ItemModel *> &items, const ItemSystem *itemSystem)
+static void readListOfItems(const JsonValue& value, std::vector<const ItemModel *> &items, const ItemSystem *itemSystem)
 {
 	std::vector<ST::string> strings;
 	JsonUtility::parseListStrings(value, strings);
@@ -18,17 +17,18 @@ static void readListOfItems(rapidjson::Value &value, std::vector<const ItemModel
 	}
 }
 
-DefaultIMPPolicy::DefaultIMPPolicy(rapidjson::Document *json, const ItemSystem *itemSystem)
+DefaultIMPPolicy::DefaultIMPPolicy(const JsonValue& json, const ItemSystem *itemSystem)
 {
-	JsonUtility::parseListStrings((*json)["activation_codes"], m_activationCodes);
+	auto r = json.toObject();
 
-	JsonObjectReader r(*json);
+	JsonUtility::parseListStrings(r["activation_codes"], m_activationCodes);
+
 	m_startingLevel = r.getOptionalUInt("starting_level", 1);
 
-	readListOfItems((*json)["inventory"], m_inventory, itemSystem);
+	readListOfItems(r["inventory"], m_inventory, itemSystem);
 
-	readListOfItems((*json)["if_good_shooter"], m_goodShooterItems, itemSystem);
-	readListOfItems((*json)["if_normal_shooter"], m_normalShooterItems, itemSystem);
+	readListOfItems(r["if_good_shooter"], m_goodShooterItems, itemSystem);
+	readListOfItems(r["if_normal_shooter"], m_normalShooterItems, itemSystem);
 }
 
 bool DefaultIMPPolicy::isCodeAccepted(const ST::string& code) const

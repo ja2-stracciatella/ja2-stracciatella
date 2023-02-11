@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Campaign_Types.h"
-#include "JsonObject.h"
+#include "Json.h"
 
 #include <vector>
 
@@ -12,7 +12,7 @@ public:
 
 	// Returns the top-left corner of the town on map. It may or may not belong to the town.
 	const SGPSector getBaseSector() const;
-	static TownModel* deserialize(const rapidjson::Value& obj);
+	static TownModel* deserialize(const JsonValue& obj);
 
 	int8_t townId;
 	std::vector<uint8_t> sectorIDs;

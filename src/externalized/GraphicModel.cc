@@ -11,18 +11,19 @@ uint8_t GraphicModel::getSubImageIndex() const {
 	return this->subImageIndex;
 }
 
-GraphicModel GraphicModel::deserialize(JsonObjectReader &obj) {
+GraphicModel GraphicModel::deserialize(const JsonValue &json) {
+	auto obj = json.toObject();
 	return GraphicModel(
 		obj.GetString("path"),
 		obj.getOptionalUInt("subImageIndex", 0)
 	);
 }
 
-JsonObject GraphicModel::serialize(rapidjson::Document::AllocatorType& allocator) const {
-	JsonObject v(allocator);
+JsonValue GraphicModel::serialize() const {
+	JsonObject v;
 
-	v.AddMember("path", path);
-	v.AddMember("subImageIndex", subImageIndex);
+	v.set("path", path);
+	v.set("subImageIndex", subImageIndex);
 
-	return v;
+	return v.toValue();
 }

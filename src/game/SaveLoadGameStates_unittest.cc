@@ -68,9 +68,8 @@ TEST(SaveLoadGameStatesTest, serializeJSON)
 	s.Set("F", 6.5f);
 	s.Set("S", ST::string("abc"));
 
-	std::stringstream ss;
-	s.Serialize(ss);
-	EXPECT_EQ(ss.str(), "{\"B\":true,\"F\":6.5,\"I\":987,\"S\":\"abc\"}");
+	auto ss = s.Serialize();
+	EXPECT_EQ(ss, "{\"B\":true,\"F\":6.5,\"I\":987,\"S\":\"abc\"}");
 }
 
 TEST(SaveLoadGameStatesTest, serializeJSONVector)
@@ -81,9 +80,8 @@ TEST(SaveLoadGameStatesTest, serializeJSONVector)
 	s.SetVector("F", std::vector<float>{4.5f});
 	s.SetVector("S", std::vector<ST::string>{"a", "b"});
 
-	std::stringstream ss;
-	s.Serialize(ss);
-	EXPECT_EQ(ss.str(), R"({"B":[false,true],"F":[4.5],"I":[3],"S":["a","b"]})");
+	auto ss = s.Serialize();
+	EXPECT_EQ(ss, R"({"B":[false,true],"F":[4.5],"I":[3],"S":["a","b"]})");
 }
 
 TEST(SaveLoadGameStatesTest, serializeJSONMap)
@@ -91,28 +89,25 @@ TEST(SaveLoadGameStatesTest, serializeJSONMap)
 	SavedGameStates s;
 	s.SetMap("M", std::map<ST::string, int32_t>{{"one", 1}});
 
-	std::stringstream ss;
-	s.Serialize(ss);
-	EXPECT_EQ(ss.str(), "{\"M\":{\"one\":1}}");
+	auto ss = s.Serialize();
+	EXPECT_EQ(ss, "{\"M\":{\"one\":1}}");
 }
 
 TEST(SaveLoadGameStatesTest, deserializeEmpty)
 {
 	std::string json = "{}";
-	std::stringstream ss(json);
 
 	SavedGameStates s;
-	s.Deserialize(ss);
+	s.Deserialize(json);
 	EXPECT_EQ(s.GetAll().size(), 0);
 }
 
 TEST(SaveLoadGameStatesTest, deserializeJSON)
 {
 	std::string json = R"({"B":true,"F":3.4,"I":567,"S":"xyz"})";
-	std::stringstream ss(json);
 
 	SavedGameStates s;
-	s.Deserialize(ss);
+	s.Deserialize(json);
 
 	EXPECT_EQ(s.Get<bool>("B"), true);
 	EXPECT_EQ(s.Get<float>("F"), 3.4f);
@@ -131,12 +126,10 @@ TEST(SaveLoadGameStatesTest, vectorOfVariant)
 	vec.emplace_back(ST::string("str"));
 	states.Set("vec", vec);
 
-	std::stringstream ss;
-	states.Serialize(ss);
-	EXPECT_EQ(ss.str(), "{\"vec\":[1,2.5,true,\"str\"]}");
+	auto ss = states.Serialize();
+	EXPECT_EQ(ss, "{\"vec\":[1,2.5,true,\"str\"]}");
 
-	std::stringstream is(ss.str());
-	states.Deserialize(is);
+	states.Deserialize(ss);
 	auto vec2 = states.Get<std::vector<PRIMITIVE_VALUE>>("vec");
 	EXPECT_EQ(std::get<int>(vec2[0]),   1);
 	EXPECT_EQ(std::get<float>(vec2[1]), 2.5f);
@@ -155,12 +148,10 @@ TEST(SaveLoadGameStatesTest, mapOfVariants)
 	};
 	states.Set("m", map);
 
-	std::stringstream ss;
-	states.Serialize(ss);
-	EXPECT_EQ(ss.str(), R"({"m":{"b":false,"f":1.5,"i":1,"s":"st"}})");
+	auto ss = states.Serialize();
+	EXPECT_EQ(ss, R"({"m":{"b":false,"f":1.5,"i":1,"s":"st"}})");
 
-	std::stringstream is(ss.str());
-	states.Deserialize(is);
+	states.Deserialize(ss);
 	auto map2 = states.Get<std::map<ST::string, PRIMITIVE_VALUE>>("m");
 	EXPECT_EQ(std::get<int  >(map2[ST::string("i")]), 1);
 	EXPECT_EQ(std::get<float>(map2[ST::string("f")]), 1.5f);

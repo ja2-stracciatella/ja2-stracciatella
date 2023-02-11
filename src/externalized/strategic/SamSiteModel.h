@@ -1,5 +1,5 @@
 #include "JA2Types.h"
-#include "JsonObject.h"
+#include "Json.h"
 
 #include <array>
 
@@ -9,7 +9,7 @@ public:
 	SamSiteModel(uint8_t sectorId_, std::array<GridNo, 2> gridNos_);
 	bool doesSamExistHere(const SGPSector& sector, GridNo const gridno) const;
 
-	static SamSiteModel* deserialize(const rapidjson::Value& obj);
+	static SamSiteModel* deserialize(const JsonValue& obj);
 	static void validateData(const std::vector<const SamSiteModel*>& models);
 
 	uint8_t sectorId;

@@ -114,8 +114,8 @@ public:
 		Set(key, STORABLE_TYPE{stored});
 	}
 
-	void Deserialize(std::stringstream&);
-	void Serialize(std::stringstream&);
+	void Deserialize(const ST::string&);
+	ST::string Serialize();
 
 	// Clears all states
 	void Clear();

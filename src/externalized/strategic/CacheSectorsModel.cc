@@ -8,7 +8,7 @@ CacheSectorsModel::CacheSectorsModel(std::vector<uint8_t> sectors_,
 	std::array<uint8_t, NUM_DIF_LEVELS> numTroopsVariance_)
 	: sectors(std::move(sectors_)), numTroops(numTroops_), numTroopsVariance(numTroopsVariance_) {}
 
-const CacheSectorsModel* CacheSectorsModel::deserialize(const rapidjson::Document& doc)
+const CacheSectorsModel* CacheSectorsModel::deserialize(const JsonValue& doc)
 {
 	auto sectorIDs = JsonUtility::parseSectorList(doc, "sectors");
 	return new CacheSectorsModel(

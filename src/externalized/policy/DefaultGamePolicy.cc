@@ -1,11 +1,10 @@
 #include "DefaultGamePolicy.h"
 #include "Campaign_Types.h"
-#include "JsonObject.h"
 
 
-DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
+DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 {
-	JsonObjectReader gp = JsonObjectReader(*json);
+	auto gp = json.toObject();
 	extra_hotkeys = gp.getOptionalBool("extra_hotkeys", true);
 	can_enter_turnbased = gp.getOptionalBool("can_enter_turnbased");
 	middle_mouse_look = gp.getOptionalBool("middle_mouse_look", true);
@@ -27,7 +26,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
 	squad_size = gp.getOptionalUInt("squad_size", 6);
 
-	JsonObjectReader ai = JsonObjectReader(gp.GetValue("ai"));
+	auto ai = gp["ai"].toObject();
 	ai_better_aiming_choice = ai.getOptionalBool("better_aiming_choice");
 	ai_go_prone_more_often = ai.getOptionalBool("go_prone_more_often");
 	threshold_cth_head = ai.getOptionalInt("threshold_cth_head", 67);
@@ -60,7 +59,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	show_hit_chance = gp.getOptionalBool("show_hit_chance", false);
 	website_loading_time_scale = gp.getOptionalDouble("website_loading_time_scale", 1.0);
 
-	JsonObjectReader imp = JsonObjectReader(gp.GetValue("imp"));
+	auto imp = gp["imp"].toObject();
 	imp_load_saved_merc_by_nickname = imp.getOptionalBool("load_saved_merc_by_nickname");
 	imp_load_keep_inventory = imp.getOptionalBool("load_keep_inventory");
 	imp_attribute_max = imp.getOptionalInt("max_attribute_points", 85);
@@ -72,7 +71,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	merc_online_min_days = gp.getOptionalUInt("merc_online_min_days", 1);
 	merc_online_max_days = gp.getOptionalUInt("merc_online_max_days", 2);
 
-	JsonObjectReader progress = JsonObjectReader(gp.GetValue("progress"));
+	auto progress = gp["progress"].toObject();
 	progress_event_madlab_min = progress.getOptionalInt("event_madlab_min", 35);
 	progress_event_mike_min = progress.getOptionalInt("event_mike_min", 50);
 	progress_event_iggy_min = progress.getOptionalInt("event_iggy_min", 70);
@@ -89,9 +88,9 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	unhired_merc_deaths_medium = gp.getOptionalInt("unhired_merc_deaths_medium", 2);
 	unhired_merc_deaths_hard = gp.getOptionalInt("unhired_merc_deaths_hard", 3);
 
-	JsonObjectReader campaign = JsonObjectReader(gp.GetValue("campaign"));
-	const char* sector_string = campaign.getOptionalString("start_sector");
-	start_sector = SGPSector::FromShortString(sector_string != nullptr ? sector_string : "A9").AsByte();
+	auto campaign = gp["campaign"].toObject();
+	ST::string sector_string = campaign.getOptionalString("start_sector");
+	start_sector = SGPSector::FromShortString(sector_string != ST::null ? sector_string : "A9").AsByte();
 	reveal_start_sector = campaign.getOptionalBool("start_sector_revealed", false);
 }
 

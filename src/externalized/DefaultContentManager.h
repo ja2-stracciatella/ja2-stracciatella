@@ -13,7 +13,6 @@
 #include "RustInterface.h"
 #include "ItemStrings.h"
 
-#include "rapidjson/document.h"
 #include <string_theory/string>
 
 #include <map>
@@ -160,7 +159,7 @@ public:
 
 	virtual const std::map<UINT32, UINT16>* getTranslationTable() const override;
 
-	std::unique_ptr<rapidjson::Document> readJsonDataFile(const ST::string& fileName) const;
+	JsonValue readJsonDataFile(const ST::string& fileName) const;
 
 	/* Gets the enabled mods and their version strings */
 	virtual const std::vector<std::pair<ST::string, ST::string>> getEnabledMods() const override;
@@ -255,7 +254,7 @@ protected:
 	bool loadCalibres();
 	bool loadAmmoTypes();
 	bool loadArmyData();
-	bool loadMusicModeList(MusicMode mode, rapidjson::Value &array);
+	bool loadMusicModeList(MusicMode mode, const JsonValue& array);
 	bool loadMusic();
 
 	const DealerInventory * loadDealerInventory(const ST::string& fileName);
@@ -272,8 +271,9 @@ protected:
 	void loadVehicles();
 	void loadTranslationTable();
 
-	std::unique_ptr<rapidjson::Document> readJsonFromString(const ST::string& jsonData, const ST::string& label) const;
-	std::unique_ptr<rapidjson::Document> readJsonDataFileWithSchema(const ST::string& jsonPath) const;
+	JsonValue readJsonFromString(const ST::string& jsonData, const ST::string& label) const;
+	JsonValue readJsonDataFileWithSchema(const ST::string& jsonPath) const;
+
 
 	/**
 	 * @param profileID

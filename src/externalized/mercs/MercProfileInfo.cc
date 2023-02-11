@@ -1,5 +1,4 @@
 #include "MercProfileInfo.h"
-#include "JsonObject.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
 #include <string_theory/format>
@@ -10,7 +9,7 @@
 
 std::function<const MercProfileInfo*(ProfileID)> MercProfileInfo::load = {};
 
-static MercType MercTypeFromString(const std::string& name)
+static MercType MercTypeFromString(const ST::string& name)
 {
 	if (name == "NOT_USED")     return MercType::NOT_USED;
 	else if (name == "AIM")     return MercType::AIM;
@@ -34,9 +33,9 @@ MercProfileInfo::MercProfileInfo()
 {
 }
 
-MercProfileInfo *MercProfileInfo::deserialize(const rapidjson::Value &json)
+MercProfileInfo *MercProfileInfo::deserialize(const JsonValue& json)
 {
-	JsonObjectReader r(json);
+	auto r = json.toObject();
 	return new MercProfileInfo(
 		r.GetUInt("profileID"),
 		r.GetString("internalName"),

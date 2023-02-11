@@ -5,10 +5,11 @@ BloodCatPlacementsModel::BloodCatPlacementsModel(uint8_t sectorId_, int8_t blood
 		:sectorId(sectorId_), bloodCatPlacements(bloodCatPlacements_)
 {}
 
-BloodCatPlacementsModel* BloodCatPlacementsModel::deserialize(JsonObjectReader & obj)
+BloodCatPlacementsModel* BloodCatPlacementsModel::deserialize(const JsonValue& json)
 {
-	uint8_t sectorId = JsonUtility::parseSectorID(obj.GetString("sector"));
-	return new BloodCatPlacementsModel(	
+	auto obj = json.toObject();
+	uint8_t sectorId = JsonUtility::parseSectorID(obj["sector"]);
+	return new BloodCatPlacementsModel(
 		sectorId,
 		obj.GetInt("bloodCatPlacements")
 		);

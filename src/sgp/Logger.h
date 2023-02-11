@@ -6,7 +6,7 @@
 #include <string_view>
 #include <string_theory/format>
 #include <string_theory/string>
-#include <stracciatella.h>
+#include <RustInterface.h>
 
 /** Get filename relative to src directory */
 constexpr size_t GetSourcePathSize(const char* filename)

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "JsonObject.h"
+#include "Json.h"
 #include "Strategic.h"
 #include "UndergroundSectorModel.h"
 
 #include <array>
-#include <rapidjson/document.h>
 #include <string>
 #include <vector>
 
@@ -27,12 +26,12 @@ struct CreatureLairSector
 class CreatureLairModel
 {
 public:
-        CreatureLairModel(const uint8_t lairId_, const uint8_t associatedMineId_, 
+        CreatureLairModel(const uint8_t lairId_, const uint8_t associatedMineId_,
                 const uint8_t entranceSector_, const uint8_t entranceSectorLevel_,
                 const std::vector<CreatureLairSector> lairSectors_,
                 const std::vector<CreatureAttackSector> attackSectors_,
                 const uint8_t warpExitSector_, const uint16_t warpExitGridNo_);
-        
+
         const uint8_t lairId;
         const uint8_t associatedMineId;
 
@@ -63,6 +62,6 @@ public:
         // returns the placeent details of an attack to the specific sector
         const CreatureAttackSector* getTownAttackDetails(uint8_t sectorId) const;
 
-        static CreatureLairModel* deserialize(const rapidjson::Value& json);
+        static CreatureLairModel* deserialize(const JsonValue& json);
         static void validateData(const std::vector<const CreatureLairModel*>& lairs, const std::vector<const UndergroundSectorModel*>& ugSectors, uint8_t numMines);
 };

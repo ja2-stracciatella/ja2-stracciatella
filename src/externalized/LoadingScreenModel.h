@@ -2,9 +2,9 @@
 
 #include "ContentManager.h"
 #include "JA2Types.h"
+#include "Json.h"
 
 #include <vector>
-#include <rapidjson/document.h>
 
 
 // Definition of a Loading Screen
@@ -41,8 +41,8 @@ public:
 
 	void validateData(ContentManager* cm) const;
 
-	static LoadingScreenModel* deserialize(const rapidjson::Value& screensList, const rapidjson::Value& screensMapping);
-	
+	static LoadingScreenModel* deserialize(const JsonValue& screensList, const JsonValue& screensMapping);
+
 protected:
 	// list of available loading screens
 	std::vector<LoadingScreen> screensList;

@@ -3,12 +3,9 @@
 #include "ContentManager.h"
 #include "FileMan.h"
 #include "GameInstance.h"
+#include "Json.h"
+
 #include <cmath>
-#include <rapidjson/document.h>
-#include <rapidjson/error/en.h>
-#include <rapidjson/istreamwrapper.h>
-#include <rapidjson/ostreamwrapper.h>
-#include <rapidjson/writer.h>
 #include <string_theory/string_stream>
 #include <utility>
 
@@ -17,19 +14,13 @@ SavedGameStates g_gameStates;
 
 uint32_t SaveStatesSize()
 {
-	std::stringstream ss;
-	g_gameStates.Serialize(ss);
-
-	std::string data = ss.str();
-	return data.length();
+	auto str = g_gameStates.Serialize().to_std_string();
+	return str.size();
 }
 
 void SaveStatesToSaveGameFile(HWFILE const hFile)
 {
-	std::stringstream ss;
-	g_gameStates.Serialize(ss);
-
-	std::string data = ss.str();
+	std::string data = g_gameStates.Serialize().to_std_string();
 	UINT32      len  = data.length();
 	hFile->write(&len, sizeof(UINT32));
 	hFile->write(data.c_str(), len);
@@ -43,8 +34,7 @@ void LoadStatesFromSaveFile(HWFILE const hFile, SavedGameStates &states)
 	ST::char_buffer buff{len, '\0'};
 	hFile->read(buff.data(), len);
 
-	std::stringstream ss(buff.c_str());
-	states.Deserialize(ss);
+	states.Deserialize(buff);
 }
 
 const ST::string MODS_KEY = "stracciatella:mods";
@@ -71,40 +61,38 @@ void SavedGameStates::Set(const ST::string& key, const char* s)
 }
 
 #define RETURN_PRIMITIVE(v) \
-	if (v.IsString()) return ST::string(v.GetString()); \
-	else if (v.IsBool()) return v.GetBool(); \
-	else if (v.IsInt()) return v.GetInt(); \
-	else if (v.IsFloat()) return v.GetFloat();
+	if (v.isString()) return ST::string(v.toString()); \
+	else if (v.isBool()) return v.toBool(); \
+	else if (v.isInt()) return v.toInt(); \
+	else if (v.isDouble()) return static_cast<float>(v.toDouble());
 
 /**
  * Reads a JSON value into a std::variant without knowing the type beforehand.
  * @param v
  * @return
  */
-static STORABLE_TYPE ReadFromJSON(const rapidjson::Value& v)
+static STORABLE_TYPE DeserializeStorableType(const JsonValue& v)
 {
-	auto readVal = [](const rapidjson::Value& v) -> PRIMITIVE_VALUE {
+	auto readVal = [](const JsonValue& v) -> PRIMITIVE_VALUE {
 		RETURN_PRIMITIVE(v) throw std::runtime_error("not a supported type");
 	};
 
 	RETURN_PRIMITIVE(v)
 
-	if (v.IsArray())
-	{
+	if (v.isVec()) {
 		std::vector<PRIMITIVE_VALUE> vec;
-		for (auto& el : v.GetArray())
+		for (auto& el : v.toVec())
 		{
 			vec.push_back(readVal(el));
 		}
 		return vec;
 	}
-	if (v.IsObject())
-	{
+	if (v.isObject()) {
+		auto obj = v.toObject();
 		std::map<ST::string, PRIMITIVE_VALUE> map;
-		for (auto& el : v.GetObject())
+		for (auto& key : obj.keys())
 		{
-			auto key = ST::string(el.name.GetString());
-			map[key] = readVal(el.value);
+			map[key] = readVal(obj[key.c_str()]);
 		}
 		return map;
 	}
@@ -114,71 +102,59 @@ static STORABLE_TYPE ReadFromJSON(const rapidjson::Value& v)
 
 #undef RETURN_PRIMITIVE
 
-#define WRITE_PRIMITIVE(v, w) \
-	if      (auto *b = std::get_if<bool>(&v))       w.Bool(*b); \
-	else if (auto *i = std::get_if<int32_t>(&v))    w.Int(*i); \
-	else if (auto *s = std::get_if<ST::string>(&v)) w.String(s->c_str()); \
-	else if (auto *f = std::get_if<float>(&v))      w.Double(*f);
+#define RETURN_PRIMITIVE(v) \
+	if      (auto *b = std::get_if<bool>(&v))       return JsonValue(*b); \
+	else if (auto *i = std::get_if<int32_t>(&v))    return JsonValue(*i); \
+	else if (auto *s = std::get_if<ST::string>(&v)) return JsonValue(*s); \
+	else if (auto *f = std::get_if<float>(&v))      return JsonValue(static_cast<double>(*f));
 
-static void WriteToJSON(const STORABLE_TYPE& v, rapidjson::Writer<rapidjson::OStreamWrapper>& w)
+static JsonValue SerializeStorableType(const STORABLE_TYPE& v)
 {
-	auto writeJSON = [&w](const PRIMITIVE_VALUE& v) {
-		WRITE_PRIMITIVE(v, w) else throw std::runtime_error("unsupported type");
+	auto serializePrimitive = [](const PRIMITIVE_VALUE& v) {
+		RETURN_PRIMITIVE(v) else throw std::runtime_error("unsupported type");
 	};
 
-	WRITE_PRIMITIVE(v, w)
+	RETURN_PRIMITIVE(v)
 	else if (auto *vec = std::get_if<std::vector<PRIMITIVE_VALUE>>(&v)) {
-		w.StartArray();
+		JsonArray w;
 		for (auto& el : *vec) {
-			writeJSON(el);
+			w.push(serializePrimitive(el));
 		}
-		w.EndArray();
+		return w.toValue();
 	}
 	else if (auto *map = std::get_if<std::map<ST::string, PRIMITIVE_VALUE>>(&v)) {
-		w.StartObject();
+		JsonObject obj;
 		for (auto& pair : *map) {
-			writeJSON(pair.first);
-			writeJSON(pair.second);
+			obj.set(pair.first.c_str(), serializePrimitive(pair.second));
 		}
-		w.EndObject();
+		return obj.toValue();
 	}
 	else throw std::logic_error("cannot serialize"); // this should never happen
 }
 
 #undef WRITE_PRIMITIVE
 
-void SavedGameStates::Deserialize(std::stringstream& ss)
+void SavedGameStates::Deserialize(const ST::string& s)
 {
-	rapidjson::IStreamWrapper is(ss);
-	rapidjson::Document doc;
-	doc.ParseStream(is);
-	if (doc.HasParseError())
-	{
-		ST::string err = ST::format("Failed to parse JSON from saved game states : {}",
-			rapidjson::GetParseError_En(doc.GetParseError()));
-		throw std::runtime_error(err.to_std_string());
-	}
-
+	auto json = JsonValue::deserialize(s);
 	this->Clear();
-	for (const auto& entry : doc.GetObject())
+	auto obj = json.toObject();
+	for (const auto& key : obj.keys())
 	{
-		ST::string key = entry.name.GetString();
-		STORABLE_TYPE v = ReadFromJSON(entry.value);
+		auto val = obj[key.c_str()];
+		STORABLE_TYPE v = DeserializeStorableType(val);
 		states[key] = v;
 	}
 }
 
-void SavedGameStates::Serialize(std::stringstream& ss)
+ST::string SavedGameStates::Serialize()
 {
-	rapidjson::OStreamWrapper os(ss);
-	rapidjson::Writer<rapidjson::OStreamWrapper> writer(os);
-	writer.StartObject();
+	JsonObject obj;
 	for (const auto& entry : states)
 	{
-		writer.String(entry.first.c_str());
-		WriteToJSON(entry.second, writer);
+		obj.set(entry.first.c_str(), SerializeStorableType(entry.second));
 	}
-	writer.EndObject();
+	return obj.toValue().serialize();
 }
 
 void SavedGameStates::Clear()
@@ -193,22 +169,17 @@ StateTable SavedGameStates::GetAll()
 
 void AddModInfoToGameStates(SavedGameStates &states) {
 	auto mods = GCM->getEnabledMods();
-	std::stringstream ss;
-	rapidjson::OStreamWrapper os(ss);
-	rapidjson::Writer<rapidjson::OStreamWrapper> writer(os);
 
-	writer.StartArray();
-	for (auto i = mods.begin(); i < mods.end(); i++) {
-		writer.StartObject();
-		writer.String("name");
-		writer.String((*i).first.c_str());
-		writer.String("version");
-		writer.String((*i).second.c_str());
-		writer.EndObject();
+	JsonArray arr;
+	for (auto& i : mods) {
+		JsonObject obj;
+		obj.set("name", i.first);
+		obj.set("version", i.second);
+
+		arr.push(obj.toValue());
 	}
-	writer.EndArray();
+	auto result = arr.toValue().serialize();
 
-	ST::string result = ss.str();
 	g_gameStates.Set(MODS_KEY, result);
 }
 
@@ -218,32 +189,13 @@ std::vector<std::pair<ST::string, ST::string>> GetModInfoFromGameStates(const Sa
 		auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: missing `{}` key", MODS_KEY);
 		throw std::runtime_error(errorMsg.c_str());
 	}
-	auto modsJson = states.Get<ST::string>(MODS_KEY);
-	std::stringstream ss(modsJson.c_str());
-	rapidjson::IStreamWrapper is(ss);
-	rapidjson::Document doc;
-	doc.ParseStream(is);
-	if (doc.HasParseError())
-	{
-		auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: {}", rapidjson::GetParseError_En(doc.GetParseError()));
-		throw std::runtime_error(errorMsg.c_str());
-	}
+	auto str = states.Get<ST::string>(MODS_KEY);
+	auto json = JsonValue::deserialize(str);
 
-	if (!doc.IsArray()) {
-		auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: root is not an array");
-		throw std::runtime_error(errorMsg.c_str());
-	}
-
-	auto array = doc.GetArray();
-	for (auto val = array.begin(); val < array.end(); val++) {
-		if (!val->IsObject()) {
-			auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: item is not an object");
-			return mods;
-		}
-
-		auto obj = val->GetObject();
-		ST::string name = obj["name"].GetString();
-		ST::string version = obj["version"].GetString();
+	for (auto& modJson : json.toVec()) {
+		auto obj = modJson.toObject();
+		ST::string name = obj.GetString("name");
+		ST::string version = obj.GetString("version");
 
 		mods.push_back(std::pair<ST::string, ST::string>(name, version));
 	}

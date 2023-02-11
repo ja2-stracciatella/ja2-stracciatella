@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rapidjson/document.h"
+#include "Json.h"
 
 #include <map>
 
@@ -19,7 +19,7 @@ class ItemSystem;
 class DealerInventory
 {
 public:
-	DealerInventory(rapidjson::Document *json, const ItemSystem *itemSystem);
+	DealerInventory(const JsonValue& json, const ItemSystem *itemSystem);
 
 	/**
 	 * Check if item in the inventory.

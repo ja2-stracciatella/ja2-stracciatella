@@ -1,9 +1,9 @@
 #pragma once
 
 #include "JA2Types.h"
+#include "Json.h"
 
 #include <array>
-#include <rapidjson/document.h>
 
 #define NUM_SECTORS 256
 
@@ -15,7 +15,7 @@ public:
 	// returns the ID of the SAM site covering the sector, or -1 if not covered by any
 	int8_t getControllingSamSiteID(uint16_t sectorId) const;
 
-	static SamSiteAirControlModel* deserialize(const rapidjson::Value& obj);
+	static SamSiteAirControlModel* deserialize(const JsonValue& json);
 	static void validateData(const SamSiteAirControlModel* model, int numSamSites);
 
 protected:

@@ -2,7 +2,6 @@
 
 #include <utility>
 
-#include "JsonObject.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
@@ -112,25 +111,25 @@ bool ItemModel::isInBigGunList() const   { return fFlags & ITEM_BIGGUNLIST;     
 
 void ItemModel::serializeFlags(JsonObject &obj) const
 {
-	if(getFlags() & ITEM_DAMAGEABLE)          { obj.AddMember("bDamageable", true);     }
-	if(getFlags() & ITEM_REPAIRABLE)          { obj.AddMember("bRepairable", true);     }
-	if(getFlags() & ITEM_WATER_DAMAGES)       { obj.AddMember("bWaterDamages", true);   }
-	if(getFlags() & ITEM_METAL)               { obj.AddMember("bMetal", true);          }
-	if(getFlags() & ITEM_SINKS)               { obj.AddMember("bSinks", true);          }
-	if(getFlags() & ITEM_SHOW_STATUS)         { obj.AddMember("bShowStatus", true);     }
-	if(getFlags() & ITEM_HIDDEN_ADDON)        { obj.AddMember("bHiddenAddon", true);    }
-	if(getFlags() & ITEM_TWO_HANDED)          { obj.AddMember("bTwoHanded", true);      }
-	if(getFlags() & ITEM_NOT_BUYABLE)         { obj.AddMember("bNotBuyable", true);     }
-	if(getFlags() & ITEM_ATTACHMENT)          { obj.AddMember("bAttachment", true);     }
-	if(getFlags() & ITEM_BIGGUNLIST)          { obj.AddMember("bBigGunList", true);     }
-	if(getFlags() & ITEM_NOT_EDITOR)          { obj.AddMember("bNotEditor", true);      }
-	if(getFlags() & ITEM_DEFAULT_UNDROPPABLE) { obj.AddMember("bDefaultUndroppable", true); }
-	if(getFlags() & ITEM_UNAERODYNAMIC)       { obj.AddMember("bUnaerodynamic", true);  }
-	if(getFlags() & ITEM_ELECTRONIC)          { obj.AddMember("bElectronic", true);     }
-	if(getFlags() & ITEM_INSEPARABLE)         { obj.AddMember("bInseparable", true);    }
+	if(getFlags() & ITEM_DAMAGEABLE)          { obj.set("bDamageable", true);     }
+	if(getFlags() & ITEM_REPAIRABLE)          { obj.set("bRepairable", true);     }
+	if(getFlags() & ITEM_WATER_DAMAGES)       { obj.set("bWaterDamages", true);   }
+	if(getFlags() & ITEM_METAL)               { obj.set("bMetal", true);          }
+	if(getFlags() & ITEM_SINKS)               { obj.set("bSinks", true);          }
+	if(getFlags() & ITEM_SHOW_STATUS)         { obj.set("bShowStatus", true);     }
+	if(getFlags() & ITEM_HIDDEN_ADDON)        { obj.set("bHiddenAddon", true);    }
+	if(getFlags() & ITEM_TWO_HANDED)          { obj.set("bTwoHanded", true);      }
+	if(getFlags() & ITEM_NOT_BUYABLE)         { obj.set("bNotBuyable", true);     }
+	if(getFlags() & ITEM_ATTACHMENT)          { obj.set("bAttachment", true);     }
+	if(getFlags() & ITEM_BIGGUNLIST)          { obj.set("bBigGunList", true);     }
+	if(getFlags() & ITEM_NOT_EDITOR)          { obj.set("bNotEditor", true);      }
+	if(getFlags() & ITEM_DEFAULT_UNDROPPABLE) { obj.set("bDefaultUndroppable", true); }
+	if(getFlags() & ITEM_UNAERODYNAMIC)       { obj.set("bUnaerodynamic", true);  }
+	if(getFlags() & ITEM_ELECTRONIC)          { obj.set("bElectronic", true);     }
+	if(getFlags() & ITEM_INSEPARABLE)         { obj.set("bInseparable", true);    }
 }
 
-uint32_t ItemModel::deserializeFlags(JsonObjectReader &obj) const
+uint32_t ItemModel::deserializeFlags(JsonObject &obj) const
 {
 	uint32_t flags = 0;
 	if(obj.getOptionalBool("bDamageable"))        { flags |= ITEM_DAMAGEABLE;             }
@@ -158,63 +157,62 @@ bool ItemModel::canBeAttached(uint16_t attachment) const
 	return false;
 }
 
-void ItemModel::serializeTo(JsonObject &obj) const
+JsonValue ItemModel::serialize() const
 {
-    obj.AddMember("itemIndex", itemIndex);
-    obj.AddMember("internalName", internalName);
-    obj.AddMember("usItemClass", (uint32_t)getItemClass());
-    obj.AddMember("ubClassIndex", getClassIndex());
-    obj.AddMember("ubCursor",  getCursor());
-    obj.AddMember("inventoryGraphics", inventoryGraphics.serialize(obj.getAllocator()).getValue());
-	obj.AddMember("tileGraphic", tileGraphic.serialize(obj.getAllocator()).getValue());
-    obj.AddMember("ubWeight", getWeight());
-    obj.AddMember("ubPerPocket", getPerPocket());
-    obj.AddMember("usPrice", getPrice());
-    obj.AddMember("ubCoolness", getCoolness());
-    obj.AddMember("bReliability", getReliability());
-    obj.AddMember("bRepairEase", getRepairEase());
+	JsonObject obj;
+    obj.set("itemIndex", itemIndex);
+    obj.set("internalName", internalName);
+    obj.set("usItemClass", (uint32_t)getItemClass());
+    obj.set("ubClassIndex", getClassIndex());
+    obj.set("ubCursor",  getCursor());
+    obj.set("inventoryGraphics", inventoryGraphics.serialize());
+	obj.set("tileGraphic", tileGraphic.serialize());
+    obj.set("ubWeight", getWeight());
+    obj.set("ubPerPocket", getPerPocket());
+    obj.set("usPrice", getPrice());
+    obj.set("ubCoolness", getCoolness());
+    obj.set("bReliability", getReliability());
+    obj.set("bRepairEase", getRepairEase());
 
     serializeFlags(obj);
+
+	return obj.toValue();
 }
 
-ST::string ItemModel::deserializeShortName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings) {
+ST::string ItemModel::deserializeShortName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string shortName = vanillaItemStrings.getShortName(itemIndex);
-	if (obj.getOptionalString("shortName")) {
+	if (obj.getOptionalString("shortName") != ST::null) {
 		shortName = obj.getOptionalString("shortName");
 	}
 	return shortName;
 }
 
-ST::string ItemModel::deserializeName(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings) {
+ST::string ItemModel::deserializeName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string name = vanillaItemStrings.getName(itemIndex);
-	if (obj.getOptionalString("name")) {
+	if (obj.getOptionalString("name") != ST::null) {
 		name = obj.getOptionalString("name");
 	}
 	return name;
 }
 
-ST::string ItemModel::deserializeDescription(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings) {
+ST::string ItemModel::deserializeDescription(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string description = vanillaItemStrings.getDescription(itemIndex);
-	if (obj.getOptionalString("description")) {
+	if (obj.getOptionalString("description") != ST::null) {
 		description = obj.getOptionalString("description");
 	}
 	return description;
 }
 
-const ItemModel* ItemModel::deserialize(JsonObjectReader &obj, const VanillaItemStrings& vanillaItemStrings)
+const ItemModel* ItemModel::deserialize(const JsonValue &json, const VanillaItemStrings& vanillaItemStrings)
 {
+	auto obj = json.toObject();
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");
-	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
-	JsonObjectReader igGreader(igSource);
-	auto inventoryGraphics = InventoryGraphicsModel::deserialize(igGreader);
-
-	const rapidjson::Value& tgSource = obj.GetValue("tileGraphic");
-	JsonObjectReader tgReader(tgSource);
-	auto tileGraphic = TilesetTileIndexModel::deserialize(tgReader);
+	auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);
+	auto tileGraphic = TilesetTileIndexModel::deserialize(obj["tileGraphic"]);
 
 	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
 	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);

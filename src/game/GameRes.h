@@ -4,7 +4,7 @@
 
 #include "Types.h"
 #include "IEncodingCorrector.h"
-#include "stracciatella.h"
+#include "RustInterface.h"
 
 #include "StringEncodingTypes.h"
 

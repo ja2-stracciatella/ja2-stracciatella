@@ -1,12 +1,11 @@
 #include "DealerModel.h"
 #include "Exceptions.h"
-#include "JsonObject.h"
 
 
-DealerModel::DealerModel(UINT8 dealerID_, UINT8 mercID_, ArmsDealerType dealerType_, 
-	FLOAT buyingPrice_, FLOAT sellingPrice_, FLOAT repairSpeed_, FLOAT repairCost_, 
+DealerModel::DealerModel(UINT8 dealerID_, UINT8 mercID_, ArmsDealerType dealerType_,
+	FLOAT buyingPrice_, FLOAT sellingPrice_, FLOAT repairSpeed_, FLOAT repairCost_,
 	INT32 initialCash_, std::bitset<ArmsDealerFlag::NUM_FLAGS> flags_)
-	: dealerID(dealerID_), profileID(mercID_), type(dealerType_), 
+	: dealerID(dealerID_), profileID(mercID_), type(dealerType_),
 		buyingPrice(buyingPrice_), sellingPrice(sellingPrice_), repairSpeed(repairSpeed_), repairCost(repairCost_),
 		initialCash(initialCash_), flags(flags_) {}
 
@@ -26,7 +25,7 @@ BOOLEAN DealerModel::doesRepairs() const
 	return type == ARMS_DEALER_REPAIRS;
 }
 
-ArmsDealerType parseType(const std::string str)
+ArmsDealerType parseType(const ST::string& str)
 {
 	if (str == "BUYS_ONLY") return ArmsDealerType::ARMS_DEALER_BUYS_ONLY;
 	if (str == "SELLS_ONLY") return ArmsDealerType::ARMS_DEALER_SELLS_ONLY;
@@ -36,7 +35,7 @@ ArmsDealerType parseType(const std::string str)
 	throw DataError(ST::format("Unrecognized dealer type: '{}'", str));
 }
 
-ArmsDealerFlag parseFlag(const std::string str)
+ArmsDealerFlag parseFlag(const ST::string& str)
 {
 	if (str == "ONLY_USED_ITEMS") return ArmsDealerFlag::ONLY_USED_ITEMS;
 	if (str == "SOME_USED_ITEMS") return ArmsDealerFlag::SOME_USED_ITEMS;
@@ -48,21 +47,21 @@ ArmsDealerFlag parseFlag(const std::string str)
 	if (str == "SELLS_ALCOHOL") return ArmsDealerFlag::SELLS_ALCOHOL;
 	if (str == "SELLS_FUEL") return ArmsDealerFlag::SELLS_FUEL;
 	if (str == "BUYS_EVERYTHING") return ArmsDealerFlag::BUYS_EVERYTHING;
-	
+
 	throw DataError(ST::format("Unrecognized dealer flag: '{}'", str));
 }
 
-const DealerModel* DealerModel::deserialize(rapidjson::Value& val, const MercSystem* mercSystem, UINT8 dealerIndex)
+const DealerModel* DealerModel::deserialize(const JsonValue& json, const MercSystem* mercSystem, UINT8 dealerIndex)
 {
+	auto obj = json.toObject();
 	std::bitset<ArmsDealerFlag::NUM_FLAGS> flags;
-	auto flagsArray = val["flags"].GetArray();
+	auto flagsArray = obj["flags"].toVec();
 	for (auto& fl : flagsArray)
 	{
-		UINT8 flagIndex = static_cast<UINT8>(parseFlag(fl.GetString()));
+		UINT8 flagIndex = static_cast<UINT8>(parseFlag(fl.toString()));
 		flags.set(flagIndex);
 	}
 
-	JsonObjectReader obj(val);
 	ST::string profile = obj.GetString("profile");
 	auto mercProfile = mercSystem->getMercProfileInfoByName(profile);
 	if (mercProfile == NULL) {
@@ -103,22 +102,22 @@ void DealerModel::validateData(std::vector<const DealerModel*> models, const Mer
 			throw DataError(err.to_std_string());
 		}
 
-		if (dealer->type == ArmsDealerType::ARMS_DEALER_REPAIRS 
+		if (dealer->type == ArmsDealerType::ARMS_DEALER_REPAIRS
 			&& (dealer->repairCost == 0.0 || dealer->repairSpeed == 0.0))
 		{
 			throw DataError(ST::format("Dealer `{}` is a repairman, but repair cost or speed is not set", profile));
 		}
-		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY 
+		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY
 			&& (dealer->buyingPrice == 0.0))
 		{
 			throw DataError(ST::format("Dealer `{}` is a buyer, but buying price is not set", profile));
 		}
-		else if (dealer->type == ArmsDealerType::ARMS_DEALER_SELLS_ONLY 
+		else if (dealer->type == ArmsDealerType::ARMS_DEALER_SELLS_ONLY
 			&& (dealer->sellingPrice == 0.0))
 		{
 			throw DataError(ST::format("Dealer `{}` is a seller, but selling price is not set", profile));
 		}
-		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY 
+		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY
 			&& (dealer->buyingPrice == 0.0 || dealer->sellingPrice == 0.0))
 		{
 			throw DataError(ST::format("Dealer `{}` is a trader, but buying price or selling price is not set", profile));

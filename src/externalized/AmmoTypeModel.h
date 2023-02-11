@@ -1,12 +1,10 @@
 #pragma once
 
+#include "Json.h"
+
 #include <map>
 #include <stdint.h>
 #include <string_theory/string>
-
-
-class JsonObject;
-class JsonObjectReader;
 
 struct AmmoTypeModel
 {
@@ -14,9 +12,9 @@ struct AmmoTypeModel
 
 	virtual ~AmmoTypeModel();
 
-	virtual void serializeTo(JsonObject &obj) const;
+	virtual JsonValue serialize() const;
 
-	static AmmoTypeModel* deserialize(JsonObjectReader &obj);
+	static AmmoTypeModel* deserialize(const JsonValue &json);
 
 	uint16_t index;
 	ST::string internalName;

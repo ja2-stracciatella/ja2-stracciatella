@@ -6,20 +6,21 @@ TilesetTileIndexModel::TilesetTileIndexModel(TileTypeDefines tileType_, uint16_t
 TileTypeDefines deserializeTileTypeDefine(const ST::string& str);
 ST::string serializeTileTypeDefine(TileTypeDefines t);
 
-TilesetTileIndexModel TilesetTileIndexModel::deserialize(JsonObjectReader &obj) {
+TilesetTileIndexModel TilesetTileIndexModel::deserialize(const JsonValue &json) {
+	auto obj = json.toObject();
 	return TilesetTileIndexModel(
 		deserializeTileTypeDefine(obj.GetString("type")),
 		obj.GetUInt("subIndex")
 	);
 }
 
-JsonObject TilesetTileIndexModel::serialize(rapidjson::Document::AllocatorType& allocator) const {
-	JsonObject v(allocator);
+JsonValue TilesetTileIndexModel::serialize() const {
+	JsonObject v;
 
-	v.AddMember("path", serializeTileTypeDefine(tileType));
-	v.AddMember("subIndex", subIndex);
+	v.set("path", serializeTileTypeDefine(tileType));
+	v.set("subIndex", subIndex);
 
-	return v;
+	return v.toValue();
 }
 
 TileTypeDefines deserializeTileTypeDefine(const ST::string& str) {

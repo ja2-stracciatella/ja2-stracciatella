@@ -18,8 +18,9 @@ uint8_t ShippingDestinationModel::getDeliverySector() const
 	return deliverySector.AsByte();
 }
 
-ShippingDestinationModel* ShippingDestinationModel::deserialize(JsonObjectReader& obj)
+ShippingDestinationModel* ShippingDestinationModel::deserialize(const JsonValue& json)
 {
+	auto obj = json.toObject();
 	uint8_t destSectorId = 0, destSectorZ = 0;
 	int16_t destGridNo = 0;
 	bool isPrimary = false;

@@ -3,9 +3,9 @@
 #include "JsonUtility.h"
 #include "Random.h"
 
-UndergroundSectorModel::UndergroundSectorModel(uint8_t sectorId_, uint8_t sectorZ_, uint8_t adjacentSectors_, 
-	std::array<uint8_t, NUM_DIF_LEVELS> numTroops_, std::array<uint8_t, NUM_DIF_LEVELS> numElites_, std::array<uint8_t, NUM_DIF_LEVELS> numCreatures_, 
-	std::array<uint8_t, NUM_DIF_LEVELS> numTroopsVariance_, std::array<uint8_t, NUM_DIF_LEVELS> numElitesVariance_, std::array<uint8_t, NUM_DIF_LEVELS> numCreaturesVariance_) 
+UndergroundSectorModel::UndergroundSectorModel(uint8_t sectorId_, uint8_t sectorZ_, uint8_t adjacentSectors_,
+	std::array<uint8_t, NUM_DIF_LEVELS> numTroops_, std::array<uint8_t, NUM_DIF_LEVELS> numElites_, std::array<uint8_t, NUM_DIF_LEVELS> numCreatures_,
+	std::array<uint8_t, NUM_DIF_LEVELS> numTroopsVariance_, std::array<uint8_t, NUM_DIF_LEVELS> numElitesVariance_, std::array<uint8_t, NUM_DIF_LEVELS> numCreaturesVariance_)
 		: sectorId(sectorId_), sectorZ(sectorZ_), adjacentSectors(adjacentSectors_),
 		numTroops(numTroops_), numElites(numElites_), numCreatures(numCreatures_),
 		numTroopsVariance(numTroopsVariance_), numElitesVariance(numElitesVariance_), numCreaturesVariance(numCreaturesVariance_) {}
@@ -24,10 +24,11 @@ UNDERGROUND_SECTORINFO* UndergroundSectorModel::createUndergroundSectorInfo(uint
 	return u;
 }
 
-UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Value& obj)
+UndergroundSectorModel* UndergroundSectorModel::deserialize(const JsonValue& json)
 {
-	uint8_t sectorId = JsonUtility::parseSectorID(obj["sector"].GetString());
-	uint8_t sectorZ = obj["sectorLevel"].GetUint();
+	auto obj = json.toObject();
+	uint8_t sectorId = JsonUtility::parseSectorID(obj["sector"]);
+	uint8_t sectorZ = obj.GetUInt("sectorLevel");
 	if (sectorZ == 0 || sectorZ > 3)
 	{
 		ST::string err = "Sector level must be between 1 and 3";
@@ -35,12 +36,12 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 	}
 
 	uint8_t adjacencyFlag = NO_ADJACENT_SECTOR;
-	if (obj.HasMember("adjacentSectors") && obj["adjacentSectors"].IsArray())
+	if (obj.has("adjacentSectors"))
 	{
-		auto adjacencies = obj["adjacentSectors"].GetArray();
+		auto adjacencies = obj["adjacentSectors"].toVec();
 		for (auto& el : adjacencies)
 		{
-			ST::string adj = el.GetString();
+			ST::string adj = el.toString();
 			if (adj.size() != 1)
 			{
 				ST::string err = ST::format("'{}' is not a valid adjacency direction.", adj);
@@ -66,15 +67,15 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 			}
 		}
 	}
-	
+
 	return new UndergroundSectorModel(
 		sectorId, sectorZ, adjacencyFlag,
-		JsonUtility::readIntArrayByDiff(obj, "numTroops"),
-		JsonUtility::readIntArrayByDiff(obj, "numElites"),
-		JsonUtility::readIntArrayByDiff(obj, "numCreatures"),
-		JsonUtility::readIntArrayByDiff(obj, "numTroopsVariance"),
-		JsonUtility::readIntArrayByDiff(obj, "numElitesVariance"),
-		JsonUtility::readIntArrayByDiff(obj, "numCreaturesVariance")
+		JsonUtility::readIntArrayByDiff(json, "numTroops"),
+		JsonUtility::readIntArrayByDiff(json, "numElites"),
+		JsonUtility::readIntArrayByDiff(json, "numCreatures"),
+		JsonUtility::readIntArrayByDiff(json, "numTroopsVariance"),
+		JsonUtility::readIntArrayByDiff(json, "numElitesVariance"),
+		JsonUtility::readIntArrayByDiff(json, "numCreaturesVariance")
 	);
 }
 
