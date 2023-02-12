@@ -63,11 +63,9 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 // MACROS
 // Check if new counter < 0        | set to 0 |        Decrement
 
-#define UPDATECOUNTER( c )		( ( giTimerCounters[ c ] - BASETIMESLICE ) < 0 ) ?  ( giTimerCounters[ c ] = 0 ) : ( giTimerCounters[ c ] -= BASETIMESLICE )
 #define RESETCOUNTER( c )		( giTimerCounters[ c ] = giTimerIntervals[ c ] )
 #define COUNTERDONE( c )		( giTimerCounters[ c ] == 0 ) ? TRUE : FALSE
 
-#define UPDATETIMECOUNTER( c )		( ( c - BASETIMESLICE ) < 0 ) ?  ( c = 0 ) : ( c -= BASETIMESLICE )
 #define RESETTIMECOUNTER( c, d )	( c = d )
 
 #ifdef BOUNDS_CHECKER

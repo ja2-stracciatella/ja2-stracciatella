@@ -17,6 +17,8 @@
 UINT32	guiClockTimer = UINT32_MAX;
 UINT32	guiTimerDiag  =  0;
 
+Uint64 last_ticks = 0;
+
 UINT32 guiBaseJA2Clock = 0;
 
 static BOOLEAN gfPauseClock = FALSE;
@@ -71,23 +73,30 @@ extern UINT32 guiFlashCursorBaseTime;
 extern UINT32 guiPotCharPathBaseTime;
 
 
+#define UPDATECOUNTER( c, n )		( ( giTimerCounters[ c ] - n ) < 0 ) ?  ( giTimerCounters[ c ] = 0 ) : ( giTimerCounters[ c ] -= n )
+#define UPDATETIMECOUNTER( c, n )		( ( c - n ) < 0 ) ?  ( c = 0 ) : ( c -= n )
+
 static UINT32 TimeProc(UINT32 const interval, void*)
 {
+	Uint64 new_last_ticks = SDL_GetTicks64();
+	Sint64 elapsed = new_last_ticks - last_ticks;
+	last_ticks = new_last_ticks;
+
 	if (!gfPauseClock)
 	{
-		guiBaseJA2Clock += BASETIMESLICE;
+		guiBaseJA2Clock += elapsed;
 
 		for (UINT32 i = 0; i != NUMTIMERS; i++)
 		{
-			UPDATECOUNTER(i);
+			UPDATECOUNTER(i, elapsed);
 		}
 
 		// Update some specialized countdown timers...
-		UPDATETIMECOUNTER(giTimerTeamTurnUpdate);
+		UPDATETIMECOUNTER(giTimerTeamTurnUpdate, elapsed);
 
 		if (gpCustomizableTimerCallback)
 		{
-			UPDATETIMECOUNTER(giTimerCustomizable);
+			UPDATETIMECOUNTER(giTimerCustomizable, elapsed);
 		}
 
 #ifndef BOUNDS_CHECKER
@@ -96,8 +105,8 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 			// IN Mapscreen, loop through player's team
 			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
-				UPDATETIMECOUNTER(s->PortraitFlashCounter);
-				UPDATETIMECOUNTER(s->PanelAnimateCounter);
+				UPDATETIMECOUNTER(s->PortraitFlashCounter, elapsed);
+				UPDATETIMECOUNTER(s->PanelAnimateCounter, elapsed);
 			}
 		}
 		else
@@ -106,14 +115,14 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 			FOR_EACH_MERC(i)
 			{
 				SOLDIERTYPE* const s = *i;
-				UPDATETIMECOUNTER(s->UpdateCounter);
-				UPDATETIMECOUNTER(s->DamageCounter);
-				UPDATETIMECOUNTER(s->BlinkSelCounter);
-				UPDATETIMECOUNTER(s->PortraitFlashCounter);
-				UPDATETIMECOUNTER(s->AICounter);
-				UPDATETIMECOUNTER(s->FadeCounter);
-				UPDATETIMECOUNTER(s->NextTileCounter);
-				UPDATETIMECOUNTER(s->PanelAnimateCounter);
+				UPDATETIMECOUNTER(s->UpdateCounter, elapsed);
+				UPDATETIMECOUNTER(s->DamageCounter, elapsed);
+				UPDATETIMECOUNTER(s->BlinkSelCounter, elapsed);
+				UPDATETIMECOUNTER(s->PortraitFlashCounter, elapsed);
+				UPDATETIMECOUNTER(s->AICounter, elapsed);
+				UPDATETIMECOUNTER(s->FadeCounter, elapsed);
+				UPDATETIMECOUNTER(s->NextTileCounter, elapsed);
+				UPDATETIMECOUNTER(s->PanelAnimateCounter, elapsed);
 			}
 		}
 #endif
@@ -126,6 +135,8 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 void InitializeJA2Clock(void)
 {
 	SDL_InitSubSystem(SDL_INIT_TIMER);
+
+	last_ticks = SDL_GetTicks64();
 
 	// Init timer delays
 	for (INT32 i = 0; i != NUMTIMERS; ++i)
