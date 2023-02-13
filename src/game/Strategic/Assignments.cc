@@ -79,7 +79,6 @@
 #include <iterator>
 #include <string_theory/format>
 #include <string_theory/string>
-struct PopUpBox;
 
 
 // various reason an assignment can be aborted before completion
@@ -3955,7 +3954,7 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 		INT32  const  w    = area.w;
 		INT32  const  h    = GetLineSpace(ghRemoveMercAssignBox) + GetFontHeight(GetBoxFont(ghRemoveMercAssignBox));
 
-		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghRemoveMercAssignBox); ++i)
+		for (INT32 i = 0; i != MAX_REMOVE_MERC_COUNT; ++i)
 		{
 			// add mouse region for each line of text..and set user data
 			MOUSE_REGION* const r = &gRemoveMercAssignRegion[i];
@@ -3970,9 +3969,9 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 	}
 	else if (fCreated && !fShowAssignmentMenu && !fShowContractMenu)
 	{
-		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghRemoveMercAssignBox); ++i)
+		for (auto & region : gRemoveMercAssignRegion)
 		{
-			MSYS_RemoveRegion(&gRemoveMercAssignRegion[i]);
+			MSYS_RemoveRegion(&region);
 		}
 
 		fShownContractMenu = FALSE;
@@ -4114,12 +4113,9 @@ static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
-	INT32 iValue = -1;
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
-
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
+		INT32 const iValue = MSYS_GetRegionUserData(pRegion, 0);
 		// highlight string
 
 		// get the string line handle
@@ -4204,17 +4200,9 @@ static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for contract region
-	INT32 iValue = -1;
-	SOLDIERTYPE * pSoldier = NULL;
-
-
-	pSoldier = gAssignmentTargetSoldier;
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
-
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		switch( iValue )
+		switch (MSYS_GetRegionUserData(pRegion, 0))
 		{
 			case REMOVE_MERC_CANCEL:
 				// stop showing menus
@@ -4238,8 +4226,12 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 				break;
 			case( REMOVE_MERC ):
+				auto * const deadMerc{ gCharactersList[bSelectedInfoChar].merc };
+				if (deadMerc)
+				{
+					StrategicRemoveMerc(*deadMerc);
+				}
 				bSelectedInfoChar = -1;
-				StrategicRemoveMerc(*pSoldier);
 
 				// dirty region
 				fCharacterInfoPanelDirty = TRUE;
