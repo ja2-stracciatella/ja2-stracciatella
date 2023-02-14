@@ -581,7 +581,7 @@ bool DefaultContentManager::loadMusic()
 	return true;
 }
 
-bool DefaultContentManager::readWeaponTable(
+void DefaultContentManager::readWeaponTable(
 	const ST::string& fileName,
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
 {
@@ -590,16 +590,13 @@ bool DefaultContentManager::readWeaponTable(
 	size_t i = 0;
 	for (auto &element : document.toVec()) {
 		std::vector<ST::string> weaponNames;
-		if(JsonUtility::parseListStrings(element, weaponNames))
+		JsonUtility::parseListStrings(element, weaponNames);
+		for (const ST::string &weapon : weaponNames)
 		{
-			for (const ST::string &weapon : weaponNames)
-			{
-				weaponTable[i].push_back(getWeaponByName(weapon));
-			}
+			weaponTable[i].push_back(getWeaponByName(weapon));
 		}
+		++i;
 	}
-
-	return true;
 }
 
 const std::vector<std::vector<const WeaponModel*> > & DefaultContentManager::getNormalGunChoice() const
