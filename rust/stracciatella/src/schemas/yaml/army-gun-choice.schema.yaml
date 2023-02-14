@@ -11,6 +11,7 @@ items:
   title: Gun choices
   description: Which guns the army will use. The array goes from lowest to highest
     gun level.
+  minItems: 1
   items:
     description: A gun to use.
     $ref: types/id.schema.yaml

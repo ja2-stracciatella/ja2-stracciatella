@@ -261,7 +261,7 @@ protected:
 	bool loadAllDealersAndInventory();
 	void loadStringRes(const ST::string& name, std::vector<ST::string> &strings) const;
 
-	bool readWeaponTable(
+	void readWeaponTable(
 		const ST::string& fileName,
 		std::vector<std::vector<const WeaponModel*> > & weaponTable);
 
