@@ -605,7 +605,7 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 	UINT8 const bTownId = GetTownIdForSector(pSoldier->sSector);
 
 	// is the merc currently in their home town?
-	if( bTownId == gMercProfiles[ pSoldier->ubProfile ].bTown )
+	if (bTownId != BLANK_SECTOR && bTownId == gMercProfiles[ pSoldier->ubProfile ].bTown)
 	{
 		// yep, value of loyalty bonus depends on his importance to this to town
 		uiLoyaltyValue = MULTIPLIER_LOCAL_RPC_HIRED * gMercProfiles[ pSoldier->ubProfile ].bTownAttachment;
