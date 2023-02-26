@@ -112,7 +112,7 @@ void BuildSectorsWithSoldiersList( void );
 void InitSectorsWithSoldiersList( void );
 
 // is there a soldier in this sector?..only use after BuildSectorsWithSoldiersList is called
-BOOLEAN IsThereASoldierInThisSector(const SGPSector& sSector);
+bool IsThereASoldierInThisSector(const SGPSector& sSector);
 
 void CheckIfSoldierUnassigned( SOLDIERTYPE *pSoldier );
 

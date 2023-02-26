@@ -76,6 +76,7 @@
 #include "VObject.h"
 #include "VSurface.h"
 #include <algorithm>
+#include <bitset>
 #include <iterator>
 #include <string_theory/format>
 #include <string_theory/string>
@@ -238,16 +239,17 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 */
 
 // a list of which sectors have characters
-static BOOLEAN fSectorsWithSoldiers[MAP_WORLD_X * MAP_WORLD_Y][4];
+static std::bitset<MAP_WORLD_X * MAP_WORLD_Y * 4> fSectorsWithSoldiers;
+static std::size_t SectorsWithSoldiersPos(SGPSector const& sector)
+{
+	return sector.AsStrategicIndex() * 4 + sector.z;
+}
 static const SGPSector gunRange(GUN_RANGE_X, GUN_RANGE_Y, GUN_RANGE_Z);
 
 void InitSectorsWithSoldiersList( void )
 {
 	// init list of sectors
-	for (auto& i : fSectorsWithSoldiers)
-	{
-		std::fill(std::begin(i), std::end(i), 0);
-	}
+	fSectorsWithSoldiers.reset();
 }
 
 
@@ -256,7 +258,7 @@ void BuildSectorsWithSoldiersList( void )
 	// fills array with pressence of player controlled characters
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
-		fSectorsWithSoldiers[s->sSector.AsStrategicIndex()][s->sSector.z] = TRUE;
+		fSectorsWithSoldiers.set(SectorsWithSoldiersPos(s->sSector));
 	}
 }
 
@@ -935,7 +937,7 @@ void UpdateAssignments()
 			for (sector.z = 0; sector.z < 4; sector.z++)
 			{
 				// is there anyone in this sector?
-				if (fSectorsWithSoldiers[sector.AsStrategicIndex()][sector.z])
+				if (IsThereASoldierInThisSector(sector))
 				{
 					// handle any doctors
 					HandleDoctorsInSector(sector);
@@ -1481,7 +1483,7 @@ static void HealHospitalPatient(SOLDIERTYPE* pPatient, UINT16 usHealingPtsLeft);
 static void CheckForAndHandleHospitalPatients(void)
 {
 	static const SGPSector hospital(HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y);
-	if (!fSectorsWithSoldiers[hospital.AsStrategicIndex()][0])
+	if (!IsThereASoldierInThisSector(hospital))
 	{
 		// nobody in the hospital sector... leave
 		return;
@@ -6159,9 +6161,9 @@ BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN IsThereASoldierInThisSector(const SGPSector& sSector)
+bool IsThereASoldierInThisSector(const SGPSector& sSector)
 {
-	return fSectorsWithSoldiers[sSector.AsByte()][sSector.z];
+	return fSectorsWithSoldiers.test(SectorsWithSoldiersPos(sSector));
 }
 
 
