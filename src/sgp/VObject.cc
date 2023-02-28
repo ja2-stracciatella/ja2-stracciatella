@@ -30,11 +30,15 @@
 static SGPVObject* gpVObjectHead = 0;
 
 
-SGPVObject::SGPVObject(SGPImage const* const img) :
+SGPVObject::SGPVObject(SGPImage * const img) :
 	flags_(),
 	palette16_(),
+	pix_data_{ img->pImageData.moveToUnique() },
+	etrle_object_{ img->pETRLEObject.moveToUnique() },
 	current_shade_(),
 	ppZStripInfo(),
+	subregion_count_{ img->usNumberOfObjects },
+	bit_depth_{ img->ubBitDepth },
 	next_(gpVObjectHead)
 {
 	std::fill(std::begin(pShades), std::end(pShades), nullptr);
@@ -44,25 +48,13 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 		throw std::runtime_error("Image for video object creation must be TRLE compressed");
 	}
 
-	ETRLEData TempETRLEData;
-	GetETRLEImageData(img, &TempETRLEData);
-
-	subregion_count_ = TempETRLEData.usNumberOfObjects;
-	etrle_object_    = TempETRLEData.pETRLEObject;
-	pix_data_        = static_cast<UINT8*>(TempETRLEData.pPixData);
-	pix_data_size_   = TempETRLEData.uiSizePixData;
-	bit_depth_       = img->ubBitDepth;
-
 	if (img->ubBitDepth == 8)
 	{
-		// create palette
-		const SGPPaletteEntry* const src_pal = img->pPalette;
-		Assert(src_pal != NULL);
+		// move palette data over
+		palette_ = img->pPalette.moveToUnique();
+		Assert(palette_);
 
-		SGPPaletteEntry* const pal = palette_.Allocate(256);
-		memcpy(pal, src_pal, sizeof(*pal) * 256);
-
-		palette16_     = Create16BPPPalette(pal);
+		palette16_     = Create16BPPPalette(palette_.get());
 		current_shade_ = palette16_;
 	}
 
@@ -80,9 +72,6 @@ SGPVObject::~SGPVObject()
 	}
 
 	DestroyPalettes();
-
-	if (pix_data_)     delete[] pix_data_;
-	if (etrle_object_) delete[] etrle_object_;
 
 	if (ppZStripInfo != NULL)
 	{
