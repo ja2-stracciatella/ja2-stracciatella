@@ -61,8 +61,6 @@
 #include <algorithm>
 #include <iterator>
 
-#define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-
 
 static const BOOLEAN gbShowEnemies = FALSE; // XXX seems to be a debug switch
 
@@ -626,6 +624,7 @@ static bool IsSoldierValidForSightings(SOLDIERTYPE const& s)
 	extern INT32 iHelicopterVehicleId; 	// I don't want to include a map screen header file for this
 	return !(!s.bActive
 	      || !s.bInSector
+	      || s.sGridNo == NOWHERE
 	      || s.uiStatusFlags & SOLDIER_DEAD
 	      || s.bLife <= 0 // should be redundant, but who knows?
 	      || (s.bAssignment == VEHICLE && s.iVehicleId == iHelicopterVehicleId));
@@ -635,12 +634,6 @@ static bool IsSoldierValidForSightings(SOLDIERTYPE const& s)
 void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 {
 	if (!IsSoldierValidForSightings(s)) return;
-
-	if (s.sGridNo == NOWHERE)
-	{
-		SLOGE("HandleSight: {} ({}) is NOWHERE", s.ubID, s.name);
-		return;
-	}
 
 	gubSightFlags = sight_flags;
 
@@ -711,10 +704,8 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 		{
 			// update our team's public knowledge
 			RadioSightings(&s, EVERYBODY, s.bTeam);
-
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
+			// Our team cooperates with the militia
 			RadioSightings(&s, EVERYBODY, MILITIA_TEAM);
-#endif
 
 			// If it's our local player's merc, revealing roofs and looking for items
 			// is handled here, too
@@ -835,7 +826,6 @@ static bool TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponent
 			return false; // that's all I need to know, get out of here
 	}
 
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 	if ( bIteration == 0 )
 	{
 		if (ubTeam == OUR_TEAM && IsTeamActive(MILITIA_TEAM))
@@ -849,7 +839,6 @@ static bool TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponent
 			return TeamNoLongerSeesMan(OUR_TEAM, pOpponent, exclude, 1);
 		}
 	}
-#endif
 
 	// none of my friends is currently seeing the guy, so return success
 	return true;
@@ -1049,11 +1038,7 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 {
 	pSoldier->fMuzzleFlash = FALSE;
 
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-	if ( pSoldier->bTeam != OUR_TEAM && pSoldier->bTeam != MILITIA_TEAM )
-#else
-	if ( pSoldier->bTeam != OUR_TEAM )
-#endif
+	if (!IsOnOurOrMilitiaTeam(*pSoldier))
 	{
 		pSoldier->bVisible = 0; // indeterminate state
 	}
@@ -1073,11 +1058,7 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 								&(gbPublicOpplist[pOtherSoldier->bTeam][pSoldier->ubID]));
 				}
 				// else this person is still seen, if the looker is on our side or the militia the person should stay visible
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-				else if ( pOtherSoldier->bTeam == OUR_TEAM || pOtherSoldier->bTeam == MILITIA_TEAM )
-#else
-				else if ( pOtherSoldier->bTeam == OUR_TEAM )
-#endif
+				else if (IsOnOurOrMilitiaTeam(*pOtherSoldier))
 				{
 					pSoldier->bVisible = TRUE; // yes, still seen
 				}
@@ -1326,11 +1307,7 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 			*pbPublOL = SEEN_THIS_TURN;
 
 			// ATE: Set visiblity to 0
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-			if ( (pSoldier->bTeam == OUR_TEAM || pSoldier->bTeam == MILITIA_TEAM) && !(pOpponent->bTeam == OUR_TEAM || pOpponent->bTeam == MILITIA_TEAM ) )
-#else
-			if ( pSoldier->bTeam == OUR_TEAM && pOpponent->bTeam != OUR_TEAM )
-#endif
+			if (IsOnOurOrMilitiaTeam(*pSoldier) && !IsOnOurOrMilitiaTeam(*pOpponent))
 			{
 				pOpponent->bVisible = 0;
 			}
@@ -1901,11 +1878,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 
 	// if looker is on local team, and the enemy was invisible or "maybe"
 	// visible just prior to this
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-	if ((IsOnOurTeam(s) || s.bTeam == MILITIA_TEAM) && opponent.bVisible <= 0)
-#else
-	if (IsOnOurTeam(s) && opponent.bVisible <= 0)
-#endif
+	if (IsOnOurOrMilitiaTeam(s) && opponent.bVisible <= 0)
 	{
 		// If opponent was truly invisible, not just turned off temporarily (FALSE)
 		// then locate to him and set his locator flag
@@ -1973,13 +1946,8 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 	INT8 bOldOppList;
 
 	// if the guy we're looking for is NOT on our team AND is currently visible
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-	if ((pOpponent->bTeam != OUR_TEAM && pOpponent->bTeam != MILITIA_TEAM) &&
+	if (!IsOnOurOrMilitiaTeam(*pOpponent) &&
 		(pOpponent->bVisible >= 0 && pOpponent->bVisible < 2) && pOpponent->bLife)
-#else
-	if ((pOpponent->bTeam != OUR_TEAM) && (pOpponent->bVisible >= 0 &&
-		pOpponent->bVisible < 2) && pOpponent->bLife)
-#endif
 	{
 		// assume he's no longer visible, until one of our mercs sees him again
 		pOpponent->bVisible = 0;
@@ -2304,10 +2272,7 @@ void BetweenTurnsVisibilityAdjustments()
 	{
 		SOLDIERTYPE& s = *i;
 		if (!IsSoldierValidForSightings(s)) continue;
-		if (IsOnOurTeam(s))          continue;
-#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-		if (s.bTeam == MILITIA_TEAM) continue;
-#endif
+		if (IsOnOurOrMilitiaTeam(s))        continue;
 		// Check if anyone on our team currently sees him (exclude NOBODY)
 		if (!TeamNoLongerSeesMan(OUR_TEAM, &s, 0, 0)) continue;
 		// then our team has lost sight of him
@@ -2800,7 +2765,7 @@ void DebugSoldierPage2()
 
 		ST::string opp_header;
 		INT8    const* opp_list = s->bOppList;
-		if (s->bTeam == OUR_TEAM || s->bTeam == MILITIA_TEAM)	// look at 8 to 15 opplist entries
+		if (IsOnOurOrMilitiaTeam(*s)) // look at 8 to 15 opplist entries
 		{
 			opp_header = "Opplist B:";
 			opp_list += 20;
