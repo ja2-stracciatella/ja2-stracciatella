@@ -123,6 +123,11 @@ static inline bool IsOnOurTeam(SOLDIERTYPE const& s)
 	return s.bTeam == OUR_TEAM;
 }
 
+constexpr bool IsOnOurOrMilitiaTeam(SOLDIERTYPE const& s)
+{
+	return s.bTeam == OUR_TEAM || s.bTeam == MILITIA_TEAM;
+}
+
 extern SOLDIERTYPE* g_selected_man;
 
 extern const char* const gzActionStr[];
