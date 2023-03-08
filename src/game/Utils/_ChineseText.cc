@@ -2734,10 +2734,10 @@ static const ST::string s_cn_zSaveLoadText[zSaveLoadText_SIZE] =
 	"存档的游戏版本不同于当前的游戏版本, 读取它游戏很可能可以正常进行.",
 	"您确定要删除名为 \"%s\" 的存档吗？",
 
-	"注意:"
+	"注意:",
 	"尝试载入旧版本的存档. 存档将会被自动更新.",
 	"您启用了不同的模组, 而不是保存游戏时使用的模组. 模组可能无法正常工作.",
-	"要继续吗?"
+	"要继续吗?",
 
 	"您确认要覆盖名为 \"%s\" 的存档吗?",
 
@@ -3314,7 +3314,7 @@ static const ST::string s_cn_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	"%疯狂了!",
+	"%s疯狂了!",
 
 	//27-28
 	//Messages why a player can't time compress.
