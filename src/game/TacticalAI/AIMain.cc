@@ -1346,10 +1346,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			else
 			{
 				RESETTIMECOUNTER( pSoldier->AICounter, pSoldier->usActionData );
-				if (pSoldier->ubProfile != NO_PROFILE)
-				{
-					SLOGD("{} waiting {} from {}", pSoldier->name, pSoldier->AICounter, GetJA2Clock());
-				}
 			}
 			ActionDone( pSoldier );
 			break;

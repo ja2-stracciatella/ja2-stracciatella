@@ -1,12 +1,13 @@
 #ifndef __TIMER_CONTROL_H
 #define __TIMER_CONTROL_H
 
-#include "Types.h"
+#include "JA2Types.h"
+#include <array>
 
 typedef void (*CUSTOMIZABLE_TIMER_CALLBACK) ( void );
 
 // TIMER DEFINES
-enum
+enum PredefinedCounters
 {
 	TOVERHEAD = 0,			// Overhead time slice
 	NEXTSCROLL,			// Scroll Speed timer
@@ -29,22 +30,12 @@ enum
 	INVALID_AP_HOLD,		// TIME TO HOLD INVALID AP
 	RADAR_MAP_BLINK,		// BLINK DELAY FOR RADAR MAP
 	MUSICOVERHEAD,			// MUSIC TIMER
+	TEAMTURNUPDATE,
 	NUMTIMERS
 };
 
-// Base resultion of callback timer
-#define BASETIMESLICE 10
-
-extern const INT32 giTimerIntervals[NUMTIMERS];
-extern INT32       giTimerCounters[NUMTIMERS];
-
 // GLOBAL SYNC TEMP TIME
-extern UINT32 guiClockTimer;
-
 extern UINT32 guiTimerDiag;
-
-extern INT32 giTimerTeamTurnUpdate;
-
 
 void InitializeJA2Clock(void);
 void ShutdownJA2Clock(void);
@@ -60,24 +51,13 @@ void CheckCustomizableTimer( void );
 extern UINT32	guiBaseJA2Clock;
 extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 
-// MACROS
-// Check if new counter < 0        | set to 0 |        Decrement
-
-#define UPDATECOUNTER( c )		( ( giTimerCounters[ c ] - BASETIMESLICE ) < 0 ) ?  ( giTimerCounters[ c ] = 0 ) : ( giTimerCounters[ c ] -= BASETIMESLICE )
-#define RESETCOUNTER( c )		( giTimerCounters[ c ] = giTimerIntervals[ c ] )
-#define COUNTERDONE( c )		( giTimerCounters[ c ] == 0 ) ? TRUE : FALSE
-
-#define UPDATETIMECOUNTER( c )		( ( c - BASETIMESLICE ) < 0 ) ?  ( c = 0 ) : ( c -= BASETIMESLICE )
-#define RESETTIMECOUNTER( c, d )	( c = d )
-
-#ifdef BOUNDS_CHECKER
-	#define TIMECOUNTERDONE(c, d) true
-#else
-	#define TIMECOUNTERDONE(c, d) (c == 0)
-#endif
+void RESETCOUNTER(PredefinedCounters);
+bool COUNTERDONE(PredefinedCounters);
+void RESETTIMECOUNTER(TIMECOUNTER &, unsigned int millis);
+bool TIMECOUNTERDONE(TIMECOUNTER, [[maybe_unused]] int = 0);
+constexpr void ZEROTIMECOUNTER(TIMECOUNTER & tc) { tc = {}; }
 
 #define SYNCTIMECOUNTER()		(void)0
-#define ZEROTIMECOUNTER( c )		( c = 0 )
 
 // whenever guiBaseJA2Clock changes, we must reset all the timer variables that
 // use it as a reference

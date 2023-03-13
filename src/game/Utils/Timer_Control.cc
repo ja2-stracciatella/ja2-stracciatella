@@ -11,46 +11,46 @@
 #include "WorldDef.h"
 
 #include <SDL.h>
+#include <chrono>
 #include <stdexcept>
+#include <utility>
+using namespace std::chrono_literals;
 
 
-UINT32	guiClockTimer = UINT32_MAX;
 UINT32	guiTimerDiag  =  0;
 
 UINT32 guiBaseJA2Clock = 0;
 
 static BOOLEAN gfPauseClock = FALSE;
 
-const INT32 giTimerIntervals[NUMTIMERS] =
+std::array<std::chrono::milliseconds, NUMTIMERS> const giTimerIntervals
 {
-	5, // Tactical Overhead
-	20, // NEXTSCROLL
-	200, // Start Scroll
-	200, // Animate tiles
-	1000, // FPS Counter
-	80, // PATH FIND COUNTER
-	150, // CURSOR TIMER
-	300, // RIGHT CLICK FOR MENU
-	300, // LEFT
-	300, // MIDDLE
-	200, // TARGET REFINE TIMER
-	150, // CURSOR/AP FLASH
-	20, // PHYSICS UPDATE
-	100, // FADE ENEMYS
-	20, // STRATEGIC OVERHEAD
-	40, // CYCLE TIME RENDER ITEM COLOR
-	500, // NON GUN TARGET REFINE TIMER
-	250, // IMPROVED CURSOR FLASH
-	500, // 2nd CURSOR FLASH
-	400, // RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
-	10  // Music Overhead
+	5ms, // Tactical Overhead
+	20ms, // NEXTSCROLL
+	200ms, // Start Scroll
+	200ms, // Animate tiles
+	1000ms, // FPS Counter
+	80ms, // PATH FIND COUNTER
+	150ms, // CURSOR TIMER
+	300ms, // RIGHT CLICK FOR MENU
+	300ms, // LEFT
+	300ms, // MIDDLE
+	200ms, // TARGET REFINE TIMER
+	150ms, // CURSOR/AP FLASH
+	20ms, // PHYSICS UPDATE
+	100ms, // FADE ENEMYS
+	20ms, // STRATEGIC OVERHEAD
+	40ms, // CYCLE TIME RENDER ITEM COLOR
+	500ms, // NON GUN TARGET REFINE TIMER
+	250ms, // IMPROVED CURSOR FLASH
+	500ms, // 2nd CURSOR FLASH
+	400ms, // RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
+	10ms,  // Music Overhead
+	100ms  // Team turn 
 };
 
-// TIMER COUNTERS
-INT32 giTimerCounters[NUMTIMERS];
-
-INT32 giTimerCustomizable       = 0;
-INT32 giTimerTeamTurnUpdate     = 0;
+static std::array<TIMECOUNTER, NUMTIMERS> giTimerCounters;
+TIMECOUNTER giTimerCustomizable;
 
 CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = 0;
 
@@ -73,52 +73,17 @@ extern UINT32 guiPotCharPathBaseTime;
 
 static UINT32 TimeProc(UINT32 const interval, void*)
 {
+	static TIMECOUNTER lastUpdate;
+
+	auto const now{ std::chrono::steady_clock::now() };
+
 	if (!gfPauseClock)
 	{
-		guiBaseJA2Clock += BASETIMESLICE;
-
-		for (UINT32 i = 0; i != NUMTIMERS; i++)
-		{
-			UPDATECOUNTER(i);
-		}
-
-		// Update some specialized countdown timers...
-		UPDATETIMECOUNTER(giTimerTeamTurnUpdate);
-
-		if (gpCustomizableTimerCallback)
-		{
-			UPDATETIMECOUNTER(giTimerCustomizable);
-		}
-
-#ifndef BOUNDS_CHECKER
-		if (fInMapMode)
-		{
-			// IN Mapscreen, loop through player's team
-			FOR_EACH_IN_TEAM(s, OUR_TEAM)
-			{
-				UPDATETIMECOUNTER(s->PortraitFlashCounter);
-				UPDATETIMECOUNTER(s->PanelAnimateCounter);
-			}
-		}
-		else
-		{
-			// Set update flags for soldiers
-			FOR_EACH_MERC(i)
-			{
-				SOLDIERTYPE* const s = *i;
-				UPDATETIMECOUNTER(s->UpdateCounter);
-				UPDATETIMECOUNTER(s->DamageCounter);
-				UPDATETIMECOUNTER(s->BlinkSelCounter);
-				UPDATETIMECOUNTER(s->PortraitFlashCounter);
-				UPDATETIMECOUNTER(s->AICounter);
-				UPDATETIMECOUNTER(s->FadeCounter);
-				UPDATETIMECOUNTER(s->NextTileCounter);
-				UPDATETIMECOUNTER(s->PanelAnimateCounter);
-			}
-		}
-#endif
+		auto const timeDiff = now - lastUpdate;
+		guiBaseJA2Clock += std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count();
 	}
 
+	lastUpdate = now;
 	return interval;
 }
 
@@ -130,7 +95,7 @@ void InitializeJA2Clock(void)
 	// Init timer delays
 	for (INT32 i = 0; i != NUMTIMERS; ++i)
 	{
-		giTimerCounters[i] = giTimerIntervals[i];
+		RESETCOUNTER(static_cast<PredefinedCounters>(i));
 	}
 
 	INT32 msPerTimeSlice = gamepolicy(ms_per_time_slice);
@@ -175,9 +140,7 @@ void CheckCustomizableTimer(void)
 	/* Set the callback to a temp variable so we can reset the global variable
 	 * before calling the callback, so that if the callback sets up another
 	 * instance of the timer, we don't reset it afterwards. */
-	CUSTOMIZABLE_TIMER_CALLBACK const callback = gpCustomizableTimerCallback;
-	gpCustomizableTimerCallback = 0;
-	callback();
+	std::exchange(gpCustomizableTimerCallback, nullptr)();
 }
 
 
@@ -197,4 +160,24 @@ void ResetJA2ClockGlobalTimers(void)
 	guiFlashContractBaseTime        = now;
 	guiFlashCursorBaseTime          = now;
 	guiPotCharPathBaseTime          = now;
+}
+
+void RESETCOUNTER(PredefinedCounters const pc)
+{
+	giTimerCounters[pc] = std::chrono::steady_clock::now() + giTimerIntervals[pc];
+}
+
+bool COUNTERDONE(PredefinedCounters const pc)
+{
+	return std::chrono::steady_clock::now() >= giTimerCounters[pc];
+}
+
+void RESETTIMECOUNTER(TIMECOUNTER & tc, unsigned int millis)
+{
+	tc = std::chrono::steady_clock::now() + std::chrono::milliseconds{millis};
+}
+
+bool TIMECOUNTERDONE(TIMECOUNTER tc, [[maybe_unused]] int)
+{
+	return std::chrono::steady_clock::now() >= tc;
 }

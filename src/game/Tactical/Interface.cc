@@ -1883,9 +1883,9 @@ void HandleTopMessages(void)
 		case MILITIA_INTERRUPT_MESSAGE:
 		case AIR_RAID_TURN_MESSAGE:
 			// OK, update timer.....
-			if (TIMECOUNTERDONE(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS))
+			if (COUNTERDONE(TEAMTURNUPDATE))
 			{
-				RESETTIMECOUNTER(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS);
+				RESETCOUNTER(TEAMTURNUPDATE);
 
 				// Update counter....
 				if (ts->usTactialTurnLimitCounter < ts->usTactialTurnLimitMax)
@@ -1912,9 +1912,9 @@ void HandleTopMessages(void)
 			{
 				ts->uiTactialTurnLimitClock = 0;
 
-				if (TIMECOUNTERDONE(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS))
+				if (COUNTERDONE(TEAMTURNUPDATE))
 				{
-					RESETTIMECOUNTER(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS);
+					RESETCOUNTER(TEAMTURNUPDATE);
 
 					if (ts->fTactialTurnLimitStartedBeep)
 					{
@@ -2056,8 +2056,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 	gTacticalStatus.fTactialTurnLimitStartedBeep = FALSE;
 
 	// RESET COIUNTER...
-	RESETTIMECOUNTER( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS );
-
+	RESETCOUNTER(TEAMTURNUPDATE);
 
 	// OK, set value
 	AddTopMessage(fInterrupt != TRUE ? PLAYER_TURN_MESSAGE : PLAYER_INTERRUPT_MESSAGE);
