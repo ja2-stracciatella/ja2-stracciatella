@@ -170,7 +170,7 @@ static void SurrenderMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 		EndCaptureSequence( );
 
 		gfSurrendered = TRUE;
-		SetCustomizableTimerCallbackAndDelay( 3000, CaptureTimerCallback, FALSE );
+		SetCustomizableTimerCallbackAndDelay(3s, CaptureTimerCallback, false);
 
 		ActionDone( gCivQuoteData.pCiv );
 	}

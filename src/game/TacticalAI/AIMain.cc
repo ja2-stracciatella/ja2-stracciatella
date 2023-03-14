@@ -170,11 +170,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			// CAMFIELD, LOOK HERE!
 			return;
 		}
-		else
-		{
-			//Reset counter!
-			RESETTIMECOUNTER(pSoldier->AICounter, AI_DELAY);
-		}
 		//#endif
 	}
 

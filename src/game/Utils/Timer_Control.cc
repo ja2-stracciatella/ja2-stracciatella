@@ -11,19 +11,14 @@
 #include "WorldDef.h"
 
 #include <SDL.h>
-#include <chrono>
+#include <array>
 #include <stdexcept>
 #include <utility>
-using namespace std::chrono_literals;
 
-
-UINT32	guiTimerDiag  =  0;
-
-UINT32 guiBaseJA2Clock = 0;
 
 static BOOLEAN gfPauseClock = FALSE;
 
-std::array<std::chrono::milliseconds, NUMTIMERS> const giTimerIntervals
+static std::array<milliseconds, NUMTIMERS> const giTimerIntervals
 {
 	5ms, // Tactical Overhead
 	20ms, // NEXTSCROLL
@@ -57,6 +52,7 @@ CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = 0;
 // Clock Callback event ID
 static SDL_TimerID g_timer;
 
+static double g_durations_multiplier;
 
 extern UINT32 guiCompressionStringBaseTime;
 extern UINT32 guiFlashHighlightedItemBaseTime;
@@ -73,14 +69,14 @@ extern UINT32 guiPotCharPathBaseTime;
 
 static UINT32 TimeProc(UINT32 const interval, void*)
 {
-	static TIMECOUNTER lastUpdate;
+	static auto lastUpdate{ ReferenceClock::now() };
 
-	auto const now{ std::chrono::steady_clock::now() };
+	auto const now{ ReferenceClock::now() };
 
 	if (!gfPauseClock)
 	{
-		auto const timeDiff = now - lastUpdate;
-		guiBaseJA2Clock += std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count();
+		auto const timeDiff{ now - lastUpdate };
+		guiBaseJA2Clock += std::chrono::duration_cast<milliseconds>(timeDiff).count();
 	}
 
 	lastUpdate = now;
@@ -98,13 +94,10 @@ void InitializeJA2Clock(void)
 		RESETCOUNTER(static_cast<PredefinedCounters>(i));
 	}
 
-	INT32 msPerTimeSlice = gamepolicy(ms_per_time_slice);
-	if (msPerTimeSlice <= 0)
-	{
-		throw std::runtime_error("ms_per_time_slice must be a positive integer");
-	}
-	g_timer = SDL_AddTimer(msPerTimeSlice, TimeProc, 0);
+	g_timer = SDL_AddTimer(10, TimeProc, nullptr);
 	if (!g_timer) throw std::runtime_error("Could not create timer callback");
+
+	g_durations_multiplier = GCM->getGamePolicy()->game_durations_multiplier;
 }
 
 
@@ -120,7 +113,8 @@ void PauseTime(BOOLEAN const fPaused)
 }
 
 
-void SetCustomizableTimerCallbackAndDelay(INT32 const delay, CUSTOMIZABLE_TIMER_CALLBACK const callback, BOOLEAN const replace)
+void SetCustomizableTimerCallbackAndDelay(ReferenceClock::duration const delay,
+	CUSTOMIZABLE_TIMER_CALLBACK const callback, bool const replace)
 {
 	if (!replace && gpCustomizableTimerCallback)
 	{ // Replace callback but call the current callback first
@@ -164,20 +158,32 @@ void ResetJA2ClockGlobalTimers(void)
 
 void RESETCOUNTER(PredefinedCounters const pc)
 {
-	giTimerCounters[pc] = std::chrono::steady_clock::now() + giTimerIntervals[pc];
+	RESETTIMECOUNTER(giTimerCounters[pc], giTimerIntervals[pc]);
 }
 
-bool COUNTERDONE(PredefinedCounters const pc)
+bool COUNTERDONE(PredefinedCounters const pc, bool const autoReset)
 {
-	return std::chrono::steady_clock::now() >= giTimerCounters[pc];
+	bool const result{ ReferenceClock::now() >= giTimerCounters[pc] };
+	if (result && autoReset) RESETCOUNTER(pc);
+	return result;
 }
 
-void RESETTIMECOUNTER(TIMECOUNTER & tc, unsigned int millis)
+void RESETTIMECOUNTER(TIMECOUNTER & tc, ReferenceClock::duration const duration)
 {
-	tc = std::chrono::steady_clock::now() + std::chrono::milliseconds{millis};
+	tc = ReferenceClock::now() + std::chrono::duration_cast
+		<ReferenceClock::duration>(duration * g_durations_multiplier);
 }
 
-bool TIMECOUNTERDONE(TIMECOUNTER tc, [[maybe_unused]] int)
+bool TIMECOUNTERDONE(TIMECOUNTER & tc, ReferenceClock::duration const duration)
 {
-	return std::chrono::steady_clock::now() >= tc;
+	bool const result{ ReferenceClock::now() >= tc};
+	if (result) RESETTIMECOUNTER(tc, duration);
+	return result;
+}
+
+bool TIMECOUNTERDONE(TIMECOUNTER & tc, unsigned int const duration)
+{
+	bool const result{ ReferenceClock::now() >= tc};
+	if (result && duration != 0) RESETTIMECOUNTER(tc, milliseconds{duration});
+	return result;
 }

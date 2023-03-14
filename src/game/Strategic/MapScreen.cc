@@ -4083,7 +4083,6 @@ static void HandleAnimatedCursorsForMapScreen(void)
 {
 	if ( COUNTERDONE( CURSORCOUNTER ) )
 	{
-		RESETCOUNTER( CURSORCOUNTER );
 		UpdateAnimatedCursorFrames( gMapScreenMaskRegion.Cursor );
 		SetCurrentCursorFromDatabase(  gMapScreenMaskRegion.Cursor  );
 	}

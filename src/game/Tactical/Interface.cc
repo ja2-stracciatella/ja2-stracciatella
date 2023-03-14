@@ -999,8 +999,6 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 		{
 			if (TIMECOUNTERDONE(s.BlinkSelCounter, 80))
 			{
-				RESETTIMECOUNTER(s.BlinkSelCounter, 80);
-
 				s.fShowLocator = TRUE;
 				if (++s.sLocatorFrame == 5)
 				{
@@ -1885,8 +1883,6 @@ void HandleTopMessages(void)
 			// OK, update timer.....
 			if (COUNTERDONE(TEAMTURNUPDATE))
 			{
-				RESETCOUNTER(TEAMTURNUPDATE);
-
 				// Update counter....
 				if (ts->usTactialTurnLimitCounter < ts->usTactialTurnLimitMax)
 				{
@@ -1914,8 +1910,6 @@ void HandleTopMessages(void)
 
 				if (COUNTERDONE(TEAMTURNUPDATE))
 				{
-					RESETCOUNTER(TEAMTURNUPDATE);
-
 					if (ts->fTactialTurnLimitStartedBeep)
 					{
 						if (GetJA2Clock() - gTopMessage.uiTimeSinceLastBeep > PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS)

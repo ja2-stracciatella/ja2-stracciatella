@@ -2,7 +2,12 @@
 #define __TIMER_CONTROL_H
 
 #include "JA2Types.h"
-#include <array>
+#include <chrono>
+
+using ReferenceClock = std::chrono::steady_clock;
+using TIMECOUNTER = std::chrono::time_point<ReferenceClock>;
+using std::chrono::milliseconds;
+using namespace std::chrono_literals;
 
 typedef void (*CUSTOMIZABLE_TIMER_CALLBACK) ( void );
 
@@ -34,30 +39,42 @@ enum PredefinedCounters
 	NUMTIMERS
 };
 
-// GLOBAL SYNC TEMP TIME
-extern UINT32 guiTimerDiag;
-
 void InitializeJA2Clock(void);
 void ShutdownJA2Clock(void);
 
-#define GetJA2Clock() guiBaseJA2Clock
-
 void PauseTime( BOOLEAN fPaused );
 
-void SetCustomizableTimerCallbackAndDelay( INT32 iDelay, CUSTOMIZABLE_TIMER_CALLBACK pCallback, BOOLEAN fReplace );
+void SetCustomizableTimerCallbackAndDelay(ReferenceClock::duration, CUSTOMIZABLE_TIMER_CALLBACK, bool fReplace);
 void CheckCustomizableTimer( void );
 
 //Don't modify this value
-extern UINT32	guiBaseJA2Clock;
+inline UINT32 guiBaseJA2Clock;
+[[nodiscard]] static inline UINT32 GetJA2Clock() { return guiBaseJA2Clock; }
+
 extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 
-void RESETCOUNTER(PredefinedCounters);
-bool COUNTERDONE(PredefinedCounters);
-void RESETTIMECOUNTER(TIMECOUNTER &, unsigned int millis);
-bool TIMECOUNTERDONE(TIMECOUNTER, [[maybe_unused]] int = 0);
-constexpr void ZEROTIMECOUNTER(TIMECOUNTER & tc) { tc = {}; }
+// Test if the given counter has elapsed. Calls RESETCOUNTER for this counter
+// if autoReset is true and the timer has elapsed.
+[[nodiscard]] bool COUNTERDONE(PredefinedCounters, bool autoReset = true);
 
-#define SYNCTIMECOUNTER()		(void)0
+void RESETCOUNTER(PredefinedCounters);
+
+// Test if the given counter has elapsed. Calls RESETCOUNTER for this counter
+// if the timer has elapsed.
+[[nodiscard]] bool TIMECOUNTERDONE(TIMECOUNTER &, ReferenceClock::duration);
+// As above, except that you can specify millis == 0 if you do not want to
+// automatically reset the counter.
+[[nodiscard]] bool TIMECOUNTERDONE(TIMECOUNTER &, unsigned int millis);
+
+
+void RESETTIMECOUNTER(TIMECOUNTER &, ReferenceClock::duration);
+// This function exists for backwards compatibility only. In new code please
+// use a proper chrono type to specify the duration.
+static inline void RESETTIMECOUNTER(TIMECOUNTER & tc, unsigned int const millis)
+{
+	RESETTIMECOUNTER(tc, milliseconds{millis});
+}
+static inline void ZEROTIMECOUNTER(TIMECOUNTER & tc) { tc = ReferenceClock::now(); }
 
 // whenever guiBaseJA2Clock changes, we must reset all the timer variables that
 // use it as a reference

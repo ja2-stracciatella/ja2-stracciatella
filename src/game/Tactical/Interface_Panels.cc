@@ -2945,8 +2945,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 						RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
 					}
 				}
-				}
-			RESETTIMECOUNTER( pSoldier->PanelAnimateCounter, 160 );
+			}
 		}
 	}
 
@@ -3001,7 +3000,6 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 				HandlePlayerTeamMemberDeathAfterSkullAnimation( pSoldier );
 
 			}
-			RESETTIMECOUNTER( pSoldier->PanelAnimateCounter, 160 );
 		}
 	}
 

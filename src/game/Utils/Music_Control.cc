@@ -168,9 +168,6 @@ void MusicPoll(void)
 	// Handle Sound every sound overhead time....
 	if ( COUNTERDONE( MUSICOVERHEAD )  )
 	{
-		// Reset counter
-		RESETCOUNTER( MUSICOVERHEAD );
-
 		if(fMusicFadingIn)
 		{
 			if(uiMusicHandle!=NO_SAMPLE)

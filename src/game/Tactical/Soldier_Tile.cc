@@ -404,8 +404,6 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 	{
 		if ( TIMECOUNTERDONE( pSoldier->NextTileCounter, NEXT_TILE_CHECK_DELAY ) )
 		{
-			RESETTIMECOUNTER( pSoldier->NextTileCounter, NEXT_TILE_CHECK_DELAY );
-
 			// Get direction from gridno...
 			const UINT8 bCauseDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, pSoldier->sDelayedMovementCauseGridNo);
 			bBlocked = TileIsClear( pSoldier, bCauseDirection, pSoldier->sDelayedMovementCauseGridNo, pSoldier->bLevel );

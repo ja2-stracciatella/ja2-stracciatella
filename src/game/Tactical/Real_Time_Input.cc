@@ -406,7 +406,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 						}
 
 						// CHECK IF WE CLICKED-HELD
-						if ( COUNTERDONE( LMOUSECLICK_DELAY_COUNTER ) && gpItemPointer != NULL )
+						if (COUNTERDONE(LMOUSECLICK_DELAY_COUNTER, false) && gpItemPointer)
 						{
 							// LEFT CLICK-HOLD EVENT
 							// Switch on UI mode
@@ -888,7 +888,7 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 			else
 			{
 				// IF HERE, DO A CLICK-HOLD IF IN INTERVAL
-				if ( COUNTERDONE( RMOUSECLICK_DELAY_COUNTER ) && !fClickHoldIntercepted )
+				if (COUNTERDONE(RMOUSECLICK_DELAY_COUNTER, false) && !fClickHoldIntercepted)
 				{
 					if ( gpItemPointer == NULL )
 					{

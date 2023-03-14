@@ -43,8 +43,6 @@ void HandleStrategicTurn(void)
 	// OK, DO THIS CHECK EVERY ONCE AND A WHILE...
 	if ( COUNTERDONE( STRATEGIC_OVERHEAD ) )
 	{
-		RESETCOUNTER( STRATEGIC_OVERHEAD );
-
 		// if the game is paused, or we're in mapscreen and time is not being compressed
 		if (GamePaused() ||
 				( ( guiCurrentScreen == MAP_SCREEN ) && !IsTimeBeingCompressed() ) )

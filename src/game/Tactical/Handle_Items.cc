@@ -1308,7 +1308,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 
 	gpTempSoldier = s;
 	gsTempGridno  = sGridNo;
-	SetCustomizableTimerCallbackAndDelay(1000, CheckForPickedOwnership, TRUE);
+	SetCustomizableTimerCallbackAndDelay(1s, CheckForPickedOwnership, true);
 }
 
 
@@ -2167,7 +2167,6 @@ void HandleFlashingItems()
 {
 	if (!COUNTERDONE(CYCLERENDERITEMCOLOR))
 		return;
-	RESETCOUNTER(CYCLERENDERITEMCOLOR);
 
 	for (ITEM_POOL_LOCATOR* l = FlashItemSlots; l != FlashItemSlots + guiNumFlashItemSlots; ++l)
 	{
