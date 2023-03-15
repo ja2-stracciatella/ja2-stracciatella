@@ -19,7 +19,6 @@
 #include "UILayout.h"
 #include "GameRes.h"
 #include "GameMode.h"
-#include "Timer.h"
 #include "Font.h"
 
 #include "DefaultContentManager.h"
@@ -119,7 +118,7 @@ void requestGameExit()
 	SDL_PushEvent(&event);
 }
 
-static void MainLoop(int msPerGameCycle)
+static void MainLoop()
 {
 	bool s_doGameCycles{true};
 
@@ -386,7 +385,7 @@ int main(int argc, char* argv[])
 		g_ui.recalculatePositions();
 
 		SLOGD("Initializing Video Manager");
-		InitializeVideoManager(scalingQuality);
+		InitializeVideoManager(scalingQuality, GCM->getGamePolicy()->target_fps);
 		VideoSetBrightness(brightness);
 
 		SLOGD("Initializing Video Object Manager");
@@ -425,7 +424,7 @@ int main(int argc, char* argv[])
 		/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
 		* are available. All we need to do is attend to the gaming mechanics
 		* themselves */
-		MainLoop(gamepolicy(ms_per_game_cycle));
+		MainLoop();
 
 		delete cm;
 		GCM = NULL;

@@ -38,18 +38,17 @@ properties:
       Automatically draw a shadow for all items in a merc's inventory.
 
       Vanilla setting: `true`
-  ms_per_game_cycle:
-    $ref: types/int32.schema.yaml
-    title: Milliseconds per game cycle
+  target_fps:
+    type: number
+    minimum: 1
+    maximum: 144
+    title: Target FPS
     description: |
-      Number of milliseconds for one game cycle.
+      Specifies how often the game tries to refresh the screen. Lower values reduce
+      power consumption, higher values can make the game appear to be more responsive.
 
-      25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen is updated on every cycle).
-      Decreasing this value will increase the speed of the game (enemy movement, bullets speed, etc).
-
-      Stracciatella default value: `25`
+      Stracciatella default value: `40`
   ms_per_time_slice:
-    $ref: types/int32.schema.yaml
     title: Milliseconds per time slice
     description: |
       Number of milliseconds for one game time slice.

@@ -76,6 +76,8 @@ static SDL_Texture* ScreenTexture;
 static SDL_Texture* ScaledScreenTexture;
 static Uint32       g_window_flags = 0;
 static VideoScaleQuality ScaleQuality = VideoScaleQuality::LINEAR;
+static std::chrono::steady_clock::duration TimeBetweenRefreshScreens;
+static std::chrono::steady_clock::time_point LastRefresh;
 
 static void DeletePrimaryVideoSurfaces(void);
 
@@ -132,7 +134,8 @@ void VideoSetBrightness(float brightness)
 static void GetRGBDistribution();
 
 
-void InitializeVideoManager(const VideoScaleQuality quality)
+void InitializeVideoManager(const VideoScaleQuality quality,
+                            const int32_t targetFPS)
 {
 	SLOGD("Initializing the video manager");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
@@ -256,6 +259,8 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 
 	// This function must be called to setup RGB information
 	GetRGBDistribution();
+
+	TimeBetweenRefreshScreens = std::chrono::microseconds{1'000'000} / targetFPS;
 }
 
 
@@ -508,7 +513,6 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	ExecuteVideoOverlaysToAlternateBuffer(BACKBUFFER);
 }
 
-static std::chrono::steady_clock::time_point gLastRefresh;
 void RefreshScreen(void)
 {
 	if (guiVideoManagerState != VIDEO_ON) return;
@@ -537,11 +541,11 @@ void RefreshScreen(void)
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
 
 	auto const now = std::chrono::steady_clock::now();
-	if (!scrolling && now - gLastRefresh < std::chrono::milliseconds{25})
+	if (!scrolling && now - LastRefresh < TimeBetweenRefreshScreens)
 	{
 		return;
 	}
-	gLastRefresh = now;
+	LastRefresh = now;
 
 	// This variable will hold the union of all modified regions.
 	struct rect : SDL_Rect {
