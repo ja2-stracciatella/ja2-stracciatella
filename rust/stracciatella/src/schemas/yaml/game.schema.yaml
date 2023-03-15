@@ -496,7 +496,6 @@ required:
   - can_enter_turnbased
   - middle_mouse_look
   - draw_item_shadow
-  - ms_per_game_cycle
   - ms_per_time_slice
   - starting_cash_easy
   - starting_cash_medium
