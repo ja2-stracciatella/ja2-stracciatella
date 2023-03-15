@@ -50,10 +50,13 @@
 
 #include <string_theory/format>
 
+#include <chrono>
 #include <exception>
 #include <locale>
 #include <new>
+#include <thread>
 #include <utility>
+using namespace std::chrono_literals;
 
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 
@@ -118,7 +121,7 @@ void requestGameExit()
 
 static void MainLoop(int msPerGameCycle)
 {
-	BOOLEAN s_doGameCycles = TRUE;
+	bool s_doGameCycles{true};
 
 	while (true)
 	{
@@ -161,22 +164,14 @@ static void MainLoop(int msPerGameCycle)
 		{
 			if (s_doGameCycles)
 			{
-				UINT32 gameCycleMS = GetClock();
-#if DEBUG_PRINT_GAME_CYCLE_TIME
-				UINT32 totalGameCycleMS = gameCycleMS;
-#endif
+				// Aim to execute the game loop at a rate of 144Hz,
+				// once every ~6944 microseconds.
+				constexpr auto targetResolution = 1'000'000us / 144;
+				auto const beforeGameLoop = std::chrono::steady_clock::now();
 				GameLoop();
-				gameCycleMS = GetClock() - gameCycleMS;
 
-				if(static_cast<int>(gameCycleMS) < msPerGameCycle)
-				{
-					SDL_Delay(msPerGameCycle - gameCycleMS);
-				}
-
-#if DEBUG_PRINT_GAME_CYCLE_TIME
-				totalGameCycleMS = GetClock() - totalGameCycleMS;
-				printf("game cycle: %4d %4d\n", gameCycleMS, totalGameCycleMS);
-#endif
+				// If the game loop took longer than 6944ms, this call does nothing.
+				std::this_thread::sleep_until(beforeGameLoop + targetResolution);
 			}
 			else
 			{

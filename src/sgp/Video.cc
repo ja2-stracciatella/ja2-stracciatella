@@ -20,6 +20,7 @@
 #include "Font.h"
 #include "Icon.h"
 #include <algorithm>
+#include <chrono>
 #include <ctime>
 #include <stdexcept>
 
@@ -507,7 +508,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	ExecuteVideoOverlaysToAlternateBuffer(BACKBUFFER);
 }
 
-
+static std::chrono::steady_clock::time_point gLastRefresh;
 void RefreshScreen(void)
 {
 	if (guiVideoManagerState != VIDEO_ON) return;
@@ -534,6 +535,13 @@ void RefreshScreen(void)
 	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
 
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
+
+	auto const now = std::chrono::steady_clock::now();
+	if (!scrolling && now - gLastRefresh < std::chrono::milliseconds{25})
+	{
+		return;
+	}
+	gLastRefresh = now;
 
 	// This variable will hold the union of all modified regions.
 	struct rect : SDL_Rect {
