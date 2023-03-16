@@ -49,6 +49,7 @@ properties:
 
       Stracciatella default value: `40`
   ms_per_time_slice:
+    $ref: types/int32.schema.yaml
     title: Milliseconds per time slice
     description: |
       Number of milliseconds for one game time slice.

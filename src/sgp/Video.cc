@@ -536,8 +536,6 @@ void RefreshScreen(void)
 	}
 #endif
 
-	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
-
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
 
 	auto const now = std::chrono::steady_clock::now();
@@ -546,6 +544,8 @@ void RefreshScreen(void)
 		return;
 	}
 	LastRefresh = now;
+
+	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
 
 	// This variable will hold the union of all modified regions.
 	struct rect : SDL_Rect {

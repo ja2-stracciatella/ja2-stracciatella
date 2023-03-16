@@ -19,7 +19,6 @@
 #include "UILayout.h"
 #include "GameRes.h"
 #include "GameMode.h"
-#include "Font.h"
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
