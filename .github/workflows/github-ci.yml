@@ -14,11 +14,11 @@ jobs:
       matrix:
         cfg:
         - name: Linux
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           target: linux
 
         - name: Linux mingw64
-          os: ubuntu-18.04
+          os: ubuntu-22.04
           target: linux-mingw64
 
         - name: Mac
@@ -26,7 +26,7 @@ jobs:
           target: mac
 
         - name: Android
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           target: android
 
     name: ${{ matrix.cfg.name }} ${{ github.ref }}

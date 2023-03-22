@@ -37,10 +37,7 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
     GCC_VER="${TARGET_GCC_MAJOR_VERSION:-8}"
 
     # MinGW compiler for cross-compiling
-    linux-install-via-apt-get build-essential mingw-w64 "gcc-$GCC_VER" "g++-$GCC_VER"
-
-    # choose a new-enough version of gcc
-    linux-set-gcc-version "$GCC_VER"
+    linux-install-via-apt-get build-essential mingw-w64 g++-mingw-w64-x86-64-posix
 
     # sccache for compilation caching
     linux-install-sccache
