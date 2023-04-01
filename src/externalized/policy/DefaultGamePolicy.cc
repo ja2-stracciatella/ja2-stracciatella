@@ -10,7 +10,7 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	middle_mouse_look = gp.getOptionalBool("middle_mouse_look", true);
 
 	f_draw_item_shadow = gp.getOptionalBool("draw_item_shadow", true);
-	ms_per_game_cycle = gp.getOptionalInt("ms_per_game_cycle", 25);
+	target_fps = gp.getOptionalInt("target_fps", 40);
 	ms_per_time_slice = gp.getOptionalInt("ms_per_time_slice", 10);
 
 	starting_cash_easy = gp.getOptionalInt("starting_cash_easy", 45000);

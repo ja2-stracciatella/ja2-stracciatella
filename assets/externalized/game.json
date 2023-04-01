@@ -31,11 +31,11 @@
   //  vanilla setting: true
   "draw_item_shadow": true,
 
-  //  Number of milliseconds for one game cycle.
-  //  25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen is updated on every cycle).
-  //  Decreasing this value will increase the speed of the game (enemy movement, bullets speed, etc).
-  //  Stracciatella standard value: 25
-  "ms_per_game_cycle": 25,
+  //  Specifies how often the game tries to refresh the screen. Lower values reduce
+  //  power consumption, higher values can make the game appear to be more responsive.
+  //  Minimum: 1, Maximum: 144
+  //  Stracciatella default value: 40
+  "target_fps": 40,
 
   //  Number of milliseconds for one game time slice.
   //  Decreasing this value will speed up UI transitions and soldier animations.

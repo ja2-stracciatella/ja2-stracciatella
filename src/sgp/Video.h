@@ -17,7 +17,7 @@ extern SDL_Window* g_game_window;
 using VideoScaleQuality = ScalingQuality;
 
 void         VideoSetFullScreen(BOOLEAN enable);
-void         InitializeVideoManager(VideoScaleQuality quality);
+void         InitializeVideoManager(VideoScaleQuality quality, int32_t targetFPS);
 void         ShutdownVideoManager(void);
 void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 void         InvalidateScreen(void);

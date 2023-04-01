@@ -19,8 +19,6 @@
 #include "UILayout.h"
 #include "GameRes.h"
 #include "GameMode.h"
-#include "Timer.h"
-#include "Font.h"
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
@@ -50,10 +48,13 @@
 
 #include <string_theory/format>
 
+#include <chrono>
 #include <exception>
 #include <locale>
 #include <new>
+#include <thread>
 #include <utility>
+using namespace std::chrono_literals;
 
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 
@@ -116,9 +117,9 @@ void requestGameExit()
 	SDL_PushEvent(&event);
 }
 
-static void MainLoop(int msPerGameCycle)
+static void MainLoop()
 {
-	BOOLEAN s_doGameCycles = TRUE;
+	bool s_doGameCycles{true};
 
 	while (true)
 	{
@@ -161,22 +162,14 @@ static void MainLoop(int msPerGameCycle)
 		{
 			if (s_doGameCycles)
 			{
-				UINT32 gameCycleMS = GetClock();
-#if DEBUG_PRINT_GAME_CYCLE_TIME
-				UINT32 totalGameCycleMS = gameCycleMS;
-#endif
+				// Aim to execute the game loop at a rate of 144Hz,
+				// once every ~6944 microseconds.
+				constexpr auto targetResolution = 1'000'000us / 144;
+				auto const beforeGameLoop = std::chrono::steady_clock::now();
 				GameLoop();
-				gameCycleMS = GetClock() - gameCycleMS;
 
-				if(static_cast<int>(gameCycleMS) < msPerGameCycle)
-				{
-					SDL_Delay(msPerGameCycle - gameCycleMS);
-				}
-
-#if DEBUG_PRINT_GAME_CYCLE_TIME
-				totalGameCycleMS = GetClock() - totalGameCycleMS;
-				printf("game cycle: %4d %4d\n", gameCycleMS, totalGameCycleMS);
-#endif
+				// If the game loop took longer than 6944ms, this call does nothing.
+				std::this_thread::sleep_until(beforeGameLoop + targetResolution);
 			}
 			else
 			{
@@ -391,7 +384,7 @@ int main(int argc, char* argv[])
 		g_ui.recalculatePositions();
 
 		SLOGD("Initializing Video Manager");
-		InitializeVideoManager(scalingQuality);
+		InitializeVideoManager(scalingQuality, GCM->getGamePolicy()->target_fps);
 		VideoSetBrightness(brightness);
 
 		SLOGD("Initializing Video Object Manager");
@@ -430,7 +423,7 @@ int main(int argc, char* argv[])
 		/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
 		* are available. All we need to do is attend to the gaming mechanics
 		* themselves */
-		MainLoop(gamepolicy(ms_per_game_cycle));
+		MainLoop();
 
 		delete cm;
 		GCM = NULL;
