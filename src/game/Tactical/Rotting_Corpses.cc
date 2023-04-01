@@ -578,34 +578,35 @@ static void RemoveCorpse(ROTTING_CORPSE* const c)
 
 static void CreateCorpsePalette(ROTTING_CORPSE* const c)
 {
-	char const* const substitution =
-		c->def.ubType == ROTTING_STAGE2                  ? ""                   :
-		c->def.usFlags & ROTTING_CORPSE_USE_CAMO_PALETTE ? ANIMSDIR "/camo.COL" :
-		GetBodyTypePaletteSubstitution(0, c->def.ubBodyType);
+	// FIXME: maxrd2 no more palette - superdead - enter tactical D15
+//	char const* const substitution =
+//		c->def.ubType == ROTTING_STAGE2                  ? ""                   :
+//		c->def.usFlags & ROTTING_CORPSE_USE_CAMO_PALETTE ? ANIMSDIR "/camo.COL" :
+//		GetBodyTypePaletteSubstitution(0, c->def.ubBodyType);
 
-	const SGPPaletteEntry* pal;
-	SGPPaletteEntry        tmp_pal[256];
-	if (!substitution)
-	{
-		// Use palette from HVOBJECT, then use substitution for pants, etc
-		memcpy(tmp_pal, gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->Palette(), sizeof(tmp_pal));
-		SetPaletteReplacement(tmp_pal, c->def.HeadPal);
-		SetPaletteReplacement(tmp_pal, c->def.VestPal);
-		SetPaletteReplacement(tmp_pal, c->def.PantsPal);
-		SetPaletteReplacement(tmp_pal, c->def.SkinPal);
-		pal = tmp_pal;
-	}
-	else if (substitution[0] != '\0' && CreateSGPPaletteFromCOLFile(tmp_pal, substitution))
-	{
-		pal = tmp_pal;
-	}
-	else
-	{
-		// Use palette from hvobject
-		pal = gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->Palette();
-	}
+//	const SGPPaletteEntry* pal;
+//	SGPPaletteEntry        tmp_pal[256];
+//	if (!substitution)
+//	{
+//		// Use palette from HVOBJECT, then use substitution for pants, etc
+//		memcpy(tmp_pal, gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->Palette(), sizeof(tmp_pal));
+//		SetPaletteReplacement(tmp_pal, c->def.HeadPal);
+//		SetPaletteReplacement(tmp_pal, c->def.VestPal);
+//		SetPaletteReplacement(tmp_pal, c->def.PantsPal);
+//		SetPaletteReplacement(tmp_pal, c->def.SkinPal);
+//		pal = tmp_pal;
+//	}
+//	else if (substitution[0] != '\0' && CreateSGPPaletteFromCOLFile(tmp_pal, substitution))
+//	{
+//		pal = tmp_pal;
+//	}
+//	else
+//	{
+//		// Use palette from hvobject
+//		pal = gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->Palette();
+//	}
 
-	CreateBiasedShadedPalettes(c->pShades, pal);
+//	CreateBiasedShadedPalettes(c->pShades, pal);
 }
 
 
