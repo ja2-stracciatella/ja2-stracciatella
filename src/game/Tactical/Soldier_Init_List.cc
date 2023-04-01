@@ -425,8 +425,7 @@ static void SortSoldierInitList(void)
 
 bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 {
-	SOLDIERCREATE_STRUCT dp;
-	dp = SOLDIERCREATE_STRUCT{};
+	SOLDIERCREATE_STRUCT dp{};
 
 	// First check if this guy has a profile and if so check his location such that it matches
 	if (SOLDIERCREATE_STRUCT* const init_dp = init->pDetailedPlacement)
@@ -480,12 +479,17 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 					gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS &&
 					CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN))))
 				{
+					// Pick a gridno in a square around the door to Hans' shop
+					auto const PickGridNo = [](INT16 const apothem) -> GridNo
+					{
+						std::uniform_int_distribution<INT16> uid(-apothem, apothem);
+						return 13531 + uid(gRandomEngine) + uid(gRandomEngine) * WORLD_COLS;
+					};
+
 					if (dp.ubProfile == NO_PROFILE)
 					{
 						// These guys should be guarding Tony
-						dp.sInsertionGridNo = 13531 +
-							PreRandom(8) * (PreRandom(1) ? -1 : 1) +
-							PreRandom(8) * (PreRandom(1) ? -1 : 1) * WORLD_ROWS;
+						dp.sInsertionGridNo = PickGridNo(7);
 
 						switch (PreRandom(3))
 						{
@@ -497,25 +501,13 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 					else if (dp.ubProfile == BILLY)
 					{
 						// Billy should now be able to roam around
-						dp.sInsertionGridNo = 13531 +
-							PreRandom(30) * (PreRandom(1) ? -1 : 1) +
-							PreRandom(30) * (PreRandom(1) ? -1 : 1) * WORLD_ROWS;
+						dp.sInsertionGridNo = PickGridNo(29);
 						dp.bOrders = SEEKENEMY;
 					}
 					else if (dp.ubProfile == MADAME)
 					{
 						// She shouldn't be here
 						return true;
-					}
-					else if (dp.ubProfile == NO_PROFILE)
-					{
-						// XXX unreachable due to same condition above
-						UINT8 const room = GetRoom(dp.sInsertionGridNo);
-						if (IN_BROTHEL(room))
-						{
-							// Must be a hooker, shouldn't be here
-							return true;
-						}
 					}
 				}
 			}
