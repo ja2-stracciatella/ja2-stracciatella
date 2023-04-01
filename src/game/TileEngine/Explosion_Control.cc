@@ -1113,7 +1113,8 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 	{
 		// Drop blood ....
 		// Get blood quantity....
-		InternalDropBlood(sGridNo, 0, HUMAN, std::max(MAXBLOODQUANTITY - uiDist * 2 /* XXX always >= 0, because uiDist is unsigned */, 0U), 1);
+		UINT8 const bloodAmount = uiDist * 2 > MAXBLOODQUANTITY ? 0 : MAXBLOODQUANTITY - uiDist * 2;
+		InternalDropBlood(sGridNo, 0, HUMAN, bloodAmount, 1);
 	}
 
 	if ( sSubsequent != ERASE_SPREAD_EFFECT && sSubsequent != BLOOD_SPREAD_EFFECT )

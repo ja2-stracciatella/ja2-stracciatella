@@ -31,24 +31,24 @@
 /*
  * Time for some crazy-ass macros!
  * The smell byte is spit as follows:
- * O \
- * O  \
- * O   \ Smell
- * O   / Strength (only on ground)
- * O  /
- * O /
- * O >   Type of blood on roof
- * O >   Type of smell/blood on ground
+ * 7 \
+ * 6  \
+ * 5   \ Smell
+ * 4   / Strength (only on ground)
+ * 3  /
+ * 2 /
+ * 1 >   Type of blood on roof
+ * 0 >   Type of smell/blood on ground
  *
  * The blood byte is split as follows:
- * O \
- * O  > Blood quantity on roof
- * O /
- * O \
- * O  > Blood quantity on ground
- * O /
- * O \  Blood decay
- * O /  time (roof and ground decay together)
+ * 7 \
+ * 6  > Blood quantity on roof
+ * 5 /
+ * 4 \
+ * 3  > Blood quantity on ground
+ * 2 /
+ * 1 \  Blood decay
+ * 0 /  time (roof and ground decay together)
  */
 
 /*
@@ -57,9 +57,9 @@
  */
 
 
-#define SMELL_STRENGTH_MAX		63
-#define BLOOD_STRENGTH_MAX		7
-#define BLOOD_DELAY_MAX       3
+constexpr UINT8 SMELL_STRENGTH_MAX = 63;
+constexpr UINT8 BLOOD_STRENGTH_MAX = 7;
+constexpr UINT8 BLOOD_DELAY_MAX = 3;
 
 #define SMELL_TYPE_BITS( s )	((s) & 0x03)
 
@@ -120,19 +120,27 @@
 	SET_BLOOD_FLOOR_STRENGTH( (b), ubRoofStrength ); \
 }
 
-#define SET_BLOOD_DELAY_TIME( b ) \
-{ \
-	(b) = BLOOD_DELAY_TIME( (UINT8) Random( BLOOD_DELAY_MAX ) + 1 ) | ((b) & 0xFC); \
+static void SetRandomBloodDecayTime(MAP_ELEMENT & me)
+{
+	me.ubBloodInfo &= 0b1111'1100;
+	me.ubBloodInfo |= static_cast<UINT8>(Random(BLOOD_DELAY_MAX) + 1); // 1, 2 or 3
 }
 
-#define SET_BLOOD_FLOOR_TYPE( s, ntg ) \
-{ \
-	(s) = BLOOD_FLOOR_TYPE( (ntg) ) | ((s) & 0xFE); \
+[[nodiscard]]
+static BloodKind GetBloodType(MAP_ELEMENT const& me, int const level)
+{
+	return level == 0
+		? ((me.ubSmellInfo & 1) ? BloodKind::CREATURE_ON_FLOOR : BloodKind::HUMAN)
+		: ((me.ubSmellInfo & 2) ? BloodKind::CREATURE_ON_ROOF  : BloodKind::HUMAN);
 }
 
-#define SET_BLOOD_ROOF_TYPE( s, ntr ) \
-{ \
-	(s) = BLOOD_ROOF_TYPE( (ntr) ) | ((s) & 0xFD); \
+static void SetBloodType(MAP_ELEMENT & me, int const level, BloodKind const bloodType)
+{
+	me.ubSmellInfo &= (level == 0 ? 0b1111'1110 : 0b1111'1101); // Clear old blood type
+	if (bloodType != BloodKind::HUMAN)
+	{
+		me.ubSmellInfo |= (level == 0 ? 1 : 2);
+	}
 }
 
 
@@ -204,7 +212,7 @@ static void DecayBlood(void)
 				// if any blood remaining, reset time
 				if ( pMapElement->ubBloodInfo )
 				{
-					SET_BLOOD_DELAY_TIME( pMapElement->ubBloodInfo );
+					SetRandomBloodDecayTime(*pMapElement);
 				}
 			}
 			// end of blood handling
@@ -301,7 +309,7 @@ void DropSmell(SOLDIERTYPE& s)
 				// same smell; increase the strength to the bigger of the two strengths,
 				// plus 1/5 of the smaller
 				ubStrength = std::max( ubStrength, ubOldStrength ) + std::min( ubStrength, ubOldStrength ) / 5;
-				ubStrength = std::max(ubStrength, UINT8(SMELL_STRENGTH_MAX));
+				ubStrength = std::max(ubStrength, SMELL_STRENGTH_MAX);
 				SET_SMELL(pMapElement->ubSmellInfo, ubStrength, ubSmell);
 			}
 			else
@@ -352,9 +360,8 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 	if (Water(gridno)) return;
 
 	// Ensure max strength is okay
-	strength = std::min(strength, UINT8(BLOOD_STRENGTH_MAX));
+	strength = std::min(strength, BLOOD_STRENGTH_MAX);
 
-	UINT8 new_strength = 0;
 	MAP_ELEMENT& me = gpWorldLevelData[gridno];
 	if (level == 0)
 	{ // Dropping blood on ground
@@ -362,9 +369,10 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 		if (old_strength > 0)
 		{
 			// blood already there... we'll leave the decay time as it is
-			if (BLOOD_FLOOR_TYPE(me.ubBloodInfo) == blood_kind)
+			if (GetBloodType(me, 0) == blood_kind)
 			{ // Combine blood strengths
-				new_strength = std::min(old_strength + strength, BLOOD_STRENGTH_MAX);
+				UINT8 const new_strength = std::min<UINT8>
+					(old_strength + strength, BLOOD_STRENGTH_MAX);
 				SET_BLOOD_FLOOR_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else
@@ -380,10 +388,10 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 		{
 			// No blood on the ground yet, so drop this amount.
 			// Set decay time
-			SET_BLOOD_DELAY_TIME(me.ubBloodInfo);
+			SetRandomBloodDecayTime(me);
 			SET_BLOOD_FLOOR_STRENGTH(me.ubBloodInfo, strength);
 			// NB blood floor type stored in smell byte!
-			SET_BLOOD_FLOOR_TYPE(me.ubSmellInfo, blood_kind);
+			SetBloodType(me, 0, blood_kind);
 		}
 	}
 	else
@@ -392,11 +400,11 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 		if (old_strength > 0)
 		{
 			// Blood already there, we'll leave the decay time as it is
-			if (BLOOD_ROOF_TYPE(me.ubSmellInfo) == blood_kind)
+			if (GetBloodType(me, 1) == blood_kind)
 			{ // Combine blood strengths
-				new_strength = std::max(old_strength, strength) + 1;
+				UINT8 new_strength = std::max(old_strength, strength) + 1;
 				// make sure the strength is legal
-				new_strength = std::max(new_strength, UINT8(BLOOD_STRENGTH_MAX));
+				new_strength = std::max(new_strength, BLOOD_STRENGTH_MAX);
 				SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else
@@ -412,9 +420,9 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 		{
 			// No blood on the roof yet, so drop this amount.
 			// Set decay time
-			SET_BLOOD_DELAY_TIME(me.ubBloodInfo);
-			SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, new_strength); // XXX new_strength always 0 here
-			SET_BLOOD_ROOF_TYPE(me.ubSmellInfo, blood_kind);
+			SetRandomBloodDecayTime(me);
+			SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, strength);
+			SetBloodType(me, 1, blood_kind);
 		}
 	}
 
