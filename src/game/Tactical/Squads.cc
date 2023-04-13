@@ -192,7 +192,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		}
 
 		// set squad value
-		ChangeSoldiersAssignment(s, bSquadValue);
+		ChangeSoldiersAssignment(s, static_cast<Assignments>(bSquadValue));
 
 		// update selected squad if the old one is emptied
 		if (iCurrentTacticalSquad == NO_CURRENT_SQUAD || SquadIsEmpty(iCurrentTacticalSquad)) SetCurrentSquad(bSquadValue, TRUE);

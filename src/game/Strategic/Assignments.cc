@@ -263,7 +263,7 @@ void BuildSectorsWithSoldiersList( void )
 }
 
 
-void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
+void ChangeSoldiersAssignment(SOLDIERTYPE * const pSoldier, Assignments const bAssignment)
 {
 	// This is the most basic assignment-setting function.  It must be called before setting any subsidiary
 	// values like fFixingRobot.  It will clear all subsidiary values so we don't leave the merc in a messed
@@ -277,8 +277,14 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 		// life checks should agree with the assignment
 		pSoldier->bLife = 0;
 	}
-	pSoldier->fFixingRobot = FALSE;
-	pSoldier->bVehicleUnderRepairID = -1;
+
+	if (bAssignment != REPAIR)
+	{
+		// Only reset these values if the new assignment is not REPAIR,
+		// they must have been set to sane values by the caller in that case.
+		pSoldier->fFixingRobot = FALSE;
+		pSoldier->bVehicleUnderRepairID = -1;
+	}
 
 	if ( ( bAssignment == DOCTOR ) || ( bAssignment == PATIENT ) || ( bAssignment == ASSIGNMENT_HOSPITAL ) )
 	{
@@ -3225,46 +3231,21 @@ static bool AssignMercToAMovementGroup(SOLDIERTYPE&);
 static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
-	INT32 iValue = -1;
-	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iRepairWhat;
-
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
+	INT32 const iValue = MSYS_GetRegionUserData(pRegion, 0);
 
 	// ignore clicks on disabled lines
 	if (GetBoxShadeFlag(ghRepairBox, iValue)) return;
 
 	// WHAT is being repaired is stored in the second user data argument
-	iRepairWhat = MSYS_GetRegionUserData( pRegion, 1 );
-
-
-	pSoldier = GetSelectedAssignSoldier( FALSE );
-
+	INT8 const iRepairWhat = static_cast<INT8>(MSYS_GetRegionUserData(pRegion, 1));
+	SOLDIERTYPE * const pSoldier = GetSelectedAssignSoldier(FALSE);
 
 	if ( pSoldier && pSoldier->bActive && ( iReason & MSYS_CALLBACK_REASON_POINTER_UP ) )
 	{
 		if( ( iRepairWhat >= REPAIR_MENU_VEHICLE1 ) && ( iRepairWhat <= REPAIR_MENU_VEHICLE3 ) )
 		{
 			// repair VEHICLE
-			PreChangeAssignment(*pSoldier);
-
-			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot ) )
-			{
-				SetTimeOfAssignmentChangeForMerc( pSoldier );
-			}
-
-			MakeSureToolKitIsInHand( pSoldier );
-
-			ChangeSoldiersAssignment( pSoldier, REPAIR );
-
-			pSoldier -> bVehicleUnderRepairID = ( INT8 ) iRepairWhat;
-
-			MakeSureToolKitIsInHand( pSoldier );
-
-			// assign to a movement group
-			AssignMercToAMovementGroup(*pSoldier);
-
+			SetSoldierAssignmentRepair(*pSoldier, false, iRepairWhat);
 			// set assignment for group
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
 			fShowAssignmentMenu = FALSE;
@@ -3273,30 +3254,16 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		else if( iRepairWhat == REPAIR_MENU_ROBOT )
 		{
 			// repair ROBOT
-			PreChangeAssignment(*pSoldier);
-			MakeSureToolKitIsInHand( pSoldier );
-
-			if (pSoldier->bAssignment != REPAIR || !pSoldier->fFixingRobot)
-			{
-				SetTimeOfAssignmentChangeForMerc( pSoldier );
-			}
-
-			ChangeSoldiersAssignment( pSoldier, REPAIR );
-			pSoldier->fFixingRobot = TRUE;
+			SetSoldierAssignmentRepair(*pSoldier, true, -1);
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
 			fShowAssignmentMenu = FALSE;
-
-			MakeSureToolKitIsInHand( pSoldier );
-
-			// assign to a movement group
-			AssignMercToAMovementGroup(*pSoldier);
 		}
 		else if( iRepairWhat == REPAIR_MENU_ITEMS )
 		{
 			// items
-			SetSoldierAssignmentRepair(*pSoldier, FALSE, -1);
+			SetSoldierAssignmentRepair(*pSoldier, false, -1);
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
@@ -4748,7 +4715,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			giAssignHighLine = -1;
 
 			// train stat
-			ChangeSoldiersAssignment( pSoldier, gbTrainingMode );
+			ChangeSoldiersAssignment(pSoldier, static_cast<Assignments>(gbTrainingMode));
 
 			// assign to a movement group
 			AssignMercToAMovementGroup(*pSoldier);
@@ -5810,7 +5777,7 @@ static void PreSetAssignment(SOLDIERTYPE& s, INT8 const assignment)
 }
 
 
-static void PostSetAssignment(SOLDIERTYPE& s, INT8 const assignment)
+static void PostSetAssignment(SOLDIERTYPE& s, Assignments const assignment)
 {
 	ChangeSoldiersAssignment(&s, assignment);
 	AssignMercToAMovementGroup(s);

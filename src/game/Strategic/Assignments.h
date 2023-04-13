@@ -28,7 +28,8 @@ struct SOLDIERTYPE;
 
 
 // Assignments Defines
-enum{
+enum Assignments : int8_t
+{
 	SQUAD_1 =0,
 	SQUAD_2,
 	SQUAD_3,
@@ -207,7 +208,7 @@ void ReEvaluateEveryonesNothingToDo(void);
 void SetAssignmentForList( INT8 bAssignment, INT8 bParam );
 
 // function where we actually set someone's assignment so we can trap certain situations
-void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment );
+void ChangeSoldiersAssignment(SOLDIERTYPE *, Assignments);
 
 void UnEscortEPC( SOLDIERTYPE *pSoldier );
 
