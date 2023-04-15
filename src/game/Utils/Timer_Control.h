@@ -51,7 +51,7 @@ void CheckCustomizableTimer( void );
 inline UINT32 guiBaseJA2Clock;
 [[nodiscard]] static inline UINT32 GetJA2Clock() { return guiBaseJA2Clock; }
 
-extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
+inline CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback{nullptr};
 
 // Test if the given counter has elapsed. Calls RESETCOUNTER for this counter
 // if autoReset is true and the timer has elapsed.

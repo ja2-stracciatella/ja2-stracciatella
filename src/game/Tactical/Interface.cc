@@ -997,7 +997,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 		}
 		else
 		{
-			if (TIMECOUNTERDONE(s.BlinkSelCounter, 80))
+			if (TIMECOUNTERDONE(s.BlinkSelCounter, 80ms))
 			{
 				s.fShowLocator = TRUE;
 				if (++s.sLocatorFrame == 5)

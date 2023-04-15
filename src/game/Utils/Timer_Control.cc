@@ -45,9 +45,7 @@ static std::array<milliseconds, NUMTIMERS> const giTimerIntervals
 };
 
 static std::array<TIMECOUNTER, NUMTIMERS> giTimerCounters;
-TIMECOUNTER giTimerCustomizable;
-
-CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = 0;
+static TIMECOUNTER giTimerCustomizable;
 
 // Clock Callback event ID
 static SDL_TimerID g_timer;
@@ -176,6 +174,9 @@ void RESETTIMECOUNTER(TIMECOUNTER & tc, ReferenceClock::duration const duration)
 
 bool TIMECOUNTERDONE(TIMECOUNTER & tc, ReferenceClock::duration const duration)
 {
+	// Timers never expire while time is paused.
+	if (gfPauseClock) return false;
+
 	bool const result{ ReferenceClock::now() >= tc};
 	if (result) RESETTIMECOUNTER(tc, duration);
 	return result;
@@ -183,6 +184,9 @@ bool TIMECOUNTERDONE(TIMECOUNTER & tc, ReferenceClock::duration const duration)
 
 bool TIMECOUNTERDONE(TIMECOUNTER & tc, unsigned int const duration)
 {
+	// Timers never expire while time is paused.
+	if (gfPauseClock) return false;
+
 	bool const result{ ReferenceClock::now() >= tc};
 	if (result && duration != 0) RESETTIMECOUNTER(tc, milliseconds{duration});
 	return result;

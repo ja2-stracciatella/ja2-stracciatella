@@ -42,7 +42,7 @@
 
 #include <algorithm>
 
-#define AI_DELAY 100
+constexpr milliseconds AI_DELAY = 100ms;
 
 
 //
