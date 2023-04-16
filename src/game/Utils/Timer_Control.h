@@ -40,15 +40,15 @@ enum PredefinedCounters
 };
 
 void InitializeJA2Clock(void);
-void ShutdownJA2Clock(void);
 
 void PauseTime( BOOLEAN fPaused );
 
 void SetCustomizableTimerCallbackAndDelay(ReferenceClock::duration, CUSTOMIZABLE_TIMER_CALLBACK, bool fReplace);
-void CheckCustomizableTimer( void );
+void CheckCustomizableTimer();
 
 //Don't modify this value
 inline UINT32 guiBaseJA2Clock;
+void UpdateJA2Clock();
 [[nodiscard]] static inline UINT32 GetJA2Clock() { return guiBaseJA2Clock; }
 
 inline CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback{nullptr};

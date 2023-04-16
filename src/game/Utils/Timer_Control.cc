@@ -47,9 +47,6 @@ static std::array<milliseconds, NUMTIMERS> const giTimerIntervals
 static std::array<TIMECOUNTER, NUMTIMERS> giTimerCounters;
 static TIMECOUNTER giTimerCustomizable;
 
-// Clock Callback event ID
-static SDL_TimerID g_timer;
-
 static double g_durations_multiplier;
 
 extern UINT32 guiCompressionStringBaseTime;
@@ -65,7 +62,7 @@ extern UINT32 guiFlashCursorBaseTime;
 extern UINT32 guiPotCharPathBaseTime;
 
 
-static UINT32 TimeProc(UINT32 const interval, void*)
+void UpdateJA2Clock()
 {
 	static auto lastUpdate{ ReferenceClock::now() };
 
@@ -78,30 +75,18 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 	}
 
 	lastUpdate = now;
-	return interval;
 }
 
 
 void InitializeJA2Clock(void)
 {
-	SDL_InitSubSystem(SDL_INIT_TIMER);
-
 	// Init timer delays
 	for (INT32 i = 0; i != NUMTIMERS; ++i)
 	{
 		RESETCOUNTER(static_cast<PredefinedCounters>(i));
 	}
 
-	g_timer = SDL_AddTimer(10, TimeProc, nullptr);
-	if (!g_timer) throw std::runtime_error("Could not create timer callback");
-
 	g_durations_multiplier = GCM->getGamePolicy()->game_durations_multiplier;
-}
-
-
-void ShutdownJA2Clock(void)
-{
-	SDL_RemoveTimer(g_timer);
 }
 
 
