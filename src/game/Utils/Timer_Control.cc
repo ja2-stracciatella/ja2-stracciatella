@@ -71,7 +71,8 @@ void UpdateJA2Clock()
 	if (!gfPauseClock)
 	{
 		auto const timeDiff{ now - lastUpdate };
-		guiBaseJA2Clock += std::chrono::duration_cast<milliseconds>(timeDiff).count();
+		guiBaseJA2Clock += static_cast<UINT32>(
+			std::chrono::duration_cast<milliseconds>(timeDiff).count());
 	}
 
 	lastUpdate = now;
@@ -146,6 +147,9 @@ void RESETCOUNTER(PredefinedCounters const pc)
 
 bool COUNTERDONE(PredefinedCounters const pc, bool const autoReset)
 {
+	// Timers never expire while time is paused.
+	if (gfPauseClock) return false;
+
 	bool const result{ ReferenceClock::now() >= giTimerCounters[pc] };
 	if (result && autoReset) RESETCOUNTER(pc);
 	return result;
