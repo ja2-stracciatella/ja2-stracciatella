@@ -324,19 +324,11 @@ enum SoundID
 };
 
 
-const char * getSoundSample(SoundID soundId);
-
-template<SoundID, SoundID, bool> struct SoundRangeHelper;
-template<SoundID first, SoundID last> struct SoundRangeHelper<first, last, true>
-{
-	operator SoundID() { return static_cast<SoundID>(first + Random(last - first + 1)); }
-};
-
-
 template<SoundID first, SoundID last> static inline SoundID SoundRange()
 {
-	return SoundRangeHelper<first, last, first < last>();
-}
+	static_assert(first < last);
+	return static_cast<SoundID>(first + Random(last - first + 1));
+};
 
 
 enum AmbientSoundID
@@ -365,7 +357,6 @@ typedef void (*SOUND_STOP_CALLBACK)( void *pData );
 void   ShutdownJA2Sound(void);
 UINT32 PlayJA2Sample(const char *sample, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan);
 UINT32 PlayJA2Sample(SoundID, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
-UINT32 PlayJA2StreamingSample(SoundID, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 
 UINT32 PlayJA2SampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback);

@@ -333,21 +333,11 @@ void ShutdownJA2Sound(void)
 }
 
 
-const char * getSoundSample(SoundID soundId)
-{
-	if(soundId == -1) {
-		return "";
-	}
-	else
-	{
-		return szSoundEffects[soundId];
-	}
-}
-
 UINT32 PlayJA2Sample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
-	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
-	return SoundPlay(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
+	// Several of the szSoundEffects entries are NULL, this will be checked
+	// inside the following function call.
+	return PlayJA2Sample(szSoundEffects[usNum], ubVolume, ubLoops, uiPan);
 }
 
 
@@ -359,13 +349,6 @@ UINT32 PlayJA2Sample(const char *sample, UINT32 const ubVolume, UINT32 const ubL
 		return SoundPlay(sample, vol, uiPan, ubLoops, NULL, NULL);
 	}
 	return SOUND_ERROR;
-}
-
-
-UINT32 PlayJA2StreamingSample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
-{
-	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
-	return SoundPlay(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
@@ -419,7 +402,7 @@ UINT32 PlayLocationJA2StreamingSample(UINT16 const grid_no, SoundID const idx, U
 {
 	UINT32 const vol = SoundVolume(base_vol, grid_no);
 	UINT32 const pan = SoundDir(grid_no);
-	return PlayJA2StreamingSample(idx, vol, loops, pan);
+	return PlayJA2Sample(idx, vol, loops, pan);
 }
 
 
@@ -436,7 +419,7 @@ UINT32 PlaySoldierJA2Sample(SOLDIERTYPE const* const s, SoundID const usNum, UIN
 		}
 	}
 
-	return( 0 );
+	return NO_SAMPLE;
 }
 
 

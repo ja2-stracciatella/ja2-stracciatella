@@ -1919,7 +1919,7 @@ static void FinishButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 		DepressAutoButton(FINISH_BUTTON);
 		gpAR->uiTimeSlice = 0xffffffff;
 		gpAR->fSound = FALSE;
-		PlayJA2StreamingSample(AUTORESOLVE_FINISHFX, HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2Sample(AUTORESOLVE_FINISHFX, HIGHVOLUME, 1, MIDDLEPAN);
 	}
 }
 
