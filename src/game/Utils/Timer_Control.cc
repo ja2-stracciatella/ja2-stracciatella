@@ -1,22 +1,14 @@
 #include "Timer_Control.h"
 
 #include "ContentManager.h"
-#include "Debug.h"
 #include "GameInstance.h"
 #include "GamePolicy.h"
-#include "Handle_Items.h"
-#include "MapScreen.h"
-#include "Overhead.h"
-#include "Soldier_Control.h"
-#include "WorldDef.h"
 
-#include <SDL.h>
 #include <array>
-#include <stdexcept>
 #include <utility>
 
 
-static BOOLEAN gfPauseClock = FALSE;
+static bool gfPauseClock{false};
 
 static std::array<milliseconds, NUMTIMERS> const giTimerIntervals
 {
@@ -49,50 +41,60 @@ static TIMECOUNTER giTimerCustomizable;
 
 static double g_durations_multiplier;
 
-extern UINT32 guiCompressionStringBaseTime;
-extern UINT32 guiFlashHighlightedItemBaseTime;
-extern UINT32 guiCompatibleItemBaseTime;
-extern UINT32 guiAnimateRouteBaseTime;
-extern UINT32 guiPotHeliPathBaseTime;
-extern UINT32 guiSectorLocatorBaseTime;
-extern UINT32 guiCommonGlowBaseTime;
-extern UINT32 guiFlashAssignBaseTime;
-extern UINT32 guiFlashContractBaseTime;
-extern UINT32 guiFlashCursorBaseTime;
-extern UINT32 guiPotCharPathBaseTime;
+// These should probably use Timer.h's GetClock() instead,
+// which would also make ResetJA2ClockGlobalTimers unnecessary.
+extern std::uint32_t guiCompressionStringBaseTime;
+extern std::uint32_t guiFlashHighlightedItemBaseTime;
+extern std::uint32_t guiCompatibleItemBaseTime;
+extern std::uint32_t guiAnimateRouteBaseTime;
+extern std::uint32_t guiPotHeliPathBaseTime;
+extern std::uint32_t guiSectorLocatorBaseTime;
+extern std::uint32_t guiCommonGlowBaseTime;
+extern std::uint32_t guiFlashAssignBaseTime;
+extern std::uint32_t guiFlashContractBaseTime;
+extern std::uint32_t guiFlashCursorBaseTime;
+extern std::uint32_t guiPotCharPathBaseTime;
 
+
+// This is the time_point when guiBaseJA2Clock was updated last,
+// unless the game time is paused, then this holds the time point
+// then the game time was unfrozen.
+static ReferenceClock::time_point gLastUpdate;
 
 void UpdateJA2Clock()
 {
-	static auto lastUpdate{ ReferenceClock::now() };
+	if (gfPauseClock) return;
 
 	auto const now{ ReferenceClock::now() };
-
-	if (!gfPauseClock)
-	{
-		auto const timeDiff{ now - lastUpdate };
-		guiBaseJA2Clock += static_cast<UINT32>(
-			std::chrono::duration_cast<milliseconds>(timeDiff).count());
-	}
-
-	lastUpdate = now;
+	guiBaseJA2Clock += static_cast<UINT32>(
+			std::chrono::duration_cast<milliseconds>(now - gLastUpdate).count());
+	gLastUpdate = now;
 }
 
 
 void InitializeJA2Clock(void)
 {
 	// Init timer delays
-	for (INT32 i = 0; i != NUMTIMERS; ++i)
+	for (int i = 0; i != NUMTIMERS; ++i)
 	{
 		RESETCOUNTER(static_cast<PredefinedCounters>(i));
 	}
 
+	gLastUpdate = ReferenceClock::now();
+	guiBaseJA2Clock = 0;
 	g_durations_multiplier = GCM->getGamePolicy()->game_durations_multiplier;
 }
 
 
-void PauseTime(BOOLEAN const fPaused)
+void PauseTime(bool const fPaused)
 {
+	if (!fPaused && gfPauseClock)
+	{
+		// Remember when game time was unfrozen so that
+		// UpdateJA2Clock() can add the number of ms between
+		// this call and its own call.
+		gLastUpdate = ReferenceClock::now();
+	}
 	gfPauseClock = fPaused;
 }
 
@@ -124,7 +126,7 @@ void CheckCustomizableTimer(void)
 
 void ResetJA2ClockGlobalTimers(void)
 {
-	UINT32 const now = GetJA2Clock();
+	auto const now{ GetJA2Clock() };
 
 	guiCompressionStringBaseTime    = now;
 	guiFlashHighlightedItemBaseTime = now;

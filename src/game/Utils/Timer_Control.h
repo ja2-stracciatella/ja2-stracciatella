@@ -1,8 +1,8 @@
 #ifndef __TIMER_CONTROL_H
 #define __TIMER_CONTROL_H
 
-#include "JA2Types.h"
 #include <chrono>
+#include <cstdint>
 
 using ReferenceClock = std::chrono::steady_clock;
 using TIMECOUNTER = std::chrono::time_point<ReferenceClock>;
@@ -41,15 +41,15 @@ enum PredefinedCounters
 
 void InitializeJA2Clock(void);
 
-void PauseTime( BOOLEAN fPaused );
+void PauseTime(bool fPaused);
 
 void SetCustomizableTimerCallbackAndDelay(ReferenceClock::duration, CUSTOMIZABLE_TIMER_CALLBACK, bool fReplace);
 void CheckCustomizableTimer();
 
 //Don't modify this value
-inline UINT32 guiBaseJA2Clock;
+inline std::uint32_t guiBaseJA2Clock;
 void UpdateJA2Clock();
-[[nodiscard]] static inline UINT32 GetJA2Clock() { return guiBaseJA2Clock; }
+[[nodiscard]] static inline std::uint32_t GetJA2Clock() { return guiBaseJA2Clock; }
 
 inline CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback{nullptr};
 
