@@ -2814,7 +2814,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 						}
 						else
 						{
-							BattleSound const snd = Random(50) == 25 ?
+							BattleSound const snd = CoinToss() ?
 								BATTLE_SOUND_LAUGH1 : BATTLE_SOUND_COOL1;
 							DoMercBattleSound(pKillerSoldier, snd);
 						}
