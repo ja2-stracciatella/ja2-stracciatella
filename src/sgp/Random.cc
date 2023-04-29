@@ -87,3 +87,11 @@ BOOLEAN PreChance(UINT32 uiChance)
 {
 	return PreRandom(100) < uiChance;
 }
+
+
+bool CoinToss()
+{
+	std::bernoulli_distribution Jacob;
+
+	return Jacob(gRandomEngine);
+}

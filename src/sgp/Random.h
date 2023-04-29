@@ -8,6 +8,9 @@
 extern void InitializeRandom(void);
 extern UINT32 Random( UINT32 uiRange );
 
+// Returns true 50% of the time, false 50% of the time.
+bool CoinToss();
+
 //Chance( 74 ) returns TRUE 74% of the time.  If uiChance >= 100, then it will always return TRUE.
 extern BOOLEAN Chance( UINT32 uiChance );
 

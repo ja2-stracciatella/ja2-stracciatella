@@ -6664,7 +6664,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 					else
 					{
 						// WE ARE SEEN
-						if ( Random( 50 ) > 25 )
+						if (CoinToss())
 						{
 							EVENT_InitNewSoldierAnim( pSoldier, STAB, 0 , FALSE );
 						}
