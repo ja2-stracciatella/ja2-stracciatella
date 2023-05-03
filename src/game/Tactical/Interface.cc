@@ -997,10 +997,8 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 		}
 		else
 		{
-			if (TIMECOUNTERDONE(s.BlinkSelCounter, 80))
+			if (TIMECOUNTERDONE(s.BlinkSelCounter, 80ms))
 			{
-				RESETTIMECOUNTER(s.BlinkSelCounter, 80);
-
 				s.fShowLocator = TRUE;
 				if (++s.sLocatorFrame == 5)
 				{
@@ -1883,10 +1881,8 @@ void HandleTopMessages(void)
 		case MILITIA_INTERRUPT_MESSAGE:
 		case AIR_RAID_TURN_MESSAGE:
 			// OK, update timer.....
-			if (TIMECOUNTERDONE(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS))
+			if (COUNTERDONE(TEAMTURNUPDATE))
 			{
-				RESETTIMECOUNTER(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS);
-
 				// Update counter....
 				if (ts->usTactialTurnLimitCounter < ts->usTactialTurnLimitMax)
 				{
@@ -1912,10 +1908,8 @@ void HandleTopMessages(void)
 			{
 				ts->uiTactialTurnLimitClock = 0;
 
-				if (TIMECOUNTERDONE(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS))
+				if (COUNTERDONE(TEAMTURNUPDATE))
 				{
-					RESETTIMECOUNTER(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS);
-
 					if (ts->fTactialTurnLimitStartedBeep)
 					{
 						if (GetJA2Clock() - gTopMessage.uiTimeSinceLastBeep > PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS)
@@ -2056,8 +2050,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 	gTacticalStatus.fTactialTurnLimitStartedBeep = FALSE;
 
 	// RESET COIUNTER...
-	RESETTIMECOUNTER( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS );
-
+	RESETCOUNTER(TEAMTURNUPDATE);
 
 	// OK, set value
 	AddTopMessage(fInterrupt != TRUE ? PLAYER_TURN_MESSAGE : PLAYER_INTERRUPT_MESSAGE);

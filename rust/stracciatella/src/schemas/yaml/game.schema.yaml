@@ -48,15 +48,18 @@ properties:
       power consumption, higher values can make the game appear to be more responsive.
 
       Stracciatella default value: `40`
-  ms_per_time_slice:
-    $ref: types/int32.schema.yaml
-    title: Milliseconds per time slice
+  game_durations_multiplier:
+    type: number
+    minimum: 0.25
+    maximum: 4.0
+    title: Game durations multiplier
     description: |
-      Number of milliseconds for one game time slice.
+      Many of the game's predefined durations are multiplied by this value, including animations. This means
+      that a value greater than 1 slows down the game, while values less than 1 speed it up. For example, the
+      dot on the radar map blinks once every 400 milliseconds by default; with game_durations_multiplier set
+      to 1.15 this would be slowed down to once every 460 milliseconds.
 
-      Decreasing this value will speed up UI transitions and soldier animations.
-
-      Stracciatella default value: `10`
+      Stracciatella default value: `1`
   starting_cash_easy:
     $ref: types/int32.schema.yaml
     title: Starting cash on easy difficulty
@@ -497,7 +500,6 @@ required:
   - can_enter_turnbased
   - middle_mouse_look
   - draw_item_shadow
-  - ms_per_time_slice
   - starting_cash_easy
   - starting_cash_medium
   - starting_cash_hard

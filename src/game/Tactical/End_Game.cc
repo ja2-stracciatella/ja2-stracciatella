@@ -155,7 +155,7 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 
 	gTacticalStatus.uiFlags |= IN_DEIDRANNA_ENDGAME;
 
-	SetCustomizableTimerCallbackAndDelay( 2000, DeidrannaTimerCallback, FALSE );
+	SetCustomizableTimerCallbackAndDelay(2s, DeidrannaTimerCallback, false);
 
 }
 
@@ -394,8 +394,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 	// gTacticalStatus.uiFlags |= IN_DEIDRANNA_ENDGAME;
 
-	SetCustomizableTimerCallbackAndDelay( 3000, QueenBitchTimerCallback, FALSE );
-
+	SetCustomizableTimerCallbackAndDelay(3s, QueenBitchTimerCallback, false);
 
 	// Kill all enemies in creature team.....
 	FOR_EACH_IN_TEAM(s, CREATURE_TEAM)

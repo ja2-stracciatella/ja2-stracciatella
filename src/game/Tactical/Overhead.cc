@@ -562,10 +562,9 @@ void ExecuteOverhead(void)
 
 	if (COUNTERDONE(TOVERHEAD))
 	{
-		RESETCOUNTER(TOVERHEAD);
-
 		// Diagnostic Stuff
 		UINT32 uiTimerVal = GetJA2Clock();
+		extern UINT32 guiTimerDiag;
 		guiTimerDiag = uiTimerVal - iTimerTest;
 		iTimerTest  = uiTimerVal;
 
@@ -605,9 +604,6 @@ void ExecuteOverhead(void)
 		{
 			SOLDIERTYPE* pSoldier = MercSlots[cnt];
 
-			// Syncronize for upcoming soldier counters
-			SYNCTIMECOUNTER();
-
 			if (pSoldier != NULL)
 			{
 				HandlePanelFaceAnimations(pSoldier);
@@ -620,8 +616,6 @@ void ExecuteOverhead(void)
 						pSoldier->bDisplayDamageCount++;
 						pSoldier->sDamageX += 1;
 						pSoldier->sDamageY -= 1;
-
-						RESETTIMECOUNTER(pSoldier->DamageCounter, DAMAGE_DISPLAY_DELAY);
 					}
 
 					if (pSoldier->bDisplayDamageCount >= 8)
@@ -636,8 +630,6 @@ void ExecuteOverhead(void)
 				if (pSoldier->fBeginFade &&
 						TIMECOUNTERDONE(pSoldier->FadeCounter, NEW_FADE_DELAY))
 				{
-					RESETTIMECOUNTER(pSoldier->FadeCounter, NEW_FADE_DELAY);
-
 					// Fade out....
 					if (pSoldier->fBeginFade == 1)
 					{
@@ -759,8 +751,8 @@ void ExecuteOverhead(void)
 				// Handle animation update counters
 				// ATE: Added additional check here for special value of anispeed that pauses all updates
 #ifndef BOUNDS_CHECKER
-				if (TIMECOUNTERDONE(pSoldier->UpdateCounter, pSoldier->sAniDelay) &&
-					pSoldier->sAniDelay != 10000)
+				if (pSoldier->sAniDelay != 10000 &&
+				    TIMECOUNTERDONE(pSoldier->UpdateCounter, pSoldier->sAniDelay))
 #endif
 				{
 					// Check if we need to look for items
@@ -769,8 +761,6 @@ void ExecuteOverhead(void)
 						RevealRoofsAndItems(pSoldier, FALSE);
 						pSoldier->uiStatusFlags &= ~SOLDIER_LOOKFOR_ITEMS;
 					}
-
-					RESETTIMECOUNTER(pSoldier->UpdateCounter, pSoldier->sAniDelay);
 
 					BOOLEAN fNoAPsForPendingAction = FALSE;
 
@@ -1156,9 +1146,6 @@ void ExecuteOverhead(void)
 				guiAISlotToHandle == HANDLE_OFF_MAP_MERC
 				&& guiAIAwaySlotToHandle != RESET_HANDLE_OF_OFF_MAP_MERCS)
 		{
-			// Syncronize for upcoming soldier counters
-			SYNCTIMECOUNTER();
-
 			// the ONLY thing to do with away soldiers is process their schedule if they have one
 			// and there is an action for them to do (like go on-sector)
 			SOLDIERTYPE* const pSoldier = AwaySlots[guiAIAwaySlotToHandle];
@@ -4483,7 +4470,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 		// Play death music
 		SetMusicMode( MUSIC_TACTICAL_DEFEAT );
-		SetCustomizableTimerCallbackAndDelay( 10000, DeathNoMessageTimerCallback, FALSE );
+		SetCustomizableTimerCallbackAndDelay(10s, DeathNoMessageTimerCallback, false);
 
 		if ( CheckFact( FACT_FIRST_BATTLE_BEING_FOUGHT, 0 ) )
 		{
@@ -4699,7 +4686,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			}
 		}
 
-		SetCustomizableTimerCallbackAndDelay(3000, HandleThePlayerBeNotifiedOfSomeoneElseInSector, FALSE);
+		SetCustomizableTimerCallbackAndDelay(3s, HandleThePlayerBeNotifiedOfSomeoneElseInSector, false);
 
 		//Whenever returning TRUE, make sure you clear gfBlitBattleSectorLocator;
 		gfBlitBattleSectorLocator = FALSE;
@@ -5071,11 +5058,11 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 			if ( fDoCapture )
 			{
 				EndCaptureSequence( );
-				SetCustomizableTimerCallbackAndDelay( 3000, CaptureTimerCallback, FALSE );
+				SetCustomizableTimerCallbackAndDelay(3s, CaptureTimerCallback, false);
 			}
 			else
 			{
-				SetCustomizableTimerCallbackAndDelay( 10000, DeathTimerCallback, FALSE );
+				SetCustomizableTimerCallbackAndDelay(10s, DeathTimerCallback, false);
 			}
 
 		}
@@ -6216,7 +6203,7 @@ void HandleThePlayerBeNotifiedOfSomeoneElseInSector(void)
 		AreWeInAUIMenu()
 		)
 	{
-		SetCustomizableTimerCallbackAndDelay(2000, HandleThePlayerBeNotifiedOfSomeoneElseInSector, FALSE);
+		SetCustomizableTimerCallbackAndDelay(2s, HandleThePlayerBeNotifiedOfSomeoneElseInSector, false);
 		return;
 	}
 

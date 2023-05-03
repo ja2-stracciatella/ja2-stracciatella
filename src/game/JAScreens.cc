@@ -76,7 +76,7 @@ RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] =
 	DefaultDebugPage4
 };
 
-
+UINT32 guiTimerDiag; // set by ExecuteOverhead
 void DisplayFrameRate( )
 {
 	static UINT32		uiFPS = 0;
@@ -87,9 +87,6 @@ void DisplayFrameRate( )
 
 	if ( COUNTERDONE( FPSCOUNTER ) )
 	{
-		// Reset counter
-		RESETCOUNTER( FPSCOUNTER );
-
 		uiFPS = uiFrameCount;
 		uiFrameCount = 0;
 	}

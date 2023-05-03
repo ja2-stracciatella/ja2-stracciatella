@@ -230,7 +230,6 @@ void RenderRadarScreen()
 		// Cycle fFlash variable
 		if (COUNTERDONE(RADAR_MAP_BLINK))
 		{
-			RESETCOUNTER(RADAR_MAP_BLINK);
 			gfRadarCurrentGuyFlash = !gfRadarCurrentGuyFlash;
 		}
 

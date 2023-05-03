@@ -11,7 +11,7 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 
 	f_draw_item_shadow = gp.getOptionalBool("draw_item_shadow", true);
 	target_fps = gp.getOptionalInt("target_fps", 40);
-	ms_per_time_slice = gp.getOptionalInt("ms_per_time_slice", 10);
+	game_durations_multiplier = gp.getOptionalDouble("game_durations_multiplier", 1.0);
 
 	starting_cash_easy = gp.getOptionalInt("starting_cash_easy", 45000);
 	starting_cash_medium = gp.getOptionalInt("starting_cash_medium", 35000);

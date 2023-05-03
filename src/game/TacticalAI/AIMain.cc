@@ -42,7 +42,7 @@
 
 #include <algorithm>
 
-#define AI_DELAY 100
+constexpr milliseconds AI_DELAY = 100ms;
 
 
 //
@@ -169,11 +169,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		{
 			// CAMFIELD, LOOK HERE!
 			return;
-		}
-		else
-		{
-			//Reset counter!
-			RESETTIMECOUNTER(pSoldier->AICounter, AI_DELAY);
 		}
 		//#endif
 	}
@@ -1346,10 +1341,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			else
 			{
 				RESETTIMECOUNTER( pSoldier->AICounter, pSoldier->usActionData );
-				if (pSoldier->ubProfile != NO_PROFILE)
-				{
-					SLOGD("{} waiting {} from {}", pSoldier->name, pSoldier->AICounter, GetJA2Clock());
-				}
 			}
 			ActionDone( pSoldier );
 			break;

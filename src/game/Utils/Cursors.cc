@@ -1192,8 +1192,6 @@ void HandleAnimatedCursors(void)
 {
 	if (COUNTERDONE(CURSORCOUNTER))
 	{
-		RESETCOUNTER(CURSORCOUNTER);
-
 		if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
 		{
 			UpdateAnimatedCursorFrames(gViewportRegion.Cursor);
@@ -1215,8 +1213,6 @@ void HandleAnimatedCursors(void)
 
 	if (COUNTERDONE(CURSORFLASHUPDATE))
 	{
-		RESETCOUNTER(CURSORFLASHUPDATE);
-
 		if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
 		{
 			UpdateFlashingCursorFrames(gViewportRegion.Cursor);
@@ -1352,7 +1348,7 @@ static void DrawMouseText(void)
 				{
 					if (COUNTERDONE(INVALID_AP_HOLD))
 					{
-						RESETCOUNTER(INVALID_AP_HOLD);
+						// INVALID_AP_HOLD was reset by COUNTERDONE
 						RESETCOUNTER(CURSORFLASH);
 
 						fShow = !fShow;
@@ -1363,7 +1359,7 @@ static void DrawMouseText(void)
 				{
 					if (COUNTERDONE(CURSORFLASH))
 					{
-						RESETCOUNTER(CURSORFLASH);
+						// CURSORFLASH was reset by COUNTERDONE
 						RESETCOUNTER(INVALID_AP_HOLD);
 
 						fShow = !fShow;

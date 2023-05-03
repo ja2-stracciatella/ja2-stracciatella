@@ -1683,7 +1683,6 @@ void RenderWorld(void)
 	// For now here, update animated tiles
 	if (COUNTERDONE(ANIMATETILES))
 	{
-		RESETCOUNTER(ANIMATETILES);
 		for (UINT32 i = 0; i != gusNumAnimatedTiles; ++i)
 		{
 			TILE_ANIMATION_DATA& a = *gTileDatabase[gusAnimatedTiles[i]].pAnimData;
@@ -1694,7 +1693,6 @@ void RenderWorld(void)
 	// HERE, UPDATE GLOW INDEX
 	if (COUNTERDONE(GLOW_ENEMYS))
 	{
-		RESETCOUNTER(GLOW_ENEMYS);
 		gsCurrentGlowFrame     = (gsCurrentGlowFrame     + 1) % lengthof(gsGlowFrames);
 		gsCurrentItemGlowFrame = (gsCurrentItemGlowFrame + 1) % NUM_ITEM_CYCLE_COLORS;
 	}
@@ -2117,7 +2115,6 @@ void ScrollWorld(void)
 			if (!g_scroll_inertia && !gfScrollPending)
 			{
 				if (!COUNTERDONE(STARTSCROLL)) break;
-				RESETCOUNTER(STARTSCROLL);
 			}
 
 			if (!gfIsUsingTouch) {
@@ -2171,8 +2168,6 @@ void ScrollWorld(void)
 	{
 		if (COUNTERDONE(NEXTSCROLL) || fIsScrollingByOffset)
 		{
-			RESETCOUNTER(NEXTSCROLL);
-
 			// Are we starting a new scroll?
 			if (!g_scroll_inertia && !gfScrollPending)
 			{

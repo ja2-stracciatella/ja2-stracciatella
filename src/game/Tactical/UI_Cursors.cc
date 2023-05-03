@@ -80,7 +80,7 @@ BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveState* const puiCursorFlags, BOOLE
 		RESETCOUNTER(PATHFINDCOUNTER);
 		do_new_tile = true;
 	}
-	else if (COUNTERDONE(PATHFINDCOUNTER)) // Only dipslay aps after a delay
+	else if (COUNTERDONE(PATHFINDCOUNTER, false)) // Only dipslay aps after a delay
 	{
 		// Don't reset counter: One when we move again do we do this!
 		show_APs = true;
@@ -215,8 +215,6 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 
 	if (!(gTacticalStatus.uiFlags & INCOMBAT) && COUNTERDONE(TARGETREFINE))
 	{
-		RESETCOUNTER(TARGETREFINE);
-
 		if (s->bDoBurst)
 		{
 			s->bShownAimTime = REFINE_AIM_BURST;
@@ -634,8 +632,6 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 
 		if (!(gTacticalStatus.uiFlags & INCOMBAT) && COUNTERDONE(NONGUNTARGETREFINE))
 		{
-			RESETCOUNTER(NONGUNTARGETREFINE);
-
 			if (s->bShownAimTime == REFINE_KNIFE_1)
 			{
 				PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
@@ -717,8 +713,6 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 
 		if (!(gTacticalStatus.uiFlags & INCOMBAT) && COUNTERDONE(NONGUNTARGETREFINE))
 		{
-			RESETCOUNTER(NONGUNTARGETREFINE);
-
 			if (s->bShownAimTime == REFINE_PUNCH_1)
 			{
 				PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);

@@ -2681,11 +2681,14 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				gMercProfiles[ ubTargetNPC ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_LEFT_COUNTRY;
 				// fall through!
 			case NPC_ACTION_CARMEN_LEAVES_FOR_C13:
+			{
 				// set "don't add to sector" cause he'll only appear after an event...
 				gMercProfiles[ ubTargetNPC ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR;
 
-				SetCustomizableTimerCallbackAndDelay(params->getAmount(10000), CarmenLeavesSectorCallback, TRUE );
+				milliseconds const carmenLeavesDelay{params->getAmount(10000)};
+				SetCustomizableTimerCallbackAndDelay(carmenLeavesDelay, CarmenLeavesSectorCallback, true);
 				break;
+			}
 
 			case NPC_ACTION_CARMEN_LEAVES_ON_NEXT_SECTOR_LOAD:
 				if (gMercProfiles[ CARMEN ].bNPCData == 0)

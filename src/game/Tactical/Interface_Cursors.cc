@@ -584,8 +584,6 @@ static void DrawSnappingCursor(void)
 		{
 			if ( COUNTERDONE( CURSORFLASH ) )
 			{
-				RESETCOUNTER( CURSORFLASH );
-
 				fShowAP = !fShowAP;
 			}
 		}

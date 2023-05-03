@@ -3025,9 +3025,6 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveState const
 			// ONLY DIPSLAY PATH AFTER A DELAY
 			if ( COUNTERDONE( PATHFINDCOUNTER ) )
 			{
-				// Reset counter
-				RESETCOUNTER( PATHFINDCOUNTER );
-
 				if ( gfPlotNewMovement  )
 				{
 					DrawUIMovementPath( pSoldier, usMapPos,  uiFlags );

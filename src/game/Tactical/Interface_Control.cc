@@ -395,9 +395,6 @@ void RenderTopmostTacticalInterface()
 		RenderMovementMenu();
 	}
 
-	// Syncronize for upcoming soldier counters
-	SYNCTIMECOUNTER();
-
 	// Setup system for video overlay (text and blitting) Sets clipping rects, etc
 	StartViewportOverlays();
 

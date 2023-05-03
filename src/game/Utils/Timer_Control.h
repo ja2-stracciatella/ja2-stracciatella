@@ -1,12 +1,18 @@
 #ifndef __TIMER_CONTROL_H
 #define __TIMER_CONTROL_H
 
-#include "Types.h"
+#include <chrono>
+#include <cstdint>
+
+using ReferenceClock = std::chrono::steady_clock;
+using TIMECOUNTER = std::chrono::time_point<ReferenceClock>;
+using std::chrono::milliseconds;
+using namespace std::chrono_literals;
 
 typedef void (*CUSTOMIZABLE_TIMER_CALLBACK) ( void );
 
 // TIMER DEFINES
-enum
+enum PredefinedCounters
 {
 	TOVERHEAD = 0,			// Overhead time slice
 	NEXTSCROLL,			// Scroll Speed timer
@@ -29,55 +35,46 @@ enum
 	INVALID_AP_HOLD,		// TIME TO HOLD INVALID AP
 	RADAR_MAP_BLINK,		// BLINK DELAY FOR RADAR MAP
 	MUSICOVERHEAD,			// MUSIC TIMER
+	TEAMTURNUPDATE,
 	NUMTIMERS
 };
 
-// Base resultion of callback timer
-#define BASETIMESLICE 10
-
-extern const INT32 giTimerIntervals[NUMTIMERS];
-extern INT32       giTimerCounters[NUMTIMERS];
-
-// GLOBAL SYNC TEMP TIME
-extern UINT32 guiClockTimer;
-
-extern UINT32 guiTimerDiag;
-
-extern INT32 giTimerTeamTurnUpdate;
-
-
 void InitializeJA2Clock(void);
-void ShutdownJA2Clock(void);
 
-#define GetJA2Clock() guiBaseJA2Clock
+void PauseTime(bool fPaused);
 
-void PauseTime( BOOLEAN fPaused );
-
-void SetCustomizableTimerCallbackAndDelay( INT32 iDelay, CUSTOMIZABLE_TIMER_CALLBACK pCallback, BOOLEAN fReplace );
-void CheckCustomizableTimer( void );
+void SetCustomizableTimerCallbackAndDelay(ReferenceClock::duration, CUSTOMIZABLE_TIMER_CALLBACK, bool fReplace);
+void CheckCustomizableTimer();
 
 //Don't modify this value
-extern UINT32	guiBaseJA2Clock;
-extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
+inline std::uint32_t guiBaseJA2Clock;
+void UpdateJA2Clock();
+[[nodiscard]] static inline std::uint32_t GetJA2Clock() { return guiBaseJA2Clock; }
 
-// MACROS
-// Check if new counter < 0        | set to 0 |        Decrement
+inline CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback{nullptr};
 
-#define UPDATECOUNTER( c )		( ( giTimerCounters[ c ] - BASETIMESLICE ) < 0 ) ?  ( giTimerCounters[ c ] = 0 ) : ( giTimerCounters[ c ] -= BASETIMESLICE )
-#define RESETCOUNTER( c )		( giTimerCounters[ c ] = giTimerIntervals[ c ] )
-#define COUNTERDONE( c )		( giTimerCounters[ c ] == 0 ) ? TRUE : FALSE
+// Test if the given counter has elapsed. Calls RESETCOUNTER for this counter
+// if autoReset is true and the timer has elapsed.
+[[nodiscard]] bool COUNTERDONE(PredefinedCounters, bool autoReset = true);
 
-#define UPDATETIMECOUNTER( c )		( ( c - BASETIMESLICE ) < 0 ) ?  ( c = 0 ) : ( c -= BASETIMESLICE )
-#define RESETTIMECOUNTER( c, d )	( c = d )
+void RESETCOUNTER(PredefinedCounters);
 
-#ifdef BOUNDS_CHECKER
-	#define TIMECOUNTERDONE(c, d) true
-#else
-	#define TIMECOUNTERDONE(c, d) (c == 0)
-#endif
+// Test if the given counter has elapsed. Calls RESETCOUNTER for this counter
+// if the timer has elapsed.
+[[nodiscard]] bool TIMECOUNTERDONE(TIMECOUNTER &, ReferenceClock::duration);
+// As above, except that you can specify millis == 0 if you do not want to
+// automatically reset the counter.
+[[nodiscard]] bool TIMECOUNTERDONE(TIMECOUNTER &, unsigned int millis);
 
-#define SYNCTIMECOUNTER()		(void)0
-#define ZEROTIMECOUNTER( c )		( c = 0 )
+
+void RESETTIMECOUNTER(TIMECOUNTER &, ReferenceClock::duration);
+// This function exists for backwards compatibility only. In new code please
+// use a proper chrono type to specify the duration.
+static inline void RESETTIMECOUNTER(TIMECOUNTER & tc, unsigned int const millis)
+{
+	RESETTIMECOUNTER(tc, milliseconds{millis});
+}
+static inline void ZEROTIMECOUNTER(TIMECOUNTER & tc) { tc = ReferenceClock::now(); }
 
 // whenever guiBaseJA2Clock changes, we must reset all the timer variables that
 // use it as a reference

@@ -124,6 +124,8 @@ static void MainLoop()
 	while (true)
 	{
 		// cycle until SDL_Quit is received
+		extern void UpdateJA2Clock();
+		UpdateJA2Clock();
 
 		SDL_Event event;
 		if (SDL_PollEvent(&event))

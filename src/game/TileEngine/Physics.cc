@@ -213,8 +213,6 @@ void SimulateWorld(  )
 
 	if ( COUNTERDONE( PHYSICSUPDATE ) )
 	{
-		RESETCOUNTER( PHYSICSUPDATE );
-
 		for( cnt = 0;cnt < guiNumObjectSlots; cnt++)
 		{
 			// CHECK FOR ALLOCATED
