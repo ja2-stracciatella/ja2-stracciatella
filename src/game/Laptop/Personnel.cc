@@ -658,7 +658,7 @@ static void DisplayCharName(SOLDIERTYPE const& s)
 	}
 
 	ST::string sString;
-	if (sTownName != NULL)
+	if (!sTownName.empty())
 	{
 		//nick name - town name
 		sString = ST::format("{} - {}", s.name, sTownName);

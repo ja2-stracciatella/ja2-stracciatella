@@ -282,7 +282,7 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 		FRAME_BUFFER->ShadowRect(usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET, usPosX + 48 + AIM_FI_FACE_OFFSET, usPosY + 43 + AIM_FI_FACE_OFFSET);
 	}
 
-	if (text != NULL)
+	if (!text.empty())
 	{
 		DrawTextToScreen(text, usPosX + AIM_FI_AWAY_TEXT_OFFSET_X, usPosY + AIM_FI_AWAY_TEXT_OFFSET_Y, AIM_FI_AWAY_TEXT_OFFSET_WIDTH, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}

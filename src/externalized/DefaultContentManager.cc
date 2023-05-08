@@ -796,10 +796,9 @@ JsonValue DefaultContentManager::readJsonDataFileWithSchema(const ST::string& js
 		auto numErrors = VecCString_len(errors.get());
 		for (uintptr_t i = 0; i < numErrors; i++) {
 			RustPointer<char> error(VecCString_get(errors.get(), i));
-
 			SLOGE("{}", error.get());
-			throw DataError(ST::format("JSON schema validation error(s) occurred when validating JSON file `{}`", jsonPath));
 		}
+		throw DataError(ST::format("JSON schema validation error(s) occurred when validating JSON file `{}`", jsonPath));
 	}
 	return value;
 }
@@ -1049,7 +1048,7 @@ bool DefaultContentManager::loadTacticalLayerData()
 
 bool DefaultContentManager::loadMercsData()
 {
-	MercProfileInfo::load = [=](uint8_t p) { return this->getMercProfileInfo(p); };
+	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
 	auto json = readJsonDataFileWithSchema("mercs-profile-info.json");
 	for (auto& element : json.toVec())
 	{

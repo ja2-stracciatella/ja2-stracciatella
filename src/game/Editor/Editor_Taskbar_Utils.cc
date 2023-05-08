@@ -390,7 +390,7 @@ void DoTaskbar(void)
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_YELLOW );
 			ClickEditorButton( TAB_ITEMS );
-			ClickEditorButton( ITEMS_WEAPONS + eInfo.uiItemType - TBAR_MODE_ITEM_WEAPONS );
+			ClickEditorButton(static_cast<INT32>(ITEMS_WEAPONS) + static_cast<INT32>(eInfo.uiItemType) - static_cast<INT32>(TBAR_MODE_ITEM_WEAPONS));
 			InitEditorItemsInfo( eInfo.uiItemType );
 			ShowItemStatsPanel();
 			gfShowPits = TRUE;
