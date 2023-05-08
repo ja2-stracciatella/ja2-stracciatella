@@ -1030,7 +1030,7 @@ try
 		FRAME_BUFFER->ShadowRect(FACE_X, FACE_Y, FACE_X + FACE_WIDTH, FACE_Y + FACE_HEIGHT);
 	}
 
-	if (text != NULL)
+	if (!text.empty())
 	{
 		DrawTextToScreen(text, FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}

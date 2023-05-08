@@ -1641,7 +1641,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 			HideEditorButtons( MERCS_SCHEDULE, MERCS_GLOWSCHEDULE );
 			ShowEditorButtons( FIRST_MERCS_GETITEM_BUTTON, LAST_MERCS_GETITEM_BUTTON );
 			InitEditorItemsInfo( eInfo.uiItemType );
-			ClickEditorButton( ITEMS_WEAPONS + eInfo.uiItemType - TBAR_MODE_ITEM_WEAPONS );
+			ClickEditorButton(static_cast<INT32>(ITEMS_WEAPONS) + static_cast<INT32>(eInfo.uiItemType) - static_cast<INT32>(TBAR_MODE_ITEM_WEAPONS));
 			break;
 		case MERC_INVENTORYMODE:
 			UpdateMercItemSlots();

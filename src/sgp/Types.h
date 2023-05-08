@@ -189,7 +189,7 @@ namespace _Types
 	template<typename T>
 	struct BoxedValue
 	{
-		BoxedValue<T>(T v) : val(v) {};
+		BoxedValue(T v) : val(v) {};
 
 		operator T() const { return val; }
 
