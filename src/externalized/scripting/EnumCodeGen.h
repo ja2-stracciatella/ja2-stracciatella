@@ -54,10 +54,10 @@ void PrintEnumFlags(std::ostream& os, const ST::string& zTypeName = ST::null)
 #ifndef MAGIC_ENUM_SUPPORTED_ALIASES
 	throw std::runtime_error("enum alias support is required")
 #endif
-	os << (zTypeName.empty() ? magic_enum::flags::enum_type_name<E>() : zTypeName.to_std_string())
+	os << (zTypeName.empty() ? magic_enum::enum_type_name<E>() : zTypeName.to_std_string())
 	   << " = {" << std::endl;
 
-	constexpr auto& entries = magic_enum::flags::enum_entries<E>();
+	constexpr auto& entries = magic_enum::enum_entries<E>();
 	for (auto& pair : entries)
 	{
 		E value = pair.first;
