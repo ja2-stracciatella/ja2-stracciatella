@@ -24,7 +24,7 @@
 static void InitEditorItemStatsButtons(void)
 {
 	INT16 const y = TASKBAR_Y;
-	iEditorButton[ITEMSTATS_PANEL]      = CreateLabel(ST::null, 0, 0, 0, 480, y + 1, 160, 99, MSYS_PRIORITY_NORMAL);
+	iEditorButton[ITEMSTATS_PANEL]      = CreateLabel({}, 0, 0, 0, 480, y + 1, 160, 99, MSYS_PRIORITY_NORMAL);
 	iEditorButton[ITEMSTATS_HIDDEN_BTN] = CreateCheckBoxButton(485, y + 5, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL, ItemStatsToggleHideCallback);
 	iEditorButton[ITEMSTATS_DELETE_BTN] = CreateTextButton("Delete", FONT10ARIAL, FONT_RED, FONT_BLACK, 600, y + 81, 36, 16, MSYS_PRIORITY_NORMAL + 1, ItemStatsDeleteCallback);
 }
@@ -258,14 +258,14 @@ static void InitEditorMercsToolbar(void)
 	MakeButtonSchedule(MERCS_SCHEDULE_ACTION3, 186, 55, 77, 16, MercsScheduleAction3Callback, "No action");
 	MakeButtonSchedule(MERCS_SCHEDULE_ACTION4, 186, 76, 77, 16, MercsScheduleAction4Callback, "No action");
 
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA1A, 331, 13, 40, 16, MercsScheduleData1ACallback, ST::null);
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA1B, 381, 13, 40, 16, MercsScheduleData1BCallback, ST::null);
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA2A, 331, 34, 40, 16, MercsScheduleData2ACallback, ST::null);
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA2B, 381, 34, 40, 16, MercsScheduleData2BCallback, ST::null);
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA3A, 331, 55, 40, 16, MercsScheduleData3ACallback, ST::null);
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA3B, 381, 55, 40, 16, MercsScheduleData3BCallback, ST::null);
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA4A, 331, 76, 40, 16, MercsScheduleData4ACallback, ST::null);
-	MakeButtonSchedule(MERCS_SCHEDULE_DATA4B, 381, 76, 40, 16, MercsScheduleData4BCallback, ST::null);
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA1A, 331, 13, 40, 16, MercsScheduleData1ACallback, {});
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA1B, 381, 13, 40, 16, MercsScheduleData1BCallback, {});
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA2A, 331, 34, 40, 16, MercsScheduleData2ACallback, {});
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA2B, 381, 34, 40, 16, MercsScheduleData2BCallback, {});
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA3A, 331, 55, 40, 16, MercsScheduleData3ACallback, {});
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA3B, 381, 55, 40, 16, MercsScheduleData3BCallback, {});
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA4A, 331, 76, 40, 16, MercsScheduleData4ACallback, {});
+	MakeButtonSchedule(MERCS_SCHEDULE_DATA4B, 381, 76, 40, 16, MercsScheduleData4BCallback, {});
 	MakeButtonSchedule(MERCS_SCHEDULE_CLEAR,  516,  2, 77, 16, MercsScheduleClearCallback,  "Clear Schedule");
 	HideEditorButtons(MERCS_SCHEDULE_DATA1A, MERCS_SCHEDULE_DATA4B);
 
@@ -335,8 +335,8 @@ static void InitEditorItemsToolbar(void)
 	iEditorButton[ITEMS_TRIGGERS]   = CreateTextButton( "Triggers",  BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, 383, y + 80, 59, 20, MSYS_PRIORITY_NORMAL, ItemsTriggersCallback);
 	iEditorButton[ITEMS_KEYS]       = CreateTextButton( "Keys",      BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, 442, y + 80, 38, 20, MSYS_PRIORITY_NORMAL, ItemsKeysCallback);
 
-	MakeButton(ITEMS_LEFTSCROLL,   1, 1, ItemsLeftScrollCallback,  EDITORDIR "/leftscroll.sti",  ST::null);
-	MakeButton(ITEMS_RIGHTSCROLL, 50, 1, ItemsRightScrollCallback, EDITORDIR "/rightscroll.sti", ST::null);
+	MakeButton(ITEMS_LEFTSCROLL,   1, 1, ItemsLeftScrollCallback,  EDITORDIR "/leftscroll.sti",  {});
+	MakeButton(ITEMS_RIGHTSCROLL, 50, 1, ItemsRightScrollCallback, EDITORDIR "/rightscroll.sti", {});
 }
 
 
@@ -345,7 +345,7 @@ static void InitEditorMapInfoToolbar(void)
 	MakeButton(MAPINFO_ADD_LIGHT1_SOURCE, 10, 2, BtnDrawLightsCallback, EDITORDIR "/light.sti", L"Add ambient light source");
 
 	INT16 const y = TASKBAR_Y;
-	iEditorButton[MAPINFO_LIGHT_PANEL]     = CreateLabel(ST::null, 0, 0, 0, 45, y + 2, 60, 50, MSYS_PRIORITY_NORMAL);
+	iEditorButton[MAPINFO_LIGHT_PANEL]     = CreateLabel({}, 0, 0, 0, 45, y + 2, 60, 50, MSYS_PRIORITY_NORMAL);
 	iEditorButton[MAPINFO_PRIMETIME_LIGHT] = MakeRadio(48,  5, MapInfoPrimeTimeRadioCallback);
 	iEditorButton[MAPINFO_NIGHTTIME_LIGHT] = MakeRadio(48, 20, MapInfoNightTimeRadioCallback);
 	iEditorButton[MAPINFO_24HOUR_LIGHT]    = MakeRadio(48, 35, MapInfo24HourTimeRadioCallback);
@@ -353,7 +353,7 @@ static void InitEditorMapInfoToolbar(void)
 
 	MakeButton(MAPINFO_TOGGLE_FAKE_LIGHTS, 120, 2, BtnFakeLightCallback, EDITORDIR "/fakelight.sti", "Toggle fake ambient lights.");
 
-	iEditorButton[MAPINFO_RADIO_PANEL]    = CreateLabel(ST::null, 0, 0, 0, 207, y + 2, 70, 50, MSYS_PRIORITY_NORMAL);
+	iEditorButton[MAPINFO_RADIO_PANEL]    = CreateLabel({}, 0, 0, 0, 207, y + 2, 70, 50, MSYS_PRIORITY_NORMAL);
 	iEditorButton[MAPINFO_RADIO_NORMAL]   = MakeRadio(210,  5, MapInfoNormalRadioCallback);
 	iEditorButton[MAPINFO_RADIO_BASEMENT] = MakeRadio(210, 20, MapInfoBasementRadioCallback);
 	iEditorButton[MAPINFO_RADIO_CAVES]    = MakeRadio(210, 35, MapInfoCavesRadioCallback);

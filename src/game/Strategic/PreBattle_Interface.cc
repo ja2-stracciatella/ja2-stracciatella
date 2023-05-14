@@ -206,7 +206,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 
 		// Reset the help text for mouse regions
-		gMapStatusBarsRegion.SetFastHelpText(ST::null);
+		gMapStatusBarsRegion.SetFastHelpText({});
 
 		gfDisplayPotentialRetreatPaths = false;
 

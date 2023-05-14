@@ -501,7 +501,7 @@ static void CreateFileDialog(const ST::string& zTitle)
 	iFileDlgButtons[FILEDIALOG_TITLE] = CreateLabel(zTitle, FONT16ARIAL, FONT_LTKHAKI, FONT_DKKHAKI, 179, 44, 281, 30, basePriority+1);
 
 	//Background
-	iFileDlgButtons[FILEDIALOG_BACKGROUND] = CreateLabel(ST::null, FONT16ARIAL, 0, 0, 179, 69, 281, 216, basePriority+1);
+	iFileDlgButtons[FILEDIALOG_BACKGROUND] = CreateLabel({}, FONT16ARIAL, 0, 0, 179, 69, 281, 216, basePriority+1);
 
 	//File list window
 	iFileDlgButtons[FILEDIALOG_LIST_BACKGROUND] = CreateHotSpot(179 + 4, 69 + 3 + 24, 179 + 4 + 240, 69 + 120 + 3, basePriority+2, FDlgNamesCallback);

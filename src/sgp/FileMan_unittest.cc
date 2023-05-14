@@ -47,7 +47,7 @@ TEST(FileManTest, joinPathsMultiple)
 		ST::string result;
 
 		result = FileMan::joinPaths({});
-		EXPECT_EQ(result, ST::null);
+		EXPECT_TRUE(result.empty());
 
 		result = FileMan::joinPaths({ "foo" });
 		EXPECT_EQ(result, "foo");

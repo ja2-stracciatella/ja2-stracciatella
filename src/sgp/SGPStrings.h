@@ -42,7 +42,7 @@ ST::string st_buffer_escape(const ST::utf32_buffer& buf);
 template<typename T>
 ST::string st_checked_buffer_to_string(ST::string& err_msg, const ST::buffer<T>& buf)
 {
-	err_msg = ST::null;
+	err_msg.clear();
 	try
 	{
 		return buf.c_str();

@@ -656,7 +656,7 @@ static ST::string ProcessHistoryTransactionString(const HistoryUnit* h)
 		case HISTORY_WONBATTLE:
 			return pHistoryStrings[code];
 	}
-	return ST::null;
+	return {};
 }
 
 

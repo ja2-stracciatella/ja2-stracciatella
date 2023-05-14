@@ -3503,7 +3503,7 @@ void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHe
 			return;
 	}
 
-	ST::string help = (fClearHelpText ? ST::null : gzLaptopHelpText[uiHelpTextID]);
+	ST::string help = (fClearHelpText ? ST::string() : gzLaptopHelpText[uiHelpTextID]);
 	pRegion->SetFastHelpText(help);
 }
 

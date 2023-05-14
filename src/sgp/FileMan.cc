@@ -72,7 +72,7 @@ ST::string FileMan::joinPaths(const ST::string& first, const ST::string& second)
 
 ST::string FileMan::joinPaths(const std::vector<ST::string> parts)
 {
-	if (parts.size() < 1) return ST::null;
+	if (parts.size() < 1) return {};
 
 	ST::string path = parts[0];
 	for (size_t i = 1; i < parts.size(); i++)
@@ -287,7 +287,7 @@ ST::string FileMan::getFileName(const ST::string &path)
 ST::string FileMan::getFileNameWithoutExt(const ST::string& path)
 {
 	RustPointer<char> filestem{Path_filestem(path.c_str())};
-	return filestem ? ST::string(filestem.get()) : ST::null;
+	return filestem ? ST::string(filestem.get()) : ST::string();
 }
 
 bool FileMan::isFile(const ST::string& path) {

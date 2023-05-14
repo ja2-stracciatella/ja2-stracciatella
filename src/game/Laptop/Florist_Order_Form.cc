@@ -986,6 +986,6 @@ void InitFloristOrderForm()
 	gubCurrentlySelectedFlowerLocation = 0;
 	gbCurrentlySelectedCard = -1;
 
-	gsSentimentTextField = ST::null;
-	gsNameTextField = ST::null;
+	gsSentimentTextField.clear();
+	gsNameTextField.clear();
 }

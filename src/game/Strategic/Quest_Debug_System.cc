@@ -607,7 +607,7 @@ ScreenID QuestDebugScreenHandle()
 	{
 		if( gubTextEntryAction != QD_DROP_DOWN_NO_ACTION )
 		{
-			CreateDestroyDisplayTextEntryBox( gubTextEntryAction, ST::null, NULL );
+			CreateDestroyDisplayTextEntryBox( gubTextEntryAction, {}, NULL );
 			gubTextEntryAction = QD_DROP_DOWN_NO_ACTION;
 		}
 
@@ -1009,7 +1009,7 @@ static void RenderQuestDebugSystem(void)
 	if( gfTextEntryActive )
 	{
 		gubTextEntryAction = QD_DROP_DOWN_DISPLAY;
-		CreateDestroyDisplayTextEntryBox( gubTextEntryAction, ST::null, NULL );
+		CreateDestroyDisplayTextEntryBox( gubTextEntryAction, {}, NULL );
 		gubTextEntryAction = QD_DROP_DOWN_NO_ACTION;
 	}
 

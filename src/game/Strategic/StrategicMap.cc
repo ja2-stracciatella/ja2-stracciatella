@@ -1061,7 +1061,7 @@ check_entry:
 			{ /* Strategic insertion failed because it expected to find an entry
 				 * point. This is likely a missing part of the map or possible fault in
 				 * strategic movement costs, traversal logic, etc. */
-				ST::string sector = ST::null;
+				ST::string sector;
 				if (gfWorldLoaded)
 				{
 					if (gWorldSector.z == 0)
@@ -1245,7 +1245,7 @@ ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed)
 {
 	if (!sector.IsValid())
 	{
-		return ST::null;
+		return {};
 	}
 
 	if (sector.z != 0)
@@ -1253,7 +1253,7 @@ ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed)
 		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(sector);
 		if (!u || (!(u->uiFlags & SF_ALREADY_VISITED) && !gfGettingNameFromSaveLoadScreen))
 		{ // Display nothing
-			return ST::null;
+			return {};
 		}
 	}
 

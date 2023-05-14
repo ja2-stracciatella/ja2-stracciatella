@@ -1211,7 +1211,7 @@ static void HandleKeyboardShortcuts(void)
 				switch( EditorInputEvent.usParam )
 				{
 					case SDLK_ESCAPE:
-						SetInputFieldString( 0, ST::null );
+						SetInputFieldString( 0, {} );
 						RemoveGotoGridNoUI();
 						break;
 
@@ -1220,7 +1220,7 @@ static void HandleKeyboardShortcuts(void)
 					case 'x':
 						if( EditorInputEvent.usKeyState & ALT_DOWN )
 						{
-							SetInputFieldString( 0, ST::null );
+							SetInputFieldString( 0, {} );
 							RemoveGotoGridNoUI();
 							iCurrentAction = ACTION_QUIT_GAME;
 						}
@@ -3375,7 +3375,7 @@ static void CreateGotoGridNoUI(void)
 	MSYS_DefineRegion(&GotoGridNoUIRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL + 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	//Init a text input field.
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
-	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, ST::null, 6, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, {}, 6, INPUTTYPE_NUMERICSTRICT );
 }
 
 

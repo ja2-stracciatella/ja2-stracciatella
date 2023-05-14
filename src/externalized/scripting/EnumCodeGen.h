@@ -21,7 +21,7 @@
  * @param zTypeName optional type name. Uses the C enum name if not provided
  */
 template<typename E>
-void PrintEnum(std::ostream& os, const ST::string& zTypeName = ST::null)
+void PrintEnum(std::ostream& os, const ST::string& zTypeName = {})
 {
 #ifdef HAS_ENUMGEN_SUPPORT
 	os << (zTypeName.empty() ? magic_enum::enum_type_name<E>() : zTypeName.to_std_string())
@@ -48,7 +48,7 @@ void PrintEnum(std::ostream& os, const ST::string& zTypeName = ST::null)
  * @param zTypeName
  */
 template<typename E>
-void PrintEnumFlags(std::ostream& os, const ST::string& zTypeName = ST::null)
+void PrintEnumFlags(std::ostream& os, const ST::string& zTypeName = {})
 {
 #ifdef MAGIC_ENUM_SUPPORTED
 #ifndef MAGIC_ENUM_SUPPORTED_ALIASES

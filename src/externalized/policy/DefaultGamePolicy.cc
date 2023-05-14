@@ -90,7 +90,7 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 
 	auto campaign = gp["campaign"].toObject();
 	ST::string sector_string = campaign.getOptionalString("start_sector");
-	start_sector = SGPSector::FromShortString(sector_string != ST::null ? sector_string : "A9").AsByte();
+	start_sector = SGPSector::FromShortString(!sector_string.empty() ? sector_string : "A9").AsByte();
 	reveal_start_sector = campaign.getOptionalBool("start_sector_revealed", false);
 }
 

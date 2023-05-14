@@ -182,7 +182,7 @@ JsonValue ItemModel::serialize() const
 ST::string ItemModel::deserializeShortName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string shortName = vanillaItemStrings.getShortName(itemIndex);
-	if (obj.getOptionalString("shortName") != ST::null) {
+	if (!obj.getOptionalString("shortName").empty()) {
 		shortName = obj.getOptionalString("shortName");
 	}
 	return shortName;
@@ -191,7 +191,7 @@ ST::string ItemModel::deserializeShortName(const JsonObject &obj, const VanillaI
 ST::string ItemModel::deserializeName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string name = vanillaItemStrings.getName(itemIndex);
-	if (obj.getOptionalString("name") != ST::null) {
+	if (!obj.getOptionalString("name").empty()) {
 		name = obj.getOptionalString("name");
 	}
 	return name;
@@ -200,7 +200,7 @@ ST::string ItemModel::deserializeName(const JsonObject &obj, const VanillaItemSt
 ST::string ItemModel::deserializeDescription(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string description = vanillaItemStrings.getDescription(itemIndex);
-	if (obj.getOptionalString("description") != ST::null) {
+	if (!obj.getOptionalString("description").empty()) {
 		description = obj.getOptionalString("description");
 	}
 	return description;

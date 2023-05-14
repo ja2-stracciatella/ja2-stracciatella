@@ -3081,7 +3081,7 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 		}
 		else
 		{
-			attachments = ST::null;
+			attachments.clear();
 		}
 
 		if (o->ubNumberOfObjects > 1)
@@ -3149,7 +3149,7 @@ void DebugSoldierPage4()
 				break;
 			// don't care (don't write anything)
 			default:
-				sclass = ST::null;
+				sclass.clear();
 				break;
 		}
 		if (!sclass.empty())

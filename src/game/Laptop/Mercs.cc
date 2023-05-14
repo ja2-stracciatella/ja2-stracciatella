@@ -802,7 +802,7 @@ static void HandleTalkingSpeck(void)
 			if( DisplayMercVideoIntro( MERC_INTRO_TIME ) )
 			{
 				//NULL out the string
-				gsSpeckDialogueTextPopUp = ST::null;
+				gsSpeckDialogueTextPopUp.clear();
 
 				//Start speck talking
 				if( !StartSpeckTalking( gusMercVideoSpeckSpeech ) )

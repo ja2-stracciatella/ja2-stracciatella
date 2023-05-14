@@ -948,7 +948,7 @@ ST::string BuildMilitiaPromotionsString()
 {
 	ST::string str;
 
-	if (gbMilitiaPromotions == 0) return ST::null;
+	if (gbMilitiaPromotions == 0) return {};
 
 	PromoteMilitia(str, gbGreenToElitePromotions, gzLateLocalizedString[STR_LATE_29], gzLateLocalizedString[STR_LATE_22]);
 	PromoteMilitia(str, gbGreenToRegPromotions,  gzLateLocalizedString[STR_LATE_30], gzLateLocalizedString[STR_LATE_23]);

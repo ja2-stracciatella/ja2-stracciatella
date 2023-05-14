@@ -325,7 +325,7 @@ void SetInputFieldString(UINT8 ubField, const ST::string& str)
 	}
 	else if (!curr->fUserField)
 	{
-		curr->str = ST::null;
+		curr->str.clear();
 		curr->numCodepoints = 0;
 	}
 	else
@@ -338,7 +338,7 @@ void SetInputFieldString(UINT8 ubField, const ST::string& str)
 ST::string GetStringFromField(UINT8 const ubField)
 {
 	TEXTINPUTNODE const* const n = GetTextInputField(ubField);
-	return n ? n->str : ST::null;
+	return n ? n->str : ST::string();
 }
 
 
@@ -368,7 +368,7 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 	AssertMsg(!curr->fUserField, ST::format("Attempting to illegally set text into user field {}", curr->ubID));
 	if (iNumber < 0) //negative number converts to blank string
 	{
-		curr->str = ST::null;
+		curr->str.clear();
 		curr->numCodepoints = 0;
 	}
 	else
@@ -804,7 +804,7 @@ static void AddChar(char32_t c)
 	{
 		ST::utf32_buffer codepoints = n.str.to_utf32();
 		size_t i = 0;
-		n.str = ST::null;
+		n.str.clear();
 		while (i < gubCursorPos)
 		{
 			n.str += codepoints[i++];
@@ -842,7 +842,7 @@ static void RemoveChars(size_t const pos, size_t const n)
 	Assert(pos + n <= t.numCodepoints);
 	ST::utf32_buffer codepoints = t.str.to_utf32();
 	size_t i = 0;
-	t.str = ST::null;
+	t.str.clear();
 	while (i < pos)
 	{
 		t.str += codepoints[i++];
@@ -1221,7 +1221,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 	//First make sure the time is a valid time.  If not, then use 23:59
 	if( usTime == 0xffff )
 	{
-		SetInputFieldString(ubField, ST::null);
+		SetInputFieldString(ubField, {});
 		return;
 	}
 	usTime = std::min(1439, int(usTime));
@@ -1230,7 +1230,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 	if (!curr) return;
 
 	AssertMsg(!curr->fUserField, ST::format("Attempting to illegally set text into user field {}", curr->ubID));
-	curr->str = ST::null;
+	curr->str.clear();
 	curr->str += static_cast<char>((usTime / 600) + 0x30); //10 hours
 	curr->str += static_cast<char>((usTime / 60 % 10) + 0x30); //1 hour
 	usTime %= 60;                                  //truncate the hours

@@ -699,7 +699,7 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 	r->MovementCallback   = movecallback;
 	r->ButtonCallback     = buttoncallback;
 	r->FastHelpTimer      = 0;
-	r->FastHelpText       = ST::null;
+	r->FastHelpText.clear();
 	r->FastHelpRect       = nullptr;
 	r->next               = 0;
 	r->prev               = 0;
@@ -732,7 +732,7 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 		FreeBackgroundRectPending(r->FastHelpRect);
 	}
 
-	r->FastHelpText = ST::null;
+	r->FastHelpText.clear();
 
 	MSYS_DeleteRegionFromList(r);
 
@@ -768,7 +768,7 @@ void RefreshMouseRegions( )
 
 void MOUSE_REGION::SetFastHelpText(const ST::string& str)
 {
-	FastHelpText = ST::null;
+	FastHelpText.clear();
 
 	if (!(uiFlags & MSYS_REGION_EXISTS)) return;
 

@@ -1247,7 +1247,7 @@ void UpdateCharRegionHelpText(void)
 	ST::string status;
 	if (!s || s->bLife == 0)
 	{
-		status = ST::null;
+		status.clear();
 	}
 	else if (s->bAssignment == ASSIGNMENT_POW)
 	{
@@ -2324,7 +2324,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 
 
 	// blank line
-	AddMonoString(box, ST::null);
+	AddMonoString(box, {});
 
 
 	// add squads
@@ -2406,7 +2406,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 
 
 	// blank line
-	AddMonoString(box, ST::null);
+	AddMonoString(box, {});
 
 
 	if ( IsAnythingSelectedForMoving() )
@@ -2417,7 +2417,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 	else
 	{
 		// blank line
-		AddMonoString(box, ST::null);
+		AddMonoString(box, {});
 	}
 
 	// add cancel line
@@ -3605,17 +3605,17 @@ void UpdateHelpTextForMapScreenMercIcons()
 
 	// if merc is an AIM merc
 	ST::string contract = s && s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ?
-		zMarksMapScreenText[21] : ST::null;
+		zMarksMapScreenText[21] : ST::string();
 	gContractIconRegion.SetFastHelpText(contract);
 
 	// if merc has life insurance
 	ST::string insurance = s && s->usLifeInsurance > 0 ?
-		zMarksMapScreenText[3] : ST::null;
+		zMarksMapScreenText[3] : ST::string();
 	gInsuranceIconRegion.SetFastHelpText(insurance);
 
 	// if merc has a medical deposit
 	ST::string medical = s && s->usMedicalDeposit > 0 ?
-		zMarksMapScreenText[12] : ST::null;
+		zMarksMapScreenText[12] : ST::string();
 	gDepositIconRegion.SetFastHelpText(medical);
 }
 

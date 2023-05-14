@@ -226,7 +226,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				}
 
 				// reset the line
-				line_buf = ST::null;
+				line_buf.clear();
 				line_w   = 0;
 
 				SkipSpace(&i);
@@ -240,7 +240,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				y += h;
 
 				// reset the line
-				line_buf = ST::null;
+				line_buf.clear();
 				line_w   = 0;
 
 				// reset width
@@ -270,7 +270,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				h = GetFontHeight(cur_font) + gap;
 
 				// erase line string
-				line_buf = ST::null;
+				line_buf.clear();
 
 				SkipSpace(&i);
 				break;
@@ -292,7 +292,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				cur_max_w -= line_w;
 
 				// erase line string
-				line_buf = ST::null;
+				line_buf.clear();
 
 				SkipSpace(&i);
 				break;
@@ -307,7 +307,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				cur_max_w -= line_w;
 
 				// erase line string
-				line_buf = ST::null;
+				line_buf.clear();
 
 				// change color back to default color
 				cur_foreground = foreground;
@@ -341,7 +341,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 					y += h;
 
 					// start off next line string with the word we couldn't fit
-					line_buf = ST::null;
+					line_buf.clear();
 					line_w   = 0;
 
 					// reset width

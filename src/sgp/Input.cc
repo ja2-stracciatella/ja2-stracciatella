@@ -377,7 +377,7 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 	}
 	gfKeyState[RemapKeycode(key)] = pressed;
 
-	QueueKeyEvent(event_type, key, mod, ST::null);
+	QueueKeyEvent(event_type, key, mod, {});
 }
 
 
