@@ -597,7 +597,7 @@ static void RenderScrollBar(void) {
 static ST::string GetGameDescription()
 {
 	INT8 const id = GetActiveFieldID();
-	if (id <= 0) return ST::null;
+	if (id <= 0) return {};
 
 	return GetStringFromField(id);
 }
@@ -914,7 +914,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 
 			region.SetFastHelpText(options);
 		} else {
-			region.SetFastHelpText(ST::null);
+			region.SetFastHelpText({});
 		}
 
 		// Display the Saved game information
@@ -1128,7 +1128,7 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 	// Game Desc Field
 	INT16 const x = SLG_FIRST_SAVED_SPOT_X + SLG_SAVE_GAME_DESC_X;
 	INT16 const y = SLG_FIRST_SAVED_SPOT_Y + SLG_SAVE_GAME_DESC_Y - 5 + SLG_GAP_BETWEEN_LOCATIONS * gbSelectedSaveLocation;
-	AddTextInputField(x, y, SLG_SAVELOCATION_WIDTH - SLG_SAVE_GAME_DESC_X - 7, 17, MSYS_PRIORITY_HIGH + 2, ST::null, 46, INPUTTYPE_FULL_TEXT);
+	AddTextInputField(x, y, SLG_SAVELOCATION_WIDTH - SLG_SAVE_GAME_DESC_X - 7, 17, MSYS_PRIORITY_HIGH + 2, {}, 46, INPUTTYPE_FULL_TEXT);
 	SetActiveField(1);
 
 	gfUserInTextInputMode = TRUE;

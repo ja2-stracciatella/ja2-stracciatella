@@ -2407,7 +2407,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				}
 				else if (s->uiStatusFlags & SOLDIER_DEAD)
 				{
-					help = ST::null;
+					help.clear();
 				}
 				else
 				{
@@ -2423,7 +2423,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				}
 				else if (s->uiStatusFlags & SOLDIER_DEAD)
 				{
-					help = ST::null;
+					help.clear();
 				}
 				else
 				{

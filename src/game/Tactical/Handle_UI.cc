@@ -390,10 +390,10 @@ ScreenID HandleTacticalUI(void)
 	gfUIHandleSelection = NO_GUY_SELECTION;
 	gSelectedGuy = NULL;
 	guiShowUPDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
-	SetHitLocationText(ST::null);
-	SetIntTileLocationText(ST::null);
-	SetIntTileLocation2Text(ST::null);
-	SetChanceToHitText(ST::null);
+	SetHitLocationText({});
+	SetIntTileLocationText({});
+	SetIntTileLocation2Text({});
+	SetChanceToHitText({});
 	//gfUIForceReExamineCursorData = FALSE;
 	gfUINewStateForIntTile = FALSE;
 	gfUIShowExitExitGrid = FALSE;

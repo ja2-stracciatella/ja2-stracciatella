@@ -1524,7 +1524,7 @@ static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const ST::string& 
 static void CreateMailScreenButtons(void)
 {
 	// create sort buttons, right now - not finished
-	MakeButton(0, ENVELOPE_BOX_X, ReadCallback,    ST::null);
+	MakeButton(0, ENVELOPE_BOX_X, ReadCallback,    {});
 	MakeButton(1, FROM_BOX_X,     FromCallback,    pEmailHeaders[FROM_HEADER]);
 	MakeButton(2, SUBJECT_BOX_X,  SubjectCallback, pEmailHeaders[SUBJECT_HEADER]);
 	MakeButton(3, DATE_BOX_X,     DateCallback,    pEmailHeaders[RECD_HEADER]);

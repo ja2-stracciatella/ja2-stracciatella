@@ -902,7 +902,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 
 	ST::string morale =
 		s.bAssignment == ASSIGNMENT_POW ? pPOWStrings[1] : // POW - morale unknown
-		s.bLife == 0                    ? ST::null :
+		s.bLife == 0                    ? ST::string() :
 		GetMoraleString(s);
 	DrawStringCentered(morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
 }
@@ -5334,7 +5334,7 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 				{
 					// "Remove Merc"
 					r.assignment.SetFastHelpText(pRemoveMercStrings[0]);
-					r.destination.SetFastHelpText(ST::null);
+					r.destination.SetFastHelpText({});
 				}
 				else
 				{
@@ -7711,7 +7711,7 @@ ST::string GetMapscreenMercDestinationString(SOLDIERTYPE const& s)
 	else
 	{
 no_destination:
-		return ST::null;
+		return {};
 	}
 }
 

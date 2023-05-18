@@ -462,7 +462,7 @@ static void GenerateProsString(ST::string& zItemPros, const OBJECTTYPE& o, UINT3
 	ST::string zTemp;
 	UINT16 usItem = o.usItem;
 
-	zItemPros = ST::null;
+	zItemPros.clear();
 
 	if (GCM->getItem(usItem)->getWeight() <= EXCEPTIONAL_WEIGHT)
 	{
@@ -563,7 +563,7 @@ static void GenerateConsString(ST::string& zItemCons, const OBJECTTYPE& o, UINT3
 	UINT8 ubWeight;
 	UINT16 usItem = o.usItem;
 
-	zItemCons = ST::null;
+	zItemCons.clear();
 
 	// calculate the weight of the item plus ammunition but not including any attachments
 	ubWeight = GCM->getItem(usItem)->getWeight();
@@ -2192,7 +2192,7 @@ static void ItemDescAttachmentsCallbackSecondary(MOUSE_REGION* pRegion, UINT32 i
 
 static ST::string GetObjectImprint(OBJECTTYPE const& o)
 {
-	return !HasObjectImprint(o) ? ST::null :
+	return !HasObjectImprint(o) ? ST::string() :
 		o.ubImprintID == NO_PROFILE + 1 ? pwMiscSectorStrings[3] :
 		GetProfile(o.ubImprintID).zNickname;
 }
@@ -4578,7 +4578,7 @@ static void SetupPickupPage(INT8 bPage)
 	// Clear help text!
 	for ( cnt = 0; cnt < NUM_PICKUP_SLOTS; cnt++ )
 	{
-		gItemPickupMenu.Regions[cnt].SetFastHelpText(ST::null);
+		gItemPickupMenu.Regions[cnt].SetFastHelpText({});
 	}
 
 	for ( cnt = 0; cnt < iEnd; )
@@ -4602,7 +4602,7 @@ static void SetupPickupPage(INT8 bPage)
 			ST::string pStr;
 			if (GCM->getItem(o.usItem)->isAmmo() || GCM->getItem(o.usItem)->isKey())
 			{
-				pStr = ST::null;
+				pStr.clear();
 			}
 			else
 			{
@@ -5180,7 +5180,7 @@ ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 	}
 	else if (usItem == NOTHING)
 	{
-		dst = ST::null;
+		dst.clear();
 	}
 	else
 	{

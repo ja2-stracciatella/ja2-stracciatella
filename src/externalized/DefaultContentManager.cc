@@ -1251,7 +1251,7 @@ const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 {
 	if (townId >= m_townNames.size()) {
 		SLOGD("Town name not defined for index {}", townId);
-		return ST::null;
+		return {};
 	}
 	return m_townNames[townId];
 }
@@ -1260,7 +1260,7 @@ const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
 {
 	if (townId >= m_townNameLocatives.size()) {
 		SLOGD("Town name locative not defined for index {}", townId);
-		return ST::null;
+		return {};
 	}
 	return m_townNameLocatives[townId];
 }

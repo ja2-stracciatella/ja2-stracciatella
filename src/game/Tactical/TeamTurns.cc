@@ -567,7 +567,7 @@ static void StartInterrupt(void)
 					// add comma to end, we know we have another person after this...
 					sTemp += ", ";
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sTemp );
-					sTemp = ST::null;
+					sTemp.clear();
 					ubInterrupters = 1;
 				}
 

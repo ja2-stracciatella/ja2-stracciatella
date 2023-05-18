@@ -855,7 +855,7 @@ static ST::string ProcessTransactionString(const FinanceUnit* f)
 		}
 
 		default:
-			return ST::null;
+			return {};
 	}
 }
 

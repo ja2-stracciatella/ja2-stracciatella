@@ -1020,7 +1020,7 @@ try
 	else
 	{
 		shaded = FALSE;
-		text   = ST::null;
+		text.clear();
 	}
 
 	BltVideoObject(FRAME_BUFFER, face.get(), 0, FACE_X, FACE_Y);
@@ -1159,7 +1159,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 				if (AimMemberHireMerc())
 				{
 					// if merc was hired
-					CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], ST::null, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
+					CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], {}, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 					DelayMercSpeech( gbCurrentSoldier, QUOTE_CONTRACT_ACCEPTANCE, 750, TRUE, FALSE );
 
 					//Disable the buttons behind the message box

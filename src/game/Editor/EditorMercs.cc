@@ -1102,7 +1102,7 @@ static void SetupTextInputForMercProfile(void)
 
 	sNum = gpSelected->pDetailedPlacement->ubProfile;
 	if( sNum == NO_PROFILE )
-		str = ST::null;
+		str.clear();
 	else
 		str = CalcStringForValue(gpSelected->pDetailedPlacement->ubProfile, NUM_PROFILES);
 	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 70, 30, 20, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
@@ -1153,7 +1153,7 @@ static void SetupTextInputForMercAttributes(void)
 static ST::string CalcStringForValue(INT32 iValue, UINT32 uiMax)
 {
 	if( iValue < 0 )			//a blank string is determined by a negative value.
-		return ST::null;
+		return {};
 	else if( (UINT32)iValue > uiMax )	//higher than max attribute value, so convert it to the max.
 		return ST::format("{}", uiMax);
 	else										//this is a valid static value, so convert it to a string.
@@ -1248,13 +1248,13 @@ static void SetupTextInputForMercSchedule(void)
 {
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 13, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 13, 36, 16, MSYS_PRIORITY_NORMAL, {}, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 1, gCurrSchedule.usTime[0] );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 34, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 34, 36, 16, MSYS_PRIORITY_NORMAL, {}, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 2, gCurrSchedule.usTime[1] );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 55, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 55, 36, 16, MSYS_PRIORITY_NORMAL, {}, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 3, gCurrSchedule.usTime[2] );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 76, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 76, 36, 16, MSYS_PRIORITY_NORMAL, {}, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 4, gCurrSchedule.usTime[3] );
 }
 
@@ -2779,9 +2779,9 @@ void ClearCurrentSchedule()
 		gCurrSchedule.usTime[i] = 0xffff;
 		SetExclusive24HourTimeValue( (UINT8)(i+1), gCurrSchedule.usTime[ i ] ); //blanks the field
 		gCurrSchedule.usData1[i] = 0xffff;
-		iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText(ST::null);
+		iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText({});
 		gCurrSchedule.usData2[i] = 0xffff;
-		iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText(ST::null);
+		iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText({});
 	}
 	//Remove the variance stuff
 	gCurrSchedule.usFlags = 0;
@@ -2860,7 +2860,7 @@ static void UpdateScheduleInfo(void)
 			if( pSchedule->usData1[i] != 0xffff )
 				str = ST::format("{}", pSchedule->usData1[i]);
 			iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText(str);
-			str = ST::null;
+			str.clear();
 			if( pSchedule->usData2[i] != 0xffff )
 				str = ST::format("{}", pSchedule->usData2[i]);
 			iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText(str);

@@ -3016,7 +3016,7 @@ void CreateDestroyMilitiaSectorButtons()
 			GUIButtonRef b = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, ButtonCallbackPrimarySecondary(MilitiaButtonCallbackPrimary, MilitiaButtonCallbackSecondary));
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
-			b->SpecifyGeneralTextAttributes(ST::null, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
+			b->SpecifyGeneralTextAttributes({}, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
 			b->SpecifyTextSubOffsets(0, 0, TRUE);
 			b->fShiftText = FALSE;
 			b->SetFastHelpText(pMilitiaButtonsHelpText[i]);

@@ -488,8 +488,8 @@ void ResetCharacterStats( void )
 	iAttitude = 0;
 
 	// names
-	pFullName = ST::null;
-	pNickName = ST::null;
+	pFullName.clear();
+	pNickName.clear();
 }
 
 

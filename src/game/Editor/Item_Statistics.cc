@@ -79,7 +79,7 @@ const ST::string gszActionItemDesc[NUM_ACTIONITEMS] =
 ST::string GetActionItemName(const OBJECTTYPE* pItem)
 {
 	if( !pItem || pItem->usItem != ACTION_ITEM )
-		return ST::null;
+		return {};
 	if( pItem->bActionValue != ACTION_ITEM_BLOW_UP )
 	{
 		switch( pItem->bActionValue )
@@ -107,7 +107,7 @@ ST::string GetActionItemName(const OBJECTTYPE* pItem)
 			case ACTION_ITEM_TOGGLE_PRESSURE_ITEMS:		return gszActionItemDesc[ ACTIONITEM_TOGGLE_PRESSURE_ITEMS ];
 			case ACTION_ITEM_MUSEUM_ALARM:						return gszActionItemDesc[ ACTIONITEM_MUSEUM_ALARM ];
 			case ACTION_ITEM_BLOODCAT_ALARM:					return gszActionItemDesc[ ACTIONITEM_BLOODCAT_ALARM ];
-			default:																	return ST::null;
+			default:																	return {};
 		}
 	}
 	else switch( pItem->usBombItem )
@@ -123,7 +123,7 @@ ST::string GetActionItemName(const OBJECTTYPE* pItem)
 		case TRIP_FLARE:				return gszActionItemDesc[ ACTIONITEM_FLARE ];
 		case TRIP_KLAXON:				return gszActionItemDesc[ ACTIONITEM_TRIP_KLAXON ];
 		case BIG_TEAR_GAS:			return gszActionItemDesc[ ACTIONITEM_BIG_TEAR_GAS ];
-		default:								return ST::null;
+		default:								return {};
 	}
 }
 

@@ -88,7 +88,7 @@ static const ST::string GetPopupMenuString(UINT8 ubIndex)
 		case ACTIONITEM_POPUP:
 			return gszActionItemDesc[ ubIndex ];
 		default:
-			return ST::null;
+			return {};
 	}
 }
 

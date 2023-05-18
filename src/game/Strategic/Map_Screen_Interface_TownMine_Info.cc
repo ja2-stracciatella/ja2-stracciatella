@@ -184,7 +184,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 
 	AddMonoString(box, title);
 	// blank line
-	AddMonoString(box, ST::null);
+	AddMonoString(box, {});
 
 	AddSectorToBox(box);
 
@@ -245,7 +245,7 @@ static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 	buf = ST::format("{} {}", GCM->getTownName(town), pwMineStrings[0]);
 	AddMonoString(box, buf);
 
-	AddMonoString(box, ST::null); // Blank line
+	AddMonoString(box, {}); // Blank line
 
 	AddSectorToBox(box);
 
@@ -319,7 +319,7 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 	AddMonoString(box, GetSectorLandTypeString(sector, 0, true));
 
 	// blank line
-	AddMonoString(box, ST::null);
+	AddMonoString(box, {});
 
 	AddSectorToBox(box);
 }

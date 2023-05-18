@@ -12,8 +12,8 @@ project(builder NONE)
 
 include(ExternalProject)
 externalproject_add(string_theory
-    URL "https://github.com/zrax/string_theory/archive/3.1.tar.gz"
-    URL_MD5 "b4cade32fb24f5e62e27d3e3135bcdb6"
+    URL "https://github.com/zrax/string_theory/archive/3.7.tar.gz"
+    URL_MD5 "08908b927d1b26e00b61cb6f32e5beb4"
     CMAKE_ARGS
         "-G@CMAKE_GENERATOR@"
         "-C@CACHE_FILE@"

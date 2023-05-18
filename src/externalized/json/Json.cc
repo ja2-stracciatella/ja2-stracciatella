@@ -217,7 +217,7 @@ const ST::string JsonObject::getOptionalString(const char *name) const
     }
     else
     {
-        return ST::null;
+        return {};
     }
 }
 
