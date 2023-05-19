@@ -152,11 +152,6 @@ if (WITH_MAEMO)
     add_definitions(-DWITH_MAEMO)
 endif()
 
-if (WITH_SOUND_DEBUG)
-    message(STATUS "Building with sound debug" )
-    add_definitions(-DWITH_SOUND_DEBUG)
-endif()
-
 if(BUILD_SDL_LIB)
     set(SDL2_LIBRARY "")
     set(SDL2_INCLUDE_DIR "")
@@ -259,11 +254,6 @@ if (WITH_UNITTESTS)
     add_definitions("-DWITH_UNITTESTS")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wtype-limits -Wignored-qualifiers")
-endif()
-
 set(
     JA2_LIBRARIES
     ${SDL2_LIBRARY}
@@ -292,7 +282,7 @@ else()
 endif()
 target_link_libraries(${JA2_BINARY} ${JA2_LIBRARIES})
 
-if (ASAN)
+if (WITH_ASAN)
     target_compile_options(${JA2_BINARY} PRIVATE -fsanitize=address)
     target_link_options(${JA2_BINARY} PRIVATE -fsanitize=address)
 endif()
@@ -300,10 +290,30 @@ endif()
 add_dependencies(${JA2_BINARY} stracciatella)
 set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game/GameVersion.cc APPEND PROPERTY COMPILE_DEFINITIONS "GAME_VERSION=v${ja2-stracciatella_VERSION}")
 
+function(add_warnings target)
+    if (NOT MSVC)
+        target_compile_options(${target} PRIVATE -Wall -Wtype-limits -Wignored-qualifiers)
+    else()
+        target_compile_options(${target} PRIVATE /W3 /wd4018 /wd4101 /wd4200 /wd4244 /wd4996)
+        # 4018 : example: signed/unsigned mismatch
+        # 4101 : example: unreferenced local variable
+        # 4200 : example: nonstandard extension used : zero-sized array in struct/union
+        # 4244 : example: conversion from 'int' to 'real', possible loss of data
+        # 4996 : example: This function or variable may be unsafe (sscanf)
+    endif()
+endfunction()
+
+if (POLICY CMP0092)
+    cmake_policy(SET CMP0092 NEW) # do not add /W3 to CFLAGS by default, added in CMake 3.15
+endif()
+
+add_warnings(${JA2_BINARY})
+
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
     target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} ${LAUNCHER_LIBRARIES})
     add_dependencies(${LAUNCHER_BINARY} stracciatella)
+    add_warnings(${LAUNCHER_BINARY})
 endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
