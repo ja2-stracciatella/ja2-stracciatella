@@ -30,7 +30,8 @@
 #include "Font_Control.h"
 #include "UILayout.h"
 #include "GameMode.h"
-#include "sgp/FileMan.h"
+#include "FileMan.h"
+#include "FPS.h"
 #include "Logger.h"
 
 #include <string_theory/format>
@@ -58,6 +59,9 @@ void InitializeGame(void)
 
 	// Init Fonts
 	InitializeFonts();
+
+	// Initialize FPS display
+	FPS::Init(GameLoop);
 
 	InitTacticalSave();
 

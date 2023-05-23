@@ -3,6 +3,7 @@
 #include "Debug.h"
 #include "Fade_Screen.h"
 #include "FileMan.h"
+#include "FPS.h"
 #include "GameInstance.h"
 #include "HImage.h"
 #include "Input.h"
@@ -634,7 +635,7 @@ void RefreshScreen(void)
 		SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
 	}
 
-	SDL_RenderPresent(GameRenderer);
+	FPS::RenderPresentPtr(GameRenderer);
 
 	gfForceFullScreenRefresh = FALSE;
 	guiDirtyRegionCount = 0;

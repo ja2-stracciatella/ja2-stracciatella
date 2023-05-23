@@ -2,6 +2,7 @@
 #include "Cheats.h"
 #include "Debug.h"
 #include "FileMan.h"
+#include "FPS.h"
 #include "Font.h"
 #include "GameLoop.h"
 #include "Init.h" // XXX should not be used in SGP
@@ -140,7 +141,17 @@ static void MainLoop()
 					s_doGameCycles = true;
 					break;
 
-				case SDL_KEYDOWN: KeyDown(&event.key.keysym); break;
+				case SDL_KEYDOWN:
+					if (event.key.keysym.sym == SDL_KeyCode::SDLK_f &&
+					    SDL_GetModState() & KMOD_CTRL)
+					{
+						FPS::ToggleOnOff();
+					}
+					else
+					{
+						KeyDown(&event.key.keysym);
+					}
+					break;
 				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
 				case SDL_TEXTINPUT: TextInput(&event.text); break;
 
@@ -168,7 +179,7 @@ static void MainLoop()
 				// once every ~6944 microseconds.
 				constexpr auto targetResolution = 1'000'000us / 144;
 				auto const beforeGameLoop = std::chrono::steady_clock::now();
-				GameLoop();
+				FPS::GameLoopPtr();
 
 				// If the game loop took longer than 6944ms, this call does nothing.
 				std::this_thread::sleep_until(beforeGameLoop + targetResolution);
