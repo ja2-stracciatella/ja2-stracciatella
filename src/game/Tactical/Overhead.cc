@@ -555,18 +555,12 @@ static void HandleCreatureTenseQuote(void);
 
 void ExecuteOverhead(void)
 {
-	// Diagnostic Stuff
-	static INT32 iTimerTest = 0;
-
 	BOOLEAN fKeepMoving;
 
 	if (COUNTERDONE(TOVERHEAD))
 	{
 		// Diagnostic Stuff
 		UINT32 uiTimerVal = GetJA2Clock();
-		extern UINT32 guiTimerDiag;
-		guiTimerDiag = uiTimerVal - iTimerTest;
-		iTimerTest  = uiTimerVal;
 
 		// ANIMATED TILE STUFF
 		UpdateAniTiles();

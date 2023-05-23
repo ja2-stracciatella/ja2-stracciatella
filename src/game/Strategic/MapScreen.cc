@@ -63,7 +63,6 @@
 #include "Strategic_Pathing.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Strategic_Turns.h"
-#include "Sys_Globals.h"
 #include "SysUtil.h"
 #include "Tactical_Save.h"
 #include "Text.h"
@@ -1910,10 +1909,6 @@ ScreenID MapScreenHandle(void)
 	// now the border corner piece
 	//RenderMapBorderCorner( );
 
-
-	// Display Framerate
-	DisplayFrameRate( );
-
 	// update paused states
 	UpdatePausedStatesDueToTimeCompression( );
 
@@ -2997,14 +2992,6 @@ static void HandleModAlt(UINT32 const key)
 				bSelectedAssignChar = bSelectedInfoChar;
 				RebuildAssignmentsBox();
 				fShowAssignmentMenu = TRUE;
-			}
-			break;
-
-		case 'f':
-			if (INFORMATION_CHEAT_LEVEL())
-			{ // Toggle Frame Rate Display
-				gbFPSDisplay = !gbFPSDisplay;
-				EnableFPSOverlay(gbFPSDisplay);
 			}
 			break;
 

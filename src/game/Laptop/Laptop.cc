@@ -86,7 +86,6 @@
 #include "Video.h"
 #include "Debug.h"
 #include "Button_System.h"
-#include "JAScreens.h"
 #include "UILayout.h"
 
 #include "policy/GamePolicy.h"
@@ -1223,9 +1222,6 @@ ScreenID LaptopScreenHandle()
 
 	// display power and HD lights
 	ShowLights();
-
-	// render frame rate
-	DisplayFrameRate();
 
 	// invalidate screen if redrawn
 	if (fReDrawScreenFlag)

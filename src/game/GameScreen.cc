@@ -582,9 +582,6 @@ ScreenID MainGameScreenHandle(void)
 		RenderFastHelp( );
 	}
 
-	// Display Framerate
-	DisplayFrameRate( );
-
 	CheckForMeanwhileOKStart( );
 
 	ScrollString( );
