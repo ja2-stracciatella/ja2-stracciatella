@@ -6,13 +6,11 @@
 #include "FPS.h"
 #include "GameInstance.h"
 #include "HImage.h"
-#include "Input.h"
 #include "Local.h"
 #include "Logger.h"
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
 #include "Timer.h"
-#include "Timer_Control.h"
 #include "Types.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
@@ -22,7 +20,6 @@
 #include "Icon.h"
 #include <algorithm>
 #include <chrono>
-#include <ctime>
 #include <stdexcept>
 
 #define BUFFER_READY      0x00
@@ -297,9 +294,6 @@ void ShutdownVideoManager(void)
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-
-	// ATE: Release mouse cursor!
-	FreeMouseCursor();
 }
 
 
@@ -517,25 +511,6 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 void RefreshScreen(void)
 {
 	if (guiVideoManagerState != VIDEO_ON) return;
-
-#if DEBUG_PRINT_FPS
-	{
-		static int32_t prevSecond = 0;
-		static int32_t fps = 0;
-
-		int32_t currentSecond = time(NULL);
-		if(currentSecond != prevSecond)
-		{
-			printf("fps: %d\n", fps);
-			fps = 0;
-			prevSecond = currentSecond;
-		}
-		else
-		{
-			fps++;
-		}
-	}
-#endif
 
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
 

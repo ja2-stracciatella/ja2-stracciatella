@@ -30,7 +30,7 @@ std::unique_ptr<SDL_Texture, SDLDeleter> Texture;
 SGPVObject * DisplayFont;
 
 std::vector<Clock::duration> LastGameLoopDurations;
-Clock::time_point  TimeLastDisplayed;
+Clock::time_point TimeLastDisplayed;
 
 unsigned FramesSinceLastDisplay;
 
@@ -71,7 +71,7 @@ void RenderPresentHook(SDL_Renderer * const renderer)
 	auto const now = Clock::now();
 
 	// We must copy the texture each frame otherwise it would flicker,
-	// but we only update its content twice a second to make it less noisy.
+	// but we only update its content once per second to make it less noisy.
 	if (now > TimeLastDisplayed + 1s)
 	{
 		UpdateTexture(renderer);
@@ -93,7 +93,7 @@ void GameLoopHook()
 	auto const elapsed = Clock::now() - before;
 
 	// Only store "interesting" game loops
-	if (elapsed > 200us)
+	if (elapsed > 150us)
 	{
 		LastGameLoopDurations.push_back(elapsed);
 	}
@@ -115,7 +115,7 @@ void ToggleOnOff()
 		RenderPresentPtr = RenderPresentHook;
 		GameLoopPtr = GameLoopHook;
 
-		Surface.reset(SDL_CreateRGBSurfaceWithFormat(0, 160, 26, 0, SDL_PIXELFORMAT_RGB565));
+		Surface.reset(SDL_CreateRGBSurfaceWithFormat(0, 320, 26, 0, SDL_PIXELFORMAT_RGB565));
 		SDL_SetColorKey(Surface.get(), true, 0);
 	}
 	else
