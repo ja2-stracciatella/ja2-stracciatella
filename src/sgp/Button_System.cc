@@ -35,49 +35,9 @@
 #define GUI_BTN_DUPLICATE_VOBJ 1
 
 
-/* Kris:  December 2, 1997
- * Special internal debugging utilities that will ensure that you don't attempt
- * to delete an already deleted button, or it's images, etc.  It will also
- * ensure that you don't create the same button that already exists.
- * TO REMOVE ALL DEBUG FUNCTIONALITY: simply comment out BUTTONSYSTEM_DEBUGGING
- * definition
- */
-#if defined _DEBUG
-#	define BUTTONSYSTEM_DEBUGGING
-#endif
-
-
 #define FOR_EACH_BUTTON(iter) \
 	FOR_EACH(GUI_BUTTON*, iter, ButtonList) \
 		if (!*iter) continue; else
-
-
-#ifdef BUTTONSYSTEM_DEBUGGING
-
-// Called immediately before assigning the button to the button list.
-static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
-{
-	FOR_EACH_BUTTON(i)
-	{
-		GUI_BUTTON const* const c = *i;
-		if (c->uiFlags            &   BUTTON_DELETION_PENDING) continue;
-		if (c->uiFlags            &   BUTTON_NO_DUPLICATE)     continue;
-		if (b->Area.PriorityLevel != c->Area.PriorityLevel)    continue;
-		if (b->X()                != c->X())                   continue;
-		if (b->Y()                != c->Y())                   continue;
-		if (b->BottomRightX()     != c->BottomRightX())        continue;
-		if (b->BottomRightY()     != c->BottomRightY())        continue;
-		if (b->ClickCallback      != c->ClickCallback)         continue;
-		if (b->MoveCallback       != c->MoveCallback)          continue;
-		/* if we get this far, it is reasonably safe to assume that the newly
-		 * created button already exists.  Placing a break point on the following
-		 * assert will allow the coder to easily isolate the case!
-		 */
-		SLOGA("Attempting to create a button that has already been created (existing buttonID {}).", c->IDNum);
-	}
-}
-
-#endif
 
 
 /* Kris:
@@ -238,9 +198,6 @@ BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const img, INT32 const off_normal
 
 void UnloadButtonImage(BUTTON_PICS* const pics)
 {
-#if defined BUTTONSYSTEM_DEBUGGING
-	AssertMsg(pics->vobj != NULL, "Attempting to UnloadButtonImage that has a null vobj (already deleted).");
-#endif
 	if (pics->vobj == NULL) return;
 
 	// If this is a duplicated button image, then don't trash the vobject
@@ -376,9 +333,6 @@ void UnloadGenericButtonIcon(INT16 GenImg)
 {
 	AssertMsg(0 <= GenImg && GenImg < MAX_BUTTON_ICONS, ST::format("Attempting to UnloadGenericButtonIcon with out of range index {}.", GenImg));
 
-#if defined BUTTONSYSTEM_DEBUGGING
-	AssertMsg(GenericButtonIcons[GenImg], "Attempting to UnloadGenericButtonIcon that has no icon (already deleted).");
-#endif
 	if (!GenericButtonIcons[GenImg]) return;
 	// If an icon is present in the slot, remove it.
 	DeleteVideoObject(GenericButtonIcons[GenImg]);
@@ -536,10 +490,6 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	AssertMsg(left >= 0 && top >= 0 && width >= 0 && height >= 0, ST::format("Attempting to create button with invalid coordinates {}{}+{}{}", left, top, width, height));
 
 	Area.SetUserPtr(this);
-
-#ifdef BUTTONSYSTEM_DEBUGGING
-	AssertFailIfIdenticalButtonAttributesFound(this);
-#endif
 
 	ButtonList[IDNum] = this;
 
