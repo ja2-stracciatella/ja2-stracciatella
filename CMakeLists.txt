@@ -1,6 +1,6 @@
 # \file CMakeLists.txt
 
-cmake_minimum_required (VERSION 3.4)
+cmake_minimum_required (VERSION 3.18.1)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 ## Some macros
@@ -111,8 +111,6 @@ if(MSVC)
 		CMAKE_C_FLAGS_MINSIZEREL
 		CMAKE_C_FLAGS_RELWITHDEBINFO
 	)
-		# force /MD runtime (future note: cmake 3.15 has CMAKE_MSVC_RUNTIME_LIBRARY)
-		string(REGEX REPLACE "/MDd|/MD|/MTd|/MT|/LDd|/LD" "/MD" _value "${${_var}}")
         # force /Z7 instead of /ZI to include debug information in obj file
         string(REGEX REPLACE "/Zi|/ZI" "/Z7" _value "${_value}")
 		if(NOT ${_var} STREQUAL _value)
@@ -221,7 +219,6 @@ include_directories(
     ${SDL2_INCLUDE_DIR}
     ${SOL_INCLUDE_DIR}
     ${LUA_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
     ${MINIAUDIO_INCLUDE_DIRS}
     ${MAGICENUM_INCLUDE_DIR}
 )
@@ -302,10 +299,6 @@ function(add_warnings target)
         # 4996 : example: This function or variable may be unsafe (sscanf)
     endif()
 endfunction()
-
-if (POLICY CMP0092)
-    cmake_policy(SET CMP0092 NEW) # do not add /W3 to CFLAGS by default, added in CMake 3.15
-endif()
 
 add_warnings(${JA2_BINARY})
 
