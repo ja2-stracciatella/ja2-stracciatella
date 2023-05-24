@@ -122,11 +122,18 @@ endif()
 
 ## Build
 
+# The main target
+if(ANDROID)
+    add_library(${JA2_BINARY} SHARED)
+else()
+    add_executable(${JA2_BINARY})
+endif()
+
 if(MSVC)
 	# set the source and execution charset
 	add_compile_options("/utf-8")
 	# suppress the min and max macro definitions
-	add_definitions("-DNOMINMAX")
+	target_compile_definitions(ja2 PRIVATE NOMINMAX)
 endif()
 
 if(NOT "${WITH_CUSTOM_LOCALE}" STREQUAL "")
@@ -142,12 +149,12 @@ add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
 if (WITH_FIXMES)
     message(STATUS "Building with fixme messages" )
-    add_definitions(-DWITH_FIXMES)
+    target_compile_definitions(ja2 PRIVATE WITH_FIXMES)
 endif()
 
 if (WITH_MAEMO)
     message(STATUS "Building with right click mapped to F4 (menu button)" )
-    add_definitions(-DWITH_MAEMO)
+    target_compile_definitions(ja2 PRIVATE WITH_MAEMO)
 endif()
 
 if(BUILD_SDL_LIB)
@@ -165,11 +172,11 @@ message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY}; SDL2 Include Dir: ${SDL2_INCLUD
 
 if (NOT WITH_MAGICENUM)
     message(STATUS "Compiling without magic_enum. This build will not have enum-gen functionalities")
-    add_compile_definitions(NO_MAGICENUM_LIB)
+    target_compile_definitions(ja2 PRIVATE NO_MAGICENUM_LIB)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR ENABLE_ASSERTS)
-    add_definitions(-DENABLE_ASSERTS)
+    target_compile_definitions(ja2 PRIVATE ENABLE_ASSERTS)
 endif()
 
 if(BUILD_LAUNCHER)
@@ -247,8 +254,8 @@ if (WITH_UNITTESTS)
     endif()
     message(STATUS "GTest Libraries: ${GTEST_LIBRARIES}")
 
-    include_directories(${GTEST_INCLUDE_DIRS})
-    add_definitions("-DWITH_UNITTESTS")
+    target_include_directories(ja2 PRIVATE ${GTEST_INCLUDE_DIRS})
+    target_compile_definitions(ja2 PRIVATE WITH_UNITTESTS)
 endif()
 
 set(
@@ -272,12 +279,9 @@ if (ANDROID)
     LIST(APPEND JA2_LIBRARIES android log)
 endif()
 
-if(ANDROID)
-    add_library(${JA2_BINARY} SHARED ${JA2_SOURCES})
-else()
-    add_executable(${JA2_BINARY} ${JA2_SOURCES})
-endif()
+target_sources(ja2 PRIVATE ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY} ${JA2_LIBRARIES})
+# target_compile_features(ja2 PRIVATE cxx_std_20)  # not yet...
 
 if (WITH_ASAN)
     target_compile_options(${JA2_BINARY} PRIVATE -fsanitize=address)
@@ -307,6 +311,9 @@ if(BUILD_LAUNCHER)
     target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} ${LAUNCHER_LIBRARIES})
     add_dependencies(${LAUNCHER_BINARY} stracciatella)
     add_warnings(${LAUNCHER_BINARY})
+    if (MSVC)
+        target_compile_definitions(${LAUNCHER_BINARY} PRIVATE NOMINMAX)
+    endif()
 endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
