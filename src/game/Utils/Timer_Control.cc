@@ -16,7 +16,6 @@ static std::array<milliseconds, NUMTIMERS> const giTimerIntervals
 	20ms, // NEXTSCROLL
 	200ms, // Start Scroll
 	200ms, // Animate tiles
-	1000ms, // FPS Counter
 	80ms, // PATH FIND COUNTER
 	150ms, // CURSOR TIMER
 	300ms, // RIGHT CLICK FOR MENU

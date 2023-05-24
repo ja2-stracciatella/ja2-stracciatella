@@ -61,7 +61,7 @@ void InitializeGame(void)
 	InitializeFonts();
 
 	// Initialize FPS display
-	FPS::Init(GameLoop);
+	FPS::Init(GameLoop, gp10PointArial);
 
 	InitTacticalSave();
 

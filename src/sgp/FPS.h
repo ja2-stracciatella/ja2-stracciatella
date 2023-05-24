@@ -2,6 +2,7 @@
 #define SGP_FPS_H
 
 struct SDL_Renderer;
+class SGPVObject;
 
 namespace FPS
 {
@@ -11,7 +12,7 @@ namespace FPS
 	extern GameLoopFunc_t  GameLoopPtr;
 	extern RenderPresent_t RenderPresentPtr;
 
-	void Init(GameLoopFunc_t gameLoop);
+	void Init(GameLoopFunc_t gameLoop, SGPVObject * FPSDisplayFont);
 	void ToggleOnOff();
 }
 
