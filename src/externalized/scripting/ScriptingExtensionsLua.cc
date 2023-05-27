@@ -324,6 +324,12 @@ static void RegisterGlobals()
 	lua.set_function("AddEveryDayStrategicEvent", AddEveryDayStrategicEvent_);
 	lua.set_function("AddStrategicEvent", AddStrategicEvent_);
 
+	lua.set_function("StartQuest", StartQuest_);
+	lua.set_function("EndQuest", EndQuest_);
+	lua.set_function("SetFactTrue", SetFactTrue);
+	lua.set_function("SetFactFalse", SetFactFalse);
+	lua.set_function("CheckFact", CheckFact);
+
 	lua.set_function("GetGameStates", GetGameStates);
 	lua.set_function("PutGameStates", PutGameStates);
 

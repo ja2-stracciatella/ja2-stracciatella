@@ -132,6 +132,36 @@ void AddStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiMinStampSeconds
 	}
 }
 
+void StartQuest(UINT8, const SGPSector &);
+void StartQuest_(UINT8 const ubQuestID, const std::string sectorID)
+{
+	if (!sectorID.empty())
+	{
+		SGPSector s = SGPSector::FromShortString(sectorID);
+		StartQuest(ubQuestID, s);
+	}
+	else
+	{
+		SGPSector s = SGPSector{-1, -1};
+		StartQuest(ubQuestID, s);
+	}
+}
+
+void EndQuest(UINT8, const SGPSector &);
+void EndQuest_(UINT8 const ubQuestID, const std::string sectorID)
+{
+	if (!sectorID.empty())
+	{
+		SGPSector s = SGPSector::FromShortString(sectorID);
+		EndQuest(ubQuestID, s);
+	}
+	else
+	{
+		SGPSector s = SGPSector{-1, -1};
+		EndQuest(ubQuestID, s);
+	}
+}
+
 void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, UINT16, UINT8);
 void GuaranteeAtLeastXItemsOfIndex_(INT8 const bDealerID, UINT16 const usItemIndex, UINT8 const ubNumItems)
 {

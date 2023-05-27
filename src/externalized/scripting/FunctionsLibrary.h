@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arms_Dealer.h"
+#include "Facts.h"
 #include "Item_Types.h"
 #include "Types.h"
 #include "Observable.h"
@@ -246,6 +247,13 @@ void AddEveryDayStrategicEvent_(UINT8 ubCallbackID, UINT32 uiStartMin, UINT32 ui
  * @param uiParam a parameter that will be passed to the event handler
  */
 void AddStrategicEvent_(UINT8 ubCallbackID, UINT32 uiMinStamp, UINT32);
+void StartQuest_(UINT8 ubQuestID, std::string sectorID);
+void EndQuest_(UINT8 ubQuest, std::string sectorID);
+
+void SetFactTrue(Fact);
+void SetFactFalse(Fact);
+BOOLEAN CheckFact(Fact, UINT8);
+
 
 /**
  * Gets the Merc Profile data object by profile ID
