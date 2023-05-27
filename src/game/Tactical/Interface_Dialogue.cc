@@ -1563,6 +1563,7 @@ static void DoneFadeOutActionBasement(void);
 static void DoneFadeOutActionLeaveBasement(void);
 static void CarmenLeavesSectorCallback(void);
 
+Observable<UINT8, UINT16, UINT8, BOOLEAN_S*> OnNPCDoAction;
 
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 {
@@ -1586,6 +1587,10 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 	}
 	else
 	{
+		BOOLEAN_S handled = false;
+		OnNPCDoAction(ubTargetNPC, usActionCode, ubQuoteNum, &handled);
+		if (handled) return;
+
 		auto params = GCM->getNpcActionParams(usActionCode);
 		switch( usActionCode )
 		{

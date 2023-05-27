@@ -1382,6 +1382,7 @@ static void MapViewRegionPrimaryCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void MapViewRegionSecondaryCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void MapViewRegionMovementCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
+Observable<> OnHandleStrategicScreen = {};
 
 ScreenID MapScreenHandle(void)
 {
@@ -1519,6 +1520,7 @@ ScreenID MapScreenHandle(void)
 
 		LoadCharacters();
 
+		OnHandleStrategicScreen();
 
 		MOUSE_CALLBACK mapViewRegionCallback = MouseCallbackPrimarySecondary(MapViewRegionPrimaryCallback, MapViewRegionSecondaryCallback);
 		// set up regions
@@ -6269,10 +6271,14 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 	}
 }
 
+Observable<BOOLEAN_S*> OnTimeCompressDisallowed = {};
 
-
-void TellPlayerWhyHeCantCompressTime( void )
+void TellPlayerWhyHeCantCompressTime()
 {
+	BOOLEAN_S handled = false;
+	OnTimeCompressDisallowed(&handled);
+	if (handled) return;
+
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{

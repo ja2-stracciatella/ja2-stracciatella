@@ -51,6 +51,8 @@ BOOLEAN gfPendingEnemies = FALSE;
 
 extern std::vector<GARRISON_GROUP> gGarrisonGroup;
 
+Observable<const SOLDIERTYPE*> OnSoldierDeath;
+
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 //Counts enemies and crepitus, but not bloodcats.
@@ -599,7 +601,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 	}
 
 	if( pSoldier->bNeutral || (pSoldier->bTeam != ENEMY_TEAM && pSoldier->bTeam != CREATURE_TEAM) )
+	{
+		OnSoldierDeath(pSoldier);
 		return;
+	}
+
 	//we are recording an enemy death
 	if( pSoldier->ubGroupID )
 	{ //The enemy was in a mobile group
@@ -608,11 +614,13 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		if( !pGroup )
 		{
 			SLOGW("Enemy soldier killed with ubGroupID of {}, and the group doesn't exist!", pSoldier->ubGroupID);
+			OnSoldierDeath(pSoldier);
 			return;
 		}
 		if( pGroup->fPlayer )
 		{
 			SLOGW("Attempting to process player group thinking it's an enemy group (#{}) in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
+			OnSoldierDeath(pSoldier);
 			return;
 		}
 		switch( pSoldier->ubSoldierClass )
@@ -909,6 +917,8 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			}
 		}
 	}
+
+	OnSoldierDeath(pSoldier);
 }
 
 

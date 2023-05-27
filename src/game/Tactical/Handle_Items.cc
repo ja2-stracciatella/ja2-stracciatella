@@ -1179,6 +1179,7 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel);
 static void SwitchMessageBoxCallBack(MessageBoxReturnValue);
 
+Observable<SOLDIERTYPE*, OBJECTTYPE*, INT16, INT8> OnSoldierGotItem;
 
 void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const INT16 sGridNo, const INT8 bZLevel, const BOOLEAN* const pfSelectionList)
 {
@@ -1233,6 +1234,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 			}
 
 			RemoveItemFromPool(wi);
+			OnSoldierGotItem(s, &o, sGridNo, bZLevel);
 		}
 
 		// ATE; If here, and we failed to add any more stuff, put failed one in our cursor...
@@ -1242,6 +1244,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 			WORLDITEM& wi = GetWorldItem(pItemPoolToDelete->iItemIndex);
 			HandleAutoPlaceFail(s, &wi.o, sGridNo);
 			RemoveItemFromPool(wi);
+			OnSoldierGotItem(s, &wi.o, sGridNo, bZLevel);
 		}
 	}
 	else
@@ -1271,6 +1274,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 					gfDontChargeAPsToPickup = TRUE;
 					HandleAutoPlaceFail(s, &o, sGridNo);
 				}
+				OnSoldierGotItem(s, &o, sGridNo, bZLevel);
 			}
 		}
 	}

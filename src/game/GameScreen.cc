@@ -94,6 +94,7 @@ static RENDER_HOOK gRenderOverride = 0;
 static ScreenID guiTacticalLeaveScreenID = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 static BOOLEAN  guiTacticalLeaveScreen   = FALSE;
 
+Observable<> OnEnterTacticalScreen = {};
 
 static void BlitMFont(VIDEO_OVERLAY* const ovr)
 {
@@ -249,6 +250,8 @@ void EnterTacticalScreen(void)
 
 	// ATE: Enable messages again...
 	EnableScrollMessages( );
+
+	OnEnterTacticalScreen();
 }
 
 

@@ -23,6 +23,7 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 #include "UILayout.h"
+#include "Observable.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -522,9 +523,15 @@ static ST::string LoadEMailText(UINT32 entry)
 static void AddMessageToPages(Email* Mail);
 static ST::string ReplaceMercNameAndAmountWithProperData(const ST::string& pFinishedString, const Email* pMail);
 
+Observable<INT32, INT32, INT32, UINT8, BOOLEAN, INT32, UINT32, BOOLEAN_S*> OnAddEmail;
 
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData)
 {
+	// pre-process by scripts - scripts can cancel (maybe add again later) the email
+	BOOLEAN_S fCancelled = false;
+	OnAddEmail(iMessageOffset, iMessageLength, iDate, ubSender, fAlreadyRead, iFirstData, uiSecondData, &fCancelled);
+	if (fCancelled) return;
+
 	// will add a message to the list of messages
 
 	// add new element onto list

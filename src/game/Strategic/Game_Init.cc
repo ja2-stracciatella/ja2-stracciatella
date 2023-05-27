@@ -64,6 +64,8 @@
 #include <stdexcept>
 #include <string_theory/format>
 
+Observable<> OnInitNewCampaign = {};
+
 void InitScriptingEngine();
 
 UINT8			gubScreenCount=0;
@@ -178,6 +180,8 @@ void InitStrategicLayer( void )
 	ShutDownLeaveList( );
 	// re-set up leave list arrays for dismissed mercs
 	InitLeaveList( );
+
+	OnInitNewCampaign();
 
 	// reset time compression mode to X0 (this will also pause it)
 	SetGameTimeCompressionLevel( TIME_COMPRESS_X0 );
