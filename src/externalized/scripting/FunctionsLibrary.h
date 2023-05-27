@@ -91,6 +91,12 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStruc
 extern Observable<STRATEGICEVENT*, BOOLEAN_S*> OnStrategicEvent;
 
 /**
+ * Allows to override the player progress calculation.
+ * @param the progress percentage calculated by the base game. This can be adjusted or overridden.
+ */
+extern Observable<UINT8_S*> OnCalcPlayerProgress;
+
+/**
  * When the game about to be saved. This is the place to persist mod game states.
  * @ingroup observables
  */

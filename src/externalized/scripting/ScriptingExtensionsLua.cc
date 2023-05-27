@@ -414,6 +414,7 @@ static void _RegisterListener(const std::string& observable, const std::string& 
 	else if (observable == "BeforePrepareSector")        BeforePrepareSector.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnSoldierCreated")           OnSoldierCreated.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));
 	else if (observable == "OnStrategicEvent")           OnStrategicEvent.addListener(key, wrap<STRATEGICEVENT*, BOOLEAN_S*>(luaFunc));
+	else if (observable == "OnCalcPlayerProgress")       OnCalcPlayerProgress.addListener(key, wrap<UINT8_S*>(luaFunc));
 	else if (observable == "BeforeGameSaved")            BeforeGameSaved.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnGameLoaded")               OnGameLoaded.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnDealerInventoryUpdated")   OnDealerInventoryUpdated.addListener(key, wrap<>(luaFunc));
