@@ -321,6 +321,10 @@ static void RegisterGlobals()
 	lua.set_function("ExecuteTacticalTextBox", ExecuteTacticalTextBox_);
 
 	lua.set_function("GetMercProfile", GetMercProfile);
+
+	lua.set_function("GetWorldTotalMin", GetWorldTotalMin);
+	lua.set_function("GetWorldTotalSeconds", GetWorldTotalSeconds);
+	lua.set_function("GetWorldDay", GetWorldDay);
 	lua.set_function("AddEveryDayStrategicEvent", AddEveryDayStrategicEvent_);
 	lua.set_function("AddStrategicEvent", AddStrategicEvent_);
 
