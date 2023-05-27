@@ -97,6 +97,22 @@ extern Observable<STRATEGICEVENT*, BOOLEAN_S*> OnStrategicEvent;
 extern Observable<UINT8_S*> OnCalcPlayerProgress;
 
 /**
+ * Callback every morning to check quests' statuses..
+ * @param the current day
+ * @param set to true to skip base game checks
+ */
+extern Observable<UINT32, BOOLEAN_S*> OnCheckQuests;
+
+/**
+ * Callback when a quest is completed.
+ * @param the Quest ID
+ * @param sector X
+ * @param sector Y
+ * @param whether or not to write an update to the laptop history page
+ */
+extern Observable<UINT8, INT16, INT16, BOOLEAN> OnQuestEnded;
+
+/**
  * When the game about to be saved. This is the place to persist mod game states.
  * @ingroup observables
  */
