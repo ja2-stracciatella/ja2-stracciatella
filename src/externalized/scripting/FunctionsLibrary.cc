@@ -1,6 +1,7 @@
 #include "FunctionsLibrary.h"
 #include "Arms_Dealer_Init.h"
 #include "Campaign_Types.h"
+#include "Game_Event_Hook.h"
 #include "Handle_Items.h"
 #include "Item_Types.h"
 #include "Items.h"
@@ -111,6 +112,24 @@ void PutGameStates(const std::string key, ExtraGameStatesTable const states)
 		else if (auto *f = std::get_if<float>(&v)) storables[k] = *f;
 	}
 	g_gameStates.Set(ST::format("scripts:{}", key), storables);
+}
+
+void AddEveryDayStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiStartMin, UINT32 const uiParam)
+{
+	BOOLEAN result = AddEveryDayStrategicEvent((StrategicEventKind)ubCallbackID, uiStartMin, uiParam);
+	if (!result)
+	{
+		SLOGW("Failed to add daily strategic event {}", ubCallbackID);
+	}
+}
+
+void AddStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiMinStampSeconds, UINT32 const uiParams)
+{
+	BOOLEAN result = AddStrategicEventUsingSeconds((StrategicEventKind)ubCallbackID, uiMinStampSeconds, uiParams);
+	if (!result)
+	{
+		SLOGW("Failed to add one time strategic event {}", ubCallbackID);
+	}
 }
 
 void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, UINT16, UINT8);

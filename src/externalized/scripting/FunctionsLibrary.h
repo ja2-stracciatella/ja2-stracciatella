@@ -231,6 +231,21 @@ OBJECTTYPE* CreateMoney(const UINT32 amt);
  * @ingroup funclib-items
  */
 void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibility);
+/**
+ * Adds a recurring events that happens at the same time every day.
+ * @param ubCallbackID strategic event ID
+ * @param uiStartMin the time (minutes of day) that the event
+ * @param uiParam a parameter that will be passed to the event handler
+ */
+void AddEveryDayStrategicEvent_(UINT8 ubCallbackID, UINT32 uiStartMin, UINT32 uiParam);
+
+/**
+ * Adds an one-off strategic event
+ * @param ubCallbackID strategic event ID
+ * @param uiMinStamp earliest time (in world-seconds) that this event will be processed
+ * @param uiParam a parameter that will be passed to the event handler
+ */
+void AddStrategicEvent_(UINT8 ubCallbackID, UINT32 uiMinStamp, UINT32);
 
 /**
  * Gets the Merc Profile data object by profile ID
