@@ -233,7 +233,7 @@ OBJECTTYPE* CreateMoney(const UINT32 amt);
  */
 void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibility);
 /**
- * Adds a recurring events that happens at the same time every day.
+ * Adds a recurring event that happens at the same time every day.
  * @param ubCallbackID strategic event ID
  * @param uiStartMin the time (minutes of day) that the event
  * @param uiParam a parameter that will be passed to the event handler
