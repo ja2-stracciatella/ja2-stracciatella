@@ -34,10 +34,12 @@
 #include "Laptop.h"
 #include "Campaign.h"
 #include "Debug.h"
+#include "Observable.h"
 
 extern UINT32	guiTimeStampOfCurrentlyExecutingEvent;
 extern BOOLEAN gfPreventDeletionOfAnyEvent;
 
+Observable<STRATEGICEVENT*, BOOLEAN_S*> OnStrategicEvent;
 
 static BOOLEAN DelayEventIfBattleInProgress(STRATEGICEVENT* pEvent)
 {
@@ -66,6 +68,14 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 	{
 		gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
 		return FALSE;
+	}
+
+	BOOLEAN_S eventProcessed = false;
+	OnStrategicEvent(pEvent, &eventProcessed);
+	if (eventProcessed)
+	{
+		gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
+		return true;
 	}
 
 	// Look at the ID of event and do stuff according to that!

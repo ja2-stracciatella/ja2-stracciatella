@@ -29,6 +29,8 @@ struct STRUCTURE;
     \brief Profile of a character in game; controls soldier's name, appearance and others */
 struct MERCPROFILESTRUCT;
 
+struct STRATEGICEVENT;
+
 /*! \defgroup funclib-dealers Shops and arms dealers
     \brief Manage behavior, inventory and prices of dealers */
 
@@ -80,6 +82,13 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> Bef
   * @ingroup observables
   */
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
+
+/**
+ * Callback when an event is due and to be handled. Implement handlers here if custom strategic events are added.
+ * @param the event to be handled
+ * @param set to true if the event should not be further processed by the base game
+ */
+extern Observable<STRATEGICEVENT*, BOOLEAN_S*> OnStrategicEvent;
 
 /**
  * When the game about to be saved. This is the place to persist mod game states.

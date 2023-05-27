@@ -401,7 +401,7 @@ static std::function<void(A...)> wrap(std::string luaFunc)
 	};
 }
 
-static void _RegisterListener(std::string observable, std::string luaFunc, ST::string key)
+static void _RegisterListener(const std::string& observable, const std::string& luaFunc, const ST::string& key)
 {
 	if (isLuaInitialized)
 	{
@@ -413,6 +413,7 @@ static void _RegisterListener(std::string observable, std::string luaFunc, ST::s
 	else if (observable == "OnAirspaceControlUpdated")   OnAirspaceControlUpdated.addListener(key, wrap<>(luaFunc));
 	else if (observable == "BeforePrepareSector")        BeforePrepareSector.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnSoldierCreated")           OnSoldierCreated.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));
+	else if (observable == "OnStrategicEvent")           OnStrategicEvent.addListener(key, wrap<STRATEGICEVENT*, BOOLEAN_S*>(luaFunc));
 	else if (observable == "BeforeGameSaved")            BeforeGameSaved.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnGameLoaded")               OnGameLoaded.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnDealerInventoryUpdated")   OnDealerInventoryUpdated.addListener(key, wrap<>(luaFunc));
