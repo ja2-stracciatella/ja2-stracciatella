@@ -15,13 +15,17 @@
 #include "Game_Events.h"
 #include "GameInstance.h"
 #include "GameSettings.h"
+#include "LaptopSave.h"
 #include "Logger.h"
 #include "Overhead.h"
 #include "Quests.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Profile_Type.h"
 #include "StrategicMap.h"
+#include "Strategic_Movement.h"
 #include "Structure.h"
+#include "Types.h"
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <string_theory/format>
@@ -45,6 +49,8 @@ static sol::state lua;
 
 // an increment counter used to generate unique keys for listeners
 static unsigned int counter;
+
+extern ScreenID guiCurrentScreen;
 
 static void RegisterUserTypes();
 static void RegisterGlobals();
@@ -143,7 +149,14 @@ static void RegisterUserTypes()
 		"ubNumAdmins", &SECTORINFO::ubNumAdmins,
 		"ubNumTroops", &SECTORINFO::ubNumTroops,
 		"ubNumElites", &SECTORINFO::ubNumElites,
-		"uiFlags", &SECTORINFO::uiFlags
+
+		"bBloodCats", &SECTORINFO::bBloodCats,
+		"bBloodCatPlacements", &SECTORINFO::bBloodCatPlacements,
+
+		"uiFlags", &SECTORINFO::uiFlags,
+		"ubGarrisonID", &SECTORINFO::ubGarrisonID,
+
+		"fSurfaceWasEverPlayerControlled", &SECTORINFO::fSurfaceWasEverPlayerControlled
 		);
 
 	lua.new_usertype<UNDERGROUND_SECTORINFO>("UNDERGROUND_SECTORINFO",
@@ -171,7 +184,9 @@ static void RegisterUserTypes()
 
 	lua.new_usertype<TacticalStatusType>("TacticalStatusType",
 		"fEnemyInSector", &TacticalStatusType::fEnemyInSector,
-		"fDidGameJustStart", &TacticalStatusType::fDidGameJustStart
+		"fDidGameJustStart", &TacticalStatusType::fDidGameJustStart,
+		"uiFlags", &TacticalStatusType::uiFlags,
+		"fEnemyFlags", &TacticalStatusType::fEnemyFlags
 		);
 
 	lua.new_usertype<STRATEGICEVENT>("STRATEGICEVENT",
@@ -189,7 +204,13 @@ static void RegisterUserTypes()
 		"fTurnTimeLimit", &GAME_OPTIONS::fTurnTimeLimit,
 		"ubGameSaveMode", &GAME_OPTIONS::ubGameSaveMode
 		);
-	
+
+	lua.new_usertype<SGPSector>("SGPSector",
+		"x", &SGPSector::x,
+		"y", &SGPSector::y,
+		"z", &SGPSector::z
+		);
+
 	lua.new_usertype<SOLDIERTYPE>("SOLDIERTYPE",
 		"ubID", &SOLDIERTYPE::ubID,
 		"ubProfile", &SOLDIERTYPE::ubProfile,
@@ -210,7 +231,9 @@ static void RegisterUserTypes()
 		"bBreath", &SOLDIERTYPE::bBreath,
 		"bBreathMax", &SOLDIERTYPE::bBreathMax,
 		"sBreathRed", &SOLDIERTYPE::sBreathRed,
+		"bActionPoints", &SOLDIERTYPE::bActionPoints,
 		"bCamo", &SOLDIERTYPE::bCamo,
+		"bCollapsed", &SOLDIERTYPE::bCollapsed,
 
 		"bAgility", &SOLDIERTYPE::bAgility,
 		"bDexterity", &SOLDIERTYPE::bDexterity,
@@ -235,6 +258,9 @@ static void RegisterUserTypes()
 
 		"sSector", &SOLDIERTYPE::sSector,
 		"fBetweenSectors", &SOLDIERTYPE::fBetweenSectors,
+
+		"ubStrategicInsertionCode", &SOLDIERTYPE::ubStrategicInsertionCode,
+		"usStrategicInsertionData", &SOLDIERTYPE::usStrategicInsertionData,
 
 		"iTotalContractLength", &SOLDIERTYPE::iTotalContractLength,
 		"iEndofContractTime", &SOLDIERTYPE::iEndofContractTime
@@ -271,6 +297,16 @@ static void RegisterUserTypes()
 		"sGridNo", &MERCPROFILESTRUCT::sGridNo,
 		"ubLastDateSpokenTo", &MERCPROFILESTRUCT::ubLastDateSpokenTo,
 
+		"sSector", &MERCPROFILESTRUCT::sSector,
+		"bSectorZ", &MERCPROFILESTRUCT::bSectorZ,
+		"sGridNo", &MERCPROFILESTRUCT::sGridNo,
+
+		"ubStrategicInsertionCode", &MERCPROFILESTRUCT::ubStrategicInsertionCode,
+		"usStrategicInsertionData", &MERCPROFILESTRUCT::usStrategicInsertionData,
+		"fUseProfileInsertionInfo", &MERCPROFILESTRUCT::fUseProfileInsertionInfo,
+
+		"bMercStatus", &MERCPROFILESTRUCT::bMercStatus,
+		"uiDayBecomesAvailable", &MERCPROFILESTRUCT::uiDayBecomesAvailable,
 		"iMercMercContractLength", &MERCPROFILESTRUCT::iMercMercContractLength,
 		"sSalary", &MERCPROFILESTRUCT::sSalary,
 		"uiWeeklySalary", &MERCPROFILESTRUCT::uiWeeklySalary,
@@ -280,7 +316,23 @@ static void RegisterUserTypes()
 		"usOptionalGearCost", &MERCPROFILESTRUCT::usOptionalGearCost,
 
 		"iBalance", &MERCPROFILESTRUCT::iBalance
-	);
+		"ubLastDateSpokenTo", &MERCPROFILESTRUCT::ubLastDateSpokenTo
+		);
+
+	lua.new_usertype<GROUP>("GROUP",
+		"ubGroupID", &GROUP::ubGroupID,
+		"ubNext", &GROUP::ubNext,
+		"uiTraverseTime", &GROUP::uiTraverseTime,
+		"ubMoveType", &GROUP::ubMoveType,
+		"setArrivalTime", &GROUP::setArrivalTime
+		);
+
+	lua.new_usertype<LaptopSaveInfoStruct>("LaptopSaveInfoStruct",
+		"iCurrentBalance", &LaptopSaveInfoStruct::iCurrentBalance,
+
+		"gubPlayersMercAccountStatus", &LaptopSaveInfoStruct::gubPlayersMercAccountStatus,
+		"ubPlayerBeenToMercSiteStatus", &LaptopSaveInfoStruct::ubPlayerBeenToMercSiteStatus
+		);
 
 	lua.new_usertype<DEALER_ITEM_HEADER>("DEALER_ITEM_HEADER",
 		"ubTotalItems", &DEALER_ITEM_HEADER::ubTotalItems,
@@ -308,11 +360,16 @@ static void RegisterGlobals()
 	lua["gubQuest"] = &gubQuest;
 	lua["gubFact"] = &gubFact;
 	lua["gGameOptions"] = &gGameOptions;
+	lua["guiCurrentScreen"] = &guiCurrentScreen;
+	lua["LaptopSaveInfo"] = &LaptopSaveInfo;
 
 	lua.set_function("GetCurrentSector", GetCurrentSector);
+	lua.set_function("GetCurrentSectorLoc", GetCurrentSectorLoc);
 	lua.set_function("GetSectorInfo", GetSectorInfo);
 	lua.set_function("GetUndergroundSectorInfo", GetUndergroundSectorInfo);
-	
+	lua.set_function("GetStrategicMapElement", GetStrategicMapElement);
+	lua.set_function("SetThisSectorAsPlayerControlled", SetThisSectorAsPlayerControlled);
+
 	lua.set_function("CreateItem", CreateItem);
 	lua.set_function("CreateMoney", CreateMoney);
 	lua.set_function("PlaceItem", PlaceItem);
@@ -321,6 +378,19 @@ static void RegisterGlobals()
 	lua.set_function("ExecuteTacticalTextBox", ExecuteTacticalTextBox_);
 
 	lua.set_function("GetMercProfile", GetMercProfile);
+	lua.set_function("CenterAtGridNo", CenterAtGridNo);
+
+	lua.set_function("ListSoldiersFromTeam", ListSoldiersFromTeam);
+	lua.set_function("FindSoldierByProfileID", FindSoldierByProfileID);
+
+	lua.set_function("ChangeSoldierState", ChangeSoldierState);
+
+	lua.set_function("TriggerNPCRecord", TriggerNPCRecord);
+	lua.set_function("StrategicNPCDialogue", StrategicNPCDialogue);
+	lua.set_function("TacticalCharacterDialogue", TacticalCharacterDialogue);
+	lua.set_function("DeleteTalkingMenu", DeleteTalkingMenu);
+
+	lua.set_function("CreateNewEnemyGroupDepartingSector", CreateNewEnemyGroupDepartingSector);
 
 	lua.set_function("GetWorldTotalMin", GetWorldTotalMin);
 	lua.set_function("GetWorldTotalSeconds", GetWorldTotalSeconds);
@@ -333,6 +403,14 @@ static void RegisterGlobals()
 	lua.set_function("SetFactTrue", SetFactTrue);
 	lua.set_function("SetFactFalse", SetFactFalse);
 	lua.set_function("CheckFact", CheckFact);
+
+	lua.set_function("AddEmailMessage", AddEmailMessage);
+	lua.set_function("SetBookMark", SetBookMark);
+	lua.set_function("AddTransactionToPlayersBook", AddTransactionToPlayersBook);
+	lua.set_function("AddHistoryToPlayersLog", AddHistoryToPlayersLog);
+
+	lua.set_function("TriggerNPCRecord", TriggerNPCRecord);
+	lua.set_function("StrategicNPCDialogue", StrategicNPCDialogue);
 
 	lua.set_function("GetGameStates", GetGameStates);
 	lua.set_function("PutGameStates", PutGameStates);
@@ -352,7 +430,7 @@ static void RegisterGlobals()
 	lua.set_function("UnregisterListener", UnregisterListener);
 }
 
-static void LogLuaMessage(LogLevel level, std::string msg) {
+static void LogLuaMessage(LogLevel const level, const std::string& msg) {
 	lua_Debug info;
 	// Stack position 0 is the c function we are in
 	// Stack position 1 is the calling lua script
@@ -377,7 +455,7 @@ static void RegisterLogger()
  * Invokes a Lua function by name
  */
 template<typename ...A>
-static void InvokeFunction(ST::string functionName, A... args)
+static void InvokeFunction(const ST::string& functionName, A... args)
 {
 	if (isLuaDisabled)
 	{
@@ -459,7 +537,7 @@ static void _RegisterListener(const std::string& observable, const std::string& 
  * @param luaFunc name of the function handling callback
  * @ingroup funclib-general
  */
-static void RegisterListener(std::string observable, std::string luaFunc)
+static void RegisterListener(const std::string observable, const std::string luaFunc)
 {
 	ST::string key = ST::format("mod:{03d}", counter++);
 	_RegisterListener(observable, luaFunc, key);
@@ -472,7 +550,7 @@ static void RegisterListener(std::string observable, std::string luaFunc)
  * @param key
  * @ingroup funclib-general
  */
-static void UnregisterListener(std::string observable, std::string key)
+static void UnregisterListener(const std::string observable, const std::string key)
 {
 	_RegisterListener(observable, "___noop", key);
 }

@@ -6,6 +6,7 @@
 #include "Types.h"
 #include "Observable.h"
 #include <variant>
+#include <vector>
 
 typedef std::map<std::string, std::variant<std::string, int32_t, float, bool>> ExtraGameStatesTable;
 
@@ -23,13 +24,20 @@ struct UNDERGROUND_SECTORINFO;
 /*! \struct SOLDIERTYPE
     \brief Information and attributes of a soldier in game */
 struct SOLDIERTYPE;
-/*! \struct STRUCTURE
-    \brief An structure element on the tactical map */
-struct STRUCTURE;
 /*! \struct MERCPROFILESTRUCT
     \brief Profile of a character in game; controls soldier's name, appearance and others */
 struct MERCPROFILESTRUCT;
-
+/*! \struct STRUCTURE
+    \brief An structure element on the tactical map */
+struct STRUCTURE;
+/*! \struct GROUP
+    \brief Representation of group of mobile enemies */
+struct GROUP;
+/*! \struct StrategicMapElement
+    \brief Strategic status of ownership and control of a map sector */
+struct StrategicMapElement;
+/*! \struct STRATEGICEVENT
+    \brief An event to scheduled for process at a later time in game */
 struct STRATEGICEVENT;
 
 /*! \defgroup funclib-dealers Shops and arms dealers
@@ -273,7 +281,7 @@ std::tuple<int, int, int> GetCurrentSectorLoc();
  * @see GetUndergroundSectorInfo
  * @ingroup funclib-sectors
  */
-SECTORINFO* GetSectorInfo(std::string const sectorID);
+SECTORINFO* GetSectorInfo(std::string sectorID);
 
 /**
  * Returns a pointer to the UNDERGROUND_SECTORINFO of the specific underground sector.
@@ -281,7 +289,16 @@ SECTORINFO* GetSectorInfo(std::string const sectorID);
  * @see GetSectorInfo
  * @ingroup funclib-sectors
  */
-UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(std::string const sectorID);
+UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(std::string sectorID);
+
+/**
+ * Retrums the StrategicMapElement of the sector
+ * @param sectorID
+ * @return
+ */
+StrategicMapElement* GetStrategicMapElement(std::string sectorID);
+
+BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& s, BOOLEAN fContested);
 
 /** @defgroup funclib-items Items and objects
  *  @brief Functions to handle items, objects and inventories
@@ -294,7 +311,7 @@ UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(std::string const sectorID);
  * @return a pointer to the created object
  * @ingroup funclib-items
  */
-OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 ubStatus);
+OBJECTTYPE* CreateItem(UINT16 usItem, INT8 ubStatus);
 
 /**
  * Creates a new money object of the specified amount
@@ -302,7 +319,7 @@ OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 ubStatus);
  * @return a pointer to the created object
  * @ingroup funclib-items
  */
-OBJECTTYPE* CreateMoney(const UINT32 amt);
+OBJECTTYPE* CreateMoney(UINT32 amt);
 
 /**
  * Places the given object at the specified grid
@@ -311,7 +328,23 @@ OBJECTTYPE* CreateMoney(const UINT32 amt);
  * @param bVisibility determines if the object is known by the player. Must match one of the Visibility enum
  * @ingroup funclib-items
  */
-void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibility);
+void PlaceItem(INT16 sGridNo, OBJECTTYPE* pObject, INT8 bVisibility);
+
+MERCPROFILESTRUCT* GetMercProfile(UINT8 ubProfileID);
+SOLDIERTYPE* FindSoldierByProfileID(UINT8 profileID);
+std::vector<SOLDIERTYPE*> ListSoldiersFromTeam(UINT8 ubTeamID);
+
+void CenterAtGridNo(INT16 sGridNo, bool fForce);
+
+void TriggerNPCRecord(UINT8 ubTriggerNPC, UINT8 record);
+void StrategicNPCDialogue(UINT8 ubProfileID, UINT16 usQuoteNum);
+BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);
+
+/**
+ * Closes the dialogue menu with an NPC.
+ */
+void DeleteTalkingMenu();
+
 /**
  * Adds a recurring event that happens at the same time every day.
  * @param ubCallbackID strategic event ID
@@ -330,6 +363,9 @@ void AddStrategicEvent_(UINT8 ubCallbackID, UINT32 uiMinStamp, UINT32);
 UINT32 GetWorldTotalMin();
 UINT32 GetWorldTotalSeconds();
 UINT32 GetWorldDay();
+
+GROUP* CreateNewEnemyGroupDepartingSector(std::string sectorID, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites);
+
 void StartQuest_(UINT8 ubQuestID, std::string sectorID);
 void EndQuest_(UINT8 ubQuest, std::string sectorID);
 
@@ -337,6 +373,12 @@ void SetFactTrue(Fact);
 void SetFactFalse(Fact);
 BOOLEAN CheckFact(Fact, UINT8);
 
+void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce);
+
+void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 uiFirstData, UINT32 uiSecondData);
+void SetBookMark(INT32 iBookId);
+void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount);
+void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, const SGPSector& s);
 
 /**
  * Gets the Merc Profile data object by profile ID

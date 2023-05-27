@@ -1,12 +1,14 @@
 #include "FunctionsLibrary.h"
 #include "Arms_Dealer_Init.h"
 #include "Campaign_Types.h"
+#include "Dialogue_Control.h"
 #include "Game_Event_Hook.h"
 #include "Handle_Items.h"
 #include "Item_Types.h"
 #include "Items.h"
 #include "JAScreens.h"
 #include "MessageBoxScreen.h"
+#include "Overhead.h"
 #include "Queen_Command.h"
 #include "SaveLoadGameStates.h"
 #include "Soldier_Profile.h"
@@ -26,14 +28,25 @@ std::string GetCurrentSector()
 	return str.to_std_string();
 }
 
-SECTORINFO* GetSectorInfo(const std::string sectorID)
+std::tuple<int, int, int> GetCurrentSectorLoc()
+{
+	return std::make_tuple(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+}
+
+static UINT8 ToSectorID(const std::string sectorID)
 {
 	if (!SGPSector().IsValid(sectorID.c_str()))
 	{
 		ST::string err = ST::format("The given sectorID ('{}') is invalid", sectorID);
 		throw std::runtime_error(err.to_std_string());
 	}
-	UINT8 ubSector = SGPSector::FromShortString(sectorID).AsByte();
+	SGPSector sector = SGPSector::FromShortString(sectorID);
+	return sector.AsByte();
+}
+
+SECTORINFO* GetSectorInfo(const std::string sectorID)
+{
+	UINT8 ubSector = ToSectorID(sectorID);
 	return &(SectorInfo[ubSector]);
 }
 
@@ -51,6 +64,13 @@ UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
 
 	const SGPSector& ubSector = SGPSector::FromShortString(stSector, ubSectorZ);
 	return FindUnderGroundSector(ubSector);
+}
+
+StrategicMapElement* GetStrategicMapElement(const std::string sectorID)
+{
+	SGPSector sector = SGPSector::FromShortString(sectorID);
+	UINT8 index = sector.AsStrategicIndex();
+	return &(StrategicMap[index]);
 }
 
 OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 bStatus)
@@ -114,6 +134,24 @@ void PutGameStates(const std::string key, ExtraGameStatesTable const states)
 	g_gameStates.Set(ST::format("scripts:{}", key), storables);
 }
 
+void CenterAtGridNo(const INT16 sGridNo, const bool fForce)
+{
+	InternalLocateGridNo(sGridNo, fForce);
+}
+
+void StrategicNPCDialogue(UINT8 const ubProfileID, UINT16 const usQuoteNum)
+{
+	CharacterDialogue(ubProfileID, usQuoteNum, GetExternalNPCFace(ubProfileID), DIALOGUE_EXTERNAL_NPC_UI, FALSE, true);
+}
+
+std::vector<SOLDIERTYPE *> ListSoldiersFromTeam(UINT8 const ubTeamID)
+{
+	std::vector<SOLDIERTYPE *> soldiers;
+	FOR_EACH_IN_TEAM(s, ubTeamID)
+	soldiers.push_back(s);
+	return soldiers;
+}
+
 void AddEveryDayStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiStartMin, UINT32 const uiParam)
 {
 	BOOLEAN result = AddEveryDayStrategicEvent((StrategicEventKind)ubCallbackID, uiStartMin, uiParam);
@@ -121,6 +159,12 @@ void AddEveryDayStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiStartMi
 	{
 		SLOGW("Failed to add daily strategic event {}", ubCallbackID);
 	}
+}
+
+GROUP *CreateNewEnemyGroupDepartingSector(std::string const sectorID, UINT8 const ubNumAdmins, UINT8 const ubNumTroops, UINT8 const ubNumElites)
+{
+	UINT32 uiSector = ToSectorID(sectorID);
+	return CreateNewEnemyGroupDepartingFromSector(uiSector, ubNumAdmins, ubNumTroops, ubNumElites);
 }
 
 void AddStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiMinStampSeconds, UINT32 const uiParams)
