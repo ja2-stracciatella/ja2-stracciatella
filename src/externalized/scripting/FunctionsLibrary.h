@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arms_Dealer.h"
+#include "Facts.h"
 #include "Item_Types.h"
 #include "Types.h"
 #include "Observable.h"
@@ -28,6 +29,8 @@ struct STRUCTURE;
 /*! \struct MERCPROFILESTRUCT
     \brief Profile of a character in game; controls soldier's name, appearance and others */
 struct MERCPROFILESTRUCT;
+
+struct STRATEGICEVENT;
 
 /*! \defgroup funclib-dealers Shops and arms dealers
     \brief Manage behavior, inventory and prices of dealers */
@@ -80,6 +83,35 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> Bef
   * @ingroup observables
   */
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
+
+/**
+ * Callback when an event is due and to be handled. Implement handlers here if custom strategic events are added.
+ * @param the event to be handled
+ * @param set to true if the event should not be further processed by the base game
+ */
+extern Observable<STRATEGICEVENT*, BOOLEAN_S*> OnStrategicEvent;
+
+/**
+ * Allows to override the player progress calculation.
+ * @param the progress percentage calculated by the base game. This can be adjusted or overridden.
+ */
+extern Observable<UINT8_S*> OnCalcPlayerProgress;
+
+/**
+ * Callback every morning to check quests' statuses..
+ * @param the current day
+ * @param set to true to skip base game checks
+ */
+extern Observable<UINT32, BOOLEAN_S*> OnCheckQuests;
+
+/**
+ * Callback when a quest is completed.
+ * @param the Quest ID
+ * @param sector X
+ * @param sector Y
+ * @param whether or not to write an update to the laptop history page
+ */
+extern Observable<UINT8, INT16, INT16, BOOLEAN> OnQuestEnded;
 
 /**
  * When the game about to be saved. This is the place to persist mod game states.
@@ -200,6 +232,31 @@ OBJECTTYPE* CreateMoney(const UINT32 amt);
  * @ingroup funclib-items
  */
 void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibility);
+/**
+ * Adds a recurring event that happens at the same time every day.
+ * @param ubCallbackID strategic event ID
+ * @param uiStartMin the time (minutes of day) that the event
+ * @param uiParam a parameter that will be passed to the event handler
+ */
+void AddEveryDayStrategicEvent_(UINT8 ubCallbackID, UINT32 uiStartMin, UINT32 uiParam);
+
+/**
+ * Adds an one-off strategic event
+ * @param ubCallbackID strategic event ID
+ * @param uiMinStamp earliest time (in world-seconds) that this event will be processed
+ * @param uiParam a parameter that will be passed to the event handler
+ */
+void AddStrategicEvent_(UINT8 ubCallbackID, UINT32 uiMinStamp, UINT32);
+UINT32 GetWorldTotalMin();
+UINT32 GetWorldTotalSeconds();
+UINT32 GetWorldDay();
+void StartQuest_(UINT8 ubQuestID, std::string sectorID);
+void EndQuest_(UINT8 ubQuest, std::string sectorID);
+
+void SetFactTrue(Fact);
+void SetFactFalse(Fact);
+BOOLEAN CheckFact(Fact, UINT8);
+
 
 /**
  * Gets the Merc Profile data object by profile ID

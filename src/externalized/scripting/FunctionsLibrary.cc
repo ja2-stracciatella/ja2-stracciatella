@@ -1,6 +1,7 @@
 #include "FunctionsLibrary.h"
 #include "Arms_Dealer_Init.h"
 #include "Campaign_Types.h"
+#include "Game_Event_Hook.h"
 #include "Handle_Items.h"
 #include "Item_Types.h"
 #include "Items.h"
@@ -111,6 +112,54 @@ void PutGameStates(const std::string key, ExtraGameStatesTable const states)
 		else if (auto *f = std::get_if<float>(&v)) storables[k] = *f;
 	}
 	g_gameStates.Set(ST::format("scripts:{}", key), storables);
+}
+
+void AddEveryDayStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiStartMin, UINT32 const uiParam)
+{
+	BOOLEAN result = AddEveryDayStrategicEvent((StrategicEventKind)ubCallbackID, uiStartMin, uiParam);
+	if (!result)
+	{
+		SLOGW("Failed to add daily strategic event {}", ubCallbackID);
+	}
+}
+
+void AddStrategicEvent_(UINT8 const ubCallbackID, UINT32 const uiMinStampSeconds, UINT32 const uiParams)
+{
+	BOOLEAN result = AddStrategicEventUsingSeconds((StrategicEventKind)ubCallbackID, uiMinStampSeconds, uiParams);
+	if (!result)
+	{
+		SLOGW("Failed to add one time strategic event {}", ubCallbackID);
+	}
+}
+
+void StartQuest(UINT8, const SGPSector &);
+void StartQuest_(UINT8 const ubQuestID, const std::string sectorID)
+{
+	if (!sectorID.empty())
+	{
+		SGPSector s = SGPSector::FromShortString(sectorID);
+		StartQuest(ubQuestID, s);
+	}
+	else
+	{
+		SGPSector s = SGPSector{-1, -1};
+		StartQuest(ubQuestID, s);
+	}
+}
+
+void EndQuest(UINT8, const SGPSector &);
+void EndQuest_(UINT8 const ubQuestID, const std::string sectorID)
+{
+	if (!sectorID.empty())
+	{
+		SGPSector s = SGPSector::FromShortString(sectorID);
+		EndQuest(ubQuestID, s);
+	}
+	else
+	{
+		SGPSector s = SGPSector{-1, -1};
+		EndQuest(ubQuestID, s);
+	}
 }
 
 void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID, UINT16, UINT8);

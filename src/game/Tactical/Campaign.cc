@@ -1182,6 +1182,8 @@ static UINT8 CalcImportantSectorControl(void);
 #define PROGRESS_PORTION_INCOME		(100 * gamepolicy(progress_weight_income) / PROGRESS_PORTION_TOTAL)
 
 
+Observable<UINT8_S*> OnCalcPlayerProgress;
+
 // returns a number between 0-100, this is an estimate of how far a player has progressed through the game
 UINT8 CurrentPlayerProgressPercentage(void)
 {
@@ -1264,7 +1266,11 @@ UINT8 CurrentPlayerProgressPercentage(void)
 	// add control progress
 	ubCurrentProgress += usControlProgress;
 
-	return(ubCurrentProgress);
+	// allow override from mod scripts
+	UINT8_S progress = ubCurrentProgress;
+	OnCalcPlayerProgress(&progress);
+
+	return progress;
 }
 
 
