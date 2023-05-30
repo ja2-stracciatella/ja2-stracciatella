@@ -4,6 +4,7 @@ set(JA2_SOURCES
     ${LOCAL_JA2_HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/EncryptedString.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ItemStrings.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Localization.cc
     PARENT_SCOPE
 )
 set(JA2_INCLUDES

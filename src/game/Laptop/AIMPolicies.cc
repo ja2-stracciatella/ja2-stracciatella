@@ -373,7 +373,7 @@ static void InitAimPolicyMenuBar()
 
 	UINT16          x    = AIM_POLICY_MENU_X;
 	UINT16  const   y    = AIM_POLICY_MENU_Y;
-	const ST::string* text = AimPolicyText;
+	const ST::string* text = AimPolicyText.data();
 	INT32           idx  = 0;
 	FOR_EACHX(GUIButtonRef, i, guiPoliciesMenuButton, x += AIM_POLICY_GAP_X)
 	{
@@ -510,7 +510,7 @@ static void InitAgreementRegion()
 
 	UINT16          x    = AIM_POLICY_AGREEMENT_X;
 	UINT16  const   y    = AIM_POLICY_AGREEMENT_Y;
-	const ST::string* text = AimPolicyText + AIM_POLICIES_DISAGREE;
+	const ST::string* text = &AimPolicyText[AIM_POLICIES_DISAGREE];
 	INT32           idx  = 0;
 	FOR_EACHX(GUIButtonRef, i, guiPoliciesAgreeButton, x += 125)
 	{

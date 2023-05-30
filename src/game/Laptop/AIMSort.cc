@@ -87,7 +87,7 @@ static void SelectMedicalBoxRegionCallBack(   MOUSE_REGION* pRegion, UINT32 iRea
 static void SelectPriceBoxRegionCallBack(     MOUSE_REGION* pRegion, UINT32 iReason);
 
 
-static AIMSortInfo g_aim_sort_info[str_aim_sort_list_SIZE] =
+static AIMSortInfo g_aim_sort_info[L10n::str_aim_sort_list_SIZE]
 {
 	{   9, 34, LEFT_JUSTIFIED,  0, SelectPriceBoxRegionCallBack      },
 	{   9, 47, LEFT_JUSTIFIED,  1, SelectExpBoxRegionCallBack        },

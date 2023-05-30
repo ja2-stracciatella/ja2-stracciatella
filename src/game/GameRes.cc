@@ -1,61 +1,21 @@
 #include "GameRes.h"
 #include "Directories.h"
 #include "EncodingCorrectors.h"
-#include "FileMan.h"
 #include "GameMode.h"
 #include "Logger.h"
-#include "Text.h"
 #include "VObject.h"
 #include <locale.h>
 #include <stdexcept>
 
 
-extern LanguageRes g_LanguageResDutch;
-extern LanguageRes g_LanguageResEnglish;
-extern LanguageRes g_LanguageResFrench;
-extern LanguageRes g_LanguageResGerman;
-extern LanguageRes g_LanguageResItalian;
-extern LanguageRes g_LanguageResPolish;
-extern LanguageRes g_LanguageResRussian;
-extern LanguageRes g_LanguageResRussianGold;
-extern LanguageRes g_LanguageResChinese;
-
-
 /** Game version. */
 static GameVersion s_gameVersion = GameVersion::ENGLISH;
-
-/** Current language resources. */
-const LanguageRes* g_langRes = &g_LanguageResEnglish;
-
-/** Set language resources. */
-static void setResources(const LanguageRes* langRes)
-{
-	g_langRes = langRes;
-}
 
 
 /** Choose game version. */
 void setGameVersion(GameVersion ver)
 {
 	s_gameVersion = ver;
-	switch(s_gameVersion)
-	{
-		case GameVersion::DUTCH:        setResources(&g_LanguageResDutch);              break;
-		case GameVersion::ENGLISH:      setResources(&g_LanguageResEnglish);            break;
-		case GameVersion::FRENCH:       setResources(&g_LanguageResFrench);             break;
-		case GameVersion::GERMAN:       setResources(&g_LanguageResGerman);             break;
-		case GameVersion::ITALIAN:      setResources(&g_LanguageResItalian);            break;
-		case GameVersion::POLISH:       setResources(&g_LanguageResPolish);             break;
-		case GameVersion::RUSSIAN:      setResources(&g_LanguageResRussian);            break;
-		case GameVersion::RUSSIAN_GOLD: setResources(&g_LanguageResRussianGold);        break;
-		case GameVersion::SIMPLIFIED_CHINESE:      setResources(&g_LanguageResChinese); break;
-		default:
-		{
-			SLOGW("Unknown version. Using ENGLISH by defaul");
-			s_gameVersion = GameVersion::ENGLISH;
-			setResources(&g_LanguageResEnglish);
-		}
-	}
 }
 
 

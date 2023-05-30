@@ -486,7 +486,7 @@ void InitAimMenuBar()
 
 	UINT16             x    = BOTTOM_BUTTON_START_X;
 	UINT16     const   y    = BOTTOM_BUTTON_START_Y;
-	const ST::string* text = AimBottomMenuText;
+	const ST::string*  text = AimBottomMenuText.data();
 	LaptopMode const*  page = gCurrentAimPage;
 	FOR_EACHX(GUIButtonRef, i, guiBottomButtons, x += BOTTOM_BUTTON_START_WIDTH)
 	{

@@ -51,6 +51,7 @@
 #include "strategic/NpcPlacementModel.h"
 #include "strategic/UndergroundSectorModel.h"
 #include "strings/EncryptedString.h"
+#include "strings/Localization.h"
 #include "tactical/MapItemReplacementModel.h"
 #include "tactical/NpcActionParamsModel.h"
 
@@ -666,27 +667,9 @@ bool DefaultContentManager::loadArmyData()
 
 void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<ST::string> &strings) const
 {
-	ST::string fullName(name);
+	ST::string const fullName = name + L10n::GetSuffix(m_gameVersion, true) + ".json";
 
-	switch(m_gameVersion)
-	{
-	case GameVersion::DUTCH:        fullName += "-dut";   break;
-	case GameVersion::ENGLISH:      fullName += "-eng";   break;
-	case GameVersion::FRENCH:       fullName += "-fr";    break;
-	case GameVersion::GERMAN:       fullName += "-ger";   break;
-	case GameVersion::ITALIAN:      fullName += "-it";    break;
-	case GameVersion::POLISH:       fullName += "-pl";    break;
-	case GameVersion::RUSSIAN:
-	case GameVersion::RUSSIAN_GOLD: fullName += "-rus";   break;
-	case GameVersion::SIMPLIFIED_CHINESE: fullName += "-chs";   break;
-	default:
-	{
-		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(m_gameVersion)).to_std_string());
-	}
-	}
-
-	fullName += ".json";
-	auto json = readJsonDataFileWithSchema(fullName.c_str());
+	auto json = readJsonDataFileWithSchema(fullName);
 	std::vector<ST::string> utf8_encoded;
 	JsonUtility::parseListStrings(json, utf8_encoded);
 	for (const ST::string &str : utf8_encoded)
@@ -763,6 +746,10 @@ bool DefaultContentManager::loadGameData()
 	loadVehicles();
 
 	loadTranslationTable();
+
+	std::unique_ptr<SGPFile> const translation { openGameResForReading(ST::format(
+		"strings/translation{}.json", L10n::GetSuffix(m_gameVersion, false)))};
+	g_langRes = std::make_unique<L10n::L10n_t>(translation.get());
 
 	return result;
 }
