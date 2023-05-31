@@ -5,7 +5,6 @@
 #include <string_theory/string>
 #include <algorithm>
 #include <exception>
-#include <utility>
 
 
 namespace L10n
@@ -56,7 +55,7 @@ L10n_t::L10n_t(SGPFile * const translationFile)
 {
 	auto const json{ JsonValue::deserialize(translationFile->readStringToEnd()).toObject() };
 
-#define GetString(stringname) stringname = std::move(json.GetString(#stringname))
+#define GetString(stringname) stringname = json.GetString(#stringname)
 #define GetArray(arrayname) GetArray(arrayname.data(), arrayname.size(), json, #arrayname)
 
 	GetArray(WeaponType);
