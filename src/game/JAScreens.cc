@@ -35,7 +35,6 @@
 #include "English.h"
 #include "Random.h"
 #include "GameRes.h"
-#include "Text.h"
 #include "Video.h"
 #include "Debug.h"
 #include "UILayout.h"
