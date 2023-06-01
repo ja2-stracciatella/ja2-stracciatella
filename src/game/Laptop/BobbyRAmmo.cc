@@ -5,7 +5,6 @@
 #include "BobbyR.h"
 #include "VObject.h"
 #include "Interface_Items.h"
-#include "Text.h"
 #include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"

@@ -1,5 +1,5 @@
-#ifndef STRINGS_LANGUAGE_H
-#define STRINGS_LANGUAGE_H
+#ifndef STRINGS_LOCALIZATION_H
+#define STRINGS_LOCALIZATION_H
 
 #include "SGPFile.h"
 #include "stracciatella.h"

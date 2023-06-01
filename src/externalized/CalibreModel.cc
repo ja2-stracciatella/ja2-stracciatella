@@ -1,7 +1,6 @@
 #include "CalibreModel.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "Text.h"
 #include <string_theory/format>
 #include <string_theory/string>
 #include <stdexcept>

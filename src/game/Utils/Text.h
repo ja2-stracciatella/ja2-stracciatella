@@ -1,7 +1,6 @@
 #ifndef __TEXT_H
 #define __TEXT_H
 
-#include "Item_Types.h"
 #include "Localization.h"
 #include "Types.h"
 

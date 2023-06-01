@@ -1,10 +1,10 @@
 #include "Localization.h"
+#include "Logger.h"
 #include "Json.h"
 #include "stracciatella.h"
 #include <string_theory/format>
 #include <string_theory/string>
 #include <algorithm>
-#include <exception>
 
 
 namespace L10n
@@ -27,7 +27,9 @@ char const * GetSuffix(VanillaVersion const version, bool const combineRusAndRus
 		return combineRusAndRusGold ? "-rus" : "-rusgold";
 
 	default:
-		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(version)).c_str());
+		SLOGE("unknown game version {}, using English as fallback option",
+		      static_cast<int>(version));
+		return "-eng";
 	}
 }
 

@@ -20,7 +20,6 @@
 #include "Video.h"
 #include "Interface_Items.h"
 #include "Dialogue_Control.h"
-#include "Text.h"
 #include "Laptop.h"
 #include "NPC.h"
 #include "MercTextBox.h"
