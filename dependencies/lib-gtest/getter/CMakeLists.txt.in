@@ -6,7 +6,7 @@
 #  * SRC_DIR - where to extract the archive
 #  * BUILD_DIR - where the integrated sources are built
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.18...3.25)
 
 project(getter NONE)
 

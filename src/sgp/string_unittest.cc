@@ -16,7 +16,7 @@ TEST(stringTest, English)
 
 TEST(stringTest, RussianWithUnicodeConsts)
 {
-	const ST::string str = "\u0442\u0435\u0441\u0442";
+	const ST::string str = u8"\u0442\u0435\u0441\u0442";
 	EXPECT_EQ(str.size(), 8u);
 	EXPECT_EQ(str[0], '\xD1');
 	EXPECT_EQ(str[1], '\x82');
