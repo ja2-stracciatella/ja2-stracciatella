@@ -260,8 +260,6 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 			ColorFillVideoSurfaceArea(FRAME_BUFFER,	x + 2, y + 2, end, y + h - 2, Get16BPPColor(FROMRGB(72 , 155, 24)));
 		}
 		InvalidateRegion(x, y, x + w, y + h);
-		ExecuteBaseDirtyRectQueue();
-		EndFrameBufferRender();
 		RefreshScreen();
 	}
 

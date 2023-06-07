@@ -211,9 +211,6 @@ ScreenID GameInitOptionsScreenHandle(void)
 	RenderFastHelp();
 #endif
 
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
-
 	if (HandleFadeOutCallback())
 	{
 		ClearMainMenu();

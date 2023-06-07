@@ -28,6 +28,7 @@
 #include "TileDef.h"
 #include "Tile_Cache.h"
 #include "Timer_Control.h"
+#include "Video.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
@@ -1841,7 +1842,7 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 
 	ResetRenderParameters();
 
-	if (!gfDoVideoScroll) AddBaseDirtyRect(sLeft, sTop, sRight, sBottom);
+	if (!gfDoVideoScroll) InvalidateRegionEx(sLeft, sTop, sRight, sBottom);
 }
 
 
@@ -1881,7 +1882,7 @@ static void RenderStaticWorld(void)
 	sLevelIDs[1] = RENDER_STATIC_ONROOF;
 	RenderTiles(TILES_OBSCURED, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 2, sLevelIDs);
 
-	AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
+	InvalidateRegionEx(gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 	ResetRenderParameters();
 }
 
@@ -1920,7 +1921,7 @@ static void RenderMarkedWorld(void)
 	sLevelIDs[0] = RENDER_STATIC_TOPMOST;
 	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 
-	AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
+	InvalidateRegionEx(gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 
 	ResetRenderParameters();
 }

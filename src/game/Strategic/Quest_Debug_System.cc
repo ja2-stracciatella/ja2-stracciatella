@@ -649,9 +649,6 @@ ScreenID QuestDebugScreenHandle()
 	SaveBackgroundRects( );
 	RenderFastHelp();
 
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
-
 	if( gfQuestDebugExit )
 	{
 		ExitQuestDebugSystem();

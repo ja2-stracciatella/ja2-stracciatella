@@ -143,8 +143,6 @@ ScreenID MainMenuScreenHandle(void)
 
 	RenderButtons();
 
-	EndFrameBufferRender();
-
 	HandleMainMenuInput();
 	HandleMainMenuScreen();
 

@@ -220,12 +220,9 @@ BOOLEAN HandleAutoBandage( )
 			//Shadow area
 			FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			InvalidateScreen( );
-			RefreshScreen();
 		}
 
 		DisplayAutoBandageUpdatePanel( );
-
-		EndFrameBufferRender( );
 
 		// Handle strategic engine
 		HandleStrategicTurn( );

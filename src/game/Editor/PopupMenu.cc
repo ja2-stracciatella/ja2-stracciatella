@@ -21,7 +21,6 @@
 #include "SelectWin.h"
 #include "PopupMenu.h"
 #include "EditorDefines.h"
-#include "Render_Dirty.h"
 #include "MouseSystem.h"
 #include "Cursors.h"
 #include "Overhead_Types.h"
@@ -504,7 +503,5 @@ BOOLEAN ProcessPopupMenuIfActive( )
 	PopupMenuHandle();
 	RenderPopupMenu();
 	InvalidateRegion( gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom );
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender( );
 	return TRUE;
 }

@@ -488,9 +488,6 @@ ScreenID ShopKeeperScreenHandle()
 	SaveBackgroundRects( );
 	RenderFastHelp( );
 
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
-
 	if( gfSKIScreenExit )
 	{
 		ExitShopKeeperInterface();

@@ -82,7 +82,6 @@
 #include "Queen_Command.h"
 #include "Quests.h"
 #include "Random.h"
-#include "Render_Dirty.h"
 #include "RenderWorld.h"
 #include "SaveLoadGame.h"
 #include "SaveLoadGameStates.h"
@@ -256,7 +255,6 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 	}
 
 	InvalidateScreen();
-	ExecuteBaseDirtyRectQueue();
 	RefreshScreen();
 
 	// Make sure we redraw the screen when we are done

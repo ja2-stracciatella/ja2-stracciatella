@@ -6,7 +6,6 @@
 #include "HImage.h"
 #include "Local.h"
 #include "RenderWorld.h"
-#include "Render_Dirty.h"
 #include "LoadScreen.h"
 #include "SelectWin.h"
 #include "EditorDefines.h"
@@ -361,8 +360,6 @@ ScreenID LoadSaveScreenHandle(void)
 	RenderAllTextFields();
 
 	InvalidateScreen();
-
-	ExecuteBaseDirtyRectQueue();
 
 	switch( iFDlgState )
 	{
@@ -1075,8 +1072,6 @@ BOOLEAN ExternalLoadMap(const ST::string& szFilename)
 	gFileForIO = szFilename;
 	gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 	ProcessFileIO(); //always returns loadsave_screen and changes iostatus to loading_map.
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
 	RefreshScreen();
 	if( ProcessFileIO() == EDIT_SCREEN )
 		return TRUE;

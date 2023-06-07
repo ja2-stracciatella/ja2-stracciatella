@@ -50,11 +50,6 @@ struct VIDEO_OVERLAY
 inline SGPRect gDirtyClipRect;
 
 
-// DIRTY QUEUE
-void AddBaseDirtyRect(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
-void ExecuteBaseDirtyRectQueue(void);
-
-
 // BACKGROUND RECT BUFFERING STUFF
 void             InitializeBackgroundRects(void);
 BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags, INT16 x, INT16 y, INT16 w, INT16 h);

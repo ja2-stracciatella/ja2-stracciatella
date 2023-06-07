@@ -449,9 +449,6 @@ void HelpScreenHandler()
 	SaveBackgroundRects( );
 	RenderFastHelp();
 
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
-
 	//if we are leaving the help screen
 	if( gfHelpScreenExit )
 	{
