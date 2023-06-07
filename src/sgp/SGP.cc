@@ -142,7 +142,7 @@ static void MainLoop()
 					break;
 
 				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDL_KeyCode::SDLK_f &&
+					if (event.key.keysym.sym == SDLK_f &&
 					    SDL_GetModState() & KMOD_CTRL)
 					{
 						FPS::ToggleOnOff();
