@@ -66,13 +66,6 @@
 #define ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
 BOOLEAN gfTacticalDoHeliRun = FALSE;
-
-
-// VIDEO OVERLAYS
-VIDEO_OVERLAY* g_fps_overlay            = NULL;
-VIDEO_OVERLAY* g_counter_period_overlay = NULL;
-
-
 BOOLEAN	gfGameScreenLocateToSoldier = FALSE;
 BOOLEAN	gfEnteringMapScreen					= FALSE;
 SOLDIERTYPE* gPreferredInitialSelectedGuy = NULL;
@@ -95,14 +88,6 @@ static ScreenID guiTacticalLeaveScreenID = ERROR_SCREEN; // XXX TODO001A had no 
 static BOOLEAN  guiTacticalLeaveScreen   = FALSE;
 
 
-static void BlitMFont(VIDEO_OVERLAY* const ovr)
-{
-	SetFontAttributes(ovr->uiFontID, ovr->ubFontFore, DEFAULT_SHADOW, ovr->ubFontBack);
-	SGPVSurface::Lock l(ovr->uiDestBuff);
-	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), ovr->sX, ovr->sY, ovr->codepoints);
-}
-
-
 void MainGameScreenInit(void)
 {
 	// all blit functions expect z-buffer pitch to match framebuffer pitch
@@ -115,31 +100,6 @@ void MainGameScreenInit(void)
 	//EnvSetTimeInHours(ENV_TIME_12);
 
 	SetRenderFlags(RENDER_FLAG_FULL);
-
-	// Init Video Overlays
-	// FIRST, FRAMERATE
-	g_fps_overlay = RegisterVideoOverlay(
-					BlitMFont,
-					DEBUG_PAGE_SCREEN_OFFSET_X,
-					DEBUG_PAGE_SCREEN_OFFSET_Y,
-					DEBUG_PAGE_FONT,
-					DEBUG_PAGE_TEXT_COLOR,
-					0,
-					L"90"
-	);
-	EnableVideoOverlay(false, g_fps_overlay);
-
-	// SECOND, PERIOD COUNTER
-	g_counter_period_overlay = RegisterVideoOverlay(
-					BlitMFont,
-					DEBUG_PAGE_SCREEN_OFFSET_X,
-					DEBUG_PAGE_SCREEN_OFFSET_Y+DEBUG_PAGE_LINE_HEIGHT,
-					DEBUG_PAGE_FONT,
-					DEBUG_PAGE_TEXT_COLOR,
-					0,
-					L"Levelnodes: 100000"
-	);
-	EnableVideoOverlay(false, g_counter_period_overlay);
 }
 
 
@@ -148,8 +108,6 @@ void MainGameScreenInit(void)
 void MainGameScreenShutdown(void)
 {
 	ShutdownZBuffer(gpZBuffer);
-	RemoveVideoOverlay(g_fps_overlay);
-	RemoveVideoOverlay(g_counter_period_overlay);
 }
 
 
@@ -582,9 +540,6 @@ ScreenID MainGameScreenHandle(void)
 		RenderFastHelp( );
 	}
 
-	// Display Framerate
-	DisplayFrameRate( );
-
 	CheckForMeanwhileOKStart( );
 
 	ScrollString( );
@@ -638,13 +593,6 @@ ScreenID MainGameScreenHandle(void)
 void SetRenderHook( RENDER_HOOK pRenderOverride )
 {
 	gRenderOverride = pRenderOverride;
-}
-
-
-void EnableFPSOverlay(BOOLEAN fEnable)
-{
-	EnableVideoOverlay(fEnable, g_fps_overlay);
-	EnableVideoOverlay(fEnable, g_counter_period_overlay);
 }
 
 

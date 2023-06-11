@@ -18,7 +18,6 @@ enum PredefinedCounters
 	NEXTSCROLL,			// Scroll Speed timer
 	STARTSCROLL,			// Scroll Start timer
 	ANIMATETILES,			// Animate tiles timer
-	FPSCOUNTER,			// FPS value
 	PATHFINDCOUNTER,		// PATH FIND COUNTER
 	CURSORCOUNTER,			// ANIMATED CURSOR
 	RMOUSECLICK_DELAY_COUNTER,	// RIGHT BUTTON CLICK DELAY

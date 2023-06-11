@@ -75,31 +75,6 @@ RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] =
 	DefaultDebugPage4
 };
 
-UINT32 guiTimerDiag; // set by ExecuteOverhead
-void DisplayFrameRate( )
-{
-	static UINT32		uiFPS = 0;
-	static UINT32		uiFrameCount = 0;
-
-	// Increment frame count
-	uiFrameCount++;
-
-	if ( COUNTERDONE( FPSCOUNTER ) )
-	{
-		uiFPS = uiFrameCount;
-		uiFrameCount = 0;
-	}
-
-	if ( gbFPSDisplay == SHOW_FULL_FPS )
-	{
-		// FRAME RATE
-		SetVideoOverlayText(g_fps_overlay, ST::format("FPS: {}", std::min(uiFPS, 1000U)));
-
-		// TIMER COUNTER
-		SetVideoOverlayText(g_counter_period_overlay, ST::format("Game Loop Time: {}", std::min(guiTimerDiag, 1000U)));
-	}
-}
-
 
 static ST::string gubErrorText;
 

@@ -1595,10 +1595,6 @@ static void HandleKeyboardShortcuts(void)
 						}
 					}
 					break;
-				case 'f':
-					gbFPSDisplay = !gbFPSDisplay;
-					EnableFPSOverlay(gbFPSDisplay);
-					break;
 				case 'g':	// ground
 					if( EditorInputEvent.usKeyState & CTRL_DOWN )
 					{
@@ -3342,9 +3338,6 @@ ScreenID EditScreenHandle(void)
 	// Perform action based on current selection
 	ScreenID const uiRetVal = PerformSelectedAction();
 	if (uiRetVal != EDIT_SCREEN) return uiRetVal;
-
-	// Display Framerate
-	DisplayFrameRate( );
 
 	// Handle video overlays, for FPS and screen message stuff
 	if ( gfScrollPending )

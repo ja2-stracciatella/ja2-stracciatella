@@ -4,15 +4,11 @@
 #include <string_theory/string>
 
 
-#define SHOW_MIN_FPS	0
-#define SHOW_FULL_FPS	1
+inline bool gfEditMode;
+inline bool fFirstTimeInGameScreen = true;
+inline bool gfGlobalError;
 
-inline BOOLEAN gfEditMode;
-inline BOOLEAN fFirstTimeInGameScreen = TRUE;
-inline INT8    gbFPSDisplay;
-inline BOOLEAN gfGlobalError;
-
-inline UINT32  guiGameCycleCounter;
+inline unsigned guiGameCycleCounter;
 
 void SET_ERROR(const ST::string& msg);
 
