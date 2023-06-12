@@ -95,6 +95,7 @@ option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 option(WITH_RUST_BINARIES "Include rust binaries in build" ON)
 option(WITH_ASAN "Build with address sanitizer" OFF)
+option(ENABLE_PCH "Use precompiled standard library headers during compilation" OFF)
 # @see LOCAL_LUA_LIB in dependencies/lib-lua/CMakeLists.txt
 # @see LOCAL_SOL_LIB in dependencies/lib-sol2/CMakeLists.txt
 # @see LOCAL_MINIAUDIO_LIB in dependencies/lib-miniaudio/CMakeLists.txt
@@ -305,6 +306,28 @@ function(add_warnings target)
 endfunction()
 
 add_warnings(${JA2_BINARY})
+
+if(ENABLE_PCH)
+    target_precompile_headers(ja2 PRIVATE
+        <algorithm>
+        <array>
+        <chrono>
+        <cmath>
+        <functional>
+        <map>
+        <memory>
+        <numeric>
+        <optional>
+        <random>
+        <set>
+        <stdexcept>
+        <stdint.h>
+        <stdlib.h>
+        <type_traits>
+        <utility>
+        <vector>
+    )
+endif()
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
