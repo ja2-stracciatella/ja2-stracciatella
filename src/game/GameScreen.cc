@@ -544,14 +544,6 @@ ScreenID MainGameScreenHandle(void)
 
 	ScrollString( );
 
-	ExecuteBaseDirtyRectQueue( );
-
-	//KillBackgroundRects( );
-
-	/////////////////////////////////////////////////////
-	EndFrameBufferRender( );
-
-
 	if ( HandleFadeInCallback( ) )
 	{
 		// Re-render the scene!
@@ -702,10 +694,6 @@ static void HandleModalTactical(void)
 	SaveBackgroundRects( );
 	RenderFastHelp();
 	RenderPausedGameBox( );
-
-	ExecuteBaseDirtyRectQueue( );
-	EndFrameBufferRender( );
-
 }
 
 

@@ -1236,9 +1236,7 @@ ScreenID LaptopScreenHandle()
 	RenderFastHelp();
 
 	// ex SAVEBUFFER queue
-	ExecuteBaseDirtyRectQueue();
 	ResetInterface();
-	EndFrameBufferRender();
 	return (LAPTOP_SCREEN);
 }
 

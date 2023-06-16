@@ -594,7 +594,6 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, STD_SCREEN_X, STD_SCREEN_Y, 261, 359 );
 	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	InvalidateScreen();
-	RefreshScreen();
 
 	SGPBox const PBIRect = { STD_SCREEN_X, STD_SCREEN_Y, 261, 359 };
 	while( iPercentage < 100  )
@@ -978,8 +977,6 @@ static void AutoResolveBattleCallback(GUI_BUTTON* btn, UINT32 reason)
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
 					InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
-					ExecuteBaseDirtyRectQueue();
-					EndFrameBufferRender( );
 					RefreshScreen();
 					KillPreBattleInterface();
 					StopTimeCompression();
@@ -1015,8 +1012,6 @@ static void GoToSectorCallback(GUI_BUTTON* btn, UINT32 reason)
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
 					InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
-					ExecuteBaseDirtyRectQueue();
-					EndFrameBufferRender( );
 					RefreshScreen();
 					KillPreBattleInterface();
 					StopTimeCompression();
@@ -1033,8 +1028,6 @@ static void GoToSectorCallback(GUI_BUTTON* btn, UINT32 reason)
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			btn->Draw();
 			InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
-			ExecuteBaseDirtyRectQueue();
-			EndFrameBufferRender( );
 			RefreshScreen();
 			SGPSector sector = gubPBSector;
 			// NOTE: remove this zeroing if we ever want to support underground auto battle resolution
@@ -1091,8 +1084,6 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, UINT32 reason)
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			btn->Draw();
 			InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
-			ExecuteBaseDirtyRectQueue();
-			EndFrameBufferRender( );
 			RefreshScreen();
 			KillPreBattleInterface();
 			StopTimeCompression();

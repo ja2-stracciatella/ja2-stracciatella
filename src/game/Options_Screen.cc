@@ -208,10 +208,6 @@ ScreenID OptionsScreenHandle()
 	RenderFastHelp();
 
 
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
-
-
 	if( gfOptionsScreenExit )
 	{
 		ExitOptionsScreen();

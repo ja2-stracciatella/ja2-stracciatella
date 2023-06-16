@@ -86,9 +86,6 @@ BOOLEAN MessageBoxHandled()
 	}
 	MarkButtonsDirty();
 	RenderButtons( );
-//	InvalidateScreen( );
-//	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender( );
 	return gubMessageBoxStatus == MESSAGEBOX_DONE;
 }
 

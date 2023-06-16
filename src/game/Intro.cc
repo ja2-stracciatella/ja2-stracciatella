@@ -15,7 +15,6 @@
 #include "MouseSystem.h"
 #include "Music_Control.h"
 #include "ContentMusic.h"
-#include "Render_Dirty.h"
 #include "Soldier_Profile.h"
 #include "SysUtil.h"
 #include "Text.h"
@@ -111,10 +110,6 @@ ScreenID IntroScreenHandle(void)
 	GetIntroScreenUserInput();
 
 	HandleIntroScreen();
-
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
-
 
 	if( gfIntroScreenExit )
 	{

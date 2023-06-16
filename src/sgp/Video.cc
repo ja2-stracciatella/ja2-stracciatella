@@ -1,16 +1,12 @@
-#include "ContentManager.h"
 #include "Cursor_Control.h"
 #include "Debug.h"
 #include "Fade_Screen.h"
-#include "FileMan.h"
 #include "FPS.h"
-#include "GameInstance.h"
 #include "HImage.h"
 #include "Local.h"
 #include "Logger.h"
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
-#include "Timer.h"
 #include "Types.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
@@ -22,16 +18,10 @@
 #include <chrono>
 #include <stdexcept>
 
-#define BUFFER_READY      0x00
-#define BUFFER_DIRTY      0x02
-
 #define MAX_CURSOR_WIDTH  64
 #define MAX_CURSOR_HEIGHT 64
 
 #define MAX_DIRTY_REGIONS 128
-
-#define VIDEO_OFF         0x00
-#define VIDEO_ON          0x01
 
 #define RED_MASK 0xF800
 #define GREEN_MASK 0x07E0
@@ -49,10 +39,6 @@ static INT16  gsMouseCursorYOffset;
 INT16 gsMouseSizeYModifier = 0; // This can increase the size of gusMouseCursorHeight so image data (ie, text) outside the normal height of the mouse cursor can be copied onto screen buffer
 
 static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
-
-// Refresh thread based variables
-static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
-static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF
 
 // Dirty rectangle management variables
 static SDL_Rect DirtyRegions[MAX_DIRTY_REGIONS];
@@ -250,9 +236,6 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	SDL_ShowCursor(SDL_DISABLE);
 
 	// Initialize state variables
-	guiFrameBufferState      = BUFFER_DIRTY;
-	guiVideoManagerState     = VIDEO_ON;
-	guiDirtyRegionCount      = 0;
 	gfForceFullScreenRefresh = TRUE;
 
 	// This function must be called to setup RGB information
@@ -265,10 +248,6 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 void ShutdownVideoManager(void)
 {
 	SLOGD("Shutting down the video manager");
-	/* Toggle the state of the video manager to indicate to the refresh thread
-	 * that it needs to shut itself down */
-
-	guiVideoManagerState = VIDEO_OFF;
 
 	// ScreenBuffer SDL surface freed by its SGPVSurface wrapper.
 	ScreenBuffer = nullptr;
@@ -329,9 +308,7 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 	{
 		// The MAX_DIRTY_REGIONS limit has been exceeded. Therefore we arbitrarely invalidate the entire
 		// screen and force a full screen refresh
-		guiDirtyRegionExCount = 0;
-		guiDirtyRegionCount = 0;
-		gfForceFullScreenRefresh = TRUE;
+		InvalidateScreen();
 	}
 }
 
@@ -341,6 +318,12 @@ static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
+	if (gfForceFullScreenRefresh)
+	{
+		// There's no point in going on since we are forcing a full screen refresh
+		return;
+	}
+
 	// Check if we are spanning the rectangle - if so slit it up!
 	if (iTop <= gsVIEWPORT_WINDOW_END_Y && iBottom > gsVIEWPORT_WINDOW_END_Y)
 	{
@@ -379,25 +362,16 @@ static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 	}
 	else
 	{
-		guiDirtyRegionExCount = 0;
-		guiDirtyRegionCount = 0;
-		gfForceFullScreenRefresh = TRUE;
+		InvalidateScreen();
 	}
 }
 
 
 void InvalidateScreen(void)
 {
-	// W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-	//
-	// This function is intended to be called by a thread which has already locked the
-	// FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-	// yack
-
 	guiDirtyRegionCount = 0;
 	guiDirtyRegionExCount = 0;
 	gfForceFullScreenRefresh = TRUE;
-	guiFrameBufferState = BUFFER_DIRTY;
 }
 
 
@@ -510,7 +484,8 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 
 void RefreshScreen(void)
 {
-	if (guiVideoManagerState != VIDEO_ON) return;
+	// Not initialised yet or already shut down?
+	if (!ScreenTexture) return;
 
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
 
@@ -528,7 +503,7 @@ void RefreshScreen(void)
 		void operator+=(SDL_Rect const& r) { SDL_UnionRect(this, &r, this); }
 	} ScreenTextureUpdateRect{ MouseBackground };
 
-	if (guiFrameBufferState == BUFFER_DIRTY)
+	if (gfForceFullScreenRefresh || guiDirtyRegionCount > 0 || guiDirtyRegionExCount > 0)
 	{
 		if (gfFadeInitialized && gfFadeInVideo)
 		{
@@ -576,7 +551,6 @@ void RefreshScreen(void)
 				gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y };
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
-		guiFrameBufferState = BUFFER_READY;
 	}
 
 	SGPPoint cursorPos;
@@ -647,11 +621,6 @@ void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHei
 	gusMouseCursorHeight = usCursorHeight;
 }
 
-
-void EndFrameBufferRender(void)
-{
-	guiFrameBufferState = BUFFER_DIRTY;
-}
 
 static void SetPrimaryVideoSurfaces(void)
 {

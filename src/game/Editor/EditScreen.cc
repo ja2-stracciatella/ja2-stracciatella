@@ -425,7 +425,6 @@ static BOOLEAN EditModeShutdown(void)
 	}
 
 	InvalidateScreen( );
-	ExecuteBaseDirtyRectQueue();
 
 	gRadarRegion.Enable();
 	CreateCurrentTacticalPanelButtons( );
@@ -2377,7 +2376,6 @@ static ScreenID WaitForHelpScreenResponse(void)
 	}
 
 	InvalidateScreen( );
-	ExecuteBaseDirtyRectQueue();
 
 	return( EDIT_SCREEN );
 }
@@ -2424,13 +2422,11 @@ static ScreenID WaitForSelectionWindowResponse(void)
 				iDrawMode = DRAW_MODE_SLANTED_ROOF;
 		}
 		InvalidateScreen( );
-		ExecuteBaseDirtyRectQueue();
 	}
 	else
 	{
 		DisplaySelectionWindowGraphicalInformation();
 		InvalidateScreen( );
-		ExecuteBaseDirtyRectQueue();
 	}
 
 	return( EDIT_SCREEN );
@@ -3348,9 +3344,6 @@ ScreenID EditScreenHandle(void)
 	ExecuteVideoOverlays( );
 
 	ScrollString( );
-
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender( );
 
 	return EDIT_SCREEN;
 }

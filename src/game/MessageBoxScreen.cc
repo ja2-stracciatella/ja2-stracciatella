@@ -518,7 +518,6 @@ ScreenID MessageBoxScreenHandle(void)
 	}
 
 	RenderButtons();
-	EndFrameBufferRender();
 
 	// carter, need key shortcuts for clearing up message boxes
 	// Check for esc

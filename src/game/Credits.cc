@@ -180,8 +180,6 @@ ScreenID CreditScreenHandle(void)
 
 	GetCreditScreenUserInput();
 	HandleCreditScreen();
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
 
 	if (!g_credits_active)
 	{

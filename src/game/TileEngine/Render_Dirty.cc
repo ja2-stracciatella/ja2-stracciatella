@@ -8,7 +8,6 @@
 #include "SysUtil.h"
 #include "Video.h"
 #include "VObject_Blitters.h"
-#include <stdarg.h>
 #include "Debug.h"
 #include "UILayout.h"
 
@@ -46,48 +45,6 @@ static VIDEO_OVERLAY* gVideoOverlays;
 #define FOR_EACH_VIDEO_OVERLAY_SAFE(iter)                             \
 	for (VIDEO_OVERLAY* iter = gVideoOverlays, * iter##__next; iter; iter = iter##__next) \
 		if (iter##__next = iter->next, iter->fDisabled) continue; else
-
-
-
-static BOOLEAN gfViewportDirty = FALSE;
-
-
-void AddBaseDirtyRect(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
-{
-	if (iLeft < 0)            iLeft = 0;
-	if (iLeft > SCREEN_WIDTH) iLeft = SCREEN_WIDTH;
-
-	if (iTop < 0)             iTop = 0;
-	if (iTop > SCREEN_HEIGHT) iTop = SCREEN_HEIGHT;
-
-	if (iRight < 0)            iRight = 0;
-	if (iRight > SCREEN_WIDTH) iRight = SCREEN_WIDTH;
-
-	if (iBottom < 0)             iBottom = 0;
-	if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
-
-	if (iLeft == iRight || iTop == iBottom) return;
-
-	if (iLeft   == gsVIEWPORT_START_X        &&
-			iRight  == gsVIEWPORT_END_X          &&
-			iTop    == gsVIEWPORT_WINDOW_START_Y &&
-			iBottom == gsVIEWPORT_WINDOW_END_Y)
-	{
-		gfViewportDirty = TRUE;
-		return;
-	}
-
-	InvalidateRegionEx(iLeft, iTop, iRight, iBottom);
-}
-
-
-void ExecuteBaseDirtyRectQueue(void)
-{
-	if (!gfViewportDirty) return;
-	gfViewportDirty = FALSE;
-
-	InvalidateScreen();
-}
 
 
 // Callers of this function must assume that the returned struct is in a
@@ -163,7 +120,7 @@ void RegisterBackgroundRectSingleFilled(INT16 const x, INT16 const y, INT16 cons
 	if (b == NO_BGND_RECT) return;
 
 	b->fFilled = TRUE;
-	AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
+	InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 }
 
 
@@ -184,7 +141,7 @@ void RestoreBackgroundRects(void)
 			if (b->pSaveArea)
 			{
 				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, b->pSaveArea.get(), b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
-				AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
+				InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 			}
 			else if (b->pZSaveArea)
 			{
@@ -193,7 +150,7 @@ void RestoreBackgroundRects(void)
 			else
 			{
 				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, b->sLeft, b->sTop, b->sLeft, b->sTop, b->sWidth, b->sHeight);
-				AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
+				InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 			}
 		}
 	}
@@ -250,7 +207,7 @@ void SaveBackgroundRects(void)
 		}
 		else
 		{
-			AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
+			InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 		}
 
 		b->fFilled = TRUE;

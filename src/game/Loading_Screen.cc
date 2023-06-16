@@ -11,7 +11,6 @@
 #include "LoadingScreenModel.h"
 #include "Local.h"
 #include "Random.h"
-#include "Render_Dirty.h"
 #include "StrategicMap.h"
 #include "Strategic_Movement.h"
 #include "VSurface.h"
@@ -117,6 +116,5 @@ void DisplayLoadScreenWithID(UINT8 const id)
 
 	gubLastLoadingScreenID = id;
 	InvalidateScreen();
-	ExecuteBaseDirtyRectQueue();
 	RefreshScreen();
 }

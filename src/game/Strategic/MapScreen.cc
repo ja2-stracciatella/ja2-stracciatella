@@ -2031,17 +2031,10 @@ ScreenID MapScreenHandle(void)
 		GlowItem( );
 	}
 
-
 	RenderFastHelp();
-
-	// execute dirty
-	ExecuteBaseDirtyRectQueue( );
 
 	// update cursor
 	UpdateCursorIfInLastSector( );
-
-	EndFrameBufferRender( );
-
 
 	// if not going anywhere else
 	if ( guiPendingScreen == NO_PENDING_SCREEN )
@@ -3249,8 +3242,6 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		PlayJA2SampleFromFile(SOUNDSDIR "/initial power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/laptopon.sti", 0, 465, 417);
 		InvalidateRegion( 465, 417, 480, 427 );
-		ExecuteBaseDirtyRectQueue( );
-		EndFrameBufferRender( );
 		RefreshScreen();
 	}
 

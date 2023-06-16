@@ -268,9 +268,6 @@ ScreenID SaveLoadScreenHandle()
 	SaveBackgroundRects( );
 	RenderFastHelp();
 
-	ExecuteBaseDirtyRectQueue( );
-	EndFrameBufferRender( );
-
 	if ( HandleFadeOutCallback( ) )
 	{
 		return( guiSaveLoadExitScreen );

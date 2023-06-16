@@ -513,8 +513,6 @@ ScreenID AutoResolveScreenHandle()
 	SaveBackgroundRects();
 	RenderButtons();
 	RenderFastHelp();
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
 	return AUTORESOLVE_SCREEN;
 }
 

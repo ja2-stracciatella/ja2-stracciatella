@@ -21,7 +21,6 @@ void         InitializeVideoManager(VideoScaleQuality quality, int32_t targetFPS
 void         ShutdownVideoManager(void);
 void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 void         InvalidateScreen(void);
-void         EndFrameBufferRender(void);
 
 void VideoSetBrightness(float brightness);
 
