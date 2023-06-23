@@ -52,7 +52,4 @@ void ReplaceObsoleteRoads(void);
 //gridnos).
 void PlaceRoadMacroAtGridNo( INT32 iMapIndex, INT32 iMacroID );
 
-void InitializeRoadMacros(void);
-
-
 #endif

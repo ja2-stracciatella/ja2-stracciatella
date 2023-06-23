@@ -5,6 +5,7 @@
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Editor_Undo.h"
+#include <array>
 
 
 struct MACROSTRUCT
@@ -17,7 +18,7 @@ struct MACROSTRUCT
 //These define the macros for the 32 road pieces.  The column contains the macro ID and
 //the second contains the gridno offset from the anchor position (where the user clicks in the world to
 //place the road).  The actual index of the array refers to the offset from ROADPIECE001.
-MACROSTRUCT gRoadMacros[] =
+static constexpr MACROSTRUCT gRoadMacros[]
 {
 	//left 1
 	{L1, -2		},
@@ -365,25 +366,26 @@ MACROSTRUCT gRoadMacros[] =
 	{TE, 0	}
 };
 
-INT16 gsRoadMacroStartIndex[ NUM_ROAD_MACROS ];
-
-//A simple optimization function that calculates the first index in the large database for
-//the particular macro ID.
-void InitializeRoadMacros()
+static constexpr std::array<INT16, NUM_ROAD_MACROS> gsRoadMacroStartIndex{ []
 {
-	INT16 i, end;
+	//A simple optimization function that calculates the first index in the
+	//large database for the particular macro ID.
+	std::array<INT16, NUM_ROAD_MACROS> startIndices{};
+
 	INT16 sMacro = 0;
-	end = sizeof( gRoadMacros ) / sizeof( MACROSTRUCT );
-	for( i = 0; i < end; i++ )
+	constexpr INT16 end = std::size(gRoadMacros);
+	for (INT16 i = 0; i < end; i++)
 	{
-		if( gRoadMacros[ i ].sMacroID == sMacro )
+		if (gRoadMacros[i].sMacroID == sMacro)
 		{
-			gsRoadMacroStartIndex[ sMacro ] = i;
+			startIndices[sMacro] = i;
 			sMacro++;
 		}
 	}
-//	i = ROADPIECES001;
-}
+
+	return startIndices;
+}() };
+
 
 //Road macros vary in size from 3 gridnos to 18 gridnos.  Using the anchor gridno based off of the original
 //road system, this function will place the new macro (consisting of multiple road pieces in multiple
