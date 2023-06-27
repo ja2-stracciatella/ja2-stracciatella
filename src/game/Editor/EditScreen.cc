@@ -194,8 +194,6 @@ void EditScreenInit(void)
 	gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
 	gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(  22,  55,  73 ) );
 
-	InitializeRoadMacros();
-
 	InitArmyGunTypes();
 }
 
