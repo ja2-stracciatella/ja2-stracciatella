@@ -73,8 +73,6 @@ void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE);
 void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE);
 
 void JA2EncryptedFileRead(HWFILE, BYTE*       data, UINT32 uiBytesToRead);
-void JA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);
-
 void NewJA2EncryptedFileRead(HWFILE, BYTE*       data, UINT32 uiBytesToRead);
 void NewJA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);
 

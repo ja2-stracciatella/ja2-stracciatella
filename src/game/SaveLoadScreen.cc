@@ -1147,7 +1147,7 @@ static UINT8 CompareSaveGameVersion(INT32 bSaveGameID)
 	auto& saveGameInfo = (*(gSavedGamesList.begin() + bSaveGameID));
 
 	// check to see if the saved game version in the header is the same as the current version
-	if( saveGameInfo.header().uiSavedGameVersion != guiSavedGameVersion )
+	if (saveGameInfo.header().uiSavedGameVersion != SAVE_GAME_VERSION)
 	{
 		ubRetVal = SLS_SAVED_GAME_VERSION_OUT_OF_DATE;
 	}

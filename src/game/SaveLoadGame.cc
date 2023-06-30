@@ -317,7 +317,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, FALSE, TRUE);
 
 		// Setup the save game header
-		header.uiSavedGameVersion = guiSavedGameVersion;
+		header.uiSavedGameVersion = SAVE_GAME_VERSION;
 		strcpy(header.zGameVersionNumber, g_version_number);
 
 		// The following will be used to quickly access info to display in the save/load screen
@@ -1197,13 +1197,11 @@ void LoadSavedGame(const ST::string &saveName)
 static void SaveMercProfiles(HWFILE const f)
 {
 	// Loop through all the profiles to save
-	void (&writer)(HWFILE, BYTE const*, UINT32) = guiSavedGameVersion < 87 ?
-		JA2EncryptedFileWrite : NewJA2EncryptedFileWrite;
 	FOR_EACH(MERCPROFILESTRUCT, i, gMercProfiles)
 	{
 		BYTE data[716];
 		InjectMercProfile(data, *i);
-		writer(f, data, sizeof(data));
+		NewJA2EncryptedFileWrite(f, data, sizeof(data));
 	}
 }
 
@@ -1309,8 +1307,6 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 static void SaveSoldierStructure(HWFILE const f)
 {
 	// Loop through all the soldier structs to save
-	void (&writer)(HWFILE, BYTE const*, UINT32) = guiSavedGameVersion < 87 ?
-		JA2EncryptedFileWrite : NewJA2EncryptedFileWrite;
 	for (UINT16 i = 0; i < TOTAL_SOLDIERS; ++i)
 	{
 		SOLDIERTYPE const& s = GetMan(i);
@@ -1323,7 +1319,7 @@ static void SaveSoldierStructure(HWFILE const f)
 		BYTE data[2328];
 		std::fill_n(data, 2328, 0);
 		InjectSoldierType(data, &s);
-		writer(f, data, sizeof(data));
+		NewJA2EncryptedFileWrite(f, data, sizeof(data));
 
 		// Save all the pointer info from the structure
 		SaveMercPath(f, s.pMercPath);

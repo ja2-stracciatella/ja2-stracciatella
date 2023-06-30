@@ -16,15 +16,6 @@ const char g_version_label[] = FULL_VERSION;
 char const g_version_number[16] = "Build 04.12.02";
 
 
-//
-// Keeps track of the saved game version.  Increment the saved game version whenever
-// you will invalidate the saved game file
-
-#define SAVE_GAME_VERSION 102
-
-const UINT32 guiSavedGameVersion = SAVE_GAME_VERSION;
-
-
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 
