@@ -1,4 +1,3 @@
-#include "Buffer.h"
 #include "Directories.h"
 #include "Font_Control.h"
 #include "LoadSaveRottingCorpse.h"
@@ -494,25 +493,13 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 		LoadDoorStatusArrayFromDoorStatusTempFile();
 	}
 
-	// if the save is an older version, use the old way of loading it up
-	if (guiSavedGameVersion < 57)
+	if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
 	{
-		if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
-		{
-			LoadEnemySoldiersFromTempFile();
-		}
+		NewWayOfLoadingEnemySoldiersFromTempFile();
 	}
-	else
+	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS)
 	{
-		// use the new way of loading the enemy and civilian placements
-		if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
-		{
-			NewWayOfLoadingEnemySoldiersFromTempFile();
-		}
-		if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS)
-		{
-			NewWayOfLoadingCiviliansFromTempFile();
-		}
+		NewWayOfLoadingCiviliansFromTempFile();
 	}
 
 	if (flags & SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS)
@@ -985,7 +972,7 @@ void NewJA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiB
 
 void NewJA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 const uiBytesToWrite)
 {
-	SGP::Buffer<UINT8> buf(uiBytesToWrite);
+	std::vector<UINT8> buf(uiBytesToWrite);
 	const UINT8* const pubRotationArray = GetRotationArray();
 	UINT8              ubArrayIndex     = 0;
 	UINT8              last_byte        = 0;
@@ -996,7 +983,7 @@ void NewJA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32
 		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
 
-	hFile->write(buf, uiBytesToWrite);
+	hFile->write(buf.data(), uiBytesToWrite);
 }
 
 
@@ -1018,21 +1005,6 @@ void JA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiByte
 	}
 }
 
-
-void JA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 const uiBytesToWrite)
-{
-	SGP::Buffer<UINT8> buf(uiBytesToWrite);
-	UINT8              ubArrayIndex = 0;
-	UINT8              last_byte    = 0;
-	for (UINT32 i = 0; i < uiBytesToWrite; ++i)
-	{
-		buf[i] += data[i] + last_byte + ubRotationArray[ubArrayIndex];
-		last_byte = buf[i];
-		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
-	}
-
-	hFile->write(buf, uiBytesToWrite);
-}
 
 ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector)
 {
