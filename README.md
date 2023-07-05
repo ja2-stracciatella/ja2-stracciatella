@@ -29,17 +29,17 @@ To get in touch with the developers you can use the [#ja2-stracciatella Discord 
 
 ### Without the optional launcher
 
-3. Start the game the first time.  It will create the configuration file %USERPROFILE%\Documents\JA2\ja2.json on Windows or ~/.ja2/ja2.json on Unix-like systems.
+3. Start the game the first time.  It will create the configuration file `%USERPROFILE%\Documents\JA2\ja2.json` on Windows or `~/.ja2/ja2.json` on Unix-like systems.
 
-4. Edit the configuration file and set parameter game_dir to point to the directory where the original game was installed during step 1.  For example, D:\games\ja2\ (on Windows) or /home/user/games/ja2-installed (on Linux).
+4. Edit the configuration file and set parameter game_dir to point to the directory where the original game was installed during step 1.  For example, `D:\games\ja2\` (on Windows) or `/home/user/games/ja2-installed` (on Linux).
 
-5. If you installed not English version of the original game, but one of the localized varieties (e.g. French or Russian), you need to start ja2.exe with parameter telling which version of the game you are using.  For example: ```ja2.exe -resversion FRENCH```
+5. If you installed not the English version of the original game, but one of the localized varieties (e.g. French or Russian), you need to start `ja2.exe` with parameter telling which version of the game you are using.  For example: `ja2.exe -resversion FRENCH`
 
 Supported localizations are DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD. Use RUSSIAN for the “BUKA Agonia Vlasty” release and RUSSIAN_GOLD for the “Gold” release.
 
 If you downloaded a precompiled version of JA2-Stracciatella, the archive may contain a set of bat files for all supported localizations.
 
-Run ```ja2.exe -help``` for list of available options.
+Run `ja2.exe -help` for list of available options.
 
 ## Development
 
@@ -78,13 +78,13 @@ Q&A](http://thepit.ja-galaxy-forum.com/index.php?t=msg&th=13222)
 
 ## License
 
-Unless specified explicitly in the commit message, all changes since `commit
-8287b98` are released to the public domain.  All libraries in `dependencies/lib-*`
+Unless specified explicitly in the commit message, all changes since `commit 8287b98`
+are released to the public domain.  All libraries in `dependencies/lib-*`
 have their own licenses.
 
 It is not known under which license Tron released his changes.  All we know,
 the source codes were publicly available in his svn repository.
 
-Original Jagged Alliance source codes were released by Strategy First Inc. in
-2004 under Source Code License Agreement ("SFI-SCLA").  You can find the
+The original Jagged Alliance source code was released by Strategy First Inc. in
+2004 under the Source Code License Agreement ("SFI-SCLA").  You can find the
 license in file *SFI Source Code license agreement.txt*.
