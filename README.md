@@ -9,7 +9,7 @@ This is continuation of venerable JA2-Stracciatella project.
 
 The goal of the project is to make Jagged Alliance 2 available on a wide range of platforms, improve its stability, fix bugs and provide a stable platform for mod development.  At the moment the goal is mostly to fix bugs.
 
-[Official Homepage](http://ja2-stracciatella.github.io)
+[Official Homepage: http://ja2-stracciatella.github.io](http://ja2-stracciatella.github.io)
 
 To get in touch with the developers you can use the [#ja2-stracciatella Discord channel on The Bear's Pit](https://discord.com/invite/GqrVZUM).
 
@@ -69,12 +69,13 @@ If you add new code, please don't add spaces after opening or before closing par
 ## History of the Project
 
 The original project was run by Tron since 2006.  He did an amazing job of
-cleaning up JA2 sources and making them portable.  The work was massive too -
+cleaning up the JA2 sources and making them portable.  The work was massive too -
 there are over *7000 commits* in the original svn repository
 svn://tron.homeunix.org/ja2/trunk.  Unfortunately, the work on the project
 ceased in 2010.  The [original project homepage](http://tron.homeunix.org/ja2)
 is no longer available.  Some history can be found in [JA2-Stracciatella
-Q&A](http://thepit.ja-galaxy-forum.com/index.php?t=msg&th=13222)
+Q&A](http://thepit.ja-galaxy-forum.com/index.php?t=msg&th=13222), or the
+[Wayback Machine](https://web.archive.org/web/20140204204243/http://tron.homeunix.org/ja2)
 
 ## License
 
