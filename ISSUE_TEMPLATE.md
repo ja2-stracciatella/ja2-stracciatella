@@ -1,9 +1,10 @@
 [//]: # (Thank you for taking the time to report an issue or propose an enhancement. Questions are also welcome.)
-[//]: # (If you have more than one item to report, please open separate issues!)
+[//]: # (If you have more than one item to report, please open separate issues for each one!)
 
 [//]: # (This text will not be visible and you can freely delete it. Check the Preview tab for a cleaner look.)
 
 ### What is wrong
+
 Details, details, details.
 
 [//]: # (For bugs, please fill in this table [otherwise delete it]. The lines don't have to stay aligned.)
