@@ -109,7 +109,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 	INT32 iThreatValue;
 	INT32 iHitRate,iBestHitRate,iPercentBetter;
 	INT32 iEstDamage;
-	UINT8 ubRawAPCost,ubMinAPcost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
+	UINT8 ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
 	UINT8 ubChanceToHit,ubChanceToGetThrough,ubChanceToReallyHit,ubBestChanceToHit = 0;
 
 	ubBestChanceToHit = ubBestAimTime = ubChanceToHit = 0;
@@ -144,7 +144,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 			continue;  // next opponent
 
 		// calculate minimum action points required to shoot at this opponent
-		ubMinAPcost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
+		UINT8 const ubMinAPcost = MinAPsToAttack(pSoldier, pOpponent->sGridNo, ADDTURNCOST);
 
 		// if we don't have enough APs left to shoot even a snap-shot at this guy
 		if (ubMinAPcost > pSoldier->bActionPoints)
@@ -153,8 +153,6 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 		// calculate chance to get through the opponent's cover (if any)
 
 		ubChanceToGetThrough = AISoldierToSoldierChanceToGetThrough( pSoldier, pOpponent );
-
-		//   ubChanceToGetThrough = ChanceToGetThrough(pSoldier,pOpponent->sGridNo,NOTFAKE,ACTUAL,TESTWALLS,9999,M9PISTOL,NOT_FOR_LOS);
 
 		// if we can't possibly get through all the cover
 		if (ubChanceToGetThrough == 0)
@@ -185,7 +183,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 		}
 
 		// calc next attack's minimum shooting cost (excludes readying & turning)
-		ubRawAPCost = MinAPsToShootOrStab(*pSoldier, pOpponent->sGridNo, FALSE);
+		UINT8 ubRawAPCost = MinAPsToShootOrStab(*pSoldier, pOpponent->sGridNo, DONTADDTURNCOST);
 
 		if (pOpponent->sGridNo != pSoldier->sLastTarget)
 		{
@@ -219,13 +217,11 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 		// consider the various aiming times
 		for (ubAimTime = AP_MIN_AIM_ATTACK; ubAimTime <= ubMaxPossibleAimTime; ubAimTime++)
 		{
-			//HandleMyMouseCursor(KEYBOARDALSO);
 			UINT8 target = AIM_SHOT_TORSO;
 			if (gamepolicy(ai_better_aiming_choice)) {
 				target = pSoldier->bAimShotLocation;
 			}
 			ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier, pOpponent->sGridNo, ubAimTime, target);
-			// ExtMen[pOpponent->ubID].haveStats = TRUE;
 
 			iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubAimTime);
 
@@ -385,7 +381,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	UINT8 ubFriendCnt = 0;
 	UINT8 ubOpponentCnt = 0;
 	SOLDIERTYPE* opponents[MAXMERCS];
-	UINT8 ubRawAPCost,ubMinAPcost,ubMaxPossibleAimTime;
+	UINT8 ubRawAPCost,ubMaxPossibleAimTime;
 	UINT8 ubChanceToHit,ubChanceToGetThrough,ubChanceToReallyHit;
 	UINT32 uiPenalty;
 	UINT8 ubSearchRange;
@@ -746,7 +742,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 
 				// calculate minimum action points required to throw at this gridno
-				ubMinAPcost = MinAPsToAttack(pSoldier,sGridNo,ADDTURNCOST);
+				UINT8 const ubMinAPcost = MinAPsToAttack(pSoldier, sGridNo, ADDTURNCOST);
 
 				// if we don't have enough APs left to throw even without aiming
 				if (ubMinAPcost > pSoldier->bActionPoints)
@@ -908,13 +904,13 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 				if ( EXPLOSIVE_GUN( usInHand ) )
 				{
-					ubRawAPCost   = MinAPsToShootOrStab(*pSoldier, sGridNo, FALSE);
+					ubRawAPCost   = MinAPsToShootOrStab(*pSoldier, sGridNo, DONTADDTURNCOST);
 					ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier, sGridNo, ubMaxPossibleAimTime, AIM_SHOT_TORSO );
 				}
 				else
 				{
 					// NB grenade launcher is NOT a direct fire weapon!
-					ubRawAPCost   = MinAPsToThrow(*pSoldier, sGridNo, FALSE);
+					ubRawAPCost   = MinAPsToThrow(*pSoldier, sGridNo, DONTADDTURNCOST);
 					ubChanceToHit = (UINT8) CalcThrownChanceToHit( pSoldier, sGridNo, ubMaxPossibleAimTime, AIM_SHOT_TORSO );
 				}
 
@@ -1000,7 +996,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate,iPercentBetter, iEstDamage;
 	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime;
+	UINT8 ubMinAPCost,ubMaxPossibleAimTime,ubAimTime;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 	UINT16 usTrueMovementMode;
 
@@ -1043,8 +1039,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		// calculate minimum action points required to stab at this opponent
 		ubMinAPCost = CalcTotalAPsToAttack( pSoldier,pOpponent->sGridNo,ADDTURNCOST, 0 );
 
-		//ubMinAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
-
 		// Human: if I don't have enough APs left to get there & stab at this guy, skip 'im.
 		// Monster:  I'll do an extra check later on to see if I can reach the guy this turn.
 
@@ -1067,7 +1061,13 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		}
 
 		// calc next attack's minimum stabbing cost (excludes movement & turning)
-		ubRawAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
+		UINT8 ubRawAPCost = MinAPsToAttack(pSoldier, pOpponent->sGridNo, DONTADDTURNCOST);
+
+		if (pOpponent->sGridNo != pSoldier->sLastTarget)
+		{
+			// raw AP cost calculation included cost of changing target!
+			ubRawAPCost -= AP_CHANGE_TARGET;
+		}
 
 		// determine if this is a surprise stab (must be next to opponent & unseen)
 		fSurpriseStab = FALSE;        // assume it is not a surprise stab
@@ -1185,8 +1185,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 {
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate, iEstDamage;
-	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime;
+	UINT8 ubAimTime;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 
 	UINT8 ubBestAimTime = (UINT8)-1; // XXX HACK000E
@@ -1222,33 +1221,30 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 		}
 
 		// calculate minimum action points required to stab at this opponent
-		ubMinAPCost = CalcTotalAPsToAttack( pSoldier,pOpponent->sGridNo,ADDTURNCOST, 0 );
-		//ubMinAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
-
+		UINT8 const ubMinAPCost = CalcTotalAPsToAttack(pSoldier, pOpponent->sGridNo, ADDTURNCOST, 0);
 
 		// calc next attack's minimum stabbing cost (excludes movement & turning)
-		ubRawAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
+		UINT8 ubRawAPCost = MinAPsToAttack(pSoldier, pOpponent->sGridNo, DONTADDTURNCOST);
+
+		if (pOpponent->sGridNo != pSoldier->sLastTarget)
+		{
+			// raw AP cost calculation included cost of changing target!
+			ubRawAPCost -= AP_CHANGE_TARGET;
+		}
 
 		// determine if this is a surprise stab (for tentacles, enemy must not see us, no dist limit)
-		fSurpriseStab = FALSE;        // assume it is not a surprise stab
-
-		// if opponent doesn't see the attacker
-		if (pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY)
-		{
-			fSurpriseStab = TRUE;   // we got 'im lined up where we want 'im!
-		}
+		bool const fSurpriseStab = (pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY);
 
 		iBestHitRate = 0;                     // reset best hit rate to minimum
 
 		// calculate the maximum possible aiming time
 
-		//ubMaxPossibleAimTime = std::min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
-		ubMaxPossibleAimTime = 0;
+		// No additional aiming for tentacle attacks (as in Vanilla).
+		UINT8 const ubMaxPossibleAimTime = 0;
 
 		// consider the various aiming times
 		for (ubAimTime = AP_MIN_AIM_ATTACK; ubAimTime <= ubMaxPossibleAimTime; ubAimTime++)
 		{
-			//HandleMyMouseCursor(KEYBOARDALSO);
 			if (!fSurpriseStab)
 			{
 				ubChanceToHit = (UINT8) CalcChanceToStab(pSoldier,pOpponent,ubAimTime);
@@ -1638,8 +1634,6 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 
 void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 {
-	UINT8 ubMinAPcost;
-
 	if ( TANK( pSoldier ) )
 	{
 		pBestThrow->bWeaponIn = FindObj( pSoldier, TANK_CANNON );
@@ -1678,7 +1672,7 @@ void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 		}
 
 		// get the minimum cost to attack with this tossable item
-		ubMinAPcost = MinAPsToAttack( pSoldier, pSoldier->sLastTarget, DONTADDTURNCOST);
+		UINT8 const ubMinAPcost = MinAPsToAttack(pSoldier, pSoldier->sLastTarget, DONTADDTURNCOST);
 
 		// if we can afford the minimum AP cost to throw this tossable item
 		if (pSoldier->bActionPoints >= ubMinAPcost)
