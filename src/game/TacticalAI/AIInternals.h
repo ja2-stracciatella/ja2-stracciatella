@@ -30,8 +30,8 @@ extern BOOLEAN gfTurnBasedAI;
 #define NOWATER         0
 #define WATEROK         1
 
-#define DONTADDTURNCOST 0
-#define ADDTURNCOST     1
+constexpr bool DONTADDTURNCOST = false;
+constexpr bool ADDTURNCOST     = true;
 
 enum
 {

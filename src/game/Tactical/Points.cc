@@ -865,7 +865,7 @@ UINT8 CalcAPsToBurst(INT8 const bBaseActionPoints, OBJECTTYPE const& o)
 }
 
 
-UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 const ubAddTurningCost, INT8 const aim_time)
+UINT8 CalcTotalAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool const add_turning_cost, INT8 const aim_time)
 {
 	UINT16            ap_cost = 0;
 	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
@@ -875,7 +875,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 		case IC_LAUNCHER:
 		case IC_TENTACLES:
 		case IC_THROWING_KNIFE:
-			return MinAPsToAttack(s, grid_no, ubAddTurningCost) +
+			return MinAPsToAttack(s, grid_no, add_turning_cost) +
 				(s->bDoBurst ? CalcAPsToBurst(CalcActionPoints(s), in_hand) :
 				// WM_ATTACHED is already handled by MinAPsToAttack and the
 				// aim time cannot be refined further.
@@ -950,7 +950,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 				}
 				ap_cost += s->sWalkToAttackWalkToCost;
 			}
-			ap_cost += MinAPsToAttack(s, adjusted_grid_no, ubAddTurningCost);
+			ap_cost += MinAPsToAttack(s, adjusted_grid_no, add_turning_cost);
 			ap_cost += aim_time;
 			break;
 	}
@@ -962,7 +962,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 static UINT8 MinAPsToPunch(SOLDIERTYPE const&, GridNo, bool add_turning_cost);
 
 
-UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add_turning_cost)
+UINT8 MinAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool const add_turning_cost)
 {
 	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
 	UINT16            item    = in_hand.usItem;
