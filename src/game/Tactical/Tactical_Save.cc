@@ -1048,8 +1048,11 @@ UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(const SGPSector&
 		n_items = u ? u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer : 0;
 	}
 
-	// If the requested sector is currently loaded
-	if (gfWorldLoaded && sMap == gWorldSector)
+	// If the requested sector is currently loaded, but not if we are
+	// currently loading the game, because in that case the items were
+	// not yet loaded and added.
+	if (gfWorldLoaded && sMap == gWorldSector &&
+	    !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// Since items might have been added, update
 		n_items = UpdateLoadedSectorsItemInventory(sMap, n_items);
@@ -1078,14 +1081,10 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPS
 	std::vector<WORLDITEM> pTotalSectorList = LoadWorldItemsFromTempItemFile(sMap);
 
 	UINT32 uiItemCount = 0;
-	if (pTotalSectorList.size() > 0)
+	for (const WORLDITEM& wi : pTotalSectorList)
 	{
-		for (const WORLDITEM& wi : pTotalSectorList)
-		{
-			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
-			uiItemCount += wi.o.ubNumberOfObjects;
-		}
-		pTotalSectorList.clear();
+		if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
+		uiItemCount += wi.o.ubNumberOfObjects;
 	}
 
 	if (check_consistency)
