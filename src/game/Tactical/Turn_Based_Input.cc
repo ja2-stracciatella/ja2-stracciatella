@@ -1363,6 +1363,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			break;
 
 		case '*':
+		case ',':
 			gTacticalStatus.uiFlags ^= RED_ITEM_GLOW_ON;
 			break;
 
