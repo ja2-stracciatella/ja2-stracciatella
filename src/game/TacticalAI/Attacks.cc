@@ -1069,6 +1069,10 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 			ubRawAPCost -= AP_CHANGE_TARGET;
 		}
 
+		// Attacks must cost at least 1 AP. This should not be necessary
+		// unless MinAPsToAttack messed up, but it makes Coverity happy.
+		ubRawAPCost = std::max<UINT8>(1, ubRawAPCost);
+
 		// determine if this is a surprise stab (must be next to opponent & unseen)
 		fSurpriseStab = FALSE;        // assume it is not a surprise stab
 
@@ -1231,6 +1235,10 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 			// raw AP cost calculation included cost of changing target!
 			ubRawAPCost -= AP_CHANGE_TARGET;
 		}
+
+		// Attacks must cost at least 1 AP. This should not be necessary
+		// unless MinAPsToAttack messed up, but it makes Coverity happy.
+		ubRawAPCost = std::max<UINT8>(1, ubRawAPCost);
 
 		// determine if this is a surprise stab (for tentacles, enemy must not see us, no dist limit)
 		bool const fSurpriseStab = (pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY);
