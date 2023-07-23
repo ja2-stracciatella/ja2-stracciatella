@@ -4530,25 +4530,16 @@ static void DoneFadeOutActionBasement(void)
 
 static void DoneFadeInActionBasement(void)
 {
-	// Start conversation, etc
+	// Another thing that should be externalized some day:
+	// what happens after we've entered the rebel basement.
 
-	// Look for someone to talk to
-	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
+	// For now, this hardcodes vanilla's behavior:
+	// Carlos starts his record #1, if he is present in the sector.
+
+	if (FindSoldierByProfileID(CARLOS))
 	{
-		// Are we in this sector, On the current squad?
-		if (s->bLife >= OKLIFE && s->bInSector && s->bAssignment == CurrentSquad())
-		{
-			break;
-		}
+		TriggerNPCRecordImmediately(CARLOS, 1);
 	}
-
-	const SOLDIERTYPE* const pNPCSoldier = FindSoldierByProfileID(CARLOS);
-	if ( !pNPCSoldier )
-	{
-		return;
-	}
-
-	TriggerNPCRecordImmediately( pNPCSoldier->ubProfile, 1 );
 }
 
 
