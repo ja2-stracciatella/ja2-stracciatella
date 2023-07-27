@@ -3128,12 +3128,16 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
-static void MakeRepairRegion(const INT32 idx, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h, const UINT32 data)
+static void MakeRepairRegion(INT32 const idx, SGPBox const area,
+                             INT32 const data, SOLDIERTYPE const& s)
 {
 	MOUSE_REGION* const r = &gRepairMenuRegion[idx];
-	MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
+	MSYS_DefineRegion(r, area.x, area.y, area.x + area.w, area.y + area.h,
+		 MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR,
+		 RepairMenuMvtCallback, RepairMenuBtnCallback);
 	MSYS_SetRegionUserData(r, 0, idx);
 	MSYS_SetRegionUserData(r, 1, data);
+	MSYS_SetRegionUserData(r, 2, s.ubID);
 }
 
 
@@ -3153,6 +3157,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 		UINT16           y    = area.y + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
 		UINT16    const  w    = area.w;
 		UINT16    const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		SGPBox regionArea { x, y, w, h };
 		INT32            idx  = 0;
 
 		// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
@@ -3170,24 +3175,24 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 				if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 				// add mouse region for each line of text..and set user data
-				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(v));
-				y += h;
+				MakeRepairRegion(idx++, regionArea, VEHICLE2ID(v), s);
+				regionArea.y += h;
 			}
 		}
 
 		// robot
 		if (IsRobotInThisSector(s.sSector))
 		{
-			MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_ROBOT);
-			y += h;
+			MakeRepairRegion(idx++, regionArea, REPAIR_MENU_ROBOT, s);
+			regionArea.y += h;
 		}
 
 		// items
-		MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_ITEMS);
-		y += h;
+		MakeRepairRegion(idx++, regionArea, REPAIR_MENU_ITEMS, s);
+		regionArea.y += h;
 
 		// cancel
-		MakeRepairRegion(idx, x, y, w, h, REPAIR_MENU_CANCEL);
+		MakeRepairRegion(idx, regionArea, REPAIR_MENU_CANCEL, s);
 
 		PauseGame();
 
@@ -3231,21 +3236,19 @@ static bool AssignMercToAMovementGroup(SOLDIERTYPE&);
 static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// btn callback handler for assignment region
-	INT32 const iValue = MSYS_GetRegionUserData(pRegion, 0);
+	auto const [ lineIndex, iRepairWhat, mercID, _ ] = pRegion->user.data;
 
 	// ignore clicks on disabled lines
-	if (GetBoxShadeFlag(ghRepairBox, iValue)) return;
+	if (GetBoxShadeFlag(ghRepairBox, lineIndex)) return;
 
-	// WHAT is being repaired is stored in the second user data argument
-	INT8 const iRepairWhat = static_cast<INT8>(MSYS_GetRegionUserData(pRegion, 1));
-	SOLDIERTYPE * const pSoldier = GetSelectedAssignSoldier(FALSE);
+	SOLDIERTYPE & pSoldier = GetMan(mercID);
 
-	if ( pSoldier && pSoldier->bActive && ( iReason & MSYS_CALLBACK_REASON_POINTER_UP ) )
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if( ( iRepairWhat >= REPAIR_MENU_VEHICLE1 ) && ( iRepairWhat <= REPAIR_MENU_VEHICLE3 ) )
 		{
 			// repair VEHICLE
-			SetSoldierAssignmentRepair(*pSoldier, false, iRepairWhat);
+			SetSoldierAssignmentRepair(pSoldier, false, iRepairWhat);
 			// set assignment for group
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
 			fShowAssignmentMenu = FALSE;
@@ -3254,7 +3257,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		else if( iRepairWhat == REPAIR_MENU_ROBOT )
 		{
 			// repair ROBOT
-			SetSoldierAssignmentRepair(*pSoldier, true, -1);
+			SetSoldierAssignmentRepair(pSoldier, true, -1);
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
@@ -3263,7 +3266,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		else if( iRepairWhat == REPAIR_MENU_ITEMS )
 		{
 			// items
-			SetSoldierAssignmentRepair(*pSoldier, false, -1);
+			SetSoldierAssignmentRepair(pSoldier, false, -1);
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
