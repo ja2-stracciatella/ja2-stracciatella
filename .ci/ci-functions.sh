@@ -10,7 +10,7 @@ unix-install-rustup () {
 }
 
 linux-install-sccache () {
-    local SCCACHE_VERSION="0.2.13"
+    local SCCACHE_VERSION="v0.5.4"
     local SCCACHE_LINUX_PACKAGE="sccache-${SCCACHE_VERSION}-x86_64-unknown-linux-musl"
 
     curl -sSfL "https://github.com/mozilla/sccache/releases/download/${SCCACHE_VERSION}/${SCCACHE_LINUX_PACKAGE}.tar.gz" | sudo tar zx --strip-component=1 -C /usr/bin/
