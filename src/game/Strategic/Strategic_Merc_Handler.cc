@@ -99,7 +99,8 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 				{ // Killed within an hour of being insured
 					p.ubSuspiciousDeath = VERY_SUSPICIOUS_DEATH;
 				}
-				else if (s.attacker->bTeam == OUR_TEAM || !gTacticalStatus.fEnemyInSector)
+				else if ((s.attacker && s.attacker->bTeam == OUR_TEAM)
+				          || !gTacticalStatus.fEnemyInSector)
 				{ /* Killed by someone on our team or while there weren't any opponents
 					* around, cause insurance company to suspect fraud and investigate this
 					* claim */
@@ -486,7 +487,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 }
 
 
-void MercComplainAboutEquipment( UINT8 ubProfile )
+void MercComplainAboutEquipment(ProfileID ubProfile)
 {
 	if ( ubProfile == LARRY_NORMAL  )
 	{
