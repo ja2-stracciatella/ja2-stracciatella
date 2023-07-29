@@ -40,11 +40,12 @@
 #include "Quests.h"
 #include "Map_Screen_Interface_Border.h"
 #include "Cheats.h"
+#include "SAM_Sites.h"
+#include "Soldier_Macros.h"
+#include "Squads.h"
 #include "Strategic_Status.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Squads.h"
 #include "Assignments.h"
-#include "Soldier_Macros.h"
 #include "History.h"
 #include "VObject.h"
 #include "Vehicles.h"
@@ -55,6 +56,7 @@
 #include "VSurface.h"
 #include "UILayout.h"
 #include <optional>
+#include <utility>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -145,7 +147,8 @@ BOOLEAN gfUsePersistantPBI;
 
 static void MakeButton(UINT idx, INT16 x, const ST::string& text, GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButton(iPBButtonImage[idx], x, STD_SCREEN_Y + 54, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButton(iPBButtonImage[idx], x,
+		STD_SCREEN_Y + 54, MSYS_PRIORITY_HIGHEST - 2, std::move(click));
 	iPBButton[idx] = btn;
 
 	btn->SpecifyGeneralTextAttributes(text, BLOCKFONT, FONT_BEIGE, 141);
@@ -398,27 +401,11 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 		else
 		{ // Are enemies invading a town, or just encountered the player.
-			UINT8 const sector = sSector.AsByte();
-			if (GetTownIdForSector(sector))
-			{
-				gubEnemyEncounterCode = ENEMY_INVASION_CODE;
-			}
-			else
-			{
-				switch (sector)
-				{
-					case SEC_D2:
-					case SEC_D15:
-					case SEC_G8:
-						// SAM sites not in towns will also be considered to be important
-						gubEnemyEncounterCode = ENEMY_INVASION_CODE;
-						break;
-
-					default:
-						gubEnemyEncounterCode = ENEMY_ENCOUNTER_CODE;
-						break;
-				}
-			}
+		  // SAM sites not in towns will also be considered to be important.
+			gubEnemyEncounterCode =
+				((GetTownIdForSector(sSector) != BLANK_SECTOR)
+				  || IsThisSectorASAMSector(sSector))
+				? ENEMY_INVASION_CODE : ENEMY_ENCOUNTER_CODE;
 		}
 	}
 
