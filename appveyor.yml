@@ -40,8 +40,11 @@ cache:
   - '%USERPROFILE%\.cargo\registry\cache\ -> rust\Cargo.lock, rust\Cargo.toml'
   - '%USERPROFILE%\.cargo\git\db\ -> rust\Cargo.lock, rust\Cargo.toml'
   - '%USERPROFILE%\.rustup\ -> rust-toolchain'
-  # sccache
+  # sccache's cache
   - '%LOCALAPPDATA%\Mozilla\sccache'
+  # sccache binary
+  - C:\ProgramData\chocolatey\bin -> appveyor.yml
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml
 
 skip_commits:
   # appveyor only searches for tags in the first line by default
