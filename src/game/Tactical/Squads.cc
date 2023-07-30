@@ -688,7 +688,7 @@ void SaveSquadInfoToSavedGameFile(HWFILE const f)
 }
 
 
-void LoadSquadInfoFromSavedGameFile(HWFILE const f)
+void LoadSquadInfoFromSavedGameFile(HWFILE const f, UINT32 const uiSaveGameVersion)
 {
 	// Load in the squad info
 	BYTE data[SQUAD_INFO_NUM_RECORDS * 12] = { 0 };
@@ -715,7 +715,7 @@ void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 
 		if (id < 0) continue; // skip empty slot
 
-		if (ubFormatVersion == 0) ubSquadID = i / 6; // use the implicit squadID
+		if (uiSaveGameVersion < 102 || ubFormatVersion == 0) ubSquadID = i / 6; // fixed squads of six, if we are loading a save from old versions
 
 		if (slotPos[ubSquadID + extraSquads] == gamepolicy(squad_size)) extraSquads++; // squad already full, split to a new one
 
