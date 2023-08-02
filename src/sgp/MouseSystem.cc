@@ -517,7 +517,7 @@ static void MSYS_UpdateMouseRegion(void)
 
 			MSYS_Action &= ~MSYS_DO_MOVE;
 
-			if (cur->ButtonCallback && MSYS_Action & (MSYS_DO_BUTTONS | MSYS_DO_TFINGER_UP | MSYS_DO_TFINGER_DOWN | MSYS_DO_TFINGER_REPEAT))
+			if (cur->ButtonCallback && (MSYS_Action & (MSYS_DO_BUTTONS | MSYS_DO_TFINGER_UP | MSYS_DO_TFINGER_DOWN | MSYS_DO_TFINGER_REPEAT)))
 			{
 				if (cur->uiFlags & MSYS_REGION_ENABLED)
 				{

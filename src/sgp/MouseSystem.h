@@ -187,11 +187,15 @@ std::function<void(T*, UINT32)> CallbackPrimarySecondary(
 			fPointerDown = FALSE;
 			fRightMouseButtonDown = TRUE;
 		}
+
+		// First gather all the callbacks that should be invoked (0-2), and only then execute them at the end of the function.
+		// It is important that by the time the second callback is invoked, no access to this lambda's captures is happening anymore, as the object might already be deleted.
+		std::vector<std::function<void(T*, UINT32)>> triggeredEventFns;
+
 		if (((reason & mouseReason) && fPointerDown) || ((reason & MSYS_CALLBACK_REASON_TFINGER_UP) && fPointerDown && !fTouchRepeatHandled))
 		{
-			// We need to guard against deletions of the mouse region during callbacks
-			if (r->uiFlags & EXISTS_FLAG && primaryAction) {
-				primaryAction(r, reason);
+			if (primaryAction) {
+				triggeredEventFns.push_back(primaryAction);
 			}
 		}
 		if (((reason & MSYS_CALLBACK_REASON_RBUTTON_UP) && fRightMouseButtonDown) || ((reason & MSYS_CALLBACK_REASON_TFINGER_REPEAT) && fPointerDown && !fTouchRepeatHandled))
@@ -202,14 +206,22 @@ std::function<void(T*, UINT32)> CallbackPrimarySecondary(
 			if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP) {
 				fRightMouseButtonDown = FALSE;
 			}
-			// We need to guard against deletions of the mouse region during callbacks
-			if (r->uiFlags & EXISTS_FLAG && secondaryAction) {
-				secondaryAction(r, reason);
+			if (secondaryAction) {
+				triggeredEventFns.push_back(secondaryAction);
 			}
 		}
 		// We need to guard against deletions of the mouse region during callbacks
-		if (r->uiFlags & EXISTS_FLAG && allEvents) {
-			allEvents(r, reason);
+		if (allEvents) {
+			triggeredEventFns.push_back(allEvents);
+		}
+
+		for (const auto& f : triggeredEventFns) {
+			// We need to guard against deletions of the mouse region during callbacks
+			if (!(r->uiFlags & EXISTS_FLAG)) {
+				break;
+			}
+			f(r, reason);
+			// Consider: assert after events that still EXISTS_FLAG?
 		}
 	};
 }
