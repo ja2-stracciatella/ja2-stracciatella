@@ -964,7 +964,12 @@ static void InitSoldierStruct(SOLDIERTYPE& s)
 void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 {
 	if (GetSelectedMan() == &s) SetSelectedMan(0);
-	if (gUIFullTarget    == &s) gUIFullTarget   = 0;
+	if (gUIFullTarget    == &s)
+	{
+		gUIFullTarget = nullptr;
+		// Force back cursor to move mode, otherwise it might get stuck.
+		guiPendingOverrideEvent = UIEventKind::A_CHANGE_TO_MOVE;
+	}
 	if (gpSMCurrentMerc  == &s) gpSMCurrentMerc = 0;
 
 	if (!s.bActive) return;
