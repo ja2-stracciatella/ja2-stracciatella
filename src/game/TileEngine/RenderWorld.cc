@@ -1193,7 +1193,7 @@ zlevel_topmost:
 								sXPos += pTrav.sOffsetX;
 								sYPos += pTrav.sOffsetY;
 
-								INT16 const h = std::min((int) uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
+								INT16 const h = std::min((int) uiBrushHeight, std::max(0, gsVIEWPORT_WINDOW_END_Y - sYPos));
 								RegisterBackgroundRect(uiDirtyFlags, sXPos, sYPos, uiBrushWidth, h);
 								if (fSaveZ)
 								{
