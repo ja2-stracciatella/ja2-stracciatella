@@ -57,6 +57,8 @@
 #include <ctime>
 
 
+constexpr int NUM_SAVE_GAMES = 11;
+
 #define SAVE_LOAD_TITLE_FONT				FONT14ARIAL
 #define SAVE_LOAD_TITLE_COLOR				FONT_MCOLOR_WHITE
 
@@ -143,7 +145,7 @@ BOOLEAN        gfRedrawSaveLoadScreen = TRUE;
 static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
 static std::vector<SaveGameInfo> gSavedGamesList;
-static size_t gCurrentScrollTop = 0;
+static int32_t gCurrentScrollTop = 0;
 static INT32 gbSelectedSaveLocation = -1;
 static INT32 gbHighLightedLocation  = -1;
 
@@ -569,6 +571,10 @@ static void RenderSaveLoadScreen(void)
 	InvalidateScreen();
 }
 
+static int32_t ScrollPositionTopMax() {
+	return std::max(0, int32_t(gSavedGamesList.size()) - NUM_SAVE_GAMES);
+}
+
 static void RenderScrollBar(void) {
 	SGPRect	clippingRect;
 	clippingRect.set(SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_INNER_POS_Y, SLG_SCROLLBAR_POS_X + SLG_SCROLLBAR_WIDTH, SLG_SCROLLBAR_INNER_POS_Y + SLG_SCROLLBAR_INNER_HEIGHT);
@@ -581,7 +587,7 @@ static void RenderScrollBar(void) {
 	}
 	SetClippingRect(previousClippingRect);
 
-	auto maxTop = gSavedGamesList.size() - NUM_SAVE_GAMES;
+	auto maxTop = std::max(1, ScrollPositionTopMax());
 	auto currentTop = gCurrentScrollTop;
 	auto maxYPos = SLG_SCROLLBAR_INNER_HEIGHT - SLG_SCROLLBAR_INDICATOR_HEIGHT - 2;
 	auto indicatorPosition = int(round(double_t(maxYPos) * double_t(currentTop) / double_t(maxTop)));
@@ -808,7 +814,7 @@ static void InitSaveGameArray(void)
 static void DisplaySaveGameList(void)
 {
 	auto start = gSavedGamesList.begin() + gCurrentScrollTop;
-	auto end = std::min(start + NUM_SAVE_GAMES, gSavedGamesList.end());
+	auto end = gSavedGamesList.begin() + std::min(size_t(gCurrentScrollTop + NUM_SAVE_GAMES), gSavedGamesList.size());
 	for (auto i = start; i < end; ++i)
 	{ // Display all the information from the header
 		DisplaySaveGameEntry(i);
@@ -983,7 +989,7 @@ static void ScrollUp() {
 }
 
 static void ScrollDown() {
-	auto nextScrollTop = std::min(gSavedGamesList.size() - NUM_SAVE_GAMES, gCurrentScrollTop + 1);
+	auto nextScrollTop = std::min(gCurrentScrollTop + 1, ScrollPositionTopMax());
 	if (nextScrollTop != gCurrentScrollTop && !gfUserInTextInputMode) {
 		gCurrentScrollTop = nextScrollTop;
 		gfRedrawSaveLoadScreen = true;
@@ -1446,7 +1452,7 @@ static void MoveSelectionDown()
 	auto newSelectedSaveLocation = std::min((INT32)gSavedGamesList.size() - 1, gbSelectedSaveLocation + 1);
 	if (newSelectedSaveLocation != gbSelectedSaveLocation) {
 		gbSelectedSaveLocation = newSelectedSaveLocation;
-		if (gbSelectedSaveLocation >= (INT32)gCurrentScrollTop + NUM_SAVE_GAMES) {
+		if (gbSelectedSaveLocation >= gCurrentScrollTop + NUM_SAVE_GAMES && gCurrentScrollTop < ScrollPositionTopMax()) {
 			gCurrentScrollTop += 1;
 		}
 		gfRedrawSaveLoadScreen = TRUE;
@@ -1460,7 +1466,7 @@ static void MoveSelectionUp()
 	if (newSelectedSaveLocation != gbSelectedSaveLocation) {
 		gbSelectedSaveLocation = newSelectedSaveLocation;
 
-		if (gbSelectedSaveLocation < (INT32)gCurrentScrollTop) {
+		if (gbSelectedSaveLocation < gCurrentScrollTop) {
 			gCurrentScrollTop -= 1;
 		}
 		gfRedrawSaveLoadScreen = TRUE;

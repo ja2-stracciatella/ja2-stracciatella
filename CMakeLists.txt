@@ -113,8 +113,8 @@ if(MSVC)
 		CMAKE_C_FLAGS_RELWITHDEBINFO
 	)
         # force /Z7 instead of /ZI to include debug information in obj file
-        string(REGEX REPLACE "/Zi|/ZI" "/Z7" _value "${_value}")
-		if(NOT ${_var} STREQUAL _value)
+        string(REGEX REPLACE "/Zi|/ZI" "/Z7" _value ${${_var}})
+		if(NOT ${${_var}} STREQUAL ${_value})
 			set_property(CACHE "${_var}" PROPERTY VALUE "${_value}")
         endif()
 	endforeach()
