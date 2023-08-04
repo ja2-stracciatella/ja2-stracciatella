@@ -167,7 +167,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	if (ScaleQuality == VideoScaleQuality::PERFECT)
 	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-#if SDL_VERSION_ATLEAST(2,0,5)
+
 		if (!IsDesktopLargeEnough())
 		{
 			// Pixel-perfect mode cannot handle scaling down, and will
@@ -178,10 +178,6 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 		}
 		SDL_SetWindowMinimumSize(g_game_window, SCREEN_WIDTH, SCREEN_HEIGHT);
 		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
-#else
-		SLOGW("Pixel-perfect scaling is not available");
-		ScaleQuality = VideoScaleQuality::NEAR_PERFECT;
-#endif
 	}
 	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT)
 	{
