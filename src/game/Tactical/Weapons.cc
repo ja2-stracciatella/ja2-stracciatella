@@ -3047,7 +3047,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 						}
 						break;
 					case AIM_SHOT_TORSO:
-						if (CoinToss() && !(pTarget->uiStatusFlags & SOLDIER_MONSTER))
+						if (PreChance(50) && !(pTarget->uiStatusFlags & SOLDIER_MONSTER))
 						{
 							if (bStatLoss >= pTarget->bDexterity)
 							{
