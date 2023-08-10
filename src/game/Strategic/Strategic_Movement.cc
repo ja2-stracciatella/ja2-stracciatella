@@ -398,18 +398,22 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 	{
 		if (n_aligned_axes == 0)
 		{
-			AssertMsg(FALSE, ST::format("Invalid DIAGONAL waypoint being added for groupID {}. AM-0", g->ubGroupID));
+			SLOGE("Invalid DIAGONAL waypoint being added for groupID {}. AM-0", g->ubGroupID);
 			return FALSE;
 		}
 
 		if (n_aligned_axes >= 2)
 		{
-			AssertMsg(FALSE, ST::format("Invalid IDENTICAL waypoint being added for groupID {}. AM-0", g->ubGroupID));
+			SLOGE("Invalid IDENTICAL waypoint being added for groupID {}. AM-0", g->ubGroupID);
 			return FALSE;
 		}
 
 		// Has to be different in exactly 1 axis to be a valid new waypoint
-		Assert(n_aligned_axes == 1);
+		if (n_aligned_axes != 1)
+		{
+			SLOGE("n_aligned_axes should be 1, is {}", n_aligned_axes);
+			return false;
+		}
 	}
 
 	WAYPOINT* const new_wp = new WAYPOINT{};
