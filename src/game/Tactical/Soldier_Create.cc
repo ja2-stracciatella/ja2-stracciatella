@@ -970,7 +970,13 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 		// Force back cursor to move mode, otherwise it might get stuck.
 		guiPendingOverrideEvent = UIEventKind::A_CHANGE_TO_MOVE;
 	}
-	if (gpSMCurrentMerc  == &s) gpSMCurrentMerc = 0;
+	if (gpSMCurrentMerc  == &s)
+	{
+		SetCurrentInterfacePanel(InterfacePanelKind::TEAM_PANEL);
+		// SetCurrentInterfacePanel still needs the old value
+		// of gpSMCurrentMerc so it must be cleared afterwards.
+		gpSMCurrentMerc = nullptr;
+	}
 
 	if (!s.bActive) return;
 
