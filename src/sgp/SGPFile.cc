@@ -5,6 +5,8 @@
 
 #include <string_theory/string>
 #include <string_theory/format>
+#include <string_view>
+#include <utility>
 
 #define SDL_RWOPS_SGP 222
 
@@ -12,6 +14,18 @@ void DeleteSGPFile(SGPFile *file)
 {
     delete file;
 }
+
+class SGPFileException : public IoException
+{
+public:
+	SGPFileException(std::string_view errorMessage,
+	                 ST::string const& filename,
+	                 RustPointer<char> const& rustError)
+		: IoException{ ST::format("SGPFile: '{}' {}: {}",
+			filename, errorMessage, rustError.get()) }
+	{
+	}
+};
 
 static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
 {
@@ -66,11 +80,18 @@ static int SGPCloseRW(SDL_RWops *context)
 	return 0;
 }
 
-SGPFile::SGPFile(VFile *f)
+SGPFile::SGPFile(VFile *f, ST::string const& filename) :
+	file{ f },
+	name{ filename }
 {
-    this->flags = SGPFILE_REAL;
-    this->file = f;
 }
+
+SGPFile::SGPFile(VFile *f, ST::string && filename) :
+	file{ f },
+	name{ std::move(filename) }
+{
+}
+
 
 SGPFile::~SGPFile()
 {
@@ -84,7 +105,7 @@ void SGPFile::read(void *const pDest, size_t const uiBytesToRead)
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::read failed: {}", err.get()));
+        throw SGPFileException("read failed", name, err);
     }
 }
 
@@ -96,7 +117,7 @@ std::vector<uint8_t> SGPFile::readToEnd()
     if (vec.get() == NULL)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::readToEnd failed: {}", err.get()));
+        throw SGPFileException("readToEnd failed", name, err);
     }
     auto bytes = VecU8_as_ptr(vec.get());
     auto len = VecU8_len(vec.get());
@@ -110,7 +131,7 @@ size_t SGPFile::readAtMost(void *const pDest, size_t const uiBytesToRead)
     if (bytesRead == SIZE_MAX)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::readAtMost failed: {}", err.get()));
+        throw SGPFileException("readAtMost failed", name, err);
     }
 
     return bytesRead;
@@ -138,7 +159,7 @@ void SGPFile::write(void const *const pDest, size_t const uiBytesToWrite)
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::write failed: {}", err.get()));
+        throw SGPFileException("write failed", name, err);
     }
 }
 
@@ -161,7 +182,7 @@ void SGPFile::seek(INT32 distance, FileSeekMode const how)
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::seek failed: {}", err.get()));
+        throw SGPFileException("seek failed", name, err);
     }
 }
 
@@ -173,7 +194,7 @@ INT32 SGPFile::pos() const
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::pos failed: {}", err.get()));
+        throw SGPFileException("pos failed", name, err);
     }
     if (position > INT32_MAX)
     {
@@ -192,7 +213,7 @@ UINT32 SGPFile::size() const
     if (!success)
     {
         RustPointer<char> err{getRustError()};
-        throw IoException(ST::format("SGPFile::size failed: {}", err.get()));
+        throw SGPFileException("size failed", name, err);
     }
     if (len > UINT32_MAX)
     {
