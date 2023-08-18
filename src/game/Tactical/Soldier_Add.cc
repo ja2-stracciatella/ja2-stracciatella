@@ -311,7 +311,8 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 
 							if (uiRange == 0 )
 							{
-								uiRange = 999;
+								// If we don't have a path, this cannot be the best gridno!
+								continue;
 							}
 						}
 						else
@@ -460,7 +461,8 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 
 							if (uiRange == 0 )
 							{
-								uiRange = 999;
+								// If we don't have a path, this cannot be the best gridno!
+								continue;
 							}
 						}
 						else
