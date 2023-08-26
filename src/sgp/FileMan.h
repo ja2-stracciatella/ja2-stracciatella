@@ -1,11 +1,9 @@
 #pragma once
 
-#include "sgp/SGPFile.h"
-#include "sgp/Types.h"
-
-#include <string_theory/string>
-
+#include "SGPFile.h"
+#include <stdint.h>
 #include <vector>
+#include <string_theory/string>
 
 /***
  * The file manager namespace provides functions to interact with files
@@ -19,18 +17,18 @@ namespace FileMan
 	/** Open file for writing.
 	 * If file is missing it will be created.
 	 * If file exists, it's content will be removed. */
-	SGPFile* openForWriting(const ST::string& filename, bool truncate=true);
+	SGPFile* openForWriting(ST::string filename, bool truncate=true);
 
 	/** Open file for appending data.
 	 * If file doesn't exist, it will be created. */
-	SGPFile* openForAppend(const ST::string& filename);
+	SGPFile* openForAppend(ST::string filename);
 
 	/** Open file for reading and writing.
 	 * If file doesn't exist, it will be created. */
-	SGPFile* openForReadWrite(const ST::string& filename);
+	SGPFile* openForReadWrite(ST::string filename);
 
 	/** Open file for reading. */
-	SGPFile* openForReading(const ST::string &filename);
+	SGPFile* openForReading(ST::string filename);
 
 	/* Delete the file at path. */
 	void deleteFile(const ST::string &path);

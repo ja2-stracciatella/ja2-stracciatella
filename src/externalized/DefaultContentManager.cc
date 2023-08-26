@@ -311,7 +311,7 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
  * settings directory) and file is present.
  * If file is not found, try to find it relatively to 'Data' directory.
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
-SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
+SGPFile* DefaultContentManager::openGameResForReading(ST::string filename) const
 {
 	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
@@ -320,7 +320,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
 	SLOGD("Opened resource file from VFS: '{}'", filename);
-	return new SGPFile(vfile.release());
+	return new SGPFile(vfile.release(), std::move(filename));
 }
 
 /* Checks if a game resource exists. */
@@ -362,7 +362,7 @@ ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fil
 	{
 		SLOGW("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg);
 	}
-	return new ST::string(quote);
+	return new ST::string{std::move(quote)};
 }
 
 /** Load all dialogue quotes for a character. */
@@ -380,7 +380,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const S
 		{
 			SLOGW("DefaultContentManager::loadAllDialogQuotes '{}' {}: {}", fileName, i, err);
 		}
-		quotes.push_back(new ST::string(quote));
+		quotes.push_back(new ST::string{std::move(quote)});
 	}
 }
 

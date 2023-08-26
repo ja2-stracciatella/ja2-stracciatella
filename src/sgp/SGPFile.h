@@ -2,22 +2,10 @@
 
 #include <stdint.h>
 
-#include <Types.h>
-#include "sgp/AutoObj.h"
-
+#include "AutoObj.h"
+#include "Types.h"
+#include <string_theory/string>
 #include <SDL_rwops.h>
-
-struct SGP_FILETIME
-{
-	uint32_t Lo;
-	uint32_t Hi;
-};
-
-enum SGPFileFlags
-{
-	SGPFILE_NONE = 0U,
-	SGPFILE_REAL = 1U << 0
-};
 
 enum FileSeekMode
 {
@@ -26,18 +14,20 @@ enum FileSeekMode
 	FILE_SEEK_FROM_CURRENT
 };
 
-struct File;
 struct VfsFile;
 
 class SGPFile
 {
 private:
-	SGPFileFlags flags;
 	VFile *file;
+	ST::string name;
 
 public:
 	/** Create a SGP file from a file on disk. */
-	SGPFile(VFile *file);
+	/* The filename is only needed for diagnostic purposes. */
+	SGPFile(VFile *file, ST::string const& filename);
+	SGPFile(VFile *file, ST::string && filename);
+
 	/** Closes file. */
 	~SGPFile();
 

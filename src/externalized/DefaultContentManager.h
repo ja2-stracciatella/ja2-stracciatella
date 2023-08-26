@@ -60,7 +60,7 @@ public:
 	virtual DirFs* tempFiles() const override;
 
 	/* Open a game resource file for reading. */
-	virtual SGPFile* openGameResForReading(const ST::string& filename) const override;
+	virtual SGPFile* openGameResForReading(ST::string filename) const override;
 
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const override;

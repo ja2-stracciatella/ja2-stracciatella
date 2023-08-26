@@ -8,6 +8,7 @@
 
 #include <stdexcept>
 #include <regex>
+#include <utility>
 
 ST::string FileMan::cleanBasename(const ST::string& pathSegment)
 {
@@ -95,7 +96,7 @@ ST::string FileMan::resolveExistingComponents(const ST::string& path)
 /** Open file for writing.
  * If file is missing it will be created.
  * If file exists, it's content will be removed. */
-SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
+SGPFile* FileMan::openForWriting(ST::string filename, bool truncate)
 {
 	uint8_t open_options = FILE_OPEN_WRITE | FILE_OPEN_CREATE;
 	if (truncate)
@@ -109,13 +110,13 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 		RustPointer<char> err{getRustError()};
 		throw IoException(ST::format("FileMan::openForWriting('{}') failed: {}", filename, err.get()));
 	}
-	return new SGPFile(file.release());
+	return new SGPFile(file.release(), std::move(filename));
 }
 
 
 /** Open file for appending data.
  * If file doesn't exist, it will be created. */
-SGPFile* FileMan::openForAppend(const ST::string& filename)
+SGPFile* FileMan::openForAppend(ST::string filename)
 {
 	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_APPEND | FILE_OPEN_CREATE)};
 	if (!file)
@@ -123,13 +124,13 @@ SGPFile* FileMan::openForAppend(const ST::string& filename)
 		RustPointer<char> err{getRustError()};
 		throw IoException(ST::format("FileMan::openForAppend('{}') failed: {}", filename, err.get()));
 	}
-	return new SGPFile(file.release());
+	return new SGPFile(file.release(), std::move(filename));
 }
 
 
 /** Open file for reading and writing.
  * If file doesn't exist, it will be created. */
-SGPFile* FileMan::openForReadWrite(const ST::string& filename)
+SGPFile* FileMan::openForReadWrite(ST::string filename)
 {
 	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_READ | FILE_OPEN_WRITE | FILE_OPEN_CREATE)};
 	if (!file)
@@ -137,11 +138,11 @@ SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 		RustPointer<char> err{getRustError()};
 		throw IoException(ST::format("FileMan::openForReadWrite('{}') failed: {}", filename, err.get()));
 	}
-	return new SGPFile(file.release());
+	return new SGPFile(file.release(), std::move(filename));
 }
 
 /** Open file for reading. */
-SGPFile* FileMan::openForReading(const ST::string &filename)
+SGPFile* FileMan::openForReading(ST::string filename)
 {
 	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_READ)};
 	if (!file)
@@ -149,7 +150,7 @@ SGPFile* FileMan::openForReading(const ST::string &filename)
 		RustPointer<char> err{getRustError()};
 		throw IoException(ST::format("FileMan::openForReading('{}') failed: {}", filename, err.get()));
 	}
-	return new SGPFile(file.release());
+	return new SGPFile(file.release(), std::move(filename));
 }
 
 std::vector<ST::string>
