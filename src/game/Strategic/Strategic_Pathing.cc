@@ -794,7 +794,6 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	INT32 iOldDelta = 0;
 	BOOLEAN fFirstNode = TRUE;
 	PathSt* pNode = pHeadOfPath;
-	WAYPOINT *wp = NULL;
 
 	//KRIS!  Added this because it was possible to plot a new course to the same destination, and the
 	//       group would add new arrival events without removing the existing one(s).
@@ -868,10 +867,18 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	AddWaypointStrategicIDToPGroup(&g, pNode->uiSectorId);
 
 	// at this point, the final sector in the path must be identical to this group's last waypoint
-	wp = GetFinalWaypoint(&g);
-	AssertMsg( wp, "Path exists, but no waypoints were added!  AM-0" );
-	AssertMsg(pNode->uiSectorId == (UINT32) wp->sSector.AsStrategicIndex(), "Last waypoint differs from final path sector!  AM-0");
+	{
+		auto * const wp = GetFinalWaypoint(&g);
 
+		if (wp == nullptr)
+		{
+			SLOGE("Path exists, but no waypoints were added!  AM-0" );
+		}
+		else if (pNode->uiSectorId != static_cast<UINT32>(wp->sSector.AsStrategicIndex()))
+		{
+			SLOGE("Last waypoint differs from final path sector!  AM-0");
+		}
+	}
 
 	// see if we've already reached the first sector in the path (we never actually left the sector and reversed back to it)
 	if (g.uiArrivalTime == GetWorldTotalMin())
