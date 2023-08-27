@@ -341,7 +341,9 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 	// keyboard layout when entering text like a save game description or
 	// the IMP name because we are using SDL_TextInput events for those,
 	// which are not affected by the KeyChange function. (Issue #1844)
-	if (mod == KMOD_NONE)
+	// Checked if neither alt, altgr, control, shift or the 'OS' key is
+	// pressed. Num lock, caps lock and scroll lock can be active.
+	if ((mod & (KMOD_ALT | KMOD_CTRL | KMOD_GUI | KMOD_MODE | KMOD_SHIFT)) == KMOD_NONE)
 	{
 		switch (key_sym->scancode)
 		{
@@ -417,6 +419,7 @@ void KeyDown(const SDL_Keysym* KeySym)
 
 		case SDLK_LALT:
 		case SDLK_RALT:
+		case SDLK_MODE:
 			gfKeyState.set(ALT);
 			break;
 
@@ -447,6 +450,7 @@ void KeyUp(const SDL_Keysym* KeySym)
 
 		case SDLK_LALT:
 		case SDLK_RALT:
+		case SDLK_MODE:
 			gfKeyState.reset(ALT);
 			break;
 
