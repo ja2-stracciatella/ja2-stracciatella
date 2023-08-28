@@ -18,8 +18,8 @@
 static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 try
 {
-	ST::string zFilename = ST::format("{}/{}.bad", AMBIENTDIR, ubAmbientID);
-	AutoSGPFile hFile(GCM->openGameResForReading(zFilename));
+	AutoSGPFile hFile{GCM->openGameResForReading(
+		ST::format("{}/{}.bad", AMBIENTDIR, ubAmbientID))};
 
 	// READ #
 	hFile->read(&gsNumAmbData, sizeof(INT16));
