@@ -43,6 +43,8 @@ void LoadEmailFromSavedGame(HWFILE const File)
 {
 	ShutDownEmailList();
 
+	GameInitEmail();
+
 	UINT32 uiNumOfEmails;
 	File->read(&uiNumOfEmails, sizeof(UINT32));
 
