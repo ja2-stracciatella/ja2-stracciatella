@@ -1,12 +1,10 @@
 // -*-coding: utf-8-unix;-*-
 
 #include "gtest/gtest.h"
-
 #include "LoadSaveData.h"
-
-#include "externalized/RustInterface.h"
-#include "externalized/TestUtils.h"
-
+#include "RustInterface.h"
+#include "TestUtils.h"
+#include <utility>
 
 TEST(LoadSaveData, integers)
 {
@@ -175,7 +173,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	ASSERT_EQ(sizeof(double), 8u);
 
 	{
-		AutoSGPFile file{FileMan::openForReading(floatsPath)};
+		AutoSGPFile file{FileMan::openForReading(std::move(floatsPath))};
 		std::vector<uint8_t> buf = file->readToEnd();
 		ASSERT_EQ(buf.size(), sizeof(float) * 5);
 		float f;
@@ -190,7 +188,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	}
 
 	{
-		AutoSGPFile file{FileMan::openForReading(doublesPath)};
+		AutoSGPFile file{FileMan::openForReading(std::move(doublesPath))};
 		std::vector<uint8_t> buf = file->readToEnd();
 		ASSERT_EQ(buf.size(), sizeof(double) * 5);
 		double d;
