@@ -315,8 +315,6 @@ static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
 	UINT16 usTileNo, usSrcTileNo;
 
-	Assert(gpWorldLevelData!=NULL);
-
 	usTileNo=MAPROWCOLTOPOS(iY, iX);
 	usSrcTileNo=MAPROWCOLTOPOS(iSrcY, iSrcX);
 
@@ -356,14 +354,10 @@ static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 // Returns TRUE/FALSE if the tile at the specified coordinates contains a wall.
 static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
-	//LEVELNODE *pStruct;
 	UINT16 usTileNo;
 	UINT16 usSrcTileNo;
 	INT8		bDirection;
 	UINT8		ubTravelCost;
-	//INT8		bWallCount = 0;
-
-	Assert(gpWorldLevelData!=NULL);
 
 	usTileNo=MAPROWCOLTOPOS(iY, iX);
 	usSrcTileNo=MAPROWCOLTOPOS(iSrcY, iSrcX);
@@ -591,8 +585,6 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 	BOOLEAN fLitWall=FALSE;
 	BOOLEAN fFake;
 
-	Assert(gpWorldLevelData!=NULL);
-
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
 	if ( uiTile >= GRIDSIZE )
@@ -725,8 +717,6 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 	UINT32 uiTile;
 	BOOLEAN fLitWall=FALSE;
 	BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
-
-	Assert(gpWorldLevelData != NULL);
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
@@ -1594,8 +1584,6 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 
 static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, const INT16 sSrcY)
 {
-	Assert(gpWorldLevelData != NULL);
-
 	UINT32     const uiTile = MAPROWCOLTOPOS(sY, sX);
 	LEVELNODE* const head   = gpWorldLevelData[uiTile].pStructHead;
 
