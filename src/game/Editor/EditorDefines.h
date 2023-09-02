@@ -2,7 +2,6 @@
 #define __EDITORDEFINES_H
 
 #include "Button_System.h"
-#include "Local.h"
 #include "Types.h"
 #include "Button_Defines.h"
 

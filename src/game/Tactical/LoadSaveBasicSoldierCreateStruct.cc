@@ -1,7 +1,7 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveBasicSoldierCreateStruct.h"
 #include "LoadSaveData.h"
+#include "SGPFile.h"
 #include "Soldier_Create.h"
 
 

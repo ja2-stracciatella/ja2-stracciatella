@@ -3,7 +3,7 @@
 #include "Buffer.h"
 #include "HImage.h"
 #include "PCX.h"
-#include "FileMan.h"
+#include "SGPFile.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Campaign_Types.h"
 #include "Json.h"
 
 /**
@@ -16,4 +15,3 @@ public:
 	uint8_t sectorId;
 	int8_t bloodCatPlacements;
 };
-

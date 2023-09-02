@@ -1,7 +1,7 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveLightEffect.h"
+#include "SGPFile.h"
 
 
 void ExtractLightEffectFromFile(HWFILE const file, LIGHTEFFECT* const l)

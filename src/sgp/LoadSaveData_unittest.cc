@@ -1,8 +1,8 @@
 // -*-coding: utf-8-unix;-*-
 
 #include "gtest/gtest.h"
+#include "FileMan.h"
 #include "LoadSaveData.h"
-#include "RustInterface.h"
 #include "TestUtils.h"
 #include <utility>
 

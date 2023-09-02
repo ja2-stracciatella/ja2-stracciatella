@@ -1,7 +1,7 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveStrategicMapElement.h"
 #include "LoadSaveData.h"
+#include "SGPFile.h"
 
 
 void ExtractStrategicMapElementFromFile(HWFILE const f, StrategicMapElement& e)

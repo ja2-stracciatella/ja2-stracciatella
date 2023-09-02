@@ -10,6 +10,7 @@
 #include "Timer_Control.h"
 #include "Render_Dirty.h"
 #include "RenderWorld.h"
+#include "SGPFile.h"
 #include "Interface.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "WordWrap.h"
@@ -21,7 +22,6 @@
 #include "VSurface.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
-#include "FileMan.h"
 #include "UILayout.h"
 
 #include <string_theory/string>

@@ -1,7 +1,6 @@
 #ifndef VSURFACE_H
 #define VSURFACE_H
 
-#include "AutoObj.h"
 #include "Buffer.h"
 #include "Types.h"
 #include <memory>

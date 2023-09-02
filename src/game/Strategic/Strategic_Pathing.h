@@ -1,7 +1,6 @@
 #ifndef __STRATPATH_H
 #define __STRATPATH_H
 
-#include "Map_Screen_Interface_Map.h"
 #include "Strategic_Movement.h"
 
 

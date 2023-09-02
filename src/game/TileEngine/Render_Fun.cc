@@ -3,8 +3,6 @@
 #include "Structure.h"
 #include "TileDat.h"
 #include "WorldDef.h"
-#include "Input.h"
-#include "SysUtil.h"
 #include "WorldMan.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"

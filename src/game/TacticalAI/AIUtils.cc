@@ -3,6 +3,7 @@
 #include "Isometric_Utils.h"
 #include "Weapons.h"
 #include "OppList.h"
+#include "Overhead.h"
 #include "Points.h"
 #include "PathAI.h"
 #include "WorldMan.h"

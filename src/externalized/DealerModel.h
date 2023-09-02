@@ -2,7 +2,6 @@
 
 #include "Arms_Dealer.h"
 #include "MercSystem.h"
-#include "JA2Types.h"
 #include "Json.h"
 
 #include <bitset>

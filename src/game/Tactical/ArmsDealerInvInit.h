@@ -2,6 +2,7 @@
 #define	_ARMS_DEALER_INV_INIT__H_
 
 #include "Arms_Dealer.h"
+#include "Types.h"
 
 
 #define LAST_DEALER_ITEM		-1

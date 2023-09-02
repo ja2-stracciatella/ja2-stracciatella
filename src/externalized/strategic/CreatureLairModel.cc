@@ -1,6 +1,5 @@
 #include "CreatureLairModel.h"
 
-#include "Campaign_Types.h"
 #include "Creature_Spreading.h"
 #include "JsonUtility.h"
 #include "Random.h"

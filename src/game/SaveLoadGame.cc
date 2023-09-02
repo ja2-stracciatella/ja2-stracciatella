@@ -16,14 +16,12 @@
 #include "Creature_Spreading.h"
 #include "Debug.h"
 #include "Dialogue_Control.h"
-#include "Directories.h"
 #include "Enemy_Soldier_Save.h"
 #include "Environment.h"
 #include "Explosion_Control.h"
 #include "FileMan.h"
 #include "Files.h"
 #include "Finances.h"
-#include "Font.h"
 #include "Font_Control.h"
 #include "Game_Events.h"
 #include "Game_Clock.h"
@@ -44,7 +42,6 @@
 #include "Interface.h"
 #include "JAScreens.h"
 #include "Keys.h"
-#include "Laptop.h"
 #include "Lighting.h"
 #include "LightEffects.h"
 #include "Loading_Screen.h"
@@ -53,7 +50,6 @@
 #include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
 #include "LoadSaveTacticalStatusType.h"
-#include "Local.h"
 #include "Logger.h"
 #include "LaptopSave.h"
 #include "Map_Screen_Helicopter.h"
@@ -98,7 +94,6 @@
 #include "Strategic_Movement.h"
 #include "Strategic_Status.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Strategic_Pathing.h"
 #include "StrategicMap.h"
 #include "StrategicMap_Secrets.h"
 #include "Tactical_Placement_GUI.h"
@@ -121,6 +116,7 @@
 #include <regex>
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 static const ST::string g_backup_dir     = "Backup";
 static const ST::string g_quicksave_name = "QuickSave";
@@ -2471,7 +2467,7 @@ static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 	guiJA2EncryptionSet = set;
 }
 
-SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(name_) {
+SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(std::move(name_)) {
 	bool stracciatellaFormat = false;
 	auto savedGameHeader = SAVED_GAME_HEADER{};
 	file->seek(0, FileSeekMode::FILE_SEEK_FROM_START);

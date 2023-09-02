@@ -1,16 +1,15 @@
 #include <stdexcept>
 
+#include "ItemModel.h"
 #include "Physics.h"
 #include "Soldier_Find.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"
 #include "Debug.h"
-#include "Smooth.h"
 #include "WorldMan.h"
 #include "RenderWorld.h"
 #include "Overhead.h"
-#include "AI.h"
 #include "Isometric_Utils.h"
 #include "Tile_Animation.h"
 #include "Tile_Cache.h"
@@ -23,7 +22,6 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "Logger.h"
 
 static ANITILE* pAniTileHead = NULL;
 

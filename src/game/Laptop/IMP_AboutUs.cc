@@ -4,7 +4,6 @@
 #include "CharProfile.h"
 #include "IMPVideoObjects.h"
 #include "Text.h"
-#include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"
 #include "Button_System.h"

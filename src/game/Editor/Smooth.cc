@@ -2,9 +2,6 @@
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Smooth.h"
-#include "EditScreen.h"
-#include "Structure_Wrap.h"
-#include "Exit_Grids.h"
 #include "Editor_Undo.h"
 #include "Random.h"
 

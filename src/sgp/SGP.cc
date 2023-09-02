@@ -1,21 +1,16 @@
 #include "Button_System.h"
-#include "Cheats.h"
-#include "Debug.h"
-#include "FileMan.h"
 #include "FPS.h"
 #include "Font.h"
 #include "GameLoop.h"
-#include "Init.h" // XXX should not be used in SGP
+#include "GameSettings.h"
 #include "Input.h"
 #include "Intro.h"
 #include "JA2_Splash.h"
 #include "Random.h"
 #include "SGP.h"
-#include "SaveLoadGame.h" // XXX should not be used in SGP
 #include "SoundMan.h"
 #include "VObject.h"
 #include "Video.h"
-#include "VSurface.h"
 #include <SDL.h>
 #include "UILayout.h"
 #include "GameRes.h"
@@ -23,7 +18,6 @@
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
-#include "JsonUtility.h"
 #include "ModPackContentManager.h"
 #include "policy/GamePolicy.h"
 #include "RustInterface.h"

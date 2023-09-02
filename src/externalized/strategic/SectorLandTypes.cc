@@ -1,5 +1,4 @@
 #include "SectorLandTypes.h"
-#include "Campaign_Types.h"
 
 std::map<SGPSector, LandType> SectorLandTypes::deserialize(const JsonValue& json, const TraversibilityMap& travMap)
 {

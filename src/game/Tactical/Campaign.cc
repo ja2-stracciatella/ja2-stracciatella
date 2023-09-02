@@ -20,6 +20,7 @@
 #include "Overhead.h"
 #include "Meanwhile.h"
 #include "Quests.h"
+#include "SAM_Sites.h"
 #include "Soldier_Macros.h"
 #include "Squads.h"
 #include "StrategicMap.h"

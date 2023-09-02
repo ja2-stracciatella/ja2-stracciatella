@@ -1,6 +1,8 @@
 #ifndef __SMARTMETHOD_H
 #define __SMARTMETHOD_H
 
+#include "Types.h"
+
 void CalcSmartWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 void CalcSmartDoorDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 void CalcSmartWindowDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );

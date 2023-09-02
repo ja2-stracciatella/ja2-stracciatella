@@ -1,6 +1,5 @@
 #include "Directories.h"
 #include "Font.h"
-#include "Overhead_Types.h"
 #include "Types.h"
 #include "MouseSystem.h"
 #include "Button_System.h"
@@ -14,7 +13,6 @@
 #include "Action_Items.h"
 #include "Item_Types.h"
 #include "Video.h"
-#include "Weapons.h"
 #include "Items.h"
 #include "EditScreen.h"
 #include "Random.h"
@@ -30,6 +28,8 @@
 
 #include <string_theory/format>
 #include <string_theory/string>
+#include <string_view>
+#include <utility>
 
 
 GUIButtonRef giBothCheckboxButton;
@@ -129,7 +129,8 @@ ST::string GetActionItemName(const OBJECTTYPE* pItem)
 
 struct AttachmentInfo
 {
-	AttachmentInfo(UINT16 const a, const ST::string& l) : attachment(a), label(l), attached(false) {}
+	AttachmentInfo(UINT16 const a, std::string_view l) :
+		attachment(a), label(l), attached(false) {}
 
 	UINT16         const attachment;
 	const ST::string     label;

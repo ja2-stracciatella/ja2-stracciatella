@@ -1,7 +1,6 @@
 #ifndef __EDITORMERCS_H
 #define __EDITORMERCS_H
 
-#include "JA2Types.h"
 #include "Overhead_Types.h"
 #include "Scheduling.h"
 

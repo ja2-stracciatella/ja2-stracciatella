@@ -1,4 +1,5 @@
 #include "EnumCodeGen.h"
+#include "MessageBoxScreen.h"
 #include <iostream>
 
 #ifdef HAS_ENUMGEN_SUPPORT
@@ -12,7 +13,7 @@
 #include "Overhead_Types.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Control.h"
-#include "TileDef.h"
+#include "TileDat.h"
 #include "Quests.h"
 #include "Sound_Control.h"
 

@@ -1,6 +1,8 @@
 #ifndef __ROAD_SMOOTHING_H
 #define __ROAD_SMOOTHING_H
 
+#include "Types.h"
+
 //There are the 32 macro definitions that make up all of the road pieces.  These enumerations
 //match up exactly to the previous road system order of graphics (FIRSTROAD1 - FIRSTROAD32)
 enum

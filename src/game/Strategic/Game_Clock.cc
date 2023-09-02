@@ -1,5 +1,4 @@
 #include "Font.h"
-#include "Local.h"
 #include "Game_Clock.h"
 #include "Font_Control.h"
 #include "Render_Dirty.h"
@@ -8,12 +7,10 @@
 #include "Environment.h"
 #include "Message.h"
 #include "Game_Events.h"
-#include "Assignments.h"
 #include "MercTextBox.h"
 #include "RenderWorld.h"
 #include "Lighting.h"
 #include "Map_Screen_Interface.h"
-#include "PreBattle_Interface.h"
 #include "Event_Pump.h"
 #include "Text.h"
 #include "Map_Screen_Interface_Map.h"
@@ -28,8 +25,6 @@
 #include "VSurface.h"
 #include "Button_System.h"
 #include "ScreenIDs.h"
-#include "FileMan.h"
-#include "UILayout.h"
 
 #include <string_theory/format>
 #include <string_theory/string>

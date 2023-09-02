@@ -12,7 +12,6 @@
 #include "Input.h"
 #include "JA2_Splash.h"
 #include "JAScreens.h"
-#include "Local.h"
 #include "MainMenuScreen.h"
 #include "MessageBoxScreen.h"
 #include "Music_Control.h"

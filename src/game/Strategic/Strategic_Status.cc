@@ -1,6 +1,6 @@
 #include "Strategic_Status.h"
 #include "Inventory_Choosing.h"
-#include "FileMan.h"
+#include "SGPFile.h"
 #include "Soldier_Profile.h"
 #include "Campaign.h"
 #include "Strategic_Mines.h"

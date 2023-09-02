@@ -3,7 +3,6 @@
 #include "Editor_Modes.h"
 #include "Editor_Taskbar_Utils.h"
 #include "EditorDefines.h"
-#include "EditorItems.h"
 #include "EditorBuildings.h"
 #include "EditorTerrain.h"
 #include "Cursor_Modes.h"
@@ -14,7 +13,6 @@
 #include "WorldDef.h"
 #include "Exit_Grids.h"
 #include "WorldMan.h"
-#include "Debug.h"
 
 
 BOOLEAN gfShowExitGrids = FALSE;

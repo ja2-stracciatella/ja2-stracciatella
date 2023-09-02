@@ -10,6 +10,7 @@
 #include "GameInstance.h"
 #include "GamePolicy.h"
 #include "MagazineModel.h"
+#include "Weapons.h"
 #include "WeaponModels.h"
 #include <utility>
 

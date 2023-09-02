@@ -1,5 +1,4 @@
 #include "SAM_Sites.h"
-#include "Campaign_Types.h"
 #include "ContentManager.h"
 #include "Explosion_Control.h"
 #include "GameInstance.h"

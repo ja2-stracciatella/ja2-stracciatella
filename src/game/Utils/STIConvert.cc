@@ -2,7 +2,6 @@
 #include "Debug.h"
 #include "Types.h"
 #include "ImgFmt.h"
-#include "HImage.h"
 #include "STIConvert.h"
 #include "WCheck.h"
 #include "FileMan.h"

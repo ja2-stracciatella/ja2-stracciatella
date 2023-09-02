@@ -1,6 +1,7 @@
 #include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
+#include "ItemModel.h"
 #include "LoadSaveData.h"
 #include "Soldier_Profile.h"
 #include "Types.h"
@@ -34,7 +35,6 @@
 #include "Game_Clock.h"
 #include "Handle_Doors.h"
 #include "Map_Screen_Interface.h"
-#include "FileMan.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

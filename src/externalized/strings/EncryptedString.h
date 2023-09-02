@@ -1,7 +1,7 @@
 #pragma once
 
+#include "StringEncodingTypes.h"
 #include "Types.h"
-#include "game/GameRes.h"
 
 #include <string_theory/string>
 

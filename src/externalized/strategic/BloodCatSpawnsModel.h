@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Campaign_Types.h"
 #include "Json.h"
 
 /**

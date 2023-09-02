@@ -1,8 +1,6 @@
 #include "Isometric_Utils.h"
 #include "Medical.h"
-#include "TileDef.h"
 #include "Types.h"
-#include "Soldier_Functions.h"
 #include "AI.h"
 #include "AIInternals.h"
 #include "Animation_Control.h"

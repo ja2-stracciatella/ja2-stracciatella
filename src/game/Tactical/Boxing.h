@@ -1,6 +1,7 @@
 #ifndef BOXING_H
-
 #define BOXING_H
+
+#include "JA2Types.h"
 
 #define BOXING_SECTOR_X		5
 #define BOXING_SECTOR_Y		4

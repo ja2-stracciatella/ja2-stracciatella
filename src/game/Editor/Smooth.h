@@ -1,11 +1,7 @@
 #ifndef __SMOOTH_H
 #define __SMOOTH_H
 
-
-//   Area (pointer to SGP rect) +
-//      Location to check-+--|  |       |---- Check left and right edges -----|    |---- Check top and bottom edges -----|
-#define IsLocationInArea( x, y, r )		( ((x) >= r->iLeft) && ((x) <= r->iRight) && ((y) >= r->iTop) && ((y) <= r->iBottom) )
-
+#include "Types.h"
 
 void SmoothAllTerrainWorld( void );
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth  );

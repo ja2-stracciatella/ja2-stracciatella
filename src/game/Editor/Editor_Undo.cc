@@ -1,6 +1,6 @@
 #include "PODObj.h"
 #include "Structure.h"
-#include "TileDef.h"
+#include "TileDat.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Smooth.h"

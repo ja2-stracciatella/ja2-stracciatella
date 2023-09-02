@@ -3,8 +3,6 @@
 #include "Spread_Burst.h"
 #include "VObject.h"
 #include "Soldier_Control.h"
-#include "Weapons.h"
-#include "Cursor_Control.h"
 #include "Soldier_Find.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"

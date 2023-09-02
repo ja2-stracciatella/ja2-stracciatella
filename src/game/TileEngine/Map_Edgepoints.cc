@@ -1,4 +1,3 @@
-#include "Buffer.h"
 #include "Map_Edgepoints.h"
 #include "Soldier_Control.h"
 #include "PathAI.h"
@@ -7,6 +6,7 @@
 #include "Isometric_Utils.h"
 #include "Debug.h"
 #include "Random.h"
+#include "SGPFile.h"
 #include "Strategic.h"
 #include "Animation_Control.h"
 #include "Render_Fun.h"
@@ -14,9 +14,6 @@
 #include "Environment.h"
 #include "TileDef.h"
 #include "WorldMan.h"
-#include "FileMan.h"
-
-#include "Message.h"
 
 #include <vector>
 

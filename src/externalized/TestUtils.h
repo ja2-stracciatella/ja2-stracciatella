@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sgp/FileMan.h"
+#include "SGPFile.h"
 
 /** Get location of directory with extra data. */
 ST::string GetExtraDataDir();

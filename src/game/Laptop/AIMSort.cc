@@ -7,13 +7,11 @@
 #include "VObject.h"
 #include "WordWrap.h"
 #include "Soldier_Profile.h"
-#include "Game_Clock.h"
 #include "Text.h"
 #include "GameRes.h"
 #include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"
-#include "Debug.h"
 #include "Font_Control.h"
 
 

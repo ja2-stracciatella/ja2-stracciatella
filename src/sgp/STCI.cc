@@ -1,10 +1,10 @@
 #include <stdexcept>
 
 #include "Buffer.h"
-#include "FileMan.h"
 #include "ImgFmt.h"
 #include "HImage.h"
 #include "Debug.h"
+#include "SGPFile.h"
 #include "STCI.h"
 
 #include "ContentManager.h"

@@ -1,6 +1,4 @@
 #include "JsonUtility.h"
-#include "Campaign_Types.h"
-#include "Debug.h"
 #include "SGPFile.h"
 #include "FileMan.h"
 

@@ -25,7 +25,6 @@
 #include "Debug.h"
 #include "Font_Control.h"
 #include "Text.h"
-#include "Soldier_Profile_Type.h"
 
 #include <string_theory/string>
 

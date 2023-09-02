@@ -1,5 +1,6 @@
 #include "Faces.h"
 #include "Assignments.h"
+#include "Campaign_Types.h"
 #include "ContentManager.h"
 #include "Dialogue_Control.h"
 #include "Directories.h"

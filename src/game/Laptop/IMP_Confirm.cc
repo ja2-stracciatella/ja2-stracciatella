@@ -1,12 +1,9 @@
-#include "Campaign_Types.h"
 #include "CharProfile.h"
 #include "Directories.h"
 #include "Font.h"
 #include "IMPVideoObjects.h"
-#include "LoadSaveMercProfile.h"
 #include "Merc_Hiring.h"
 #include "Text.h"
-#include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Compile_Character.h"
@@ -18,7 +15,6 @@
 #include "Soldier_Profile_Type.h"
 #include "Soldier_Control.h"
 #include "IMP_Portraits.h"
-#include "Overhead.h"
 #include "History.h"
 #include "Game_Clock.h"
 #include "Game_Event_Hook.h"
@@ -28,13 +24,11 @@
 #include "Random.h"
 #include "Button_System.h"
 #include "Font_Control.h"
-#include "FileMan.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 #include "policy/IMPPolicy.h"
-#include "Logger.h"
 
 #include <string_theory/string>
 

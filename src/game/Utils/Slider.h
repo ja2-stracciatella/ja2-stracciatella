@@ -1,6 +1,7 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
+#include "Types.h"
 struct SLIDER;
 
 //defines for the different styles of sliders

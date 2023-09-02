@@ -1,7 +1,4 @@
 #include "Font.h"
-#include "Local.h"
-#include "Logger.h"
-#include "WorldDef.h"
 #include "RenderWorld.h"
 #include "VSurface.h"
 #include "Render_Dirty.h"

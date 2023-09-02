@@ -1,4 +1,5 @@
-#include "MapScreen.h"
+#include "ItemModel.h"
+#include "SaveLoadMap.h"
 #include "Strategic_Event_Handler.h"
 #include "Item_Types.h"
 #include "Items.h"
@@ -14,11 +15,6 @@
 #include "Random.h"
 #include "Overhead.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Soldier_Init_List.h"
-#include "SaveLoadMap.h"
-#include "Soldier_Create.h"
-#include "Soldier_Add.h"
-#include "OppList.h"
 #include "EMail.h"
 #include "Structure_Wrap.h"
 #include "History.h"
@@ -29,7 +25,6 @@
 #include "policy/GamePolicy.h"
 #include "strategic/NpcPlacementModel.h"
 #include "MercProfile.h"
-#include "MercProfileInfo.h"
 
 
 UINT32 guiPabloExtraDaysBribed = 0;

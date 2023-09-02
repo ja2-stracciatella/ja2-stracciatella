@@ -6,7 +6,7 @@
 TownModel::TownModel(int8_t townId_, std::vector<uint8_t> sectorIDs_, SGPPoint townPoint_, bool isMilitiaTrainingAllowed_)
 		: townId(townId_), sectorIDs(std::move(sectorIDs_)), townPoint(townPoint_), isMilitiaTrainingAllowed(isMilitiaTrainingAllowed_) {}
 
-const SGPSector TownModel::getBaseSector() const
+SGPSector TownModel::getBaseSector() const
 {
 	SGPSector min(99, 99);
 	for ( auto sectorID : sectorIDs ) {

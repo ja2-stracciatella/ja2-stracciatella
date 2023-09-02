@@ -1,6 +1,5 @@
 #include "TestUtils.h"
-
-#include "externalized/DefaultContentManager.h"
+#include "FileMan.h"
 
 
 SGPFile* OpenTestResourceForReading(const char *filePath)

@@ -1,6 +1,7 @@
 #ifndef __MESSAGEBOX_H
 #define __MESSAGEBOX_H
 
+#include "Types.h"
 #include <string_theory/string>
 
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameSettings.h"
-#include "GameInstance.h"
 #include <array>
 #include <stdint.h>
 #include <string_theory/string>

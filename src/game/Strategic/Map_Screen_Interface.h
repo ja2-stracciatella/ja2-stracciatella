@@ -9,11 +9,6 @@
 #include "UILayout.h"
 #include <string_theory/string>
 
-class SGPVObject;
-class SGPVSurface;
-struct GROUP;
-struct OBJECTTYPE;
-
 
 // char breath and life position
 #define BAR_INFO_X (STD_SCREEN_X + 66)

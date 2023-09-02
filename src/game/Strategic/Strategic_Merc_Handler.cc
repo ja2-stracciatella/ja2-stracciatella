@@ -17,7 +17,6 @@
 #include "Mercs.h"
 #include "MapScreen.h"
 #include "Weapons.h"
-#include "Personnel.h"
 #include "Strategic_Movement.h"
 #include "LaptopSave.h"
 #include "Message.h"

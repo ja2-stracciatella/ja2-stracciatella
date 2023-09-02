@@ -1,6 +1,4 @@
-#include "Types.h"
 #include "QuestText.h"
-#include "Quests.h"
 
 
 const ST::string QuestDescText[] =

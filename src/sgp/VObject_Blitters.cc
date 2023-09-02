@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include "Debug.h"
 #include "HImage.h"
-#include "Local.h"
 #include "Shading.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"

@@ -24,9 +24,6 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 	this->description = description_;
 }
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "Items.h"
 
 JsonValue MagazineModel::serialize() const
 {

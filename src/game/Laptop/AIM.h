@@ -1,6 +1,8 @@
 #ifndef __AIM_H
 #define __AIM_H
 
+#include "Types.h"
+
 #define AIMHISTORYFILE			BINARYDATADIR "/aimhist.edt"
 #define AIM_HISTORY_LINE_SIZE		400
 

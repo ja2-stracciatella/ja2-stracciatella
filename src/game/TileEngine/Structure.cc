@@ -6,7 +6,6 @@
 #include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
-#include "FileMan.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
@@ -14,12 +13,9 @@
 #include "Interface.h"
 #include "Isometric_Utils.h"
 #include "Font.h"
-#include "Font_Control.h"
 #include "Debug_Pages.h"
-#include "LOS.h"
 #include "Smell.h"
 #include "SaveLoadMap.h"
-#include "StrategicMap.h"
 #include "Sys_Globals.h" //for access to gfEditMode flag
 //Kris:
 #include "Editor_Undo.h" //for access to AddToUndoList( iMapIndex )

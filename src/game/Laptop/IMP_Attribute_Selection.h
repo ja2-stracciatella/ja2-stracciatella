@@ -1,6 +1,8 @@
 #ifndef IMP_ATTRIBUTE_SELECTION_H
 #define IMP_ATTRIBUTE_SELECTION_H
 
+#include "Types.h"
+
 void EnterIMPAttributeSelection(void);
 void RenderIMPAttributeSelection(void);
 void ExitIMPAttributeSelection(void);

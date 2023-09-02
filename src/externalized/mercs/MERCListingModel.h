@@ -1,6 +1,5 @@
 #pragma once
 
-#include "MercProfile.h"
 #include "MercSystem.h"
 #include "MERCSpeckQuote.h"
 #include "Json.h"

@@ -1,13 +1,12 @@
 #include <stdexcept>
 
 #include "HImage.h"
-#include "Structure.h"
+#include "Structure_Internals.h"
 #include "TileDef.h"
 #include "VObject.h"
 #include "WorldDef.h"
 #include "Debug.h"
 #include "WorldMan.h"
-#include "Edit_Sys.h"
 #include "PathAI.h"
 #include "Tile_Surface.h"
 #include "Logger.h"

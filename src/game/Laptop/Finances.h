@@ -1,6 +1,7 @@
 #ifndef __FINANCES_H
 #define __FINANCES_H
 
+#include "Types.h"
 #include <string_theory/string>
 
 

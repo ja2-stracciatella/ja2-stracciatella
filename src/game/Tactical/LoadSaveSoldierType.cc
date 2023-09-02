@@ -3,7 +3,6 @@
 #include "LoadSaveObjectType.h"
 #include "LoadSaveSoldierType.h"
 #include "Overhead.h"
-#include "Tactical_Save.h"
 #include "Types.h"
 
 #include <string_theory/string>

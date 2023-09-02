@@ -1,10 +1,9 @@
 #include "Debug.h"
 #include "LoadSaveSoldierCreate.h"
-#include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
-
 #include "Logger.h"
+#include "SGPFile.h"
 
 #include <string_theory/string>
 

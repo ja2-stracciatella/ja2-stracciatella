@@ -1,6 +1,6 @@
+#include "Debug.h"
 #include "Types.h"
 
-#include "Campaign_Types.h"
 
 #define MAX_SECTOR 16
 #define MAX_Z 3

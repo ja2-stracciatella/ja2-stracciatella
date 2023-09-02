@@ -4,12 +4,8 @@
 #include "Button_System.h"
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
-#include "Types.h"
+#include "JA2Types.h"
 #include <string_theory/string>
-
-struct OBJECTTYPE;
-struct PathSt;
-struct SOLDIERTYPE;
 
 
 // Sector name identifiers

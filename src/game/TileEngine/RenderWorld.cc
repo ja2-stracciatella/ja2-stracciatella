@@ -12,7 +12,6 @@
 #include "Interface.h"
 #include "Interface_Control.h"
 #include "Isometric_Utils.h"
-#include "Local.h"
 #include "Overhead.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"

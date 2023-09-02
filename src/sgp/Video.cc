@@ -12,7 +12,6 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "UILayout.h"
-#include "Font.h"
 #include "Icon.h"
 #include <algorithm>
 #include <chrono>

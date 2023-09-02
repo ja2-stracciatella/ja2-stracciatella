@@ -2,7 +2,6 @@
 
 #include "Types.h"
 #include "Debug.h"
-#include "FileMan.h"
 #include "HImage.h"
 #include "ImpTGA.h"
 #include "PCX.h"

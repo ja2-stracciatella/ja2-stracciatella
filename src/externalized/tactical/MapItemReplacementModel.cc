@@ -1,4 +1,5 @@
 #include "MapItemReplacementModel.h"
+#include "ItemModel.h"
 
 static const ItemModel* GetItemFromValue(const JsonValue& val, const ItemSystem* items)
 {

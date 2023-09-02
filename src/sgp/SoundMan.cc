@@ -6,9 +6,7 @@
 * Derek Beland, May 28, 1997
 *********************************************************************************/
 
-#include "Buffer.h"
 #include "Debug.h"
-#include "FileMan.h"
 #include "Random.h"
 #include "SoundMan.h"
 #include "Timer.h"

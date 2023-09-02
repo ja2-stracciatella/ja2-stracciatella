@@ -3,7 +3,7 @@
 
 #include "JA2Types.h"
 #include "WorldDef.h"
-#include "Logger.h"
+
 
 extern INT8	gubAIPathCosts[19][19];
 #define AI_PATHCOST_RADIUS 9

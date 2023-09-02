@@ -3,7 +3,6 @@
 
 #include "JA2Types.h"
 #include "Observable.h"
-#include "Overhead_Types.h"
 #include "Item_Types.h"
 #include "Soldier_Control.h"
 

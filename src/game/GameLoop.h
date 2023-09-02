@@ -3,7 +3,6 @@
 
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
-#include "Types.h"
 
 
 void InitializeGame(void);

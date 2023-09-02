@@ -1,6 +1,8 @@
 #ifndef __EDITORBUILDINGS_H
 #define __EDITORBUILDINGS_H
 
+#include "Types.h"
+
 extern BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 extern UINT8 gubCurrRoomNumber;
 extern UINT8 gubMaxRoomNumber;

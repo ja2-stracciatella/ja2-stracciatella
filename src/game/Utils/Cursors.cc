@@ -6,7 +6,6 @@
 #include "Font_Control.h"
 #include "Handle_UI.h"
 #include "Interface.h"
-#include "Overhead.h"
 #include "Cursor_Control.h"
 #include "Sound_Control.h"
 #include "Video.h"

@@ -1,7 +1,6 @@
 #ifndef _SHOPKEEPER_INTERFACE__H_
 #define _SHOPKEEPER_INTERFACE__H_
 
-#include "Arms_Dealer.h"
 #include "Item_Types.h"
 #include "JA2Types.h"
 #include "MessageBoxScreen.h"

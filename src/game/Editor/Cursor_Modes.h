@@ -2,6 +2,7 @@
 #define __CURSOR_MODES_H
 
 #include <string_theory/string>
+#include "Types.h"
 
 
 enum

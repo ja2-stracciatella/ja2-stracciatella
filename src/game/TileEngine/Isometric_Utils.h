@@ -5,7 +5,6 @@
 #include "Overhead_Types.h"
 #include "Types.h"
 #include "WorldDef.h"
-struct SOLDIERTYPE;
 
 
 #define MAXCOL					WORLD_COLS

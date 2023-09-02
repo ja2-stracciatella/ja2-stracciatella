@@ -1,6 +1,5 @@
 #pragma once
 
-#include "JA2Types.h"
 #include "Json.h"
 
 #include <array>

@@ -1,6 +1,7 @@
 #ifndef __MERCS_H
 #define __MERCS_H
 
+#include "JA2Types.h"
 #include <string_theory/string>
 
 class  MERCListingModel;

@@ -1,5 +1,4 @@
 #include "Cursors.h"
-#include "Font_Control.h"
 #include "TileDat.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
@@ -9,7 +8,6 @@
 #include "Animation_Control.h"
 #include "Points.h"
 #include "Overhead.h"
-#include "Structure_Wrap.h"
 #include "Tile_Animation.h"
 #include "Interactive_Tiles.h"
 #include "Handle_Doors.h"

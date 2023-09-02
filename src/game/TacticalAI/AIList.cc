@@ -17,6 +17,7 @@
 #include "AI.h"
 #include "OppList.h"
 #include "Interface.h"
+#include "Random.h"
 
 #include <algorithm>
 #include <iterator>
