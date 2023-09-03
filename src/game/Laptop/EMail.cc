@@ -279,6 +279,9 @@ void GameInitEmail()
 	pEmailList=NULL;
 	pPageList=NULL;
 
+	CurrentMail = NULL;
+	PreviousMail = NULL;
+
 	iLastPage=-1;
 
 	iCurrentPage=0;
