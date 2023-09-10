@@ -5035,16 +5035,19 @@ void LoadPaletteData()
 void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, const ST::string& aPalRep)
 {
 	UINT32 cnt2;
-	UINT8  ubType;
 
-	const UINT8 ubPalIndex = GetPaletteRepIndexFromID(aPalRep);
+	auto const ubPalIndex = GetPaletteRepIndexFromID(aPalRep);
+	if (!ubPalIndex)
+	{
+		return;
+	}
 
 	// Get range type
-	ubType = gpPalRep[ ubPalIndex ].ubType;
+	auto const ubType = gpPalRep[*ubPalIndex].ubType;
 
 	for ( cnt2 = gpPaletteSubRanges[ ubType ].ubStart; cnt2 <= gpPaletteSubRanges[ ubType ].ubEnd; cnt2++ )
 	{
-		p8BPPPalette[cnt2] = gpPalRep[ubPalIndex].rgb[cnt2 - gpPaletteSubRanges[ubType].ubStart];
+		p8BPPPalette[cnt2] = gpPalRep[*ubPalIndex].rgb[cnt2 - gpPaletteSubRanges[ubType].ubStart];
 	}
 }
 
@@ -5081,7 +5084,7 @@ void DeletePaletteData()
 }
 
 
-UINT8 GetPaletteRepIndexFromID(const ST::string& pal_rep)
+std::optional<UINT8> GetPaletteRepIndexFromID(const ST::string& pal_rep)
 {
 	// Check if type exists
 	for (UINT32 i = 0; i < guiNumReplacements; ++i)
@@ -5089,7 +5092,7 @@ UINT8 GetPaletteRepIndexFromID(const ST::string& pal_rep)
 		if (pal_rep.compare(gpPalRep[i].ID) == 0) return i;
 	}
 
-	throw std::logic_error("Invalid Palette Replacement ID given");
+	return {};
 }
 
 

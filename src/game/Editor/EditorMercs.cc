@@ -220,6 +220,7 @@ static SoldierBodyType const bRebelArray[]    = { BODY_RANDOM, FATCIV, MANCIV, R
 static SoldierBodyType const bCivArray[]      = { BODY_RANDOM, FATCIV, MANCIV, MINICIV, DRESSCIV, HATKIDCIV, KIDCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE, HUMVEE, ELDORADO, ICECREAMTRUCK, JEEP, CRIPPLECIV, ROBOTNOWEAPON, COW };
 static SoldierBodyType gbCurrCreature = BLOODCAT;
 
+constexpr UINT8 NO_PAL_REP = 0xff;
 
 void GameInitEditorMercsInfo()
 {
@@ -304,7 +305,13 @@ void ProcessMercEditing(void)
 			return;
 	}
 
-	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(*soldier_pal);
+	auto const paletteRep = GetPaletteRepIndexFromID(*soldier_pal);
+	if (!paletteRep)
+	{
+		return;
+	}
+	auto ubPaletteRep = *paletteRep;
+
 	const INT32 start = iEditColorStart[ubType];
 	const UINT8 range = gubpNumReplacementsPerRange[ubType];
 	if (iEditWhichStat & 1)
@@ -647,7 +654,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if (pSoldier->HeadPal.empty())
 			ubPaletteRep = 0xff;
 		else
-			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->HeadPal);
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->HeadPal).value_or(NO_PAL_REP);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 0 );
 
@@ -656,7 +663,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if (pSoldier->SkinPal.empty())
 			ubPaletteRep = 0xff;
 		else
-			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->SkinPal);
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->SkinPal).value_or(NO_PAL_REP);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 1 );
 
@@ -665,7 +672,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if (pSoldier->VestPal.empty())
 			ubPaletteRep = 0xff;
 		else
-			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->VestPal);
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->VestPal).value_or(NO_PAL_REP);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 2 );
 
@@ -674,7 +681,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if (pSoldier->PantsPal.empty())
 			ubPaletteRep = 0xff;
 		else
-			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->PantsPal);
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->PantsPal).value_or(NO_PAL_REP);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 3 );
 }
@@ -689,7 +696,7 @@ static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 	INT16 sUnitSize;
 	INT16  sLeft, sTop, sRight, sBottom;
 
-	if( ubPaletteRep == 0xff )
+	if (ubPaletteRep == NO_PAL_REP)
 		ubSize = 16;
 	else
 		ubSize = gpPalRep[ ubPaletteRep ].ubPaletteSize;

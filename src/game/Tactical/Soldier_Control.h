@@ -14,6 +14,7 @@
 #include "Timer_Control.h"
 
 #include <string_theory/string>
+#include <optional>
 
 
 // ANDREW: these are defines for OKDestanation usage - please move to approprite file
@@ -934,7 +935,7 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 // Palette functions for soldiers
 void  CreateSoldierPalettes(SOLDIERTYPE&);
-UINT8 GetPaletteRepIndexFromID(const ST::string& pal_rep);
+std::optional<UINT8> GetPaletteRepIndexFromID(const ST::string& pal_rep);
 void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, const ST::string& aPalRep);
 void  LoadPaletteData(void);
 void  DeletePaletteData(void);

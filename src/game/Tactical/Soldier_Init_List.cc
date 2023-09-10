@@ -1419,14 +1419,14 @@ void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumI
 }
 
 
-SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
+SOLDIERINITNODE* FindSoldierInitNodeWithID(SoldierID const soldierID)
 {
 	FOR_EACH_SOLDIERINITNODE(curr)
 	{
-		if( curr->pSoldier->ubID == usID )
+		if (curr->pSoldier && curr->pSoldier->ubID == soldierID)
 			return curr;
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -1436,7 +1436,7 @@ SOLDIERINITNODE* FindSoldierInitNodeBySoldier(SOLDIERTYPE const& s)
 	{
 		if (i->pSoldier == &s) return i;
 	}
-	return 0;
+	return nullptr;
 }
 
 
