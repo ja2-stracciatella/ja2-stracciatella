@@ -232,7 +232,7 @@ struct TILE_SURFACE_RESOURCE
 };
 
 // World Data
-extern MAP_ELEMENT* gpWorldLevelData;
+inline MAP_ELEMENT gpWorldLevelData[WORLD_MAX];
 
 #define FOR_EACH_WORLD_TILE(iter) \
 	for (MAP_ELEMENT* iter = gpWorldLevelData, * const iter##__end = gpWorldLevelData + WORLD_MAX; iter != iter##__end; ++iter)
