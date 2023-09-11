@@ -43,15 +43,18 @@ void DisplayPaletteRep(const ST::string& aPalRep, UINT8 ubXPos, UINT8 ubYPos, SG
 {
 	UINT16 us16BPPColor;
 	UINT32 cnt1;
-	UINT8  ubSize;
 	INT16  sTLX, sTLY, sBRX, sBRY;
 
 	// Create 16BPP Palette
-	const UINT8 ubPaletteRep = GetPaletteRepIndexFromID(aPalRep);
+	auto const ubPaletteRep = GetPaletteRepIndexFromID(aPalRep);
+	if (!ubPaletteRep)
+	{
+		return;
+	}
 
 	SetFont( LARGEFONT1 );
 
-	ubSize = gpPalRep[ ubPaletteRep ].ubPaletteSize;
+	auto const ubSize = gpPalRep[*ubPaletteRep].ubPaletteSize;
 
 	for ( cnt1 = 0; cnt1 < ubSize; cnt1++ )
 	{
@@ -60,11 +63,11 @@ void DisplayPaletteRep(const ST::string& aPalRep, UINT8 ubXPos, UINT8 ubYPos, SG
 		sBRX = sTLX + 20;
 		sBRY = sTLY + 20;
 
-		const SGPPaletteEntry* Clr = &gpPalRep[ubPaletteRep].rgb[cnt1];
+		auto const * const Clr = &gpPalRep[*ubPaletteRep].rgb[cnt1];
 		us16BPPColor = Get16BPPColor(FROMRGB(Clr->r, Clr->g, Clr->b));
 
 		ColorFillVideoSurfaceArea(dst, sTLX, sTLY, sBRX, sBRY, us16BPPColor);
 	}
 
-	GPrint(ubXPos + 16 * 20, ubYPos, ST::format("{}", gpPalRep[ubPaletteRep].ID));
+	GPrint(ubXPos + 16 * 20, ubYPos, gpPalRep[*ubPaletteRep].ID);
 }

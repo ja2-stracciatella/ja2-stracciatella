@@ -242,7 +242,13 @@ static void PalEditRenderHook(void)
 
 static void CyclePaletteReplacement(SOLDIERTYPE& s, ST::string& pal)
 {
-	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(pal);
+	auto const paletteRep = GetPaletteRepIndexFromID(pal);
+	if (!paletteRep)
+	{
+		return;
+	}
+
+	auto ubPaletteRep = *paletteRep;
 	const UINT8 ubType = gpPalRep[ubPaletteRep].ubType;
 
 	ubPaletteRep++;
