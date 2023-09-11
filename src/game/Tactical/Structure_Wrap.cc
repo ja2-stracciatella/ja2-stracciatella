@@ -1,14 +1,12 @@
-#include "Explosion_Control.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Structure_Wrap.h"
 #include "Isometric_Utils.h"
-#include "Overhead.h"
 #include "RenderWorld.h"
-#include "StrategicMap.h"
 #include "Rotting_Corpses.h"
+#include "Soldier_Control.h"
 
 
 BOOLEAN	IsRoofPresentAtGridno( INT16 sGridNo )

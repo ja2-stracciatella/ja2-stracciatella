@@ -6,7 +6,6 @@
 #include "SmartMethod.h"
 #include "Smoothing_Utils.h"
 #include "Editor_Undo.h"
-#include "EditorDefines.h"
 #include "Edit_Sys.h"
 #include "Environment.h"
 

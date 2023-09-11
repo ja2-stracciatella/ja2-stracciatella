@@ -1,7 +1,8 @@
-#include "Types.h"
-#include "Overhead.h"
-#include "Random.h"
-#include "Points.h"
+#ifndef TACTICALAI_AIINTERNALS_H
+#define TACTICALAI_AIINTERNALS_H
+
+#include "JA2Types.h"
+#include "Overhead_Types.h"
 
 
 extern BOOLEAN gfTurnBasedAI;
@@ -181,3 +182,5 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel );
 INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier );
 
 BOOLEAN ArmySeesOpponents( void );
+
+#endif

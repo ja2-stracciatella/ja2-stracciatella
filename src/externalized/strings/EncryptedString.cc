@@ -1,5 +1,5 @@
 #include "EncryptedString.h"
-
+#include "GameRes.h"
 #include "SGPFile.h"
 
 

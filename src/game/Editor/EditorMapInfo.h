@@ -1,7 +1,7 @@
 #ifndef __EDITORMAPINFO_H
 #define __EDITORMAPINFO_H
 
-
+#include "Types.h"
 
 void SetupTextInputForMapInfo(void);
 void UpdateMapInfo(void);

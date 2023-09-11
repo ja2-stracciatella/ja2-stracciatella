@@ -1,6 +1,5 @@
 #include "Meanwhile.h"
 
-#include "Assignments.h"
 #include "Campaign_Types.h"
 #include "ContentManager.h"
 #include "ContentMusic.h"

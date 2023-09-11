@@ -1,6 +1,8 @@
 #ifndef __DRUGS_AND_ALCOHOL_H
 #define __DRUGS_AND_ALCOHOL_H
 
+#include "JA2Types.h"
+
 
 #define DRUG_TYPE_ADRENALINE		0
 #define DRUG_TYPE_ALCOHOL		1

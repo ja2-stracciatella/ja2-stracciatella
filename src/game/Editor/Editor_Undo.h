@@ -1,6 +1,8 @@
 #ifndef __EDITOR_UNDO_H
 #define __EDITOR_UNDO_H
 
+#include "Types.h"
+
 BOOLEAN AddToUndoList( INT32 iMapIndex );
 void AddLightToUndoList(INT32 iMapIndex, INT32 iLightRadius);
 

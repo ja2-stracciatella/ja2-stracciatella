@@ -6,12 +6,10 @@
 // Author          :       Chris Camfield
 // Date            :       1997-NOV
 
-#include "Font_Control.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"
 #include "Soldier_Control.h"
-#include "Animation_Cache.h"
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Interface.h"
@@ -25,8 +23,6 @@
 #include "Points.h"
 #include "AI.h"
 #include "Random.h"
-#include "Message.h"
-#include "Structure_Wrap.h"
 #include "Keys.h"
 #include "GameSettings.h"
 #include "Buildings.h"

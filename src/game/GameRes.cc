@@ -1,8 +1,6 @@
 #include "GameRes.h"
 #include "Directories.h"
 #include "EncodingCorrectors.h"
-#include "GameMode.h"
-#include "Logger.h"
 #include "VObject.h"
 #include <locale.h>
 #include <stdexcept>

@@ -1,6 +1,7 @@
 #ifndef __VOBJECT_BLITTERS
 #define __VOBJECT_BLITTERS
 
+#include "Types.h"
 
 inline SGPRect		ClippingRect;
 extern UINT32			guiTranslucentMask;

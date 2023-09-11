@@ -4,6 +4,7 @@
 #include "Drugs_And_Alcohol.h"
 #include "GameInstance.h"
 #include "ContentManager.h"
+#include "ItemModel.h"
 #include "Items.h"
 #include "Morale.h"
 #include "Points.h"

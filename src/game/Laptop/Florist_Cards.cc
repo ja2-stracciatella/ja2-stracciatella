@@ -5,7 +5,6 @@
 #include "VObject.h"
 #include "WordWrap.h"
 #include "Cursors.h"
-#include "Florist_Gallery.h"
 #include "Text.h"
 #include "Button_System.h"
 #include "Video.h"

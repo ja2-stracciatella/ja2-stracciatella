@@ -1,6 +1,7 @@
 #ifndef _AUTO_BANDAGE_H
 #define _AUTO_BANDAGE_H
 
+#include "Types.h"
 //#define VISIBLE_AUTO_BANDAGE
 
 void AutoBandage( BOOLEAN fStart );

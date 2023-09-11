@@ -7,7 +7,6 @@
 #include "math.h"
 #include "WorldMan.h"
 #include "Structure_Wrap.h"
-#include "Sys_Globals.h"
 #include "Overhead.h"
 #include "Random.h"
 #include "PathAI.h"

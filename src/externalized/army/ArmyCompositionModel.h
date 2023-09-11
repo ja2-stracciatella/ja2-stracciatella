@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Campaign_Types.h"
 #include "Strategic_AI.h"
 #include "Json.h"
 

@@ -1,9 +1,7 @@
 #ifndef _GAME_SETTINGS__H_
 #define _GAME_SETTINGS__H_
 
-#include "VanillaDataStructures.h"
-#include "MessageBoxScreen.h"
-
+#include "Types.h"
 #include <string_theory/string>
 
 

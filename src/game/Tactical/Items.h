@@ -5,7 +5,6 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
-#include "Weapons.h"
 
 struct CalibreModel;
 struct ItemModel;

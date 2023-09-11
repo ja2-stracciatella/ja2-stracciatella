@@ -1,5 +1,4 @@
 #include "PatrolGroupModel.h"
-#include "Campaign_Types.h"
 #include "JsonUtility.h"
 
 static void ReadPatrolPoints(const JsonValue& root, uint8_t (&points)[4])

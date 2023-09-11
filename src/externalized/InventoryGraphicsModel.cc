@@ -1,7 +1,9 @@
 #include "InventoryGraphicsModel.h"
+#include <utility>
 
-InventoryGraphicsModel::InventoryGraphicsModel(GraphicModel small_, GraphicModel big_) : small(small_), big(big_) {
-}
+InventoryGraphicsModel::InventoryGraphicsModel(GraphicModel small_,
+                                               GraphicModel big_)
+    : small(std::move(small_)), big(std::move(big_)) {}
 
 InventoryGraphicsModel InventoryGraphicsModel::deserialize(const JsonValue& json) {
 	auto obj = json.toObject();

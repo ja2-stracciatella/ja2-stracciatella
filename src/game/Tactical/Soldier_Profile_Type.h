@@ -1,9 +1,7 @@
 #ifndef __SOLDER_PROFILE_TYPE_H
 #define __SOLDER_PROFILE_TYPE_H
 
-#include "Overhead_Types.h"
 #include "Types.h"
-
 #include <string_theory/string>
 
 

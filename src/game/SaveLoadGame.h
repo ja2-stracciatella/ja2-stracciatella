@@ -2,6 +2,7 @@
 #define _SAVE_LOAD_GAME_H_
 
 #include "GameSettings.h"
+#include "JA2Types.h"
 #include "ScreenIDs.h"
 
 #include <string_theory/string>

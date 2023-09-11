@@ -8,10 +8,6 @@
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Soldier_Control.h"
-#include "Sys_Globals.h"
-#include "WorldDef.h"
-#include "FileMan.h"
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"

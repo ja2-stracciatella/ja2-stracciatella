@@ -1,6 +1,7 @@
 #ifndef _IMP_PERSOANLITY_QUIZ_H
 #define _IMP_PERSOANLITY_QUIZ_H
 
+#include "Types.h"
 
 void EnterIMPPersonalityQuiz( void );
 void RenderIMPPersonalityQuiz( void );

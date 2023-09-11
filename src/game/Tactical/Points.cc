@@ -10,8 +10,6 @@
 #include "PathAI.h"
 #include "Message.h"
 #include "Animation_Control.h"
-#include "Weapons.h"
-#include "Structure_Wrap.h"
 #include "Dialogue_Control.h"
 #include "Items.h"
 #include "RT_Time_Defines.h"

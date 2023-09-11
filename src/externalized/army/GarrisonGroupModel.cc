@@ -1,5 +1,4 @@
 #include "GarrisonGroupModel.h"
-#include "Campaign_Types.h"
 #include "JsonUtility.h"
 
 GARRISON_GROUP GarrisonGroupModel::deserialize(const JsonValue& json, const std::map<ST::string, uint8_t>& armyCompMapping)

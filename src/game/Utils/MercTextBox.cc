@@ -8,7 +8,6 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 #include "WordWrap.h"
-#include "Render_Dirty.h"
 #include "Video.h"
 #include "UILayout.h"
 

@@ -8,7 +8,6 @@
 #include "VSurface.h"
 #include "WorldDat.h"
 #include "Random.h"
-#include "SysUtil.h"
 #include "Font_Control.h"
 #include "SelectWin.h"
 #include "EditorDefines.h"

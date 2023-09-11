@@ -10,7 +10,6 @@
 #include "Arms_Dealer_Init.h"
 #include "Campaign_Types.h"
 #include "ContentManager.h"
-#include "FileMan.h"
 #include "FunctionsLibrary.h"
 #include "Game_Events.h"
 #include "GameInstance.h"
@@ -18,10 +17,10 @@
 #include "Logger.h"
 #include "Overhead.h"
 #include "Quests.h"
-#include "Soldier_Profile.h"
+#include "SAM_Sites.h"
 #include "Soldier_Profile_Type.h"
 #include "StrategicMap.h"
-#include "Structure.h"
+#include "Structure_Internals.h"
 #include <stdexcept>
 #include <string>
 #include <string_theory/format>

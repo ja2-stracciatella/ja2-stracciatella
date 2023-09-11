@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GameRes.h"
 #include "externalized/DefaultContentManager.h"
 
 struct EngineOptions;

@@ -1,6 +1,7 @@
 #ifndef _OPPLIST_H
 #define _OPPLIST_H
 
+#include "JA2Types.h"
 #include "Overhead_Types.h"
 
 

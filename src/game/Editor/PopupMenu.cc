@@ -9,11 +9,9 @@
 //currently disabled.
 
 #include "Button_System.h"
+#include "Font.h"
 #include "HImage.h"
 #include "Input.h"
-#include "Local.h"
-#include "SysUtil.h"
-#include "Font.h"
 #include "Font_Control.h"
 #include "Line.h"
 #include "VObject.h"
@@ -26,7 +24,6 @@
 #include "Overhead_Types.h"
 #include "EditorMercs.h"
 #include "Scheduling.h"
-#include "English.h"
 #include "Item_Statistics.h"
 #include "Video.h"
 #include "VSurface.h"

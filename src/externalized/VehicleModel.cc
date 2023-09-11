@@ -3,11 +3,13 @@
 #include "ItemModel.h"
 #include "ItemSystem.h"
 #include "Vehicles.h"
+#include <utility>
+
 
 VehicleModel::VehicleModel(ST::string enterSound, ST::string movementSound,
                            ProfileID profile, VehicleMovementType movementType,
                            uint16_t armourType, uint8_t seats_)
-    : enter_sound(enterSound), move_sound(movementSound), profile(profile),
+    : enter_sound(std::move(enterSound)), move_sound(std::move(movementSound)), profile(profile),
       movement_type(movementType), armour_type(armourType), seats(seats_) {}
 
 static VehicleMovementType toMovementType(const ST::string& typeName)

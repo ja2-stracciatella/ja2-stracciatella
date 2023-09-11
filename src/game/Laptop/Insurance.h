@@ -1,6 +1,7 @@
 #ifndef __INSURANCE_H
 #define __INSURANCE_H
 
+#include "Types.h"
 #include <string_theory/string>
 
 

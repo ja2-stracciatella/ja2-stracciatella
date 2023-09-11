@@ -1,6 +1,7 @@
 #ifndef __MESSAGE_H
 #define __MESSAGE_H
 
+#include "Font_Control.h"
 #include "Types.h"
 
 #include <string_theory/string>

@@ -3,7 +3,6 @@
 #include "Campaign_Types.h"
 #include "JA2Types.h"
 #include "Json.h"
-#include "Sound_Control.h"
 #include "MercSystem.h"
 
 #include <vector>

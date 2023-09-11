@@ -12,7 +12,6 @@
 #include "Finances.h"
 #include "Game_Clock.h"
 #include "Soldier_Add.h"
-#include "Overhead.h"
 #include "History.h"
 #include "LaptopSave.h"
 #include "Text.h"

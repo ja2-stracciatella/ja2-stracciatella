@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ContentManager.h"
-#include "JA2Types.h"
 #include "Json.h"
 
+#include <utility>
 #include <vector>
 
 
@@ -11,7 +11,7 @@
 struct LoadingScreen
 {
 	LoadingScreen(uint8_t index_, ST::string internalName_, ST::string filename_)
-		: index(index_), internalName(internalName_), filename(filename_) {}
+		: index(index_), internalName(std::move(internalName_)), filename(std::move(filename_)) {}
 
 	uint8_t index;
 	ST::string internalName;

@@ -4,7 +4,6 @@
 #include "Buildings.h"
 #include "Isometric_Utils.h"
 #include "PathAI.h"
-#include "AI.h"
 #include "Structure_Wrap.h"
 #include "Random.h"
 #include "Overhead.h"

@@ -1,6 +1,5 @@
 #include <stdarg.h>
 #include "HImage.h"
-#include "Local.h"
 #include "Types.h"
 #include "Font.h"
 #include "Debug.h"
@@ -8,7 +7,6 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "UILayout.h"
-#include "GameRes.h"
 #include "GameInstance.h"
 #include "ContentManager.h"
 #include "Logger.h"

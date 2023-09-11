@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Json.h"
+
 class IGameDataLoader
 {
 public:

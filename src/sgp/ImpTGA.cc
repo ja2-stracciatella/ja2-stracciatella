@@ -3,8 +3,8 @@
 #include "Buffer.h"
 #include "HImage.h"
 #include "LoadSaveData.h"
+#include "SGPFile.h"
 #include "Types.h"
-#include "FileMan.h"
 #include "ImpTGA.h"
 #include "Debug.h"
 

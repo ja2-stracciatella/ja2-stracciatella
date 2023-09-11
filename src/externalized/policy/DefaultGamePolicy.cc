@@ -1,6 +1,5 @@
 #include "DefaultGamePolicy.h"
-#include "Campaign_Types.h"
-
+#include "Types.h"
 
 DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 {

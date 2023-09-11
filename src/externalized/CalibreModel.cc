@@ -15,10 +15,10 @@ CalibreModel::CalibreModel(uint16_t index_,
 				bool showInHelpText_,
 				bool monsterWeapon_)
 	:index(index_), internalName(std::move(internalName_)),
-	sound(sound_),
-	burstSound(burstSound_),
-	silencedSound(silencedSound_),
-	silencedBurstSound(silencedBurstSound_),
+	sound(std::move(sound_)),
+	burstSound(std::move(burstSound_)),
+	silencedSound(std::move(silencedSound_)),
+	silencedBurstSound(std::move(silencedBurstSound_)),
 	showInHelpText(showInHelpText_),
 	monsterWeapon(monsterWeapon_)
 {

@@ -1,6 +1,8 @@
 #ifndef __SOLDIER_ANI_H
 #define __SOLDIER_ANI_H
 
+#include "JA2Types.h"
+
 BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier );
 
 void CheckForAndHandleSoldierDeath(SOLDIERTYPE* pSoldier, BOOLEAN* pfMadeCorpse);

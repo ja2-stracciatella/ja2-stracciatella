@@ -1,10 +1,10 @@
 #include "WeaponModels.h"
 #include "CalibreModel.h"
-#include "Items.h"
 #include "Logger.h"
 #include "MagazineModel.h"
 #include "Points.h"
 #include "Sound_Control.h"
+#include "Weapons.h"
 #include <utility>
 
 // exact gun types

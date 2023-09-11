@@ -6,7 +6,6 @@
 #include "Overhead.h"
 #include "Soldier_Profile.h"
 #include "Dialogue_Control.h"
-#include "Personnel.h"
 #include "Tactical_Save.h"
 #include "Isometric_Utils.h"
 #include "Vehicles.h"

@@ -1,6 +1,8 @@
 #ifndef STRUCURE_WRAP_H
 #define STRUCURE_WRAP_H
 
+#include "JA2Types.h"
+
 
 BOOLEAN	IsJumpableWindowPresentAtGridNo( INT32 sGridNo, INT8 direction2);
 BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo );

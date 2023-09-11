@@ -34,6 +34,7 @@
 #include "SkillCheck.h"
 #include "Soldier_Macros.h"
 #include "Strategic.h"
+#include "StrategicMap.h"
 #include "Strategic_AI.h"
 #include "Strategic_Merc_Handler.h"
 #include "Strategic_Status.h"
@@ -50,6 +51,7 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "WeaponModels.h"
+#include "Weapons.h"
 #include "WordWrap.h"
 #include <stdexcept>
 #include <string_theory/format>

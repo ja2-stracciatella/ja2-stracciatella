@@ -1,7 +1,5 @@
 #pragma once
 
-/* XXX */
-#include "ItemModel.h"
 #include "ContentMusic.h"
 
 #include "Facts.h"

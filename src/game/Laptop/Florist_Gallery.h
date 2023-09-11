@@ -1,6 +1,7 @@
 #ifndef __FLORIST_GALLERY_H
 #define __FLORIST_GALLERY_H
 
+#include "Types.h"
 
 #define FLOR_GALLERY_TEXT_FILE       BINARYDATADIR "/flowerdesc.edt"
 #define FLOR_GALLERY_TEXT_TITLE_SIZE 80

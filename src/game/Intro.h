@@ -1,6 +1,7 @@
 #ifndef _INTRO__C_
 #define _INTRO__C_
 
+#include "Types.h"
 #include "ScreenIDs.h"
 
 

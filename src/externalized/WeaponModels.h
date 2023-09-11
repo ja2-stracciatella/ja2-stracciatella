@@ -1,10 +1,8 @@
 #pragma once
 
-// XXX
-#include "game/Tactical/Weapons.h"
-
 #include "ItemModel.h"
 #include "ItemStrings.h"
+#include "Sound_Control.h"
 
 #include <string_theory/string>
 

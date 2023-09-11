@@ -1,8 +1,8 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveBullet.h"
 #include "LoadSaveData.h"
 #include "Overhead.h"
+#include "SGPFile.h"
 
 
 void ExtractBulletFromFile(HWFILE const file, BULLET* const b)

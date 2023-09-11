@@ -1,5 +1,4 @@
 #include "Font.h"
-#include "Local.h"
 #include "PopUpBox.h"
 #include "SysUtil.h"
 #include "Debug.h"

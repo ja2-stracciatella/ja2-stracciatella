@@ -1,6 +1,5 @@
 #include "Debug.h"
 #include "HImage.h"
-#include "FileMan.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"

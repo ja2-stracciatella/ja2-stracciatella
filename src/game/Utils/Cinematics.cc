@@ -19,7 +19,6 @@ extern "C" {
 #include "externalized/GameInstance.h"
 #include "game/Utils/Cinematics.h"
 #include "sgp/Debug.h"
-#include "sgp/FileMan.h"
 #include "sgp/HImage.h"
 #include "sgp/VObject.h"
 #include "sgp/VSurface.h"

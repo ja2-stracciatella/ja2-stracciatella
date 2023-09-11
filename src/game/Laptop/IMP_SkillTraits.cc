@@ -4,6 +4,7 @@
 #include "Button_System.h"
 #include "CharProfile.h"
 #include "Cursors.h"
+#include "Debug.h"
 #include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"

@@ -1,9 +1,7 @@
 #include "ModPackContentManager.h"
 
 #include "JsonUtility.h"
-#include "sgp/FileMan.h"
 
-#include "Debug.h"
 #include "Logger.h"
 #include <utility>
 

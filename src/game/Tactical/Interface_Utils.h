@@ -1,10 +1,7 @@
 #ifndef __INTERFACE_UTILS_H
 #define __INTERFACE_UTILS_H
 
-#include "Types.h"
-class SGPVSurface;
-struct OBJECTTYPE;
-struct SOLDIERTYPE;
+#include "JA2Types.h"
 
 
 #define DRAW_ITEM_STATUS_ATTACHMENT1	200

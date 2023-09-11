@@ -1,11 +1,10 @@
 #include "LoadingScreenModel.h"
 
-#include "Campaign_Types.h"
-#include "Directories.h"
 #include "Loading_Screen.h"
 
 #include <map>
 #include <stdexcept>
+#include <utility>
 
 const std::vector<LoadingScreen> PREDEFINED_SCREENS = {
 	LoadingScreen(LOADINGSCREEN_NOTHING,     "NOTHING",     "/ls_heli.sti"),
@@ -41,7 +40,7 @@ const std::vector<LoadingScreen> PREDEFINED_SCREENS = {
 };
 
 LoadingScreenModel::LoadingScreenModel(std::vector<LoadingScreen> screensList_, std::vector<LoadingScreenMapping> screensMapping_)
-	: screensList(screensList_), screensMapping(screensMapping_) {}
+	: screensList(std::move(screensList_)), screensMapping(std::move(screensMapping_)) {}
 
 const LoadingScreen* LoadingScreenModel::getScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
 {

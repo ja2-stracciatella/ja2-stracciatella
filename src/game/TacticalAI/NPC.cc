@@ -8,7 +8,6 @@
 #include "Dialogue_Control.h"
 #include "Directories.h"
 #include "Faces.h"
-#include "FileMan.h"
 #include "Font_Control.h"
 #include "Game_Clock.h"
 #include "GameInstance.h"
@@ -31,11 +30,13 @@
 #include "Soldier_Add.h"
 #include "Soldier_Macros.h"
 #include "Soldier_Tile.h"
+#include "StrategicMap.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Tactical_Save.h"
 #include "Text.h"
 #include "Timer_Control.h"
 #include "WeaponModels.h"
+#include "Weapons.h"
 #include <memory>
 #include <string_theory/format>
 #include <string_theory/string>

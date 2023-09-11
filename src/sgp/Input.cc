@@ -3,7 +3,6 @@
 #include "English.h"
 #include "Timer.h"
 #include "Video.h"
-#include "Local.h"
 #include "UILayout.h"
 
 #include <string_theory/string>

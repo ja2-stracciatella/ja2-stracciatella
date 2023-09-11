@@ -1,10 +1,8 @@
 #ifndef __QUESTS_H
 #define __QUESTS_H
 
-#include "Campaign_Types.h"
 #include "Facts.h"
-#include "StrategicMap.h"
-
+#include "Types.h"
 
 //  Quest.ubStatus values
 #define QUESTNOTSTARTED		0

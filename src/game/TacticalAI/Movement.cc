@@ -3,15 +3,14 @@
 #include "Animation_Control.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"
+#include "Random.h"
 #include "WorldMan.h"
 #include "PathAI.h"
 #include "Points.h"
 #include "Smell.h"
-#include "Strategic_Pathing.h"
 #include "Soldier_Control.h"
 #include "Soldier_Macros.h"
 #include "Render_Fun.h"
-#include "Debug.h"
 #include <algorithm>
 #include <array>
 

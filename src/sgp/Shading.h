@@ -1,6 +1,8 @@
 #ifndef SHADING_H
 #define SHADING_H
 
+#include "Types.h"
+
 void BuildShadeTable(void);
 void BuildIntensityTable(void);
 void SetShadeTablePercent(float uiShadePercent);

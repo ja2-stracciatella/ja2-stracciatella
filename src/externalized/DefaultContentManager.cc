@@ -3,14 +3,9 @@
 #include "Exceptions.h"
 #include "game/Directories.h"
 #include "game/Strategic/Strategic_Status.h"
-#include "game/Tactical/Items.h"
-#include "game/Tactical/Weapons.h"
 
 // XXX: GameRes.h should be integrated to ContentManager
 #include "game/GameRes.h"
-
-// XXX
-#include "game/GameMode.h"
 
 #include "sgp/FileMan.h"
 
@@ -31,6 +26,7 @@
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
 #include "mercs/MERCListingModel.h"
+#include "MercProfile.h"
 #include "mercs/MercProfileInfo.h"
 #include "mercs/RPCSmallFaceModel.h"
 #include "policy/DefaultGamePolicy.h"
@@ -57,7 +53,6 @@
 
 #include "Logger.h"
 #include "Strategic_AI.h"
-#include "Soldier_Profile_Type.h"
 
 #include <string_theory/format>
 #include <string_theory/string>

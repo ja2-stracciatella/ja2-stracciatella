@@ -1,8 +1,8 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveExplosionType.h"
 #include "LoadSaveData.h"
 #include "Overhead.h"
+#include "SGPFile.h"
 
 
 void ExtractExplosionTypeFromFile(HWFILE const file, EXPLOSIONTYPE* const e)

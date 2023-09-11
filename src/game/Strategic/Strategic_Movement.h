@@ -2,9 +2,8 @@
 #define __STRATEGIC_MOVEMENT_H
 
 #include "Debug.h"
-#include "Types.h"
+#include "JA2Types.h"
 
-struct SOLDIERTYPE;
 
 
 enum //enemy intentions,

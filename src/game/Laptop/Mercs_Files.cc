@@ -2,7 +2,6 @@
 #include "AIMMembers.h"
 #include "Assignments.h"
 #include "Button_System.h"
-#include "Campaign_Types.h"
 #include "Cheats.h"
 #include "ContentManager.h"
 #include "Cursors.h"

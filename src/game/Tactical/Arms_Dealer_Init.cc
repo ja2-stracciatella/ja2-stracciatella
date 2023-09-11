@@ -4,7 +4,6 @@
 #include "Debug.h"
 #include "Random.h"
 #include "Weapons.h"
-#include "FileMan.h"
 #include "Game_Clock.h"
 #include "ArmsDealerInvInit.h"
 #include "Soldier_Profile.h"

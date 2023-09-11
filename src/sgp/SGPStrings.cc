@@ -1,5 +1,4 @@
 #include "SGPStrings.h"
-#include "Debug.h"
 
 #include <string_theory/format>
 #include <string_theory/string>

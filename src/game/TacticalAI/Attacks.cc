@@ -15,6 +15,7 @@
 #include "Isometric_Utils.h"
 #include "Soldier_Macros.h"
 #include "PathAI.h"
+#include "Points.h"
 #include "GameSettings.h"
 #include "StrategicMap.h"
 #include "Lighting.h"

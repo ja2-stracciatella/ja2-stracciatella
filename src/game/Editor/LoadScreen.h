@@ -2,7 +2,7 @@
 #define _JA2_LOAD_SCREEN_
 
 #include "ScreenIDs.h"
-
+#include "Types.h"
 #include <string_theory/string>
 
 enum class FileType {

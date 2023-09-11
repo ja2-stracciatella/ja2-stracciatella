@@ -24,7 +24,6 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "policy/GamePolicy.h"
 
 #include <algorithm>
 

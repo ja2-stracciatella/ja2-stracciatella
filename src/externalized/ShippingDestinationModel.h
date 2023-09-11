@@ -1,8 +1,7 @@
 #pragma once
 
-#include "BobbyRMailOrder.h"
-#include "Campaign_Types.h"
 #include "Json.h"
+#include "Types.h"
 
 class ShippingDestinationModel
 {

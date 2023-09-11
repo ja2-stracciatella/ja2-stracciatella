@@ -2,8 +2,6 @@
 
 #include <utility>
 
-#include "MagazineModel.h"
-#include "WeaponModels.h"
 
 
 ItemModel::ItemModel(uint16_t itemIndex,
@@ -44,7 +42,7 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 			uint8_t    ubCoolness,
 			int8_t     bReliability,
 			int8_t     bRepairEase,
-			uint16_t   fFlags) : inventoryGraphics(inventoryGraphics_), tileGraphic(tileGraphic_)
+			uint16_t   fFlags) : inventoryGraphics(std::move(inventoryGraphics_)), tileGraphic(tileGraphic_)
 {
 	this->itemIndex             = itemIndex;
 	this->internalName          = internalName;

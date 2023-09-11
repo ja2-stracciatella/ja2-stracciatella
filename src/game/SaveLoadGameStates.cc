@@ -1,9 +1,8 @@
 #include "SaveLoadGameStates.h"
-#include "Buffer.h"
 #include "ContentManager.h"
-#include "FileMan.h"
 #include "GameInstance.h"
 #include "Json.h"
+#include "SGPFile.h"
 
 #include <cmath>
 #include <string_theory/string_stream>

@@ -5,7 +5,6 @@
 #include "Handle_Items.h"
 #include "Item_Types.h"
 #include "Items.h"
-#include "JAScreens.h"
 #include "MessageBoxScreen.h"
 #include "Queen_Command.h"
 #include "SaveLoadGameStates.h"

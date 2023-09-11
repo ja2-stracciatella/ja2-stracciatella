@@ -1,9 +1,9 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 #include "LoadSaveRealObject.h"
 #include "Overhead.h"
+#include "SGPFile.h"
 
 
 void ExtractRealObjectFromFile(HWFILE const file, REAL_OBJECT* const o)

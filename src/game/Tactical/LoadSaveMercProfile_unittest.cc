@@ -2,14 +2,11 @@
 
 #include "gtest/gtest.h"
 
-#include "EncodingCorrectors.h"
-#include "FileMan.h"
 #include "IMP_Compile_Character.h"
 #include "LoadSaveMercProfile.h"
-#include "Soldier_Profile.h"
+#include "SGPFile.h"
 #include "Soldier_Profile_Type.h"
-
-#include "externalized/TestUtils.h"
+#include "TestUtils.h"
 
 
 TEST(LoadSaveMercProfileTest, vanillaProfile)

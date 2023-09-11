@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ItemModel.h"
 #include "ItemSystem.h"
 #include "Json.h"
 

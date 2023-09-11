@@ -1,7 +1,6 @@
 #ifndef __CAMPAIGN_TYPES_H
 #define __CAMPAIGN_TYPES_H
 
-#include "Debug.h"
 #include "Types.h"
 
 //Sector enumerations

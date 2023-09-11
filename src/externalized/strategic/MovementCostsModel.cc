@@ -4,15 +4,20 @@
 #include <string_theory/string>
 
 #include <map>
+#include <utility>
 
 
 // helper functions
 void readTraversibiltyIntoVector(const JsonValue& jsonArray, IntIntVector& vec, const TraversibilityMap& mapping, size_t expectedRows, size_t expectedCols);
 void readIntIntoVector(const JsonValue& jsonArray, IntIntVector& vec, size_t expectedRows, size_t expectedCols);
 
-
-MovementCostsModel::MovementCostsModel(IntIntVector traverseWE_, IntIntVector traverseNS_, IntIntVector traverseThrough_, IntIntVector travelRatings_)
-	:traverseWE(traverseWE_), traverseNS(traverseNS_), traverseThrough(traverseThrough_), travelRatings(travelRatings_) {}
+MovementCostsModel::MovementCostsModel(IntIntVector traverseWE_,
+                                       IntIntVector traverseNS_,
+                                       IntIntVector traverseThrough_,
+                                       IntIntVector travelRatings_)
+    : traverseWE(std::move(traverseWE_)), traverseNS(std::move(traverseNS_)),
+      traverseThrough(std::move(traverseThrough_)),
+      travelRatings(std::move(travelRatings_)) {}
 
 uint8_t MovementCostsModel::getTraversibilityWestEast(const SGPSector& sSector) const
 {

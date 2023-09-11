@@ -1,7 +1,6 @@
 //sgp
 #include "Button_System.h"
 #include "Directories.h"
-#include "Font.h"
 #include "Font_Control.h"
 //editor
 #include "EditorDefines.h"
@@ -12,8 +11,6 @@
 #include "EditorMapInfo.h"
 //tactical
 #include "Soldier_Control.h"
-#include "Soldier_Create.h"
-#include "Overhead_Types.h"
 
 #include "UILayout.h"
 

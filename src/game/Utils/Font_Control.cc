@@ -3,7 +3,6 @@
 #include "HImage.h"
 #include "VObject.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Font_Control.h"
 #include "GameRes.h"
 #include "GameMode.h"

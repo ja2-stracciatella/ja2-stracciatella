@@ -13,7 +13,6 @@
 #include "Insurance_Text.h"
 #include "Soldier_Profile.h"
 #include "Overhead.h"
-#include "Soldier_Add.h"
 #include "Game_Clock.h"
 #include "Finances.h"
 #include "History.h"

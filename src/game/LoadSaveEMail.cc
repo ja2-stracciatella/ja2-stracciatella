@@ -1,7 +1,7 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveEMail.h"
+#include "SGPFile.h"
 
 
 static void LoadEMailFromFile(HWFILE const File)

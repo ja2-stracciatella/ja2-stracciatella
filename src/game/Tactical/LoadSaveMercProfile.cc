@@ -1,7 +1,8 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
+#include "Overhead_Types.h"
+#include "SGPFile.h"
 #include "Tactical_Save.h"
 
 #include <string_theory/string>

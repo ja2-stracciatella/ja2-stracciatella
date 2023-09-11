@@ -6,6 +6,7 @@
 #include "AI.h"
 #include "AIInternals.h"
 #include "LOS.h"
+#include "Overhead.h"
 #include "Soldier_Profile.h"
 #include "Structure.h"
 #include "Weapons.h"
@@ -18,8 +19,6 @@
 #include "RenderWorld.h"
 #include "Render_Fun.h"
 #include "Boxing.h"
-#include "Text.h"
-#include "Structure_Wrap.h"
 #ifdef _DEBUG
 	#include "Video.h"
 #endif

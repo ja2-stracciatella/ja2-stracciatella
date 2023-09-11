@@ -1,6 +1,8 @@
 #ifndef __SUMMARY_INFO_H
 #define __SUMMARY_INFO_H
 
+#include "Exit_Grids.h"
+#include "Map_Information.h"
 #include "Types.h"
 
 #define GLOBAL_SUMMARY_VERSION	14

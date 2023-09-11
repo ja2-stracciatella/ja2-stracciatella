@@ -3,8 +3,6 @@
 #include "Shading.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
-#include "Video.h"
-#include "SGP.h"
 #include "Logger.h"
 
 #include <string_theory/format>

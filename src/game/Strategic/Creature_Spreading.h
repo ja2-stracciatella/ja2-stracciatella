@@ -2,7 +2,6 @@
 #define __CREATURE_SPREADING_H
 
 #include "JA2Types.h"
-#include "Types.h"
 
 
 void InitCreatureQuest(void);

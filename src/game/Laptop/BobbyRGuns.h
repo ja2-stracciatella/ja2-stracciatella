@@ -1,8 +1,7 @@
 #ifndef __BOBBYRGUNS_H
 #define __BOBBYRGUNS_H
 
-//#include "LaptopSave.h"
-
+#include "Types.h"
 
 #define BOBBYRDESCFILE BINARYDATADIR "/braydesc.edt"
 

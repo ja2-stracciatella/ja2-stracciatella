@@ -1,6 +1,7 @@
 #ifndef __AIMSORT_H_
 #define __AIMSORT_H_
 
+#include "Types.h"
 
 extern UINT8 gubCurrentSortMode;
 extern UINT8 gubCurrentListMode;

@@ -1,6 +1,8 @@
 #ifndef __ENDGAME_H
 #define __ENDGAME_H
 
+#include "JA2Types.h"
+
 void HandleStatueDamaged(INT16 sectorX, INT16 sectorY, INT8 sectorZ, INT16 sGridNo, STRUCTURE *s, UINT32 uiDist, BOOLEAN_S *skipDamage);
 void ChangeO3SectorStatue( BOOLEAN fFromExplosion );
 

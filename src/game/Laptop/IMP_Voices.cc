@@ -4,8 +4,6 @@
 #include "IMP_Voices.h"
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
-#include "Input.h"
-#include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"
 #include "Sound_Control.h"

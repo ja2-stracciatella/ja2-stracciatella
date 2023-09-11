@@ -3,10 +3,7 @@
 #include "Types.h"
 #include "Game_Events.h"
 #include "Game_Clock.h"
-#include "Font_Control.h"
-#include "Message.h"
 #include "Text.h"
-#include "FileMan.h"
 #include "Logger.h"
 
 STRATEGICEVENT									*gpEventList = NULL;

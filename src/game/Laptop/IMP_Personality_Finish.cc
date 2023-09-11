@@ -5,7 +5,6 @@
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
 #include "Text.h"
-#include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Text_System.h"

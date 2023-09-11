@@ -12,7 +12,6 @@
 #include "Text_Input.h"
 #include "Finances.h"
 #include "Game_Clock.h"
-#include "English.h"
 #include "Text.h"
 #include "LaptopSave.h"
 #include "Random.h"

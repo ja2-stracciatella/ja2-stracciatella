@@ -4,8 +4,6 @@
 
 #include "Types.h"
 #include "IEncodingCorrector.h"
-#include "RustInterface.h"
-
 #include "StringEncodingTypes.h"
 
 #include <string_theory/string>

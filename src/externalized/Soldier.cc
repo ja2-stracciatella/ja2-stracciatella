@@ -10,11 +10,11 @@
 #include "game/TacticalAI/AI.h"
 #include "game/Utils/Font_Control.h"
 #include "game/Utils/Message.h"
-#include "game/Utils/Text.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "GamePolicy.h"
+#include "ItemModel.h"
 #include "content/NewStrings.h"
 #include "internals/enums.h"
 

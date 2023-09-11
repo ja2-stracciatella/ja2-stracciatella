@@ -1,8 +1,8 @@
 #include "Debug.h"
-#include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveSmokeEffect.h"
 #include "Overhead.h"
+#include "SGPFile.h"
 #include "SmokeEffects.h"
 
 

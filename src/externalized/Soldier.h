@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Soldier_Control.h"
-#include "Types.h"
 #include <memory>
 
 

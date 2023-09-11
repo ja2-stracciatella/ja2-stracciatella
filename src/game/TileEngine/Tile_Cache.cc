@@ -1,6 +1,5 @@
 #include "Tile_Cache.h"
 #include "ContentManager.h"
-#include "Directories.h"
 #include "FileMan.h"
 #include "GameInstance.h"
 #include "HImage.h"
@@ -11,7 +10,6 @@
 #include "WorldDef.h"
 #include <stdexcept>
 #include <vector>
-struct AuxObjectData;
 
 
 struct TILE_CACHE_STRUCT

@@ -1,11 +1,10 @@
 #include "Debug.h"
 #include "Environment.h"
-#include "FileMan.h"
-#include "JAScreens.h"
 #include "LoadSaveData.h"
 #include "LoadSaveLightSprite.h"
-#include "ScreenIDs.h"
+#include "SGPFile.h"
 #include "Sys_Globals.h"
+
 
 void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 {

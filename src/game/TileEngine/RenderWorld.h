@@ -1,6 +1,8 @@
 #ifndef RENDERWORLD_H
 #define RENDERWORLD_H
 
+#include "Types.h"
+
 extern BOOLEAN gfDoVideoScroll;
 extern UINT8   gubCurScrollSpeedID;
 

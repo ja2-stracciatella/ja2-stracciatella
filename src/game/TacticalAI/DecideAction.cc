@@ -11,7 +11,6 @@
 #include "LOS.h"
 #include "Logger.h"
 #include "Map_Screen_Interface_Map.h"
-#include "Message.h"
 #include "NPC.h"
 #include "OppList.h"
 #include "Overhead.h"

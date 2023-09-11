@@ -1,6 +1,8 @@
 #ifndef __HISTORY_H
 #define __HISTORY_H
 
+#include "Types.h"
+
 void GameInitHistory(void);
 void EnterHistory(void);
 void ExitHistory(void);

@@ -1,5 +1,3 @@
-#include <math.h> // floorf
-
 #include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
@@ -30,7 +28,6 @@
 #include "Dialogue_Control.h"
 #include "SkillCheck.h"
 #include "Explosion_Control.h"
-#include "Quests.h"
 #include "Physics.h"
 #include "Random.h"
 #include "Vehicles.h"
@@ -42,15 +39,13 @@
 #include "Soldier_Macros.h"
 #include "SmokeEffects.h"
 #include "Auto_Resolve.h"
-#include "SoundMan.h"
 #include "Debug.h"
 
-#include "CalibreModel.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "Logger.h"
-#include "policy/GamePolicy.h"
+#include "GamePolicy.h"
 
 // NB this is arbitrary, chances in DG ranged from 1 in 6 to 1 in 20
 #define BASIC_DEPRECIATE_CHANCE	15
