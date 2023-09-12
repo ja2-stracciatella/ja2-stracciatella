@@ -189,14 +189,14 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 }
 
 
-INT8 SoldierClassToMilitiaRank(UINT8 const soldier_class)
+std::optional<UINT8> SoldierClassToMilitiaRank(UINT8 const soldier_class)
 {
 	switch (soldier_class)
 	{
 		case SOLDIER_CLASS_GREEN_MILITIA: return GREEN_MILITIA;
 		case SOLDIER_CLASS_REG_MILITIA:   return REGULAR_MILITIA;
 		case SOLDIER_CLASS_ELITE_MILITIA: return ELITE_MILITIA;
-		default:                          return -1;
+		default:                          return {};
 	}
 }
 

@@ -73,8 +73,11 @@ void HandleMilitiaPromotions()
 		if (s.bLife <= 0)          continue;
 		if (s.ubMilitiaKills == 0) continue;
 
-		UINT8 militia_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
-		if (militia_rank >= MAX_MILITIA_LEVELS)      throw std::logic_error("invalid militia rank");
+		// Is this a regular militia or a "rebel" (the editor kind, not the
+		// A10 basement kind? Only regular milita can be promoted.
+		auto const rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
+		if (!rank) continue;
+		auto militia_rank = *rank;
 
 		UINT8 const promotions   = CheckOneMilitiaForPromotion(gWorldSector, militia_rank, s.ubMilitiaKills);
 		if (promotions != 0)

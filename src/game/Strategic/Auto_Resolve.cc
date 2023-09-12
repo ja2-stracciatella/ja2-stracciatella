@@ -1752,12 +1752,14 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 	{
 		if (!gpCivs[i].pSoldier) continue;
 		SOLDIERTYPE& s = *gpCivs[i].pSoldier;
+		// The soldiers in the gpCivs array should all be regular militia
+		// members. Thr might get promoted before they're removed.
+		auto const rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
 
-		UINT8 current_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
-		if (current_rank >= MAX_MILITIA_LEVELS) throw std::runtime_error(ST::format("Removing autoresolve militia with invalid ubSoldierClass {}.", s.ubSoldierClass).to_std_string());
-
-		if (delete_for_good)
+		if (rank && delete_for_good)
 		{
+			auto current_rank = *rank;
+
 			if (s.bLife < OKLIFE / 2)
 			{
 				AddDeadSoldierToUnLoadedSector(arSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
