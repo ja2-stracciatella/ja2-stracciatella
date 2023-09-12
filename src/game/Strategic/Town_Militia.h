@@ -6,6 +6,7 @@
 #include "JA2Types.h"
 
 #include <string_theory/string>
+#include <optional>
 
 
 // how many militia of all ranks can be in any one sector at once
@@ -25,8 +26,8 @@
 // this handles what happens when a new militia unit is finishes getting trained
 void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector);
 
-// Given a SOLDIER_CLASS_ returns a _MITILIA rank or -1 if it is not militia
-INT8 SoldierClassToMilitiaRank(UINT8 soldier_class);
+// Given a SOLDIER_CLASS_ returns a _MITILIA rank if it is militia
+std::optional<UINT8> SoldierClassToMilitiaRank(UINT8 soldier_class);
 
 // remove militias of a certain rank
 void StrategicRemoveMilitiaFromSector(const SGPSector& sMap, UINT8 ubRank, UINT8 ubHowMany);

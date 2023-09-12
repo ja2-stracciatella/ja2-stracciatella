@@ -2520,11 +2520,11 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 	}
 	else if (pSoldierOld->bTeam == MILITIA_TEAM)
 	{
-		const INT8 bMilitiaRank = SoldierClassToMilitiaRank(pSoldierOld->ubSoldierClass);
-		if (bMilitiaRank != -1)
+		auto const militiaRank = SoldierClassToMilitiaRank(pSoldierOld->ubSoldierClass);
+		if (militiaRank)
 		{
 			// remove this militia from the strategic records
-			StrategicRemoveMilitiaFromSector(gWorldSector, bMilitiaRank, 1);
+			StrategicRemoveMilitiaFromSector(gWorldSector, *militiaRank, 1);
 		}
 
 		// also treat this as murder - but player will never be blamed for militia death he didn't cause
