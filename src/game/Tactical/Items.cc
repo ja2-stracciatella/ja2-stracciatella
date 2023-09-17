@@ -2623,16 +2623,17 @@ static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 {
 	*pObj = OBJECTTYPE{};
-	if (usItem >= MAXITEMS)
+	auto item = GCM->getItem(usItem);
+	if (!item)
 	{
-		throw std::logic_error("Tried to create item with invalid ID");
+		throw std::logic_error(ST::format("Tried to create item with unknown ID: `{}`", usItem).c_str());
 	}
 
-	if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
+	if (item->getItemClass() == IC_GUN)
 	{
 		CreateGun( usItem, bStatus, pObj );
 	}
-	else if (GCM->getItem(usItem)->getItemClass() == IC_AMMO)
+	else if (item->getItemClass() == IC_AMMO)
 	{
 		CreateMagazine(usItem, pObj);
 	}

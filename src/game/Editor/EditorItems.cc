@@ -105,7 +105,6 @@ EditorItemsInfo eInfo;
 //isn't calculated every time a player changes categories.
 void EntryInitEditorItemsInfo()
 {
-	INT32 i;
 	eInfo.uiBuffer = 0;
 	eInfo.fActive = 0;
 	eInfo.sScrollIndex = 0;
@@ -120,10 +119,11 @@ void EntryInitEditorItemsInfo()
 		eInfo.uiItemType = TBAR_MODE_ITEM_WEAPONS;
 		//Pre-calculate the number of each item type.
 		eInfo.sNumTriggers = NUMBER_TRIGGERS;
-		for( i=0; i < MAXITEMS; i++ )
+		for (auto item : GCM->getItems())
 		{
-			const ItemModel* item = GCM->getItem(i);
-			if( GCM->getItem(i)->getFlags() & ITEM_NOT_EDITOR )
+			auto i = item->getItemIndex();
+
+			if( item->getFlags() & ITEM_NOT_EDITOR )
 				continue;
 			if( i == SWITCH || i == ACTION_ITEM )
 			{

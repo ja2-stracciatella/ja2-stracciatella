@@ -2172,7 +2172,6 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement);
 
 static void DetermineArmsDealersSellingInventory(void)
 {
-	UINT16  usItemIndex;
 	UINT8   ubElement;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	BOOLEAN fAddSpecialItem;
@@ -2190,8 +2189,11 @@ static void DetermineArmsDealersSellingInventory(void)
 	guiNextFreeInvSlot     = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
-	for( usItemIndex=1; usItemIndex<MAXITEMS; usItemIndex++)
+	for (auto item : GCM->getItems())
 	{
+		auto usItemIndex = item->getItemIndex();
+		if (usItemIndex == NOTHING) continue;
+
 		//if the arms dealer has some of the inventory
 		if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubTotalItems > 0)
 		{
@@ -5992,7 +5994,6 @@ static void HandlePossibleRepairDelays(void)
 
 static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceOldestItemRepaired)
 {
-	UINT16 usItemIndex;
 	UINT8  ubElement;
 	DEALER_ITEM_HEADER *pDealerItem;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
@@ -6009,8 +6010,11 @@ static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceO
 	*puiHoursSinceOldestItemRepaired = 0;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+	for (auto item : GCM->getItems())
 	{
+		auto usItemIndex = item->getItemIndex();
+		if (usItemIndex == NOTHING) continue;
+
 		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
 
 		//if there is some items in stock
@@ -6059,7 +6063,6 @@ static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceO
 
 static void DelayRepairsInProgressBy(UINT32 uiMinutesDelayed)
 {
-	UINT16 usItemIndex;
 	UINT8  ubElement;
 	DEALER_ITEM_HEADER *pDealerItem;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
@@ -6071,8 +6074,11 @@ static void DelayRepairsInProgressBy(UINT32 uiMinutesDelayed)
 		return;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+	for (auto item : GCM->getItems())
 	{
+		auto usItemIndex = item->getItemIndex();
+		if (usItemIndex == NOTHING) continue;
+
 		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
 
 		//if there is some items in stock

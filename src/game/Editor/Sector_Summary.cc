@@ -583,7 +583,7 @@ static void RenderItemDetails(void)
 {
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
-	INT32 index, i;
+	INT32 i;
 	UINT32 uiQuantity, uiExistChance, uiStatus;
 	UINT32 xp, yp;
 	INT8 bFreqIndex;
@@ -599,8 +599,11 @@ static void RenderItemDetails(void)
 		UINT32 uiActionQuantity[8] {};
 		UINT32 uiTriggerExistChance[8] {};
 		UINT32 uiActionExistChance[8] {};
-		for( index = 1; index < MAXITEMS; index++ )
+		for (auto item : GCM->getItems())
 		{
+			auto index = item->getItemIndex();
+			if (index == NOTHING) continue;
+
 			uiQuantity = 0;
 			uiExistChance = 0;
 			uiStatus = 0;
@@ -669,7 +672,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, GCM->getItem(index)->getShortName());
+				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
@@ -749,8 +752,11 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		else for( index = 1; index < MAXITEMS; index++ )
+		else for (auto item : GCM->getItems())
 		{
+			auto index = item->getItemIndex();
+			if (index == NOTHING) continue;
+
 			uiQuantity = 0;
 			uiExistChance = 0;
 			uiStatus = 0;
@@ -774,7 +780,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, GCM->getItem(index)->getShortName());
+				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
@@ -816,8 +822,11 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		for( index = 1; index < MAXITEMS; index++ )
+		for (auto item : GCM->getItems())
 		{
+			auto index = item->getItemIndex();
+			if (index == NOTHING) continue;
+
 			uiQuantity = 0;
 			uiExistChance = 0;
 			uiStatus = 0;
@@ -841,7 +850,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, GCM->getItem(index)->getShortName());
+				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;

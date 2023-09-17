@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string_theory/string>
 #include <vector>
 #include <map>
@@ -14,6 +15,9 @@ public:
 
 	// Returns an item by numeric id
 	virtual const ItemModel* getItem(uint16_t itemIndex) const = 0;
+
+	// Returns a vector of all items
+	virtual const std::vector<const ItemModel*>& getItems() const = 0;
 
 	// Returns all paths to small inventory images
 	virtual std::vector<ST::string> getAllSmallInventoryGraphicPaths() const = 0;

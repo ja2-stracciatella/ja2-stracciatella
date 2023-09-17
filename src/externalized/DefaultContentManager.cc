@@ -811,6 +811,11 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 	return true;
 }
 
+const std::vector<const ItemModel*>& DefaultContentManager::getItems() const
+{
+	return m_items;
+}
+
 const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
 {
 	if(itemIndex >= m_items.size())
