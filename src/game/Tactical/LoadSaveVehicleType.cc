@@ -1,4 +1,6 @@
+#include "Assignments.h"
 #include "Debug.h"
+#include "Isometric_Utils.h"
 #include "LoadSaveVehicleType.h"
 #include "LoadSaveData.h"
 #include "SGPFile.h"
@@ -24,12 +26,45 @@ void ExtractVehicleTypeFromFile(HWFILE const file, VEHICLETYPE* const v, UINT32 
 	EXTR_I16(d, v->sGridNo);
 	const ProfileID noone = (savegame_version < 86 ? 0 : NO_PROFILE);
 	// The ProfileID of the passengers gets stored, not their SoldierID
-	FOR_EACH(SOLDIERTYPE*, i, v->pPassengers)
+	for (auto & soldier : v->pPassengers)
 	{
 		ProfileID id;
 		EXTR_U8(d, id)
 		EXTR_SKIP(d, 3)
-		*i = (id == noone ? NULL : FindSoldierByProfileID(id));
+		if (id == noone)
+		{
+			soldier = nullptr;
+			continue;
+		}
+
+		soldier = FindSoldierByProfileID(id);
+		if (soldier == nullptr)
+		{
+			SLOGE("Soldier with profile id {} supposed to be in vehicle"
+			      "but doesn't have a SOLDIERTYPE", id);
+			continue;
+		}
+
+		if (soldier->bAssignment != Assignments::VEHICLE)
+		{
+			// Workaround for issue 1885: it is somehow possible for a merc
+			// to be aboard the helicopter while having a different assignment.
+			SLOGE("{} in vehicle but has wrong assignment {}",
+				soldier->name, soldier->bAssignment);
+			// We cannot know whether the assignment or the passenger's list
+			// is incorrect, so we have to make a guess. If this guy is in
+			// the same sector as the vehicle but nowhere on the map we fix
+			// his assignment, otherwise we remove him from the vehicle.
+			if (soldier->sSector == v->sSector && soldier->sGridNo == NOWHERE)
+			{
+				soldier->bAssignment = Assignments::VEHICLE;
+				soldier->bVehicleID = static_cast<INT8>(VEHICLE2ID(*v));
+			}
+			else
+			{
+				soldier = nullptr;
+			}
+		}
 	}
 	EXTR_SKIP(d, 61)
 	EXTR_BOOL(d, v->fDestroyed)
