@@ -1,7 +1,9 @@
 #include "Button_System.h"
 #include "Cursor_Modes.h"
 #include "Directories.h"
+#include "EditScreen.h"
 #include "Font.h"
+#include "Handle_UI.h"
 #include "Isometric_Utils.h"
 #include "Edit_Sys.h"
 #include "Font_Control.h"
@@ -506,6 +508,11 @@ void InitDoorEditing(INT32 const map_idx)
 {
 	if (!DoorAtGridNo(map_idx) && !OpenableAtGridNo(map_idx)) return;
 
+	// Let HandleMouseClicksInGameScreen() know it should ignore clicks,
+	// otherwise it would call this function for every mouse click. We
+	// restore the old value in KillDoorEditing().
+	iDrawMode = DRAW_MODE_NOTHING;
+
 	gfEditingDoor = TRUE;
 	iDoorMapIndex = map_idx;
 	DisableEditorTaskbar();
@@ -637,6 +644,8 @@ void KillDoorEditing()
 	MSYS_RemoveRegion(&DoorRegion);
 	FOR_EACH(GUIButtonRef, i, iDoorButton) RemoveButton(*i);
 	gfEditingDoor = FALSE;
+	// Restore the draw mode that we changed in InitDoorEditing().
+	iDrawMode = DRAW_MODE_DOORKEYS;
 	KillTextInputMode();
 }
 

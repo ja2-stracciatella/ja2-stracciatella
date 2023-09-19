@@ -13,6 +13,7 @@
 #include "MouseSystem.h"
 
 #include <string_theory/string>
+#include <utility>
 
 
 BOOLEAN gfNoScroll = FALSE;
@@ -58,6 +59,7 @@ struct TEXTINPUTNODE
 struct STACKTEXTINPUTNODE
 {
 	TEXTINPUTNODE *head;
+	TEXTINPUTNODE *tail;
 	TextInputColors *pColors;
 	STACKTEXTINPUTNODE* next;
 };
@@ -71,8 +73,20 @@ static TEXTINPUTNODE* gpActive = NULL;
 
 //Saving current mode
 static TEXTINPUTNODE* pSavedHead = NULL;
+static TEXTINPUTNODE* pSavedTail = NULL;
 static TextInputColors* pSavedColors = NULL;
 static UINT16 gusTextInputCursor = CURSOR_IBEAM;
+
+
+// Zap the four pointers that control text input. This is a separate
+// function because the tail pointer was often forgotten before.
+static void ZapTextInputPointers()
+{
+	gpTextInputHead = nullptr;
+	gpTextInputTail = nullptr;
+	gpActive = nullptr;
+	pColors = nullptr;
+}
 
 
 //Saves the current text input mode by pushing it onto our stack, then starts a new
@@ -81,6 +95,7 @@ static void PushTextInputLevel(void)
 {
 	STACKTEXTINPUTNODE* const pNewLevel = new STACKTEXTINPUTNODE{};
 	pNewLevel->head = gpTextInputHead;
+	pNewLevel->tail = gpTextInputTail;
 	pNewLevel->pColors = pColors;
 	pNewLevel->next = pInputStack;
 	pInputStack = pNewLevel;
@@ -95,6 +110,7 @@ static void PopTextInputLevel(void)
 {
 	STACKTEXTINPUTNODE *pLevel;
 	gpTextInputHead = pInputStack->head;
+	gpTextInputTail = pInputStack->tail;
 	pColors = pInputStack->pColors;
 	pLevel = pInputStack;
 	pInputStack = pInputStack->next;
@@ -145,7 +161,7 @@ void InitTextInputMode()
 		PushTextInputLevel();
 		//KillTextInputMode();
 	}
-	gpTextInputHead = NULL;
+	ZapTextInputPointers();
 	pColors = new TextInputColors{};
 	gfTextInputMode = TRUE;
 	SetEditingStatus(FALSE);
@@ -179,17 +195,13 @@ void KillTextInputMode()
 	if (!i) return;
 	while (i)
 	{
-		TEXTINPUTNODE* const del = i;
-		i = i->next;
-		if (del->maxCodepoints > 0)
+		if (i->maxCodepoints > 0)
 		{
-			MSYS_RemoveRegion(&del->region);
+			MSYS_RemoveRegion(&i->region);
 		}
-		delete del;
+		delete std::exchange(i, i->next);
 	}
 	delete pColors;
-	pColors         = 0;
-	gpTextInputHead = 0;
 
 	if (pInputStack)
 	{
@@ -200,9 +212,8 @@ void KillTextInputMode()
 	{
 		gfTextInputMode = FALSE;
 		SetEditingStatus(FALSE);
+		ZapTextInputPointers();
 	}
-
-	if (!gpTextInputHead) gpActive = 0;
 }
 
 
@@ -1158,22 +1169,23 @@ void SaveAndRemoveCurrentTextInputMode()
 	if( pInputStack )
 	{
 		gpTextInputHead = pInputStack->head;
+		gpTextInputTail = pInputStack->tail;
 		pColors = pInputStack->pColors;
+		gpActive = nullptr;
 	}
 	else
 	{
-		gpTextInputHead = NULL;
-		pColors = NULL;
+		ZapTextInputPointers();
 	}
 }
 
 void RestoreSavedTextInputMode()
 {
 	Assert(pSavedHead); // Attempting to restore saved text input stack head, when one doesn't exist?
-	gpTextInputHead = pSavedHead;
-	pColors = pSavedColors;
-	pSavedHead = NULL;
-	pSavedColors = NULL;
+	gpTextInputHead = std::exchange(pSavedHead, nullptr);
+	gpTextInputTail = std::exchange(pSavedTail, nullptr);
+	pColors = std::exchange(pSavedColors, nullptr);
+	gpActive = nullptr;
 }
 
 
