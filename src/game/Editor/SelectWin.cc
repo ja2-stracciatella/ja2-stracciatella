@@ -20,8 +20,7 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <stdexcept>
-
+#include <utility>
 
 // defines for DisplaySpec.ubType
 #define DISPLAY_TEXT    1
@@ -62,6 +61,11 @@ struct DisplayList
 	BOOLEAN      fChosen;
 	DisplayList* pNext;
 };
+
+constexpr bool operator==(Selections const& selection, DisplayList const& dlist)
+{
+	return dlist.uiObjIndx == selection.uiObject && dlist.uiIndex == selection.usIndex;
+}
 
 
 extern BOOLEAN fDontUseRandom;
@@ -226,7 +230,8 @@ static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_
 {
 	INT16 const img = LoadGenericButtonIcon(gfx);
 	iButtonIcons[idx] = img;
-	GUIButtonRef const btn = CreateIconButton(img, 0, SCREEN_WIDTH - 40, y, 40, h, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconButton(img, 0, SCREEN_WIDTH - 40, y,
+	 40, h, MSYS_PRIORITY_HIGH, std::move(click));
 	btn->SetFastHelpText(help);
 	return btn;
 }
@@ -874,8 +879,7 @@ static void AddToSelectionList(DisplayList* pNode)
 {
 	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
-		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-			pNode->uiIndex == pSelList[ iIndex ].usIndex )
+		if (pSelList[iIndex] == *pNode)
 		{
 			// Was already in the list, so bump up the count
 			++pSelList[iIndex].sCount;
@@ -935,8 +939,7 @@ static BOOLEAN RemoveFromSelectionList(DisplayList* pNode)
 
 	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
-		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-			pNode->uiIndex == pSelList[ iIndex ].usIndex )
+		if (pSelList[iIndex] == *pNode)
 		{
 			if (--pSelList[iIndex].sCount <= 0)
 			{
@@ -996,8 +999,7 @@ static BOOLEAN IsInSelectionList(const DisplayList* pNode)
 {
 	for (INT32 iIndex = 0; iIndex < *pNumSelList; iIndex++)
 	{
-		if (pNode->uiObjIndx == pSelList[iIndex].uiObject &&
-				pNode->uiIndex   == pSelList[iIndex].usIndex)
+		if (pSelList[iIndex] == *pNode)
 		{
 			return TRUE;
 		}
@@ -1009,17 +1011,17 @@ static BOOLEAN IsInSelectionList(const DisplayList* pNode)
 
 /* Find an occurance of a particular display list object in the current
  * selection list. Returns the corresponding selection list entry. */
-static Selections const& FindInSelectionList(DisplayList const& n)
+static Selections const * FindInSelectionList(DisplayList const& n)
 {
 	Selections const* const end = pSelList + *pNumSelList;
 	for (Selections const* i = pSelList; i != end; ++i)
 	{
-		Selections const& sel = *i;
-		if (n.uiObjIndx != sel.uiObject) continue;
-		if (n.uiIndex   != sel.usIndex)  continue;
-		return sel;
+		if (*i == n)
+		{
+			return i;
+		}
 	}
-	throw std::logic_error("node not in selection list");
+	return nullptr;
 }
 
 
@@ -1231,7 +1233,10 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 
 	if (n->fChosen)
 	{
-		INT16 const count = FindInSelectionList(*n).sCount;
-		if (count != 0) GPrint(x, y, ST::format("{}", count));
+		auto * const selection = FindInSelectionList(*n);
+		if (selection != nullptr && selection->sCount != 0)
+		{
+			GPrint(x, y, ST::format("{}", selection->sCount));
+		}
 	}
 }
