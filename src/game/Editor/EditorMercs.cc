@@ -611,9 +611,8 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, UINT32 reason )
 	}
 }
 
-
-static void ChangeBodyType(INT8 bOffset);
-
+enum class CBT { next, previous };
+static void ChangeBodyType(CBT);
 
 void MercsSetBodyTypeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
@@ -621,9 +620,9 @@ void MercsSetBodyTypeCallback( GUI_BUTTON *btn, UINT32 reason )
 	{
 		gfRenderMercInfo = TRUE;
 		if (btn == iEditorButton[MERCS_BODYTYPE_DOWN])
-			ChangeBodyType( 1 );	//next
+			ChangeBodyType(CBT::next);
 		else
-			ChangeBodyType( -1 ); //previous
+			ChangeBodyType(CBT::previous);
 	}
 }
 
@@ -1373,9 +1372,9 @@ void KillDetailedPlacementForMerc()
 }
 
 
-static void ChangeBodyType(INT8 const offset)
+static void ChangeBodyType(CBT const direction)
 {
-	Assert(offset == -1 || offset == 1); // only +/-1 allowed
+	int const offset = direction == CBT::next ? 1 : -1;
 
 	gfRenderTaskbar  = TRUE;
 	gfRenderMercInfo = TRUE;
@@ -1391,7 +1390,7 @@ static void ChangeBodyType(INT8 const offset)
 		case CREATURE_TEAM: body_types = bCreatureArray; n = lengthof(bCreatureArray); break;
 		case MILITIA_TEAM:  body_types = bRebelArray;    n = lengthof(bRebelArray);    break;
 		case CIV_TEAM:      body_types = bCivArray;      n = lengthof(bCivArray);      break;
-		default: abort(); // HACK000E
+		default: return;
 	}
 	INT32 next = 0; // XXX HACK000E
 	for (INT32 i = 0; i != n; ++i)
@@ -1436,7 +1435,13 @@ static void ChangeBodyType(INT8 const offset)
 			default:
 				break;
 		}
-		SetSoldierAnimationSurface(&s, s.usAnimState);
+		// Different body types have different number of animation frames, so
+		// we have to reset the current frame here to avoid a crash in
+		// RenderWorld; issue #1890. Afterwards we have to reset the direction
+		// so this character is displayed facing the right way.
+		s.usAniFrame = 0;
+		SetSoldierAnimationSurface(&s, AnimationStates::STANDING);
+		SetMercDirection(s.bDirection);
 	}
 	// Update the placement's info as well.
 	bp.bBodyType = body_type;
