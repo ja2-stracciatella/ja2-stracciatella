@@ -434,7 +434,7 @@ static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, UINT32 const re
 }
 
 
-static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
+static void CalcFirstIndexForPage(const std::vector<STORE_INVENTORY>& pInv, UINT32 uiItemClass);
 static UINT32 CalculateTotalPurchasePrice();
 static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const ItemModel* const items[]);
 static void DisableBobbyRButtons(void);
@@ -493,20 +493,22 @@ void DisplayItemInfo(UINT32 uiItemClass)
 	{
 		if( uiItemClass == BOBBYR_USED_ITEMS )
 		{
+			const auto& inventoryItem = LaptopSaveInfo.BobbyRayUsedInventory.at(i);
 			//If there is not items in stock
-			if( LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnHand == 0 )
+			if( inventoryItem.ubQtyOnHand == 0 )
 				continue;
 
-			usItemIndex = LaptopSaveInfo.BobbyRayUsedInventory[ i ].usItemIndex;
+			usItemIndex = inventoryItem.usItemIndex;
 			gfOnUsedPage = TRUE;
 		}
 		else
 		{
+			const auto& inventoryItem = LaptopSaveInfo.BobbyRayInventory.at(i);
 			//If there is not items in stock
-			if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand == 0 )
+			if( inventoryItem.ubQtyOnHand == 0 )
 				continue;
 
-			usItemIndex = LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex;
+			usItemIndex = inventoryItem.usItemIndex;
 			gfOnUsedPage = FALSE;
 		}
 
@@ -786,9 +788,9 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 	usPosY += usFontHeight + 2;
 
 	if( fUsed )
-		sTemp = ST::format("{_ 4d}", LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].ubQtyOnHand);
+		sTemp = ST::format("{_ 4d}", LaptopSaveInfo.BobbyRayUsedInventory.at(usBobbyIndex).ubQtyOnHand);
 	else
-		sTemp = ST::format("{_ 4d}", LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].ubQtyOnHand);
+		sTemp = ST::format("{_ 4d}", LaptopSaveInfo.BobbyRayInventory.at(usBobbyIndex).ubQtyOnHand);
 
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_STOCK_TEXT_X, usPosY, BOBBYR_ITEM_COST_TEXT_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
@@ -901,7 +903,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 	//if it's a used item, display how damaged the item is
 	if( fUsed )
 	{
-		sTemp = ST::format("*{3d}%", LaptopSaveInfo.BobbyRayUsedInventory[usBobbyIndex].ubItemQuality);
+		sTemp = ST::format("*{3d}%", LaptopSaveInfo.BobbyRayUsedInventory.at(usBobbyIndex).ubItemQuality);
 		DrawTextToScreen(sTemp, BOBBYR_ITEM_NAME_X - 2, usPosY - BOBBYR_ORDER_NUM_Y_OFFSET, BOBBYR_ORDER_NUM_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -917,7 +919,6 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 //Loops through Bobby Rays Inventory to find the first and last index
 void SetFirstLastPagesForNew( UINT32 uiClassMask )
 {
-	UINT16 i;
 	INT16	sFirst = -1;
 	INT16	sLast = -1;
 	UINT8	ubNumItems=0;
@@ -925,12 +926,13 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 	gubCurPage = 0;
 
 	//First loop through to get the first and last index indexs
-	for(i=0; i<MAXITEMS; i++)
+	UINT16 i = 0;
+	for (auto& inventoryItem : LaptopSaveInfo.BobbyRayInventory)
 	{
 		//If we have some of the inventory on hand
-		if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand != 0 )
+		if( inventoryItem.ubQtyOnHand != 0 )
 		{
-			if( GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex)->getItemClass() & uiClassMask )
+			if( GCM->getItem(inventoryItem.usItemIndex)->getItemClass() & uiClassMask )
 			{
 				ubNumItems++;
 
@@ -939,7 +941,10 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 				sLast = i;
 			}
 		}
+
+		i++;
 	}
+
 
 	if( ubNumItems == 0 )
 	{
@@ -959,7 +964,7 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 //Loops through Bobby Rays Used Inventory to find the first and last index
 void SetFirstLastPagesForUsed()
 {
-	UINT16 i;
+	UINT16  i = 0;
 	INT16	sFirst = -1;
 	INT16	sLast = -1;
 	UINT8	ubNumItems=0;
@@ -967,10 +972,10 @@ void SetFirstLastPagesForUsed()
 	gubCurPage = 0;
 
 	//First loop through to get the first and last index indexs
-	for(i=0; i<MAXITEMS; i++)
+	for(const auto& inventoryItem : LaptopSaveInfo.BobbyRayUsedInventory)
 	{
 		//If we have some of the inventory on hand
-		if( LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnHand != 0 )
+		if( inventoryItem.ubQtyOnHand != 0 )
 		{
 			ubNumItems++;
 
@@ -978,6 +983,8 @@ void SetFirstLastPagesForUsed()
 				sFirst = i;
 			sLast = i;
 		}
+
+		i++;
 	}
 	if( sFirst == -1 )
 	{
@@ -1144,8 +1151,9 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 	//if we are in the used page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_BOBBY_R_USED )
 	{
+		const auto& inventoryItem = LaptopSaveInfo.BobbyRayUsedInventory.at(usItemNumber);
 		//if there is enough inventory in stock to cover the purchase
-		if( ubPurchaseNumber == BOBBY_RAY_NOT_PURCHASED || LaptopSaveInfo.BobbyRayUsedInventory[ usItemNumber ].ubQtyOnHand >= ( BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased + 1) )
+		if( ubPurchaseNumber == BOBBY_RAY_NOT_PURCHASED || inventoryItem.ubQtyOnHand >= ( BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased + 1) )
 		{
 			// If the item has not yet been purchased
 			if( ubPurchaseNumber == BOBBY_RAY_NOT_PURCHASED )
@@ -1154,9 +1162,9 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 
 				if( ubPurchaseNumber != BOBBY_RAY_NOT_PURCHASED )
 				{
-					BobbyRayPurchases[ ubPurchaseNumber ].usItemIndex = LaptopSaveInfo.BobbyRayUsedInventory[ usItemNumber ].usItemIndex;
+					BobbyRayPurchases[ ubPurchaseNumber ].usItemIndex = inventoryItem.usItemIndex;
 					BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased = 1;
-					BobbyRayPurchases[ ubPurchaseNumber ].bItemQuality = LaptopSaveInfo.BobbyRayUsedInventory[ usItemNumber ].ubItemQuality;
+					BobbyRayPurchases[ ubPurchaseNumber ].bItemQuality = inventoryItem.ubItemQuality;
 					BobbyRayPurchases[ ubPurchaseNumber ].usBobbyItemIndex = usItemNumber;
 					BobbyRayPurchases[ ubPurchaseNumber ].fUsed = TRUE;
 				}
@@ -1183,7 +1191,7 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 	else
 	{
 		//if there is enough inventory in stock to cover the purchase
-		if( ubPurchaseNumber == BOBBY_RAY_NOT_PURCHASED || LaptopSaveInfo.BobbyRayInventory[ usItemNumber ].ubQtyOnHand >= ( BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased + 1) )
+		if( ubPurchaseNumber == BOBBY_RAY_NOT_PURCHASED || LaptopSaveInfo.BobbyRayInventory.at(usItemNumber).ubQtyOnHand >= ( BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased + 1) )
 		{
 			// If the item has not yet been purchased
 			if( ubPurchaseNumber == BOBBY_RAY_NOT_PURCHASED )
@@ -1192,7 +1200,7 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 
 				if( ubPurchaseNumber != BOBBY_RAY_NOT_PURCHASED )
 				{
-					BobbyRayPurchases[ ubPurchaseNumber ].usItemIndex = LaptopSaveInfo.BobbyRayInventory[ usItemNumber ].usItemIndex;
+					BobbyRayPurchases[ ubPurchaseNumber ].usItemIndex = LaptopSaveInfo.BobbyRayInventory.at(usItemNumber).usItemIndex;
 					BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased = 1;
 					BobbyRayPurchases[ ubPurchaseNumber ].bItemQuality = 100;
 					BobbyRayPurchases[ ubPurchaseNumber ].usBobbyItemIndex = usItemNumber;
@@ -1313,11 +1321,14 @@ void UpdateButtonText(UINT32	uiCurPage)
 UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
 	DOUBLE value;
+	const auto& inventory = fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
+	const auto& inventoryItem = inventory.at(usBobbyIndex);
+	auto item = GCM->getItem(inventoryItem.usItemIndex);
+
 	if( fUsed )
-		value = GCM->getItem(LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].usItemIndex)->getPrice() *
-								( .5 + .5 * ( LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].ubItemQuality ) / 100 ) + .5;
+		value = item->getPrice() * ( .5 + .5 * ( inventoryItem.ubItemQuality ) / 100 ) + .5;
 	else
-		value = GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].usItemIndex)->getPrice();
+		value = item->getPrice();
 
 	return( (UINT16) value);
 }
@@ -1346,7 +1357,7 @@ static void DisableBobbyRButtons(void)
 }
 
 
-static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item_class)
+static void CalcFirstIndexForPage(const std::vector<STORE_INVENTORY>& pInv, UINT32 const item_class)
 {
 	// Reset the Current weapon Index
 	gusCurWeaponIndex = 0;
@@ -1360,7 +1371,7 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 		if (pInv[i].ubQtyOnHand == 0) continue;
 
 		gusCurWeaponIndex = i;
-		if (inv_idx++ == gubCurPage * 4) break;
+		if (inv_idx++ == gubCurPage * BOBBYR_NUM_WEAPONS_ON_PAGE) break;
 	}
 }
 

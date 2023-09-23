@@ -95,8 +95,8 @@ struct LaptopSaveInfoStruct
 
 
 	// BobbyRay Site
-	STORE_INVENTORY BobbyRayInventory[ MAXITEMS ];
-	STORE_INVENTORY BobbyRayUsedInventory[ MAXITEMS ];
+	std::vector<STORE_INVENTORY> BobbyRayInventory;
+	std::vector<STORE_INVENTORY> BobbyRayUsedInventory;
 
 	std::vector<BobbyRayOrderStruct> BobbyRayOrdersOnDeliveryArray;
 	UINT8 usNumberOfBobbyRayOrderUsed; // The number of items in the array that are used

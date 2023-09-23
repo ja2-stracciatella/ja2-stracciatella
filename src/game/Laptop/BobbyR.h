@@ -29,9 +29,10 @@ void InitBobbyRWoodBackground(void);
 void DailyUpdateOfBobbyRaysNewInventory(void);
 void DailyUpdateOfBobbyRaysUsedInventory(void);
 void AddFreshBobbyRayInventory( UINT16 usItemIndex );
-void InitBobbyRayInventory(void);
+void InitBobbyRayInventory();
+void ResetBobbyRayInventory();
 void CancelAllPendingBRPurchaseOrders(void);
-INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemIndex, BOOLEAN fUsed);
+std::vector<STORE_INVENTORY>::iterator GetInventorySlotForItem(std::vector<STORE_INVENTORY>& pInventoryArray, UINT16 usItemIndex);
 
 
 #endif

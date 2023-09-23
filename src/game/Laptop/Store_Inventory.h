@@ -22,6 +22,6 @@ enum
 	BOBBY_RAY_LISTS,
 };
 
-void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed );
+void SetupStoreInventory( std::vector<STORE_INVENTORY>& pInventoryArray, BOOLEAN fUsed );
 
 #endif

@@ -106,6 +106,8 @@ enum
 	LAPTOP_PROGRAM_OPEN
 };
 
+#define VANILLA_STORE_INVENTORY_SIZE MAXITEMS
+
 #define BOOK_FONT     FONT10ARIAL
 #define DOWNLOAD_FONT FONT12ARIAL
 
@@ -3254,7 +3256,7 @@ void ClearOutTempLaptopFiles(void)
 }
 
 
-static void InjectStoreInvetory(DataWriter& d, STORE_INVENTORY const& i)
+static void InjectStoreInventory(DataWriter& d, STORE_INVENTORY const& i)
 {
 	size_t start = d.getConsumed();
 	INJ_U16( d, i.usItemIndex)
@@ -3267,7 +3269,7 @@ static void InjectStoreInvetory(DataWriter& d, STORE_INVENTORY const& i)
 }
 
 
-static void ExtractStoreInvetory(DataReader& d, STORE_INVENTORY& i)
+static void ExtractStoreInventory(DataReader& d, STORE_INVENTORY& i)
 {
 	size_t start = d.getConsumed();
 	EXTR_U16( d, i.usItemIndex)
@@ -3301,13 +3303,16 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_U32(  d, l.guiPlayersMercAccountNumber)
 	INJ_U8(   d, l.gubLastMercIndex)
 	INJ_SKIP( d, 1)
-	FOR_EACH(STORE_INVENTORY const, i, l.BobbyRayInventory)
-	{
-		InjectStoreInvetory(d, *i);
+	Assert(l.BobbyRayInventory.size() <= VANILLA_STORE_INVENTORY_SIZE);
+	Assert(l.BobbyRayUsedInventory.size() <= VANILLA_STORE_INVENTORY_SIZE);
+	const auto emptyStoreInventory = STORE_INVENTORY{};
+	for (uint16_t i = 0; i < VANILLA_STORE_INVENTORY_SIZE; i++) {
+		auto& inventoryItem = i < l.BobbyRayInventory.size() ? l.BobbyRayInventory[i] : emptyStoreInventory;
+		InjectStoreInventory(d, inventoryItem);
 	}
-	FOR_EACH(STORE_INVENTORY const, i, l.BobbyRayUsedInventory)
-	{
-		InjectStoreInvetory(d, *i);
+	for (uint16_t i = 0; i < VANILLA_STORE_INVENTORY_SIZE; i++) {
+		auto& inventoryItem = i < l.BobbyRayUsedInventory.size() ? l.BobbyRayUsedInventory[i] : emptyStoreInventory;
+		InjectStoreInventory(d, inventoryItem);
 	}
 	INJ_SKIP( d, 6)
 	Assert(l.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
@@ -3366,6 +3371,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	LaptopSaveInfoStruct& l = LaptopSaveInfo;
 
 	l.BobbyRayOrdersOnDeliveryArray.clear();
+	ResetBobbyRayInventory();
 
 	l.pLifeInsurancePayouts.clear();
 
@@ -3388,14 +3394,38 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_U32(  d, l.guiPlayersMercAccountNumber)
 	EXTR_U8(   d, l.gubLastMercIndex)
 	EXTR_SKIP( d, 1)
-	FOR_EACH(STORE_INVENTORY, i, l.BobbyRayInventory)
-	{
-		ExtractStoreInvetory(d, *i);
+	for (auto i = 0; i < VANILLA_STORE_INVENTORY_SIZE; i++) {
+		STORE_INVENTORY inventoryItem;
+		ExtractStoreInventory(d, inventoryItem);
+
+		if (inventoryItem.usItemIndex == NOTHING || inventoryItem.usItemIndex == BOBBYR_NO_ITEMS) {
+			continue;
+		}
+		// Check if the item is still eligible for bobby rays, this can change when mods are disabled / enabled
+		auto it = GetInventorySlotForItem(l.BobbyRayInventory, inventoryItem.usItemIndex);
+		if (it == l.BobbyRayInventory.end()) {
+			SLOGW("Loaded bobby rays inventory item with item index {}, which is no longer eligible for bobby rays. Removing from inventory.", inventoryItem.usItemIndex);
+			continue;
+		}
+		(*it) = std::move(inventoryItem);
 	}
-	FOR_EACH(STORE_INVENTORY, i, l.BobbyRayUsedInventory)
-	{
-		ExtractStoreInvetory(d, *i);
+	for (auto i = 0; i < VANILLA_STORE_INVENTORY_SIZE; i++) {
+		STORE_INVENTORY inventoryItem;
+		ExtractStoreInventory(d, inventoryItem);
+
+		if (inventoryItem.usItemIndex == NOTHING || inventoryItem.usItemIndex == BOBBYR_NO_ITEMS) {
+			continue;
+		}
+
+		// Check if the item is still eligible for bobby rays, this can change when mods are disabled / enabled
+		auto it = GetInventorySlotForItem(l.BobbyRayUsedInventory, inventoryItem.usItemIndex);
+		if (it == l.BobbyRayUsedInventory.end()) {
+			SLOGW("Loaded bobby rays used inventory item with item index {}, which is no longer eligible for bobby rays. Removing from inventory.", inventoryItem.usItemIndex);
+			continue;
+		}
+		(*it) = std::move(inventoryItem);
 	}
+	// TODO: Read SaveLoadGameStates
 	EXTR_SKIP( d, 6)
 	UINT8 BobbyRayOrdersOnDeliveryArraySize;
 	EXTR_U8(   d, BobbyRayOrdersOnDeliveryArraySize)
@@ -3441,6 +3471,27 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 		l.BobbyRayOrdersOnDeliveryArray.resize(BobbyRayOrdersOnDeliveryArraySize);
 		size_t const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray.data()) * BobbyRayOrdersOnDeliveryArraySize;
 		f->read(l.BobbyRayOrdersOnDeliveryArray.data(), size);
+
+		// Fixup bobby ray indexes as the bobby rays inventory might change due to mods
+		for (auto& order : l.BobbyRayOrdersOnDeliveryArray) {
+			for (auto i = 0; i < order.ubNumberPurchases;) {
+				auto& item = order.BobbyRayPurchase[i];
+				auto& inv = item.fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
+				auto it = GetInventorySlotForItem(inv, item.usItemIndex);
+				if (it == l.BobbyRayUsedInventory.end()) {
+					SLOGW("Loaded bobby rays purchase item with item index {}, which is no longer eligible for bobby rays. Removing from purchase.", item.usItemIndex);
+					for (auto j = i; j < order.ubNumberPurchases; j++) {
+						order.BobbyRayPurchase[j] = order.BobbyRayPurchase[j+1];
+					}
+					order.BobbyRayPurchase[order.ubNumberPurchases-1] = BobbyRayPurchaseStruct{};
+					order.ubNumberPurchases -= 1;
+				} else {
+					auto d = std::distance(inv.begin(), it);
+					order.BobbyRayPurchase[i].usBobbyItemIndex = d;
+					i++;
+				}
+			}
+		}
 	}
 	else
 	{

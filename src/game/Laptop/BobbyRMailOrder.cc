@@ -733,11 +733,11 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			//Display Items Name
 			if( pBobbyRayPurchase[i].fUsed )
 			{
-				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayUsedInventory[ pBobbyRayPurchase[i].usBobbyItemIndex ].usItemIndex;
+				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayUsedInventory.at(pBobbyRayPurchase[i].usBobbyItemIndex).usItemIndex;
 			}
 			else
 			{
-				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayInventory[ pBobbyRayPurchase[i].usBobbyItemIndex ].usItemIndex;
+				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayInventory.at(pBobbyRayPurchase[i].usBobbyItemIndex).usItemIndex;
 			}
 
 
@@ -1295,10 +1295,15 @@ static void RemovePurchasedItemsFromBobbyRayInventory()
 		BobbyRayPurchaseStruct const& p = *i;
 		if (p.ubNumberPurchased == 0) continue;
 		// Is the item used?
-		STORE_INVENTORY *inv = p.fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
-		UINT8&            qty            = inv[p.usBobbyItemIndex].ubQtyOnHand;
+		std::vector<STORE_INVENTORY>& inv = p.fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
+		auto it = GetInventorySlotForItem(inv, p.usItemIndex);
+		if (it == inv.end()) {
+			SLOGE("could not find store inventory for purchase item {}, ignoring for removal", p.usItemIndex);
+			continue;
+		}
+		STORE_INVENTORY& inventoryItem = *it;
 		// Remove it from Bobby Rays Inventory
-		qty = qty > p.ubNumberPurchased ? qty - p.ubNumberPurchased : 0;
+		inventoryItem.ubQtyOnHand = inventoryItem.ubQtyOnHand > p.ubNumberPurchased ? inventoryItem.ubQtyOnHand - p.ubNumberPurchased : 0;
 	}
 	gfRemoveItemsFromStock = FALSE;
 }

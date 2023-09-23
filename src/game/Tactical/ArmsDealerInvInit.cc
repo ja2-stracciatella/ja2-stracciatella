@@ -273,11 +273,7 @@ UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, UINT16 const usIte
 
 BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usItemIndex, BOOLEAN const fDealerIsSelling, BOOLEAN const fUsed)
 {
-	UINT8 ubChance;
-	INT16 sInventorySlot;
-
-
-	ubChance = ChanceOfItemTransaction( bArmsDealer, usItemIndex, fDealerIsSelling, fUsed );
+	UINT8 ubChance = ChanceOfItemTransaction( bArmsDealer, usItemIndex, fDealerIsSelling, fUsed );
 
 	// if the dealer is buying, and a chance exists (i.e. the item is "eligible")
 	if (!fDealerIsSelling && (ubChance > 0))
@@ -285,13 +281,15 @@ BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usIte
 		// mark it as such
 		if (bArmsDealer == ARMS_DEALER_BOBBYR)
 		{
-			STORE_INVENTORY* pInventory = fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
-			sInventorySlot = GetInventorySlotForItem(pInventory, usItemIndex, fUsed);
-			if (sInventorySlot == -1)
+			std::vector<STORE_INVENTORY>& pInventory = fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
+			auto it = GetInventorySlotForItem(pInventory, usItemIndex);
+			if (it == pInventory.end())
 			{
 				return(FALSE);
 			}
-			pInventory[ sInventorySlot ].fPreviouslyEligible = TRUE;
+			STORE_INVENTORY& inventorySlot = *it;
+
+			inventorySlot.fPreviouslyEligible = TRUE;
 		}
 		else
 		{
@@ -374,18 +372,18 @@ UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 
 
 
-int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
+int BobbyRayItemQsortCompare(const STORE_INVENTORY& pArg1, const STORE_INVENTORY& pArg2)
 {
 	UINT16 usItem1Index;
 	UINT16 usItem2Index;
 	UINT8  ubItem1Quality;
 	UINT8  ubItem2Quality;
 
-	usItem1Index = ( ( STORE_INVENTORY * ) pArg1 ) -> usItemIndex;
-	usItem2Index = ( ( STORE_INVENTORY * ) pArg2 ) -> usItemIndex;
+	usItem1Index = pArg1.usItemIndex;
+	usItem2Index = pArg2.usItemIndex;
 
-	ubItem1Quality = ( ( STORE_INVENTORY * ) pArg1 ) -> ubItemQuality;
-	ubItem2Quality = ( ( STORE_INVENTORY * ) pArg2 ) -> ubItemQuality;
+	ubItem1Quality = pArg1.ubItemQuality;
+	ubItem2Quality = pArg2.ubItemQuality;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }

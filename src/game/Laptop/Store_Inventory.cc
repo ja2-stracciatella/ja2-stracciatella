@@ -12,41 +12,39 @@
 
 
 // SetupStoreInventory sets up the initial quantity on hand for all of Bobby Ray's inventory items
-void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
+void SetupStoreInventory( std::vector<STORE_INVENTORY>& pInventoryArray, BOOLEAN fUsed )
 {
-	UINT16 i;
-	UINT16 usItemIndex;
 	UINT8 ubNumBought;
 
 	//loop through all items BR can stock to init a starting quantity on hand
-	for(i = 0; i < LaptopSaveInfo.usInventoryListLength[fUsed]; i++)
+	for(auto& inventoryItem : pInventoryArray)
 	{
-		usItemIndex = pInventoryArray[ i ].usItemIndex;
-		Assert(usItemIndex < MAXITEMS);
+		auto item = GCM->getItem(inventoryItem.usItemIndex);
 
-		const ItemModel *item = GCM->getItem(usItemIndex);
+		Assert(item != NULL);
+
 		int maxAmount = fUsed ? GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) : GCM->getBobbyRayNewInventory()->getMaxItemAmount(item);
-		ubNumBought = DetermineInitialInvItems(ARMS_DEALER_BOBBYR, usItemIndex, maxAmount, fUsed);
+		ubNumBought = DetermineInitialInvItems(ARMS_DEALER_BOBBYR, inventoryItem.usItemIndex, maxAmount, fUsed);
 		if ( ubNumBought > 0)
 		{
 			// If doing used items
 			if( fUsed )
 			{
 				// then there should only be 1 of them, and it's damaged
-				pInventoryArray[i].ubQtyOnHand = 1;
-				pInventoryArray[i].ubItemQuality = 20 + (UINT8) Random( 60 );
+				inventoryItem.ubQtyOnHand = 1;
+				inventoryItem.ubItemQuality = 20 + (UINT8) Random( 60 );
 			}
 			else	// new
 			{
-				pInventoryArray[i].ubQtyOnHand = ubNumBought;
-				pInventoryArray[i].ubItemQuality = 100;
+				inventoryItem.ubQtyOnHand = ubNumBought;
+				inventoryItem.ubItemQuality = 100;
 			}
 		}
 		else
 		{
 			// doesn't sell / not in stock
-			pInventoryArray[i].ubQtyOnHand = 0;
-			pInventoryArray[i].ubItemQuality = 0;
+			inventoryItem.ubQtyOnHand = 0;
+			inventoryItem.ubItemQuality = 0;
 		}
 	}
 }
