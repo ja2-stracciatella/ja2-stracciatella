@@ -56,7 +56,7 @@ struct GARRISON_GROUP;
 class ContentManager : public ItemSystem, public MercSystem
 {
 public:
-	virtual ~ContentManager() noexcept(false) {};
+	virtual ~ContentManager() = default;
 
 	virtual void logConfiguration() const = 0;
 
@@ -121,7 +121,7 @@ public:
 	virtual const std::vector<ARMY_COMPOSITION>& getArmyCompositions() const = 0;
 
 	virtual const DealerModel* getDealer(uint8_t dealerID) const = 0;
-	virtual const std::vector<const DealerModel*> getDealers() const = 0;
+	virtual const std::vector<const DealerModel*>& getDealers() const = 0;
 
 	virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;

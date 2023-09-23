@@ -237,7 +237,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 
 	// Read the number of items that were saved in the map
 	UINT32 n_world_items;
-	auto itemReplacements = GCM->getMapItemReplacements();
+	auto const& itemReplacements = GCM->getMapItemReplacements();
 	f->read(&n_world_items, sizeof(n_world_items));
 
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode)

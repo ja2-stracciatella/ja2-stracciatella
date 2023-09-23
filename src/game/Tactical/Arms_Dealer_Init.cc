@@ -451,7 +451,7 @@ static void LimitArmsDealersInventory(ArmsDealerID, UINT32 uiDealerItemType, UIN
 
 static void AdjustCertainDealersInventory(void)
 {
-	auto dealers = GCM->getDealers();
+	auto const& dealers = GCM->getDealers();
 
 	//Adjust Tony's items (this restocks *instantly* 1/day, doesn't use the reorder system)
 	GuaranteeAtLeastOneItemOfType( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS );
