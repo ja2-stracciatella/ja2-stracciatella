@@ -25,7 +25,7 @@ class DefaultContentManager : public ContentManager, public IGameDataLoader
 public:
 	DefaultContentManager(RustPointer<EngineOptions> engineOptions);
 
-	virtual ~DefaultContentManager() noexcept(false) override;
+	virtual ~DefaultContentManager() override;
 
 	void logConfiguration() const override;
 
@@ -92,7 +92,7 @@ public:
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
 	virtual const ItemModel* getKeyItemForKeyId(uint16_t usKeyItem) const override;
 	virtual std::vector<ST::string> getAllSmallInventoryGraphicPaths() const override;
-	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const override;
+	virtual const std::map<uint16_t, uint16_t>& getMapItemReplacements() const override;
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const override;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const override;
@@ -105,7 +105,7 @@ public:
 	virtual const DealerInventory* getBobbyRayUsedInventory() const override;
 
 	virtual const DealerModel* getDealer(uint8_t dealerID) const override;
-	virtual const std::vector<const DealerModel*> getDealers() const override;
+	virtual const std::vector<const DealerModel*> & getDealers() const override;
 
 	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const override;
 	virtual const ShippingDestinationModel* getShippingDestination(uint8_t locationId) const override;

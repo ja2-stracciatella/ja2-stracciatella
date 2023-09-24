@@ -68,6 +68,7 @@ static void shutdownGame()
 		ShutdownGame();
 	}
 
+	SLOGD("Shutting Down Content Manager");
 	delete GCM;
 	GCM = NULL;
 

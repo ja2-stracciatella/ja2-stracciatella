@@ -142,11 +142,10 @@ void deleteElements(std::map<K, const V*> & map)
 	}
 }
 
-DefaultContentManager::~DefaultContentManager() noexcept(false)
+DefaultContentManager::~DefaultContentManager()
 {
 	// Deconstruction of vectors containing non-pointer types
 	// is left to the compiler, no need to clear() them.
-	SLOGD("Shutting Down Content Manager");
 
 	deleteElements(m_items);
 	deleteElements(m_calibres);
@@ -170,10 +169,6 @@ DefaultContentManager::~DefaultContentManager() noexcept(false)
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
 	deleteElements(m_vehicles);
-
-	m_vfs.reset();
-	m_tempDir.reset();
-	m_engineOptions.reset();
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -191,7 +186,7 @@ const DealerModel* DefaultContentManager::getDealer(uint8_t dealerID) const
 	return m_dealers[dealerID];
 }
 
-const std::vector<const DealerModel*> DefaultContentManager::getDealers() const
+const std::vector<const DealerModel*>& DefaultContentManager::getDealers() const
 {
 	return m_dealers;
 }
@@ -246,7 +241,7 @@ const FactParamsModel* DefaultContentManager::getFactParams(Fact fact) const
 /** Get map file path. */
 ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 {
-	ST::string const result = MAPSDIR "/" + mapName;
+	ST::string result = MAPSDIR "/" + mapName;
 
 	SLOGD("map file {}", result);
 
@@ -256,7 +251,7 @@ ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 /** Get radar map resource name. */
 ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapName) const
 {
-	ST::string const result = RADARMAPSDIR "/" + mapName;
+	ST::string result = RADARMAPSDIR "/" + mapName;
 
 	SLOGD("map file {}", result);
 
@@ -856,7 +851,7 @@ std::vector<ST::string> DefaultContentManager::getAllSmallInventoryGraphicPaths(
 	return v;
 }
 
-const std::map<uint16_t, uint16_t> DefaultContentManager::getMapItemReplacements() const
+const std::map<uint16_t, uint16_t>& DefaultContentManager::getMapItemReplacements() const
 {
 	return m_mapItemReplacements;
 }

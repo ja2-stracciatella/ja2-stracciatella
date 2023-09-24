@@ -1,5 +1,6 @@
 #pragma once
 
+#include "stdint.h"
 #include <string_theory/string>
 #include <vector>
 #include <map>
@@ -19,7 +20,7 @@ public:
 	virtual std::vector<ST::string> getAllSmallInventoryGraphicPaths() const = 0;
 
 	// Returns item replacements for maps
-	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const = 0;
+	virtual const std::map<uint16_t, uint16_t>& getMapItemReplacements() const = 0;
 
 	// Returns a key for
 	virtual const ItemModel* getKeyItemForKeyId(uint16_t usKeyItem) const = 0;
