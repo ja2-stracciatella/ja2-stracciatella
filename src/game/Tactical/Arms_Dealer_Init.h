@@ -6,6 +6,7 @@
 #include "JA2Types.h"
 
 #include <vector>
+#include <map>
 
 
 //The following defines indicate what items can be sold by the arms dealer
@@ -145,7 +146,7 @@ struct DEALER_ITEM_HEADER
 };
 
 extern ARMS_DEALER_STATUS gArmsDealerStatus[ NUM_ARMS_DEALERS ];
-extern DEALER_ITEM_HEADER gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
+extern std::array<std::map<uint16_t, DEALER_ITEM_HEADER>, NUM_ARMS_DEALERS> gArmsDealersInventory;
 
 
 

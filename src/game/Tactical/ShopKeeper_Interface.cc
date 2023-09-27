@@ -2155,9 +2155,15 @@ static int RepairmanItemQsortCompare(void const* pArg1, void const* pArg2)
 	Assert(inv_slot1.sSpecialItemElement != -1);
 	Assert(inv_slot2.sSpecialItemElement != -1);
 
-	DEALER_ITEM_HEADER const (& dih)[MAXITEMS] = gArmsDealersInventory[gbSelectedArmsDealerID];
-	UINT32             const repair_time1      = dih[inv_slot1.sItemIndex].SpecialItem[inv_slot1.sSpecialItemElement].uiRepairDoneTime;
-	UINT32             const repair_time2      = dih[inv_slot2.sItemIndex].SpecialItem[inv_slot2.sSpecialItemElement].uiRepairDoneTime;
+	const auto& inventory = gArmsDealersInventory[gbSelectedArmsDealerID];
+	const auto& inventoryIt1 = inventory.find(inv_slot1.sItemIndex);
+	const auto& inventoryIt2 = inventory.find(inv_slot1.sItemIndex);
+
+	Assert(inventoryIt1 != inventory.end());
+	Assert(inventoryIt2 != inventory.end());
+
+	UINT32             const repair_time1      = (*inventoryIt1).second.SpecialItem[inv_slot1.sSpecialItemElement].uiRepairDoneTime;
+	UINT32             const repair_time2      = (*inventoryIt2).second.SpecialItem[inv_slot2.sSpecialItemElement].uiRepairDoneTime;
 
 	// lower reapir time first
 	return repair_time1 < repair_time2 ? -1 :
@@ -2189,29 +2195,30 @@ static void DetermineArmsDealersSellingInventory(void)
 	guiNextFreeInvSlot     = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
-	for (auto item : GCM->getItems())
+	auto& inventory = gArmsDealersInventory[ gbSelectedArmsDealerID ];
+	for (auto& inventoryItem : inventory)
 	{
-		auto usItemIndex = item->getItemIndex();
+		auto usItemIndex = inventoryItem.first;
 		if (usItemIndex == NOTHING) continue;
 
 		//if the arms dealer has some of the inventory
-		if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubTotalItems > 0)
+		if( inventoryItem.second.ubTotalItems > 0)
 		{
 			// if there are any items in perfect condition
-			if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubPerfectItems > 0 )
+			if( inventoryItem.second.ubPerfectItems > 0 )
 			{
 				// create just ONE dealer inventory box for them all.
 				// create item info describing a perfect item
 				SetSpecialItemInfoToDefaults( &SpclItemInfo );
 				// no special element index - it's "perfect"
-				AddItemsToTempDealerInventory(usItemIndex, &SpclItemInfo, -1, gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubPerfectItems, NO_PROFILE );
+				AddItemsToTempDealerInventory(usItemIndex, &SpclItemInfo, -1, inventoryItem.second.ubPerfectItems, NO_PROFILE );
 			}
 
 			// add all active special items
-			Assert(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
-			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem.size()); ubElement++)
+			Assert(inventoryItem.second.SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(inventoryItem.second.SpecialItem.size()); ubElement++)
 			{
-				pSpecialItem = &(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ]);
+				pSpecialItem = &(inventoryItem.second.SpecialItem[ ubElement ]);
 
 				if ( pSpecialItem->fActive )
 				{
@@ -2360,6 +2367,13 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 	INVENTORY_IN_SLOT RepairItem;
 	INT8  bSlotNum;
 	UINT8 ubCnt;
+	auto& inventory = gArmsDealersInventory[ gbSelectedArmsDealerID ];
+	auto it = inventory.find(usItemIndex);
+	if (it == inventory.end()) {
+		SLOGE("Checking if repair is done for item not in dealer inventory");
+		return false;
+	}
+	auto& inventoryItem = *it;
 
 
 	// make a new shopkeeper invslot item out of it
@@ -2369,11 +2383,11 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 	RepairItem.sItemIndex = usItemIndex;
 
 	// set the owner of the item.  Slot is always -1 of course.
-	RepairItem.ubIdOfMercWhoOwnsTheItem = gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].ubOwnerProfileId;
+	RepairItem.ubIdOfMercWhoOwnsTheItem = inventoryItem.second.SpecialItem[ ubElement ].ubOwnerProfileId;
 	RepairItem.bSlotIdInOtherLocation = -1;
 
 	// Create the item object
-	MakeObjectOutOfDealerItems( usItemIndex, &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].Info ), &RepairItem.ItemObject, 1 );
+	MakeObjectOutOfDealerItems( usItemIndex, &( inventoryItem.second.SpecialItem[ ubElement ].Info ), &RepairItem.ItemObject, 1 );
 
 	if ( CanDealerRepairItem( gbSelectedArmsDealerID, RepairItem.ItemObject.usItem ) )
 	{
@@ -2399,7 +2413,6 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 
 	// if the item is imprinted (by anyone, even player's mercs), and it's the elctronics guy repairing it
 	if (
-		/*( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].Info.ubImprintID == (NO_PROFILE + 1) ) && */
 		GetDealer(gbSelectedArmsDealerID)->hasFlag(ArmsDealerFlag::REPAIRS_ELECTRONICS))
 	{
 		// then reset the imprinting!
@@ -6010,12 +6023,13 @@ static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceO
 	*puiHoursSinceOldestItemRepaired = 0;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for (auto item : GCM->getItems())
+	auto& inventory = gArmsDealersInventory[ gbSelectedArmsDealerID ];
+	for (auto& inventoryItem : inventory)
 	{
-		auto usItemIndex = item->getItemIndex();
+		auto usItemIndex = inventoryItem.first;
 		if (usItemIndex == NOTHING) continue;
 
-		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
+		pDealerItem = &( inventoryItem.second );
 
 		//if there is some items in stock
 		if( pDealerItem->ubTotalItems )
@@ -6074,12 +6088,13 @@ static void DelayRepairsInProgressBy(UINT32 uiMinutesDelayed)
 		return;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for (auto item : GCM->getItems())
+	auto &inventory = gArmsDealersInventory[gbSelectedArmsDealerID];
+	for (auto& inventoryItem : inventory)
 	{
-		auto usItemIndex = item->getItemIndex();
+		auto usItemIndex = inventoryItem.first;
 		if (usItemIndex == NOTHING) continue;
 
-		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
+		pDealerItem = &( inventoryItem.second );
 
 		//if there is some items in stock
 		if( pDealerItem->ubTotalItems )
@@ -6295,20 +6310,25 @@ static ST::string BuildDoneWhenTimeString(ArmsDealerID ubArmsDealer, UINT16 usIt
 
 	//dealer must be a repair dealer
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
+
+	const auto& inventory = gArmsDealersInventory[ ubArmsDealer ];
+	const auto& it = inventory.find(usItemIndex);
 	// element index must be valid
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() );
+	Assert( it != inventory.end() );
+	const auto& inventoryItem = *it;
+	Assert( ubElement < inventoryItem.second.SpecialItem.size() );
 	// that item must be active
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive );
+	Assert( inventoryItem.second.SpecialItem[ ubElement ].fActive );
 	// that item must be in repair
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 );
+	Assert( inventoryItem.second.SpecialItem[ ubElement ].Info.bItemCondition < 0 );
 
 	//if the item has already been repaired
-	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
+	if( inventoryItem.second.SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
 	{
 		return {};
 	}
 
-	uiDoneTime = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime;
+	uiDoneTime = inventoryItem.second.SpecialItem[ ubElement ].uiRepairDoneTime;
 
 	// round off to next higher 15 minutes
 	if ( ( uiDoneTime % REPAIR_MINUTES_INTERVAL ) > 0 )

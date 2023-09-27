@@ -293,7 +293,12 @@ BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usIte
 		}
 		else
 		{
-			gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].fPreviouslyEligible = TRUE;
+			auto& inventory = gArmsDealersInventory[bArmsDealer];
+			auto it = inventory.find(usItemIndex);
+			if (it == inventory.end()) {
+				return false;
+			}
+			(*it).second.fPreviouslyEligible = TRUE;
 		}
 	}
 

@@ -176,9 +176,9 @@ void RemoveRandomItemFromDealerInventory(INT8 bDealerID, UINT16 usItemIndex, UIN
 std::vector<DEALER_ITEM_HEADER*> GetDealerInventory(UINT8 ubDealerID)
 {
 	std::vector<DEALER_ITEM_HEADER*> items{};
-	for (DEALER_ITEM_HEADER& i : gArmsDealersInventory[ubDealerID])
+	for (auto& i : gArmsDealersInventory[ubDealerID])
 	{
-		items.push_back(&i);
+		items.push_back(&i.second);
 	}
 	return items;
 }
