@@ -598,6 +598,10 @@ ScreenID HandleTacticalUI(void)
 		}
 	}
 
+	if ( gCurrentUIMode == CONFIRM_ACTION_MODE || gCurrentUIMode == LOCKOURTURN_UI_MODE ) {
+		RefreshMouseRegions();
+	}
+
 	return( ReturnVal );
 }
 
@@ -2706,6 +2710,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 						gUIActionModeChangeDueToMouseOver = TRUE;
 
 						guiPendingOverrideEvent = M_CHANGE_TO_ACTION;
+						gfUIForceReExamineCursorData = TRUE;
 						// Return FALSE
 						return( FALSE );
 					}
