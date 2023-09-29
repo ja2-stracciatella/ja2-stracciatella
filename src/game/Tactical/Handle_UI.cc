@@ -598,10 +598,6 @@ ScreenID HandleTacticalUI(void)
 		}
 	}
 
-	if ( gCurrentUIMode == CONFIRM_ACTION_MODE || gCurrentUIMode == LOCKOURTURN_UI_MODE ) {
-		RefreshMouseRegions();
-	}
-
 	return( ReturnVal );
 }
 
@@ -905,6 +901,9 @@ static void SetUIMouseCursor(void)
 				guiCurrentUICursor = guiNewUICursor;
 			}
 		}
+	}
+	if ( gCurrentUIMode == CONFIRM_ACTION_MODE || gCurrentUIMode == LOCKOURTURN_UI_MODE ) {
+		RefreshMouseRegions();
 	}
 }
 
