@@ -2,6 +2,7 @@
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Overhead_Types.h"
+#include "SGPStrings.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Event_Pump.h"
@@ -676,6 +677,37 @@ static UINT16 ModifyExpGainByTarget(const UINT16 exp_gain, const SOLDIERTYPE* co
 static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObj);
 
 
+static ST::string GetBurstSoundName(SOLDIERTYPE const& soldier)
+{
+	auto * const weapon = GCM->getWeapon(soldier.usAttackingWeapon);
+	bool isSilenced = FindAttachment(&soldier.inv[soldier.ubAttackingHand], SILENCER) != NO_SLOT;
+	auto const& burstSound = isSilenced ? weapon->silencedBurstSound : weapon->burstSound;
+
+	if (!burstSound.empty())
+	{
+		// Was a burst sound specified and do we have the matching sound file?
+		auto tryBurstSound = st_format_printf(burstSound, soldier.bBulletsLeft);
+		if (GCM->doesGameResExists(tryBurstSound))
+		{
+			return tryBurstSound;
+		}
+	}
+
+	if (soldier.bBulletsLeft == 1)
+	{
+		// No burst sound found for 1-shot bursts, see if we can find a
+		// file for a single shot.
+		auto const& singleSound = isSilenced ? weapon->silencedSound : weapon->sound;
+		if (!singleSound.empty() && GCM->doesGameResExists(singleSound))
+		{
+			return singleSound;
+		}
+	}
+
+	// Everything else failed, use the generic burst sound.
+	return "sounds/weapons/bursttype1.wav";
+}
+
 static void UseGun(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 {
 	UINT32  uiHitChance, uiDiceRoll;
@@ -702,17 +734,10 @@ static void UseGun(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 		// ONly deduct points once
 		if ( pSoldier->bDoBurst == 1 )
 		{
-			auto weapon = GCM->getWeapon( usItemNum );
-			auto burstSound = &weapon->burstSound;
-			auto isSilenced = FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT;
-			if (isSilenced) {
-				burstSound = &weapon->silencedBurstSound;
-			}
-
-			if (!burstSound->empty()) {
-				auto renderedBurstSound = burstSound->replace("%d", ST::format("{}", pSoldier->bBulletsLeft));
-				pSoldier->uiBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, renderedBurstSound.c_str(), HIGHVOLUME, 1);
-			}
+			auto burstSound = GetBurstSoundName(*pSoldier);
+			SLOGD("Using burst sound {}", burstSound);
+			pSoldier->uiBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo,
+				burstSound.c_str(), HIGHVOLUME, 1);
 
 			DeductPoints( pSoldier, sAPCost, 0 );
 		}
