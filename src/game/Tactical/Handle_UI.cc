@@ -902,6 +902,9 @@ static void SetUIMouseCursor(void)
 			}
 		}
 	}
+	if ( gCurrentUIMode == CONFIRM_ACTION_MODE || gCurrentUIMode == LOCKOURTURN_UI_MODE ) {
+		RefreshMouseRegions();
+	}
 }
 
 void SetUIKeyboardHook( UIKEYBOARD_HOOK KeyboardHookFnc )
@@ -2706,6 +2709,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 						gUIActionModeChangeDueToMouseOver = TRUE;
 
 						guiPendingOverrideEvent = M_CHANGE_TO_ACTION;
+						gfUIForceReExamineCursorData = TRUE;
 						// Return FALSE
 						return( FALSE );
 					}
