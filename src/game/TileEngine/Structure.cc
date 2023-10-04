@@ -1708,21 +1708,12 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 
 					// now create the array!
 					pCurr->ubNumberOfZChanges = ubNumIncreasing + ubNumStable + ubNumDecreasing;
-					pCurr->pbZChange = new INT8[pCurr->ubNumberOfZChanges]{};
+					Assert(pCurr->ubNumberOfZChanges <= std::size(pCurr->pbZChange));
+					auto end = std::fill_n(pCurr->pbZChange, ubNumIncreasing, 1);
+					     end = std::fill_n(end, ubNumStable, 0);
+					     end = std::fill_n(end, ubNumDecreasing, -1);
+					std::fill(end, std::end(pCurr->pbZChange), 0);
 
-					UINT8 ubLoop2;
-					for (ubLoop2 = 0; ubLoop2 < ubNumIncreasing; ubLoop2++)
-					{
-						pCurr->pbZChange[ubLoop2] = 1;
-					}
-					for (; ubLoop2 < ubNumIncreasing + ubNumStable; ubLoop2++)
-					{
-						pCurr->pbZChange[ubLoop2] = 0;
-					}
-					for (; ubLoop2 < pCurr->ubNumberOfZChanges; ubLoop2++)
-					{
-						pCurr->pbZChange[ubLoop2] = -1;
-					}
 					if (ubNumIncreasing > 0)
 					{
 						pCurr->bInitialZChange = -ubNumIncreasing;

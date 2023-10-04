@@ -78,7 +78,6 @@ SGPVObject::~SGPVObject()
 		{
 			if (ppZStripInfo[usLoop] != NULL)
 			{
-				delete[] ppZStripInfo[usLoop]->pbZChange;
 				delete ppZStripInfo[usLoop];
 			}
 		}
