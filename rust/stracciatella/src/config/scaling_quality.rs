@@ -6,7 +6,7 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 
 /// Enum used to specify scaling quality for scaling up graphics
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]
 #[allow(non_camel_case_types)]
 pub enum ScalingQuality {

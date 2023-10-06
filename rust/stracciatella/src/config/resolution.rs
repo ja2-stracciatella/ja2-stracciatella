@@ -6,7 +6,7 @@ use std::str::FromStr;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Struct that contains a specific resolution for the game
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub struct Resolution(pub u16, pub u16);
 
 impl FromStr for Resolution {

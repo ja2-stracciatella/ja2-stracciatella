@@ -192,7 +192,7 @@ pub struct ModManager {
     available_mods: Vec<Mod>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ModManagerInitError {
     /// There are some mods enabled that dont exist on disk
     MissingEnabledMods(Vec<String>),

@@ -13,7 +13,7 @@ pub const STCI_RGB565_BLUE_MASK: u32 = 0x1F;
 /// Rgb color representation with 8 bit per color
 ///
 /// This is used in indexed STCI images as the palette colors
-#[derive(Debug, Default, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct StciRgb888(pub u8, pub u8, pub u8);
 
 impl StciRgb888 {
@@ -77,7 +77,7 @@ impl From<StciRgb565> for StciRgb888 {
 /// // Black should be black
 /// assert_eq!(StciRgb888::from(StciRgb565(0)), StciRgb888(0, 0, 0));
 /// ```
-#[derive(Debug, Default, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct StciRgb565(pub u16);
 
 impl StciRgb565 {

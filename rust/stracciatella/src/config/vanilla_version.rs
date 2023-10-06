@@ -5,7 +5,7 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 
 /// Enum for the vanilla game version that is used to run the game
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]
 #[allow(non_camel_case_types)]
 pub enum VanillaVersion {

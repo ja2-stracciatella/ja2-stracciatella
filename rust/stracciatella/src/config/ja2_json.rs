@@ -11,7 +11,7 @@ use crate::config::{EngineOptions, Resolution, ScalingQuality, VanillaVersion};
 use crate::fs::resolve_existing_components;
 use crate::json;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Ja2JsonError {
     CreatingFailed(String),
     ReadingFailed(String),

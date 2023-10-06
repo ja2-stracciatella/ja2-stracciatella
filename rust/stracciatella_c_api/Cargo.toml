@@ -15,9 +15,8 @@ libc = "0.2"
 log = "0.4"
 stracciatella = { path = "../stracciatella" }
 tempfile = "3.3"
-serde = "1.0"
-serde_derive = "1.0"
-serde_json = "1.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
 
 [target.'cfg(target_os = "android")'.dependencies.jni]
 version = "0.14"
