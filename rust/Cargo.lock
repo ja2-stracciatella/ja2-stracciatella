@@ -988,19 +988,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "remove_dir_all"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "882f368737489ea543bc5c340e6f3d34a28c39980bd9a979e47322b26f60ac40"
-dependencies = [
- "libc",
- "log",
- "num_cpus",
- "rayon",
- "winapi",
-]
-
-[[package]]
 name = "rustc-demangle"
 version = "0.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1130,7 +1117,6 @@ dependencies = [
  "ndk-sys",
  "rayon",
  "regex",
- "remove_dir_all 0.7.0",
  "send_wrapper",
  "serde",
  "serde_json",
@@ -1194,7 +1180,7 @@ dependencies = [
  "fastrand",
  "libc",
  "redox_syscall",
- "remove_dir_all 0.5.3",
+ "remove_dir_all",
  "winapi",
 ]
 
