@@ -15,7 +15,7 @@ use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 ///
 /// We only support RGB565 without alpha channel right now. All other masks will result
 /// in an error.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StciMaskRgb(pub u32, pub u32, pub u32, pub u32);
 
 impl StciMaskRgb {
@@ -78,7 +78,7 @@ impl Default for StciMaskRgb {
 ///
 /// We only support RGB565 without alpha channel right now. All other color depths will result
 /// in an error.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StciColorDepthRgb(pub u8, pub u8, pub u8, pub u8);
 
 impl StciColorDepthRgb {
@@ -137,7 +137,7 @@ impl Default for StciColorDepthRgb {
 }
 
 /// Rgb specific part of the STCI header
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct StciHeaderRgb {
     pub mask: StciMaskRgb,
     pub color_depth: StciColorDepthRgb,

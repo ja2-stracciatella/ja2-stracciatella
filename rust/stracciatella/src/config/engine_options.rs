@@ -8,7 +8,7 @@ use super::{Cli, CliError, Ja2Json, Ja2JsonError};
 
 pub const SAVED_GAME_DIR: &str = "SavedGames";
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EngineOptionsError {
     Cli(CliError),
     Ja2Json(Ja2JsonError),

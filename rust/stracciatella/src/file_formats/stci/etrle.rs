@@ -132,7 +132,7 @@ where
                     write_sequence(&current_sequence, output)?;
                     current_sequence = vec![];
                 }
-                match (current_sequence.get(0), next_byte) {
+                match (current_sequence.first(), next_byte) {
                     (None, next_byte) => {
                         current_sequence.push(next_byte);
                     }

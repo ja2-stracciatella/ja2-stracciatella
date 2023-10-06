@@ -19,6 +19,7 @@ use std::char;
 use std::convert::TryFrom;
 use std::ffi::{CStr, CString, OsStr};
 use std::fmt;
+use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use std::str;
 
@@ -111,7 +112,7 @@ impl AnyPath {
 
     /// Encodes and adds a u8 value.
     pub fn push_byte(&mut self, b: u8) {
-        self.inner.push_str(&format!("%{:02X}", b));
+        let _ = write!(&mut self.inner, "%{:02X}", b);
     }
 
     /// Encodes and adds a wide value.
@@ -119,7 +120,7 @@ impl AnyPath {
         if w < 0x80 {
             self.push_byte(w as u8);
         } else {
-            self.inner.push_str(&format!("%u{:04X}", w));
+            let _ = write!(&mut self.inner, "%u{:04X}", w);
         }
     }
 

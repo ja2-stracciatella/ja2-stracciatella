@@ -16,7 +16,7 @@ use log::{
 
 static GLOBAL_LOG_LEVEL: AtomicUsize = AtomicUsize::new(LogLevel::Info as usize);
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 #[repr(C)]
 /// Enum to represent log levels in the application
 pub enum LogLevel {

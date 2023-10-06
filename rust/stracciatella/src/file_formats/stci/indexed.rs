@@ -14,7 +14,7 @@ use std::io::{
 ///
 /// We currently only support RGB888 color depth for palettes, all other color depths in STCI
 /// images will result in an error.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StciColorDepthIndexed(pub u8, pub u8, pub u8);
 
 impl StciColorDepthIndexed {
@@ -73,7 +73,7 @@ impl Default for StciColorDepthIndexed {
 ///
 /// We currently only support 256 palette colors, all other numbers of colors
 /// will result in an error.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StciHeaderIndexed {
     pub number_of_palette_colors: u32,
     pub number_of_images: u16,
@@ -225,7 +225,7 @@ pub const STCI_SUB_IMAGE_HEADER_SIZE: usize = 16;
 ///
 /// Sub image headers determine where the data of a specific sub image
 /// is located and it's dimensions and offset when rendered.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StciSubImageHeader {
     pub data_offset: u32,
     pub data_length: u32,
@@ -284,7 +284,7 @@ bitflags::bitflags! {
 }
 
 /// Ja2 specific metadata that might exist for each sub image in an indexed STCI image
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StciAppData {
     pub wall_orientation: u8,
     pub number_of_tiles: u8,
@@ -347,7 +347,7 @@ impl StciAppData {
 /// Final representation of a sub image within a indexed STCI image.
 ///
 /// This already holds decompressed ETRLE data, so no need to further decompress anything.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StciSubImage {
     pub offset: (i16, i16),
     pub dimensions: (u16, u16),
