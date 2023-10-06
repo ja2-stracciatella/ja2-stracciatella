@@ -412,7 +412,7 @@ mod tests {
         let mut vfs = Vfs::new();
         vfs.init(&engine_options, &mod_manager).unwrap();
 
-        crate::fs::remove_dir_all(&engine_options.stracciatella_home.join("mods/test-mod/data"))
+        std::fs::remove_dir_all(&engine_options.stracciatella_home.join("mods/test-mod/data"))
             .expect("remove `test-mod/data` dir");
         std::fs::create_dir_all(&engine_options.stracciatella_home.join("mods/test-mod/dAtA"))
             .expect("create `test-mod/dAtA` dir");
