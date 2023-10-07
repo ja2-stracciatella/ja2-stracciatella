@@ -640,7 +640,7 @@ void TacticalViewPortMovementCallback(MOUSE_REGION* region, UINT32 reason) {
 		gUIFingersDown = 0;
 		if (!IsPointerOnTacticalTouchUI()) {
 			if (gCurrentUIMode == PAN_MODE) {
-				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+				TogglePanMode();
 			}
 			ResetCurrentCursorTarget();
 		} else {
@@ -2613,6 +2613,17 @@ void ToggleLookCursorMode()
 	HandleTacticalUI();
 }
 
+void TogglePanMode()
+{
+	gsScrollXOffset = 0;
+	gsScrollYOffset = 0;
+	if (gCurrentUIMode == PAN_MODE) {
+		guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+	} else {
+		guiPendingOverrideEvent = P_PANMODE;
+	}
+}
+
 
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 {
@@ -4501,7 +4512,7 @@ static ScreenID UIHandlePPanMode(UI_EVENT* pUIEvent) {
 	}
 
 	HideTacticalTouchUI();
-	guiNewUICursor = NO_UICURSOR;
+	guiNewUICursor = gfIsUsingTouch ? NO_UICURSOR : FLOATING_X_UICURSOR;
 
 	if (lastPointerXPos != -1 && lastPointerYPos != -1) {
 		auto diffX = gusMouseXPos - lastPointerXPos;

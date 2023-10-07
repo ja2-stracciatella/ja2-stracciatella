@@ -80,7 +80,7 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 		}
 		else
 		{
-			if ( fMiddleButtonDown )
+			if ( fMiddleButtonDown && !_KeyDown(SHIFT) )
 			{
 				// OK , FOR DOUBLE CLICKS - TAKE TIME STAMP & RECORD EVENT
 				if ( ( GetJA2Clock() - uiSingleClickTime ) < 300 )
@@ -1379,11 +1379,27 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 			{
 				case MOVE_MODE:
 				case CONFIRM_MOVE_MODE:
-					guiPendingOverrideEvent = P_PANMODE;
+					TogglePanMode();
 					break;
 				default:
 					break;
 			}
+		}
+	} else if (reason & MSYS_CALLBACK_REASON_MBUTTON_DWN) {
+		if (_KeyDown(SHIFT) && gpItemPointer == NULL) {
+			switch( gCurrentUIMode )
+			{
+				case MOVE_MODE:
+				case CONFIRM_MOVE_MODE:
+					TogglePanMode();
+					break;
+				default:
+					break;
+			}
+		}
+	} else if (reason & MSYS_CALLBACK_REASON_MBUTTON_UP) {
+		if (gCurrentUIMode == PAN_MODE) {
+			TogglePanMode();
 		}
 	} else if (reason & MSYS_CALLBACK_REASON_TFINGER_UP) {
 		auto selected = GetSelectedMan();
@@ -1431,8 +1447,7 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 					guiPendingOverrideEvent = PADJ_ADJUST_STANCE;
 					break;
 				case PAN_MODE:
-					// If we are in pan mode, end pan mode
-					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+					TogglePanMode();
 					break;
 				default:
 					break;
