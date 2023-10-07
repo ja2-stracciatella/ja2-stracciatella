@@ -249,6 +249,7 @@ BOOLEAN SelectedMercCanAffordMove(void);
 void ToggleHandCursorMode(UIEventKind* puiNewEvent);
 void ToggleTalkCursorMode(UIEventKind* puiNewEvent);
 void ToggleLookCursorMode();
+void TogglePanMode();
 
 void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance);
 MouseMoveState GetCursorMovementFlags();

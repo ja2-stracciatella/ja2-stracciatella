@@ -96,6 +96,10 @@ enum RenderLayerID
 
 #define NUM_ITEM_CYCLE_COLORS 20
 
+
+#define MIN_SCROLL_OFFSET_X 20
+#define MIN_SCROLL_OFFSET_Y 20
+
 static UINT16 us16BPPItemCycleWhiteColors[NUM_ITEM_CYCLE_COLORS];
 static UINT16 us16BPPItemCycleRedColors[NUM_ITEM_CYCLE_COLORS];
 static UINT16 us16BPPItemCycleYellowColors[NUM_ITEM_CYCLE_COLORS];
@@ -2052,6 +2056,7 @@ void ScrollWorld(void)
 	if (_KeyDown(ALT)) return;
 
 	UINT32 ScrollFlags = 0;
+	BOOLEAN fIsScrollingByOffset = gsScrollXOffset != 0 || gsScrollYOffset != 0;
 
 	do
 	{
@@ -2117,7 +2122,7 @@ void ScrollWorld(void)
 				if (!COUNTERDONE(STARTSCROLL)) break;
 			}
 
-			if (!gfIsUsingTouch) {
+			if (!gfIsUsingTouch && !fIsScrollingByOffset) {
 				if (gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_UP;
 				if (gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_DOWN;
 				if (gusMouseXPos >= SCREEN_WIDTH  - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_RIGHT;
@@ -2127,8 +2132,6 @@ void ScrollWorld(void)
 	}
 	while (FALSE);
 
-
-	BOOLEAN fIsScrollingByOffset = gsScrollXOffset != 0 || gsScrollYOffset != 0;
 	BOOLEAN fAGoodMove   = FALSE;
 	INT16   sScrollXStep = -1;
 	INT16   sScrollYStep = -1;
@@ -2141,9 +2144,9 @@ void ScrollWorld(void)
 
 		fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
 	} else if (fIsScrollingByOffset) {
-		if (std::abs(gsScrollXOffset) >= CELL_X_SIZE || std::abs(gsScrollYOffset) >= CELL_Y_SIZE) {
-			sScrollXStep = (gsScrollXOffset / CELL_X_SIZE) * CELL_X_SIZE;
-			sScrollYStep = (gsScrollYOffset / CELL_Y_SIZE) * CELL_Y_SIZE;
+		if (std::abs(gsScrollXOffset) >= MIN_SCROLL_OFFSET_X || std::abs(gsScrollYOffset) >= MIN_SCROLL_OFFSET_Y) {
+			sScrollXStep = (gsScrollXOffset / MIN_SCROLL_OFFSET_X) * MIN_SCROLL_OFFSET_X;
+			sScrollYStep = (gsScrollYOffset / MIN_SCROLL_OFFSET_Y) * MIN_SCROLL_OFFSET_Y;
 			if (sScrollXStep != 0) {
 				ScrollFlags |= (sScrollXStep > 0) ? SCROLL_LEFT : SCROLL_RIGHT;
 			}
@@ -2154,12 +2157,6 @@ void ScrollWorld(void)
 			sScrollYStep = std::abs(sScrollYStep);
 
 			fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
-
-			if (fAGoodMove) {
-				SetRenderFlags(RENDER_FLAG_FULL);
-				gsScrollXOffset %= CELL_X_SIZE;
-				gsScrollYOffset %= CELL_Y_SIZE;
-			}
 		}
 	}
 
@@ -2186,6 +2183,11 @@ void ScrollWorld(void)
 
 			g_scroll_inertia = true;
 
+			if (fIsScrollingByOffset) {
+				SetRenderFlags(RENDER_FLAG_FULL);
+				gsScrollXOffset %= MIN_SCROLL_OFFSET_X;
+				gsScrollYOffset %= MIN_SCROLL_OFFSET_Y;
+			}
 			// Now we actually begin our scrolling
 			HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, FALSE);
 		}
