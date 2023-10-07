@@ -272,16 +272,6 @@ std::vector<ST::string> InitGlobalLocale()
 int main(int argc, char* argv[])
 {
     try {
-		// init locale and logging
-		{
-			std::vector<ST::string> problems = InitGlobalLocale();
-			Logger_initialize("ja2.log");
-			for (const ST::string& msg : problems)
-			{
-				SLOGW("{}", msg);
-			}
-		}
-
 		#ifdef __ANDROID__
 		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
 
@@ -293,6 +283,17 @@ int main(int argc, char* argv[])
 			return EXIT_FAILURE;
 		}
 		#endif
+
+		// init locale and logging
+		{
+			std::vector<ST::string> problems = InitGlobalLocale();
+			Logger_initialize("ja2.log");
+			for (const ST::string& msg : problems)
+			{
+				SLOGW("{}", msg);
+			}
+		}
+
 		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
 		if (configFolderPath.get() == NULL) {
 			auto rustError = getRustError();

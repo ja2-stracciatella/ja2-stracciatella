@@ -14,5 +14,7 @@ data class Ja2Json(
     @SerialName("res")
     val resolution: Resolution? = null,
     @SerialName("scaling")
-    val scalingQuality: ScalingQuality? = null
+    val scalingQuality: ScalingQuality? = null,
+    @SerialName("debug")
+    val debug: Boolean? = null
 )

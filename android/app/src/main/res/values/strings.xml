@@ -4,6 +4,7 @@
     <string name="floating_action_button_start_text">Start the game</string>
     <string name="tab_text_data">Data</string>
     <string name="tab_text_settings">Settings</string>
+    <string name="tab_text_logs">Logs</string>
     <string name="select_directory_button_label">Choose</string>
     <string name="game_dir_title_text">Original Jagged Alliance 2 Game Directory</string>
     <string name="game_dir_info_text">
@@ -27,4 +28,11 @@
     <string name="resolution_info_title_text">Internal Resolution</string>
     <string name="resolution_info_text">Specify the resolution for tactical screen rendering. Texts and sprites become very small at higher internal resolutions. Note that menus and the strategic map screen are always rendered at 640x480. The launcher can try to detect the best resolution. The result will depend on the selected scaling mode.</string>
     <string name="resolution_auto_button">Detect</string>
+    <string name="logs_description_text">The logs of your latest run of the game are shown below. In case of any issues, you can check the logs for errors. If you create a bug report, please include the logs.</string>
+    <string name="logs_copy_to_clipboard_button">Copy all logs to clipboard</string>
+    <string name="logs_copied_to_clipboard_name">JA2 Stracciatella logs</string>
+    <string name="logs_copied_to_clipboard_toast">Copied logs to clipboard</string>
+    <string name="debug_mode_info_title_text">Debug Mode</string>
+    <string name="debug_mode_info_text">In case you run into issues, you can enable debug mode. This will result in more logs being written in order to be able to debug issues.</string>
+    <string name="debug_mode_label">Enable Debug Mode</string>
 </resources>

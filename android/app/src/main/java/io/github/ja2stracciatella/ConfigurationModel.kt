@@ -53,7 +53,8 @@ class Resolution(
 
 
 object ResolutionSerializer : KSerializer<Resolution> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Resolution", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("Resolution", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Resolution) {
         val width = value.width.toString()
@@ -103,6 +104,7 @@ class ConfigurationModel : ViewModel() {
     val saveGameDir = MutableLiveData<String?>()
     val resolution = MutableLiveData(Resolution.DEFAULT)
     val scalingQuality = MutableLiveData(ScalingQuality.DEFAULT)
+    val debug = MutableLiveData(false)
 
     fun setVanillaGameDir(vanillaGameDirSet: String?) {
         vanillaGameDir.value = vanillaGameDirSet
@@ -122,5 +124,9 @@ class ConfigurationModel : ViewModel() {
 
     fun setScalingQuality(quality: ScalingQuality) {
         scalingQuality.value = quality
+    }
+
+    fun setDebug(enabled: Boolean) {
+        debug.value = enabled
     }
 }

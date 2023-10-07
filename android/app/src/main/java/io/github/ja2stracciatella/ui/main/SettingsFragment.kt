@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.CompoundButton
+import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import io.github.ja2stracciatella.*
@@ -140,6 +142,13 @@ class SettingsFragment : Fragment() {
             if (launcherActivity is LauncherActivity) {
                 configurationModel.resolution.value = launcherActivity.getRecommendedResolution()
             }
+        }
+
+        configurationModel.debug.observe(viewLifecycleOwner) { enabled ->
+            binding.debugModeChip.isChecked = enabled
+        }
+        binding.debugModeChip.setOnCheckedChangeListener { _, isChecked ->
+            configurationModel.debug.value = isChecked
         }
 
         return binding.root
