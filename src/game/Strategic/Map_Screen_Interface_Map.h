@@ -15,9 +15,6 @@ void DrawMap(void);
 
 void GetScreenXYFromMapXY(const SGPSector& sMap, INT16 *psX, INT16 *psY);
 
-void InitializePalettesForMap(void);
-void ShutDownPalettesForMap( void );
-
 // plot path for helicopter
 void PlotPathForHelicopter(const SGPSector& sector);
 
