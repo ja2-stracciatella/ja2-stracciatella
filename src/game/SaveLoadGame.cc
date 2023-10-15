@@ -789,7 +789,7 @@ void LoadSavedGame(const ST::string &saveName)
 	LoadUnderGroundSectorInfoFromSavedGame(f);
 
 	BAR(1, "Squad Info...");
-	LoadSquadInfoFromSavedGameFile(f);
+	LoadSquadInfoFromSavedGameFile(f, version);
 
 	BAR(1, "Strategic Movement Groups...");
 	LoadStrategicMovementGroupsFromSavedGameFile(f);

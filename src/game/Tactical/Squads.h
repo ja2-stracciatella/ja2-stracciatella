@@ -120,7 +120,7 @@ void ExamineCurrentSquadLights( void );
 void SaveSquadInfoToSavedGameFile(HWFILE);
 
 //Load all the squad info from the saved game file
-void LoadSquadInfoFromSavedGameFile(HWFILE);
+void LoadSquadInfoFromSavedGameFile(HWFILE, UINT32);
 
 // get squad id of first free squad
 INT8 GetFirstEmptySquad( void );
