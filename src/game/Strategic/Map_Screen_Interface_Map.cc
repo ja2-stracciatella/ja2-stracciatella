@@ -832,11 +832,10 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 	map->p16BPPPalette = org_pal;
 }
 
-void InitializePalettesForMap(void)
-{
-	std::unique_ptr<SGPVSurface> uiTempMap(AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx"));
 
-	SGPPaletteEntry const* const pal = uiTempMap->GetPalette();
+static void InitializePalettesForMap(SGPPaletteEntry const * const pal)
+{
+	if (pMapDKGreenPalette) return;
 
 	pMapLTRedPalette   = Create16BPPPaletteShaded(pal, 400,   0, 0, TRUE);
 	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
@@ -845,7 +844,7 @@ void InitializePalettesForMap(void)
 }
 
 
-void ShutDownPalettesForMap(void)
+static void ShutDownPalettesForMap()
 {
 	delete[] pMapLTRedPalette;
 	delete[] pMapDKRedPalette;
@@ -2722,6 +2721,8 @@ void LoadMapScreenInterfaceMapGraphics()
 			gSecretSiteIcons[path] = AddVideoObjectFromFile(path);
 		}
 	}
+
+	InitializePalettesForMap(guiBIGMAP->GetPalette());
 }
 
 
@@ -2750,6 +2751,8 @@ void DeleteMapScreenInterfaceMapGraphics()
 		DeleteVideoObject(pair.second);
 	}
 	gSecretSiteIcons.clear();
+
+	ShutDownPalettesForMap();
 }
 
 

@@ -1308,9 +1308,6 @@ static void RefreshMapScreen()
 // THIS IS STUFF THAT RUNS *ONCE* DURING APPLICATION EXECUTION, AT INITIAL STARTUP
 void MapScreenInit(void)
 {
-	// init palettes for big map
-	InitializePalettesForMap( );
-
 	InitMapScreenInterfaceMap();
 
 	// set up leave list arrays for dismissed mercs
@@ -1326,8 +1323,6 @@ void MapScreenShutdown(void)
 {
 	// free up alloced mapscreen messages
 	FreeGlobalMessageList( );
-
-	ShutDownPalettesForMap( );
 
 	// free memory for leave list arrays for dismissed mercs
 	ShutDownLeaveList( );
