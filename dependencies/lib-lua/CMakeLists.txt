@@ -3,7 +3,7 @@
 option(LOCAL_LUA_LIB "Download and build Lua instead of searching the system" ON)
 if (NOT LOCAL_LUA_LIB)
     message(STATUS "Using system Lua")
-    find_package(Lua "5.3" REQUIRED)
+    find_package(Lua "5.3" REQUIRED EXACT)
     if (NOT LUA_FOUND)
         message(FATAL_ERROR "Lua 5.3 not found")
     endif()
