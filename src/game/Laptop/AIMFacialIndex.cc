@@ -246,7 +246,11 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 	if (IsMercDead(p))
 	{
 		// the merc is dead, so shade the face red
-		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		if (face->pShades[0] == nullptr)
+		{
+			face->pShades[0] = Create16BPPPaletteShaded(face->Palette(),
+				DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		}
 		face->CurrentShade(0);
 		shaded = FALSE;
 		text   = AimFiText[AIM_FI_DEAD];
