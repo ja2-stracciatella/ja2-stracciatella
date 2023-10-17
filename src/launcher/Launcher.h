@@ -44,6 +44,7 @@ private:
 	void updateLogs();
 	void showModDetails(const ST::string& modName);
 	void hideModDetails();
+	static bool checkGameDirectoryForCommonMistakes(const ST::string& gameDir);
 	static void openGameDirectorySelector(Fl_Widget *btn, void *userdata);
 	static void openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata);
 	static void startGame(Fl_Widget* btn, void* userdata);
