@@ -93,14 +93,14 @@ extern INT16 gsBottomRightWorldY;
 
 
 // GLOBAL COORDINATES
-extern INT16 gCenterWorldX;
-extern INT16 gCenterWorldY;
+constexpr INT16 gCenterWorldX = 800; // (was a variable in vanilla, always computed to 800).
+constexpr INT16 gCenterWorldY = 800; // (was a variable in vanilla, always computed to 800).
 extern INT16 gsLeftX;
 extern INT16 gsTopY;
 extern INT16 gsRightX;
 extern INT16 gsBottomY;
-extern INT16 gsCX;
-extern INT16 gsCY;
+constexpr INT16 gsCX = 0;    // Center of the map in screen coordinates (was a variable in vanilla, always computed to 0).
+constexpr INT16 gsCY = 1625; // Center of the map in screen coordinates (was a variable in vanilla, always computed to 1625).
 extern double gdScaleX;
 extern double gdScaleY;
 
