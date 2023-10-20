@@ -1,5 +1,6 @@
 package io.github.ja2stracciatella
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -130,10 +131,15 @@ class LauncherActivity : AppCompatActivity() {
     private fun startGame() {
         try {
             getPermissionsIfNecessaryForAction {
-                saveJA2Json()
-                NativeExceptionContainer.resetException()
-                val intent = Intent(this@LauncherActivity, StracciatellaActivity::class.java)
-                startActivity(intent)
+                GameDir.checkGameDirectoryForCommonMistakes(
+                    this,
+                    configurationModel.vanillaGameDir.value
+                ) {
+                    saveJA2Json()
+                    NativeExceptionContainer.resetException()
+                    val intent = Intent(this@LauncherActivity, StracciatellaActivity::class.java)
+                    startActivity(intent)
+                }
             }
         } catch (e: IOException) {
             val message = "Could not write ${ja2JsonPath}: ${e.message}"

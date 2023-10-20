@@ -293,7 +293,7 @@ void Launcher::populateChoices() {
 void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 	Fl_Native_File_Chooser fnfc;
-	fnfc.title("Select the original Jagged Alliance 2 install directory");
+	fnfc.title("Select the original Jagged Alliance 2 installation directory");
 	fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 	ST::char_buffer decoded = decodePath(window->gameDirectoryInput->value());
 	fnfc.directory(decoded.empty() ? nullptr : decoded.c_str());
@@ -305,12 +305,47 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 			break; // CANCEL
 		default:
 		{
-			ST::string encoded = encodePath(fnfc.filename());
-			window->gameDirectoryInput->value(encoded.c_str());
+			const auto dir = encodePath(fnfc.filename());
+			if (!checkGameDirectoryForCommonMistakes(dir)) return;
+			window->gameDirectoryInput->value(dir.c_str());
 			window->update(true);
 			break; // FILE CHOSEN
 		}
 	}
+}
+
+bool Launcher::checkGameDirectoryForCommonMistakes(const ST::string& dir) {
+	auto fileToCheck = FileMan::resolveExistingComponents(FileMan::joinPaths(dir, "data/Ja2Set.dat.xml"));
+	try {
+		if (!checkIfRelativePathExists(dir.c_str(), "Data", true)) {
+			fl_message_title("Incorrect game directory detected");
+			int choice = fl_choice(
+				"The Data directory was not found within game directory.\nThis means the chosen directory does not contain a Jagged Alliance 2 installation.",
+				"Continue",
+				"Cancel",
+				0
+			);
+			if (choice == 1) {
+				return false;
+			}
+		}
+		if (checkIfRelativePathExists(dir.c_str(), "Data/Ja2Set.dat.xml", true)) {
+			fl_message_title("Modified game directory detected");
+			auto choice = fl_choice(
+				"We detected that the game directory contains the 1.13 patch.\nJA2 Stracciatella will not work properly with the modified files.\nPlease use a clean installation of Jagged Alliance 2.",
+				"Continue",
+				"Cancel",
+				0
+			);
+
+			if (choice == 1) {
+				return false;
+			}
+		}
+	} catch (const std::runtime_error &ex) {
+		SLOGE("failed to read game dir: {}", ex.what());
+	}
+	return true;
 }
 
 void Launcher::openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata) {
@@ -499,13 +534,9 @@ void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	if (!checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data", true)) {
-		fl_message_title(window->playButton->label());
-		int choice = fl_choice("Data directory not found within game directory.\nAre you sure you want to continue?", "Stop", "Continue", 0);
-		if (choice != 1) {
-			return;
-		}
-	}
+
+	if (!checkGameDirectoryForCommonMistakes(window->gameDirectoryInput->value())) return;
+
 	window->startExecutable(false);
 }
 
@@ -533,14 +564,17 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 
 void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
+	ST::string gamedir = window->gameDirectoryInput->value();
+
+	if (!checkGameDirectoryForCommonMistakes(gamedir)) return;
+
 	fl_message_title("Guess Game Version");
 	int choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 	if (choice != 1) {
 		return;
 	}
 
-	const char* gamedir = window->gameDirectoryInput->value();
-	int guessedVersion = guessResourceVersion(gamedir);
+	int guessedVersion = guessResourceVersion(gamedir.c_str());
 	if (guessedVersion != -1) {
 		int resourceVersionIndex = 0;
 		for (GameVersion version : predefinedVersions) {

@@ -35,4 +35,11 @@
     <string name="debug_mode_info_title_text">Debug Mode</string>
     <string name="debug_mode_info_text">In case you run into issues, you can enable debug mode. This will result in more logs being written in order to be able to debug issues.</string>
     <string name="debug_mode_label">Enable Debug Mode</string>
+    <string name="continue_action">Continue</string>
+    <string name="common_mistakes_no_game_dir_selected_title">No game directory selected</string>
+    <string name="common_mistakes_no_game_dir_selected_description">You have not selected a game directory yet. Please set a game directory containing an unmodified Jagged Alliance 2 installation.</string>
+    <string name="common_mistakes_no_data_dir_found_title">Incorrect game directory detected</string>
+    <string name="common_mistakes_no_data_dir_found_description">The Data directory was not found within game directory. This means the chosen directory does not contain a Jagged Alliance 2 installation.</string>
+    <string name="common_mistakes_one_dot_thirteen_detected_title">Modified game directory detected</string>
+    <string name="common_mistakes_one_dot_thirteen_detected_description">We detected that the game directory contains the 1.13 patch. JA2 Stracciatella will not work properly with the modified files. Please use a clean installation of Jagged Alliance 2.</string>
 </resources>
