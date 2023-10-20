@@ -142,14 +142,10 @@ BOOLEAN gfIgnoreScrollDueToCenterAdjust = FALSE;
 //
 
 // GLOBAL SCROLLING PARAMS
-INT16 gCenterWorldX;
-INT16 gCenterWorldY;
 INT16 gsLeftX;      // Left edge of the current map in screen coordinates.
 INT16 gsTopY;       // Top edge of the current map in screen coordinates.
 INT16 gsRightX;     // Right edge of the current map in screen coordinates.
 INT16 gsBottomY;    // Bottom edge of the current map in screen coordinates.
-INT16 gsCX;         // Center of the map in screen coordinates (seems to be always 0).
-INT16 gsCY;         // Center of the map in screen coordinates (seems to be always 1625).
 double gdScaleX;
 double gdScaleY;
 
@@ -2252,17 +2248,12 @@ void InitRenderParams(UINT8 ubRestrictionID)
 		default: abort(); // HACK000E
 	}
 
-	gCenterWorldX = CELL_X_SIZE * WORLD_ROWS / 2;
-	gCenterWorldY = CELL_X_SIZE * WORLD_COLS / 2;
-
 	// Convert Bounding box into screen coords
 	FromCellToScreenCoordinates(gTopLeftWorldLimitX,     gTopLeftWorldLimitY,     &gsLeftX, &gsTopY);
 	FromCellToScreenCoordinates(gBottomRightWorldLimitX, gBottomRightWorldLimitY, &gsRightX, &gsBottomY);
-	FromCellToScreenCoordinates(gCenterWorldX,           gCenterWorldY,           &gsCX,  &gsCY);
 
 	// Adjust for interface height tabbing!
 	gsTopY += ROOF_LEVEL_HEIGHT;
-	gsCY  += ROOF_LEVEL_HEIGHT / 2;
 
 	SLOGD("World Screen Width {} Height {}", gsRightX - gsLeftX, gsBottomY - gsTopY);
 

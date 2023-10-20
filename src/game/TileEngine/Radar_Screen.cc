@@ -316,7 +316,6 @@ static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY)
 
 	INT16 sScreenX, sScreenY;
 	INT16	sTempX_W, sTempY_W;
-	INT16 sNewCenterWorldX, sNewCenterWorldY;
 	INT16 sNumXSteps, sNumYSteps;
 
 	// Use radar scale values to get screen values, then convert ot map values, rounding to nearest middle tile
@@ -346,10 +345,7 @@ static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY)
 	FromScreenToCellCoordinates( sScreenX, sScreenY, &sTempX_W, &sTempY_W );
 
 	// Adjust these to world center
-	sNewCenterWorldX = (INT16)(gCenterWorldX + sTempX_W);
-	sNewCenterWorldY = (INT16)(gCenterWorldY + sTempY_W);
-
-	SetRenderCenter( sNewCenterWorldX, sNewCenterWorldY );
+	SetRenderCenter( gCenterWorldX + sTempX_W, gCenterWorldY + sTempY_W);
 }
 
 
