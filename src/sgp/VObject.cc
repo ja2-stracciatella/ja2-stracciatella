@@ -35,7 +35,6 @@ SGPVObject::SGPVObject(SGPImage * const img) :
 	pix_data_{ img->pImageData.moveToUnique() },
 	etrle_object_{ img->pETRLEObject.moveToUnique() },
 	current_shade_(),
-	ppZStripInfo(),
 	subregion_count_{ img->usNumberOfObjects },
 	bit_depth_{ img->ubBitDepth },
 	next_(gpVObjectHead)
@@ -71,18 +70,6 @@ SGPVObject::~SGPVObject()
 	}
 
 	DestroyPalettes();
-
-	if (ppZStripInfo != NULL)
-	{
-		for (UINT32 usLoop = 0; usLoop < SubregionCount(); usLoop++)
-		{
-			if (ppZStripInfo[usLoop] != NULL)
-			{
-				delete ppZStripInfo[usLoop];
-			}
-		}
-		delete[] ppZStripInfo;
-	}
 }
 
 

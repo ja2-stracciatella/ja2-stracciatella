@@ -2512,8 +2512,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDest
 		return;
 	}
 	// setup for the z-column blitting stuff
-	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
-	if (pZInfo == NULL)
+	auto const& pZInfo = hSrcVObject->ppZStripInfo[usIndex];
+	if (!pZInfo)
 	{
 		SLOGW("Missing Z-Strip info on multi-Z object");
 		return;
@@ -2775,8 +2775,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuf
 		return;
 	}
 	// setup for the z-column blitting stuff
-	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
-	if (pZInfo == NULL)
+	auto const& pZInfo = hSrcVObject->ppZStripInfo[usIndex];
+	if (!pZInfo)
 	{
 		SLOGW("Missing Z-Strip info on multi-Z object");
 		return;
@@ -3042,8 +3042,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 		return;
 	}
 	// setup for the z-column blitting stuff
-	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
-	if (pZInfo == NULL)
+	auto const& pZInfo = hSrcVObject->ppZStripInfo[usIndex];
+	if (!pZInfo)
 	{
 		SLOGW("Missing Z-Strip info on multi-Z object");
 		return;
@@ -3304,8 +3304,8 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuf
 		return;
 	}
 	// setup for the z-column blitting stuff
-	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
-	if (pZInfo == NULL)
+	auto const& pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
+	if (!pZInfo)
 	{
 		SLOGW("Missing Z-Strip info on multi-Z object");
 		return;
@@ -3570,8 +3570,8 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UI
 		return;
 	}
 	// setup for the z-column blitting stuff
-	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
-	if (pZInfo == NULL)
+	auto const& pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
+	if (!pZInfo)
 	{
 		SLOGW("Missing Z-Strip info on multi-Z object");
 		return;

@@ -76,7 +76,8 @@ class SGPVObject
 	private:
 		UINT16 const*                current_shade_;
 	public:
-		ZStripInfo**                 ppZStripInfo;                   // Z-value strip info arrays
+		// Smart pointer to an array of smart pointers to ZStripInfo structs.
+		std::unique_ptr<std::unique_ptr<ZStripInfo> []> ppZStripInfo;// Z-value strip info arrays
 
 	private:
 		UINT16                       subregion_count_;               // Total number of objects
