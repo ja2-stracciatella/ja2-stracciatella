@@ -967,7 +967,10 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 	}
 	if (gpSMCurrentMerc  == &s)
 	{
-		SetCurrentInterfacePanel(InterfacePanelKind::TEAM_PANEL);
+		if (guiCurrentScreen == ScreenID::GAME_SCREEN)
+		{
+			SetCurrentInterfacePanel(InterfacePanelKind::TEAM_PANEL);
+		}
 		// SetCurrentInterfacePanel still needs the old value
 		// of gpSMCurrentMerc so it must be cleared afterwards.
 		gpSMCurrentMerc = nullptr;
