@@ -30,10 +30,11 @@
 #include "GameInstance.h"
 
 #include <climits>
+#include <memory>
+#include <stdexcept>
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <stdexcept>
 
 
 #ifdef COUNT_PATHS
@@ -1526,7 +1527,8 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 	if (!fFound) return;
 
 	UINT         const zcount = hVObject->SubregionCount();
-	ZStripInfo** const zinfo  = new ZStripInfo*[zcount]{};
+	auto & zinfo = hVObject->ppZStripInfo;
+	zinfo = std::make_unique<std::unique_ptr<ZStripInfo> []>(zcount);
 
 	INT16 sSTIStep;
 	if (fFromAnimation)
@@ -1554,7 +1556,6 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 	INT16   sNext           = sSTIStartIndex + sSTIStep;
 	BOOLEAN fFirstTime      = TRUE;
 	for (UINT32 uiLoop = sSTIStartIndex; uiLoop < zcount; ++uiLoop)
-	try
 	{
 		// Defualt to true
 		BOOLEAN fCopyIntoVo = TRUE;
@@ -1588,9 +1589,9 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 				// ATE: We allow SLIDING DOORS of 2 tile sizes...
 				if (!(pDBStructure->fFlags & STRUCTURE_ANYDOOR) || pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR)
 				{
-					ZStripInfo* const pCurr = new ZStripInfo{};
 					Assert(uiDestVoIndex < zcount);
-					zinfo[uiDestVoIndex] = pCurr;
+					auto & pCurr = zinfo[uiDestVoIndex];
+					pCurr = std::make_unique<ZStripInfo>();
 
 					UINT8 ubNumIncreasing = 0;
 					UINT8 ubNumStable     = 0;
@@ -1730,20 +1731,6 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 			}
 		}
 	}
-	catch (...)
-	{
-		for (UINT ubLoop2 = 0; ubLoop2 < uiLoop; ++ubLoop2)
-		{
-			if (zinfo[ubLoop2] != NULL)
-			{
-				delete zinfo[uiLoop];
-			}
-		}
-		delete[] zinfo;
-		throw;
-	}
-
-	hVObject->ppZStripInfo = zinfo;
 }
 
 

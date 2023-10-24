@@ -69,7 +69,7 @@ void CreateTileDatabase()
 			TileElement.sBuddyNum			= -1;
 
 			// Check for multi-z stuff
-			ZStripInfo* const* const zsi = TileSurf->vo->ppZStripInfo;
+			auto const& zsi = TileSurf->vo->ppZStripInfo;
 			if (zsi && zsi[cnt2]) TileElement.uiFlags |= MULTI_Z_TILE;
 
 			// Structure database stuff!
