@@ -4,6 +4,7 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Logger.h"
+#include "SDL_render.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -96,6 +97,20 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 void SGPVSurface::Fill(const UINT16 colour)
 {
 	SDL_FillRect(surface_.get(), NULL, colour);
+}
+
+
+SDL_Renderer * SGPVSurface::GetRenderer()
+{
+	if (!renderer_)
+	{
+		renderer_.reset(SDL_CreateSoftwareRenderer(surface_.get()));
+		if (!renderer_)
+		{
+			throw std::runtime_error("Could not create software renderer");
+		}
+	}
+	return renderer_.get();
 }
 
 

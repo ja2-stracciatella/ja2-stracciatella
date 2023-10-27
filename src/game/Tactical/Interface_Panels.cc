@@ -47,6 +47,8 @@
 #include "Points.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
+#include "SDL_pixels.h"
+#include "SDL_surface.h"
 #include "ScreenIDs.h"
 #include "ShopKeeper_Interface.h"
 #include "Soldier_Functions.h"
@@ -1174,25 +1176,16 @@ static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 
 void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 rgb, const UINT8 scale_rgb)
 {
-	SGPVSurface::Lock l(guiSAVEBUFFER);
-
 	#define s(a)				((a) / 2) + ((a) / 2) * (scale_rgb) / 100
 
 	const int r = s(0xff & rgb >> 16);
 	const int g = s(0xff & rgb >> 8);
 	const int b = s(0xff & rgb);
 
-	const UINT16 fill_color = Get16BPPColor((b << 16) + (g << 8) + r);
+	auto & surface = guiSAVEBUFFER->GetSDLSurface();
+	SDL_Rect rect{ 0, 0, sWidth, sHeight };
 
-	UINT16* const dst = l.Buffer<UINT16>();
-
-	for (int y = 0; y < sHeight; ++y)
-	{
-		for(int x = 0; x < sWidth; ++x)
-		{
-			dst[(y + sTop)*l.Pitch() / 2 + sLeft + x] = fill_color;
-		}
-	}
+	SDL_FillRect(&surface, &rect, SDL_MapRGB(surface.format, r, g, b));
 }
 
 static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 const stat_val, INT16 const x, INT16 const y, INT32 const progress)
