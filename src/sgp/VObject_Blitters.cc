@@ -167,7 +167,7 @@ Blt32_Texture(
 			SLOGW("Invalid Z-Strip index requested on multi-Z object");
 			return;
 		}
-		const ZStripInfo *zInfo = srcObj->ppZStripInfo[zStripIndex];
+		const ZStripInfo *zInfo = srcObj->ppZStripInfo[zStripIndex].get();
 		if(zInfo == nullptr) {
 			SLOGW("Missing Z-Strip info on multi-Z object");
 			return;
