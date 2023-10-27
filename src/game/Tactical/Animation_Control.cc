@@ -2573,10 +2573,10 @@ UINT16 LoadSoldierAnimationSurface(SOLDIERTYPE& s, UINT16 const anim_state)
 	{
 		// Ensure that it's been loaded
 		s.AnimCache.cache(anim_surface, s.usAnimState,
-				GetPaletteRepIndexFromID(s.HeadPal),
-				GetPaletteRepIndexFromID(s.PantsPal),
-				GetPaletteRepIndexFromID(s.VestPal),
-				GetPaletteRepIndexFromID(s.SkinPal));
+				GetPaletteRepIndexFromID(s.HeadPal).value(),
+				GetPaletteRepIndexFromID(s.PantsPal).value(),
+				GetPaletteRepIndexFromID(s.VestPal).value(),
+				GetPaletteRepIndexFromID(s.SkinPal).value());
 		return anim_surface;
 	}
 	catch (...)

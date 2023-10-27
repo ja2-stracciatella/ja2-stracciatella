@@ -5033,7 +5033,7 @@ void LoadPaletteData()
 
 void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, const ST::string& aPalRep)
 {
-	SetPaletteReplacement(p8BPPPalette, GetPaletteRepIndexFromID(aPalRep));
+	SetPaletteReplacement(p8BPPPalette, GetPaletteRepIndexFromID(aPalRep).value());
 }
 
 void  SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, UINT8 ubPalIndex)
