@@ -2622,6 +2622,18 @@ static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 
 void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 {
+	auto checkedStatus = [](INT8 status)
+	{
+		if (status < 1 || status > 100)
+		{
+			SLOGE("CreateItem: Status outside interval [1, 100]");
+			// Since we have no idea what was intended here, just
+			// choose some valid value instead.
+			status = 70;
+		}
+		return status;
+	};
+
 	*pObj = OBJECTTYPE{};
 	if (usItem >= MAXITEMS)
 	{
@@ -2630,7 +2642,7 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 
 	if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
 	{
-		CreateGun( usItem, bStatus, pObj );
+		CreateGun(usItem, checkedStatus(bStatus), pObj);
 	}
 	else if (GCM->getItem(usItem)->getItemClass() == IC_AMMO)
 	{
@@ -2649,7 +2661,7 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 		}
 		else
 		{
-			pObj->bStatus[0] = bStatus;
+			pObj->bStatus[0] = checkedStatus(bStatus);
 		}
 		pObj->ubWeight = CalculateObjectWeight( pObj );
 	}
