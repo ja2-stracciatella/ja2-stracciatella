@@ -685,7 +685,7 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc,
 		MOUSE_REGION&      m = gSMInvRegion[i];
 		MSYS_DefineRegion(&m, x, y, x + r.w, y + r.h,
 			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
-			std::move(INVMoveCallback), std::move(INVClickCallback));
+			INVMoveCallback, INVClickCallback);
 		MSYS_SetRegionUserData(&m, 0, i);
 	}
 
