@@ -78,7 +78,6 @@ static void HandleMainMenuScreen(void);
 static void RenderMainMenu(void);
 static void RenderGameVersion(void);
 static void RenderCopyright(void);
-static void RestoreButtonBackGrounds(void);
 
 
 ScreenID MainMenuScreenHandle(void)
@@ -130,14 +129,6 @@ ScreenID MainMenuScreenHandle(void)
 		RenderCopyright();
 
 		fInitialRender = FALSE;
-	}
-
-	RestoreButtonBackGrounds();
-
-	// Render buttons
-	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
-	{
-		MarkAButtonDirty(iMenuButtons[cnt]);
 	}
 
 	RenderButtons();
@@ -357,15 +348,4 @@ void RenderGameVersion() {
 
 void RenderCopyright() {
 	DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-}
-
-static void RestoreButtonBackGrounds(void)
-{
-#ifndef TESTFOREIGNFONTS
-	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
-	{
-		GUI_BUTTON const& b = *iMenuButtons[cnt];
-		RestoreExternBackgroundRect(b.X(), b.Y(), b.W() + 1, b.H() + 1);
-	}
-#endif
 }
