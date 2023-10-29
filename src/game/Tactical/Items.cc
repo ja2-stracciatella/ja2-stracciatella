@@ -3074,8 +3074,6 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 
 static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 {
-	INT8 bDamage = 0;
-
 	// if the item is protective armour, reduce the amount of damage
 	// by its armour value
 	if (GCM->getItem(usItem)->getItemClass() == IC_ARMOUR)
@@ -3093,9 +3091,10 @@ static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 	}
 	if (iMaxDamage > 0)
 	{
-		bDamage = (INT8) PreRandom( iMaxDamage );
+		// Allow maximum 100 points of damage.
+		return static_cast<INT8>(std::min(PreRandom(iMaxDamage), 100U));
 	}
-	return( bDamage );
+	return 0;
 }
 
 
