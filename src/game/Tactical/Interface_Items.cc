@@ -3,6 +3,7 @@
 #include "Font.h"
 #include "Handle_Items.h"
 #include "Isometric_Utils.h"
+#include "Item_Types.h"
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 #include "HImage.h"
@@ -649,7 +650,10 @@ static void GenerateConsString(ST::string& zItemCons, const OBJECTTYPE& o, UINT3
 }
 
 
-void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_DESC const* const pCamoRegion, MOUSE_CALLBACK const INVMoveCallback, MOUSE_CALLBACK const INVClickCallback, MOUSE_CALLBACK const INVMoveCamoCallback, MOUSE_CALLBACK const INVClickCamoCallback)
+void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc,
+	INV_REGION_DESC const* const pCamoRegion,
+	MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback,
+	MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback)
 {
 	// Load all four body type images
 	guiBodyInvVO[0][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
@@ -667,7 +671,9 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 	// Add camo region
 	UINT16 const x = pCamoRegion->uX;
 	UINT16 const y = pCamoRegion->uY;
-	MSYS_DefineRegion(&gSMInvCamoRegion, x, y, x + CAMO_REGION_WIDTH, y + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCamoCallback, INVClickCamoCallback);
+	MSYS_DefineRegion(&gSMInvCamoRegion, x, y, x + CAMO_REGION_WIDTH,
+		y + CAMO_REGION_HEIGHT,	MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
+		std::move(INVMoveCamoCallback), std::move(INVClickCamoCallback));
 
 	// Add regions for inventory slots
 	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
@@ -677,7 +683,9 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 		INT16       const  y = pRegionDesc[i].uY;
 		INV_REGIONS const& r = gSMInvData[i];
 		MOUSE_REGION&      m = gSMInvRegion[i];
-		MSYS_DefineRegion(&m, x, y, x + r.w, y + r.h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
+		MSYS_DefineRegion(&m, x, y, x + r.w, y + r.h,
+			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
+			INVMoveCallback, INVClickCallback);
 		MSYS_SetRegionUserData(&m, 0, i);
 	}
 
@@ -687,14 +695,20 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 
 void InitKeyRingInterface(MOUSE_CALLBACK KeyRingClickCallback)
 {
-	MSYS_DefineRegion(&gKeyRingPanel, KEYRING_X, KEYRING_Y, KEYRING_X + KEYRING_WIDTH, KEYRING_Y + KEYRING_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingClickCallback);
+	MSYS_DefineRegion(&gKeyRingPanel, KEYRING_X, KEYRING_Y,
+		KEYRING_X + KEYRING_WIDTH, KEYRING_Y + KEYRING_HEIGHT,
+		MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK,
+		std::move(KeyRingClickCallback));
 	gKeyRingPanel.SetFastHelpText(TacticalStr[KEYRING_HELP_TEXT]);
 }
 
 
 void InitMapKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback )
 {
-	MSYS_DefineRegion(&gKeyRingPanel, MAP_KEYRING_X, MAP_KEYRING_Y, MAP_KEYRING_X + KEYRING_WIDTH, MAP_KEYRING_Y + KEYRING_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingClickCallback);
+	MSYS_DefineRegion(&gKeyRingPanel, MAP_KEYRING_X, MAP_KEYRING_Y,
+		MAP_KEYRING_X + KEYRING_WIDTH, MAP_KEYRING_Y + KEYRING_HEIGHT,
+		MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK,
+		std::move(KeyRingClickCallback));
 	gKeyRingPanel.SetFastHelpText(TacticalStr[KEYRING_HELP_TEXT]);
 }
 
@@ -1679,34 +1693,24 @@ BOOLEAN InItemDescriptionBox( )
 
 void CycleItemDescriptionItem( )
 {
-	INT16 usOldItem;
-
 	// Delete old box...
 	DeleteItemDescriptionBox( );
 
 	// Make new item....
-	usOldItem = gpItemDescSoldier->inv[ HANDPOS ].usItem;
+	auto usOldItem = gpItemDescSoldier->inv[HANDPOS].usItem;
 
-	if ( _KeyDown( SHIFT ) )
+	if (_KeyDown(SDLK_END))
 	{
-		usOldItem--;
-
-		if ( usOldItem < 0 )
-		{
-			usOldItem = MAXITEMS-1;
-		}
+		// cycle backwards
+		usOldItem = usOldItem > 1 ? usOldItem - 1 : MAXITEMS - 1;
 	}
 	else
 	{
-		usOldItem++;
-
-		if ( usOldItem > MAXITEMS )
-		{
-			usOldItem = 0;
-		}
+		// cycle forwards
+		usOldItem = usOldItem < MAXITEMS - 1 ? usOldItem + 1 : 1;
 	}
 
-	CreateItem( (UINT16)usOldItem, 100, &( gpItemDescSoldier->inv[ HANDPOS ] ) );
+	CreateItem(usOldItem, 100, &gpItemDescSoldier->inv[HANDPOS]);
 
 	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), INTERFACE_START_X + 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
 }
