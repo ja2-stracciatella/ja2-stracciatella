@@ -3074,6 +3074,15 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 
 static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 {
+	// 10000 must match the number used in ObliterateSector (Turn_Based_Input.cc).
+	if (iMaxDamage == 10'000)
+	{
+		// If the poor guy got annihilated by the cheat key alt+O, we
+		// want to leave his items intact, so we pretend he died from
+		// stubbing his toe here.
+		iMaxDamage = 2;
+	}
+
 	// if the item is protective armour, reduce the amount of damage
 	// by its armour value
 	if (GCM->getItem(usItem)->getItemClass() == IC_ARMOUR)
