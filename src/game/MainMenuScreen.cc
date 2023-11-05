@@ -32,7 +32,6 @@
 #include <string_theory/format>
 
 
-//#define TESTFOREIGNFONTS
 
 // MENU ITEMS
 enum
@@ -45,13 +44,8 @@ enum
 	NUM_MENU_ITEMS
 };
 
-#if defined TESTFOREIGNFONTS
-#	define MAINMENU_Y         0
-#	define MAINMENU_Y_SPACE  18
-#else
-#	define MAINMENU_Y       277
-#	define MAINMENU_Y_SPACE  37
-#endif
+#define MAINMENU_Y       277
+#define MAINMENU_Y_SPACE  37
 
 
 static BUTTON_PICS* iMenuImages[NUM_MENU_ITEMS];
@@ -78,7 +72,6 @@ static void HandleMainMenuScreen(void);
 static void RenderMainMenu(void);
 static void RenderGameVersion(void);
 static void RenderCopyright(void);
-static void RestoreButtonBackGrounds(void);
 
 
 ScreenID MainMenuScreenHandle(void)
@@ -130,14 +123,6 @@ ScreenID MainMenuScreenHandle(void)
 		RenderCopyright();
 
 		fInitialRender = FALSE;
-	}
-
-	RestoreButtonBackGrounds();
-
-	// Render buttons
-	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
-	{
-		MarkAButtonDirty(iMenuButtons[cnt]);
 	}
 
 	RenderButtons();
@@ -202,10 +187,8 @@ void InitMainMenu(void)
 {
 	CreateDestroyMainMenuButtons(TRUE);
 
-#	define GFX_DIR LOADSCREENSDIR
-	guiMainMenuBackGroundImage = AddVideoObjectFromFile(GFX_DIR "/mainmenubackground.sti");
-	guiJa2LogoImage            = AddVideoObjectFromFile(GFX_DIR "/ja2logo.sti");
-#undef GFX_DIR
+	guiMainMenuBackGroundImage = AddVideoObjectFromFile(LOADSCREENSDIR "/mainmenubackground.sti");
+	guiJa2LogoImage            = AddVideoObjectFromFile(LOADSCREENSDIR "/ja2logo.sti");
 
 	// If there are no saved games, disable the button
 	if (!AreThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
@@ -347,7 +330,6 @@ static void RenderMainMenu(void)
 {
 	BltVideoObject(FRAME_BUFFER, guiMainMenuBackGroundImage, 0, STD_SCREEN_X,       STD_SCREEN_Y     );
 	BltVideoObject(FRAME_BUFFER, guiJa2LogoImage,            0, STD_SCREEN_X + 188, STD_SCREEN_Y + 15);
-	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 }
 
 void RenderGameVersion() {
@@ -357,15 +339,4 @@ void RenderGameVersion() {
 
 void RenderCopyright() {
 	DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-}
-
-static void RestoreButtonBackGrounds(void)
-{
-#ifndef TESTFOREIGNFONTS
-	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
-	{
-		GUI_BUTTON const& b = *iMenuButtons[cnt];
-		RestoreExternBackgroundRect(b.X(), b.Y(), b.W() + 1, b.H() + 1);
-	}
-#endif
 }
