@@ -2622,6 +2622,18 @@ static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 
 void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 {
+	auto checkedStatus = [](INT8 status)
+	{
+		if (status < 1 || status > 100)
+		{
+			SLOGE("CreateItem: Status outside interval [1, 100]");
+			// Since we have no idea what was intended here, just
+			// choose some valid value instead.
+			status = 70;
+		}
+		return status;
+	};
+
 	*pObj = OBJECTTYPE{};
 	if (usItem >= MAXITEMS)
 	{
@@ -2630,7 +2642,7 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 
 	if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
 	{
-		CreateGun( usItem, bStatus, pObj );
+		CreateGun(usItem, checkedStatus(bStatus), pObj);
 	}
 	else if (GCM->getItem(usItem)->getItemClass() == IC_AMMO)
 	{
@@ -2649,7 +2661,7 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 		}
 		else
 		{
-			pObj->bStatus[0] = bStatus;
+			pObj->bStatus[0] = checkedStatus(bStatus);
 		}
 		pObj->ubWeight = CalculateObjectWeight( pObj );
 	}
@@ -3062,8 +3074,6 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 
 static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 {
-	INT8 bDamage = 0;
-
 	// if the item is protective armour, reduce the amount of damage
 	// by its armour value
 	if (GCM->getItem(usItem)->getItemClass() == IC_ARMOUR)
@@ -3081,9 +3091,10 @@ static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 	}
 	if (iMaxDamage > 0)
 	{
-		bDamage = (INT8) PreRandom( iMaxDamage );
+		// Allow maximum 100 points of damage.
+		return static_cast<INT8>(std::min(PreRandom(iMaxDamage), 100U));
 	}
-	return( bDamage );
+	return 0;
 }
 
 
