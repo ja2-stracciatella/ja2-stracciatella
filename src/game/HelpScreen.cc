@@ -1872,7 +1872,7 @@ static void ChangeHelpScreenSubPage(void)
 
 static void ClearHelpScreenTextBuffer(void)
 {
-	guiHelpScreenTextBufferSurface->Fill(0);
+	guiHelpScreenTextBufferSurface->Fill(0x000000FF);
 	InvalidateScreen();
 }
 
@@ -1925,21 +1925,21 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 	//if there ARE scroll bars, draw the
 	if( !( gHelpScreen.usTotalNumberOfLinesInBuffer <= HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER ) )
 	{
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA,	iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 227, 198, 88 ) ) );
+		ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA,	iTopPosScrollBox+iSizeOfBox-1, RGB(227, 198, 88) );
 
 		//display the line
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32* const pDestBuf         = l.Buffer<UINT32>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		// draw the gold highlite line on the top and left
-		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
-		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
+		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, RGB(235, 222, 171), pDestBuf);
+		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX, iTopPosScrollBox+iSizeOfBox-1, RGB(235, 222, 171), pDestBuf);
 
 		// draw the shadow line on the bottom and right
-		LineDraw(FALSE, usPosX, iTopPosScrollBox+iSizeOfBox-1, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
-		LineDraw(FALSE, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
+		LineDraw(FALSE, usPosX, iTopPosScrollBox+iSizeOfBox-1, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, RGB(65, 49, 6), pDestBuf);
+		LineDraw(FALSE, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, RGB(65, 49, 6), pDestBuf);
 	}
 }
 

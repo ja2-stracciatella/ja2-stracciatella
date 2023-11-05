@@ -236,8 +236,8 @@ void EnterBobbyRGuns()
 
 void ExitBobbyRGuns()
 {
-	DeleteVideoObject(guiGunBackground);
-	DeleteVideoObject(guiGunsGrid);
+	delete guiGunBackground;
+	delete guiGunsGrid;
 	DeleteBobbyBrTitle();
 	DeleteBobbyMenuBar();
 
@@ -302,7 +302,7 @@ void InitBobbyBrTitle()
 
 void DeleteBobbyBrTitle()
 {
-	DeleteVideoObject(guiBrTitle);
+	delete guiBrTitle;
 	MSYS_RemoveRegion(&gSelectedTitleImageLinkRegion);
 	DeleteMouseRegionForBigImage();
 }
@@ -722,7 +722,7 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 	if (gamepolicy(f_draw_item_shadow))
 	{
 		//blt the shadow of the item
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage.get(), subImageIndex, sCenX - 2, sCenY + 2);
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage.get(), subImageIndex, sCenX - g_ui.m_stdScreenScale * 2, sCenY + g_ui.m_stdScreenScale * 2);
 	}
 
 	BltVideoObject(FRAME_BUFFER, uiImage.get(), subImageIndex, sCenX, sCenY);

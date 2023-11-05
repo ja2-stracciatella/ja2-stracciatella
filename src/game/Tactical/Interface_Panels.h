@@ -129,6 +129,6 @@ extern BOOLEAN      gfSMDisableForItems;
 void LoadInterfacePanelGraphics();
 void DeleteInterfacePanelGraphics();
 
-void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 rgb, const UINT8 scale_rgb);
+void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 fill_color, const UINT32 scale_color);
 
 #endif

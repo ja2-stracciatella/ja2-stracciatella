@@ -74,7 +74,7 @@ SGPImage* LoadPCXFileToImage(const ST::string& filename, UINT16 const contents)
 			dst[i].r      = palette[i * 3 + 0];
 			dst[i].g      = palette[i * 3 + 1];
 			dst[i].b      = palette[i * 3 + 2];
-			dst[i].a      = 0;
+			dst[i].a      = 255;
 		}
 		img->pui16BPPPalette = Create16BPPPalette(dst);
 	}
@@ -90,10 +90,10 @@ static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 const w, UINT16
 		if (*src >= 0xC0)
 		{
 			UINT32      n_px   = *src++ & 0x3F;
-			UINT8 const colour = *src++;
+			UINT8 const color = *src++;
 			if (n_px > n) n_px = n;
 			n -= n_px;
-			for (; n_px != 0; --n_px) *dst++ = colour;
+			for (; n_px != 0; --n_px) *dst++ = color;
 		}
 		else
 		{

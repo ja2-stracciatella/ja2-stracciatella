@@ -8,6 +8,8 @@
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Soldier_Control.h"
+#include "UILayout.h"
+#include "VideoScale.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
@@ -631,7 +633,8 @@ STRUCTURE_FILE_REF* GetAnimationStructureRef(const SOLDIERTYPE* const s, const U
 
 
 // Surface mamagement functions
-void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex, UINT16 const usAnimState)
+void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex, UINT16 const usAnimState,
+			  UINT8 head, UINT8 pants, UINT8 vest, UINT8 skin)
 {
 	if (usSurfaceIndex >= NUMANIMATIONSURFACETYPES)
 	{
@@ -641,7 +644,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 	AnimationSurfaceType* const a = &gAnimSurfaceDatabase[usSurfaceIndex];
 
 	// Check if surface is loaded
-	if (a->hVideoObject != NULL)
+	if (a->hVideoObject != NULL && a->head == head && a->pants == pants && a->vest == vest && a->skin == skin)
 	{
 		// just increment usage counter ( below )
 		SLOGD("Surface Database: Hit {}", usSurfaceIndex);
@@ -650,10 +653,22 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 	{
 		try
 		{
+			a->head = head;
+			a->pants = pants;
+			a->vest = vest;
+			a->skin = skin;
+
 			// Load into memory
 			SLOGD("Surface Database: Loading {}", usSurfaceIndex);
 
-			AutoSGPImage   hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
+			AutoSGPImage img(CreateImage(a->Filename, IMAGE_ALLDATA | IMAGE_HACK254));
+			Assert(img->pPalette != nullptr);
+//			SetPaletteReplacement(img->pPalette, a->head);
+//			SetPaletteReplacement(img->pPalette, a->vest);
+//			SetPaletteReplacement(img->pPalette, a->pants);
+//			SetPaletteReplacement(img->pPalette, a->skin);
+
+			AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_tacticalScreenScale, g_ui.m_tacticalScreenScale));
 			AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage.get()));
 
 			// Get aux data
@@ -684,6 +699,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 			}
 
 			// Set video object index
+			delete a->hVideoObject;
 			a->hVideoObject = hVObject.release();
 
 			// Determine if we have a problem with #frames + directions ( ie mismatch )

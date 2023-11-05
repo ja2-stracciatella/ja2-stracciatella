@@ -134,89 +134,54 @@ void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX
 	*psCellY = floor((FLOAT(sScreenY) / HALF_TILE_HEIGHT - FLOAT(sScreenX) / HALF_TILE_WIDTH) / 2.0f);
 }
 
-// These two functions take into account that our world is projected and attached
-// to the screen (0,0) in a specific way, and we MUSt take that into account then
-// determining screen coords
-
-void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScreenX, FLOAT *pdScreenY )
-{
-	FLOAT dScreenX, dScreenY;
-
-	dScreenX = ( 2 * dCellX ) - ( 2 * dCellY );
-	dScreenY = dCellX + dCellY;
-
-	*pdScreenX = dScreenX;
-	*pdScreenY = dScreenY;
-}
-
-
-BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
+BOOLEAN GetMouseXY(INT16 *psMouseX, INT16 *psMouseY)
 {
 	INT16 sWorldX, sWorldY;
-
-	if ( !GetMouseWorldCoords( &sWorldX, &sWorldY ) )
-	{
-		(*psMouseX) = 0;
-		(*psMouseY) = 0;
-		return( FALSE );
+	if(!GetMouseWorldCoords(&sWorldX, &sWorldY)) {
+		*psMouseX = 0;
+		*psMouseY = 0;
+		return FALSE;
 	}
 
 	// Find start block
-	(*psMouseX) = ( sWorldX / CELL_X_SIZE );
-	(*psMouseY) = ( sWorldY / CELL_Y_SIZE );
+	Assert(sWorldX > 0 && sWorldY > 0);
+	*psMouseX = sWorldX / CELL_X_SIZE;
+	*psMouseY = sWorldY / CELL_Y_SIZE;
 
-	return( TRUE );
+	return TRUE;
 }
 
 
-BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
+BOOLEAN GetMouseWorldCoords(INT16 *psMouseX, INT16 *psMouseY)
 {
-	INT16 sOffsetX, sOffsetY;
-	INT16 sTempPosX_W, sTempPosY_W;
-	INT16 sStartPointX_W, sStartPointY_W;
+	if(!(gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)) {
+		*psMouseX = 0;
+		*psMouseY = 0;
+		return FALSE;
+	}
 
 	// Convert mouse screen coords into offset from center
-	if ( ! ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
-	{
-		*psMouseX = 0;
-		*psMouseY = 0;
-		return( FALSE );
-	}
+	const INT16 sOffsetX = gViewportRegion.MouseXPos - g_ui.m_tacticalMapCenterX;
+	const INT16 sOffsetY = gViewportRegion.MouseYPos - g_ui.m_tacticalMapCenterY;
 
-	SGPPoint cursorPosition;
-	GetCursorPos(cursorPosition);
-	sOffsetX = cursorPosition.iX - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
-	sOffsetY = cursorPosition.iY - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
-
-	// OK, Let's offset by a value if our interfac level is changed!
-	if ( gsInterfaceLevel != 0 )
-	{
-		//sOffsetY -= 50;
-	}
-
-
-	FromScreenToCellCoordinates( sOffsetX, sOffsetY, &sTempPosX_W, &sTempPosY_W );
+	INT16 sTempPosX_W, sTempPosY_W;
+	FromScreenToCellCoordinates(sOffsetX, sOffsetY, &sTempPosX_W, &sTempPosY_W);
 
 	// World start point is Render center plus this distance
-	sStartPointX_W = gsRenderCenterX + sTempPosX_W;
-	sStartPointY_W = gsRenderCenterY + sTempPosY_W;
-
+	const INT16 sStartPointX_W = gsRenderCenterX + sTempPosX_W;
+	const INT16 sStartPointY_W = gsRenderCenterY + sTempPosY_W;
 
 	// check if we are out of bounds..
-	if (sStartPointX_W < 0 || sStartPointX_W >= WORLD_COORD_COLS || sStartPointY_W < 0 || sStartPointY_W >= WORLD_COORD_ROWS)
-	{
+	if(sStartPointX_W < 0 || sStartPointX_W >= WORLD_COORD_COLS || sStartPointY_W < 0 || sStartPointY_W >= WORLD_COORD_ROWS) {
 		*psMouseX = 0;
 		*psMouseY = 0;
-		return( FALSE );
+		return FALSE;
 	}
 
-	// Determine Start block and render offsets
-	// Find start block
-	// Add adjustment for render origin as well
-	(*psMouseX) = sStartPointX_W;
-	(*psMouseY) = sStartPointY_W;
+	*psMouseX = sStartPointX_W;
+	*psMouseY = sStartPointY_W;
 
-	return( TRUE );
+	return TRUE;
 }
 
 void GetAbsoluteScreenXYFromMapPos(const GridNo pos, INT16* const psWorldScreenX, INT16* const psWorldScreenY)

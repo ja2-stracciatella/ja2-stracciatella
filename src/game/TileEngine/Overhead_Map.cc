@@ -394,10 +394,9 @@ void GoIntoOverheadMap( )
 
 	// Add shades to persons....
 	SGPVObject*            const vo  = uiPERSONS;
-	SGPPaletteEntry const* const pal = vo->Palette();
-	vo->pShades[0] = Create16BPPPaletteShaded(pal, 256, 256, 256, FALSE);
-	vo->pShades[1] = Create16BPPPaletteShaded(pal, 310, 310, 310, FALSE);
-	vo->pShades[2] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
+	vo->pShades[0] = SHADE_STD(255, 255, 255);
+	vo->pShades[1] = SHADE_STD(255, 255, 255); // 310, 310, 310
+	vo->pShades[2] = SHADE_STD(0, 0, 0);
 
 	gfOverheadMapDirty = TRUE;
 
@@ -484,7 +483,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 	gfOverheadMapDirty = FALSE;
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32* const pDestBuf         = l.Buffer<UINT32>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 
 		{ // Begin Render Loop
@@ -512,7 +511,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							INT16         const  sX    = sTempPosX_S;
 							INT16         const  sY    = sTempPosY_S - sHeight + gsRenderHeight / 5;
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 					}
 
@@ -580,7 +581,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							sY += gsRenderHeight / 5;
 
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 
 						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pShadowHead; n; n = n->pNext)
@@ -594,7 +597,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							sY += gsRenderHeight / 5;
 
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferShadow(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferShadow(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 
 						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pStructHead; n; n = n->pNext)
@@ -619,7 +622,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							sY += gsRenderHeight / 5;
 
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 					}
 
@@ -680,7 +685,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							pTile.vo->CurrentShade(n->ubShadeLevel);
 
 							// RENDER!
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 					}
 
@@ -709,7 +716,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 	// OK, blacken out edges of smaller maps...
 	if (gMapInformation.ubRestrictedScrollID != 0)
 	{
-		UINT16 const black = Get16BPPColor(FROMRGB(0, 0, 0));
+		const UINT32 black = RGB(0, 0, 0);
 		INT16 sX1;
 		INT16 sX2;
 		INT16 sY1;
@@ -742,7 +749,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 static void RenderOverheadOverlays(void)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32* const pDestBuf         = l.Buffer<UINT32>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	// Soldier overlay
@@ -784,7 +791,9 @@ static void RenderOverheadOverlays(void)
 
 		if (gfEditMode && GameMode::getInstance()->isEditorMode() && gpSelected && gpSelected->pSoldier == &s)
 		{ //editor:  show the selected edited merc as the yellow one.
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 0);
+			Blt32BPPDataTo32BPPBufferTransparent(
+						reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+						uiDestPitchBYTES, marker, sX, sY, 0);
 		}
 		else
 		{
@@ -794,7 +803,9 @@ static void RenderOverheadOverlays(void)
 				&s == gpTacticalPlacementSelectedSoldier                     ? 7       :
 				&s == gpTacticalPlacementHilightedSoldier && s.uiStatusFlags ? 8       :
 				s.bTeam;
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, region);
+			Blt32BPPDataTo32BPPBufferTransparent(
+						reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+						uiDestPitchBYTES, marker, sX, sY, region);
 			ETRLEObject const& e = marker->SubregionProperties(region);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX + e.sOffsetX, sY + e.sOffsetY, e.usWidth, e.usHeight);
 		}
@@ -823,22 +834,22 @@ static void RenderOverheadOverlays(void)
 			UINT32 col;
 			if (gsOveritemPoolGridNo == wi.sGridNo)
 			{
-				col = FROMRGB(255, 0, 0);
+				col = RGB(255, 0, 0);
 			}
 			else if (gfRadarCurrentGuyFlash)
 			{
-				col = FROMRGB(0, 0, 0);
+				col = RGB(0, 0, 0);
 			}
 			else switch (wi.bVisible)
 			{
-				case HIDDEN_ITEM:      col = FROMRGB(  0,   0, 255); break;
-				case BURIED:           col = FROMRGB(255,   0,   0); break;
-				case HIDDEN_IN_OBJECT: col = FROMRGB(  0,   0, 255); break;
-				case INVISIBLE:        col = FROMRGB(  0, 255,   0); break;
-				case VISIBLE:          col = FROMRGB(255, 255, 255); break;
+				case HIDDEN_ITEM:      col = RGB(  0,   0, 255); break;
+				case BURIED:           col = RGB(255,   0,   0); break;
+				case HIDDEN_IN_OBJECT: col = RGB(  0,   0, 255); break;
+				case INVISIBLE:        col = RGB(  0, 255,   0); break;
+				case VISIBLE:          col = RGB(255, 255, 255); break;
 				default:               abort();
 			}
-			PixelDraw(FALSE, sX, sY, Get16BPPColor(col), pDestBuf);
+			PixelDraw(FALSE, sX, sY, col, pDestBuf);
 			InvalidateRegion(sX, sY, sX + 1, sY + 1);
 		}
 	}

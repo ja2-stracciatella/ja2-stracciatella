@@ -584,9 +584,9 @@ static void DrawFileDialog(void)
 
 	iFileDlgButtons[FILEDIALOG_BACKGROUND]->Draw();
 
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+4), (69+3+24), (179+4+240), (69+123+24), Get16BPPColor(FROMRGB(24, 61, 81)) );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4+24), (179+4+240), (69+123+24), Get16BPPColor(FROMRGB(136, 138, 135)) );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4+24), (179+3+240), (69+122+24), Get16BPPColor(FROMRGB(250, 240, 188)) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+4), (69+3+24), (179+4+240), (69+123+24), RGB(24, 61, 81) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4+24), (179+4+240), (69+123+24), RGB(136, 138, 135) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4+24), (179+3+240), (69+122+24), RGB(250, 240, 188) );
 
 	for (auto i = 1; i < NUM_FILEDIALOG_BUTTONS; i++) {
 		if (iFileDlgButtons[i]) {

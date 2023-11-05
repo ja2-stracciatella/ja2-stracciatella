@@ -3,6 +3,7 @@
 
 #include "Handle_UI.h"
 #include "MouseSystem.h"
+#include "UILayout.h"
 
 #include <string_theory/string>
 
@@ -44,7 +45,7 @@
 #define ARROWS_SHOW_UP_ABOVE_CLIMB3	0x00800000
 #define ARROWS_SHOW_DOWN_CLIMB		0x02000000
 
-#define ROOF_LEVEL_HEIGHT		50
+#define ROOF_LEVEL_HEIGHT		(g_ui.m_tacticalScreenScale * 50)
 
 #define SCROLL_LEFT_PADDING -30
 #define SCROLL_RIGHT_PADDING 10

@@ -18,6 +18,7 @@
 #include "Video.h"
 #include "WordWrap.h"
 #include "UILayout.h"
+#include "FontCompat.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -65,21 +66,21 @@ struct CRDT_NODE
 #define CRDT_END_OF_SECTION		'}'
 
 
-#define CRDT_NAME_LOC_X		(375 + STD_SCREEN_X)
-#define CRDT_NAME_LOC_Y		(420 + STD_SCREEN_Y)
-#define CRDT_NAME_TITLE_LOC_Y		(435 + STD_SCREEN_Y)
-#define CRDT_NAME_FUNNY_LOC_Y		(450 + STD_SCREEN_Y)
-#define CRDT_NAME_LOC_WIDTH		260
+#define CRDT_NAME_LOC_X		(g_ui.m_stdScreenScale * 375 + STD_SCREEN_X)
+#define CRDT_NAME_LOC_Y		(g_ui.m_stdScreenScale * 420 + STD_SCREEN_Y)
+#define CRDT_NAME_TITLE_LOC_Y		(g_ui.m_stdScreenScale * 435 + STD_SCREEN_Y)
+#define CRDT_NAME_FUNNY_LOC_Y		(g_ui.m_stdScreenScale * 450 + STD_SCREEN_Y)
+#define CRDT_NAME_LOC_WIDTH		(g_ui.m_stdScreenScale * 260)
 #define CRDT_NAME_LOC_HEIGHT		( CRDT_NAME_FUNNY_LOC_Y - CRDT_NAME_LOC_Y + GetFontHeight( CRDT_NAME_FONT ) )
 
 #define CRDT_NAME_FONT			FONT12ARIAL
 
 
-#define CRDT_WIDTH_OF_TEXT_AREA	210
-#define CRDT_TEXT_START_LOC		(10 + STD_SCREEN_X)
+#define CRDT_WIDTH_OF_TEXT_AREA	(g_ui.m_stdScreenScale * 210)
+#define CRDT_TEXT_START_LOC		(g_ui.m_stdScreenScale * 10 + STD_SCREEN_X)
 
 
-#define CRDT_SCROLL_PIXEL_AMOUNT	1
+#define CRDT_SCROLL_PIXEL_AMOUNT	g_ui.m_stdScreenScale * 1
 #define CRDT_NODE_DELAY_AMOUNT		25
 
 #define CRDT_SPACE_BN_SECTIONS		50
@@ -87,8 +88,8 @@ struct CRDT_NODE
 
 #define CRDT_START_POS_Y		(SCREEN_HEIGHT - 1 - STD_SCREEN_Y)
 
-#define CRDT_EYE_WIDTH			30
-#define CRDT_EYE_HEIGHT		12
+#define CRDT_EYE_WIDTH			(g_ui.m_stdScreenScale * 30)
+#define CRDT_EYE_HEIGHT		(g_ui.m_stdScreenScale * 12)
 
 #define CRDT_EYES_CLOSED_TIME		150
 
@@ -149,8 +150,8 @@ static INT32 giCurrentlySelectedFace;
 
 static SGPFont guiCreditScreenActiveFont;  // the font that is used
 static SGPFont guiCreditScreenTitleFont;   // the font that is used
-static UINT8 gubCreditScreenActiveColor; // color of the font
-static UINT8 gubCreditScreenTitleColor;  // color of a Title node
+static UINT32 gubCreditScreenActiveColor; // color of the font
+static UINT32 gubCreditScreenTitleColor;  // color of a Title node
 
 static UINT32 guiCrdtNodeScrollSpeed;      // speed credits go up at
 static UINT32 guiCrdtLastTimeUpdatingNode; // the last time a node was read from the file
@@ -222,10 +223,10 @@ try
 		// Make a mouse region
 		MOUSE_REGION* const  r = &gCrdtMouseRegions[i];
 		CreditFace    const& f = gCreditFaces[i];
-		UINT16        const  x = f.sX + STD_SCREEN_X;
-		UINT16        const  y = f.sY + STD_SCREEN_Y;
-		UINT16        const  w = f.sWidth;
-		UINT16        const  h = f.sHeight;
+		UINT16        const  x = g_ui.m_stdScreenScale * f.sX + STD_SCREEN_X;
+		UINT16        const  y = g_ui.m_stdScreenScale * f.sY + STD_SCREEN_Y;
+		UINT16        const  w = g_ui.m_stdScreenScale * f.sWidth;
+		UINT16        const  h = g_ui.m_stdScreenScale * f.sHeight;
 		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, MSYS_NO_CALLBACK);
 		MSYS_SetRegionUserData(r, 0, i);
 	}
@@ -287,9 +288,15 @@ static void HandleCreditScreen(void)
 
 	if (giCurrentlySelectedFace != -1)
 	{
-		DrawTextToScreen(gzCreditNames[giCurrentlySelectedFace],     CRDT_NAME_LOC_X, CRDT_NAME_LOC_Y,       CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
-		DrawTextToScreen(gzCreditNameTitle[giCurrentlySelectedFace], CRDT_NAME_LOC_X, CRDT_NAME_TITLE_LOC_Y, CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
-		DrawTextToScreen(gzCreditNameFunny[giCurrentlySelectedFace], CRDT_NAME_LOC_X, CRDT_NAME_FUNNY_LOC_Y, CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
+		DrawTextToScreen(gzCreditNames[giCurrentlySelectedFace],
+			CRDT_NAME_LOC_X, CRDT_NAME_LOC_Y, CRDT_NAME_LOC_WIDTH,
+			CRDT_NAME_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, INVALIDATE_TEXT | CENTER_JUSTIFIED);
+		DrawTextToScreen(gzCreditNameTitle[giCurrentlySelectedFace],
+			CRDT_NAME_LOC_X, CRDT_NAME_TITLE_LOC_Y, CRDT_NAME_LOC_WIDTH,
+			CRDT_NAME_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, INVALIDATE_TEXT | CENTER_JUSTIFIED);
+		DrawTextToScreen(gzCreditNameFunny[giCurrentlySelectedFace],
+			CRDT_NAME_LOC_X, CRDT_NAME_FUNNY_LOC_Y, CRDT_NAME_LOC_WIDTH,
+			CRDT_NAME_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, INVALIDATE_TEXT | CENTER_JUSTIFIED);
 	}
 }
 
@@ -334,7 +341,7 @@ static void AddCreditNode(UINT32 uiFlags, const ST::string& pString)
 
 	//Determine the font and the color to use
 	SGPFont  uiFontToUse;
-	UINT8 uiColorToUse;
+	UINT32 uiColorToUse;
 	if (uiFlags & CRDT_FLAG__TITLE)
 	{
 		uiFontToUse  = guiCreditScreenTitleFont;
@@ -347,16 +354,13 @@ static void AddCreditNode(UINT32 uiFlags, const ST::string& pString)
 	}
 
 	//Calculate the height of the string
-	pNodeToAdd->sHeightOfString = DisplayWrappedString(0, 0, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, DONT_DISPLAY_TEXT) + 1;
+	pNodeToAdd->sHeightOfString = DisplayWrappedString(0, 0, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, FONT_MCOLOR_TRANSPARENT, DONT_DISPLAY_TEXT) + 1;
 
 	//starting y position on the screen
 	pNodeToAdd->sPosY = CRDT_START_POS_Y;
 
 	SGPVSurface* const vs = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
 	pNodeToAdd->uiVideoSurfaceImage = vs;
-
-	vs->SetTransparency(0);
-	vs->Fill(0);
 
 	//write the string onto the surface
 	SetFontDestBuffer(vs);
@@ -437,6 +441,13 @@ static UINT32 GetNumber(const char* string)
 	return v;
 }
 
+static UINT32 GetColor(const char* const string)
+{
+	const unsigned int v = GetNumber(string);
+	Assert(v < 256);
+	return gColorFromPalette[v];
+}
+
 
 static void HandleCreditFlags(UINT32 uiFlags);
 
@@ -467,8 +478,8 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 				case CRDT_DELAY_BN_STRINGS_CODE:  guiGapBetweenCreditNodes    = GetNumber(s); break;
 				case CRDT_DELAY_BN_SECTIONS_CODE: guiGapBetweenCreditSections = GetNumber(s); break;
 				case CRDT_SCROLL_SPEED:           guiCrdtNodeScrollSpeed      = GetNumber(s); break;
-				case CRDT_TITLE_FONT_COLOR:       gubCreditScreenTitleColor   = GetNumber(s); break;
-				case CRDT_ACTIVE_FONT_COLOR:      gubCreditScreenActiveColor  = GetNumber(s); break;
+				case CRDT_TITLE_FONT_COLOR:       gubCreditScreenTitleColor   = GetColor(s); break;
+				case CRDT_ACTIVE_FONT_COLOR:      gubCreditScreenActiveColor  = GetColor(s); break;
 
 				case CRDT_FONT_JUSTIFICATION:
 					switch (GetNumber(s))
@@ -553,8 +564,8 @@ static void HandleCreditEyeBlinking()
 		UINT32 const now = GetJA2Clock();
 		if (now - f.uiLastBlinkTime > f.sBlinkFreq)
 		{
-			INT32 const x = f.sEyeX + STD_SCREEN_X;
-			INT32 const y = f.sEyeY + STD_SCREEN_Y;
+			INT32 const x = g_ui.m_stdScreenScale * f.sEyeX + STD_SCREEN_X;
+			INT32 const y = g_ui.m_stdScreenScale * f.sEyeY + STD_SCREEN_Y;
 			BltVideoObject(FRAME_BUFFER, guiCreditFaces, gfx, x, y);
 			InvalidateRegion(x, y, x + CRDT_EYE_WIDTH, y + CRDT_EYE_HEIGHT);
 
@@ -563,7 +574,7 @@ static void HandleCreditEyeBlinking()
 		}
 		else if (now > f.uiEyesClosedTime)
 		{
-			RestoreExternBackgroundRect(f.sEyeX + STD_SCREEN_X, f.sEyeY + STD_SCREEN_Y, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT);
+			RestoreExternBackgroundRect(g_ui.m_stdScreenScale * f.sEyeX + STD_SCREEN_X, g_ui.m_stdScreenScale * f.sEyeY + STD_SCREEN_Y, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT);
 
 			f.uiEyesClosedTime = 0;
 		}

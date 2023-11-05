@@ -22,10 +22,10 @@
 
 #define MAX_DIRTY_REGIONS 128
 
-#define RED_MASK 0xF800
-#define GREEN_MASK 0x07E0
-#define BLUE_MASK 0x001F
-#define ALPHA_MASK 0
+#define RED_MASK 0xFF000000 // TODO: maxrd2 we don't need these
+#define GREEN_MASK 0x00FF0000
+#define BLUE_MASK 0x0000FF00
+#define ALPHA_MASK 0x000000FF
 
 #define OVERSAMPLING_SCALE 4
 
@@ -114,9 +114,6 @@ void VideoSetBrightness(float brightness)
 }
 
 
-static void GetRGBDistribution();
-
-
 void InitializeVideoManager(const VideoScaleQuality quality,
                             const int32_t targetFPS)
 {
@@ -182,7 +179,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
-			SDL_PIXELFORMAT_RGB565,
+			SDL_PIXELFORMAT_RGBA8888,
 			SDL_TEXTUREACCESS_TARGET,
 			SCREEN_WIDTH * OVERSAMPLING_SCALE, SCREEN_HEIGHT * OVERSAMPLING_SCALE);
 
@@ -199,7 +196,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	}
 
 	ScreenTexture = SDL_CreateTexture(GameRenderer,
-					SDL_PIXELFORMAT_RGB565,
+					SDL_PIXELFORMAT_RGBA8888,
 					SDL_TEXTUREACCESS_STREAMING,
 					SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -218,7 +215,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	}
 
 	MouseCursor = SDL_CreateRGBSurface(
-		0, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
+		0, MAX_CURSOR_WIDTH * g_ui.m_stdScreenScale, MAX_CURSOR_HEIGHT * g_ui.m_stdScreenScale, PIXEL_DEPTH,
 		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
 	SDL_SetColorKey(MouseCursor, SDL_TRUE, 0);
@@ -232,9 +229,6 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 
 	// Initialize state variables
 	gfForceFullScreenRefresh = TRUE;
-
-	// This function must be called to setup RGB information
-	GetRGBDistribution();
 
 	TimeBetweenRefreshScreens = std::chrono::microseconds{1'000'000} / targetFPS;
 }
@@ -584,27 +578,6 @@ void RefreshScreen(void)
 	gfForceFullScreenRefresh = FALSE;
 	guiDirtyRegionCount = 0;
 	guiDirtyRegionExCount = 0;
-}
-
-
-static void GetRGBDistribution()
-{
-	SDL_PixelFormat const& f = *ScreenBuffer->format;
-
-	UINT32          const  r = f.Rmask;
-	UINT32          const  g = f.Gmask;
-	UINT32          const  b = f.Bmask;
-
-	/* Mask the highest bit of each component. This is used for alpha blending. */
-	guiTranslucentMask = (r & r >> 1) | (g & g >> 1) | (b & b >> 1);
-
-	gusRedMask   = static_cast<UINT16>(r);
-	gusGreenMask = static_cast<UINT16>(g);
-	gusBlueMask  = static_cast<UINT16>(b);
-
-	gusRedShift   = f.Rshift - f.Rloss;
-	gusGreenShift = f.Gshift - f.Gloss;
-	gusBlueShift  = f.Bshift - f.Bloss;
 }
 
 

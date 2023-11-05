@@ -27,10 +27,10 @@ extern BOOLEAN fOkToBeepNewMessage;
 
 
 
-void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str);
+void ScreenMsg(UINT32 usColor, UINT8 ubPriority, const ST::string& str);
 
 // same as screen message, but only display to mapscreen message system, not tactical
-void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str);
+void MapScreenMessage(UINT32 usColor, UINT8 ubPriority, const ST::string& str);
 
 void ScrollString( void );
 void DisplayStringsInMapScreenMessageList( void );
@@ -47,7 +47,7 @@ void ClearDisplayedListOfTacticalStrings( void );
 // clear ALL strings in the tactical Message Queue
 void ClearTacticalMessageQueue( void );
 
-void LoadMapScreenMessagesFromSaveGameFile(HWFILE, bool stracLinuxFormat);
+void LoadMapScreenMessagesFromSaveGameFile(const HWFILE hFile, bool stracLinuxFormat, const UINT32 version);
 void SaveMapScreenMessagesToSaveGameFile(HWFILE);
 
 // use these if you are not Kris

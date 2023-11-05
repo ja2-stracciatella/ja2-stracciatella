@@ -3,6 +3,7 @@
 
 #include "Buffer.h"
 #include "Types.h"
+#include "VideoScale.h"
 #include <memory>
 #include <SDL.h>
 
@@ -44,8 +45,8 @@ class SGPVSurface
 
 		void SetTransparency(COLORVAL);
 
-		/* Fill an entire surface with a colour */
-		void Fill(UINT16 colour);
+		/* Fill an entire surface with a color */
+		void Fill(UINT32 color);
 
 		void ShadowRect(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
 		void ShadowRectUsingLowPercentTable(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
@@ -54,7 +55,7 @@ class SGPVSurface
 		SDL_Surface const& GetSDLSurface() const noexcept { return *surface_; }
 
 		/* Fills an rectangular area with a specified color value. */
-		friend void ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
+		friend void ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT32 Color);
 
 		// Blits a video Surface to another video Surface
 		friend void BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 iDestY, SGPBox const* src_rect);
@@ -65,9 +66,12 @@ class SGPVSurface
 
 	private:
 		SurfaceUniquePtr                           surface_;
+
+		friend void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 const DestX, INT32 const DestY, SGPBox const* const src_rect);
+
 		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
-		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
+		UINT32                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits TODO:maxrd2 dropme???
 	private:
 		SGPVSurface*                 next_;
 
@@ -130,12 +134,15 @@ inline SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 	return new SGPVSurface(Width, Height, BitDepth);
 }
 
-SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
+SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
+SGPVSurface* AddVideoSurfaceFromFile(const char* Filename, ScaleCallback *callback=nullptr, double scaleX=NAN, double scaleY=NAN);
+
+void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const iDestX, INT32 const iDestY, SGPBox const* const src_box);
 
 /* Blits a video surface in half size to another video surface.
  * If SrcRect is NULL the entire source surface is blitted.
  * Only blitting from 8bbp surfaces to 16bpp surfaces is supported. */
-void BltVideoSurfaceHalf(SGPVSurface* dst, SGPVSurface* src, INT32 DestX, INT32 DestY, SGPBox const* src_rect);
+void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 const DestX, INT32 const DestY, SGPBox const* const src_rect);
 
 // Deletes all data, including palettes
 static inline void DeleteVideoSurface(SGPVSurface* const vs)
@@ -151,4 +158,5 @@ void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const fi
 /** Fill video surface with another one with stretch. */
 void FillVideoSurfaceWithStretch(SGPVSurface* const dst, SGPVSurface* const src);
 
+void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, const UINT32 Color);
 #endif

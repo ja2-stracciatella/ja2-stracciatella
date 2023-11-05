@@ -1,5 +1,6 @@
 #include "Directories.h"
 #include "Font.h"
+#include "FontCompat.h"
 #include "HImage.h"
 #include "Laptop.h"
 #include "MercPortrait.h"
@@ -471,13 +472,10 @@ static void RenderPersonnelStats(SOLDIERTYPE const& s)
 static void RenderPersonnelFace(MERCPROFILESTRUCT const& p, BOOLEAN const alive)
 try
 {
-	{ AutoSGPVObject guiFACE(LoadBigPortrait(p));
+	{
+		AutoSGPVObject guiFACE(LoadBigPortrait(p));
 		if (!alive)
-		{
-			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-			//set the red pallete to the face
-			guiFACE->CurrentShade(0);
-		}
+			guiFACE->SetShadeColor(DEAD_MERC_SHADE);
 		BltVideoObject(FRAME_BUFFER, guiFACE.get(), 0, IMAGE_BOX_X, IMAGE_BOX_Y);
 	}
 
@@ -947,20 +945,17 @@ try
 		// found the next actual guy
 		INT32 const x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 		INT32 const y = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
-		{ AutoSGPVObject guiFACE(LoadSmallPortrait(GetProfile(s->ubProfile)));
+		{
+			AutoSGPVObject guiFACE(LoadSmallPortrait(GetProfile(s->ubProfile)));
 			if (s->bLife <= 0)
-			{
-				guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-				//set the red pallete to the face
-				guiFACE->CurrentShade(0);
-			}
+				guiFACE->SetShadeColor(DEAD_MERC_SHADE);
 			BltVideoObject(FRAME_BUFFER, guiFACE.get(), 0, x, y);
 		}
 
 		if (s->bLife <= 0)
 		{
 			//if the merc is dead, display it
-			DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], x, y + SMALL_PORT_HEIGHT / 2, SMALL_PORTRAIT_WIDTH_NO_BORDERS, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], x, y + SMALL_PORT_HEIGHT / 2, SMALL_PORTRAIT_WIDTH_NO_BORDERS, FONT10ARIAL, FONT_COLOR_P145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 
 		i++;
@@ -1859,11 +1854,7 @@ try
 	AutoSGPVObject guiFACE(LoadSmallPortrait(GetProfile(iId)));
 
 	if (fDead)
-	{
-		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-		//set the red pallete to the face
-		guiFACE->CurrentShade(0);
-	}
+		guiFACE->SetShadeColor(DEAD_MERC_SHADE);
 
 	const INT32 x = SMALL_PORTRAIT_START_X + iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;

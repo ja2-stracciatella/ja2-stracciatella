@@ -41,7 +41,7 @@ void UpdateTexture(SDL_Renderer * const renderer)
 
 	SDL_FillRect(Surface.get(), nullptr, 0);
 
-	auto * const pixels = static_cast<UINT16*>(Surface->pixels);
+	auto * const pixels = static_cast<UINT32*>(Surface->pixels);
 
 	MPrintBuffer(pixels, Surface->pitch, 0, 0,
 		ST::format("{} FPS", FramesSinceLastDisplay));
@@ -115,7 +115,7 @@ void ToggleOnOff()
 		RenderPresentPtr = RenderPresentHook;
 		GameLoopPtr = GameLoopHook;
 
-		Surface.reset(SDL_CreateRGBSurfaceWithFormat(0, 320, 26, 0, SDL_PIXELFORMAT_RGB565));
+		Surface.reset(SDL_CreateRGBSurfaceWithFormat(0, 320, 26, 0, SDL_PIXELFORMAT_RGBA8888));
 		SDL_SetColorKey(Surface.get(), true, 0);
 	}
 	else

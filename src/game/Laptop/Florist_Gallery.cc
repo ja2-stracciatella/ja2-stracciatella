@@ -272,7 +272,7 @@ static void DeleteFlowerButtons(void)
 
 	for(i=0; i<gubPrevNumberOfFlowers; i++)
 	{
-		DeleteVideoObject(guiFlowerImages[i]);
+		delete guiFlowerImages[i];
 	}
 
 	UnloadButtonImage( guiGalleryButtonImage );

@@ -17,14 +17,6 @@
 #define BLACK_SUBSTITUTE	0x0001
 
 
-UINT16 gusRedMask = 0;
-UINT16 gusGreenMask = 0;
-UINT16 gusBlueMask = 0;
-INT16  gusRedShift = 0;
-INT16  gusBlueShift = 0;
-INT16  gusGreenShift = 0;
-
-
 SGPImage* CreateImage(const ST::string& filename, const UINT16 fContents)
 {
 	// depending on extension of filename, use different image readers
@@ -35,18 +27,34 @@ SGPImage* CreateImage(const ST::string& filename, const UINT16 fContents)
 		throw std::logic_error(errorMessage.c_str());
 	}
 
-	if (ext.compare_i("STI") == 0) {
-		return  LoadSTCIFileToImage(filename, fContents);
-	}
-	if (ext.compare_i("PCX") == 0) {
-		return LoadPCXFileToImage( filename, fContents);
-	}
-	if (ext.compare_i("TGA") == 0) {
-		return LoadTGAFileToImage( filename, fContents);
+	// TODO: maxrd2: check for override resources here
+
+	SGPImage *img =
+		ext.compare_i("STI") == 0 ? LoadSTCIFileToImage(filename, fContents) :
+		ext.compare_i("PCX") == 0 ? LoadPCXFileToImage(filename, fContents) :
+		ext.compare_i("TGA") == 0 ? LoadTGAFileToImage(filename, fContents) :
+		throw std::logic_error(ST::format("Tried to load image `{}` with unknown extension", filename).c_str());
+
+	if(img->pPalette) {
+		if(fContents & IMAGE_REMOVE_PAL1) {
+			// offical 256 color resource images use color 1 to draw font shadow, since we'll be drawing
+			// the shadow with algorithm we're setting it to transparent
+			img->pPalette[1].r = img->pPalette[1].g = img->pPalette[1].b = img->pPalette[1].a = 0;
+		}
+		if(fContents & IMAGE_REMOVE_PAL254) {
+			// offical 256 color resource images use color 254 to draw item outline, since we'll be drawing
+			// the outline with algorithm we're setting it to transparent
+			img->pPalette[254].r = img->pPalette[254].g = img->pPalette[254].b = img->pPalette[254].a = 0;
+		} else if(fContents & IMAGE_HACK254) {
+			// offical 256 color resource images use color 254 to draw shadow
+			img->pPalette[254].r = 0x02;
+			img->pPalette[254].g = 0x05;
+			img->pPalette[254].b = 0x04;
+			img->pPalette[254].a = 0x7F; // 50% opacity
+		}
 	}
 
-	auto errorMessage = ST::format("Tried to load image `{}` with unknown extension", filename);
-	throw std::logic_error(errorMessage.c_str());
+	return img;
 }
 
 
@@ -79,6 +87,35 @@ static BOOLEAN Copy8BPPImageTo8BPPBuffer(SGPImage const* const img, BYTE* const 
 	return TRUE;
 }
 
+static BOOLEAN Copy32BPPImageTo32BPPBuffer(SGPImage const* const img, BYTE* const pDestBuf, UINT16 const usDestWidth, UINT16 const usDestHeight, UINT16 const usX, UINT16 const usY, SGPBox const* const src_box)
+{
+	CHECKF(usX < img->usWidth);
+	CHECKF(usY < img->usHeight);
+	CHECKF(src_box->w > 0);
+	CHECKF(src_box->h > 0);
+
+	// Determine memcopy coordinates
+	const UINT32 uiLineSize = src_box->w;
+	INT32 uiNumLines = src_box->h;
+
+	CHECKF(usDestWidth  >= uiLineSize);
+	CHECKF(usDestHeight >= uiNumLines);
+
+	// Copy line by line
+	UINT32 *dst = reinterpret_cast<UINT32*>(pDestBuf)
+			+ usY * usDestWidth
+			+ usX;
+	const UINT32 *src = reinterpret_cast<const UINT32 *>(static_cast<const UINT8 *>(img->pImageData))
+			+ src_box->y * img->usWidth
+			+ src_box->x;
+	while(uiNumLines-- > 0) {
+		memcpy(dst, src, uiLineSize * 4);
+		dst += usDestWidth;
+		src += img->usWidth;
+	}
+
+	return TRUE;
+}
 
 static BOOLEAN Copy16BPPImageTo16BPPBuffer(SGPImage const* const img, BYTE* const pDestBuf, UINT16 const usDestWidth, UINT16 const usDestHeight, UINT16 const usX, UINT16 const usY, SGPBox const* const src_box)
 {
@@ -166,6 +203,11 @@ BOOLEAN CopyImageToBuffer(SGPImage const* const img, UINT32 const fBufferType, B
 		SLOGD("Automatically Copying 16 BPP Imagery.");
 		return Copy16BPPImageTo16BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
+	if (img->ubBitDepth == 32 && fBufferType == BUFFER_32BPP)
+	{
+		SLOGD("Automatically Copying 32 BPP Imagery.");
+		return Copy32BPPImageTo32BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
+	}
 
 	return FALSE;
 }
@@ -182,7 +224,7 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 		UINT8 const r = pPalette[cnt].r;
 		UINT8 const g = pPalette[cnt].g;
 		UINT8 const b = pPalette[cnt].b;
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = RGB(r, g, b);
 	}
 
 	return p16BPPPalette;
@@ -241,94 +283,10 @@ UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale,
 		UINT8 r = std::min(rmod, 255U);
 		UINT8 g = std::min(gmod, 255U);
 		UINT8 b = std::min(bmod, 255U);
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = RGB(r, g, b);
 	}
 	return p16BPPPalette;
 }
-
-
-// Convert from RGB to 16 bit value
-UINT16 Get16BPPColor( UINT32 RGBValue )
-{
-	UINT8 r = SGPGetRValue(RGBValue);
-	UINT8 g = SGPGetGValue(RGBValue);
-	UINT8 b = SGPGetBValue(RGBValue);
-
-	UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
-	UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
-	UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
-
-	UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
-
-	// if our color worked out to absolute black, and the original wasn't
-	// absolute black, convert it to a VERY dark grey to avoid transparency
-	// problems
-	if (usColor == 0 && RGBValue != 0) usColor = BLACK_SUBSTITUTE;
-
-	return usColor;
-}
-
-
-// Convert from 16 BPP to RGBvalue
-UINT32 GetRGBColor(UINT16 Value16BPP)
-{
-	UINT32 r16 = Value16BPP & gusRedMask;
-	UINT32 g16 = Value16BPP & gusGreenMask;
-	UINT32 b16 = Value16BPP & gusBlueMask;
-
-	UINT32 r = (gusRedShift   < 0 ? r16 << -gusRedShift   : r16 >> gusRedShift);
-	UINT32 g = (gusGreenShift < 0 ? g16 << -gusGreenShift : g16 >> gusGreenShift);
-	UINT32 b = (gusBlueShift  < 0 ? b16 << -gusBlueShift  : b16 >> gusBlueShift);
-
-	r &= 0x000000ff;
-	g &= 0x000000ff;
-	b &= 0x000000ff;
-
-	UINT32 val = FROMRGB(r, g, b);
-	return val;
-}
-
-
-void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
-{
-	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
-	{
-		*Px = ((*Px >> 1) & ~0x001F) | (*Px & 0x001F);
-	}
-}
-
-void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
-{
-	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
-	{
-		*Px = ((*Px >> 1) & 0x03E0) | (*Px & ~0x07E0);
-	}
-}
-
-void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
-{
-	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
-	{
-		*Px = (*Px & ~0x003F) | ((*Px << 1) & 0x003F);
-	}
-}
-
-
-void ConvertRGBDistribution565ToAny(UINT16* const p16BPPData, UINT32 const uiNumberOfPixels)
-{
-	UINT16* px = p16BPPData;
-	for (size_t n = uiNumberOfPixels; n != 0; --n)
-	{
-		// put the 565 RGB 16-bit value into a 32-bit RGB value
-		UINT32 const r   = (*px         ) >> 11;
-		UINT32 const g   = (*px & 0x07E0) >>  5;
-		UINT32 const b   = (*px & 0x001F);
-		UINT32 const rgb = FROMRGB(r, g, b);
-		// then convert the 32-bit RGB value to whatever 16 bit format is used
-		*px++ = Get16BPPColor(rgb);
-	}
-}
-
 
 #ifdef WITH_UNITTESTS
 #undef FAIL

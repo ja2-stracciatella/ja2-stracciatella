@@ -39,7 +39,7 @@ void RenderIMPPersonalityEntrance( void )
 	//RenderIMPSymbol( 112, 30 );
 
 	// indent
-	RenderAvgMercIndentFrame(90, 40 );
+	RenderAvgMercIndentFrame(90 * g_ui.m_stdScreenScale, 40 * g_ui.m_stdScreenScale);
 }
 
 
@@ -69,7 +69,7 @@ static void CreateIMPPersonalityEntranceButtons(void)
 							pImpButtonText[ 1 ], FONT12ARIAL,
 							FONT_WHITE, DEFAULT_SHADOW,
 							FONT_WHITE, DEFAULT_SHADOW,
-							LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 314,
+							LAPTOP_SCREEN_UL_X + 136 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 314 * g_ui.m_stdScreenScale,
 							MSYS_PRIORITY_HIGH,
 							BtnIMPPersonalityEntranceDoneCallback);
 

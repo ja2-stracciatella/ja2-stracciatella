@@ -44,23 +44,23 @@
 #define OPT_HIGHLIGHT_COLOR			FONT_MCOLOR_WHITE//FONT_MCOLOR_LTYELLOW
 
 
-#define OPTIONS_SCREEN_WIDTH			440
-#define OPTIONS_SCREEN_HEIGHT			400
+#define OPTIONS_SCREEN_WIDTH			(g_ui.m_stdScreenScale * 440)
+#define OPTIONS_SCREEN_HEIGHT			(g_ui.m_stdScreenScale * 400)
 
 
-#define OPTIONS__TOP_LEFT_X			(100 + STD_SCREEN_X)
-#define OPTIONS__TOP_LEFT_Y			(40  + STD_SCREEN_Y)
+#define OPTIONS__TOP_LEFT_X			(g_ui.m_stdScreenScale * 100 + STD_SCREEN_X)
+#define OPTIONS__TOP_LEFT_Y			(g_ui.m_stdScreenScale * 40  + STD_SCREEN_Y)
 #define OPTIONS__BOTTOM_RIGHT_X		OPTIONS__TOP_LEFT_X + OPTIONS_SCREEN_WIDTH
 #define OPTIONS__BOTTOM_RIGHT_Y		OPTIONS__TOP_LEFT_Y + OPTIONS_SCREEN_HEIGHT
 
-#define OPT_SAVE_BTN_X				( 51 + STD_SCREEN_X)
-#define OPT_LOAD_BTN_X				(190 + STD_SCREEN_X)
-#define OPT_QUIT_BTN_X				(329 + STD_SCREEN_X)
-#define OPT_DONE_BTN_X				(469 + STD_SCREEN_X)
-#define OPT_BTN_Y				(438 + STD_SCREEN_Y)
+#define OPT_SAVE_BTN_X				(g_ui.m_stdScreenScale *  51 + STD_SCREEN_X)
+#define OPT_LOAD_BTN_X				(g_ui.m_stdScreenScale * 190 + STD_SCREEN_X)
+#define OPT_QUIT_BTN_X				(g_ui.m_stdScreenScale * 329 + STD_SCREEN_X)
+#define OPT_DONE_BTN_X				(g_ui.m_stdScreenScale * 469 + STD_SCREEN_X)
+#define OPT_BTN_Y				(g_ui.m_stdScreenScale * 438 + STD_SCREEN_Y)
 
 
-#define OPT_GAP_BETWEEN_TOGGLE_BOXES		31//40
+#define OPT_GAP_BETWEEN_TOGGLE_BOXES		(g_ui.m_stdScreenScale * 31)//40
 
 
 //Text
@@ -69,39 +69,39 @@
 
 
 //toggle boxes
-#define OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX	30//220
-#define OPT_TOGGLE_TEXT_OFFSET_Y		2//3
+#define OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX	(g_ui.m_stdScreenScale * 30)//220
+#define OPT_TOGGLE_TEXT_OFFSET_Y		(g_ui.m_stdScreenScale * 2)//3
 
-#define OPT_TOGGLE_BOX_FIRST_COLUMN_X		(265 + STD_SCREEN_X)
-#define OPT_TOGGLE_BOX_SECOND_COLUMN_X		(428 + STD_SCREEN_X)
-#define   OPT_TOGGLE_BOX_START_Y		(89 + STD_SCREEN_Y)
+#define OPT_TOGGLE_BOX_FIRST_COLUMN_X		(g_ui.m_stdScreenScale * 265 + STD_SCREEN_X)
+#define OPT_TOGGLE_BOX_SECOND_COLUMN_X		(g_ui.m_stdScreenScale * 428 + STD_SCREEN_X)
+#define   OPT_TOGGLE_BOX_START_Y		(g_ui.m_stdScreenScale * 89 + STD_SCREEN_Y)
 
 #define OPT_TOGGLE_BOX_TEXT_WIDTH		OPT_TOGGLE_BOX_SECOND_COLUMN_X - OPT_TOGGLE_BOX_FIRST_COLUMN_X - 20
 
 // Slider bar defines
-#define OPT_SLIDER_BAR_SIZE			258
+#define OPT_SLIDER_BAR_SIZE			(g_ui.m_stdScreenScale * 258)
 
-#define OPT_SLIDER_TEXT_WIDTH			45
+#define OPT_SLIDER_TEXT_WIDTH			(g_ui.m_stdScreenScale * 45)
 
-#define OPT_SOUND_FX_TEXT_X			(38 + STD_SCREEN_X)
-#define OPT_SOUND_FX_TEXT_Y			(87 + STD_SCREEN_Y)
+#define OPT_SOUND_FX_TEXT_X			(g_ui.m_stdScreenScale * 38 + STD_SCREEN_X)
+#define OPT_SOUND_FX_TEXT_Y			(g_ui.m_stdScreenScale * 87 + STD_SCREEN_Y)
 
-#define OPT_SPEECH_TEXT_X			(85 + STD_SCREEN_X)
+#define OPT_SPEECH_TEXT_X			(g_ui.m_stdScreenScale * 85 + STD_SCREEN_X)
 #define OPT_SPEECH_TEXT_Y			OPT_SOUND_FX_TEXT_Y
 
-#define OPT_MUSIC_TEXT_X			(137 + STD_SCREEN_X)
+#define OPT_MUSIC_TEXT_X			(g_ui.m_stdScreenScale * 137 + STD_SCREEN_X)
 #define OPT_MUSIC_TEXT_Y			OPT_SOUND_FX_TEXT_Y
 
-#define OPT_SOUND_EFFECTS_SLIDER_X		(56 + STD_SCREEN_X)
-#define OPT_SOUND_EFFECTS_SLIDER_Y		(126 + STD_SCREEN_Y)
+#define OPT_SOUND_EFFECTS_SLIDER_X		(g_ui.m_stdScreenScale * 56 + STD_SCREEN_X)
+#define OPT_SOUND_EFFECTS_SLIDER_Y		(g_ui.m_stdScreenScale * 126 + STD_SCREEN_Y)
 
-#define OPT_SPEECH_SLIDER_X			(107 + STD_SCREEN_X)
+#define OPT_SPEECH_SLIDER_X			(g_ui.m_stdScreenScale * 107 + STD_SCREEN_X)
 #define OPT_SPEECH_SLIDER_Y			OPT_SOUND_EFFECTS_SLIDER_Y
 
-#define OPT_MUSIC_SLIDER_X			(158 + STD_SCREEN_X)
+#define OPT_MUSIC_SLIDER_X			(g_ui.m_stdScreenScale * 158 + STD_SCREEN_X)
 #define OPT_MUSIC_SLIDER_Y			OPT_SOUND_EFFECTS_SLIDER_Y
 
-#define OPT_MUSIC_SLIDER_PLAY_SOUND_DELAY	75
+#define OPT_MUSIC_SLIDER_PLAY_SOUND_DELAY	(g_ui.m_stdScreenScale * 75)
 
 
 #define OPT_FIRST_COLUMN_TOGGLE_CUT_OFF	10//8
@@ -301,7 +301,7 @@ static void EnterOptionsScreen(void)
 		{
 			//Get how many lines will be used to display the string, without displaying the string
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
-			height = DisplayWrappedString(0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT);
+			height = DisplayWrappedString(0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT);
 		}
 		else
 		{
@@ -453,8 +453,8 @@ static void RenderOptionsScreen(void)
 	BltVideoObject(FRAME_BUFFER, guiOptionBackGroundImage, 0, STD_SCREEN_X, STD_SCREEN_Y);
 
 	//Get and display the titla image
-	BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 0, STD_SCREEN_X + 0, STD_SCREEN_Y +   0);
-	BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 1, STD_SCREEN_X + 0, STD_SCREEN_Y + 434);
+	BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 0, STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 0);
+	BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 1, STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 434);
 
 	//
 	// Text for the toggle boxes
@@ -474,9 +474,9 @@ static void RenderOptionsScreen(void)
 
 		//if the string is going to wrap, move the string up a bit
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
-			DisplayWrappedString(pos_x, pos_y, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DisplayWrappedString(pos_x, pos_y, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 		else
-			DrawTextToScreen(zOptionsToggleText[cnt], pos_x, pos_y, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(zOptionsToggleText[cnt], pos_x, pos_y, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
@@ -486,13 +486,13 @@ static void RenderOptionsScreen(void)
 	//
 
 	//Display the Sound Fx text
-	DisplayWrappedString(OPT_SOUND_FX_TEXT_X, OPT_SOUND_FX_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SOUND_FX], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(OPT_SOUND_FX_TEXT_X, OPT_SOUND_FX_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SOUND_FX], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	//Display the Speech text
-	DisplayWrappedString(OPT_SPEECH_TEXT_X, OPT_SPEECH_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SPEECH], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(OPT_SPEECH_TEXT_X, OPT_SPEECH_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SPEECH], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	//Display the Music text
-	DisplayWrappedString(OPT_MUSIC_TEXT_X, OPT_MUSIC_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_MUSIC], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(OPT_MUSIC_TEXT_X, OPT_MUSIC_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_MUSIC], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 
 	InvalidateRegion( OPTIONS__TOP_LEFT_X, OPTIONS__TOP_LEFT_Y, OPTIONS__BOTTOM_RIGHT_X, OPTIONS__BOTTOM_RIGHT_Y);
@@ -850,14 +850,14 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 		usWidth = StringPixLength( zOptionsToggleText[ bHighLight ], OPT_MAIN_FONT );
 
 		//if the string is going to wrap, move the string up a bit
-		UINT8 color = fHighLight ? OPT_HIGHLIGHT_COLOR : OPT_MAIN_COLOR;
+		UINT32 color = fHighLight ? OPT_HIGHLIGHT_COLOR : OPT_MAIN_COLOR;
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 		{
-			DisplayWrappedString(usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, color, zOptionsToggleText[bHighLight], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
+			DisplayWrappedString(usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, color, zOptionsToggleText[bHighLight], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | MARK_DIRTY);
 		}
 		else
 		{
-			DrawTextToScreen(zOptionsToggleText[bHighLight], usPosX, usPosY, 0, OPT_MAIN_FONT, color, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
+			DrawTextToScreen(zOptionsToggleText[bHighLight], usPosX, usPosY, 0, OPT_MAIN_FONT, color, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 }

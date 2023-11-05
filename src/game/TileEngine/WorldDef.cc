@@ -256,7 +256,7 @@ static void AddTileSurface(ST::string const& filename, UINT32 const type)
 		slot = NULL;
 	}
 
-	TILE_IMAGERY* const t = LoadTileSurface(filename);
+	TILE_IMAGERY* const t = LoadTileSurface(filename, type);
 	t->fType = type;
 	SetRaisedObjectFlag(filename, t);
 
@@ -1799,9 +1799,9 @@ try
 		RenderProgressBar(0, 92);
 
 		//skip number of light palette entries
-		UINT8 n_light_colours;
-		f->read(&n_light_colours, sizeof(n_light_colours));
-		f->seek(sizeof(SGPPaletteEntry) * n_light_colours, FILE_SEEK_FROM_CURRENT);
+		UINT8 n_light_colors;
+		f->read(&n_light_colors, sizeof(n_light_colors));
+		f->seek(sizeof(SGPPaletteEntry) * n_light_colors, FILE_SEEK_FROM_CURRENT);
 
 		//get number of lights
 		f->read(&pSummary->usNumLights, sizeof(pSummary->usNumLights));

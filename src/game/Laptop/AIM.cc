@@ -45,55 +45,55 @@ static LaptopMode const gCurrentAimPage[NUM_AIM_SCREENS] =
 
 
 // Link Images
-#define LINK_SIZE_X				101
-#define LINK_SIZE_Y				76
+#define LINK_SIZE_X				(101 * g_ui.m_stdScreenScale)
+#define LINK_SIZE_Y				(76 * g_ui.m_stdScreenScale)
 
-#define MEMBERCARD_X				IMAGE_OFFSET_X + 118
-#define MEMBERCARD_Y				IMAGE_OFFSET_Y + 190
+#define MEMBERCARD_X				(IMAGE_OFFSET_X + 118 * g_ui.m_stdScreenScale)
+#define MEMBERCARD_Y				(IMAGE_OFFSET_Y + 190 * g_ui.m_stdScreenScale)
 
-#define POLICIES_X				IMAGE_OFFSET_X + 284
+#define POLICIES_X				(IMAGE_OFFSET_X + 284 * g_ui.m_stdScreenScale)
 #define POLICIES_Y				MEMBERCARD_Y
 
 #define HISTORY_X				MEMBERCARD_X
-#define HISTORY_Y				IMAGE_OFFSET_Y + 279
+#define HISTORY_Y				(IMAGE_OFFSET_Y + 279 * g_ui.m_stdScreenScale)
 
 #define LINKS_X					POLICIES_X
 #define LINKS_Y					HISTORY_Y
 
-#define WARNING_X				IMAGE_OFFSET_X + 126
-#define WARNING_Y				IMAGE_OFFSET_Y + 80 -1
+#define WARNING_X				(IMAGE_OFFSET_X + 126 * g_ui.m_stdScreenScale)
+#define WARNING_Y				(IMAGE_OFFSET_Y + (80 - 1) * g_ui.m_stdScreenScale)
 
-#define MEMBERS_TEXT_Y				MEMBERCARD_Y + 77
-#define HISTORY_TEXT_Y				HISTORY_Y + 77
+#define MEMBERS_TEXT_Y				(MEMBERCARD_Y + 77 * g_ui.m_stdScreenScale)
+#define HISTORY_TEXT_Y				(HISTORY_Y + 77 * g_ui.m_stdScreenScale)
 #define POLICIES_TEXT_Y				MEMBERS_TEXT_Y
 #define LINK_TEXT_Y				HISTORY_TEXT_Y
 
-#define AIM_WARNING_TEXT_X			WARNING_X + 15
-#define AIM_WARNING_TEXT_Y			WARNING_Y + 46
-#define AIM_WARNING_TEXT_WIDTH			220
+#define AIM_WARNING_TEXT_X			(WARNING_X + 15 * g_ui.m_stdScreenScale)
+#define AIM_WARNING_TEXT_Y			(WARNING_Y + 46 * g_ui.m_stdScreenScale)
+#define AIM_WARNING_TEXT_WIDTH			(220 * g_ui.m_stdScreenScale)
 
-#define AIM_FLOWER_LINK_TEXT_Y			AIM_WARNING_TEXT_Y + 25
+#define AIM_FLOWER_LINK_TEXT_Y			(AIM_WARNING_TEXT_Y + 25 * g_ui.m_stdScreenScale)
 
-#define AIM_BOBBYR1_LINK_TEXT_X			WARNING_X + 20
-#define AIM_BOBBYR1_LINK_TEXT_Y			WARNING_Y + 20
+#define AIM_BOBBYR1_LINK_TEXT_X			(WARNING_X + 20 * g_ui.m_stdScreenScale)
+#define AIM_BOBBYR1_LINK_TEXT_Y			(WARNING_Y + 20 * g_ui.m_stdScreenScale)
 
-#define AIM_BOBBYR2_LINK_TEXT_X			WARNING_X + 50
-#define AIM_BOBBYR2_LINK_TEXT_Y			WARNING_Y + 58
+#define AIM_BOBBYR2_LINK_TEXT_X			(WARNING_X + 50 * g_ui.m_stdScreenScale)
+#define AIM_BOBBYR2_LINK_TEXT_Y			(WARNING_Y + 58 * g_ui.m_stdScreenScale)
 
-#define AIM_BOBBYR3_LINK_TEXT_X			WARNING_X + 20
-#define AIM_BOBBYR3_LINK_TEXT_Y			WARNING_Y + 20
+#define AIM_BOBBYR3_LINK_TEXT_X			(WARNING_X + 20 * g_ui.m_stdScreenScale)
+#define AIM_BOBBYR3_LINK_TEXT_Y			(WARNING_Y + 20 * g_ui.m_stdScreenScale)
 
 
 
 #define AIM_AD_TOP_LEFT_X			WARNING_X
 #define AIM_AD_TOP_LEFT_Y			WARNING_Y
-#define AIM_AD_BOTTOM_RIGHT_X			AIM_AD_TOP_LEFT_X + 248
-#define AIM_AD_BOTTOM_RIGHT_Y			AIM_AD_TOP_LEFT_Y + 110
+#define AIM_AD_BOTTOM_RIGHT_X			(AIM_AD_TOP_LEFT_X + 248 * g_ui.m_stdScreenScale)
+#define AIM_AD_BOTTOM_RIGHT_Y			(AIM_AD_TOP_LEFT_Y + 110 * g_ui.m_stdScreenScale)
 
-#define AIM_COPYRIGHT_X				(160 + STD_SCREEN_X)
-#define AIM_COPYRIGHT_Y				(396 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y)
-#define AIM_COPYRIGHT_WIDTH			400
-#define AIM_COPYRIGHT_GAP			9
+#define AIM_COPYRIGHT_X				(160 * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define AIM_COPYRIGHT_Y				(396 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y)
+#define AIM_COPYRIGHT_WIDTH			(400 * g_ui.m_stdScreenScale)
+#define AIM_COPYRIGHT_GAP			(9 * g_ui.m_stdScreenScale)
 
 //#define AIM_WARNING_TIME			100
 #define AIM_WARNING_TIME			10000
@@ -289,16 +289,16 @@ void ExitAIM()
 {
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiMemberCard);
-	DeleteVideoObject(guiPolicies);
-	DeleteVideoObject(guiLinks);
-	DeleteVideoObject(guiHistory);
-	DeleteVideoObject(guiWarning);
-	DeleteVideoObject(guiFlowerAdvertisement);
-	DeleteVideoObject(guiAdForAdsImages);
-	DeleteVideoObject(guiInsuranceAdImages);
-	DeleteVideoObject(guiFuneralAdImages);
-	DeleteVideoObject(guiBobbyRAdImages);
+	delete guiMemberCard;
+	delete guiPolicies;
+	delete guiLinks;
+	delete guiHistory;
+	delete guiWarning;
+	delete guiFlowerAdvertisement;
+	delete guiAdForAdsImages;
+	delete guiInsuranceAdImages;
+	delete guiFuneralAdImages;
+	delete guiBobbyRAdImages;
 
 	// Remove Mouse Regions
 	MSYS_RemoveRegion( &gSelectedMemberCardRegion);
@@ -336,19 +336,19 @@ void RenderAIM()
 
 	//Draw text under boxes
 	// members
-	DrawTextToScreen(AimBottomMenuText[AIM_MEMBERS], MEMBERCARD_X, MEMBERS_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimBottomMenuText[AIM_MEMBERS], MEMBERCARD_X, MEMBERS_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 	// Policies
-	DrawTextToScreen(AimBottomMenuText[AIM_POLICIES], POLICIES_X, POLICIES_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimBottomMenuText[AIM_POLICIES], POLICIES_X, POLICIES_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 	// History
-	DrawTextToScreen(AimBottomMenuText[AIM_HISTORY], HISTORY_X, HISTORY_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimBottomMenuText[AIM_HISTORY], HISTORY_X, HISTORY_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 	// Links
-	DrawTextToScreen(AimBottomMenuText[AIM_LINKS], LINKS_X, LINK_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimBottomMenuText[AIM_LINKS], LINKS_X, LINK_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	HandleAdAndWarningArea( gfInitAdArea, TRUE );
 
 	RenderWWWProgramTitleBar( );
 
-	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -410,8 +410,8 @@ void InitAimDefaults()
 
 void RemoveAimDefaults()
 {
-	DeleteVideoObject(guiRustBackGround);
-	DeleteVideoObject(guiAimSymbol);
+	delete guiRustBackGround;
+	delete guiAimSymbol;
 	MSYS_RemoveRegion( &gSelectedAimLogo);
 }
 
@@ -455,7 +455,7 @@ void DisplayAimSlogan()
 {
 	ST::string sSlogan = LoadAIMText(0);
 	//Display Aim Text under the logo
-	DisplayWrappedString(AIM_LOGO_TEXT_X, AIM_LOGO_TEXT_Y, AIM_LOGO_TEXT_WIDTH, 2, AIM_LOGO_FONT, AIM_FONT_MCOLOR_WHITE, sSlogan, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(AIM_LOGO_TEXT_X, AIM_LOGO_TEXT_Y, AIM_LOGO_TEXT_WIDTH, 2, AIM_LOGO_FONT, AIM_FONT_MCOLOR_WHITE, sSlogan, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 }
 
 
@@ -466,13 +466,13 @@ void DisplayAimCopyright()
 	//Load and Display the copyright notice
 
 	sSlogan = LoadAIMText(AIM_COPYRIGHT_1);
-	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	sSlogan = LoadAIMText(AIM_COPYRIGHT_2);
-	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	sSlogan = LoadAIMText(AIM_COPYRIGHT_3);
-	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP * 2, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP * 2, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 }
 
 
@@ -680,11 +680,11 @@ static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw)
 				fReDrawNewMailFlag = TRUE;
 
 				//Display Aim Warning Text
-				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT14ARIAL, FONT_GREEN, AimScreenText[AIM_INFO_6], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT14ARIAL, FONT_GREEN, AimScreenText[AIM_INFO_6], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 				//Display Aim Warning Text
 				SetFontShadow( FONT_MCOLOR_WHITE );
-				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_FLOWER_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT12ARIAL, 2, AimScreenText[AIM_INFO_7], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_FLOWER_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT12ARIAL, 2, AimScreenText[AIM_INFO_7], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 				SetFontShadow( DEFAULT_SHADOW );
 
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
@@ -730,9 +730,9 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 
 		//Display Aim Warning Text
 		ST::string sText = LoadAIMText(AIM_WARNING_1);
-		DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, AIM_WARNING_FONT, FONT_RED, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, AIM_WARNING_FONT, FONT_RED, sText, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
-		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
+		InvalidateRegion(AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y);
 
 		// redraw new mail warning, and create new mail button, if nessacary
 		fReDrawNewMailFlag = TRUE;
@@ -796,7 +796,7 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
 
-				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
+				InvalidateRegion(AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
 			uiLastTime = GetJA2Clock();
@@ -822,7 +822,7 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
 
-				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
+				InvalidateRegion(AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
 			uiLastTime = GetJA2Clock();
@@ -848,7 +848,7 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 		HandleTextOnAimAdd( ubSubImage );
 
 		uiLastTime = GetJA2Clock();
-		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
+		InvalidateRegion(AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y);
 	}
 	return( ubRetVal );
 }
@@ -880,7 +880,9 @@ static void HandleTextOnAimAdd(UINT8 ubCurSubImage)
 			{
 				//Display Aim Warning Text
 				SetFontShadow( 2 );
-				DisplayWrappedString(AIM_BOBBYR1_LINK_TEXT_X, AIM_BOBBYR1_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, BOBBYR_UNDER_CONSTRUCTION_AD_FONT, BOBBYR_UNDER_CONSTRUCTION_AD_COLOR, AimScreenText[AIM_BOBBYR_ADD1], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | INVALIDATE_TEXT);
+				DisplayWrappedString(AIM_BOBBYR1_LINK_TEXT_X, AIM_BOBBYR1_LINK_TEXT_Y,
+						     AIM_WARNING_TEXT_WIDTH, 2, BOBBYR_UNDER_CONSTRUCTION_AD_FONT, BOBBYR_UNDER_CONSTRUCTION_AD_COLOR,
+						     AimScreenText[AIM_BOBBYR_ADD1], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | INVALIDATE_TEXT);
 				SetFontShadow( DEFAULT_SHADOW );
 			}
 
@@ -889,7 +891,9 @@ static void HandleTextOnAimAdd(UINT8 ubCurSubImage)
 			{
 				//Display Aim Warning Text
 				SetFontShadow( 2 );
-				DisplayWrappedString(AIM_BOBBYR2_LINK_TEXT_X, AIM_BOBBYR2_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, BOBBYR_UNDER_CONSTRUCTION_AD_FONT, BOBBYR_UNDER_CONSTRUCTION_AD_COLOR, AimScreenText[AIM_BOBBYR_ADD2], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | INVALIDATE_TEXT);
+				DisplayWrappedString(AIM_BOBBYR2_LINK_TEXT_X, AIM_BOBBYR2_LINK_TEXT_Y,
+						     AIM_WARNING_TEXT_WIDTH, 2, BOBBYR_UNDER_CONSTRUCTION_AD_FONT, BOBBYR_UNDER_CONSTRUCTION_AD_COLOR,
+						     AimScreenText[AIM_BOBBYR_ADD2], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | INVALIDATE_TEXT);
 				SetFontShadow( DEFAULT_SHADOW );
 			}
 /*
@@ -934,7 +938,7 @@ static BOOLEAN DisplayBobbyRAd(BOOLEAN fInit, BOOLEAN fRedraw)
 		{
 			ubSubImage ++;
 
-			InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
+			InvalidateRegion(AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y);
 
 			// if we do the first set of images
 			if( ubSubImage > AIM_AD_BOBBYR_AD_NUM_DUCK_SUBIMAGES )
@@ -968,7 +972,7 @@ static BOOLEAN DisplayBobbyRAd(BOOLEAN fInit, BOOLEAN fRedraw)
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;
 
-			InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
+			InvalidateRegion(AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y);
 		}
 
 		//if the add it to have text on it, then put the text on it.
@@ -976,7 +980,7 @@ static BOOLEAN DisplayBobbyRAd(BOOLEAN fInit, BOOLEAN fRedraw)
 
 
 		uiLastTime = GetJA2Clock();
-		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
+		InvalidateRegion(AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y);
 	}
 
 	return( ubRetVal );

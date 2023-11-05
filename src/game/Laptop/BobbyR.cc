@@ -233,16 +233,16 @@ void EnterBobbyR()
 void ExitBobbyR()
 {
 
-	DeleteVideoObject(guiBobbyName);
-	DeleteVideoObject(guiPlaque);
-	DeleteVideoObject(guiTopHinge);
-	DeleteVideoObject(guiBottomHinge);
-	DeleteVideoObject(guiStorePlaque);
-	DeleteVideoObject(guiHandle);
+	delete guiBobbyName;
+	delete guiPlaque;
+	delete guiTopHinge;
+	delete guiBottomHinge;
+	delete guiStorePlaque;
+	delete guiHandle;
 
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
-		DeleteVideoObject(guiUnderConstructionImage);
+		delete guiUnderConstructionImage;
 	}
 
 
@@ -324,7 +324,7 @@ void InitBobbyRWoodBackground()
 
 void DeleteBobbyRWoodBackground()
 {
-	DeleteVideoObject(guiWoodBackground);
+	delete guiWoodBackground;
 }
 
 

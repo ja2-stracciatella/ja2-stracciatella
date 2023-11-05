@@ -3,7 +3,7 @@
 
 // Sir-Tech's Crazy Image (STCI) file format specifications.  Each file is composed of:
 // 1		ImageFileHeader, uncompressed
-// *		Palette (STCI_INDEXED, size = uiNumberOfColours * PALETTE_ELEMENT_SIZE), uncompressed
+// *		Palette (STCI_INDEXED, size = uiNumberOfColors * PALETTE_ELEMENT_SIZE), uncompressed
 // *		SubRectInfo's (usNumberOfRects > 0, size = usNumberOfSubRects * sizeof(SubRectInfo) ), uncompressed
 // *		Bytes of image data, possibly compressed
 
@@ -51,7 +51,7 @@ struct STCIHeader
 		} RGB;
 		struct
 		{ // For indexed files, the palette will contain 3 separate bytes for red, green, and blue
-			UINT32	uiNumberOfColours;
+			UINT32	uiNumberOfColors;
 			UINT16	usNumberOfSubImages;
 			UINT8		ubRedDepth;
 			UINT8		ubGreenDepth;

@@ -76,168 +76,168 @@
 #include <string_theory/string>
 
 // DEFINES FOR VARIOUS PANELS
-#define SM_ITEMDESC_START_X			214 + INTERFACE_START_X
-#define SM_ITEMDESC_START_Y			1 + INV_INTERFACE_START_Y
+#define SM_ITEMDESC_START_X			(g_ui.m_stdScreenScale * 214) + INTERFACE_START_X
+#define SM_ITEMDESC_START_Y			(g_ui.m_stdScreenScale * 1 + INV_INTERFACE_START_Y)
 #define SM_ITEMDESC_HEIGHT			128
 #define SM_ITEMDESC_WIDTH			314
 
 // SINGLE MERC SCREEN
 
-#define SM_SELMERC_AP_X			67
-#define SM_SELMERC_AP_Y			53
-#define SM_SELMERC_AP_HEIGHT			10
-#define SM_SELMERC_AP_WIDTH			17
+#define SM_SELMERC_AP_X			(g_ui.m_stdScreenScale * 67)
+#define SM_SELMERC_AP_Y			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERC_AP_HEIGHT			(g_ui.m_stdScreenScale * 10)
+#define SM_SELMERC_AP_WIDTH			(g_ui.m_stdScreenScale * 17)
 
-#define SM_SELMERC_HEALTH_X			69
-#define SM_SELMERC_HEALTH_Y			47
+#define SM_SELMERC_HEALTH_X			(g_ui.m_stdScreenScale * 69)
+#define SM_SELMERC_HEALTH_Y			(g_ui.m_stdScreenScale * 47)
 
-#define SM_SELMERCNAME_X			11
-#define SM_SELMERCNAME_Y			53
-#define SM_SELMERCNAME_WIDTH			53
-#define SM_SELMERCNAME_HEIGHT			10
+#define SM_SELMERCNAME_X			(g_ui.m_stdScreenScale * 11)
+#define SM_SELMERCNAME_Y			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERCNAME_WIDTH			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERCNAME_HEIGHT			(g_ui.m_stdScreenScale * 10)
 
-#define SM_SELMERC_FACE_X			13
-#define SM_SELMERC_FACE_Y			6
-#define SM_SELMERC_FACE_HEIGHT			42
-#define SM_SELMERC_FACE_WIDTH			48
+#define SM_SELMERC_FACE_X			(g_ui.m_stdScreenScale * 13)
+#define SM_SELMERC_FACE_Y			(g_ui.m_stdScreenScale * 6)
+#define SM_SELMERC_FACE_HEIGHT			(g_ui.m_stdScreenScale * 42)
+#define SM_SELMERC_FACE_WIDTH			(g_ui.m_stdScreenScale * 48)
 
-#define SM_SELMERC_PLATE_X			4
-#define SM_SELMERC_PLATE_Y			2
-#define SM_SELMERC_PLATE_HEIGHT		65
-#define SM_SELMERC_PLATE_WIDTH			83
-
-
-#define STATS_TITLE_FONT_COLOR			6
-#define STATS_TEXT_FONT_COLOR			5
+#define SM_SELMERC_PLATE_X			(g_ui.m_stdScreenScale * 4)
+#define SM_SELMERC_PLATE_Y			(g_ui.m_stdScreenScale * 2)
+#define SM_SELMERC_PLATE_HEIGHT		(g_ui.m_stdScreenScale * 65)
+#define SM_SELMERC_PLATE_WIDTH			(g_ui.m_stdScreenScale * 83)
 
 
-#define SM_TALKB_X				155
-#define SM_TALKB_Y				108
-#define SM_MUTEB_X				91
-#define SM_MUTEB_Y				108
-#define SM_STANCEUPB_X				187
-#define SM_STANCEUPB_Y				40
-#define SM_UPDOWNB_X				91
-#define SM_UPDOWNB_Y				73
-#define SM_CLIMBB_X				187
-#define SM_CLIMBB_Y				8
-#define SM_STANCEDOWNB_X			187
-#define SM_STANCEDOWNB_Y			108
-#define SM_HANDCURSORB_X			123
-#define SM_HANDCURSORB_Y			73
-#define SM_PREVMERCB_X				9
-#define SM_PREVMERCB_Y				70
-#define SM_NEXTMERCB_X				51
-#define SM_NEXTMERCB_Y				70
-#define SM_OPTIONSB_X				9
-#define SM_OPTIONSB_Y				105
-#define SM_BURSTMODEB_X			155
-#define SM_BURSTMODEB_Y			73
-#define SM_LOOKB_X				123
-#define SM_LOOKB_Y				108
-#define SM_STEALTHMODE_X			187
-#define SM_STEALTHMODE_Y			73
-#define SM_DONE_X				(g_ui.m_teamPanelSlotsTotalWidth + 45)
-#define SM_DONE_Y				4
-#define SM_MAPSCREEN_X				(g_ui.m_teamPanelSlotsTotalWidth + 91)
-#define SM_MAPSCREEN_Y				4
+#define STATS_TITLE_FONT_COLOR			RGB(173, 148, 115)
+#define STATS_TEXT_FONT_COLOR			RGB(214, 201, 156)
 
 
-#define SM_PERCENT_WIDTH			20
-#define SM_PERCENT_HEIGHT			10
-#define SM_ARMOR_X				347
-#define SM_ARMOR_Y				79
-#define SM_ARMOR_LABEL_X			363
-#define SM_ARMOR_LABEL_Y			69
-#define SM_ARMOR_PERCENT_X			368
-#define SM_ARMOR_PERCENT_Y			79
+#define SM_TALKB_X				(g_ui.m_stdScreenScale * 155)
+#define SM_TALKB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_MUTEB_X				(g_ui.m_stdScreenScale * 91)
+#define SM_MUTEB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_STANCEUPB_X				(g_ui.m_stdScreenScale * 187)
+#define SM_STANCEUPB_Y				(g_ui.m_stdScreenScale * 40)
+#define SM_UPDOWNB_X				(g_ui.m_stdScreenScale * 91)
+#define SM_UPDOWNB_Y				(g_ui.m_stdScreenScale * 73)
+#define SM_CLIMBB_X				(g_ui.m_stdScreenScale * 187)
+#define SM_CLIMBB_Y				(g_ui.m_stdScreenScale * 8)
+#define SM_STANCEDOWNB_X			(g_ui.m_stdScreenScale * 187)
+#define SM_STANCEDOWNB_Y			(g_ui.m_stdScreenScale * 108)
+#define SM_HANDCURSORB_X			(g_ui.m_stdScreenScale * 123)
+#define SM_HANDCURSORB_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_PREVMERCB_X				(g_ui.m_stdScreenScale * 9)
+#define SM_PREVMERCB_Y				(g_ui.m_stdScreenScale * 70)
+#define SM_NEXTMERCB_X				(g_ui.m_stdScreenScale * 51)
+#define SM_NEXTMERCB_Y				(g_ui.m_stdScreenScale * 70)
+#define SM_OPTIONSB_X				(g_ui.m_stdScreenScale * 9)
+#define SM_OPTIONSB_Y				(g_ui.m_stdScreenScale * 105)
+#define SM_BURSTMODEB_X			(g_ui.m_stdScreenScale * 155)
+#define SM_BURSTMODEB_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_LOOKB_X				(g_ui.m_stdScreenScale * 123)
+#define SM_LOOKB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_STEALTHMODE_X			(g_ui.m_stdScreenScale * 187)
+#define SM_STEALTHMODE_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_DONE_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 45))
+#define SM_DONE_Y				(g_ui.m_stdScreenScale * 4)
+#define SM_MAPSCREEN_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 91))
+#define SM_MAPSCREEN_Y				(g_ui.m_stdScreenScale * 4)
 
-#define SM_WEIGHT_LABEL_X			430
-#define SM_WEIGHT_LABEL_Y			107
-#define SM_WEIGHT_PERCENT_X			449
-#define SM_WEIGHT_PERCENT_Y			106
-#define SM_WEIGHT_X				428
-#define SM_WEIGHT_Y				106
 
-#define SM_CAMO_LABEL_X			430
-#define SM_CAMO_LABEL_Y			122
-#define SM_CAMO_PERCENT_X			449
-#define SM_CAMO_PERCENT_Y			121
-#define SM_CAMO_X				428
-#define SM_CAMO_Y				121
+#define SM_PERCENT_WIDTH			(g_ui.m_stdScreenScale * 20)
+#define SM_PERCENT_HEIGHT			(g_ui.m_stdScreenScale * 10)
+#define SM_ARMOR_X				(g_ui.m_stdScreenScale * 347)
+#define SM_ARMOR_Y				(g_ui.m_stdScreenScale * 79)
+#define SM_ARMOR_LABEL_X			(g_ui.m_stdScreenScale * 363)
+#define SM_ARMOR_LABEL_Y			(g_ui.m_stdScreenScale * 69)
+#define SM_ARMOR_PERCENT_X			(g_ui.m_stdScreenScale * 368)
+#define SM_ARMOR_PERCENT_Y			(g_ui.m_stdScreenScale * 79)
+
+#define SM_WEIGHT_LABEL_X			(g_ui.m_stdScreenScale * 430)
+#define SM_WEIGHT_LABEL_Y			(g_ui.m_stdScreenScale * 107)
+#define SM_WEIGHT_PERCENT_X			(g_ui.m_stdScreenScale * 449)
+#define SM_WEIGHT_PERCENT_Y			(g_ui.m_stdScreenScale * 106)
+#define SM_WEIGHT_X				(g_ui.m_stdScreenScale * 428)
+#define SM_WEIGHT_Y				(g_ui.m_stdScreenScale * 106)
+
+#define SM_CAMO_LABEL_X			(g_ui.m_stdScreenScale * 430)
+#define SM_CAMO_LABEL_Y			(g_ui.m_stdScreenScale * 122)
+#define SM_CAMO_PERCENT_X			(g_ui.m_stdScreenScale * 449)
+#define SM_CAMO_PERCENT_Y			(g_ui.m_stdScreenScale * 121)
+#define SM_CAMO_X				(g_ui.m_stdScreenScale * 428)
+#define SM_CAMO_Y				(g_ui.m_stdScreenScale * 121)
 
 
-#define SM_STATS_WIDTH				30
-#define SM_STATS_HEIGHT			8
-#define SM_AGI_X				99
-#define SM_AGI_Y				7
-#define SM_DEX_X				99
-#define SM_DEX_Y				17
-#define SM_STR_X				99
-#define SM_STR_Y				27
-#define SM_CHAR_X				99
-#define SM_CHAR_Y				37
-#define SM_WIS_X				99
-#define SM_WIS_Y				47
-#define SM_EXPLVL_X				148
-#define SM_EXPLVL_Y				7
-#define SM_MRKM_X				148
-#define SM_MRKM_Y				17
-#define SM_EXPL_X				148
-#define SM_EXPL_Y				27
-#define SM_MECH_X				148
-#define SM_MECH_Y				37
-#define SM_MED_X				148
-#define SM_MED_Y				47
+#define SM_STATS_WIDTH				(g_ui.m_stdScreenScale * 30)
+#define SM_STATS_HEIGHT			(g_ui.m_stdScreenScale * 8)
+#define SM_AGI_X				(g_ui.m_stdScreenScale * 99)
+#define SM_AGI_Y				(g_ui.m_stdScreenScale * 7)
+#define SM_DEX_X				(g_ui.m_stdScreenScale * 99)
+#define SM_DEX_Y				(g_ui.m_stdScreenScale * 17)
+#define SM_STR_X				(g_ui.m_stdScreenScale * 99)
+#define SM_STR_Y				(g_ui.m_stdScreenScale * 27)
+#define SM_CHAR_X				(g_ui.m_stdScreenScale * 99)
+#define SM_CHAR_Y				(g_ui.m_stdScreenScale * 37)
+#define SM_WIS_X				(g_ui.m_stdScreenScale * 99)
+#define SM_WIS_Y				(g_ui.m_stdScreenScale * 47)
+#define SM_EXPLVL_X				(g_ui.m_stdScreenScale * 148)
+#define SM_EXPLVL_Y				(g_ui.m_stdScreenScale * 7)
+#define SM_MRKM_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MRKM_Y				(g_ui.m_stdScreenScale * 17)
+#define SM_EXPL_X				(g_ui.m_stdScreenScale * 148)
+#define SM_EXPL_Y				(g_ui.m_stdScreenScale * 27)
+#define SM_MECH_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MECH_Y				(g_ui.m_stdScreenScale * 37)
+#define SM_MED_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MED_Y				(g_ui.m_stdScreenScale * 47)
 
-#define MONEY_X				460
-#define MONEY_Y				105
-#define MONEY_WIDTH				30
-#define MONEY_HEIGHT				22
+#define MONEY_X				(g_ui.m_stdScreenScale * 460)
+#define MONEY_Y				(g_ui.m_stdScreenScale * 105)
+#define MONEY_WIDTH				(g_ui.m_stdScreenScale * 30)
+#define MONEY_HEIGHT				(g_ui.m_stdScreenScale * 22)
 
-#define TM_FACE_X				14
-#define TM_FACE_Y				6
-#define TM_FACE_WIDTH				48
-#define TM_FACE_HEIGHT				43
+#define TM_FACE_X				(g_ui.m_stdScreenScale * 14)
+#define TM_FACE_Y				(g_ui.m_stdScreenScale * 6)
+#define TM_FACE_WIDTH				(g_ui.m_stdScreenScale * 48)
+#define TM_FACE_HEIGHT				(g_ui.m_stdScreenScale * 43)
 
-#define TM_ENDTURN_X				(g_ui.m_teamPanelSlotsTotalWidth + 9)
-#define TM_ENDTURN_Y				9
-#define TM_ROSTERMODE_X			(g_ui.m_teamPanelSlotsTotalWidth + 9)
-#define TM_ROSTERMODE_Y			45
-#define TM_DISK_X				(g_ui.m_teamPanelSlotsTotalWidth + 9)
-#define TM_DISK_Y				81
+#define TM_ENDTURN_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 9))
+#define TM_ENDTURN_Y				(g_ui.m_stdScreenScale * 9)
+#define TM_ROSTERMODE_X			(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 9))
+#define TM_ROSTERMODE_Y			(g_ui.m_stdScreenScale * 45)
+#define TM_DISK_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 9))
+#define TM_DISK_Y				(g_ui.m_stdScreenScale * 81)
 
-#define TM_NAME_X				11
-#define TM_NAME_Y				53
-#define TM_NAME_WIDTH				53
-#define TM_NAME_HEIGHT				10
+#define TM_NAME_X				(g_ui.m_stdScreenScale * 11)
+#define TM_NAME_Y				(g_ui.m_stdScreenScale * 53)
+#define TM_NAME_WIDTH				(g_ui.m_stdScreenScale * 53)
+#define TM_NAME_HEIGHT				(g_ui.m_stdScreenScale * 10)
 
-#define TM_AP_X				67
-#define TM_AP_Y				53
-#define TM_AP_WIDTH				18
-#define TM_AP_HEIGHT				10
+#define TM_AP_X				(g_ui.m_stdScreenScale * 67)
+#define TM_AP_Y				(g_ui.m_stdScreenScale * 53)
+#define TM_AP_WIDTH				(g_ui.m_stdScreenScale * 18)
+#define TM_AP_HEIGHT				(g_ui.m_stdScreenScale * 10)
 
-#define TM_LIFEBAR_HEIGHT			42
+#define TM_LIFEBAR_HEIGHT			(g_ui.m_stdScreenScale * 42)
 
-#define TM_FACEHIGHTL_X			4
-#define TM_FACEHIGHTL_Y			2
-#define TM_FACEHIGHTL_WIDTH			84
-#define TM_FACEHIGHTL_HEIGHT			114
+#define TM_FACEHIGHTL_X			(g_ui.m_stdScreenScale * 4)
+#define TM_FACEHIGHTL_Y			(g_ui.m_stdScreenScale * 2)
+#define TM_FACEHIGHTL_WIDTH			(g_ui.m_stdScreenScale * 84)
+#define TM_FACEHIGHTL_HEIGHT			(g_ui.m_stdScreenScale * 114)
 
-#define TM_INV_WIDTH				58
-#define TM_INV_HEIGHT				23
-#define TM_INV_HAND1STARTX			8
-#define TM_INV_HAND1STARTY			67
-#define TM_INV_HAND_SEP			83
-#define TM_INV_HAND_SEPY			24
+#define TM_INV_WIDTH				(g_ui.m_stdScreenScale * 58)
+#define TM_INV_HEIGHT				(g_ui.m_stdScreenScale * 23)
+#define TM_INV_HAND1STARTX			(g_ui.m_stdScreenScale * 8)
+#define TM_INV_HAND1STARTY			(g_ui.m_stdScreenScale * 67)
+#define TM_INV_HAND_SEP			(g_ui.m_stdScreenScale * 83)
+#define TM_INV_HAND_SEPY			(g_ui.m_stdScreenScale * 24)
 
-#define TM_BARS_X				67
-#define TM_BARS_Y				3
-#define TM_BARS_WIDTH				19
-#define TM_BARS_HEIGHT				47
+#define TM_BARS_X				(g_ui.m_stdScreenScale * 67)
+#define TM_BARS_Y				(g_ui.m_stdScreenScale * 3)
+#define TM_BARS_WIDTH				(g_ui.m_stdScreenScale * 19)
+#define TM_BARS_HEIGHT				(g_ui.m_stdScreenScale * 47)
 
-#define INDICATOR_BOX_WIDTH			12
-#define INDICATOR_BOX_HEIGHT			10
+#define INDICATOR_BOX_WIDTH			(g_ui.m_stdScreenScale * 12)
+#define INDICATOR_BOX_HEIGHT			(g_ui.m_stdScreenScale * 10)
 
 
 enum
@@ -848,13 +848,24 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, UINT32 iRe
 /** Fill empty space at the bottom of the screen. */
 static void FillEmptySpaceAtBottom()
 {
-	if(g_ui.isBigScreen())
-	{
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER, 0, g_ui.get_INV_INTERFACE_START_Y(),
-						INTERFACE_START_X, g_ui.m_screenHeight, 0);
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER, INTERFACE_START_X + g_ui.m_teamPanelWidth, g_ui.get_INV_INTERFACE_START_Y(),
-						g_ui.m_screenWidth, g_ui.m_screenHeight, 0);
-	}
+//	if(g_ui.isBigScreen())
+//	{
+//		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+//					  0, g_ui.get_INV_INTERFACE_START_Y(),
+//					  INTERFACE_START_X, g_ui.m_screenHeight,
+//					  RGB(0, 0, 0));
+//		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+//					  INTERFACE_START_X + g_ui.m_teamPanelWidth, g_ui.get_INV_INTERFACE_START_Y(),
+//					  g_ui.m_screenWidth, g_ui.m_screenHeight,
+//					  RGB(0, 0, 0));
+//	}
+
+	// clear whole area
+	ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+				  0, g_ui.get_INV_INTERFACE_START_Y(),
+				  g_ui.m_screenWidth, g_ui.m_screenHeight,
+				  RGB(0, 0, 0));
+
 }
 
 /** Fill up some space with a textured space filler */
@@ -873,22 +884,26 @@ void InitializeSMPanel()
 	// For visual consistency, the SMPanel should fill up the same width as the TEAMPanel, that the buttons and
 	// minimap are in the bottom-right corner.
 	SGPVObject* voSMPanel = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
-	guiSMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, INV_INTERFACE_HEIGHT, PIXEL_DEPTH);
-	if (g_ui.m_teamPanelWidth > 640)
-	{
-		// The team panel is longer than default
-		// need a second blit, and we will start from the right
-		BltVideoObject(guiSMPanel, voSMPanel, 0, g_ui.m_teamPanelWidth - 640, 0);
-	}
+	guiSMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, std::ceil(INV_INTERFACE_HEIGHT), PIXEL_DEPTH);
+	const UINT16 width640 = g_ui.m_stdScreenScale * 640;
+	const INT16 sFillerWidth = g_ui.m_teamPanelWidth - width640;
+//	if (sFillerWidth > 0)
+//	{
+//		// The team panel is longer than default
+//		// need a second blit, and we will start from the right
+//		BltVideoObject(guiSMPanel, voSMPanel, 0, sFillerWidth/*g_ui.m_teamPanelWidth - width640*/, 0);
+//	}
 	// draw the basic Single-Merc panel
 	BltVideoObject(guiSMPanel, voSMPanel, 0, 0, 0);
-	DeleteVideoObject(voSMPanel);
+	delete voSMPanel;
 
-	INT16 sFillerWidth = g_ui.m_teamPanelWidth - 640;
 	if (sFillerWidth > 0)
 	{
 		// draw a space filler if needed
-		SGPBox const dest = {SM_INVINTERFACE_WIDTH, 2, static_cast<UINT16>(sFillerWidth), INV_INTERFACE_HEIGHT - 6};
+		SGPBox const dest = {
+			UINT16(SM_INVINTERFACE_WIDTH), UINT16(g_ui.m_stdScreenScale * 2),
+			UINT16(sFillerWidth), UINT16(INV_INTERFACE_HEIGHT - g_ui.m_stdScreenScale * 6)
+		};
 		DrawFillerOnSurface(guiSMPanel, dest);
 	}
 
@@ -900,37 +915,45 @@ void InitializeSMPanel()
 	// INit viewport region
 	// Set global mouse regions
 	// Define region for viewport
-	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
+	MSYS_DefineRegion(&gViewportRegion,
+			  0, 0,
+			  gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y,
+			  MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 	// Create buttons
 	CreateSMPanelButtons();
 
-	const INT32 dx = INTERFACE_START_X;
-	const INT32 dy = INV_INTERFACE_START_Y;
-
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gSMPanelRegion, dx, dy, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gSMPanelRegion,
+			  INTERFACE_START_X, INV_INTERFACE_START_Y,
+			  SCREEN_WIDTH, SCREEN_HEIGHT,
+			  MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	INT32 x;
-	INT32 y;
-
-	x = dx + SM_SELMERC_FACE_X;
-	y = dy + SM_SELMERC_FACE_Y;
+	INT32 x = INTERFACE_START_X + SM_SELMERC_FACE_X;
+	INT32 y = INV_INTERFACE_START_Y + SM_SELMERC_FACE_Y;
 
 	MOUSE_CALLBACK selectedMercButtonCallback = MouseCallbackPrimarySecondary(SelectedMercButtonCallbackPrimary, SelectedMercButtonCallbackSecondary, MSYS_NO_CALLBACK, true);
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCPanelRegion, x, y, x + SM_SELMERC_FACE_WIDTH, y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, selectedMercButtonCallback);
+	MSYS_DefineRegion(&gSM_SELMERCPanelRegion,
+			  x, y,
+			  x + SM_SELMERC_FACE_WIDTH, y + SM_SELMERC_FACE_HEIGHT,
+			  MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR,
+			  SelectedMercButtonMoveCallback, selectedMercButtonCallback);
 
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCEnemyIndicatorRegion, x + 1, y + 1, x + INDICATOR_BOX_WIDTH,
-				y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR,
-				MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback);
+	MSYS_DefineRegion(&gSM_SELMERCEnemyIndicatorRegion,
+			  x + 1, y + 1, x + INDICATOR_BOX_WIDTH,
+			  y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR,
+			  MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback);
 
 	//DEfine region for money button
-	x = dx + MONEY_X;
-	y = dy + MONEY_Y;
-	MSYS_DefineRegion(&gSM_SELMERCMoneyRegion, x, y, x + MONEY_WIDTH, y + MONEY_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback);
+	x = INTERFACE_START_X + MONEY_X;
+	y = INV_INTERFACE_START_Y + MONEY_Y;
+	MSYS_DefineRegion(&gSM_SELMERCMoneyRegion,
+			  x, y,
+			  x + MONEY_WIDTH, y + MONEY_HEIGHT,
+			  MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback);
 	gSM_SELMERCMoneyRegion.SetFastHelpText(TacticalStr[MONEY_BUTTON_HELP_TEXT]);
 
 	// Check if mouse is in region and if so, adjust...
@@ -940,7 +963,10 @@ void InitializeSMPanel()
 	}
 
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, dx + 62, dy + 2, dx + 85, dy + 51, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, selectedMercButtonCallback);
+	MSYS_DefineRegion(&gSM_SELMERCBarsRegion,
+			  INTERFACE_START_X + g_ui.m_stdScreenScale * 62, INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 2,
+			  INTERFACE_START_X + g_ui.m_stdScreenScale * 85, INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 51,
+			  MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, selectedMercButtonCallback);
 
 	MOUSE_CALLBACK smInvClickCallback = MouseCallbackPrimarySecondary(SMInvClickCallbackPrimary, SMInvClickCallbackSecondary, MSYS_NO_CALLBACK, true);
 	InitInvSlotInterface(g_ui.m_invSlotPositionTac, &g_ui.m_invCamoRegion, SMInvMoveCallback, smInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
@@ -1092,8 +1118,8 @@ void ShutdownSMPanel()
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
 	delete guiSMPanel;
-	DeleteVideoObject(guiSMObjects);
-	DeleteVideoObject(guiSMObjects2);
+	delete guiSMObjects;
+	delete guiSMObjects2;
 
 	gSelectSMPanelToMerc = NULL;
 
@@ -1132,13 +1158,13 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 
 	INT8  const ap         = GetUIApsToDisplay(s);
 	UINT8 const min_ap     = MinAPsToAttack(s, s->sLastTarget, TRUE);
-	UINT8 const foreground =
+	const UINT32 foreground =
 		!EnoughPoints(s, min_ap, 0, FALSE) ? FONT_MCOLOR_DKRED    :
 		ap < 0                             ? FONT_MCOLOR_DKRED    :
 		MercUnderTheInfluence(s)           ? FONT_MCOLOR_LTBLUE   :
 		s->bStealthMode                    ? FONT_MCOLOR_LTYELLOW :
 		FONT_MCOLOR_LTGRAY;
-	SetFontAttributes(TINYFONT1, foreground);
+	SetFontAttributes(TINYFONT1, foreground, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 	RestoreExternBackgroundRect(x, y, w, h);
 	ST::string buf = ST::format("{}", ap);
@@ -1172,34 +1198,21 @@ static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 	r.SetFastHelpText(help);
 }
 
-void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 rgb, const UINT8 scale_rgb)
+void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 fill_color, const UINT32 scale_color)
 {
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 
-	#define s(a)				((a) / 2) + ((a) / 2) * (scale_rgb) / 100
-
-	const int r = s(0xff & rgb >> 16);
-	const int g = s(0xff & rgb >> 8);
-	const int b = s(0xff & rgb);
-
-	const UINT16 fill_color = Get16BPPColor((b << 16) + (g << 8) + r);
-
-	UINT16* const dst = l.Buffer<UINT16>();
+	UINT32* const dst = l.Buffer<UINT32>();
 
 	for (int y = 0; y < sHeight; ++y)
-	{
 		for(int x = 0; x < sWidth; ++x)
-		{
-			dst[(y + sTop)*l.Pitch() / 2 + sLeft + x] = fill_color;
-		}
-	}
+			dst[(y + sTop) * l.Pitch() / 4 + sLeft + x] = fill_color;
 }
 
 static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 const stat_val, INT16 const x, INT16 const y, INT32 const progress)
 {
-	SOLDIERTYPE const& s  = *gpSMCurrentMerc;
-
-	UINT8       const  fg =
+	const SOLDIERTYPE &s = *gpSMCurrentMerc;
+	const UINT32 fg =
 		s.bLife < OKLIFE                                             ? FONT_MCOLOR_DKGRAY    :
 		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? STATS_TEXT_FONT_COLOR :
 		change_time == 0                                             ? STATS_TEXT_FONT_COLOR :
@@ -1210,9 +1223,8 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 
 	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
-	{
-		ProgressBarBackgroundRect(x + 16, y - 2, 15 * progress / 100, 10, 0x514A05, progress);
-	}
+		ProgressBarBackgroundRect(x + g_ui.m_stdScreenScale * 16, y - g_ui.m_stdScreenScale * 2,
+			g_ui.m_stdScreenScale * 15 * progress / 100, g_ui.m_stdScreenScale * 10, RGB(0x51, 0x4A, 0x05), progress);
 
 	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
 }
@@ -1289,9 +1301,9 @@ no_plate:
 			SetFontAttributes(BLOCKFONT2, STATS_TITLE_FONT_COLOR);
 			for (UINT32 i = 0; i != 5; ++i)
 			{
-				INT32 const y = dy + 7 + i * 10;
-				MPrint( dx + 92, y, pShortAttributeStrings[i]);
-				MPrint(dx + 137, y, pShortAttributeStrings[i + 5]);
+				INT32 const y = dy + g_ui.m_stdScreenScale * 7 + i * g_ui.m_stdScreenScale * 10;
+				MPrint(dx + g_ui.m_stdScreenScale * 92, y, pShortAttributeStrings[i]);
+				MPrint(dx + g_ui.m_stdScreenScale * 137, y, pShortAttributeStrings[i + 5]);
 			}
 
 			MPrint(dx + SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
@@ -1342,8 +1354,8 @@ no_plate:
 		}
 
 		// Render name
-		UINT8 const fg = s.bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-		SetFontAttributes(BLOCKFONT2, fg);
+		const UINT32 fg = s.bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+		SetFontAttributes(BLOCKFONT2, fg, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 		INT16 const x = SM_SELMERCNAME_X + dx;
 		INT16 const y = SM_SELMERCNAME_Y + dy;
@@ -1376,12 +1388,12 @@ no_plate:
 	if (gfSMDisableForItems && *dirty_level != DIRTYLEVEL0)
 	{
 		SGPRect ClipRect;
-		ClipRect.iLeft = dx + 87;
-		ClipRect.iRight = dx + 536;
+		ClipRect.iLeft = dx + g_ui.m_stdScreenScale * 87;
+		ClipRect.iRight = dx + g_ui.m_stdScreenScale * 536;
 		ClipRect.iTop = INV_INTERFACE_START_Y;
 		ClipRect.iBottom = SCREEN_HEIGHT;
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
+		Blt32BPPBufferHatchRect(l.Buffer<UINT32>(), l.Pitch(), &ClipRect);
 	}
 }
 
@@ -2251,14 +2263,16 @@ void InitializeTEAMPanel()
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 	// Create the TEAMpanel from graphic objects.
-	guiTEAMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, TEAMPANEL_HEIGHT, PIXEL_DEPTH);
+	guiTEAMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, std::ceil(TEAMPANEL_HEIGHT), PIXEL_DEPTH);
 
 	auto vsTEAMPanel = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/bottom_bar.sti", 0);
 	BltVideoSurface(guiTEAMPanel, vsTEAMPanel.get(), 0, 0, NULL);
 	for (int i = 6; i < NUM_TEAM_SLOTS; i++)
 	{	// extend the panel if needed
-		SGPBox const rect = {5 * TEAMPANEL_SLOT_WIDTH, 0,
-					TEAMPANEL_SLOT_WIDTH + TEAMPANEL_BUTTONSBOX_WIDTH, TEAMPANEL_HEIGHT};
+		SGPBox const rect = {
+			UINT16(5 * TEAMPANEL_SLOT_WIDTH), 0,
+			UINT16(TEAMPANEL_SLOT_WIDTH + TEAMPANEL_BUTTONSBOX_WIDTH), UINT16(TEAMPANEL_HEIGHT)
+		};
 		BltVideoSurface(guiTEAMPanel, vsTEAMPanel.get(), i * TEAMPANEL_SLOT_WIDTH, 0, &rect);
 	}
 
@@ -2315,8 +2329,8 @@ void ShutdownTEAMPanel()
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
 	delete guiTEAMPanel;
-	DeleteVideoObject(guiTEAMObjects);
-	DeleteVideoObject(guiVEHINV);
+	delete guiTEAMObjects;
+	delete guiVEHINV;
 
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);
@@ -2430,8 +2444,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				// Restore AP/LIFE POSIITONS
 
 				// Render name!
-				UINT8 const foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-				SetFontAttributes(BLOCKFONT2, foreground);
+				const UINT32 foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+				SetFontAttributes(BLOCKFONT2, foreground, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 				// RENDER ON SAVE BUFFER!
 				SetFontDestBuffer(guiSAVEBUFFER);
@@ -3192,10 +3206,13 @@ void RenderTownIDString(void)
 	INT16 sFontX, sFontY;
 
 	// Render town, position
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0));
 	ST::string zTownIDString = GetSectorIDString(gWorldSector, TRUE);
-	zTownIDString = ReduceStringLength(zTownIDString, 80, COMPFONT);
-	FindFontCenterCoordinates(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + 50, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
+	zTownIDString = ReduceStringLength(zTownIDString, g_ui.m_stdScreenScale * 80, COMPFONT);
+	FindFontCenterCoordinates(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + g_ui.m_stdScreenScale * 50,
+		SCREEN_HEIGHT - g_ui.m_stdScreenScale * 55,
+		g_ui.m_stdScreenScale * 80, g_ui.m_stdScreenScale * 16,
+		zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }
 
@@ -3313,8 +3330,8 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		if (pSoldier == NULL) return;
 
 		sStartYPosition = MAP_START_KEYRING_Y;
-		sWidth = 261;
-		sHeight = ( 359 - 107 );
+		sWidth = g_ui.m_stdScreenScale * 261;
+		sHeight = g_ui.m_stdScreenScale * (359 - 107);
 	}
 	else
 	{
@@ -3337,9 +3354,10 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		if( guiCurrentScreen == MAP_SCREEN )
 		{
 			// shade the background
-			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 0, STD_SCREEN_Y + 107,
-							STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
-			InvalidateRegion(STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
+			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 107,
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 261, STD_SCREEN_Y + g_ui.m_stdScreenScale * 359);
+			InvalidateRegion(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 107,
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 261, STD_SCREEN_Y + g_ui.m_stdScreenScale * 359);
 			InitKeyRingPopup(pSoldier, STD_SCREEN_X + 0, sStartYPosition, sWidth, sHeight);
 		}
 		else

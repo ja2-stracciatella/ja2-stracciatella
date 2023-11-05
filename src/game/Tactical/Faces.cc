@@ -156,30 +156,31 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	f.sMouthFrame           = 0;
 	f.uiVideoObject         = vo;
 
-	// Set palette
-	SGPPaletteEntry pal[256];
-	// Build a grayscale palette! (for testing different looks)
-	for (UINT32 i = 0; i < 256; ++i)
-	{
-		pal[i].r = 255;
-		pal[i].g = 255;
-		pal[i].b = 255;
-	}
+	// FIXME: TESTME: maxrd2 shading here
+//	// Set palette
+//	SGPPaletteEntry pal[256];
+//	// Build a grayscale palette! (for testing different looks)
+//	for (UINT32 i = 0; i < 256; ++i)
+//	{
+//		pal[i].r = 255;
+//		pal[i].g = 255;
+//		pal[i].b = 255;
+//	}
 
-	const SGPPaletteEntry* const vo_pal = vo->Palette();
-	vo->pShades[FLASH_PORTRAIT_NOSHADE   ] = Create16BPPPaletteShaded(vo_pal, 255, 255, 255, FALSE);
-	vo->pShades[FLASH_PORTRAIT_STARTSHADE] = Create16BPPPaletteShaded(pal,    255, 255, 255, FALSE);
-	vo->pShades[FLASH_PORTRAIT_ENDSHADE  ] = Create16BPPPaletteShaded(vo_pal, 250,  25,  25, TRUE );
-	vo->pShades[FLASH_PORTRAIT_DARKSHADE ] = Create16BPPPaletteShaded(vo_pal, 100, 100, 100, TRUE );
-	vo->pShades[FLASH_PORTRAIT_LITESHADE ] = Create16BPPPaletteShaded(vo_pal, 100, 100, 100, FALSE);
+//	const SGPPaletteEntry* const vo_pal = vo->Palette();
+	vo->pShades[FLASH_PORTRAIT_NOSHADE   ] = SHADE_NONE; //SHADE_STD(255, 255, 255);
+	vo->pShades[FLASH_PORTRAIT_STARTSHADE] = SHADE_MONO(255, 255, 255);
+	vo->pShades[FLASH_PORTRAIT_ENDSHADE  ] = SHADE_MONO(250,  25,  25);
+	vo->pShades[FLASH_PORTRAIT_DARKSHADE ] = SHADE_MONO(100, 100, 100);
+	vo->pShades[FLASH_PORTRAIT_LITESHADE ] = SHADE_STD(100, 100, 100);
 
-	for (UINT32 i = 0; i < 256; ++i)
-	{
-		pal[i].r = i % 128 + 128;
-		pal[i].g = i % 128 + 128;
-		pal[i].b = i % 128 + 128;
-	}
-	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+//	for (UINT32 i = 0; i < 256; ++i)
+//	{
+//		pal[i].r = i % 128 + 128;
+//		pal[i].g = i % 128 + 128;
+//		pal[i].b = i % 128 + 128;
+//	}
+	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = SHADE_MONO(255, 255, 255); // 255, 255, 255
 
 	// Get FACE height, width
 	ETRLEObject const& face_gfx = vo->SubregionProperties(0);
@@ -260,18 +261,18 @@ static void GetFaceRelativeCoordinates(FACETYPE const& f, UINT16* const pusEyesX
 		const RPCSmallFaceModel* face = GCM->getRPCSmallFaceOffsets(pid);
 		if (face)
 		{
-			*pusEyesX = face->bEyesX;
-			*pusEyesY = face->bEyesY;
-			*pusMouthX = face->bMouthX;
-			*pusMouthY = face->bMouthY;
+			*pusEyesX = g_ui.m_stdScreenScale * face->bEyesX;
+			*pusEyesY = g_ui.m_stdScreenScale * face->bEyesY;
+			*pusMouthX = g_ui.m_stdScreenScale * face->bMouthX;
+			*pusMouthY = g_ui.m_stdScreenScale * face->bMouthY;
 			return;
 		}
 	}
 
-	*pusEyesX  = p.usEyesX;
-	*pusEyesY  = p.usEyesY;
-	*pusMouthX = p.usMouthX;
-	*pusMouthY = p.usMouthY;
+	*pusEyesX  = g_ui.m_stdScreenScale * p.usEyesX;
+	*pusEyesY  = g_ui.m_stdScreenScale * p.usEyesY;
+	*pusMouthX = g_ui.m_stdScreenScale * p.usMouthX;
+	*pusMouthY = g_ui.m_stdScreenScale * p.usMouthY;
 }
 
 
@@ -498,15 +499,15 @@ static void BlinkAutoFace(FACETYPE& f)
 }
 
 
-static void DrawFaceRect(FACETYPE const& f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 colour)
+static void DrawFaceRect(FACETYPE const& f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 color)
 {
 	SGPVSurface::Lock l(buffer);
 	UINT32 const uiDestPitchBYTES = l.Pitch();
 
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, f.usFaceWidth + 4, f.usFaceHeight + 4);
 
-	const UINT16 usLineColor = Get16BPPColor(colour);
-	RectangleDraw(TRUE, x - 2, y - 1, x + f.usFaceWidth + 1, y + f.usFaceHeight, usLineColor, l.Buffer<UINT16>());
+	const UINT32 usLineColor = color;
+	RectangleDraw(TRUE, x - 2, y - 1, x + f.usFaceWidth + 1, y + f.usFaceHeight, usLineColor, l.Buffer<UINT32>());
 
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -521,27 +522,27 @@ static void HandleFaceHilights(FACETYPE const& f, SGPVSurface* const uiBuffer, c
 		// If we are highlighted, do this now!
 		if (f.uiFlags & FACE_SHOW_WHITE_HILIGHT)
 		{
-			DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 255, 255));
+			DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, RGB(255, 255, 255));
 		}
 		else if (f.uiFlags & FACE_SHOW_MOVING_HILIGHT)
 		{
 			SOLDIERTYPE const* const s = f.soldier;
 			if (s != NULL && s->bLife >= OKLIFE)
 			{
-				const UINT32 color = (s->bStealthMode ? FROMRGB(158, 158, 12) : FROMRGB(8, 12, 118));
+				const UINT32 color = (s->bStealthMode ? RGB(158, 158, 12) : RGB(8, 12, 118));
 				DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, color);
 			}
 		}
 		else
 		{
 			// ATE: Zero out any highlight boxzes....
-			DrawFaceRect(f, f.uiAutoDisplayBuffer, f.usFaceX, f.usFaceY, FROMRGB(0, 0, 0));
+			DrawFaceRect(f, f.uiAutoDisplayBuffer, f.usFaceX, f.usFaceY, RGB(0, 0, 0));
 		}
 	}
 
 	if (f.fCompatibleItems)
 	{
-		DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 0, 0));
+		DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, RGB(255, 0, 0));
 	}
 }
 
@@ -672,7 +673,8 @@ static void SetFaceShade(FACETYPE const& f, BOOLEAN const fExternBlit)
 	{
 		shade = FLASH_PORTRAIT_NOSHADE; // Set to default
 	}
-	f.uiVideoObject->CurrentShade(shade);
+	// FIXME: maxrd2: we don't have shades anymore
+//	f.uiVideoObject->CurrentShade(shade);
 }
 
 
@@ -781,8 +783,8 @@ static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffe
 				SGPVSurface::Lock l(uiRenderBuffer);
 				SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-				const UINT16 usLineColor = Get16BPPColor(FROMRGB(105, 8, 9));
-				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, l.Buffer<UINT16>());
+				const UINT32 usLineColor = RGB(105, 8, 9);
+				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, l.Buffer<UINT32>());
 			}
 
 			if ((s->bInSector && (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s)) &&

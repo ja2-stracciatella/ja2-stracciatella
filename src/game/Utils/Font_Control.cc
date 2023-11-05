@@ -97,25 +97,24 @@ void SetFontShade(SGPFont const font, FontShade const shade)
 
 static void CreateFontPaletteTables(SGPFont const f)
 {
-	const SGPPaletteEntry* const pal = f->Palette();
-	f->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pal, 255,   0,   0, TRUE);
-	f->pShades[FONT_SHADE_BLUE]    = Create16BPPPaletteShaded(pal,   0,   0, 255, TRUE);
-	f->pShades[FONT_SHADE_GREEN]   = Create16BPPPaletteShaded(pal,   0, 255,   0, TRUE);
-	f->pShades[FONT_SHADE_YELLOW]  = Create16BPPPaletteShaded(pal, 255, 255,   0, TRUE);
-	f->pShades[FONT_SHADE_NEUTRAL] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-	f->pShades[FONT_SHADE_WHITE]   = Create16BPPPaletteShaded(pal, 255, 255, 255, TRUE);
+	f->pShades[FONT_SHADE_RED]     = SHADE_MONO(255, 0, 0);
+	f->pShades[FONT_SHADE_BLUE]    = SHADE_MONO(0, 0, 255);
+	f->pShades[FONT_SHADE_GREEN]   = SHADE_MONO(0, 255, 0);
+	f->pShades[FONT_SHADE_YELLOW]  = SHADE_MONO(255, 255, 0);
+	f->pShades[FONT_SHADE_NEUTRAL] = SHADE_STD(255, 255, 255);
+	f->pShades[FONT_SHADE_WHITE]   = SHADE_MONO(255, 255, 255);
 
 	// the rest are darkening tables, right down to all-black.
-	f->pShades[ 0] = Create16BPPPaletteShaded(pal, 165, 165, 165, FALSE);
-	f->pShades[ 7] = Create16BPPPaletteShaded(pal, 135, 135, 135, FALSE);
-	f->pShades[ 8] = Create16BPPPaletteShaded(pal, 105, 105, 105, FALSE);
-	f->pShades[ 9] = Create16BPPPaletteShaded(pal,  75,  75,  75, FALSE);
-	f->pShades[10] = Create16BPPPaletteShaded(pal,  45,  45,  45, FALSE);
-	f->pShades[11] = Create16BPPPaletteShaded(pal,  36,  36,  36, FALSE);
-	f->pShades[12] = Create16BPPPaletteShaded(pal,  27,  27,  27, FALSE);
-	f->pShades[13] = Create16BPPPaletteShaded(pal,  18,  18,  18, FALSE);
-	f->pShades[14] = Create16BPPPaletteShaded(pal,   9,   9,   9, FALSE);
-	f->pShades[15] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
+	f->pShades[ 0] = SHADE_STD(165, 165, 165);
+	f->pShades[ 7] = SHADE_STD(135, 135, 135);
+	f->pShades[ 8] = SHADE_STD(105, 105, 105);
+	f->pShades[ 9] = SHADE_STD(75,  75,  75);
+	f->pShades[10] = SHADE_STD(45,  45,  45);
+	f->pShades[11] = SHADE_STD(36,  36,  36);
+	f->pShades[12] = SHADE_STD(27,  27,  27);
+	f->pShades[13] = SHADE_STD(18,  18,  18);
+	f->pShades[14] = SHADE_STD(9,   9,   9);
+	f->pShades[15] = SHADE_STD(0, 0, 0);
 
 	// Set current shade table to neutral color
 	f->CurrentShade(FONT_SHADE_NEUTRAL);

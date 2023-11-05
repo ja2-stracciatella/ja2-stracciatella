@@ -86,15 +86,15 @@ enum //GraphicIDs for the panel
 };
 
 //The start of the black space
-#define TOP_Y							(STD_SCREEN_Y + 113)
+#define TOP_Y							(STD_SCREEN_Y + g_ui.m_stdScreenScale * 113)
 //The end of the black space
-#define BOTTOM_Y					(STD_SCREEN_Y + 349)
+#define BOTTOM_Y					(STD_SCREEN_Y + g_ui.m_stdScreenScale * 349)
 //The internal height of the uninvolved panel
-#define INTERNAL_HEIGHT		27
+#define INTERNAL_HEIGHT		(g_ui.m_stdScreenScale * 27)
 //The actual height of the uninvolved panel
-#define ACTUAL_HEIGHT			34
+#define ACTUAL_HEIGHT			(g_ui.m_stdScreenScale * 34)
 //The height of each row
-#define ROW_HEIGHT				10
+#define ROW_HEIGHT				(g_ui.m_stdScreenScale * 10)
 
 bool gfDisplayPotentialRetreatPaths = false;
 
@@ -660,7 +660,7 @@ void KillPreBattleInterface()
 	//Enable the options button when the auto resolve  screen comes up
 	EnableDisAbleMapScreenOptionsButton( TRUE );
 
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, 0, 0, 261, 359, 0 );
+	ColorFillVideoSurfaceArea(guiSAVEBUFFER, 0, 0, 261, 359, 0x000000FF);
 
 	EnableTeamInfoPanels();
 	if (giMapContractButton) giMapContractButton->Show();
@@ -709,10 +709,11 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 			str = gpStrategicString[STR_PB_ENTERINGBLOODCATLAIR_HEADER];
 			break;
 	}
-	width = StringPixLength( str, FONT10ARIALBOLD );
-	x = 130 - width / 2;
-	MPrint(STD_SCREEN_X + x, STD_SCREEN_Y + 4, str);
-	InvalidateRegion( STD_SCREEN_X + 0, STD_SCREEN_Y + 0, STD_SCREEN_X + 231, STD_SCREEN_Y + 12 );
+	width = StringPixLength(str, FONT10ARIALBOLD);
+	x = g_ui.m_stdScreenScale * 130 - width / 2;
+	MPrint(STD_SCREEN_X + g_ui.m_stdScreenScale * x, STD_SCREEN_Y + g_ui.m_stdScreenScale * 4, str);
+	InvalidateRegion(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 0,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 231, STD_SCREEN_Y + g_ui.m_stdScreenScale * 12);
 	*piX = x;
 	*piWidth = width;
 }
@@ -787,52 +788,53 @@ void RenderPreBattleInterface()
 
 		SGPVObject const* const vo = uiInterfaceImages;
 		// Main panel
-		BltVideoObject(dst, vo, MAINPANEL, STD_SCREEN_X + 0, STD_SCREEN_Y + 0);
+		BltVideoObject(dst, vo, MAINPANEL, STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 0);
 		// Main title
 		RenderPBHeader(&x, &width);
 		// Draw the title bars up to the text
-		for (INT32 i = x - 12; i > 20; i -= 10)
+		for (INT32 i = x - g_ui.m_stdScreenScale * 12; i > g_ui.m_stdScreenScale * 20; i -= g_ui.m_stdScreenScale * 10)
 		{
-			BltVideoObject(dst, vo, TITLE_BAR_PIECE, STD_SCREEN_X + i, STD_SCREEN_Y + 6);
+			BltVideoObject(dst, vo, TITLE_BAR_PIECE, STD_SCREEN_X + i, STD_SCREEN_Y + g_ui.m_stdScreenScale * 6);
 		}
-		for (INT32 i = x + width + 2; i < 231; i += 10)
+		for (INT32 i = x + width + g_ui.m_stdScreenScale * 2; i < g_ui.m_stdScreenScale * 231; i += g_ui.m_stdScreenScale * 10)
 		{
-			BltVideoObject(dst, vo, TITLE_BAR_PIECE, STD_SCREEN_X + i, STD_SCREEN_Y + 6);
+			BltVideoObject(dst, vo, TITLE_BAR_PIECE, STD_SCREEN_X + i, STD_SCREEN_Y + g_ui.m_stdScreenScale * 6);
 		}
 
-		{ INT32 const y = BOTTOM_Y - ACTUAL_HEIGHT - ROW_HEIGHT * std::max(guiNumUninvolved, 1U);
-			BltVideoObject(dst, vo, UNINVOLVED_HEADER, STD_SCREEN_X + 8, y);
+		{
+			const INT32 y = BOTTOM_Y - ACTUAL_HEIGHT - ROW_HEIGHT * std::max(guiNumUninvolved, 1U);
+			BltVideoObject(dst, vo, UNINVOLVED_HEADER, STD_SCREEN_X + g_ui.m_stdScreenScale * 8, y);
 		}
 
 		SetFontForeground(FONT_BEIGE);
-		PrintConfined(65, 17, 64, gpStrategicString[STR_PB_LOCATION]);
+		PrintConfined(g_ui.m_stdScreenScale * 65, g_ui.m_stdScreenScale * 17, g_ui.m_stdScreenScale * 64, gpStrategicString[STR_PB_LOCATION]);
 
 		ST::string encounter =
 			gubEnemyEncounterCode != CREATURE_ATTACK_CODE        ? gpStrategicString[STR_PB_ENEMIES] :
 			gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE || // XXX case is unreachable, because of != above
 			gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ? gpStrategicString[STR_PB_BLOODCATS] :
 			gpStrategicString[STR_PB_CREATURES];
-		PrintConfined( 54, 38, 52, encounter);
-		PrintConfined(139, 38, 52, gpStrategicString[STR_PB_MERCS]);
-		PrintConfined(224, 38, 52, gpStrategicString[STR_PB_MILITIA]);
+		PrintConfined(g_ui.m_stdScreenScale *  54, g_ui.m_stdScreenScale * 38, g_ui.m_stdScreenScale * 52, encounter);
+		PrintConfined(g_ui.m_stdScreenScale * 139, g_ui.m_stdScreenScale * 38, g_ui.m_stdScreenScale * 52, gpStrategicString[STR_PB_MERCS]);
+		PrintConfined(g_ui.m_stdScreenScale * 224, g_ui.m_stdScreenScale * 38, g_ui.m_stdScreenScale * 52, gpStrategicString[STR_PB_MILITIA]);
 
 		// Draw the bottom columns
 		for (INT32 i = 0; i < (INT32)std::max(guiNumUninvolved, 1U); ++i)
 		{
 			INT32 const y = BOTTOM_Y - ROW_HEIGHT * (i + 1) + 1;
-			BltVideoObject(dst, vo, BOTTOM_COLUMN, STD_SCREEN_X + 161, y);
+			BltVideoObject(dst, vo, BOTTOM_COLUMN, STD_SCREEN_X + g_ui.m_stdScreenScale * 161, y);
 		}
 
 		for (INT32 i = 0; i < (INT32)(21 - std::max(guiNumUninvolved, 1U)); ++i)
 		{
 			INT32 const y = TOP_Y + ROW_HEIGHT * i;
-			BltVideoObject(dst, vo, TOP_COLUMN, STD_SCREEN_X + 186, y);
+			BltVideoObject(dst, vo, TOP_COLUMN, STD_SCREEN_X + g_ui.m_stdScreenScale * 186, y);
 		}
 
 		// Location
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		ST::string sector_name = GetSectorIDString(gubPBSector, TRUE);
-		MPrint(STD_SCREEN_X + 70, STD_SCREEN_Y + 17, ST::format("{} {}", gpStrategicString[STR_PB_SECTOR], sector_name));
+		MPrint(STD_SCREEN_X + g_ui.m_stdScreenScale * 70, STD_SCREEN_Y + g_ui.m_stdScreenScale * 17, ST::format("{} {}", gpStrategicString[STR_PB_SECTOR], sector_name));
 
 		SetFont(FONT14ARIAL);
 		// Enemy
@@ -850,13 +852,13 @@ void RenderPreBattleInterface()
 			str = ST::format("{}", n);
 			enemies = str;
 		}
-		MPrintCentered(57, 36, 27, enemies);
+		MPrintCentered(g_ui.m_stdScreenScale * 57, g_ui.m_stdScreenScale * 36, g_ui.m_stdScreenScale * 27, enemies);
 		// Player
 		str = ST::format("{}", guiNumInvolved);
-		MPrintCentered(142, 36, 27, str);
+		MPrintCentered(g_ui.m_stdScreenScale * 142, g_ui.m_stdScreenScale * 36, g_ui.m_stdScreenScale * 27, str);
 		// Militia
 		str = ST::format("{}", CountAllMilitiaInSector(gubPBSector));
-		MPrintCentered(227, 36, 27, str);
+		MPrintCentered(g_ui.m_stdScreenScale * 227, g_ui.m_stdScreenScale * 36, g_ui.m_stdScreenScale * 27, str);
 		SetFontShadow(FONT_NEARBLACK);
 
 		SetFont(BLOCKFONT2);

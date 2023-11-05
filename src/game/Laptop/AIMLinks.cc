@@ -17,14 +17,14 @@
 
 #define AIM_LINK_NUM_LINKS		3
 
-#define AIM_LINK_LINK_OFFSET_X		94
-#define AIM_LINK_LINK_OFFSET_Y		94//90
+#define AIM_LINK_LINK_OFFSET_X		94 * g_ui.m_stdScreenScale
+#define AIM_LINK_LINK_OFFSET_Y		94 * g_ui.m_stdScreenScale//90
 
-#define AIM_LINK_LINK_WIDTH		420
-#define AIM_LINK_LINK_HEIGHT		70
+#define AIM_LINK_LINK_WIDTH		420 * g_ui.m_stdScreenScale
+#define AIM_LINK_LINK_HEIGHT		70 * g_ui.m_stdScreenScale
 
-#define AIM_LINK_BOBBY_LINK_X		LAPTOP_SCREEN_UL_X + 40
-#define AIM_LINK_BOBBY_LINK_Y		LAPTOP_SCREEN_WEB_UL_Y + 91
+#define AIM_LINK_BOBBY_LINK_X		LAPTOP_SCREEN_UL_X + 40 * g_ui.m_stdScreenScale
+#define AIM_LINK_BOBBY_LINK_Y		LAPTOP_SCREEN_WEB_UL_Y + 91 * g_ui.m_stdScreenScale
 
 #define AIM_LINK_FUNERAL_LINK_X		AIM_LINK_BOBBY_LINK_X
 #define AIM_LINK_FUNERAL_LINK_Y		AIM_LINK_BOBBY_LINK_Y + AIM_LINK_LINK_OFFSET_Y
@@ -32,8 +32,8 @@
 #define AIM_LINK_INSURANCE_LINK_X	AIM_LINK_BOBBY_LINK_X
 #define AIM_LINK_INSURANCE_LINK_Y	AIM_LINK_FUNERAL_LINK_Y + AIM_LINK_LINK_OFFSET_Y
 
-#define AIM_LINK_TITLE_X		IMAGE_OFFSET_X + 149
-#define AIM_LINK_TITLE_Y		AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y + 10
+#define AIM_LINK_TITLE_X		IMAGE_OFFSET_X + 149 * g_ui.m_stdScreenScale
+#define AIM_LINK_TITLE_Y		AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y + 10 * g_ui.m_stdScreenScale
 #define AIM_LINK_TITLE_WIDTH		AIM_SYMBOL_WIDTH
 
 
@@ -79,9 +79,9 @@ void ExitAimLinks()
 {
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiBobbyLink);
-	DeleteVideoObject(guiFuneralLink);
-	DeleteVideoObject(guiInsuranceLink);
+	delete guiBobbyLink;
+	delete guiFuneralLink;
+	delete guiInsuranceLink;
 
 	FOR_EACH(MOUSE_REGION, i, gSelectedLinkRegion) MSYS_RemoveRegion(&*i);
 
@@ -99,7 +99,7 @@ void RenderAimLinks()
 	BltVideoObject(FRAME_BUFFER, guiInsuranceLink, 0, AIM_LINK_INSURANCE_LINK_X, AIM_LINK_INSURANCE_LINK_Y);
 
 	//Draw Link Title
-	DrawTextToScreen(AimLinkText, AIM_LINK_TITLE_X, AIM_LINK_TITLE_Y, AIM_LINK_TITLE_WIDTH, AIM_LINK_TITLE_FONT, AIM_LINK_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimLinkText, AIM_LINK_TITLE_X, AIM_LINK_TITLE_Y, AIM_LINK_TITLE_WIDTH, AIM_LINK_TITLE_FONT, AIM_LINK_TITLE_COLOR, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );

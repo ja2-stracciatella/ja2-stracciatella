@@ -53,22 +53,22 @@
 #include <string_theory/string>
 
 
-#define MAP_BOTTOM_X (STD_SCREEN_X + 0)
-#define MAP_BOTTOM_Y (STD_SCREEN_Y + 359)
+#define MAP_BOTTOM_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 0)
+#define MAP_BOTTOM_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 359)
 
-#define MESSAGE_BOX_X (STD_SCREEN_X +  17)
-#define MESSAGE_BOX_Y (STD_SCREEN_Y + 377)
-#define MESSAGE_BOX_W 301
-#define MESSAGE_BOX_H  86
+#define MESSAGE_BOX_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 17)
+#define MESSAGE_BOX_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 377)
+#define MESSAGE_BOX_W (g_ui.m_stdScreenScale * 301)
+#define MESSAGE_BOX_H (g_ui.m_stdScreenScale * 86)
 
-#define MESSAGE_SCROLL_AREA_START_X (STD_SCREEN_X + 330)
-#define MESSAGE_SCROLL_AREA_WIDTH    15
+#define MESSAGE_SCROLL_AREA_START_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 330)
+#define MESSAGE_SCROLL_AREA_WIDTH   (g_ui.m_stdScreenScale * 15)
 
-#define MESSAGE_SCROLL_AREA_START_Y (STD_SCREEN_Y + 390)
-#define MESSAGE_SCROLL_AREA_HEIGHT   59
+#define MESSAGE_SCROLL_AREA_START_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 390)
+#define MESSAGE_SCROLL_AREA_HEIGHT  (g_ui.m_stdScreenScale * 59)
 
-#define SLIDER_HEIGHT		11
-#define SLIDER_WIDTH		11
+#define SLIDER_HEIGHT		(g_ui.m_stdScreenScale * 11)
+#define SLIDER_WIDTH		(g_ui.m_stdScreenScale * 11)
 
 #define SLIDER_BAR_RANGE			( MESSAGE_SCROLL_AREA_HEIGHT - SLIDER_HEIGHT )
 
@@ -79,7 +79,7 @@
 // delay for paused flash
 #define PAUSE_GAME_TIMER 500
 
-#define MAP_BOTTOM_FONT_COLOR ( 32 * 4 - 9 )
+#define MAP_BOTTOM_FONT_COLOR RGB(139, 106,  57)
 
 // button enums
 enum{
@@ -290,17 +290,31 @@ static GUIButtonRef MakeArrowButton(INT32 grayed, INT32 off, INT32 on, INT16 x, 
 
 static void CreateButtonsForMapScreenInterfaceBottom(void)
 {
-	guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]   = MakeExitButton( 6, 15, STD_SCREEN_X + 456, STD_SCREEN_Y + 410, BtnLaptopCallback,               pMapScreenBottomFastHelp[0]);
-	guiMapBottomExitButtons[MAP_EXIT_TO_TACTICAL] = MakeExitButton( 7, 16, STD_SCREEN_X + 496, STD_SCREEN_Y + 410, BtnTacticalCallback,             pMapScreenBottomFastHelp[1]);
-	guiMapBottomExitButtons[MAP_EXIT_TO_OPTIONS]  = MakeExitButton(18, 19, STD_SCREEN_X + 458, STD_SCREEN_Y + 372, BtnOptionsFromMapScreenCallback, pMapScreenBottomFastHelp[2]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]   = MakeExitButton( 6, 15,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 456, STD_SCREEN_Y + g_ui.m_stdScreenScale * 410,
+		BtnLaptopCallback,               pMapScreenBottomFastHelp[0]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_TACTICAL] = MakeExitButton( 7, 16,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 496, STD_SCREEN_Y + g_ui.m_stdScreenScale * 410,
+		BtnTacticalCallback,             pMapScreenBottomFastHelp[1]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_OPTIONS]  = MakeExitButton(18, 19,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 458, STD_SCREEN_Y + g_ui.m_stdScreenScale * 372,
+		BtnOptionsFromMapScreenCallback, pMapScreenBottomFastHelp[2]);
 
 	// time compression buttons
-	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_MORE] = MakeArrowButton(10, 1, 3, STD_SCREEN_X + 528, STD_SCREEN_Y + 456, BtnTimeCompressMoreMapScreenCallback, pMapScreenBottomFastHelp[3]);
-	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_LESS] = MakeArrowButton( 9, 0, 2, STD_SCREEN_X + 466, STD_SCREEN_Y + 456, BtnTimeCompressLessMapScreenCallback, pMapScreenBottomFastHelp[4]);
+	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_MORE] = MakeArrowButton(10, 1, 3,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 528, STD_SCREEN_Y + g_ui.m_stdScreenScale * 456,
+		BtnTimeCompressMoreMapScreenCallback, pMapScreenBottomFastHelp[3]);
+	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_LESS] = MakeArrowButton( 9, 0, 2,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 466, STD_SCREEN_Y + g_ui.m_stdScreenScale * 456,
+		BtnTimeCompressLessMapScreenCallback, pMapScreenBottomFastHelp[4]);
 
 	// scroll buttons
-	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_UP]   = MakeArrowButton(11, 4, 6, STD_SCREEN_X + 331, STD_SCREEN_Y + 371, BtnMessageUpMapScreenCallback,   pMapScreenBottomFastHelp[5]);
-	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_DOWN] = MakeArrowButton(12, 5, 7, STD_SCREEN_X + 331, STD_SCREEN_Y + 452, BtnMessageDownMapScreenCallback, pMapScreenBottomFastHelp[6]);
+	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_UP]   = MakeArrowButton(11, 4, 6,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 331, STD_SCREEN_Y + g_ui.m_stdScreenScale * 371,
+		BtnMessageUpMapScreenCallback,   pMapScreenBottomFastHelp[5]);
+	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_DOWN] = MakeArrowButton(12, 5, 7,
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 331, STD_SCREEN_Y + g_ui.m_stdScreenScale * 452,
+		BtnMessageDownMapScreenCallback, pMapScreenBottomFastHelp[6]);
 }
 
 
@@ -344,14 +358,16 @@ static void DrawNameOfLoadedSector()
 {
 	SetFontDestBuffer(FRAME_BUFFER);
 	SGPFont const font = COMPFONT;
-	SetFontAttributes(font, 183);
+	SetFontAttributes(font, RGB(  0, 255,   0), DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 	ST::string buf = GetSectorIDString(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ), TRUE);
 	buf = ReduceStringLength(buf, 80, font);
 
 	INT16 x;
 	INT16 y;
-	FindFontCenterCoordinates(STD_SCREEN_X + 548, STD_SCREEN_Y + 426, 80, 16, buf, font, &x, &y);
+	FindFontCenterCoordinates(STD_SCREEN_X + g_ui.m_stdScreenScale * 548, STD_SCREEN_Y + g_ui.m_stdScreenScale * 426,
+		g_ui.m_stdScreenScale * 80, g_ui.m_stdScreenScale * 16,
+		buf, font, &x, &y);
 	MPrint(x, y, buf);
 }
 
@@ -524,7 +540,7 @@ static void EnableDisableMessageScrollButtonsAndRegions(void)
 static void DisplayCompressMode(void)
 {
 	INT16 sX, sY;
-	static UINT8 usColor = FONT_LTGREEN;
+	static UINT32 usColor = FONT_LTGREEN;
 
 	// get compress speed
 	ST::string Time;
@@ -533,30 +549,27 @@ static void DisplayCompressMode(void)
 		Time = sTimeStrings[IsTimeBeingCompressed() ? giTimeCompressMode : 0];
 	}
 
-	RestoreExternBackgroundRect( STD_SCREEN_X + 489, STD_SCREEN_Y + 457, 522 - 489, 467 - 454 );
+	RestoreExternBackgroundRect( STD_SCREEN_X + g_ui.m_stdScreenScale * 489, STD_SCREEN_Y + g_ui.m_stdScreenScale * 457,
+		g_ui.m_stdScreenScale * (522 - 489), g_ui.m_stdScreenScale * (467 - 454));
 	SetFontDestBuffer(FRAME_BUFFER);
 
 	if( GetJA2Clock() - guiCompressionStringBaseTime >= PAUSE_GAME_TIMER )
 	{
 		if( usColor == FONT_LTGREEN )
-		{
 			usColor = FONT_WHITE;
-		}
 		else
-		{
 			usColor = FONT_LTGREEN;
-		}
 
 		guiCompressionStringBaseTime = GetJA2Clock();
 	}
 
 	if (giTimeCompressMode != 0 && !GamePaused())
-	{
 		usColor = FONT_LTGREEN;
-	}
 
 	SetFontAttributes(COMPFONT, usColor);
-	FindFontCenterCoordinates(STD_SCREEN_X + 489, STD_SCREEN_Y + 457, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);
+	FindFontCenterCoordinates(STD_SCREEN_X + g_ui.m_stdScreenScale * 489, STD_SCREEN_Y + g_ui.m_stdScreenScale * 457,
+		g_ui.m_stdScreenScale * (522 - 489), g_ui.m_stdScreenScale * (467 - 454),
+		Time, COMPFONT, &sX, &sY);
 	MPrint(sX, sY, Time);
 }
 
@@ -706,7 +719,8 @@ static void DisplayScrollBarSlider(void)
 		// calculate where slider should be positioned
 		ubSliderOffset = ( SLIDER_BAR_RANGE * gubFirstMapscreenMessageIndex ) / ( ubNumMessages - MAX_MESSAGES_ON_MAP_BOTTOM );
 
-		BltVideoObject(FRAME_BUFFER, guiSliderBar, 8, MESSAGE_SCROLL_AREA_START_X + 2, MESSAGE_SCROLL_AREA_START_Y + ubSliderOffset);
+		BltVideoObject(FRAME_BUFFER, guiSliderBar, 8,
+			MESSAGE_SCROLL_AREA_START_X + g_ui.m_stdScreenScale * 2, MESSAGE_SCROLL_AREA_START_Y + ubSliderOffset);
 	}
 }
 
@@ -884,11 +898,15 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	SetFontAttributes(COMPFONT, MAP_BOTTOM_FONT_COLOR);
 
 	sString = pMapScreenBottomText;
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
+	FindFontCenterCoordinates(STD_SCREEN_X + g_ui.m_stdScreenScale * 359, STD_SCREEN_Y + g_ui.m_stdScreenScale * (387 - 14),
+		g_ui.m_stdScreenScale * (437 - 359), g_ui.m_stdScreenScale * 10,
+		sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 
 	sString = zMarksMapScreenText[2];
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
+	FindFontCenterCoordinates(STD_SCREEN_X + g_ui.m_stdScreenScale * 359, STD_SCREEN_Y + g_ui.m_stdScreenScale * (433 - 14),
+		g_ui.m_stdScreenScale * (437 - 359), g_ui.m_stdScreenScale * 10,
+		sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -901,9 +919,11 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0), DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 	ST::string sString = SPrintMoney(LaptopSaveInfo.iCurrentBalance);
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
+	FindFontCenterCoordinates(STD_SCREEN_X + g_ui.m_stdScreenScale * 359, STD_SCREEN_Y + g_ui.m_stdScreenScale * (387 + 2),
+		g_ui.m_stdScreenScale * (437 - 359), g_ui.m_stdScreenScale * 10,
+		sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 }
 
@@ -961,9 +981,11 @@ static void DisplayProjectedDailyMineIncome(void)
 	}
 
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0), DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 	ST::string sString = SPrintMoney(iRate);
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
+	FindFontCenterCoordinates(STD_SCREEN_X + g_ui.m_stdScreenScale * 359, STD_SCREEN_Y + g_ui.m_stdScreenScale * (433 + 2),
+		g_ui.m_stdScreenScale * (437 - 359), g_ui.m_stdScreenScale * 10,
+		sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 }
 

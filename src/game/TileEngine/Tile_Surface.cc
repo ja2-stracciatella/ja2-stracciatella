@@ -15,16 +15,23 @@
 #include <stdexcept>
 #include <string_theory/format>
 
+#include "VideoScale.h"
+#include "UILayout.h"
 
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
 
-TILE_IMAGERY* LoadTileSurface(ST::string const& cFilename)
+TILE_IMAGERY* LoadTileSurface(ST::string const& cFilename, int type)
 try
 {
-	// Add tile surface
-	AutoSGPImage   hImage(CreateImage(cFilename, IMAGE_ALLDATA));
+	const bool isContinuousTile = (type >= FIRSTTEXTURE && type <= DEEPWATERTEXTURE)
+			|| (type >= FIRSTSHADOW && type <= FOURTHFULLSHADOW)
+			|| (type >= FIRSTCLIFFHANG && type <= FIRSTCLIFFSHADOW)
+			|| (type >= FIRSTVEHICLE && type <= SECONDVEHICLESHADOW)
+			|| type == ROADPIECES;
+	AutoSGPImage img(CreateImage(cFilename, IMAGE_ALLDATA | IMAGE_HACK254));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_tacticalScreenScale, g_ui.m_tacticalScreenScale, !isContinuousTile));
 	AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage.get()));
 
 	// Load structure data, if any.
@@ -65,6 +72,15 @@ try
 
 	pTileSurf->vo                = hVObject.release();
 	pTileSurf->pStructureFileRef = pStructureFileRef.Release();
+	if(type == GUNS || type == P1ITEMS || type == P2ITEMS) {
+		// TODO: original game is using tile graphics to render items
+		//       in pickup menu and that looks ugly - we could switch
+		//       to inventory icons, but they need to get scaled down
+		AutoSGPImage hIntImage(ScaleImage(img.get(), g_ui.m_stdScreenScale, g_ui.m_stdScreenScale));
+		pTileSurf->voInterface = AddVideoObjectFromHImage(hIntImage.get());
+	} else {
+		pTileSurf->voInterface = nullptr;
+	}
 	return pTileSurf.Release();
 }
 catch (...)
@@ -91,7 +107,8 @@ void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 		}
 	}
 
-	DeleteVideoObject(pTileSurf->vo);
+	delete pTileSurf->vo;
+	delete pTileSurf->voInterface;
 	delete pTileSurf;
 }
 

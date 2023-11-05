@@ -43,8 +43,8 @@ static SGPVObject* guiSHORT2HINDENT;
 
 
 // position defines
-#define CHAR_PROFILE_BACKGROUND_TILE_WIDTH 125
-#define CHAR_PROFILE_BACKGROUND_TILE_HEIGHT 100
+#define CHAR_PROFILE_BACKGROUND_TILE_WIDTH (125 * g_ui.m_stdScreenScale)
+#define CHAR_PROFILE_BACKGROUND_TILE_HEIGHT (100 * g_ui.m_stdScreenScale)
 
 extern void DrawBonusPointsRemaining( void );
 
@@ -316,15 +316,15 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 
-	sCurrentY += 10;
+	sCurrentY += 10 * g_ui.m_stdScreenScale;
 	for( iCounter = 0; iCounter < 10; iCounter++ )
 	{
 		// blt to sX, sY relative to upper left corner
-		BltVideoObject(FRAME_BUFFER, hHandle, 2, LAPTOP_SCREEN_UL_X + sX + 134, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
+		BltVideoObject(FRAME_BUFFER, hHandle, 2, LAPTOP_SCREEN_UL_X + sX + 134 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
 		BltVideoObject(FRAME_BUFFER, hHandle, 1, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
-		BltVideoObject(FRAME_BUFFER, hHandle, 3, LAPTOP_SCREEN_UL_X + sX + 368, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
+		BltVideoObject(FRAME_BUFFER, hHandle, 3, LAPTOP_SCREEN_UL_X + sX + 368 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
 
-		sCurrentY += 20;
+		sCurrentY += 20 * g_ui.m_stdScreenScale;
 	}
 
 	BltVideoObject(FRAME_BUFFER, hHandle, 4, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
@@ -332,19 +332,14 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 
 void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 {
-	INT16 sCurrentY = 0;
-
-	// valid index?
-	if( iIndex == -1 )
-	{
+	if(iIndex == -1)
 		return;
-	}
 
-	sCurrentY = ( INT16 )( 10 + ( iIndex * 20 ) );
+	INT16 sCurrentY = INT16(10 + (iIndex * 20)) * g_ui.m_stdScreenScale;
 
-	BltVideoObject(FRAME_BUFFER, guiATTRIBUTEFRAME, 2, LAPTOP_SCREEN_UL_X + sX + 134, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
+	BltVideoObject(FRAME_BUFFER, guiATTRIBUTEFRAME, 2, LAPTOP_SCREEN_UL_X + sX + 134 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
 
-	RenderAttrib2IndentFrame(350, 42 );
+	RenderAttrib2IndentFrame(350 * g_ui.m_stdScreenScale, 42 * g_ui.m_stdScreenScale);
 
 	// amt of bonus pts
 	DrawBonusPointsRemaining( );
@@ -352,7 +347,8 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 	// render attribute boxes
 	RenderAttributeBoxes( );
 
-	InvalidateRegion( LAPTOP_SCREEN_UL_X + sX + 134, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY, LAPTOP_SCREEN_UL_X + sX + 400, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY + 21 );
+	InvalidateRegion(LAPTOP_SCREEN_UL_X + sX + 134 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY,
+			 LAPTOP_SCREEN_UL_X + sX + 400 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY + 21 * g_ui.m_stdScreenScale);
 }
 
 

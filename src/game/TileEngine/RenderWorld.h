@@ -2,6 +2,7 @@
 #define RENDERWORLD_H
 
 #include "Types.h"
+#include "UILayout.h"
 
 extern BOOLEAN gfDoVideoScroll;
 extern UINT8   gubCurScrollSpeedID;
@@ -37,7 +38,7 @@ ENUM_BITSET(RenderFlags)
 #define TOPMOST_Z_LEVEL 32767
 
 /* number of pixels to show the exit sector cursor at the edge of the map */
-#define NO_PX_SHOW_EXIT_CURS			15
+#define NO_PX_SHOW_EXIT_CURS			(g_ui.m_tacticalScreenScale * 15)
 
 enum RenderLayerFlags
 {
@@ -82,8 +83,6 @@ extern INT16 gsRenderHeight;
 
 extern INT16 gsRenderCenterX;
 extern INT16 gsRenderCenterY;
-extern INT16 gsRenderWorldOffsetX;
-extern INT16 gsRenderWorldOffsetY;
 
 // CURRENT VIEWPORT IN WORLD COORDS
 extern INT16 gsTopLeftWorldX;
@@ -93,14 +92,14 @@ extern INT16 gsBottomRightWorldY;
 
 
 // GLOBAL COORDINATES
-constexpr INT16 gCenterWorldX = 800; // (was a variable in vanilla, always computed to 800).
-constexpr INT16 gCenterWorldY = 800; // (was a variable in vanilla, always computed to 800).
+extern INT16 gCenterWorldX;
+extern INT16 gCenterWorldY;
 extern INT16 gsLeftX;
 extern INT16 gsTopY;
 extern INT16 gsRightX;
 extern INT16 gsBottomY;
-constexpr INT16 gsCX = 0;    // Center of the map in screen coordinates (was a variable in vanilla, always computed to 0).
-constexpr INT16 gsCY = 1625; // Center of the map in screen coordinates (was a variable in vanilla, always computed to 1625).
+extern INT16 gsCX;
+extern INT16 gsCY;
 extern double gdScaleX;
 extern double gdScaleY;
 
@@ -118,10 +117,10 @@ void ClearRenderFlags(RenderFlags);
 
 void RenderSetShadows(BOOLEAN fShadows);
 
-extern UINT16* gpZBuffer;
+extern UINT16 *gpZBuffer;
 extern UINT16  gZBufferPitch;
-extern BOOLEAN gfIgnoreScrolling;
 
+extern BOOLEAN gfIgnoreScrolling;
 extern bool    g_scroll_inertia;
 extern BOOLEAN gfScrollPending;
 

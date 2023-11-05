@@ -4108,9 +4108,7 @@ static void GetGridNoScreenXY(INT16 sGridNo, INT16* pScreenX, INT16* pScreenY)
 	sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)sTempY_S;
 
 	// Adjust for offset position on screen
-	sScreenX -= gsRenderWorldOffsetX;
-	sScreenY -= gsRenderWorldOffsetY;
-	sScreenY -=	gpWorldLevelData[ sGridNo ].sHeight;
+	sScreenY -= gpWorldLevelData[ sGridNo ].sHeight;
 
 	// Adjust based on interface level
 

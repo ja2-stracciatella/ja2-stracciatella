@@ -2,6 +2,7 @@
 #define __VOBJECT_H
 
 #include "Types.h"
+#include "VideoScale.h"
 #include <memory>
 
 
@@ -18,9 +19,11 @@ struct ZStripInfo
 	UINT8 ubNumberOfZChanges; // number of strips (after the first)
 };
 
-// This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
-// From RGB to COLORVAL
-#define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16)))
+#define RGBA(r, g, b, a)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | UINT32(a))
+#define RGB(r, g, b)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | 0xFF)
+#define SHADE_NONE RGBA(0, 0, 0, 0)
+#define SHADE_MONO(r, g, b) RGBA(r, g, b, 1)
+#define SHADE_STD(r, g, b) RGBA(r, g, b, 2)
 
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
@@ -35,12 +38,11 @@ class SGPVObject
 
 		SGPPaletteEntry const* Palette() const { return palette_.get(); }
 
-		UINT16 const* Palette16() const { return palette16_; }
-
-		UINT16 const* CurrentShade() const { return current_shade_; }
+		UINT32 CurrentShade() const { return current_shade_; }
 
 		// Set the current object shade table
 		void CurrentShade(size_t idx);
+		void SetShadeColor(UINT32 rgba) { current_shade_ = rgba; }
 
 		UINT16 SubregionCount() const { return subregion_count_; }
 
@@ -67,14 +69,13 @@ class SGPVObject
 	private:
 		Flags                        flags_;                         // Special flags
 		std::unique_ptr<SGPPaletteEntry const []> palette_;          // 8BPP Palette
-		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
 		std::unique_ptr<UINT8 const []> pix_data_;                   // ETRLE pixel data
 		std::unique_ptr<ETRLEObject const []> etrle_object_;         // Object offset data etc
 	public:
-		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
+		UINT32                       pShades[HVOBJECT_SHADE_TABLES]; // Shading values
 	private:
-		UINT16 const*                current_shade_;
+		UINT32                       current_shade_;
 	public:
 		// Smart pointer to an array of smart pointers to ZStripInfo structs.
 		std::unique_ptr<std::unique_ptr<ZStripInfo> []> ppZStripInfo;// Z-value strip info arrays
@@ -96,23 +97,28 @@ void InitializeVideoObjectManager(void);
 void ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
-SGPVObject* AddVideoObjectFromHImage(SGPImage*);
-SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile);
+SGPVObject* AddVideoObjectFromHImage(SGPImage *img);
+SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback=nullptr, double scaleX=NAN, double scaleY=NAN);
+SGPVObject* AddScaledOutlineVideoObjectFromFile(const ST::string& ImageFile);
+SGPVObject* AddScaledAlphaVideoObjectFromFile(const ST::string& ImageFile);
+
+inline SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
+{
+	return AddScaledVideoObjectFromFile(ImageFile);
+}
 
 // Removes a video object
-static inline void DeleteVideoObject(SGPVObject* const vo)
+inline void DeleteVideoObject(SGPVObject* const vo)
 {
 	delete vo;
 }
 
 // Blits a video object to another video object
-void BltVideoObject(SGPVSurface* dst, SGPVObject const* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
+void BltVideoObject(SGPVSurface *dst, const SGPVObject *src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY);
+void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, const UINT32 colOutline);
+void BltVideoObjectOutlineShadow(SGPVSurface *dst, const SGPVObject *src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY);
 
-
-void BltVideoObjectOutline(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);
-void BltVideoObjectOutlineShadow(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
-
-/* Loads a video object, blits it once and frees it */
+// Loads a video object, blits it once and frees it
 void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
 
 typedef std::unique_ptr<SGPVObject> AutoSGPVObject;

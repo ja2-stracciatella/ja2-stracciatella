@@ -109,7 +109,7 @@ void DisplayLoadScreenWithID(UINT8 const id)
 	catch (...)
 	{ // Failed to load the file, so use a black screen and print out message.
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-		FRAME_BUFFER->Fill(0);
+		FRAME_BUFFER->Fill(0x000000FF);
 		MPrint(5, 5, ST::format("{} loadscreen data file not found", filename));
 	}
 

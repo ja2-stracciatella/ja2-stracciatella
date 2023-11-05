@@ -167,12 +167,10 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 				UINT16 const anim_surface = GetSoldierAnimationSurface(&s);
 				if (anim_surface != INVALID_ANIMATION_SURFACE)
 				{
-					INT32 const merc_screen_x =   screen_x - soldier_rect.iLeft;
-					INT32 const merc_screen_y = -(screen_y - soldier_rect.iBottom);
+					INT32 const merc_screen_x = screen_x - soldier_rect.iLeft;
+					INT32 const merc_screen_y = screen_y - soldier_rect.iTop;
 					if (!CheckVideoObjectScreenCoordinateInData(gAnimSurfaceDatabase[anim_surface].hVideoObject, s.usAniFrame, merc_screen_x, merc_screen_y))
-					{
 						continue;
-					}
 				}
 			}
 
@@ -345,19 +343,15 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX,
 	}
 
 	// Get 'TRUE' merc position
-	FLOAT const dOffsetX = s->dXPos - gsRenderCenterX;
-	FLOAT const dOffsetY = s->dYPos - gsRenderCenterY;
+	INT16 const dOffsetX = s->dXPos - gsRenderCenterX;
+	INT16 const dOffsetY = s->dYPos - gsRenderCenterY;
 
-	FLOAT dTempX_S;
-	FLOAT dTempY_S;
-	FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
+	INT16 dTempX_S;
+	INT16 dTempY_S;
+	FromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
 	INT16 sMercScreenX = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
 	INT16 sMercScreenY = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S;
-
-	// Adjust starting screen coordinates
-	sMercScreenX -= gsRenderWorldOffsetX;
-	sMercScreenY -= gsRenderWorldOffsetY;
 
 	// Adjust for render height
 	sMercScreenY += gsRenderHeight;
@@ -505,8 +499,8 @@ UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* const pSoldier, const INT1
 void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *psScreenY )
 {
 	INT16 sScreenX, sScreenY;
-	FLOAT dOffsetX, dOffsetY;
-	FLOAT dTempX_S, dTempY_S;
+	INT16 dOffsetX, dOffsetY;
+	INT16 dTempX_S, dTempY_S;
 
 	// Get 'TRUE' merc position
 	dOffsetX = (FLOAT)( CenterX( sGridNo ) - gsRenderCenterX );
@@ -515,14 +509,10 @@ void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *
 	// OK, DONT'T ASK... CONVERSION TO PROPER Y NEEDS THIS...
 	dOffsetX -= CELL_Y_SIZE;
 
-	FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
+	FromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
 	sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)dTempX_S;
 	sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)dTempY_S;
-
-	// Adjust starting screen coordinates
-	sScreenX -= gsRenderWorldOffsetX;
-	sScreenY -= gsRenderWorldOffsetY;
 
 	sScreenY += gsRenderHeight;
 

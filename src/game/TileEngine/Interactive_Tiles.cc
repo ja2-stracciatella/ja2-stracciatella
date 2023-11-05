@@ -271,9 +271,7 @@ static void GetLevelNodeScreenRect(LEVELNODE const& n, SGPRect& rect, INT16 cons
 	INT16 sScreenY = (g_ui.m_tacticalMapCenterY) + (INT16)sTempY_S;
 
 	// Adjust for offset position on screen
-	sScreenX -= gsRenderWorldOffsetX;
-	sScreenY -= gsRenderWorldOffsetY;
-	sScreenY -=	gpWorldLevelData[gridno].sHeight;
+	sScreenY -= gpWorldLevelData[gridno].sHeight;
 
 	// Adjust based on interface level
 	if (gsInterfaceLevel > 0)
@@ -328,7 +326,7 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 		// Make sure we are always on guy if we are on same gridno
 		if (!IsPointInScreenRect(cursorPosition.iX, cursorPosition.iY, aRect)) continue;
 
-		if (!RefinePointCollisionOnStruct(cursorPosition.iX, cursorPosition.iY, aRect.iLeft, aRect.iBottom, *n)) continue;
+		if (!RefinePointCollisionOnStruct(cursorPosition.iX, cursorPosition.iY, aRect.iLeft, aRect.iTop, *n)) continue;
 
 		if (!RefineLogicOnStruct(sGridNo, *n)) continue;
 
@@ -554,54 +552,20 @@ static BOOLEAN RefinePointCollisionOnStruct(INT16 const test_x, INT16 const test
 		vo  = te->hTileSurface;
 		idx = te->usRegionIndex;
 	}
-	return CheckVideoObjectScreenCoordinateInData(vo, idx, test_x - src_x, -(test_y - src_y));
+	return CheckVideoObjectScreenCoordinateInData(vo, idx, test_x - src_x, test_y - src_y);
 }
 
 
 // This function will check the video object at SrcX and SrcY for the lack of transparency
 // will return true if data found, else false
-BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY)
+BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT srcObj, UINT16 srcIndex, INT32 testX, INT32 testY)
 {
-	BOOLEAN fDataFound = FALSE;
-	INT32   iTestPos, iStartPos;
+	Assert(srcObj != nullptr);
 
-	// Assertions
-	Assert( hSrcVObject != NULL );
+	const ETRLEObject &etrle = srcObj->SubregionProperties(srcIndex);
 
-	// Get Offsets from Index into structure
-	ETRLEObject const& pTrav    = hSrcVObject->SubregionProperties(usIndex);
-	UINT32             usHeight = pTrav.usHeight;
-	UINT32      const  usWidth  = pTrav.usWidth;
-
-	// Calculate test position we are looking for!
-	// Calculate from 0, 0 at top left!
-	iTestPos	= ( ( usHeight - iTestY ) * usWidth ) + iTestX;
-	iStartPos	= 0;
-
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
-
-	do
-	{
-		for (;;)
-		{
-			UINT8 PxCount = *SrcPtr++;
-			if (PxCount == 0) break;
-			if (PxCount & 0x80)
-			{
-				PxCount &= 0x7F;
-			}
-			else
-			{
-				if (iStartPos < iTestPos && iTestPos <= iStartPos + PxCount) return TRUE;
-				SrcPtr += PxCount;
-			}
-			iStartPos += PxCount;
-		}
-		if (iStartPos >= iTestPos) break;
-	}
-	while (--usHeight > 0);
-	return(fDataFound);
-
+	const UINT32 *buf = reinterpret_cast<const UINT32 *>(srcObj->PixData(etrle));
+	return buf[testY * etrle.usHeight + testX] != 0;
 }
 
 

@@ -50,12 +50,12 @@ void RenderIMPAboutUs( void )
 	RenderProfileBackGround( );
 
 	// the IMP symbol
-	RenderIMPSymbol( 106, 1 );
+	RenderIMPSymbol( 106 * g_ui.m_stdScreenScale, 1 * g_ui.m_stdScreenScale );
 
 	// about us indent
-	RenderAboutUsIndentFrame( 8, 130 );
+	RenderAboutUsIndentFrame( 8 * g_ui.m_stdScreenScale, 130 * g_ui.m_stdScreenScale );
 	// about us indent
-	RenderAboutUsIndentFrame( 258, 130 );
+	RenderAboutUsIndentFrame( 258 * g_ui.m_stdScreenScale, 130 * g_ui.m_stdScreenScale );
 }
 
 
@@ -75,7 +75,7 @@ static void CreateIMPAboutUsButtons(void)
 					giIMPAboutUsButtonImage[0], pImpButtonText[6], FONT12ARIAL,
 					FONT_WHITE, DEFAULT_SHADOW,
 					FONT_WHITE, DEFAULT_SHADOW,
-					LAPTOP_SCREEN_UL_X + 216, LAPTOP_SCREEN_WEB_UL_Y + 360,
+					LAPTOP_SCREEN_UL_X + 216 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 360 * g_ui.m_stdScreenScale,
 					MSYS_PRIORITY_HIGH,
 					BtnIMPBackCallback);
 

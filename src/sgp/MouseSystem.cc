@@ -683,6 +683,8 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 {
 	if (priority <= MSYS_PRIORITY_LOWEST) priority = MSYS_PRIORITY_LOWEST;
 
+	Assert(r->RegionBottomRightX < g_ui.m_screenWidth && r->RegionBottomRightY < g_ui.m_screenHeight);
+
 	r->PriorityLevel      = priority;
 	r->uiFlags            = MSYS_REGION_ENABLED | MSYS_REGION_EXISTS;
 	r->RegionTopLeftX     = tlx;
@@ -805,16 +807,16 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 {
 	if (!(r->uiFlags & MSYS_FASTHELP)) return;
 
-	INT32 const w = GetWidthOfString(r->FastHelpText) + 10;
-	INT32 const h = GetNumberOfLinesInHeight(r->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + 8;
+	INT32 const w = GetWidthOfString(r->FastHelpText) + g_ui.m_stdScreenScale * 10;
+	INT32 const h = GetNumberOfLinesInHeight(r->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + g_ui.m_stdScreenScale * 8;
 
-	INT32 x = r->RegionTopLeftX + 10;
+	INT32 x = r->RegionTopLeftX + g_ui.m_stdScreenScale * 10;
 	if (x <  0)                x = 0;
-	if (x >= SCREEN_WIDTH - w) x = SCREEN_WIDTH - w - 4;
+	if (x >= SCREEN_WIDTH - w) x = SCREEN_WIDTH - w - g_ui.m_stdScreenScale * 4;
 
 	INT32 y = r->RegionTopLeftY - h * 3 / 4;
 	if (y <  0)                 y = 0;
-	if (y >= SCREEN_HEIGHT - h) y = SCREEN_HEIGHT - h - 15;
+	if (y >= SCREEN_HEIGHT - h) y = SCREEN_HEIGHT - h - g_ui.m_stdScreenScale * 15;
 
 	if (!r->HasFastHelp())
 	{
@@ -822,16 +824,17 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 	}
 	else
 	{
-		{ SGPVSurface::Lock l(FRAME_BUFFER);
-			UINT16* const buf = l.Buffer<UINT16>();
+		{
+			SGPVSurface::Lock l(FRAME_BUFFER);
+			UINT32 *buf = l.Buffer<UINT32>();
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, x + 1, y + 1, x + w - 1, y + h - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), buf);
-			RectangleDraw(TRUE, x,     y,     x + w - 2, y + h - 2, Get16BPPColor(FROMRGB(227, 198, 88)), buf);
+			RectangleDraw(TRUE, x + 1, y + 1, x + w - 1, y + h - 1, RGB(65, 57, 15), buf);
+			RectangleDraw(TRUE, x,     y,     x + w - 2, y + h - 2, RGB(227, 198, 88), buf);
 		}
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 
-		DisplayHelpTokenizedString(r->FastHelpText, x + 5, y + 5);
+		DisplayHelpTokenizedString(r->FastHelpText, x + g_ui.m_stdScreenScale * 5, y + g_ui.m_stdScreenScale * 5);
 		InvalidateRegion(x, y, x + w, y + h);
 	}
 }
@@ -882,7 +885,7 @@ static void DisplayHelpTokenizedString(const ST::utf32_buffer& codepoints, INT16
 	{
 		char32_t c = *i;
 		SGPFont font;
-		UINT8   foreground;
+		UINT32   foreground;
 		switch (c)
 		{
 			case U'\0': return;
@@ -895,7 +898,7 @@ static void DisplayHelpTokenizedString(const ST::utf32_buffer& codepoints, INT16
 			case U'|':
 				c = *++i;
 				font       = bold_font;
-				foreground = 146;
+				foreground = RGB(223, 176,   1);
 				break;
 
 			default:

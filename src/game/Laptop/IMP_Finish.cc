@@ -74,7 +74,7 @@ void RenderIMPFinish( void )
 	RenderCharFullName( );
 
 	// indent for text
-	RenderBeginIndent( 110, 50 );
+	RenderBeginIndent( 110 * g_ui.m_stdScreenScale, 50 * g_ui.m_stdScreenScale );
 }
 
 
@@ -101,8 +101,8 @@ static void MakeButton(UINT idx, const char* img_file, const ST::string& text, I
 {
 	BUTTON_PICS* const img = LoadButtonImage(img_file, 0, 1);
 	giIMPFinishButtonImage[idx] = img;
-	const INT16 text_col   = FONT_WHITE;
-	const INT16 shadow_col = DEFAULT_SHADOW;
+	const UINT32 text_col   = FONT_WHITE;
+	const UINT32 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPFinishButton[idx] = btn;
 	btn->SetCursor(CURSOR_WWW);
@@ -122,28 +122,28 @@ static void CreateIMPFinishButtons(void)
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
 
 	// the start over button button
-	MakeButton(0, LAPTOPDIR "/button_2.sti", pImpButtonText[7], dx + 136, dy + 174, BtnIMPFinishStartOverCallback);
+	MakeButton(0, LAPTOPDIR "/button_2.sti", pImpButtonText[7], dx + 136 * g_ui.m_stdScreenScale, dy + 174 * g_ui.m_stdScreenScale, BtnIMPFinishStartOverCallback);
 
 	// the done button
-	MakeButton(1, LAPTOPDIR "/button_2.sti", pImpButtonText[6], dx + 136, dy + 114, BtnIMPFinishDoneCallback);
+	MakeButton(1, LAPTOPDIR "/button_2.sti", pImpButtonText[6], dx + 136 * g_ui.m_stdScreenScale, dy + 114 * g_ui.m_stdScreenScale, BtnIMPFinishDoneCallback);
 
 	// the personality button
 	ST::string btnText = gamepolicy(imp_pick_skills_directly) ? pImpButtonText[26] : pImpButtonText[2];
-	MakeButton(2, LAPTOPDIR "/button_8.sti", btnText, dx +  13, dy + 245, BtnIMPFinishPersonalityCallback);
-	giIMPFinishButton[2]->SpecifyIcon(guiANALYSE, 0, 33, 23, FALSE);
+	MakeButton(2, LAPTOPDIR "/button_8.sti", btnText, dx +  13 * g_ui.m_stdScreenScale, dy + 245 * g_ui.m_stdScreenScale, BtnIMPFinishPersonalityCallback);
+	giIMPFinishButton[2]->SpecifyIcon(guiANALYSE, 0, 33 * g_ui.m_stdScreenScale, 23 * g_ui.m_stdScreenScale, FALSE);
 
 	// the attribs button
-	MakeButton(3, LAPTOPDIR "/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPFinishAttributesCallback);
-	giIMPFinishButton[3]->SpecifyIcon(guiATTRIBUTEGRAPH, 0, 25, 25, FALSE);
+	MakeButton(3, LAPTOPDIR "/button_8.sti", pImpButtonText[3], dx + 133 * g_ui.m_stdScreenScale, dy + 245 * g_ui.m_stdScreenScale, BtnIMPFinishAttributesCallback);
+	giIMPFinishButton[3]->SpecifyIcon(guiATTRIBUTEGRAPH, 0, 25 * g_ui.m_stdScreenScale, 25 * g_ui.m_stdScreenScale, FALSE);
 
 	// the portrait button
-	MakeButton(4, LAPTOPDIR "/button_8.sti", pImpButtonText[4], dx + 253, dy + 245, BtnIMPMainPagePortraitCallback);
-	giIMPFinishButton[4]->SpecifyIcon(guiCHARACTERPORTRAIT, 0, 33, 23, FALSE);
+	MakeButton(4, LAPTOPDIR "/button_8.sti", pImpButtonText[4], dx + 253 * g_ui.m_stdScreenScale, dy + 245 * g_ui.m_stdScreenScale, BtnIMPMainPagePortraitCallback);
+	giIMPFinishButton[4]->SpecifyIcon(guiCHARACTERPORTRAIT, 0, 33 * g_ui.m_stdScreenScale, 23 * g_ui.m_stdScreenScale, FALSE);
 
 	// the voice button
 	ST::string sString = st_format_printf(pImpButtonText[5], iCurrentVoices + 1);
-	MakeButton(5, LAPTOPDIR "/button_8.sti", sString, dx + 373, dy + 245, BtnIMPMainPageVoiceCallback);
-	giIMPFinishButton[5]->SpecifyIcon(guiSMALLSILHOUETTE, 0, 33, 23, FALSE);
+	MakeButton(5, LAPTOPDIR "/button_8.sti", sString, dx + 373 * g_ui.m_stdScreenScale, dy + 245 * g_ui.m_stdScreenScale, BtnIMPMainPageVoiceCallback);
+	giIMPFinishButton[5]->SpecifyIcon(guiSMALLSILHOUETTE, 0, 33 * g_ui.m_stdScreenScale, 23 * g_ui.m_stdScreenScale, FALSE);
 }
 
 
@@ -245,7 +245,7 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 		{
 			uiBaseTime = GetJA2Clock();
 			fState = !fState;
-			btn->SpecifyIcon(guiANALYSE, fState ? 0 : 1, 33, 23, FALSE);
+			btn->SpecifyIcon(guiANALYSE, fState ? 0 : 1, 33 * g_ui.m_stdScreenScale, 23 * g_ui.m_stdScreenScale, FALSE);
 		}
 	}
 }
@@ -281,7 +281,7 @@ static void RenderCharFullName(void)
 	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
 	ST::string sString = st_format_printf(pIMPFinishStrings, pFullName);
 	FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
-	MPrint(sX, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);
+	MPrint(sX, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 33 * g_ui.m_stdScreenScale, sString);
 }
 
 

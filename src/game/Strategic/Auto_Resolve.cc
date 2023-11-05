@@ -834,24 +834,24 @@ static void RenderSoldierCellBars(SOLDIERCELL* pCell)
 		return;
 	//yellow one for bleeding
 	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->bLifeMax/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, RGB(107, 107, 57) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, RGB(222, 181, 115) );
 	//pink one for bandaged.
 	iStartY += 25*pCell->pSoldier->bBleeding/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, Get16BPPColor( FROMRGB( 156, 57, 57 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, RGB(156, 57, 57) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, RGB(222, 132, 132) );
 	//red one for actual health
 	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->bLife/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, RGB(107, 8, 8) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, RGB(206, 0, 0) );
 	//BREATH BAR
 	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->bBreathMax/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+41, iStartY, pCell->xp+42, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 8, 132 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+42, iStartY, pCell->xp+43, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+41, iStartY, pCell->xp+42, pCell->yp+29, RGB(8, 8, 132) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+42, iStartY, pCell->xp+43, pCell->yp+29, RGB(8, 8, 107) );
 	//MORALE BAR
 	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->bMorale/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+45, iStartY, pCell->xp+46, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+46, iStartY, pCell->xp+47, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+45, iStartY, pCell->xp+46, pCell->yp+29, RGB(8, 156, 8) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+46, iStartY, pCell->xp+47, pCell->yp+29, RGB(8, 107, 8) );
 }
 
 
@@ -1501,9 +1501,8 @@ static void CreateAutoResolveInterface(void)
 	// Load the generic faces for civs and enemies
 	SGPVObject* const faces = AddVideoObjectFromFile(INTERFACEDIR "/smfaces.sti");
 	ar->iFaces = faces;
-	SGPPaletteEntry const* const pal = faces->Palette();
-	faces->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-	faces->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
+	faces->pShades[0] = SHADE_STD(255, 255, 255);
+	faces->pShades[1] = SHADE_MONO(250, 25, 25);
 
 	// Add the battle over panels
 	ar->iIndent = AddVideoObjectFromFile(INTERFACEDIR "/indent.sti");
@@ -1514,9 +1513,8 @@ static void CreateAutoResolveInterface(void)
 		//Load the face
 		SGPVObject* const face = Load65Portrait(GetProfile(cell->pSoldier->ubProfile));
 		cell->uiVObjectID = face;
-		SGPPaletteEntry const* const pal = face->Palette();
-		face->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
+		face->pShades[0] = SHADE_STD(255, 255, 255);
+		face->pShades[1] = SHADE_MONO(250, 25, 25);
 	}
 
 	UINT8 n_militia_elite = MilitiaInSectorOfRank(ar->ubSector, ELITE_MILITIA);
@@ -2424,7 +2422,7 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	UINT16 xp, yp;
 	ST::string pStr;
 	ST::string str;
-	UINT16 usColor;
+	UINT32 usColor;
 
 	SetFont( SMALLCOMPFONT );
 	//Restore the background before drawing text.

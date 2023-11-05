@@ -34,12 +34,12 @@ struct VIDEO_OVERLAY
 	BOOLEAN          fActivelySaving;
 	BOOLEAN          fDeletionPending;
 	BACKGROUND_SAVE* background;
-	std::unique_ptr<UINT16 []> pSaveArea;
+	std::unique_ptr<UINT32 []> pSaveArea;
 	SGPFont          uiFontID;
 	INT16            sX;
 	INT16            sY;
-	UINT8            ubFontBack;
-	UINT8            ubFontFore;
+	UINT32           ubFontBack;
+	UINT32           ubFontFore;
 	ST::utf32_buffer codepoints;
 	SGPVSurface*     uiDestBuff;
 	OVERLAY_CALLBACK BltCallback;
@@ -83,8 +83,8 @@ inline void GPrintInvalidate(INT16 x, INT16 y, const ST::string& str)
 
 // VIDEO OVERLAY STUFF
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, INT16 w, INT16 h);
-VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT8 foreground, UINT8 background, const ST::utf32_buffer& codepoints);
-inline VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT8 foreground, UINT8 background, const ST::string& str)
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT32 foreground, UINT32 background, const ST::utf32_buffer& codepoints);
+inline VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT32 foreground, UINT32 background, const ST::string& str)
 {
 	return RegisterVideoOverlay(callback, x, y, font, foreground, background, str.to_utf32());
 }
@@ -106,6 +106,6 @@ inline void SetVideoOverlayText(VIDEO_OVERLAY* v, const ST::string& str)
 }
 void SetVideoOverlayPos(VIDEO_OVERLAY*, INT16 X, INT16 Y);
 
-void BlitBufferToBuffer(SGPVSurface* src, SGPVSurface* dst, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight);
+void BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UINT16 usSrcX, const UINT16 usSrcY, const UINT16 usWidth, const UINT16 usHeight);
 
 #endif

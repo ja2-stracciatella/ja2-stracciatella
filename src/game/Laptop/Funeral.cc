@@ -229,7 +229,7 @@ void RenderFuneral()
 static void DisplayFuneralRipTombStone(void)
 {
 	// rip tombstone
-	BltVideoObjectOutlineShadow(FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X + 5, FUNERAL_CLOSED_RIP_SIGN_Y + 5);
+	BltVideoObjectOutlineShadow(FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X + g_ui.m_stdScreenScale * 5, FUNERAL_CLOSED_RIP_SIGN_Y + g_ui.m_stdScreenScale * 5);
 	BltVideoObject(             FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X,     FUNERAL_CLOSED_RIP_SIGN_Y);
 
 	SetFontShadow( FUNERAL_RIP_SHADOW_COLOR );

@@ -1,6 +1,6 @@
 #include "Directories.h"
 #include "Font.h"
-#include "HImage.h"
+//#include "HImage.h"
 #include "Local.h"
 #include "MercTextBox.h"
 #include "PODObj.h"
@@ -17,19 +17,19 @@
 #include <utility>
 
 
-#define TEXT_POPUP_GAP_BN_LINES		10
+#define TEXT_POPUP_GAP_BN_LINES		(g_ui.m_stdScreenScale * 10)
 #define TEXT_POPUP_FONT			FONT12ARIAL
 #define TEXT_POPUP_COLOR			FONT_MCOLOR_WHITE
 
 #define MERC_TEXT_FONT				FONT12ARIAL
 #define MERC_TEXT_COLOR			FONT_MCOLOR_WHITE
 
-#define MERC_TEXT_MIN_WIDTH			10
-#define MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X	10
-#define MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y	10
+#define MERC_TEXT_MIN_WIDTH			(g_ui.m_stdScreenScale * 10)
+#define MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X	(g_ui.m_stdScreenScale * 10)
+#define MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y	(g_ui.m_stdScreenScale * 10)
 
-#define MERC_BACKGROUND_WIDTH			350
-#define MERC_BACKGROUND_HEIGHT			200
+#define MERC_BACKGROUND_WIDTH			(g_ui.m_stdScreenScale * 350)
+#define MERC_BACKGROUND_HEIGHT			(g_ui.m_stdScreenScale * 200)
 
 
 // both of the below are index by the enum for thier types - background and border in
@@ -108,7 +108,7 @@ void RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16
 }
 
 
-static std::pair<UINT8, UINT8> GetMercPopupBoxFontColors(UINT8 ubBackgroundIndex);
+static std::pair<UINT32, UINT32> GetMercPopupBoxFontColors(UINT8 ubBackgroundIndex);
 
 
 MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackgroundIndex, MercPopUpBorder ubBorderIndex, const ST::utf32_buffer& codepoints, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags)
@@ -165,8 +165,8 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 	if (flags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
 	{
 		// Make minimun height for box...
-		if (usHeight < 45) usHeight = 45;
-		usWidth += 35;
+		if (usHeight < g_ui.m_stdScreenScale * 45) usHeight = g_ui.m_stdScreenScale * 45;
+		usWidth += g_ui.m_stdScreenScale * 35;
 	}
 
 	if (usWidth >= MERC_BACKGROUND_WIDTH) usWidth = MERC_BACKGROUND_WIDTH - 1;
@@ -188,8 +188,8 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 	{
 		// Zero with yellow,
 		// Set source transparcenty
-		vs->SetTransparency(FROMRGB(255, 255, 0));
-		vs->Fill(Get16BPPColor(FROMRGB(255, 255, 0)));
+		vs->SetTransparency(RGB(255, 255, 0));
+		vs->Fill(RGB(255, 255, 0)); // FIXME: maxrd2 probably just set alpha here
 	}
 	else
 	{
@@ -206,15 +206,15 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 		//TOP ROW
 		BltVideoObject(vs, hImageHandle, 1, i, usPosY);
 		//BOTTOM ROW
-		BltVideoObject(vs, hImageHandle, 6, i, usHeight - TEXT_POPUP_GAP_BN_LINES + 6);
+		BltVideoObject(vs, hImageHandle, 6, i, usHeight - TEXT_POPUP_GAP_BN_LINES + g_ui.m_stdScreenScale * 6);
 	}
 
 	//blit the left and right row of images
 	UINT16 usPosX = 0;
 	for (UINT16 i= TEXT_POPUP_GAP_BN_LINES; i < usHeight - TEXT_POPUP_GAP_BN_LINES; i += TEXT_POPUP_GAP_BN_LINES)
 	{
-		BltVideoObject(vs, hImageHandle, 3, usPosX,               i);
-		BltVideoObject(vs, hImageHandle, 4, usPosX + usWidth - 4, i);
+		BltVideoObject(vs, hImageHandle, 3, usPosX,                                       i);
+		BltVideoObject(vs, hImageHandle, 4, usPosX + usWidth - g_ui.m_stdScreenScale * 4, i);
 	}
 
 	//blt the corner images for the row
@@ -230,11 +230,11 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 	// Icon if ness....
 	if (flags & MERC_POPUP_PREPARE_FLAGS_STOPICON)
 	{
-		BltVideoObject(vs, guiBoxIcons, 0, 5, 4);
+		BltVideoObject(vs, guiBoxIcons, 0, g_ui.m_stdScreenScale * 5, g_ui.m_stdScreenScale * 4);
 	}
 	if (flags & MERC_POPUP_PREPARE_FLAGS_SKULLICON)
 	{
-		BltVideoObject(vs, guiSkullIcons, 0, 9, 4);
+		BltVideoObject(vs, guiSkullIcons, 0, g_ui.m_stdScreenScale * 9, g_ui.m_stdScreenScale * 4);
 	}
 
 	//Get the font and shadow colors
@@ -248,10 +248,12 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 
 	if (flags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
 	{
-		sDispTextXPos += 30;
+		sDispTextXPos += g_ui.m_stdScreenScale * 30;
 	}
 
-	IanDisplayWrappedString(sDispTextXPos, MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY, usTextWidth, 2, MERC_TEXT_FONT, ubFontColor, codepoints, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	IanDisplayWrappedString(sDispTextXPos, MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY, usTextWidth,
+				2 * g_ui.m_stdScreenScale, MERC_TEXT_FONT, ubFontColor, codepoints,
+				FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
@@ -269,16 +271,17 @@ void RemoveMercPopupBox(MercPopUpBox* const box)
 
 
 //Pass in the background index, and you will get back the font and shadow color
-static std::pair<UINT8, UINT8> GetMercPopupBoxFontColors(UINT8 const ubBackgroundIndex)
+static std::pair<UINT32, UINT32> GetMercPopupBoxFontColors(UINT8 const ubBackgroundIndex)
 {
 	switch( ubBackgroundIndex )
 	{
 		case WHITE_MERC_POPUP_BACKGROUND:
-			return { 2, FONT_MCOLOR_WHITE };
+			return { FONT_MCOLOR_RED, FONT_MCOLOR_WHITE };
 
 		case GREY_MERC_POPUP_BACKGROUND:
-			return { 2, NO_SHADOW };
+			return { FONT_MCOLOR_RED, NO_SHADOW };
 
+		case LAPTOP_POPUP_BACKGROUND:
 		default:
 			return { TEXT_POPUP_COLOR, DEFAULT_SHADOW };
 	}

@@ -1390,7 +1390,7 @@ static void DrawMouseText(void)
 
 			if (fShow)
 			{
-				SetFontBackground(FONT_MCOLOR_BLACK);
+				SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 				SetFontForeground(gfUIDisplayActionPointsInvalid ? 141 : FONT_MCOLOR_WHITE);
 				SetFontShadow(DEFAULT_SHADOW);
 			}

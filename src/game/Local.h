@@ -11,6 +11,6 @@
 // Basic defines for the video manager. These represent the starting values
 //
 
-#define PIXEL_DEPTH           16
+#define PIXEL_DEPTH           32
 
 #endif

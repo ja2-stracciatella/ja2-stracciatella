@@ -166,8 +166,8 @@ static void LoadEditorImages(void)
 static void DeleteEditorImages(void)
 {
 	//The merc inventory panel
-	DeleteVideoObject(guiMercInventoryPanel);
-	DeleteVideoObject(guiOmertaMap);
+	delete guiMercInventoryPanel;
+	delete guiOmertaMap;
 	//The merc directional buttons
 	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[0] );
 	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[1] );
@@ -487,16 +487,16 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 //look.
 void DrawEditorInfoBox(const ST::string& str, SGPFont const font, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
 {
-	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
+	UINT32 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
 
 	y  += TASKBAR_Y;
 	x2  = x + w;
 	y2  = y + h;
 
-	usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
-	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
-	usFillColorBack = Get16BPPColor(FROMRGB(250, 240, 188));
+	usFillColorDark = RGB(24, 61, 81);
+	usFillColorLight = RGB(136, 138, 135);
+	usFillColorBack = RGB(250, 240, 188);
 
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, x, y, x2, y2, usFillColorDark);
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, x + 1, y + 1, x2, y2, usFillColorLight);
@@ -626,24 +626,24 @@ static void RenderMapEntryPointsAndLights(void)
 		GetGridNoScreenPos(gridno, 0, &x, &y);
 		if (x < -40 || SCREEN_WIDTH <= x || y < -50 || TASKBAR_Y - 60 <= y) continue;
 
-		UINT8          colour;
+		UINT32         color;
 		ST::string text;
 		if (l->uiFlags & LIGHT_PRIMETIME)
 		{
-			colour = FONT_ORANGE;
+			color = FONT_ORANGE;
 			text   = "Prime";
 		}
 		else if (l->uiFlags & LIGHT_NIGHTTIME)
 		{
-			colour = FONT_RED;
+			color = FONT_RED;
 			text   = "Night";
 		}
 		else
 		{
-			colour = FONT_YELLOW;
+			color = FONT_YELLOW;
 			text   = "24Hour";
 		}
-		DisplayWrappedString(x, y - 5, 50, 2, FONT10ARIAL, colour, text, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
+		DisplayWrappedString(x, y - 5, 50, 2, FONT10ARIAL, color, text, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 	}
 }
 
@@ -733,7 +733,7 @@ static void RenderSelectedItemBlownUp(void)
 	ETRLEObject const& e  = vo->SubregionProperties(index);
 	x = screen_x - e.sOffsetX + (40 - e.usWidth)  / 2;
 	y = screen_y - e.sOffsetY + (20 - e.usHeight) / 2;
-	BltVideoObjectOutline(FRAME_BUFFER, vo, index, x, y, Get16BPPColor(FROMRGB(0, 140, 170)));
+	BltVideoObjectOutline(FRAME_BUFFER, vo, index, x, y, RGB(0, 140, 170));
 
 	// Display the item name above it
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);

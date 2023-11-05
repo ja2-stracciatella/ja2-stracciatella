@@ -59,55 +59,55 @@ constexpr int NUM_SAVE_GAMES = 11;
 #define SAVE_LOAD_TITLE_COLOR				FONT_MCOLOR_WHITE
 
 #define SAVE_LOAD_NORMAL_FONT				FONT12ARIAL
-#define SAVE_LOAD_NORMAL_COLOR				2//FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_NORMAL_SHADOW_COLOR			118//121//118//125
+#define SAVE_LOAD_NORMAL_COLOR				FONT_MCOLOR_BLACK //  maxrd2: was 2
+#define SAVE_LOAD_NORMAL_SHADOW_COLOR			RGB(144, 107,  35) // maxrd2: was 118
 
-#define SAVE_LOAD_EMPTYSLOT_COLOR			2//125//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		121//118
+#define SAVE_LOAD_EMPTYSLOT_COLOR			FONT_MCOLOR_BLACK // 2
+#define SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		RGB(166, 126,  53) // 121
 
 #define SAVE_LOAD_HIGHLIGHTED_COLOR			FONT_MCOLOR_WHITE
-#define SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR		2
+#define SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR		FONT_MCOLOR_BLACK // 2
 
-#define SAVE_LOAD_SELECTED_COLOR			2//145//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_SELECTED_SHADOW_COLOR		130//2
+#define SAVE_LOAD_SELECTED_COLOR			FONT_MCOLOR_BLACK // 2
+#define SAVE_LOAD_SELECTED_SHADOW_COLOR		RGB(201, 197, 143)
 
-#define SLG_SAVELOCATION_WIDTH				575
-#define SLG_SAVELOCATION_HEIGHT			30//46
-#define SLG_FIRST_SAVED_SPOT_X				(STD_SCREEN_X + 17)
-#define SLG_FIRST_SAVED_SPOT_Y				(STD_SCREEN_Y + 49)
-#define SLG_GAP_BETWEEN_LOCATIONS			35//47
+#define SLG_SAVELOCATION_WIDTH				(g_ui.m_stdScreenScale * 575)
+#define SLG_SAVELOCATION_HEIGHT			(g_ui.m_stdScreenScale * 30)//46
+#define SLG_FIRST_SAVED_SPOT_X				(STD_SCREEN_X + g_ui.m_stdScreenScale * 17)
+#define SLG_FIRST_SAVED_SPOT_Y				(STD_SCREEN_Y + g_ui.m_stdScreenScale * 49)
+#define SLG_GAP_BETWEEN_LOCATIONS			(g_ui.m_stdScreenScale * 35)//47
 
 
 
-#define SLG_DATE_OFFSET_X				13
-#define SLG_DATE_OFFSET_Y				11
+#define SLG_DATE_OFFSET_X				(g_ui.m_stdScreenScale * 13)
+#define SLG_DATE_OFFSET_Y				(g_ui.m_stdScreenScale * 11)
 
-#define SLG_SECTOR_OFFSET_X				95//105//114
-#define SLG_SECTOR_WIDTH				98
+#define SLG_SECTOR_OFFSET_X				(g_ui.m_stdScreenScale * 95)//105//114
+#define SLG_SECTOR_WIDTH				(g_ui.m_stdScreenScale * 98)
 
-#define SLG_NUM_MERCS_OFFSET_X				196//190//SLG_DATE_OFFSET_X
+#define SLG_NUM_MERCS_OFFSET_X				(g_ui.m_stdScreenScale * 196)//190//SLG_DATE_OFFSET_X
 
-#define SLG_BALANCE_OFFSET_X				260//SLG_SECTOR_OFFSET_X
+#define SLG_BALANCE_OFFSET_X				(g_ui.m_stdScreenScale * 260)//SLG_SECTOR_OFFSET_X
 
-#define SLG_SAVE_GAME_DESC_X				318//320//204
+#define SLG_SAVE_GAME_DESC_X				(g_ui.m_stdScreenScale * 318)//320//204
 #define SLG_SAVE_GAME_DESC_Y				SLG_DATE_OFFSET_Y//SLG_DATE_OFFSET_Y + 7
-#define SLG_SAVE_GAME_SKULL_X				552
-#define SLG_SAVE_GAME_SKULL_Y				-3
+#define SLG_SAVE_GAME_SKULL_X				(g_ui.m_stdScreenScale * 552)
+#define SLG_SAVE_GAME_SKULL_Y				(g_ui.m_stdScreenScale * -3)
 
 #define SLG_TITLE_POS_X				(STD_SCREEN_X)
 #define SLG_TITLE_POS_Y				(STD_SCREEN_Y)
 
-#define SLG_SAVE_CANCEL_POS_X				(226 + STD_SCREEN_X)
-#define SLG_LOAD_CANCEL_POS_X				(329 + STD_SCREEN_X)
-#define SLG_SAVE_LOAD_BTN_POS_X				(123 + STD_SCREEN_X)
-#define SLG_BTN_POS_Y					(438 + STD_SCREEN_Y)
+#define SLG_SAVE_CANCEL_POS_X				(g_ui.m_stdScreenScale * 226 + STD_SCREEN_X)
+#define SLG_LOAD_CANCEL_POS_X				(g_ui.m_stdScreenScale * 329 + STD_SCREEN_X)
+#define SLG_SAVE_LOAD_BTN_POS_X				(g_ui.m_stdScreenScale * 123 + STD_SCREEN_X)
+#define SLG_BTN_POS_Y					(g_ui.m_stdScreenScale * 438 + STD_SCREEN_Y)
 
-#define SLG_SCROLLBAR_POS_X (SLG_FIRST_SAVED_SPOT_X + 582)
+#define SLG_SCROLLBAR_POS_X (SLG_FIRST_SAVED_SPOT_X + g_ui.m_stdScreenScale * 582)
 #define SLG_SCROLLBAR_POS_Y (SLG_FIRST_SAVED_SPOT_Y)
-#define SLG_SCROLLBAR_HEIGHT 378
-#define SLG_SCROLLBAR_WIDTH 23
-#define SLG_SCROLLBAR_BTN_HEIGHT 23
-#define SLG_SCROLLBAR_INDICATOR_HEIGHT 19
+#define SLG_SCROLLBAR_HEIGHT (g_ui.m_stdScreenScale * 378)
+#define SLG_SCROLLBAR_WIDTH (g_ui.m_stdScreenScale * 23)
+#define SLG_SCROLLBAR_BTN_HEIGHT (g_ui.m_stdScreenScale * 23)
+#define SLG_SCROLLBAR_INDICATOR_HEIGHT (g_ui.m_stdScreenScale * 19)
 #define SLG_SCROLLBAR_INNER_HEIGHT (SLG_SCROLLBAR_HEIGHT - 2 * SLG_SCROLLBAR_BTN_HEIGHT)
 #define SLG_SCROLLBAR_INNER_POS_Y (SLG_SCROLLBAR_POS_Y + SLG_SCROLLBAR_BTN_HEIGHT)
 #define SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y (SLG_SCROLLBAR_POS_Y + SLG_SCROLLBAR_HEIGHT - SLG_SCROLLBAR_BTN_HEIGHT)
@@ -215,7 +215,7 @@ ScreenID SaveLoadScreenHandle()
 		PauseGame();
 
 		//save the new rect
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, g_ui.m_stdScreenScale * 439);
 	}
 
 	RestoreBackgroundRects();
@@ -402,10 +402,14 @@ static void EnterSaveLoadScreen()
 	guiSlgAddonsStracciatella = AddVideoObjectFromFile("sti/interface/save-load-addons.sti");
 	guiSlgScrollbarStracciatella = AddVideoObjectFromFile("sti/interface/scroll-bar.sti");
 
-	guiSlgScrollUpBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti", SLG_SCROLL_UP_GRAPHICS_NUMBER_UP, SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollUpCallback);
+	guiSlgScrollUpBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti",
+						 SLG_SCROLL_UP_GRAPHICS_NUMBER_UP, SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN,
+						 SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollUpCallback);
 	guiSlgScrollUpBtn->SetFastHelpText("Scroll up");
 	guiSlgScrollUpBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-	guiSlgScrollDownBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti", SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP, SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollDownCallback);
+	guiSlgScrollDownBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti",
+						   SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP, SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN,
+						   SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollDownCallback);
 	guiSlgScrollDownBtn->SetFastHelpText("Scroll down");
 	guiSlgScrollDownBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
@@ -479,7 +483,7 @@ static void EnterSaveLoadScreen()
 	{
 		guiSlgCancelBtn->uiFlags   |= BUTTON_FORCE_UNDIRTY;
 		guiSlgSaveLoadBtn->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		FRAME_BUFFER->Fill(0);
+		FRAME_BUFFER->Fill(0x000000FF);
 	}
 
 	gfGettingNameFromSaveLoadScreen = FALSE;
@@ -583,10 +587,10 @@ static void RenderScrollBar(void) {
 	}
 	SetClippingRect(previousClippingRect);
 
-	auto maxTop = std::max(1, ScrollPositionTopMax());
-	auto currentTop = gCurrentScrollTop;
-	auto maxYPos = SLG_SCROLLBAR_INNER_HEIGHT - SLG_SCROLLBAR_INDICATOR_HEIGHT - 2;
-	auto indicatorPosition = int(round(double_t(maxYPos) * double_t(currentTop) / double_t(maxTop)));
+	int maxTop = std::max(1, ScrollPositionTopMax());
+	int currentTop = gCurrentScrollTop;
+	int maxYPos = SLG_SCROLLBAR_INNER_HEIGHT - SLG_SCROLLBAR_INDICATOR_HEIGHT - 2;
+	int indicatorPosition = int(round(double_t(maxYPos) * double_t(currentTop) / double_t(maxTop)));
 	indicatorPosition = std::clamp(indicatorPosition, 0, maxYPos);
 
 	BltVideoObject(FRAME_BUFFER, guiSlgScrollbarStracciatella, SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X + 2, SLG_SCROLLBAR_INNER_POS_Y + indicatorPosition + 1);
@@ -842,8 +846,8 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 	BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, gfx, bx, by);
 
 	SGPFont  font = SAVE_LOAD_NORMAL_FONT;
-	UINT8 foreground;
-	UINT8 shadow;
+	UINT32 foreground;
+	UINT32 shadow;
 	if (gfSaveGame && isNewSave) {
 		// The new save game slot
 		foreground = SAVE_LOAD_EMPTYSLOT_COLOR;
@@ -869,7 +873,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 	if (isNewSave) {
 		if (!gfUserInTextInputMode) {
 			// If this is the new save slot
-			DrawTextToScreen(pMessageStrings[MSG_NEW_SAVE], bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DrawTextToScreen(pMessageStrings[MSG_NEW_SAVE], bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 		}
 	} else {
 		auto &header = (*entry).header();
@@ -919,7 +923,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 		// Display the Saved game information
 		// The date
 		ST::string date = ST::format("{} {}, {02d}:{02d}", pMessageStrings[MSG_DAY], header.uiDay, header.ubHour, header.ubMin);
-		DrawTextToScreen(date, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(date, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		// The sector
 		ST::string location;
@@ -938,7 +942,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 			location = gzLateLocalizedString[STR_LATE_14];
 		}
 		location = ReduceStringLength(location, SLG_SECTOR_WIDTH, font);
-		DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		// Number of mercs on the team
 		// If only 1 merc is on the team use "merc" else "mercs"
@@ -947,15 +951,15 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 			MercAccountText[MERC_ACCOUNT_MERC] :
 			pMessageStrings[MSG_MERCS];
 		ST::string merc_count = ST::format("{} {}", n_mercs, merc);
-		DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		// The balance
-		DrawTextToScreen(SPrintMoney(header.iCurrentBalance), x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(header.iCurrentBalance), x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		if (!(gfSaveGame && gfUserInTextInputMode && isSelected))
 		{
 			// The saved game description
-			DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 		}
 
 		if (header.sInitialGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
@@ -1116,11 +1120,11 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 	InitTextInputMode();
 	SetTextInputCursor(CUROSR_IBEAM_WHITE);
 	SetTextInputFont(FONT12ARIALFIXEDWIDTH);
-	Set16BPPTextFieldColor(Get16BPPColor(FROMRGB(0, 0, 0)));
-	SetBevelColors(Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)));
+	Set16BPPTextFieldColor(RGB(0, 0, 0)); // maxrd2: refactor func name
+	SetBevelColors(RGB(136, 138, 135), RGB(24, 61, 81));
 	SetTextInputRegularColors(FONT_WHITE, 2);
 	SetTextInputHilitedColors(2, FONT_WHITE, FONT_WHITE);
-	SetCursorColor(Get16BPPColor(FROMRGB(255, 255, 255)));
+	SetCursorColor(RGB(255, 255, 255));
 
 	AddUserInputField(NULL);
 

@@ -84,7 +84,7 @@ static HVOBJECT GenericButtonOffNormal;
 static HVOBJECT GenericButtonOffHilite;
 static HVOBJECT GenericButtonOnNormal;
 static HVOBJECT GenericButtonOnHilite;
-static UINT16   GenericButtonFillColors;
+static UINT32   GenericButtonFillColors;
 
 static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
@@ -298,8 +298,9 @@ static void InitializeButtonImageManager(void)
 	}
 	catch (...) { /* see comment above */ }
 
-	UINT8 const Pix = GenericButtonOffNormal->GetETRLEPixelValue(8, 0, 0);
-	GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
+	Assert(GenericButtonOffNormal->BPP() == 32);
+	const ETRLEObject &etrle = GenericButtonOffNormal->SubregionProperties(0);
+	GenericButtonFillColors = reinterpret_cast<const UINT32 *>(GenericButtonOffNormal->PixData(etrle))[0];
 }
 
 
@@ -467,7 +468,7 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	codepoints(),
 	usFont(0),
 	sForeColor(0),
-	sShadowColor(-1),
+	sShadowColor(-1), // FIXME: maxrd2
 	sForeColorDown(-1),
 	sShadowColorDown(-1),
 	sForeColorHilited(-1),
@@ -532,7 +533,7 @@ GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 ylo
 }
 
 
-GUIButtonRef CreateTextButton(const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateTextButton(const ST::string& str, SGPFont font, UINT32 sForeColor, UINT32 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
@@ -600,7 +601,7 @@ GUIButtonRef QuickCreateButtonImg(char const* const gfx, INT32 const off_normal,
 }
 
 
-GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, SGPFont font, UINT32 sForeColor, UINT32 sShadowColor, UINT32 sForeColorDown, UINT32 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	GUIButtonRef const b = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	b->codepoints       = str.to_utf32();
@@ -613,7 +614,7 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, 
 }
 
 
-GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
+GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, UINT32 forecolor, UINT32 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
 	GUIButtonRef const btn = CreateTextButton(str, font, forecolor, shadowcolor, x, y, w, h, priority, MSYS_NO_CALLBACK);
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
@@ -629,18 +630,18 @@ void GUI_BUTTON::SpecifyText(const ST::string& str)
 }
 
 
-void GUI_BUTTON::SpecifyDownTextColors(INT16 const fore_colour_down, INT16 const shadow_colour_down)
+void GUI_BUTTON::SpecifyDownTextColors(UINT32 const fore_color_down, UINT32 const shadow_color_down)
 {
-	sForeColorDown    = fore_colour_down;
-	sShadowColorDown  = shadow_colour_down;
+	sForeColorDown    = fore_color_down;
+	sShadowColorDown  = shadow_color_down;
 	uiFlags          |= BUTTON_DIRTY;
 }
 
 
-void GUI_BUTTON::SpecifyHilitedTextColors(INT16 const fore_colour_highlighted, INT16 const shadow_colour_highlighted)
+void GUI_BUTTON::SpecifyHilitedTextColors(UINT32 const fore_color_highlighted, UINT32 const shadow_color_highlighted)
 {
-	sForeColorHilited    = fore_colour_highlighted;
-	sShadowColorHilited  = shadow_colour_highlighted;
+	sForeColorHilited    = fore_color_highlighted;
+	sShadowColorHilited  = shadow_color_highlighted;
 	uiFlags             |= BUTTON_DIRTY;
 }
 
@@ -652,12 +653,12 @@ void GUI_BUTTON::SpecifyTextJustification(Justification const j)
 }
 
 
-void GUI_BUTTON::SpecifyGeneralTextAttributes(const ST::string& str, SGPFont font, INT16 fore_colour, INT16 shadow_colour)
+void GUI_BUTTON::SpecifyGeneralTextAttributes(const ST::string& str, SGPFont font, UINT32 fore_color, UINT32 shadow_color)
 {
 	SpecifyText(str);
 	usFont        = font;
-	sForeColor    = fore_colour;
-	sShadowColor  = shadow_colour;
+	sForeColor    = fore_color;
+	sShadowColor  = shadow_color;
 	uiFlags      |= BUTTON_DIRTY;
 }
 
@@ -1098,7 +1099,7 @@ static void DrawHatchOnButton(const GUI_BUTTON* b)
 	ClipRect.iTop    = b->Y();
 	ClipRect.iBottom = b->BottomRightY() - 1;
 	SGPVSurface::Lock l(ButtonDestBuffer);
-	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
+	Blt32BPPBufferHatchRect(l.Buffer<UINT32>(), l.Pitch(), &ClipRect);
 }
 
 
@@ -1353,7 +1354,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	// print the text
 
 	//Override the colors if necessary.
-	INT16 sForeColor;
+	UINT32 sForeColor;
 	if (b->Enabled() && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sForeColorHilited != -1)
 	{
 		sForeColor = b->sForeColorHilited;
@@ -1518,7 +1519,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->X(), b->Y(), b->BottomRightX(), b->BottomRightY(), GenericButtonFillColors);
 
 	SGPVSurface::Lock l(ButtonDestBuffer);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32* const pDestBuf         = l.Buffer<UINT32>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	SGPRect const ClipRect = GetClippingRect();
@@ -1528,27 +1529,27 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	{
 		INT32 const ImgNum = (q == 0 ? 0 : 1);
 		INT32 const x = bx + q * iBorderWidth;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  by, ImgNum,     &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  cy, ImgNum + 5, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  by, ImgNum,     &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  cy, ImgNum + 5, &ClipRect);
 	}
 	// Blit the right side corners
-	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, by, 2, &ClipRect);
-	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, cy, 7, &ClipRect);
+	Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, by, 2, &ClipRect);
+	Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, cy, 7, &ClipRect);
 	// Draw the vertical members of the button's borders
 	NumChunksHigh--;
 
 	if (hremain != 0)
 	{
 		INT32 const y = by + NumChunksHigh * iBorderHeight - iBorderHeight + hremain;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
 	}
 
 	for (INT32 q = 1; q < NumChunksHigh; q++)
 	{
 		INT32 const y = by + q * iBorderHeight;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
 	}
 }
 
@@ -1652,7 +1653,7 @@ void ShowButton(GUIButtonRef const b)
 }
 
 
-UINT16 GetGenericButtonFillColor(void)
+UINT32 GetGenericButtonFillColor(void)
 {
 	return GenericButtonFillColors;
 }

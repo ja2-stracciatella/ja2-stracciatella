@@ -93,8 +93,8 @@ INT16   gsWarpGridNo;
 
 static GUIButtonRef MakeButton(const ST::string& text, INT16 dx, GUI_CALLBACK click)
 {
-	const INT16 text_col   = FONT_MCOLOR_WHITE;
-	const INT16 shadow_col = DEFAULT_SHADOW;
+	const UINT32 text_col   = FONT_MCOLOR_WHITE;
+	const UINT32 shadow_col = DEFAULT_SHADOW;
 	return CreateIconAndTextButton(gExitDialog.iButtonImages, text, FONT12ARIAL, text_col,
 					shadow_col, text_col, shadow_col, gExitDialog.sX + dx,
 					gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST, click);
@@ -633,7 +633,7 @@ void RenderSectorExitMenu()
 	InvalidateRegion(x, y, gExitDialog.usWidth, gExitDialog.usHeight);
 
 	SetFont(FONT12ARIAL);
-	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 
 	{
 		UINT8 const foreground =

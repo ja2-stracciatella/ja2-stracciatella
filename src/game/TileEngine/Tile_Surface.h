@@ -8,7 +8,7 @@ struct TILE_IMAGERY;
 extern TILE_IMAGERY* gTileSurfaceArray[NUMBEROFTILETYPES];
 
 
-TILE_IMAGERY* LoadTileSurface(ST::string const& cFilename);
+TILE_IMAGERY* LoadTileSurface(ST::string const& cFilename, int type);
 
 void DeleteTileSurface(TILE_IMAGERY* pTileSurf);
 

@@ -34,8 +34,8 @@ void EnterBobbyRArmour()
 
 void ExitBobbyRArmour()
 {
-	DeleteVideoObject(guiArmourBackground);
-	DeleteVideoObject(guiArmourGrid);
+	delete guiArmourBackground;
+	delete guiArmourGrid;
 	DeleteBobbyMenuBar();
 
 	DeleteBobbyBrTitle();

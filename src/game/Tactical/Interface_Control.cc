@@ -291,24 +291,24 @@ void ResetInterface()
 
 static UINT32 const guiColors[] =
 {
-	FROMRGB(198, 163, 0),
-	FROMRGB(185, 150, 0),
-	FROMRGB(172, 136, 0),
-	FROMRGB(159, 123, 0),
-	FROMRGB(146, 110, 0),
-	FROMRGB(133,  96, 0),
-	FROMRGB(120,  83, 0),
-	FROMRGB(133,  96, 0),
-	FROMRGB(146, 110, 0),
-	FROMRGB(159, 123, 0),
-	FROMRGB(172, 136, 0),
-	FROMRGB(185, 150, 0)
+	RGB(198, 163, 0),
+	RGB(185, 150, 0),
+	RGB(172, 136, 0),
+	RGB(159, 123, 0),
+	RGB(146, 110, 0),
+	RGB(133,  96, 0),
+	RGB(120,  83, 0),
+	RGB(133,  96, 0),
+	RGB(146, 110, 0),
+	RGB(159, 123, 0),
+	RGB(172, 136, 0),
+	RGB(185, 150, 0)
 };
 
 
 static void RenderRubberBanding(void)
 {
-	static INT32 flash_colour        = 0;
+	static UINT32 flash_color        = 0;
 	static INT32 time_of_last_update = 0;
 
 	if (!gRubberBandActive) return;
@@ -324,30 +324,30 @@ static void RenderRubberBanding(void)
 	if (now - time_of_last_update > 60)
 	{
 		time_of_last_update = now;
-		if (++flash_colour == lengthof(guiColors)) flash_colour = 0;
+		if (++flash_color == lengthof(guiColors)) flash_color = 0;
 	}
-	UINT16 const colour = Get16BPPColor(guiColors[flash_colour]);
+	UINT32 const color = guiColors[flash_color];
 
 	// Draw rectangle.....
 	SGPVSurface::Lock lock(FRAME_BUFFER);
-	UINT16* const pDestBuf = lock.Buffer<UINT16>();
+	UINT32* const pDestBuf = lock.Buffer<UINT32>();
 	SetClippingRegionAndImageWidth(lock.Pitch(), 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 
 	if (l != r)
 	{
 		if (l > r) Swap(l, r);
-		LineDraw(TRUE, l, t, r, t, colour, pDestBuf);
+		LineDraw(TRUE, l, t, r, t, color, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, r - l + 1, 1);
-		LineDraw(TRUE, l, b, r, b, colour, pDestBuf);
+		LineDraw(TRUE, l, b, r, b, color, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, b, r - l + 1, 1);
 	}
 
 	if (t != b)
 	{
 		if (t > b) Swap(t, b);
-		LineDraw(TRUE, l, t, l, b, colour, pDestBuf);
+		LineDraw(TRUE, l, t, l, b, color, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, 1, b - t + 1);
-		LineDraw(TRUE, r, t, r, b, colour, pDestBuf);
+		LineDraw(TRUE, r, t, r, b, color, pDestBuf);
 		RegisterBackgroundRectSingleFilled(r, t, 1, b - t + 1);
 	}
 }
@@ -413,13 +413,13 @@ void RenderTopmostTacticalInterface()
 		INT16 y = sMercScreenY + s.sDamageY;
 		if (s.ubBodyType == QUEENMONSTER)
 		{
-			x += 25;
-			y += 10;
+			x += g_ui.m_stdScreenScale * 25;
+			y += g_ui.m_stdScreenScale * 10;
 		}
 		else
 		{
-			x += 2 * 30 / 3;
-			y += -5;
+			x += g_ui.m_stdScreenScale * (2 * 30 / 3);
+			y += g_ui.m_stdScreenScale * (-5);
 
 			if (y < gsVIEWPORT_WINDOW_START_Y)
 			{

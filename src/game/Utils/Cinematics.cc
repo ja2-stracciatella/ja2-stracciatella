@@ -18,6 +18,7 @@ extern "C" {
 #include "externalized/ContentManager.h"
 #include "externalized/GameInstance.h"
 #include "game/Utils/Cinematics.h"
+#include "game/UILayout.h"
 #include "sgp/Debug.h"
 #include "sgp/HImage.h"
 #include "sgp/VObject.h"
@@ -117,8 +118,12 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 	if (sf == nullptr) return nullptr;
 
 	// Set the blitting position on the screen
-	sf->left = left;
-	sf->top  = top;
+	unsigned long video_width;
+	unsigned long video_height;
+	if (smk_info_video(sf->smacker, &video_width, &video_height, nullptr) < 0)
+		return nullptr;
+	sf->left = left + (g_ui.m_scaledInterfaceWidth - video_width) / 2;
+	sf->top  = top + (g_ui.m_scaledInterfaceHeight - video_height) / 2;
 
 	// Get all the audio data
 	unsigned char audio_tracks;
@@ -288,19 +293,19 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
 	if (smk_info_video(sf->smacker, &src_width, &src_height, nullptr) < 0) return;
 
 	// convert palette
-	UINT16 palette[256];
+	UINT32 palette[256];
 	for (int i = 0; i < 256; i++)
 	{
 		unsigned char* rgb = src_palette + i * 3;
-		palette[i] = Get16BPPColor(FROMRGB(rgb[0], rgb[1], rgb[2]));
+		palette[i] = RGB(rgb[0], rgb[1], rgb[2]);
 	}
 
 	// get surface (destination)
 	SGPVSurface::Lock lock(surface);
-	UINT16* dst = lock.Buffer<UINT16>();
-	Assert(lock.Pitch() % 2 == 0);
-	Assert(surface->BPP() == 16);
-	UINT32 dst_pitch = lock.Pitch() / 2; // pitch in pixels
+	UINT32* dst = lock.Buffer<UINT32>();
+	Assert(lock.Pitch() % 4 == 0);
+	Assert(surface->BPP() == 32);
+	UINT32 dst_pitch = lock.Pitch() / 4; // pitch in pixels
 	UINT16 dst_height = surface->Height();
 
 	// blit the intersection

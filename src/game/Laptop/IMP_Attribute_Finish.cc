@@ -45,7 +45,7 @@ void RenderIMPAttributeFinish( void )
 	RenderProfileBackGround( );
 
 	// indent for text
-	RenderBeginIndent( 110, 93 );
+	RenderBeginIndent( 110 * g_ui.m_stdScreenScale, 93 * g_ui.m_stdScreenScale );
 }
 
 
@@ -67,8 +67,8 @@ static void MakeButton(UINT idx, const ST::string& text, INT16 y, GUI_CALLBACK c
 {
 	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/button_2.sti", 0, 1);
 	giIMPAttributeFinishButtonImage[idx] = img;
-	const INT16 text_col   = FONT_WHITE;
-	const INT16 shadow_col = DEFAULT_SHADOW;
+	const UINT32 text_col   = FONT_WHITE;
+	const UINT32 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 130, y, MSYS_PRIORITY_HIGH, click);
 	giIMPAttributeFinishButton[idx] = btn;
 	btn->SetCursor(CURSOR_WWW);
@@ -79,8 +79,8 @@ static void CreateAttributeFinishButtons(void)
 {
 	// this procedure will create the buttons needed for the attribute finish screen
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
-	MakeButton(0, pImpButtonText[20], dy + 180, BtnIMPAttributeFinishYesCallback); // Yes button
-	MakeButton(1, pImpButtonText[21], dy + 264, BtnIMPAttributeFinishNoCallback);  // No button
+	MakeButton(0, pImpButtonText[20], dy + 180 * g_ui.m_stdScreenScale, BtnIMPAttributeFinishYesCallback); // Yes button
+	MakeButton(1, pImpButtonText[21], dy + 264 * g_ui.m_stdScreenScale, BtnIMPAttributeFinishNoCallback);  // No button
 }
 
 

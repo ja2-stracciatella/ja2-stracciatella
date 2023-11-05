@@ -53,13 +53,13 @@ void RenderIMPPortraits( void )
 	RenderProfileBackGround( );
 
 	// the Voices frame
-	RenderPortraitFrame( 191, 167 );
+	RenderPortraitFrame( 191 * g_ui.m_stdScreenScale, 167 * g_ui.m_stdScreenScale );
 
 	// render the current portrait
-	RenderPortrait( 200, 176 );
+	RenderPortrait( 200 * g_ui.m_stdScreenScale, 176 * g_ui.m_stdScreenScale );
 
 	// indent for the text
-	RenderAttrib1IndentFrame( 128, 65);
+	RenderAttrib1IndentFrame( 128 * g_ui.m_stdScreenScale, 65 * g_ui.m_stdScreenScale);
 
 	// text
 	PrintImpText( );
@@ -126,8 +126,8 @@ static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 o
 {
 	BUTTON_PICS* const img = LoadButtonImage(img_file, off_normal, on_normal);
 	giIMPPortraitButtonImage[idx] = img;
-	const INT16 text_col   = FONT_WHITE;
-	const INT16 shadow_col = DEFAULT_SHADOW;
+	const UINT32 text_col   = FONT_WHITE;
+	const UINT32 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPPortraitButton[idx] = btn;
 	btn->SetCursor(CURSOR_WWW);
@@ -144,9 +144,12 @@ static void CreateIMPPortraitButtons(void)
 	// will create buttons need for the IMP portrait screen
 	const INT16 dx = LAPTOP_SCREEN_UL_X;
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
-	MakeButton(0, LAPTOPDIR "/voicearrows.sti", 1, 3, pImpButtonText[13], dx + 343, dy + 205, BtnIMPPortraitNextCallback);     // Next button
-	MakeButton(1, LAPTOPDIR "/voicearrows.sti", 0, 2, pImpButtonText[12], dx +  93, dy + 205, BtnIMPPortraitPreviousCallback); // Previous button
-	MakeButton(2, LAPTOPDIR "/button_5.sti",    0, 1, pImpButtonText[11], dx + 187, dy + 330, BtnIMPPortraitDoneCallback);     // Done button
+	MakeButton(0, LAPTOPDIR "/voicearrows.sti", 1, 3, pImpButtonText[13],
+			dx + 343 * g_ui.m_stdScreenScale, dy + 205 * g_ui.m_stdScreenScale, BtnIMPPortraitNextCallback);     // Next button
+	MakeButton(1, LAPTOPDIR "/voicearrows.sti", 0, 2, pImpButtonText[12],
+			dx +  93 * g_ui.m_stdScreenScale, dy + 205 * g_ui.m_stdScreenScale, BtnIMPPortraitPreviousCallback); // Previous button
+	MakeButton(2, LAPTOPDIR "/button_5.sti",    0, 1, pImpButtonText[11],
+			dx + 187 * g_ui.m_stdScreenScale, dy + 330 * g_ui.m_stdScreenScale, BtnIMPPortraitDoneCallback);     // Done button
 }
 
 

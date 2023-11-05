@@ -3,6 +3,9 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
+#include "VideoScale.h"
+
+#include "UILayout.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -31,7 +34,6 @@ static SGPVObject* gpVObjectHead = 0;
 
 SGPVObject::SGPVObject(SGPImage * const img) :
 	flags_(),
-	palette16_(),
 	pix_data_{ img->pImageData.moveToUnique() },
 	etrle_object_{ img->pETRLEObject.moveToUnique() },
 	current_shade_(),
@@ -39,7 +41,7 @@ SGPVObject::SGPVObject(SGPImage * const img) :
 	bit_depth_{ img->ubBitDepth },
 	next_(gpVObjectHead)
 {
-	std::fill(std::begin(pShades), std::end(pShades), nullptr);
+	std::fill(std::begin(pShades), std::end(pShades), RGBA(0, 0, 0, 0));
 
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
 	{
@@ -52,8 +54,7 @@ SGPVObject::SGPVObject(SGPImage * const img) :
 		palette_ = img->pPalette.moveToUnique();
 		Assert(palette_);
 
-		palette16_     = Create16BPPPalette(palette_.get());
-		current_shade_ = palette16_;
+		current_shade_ = RGBA(0, 0, 0, 0); // no shade - transparent
 	}
 
 	gpVObjectHead = this;
@@ -75,7 +76,7 @@ SGPVObject::~SGPVObject()
 
 void SGPVObject::CurrentShade(size_t const idx)
 {
-	if (idx >= lengthof(pShades) || !pShades[idx])
+	if (idx >= lengthof(pShades) /*|| !pShades[idx]*/)
 	{
 		throw std::logic_error("Tried to set invalid video object shade");
 	}
@@ -113,7 +114,10 @@ UINT8 SGPVObject::GetETRLEPixelValue(UINT16 const usETRLEIndex, UINT16 const usX
 	}
 
 	// Assuming everything's okay, go ahead and look...
-	UINT8 const* pCurrent = PixData(pETRLEObject);
+	const UINT8 *pCurrent = PixData(pETRLEObject);
+
+	if(bit_depth_ == 32)
+		return reinterpret_cast<const UINT32 *>(pCurrent)[usY * pETRLEObject.usWidth + usX];
 
 	// Skip past all uninteresting scanlines
 	for (UINT16 usLoopY = 0; usLoopY < usY; usLoopY++)
@@ -168,22 +172,6 @@ UINT8 SGPVObject::GetETRLEPixelValue(UINT16 const usETRLEIndex, UINT16 const usX
  * new tables are calculated, or things WILL go boom. */
 void SGPVObject::DestroyPalettes()
 {
-	FOR_EACH(UINT16*, i, pShades)
-	{
-		if (flags_ & SHADETABLE_SHARED) continue;
-		UINT16* const p = *i;
-		if (!p)                         continue;
-		if (palette16_ == p) palette16_ = 0;
-		*i = 0;
-		delete[] p;
-	}
-
-	if (UINT16* const p = palette16_)
-	{
-		palette16_ = 0;
-		delete[] p;
-	}
-
 	current_shade_ = 0;
 }
 
@@ -215,74 +203,94 @@ void ShutdownVideoObjectManager(void)
 	}
 }
 
-SGPVObject* AddVideoObjectFromHImage(SGPImage* const img)
+SGPVObject* AddVideoObjectFromHImage(SGPImage *img)
 {
 	return new SGPVObject(img);
 }
 
-SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
+SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback, double scaleX, double scaleY)
 {
-	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
+	if(std::isnan(scaleX))
+		scaleX = g_ui.m_stdScreenScale;
+	if(std::isnan(scaleY))
+		scaleY = g_ui.m_stdScreenScale;
+	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
+	AutoSGPImage hImage(ScaleImage(img.get(), scaleX, scaleY, true, callback));
 	return AddVideoObjectFromHImage(hImage.get());
 }
 
-
-void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 const usRegionIndex, INT32 const iDestX, INT32 const iDestY)
+SGPVObject* AddScaledOutlineVideoObjectFromFile(const ST::string& ImageFile)
 {
-	Assert(src->BPP() ==  8);
-	Assert(dst->BPP() == 16);
+	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA | IMAGE_REMOVE_PAL254));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale, g_ui.m_stdScreenScale));
+	return AddVideoObjectFromHImage(hImage.get());
+}
+
+SGPVObject* AddScaledAlphaVideoObjectFromFile(const ST::string& ImageFile)
+{
+	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA | IMAGE_REMOVE_PAL1));
+	AutoSGPImage hImage(ScaleAlphaImage(img.get(), g_ui.m_stdScreenScale, g_ui.m_stdScreenScale));
+	return AddVideoObjectFromHImage(hImage.get());
+}
+
+void BltVideoObject(SGPVSurface *dst, const SGPVObject *src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY)
+{
+	Assert(src->BPP() == 32);
+	Assert(dst->BPP() == 32);
 
 	SGPVSurface::Lock l(dst);
-	UINT16* const pBuffer = l.Buffer<UINT16>();
-	UINT32  const uiPitch = l.Pitch();
+	UINT32 *pBuffer = l.Buffer<UINT32>();
+	const UINT32 uiPitch = l.Pitch();
 
-	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect))
-	{
-		Blt8BPPDataTo16BPPBufferTransparentClip(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex, &ClippingRect);
-	}
-	else
-	{
-		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
+	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect)) {
+		Blt32BPPDataTo32BPPBufferTransparentClip(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex, &ClippingRect);
+	} else {
+		const ETRLEObject &etrle = src->SubregionProperties(usRegionIndex);
+		Assert(dst->Height() - iDestY >= etrle.usHeight);
+		Blt32BPPDataTo32BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
 	}
 }
 
 
-void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, INT16 const s16BPPColor)
+void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, const UINT32 colOutline)
 {
+	Assert(hSrcVObject->BPP() == 32);
+	Assert(dst->BPP() == 32);
+
 	SGPVSurface::Lock l(dst);
-	UINT16* const pBuffer = l.Buffer<UINT16>();
-	UINT32  const uiPitch = l.Pitch();
+	UINT32 *pBuffer = l.Buffer<UINT32>();
+	UINT32  uiPitch = l.Pitch();
 
 	if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 	{
-		Blt8BPPDataTo16BPPBufferOutlineClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, &ClippingRect);
+		Blt32BPPDataTo32BPPBufferOutlineClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, colOutline, &ClippingRect);
 	}
 	else
 	{
-		Blt8BPPDataTo16BPPBufferOutline(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor);
+		Blt32BPPDataTo32BPPBufferOutline(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, colOutline);
 	}
 }
 
 
-void BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
+void BltVideoObjectOutlineShadow(SGPVSurface *dst, const SGPVObject *src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
 {
+	Assert(src->BPP() == 32);
+	Assert(dst->BPP() == 32);
+
 	SGPVSurface::Lock l(dst);
-	UINT16* const pBuffer = l.Buffer<UINT16>();
-	UINT32  const uiPitch = l.Pitch();
+	UINT32 *pBuffer = l.Buffer<UINT32>();
+	const  UINT32 uiPitch = l.Pitch();
 
 	if (BltIsClipped(src, iDestX, iDestY, usIndex, &ClippingRect))
-	{
-		Blt8BPPDataTo16BPPBufferOutlineShadowClip(pBuffer, uiPitch, src, iDestX, iDestY, usIndex, &ClippingRect);
-	}
+		Blt32BPPDataTo32BPPBufferShadowClip(pBuffer, uiPitch, src, iDestX, iDestY, usIndex, &ClippingRect);
 	else
-	{
-		Blt8BPPDataTo16BPPBufferOutlineShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
-	}
+		Blt32BPPDataTo32BPPBufferShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
 }
 
 
 void BltVideoObjectOnce(SGPVSurface* const dst, char const* const filename, UINT16 const region, INT32 const x, INT32 const y)
 {
-	AutoSGPVObject vo(AddVideoObjectFromFile(filename));
+	Assert(dst->BPP() == 32);
+	AutoSGPVObject vo(AddScaledVideoObjectFromFile(filename));
 	BltVideoObject(dst, vo.get(), region, x, y);
 }

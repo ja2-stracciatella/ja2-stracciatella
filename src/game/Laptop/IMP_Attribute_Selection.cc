@@ -23,13 +23,13 @@
 
 
 // width of the slider bar region
-#define BAR_WIDTH 423 - 197
+#define BAR_WIDTH (423 - 197) * g_ui.m_stdScreenScale
 
 // width of the slider bar itself
-#define SLIDER_BAR_WIDTH 37
+#define SLIDER_BAR_WIDTH 37 * g_ui.m_stdScreenScale
 
 // the sizeof one skill unit on the sliding bar in pixels
-#define BASE_SKILL_PIXEL_UNIT_SIZE (423 - 230)
+#define BASE_SKILL_PIXEL_UNIT_SIZE ((423 - 230) * g_ui.m_stdScreenScale)
 
 #define MAX_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_max))
 #define MIN_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_min))
@@ -143,11 +143,11 @@ void EnterIMPAttributeSelection(void)
 void RenderIMPAttributeSelection(void)
 {
 	RenderProfileBackGround();
-	RenderAttributeFrame(51, 87);
+	RenderAttributeFrame(51 * g_ui.m_stdScreenScale, 87 * g_ui.m_stdScreenScale);
 	RenderAttributeBoxes();
-	RenderAttrib1IndentFrame(51, 30);
+	RenderAttrib1IndentFrame(51 * g_ui.m_stdScreenScale, 30 * g_ui.m_stdScreenScale);
 
-	if (!fReviewStats) RenderAttrib2IndentFrame(350, 42);
+	if (!fReviewStats) RenderAttrib2IndentFrame(350 * g_ui.m_stdScreenScale, 42 * g_ui.m_stdScreenScale);
 
 	// reset rerender flag
 	fHasAnySlidingBarMoved = FALSE;
@@ -259,7 +259,7 @@ void HandleIMPAttributeSelection(void)
 		}
 		else
 		{
-			RenderAttributeFrameForIndex(51, 87, uiBarToReRender);
+			RenderAttributeFrameForIndex(51 * g_ui.m_stdScreenScale, 87 * g_ui.m_stdScreenScale, uiBarToReRender);
 			/*
 			// print text for screen
 			PrintImpText();
@@ -397,7 +397,7 @@ static void CreateIMPAttributeSelectionButtons(void)
 		giIMPAttributeSelectionButtonImage[0], pImpButtonText[11], FONT12ARIAL,
 		FONT_WHITE, DEFAULT_SHADOW,
 		FONT_WHITE, DEFAULT_SHADOW,
-		LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
+		LAPTOP_SCREEN_UL_X + 136 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 314 * g_ui.m_stdScreenScale, MSYS_PRIORITY_HIGH,
 		BtnIMPAttributeFinishCallback
 	);
 	giIMPAttributeSelectionButton[0]->SetCursor(CURSOR_WWW);
@@ -469,10 +469,14 @@ static void CreateAttributeSliderButtons(void)
 
 	for (INT32 iCounter = 0; iCounter < 20; iCounter += 2)
 	{
-		const INT16 y = LAPTOP_SCREEN_WEB_UL_Y + (99 + iCounter / 2 * 20);
+		const INT16 y = LAPTOP_SCREEN_WEB_UL_Y + (99 + iCounter / 2 * 20) * g_ui.m_stdScreenScale;
 		// left/right buttons - decrement/increment stat
-		giIMPAttributeSelectionSliderButton[iCounter    ] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[0], LAPTOP_SCREEN_UL_X + 163, y, MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderLeftCallback);
-		giIMPAttributeSelectionSliderButton[iCounter + 1] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[1], LAPTOP_SCREEN_UL_X + 419, y, MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderRightCallback);
+		giIMPAttributeSelectionSliderButton[iCounter    ] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[0],
+				LAPTOP_SCREEN_UL_X + 163 * g_ui.m_stdScreenScale, y,
+				MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderLeftCallback);
+		giIMPAttributeSelectionSliderButton[iCounter + 1] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[1],
+				LAPTOP_SCREEN_UL_X + 419 * g_ui.m_stdScreenScale, y,
+				MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderRightCallback);
 
 		giIMPAttributeSelectionSliderButton[iCounter    ]->SetCursor(CURSOR_WWW);
 		giIMPAttributeSelectionSliderButton[iCounter + 1]->SetCursor(CURSOR_WWW);
@@ -538,7 +542,8 @@ static void CreateSlideRegionMouseRegions()
 		MOUSE_REGION& r = pSliderRegions[i];
 		UINT16 const  x = LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X;
 		UINT16 const  y = LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + i * SKILL_SLIDE_HEIGHT;
-		MSYS_DefineRegion(&r, x, y, x + BAR_WIDTH, y + 15, MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderRegionButtonCallback);
+		MSYS_DefineRegion(&r, x, y, x + BAR_WIDTH, y + 15 * g_ui.m_stdScreenScale,
+				  MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderRegionButtonCallback);
 		MSYS_SetRegionUserData(&r, 0, i);
 	}
 }
@@ -756,8 +761,9 @@ void DrawBonusPointsRemaining(void)
 	if (fReviewStats) return;
 
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
-	MPrint(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, ST::format("{}", iCurrentBonusPoints));
-	InvalidateRegion(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, LAPTOP_SCREEN_UL_X + 475, LAPTOP_SCREEN_WEB_UL_Y + 71);
+	MPrint(LAPTOP_SCREEN_UL_X + 425 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 51 * g_ui.m_stdScreenScale, ST::format("{}", iCurrentBonusPoints));
+	InvalidateRegion(LAPTOP_SCREEN_UL_X + 425 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 51 * g_ui.m_stdScreenScale,
+			LAPTOP_SCREEN_UL_X + 475 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 71 * g_ui.m_stdScreenScale);
 }
 
 

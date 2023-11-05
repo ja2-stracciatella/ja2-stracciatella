@@ -323,8 +323,8 @@ static void LoadFiles(void)
 static void RemoveFiles(void)
 {
 	// delete files video objects from memory
-	DeleteVideoObject(guiTOP);
-	DeleteVideoObject(guiTITLE);
+	delete guiTOP;
+	delete guiTITLE;
 }
 
 
@@ -427,8 +427,8 @@ static void DisplayFilesList(void)
 	{
 		if (i == iHighLightFileLine)
 		{
-			UINT16 const colour = Get16BPPColor(FROMRGB(240, 240, 200));
-			ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + w, y + h, colour);
+			UINT32 const color = RGB(240, 240, 200);
+			ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + w, y + h, color);
 		}
 		MPrint(FILES_SENDER_TEXT_X, y + 2, pFilesSenderList[fu->ubCode]);
 		y += h;
@@ -517,7 +517,7 @@ static void DisplayFormattedText(void)
 {
 	fWaitAFrame = FALSE;
 
-	UINT16 const white = Get16BPPColor(FROMRGB(255, 255, 255));
+	UINT32 const white = RGB(255, 255, 255);
 	INT32  const x     = FILE_VIEWER_X;
 	INT32  const y     = FILE_VIEWER_Y;
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + FILE_VIEWER_W, y + FILE_VIEWER_H, white);

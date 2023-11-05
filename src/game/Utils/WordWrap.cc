@@ -110,7 +110,7 @@ WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::utf32
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer
 //					the gap in between the lines
-UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::utf32_buffer& codepoints, UINT8 background, UINT32 flags)
+UINT16 DisplayWrappedString(const UINT16 x, UINT16 y, UINT16 w, const UINT8 gap, const SGPFont font, const UINT32 foreground, const ST::utf32_buffer& codepoints, const UINT32 background, const UINT32 flags)
 {
 	UINT16       total_h = 0;
 	UINT16 const h       = GetFontHeight(font) + gap;
@@ -137,7 +137,7 @@ UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont fon
 //			the color of the background
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
-void DrawTextToScreen(const ST::utf32_buffer& codepoints, UINT16 x, UINT16 y, UINT16 max_w, SGPFont font, UINT8 foreground, UINT8 background, UINT32 flags)
+void DrawTextToScreen(const ST::utf32_buffer& codepoints, UINT16 x, const UINT16 y, const UINT16 max_w, const SGPFont font, const UINT32 foreground, const UINT32 background, const UINT32 flags)
 {
 	if (flags & DONT_DISPLAY_TEXT) return;
 
@@ -179,7 +179,7 @@ void DrawTextToScreen(const ST::utf32_buffer& codepoints, UINT16 x, UINT16 y, UI
 }
 
 
-static void IanDrawTextToScreen(const ST::string& str, UINT16 x, UINT16 y, UINT16 w, SGPFont font, UINT8 foreground, UINT8 background, UINT32 flags, UINT32 ian_flags)
+static void IanDrawTextToScreen(const ST::string& str, UINT16 const x, UINT16 const y, UINT16 const w, SGPFont const font, UINT32 const foreground, UINT32 const background, UINT32 flags, UINT32 const ian_flags)
 {
 	if (ian_flags & IAN_WRAP_NO_SHADOW) SetFontShadow(NO_SHADOW);
 	flags |= ian_flags & MARK_DIRTY;
@@ -191,7 +191,7 @@ static void IanDrawTextToScreen(const ST::string& str, UINT16 x, UINT16 y, UINT1
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer (how many pixels wide for word wrapping)
 //					the gap in between the lines
-UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::utf32_buffer& codepoints, UINT8 background, UINT32 flags)
+UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const max_w, UINT8 const gap, SGPFont const font, UINT32 const foreground, const ST::utf32_buffer& codepoints, UINT32 const background, UINT32 const flags)
 {
 	ST::string line_buf;
 	const char32_t* i = codepoints.c_str();
@@ -202,7 +202,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 	SGPFont        cur_font       = font;
 	UINT16         h              = GetFontHeight(cur_font) + gap;
 	bool           is_bold        = false;
-	UINT8          cur_foreground = foreground;
+	UINT32          cur_foreground = foreground;
 	UINT16         justification  = LEFT_JUSTIFIED;
 	do
 	{

@@ -94,12 +94,12 @@ static BOOLEAN Clip2D(int* ix0, int* iy0, int* ix1, int* iy1)
 }
 
 
-static void DrawHorizontalRun(UINT16** ScreenPtr, int XAdvance, int RunLength, int Color);
-static void DrawVerticalRun(UINT16** ScreenPtr, int XAdvance, int RunLength, int Color);
+static void DrawHorizontalRun(UINT32** ScreenPtr, int XAdvance, int RunLength, int Color);
+static void DrawVerticalRun(UINT32** ScreenPtr, int XAdvance, int RunLength, int Color);
 
 
 /* Draws a line between the specified endpoints in color Color. */
-void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, short const Color, UINT16* ScreenPtr)
+void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, UINT32 const Color, UINT32* ScreenPtr)
 {
 	if (fClip && !Clip2D(&XStart, &YStart, &XEnd, &YEnd)) return;
 
@@ -117,7 +117,7 @@ void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, s
 		XEnd = Temp;
 	}
 
-	int const pitch = giImageWidth >> 1;
+	int const pitch = giImageWidth >> 2;
 
 	// point to the bitmap address first pixel to draw
 	ScreenPtr += YStart * pitch + XStart;
@@ -294,7 +294,7 @@ void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, s
 
 
 // Draws a pixel in the specified color
-void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const INT16 sColor, UINT16* const pScreen)
+void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const UINT32 sColor, UINT32* const pScreen)
 {
 	if (fClip && !ClipPoint(xp, yp)) return;
 
@@ -304,9 +304,9 @@ void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const INT16 
 
 /* Draws a horizontal run of pixels, then advances the bitmap pointer to the
  * first pixel of the next run. */
-static void DrawHorizontalRun(UINT16** const ScreenPtr, int const XAdvance, int const RunLength, int const Color)
+static void DrawHorizontalRun(UINT32** const ScreenPtr, int const XAdvance, int const RunLength, int const Color)
 {
-	UINT16* WorkingScreenPtr = *ScreenPtr;
+	UINT32* WorkingScreenPtr = *ScreenPtr;
 
 	for (int i = 0; i < RunLength; i++)
 	{
@@ -314,18 +314,18 @@ static void DrawHorizontalRun(UINT16** const ScreenPtr, int const XAdvance, int 
 		WorkingScreenPtr += XAdvance;
 	}
 	/* Advance to the next scan line */
-	WorkingScreenPtr += giImageWidth >> 1;
+	WorkingScreenPtr += giImageWidth >> 2;
 	*ScreenPtr = WorkingScreenPtr;
 }
 
 
 /* Draws a vertical run of pixels, then advances the bitmap pointer to the
  * first pixel of the next run. */
-static void DrawVerticalRun(UINT16** const ScreenPtr, int const XAdvance, int const RunLength, int const Color)
+static void DrawVerticalRun(UINT32** const ScreenPtr, int const XAdvance, int const RunLength, int const Color)
 {
-	UINT16* WorkingScreenPtr = *ScreenPtr;
+	UINT32* WorkingScreenPtr = *ScreenPtr;
 
-	int const pitch = giImageWidth >> 1;
+	int const pitch = giImageWidth >> 2;
 	for (int i = 0; i < RunLength; i++)
 	{
 		*WorkingScreenPtr = Color;
@@ -338,7 +338,7 @@ static void DrawVerticalRun(UINT16** const ScreenPtr, int const XAdvance, int co
 
 
 /* Draws a rectangle between the specified endpoints in color Color. */
-void RectangleDraw(BOOLEAN const fClip, int const XStart, int const YStart, int const XEnd, int const YEnd, short const Color, UINT16* const ScreenPtr)
+void RectangleDraw(const BOOLEAN fClip, const int XStart, const int YStart, const int XEnd, const int YEnd, const UINT32 Color, UINT32 *ScreenPtr)
 {
 	LineDraw(fClip, XStart, YStart, XEnd,   YStart, Color, ScreenPtr);
 	LineDraw(fClip, XStart, YEnd,   XEnd,   YEnd,   Color, ScreenPtr);

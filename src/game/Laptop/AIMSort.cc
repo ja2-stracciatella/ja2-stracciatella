@@ -21,20 +21,20 @@
 #define AIM_SORT_FONT_SORT_TEXT		FONT10ARIAL
 
 #define AIM_SORT_COLOR_SORT_TEXT	AIM_FONT_MCOLOR_WHITE
-#define AIM_SORT_SORT_BY_COLOR		146
-#define AIM_SORT_LINK_TEXT_COLOR	146
+#define AIM_SORT_SORT_BY_COLOR		FONT_COLOR_P146
+#define AIM_SORT_LINK_TEXT_COLOR	FONT_COLOR_P146
 
-#define AIM_SORT_GAP_BN_ICONS		60
-#define AIM_SORT_CHECKBOX_SIZE		10
+#define AIM_SORT_GAP_BN_ICONS		60 * g_ui.m_stdScreenScale
+#define AIM_SORT_CHECKBOX_SIZE		10 * g_ui.m_stdScreenScale
 #define AIM_SORT_ON			0
 #define AIM_SORT_OFF			1
 
-#define AIM_SORT_SORT_BY_X		IMAGE_OFFSET_X + 155
-#define AIM_SORT_SORT_BY_Y		IMAGE_OFFSET_Y + 96
+#define AIM_SORT_SORT_BY_X		IMAGE_OFFSET_X + 155 * g_ui.m_stdScreenScale
+#define AIM_SORT_SORT_BY_Y		IMAGE_OFFSET_Y + 96 * g_ui.m_stdScreenScale
 
-#define AIM_SORT_TO_MUGSHOTS_X		IMAGE_OFFSET_X + 89
-#define AIM_SORT_TO_MUGSHOTS_Y		IMAGE_OFFSET_Y + 184
-#define AIM_SORT_TO_MUGSHOTS_SIZE	54
+#define AIM_SORT_TO_MUGSHOTS_X		IMAGE_OFFSET_X + 89 * g_ui.m_stdScreenScale
+#define AIM_SORT_TO_MUGSHOTS_Y		IMAGE_OFFSET_Y + 184 * g_ui.m_stdScreenScale
+#define AIM_SORT_TO_MUGSHOTS_SIZE	54 * g_ui.m_stdScreenScale
 
 #define AIM_SORT_TO_STATS_X		AIM_SORT_TO_MUGSHOTS_X
 #define AIM_SORT_TO_STATS_Y		AIM_SORT_TO_MUGSHOTS_Y + AIM_SORT_GAP_BN_ICONS
@@ -45,23 +45,23 @@
 #define AIM_SORT_TO_ALUMNI_SIZE		AIM_SORT_TO_MUGSHOTS_SIZE
 
 #define AIM_SORT_AIM_MEMBER_X		AIM_SORT_SORT_BY_X
-#define AIM_SORT_AIM_MEMBER_Y		(STD_SCREEN_Y + 105 + LAPTOP_SCREEN_WEB_DELTA_Y)
-#define AIM_SORT_AIM_MEMBER_WIDTH	190
+#define AIM_SORT_AIM_MEMBER_Y		(STD_SCREEN_Y + 105 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_SORT_AIM_MEMBER_WIDTH	190 * g_ui.m_stdScreenScale
 
 #define AIM_SORT_SORT_BY_TEXT_X		AIM_SORT_SORT_BY_X + 9
 #define AIM_SORT_SORT_BY_TEXT_Y		AIM_SORT_SORT_BY_Y + 8
 
-#define AIM_SORT_ASC_DESC_WIDTH		100
+#define AIM_SORT_ASC_DESC_WIDTH		100 * g_ui.m_stdScreenScale
 
 
-#define AIM_SORT_MUGSHOT_TEXT_X		(STD_SCREEN_X + 266)
-#define AIM_SORT_MUGSHOT_TEXT_Y		(STD_SCREEN_Y + 230 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_SORT_MUGSHOT_TEXT_X		(STD_SCREEN_X + 266 * g_ui.m_stdScreenScale)
+#define AIM_SORT_MUGSHOT_TEXT_Y		(STD_SCREEN_Y + 230 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 #define AIM_SORT_MERC_STATS_TEXT_X	AIM_SORT_MUGSHOT_TEXT_X
-#define AIM_SORT_MERC_STATS_TEXT_Y	(STD_SCREEN_Y + 293 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_SORT_MERC_STATS_TEXT_Y	(STD_SCREEN_Y + 293 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 #define AIM_SORT_ALUMNI_TEXT_X		AIM_SORT_MUGSHOT_TEXT_X
-#define AIM_SORT_ALUMNI_TEXT_Y		(STD_SCREEN_Y + 351 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_SORT_ALUMNI_TEXT_Y		(STD_SCREEN_Y + 351 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 
 struct AIMSortInfo
@@ -179,9 +179,9 @@ void EnterAimSort()
 	FOR_EACH(AIMSortInfo, i, g_aim_sort_info)
 	{
 		const UINT16 txt_w = StringPixLength(str_aim_sort_list[i->index], AIM_SORT_FONT_SORT_TEXT);
-		const UINT16 x = AIM_SORT_SORT_BY_X + i->x - (i->align == LEFT_JUSTIFIED ? 0 : 4 + txt_w);
-		const UINT16 w = AIM_SORT_CHECKBOX_SIZE + 4 + txt_w;
-		const UINT16 y = AIM_SORT_SORT_BY_Y + i->y;
+		const UINT16 x = AIM_SORT_SORT_BY_X + i->x * g_ui.m_stdScreenScale - (i->align == LEFT_JUSTIFIED ? 0 : 4 * g_ui.m_stdScreenScale + txt_w);
+		const UINT16 w = AIM_SORT_CHECKBOX_SIZE + 4 * g_ui.m_stdScreenScale + txt_w;
+		const UINT16 y = AIM_SORT_SORT_BY_Y + i->y * g_ui.m_stdScreenScale;
 		const UINT16 h = AIM_SORT_CHECKBOX_SIZE;
 		MSYS_DefineRegion(&i->region, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, i->click);
 	}
@@ -200,11 +200,11 @@ void ExitAimSort()
 	SortMercArray();
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiSortByBox);
-	DeleteVideoObject(guiToAlumni);
-	DeleteVideoObject(guiToMugShots);
-	DeleteVideoObject(guiToStats);
-	DeleteVideoObject(guiSelectLight);
+	delete guiSortByBox;
+	delete guiToAlumni;
+	delete guiToMugShots;
+	delete guiToStats;
+	delete guiSelectLight;
 
 	MSYS_RemoveRegion( &gSelectedToMugShotRegion);
 	MSYS_RemoveRegion( &gSelectedToStatsRegion);
@@ -235,22 +235,22 @@ void RenderAimSort()
 	DisplayAimSlogan();
 
 	//Display AIM Member text
-	DrawTextToScreen(AimSortText[AIM_AIMMEMBERS], AIM_SORT_AIM_MEMBER_X, AIM_SORT_AIM_MEMBER_Y, AIM_SORT_AIM_MEMBER_WIDTH, AIM_MAINTITLE_FONT, AIM_MAINTITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimSortText[AIM_AIMMEMBERS], AIM_SORT_AIM_MEMBER_X, AIM_SORT_AIM_MEMBER_Y, AIM_SORT_AIM_MEMBER_WIDTH, AIM_MAINTITLE_FONT, AIM_MAINTITLE_COLOR, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	//Display sort title
-	DrawTextToScreen(AimSortText[SORT_BY], AIM_SORT_SORT_BY_TEXT_X, AIM_SORT_SORT_BY_TEXT_Y, 0, AIM_SORT_FONT_TITLE, AIM_SORT_SORT_BY_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(AimSortText[SORT_BY], AIM_SORT_SORT_BY_TEXT_X, AIM_SORT_SORT_BY_TEXT_Y, 0, AIM_SORT_FONT_TITLE, AIM_SORT_SORT_BY_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 	// Display all the sort by text
 	FOR_EACH(AIMSortInfo const, i, g_aim_sort_info)
 	{
-		const UINT16 x = AIM_SORT_SORT_BY_X + i->x + (i->align == LEFT_JUSTIFIED ? 14 : -AIM_SORT_ASC_DESC_WIDTH - 4);
-		DrawTextToScreen(str_aim_sort_list[i->index], x, AIM_SORT_SORT_BY_Y + i->y + 2, AIM_SORT_ASC_DESC_WIDTH, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_COLOR_SORT_TEXT, FONT_MCOLOR_BLACK, i->align);
+		const UINT16 x = AIM_SORT_SORT_BY_X + i->x * g_ui.m_stdScreenScale + (i->align == LEFT_JUSTIFIED ? 14 * g_ui.m_stdScreenScale : -AIM_SORT_ASC_DESC_WIDTH - 4 * g_ui.m_stdScreenScale);
+		DrawTextToScreen(str_aim_sort_list[i->index], x, AIM_SORT_SORT_BY_Y + (i->y + 2) * g_ui.m_stdScreenScale, AIM_SORT_ASC_DESC_WIDTH, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_COLOR_SORT_TEXT, FONT_MCOLOR_TRANSPARENT, i->align);
 	}
 
 	// Display text for the 3 icons
-	DrawTextToScreen(AimSortText[MUGSHOT_INDEX],   AIM_SORT_MUGSHOT_TEXT_X,    AIM_SORT_MUGSHOT_TEXT_Y,    0, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_LINK_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(AimSortText[MERCENARY_FILES], AIM_SORT_MERC_STATS_TEXT_X, AIM_SORT_MERC_STATS_TEXT_Y, 0, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_LINK_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(AimSortText[ALUMNI_GALLERY],  AIM_SORT_ALUMNI_TEXT_X,     AIM_SORT_ALUMNI_TEXT_Y,     0, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_LINK_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(AimSortText[MUGSHOT_INDEX],   AIM_SORT_MUGSHOT_TEXT_X,    AIM_SORT_MUGSHOT_TEXT_Y,    0, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_LINK_TEXT_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
+	DrawTextToScreen(AimSortText[MERCENARY_FILES], AIM_SORT_MERC_STATS_TEXT_X, AIM_SORT_MERC_STATS_TEXT_Y, 0, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_LINK_TEXT_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
+	DrawTextToScreen(AimSortText[ALUMNI_GALLERY],  AIM_SORT_ALUMNI_TEXT_X,     AIM_SORT_ALUMNI_TEXT_Y,     0, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_LINK_TEXT_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 	DrawSelectLight(gubCurrentSortMode, AIM_SORT_ON);
 	DrawSelectLight(gubCurrentListMode, AIM_SORT_ON);
@@ -361,8 +361,8 @@ static void SelectDescendBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason
 static void DrawSelectLight(const UINT8 ubMode, const UINT8 ubImage)
 {
 	const AIMSortInfo* const asi = &g_aim_sort_info[ubMode];
-	const INT32 x = AIM_SORT_SORT_BY_X + asi->x;
-	const INT32 y = AIM_SORT_SORT_BY_Y + asi->y;
+	const INT32 x = AIM_SORT_SORT_BY_X + asi->x * g_ui.m_stdScreenScale;
+	const INT32 y = AIM_SORT_SORT_BY_Y + asi->y * g_ui.m_stdScreenScale;
 	BltVideoObject(FRAME_BUFFER, guiSelectLight, ubImage, x, y);
 	InvalidateRegion(x, y, x + AIM_SORT_CHECKBOX_SIZE, y + AIM_SORT_CHECKBOX_SIZE);
 }

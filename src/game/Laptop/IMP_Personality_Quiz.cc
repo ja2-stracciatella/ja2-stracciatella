@@ -45,10 +45,10 @@ INT32 giMaxPersonalityQuizQuestion = 0;
 BOOLEAN fStartOverFlag = FALSE;
 
 
-#define BTN_FIRST_COLUMN_X 15
-#define BTN_SECOND_COLUMN_X 256
+#define BTN_FIRST_COLUMN_X (15 * g_ui.m_stdScreenScale)
+#define BTN_SECOND_COLUMN_X (256 * g_ui.m_stdScreenScale)
 
-#define INDENT_OFFSET 55
+#define INDENT_OFFSET (55 * g_ui.m_stdScreenScale)
 
 // number of IMP questions
 #define MAX_NUMBER_OF_IMP_QUESTIONS 16
@@ -152,8 +152,8 @@ void HandleIMPPersonalityQuiz( void )
 
 static GUIButtonRef MakeButton(BUTTON_PICS* const img, const ST::string& text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
-	const INT16 text_col   = FONT_WHITE;
-	const INT16 shadow_col = DEFAULT_SHADOW;
+	const UINT32 text_col   = FONT_WHITE;
+	const UINT32 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	btn->SetCursor(CURSOR_WWW);
 	return btn;
@@ -174,17 +174,21 @@ static void CreateIMPPersonalityQuizButtons(void)
 
 	// ths Done button
 	giIMPPersonalityQuizButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_7.sti", 0, 1);
-	giIMPPersonalityQuizButton[0] = MakeButton(giIMPPersonalityQuizButtonImage[0], pImpButtonText[8], dx + 197, dy + 302, BtnIMPPersonalityQuizAnswerConfirmCallback);
+	giIMPPersonalityQuizButton[0] = MakeButton(giIMPPersonalityQuizButtonImage[0], pImpButtonText[8],
+			dx + 197 * g_ui.m_stdScreenScale, dy + 302 * g_ui.m_stdScreenScale, BtnIMPPersonalityQuizAnswerConfirmCallback);
 
 	// start over
 	giIMPPersonalityQuizButtonImage[1] = LoadButtonImage(LAPTOPDIR "/button_5.sti", 0, 1);
-	giIMPPersonalityQuizButton[1] = MakeButton(giIMPPersonalityQuizButtonImage[1], pImpButtonText[7], dx + BTN_FIRST_COLUMN_X, dy + 302, BtnIMPPersonalityQuizStartOverCallback);
+	giIMPPersonalityQuizButton[1] = MakeButton(giIMPPersonalityQuizButtonImage[1], pImpButtonText[7],
+			dx + BTN_FIRST_COLUMN_X, dy + 302 * g_ui.m_stdScreenScale, BtnIMPPersonalityQuizStartOverCallback);
 
 	giPreviousQuestionButtonImage = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
-	giPreviousQuestionButton = MakeButton(giPreviousQuestionButtonImage, pImpButtonText[12], dx + 197, dy + 361, PreviousQuestionButtonCallback);
+	giPreviousQuestionButton = MakeButton(giPreviousQuestionButtonImage, pImpButtonText[12],
+			dx + 197 * g_ui.m_stdScreenScale, dy + 361 * g_ui.m_stdScreenScale, PreviousQuestionButtonCallback);
 
 	giNextQuestionButtonImage = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
-	giNextQuestionButton = MakeButton(giNextQuestionButtonImage, pImpButtonText[13], dx + 417, dy + 361, NextQuestionButtonCallback);
+	giNextQuestionButton = MakeButton(giNextQuestionButtonImage, pImpButtonText[13],
+			dx + 417 * g_ui.m_stdScreenScale, dy + 361 * g_ui.m_stdScreenScale, NextQuestionButtonCallback);
 
 	giNextQuestionButton->SpecifyTextSubOffsets(    0, -1, FALSE);
 	giPreviousQuestionButton->SpecifyTextSubOffsets(0, -1, FALSE);
@@ -307,7 +311,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		GUIButtonRef const Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, BtnQuizAnswerCallback);
 		giIMPPersonalityQuizAnswerButton[i] = Button;
 		Button->SetUserData(i);
-		Button->SpecifyTextOffsets(23, 12, TRUE);
+		Button->SpecifyTextOffsets(23 * g_ui.m_stdScreenScale, 12 * g_ui.m_stdScreenScale, TRUE);
 		ST::string sString = ST::format("{}", i + 1);
 		Button->SpecifyGeneralTextAttributes(sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK);
 		Button->SetCursor(CURSOR_WWW);
@@ -566,7 +570,7 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 
 
 	// the question indent
-	RenderQtnIndentFrame( 15, 20 );
+	RenderQtnIndentFrame( 15 * g_ui.m_stdScreenScale, 20 * g_ui.m_stdScreenScale );
 
 
 	// the answers
@@ -578,60 +582,60 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 			case( 0 ):
 				if( iNumberOfIndents < 5 )
 				{
-					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
-						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 );
+						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale );
 					}
 				}
 				else
 				{
-					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93);
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
-						RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 );
+						RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale );
 					}
 				}
 				break;
 			case( 1 ):
 				if( iNumberOfIndents < 5 )
 				{
-					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
-						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 );
+						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale );
 					}
 				}
 				else
 				{
-					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143);
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
-						RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 );
+						RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale );
 					}
 				}
 				break;
 			case( 2 ):
 				if( iNumberOfIndents < 5 )
 				{
-					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
-					RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 );
+					RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 * g_ui.m_stdScreenScale );
 					}
 				}
 				else
 				{
-					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193);
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
-					RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 );
+					RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 * g_ui.m_stdScreenScale );
 					}
 				}
 				break;
@@ -640,13 +644,13 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 				if( giCurrentPersonalityQuizQuestion == 5 )
 				{
 					// render longer frame
-					RenderQtnShort2IndentFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
+					RenderQtnShort2IndentFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 * g_ui.m_stdScreenScale );
 
 					// is this answer currently selected?
 					if( iCurrentAnswer == iCounter )
 					{
 						// need to highlight
-						RenderQtnShort2IndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
+						RenderQtnShort2IndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 * g_ui.m_stdScreenScale );
 					}
 					// done
 					break;
@@ -654,16 +658,16 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 
 				if( iNumberOfIndents < 5 )
 				{
-					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
-						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
+						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 * g_ui.m_stdScreenScale );
 					}
 				}
 				else
 				{
-					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243);
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 * g_ui.m_stdScreenScale);
 
 					if( iCurrentAnswer == iCounter )
 					{
@@ -676,23 +680,23 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 				if( ( giCurrentPersonalityQuizQuestion == 10)||( giCurrentPersonalityQuizQuestion == 5 ) )
 				{
 					// render longer frame
-					RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
+					RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale );
 
 					// is this answer currently selected?
 					if( iCurrentAnswer == iCounter )
 					{
 						// need to highlight
-						RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
+						RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale );
 					}
 					// done
 					break;
 				}
 
-				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93);
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale);
 
 				if( iCurrentAnswer == iCounter )
 				{
-					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 * g_ui.m_stdScreenScale );
 				}
 				break;
 			case( 5 ):
@@ -700,35 +704,35 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 				if(  giCurrentPersonalityQuizQuestion == 19 )
 				{
 					// render longer frame
-					RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
+					RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale );
 
 					// is this answer currently selected?
 					if( iCurrentAnswer == iCounter )
 					{
 						// need to highlight
-						RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
+						RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale );
 					}
 					// done
 					break;
 				}
-				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143);
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale);
 				if( iCurrentAnswer == iCounter )
 				{
-					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 * g_ui.m_stdScreenScale );
 				}
 				break;
 			case( 6 ):
-				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193);
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193 * g_ui.m_stdScreenScale);
 				if( iCurrentAnswer == iCounter )
 				{
-					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193 );
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193 * g_ui.m_stdScreenScale );
 				}
 				break;
 			case( 7 ):
-				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243);
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243 * g_ui.m_stdScreenScale);
 				if( iCurrentAnswer == iCounter )
 				{
-					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243 );
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243 * g_ui.m_stdScreenScale );
 				}
 				break;
 			case( 8 ):
@@ -745,10 +749,10 @@ static void PrintQuizQuestionNumber(void)
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
 
 	// print current question number
-	MPrint(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, ST::format("{}", giCurrentPersonalityQuizQuestion + 1));
+	MPrint(LAPTOP_SCREEN_UL_X + 345 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 370 * g_ui.m_stdScreenScale, ST::format("{}", giCurrentPersonalityQuizQuestion + 1));
 
 	// total number of questions
-	MPrint(LAPTOP_SCREEN_UL_X + 383, LAPTOP_SCREEN_WEB_UL_Y + 370, "16");
+	MPrint(LAPTOP_SCREEN_UL_X + 383 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 370 * g_ui.m_stdScreenScale, "16");
 }
 
 

@@ -58,26 +58,26 @@ static void MakeButtonTeam(UINT idx, INT16 y, GUI_CALLBACK click, const ST::stri
 }
 
 
-static GUIButtonRef MakeTextButton(const ST::string& text, INT16 fore_colour, INT16 x, INT16 y, INT16 w, INT16 h, GUI_CALLBACK click)
+static GUIButtonRef MakeTextButton(const ST::string& text, UINT32 const fore_color, INT16 const x, INT16 const y, INT16 const w, INT16 const h, GUI_CALLBACK const click)
 {
-	return CreateTextButton(text, SMALLCOMPFONT, fore_colour, FONT_BLACK, x, TASKBAR_Y + y, w, h, MSYS_PRIORITY_NORMAL, click);
+	return CreateTextButton(text, SMALLCOMPFONT, fore_color, FONT_BLACK, x, TASKBAR_Y + y, w, h, MSYS_PRIORITY_NORMAL, click);
 }
 
 
-static void MakeButtonEquipment(UINT idx, UINT level, INT16 colour, const ST::string& text)
+static void MakeButtonEquipment(UINT idx, UINT level, UINT32 color, const ST::string& text)
 {
 	GUIButtonRef const btn = MakeTextButton(text, FONT_GRAY1, 480, 20 + 15 * level, 40, 15, MercsSetRelativeEquipmentCallback);
 	iEditorButton[idx] = btn;
-	btn->SpecifyDownTextColors(colour, FONT_BLACK);
+	btn->SpecifyDownTextColors(color, FONT_BLACK);
 	btn->SetUserData(level);
 }
 
 
-static void MakeButtonAttribute(UINT idx, UINT level, INT16 colour, const ST::string& text)
+static void MakeButtonAttribute(UINT idx, UINT level, UINT32 color, const ST::string& text)
 {
 	GUIButtonRef const btn = MakeTextButton(text, FONT_GRAY1, 530, TASKBAR_Y + 20 + 15 * level, 40, 15, MercsSetRelativeAttributesCallback);
 	iEditorButton[idx] = btn;
-	btn->SpecifyDownTextColors(colour, FONT_BLACK);
+	btn->SpecifyDownTextColors(color, FONT_BLACK);
 	btn->SetUserData(level);
 }
 

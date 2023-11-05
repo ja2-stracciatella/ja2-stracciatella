@@ -350,11 +350,11 @@ static void LoadFinances(void)
 static void RemoveFinances(void)
 {
 	// delete Finance video objects from memory
-	DeleteVideoObject(guiLONGLINE);
-	DeleteVideoObject(guiLINE);
-	DeleteVideoObject(guiLISTCOLUMNS);
-	DeleteVideoObject(guiTOP);
-	DeleteVideoObject(guiTITLE);
+	delete guiLONGLINE;
+	delete guiLINE;
+	delete guiLISTCOLUMNS;
+	delete guiTOP;
+	delete guiTITLE;
 }
 
 

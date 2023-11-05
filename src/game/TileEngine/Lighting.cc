@@ -2079,10 +2079,13 @@ CreateObjectPaletteTables
 **********************************************************************************************/
 void CreateTilePaletteTables(const HVOBJECT pObj)
 {
+	// FIXME: maxrd2 - we wont be using this most likely so drop it
+	return;
+
 	Assert(pObj != NULL);
 
 	// build the shade tables
-	CreateBiasedShadedPalettes(pObj->pShades, pObj->Palette());
+	// FIXME: maxrd2 - CreateBiasedShadedPalettes(pObj->pShades, pObj->Palette());
 
 	// build neutral palette as well!
 	// Set current shade table to neutral color

@@ -6,6 +6,7 @@
 #include "Types.h"
 #include "WorldDef.h"
 
+#include <math.h>
 
 #define MAXCOL					WORLD_COLS
 #define MAXROW					WORLD_ROWS
@@ -29,10 +30,9 @@ extern const UINT8 gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIREC
 // Macros
 
 
-//                                                |Check for map bounds------------------------------------------|   |Invalid-|   |Valid-------------------|
-#define MAPROWCOLTOPOS( r, c )									( ( (r < 0) || (r >= WORLD_ROWS) || (c < 0) || (c >= WORLD_COLS) ) ? ( 0xffff ) : ( (r) * WORLD_COLS + (c) ) )
-
-#define GETWORLDINDEXFROMWORLDCOORDS( r, c )		( (INT16) ( r / CELL_X_SIZE ) ) * WORLD_COLS + ( (INT16) ( c / CELL_Y_SIZE ) )
+#define GETWORLDINDEXFROMWORLDCOORDS(r, c) INT16(floor(double(r) / CELL_X_SIZE) * WORLD_COLS + floor(double(c) / CELL_Y_SIZE))
+#define MAPROWCOLTOPOS_NOCHECK(r, c) ( (r) * WORLD_COLS + (c) )
+#define MAPROWCOLTOPOS(r, c) ( (r) < 0 || (r) >= WORLD_ROWS || (c) < 0 || (c) >= WORLD_COLS ? 0xffff : MAPROWCOLTOPOS_NOCHECK(r, c) )
 
 void ConvertGridNoToXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos );
 void ConvertGridNoToCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos );
@@ -45,8 +45,8 @@ INT16 DirectionInc(UINT8 sDirection);
 INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno);
 
 
-BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY );
-BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
+BOOLEAN GetMouseXY(INT16 *psMouseX, INT16 *psMouseY);
+BOOLEAN GetMouseWorldCoords(INT16 *psMouseX, INT16 *psMouseY);
 
 void   GetAbsoluteScreenXYFromMapPos(GridNo pos, INT16* psWorldScreenX, INT16* psWorldScreenY);
 GridNo GetMapPosFromAbsoluteScreenXY(INT16 sWorldScreenX, INT16 sWorldScreenY);
@@ -54,9 +54,6 @@ GridNo GetMapPosFromAbsoluteScreenXY(INT16 sWorldScreenX, INT16 sWorldScreenY);
 
 void FromCellToScreenCoordinates( INT16 sCellX, INT16 sCellY, INT16 *psScreenX, INT16 *psScreenY );
 void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX, INT16 *psCellY );
-
-// Higher resolution convertion functions
-void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScreenX, FLOAT *pdScreenY );
 
 BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo );
 BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection );

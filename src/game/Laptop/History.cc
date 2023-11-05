@@ -433,11 +433,11 @@ static void DrawHistoryRecordsText(void)
 	UINT entry_count = 0;
 	for (const HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
 	{
-		const UINT8 colour =
+		const UINT32 color =
 			h->ubCode  == HISTORY_CHEAT_ENABLED ||
 			(h->ubCode == HISTORY_QUEST_STARTED && gubQuest[h->ubSecondCode] == QUESTINPROGRESS) ?
 				FONT_RED : FONT_BLACK;
-		SetFontForeground(colour);
+		SetFontForeground(color);
 
 		const INT32 y = RECORD_Y + entry_count * BOX_HEIGHT + 3;
 

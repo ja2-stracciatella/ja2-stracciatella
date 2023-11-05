@@ -156,9 +156,9 @@ static UINT16      PrevCurrentPaste       = FIRSTTEXTURE;
 static INT32       gPrevCurrentBackground = FIRSTTEXTURE;
 static ToolbarMode iPrevJA2ToolbarState   = TBAR_MODE_NONE;
 
-UINT16 gusEditorTaskbarColor;
-UINT16 gusEditorTaskbarHiColor;
-UINT16 gusEditorTaskbarLoColor;
+UINT32 gusEditorTaskbarColor;
+UINT32 gusEditorTaskbarHiColor;
+UINT32 gusEditorTaskbarLoColor;
 
 BOOLEAN gfGotoGridNoUI = FALSE;
 static GUIButtonRef guiGotoGridNoUIButtonID;
@@ -179,13 +179,13 @@ void EditScreenInit(void)
 
 	//Set the editor colors.
 	//gusEditorTaskbarColor = 9581;
-	//gusEditorTaskbarColor =		Get16BPPColor( FROMRGB(  72,  88, 104 ) );
-	//gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 136, 138, 135 ) );
-	//gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(  24,  61,  81 ) );
+	//gusEditorTaskbarColor =		RGB(72, 88, 104);
+	//gusEditorTaskbarHiColor = RGB(136, 138, 135);
+	//gusEditorTaskbarLoColor = RGB(24, 61, 81);
 
-	gusEditorTaskbarColor   = Get16BPPColor( FROMRGB(  65,  79,  94 ) );
-	gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
-	gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(  22,  55,  73 ) );
+	gusEditorTaskbarColor   = RGB(65, 79, 94);
+	gusEditorTaskbarHiColor = RGB(122, 124, 121);
+	gusEditorTaskbarLoColor = RGB(22, 55, 73);
 
 	InitArmyGunTypes();
 }
@@ -913,10 +913,10 @@ void ShowCurrentDrawingMode( void )
 	}
 
 	// Set the color for the window's border. Blueish color = Normal, Red = Fake lighting is turned on
-	UINT16 usFillColor = GetGenericButtonFillColor();
+	UINT32 usFillColor = GetGenericButtonFillColor();
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		RectangleDraw(FALSE, x, y, x + w - 1, y + h, usFillColor, l.Buffer<UINT16>());
+		RectangleDraw(FALSE, x, y, x + w - 1, y + h, usFillColor, l.Buffer<UINT32>());
 	}
 
 	InvalidateRegion(x, y, x + w, y + h);
@@ -2266,9 +2266,9 @@ static ScreenID WaitForHelpScreenResponse(void)
 	BOOLEAN fLeaveScreen;
 
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	50, 50, 590, 310,
-													Get16BPPColor(FROMRGB(136, 138, 135)) );
+													RGB(136, 138, 135) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	51, 51, 590, 310,
-													Get16BPPColor(FROMRGB(24, 61, 81)) );
+													RGB(24, 61, 81) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	51, 51, 589, 309, GetGenericButtonFillColor());
 
 	SetFont( gp12PointFont1 );

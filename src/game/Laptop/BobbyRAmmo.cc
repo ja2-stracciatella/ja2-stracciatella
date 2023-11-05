@@ -36,8 +36,8 @@ void EnterBobbyRAmmo()
 
 void ExitBobbyRAmmo()
 {
-	DeleteVideoObject(guiAmmoBackground);
-	DeleteVideoObject(guiAmmoGrid);
+	delete guiAmmoBackground;
+	delete guiAmmoGrid;
 	DeleteBobbyMenuBar();
 
 	DeleteBobbyBrTitle();
