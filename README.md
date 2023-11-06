@@ -3,7 +3,7 @@
 [![GitHub CI](https://img.shields.io/github/actions/workflow/status/ja2-stracciatella/ja2-stracciatella/github-ci.yml?branch=master&label=GitHub%20CI&logo=github)](https://github.com/ja2-stracciatella/ja2-stracciatella/actions?query=workflow%3A%22GitHub+CI%22)
 [![AppVeyor](https://img.shields.io/appveyor/ci/ja2-stracciatella/ja2-stracciatella/master.svg?style=flat-square&logo=appveyor&label=AppVeyor)](https://ci.appveyor.com/project/ja2-stracciatella/ja2-stracciatella)
 [![Coverity Scan](https://img.shields.io/coverity/scan/8431.svg?style=flat-square&label=Coverity%20Scan)](https://scan.coverity.com/projects/ja2-stracciatella-ja2-stracciatella)
-[![Current Release](https://img.shields.io/github/downloads/ja2-stracciatella/ja2-stracciatella/v0.20.0/total)](https://github.com/ja2-stracciatella/ja2-stracciatella/releases/tag/v0.20.0)
+[![Current Release](https://img.shields.io/github/downloads/ja2-stracciatella/ja2-stracciatella/v0.20.0/total)](https://github.com/ja2-stracciatella/ja2-stracciatella/releases/tag/v0.21.0)
 
 This is continuation of venerable JA2-Stracciatella project.
 
