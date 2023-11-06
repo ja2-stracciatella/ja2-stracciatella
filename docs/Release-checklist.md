@@ -54,6 +54,6 @@ If you want to build the packages manually:
 
 ## Post-release
 
-- [ ] Set version to +1 and add the `-dev` suffix
+- [ ] Set version to +1 and update README.md link
 - [ ] Close this bug and GitHub milestone
 - [ ] Create new milestone if none exists yet
