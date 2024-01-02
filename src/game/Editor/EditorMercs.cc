@@ -1987,7 +1987,7 @@ void UpdateMercsInfo()
 //is called by the region callback functions to handle these cases.  The event types are defined
 //in Editor Taskbar Utils.h.  Here are the internal functions...
 
-SGPRect mercRects[9] =
+static SGPRect const mercRects[9]
 {
 	{  75,  0, 104, 19 }, //head
 	{  75, 22, 104, 41 }, //body
@@ -2001,13 +2001,13 @@ SGPRect mercRects[9] =
 };
 
 
-static BOOLEAN PointInRect(SGPRect* pRect, INT32 x, INT32 y)
+static bool PointInRect(SGPRect const * pRect, INT32 x, INT32 y)
 {
 	return( x >= pRect->iLeft && x <= pRect->iRight && y >= pRect->iTop && y <= pRect->iBottom );
 }
 
 
-static void DrawRect(SGPRect* pRect, INT16 color)
+static void DrawRect(SGPRect const * pRect, INT16 color)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
