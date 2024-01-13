@@ -1132,6 +1132,7 @@ void EnableAllTextFields()
 		i->fEnabled = TRUE;
 	}
 	if (!gpActive) gpActive = gpTextInputHead;
+	SetEditingStatus(gpActive != nullptr);
 }
 
 
@@ -1144,6 +1145,7 @@ void DisableAllTextFields()
 		i->region.Disable();
 		i->fEnabled = FALSE;
 	}
+	SetEditingStatus(false);
 }
 
 
