@@ -7,7 +7,7 @@ use crate::get_assets_dir;
 use super::{Cli, CliError, Ja2Json, Ja2JsonError};
 
 pub const SAVED_GAME_DIR: &str = "SavedGames";
-const STRACCIATELLA_HOME_DIR_NAME: &str = "/.ja2";
+const STRACCIATELLA_HOME_DIR_NAME: &str = "/ja2";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EngineOptionsError {
