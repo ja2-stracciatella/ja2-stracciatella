@@ -1,3 +1,13 @@
+option(LOCAL_SMACKER_LIB "Use bundled libsmacker instead of searching the system" ON)
+if (NOT LOCAL_SMACKER_LIB)
+    message(STATUS "Using system libsmacker")
+    find_library(LIBSMACKER_found libsmacker.so)
+    if (NOT LIBSMACKER_found)
+        message(FATAL_ERROR "libsmacker not found")
+    endif()
+    return()
+endif()
+
 project(smacker)
 
 add_library(smacker STATIC
