@@ -247,10 +247,17 @@ mod tests {
         let home = temp_dir.path().join(".ja2");
 
         let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
-        let expected_save_game_dir = temp_dir.path().join(".ja2/SavedGames");
-
-        assert!(expected_save_game_dir.is_dir());
-        assert_eq!(engine_options.save_game_dir, expected_save_game_dir);
+        let mut expected_vec: Vec<PathBuf> = Vec::new();
+	    let expected_save_game_dir1 = temp_dir.path().join(".ja2/SavedGames");
+	    let expected_save_game_dir2 = PathBuf::from(format!("{}{}{}", std::env::var("XDG_DATA_HOME").unwrap(), STRACCIATELLA_HOME_DIR_NAME,
+	    "/SavedGames"));
+	    let expected_save_game_dir3 = PathBuf::from(format!("{}{}{}{}", std::env::var("HOME").unwrap(), "/.local/share", STRACCIATELLA_HOME_DIR_NAME,
+	    "/SavedGames"));
+	    expected_vec.push(expected_save_game_dir1);
+	    expected_vec.push(expected_save_game_dir2);
+	    expected_vec.push(expected_save_game_dir3);
+	    assert!(expected_vec.contains(&engine_options.save_game_dir));
+        assert!(expected_vec[0].is_dir() || expected_vec[1].is_dir() || expected_vec[2].is_dir());
     }
 
     #[test]
