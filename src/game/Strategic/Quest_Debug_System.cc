@@ -27,6 +27,9 @@
 #include "QuestText.h"
 #include "Random.h"
 #include "Render_Dirty.h"
+#include "SDL_pixels.h"
+#include "SDL_render.h"
+#include "SDL_surface.h"
 #include "SGP.h"
 #include "Soldier_Add.h"
 #include "Soldier_Control.h"
@@ -385,8 +388,6 @@ static BOOLEAN gfQuestDebugExit  = FALSE;
 
 static BOOLEAN gfRedrawQuestDebugSystem = TRUE;
 
-static UINT16 gusQuestDebugBlue;
-
 
 static SCROLL_BOX gNpcListBox;  // The Npc Scroll box
 static SCROLL_BOX gItemListBox;
@@ -498,8 +499,6 @@ void QuestDebugScreenInit()
 
 	//Set so next time we come in, we can set up
 	gfQuestDebugEntry = TRUE;
-
-	gusQuestDebugBlue = Get16BPPColor( FROMRGB(  65,  79,  94 ) );
 
 	//Initialize which facts are at the top of the list
 	gusFactAtTopOfList = 0;
@@ -961,7 +960,8 @@ static void DisplaySectionLine(void);
 
 static void RenderQuestDebugSystem(void)
 {
-	ButtonDestBuffer->Fill(gusQuestDebugBlue);
+	auto * surface = &ButtonDestBuffer->GetSDLSurface();
+	SDL_FillRect(surface, nullptr, SDL_MapRGB(surface->format, 65, 79, 94));
 
 	//display the title
 	DisplayWrappedString(0, 5, SCREEN_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, QuestDebugText[QUEST_DBS_TITLE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -1240,23 +1240,22 @@ static void DisplaySectionLine(void)
 	usStartY = QUEST_DBS_FIRST_COL_NUMBER_Y;
 	usEndY = 475;
 
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
+	auto * renderer = FRAME_BUFFER->GetRenderer();
 
 	// draw the line in b/n the first and second section
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderDrawLine(renderer, usStartX, usStartY, usEndX, usEndY);
 
 	// draw the line in b/n the second and third section
 	usStartX = usEndX = QUEST_DBS_FIRST_SECTION_WIDTH + QUEST_DBS_SECOND_SECTION_WIDTH;
-	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	SDL_RenderDrawLine(renderer, usStartX, usStartY, usEndX, usEndY);
 
 
 	//draw the horizopntal line under the title
 	usStartX = 0;
 	usEndX   = SCREEN_WIDTH - 1;
 	usStartY = usEndY = 75;
-	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	SDL_RenderDrawLine(renderer, usStartX, usStartY, usEndX, usEndY);
 }
 
 

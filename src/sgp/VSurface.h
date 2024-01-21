@@ -20,8 +20,10 @@ inline SGPVSurface* g_mouse_buffer;
 struct SDLDeleter
 {
 	void operator()(SDL_Surface *p) noexcept { SDL_FreeSurface(p); }
+	void operator()(SDL_Renderer *p) noexcept { SDL_DestroyRenderer(p); }
 };
 using SurfaceUniquePtr = std::unique_ptr<SDL_Surface, SDLDeleter>;
+using RendererUniquePtr = std::unique_ptr<SDL_Renderer, SDLDeleter>;
 
 
 /** Utility wrapper around SDL_Surface. */
@@ -30,7 +32,7 @@ class SGPVSurface
 	public:
 		SGPVSurface(SDL_Surface*);
 		SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
-		virtual ~SGPVSurface();
+		~SGPVSurface();
 
 		UINT16 Width()  const { return surface_->w; }
 		UINT16 Height() const { return surface_->h; }
@@ -50,8 +52,45 @@ class SGPVSurface
 		void ShadowRect(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
 		void ShadowRectUsingLowPercentTable(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
 
-		/* Allow read access to the underlying SDL_Surface */
-		SDL_Surface const& GetSDLSurface() const noexcept { return *surface_; }
+		/* Allow access to the underlying SDL_Surface */
+		SDL_Surface & GetSDLSurface() const noexcept { return *surface_; }
+
+		/* Return a software renderer for this surface. The renderer is created
+		 * on demand the first time this method gets called and will be
+		 * destroyed together with the surface. */
+		SDL_Renderer * GetRenderer();
+
+		/* Set the draw color for this surface's renderer. */
+		SGPVSurface & SetDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
+		{
+			SDL_SetRenderDrawColor(GetRenderer(), r, g, b, a);
+			return *this;
+		}
+
+		/* Draw a line from (x1, y1) to (x2, y2) using the surface's renderer. */
+		SGPVSurface & LineDraw(int x1, int y1, int x2, int y2)
+		{
+			SDL_RenderDrawLine(GetRenderer(), x1, y1, x2, y2);
+			return *this;
+		}
+
+		/* Draw a rectangle (not filled!) to the surface. The parameters may
+		 * look a bit weird; that's because this method is meant as a drop-in
+		 * replacement for the old RectangleDraw API, which specified the top
+		 * left and bottom right corners of the rectangle. */
+		SGPVSurface & RectangleDraw(int tl_x, int tl_y, int br_x, int br_y)
+		{
+			SDL_Rect r{ tl_x, tl_y, br_x - tl_x + 1, br_y - tl_y + 1 };
+			SDL_RenderDrawRect(GetRenderer(), &r);
+			return *this;
+		}
+
+		/* Fill a rectangle with the currently set draw color. */
+		SGPVSurface & FillRect(SDL_Rect const& rect)
+		{
+			SDL_RenderFillRect(GetRenderer(), &rect);
+			return *this;
+		}
 
 		/* Fills an rectangular area with a specified color value. */
 		friend void ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
@@ -65,6 +104,7 @@ class SGPVSurface
 
 	private:
 		SurfaceUniquePtr                           surface_;
+		RendererUniquePtr                          renderer_;
 		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits

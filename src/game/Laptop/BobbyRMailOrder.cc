@@ -7,6 +7,7 @@
 #include "BobbyRMailOrder.h"
 #include "BobbyR.h"
 #include "MessageBoxScreen.h"
+#include "SDL_render.h"
 #include "Text.h"
 #include "VObject.h"
 #include "WordWrap.h"
@@ -1464,20 +1465,20 @@ static void DrawGoldRectangle(INT8 bCityNum)
 	if( usPosY >= temp )
 		usPosY = BOBBYR_SCROLL_AREA_Y + BOBBYR_SCROLL_AREA_HEIGHT - BOBBYR_SCROLL_ARROW_HEIGHT - usHeight - 5;
 
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SCROLL_AREA_X, usPosY, BOBBYR_SCROLL_AREA_X+usWidth,	usPosY+usHeight, Get16BPPColor( FROMRGB( 186, 165, 68 ) ) );
+	FRAME_BUFFER->SetDrawColor(186, 165, 68)
+	.FillRect({ BOBBYR_SCROLL_AREA_X, usPosY, usWidth, usHeight })
 
 	//display the line
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw the gold highlite line on the top and left
-	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth, usPosY, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX, usPosY, usPosX, usPosY+usHeight, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
+	.SetDrawColor(235, 222, 171)
+	.LineDraw(usPosX, usPosY, usPosX + usWidth, usPosY)
+	.LineDraw(usPosX, usPosY, usPosX, usPosY + usHeight)
 
 	// draw the shadow line on the bottom and right
-	LineDraw(FALSE, usPosX, usPosY+usHeight, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX+usWidth, usPosY, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
+	.SetDrawColor(65, 49, 6)
+	.LineDraw(usPosX, usPosY + usHeight, usPosX + usWidth, usPosY + usHeight)
+	.LineDraw(usPosX + usWidth, usPosY, usPosX + usWidth, usPosY + usHeight);
 }
 
 

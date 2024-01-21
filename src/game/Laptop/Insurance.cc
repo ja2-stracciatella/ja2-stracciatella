@@ -4,6 +4,7 @@
 #include "Laptop.h"
 #include "Insurance.h"
 #include "Insurance_Contract.h"
+#include "SDL_render.h"
 #include "VObject.h"
 #include "WordWrap.h"
 #include "Cursors.h"
@@ -294,17 +295,13 @@ void RemoveInsuranceDefaults()
 
 void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY)
 {
-	SGPVSurface::Lock l(FRAME_BUFFER);
-
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
-
 	// draw the red line
-	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, Get16BPPColor( FROMRGB( 255, 0, 0 ) ), pDestBuf);
+	FRAME_BUFFER->SetDrawColor(255, 0, 0)
+		.LineDraw(usStartX, usStartY, EndX, EndY)
 
 	// draw the black shadow line
-	LineDraw(FALSE, usStartX+1, usStartY+1, EndX+1, EndY+1, Get16BPPColor( FROMRGB( 0, 0, 0 ) ), pDestBuf);
+		.SetDrawColor(0, 0, 0)
+		.LineDraw(usStartX + 1, usStartY + 1, EndX + 1, EndY + 1);
 }
 
 
