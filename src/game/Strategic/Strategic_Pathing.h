@@ -13,18 +13,6 @@
 #define SOUTH_MOVE  18
 
 
-// Movement speed defines
-#define NORMAL_MVT 1
-#define SLOW_MVT   0
-
-
-// movment modes
-enum{
-	MVT_MODE_AIR,
-	MVT_MODE_VEHICLE,
-	MVT_MODE_FOOT,
-};
-
 INT32 FindStratPath(INT16 sStart, INT16 sDestination, GROUP const&, BOOLEAN fTacticalTraversal);
 
 // build a stategic path
