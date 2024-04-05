@@ -23,6 +23,7 @@ set(MINGW_CORE_DLLS
     "version.dll"
     "winmm.dll"
     "ws2_32.dll"
+    "nt.dll"
 )
 
 #
