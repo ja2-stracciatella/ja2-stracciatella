@@ -1314,7 +1314,6 @@ void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE const& s, OBJECTTYPE& o)
 	// Don't drop all the clips, just a random # of them between 1 and how
 	// many there are
 	o.ubNumberOfObjects = 1 + Random(o.ubNumberOfObjects);
-	o.ubWeight          = CalculateObjectWeight(&o);
 }
 
 

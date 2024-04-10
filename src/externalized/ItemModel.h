@@ -33,7 +33,7 @@ struct ItemModel
 		ItemCursor ubCursor,
 		InventoryGraphicsModel inventoryGraphics,
 		TilesetTileIndexModel tileGraphic,
-		uint8_t    ubWeight,
+		uint8_t    ubWeight, // In hectogram, so f.e. ubWeight==4 means 400 grams.
 		uint8_t    ubPerPocket,
 		uint16_t   usPrice,
 		uint8_t    ubCoolness,
@@ -41,8 +41,7 @@ struct ItemModel
 		int8_t     bRepairEase,
 		uint16_t   fFlags);
 
-	// This could be default in C++11
-	virtual ~ItemModel();
+	virtual ~ItemModel() = default;
 
 	const virtual ST::string& getInternalName() const;
 	const virtual ST::string& getShortName() const;

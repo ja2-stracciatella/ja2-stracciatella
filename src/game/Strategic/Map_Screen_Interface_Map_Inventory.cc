@@ -801,10 +801,7 @@ static BOOLEAN GetObjFromInventoryStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTY
 		// find first unempty slot
 		pItemPtr->bStatus[0] = pInventorySlot->bStatus[0];
 		pItemPtr->ubNumberOfObjects = 1;
-		pItemPtr->ubWeight = CalculateObjectWeight( pItemPtr );
 		RemoveObjFrom( pInventorySlot, 0 );
-		pInventorySlot->ubWeight = CalculateObjectWeight( pInventorySlot );
-
 	}
 
 	return ( TRUE );

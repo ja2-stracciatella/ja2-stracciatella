@@ -5,6 +5,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "ItemModel.h"
+#include <algorithm>
 
 
 static void ReplaceInvalidItem(UINT16 & usItem)
@@ -199,7 +200,7 @@ inject_status:
 	INJ_U8(d, o->ubMission)
 	INJ_I8(d, o->bTrap)
 	INJ_U8(d, o->ubImprintID)
-	INJ_U8(d, o->ubWeight)
+	d.writeU8(static_cast<UINT8>(std::clamp(Weight(*o), 1, 255)));
 	INJ_U8(d, o->fUsed)
 	INJ_SKIP(d, 2)
 	Assert(d.getConsumed() == start + 36);

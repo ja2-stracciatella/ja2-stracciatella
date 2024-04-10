@@ -1,7 +1,7 @@
 #ifndef ITEM_TYPES_H
 #define ITEM_TYPES_H
 
-#include "Types.h"
+#include "JA2Types.h"
 
 enum ItemCursor
 {
@@ -129,6 +129,10 @@ struct OBJECTTYPE
 	UINT8  ubMission;
 	INT8   bTrap; // 1-10 exp_lvl to detect
 	UINT8  ubImprintID; // ID of merc that item is imprinted on
+
+	// Was the weight of object in multiples of 0.1kg
+	// (including attachments and ammo, if applicable)
+	// no longer used, this is now computed on demand.
 	UINT8  ubWeight;
 	UINT8  fUsed; // flags for whether the item is used or not
 };
@@ -607,5 +611,7 @@ enum ITEMDEFINE
 
 	MAXITEMS
 };
+
+grams Weight(OBJECTTYPE const& object);
 
 #endif

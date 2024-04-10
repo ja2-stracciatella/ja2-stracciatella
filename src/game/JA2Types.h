@@ -33,4 +33,6 @@ struct TILE_IMAGERY;
 struct VEHICLETYPE;
 struct VIDEO_OVERLAY;
 
+using grams = int;
+
 #endif

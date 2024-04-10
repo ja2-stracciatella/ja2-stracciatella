@@ -155,7 +155,7 @@ static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
 #define ITEM_FONT					TINYFONT1
 
 #define EXCEPTIONAL_DAMAGE				30
-#define EXCEPTIONAL_WEIGHT				20
+constexpr grams EXCEPTIONAL_WEIGHT = 2000;
 #define EXCEPTIONAL_RANGE				300
 #define EXCEPTIONAL_MAGAZINE				30
 #define EXCEPTIONAL_AP_COST				7
@@ -458,7 +458,7 @@ static void GenerateProsString(ST::string& zItemPros, const OBJECTTYPE& o, UINT3
 
 	zItemPros.clear();
 
-	if (GCM->getItem(usItem)->getWeight() <= EXCEPTIONAL_WEIGHT)
+	if (GCM->getItem(usItem)->getWeight() * 100 <= EXCEPTIONAL_WEIGHT)
 	{
 		zTemp = g_langRes->Message[STR_LIGHT];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -2388,9 +2388,11 @@ void RenderItemDescriptionBox(void)
 	}
 
 	// Calculate total weight of item and attachments
-	float fWeight = CalculateObjectWeight(&obj) / 10.f;
-	if (!gGameSettings.fOptions[TOPTION_USE_METRIC_SYSTEM]) fWeight *= 2.2f;
-	if (fWeight < 0.1) fWeight = 0.1f;
+	grams const objectWeight = Weight(obj);
+	double const convertedWeight = objectWeight /
+		(gGameSettings.fOptions[TOPTION_USE_METRIC_SYSTEM]
+		? 1000.0      // Weight in kilograms
+		: 453.59237); // Weight in pounds
 
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -2431,8 +2433,8 @@ void RenderItemDescriptionBox(void)
 		MPrint(usX, usY, pStr);
 
 		//Weight
-		HighlightIf(fWeight <= EXCEPTIONAL_WEIGHT / 10);
-		pStr = ST::format("{1.1f}", fWeight);
+		HighlightIf(objectWeight <= EXCEPTIONAL_WEIGHT);
+		pStr = ST::format("{1.1f}", convertedWeight);
 		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
@@ -2584,7 +2586,7 @@ void RenderItemDescriptionBox(void)
 		}
 
 		//Weight
-		pStr = ST::format("{1.1f}", fWeight);
+		pStr = ST::format("{1.1f}", convertedWeight);
 		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
