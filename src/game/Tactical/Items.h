@@ -1,13 +1,10 @@
 #ifndef ITEMS_H
 #define ITEMS_H
 
-#include <vector>
-
 #include "Item_Types.h"
 #include "JA2Types.h"
 
 struct CalibreModel;
-struct ItemModel;
 struct WeaponModel;
 
 void DamageObj(OBJECTTYPE* pObj, INT8 bAmount);
@@ -42,7 +39,7 @@ extern void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest 
 bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE* const pAttachment, UINT8 const ubIndexInStack = 0);
 extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj );
 
-UINT8	CalculateObjectWeight(const OBJECTTYPE* pObject);
+// Returns (in percent) how much of his carrying capacity this soldier uses.
 UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier);
 
 extern UINT16 TotalPoints(const OBJECTTYPE*);

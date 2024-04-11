@@ -61,8 +61,6 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 	this->fFlags                = fFlags;
 }
 
-ItemModel::~ItemModel() = default;
-
 const ST::string& ItemModel::getInternalName() const   { return internalName;          }
 
 const ST::string& ItemModel::getShortName() const      { return shortName; }
