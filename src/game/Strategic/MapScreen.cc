@@ -59,6 +59,7 @@
 #include "RenderWorld.h"
 #include "SAM_Sites.h"
 #include "SaveLoadScreen.h"
+#include "Soldier_Control.h"
 #include "Soldier_Macros.h"
 #include "Squads.h"
 #include "StrategicMap.h"
@@ -79,14 +80,7 @@
 
 #include <string_theory/format>
 
-struct PopUpBox;
-
-
-
 #define MAX_SORT_METHODS					6
-
-// Cursors
-#define SCREEN_CURSOR CURSOR_NORMAL
 
 // Fonts
 #define CHAR_FONT BLOCKFONT2 // COMPFONT
@@ -777,9 +771,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 	DrawStringCentered(nickname, PIC_NAME_X,  PIC_NAME_Y,  PIC_NAME_WID,  PIC_NAME_HEI,  CHAR_FONT);
 	DrawStringCentered(name,     CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, CHAR_FONT);
 
-	ST::string assignment =
-		s.bAssignment == VEHICLE ? pShortVehicleStrings[GetVehicle(s.iVehicleId).ubVehicleType] : // Show vehicle type
-		pAssignmentStrings[s.bAssignment];
+	auto const assignment = GetMapscreenMercAssignmentString(s);
 	DrawStringCentered(assignment, CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 
 	// Second assignment line
@@ -1560,7 +1552,7 @@ ScreenID MapScreenHandle(void)
 
 		if ( !gfFadeOutDone && !gfFadeIn )
 		{
-			MSYS_SetCurrentCursor(SCREEN_CURSOR);
+			SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 		}
 		gMPanelRegion.Disable();
 
@@ -3173,7 +3165,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 
 	if ( !fDuringFade )
 	{
-		MSYS_SetCurrentCursor(SCREEN_CURSOR);
+		SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 	}
 
 	RemoveMapStatusBarsRegion( );
@@ -4144,7 +4136,8 @@ static void BlitBackgroundToSaveBuffer(void)
 
 static void MakeRegion(MOUSE_REGION* r, UINT idx, UINT16 x, UINT16 y, UINT16 w, MOUSE_CALLBACK move, MOUSE_CALLBACK click, const ST::string& help)
 {
-	MSYS_DefineRegion(r, x, y, x + w, y + Y_SIZE + 1, MSYS_PRIORITY_NORMAL + 1, MSYS_NO_CURSOR, move, click);
+	MSYS_DefineRegion(r, x, y, x + w, y + Y_SIZE + 1, MSYS_PRIORITY_NORMAL + 1,
+		MSYS_NO_CURSOR, std::move(move), std::move(click));
 	MSYS_SetRegionUserData(r, 0, idx);
 	r->SetFastHelpText(help);
 }
@@ -6782,8 +6775,9 @@ BOOLEAN CanExtendContractForSoldier(const SOLDIERTYPE* const s)
 	Assert(s);
 	Assert(s->bActive);
 
-	// if a vehicle, in transit, or a POW
+	// if a vehicle, an EPC, in transit, or a POW
 	if (s->uiStatusFlags & SOLDIER_VEHICLE ||
+			s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ||
 			s->bAssignment == IN_TRANSIT ||
 			s->bAssignment == ASSIGNMENT_POW)
 	{
@@ -6791,9 +6785,9 @@ BOOLEAN CanExtendContractForSoldier(const SOLDIERTYPE* const s)
 		return (FALSE);
 	}
 
-	// mercs below OKLIFE, M.E.R.C. mercs, EPCs, and the Robot use the Contract menu so they can be DISMISSED/ABANDONED!
-
-	// everything OK
+	// mercs below OKLIFE, M.E.R.C. mercs, and the Robot use the Contract menu
+	// so they can be DISMISSED/ABANDONED! EPCs must be 'unrecruited" via the
+	// assignment menu.
 	return( TRUE );
 }
 
