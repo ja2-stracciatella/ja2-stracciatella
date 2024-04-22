@@ -71,7 +71,6 @@
 #include "PreBattle_Interface.h"
 #include "Button_System.h"
 #include "Items.h"
-#include "GameRes.h"
 #include "GameMode.h"
 
 #include "Logger.h"
@@ -79,8 +78,6 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "policy/GamePolicy.h"
-
-#define DEBUG_CONSOLE_TOPIC "Debug Console"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1303,8 +1300,7 @@ static void CreatePlayerControlledMonster(void);
 static void CreateRandomItem(void);
 static void CycleSelectedMercsItem(void);
 static void EscapeUILock(void);
-static void GrenadeTest1(void);
-static void GrenadeTest2(void);
+static void GrenadeTest(UINT16 grenadeType, short xForce, short yForce);
 static void HandleItemMenuKeys(InputAtom*, UIEventKind*);
 static void HandleMenuKeys(InputAtom*, UIEventKind*);
 static void HandleOpenDoorMenuKeys(InputAtom*, UIEventKind*);
@@ -1672,7 +1668,6 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F11:
 			if (DEBUG_CHEAT_LEVEL())
 			{
-				SLOGD("Entering Quest Debug Mode");
 				gsQdsEnteringGridNo = guiCurrentCursorGridNo;
 				LeaveTacticalScreen(QUEST_DEBUG_SCREEN);
 			}
@@ -1773,7 +1768,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 
 		case 'h': if (CHEATER_CHEAT_LEVEL()) *new_event = I_TESTHIT;   break;
 
-		case 'k': if (CHEATER_CHEAT_LEVEL()) GrenadeTest2();           break;
+		case 'k': if (CHEATER_CHEAT_LEVEL()) GrenadeTest(HAND_GRENADE, 0, -30); break;
 
 		case 'l':
 			if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
@@ -1855,7 +1850,6 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			break;
 
 		case 'z':
-			SLOGD("Toggling ZBuffer");
 			if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer();
 			break;
 
@@ -1874,6 +1868,10 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 }
 
 
+// Key combinations with ALT are mainly for debugging, but there are also some
+// regular combinations. Before you add new combinations here, please check
+// that the new definition does not clash with an existing one in
+// HandleModAltCheats.
 static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
@@ -1885,60 +1883,16 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 
-		case '2': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(INFANT_MONSTER, TRUE);                      break;
-		case '3': if (CHEATER_CHEAT_LEVEL()) EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE); break;
-		case '4': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(CRIPPLECIV,     TRUE);                      break;
-		case '5': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(YAM_MONSTER,    TRUE);                      break;
-
-		case 'b': if (CHEATER_CHEAT_LEVEL()) *new_event = I_NEW_BADMERC; break;
-		case 'c': if (CHEATER_CHEAT_LEVEL()) CreateNextCivType();        break;
-
-		case 'd':
-			if (CHEATER_CHEAT_LEVEL() &&
-				(gTacticalStatus.uiFlags & INCOMBAT) &&
-				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
-				// Nothing in hand and the Done button for whichever panel we're in must be enabled
-				!gpItemPointer &&
-				!gfDisableTacticalPanelButtons &&
-				(
-					(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->Enabled()) ||
-					(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->Enabled())
-				))
-			{
-				FOR_EACH_IN_TEAM(s, OUR_TEAM)
-				{
-					if (s->bLife <= 0) continue;
-					// Get APs back
-					CalcNewActionPoints(s);
-					fInterfacePanelDirty = DIRTYLEVEL2;
-				}
-			}
-			break;
-
-		case 'e':
-			if (CHEATER_CHEAT_LEVEL())
-			{
-				ToggleViewAllMercs();
-				ToggleViewAllItems();
-			}
-			break;
-
 		case 'f':
 		{
 			BOOLEAN& tracking = gGameSettings.fOptions[TOPTION_TRACKING_MODE];
 			tracking = !tracking;
-			ST::string msg =
+			ST::string const& msg =
 				tracking ? pMessageStrings[MSG_TACKING_MODE_ON] :
 				pMessageStrings[MSG_TACKING_MODE_OFF];
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
 			break;
 		}
-
-		case 'g': if (CHEATER_CHEAT_LEVEL()) *new_event = I_NEW_MERC;                  break;
-		case 'h': if (CHEATER_CHEAT_LEVEL()) gfReportHitChances = !gfReportHitChances; break;
-		case 'i': if (CHEATER_CHEAT_LEVEL()) CreateRandomItem();                       break;
-		case 'j': if (CHEATER_CHEAT_LEVEL()) gfNextFireJam = TRUE;                     break;
-		case 'k': if (CHEATER_CHEAT_LEVEL()) GrenadeTest1();                           break;
 
 		case 'l':
 			if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
@@ -1965,24 +1919,10 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			}
 			break;
 
-		case 'o':
-			if (CHEATER_CHEAT_LEVEL())
-			{
-				gStrategicStatus.usPlayerKills += NumEnemiesInAnySector(gWorldSector);
-				ObliterateSector();
-			}
-			break;
-
 		case 'r':
-			if (CHEATER_CHEAT_LEVEL())
+			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_ALT, 'r')))
 			{
-				// Reload selected merc's weapon
-				SOLDIERTYPE* const sel = GetSelectedMan();
-				if (sel) ReloadWeapon(sel, sel->ubAttackingHand);
-			}
-			else
-			{
-				if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_ALT, 'r'))) HandleTBReload();
+				HandleTBReload();
 			}
 			break;
 
@@ -1999,50 +1939,6 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 					// Display a message saying the player cannot save now
 					DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
 				}
-			}
-			break;
-
-		case 't': if (CHEATER_CHEAT_LEVEL()) TeleportSelectedSoldier(); break;
-		case 'u': if (CHEATER_CHEAT_LEVEL()) RefreshSoldier();          break;
-
-		case 'v':
-		{
-			if (DEBUG_CHEAT_LEVEL()) {
-				gfDoVideoScroll ^= TRUE;
-				ST::string msg = gfDoVideoScroll ? "Video Scroll ON" :
-								"Video Scroll OFF";
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
-			}
-			break;
-		}
-
-		case 'w':
-			if (CHEATER_CHEAT_LEVEL())
-			{
-				if (InItemDescriptionBox())
-				{
-					// Swap item in description panel
-					CycleItemDescriptionItem();
-				}
-				else
-				{
-					CycleSelectedMercsItem();
-				}
-			}
-			break;
-
-		case 'y':
-			if (CHEATER_CHEAT_LEVEL())
-			{
-				QuickCreateProfileMerc(CIV_TEAM, MARIA);
-				RecruitEPC(MARIA);
-			}
-
-			if (SOLDIERTYPE* const robot = FindSoldierByProfileID(ROBOT))
-			{
-				OBJECTTYPE o;
-				CreateItem(G41, 100, &o);
-				AutoPlaceObject(robot, &o, FALSE);
 			}
 			break;
 
@@ -2077,6 +1973,107 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
 			break;
 		}
+	}
+}
+
+
+// Key combinations that are only enabled if CHEATER_CHEAT_LEVEL() is true.
+// Mainly useful for debugging; some stuff can be used for cheating.
+static void HandleModAltCheats(UINT32 const key, UIEventKind * const new_event)
+{
+	switch (key)
+	{
+		case '2': ChangeSoldiersBodyType(INFANT_MONSTER, TRUE);                      break;
+		case '3': EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE); break;
+		case '4': ChangeSoldiersBodyType(CRIPPLECIV,     TRUE);                      break;
+		case '5': ChangeSoldiersBodyType(YAM_MONSTER,    TRUE);                      break;
+		case '6': break; // Also used for cheats but handled below in GetKeyboardInput()
+		case '7':
+			if (auto * const robot = FindSoldierByProfileID(ROBOT))
+			{
+				OBJECTTYPE g41;
+				CreateItem(G41, 100, &g41);
+				AutoPlaceObject(robot, &g41, FALSE);
+			}
+			break;
+		case '8':
+			// Next hit by anybody does 100 damage.
+			gfNextShotKills = !gfNextShotKills;
+			break;
+
+		case 'b': *new_event = I_NEW_BADMERC;   break;
+		case 'c': CreateNextCivType();          break;
+
+		case 'd':
+			if 	((gTacticalStatus.uiFlags & INCOMBAT) &&
+				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
+				// Nothing in hand and the Done button for whichever panel we're in must be enabled
+				!gpItemPointer &&
+				!gfDisableTacticalPanelButtons &&
+				(
+					(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->Enabled()) ||
+					(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->Enabled())
+				))
+			{
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
+				{
+					if (s->bLife <= 0) continue;
+					// Get APs back
+					CalcNewActionPoints(s);
+					fInterfacePanelDirty = DIRTYLEVEL2;
+				}
+			}
+			break;
+
+		case 'e':
+			ToggleViewAllMercs();
+			ToggleViewAllItems();
+			break;
+
+		case 'g': *new_event = I_NEW_MERC;                  break;
+		case 'h': gfReportHitChances = !gfReportHitChances; break;
+		case 'i': CreateRandomItem();                       break;
+		case 'j': gfNextFireJam = TRUE;                     break;
+		case 'k': GrenadeTest(MUSTARD_GRENADE, -20, 20);    break;
+
+		case 'o':
+			gStrategicStatus.usPlayerKills += NumEnemiesInAnySector(gWorldSector);
+			ObliterateSector();
+			break;
+
+		case 'r':
+			// Reload selected merc's weapon
+			if (auto * const sel = GetSelectedMan())
+			{
+				ReloadWeapon(sel, sel->ubAttackingHand);
+			}
+			break;
+
+		case 't': TeleportSelectedSoldier(); break;
+		case 'u': RefreshSoldier();          break;
+
+		case 'v':
+			gfDoVideoScroll ^= TRUE;
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+				gfDoVideoScroll ? "Video Scroll ON" : "Video Scroll OFF");
+			break;
+
+		case 'w':
+			if (InItemDescriptionBox())
+			{
+				// Swap item in description panel
+				CycleItemDescriptionItem();
+			}
+			else
+			{
+				CycleSelectedMercsItem();
+			}
+			break;
+
+		case 'y':
+			QuickCreateProfileMerc(CIV_TEAM, MARIA);
+			RecruitEPC(MARIA);
+			break;
 	}
 }
 
@@ -2181,7 +2178,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 		// Break of out IN CONV...
 		if ( CHEATER_CHEAT_LEVEL( ) )
 		{
-			if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN && InputEvent.usKeyState & ALT_DOWN)
+			if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_6 && InputEvent.usKeyState & ALT_DOWN)
 			{
 				if ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )
 				{
@@ -2197,7 +2194,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			{
 				if ( CHEATER_CHEAT_LEVEL( ) )
 				{
-					if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN && InputEvent.usKeyState & ALT_DOWN)
+					if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_6 && InputEvent.usKeyState & ALT_DOWN)
 					{
 						// ESCAPE ENEMY'S TURN
 						EndAIDeadlock();
@@ -2392,20 +2389,15 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 				case 0:          HandleModNone( key, puiNewEvent); break;
 				case SHIFT_DOWN: HandleModShift(key, puiNewEvent); break;
 				case CTRL_DOWN:  HandleModCtrl( key, puiNewEvent); break;
-				case ALT_DOWN:   HandleModAlt(  key, puiNewEvent); break;
-
-				case CTRL_DOWN | SHIFT_DOWN:  HandleModCtrlShift( key, puiNewEvent); break;
-
-				case CTRL_DOWN | ALT_DOWN:
-					if (key == 'k')
+				case ALT_DOWN:
+					HandleModAlt(key, puiNewEvent);
+					if (CHEATER_CHEAT_LEVEL())
 					{
-						if (CHEATER_CHEAT_LEVEL())
-						{
-							// Next shot by anybody is auto kill
-							gfNextShotKills = !gfNextShotKills;
-						}
+						HandleModAltCheats(key, puiNewEvent);
 					}
 					break;
+
+				case CTRL_DOWN | SHIFT_DOWN:  HandleModCtrlShift( key, puiNewEvent); break;
 			}
 		}
 	}
@@ -2713,7 +2705,7 @@ static void ToggleWireFrame(void)
 {
 	UINT8& show_wireframe = gGameSettings.fOptions[TOPTION_TOGGLE_WIREFRAME];
 	show_wireframe = !show_wireframe;
-	ST::string msg = show_wireframe ?
+	ST::string const& msg = show_wireframe ?
 		pMessageStrings[MSG_WIREFRAMES_ADDED] :
 		pMessageStrings[MSG_WIREFRAMES_REMOVED];
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
@@ -2914,32 +2906,18 @@ static void ToggleCliffDebug()
 }
 
 
-static void GrenadeTest1(void)
+static void GrenadeTest(UINT16 const grenadeType, short const xForce, short const yForce)
 {
 	// Get mousexy
 	INT16 sX, sY;
 	if ( GetMouseXY( &sX, &sY ) )
 	{
 		OBJECTTYPE Object{};
-		Object.usItem = MUSTARD_GRENADE;
+		Object.usItem = grenadeType;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
-		CreatePhysicalObject(&Object, 60, sX * CELL_X_SIZE, sY * CELL_Y_SIZE, 256, -20, 20, 158, NULL, THROW_ARM_ITEM, 0);
-	}
-}
-
-
-static void GrenadeTest2(void)
-{
-	// Get mousexy
-	INT16 sX, sY;
-	if ( GetMouseXY( &sX, &sY ) )
-	{
-		OBJECTTYPE Object{};
-		Object.usItem = HAND_GRENADE;
-		Object.bStatus[ 0 ] = 100;
-		Object.ubNumberOfObjects = 1;
-		CreatePhysicalObject(&Object, 60, sX * CELL_X_SIZE, sY * CELL_Y_SIZE, 256, 0, -30, 158, NULL, THROW_ARM_ITEM, 0);
+		CreatePhysicalObject(&Object, 60, sX * CELL_X_SIZE, sY * CELL_Y_SIZE,
+			256, xForce, yForce, 158, nullptr, THROW_ARM_ITEM, nullptr);
 	}
 }
 
