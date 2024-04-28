@@ -2162,7 +2162,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 		{
 			gfSaveGame              = FALSE;
 			gfCameDirectlyFromGame  = TRUE;
-			guiPreviousOptionScreen = SAVE_LOAD_SCREEN;
+			guiPreviousOptionScreen = GAME_SCREEN;
 			LeaveTacticalScreen( SAVE_LOAD_SCREEN );
 		}
 
