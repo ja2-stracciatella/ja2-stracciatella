@@ -1,3 +1,4 @@
+#include "Debug.h"
 #include "Directories.h"
 #include "Font.h"
 #include "Handle_UI.h"
@@ -28,7 +29,6 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-
 #define MSGBOX_DEFAULT_WIDTH      300
 
 #define MSGBOX_BUTTON_WIDTH        61
@@ -44,7 +44,6 @@ static SGPRect  MessageBoxRestrictedCursorRegion;
 
 // if the cursor was locked to a region
 static BOOLEAN fCursorLockedToArea = FALSE;
-BOOLEAN        gfInMsgBox = FALSE;
 
 
 static SGPRect gOldCursorLimitRectangle;
@@ -59,23 +58,6 @@ BOOLEAN            gfDontOverRideSaveBuffer = TRUE;	//this variable can be unset
 
 ST::string gzUserDefinedButton1;
 ST::string gzUserDefinedButton2;
-
-
-static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
-static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
-static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
-static void NumberedMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
-static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
-static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason);
-
-
-static GUIButtonRef MakeButton(const ST::string& text, INT16 fore_colour, INT16 shadow_colour, INT16 x, INT16 y, GUI_CALLBACK click, UINT16 cursor)
-{
-	GUIButtonRef const btn = CreateIconAndTextButton(gMsgBox.iButtonImages, text, FONT12ARIAL, fore_colour, shadow_colour, fore_colour, shadow_colour, x, y, MSYS_PRIORITY_HIGHEST, click);
-	btn->SetCursor(cursor);
-	ForceButtonUnDirty(btn);
-	return btn;
-}
 
 
 struct MessageBoxStyle
@@ -100,12 +82,10 @@ static MessageBoxStyle const g_msg_box_style[] =
 	{ IMP_POPUP_BACKGROUND,         DIALOG_MERC_POPUP_BORDER, INTERFACEDIR "/msgboxgreybuttons.sti", 0, 1, 2,                 FONT_MCOLOR_WHITE, CURSOR_LAPTOP_SCREEN }, // MSG_BOX_IMP_STYLE
 	{ LAPTOP_POPUP_BACKGROUND,      LAPTOP_POP_BORDER,        INTERFACEDIR "/popupbuttons.sti",      0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW,    CURSOR_LAPTOP_SCREEN }  // MSG_BOX_LAPTOP_DEFAULT
 };
+static_assert(NUMBER_OF_MSG_BOX_STYLES == std::size(g_msg_box_style));
 
 
-static MessageBoxStyle const g_msg_box_style_default = { BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, INTERFACEDIR "/msgboxbuttons.sti", 0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW, CURSOR_NORMAL };
-
-
-void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect)
+void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect)
 {
 	GetMousePos(&pOldMousePosition);
 
@@ -116,8 +96,8 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 
 	if (gMsgBox.BackRegion.uiFlags & MSYS_REGION_EXISTS) return;
 
-	MessageBoxStyle const& style = ubStyle < lengthof(g_msg_box_style) ?
-		g_msg_box_style[ubStyle] : g_msg_box_style_default;
+	Assert(ubStyle >= 0 && ubStyle < NUMBER_OF_MSG_BOX_STYLES);
+	auto const& style{ g_msg_box_style[ubStyle] };
 
 	// Set some values!
 	gMsgBox.usFlags      = usFlags;
@@ -199,8 +179,29 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 	gMsgBox.iButtonImages = LoadButtonImage(style.btn_image, style.btn_off, style.btn_on);
 
 	INT16 const dx            = MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP;
-	UINT8 const font_colour   = style.font_colour;
-	UINT8 const shadow_colour = style.shadow_colour;
+
+	auto const MakeButton{ [style, y](ST::string const& text,
+		int const x, MessageBoxReturnValue const returnValue)
+	{
+		auto const btn{ CreateIconAndTextButton(
+			gMsgBox.iButtonImages, text, FONT12ARIAL,
+			style.font_colour, style.shadow_colour,
+			style.font_colour, style.shadow_colour,
+			static_cast<INT16>(x), static_cast<INT16>(y),
+			MSYS_PRIORITY_HIGHEST,
+			[returnValue](GUI_BUTTON *, UINT32 const reason)
+			{
+				if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
+				{
+					gMsgBox.bHandled = returnValue;
+				}
+			})};
+
+		btn->SetCursor(style.cursor);
+		ForceButtonUnDirty(btn);
+		return btn;
+	}};
+
 	switch (usFlags)
 	{
 		case MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS:
@@ -212,60 +213,58 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 			for (UINT8 i = 0; i < 4; ++i)
 			{
 				ST::string text = ST::format("{}", i + 1);
-				GUIButtonRef const btn = MakeButton(text, font_colour, shadow_colour, x + dx * i, y, NumberedMsgBoxCallback, cursor);
-				gMsgBox.uiButton[i] = btn;
-				btn->SetUserData(i + 1);
+				gMsgBox.uiButton[i] = MakeButton(text, x + dx * i, static_cast<MessageBoxReturnValue>(i + 1));
 			}
 			break;
 		}
 
 		case MSG_BOX_FLAG_OK:
 			x += (usTextBoxWidth - GetDimensionsOfButtonPic(gMsgBox.iButtonImages)->w) / 2;
-			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], font_colour, shadow_colour, x, y, OKMsgBoxCallback, cursor);
+			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], x, MSG_BOX_RETURN_OK);
 			break;
 
 		case MSG_BOX_FLAG_YESNO:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], x,      MSG_BOX_RETURN_YES);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  x + dx, MSG_BOX_RETURN_NO);
 			break;
 
 		case MSG_BOX_FLAG_CONTINUESTOP:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pUpdatePanelButtons[0], font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
-			gMsgBox.uiNOButton  = MakeButton(pUpdatePanelButtons[1], font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
+			gMsgBox.uiYESButton = MakeButton(pUpdatePanelButtons[0], x,      MSG_BOX_RETURN_YES);
+			gMsgBox.uiNOButton  = MakeButton(pUpdatePanelButtons[1], x + dx, MSG_BOX_RETURN_NO);
 			break;
 
 		case MSG_BOX_FLAG_OKCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],     font_colour, shadow_colour, x,      y, YESMsgBoxCallback,      cursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_REHIRE], font_colour, shadow_colour, x + dx, y, ContractMsgBoxCallback, cursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],     x,      MSG_BOX_RETURN_YES);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_REHIRE], x + dx, MSG_BOX_RETURN_CONTRACT);
 			break;
 
 		case MSG_BOX_FLAG_GENERICCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
-			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1,        font_colour, shadow_colour, x,          y, YESMsgBoxCallback,      cursor);
-			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2,        font_colour, shadow_colour, x + dx,     y, NOMsgBoxCallback,       cursor);
-			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], font_colour, shadow_colour, x + dx * 2, y, ContractMsgBoxCallback, cursor);
+			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1,        x,          MSG_BOX_RETURN_YES);
+			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2,        x + dx,     MSG_BOX_RETURN_NO);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], x + dx * 2, MSG_BOX_RETURN_CONTRACT);
 			break;
 
 		case MSG_BOX_FLAG_GENERIC:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1, font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
-			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2, font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
+			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1, x,      MSG_BOX_RETURN_YES);
+			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2, x + dx, MSG_BOX_RETURN_NO);
 			break;
 
 		case MSG_BOX_FLAG_YESNOLIE:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], font_colour, shadow_colour, x,          y, YESMsgBoxCallback, cursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  font_colour, shadow_colour, x + dx,     y, NOMsgBoxCallback,  cursor);
-			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_LIE], font_colour, shadow_colour, x + dx * 2, y, LieMsgBoxCallback, cursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], x,          MSG_BOX_RETURN_YES);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  x + dx,     MSG_BOX_RETURN_NO);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_LIE], x + dx * 2, MSG_BOX_RETURN_LIE);
 			break;
 
 		case MSG_BOX_FLAG_OKSKIP:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],   font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_SKIP], font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],   x,      MSG_BOX_RETURN_YES);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_SKIP], x + dx, MSG_BOX_RETURN_NO);
 			break;
 	}
 
@@ -283,59 +282,6 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 	gfInMsgBox     = TRUE;
 }
 
-
-static void OKMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		gMsgBox.bHandled = MSG_BOX_RETURN_OK;
-	}
-}
-
-
-static void YESMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		gMsgBox.bHandled = MSG_BOX_RETURN_YES;
-	}
-}
-
-
-static void NOMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		gMsgBox.bHandled = MSG_BOX_RETURN_NO;
-	}
-}
-
-
-static void ContractMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		gMsgBox.bHandled = MSG_BOX_RETURN_CONTRACT;
-	}
-}
-
-
-static void LieMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		gMsgBox.bHandled = MSG_BOX_RETURN_LIE;
-	}
-}
-
-
-static void NumberedMsgBoxCallback(GUI_BUTTON* btn, UINT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		gMsgBox.bHandled = static_cast<MessageBoxReturnValue>(btn->GetUserData());
-	}
-}
 
 
 static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
@@ -450,7 +396,7 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 }
 
 
-ScreenID MessageBoxScreenHandle(void)
+ScreenID MessageBoxScreenHandle()
 {
 	if (gfNewMessageBox)
 	{
