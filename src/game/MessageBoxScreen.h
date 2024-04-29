@@ -50,7 +50,8 @@ enum MessageBoxStyleID
 	MSG_BOX_BLUE_ON_GREY,
 	MSG_BOX_BASIC_SMALL_BUTTONS,
 	MSG_BOX_IMP_STYLE,
-	MSG_BOX_LAPTOP_DEFAULT
+	MSG_BOX_LAPTOP_DEFAULT,
+	NUMBER_OF_MSG_BOX_STYLES
 };
 
 
@@ -86,12 +87,12 @@ extern ST::string gzUserDefinedButton1;
 extern ST::string gzUserDefinedButton2;
 
 /* ubStyle:       Determines the look of graphics including buttons
- * zString:       16-bit string
+ * str:           The message box text.
  * uiExitScreen   The screen to exit to
  * ubFlags        Some flags for button style
- * ReturnCallback Callback for return. Can be NULL. Returns any above return value
+ * ReturnCallback Callback for return. Can be NULL. Receives a MessageBoxReturnValue defined above.
  * pCenteringRect Rect to center in. Can be NULL */
-void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect);
+void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback = nullptr, const SGPBox* centering_rect = nullptr);
 void DoScreenIndependantMessageBox(const ST::string& msg, MessageBoxFlags flags, MSGBOX_CALLBACK callback);
 
 //wrappers for other screens
@@ -99,9 +100,9 @@ void DoMapMessageBoxWithRect(MessageBoxStyleID ubStyle, const ST::string& str, S
 void DoOptionsMessageBoxWithRect(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect);
 void DoSaveLoadMessageBoxWithRect(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect);
 
-extern BOOLEAN gfInMsgBox;
+inline bool gfInMsgBox{ false };
 
-ScreenID MessageBoxScreenHandle(void);
+ScreenID MessageBoxScreenHandle();
 void     MessageBoxScreenShutdown();
 
 #endif
