@@ -8,6 +8,7 @@
 
 #include "ContentManager.h"
 #include "ContentMusic.h"
+#include "IEDT.h"
 #include "IGameDataLoader.h"
 #include "StringEncodingTypes.h"
 #include "RustInterface.h"
@@ -17,7 +18,7 @@
 
 #include <map>
 #include <memory>
-#include <stdexcept>
+#include <string_view>
 #include <vector>
 
 class DefaultContentManager : public ContentManager, public IGameDataLoader
@@ -163,6 +164,11 @@ public:
 
 	/* Gets the enabled mods and their version strings */
 	virtual const std::vector<std::pair<ST::string, ST::string>> getEnabledMods() const override;
+
+	/* Opens an EDT file. The columns parameter describes the layout of the data
+	   inside the EDT file. */
+	IEDT::uptr openEDT(std::string_view filename, IEDT::column_list columns) const override;
+
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
 	RustPointer<ModManager> m_modManager;

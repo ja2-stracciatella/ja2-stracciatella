@@ -6,11 +6,11 @@
 #include "ItemSystem.h"
 #include "MercSystem.h"
 #include "DirFs.h"
+#include "IEDT.h"
 
 #include <string_theory/string>
-
 #include <map>
-#include <stdint.h>
+#include <string_view>
 #include <vector>
 
 
@@ -198,4 +198,6 @@ public:
 
 	/* Gets the enabled mods and their version strings as a map */
 	virtual const std::vector<std::pair<ST::string, ST::string>> getEnabledMods() const = 0;
+
+	virtual IEDT::uptr openEDT(std::string_view filename, IEDT::column_list columns) const = 0;
 };

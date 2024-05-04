@@ -18,10 +18,6 @@ ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOp
 	m_modNames = modNames;
 }
 
-ModPackContentManager::~ModPackContentManager()
-{
-}
-
 void ModPackContentManager::logConfiguration() const {
 	ST::string joinedModList;
     for(const auto &s : m_modNames) {

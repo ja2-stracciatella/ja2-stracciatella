@@ -1,5 +1,6 @@
 #include "Cursors.h"
 #include "Directories.h"
+#include "EDT.h"
 #include "EMail.h"
 #include "Font.h"
 #include "HImage.h"
@@ -55,9 +56,6 @@
 #include <string_theory/string>
 
 #include <stdexcept>
-
-
-#define MERCBIOSFILENAME			BINARYDATADIR "/aimbios.edt"
 
 
 
@@ -255,8 +253,6 @@
 #define VC_NUM_FUZZ_LINES			10
 #define VC_NUM_STRAIGHT_LINES			9
 
-#define VC_ANSWER_IMAGE_DELAY			100
-
 
 #define QUOTE_FIRST_ATTITUDE_TIME		3000
 #define QUOTE_ATTITUDE_TIME			10000
@@ -269,7 +265,6 @@
 #define QUOTE_MERC_BUSY	6
 
 #define TEXT_POPUP_WINDOW_Y			(STD_SCREEN_Y + 255 + LAPTOP_SCREEN_WEB_DELTA_Y)
-#define TEXT_POPUP_STRING_SIZE			512
 
 #define MINIMUM_TALKING_TIME_FOR_MERC		1500
 
@@ -810,9 +805,6 @@ static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReas
 }
 
 
-static void LoadMercBioInfo(UINT8 ubIndex, ST::string& pInfoString, ST::string& pAddInfo);
-
-
 static void UpdateMercInfo(void)
 {
 	//Display the salaries
@@ -838,26 +830,20 @@ static void UpdateMercInfo(void)
 			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	ST::string MercInfoString;
-	ST::string AdditionalInfoString;
-	LoadMercBioInfo( gbCurrentSoldier, MercInfoString, AdditionalInfoString);
-	if( MercInfoString[0] != 0)
+	EDTFile biosfile{ EDTFile::AIMBIOS };
+	auto const MercInfoString{ biosfile.at(gbCurrentSoldier, 0) };
+	auto const AdditionalInfoString{ biosfile.at(gbCurrentSoldier, 1) };
+
+	if (!MercInfoString.empty())
 	{
 		DisplayWrappedString(AIM_MERC_INFO_X, AIM_MERC_INFO_Y, AIM_MERC_INFO_WIDTH, 2, AIM_M_FONT_DYNAMIC_TEXT, AIM_FONT_MCOLOR_WHITE, MercInfoString, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
-	if( AdditionalInfoString[0] != 0)
+
+	if (!AdditionalInfoString.empty())
 	{
 		DrawTextToScreen(CharacterInfo[AIM_MEMBER_ADDTNL_INFO], AIM_MERC_ADD_X, AIM_MERC_ADD_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		DisplayWrappedString(AIM_MERC_ADD_INFO_X, AIM_MERC_ADD_INFO_Y, AIM_MERC_INFO_WIDTH, 2, AIM_M_FONT_DYNAMIC_TEXT, AIM_FONT_MCOLOR_WHITE, AdditionalInfoString, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
-}
-
-
-static void LoadMercBioInfo(UINT8 ubIndex, ST::string& pInfoString, ST::string& pAddInfo)
-{
-	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
-	pInfoString = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount, SIZE_MERC_BIO_INFO);
-	pAddInfo = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
 }
 
 
@@ -1037,7 +1023,7 @@ catch (...) { /* XXX ignore */ }
 static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const ST::string& pString);
 
 
-static void DrawStatColoured(UINT16 x, UINT16 y, const ST::string stat, INT32 val, UINT8 colour)
+static void DrawStatColoured(UINT16 x, UINT16 y, const ST::string& stat, INT32 val, UINT8 colour)
 {
 	DrawTextToScreen(stat, x, y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DisplayDots(x, y, x + STAT_NAME_WIDTH, stat);
