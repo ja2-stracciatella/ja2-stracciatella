@@ -9,7 +9,7 @@
 /*
     EDTFile: support class for reading strings from EDT files.
 
-    EDT files are essentially just one big blog of slightly obfuscated
+    EDT files are essentially just one big blob of slightly obfuscated
     UTF-16 (or UCS2?) characters. They contain absolutely no metadata to
     indicate where one string ends and the next one begins. It is entirely
     up to the code reading the file to break up the blob into single strings.

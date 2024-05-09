@@ -98,7 +98,7 @@ public:
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const = 0;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) = 0;
+	virtual ST::string loadDialogQuoteFromFile(const ST::string& filename, unsigned quote_number) = 0;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index) = 0;

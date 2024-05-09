@@ -15,7 +15,7 @@ public:
 	~ModPackContentManager() override = default;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
+	ST::string loadDialogQuoteFromFile(const ST::string& filename, unsigned quote_number) override;
 
 	IEDT::uptr openEDT(std::string_view filename, IEDT::column_list columns) const override;
 

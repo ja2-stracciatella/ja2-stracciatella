@@ -70,7 +70,7 @@ public:
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const override;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
+	ST::string loadDialogQuoteFromFile(const ST::string& filename, unsigned quote_number) override;
 
 	/** Load all dialogue quotes for a character. */
 	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& filename, std::vector<ST::string*> &quotes) const;

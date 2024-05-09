@@ -343,18 +343,15 @@ ST::string DefaultContentManager::loadEncryptedString(const ST::string& fileName
 }
 
 /** Load dialogue quote from file. */
-ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fileName, int quote_number)
+ST::string DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fileName, unsigned quote_number)
 {
-	AutoSGPFile File(openGameResForReading(fileName));
-	ST::string err_msg;
-	ST::string quote = LoadEncryptedData(err_msg, getStringEncType(), File, quote_number * DIALOGUESIZE, DIALOGUESIZE);
-	if (!err_msg.empty())
-	{
-		SLOGW("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg);
-	}
-	return new ST::string{std::move(quote)};
+	// Using the qualified name because we do not want a virtual function call here.
+	return DefaultContentManager::openEDT(fileName.view(), { DIALOGUESIZE })->at(quote_number);
 }
 
+#if 0
+/* This function is only used when someone wants to extract all quotes to JSON,
+   see the commented out code in SGP.cc */
 /** Load all dialogue quotes for a character. */
 void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& fileName, std::vector<ST::string*> &quotes) const
 {
@@ -373,6 +370,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const S
 		quotes.push_back(new ST::string{std::move(quote)});
 	}
 }
+#endif
 
 /** Get weapons with the give index. */
 const WeaponModel* DefaultContentManager::getWeapon(uint16_t itemIndex)
