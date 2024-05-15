@@ -3332,6 +3332,10 @@ static void MakeSureToolKitIsInHand(SOLDIERTYPE* pSoldier)
 			if( pSoldier -> inv[ bPocket ].usItem == TOOLKIT )
 			{
 				SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ bPocket ] );
+				if (pSoldier->inv[SECONDHANDPOS].usItem == NOTHING && pSoldier->inv[bPocket].usItem != NOTHING)
+				{
+					SwapObjs(&pSoldier->inv[SECONDHANDPOS], &pSoldier->inv[bPocket]);
+				}
 				break;
 			}
 		}
@@ -3358,6 +3362,10 @@ static BOOLEAN MakeSureMedKitIsInHand(SOLDIERTYPE* pSoldier)
 		{
 			fCharacterInfoPanelDirty = TRUE;
 			SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ bPocket ] );
+			if (pSoldier->inv[SECONDHANDPOS].usItem == NOTHING && pSoldier->inv[bPocket].usItem != NOTHING)
+			{
+				SwapObjs(&pSoldier->inv[SECONDHANDPOS], &pSoldier->inv[bPocket]);
+			}
 			return(TRUE);
 		}
 	}
