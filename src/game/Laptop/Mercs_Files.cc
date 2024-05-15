@@ -6,6 +6,7 @@
 #include "ContentManager.h"
 #include "Cursors.h"
 #include "Directories.h"
+#include "EDT.h"
 #include "English.h"
 #include "Facts.h"
 #include "Font.h"
@@ -37,10 +38,7 @@
 #include "WordWrap.h"
 #include <string_theory/format>
 #include <string_theory/string>
-struct BUTTON_PICS;
 
-
-#define MERCBIOFILE			BINARYDATADIR "/mercbios.edt"
 
 #define MERC_BIO_FONT			FONT14ARIAL//FONT12ARIAL
 #define MERC_BIO_COLOR			FONT_MCOLOR_WHITE
@@ -90,10 +88,6 @@ struct BUTTON_PICS;
 #define MERC_ADD_BIO_TEXT_Y		MERC_ADD_BIO_TITLE_Y + 20
 
 #define MERC_BIO_WIDTH			460 - 10
-
-#define MERC_BIO_INFO_TEXT_SIZE		5 * 80
-#define MERC_BIO_ADD_INFO_TEXT_SIZE	2 * 80
-#define MERC_BIO_SIZE			7 * 80
 
 #define MERC_STATS_FIRST_COL_X		MERC_NAME_X
 #define MERC_STATS_FIRST_NUM_COL_X	MERC_STATS_FIRST_COL_X + 90
@@ -345,20 +339,18 @@ catch (...) { /* XXX ignore */ }
 
 static void LoadAndDisplayMercBio(UINT8 ubMercID)
 {
-	UINT32 uiStartLoc;
+	EDTFile mercbios{ EDTFile::MERCBIOS };
 
 	{
 		//load and display the merc bio
-		uiStartLoc = MERC_BIO_SIZE * ubMercID;
-		ST::string sText = GCM->loadEncryptedString(MERCBIOFILE, uiStartLoc, MERC_BIO_INFO_TEXT_SIZE);
+		auto const sText{ mercbios.at(ubMercID, 0) };
 		DisplayWrappedString(MERC_BIO_TEXT_X, MERC_BIO_TEXT_Y, MERC_BIO_WIDTH, 2, MERC_BIO_FONT, MERC_BIO_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	{
 		//load and display the merc's additioanl info (if any)
-		uiStartLoc += MERC_BIO_INFO_TEXT_SIZE;
-		ST::string sText = GCM->loadEncryptedString(MERCBIOFILE, uiStartLoc, MERC_BIO_ADD_INFO_TEXT_SIZE);
-		if( sText[0] != 0 )
+		auto const sText{ mercbios.at(ubMercID, 1) };
+		if (!sText.empty())
 		{
 			DrawTextToScreen(MercInfo[MERC_FILES_ADDITIONAL_INFO], MERC_ADD_BIO_TITLE_X, MERC_ADD_BIO_TITLE_Y, 0, MERC_TITLE_FONT, MERC_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			DisplayWrappedString(MERC_ADD_BIO_TEXT_X, MERC_ADD_BIO_TEXT_Y, MERC_BIO_WIDTH, 2, MERC_BIO_FONT, MERC_BIO_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

@@ -1,4 +1,5 @@
 #include "Directories.h"
+#include "EDT.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Interface.h"
@@ -27,9 +28,6 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
 #include <string_theory/string>
 
 
@@ -40,11 +38,6 @@ extern void PrintBalance( void );
 
 #define HELP_SCREEN_ACTIVE					0x00000001
 
-
-
-//The defualt size and placement of the screen
-#define HELP_SCREEN_DEFUALT_LOC_X				155
-#define HELP_SCREEN_DEFUALT_LOC_Y				105
 
 #define HELP_SCREEN_DEFUALT_LOC_WIDTH				HELP_SCREEN_SMALL_LOC_WIDTH + HELP_SCREEN_BUTTON_BORDER_WIDTH
 #define HELP_SCREEN_DEFUALT_LOC_HEIGHT				292//300
@@ -60,10 +53,8 @@ extern void PrintBalance( void );
 #define HELP_SCREEN_BTN_FONT_ON_COLOR				73
 #define HELP_SCREEN_BTN_FONT_OFF_COLOR				FONT_MCOLOR_WHITE
 
-#define HELP_SCREEN_BTN_FONT_BACK_COLOR			50
 #define HELP_SCREEN_BTN_FONT					FONT10ARIAL
 
-#define HELP_SCREEN_BTN_WIDTH					77
 #define HELP_SCREEN_BTN_HEIGHT					22
 #define HELP_SCREEN_GAP_BN_BTNS				8
 
@@ -97,8 +88,6 @@ extern void PrintBalance( void );
 #define HELP_SCREEN_EXIT_BTN_OFFSET_X				291
 #define HELP_SCREEN_EXIT_BTN_LOC_Y				9
 
-#define HELP_SCREEN_
-
 
 //the type of help screen
 #define HLP_SCRN_DEFAULT_TYPE					9
@@ -112,7 +101,6 @@ extern void PrintBalance( void );
 #define HLP_SCRN__WIDTH_OF_TEXT_BUFFER				280
 #define HLP_SCRN__MAX_NUMBER_OF_LINES_IN_BUFFER		170//100
 #define HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER			( GetFontHeight( HELP_SCREEN_TEXT_BODY_FONT ) + HELP_SCREEN_GAP_BTN_LINES )
-#define HLP_SCRN__MAX_NUMBER_PIXELS_DISPLAYED_IN_TEXT_BUFFER	HELP_SCREEN_DEFUALT_LOC_HEIGHT
 #define HLP_SCRN__HEIGHT_OF_TEXT_BUFFER			( HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER * HLP_SCRN__MAX_NUMBER_OF_LINES_IN_BUFFER )
 
 #define HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER		( HLP_SCRN__HEIGHT_OF_TEXT_AREA / HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER )
@@ -127,9 +115,7 @@ extern void PrintBalance( void );
 #define HLP_SCRN__SCROLL_UP_ARROW_X				292
 #define HLP_SCRN__SCROLL_UP_ARROW_Y				43
 
-#define HLP_SCRN__SCROLL_DWN_ARROW_X				HLP_SCRN__SCROLL_UP_ARROW_X
 #define HLP_SCRN__SCROLL_DWN_ARROW_Y				HLP_SCRN__SCROLL_UP_ARROW_Y + 202
-
 
 
 
@@ -211,12 +197,11 @@ enum
 };
 
 
-
 HELP_SCREEN_STRUCT gHelpScreen;
 
 
 //An array of record nums for the text on the help buttons
-static const INT32 gHelpScreenBtnTextRecordNum[HELP_SCREEN_NUMBER_OF_HELP_SCREENS][HELP_SCREEN_NUM_BTNS] =
+static const INT16 gHelpScreenBtnTextRecordNum[HELP_SCREEN_NUMBER_OF_HELP_SCREENS][HELP_SCREEN_NUM_BTNS]
 {
 //new screen:
 
@@ -828,7 +813,6 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 
 
 static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, UINT32 reason);
-static ST::string GetHelpScreenText(UINT32 uiRecordToGet);
 
 
 static void CreateHelpScreenButtons(void)
@@ -843,12 +827,13 @@ static void CreateHelpScreenButtons(void)
 		usPosX = gHelpScreen.usScreenLocX + HELP_SCREEN_BTN_OFFSET_X;
 		usPosY = HELP_SCREEN_BTN_OFFSET_Y + gHelpScreen.usScreenLocY;
 
-
+		EDTFile helpFile{ EDTFile::HELP };
+		auto const& buttonNumbers{ gHelpScreenBtnTextRecordNum[gHelpScreen.bCurrentHelpScreen] };
 		//loop through all the buttons, and create them
 		for( i=0; i< gHelpScreen.bNumberOfButtons; i++ )
 		{
 			//get the text for the button
-			ST::string sText = GetHelpScreenText(gHelpScreenBtnTextRecordNum[gHelpScreen.bCurrentHelpScreen][i]);
+			auto const sText{ helpFile.at(buttonNumbers[i]) };
 
 			giHelpScreenButtonsImage[i] = UseLoadedButtonImage( giExitBtnImage, -1,1,5,3,7 );
 
@@ -1113,12 +1098,12 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 	else
 		usWidth = gHelpScreen.usScreenWidth - HELP_SCREEN_TEXT_LEFT_MARGIN - HELP_SCREEN_TEXT_RIGHT_MARGIN_SPACE;
 
-	ST::string zText;
+	EDTFile helpFile{ EDTFile::HELP };
 
 	//if this screen has a valid title
 	if( iStartLoc != -1 )
 	{
-		zText = GetHelpScreenText(iStartLoc);
+		auto const zText{ helpFile.at(iStartLoc) };
 
 		SetFontShadow( NO_SHADOW );
 
@@ -1129,7 +1114,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 	}
 
 	//Display the '( press H to get help... )'
-	zText = GetHelpScreenText(HLP_TXT_CONSTANT_SUBTITLE);
+	auto const zText{ helpFile.at(HLP_TXT_CONSTANT_SUBTITLE) };
 
 	usPosX = gHelpScreen.usLeftMarginPosX;
 
@@ -1140,7 +1125,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 	if( !gHelpScreen.fForceHelpScreenToComeUp )
 	{
 		//calc location for the ' [ x ] Dont display again...'
-		zText = GetHelpScreenText(HLP_TXT_CONSTANT_FOOTER);
+		auto const zText{ helpFile.at(HLP_TXT_CONSTANT_FOOTER) };
 
 		usPosX = gHelpScreen.usLeftMarginPosX + HELP_SCREEN_SHOW_HELP_AGAIN_REGION_TEXT_OFFSET_X;
 
@@ -1220,12 +1205,6 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 }
 
 
-static ST::string GetHelpScreenText(UINT32 uiRecordToGet)
-{
-	return GCM->loadEncryptedString(BINARYDATADIR "/help.edt", HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
-}
-
-
 //returns the number of vertical pixels printed
 static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth)
 {
@@ -1233,7 +1212,7 @@ static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16
 
 	SetFontShadow( NO_SHADOW );
 
-	ST::string zText = GetHelpScreenText(uiRecord);
+	auto const zText{ EDTFile{ EDTFile::HELP }.at(uiRecord) };
 
 	//Display the text
 	usNumVertPixels = IanDisplayWrappedString(usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TEXT_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);

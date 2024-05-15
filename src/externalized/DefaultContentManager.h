@@ -8,6 +8,7 @@
 
 #include "ContentManager.h"
 #include "ContentMusic.h"
+#include "IEDT.h"
 #include "IGameDataLoader.h"
 #include "StringEncodingTypes.h"
 #include "RustInterface.h"
@@ -17,7 +18,7 @@
 
 #include <map>
 #include <memory>
-#include <stdexcept>
+#include <string_view>
 #include <vector>
 
 class DefaultContentManager : public ContentManager, public IGameDataLoader
@@ -69,7 +70,7 @@ public:
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const override;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
+	ST::string loadDialogQuoteFromFile(const ST::string& filename, unsigned quote_number) override;
 
 	/** Load all dialogue quotes for a character. */
 	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& filename, std::vector<ST::string*> &quotes) const;
@@ -163,6 +164,11 @@ public:
 
 	/* Gets the enabled mods and their version strings */
 	virtual const std::vector<std::pair<ST::string, ST::string>> getEnabledMods() const override;
+
+	/* Opens an EDT file. The columns parameter describes the layout of the data
+	   inside the EDT file. */
+	IEDT::uptr openEDT(std::string_view filename, IEDT::column_list columns) const override;
+
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
 	RustPointer<ModManager> m_modManager;

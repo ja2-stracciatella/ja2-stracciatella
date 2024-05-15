@@ -897,13 +897,8 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 		bool success = false;
 		try
 		{
-			ST::string* quote = GCM->loadDialogQuoteFromFile(zFilename, usQuoteNum);
-			if(quote)
-			{
-				zDialogueText = *quote;
-				delete quote;
-				success = !zDialogueText.empty();
-			}
+			zDialogueText = GCM->loadDialogQuoteFromFile(zFilename, usQuoteNum);
+			success = !zDialogueText.empty();
 		}
 		catch (...) { success = false; }
 		if (!success)
@@ -914,12 +909,11 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 	}
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-	ST::string zFilename = Content::GetDialogueVoiceFilename(
+	zSoundString = Content::GetDialogueVoiceFilename(
 		profile, usQuoteNum, useAlternateDialogueFile,
 		ProfileCurrentlyTalkingInDialoguePanel(profile.getID()),
 		isRussianVersion() || isRussianGoldVersion());
 
-	zSoundString = zFilename;
 	return(TRUE);
 }
 

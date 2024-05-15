@@ -1,8 +1,6 @@
 #ifndef HELP_SCREEN_TEXT__H_
 #define HELP_SCREEN_TEXT__H_
 
-#define HELPSCREEN_RECORD_SIZE 80 * 8
-
 //enum for the help text paragrphs
 enum
 {
@@ -165,9 +163,6 @@ enum
 //	HLP_TXT_SECTOR_INVTRY_BUTTON_1,
 	HLP_TXT_SECTOR_INVTRY_OVERVIEW_P1,
 	HLP_TXT_SECTOR_INVTRY_OVERVIEW_P2,
-
-
-//	HLP_TXT_,
 };
 
 #endif

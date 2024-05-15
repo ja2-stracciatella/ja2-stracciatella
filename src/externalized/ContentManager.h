@@ -6,11 +6,11 @@
 #include "ItemSystem.h"
 #include "MercSystem.h"
 #include "DirFs.h"
+#include "IEDT.h"
 
 #include <string_theory/string>
-
 #include <map>
-#include <stdint.h>
+#include <string_view>
 #include <vector>
 
 
@@ -98,7 +98,7 @@ public:
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const = 0;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) = 0;
+	virtual ST::string loadDialogQuoteFromFile(const ST::string& filename, unsigned quote_number) = 0;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index) = 0;
@@ -198,4 +198,6 @@ public:
 
 	/* Gets the enabled mods and their version strings as a map */
 	virtual const std::vector<std::pair<ST::string, ST::string>> getEnabledMods() const = 0;
+
+	virtual IEDT::uptr openEDT(std::string_view filename, IEDT::column_list columns) const = 0;
 };

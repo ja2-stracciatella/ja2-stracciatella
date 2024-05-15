@@ -18,10 +18,6 @@ ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOp
 	m_modNames = modNames;
 }
 
-ModPackContentManager::~ModPackContentManager()
-{
-}
-
 void ModPackContentManager::logConfiguration() const {
 	ST::string joinedModList;
     for(const auto &s : m_modNames) {
@@ -34,14 +30,14 @@ void ModPackContentManager::logConfiguration() const {
 }
 
 /** Load dialogue quote from file. */
-ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& filename, int quote_number)
+ST::string ModPackContentManager::loadDialogQuoteFromFile(const ST::string& filename, unsigned quote_number)
 {
 	ST::string jsonFileName = ST::string(filename) + ".json";
 	std::map<ST::string, std::vector<ST::string> >::iterator it = m_dialogQuotesMap.find(jsonFileName);
 	if(it != m_dialogQuotesMap.end())
 	{
 		SLOGD("cached quote {} {}", quote_number, jsonFileName);
-		return new ST::string(it->second[quote_number]);
+		return it->second[quote_number];
 	}
 	else
 	{
@@ -52,7 +48,7 @@ ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& fil
 			std::vector<ST::string> quotes;
 			JsonUtility::parseJsonToListStrings(jsonQuotes.c_str(), quotes);
 			m_dialogQuotesMap[jsonFileName] = quotes;
-			return new ST::string(quotes[quote_number]);
+			return quotes[quote_number];
 		}
 		else
 		{

@@ -1,0 +1,4 @@
+{
+ "0": { "1": "This is the additional info for Barry who usually does not have any. The above text still comes from the original aimbios.edt file. Please note that this text is longer than the old limit of 160 characters." },
+ "5": { "0": "Main description for Trevor. Unicode seems to work partially (it depends on the font, of course): ô£ÇБÿÄщµ¢ć. Error messages about invalid characters in the console are expected." }
+}
