@@ -71,7 +71,7 @@ struct SGPBox
 	UINT16 w;
 	UINT16 h;
 
-	void set(UINT16 _x, UINT16 _y, UINT16 _w, UINT16 _h)
+	constexpr void set(UINT16 _x, UINT16 _y, UINT16 _w, UINT16 _h)
 	{
 		x = _x;
 		y = _y;
@@ -87,7 +87,7 @@ struct SGPRect
 	UINT16 iRight;
 	UINT16 iBottom;
 
-	void set(UINT16 left, UINT16 top, UINT16 right, UINT16 bottom)
+	constexpr void set(UINT16 left, UINT16 top, UINT16 right, UINT16 bottom)
 	{
 		iLeft       = left;
 		iTop        = top;
@@ -101,7 +101,7 @@ struct SGPPoint
 	UINT16 iX;
 	UINT16 iY;
 
-	void set(UINT16 x, UINT16 y)
+	constexpr void set(UINT16 x, UINT16 y)
 	{
 		iX = x;
 		iY = y;
@@ -115,9 +115,11 @@ public:
 	INT16 y = 0;
 	INT8 z = 0;
 
-	SGPSector() noexcept = default;
-	SGPSector(INT16 a, INT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
-	SGPSector(const SGPSector&) noexcept = default;
+	constexpr SGPSector() noexcept = default;
+	// Could add 'constexpr ~SGPSector() = default;' in C++20.
+	constexpr SGPSector(INT16 a, INT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
+	constexpr SGPSector(const SGPSector&) noexcept = default;
+	constexpr SGPSector& operator=(const SGPSector&) noexcept = default;
 	SGPSector(UINT32 s) noexcept; // normal FromSectorID
 	static SGPSector FromStrategicIndex(UINT16 idx);
 	static SGPSector FromShortString(const ST::string coordinates, INT8 h = 0);
@@ -189,9 +191,9 @@ namespace _Types
 	template<typename T>
 	struct BoxedValue
 	{
-		BoxedValue(T v) : val(v) {};
+		constexpr BoxedValue(T v) noexcept : val(v) {};
 
-		operator T() const { return val; }
+		constexpr operator T() const noexcept { return val; }
 
 		T val;
 	};
