@@ -499,11 +499,15 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	//BOOLEAN fTurnBased;
 	BOOLEAN fPathingForPlayer;
 	INT32   iDoorGridNo=-1;
+	INT32	iDoorGridNo2 = -1;
 	BOOLEAN fDoorIsObstacleIfClosed= 0; // if false, door is obstacle if it is open
 	DOOR_STATUS *pDoorStatus;
+	DOOR_STATUS *pDoorStatus2;
 	DOOR    *pDoor;
 	STRUCTURE *pDoorStructure;
+	STRUCTURE *pDoorStructure2;
 	BOOLEAN fDoorIsOpen = FALSE;
+	BOOLEAN fDoorIsOpen2 = FALSE;
 	BOOLEAN fNonFenceJumper;
 	BOOLEAN fNonSwimmer;
 	BOOLEAN fPathAroundPeople;
@@ -1063,13 +1067,53 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				{
 
 					// don't let anyone path diagonally through doors!
-					if (ubCnt & 1)
-					{
-						goto NEXTDIR;
-					}
+					//if (ubCnt & 1)
+					//{
+					//	goto NEXTDIR;
+					//}
 
 					switch( nextCost )
 					{
+						case TRAVELCOST_DOORS_CLOSED_W_SW:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc + DirIncrementer[WEST];
+							iDoorGridNo2 = newLoc + DirIncrementer[SOUTHWEST];
+							break;
+						case TRAVELCOST_DOORS_CLOSED_HERE_S:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc;
+							iDoorGridNo2 = newLoc + DirIncrementer[SOUTH];
+							break;
+						case TRAVELCOST_DOORS_CLOSED_N_NW:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc + DirIncrementer[NORTH];
+							iDoorGridNo2 = newLoc + DirIncrementer[NORTHWEST];
+							break;
+						case TRAVELCOST_DOORS_CLOSED_HERE_W:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc;
+							iDoorGridNo2 = newLoc + DirIncrementer[WEST];
+							break;
+						case TRAVELCOST_DOORS_CLOSED_W_NW:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc + DirIncrementer[WEST];
+							iDoorGridNo2 = newLoc + DirIncrementer[NORTHWEST];
+							break;
+						case TRAVELCOST_DOORS_CLOSED_HERE_N:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc;
+							iDoorGridNo2 = newLoc + DirIncrementer[NORTH];
+							break;
+						case TRAVELCOST_DOORS_CLOSED_N_NE:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc + DirIncrementer[NORTH];
+							iDoorGridNo2 = newLoc + DirIncrementer[NORTHEAST];
+							break;
+						case TRAVELCOST_DOORS_CLOSED_HERE_E:
+							fDoorIsObstacleIfClosed = TRUE;
+							iDoorGridNo = newLoc;
+							iDoorGridNo2 = newLoc + DirIncrementer[EAST];
+							break;
 						case TRAVELCOST_DOOR_CLOSED_HERE:
 							fDoorIsObstacleIfClosed = TRUE;
 							iDoorGridNo = newLoc;
@@ -1081,7 +1125,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						case TRAVELCOST_DOOR_CLOSED_W:
 							fDoorIsObstacleIfClosed = TRUE;
 							iDoorGridNo = newLoc + DirIncrementer[ WEST ];
-							break;
+							break;						
 						case TRAVELCOST_DOOR_OPEN_HERE:
 							fDoorIsObstacleIfClosed = FALSE;
 							iDoorGridNo = newLoc;
@@ -1156,8 +1200,12 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						}
 						else
 						{
-							// door destroyed?
-							nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
+							// if there is no second door
+							if (iDoorGridNo2 == -1)
+							{
+								// door destroyed?
+								nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
+							}
 						}
 					}
 					else
@@ -1170,11 +1218,78 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						}
 						else
 						{
-							// door destroyed?
-							nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
+							// if there is no second door
+							if (iDoorGridNo2 == -1)
+							{
+								// door destroyed?
+								nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
+							}
 						}
 					}
 
+					// two door dependent direction?
+					if (iDoorGridNo2 != -1)
+					{
+						pDoorStatus = GetDoorStatus((INT16)iDoorGridNo);
+						if (fPathingForPlayer && gpWorldLevelData[iDoorGridNo2].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT && pDoorStatus)
+						{
+							// check second door status
+							pDoorStatus2 = GetDoorStatus((INT16)iDoorGridNo2);
+							if (pDoorStatus2)
+							{
+								fDoorIsOpen2 = (pDoorStatus2->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+							}
+							// both doors destroyed?
+							if (!pDoorStatus && !pDoorStatus2)
+							{
+								nextCost = gTileTypeMovementCost[gpWorldLevelData[newLoc].ubTerrainID];
+							}
+							else
+							{
+								// one or both closed?
+								if ((pDoorStatus && !fDoorIsOpen) || (pDoorStatus2 && !fDoorIsOpen2))
+								{
+									fDoorIsOpen = FALSE;
+								}
+								// both open (destroyed means open)
+								else
+								{
+									fDoorIsOpen = TRUE;
+								}
+							}
+						}
+						else
+						{
+							// check second door structure
+							pDoorStructure = FindStructure((INT16)iDoorGridNo, STRUCTURE_ANYDOOR);
+							pDoorStructure2 = FindStructure((INT16)iDoorGridNo2, STRUCTURE_ANYDOOR);
+							if (pDoorStructure2)
+							{
+								fDoorIsOpen2 = (pDoorStructure2->fFlags & STRUCTURE_OPEN) != 0;
+							}							
+							// both doors destroyed?
+							if (!pDoorStructure && !pDoorStructure2)
+							{
+								nextCost = gTileTypeMovementCost[gpWorldLevelData[newLoc].ubTerrainID];
+							}
+							else
+							{
+								// one or both closed?
+								if ((pDoorStructure && !fDoorIsOpen) || (pDoorStructure2 && !fDoorIsOpen2))
+								{
+									iDoorGridNo2 = -1;
+									//don't let anyone path diagonally through doors of which one or both are closed
+									goto NEXTDIR;
+								}
+								// both open (destroyed means open)
+								else
+								{
+									fDoorIsOpen = TRUE;
+								}
+							}
+						}
+						iDoorGridNo2 = -1;
+					} 
 					// now determine movement cost... if it hasn't been changed already
 					if ( IS_TRAVELCOST_DOOR( nextCost ) )
 					{
@@ -2511,16 +2626,20 @@ INT16 EstimatePlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const 
 
 
 UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32* piDoorGridNo, BOOLEAN fReturnDoorCost)
-{
+{	
 	// This function will return either TRAVELCOST_DOOR (in place of closed door cost),
 	// TRAVELCOST_OBSTACLE, or the base ground terrain
 	// travel cost, depending on whether or not the door is open or closed etc.
 	BOOLEAN fDoorIsObstacleIfClosed=FALSE;
 	INT32 iDoorGridNo=-1;
-	DOOR_STATUS *pDoorStatus;
+	INT32 iDoorGridNo2 = -1;
+	DOOR_STATUS *pDoorStatus{};
+	DOOR_STATUS *pDoorStatus2{};
 	DOOR *pDoor;
-	STRUCTURE *pDoorStructure;
-	BOOLEAN fDoorIsOpen;
+	STRUCTURE *pDoorStructure{};
+	STRUCTURE *pDoorStructure2{};
+	BOOLEAN fDoorIsOpen{};
+	BOOLEAN fDoorIsOpen2{};
 	UINT8 ubReplacementCost;
 
 	if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
@@ -2529,6 +2648,54 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 
 		switch( ubMovementCost )
 		{
+			case TRAVELCOST_DOORS_CLOSED_W_SW:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo + DirIncrementer[WEST];
+				iDoorGridNo2 = iGridNo + DirIncrementer[SOUTHWEST];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
+			case TRAVELCOST_DOORS_CLOSED_HERE_S:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo;
+				iDoorGridNo2 = iGridNo + DirIncrementer[SOUTH];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
+			case TRAVELCOST_DOORS_CLOSED_N_NW:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo + DirIncrementer[NORTH];
+				iDoorGridNo2 = iGridNo + DirIncrementer[NORTHWEST];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
+			case TRAVELCOST_DOORS_CLOSED_HERE_W:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo;
+				iDoorGridNo2 = iGridNo + DirIncrementer[WEST];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
+			case TRAVELCOST_DOORS_CLOSED_W_NW:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo + DirIncrementer[WEST];
+				iDoorGridNo2 = iGridNo + DirIncrementer[NORTHWEST];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
+			case TRAVELCOST_DOORS_CLOSED_HERE_N:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo;
+				iDoorGridNo2 = iGridNo + DirIncrementer[NORTH];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
+			case TRAVELCOST_DOORS_CLOSED_N_NE:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo + DirIncrementer[NORTH];
+				iDoorGridNo2 = iGridNo + DirIncrementer[NORTHEAST];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
+			case TRAVELCOST_DOORS_CLOSED_HERE_E:
+				fDoorIsObstacleIfClosed = TRUE;
+				iDoorGridNo = iGridNo;
+				iDoorGridNo2 = iGridNo + DirIncrementer[EAST];
+				ubReplacementCost = TRAVELCOST_DOOR;
+				break;
 			case TRAVELCOST_DOOR_CLOSED_HERE:
 				fDoorIsObstacleIfClosed = TRUE;
 				iDoorGridNo = iGridNo;
@@ -2620,7 +2787,7 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 			// return gridno of door through pointer
 			*piDoorGridNo = iDoorGridNo;
 		}
-
+		
 		if (fReturnPerceivedValue &&
 			gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT)
 		{
@@ -2632,8 +2799,12 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 			}
 			else
 			{
-				// abort!
-				return( ubMovementCost );
+				// if there is no second door
+				if (iDoorGridNo2 == -1)
+				{
+					// abort!
+					return(ubMovementCost);
+				}				
 			}
 		}
 		else
@@ -2646,9 +2817,73 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 			}
 			else
 			{
-				// abort!
-				return( ubMovementCost );
+				// if there is no second door
+				if (iDoorGridNo2 == -1)
+				{
+					// abort!
+					return( ubMovementCost );
+				}
 			}
+		}
+		// two door dependent direction?
+		if (iDoorGridNo2 != -1)
+		{
+			pDoorStatus = GetDoorStatus((INT16)iDoorGridNo);
+			if (fReturnPerceivedValue && gpWorldLevelData[iDoorGridNo2].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT && pDoorStatus)
+			{
+				// check second door status
+				pDoorStatus2 = GetDoorStatus((INT16)iDoorGridNo2);
+				if (pDoorStatus2)
+				{
+					fDoorIsOpen2 = (pDoorStatus2->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+				}
+				// both doors destroyed?
+				if (!pDoorStatus && !pDoorStatus2)
+				{
+					return(ubMovementCost);
+				}
+				else
+				{
+					// one or both closed?
+					if ((pDoorStatus && !fDoorIsOpen) || (pDoorStatus2 && !fDoorIsOpen2))
+					{
+						return(ubReplacementCost);
+					}
+					// both open (destroyed means open)
+					else
+					{
+						fDoorIsOpen = TRUE;
+					}
+				}
+			}
+			else
+			{
+				// check second door structure
+				pDoorStructure = FindStructure((INT16)iDoorGridNo, STRUCTURE_ANYDOOR);
+				pDoorStructure2 = FindStructure((INT16)iDoorGridNo2, STRUCTURE_ANYDOOR);
+				if (pDoorStructure2)
+				{
+					fDoorIsOpen2 = (pDoorStructure2->fFlags & STRUCTURE_OPEN) != 0;
+				}
+				// both doors destroyed?
+				if (!pDoorStructure && !pDoorStructure2)
+				{
+					return(ubMovementCost);
+				}
+				else
+				{
+					// one or both both closed?
+					if ((pDoorStructure && !fDoorIsOpen) || (pDoorStructure2 && !fDoorIsOpen2))
+					{						
+						return(ubReplacementCost);
+					}
+					// both open (destroyed means open)
+					else
+					{
+						fDoorIsOpen = TRUE;
+					}
+				}
+			}						
 		}
 		// now determine movement cost
 		if (fDoorIsOpen)
