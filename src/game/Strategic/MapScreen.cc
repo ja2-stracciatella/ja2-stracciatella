@@ -1241,7 +1241,7 @@ static void DisplayCharacterList(void)
 			CharacterIsGettingPathPlotted(i) ? FONT_LTBLUE    :
 			/* Not in current sector? */
 			s.sSector.x != sSelMap.x ||
-			s.sSector.x != sSelMap.y ||
+			s.sSector.y != sSelMap.y ||
 			s.sSector.z != iCurrentMapSectorZ ? 5              :
 			/* Mobile? */
 			s.bAssignment < ON_DUTY ||
