@@ -20,6 +20,7 @@
 #include "VObject.h"
 #include "Interface_Control.h"
 #include "Game_Clock.h"
+#include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "Meanwhile.h"
 #include "StrategicMap.h"
@@ -37,8 +38,6 @@
 #include "GameInstance.h"
 
 #include <cmath>
-
-extern INT32 iCurrentMapSectorZ;
 
 // the squad list font
 #define SQUAD_FONT COMPFONT

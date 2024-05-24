@@ -1460,7 +1460,7 @@ ScreenID MapScreenHandle(void)
 		else	// no loaded sector
 		{
 			// Only select start sector, if there is no current selection, otherwise leave it as is.
-			if (!sSelMap.IsValid() || iCurrentMapSectorZ == -1)
+			if (!sSelMap.IsValid())
 			{
 				ChangeSelectedMapSector(startSector);
 			}
@@ -1818,7 +1818,7 @@ ScreenID MapScreenHandle(void)
 	if (!fDisableDueToBattleRoster)
 	{
 		// remove the move box once user leaves it
-		CreateDestroyMovementBox( 0,0,0 );
+		CreateDestroyMovementBox();
 
 		// this updates the move box contents when changes took place
 		ReBuildMoveBox( );
@@ -1864,7 +1864,7 @@ ScreenID MapScreenHandle(void)
 
 
 	// display town info
-	DisplayTownInfo(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ));
+	DisplayTownInfo(sSelMap);
 
 	if (fShowTownInfo)
 	{
@@ -2362,9 +2362,7 @@ static UINT32 HandleMapUI(void)
 					if ( gpItemPointerSoldier != NULL )
 					{
 						// make sure it's the owner's sector that's selected
-						if ( (gpItemPointerSoldier->sSector.x != sSelMap.x ) ||
-							( gpItemPointerSoldier->sSector.y != sSelMap.y ) ||
-							( gpItemPointerSoldier->sSector.z != iCurrentMapSectorZ ) )
+						if (gpItemPointerSoldier->sSector != sSelMap)
 						{
 							ChangeSelectedMapSector(gpItemPointerSoldier->sSector);
 						}
@@ -3125,7 +3123,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	if ( fShowMapScreenMovementList )
 	{
 		fShowMapScreenMovementList = FALSE;
-		CreateDestroyMovementBox( 0, 0, 0 );
+		CreateDestroyMovementBox();
 	}
 
 	// the remove merc from team box
@@ -6743,7 +6741,6 @@ void ChangeSelectedMapSector(const SGPSector& sMap)
 		return;
 
 	sSelMap = sMap;
-	iCurrentMapSectorZ = sMap.z;
 
 	// if going underground while in airspace mode
 	if (sMap.z > 0 && fShowAircraftFlag)
@@ -7451,7 +7448,7 @@ static void DestinationPlottingCompleted(void)
 static void HandleMilitiaRedistributionClick(void)
 {
 	ST::string sString;
-	SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
+	auto const& sector{ sSelMap };
 
 	// if on the surface
 	if (sector.z == 0)

@@ -299,7 +299,7 @@ static void StartMeanwhile(void)
 	{
 		gsOldSector = gWorldSector;
 	}
-	gsOldSelectedSector = SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
+	gsOldSelectedSector = sSelMap;
 
 	gfInMeanwhile = TRUE;
 

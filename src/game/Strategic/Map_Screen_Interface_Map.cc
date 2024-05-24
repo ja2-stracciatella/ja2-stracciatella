@@ -311,14 +311,8 @@ static SGPVObject* guiSubLevel3;
 static SGPVObject* guiCHARBETWEENSECTORICONS;
 static SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
 
-// selected sector
-SGPSector sSelMap(9, 1);
-
 // highlighted sector
 SGPSector gsHighlightSector(-1, -1);
-
-// the current sector Z value of the map being displayed
-INT32 iCurrentMapSectorZ = 0;
 
 // the palettes
 static UINT16* pMapLTRedPalette;
