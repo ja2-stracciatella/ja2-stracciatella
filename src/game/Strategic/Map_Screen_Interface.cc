@@ -59,8 +59,6 @@
 #include <iterator>
 #include <string_theory/format>
 #include <string_theory/string>
-struct FACETYPE;
-struct PopUpBox;
 
 // number of LINKED LISTS for sets of leave items (each slot holds an unlimited # of items)
 #define NUM_LEAVE_LIST_SLOTS 20
@@ -1462,9 +1460,7 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 	if ( fShowMapInventoryPool && !gpItemPointerSoldier && fMapInventoryItem )
 	{
 		// disallow passing items to anyone not in that sector
-		if (pNewSoldier->sSector.x != sSelMap.x ||
-			pNewSoldier->sSector.y != sSelMap.y ||
-			pNewSoldier->sSector.z != ( INT8 )( iCurrentMapSectorZ ) )
+		if (pNewSoldier->sSector != sSelMap)
 		{
 			return( FALSE );
 		}
@@ -2191,13 +2187,13 @@ static void ClearMouseRegionsForMoveBox(void);
 static void CreatePopUpBoxForMovementBox(void);
 
 
-void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+void CreateDestroyMovementBox([[maybe_unused]] SGPSector const& sector)
 {
 	static BOOLEAN fCreated = FALSE;
 
 
 	// not allowed for underground movement!
-	Assert( sSectorZ == 0 );
+	Assert(sector.z == 0);
 
 	if (fShowMapScreenMovementList && !fCreated)
 	{
@@ -2262,7 +2258,7 @@ void SetUpMovingListsForSector(const SGPSector& sSector)
 	}
 
 	fShowMapScreenMovementList = TRUE;
-	CreateDestroyMovementBox(sSector.x, sSector.y, sSector.z);
+	CreateDestroyMovementBox(sSector);
 }
 
 
@@ -3024,11 +3020,11 @@ void ReBuildMoveBox( void )
 
 	// stop showing the box
 	fShowMapScreenMovementList = FALSE;
-	CreateDestroyMovementBox( sSelMap.x, sSelMap.y, ( INT16 )iCurrentMapSectorZ );
+	CreateDestroyMovementBox(sSelMap);
 
 	// show the box
 	fShowMapScreenMovementList = TRUE;
-	CreateDestroyMovementBox( sSelMap.x, sSelMap.y, ( INT16 )iCurrentMapSectorZ );
+	CreateDestroyMovementBox(sSelMap);
 	ShowBox( ghMoveBox );
 	MarkAllBoxesAsAltered( );
 }

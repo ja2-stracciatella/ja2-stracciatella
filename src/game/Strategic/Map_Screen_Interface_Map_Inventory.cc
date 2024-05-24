@@ -284,7 +284,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 		fShowMapInventoryPool = FALSE;
 	}
 */
-	SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
+	auto const& sector{ sSelMap };
 	if (fShowMapInventoryPool && !fCreated)
 	{
 		if (gWorldSector == sector)
@@ -398,7 +398,7 @@ static void SaveSeenAndUnseenItems(void)
 	}
 
 	// if this is the loaded sector handle here
-	SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
+	auto const& sector{ sSelMap };
 	if (gWorldSector == sector)
 	{
 		ReBuildWorldItemStashForLoadedSector(pSeenItemsList, pUnSeenItems);
