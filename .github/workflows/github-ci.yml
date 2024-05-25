@@ -47,7 +47,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Compiler cache (sccache)
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/sccache
@@ -58,7 +58,7 @@ jobs:
           ${{ matrix.cfg.target }}-sccache-v1-refs/heads/master-
           ${{ matrix.cfg.target }}-sccache-v1-
     - name: Cache Rust deps and build output
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cargo/bin
