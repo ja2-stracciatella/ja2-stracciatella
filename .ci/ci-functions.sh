@@ -49,7 +49,7 @@ linux-install-appimage-build-tools () {
 linux-install-via-android-sdkmanager () {
     for var in "$@"
     do
-        sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install $var
+        sdkmanager --install $var
     done
 }
 
