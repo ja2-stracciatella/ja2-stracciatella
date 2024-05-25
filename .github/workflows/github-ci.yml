@@ -114,7 +114,7 @@ jobs:
         GCLOUD_CREDENTIALS_IV: ${{ secrets.GCLOUD_CREDENTIALS_IV }}
 
     - name: Upload android cmake logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       if: failure() && matrix.cfg.target == 'android'
       with:
         name: android-cmake-logs
@@ -132,7 +132,7 @@ jobs:
           cp "${file}" artifacts/
         done
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: artifacts
         path: ${{ github.workspace }}/artifacts
