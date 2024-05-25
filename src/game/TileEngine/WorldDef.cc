@@ -987,7 +987,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 			}
 			else
 			{
-				if (!(pStructure->fFlags & STRUCTURE_PASSABLE || pStructure->fFlags & STRUCTURE_NORMAL_ROOF))
+				if (!(pStructure->fFlags & (STRUCTURE_PASSABLE|STRUCTURE_NORMAL_ROOF|STRUCTURE_PERSON)))
 				{
 					fStructuresOnRoof = TRUE;
 				}
