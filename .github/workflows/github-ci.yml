@@ -44,7 +44,7 @@ jobs:
       run: ''
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Compiler cache (sccache)
       uses: actions/cache@v2
@@ -154,7 +154,7 @@ jobs:
     runs-on: ${{ matrix.cfg.os }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install rustup
       shell: bash
