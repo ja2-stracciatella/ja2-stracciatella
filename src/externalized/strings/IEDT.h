@@ -20,6 +20,6 @@ struct IEDT
 #else
 	// Microsoft's STL implementation of initializer_list seems broken,
 	// we have to use vector as a workaround.
-	using column_list = std::vector<std::uint16_t>
+	using column_list = std::vector<std::uint16_t>;
 #endif
 };
