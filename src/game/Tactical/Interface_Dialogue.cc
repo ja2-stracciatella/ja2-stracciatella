@@ -3805,7 +3805,7 @@ action_punch_pc:
 			case NPC_ACTION_REMOVE_MERC_FOR_MARRIAGE:
 			{
 				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(ubTargetNPC);
-				assert(pSoldier);
+				Assert(pSoldier);
 
 				pSoldier = ChangeSoldierTeam(pSoldier, CIV_TEAM);
 				// remove profile from map
