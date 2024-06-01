@@ -7,7 +7,6 @@
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
 #include "Soldier_Find.h"
-#include <magic_enum.hpp>
 
 
 #define UIEVENT_SINGLEEVENT		0x00000002
