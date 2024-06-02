@@ -51,7 +51,7 @@ class EDTFile
 		IEDT::column_list    columns;
 	};
 
-	static constexpr EDTFilesTable EDTFilesTable[]
+	static inline EDTFilesTable const EDTFilesTable[]
 	{
 		/* Description strings of the A.I.M. members screen.
 		   One row per merc (40 in total) with two columns each:
