@@ -107,6 +107,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "WorldDef.h"
+#include "Militia_Control.h"
 
 #include "policy/GamePolicy.h"
 
@@ -1878,7 +1879,8 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_I32(  d, giHospitalRefund)
 	INJ_I8(   d, gfPlayerTeamSawJoey)
 	INJ_I8(   d, gfMikeShouldSayHi)
-	INJ_SKIP( d, 550)
+	INJ_BOOL( d, gfStrategicMilitiaChangesMade)
+	INJ_SKIP( d, 549)
 	Assert(d.getConsumed() == lengthof(data));
 
 	f->write(data, sizeof(data));
@@ -2036,7 +2038,8 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_I32(  d, giHospitalRefund)
 	EXTR_I8(   d, gfPlayerTeamSawJoey)
 	EXTR_I8(   d, gfMikeShouldSayHi)
-	EXTR_SKIP( d, 550)
+	EXTR_BOOL( d, gfStrategicMilitiaChangesMade)
+	EXTR_SKIP( d, 549)
 	Assert(d.getConsumed() == lengthof(data));
 }
 
