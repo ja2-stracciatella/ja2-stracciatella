@@ -66,6 +66,7 @@
 #include "Mercs.h"
 #include "MercTextBox.h"
 #include "Message.h"
+#include "Militia_Control.h"
 #include "Music_Control.h"
 #include "NPC.h"
 #include "NpcPlacementModel.h"
@@ -107,7 +108,6 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "WorldDef.h"
-#include "Militia_Control.h"
 
 #include "policy/GamePolicy.h"
 
