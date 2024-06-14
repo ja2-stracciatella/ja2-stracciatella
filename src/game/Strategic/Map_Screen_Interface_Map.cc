@@ -1961,7 +1961,11 @@ void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 
 bool IsTheCursorAllowedToHighLightThisSector(const SGPSector& sMap)
 {
-	return SectorInfo[sMap.AsByte()].ubTraversability[THROUGH_STRATEGIC_MOVE] != EDGEOFWORLD;
+	return
+		sMap.IsValid() &&
+		sMap.z == 0 &&
+		(SectorInfo[sMap.AsByte()].ubTraversability[THROUGH_STRATEGIC_MOVE]
+			!= EDGEOFWORLD);
 }
 
 
