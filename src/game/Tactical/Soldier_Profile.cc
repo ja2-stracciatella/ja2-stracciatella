@@ -990,7 +990,7 @@ SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 */
 
 	memcpy(dst.bInvStatus, src.bInvStatus, sizeof(dst.bInvStatus));
-	memcpy(dst.bInvNumber, src.bInvStatus, sizeof(dst.bInvNumber));
+	memcpy(dst.bInvNumber, src.bInvNumber, sizeof(dst.bInvNumber));
 	memcpy(dst.inv,        src.inv,        sizeof(dst.inv));
 
 	DeleteSoldierFace(s);
