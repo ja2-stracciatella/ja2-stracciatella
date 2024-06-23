@@ -218,7 +218,7 @@ void RenderMapScreenInterfaceBottom( void )
 	if (fMapScreenBottomDirty)
 	{
 		BltVideoObject(guiSAVEBUFFER, guiMAPBOTTOMPANEL, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
-		SGPSector sMap(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
+		auto const& sMap{ sSelMap };
 
 		if (GetSectorFlagStatus(sMap, SF_ALREADY_VISITED))
 		{
@@ -346,7 +346,7 @@ static void DrawNameOfLoadedSector()
 	SGPFont const font = COMPFONT;
 	SetFontAttributes(font, 183);
 
-	ST::string buf = GetSectorIDString(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ), TRUE);
+	ST::string buf = GetSectorIDString(sSelMap, TRUE);
 	buf = ReduceStringLength(buf, 80, font);
 
 	INT16 x;
@@ -1093,7 +1093,7 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 	if ( bExitToWhere == MAP_EXIT_TO_TACTICAL )
 	{
 		// if in battle or bloodcat ambush, the ONLY sector we can go tactical in is the one that's loaded
-		SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
+		auto const& sector{ sSelMap };
 		BOOLEAN fBattleGoingOn = gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector || (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent());
 		BOOLEAN fCurrentSectorSelected = sector == gWorldSector;
 		if (fBattleGoingOn && !fCurrentSectorSelected)
@@ -1147,7 +1147,7 @@ void HandleExitsFromMapScreen( void )
 				break;
 
 			case MAP_EXIT_TO_TACTICAL:
-				SetCurrentWorldSector(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ));
+				SetCurrentWorldSector(sSelMap);
 				break;
 
 			case MAP_EXIT_TO_OPTIONS:
