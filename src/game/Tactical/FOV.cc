@@ -26,6 +26,7 @@
 #include "Input.h"
 #include "Timer_Control.h"
 #include "Video.h"
+#include "SDL.h"
 #endif
 
 #include <string_theory/format>
@@ -430,19 +431,15 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 #ifdef _DEBUG
 			if (_KeyDown(SDLK_NUMLOCKCLEAR))
 			{
-				unsigned int cnt = GetJA2Clock();
-
 				gubFOVDebugInfoInfo[ marker ] = (UINT8)markercnt;
 				RenderFOVDebug( );
 				SetFontAttributes(LARGEFONT1, FONT_MCOLOR_WHITE);
-				MPrint( 10,  10 , ST::format("{}", maincnt) );
-				//MPrint( 10,  20 , ST::format("{}", marker) );
-				//MPrint( 50,  20 , ST::format("{}", pSoldier->sGridNo) );
+				MPrint(10, 10, ST::format("{}", maincnt));
+				MPrint(10, 20, ST::format("{}", marker));
+				MPrint(90, 20, ST::format("{}", pSoldier->sGridNo));
 				InvalidateScreen( );
 				RefreshScreen();
-				do
-				{}
-				while( ( GetJA2Clock( ) - cnt ) < 250 );
+				SDL_Delay(30);
 			}
 #endif
 
