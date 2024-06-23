@@ -48,14 +48,11 @@ struct FinanceUnit
 #define BLOCK_HEIGHT 10
 #define TOP_DIVLINE_Y (102 + STD_SCREEN_Y)
 #define DIVLINE_X (130 + STD_SCREEN_X)
-#define MID_DIVLINE_Y (205 + STD_SCREEN_Y)
 #define BOT_DIVLINE_Y (180 + STD_SCREEN_Y)
 #define MID_DIVLINE_Y2 (263 + 20 + STD_SCREEN_Y)
-#define BOT_DIVLINE_Y2 MID_DIVLINE_Y2 + MID_DIVLINE_Y - BOT_DIVLINE_Y
 #define TITLE_X (140 + STD_SCREEN_X)
 #define TITLE_Y (33 + STD_SCREEN_Y)
 #define TEXT_X (140 + STD_SCREEN_X)
-#define PAGE_SIZE 17
 
 // yesterdyas/todays income and balance text positions
 #define YESTERDAYS_INCOME               (STD_SCREEN_Y + 114)
@@ -70,7 +67,7 @@ struct FinanceUnit
 #define TODAYS_CURRENT_FORCAST_BALANCE  (STD_SCREEN_Y + 354)
 #define FINANCE_HEADER_FONT FONT14ARIAL
 #define FINANCE_TEXT_FONT FONT12ARIAL
-#define NUM_RECORDS_PER_PAGE PAGE_SIZE
+#define NUM_RECORDS_PER_PAGE (17)
 
 // records text positions
 #define RECORD_CREDIT_WIDTH (106-47)
@@ -384,10 +381,8 @@ static void DrawSummaryLines(void)
 	// blit summary LINE object to screen
 	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, TOP_DIVLINE_Y);
 	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, TOP_DIVLINE_Y+2);
-	//BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, MID_DIVLINE_Y);
 	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y);
 	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, MID_DIVLINE_Y2);
-	//BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y2);
 }
 
 

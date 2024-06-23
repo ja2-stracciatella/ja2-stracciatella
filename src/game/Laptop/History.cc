@@ -44,9 +44,7 @@ struct HistoryUnit
 #define TOP_DIVLINE_Y			(STD_SCREEN_Y + 101)
 #define TITLE_X				(STD_SCREEN_X + 140)
 #define TITLE_Y				(STD_SCREEN_Y + 33 )
-#define PAGE_SIZE			22
 #define RECORD_Y			TOP_DIVLINE_Y
-#define RECORD_HISTORY_WIDTH		200
 #define PAGE_NUMBER_X			TOP_X+20
 #define PAGE_NUMBER_Y			TOP_Y+33
 #define HISTORY_DATE_X			PAGE_NUMBER_X+85
@@ -60,7 +58,7 @@ struct HistoryUnit
 #define RECORD_HEADER_Y			(STD_SCREEN_Y + 90)
 
 
-#define NUM_RECORDS_PER_PAGE		PAGE_SIZE
+#define NUM_RECORDS_PER_PAGE		(22)
 #define SIZE_OF_HISTORY_FILE_RECORD	( sizeof( UINT8 ) + sizeof( UINT8 ) + sizeof( UINT32 ) + sizeof( UINT16 ) + sizeof( UINT16 ) + sizeof( UINT8 ) + sizeof( UINT8 ) )
 
 // button positions
