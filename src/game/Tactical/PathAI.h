@@ -27,6 +27,7 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius );
 
 UINT8 DoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32* piDoorGridNo);
 UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32* piDoorGridNo, BOOLEAN fReturnDoorCost);
+BOOLEAN IsDoorObstacleIfClosed(UINT8 ubMovementCost, INT32 iGridNo, INT32* iDoorGridNo, INT32* iDoorGridNo2);
 
 INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode );
 
@@ -77,6 +78,15 @@ public:
 
 // these values are used to indicate "this is an obstacle
 // if there is a door (perceived) open/closed in this tile
+
+#define TRAVELCOST_DOORS_CLOSED_W_SW	212
+#define TRAVELCOST_DOORS_CLOSED_HERE_S	213
+#define TRAVELCOST_DOORS_CLOSED_N_NW	214
+#define TRAVELCOST_DOORS_CLOSED_HERE_W	215
+#define TRAVELCOST_DOORS_CLOSED_W_NW	216
+#define TRAVELCOST_DOORS_CLOSED_HERE_N	217
+#define TRAVELCOST_DOORS_CLOSED_N_NE	218
+#define TRAVELCOST_DOORS_CLOSED_HERE_E	219
 #define TRAVELCOST_DOOR_CLOSED_HERE		220
 #define TRAVELCOST_DOOR_CLOSED_N		221
 #define TRAVELCOST_DOOR_CLOSED_W		222
@@ -110,8 +120,8 @@ public:
 #define TRAVELCOST_FLATFLOOR			10
 
 #define TRAVELCOST_BLOCKED			(TRAVELCOST_OFF_MAP)
-#define IS_TRAVELCOST_DOOR( x )		(x >= TRAVELCOST_DOOR_CLOSED_HERE && x <= TRAVELCOST_DOOR_OPEN_NW_W)
-#define IS_TRAVELCOST_CLOSED_DOOR( x )		(x >= TRAVELCOST_DOOR_CLOSED_HERE && x << TRAVELCOST_DOOR_CLOSED_W)
+#define IS_TRAVELCOST_DOOR( x )		(x >= TRAVELCOST_DOORS_CLOSED_W_SW && x <= TRAVELCOST_DOOR_OPEN_NW_W)
+#define IS_TRAVELCOST_CLOSED_DOOR( x )		(x >= TRAVELCOST_DOORS_CLOSED_W_SW && x << TRAVELCOST_DOOR_CLOSED_W)
 
 // ------------------------------------------
 // PLOT PATH defines
