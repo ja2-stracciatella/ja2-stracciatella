@@ -5264,10 +5264,13 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 	UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	UINT8 cnt;
 	UINT8 ubMovementCost;
+	UINT8 ubOppMovementCost;
 
 	// First check that action point cost is zero so far
 	// ie: NO PATH!
-	if ( gsCurrentActionPoints != 0 && fCheckForPath )
+	// Or the cursor is in "select currently non-selected soldier" mode
+	if (gsSelectedGridNo == sGridNo ||
+		(gsCurrentActionPoints != 0 && guiCurrentUICursor != NO_UICURSOR && fCheckForPath))
 	{
 		return( FALSE );
 	}
@@ -5280,13 +5283,18 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 
 		// ATE: Check our movement costs for going through walls!
 		ubMovementCost = gubWorldMovementCosts[ sIntSpot ][ sDirs[ cnt ] ][ pSoldier->bLevel ];
+		ubOppMovementCost = gubWorldMovementCosts[sIntSpot][OppositeDirection(sDirs[cnt])][pSoldier->bLevel];
 		if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 		{
 			ubMovementCost = DoorTravelCost(pSoldier, sIntSpot, ubMovementCost, pSoldier->bTeam == OUR_TEAM, NULL);
 		}
+		if (IS_TRAVELCOST_DOOR(ubOppMovementCost))
+		{
+			ubOppMovementCost = DoorTravelCost(pSoldier, sIntSpot, ubOppMovementCost, pSoldier->bTeam == OUR_TEAM, NULL);
+		}
 
 		// If we have hit an obstacle, STOP HERE
-		if ( ubMovementCost >= TRAVELCOST_BLOCKED )
+		if (ubMovementCost >= TRAVELCOST_BLOCKED || ubOppMovementCost >= TRAVELCOST_BLOCKED)
 		{
 			// no good, continue
 			continue;
