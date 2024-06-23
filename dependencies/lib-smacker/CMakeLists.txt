@@ -10,5 +10,5 @@ target_include_directories(smacker PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/libsmacke
 
 if(NOT MSVC)
     # Compilation flags copied from the Makefile
-    target_compile_options(smacker PRIVATE -pipe -Wall -Wextra -ansi -pedantic)
+    target_compile_options(smacker PRIVATE -pipe -Wall -Wextra -ansi -pedantic -fsigned-char)
 endif()
