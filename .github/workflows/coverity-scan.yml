@@ -17,7 +17,7 @@ jobs:
   coverity_scan:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up environment
         shell: bash
@@ -62,7 +62,7 @@ jobs:
               https://scan.coverity.com/builds?project=${COVERITY_PROJECT}
 
       - name: Upload scan logs as artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: scan-logs
           path: |

@@ -44,10 +44,10 @@ jobs:
       run: ''
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Compiler cache (sccache)
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/sccache
@@ -58,7 +58,7 @@ jobs:
           ${{ matrix.cfg.target }}-sccache-v1-refs/heads/master-
           ${{ matrix.cfg.target }}-sccache-v1-
     - name: Cache Rust deps and build output
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cargo/bin
@@ -72,7 +72,7 @@ jobs:
           ${{ matrix.cfg.target }}-rust-v2-
 
     - name: Set up JDK 18
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       if: matrix.cfg.target == 'android'
       with:
         distribution: temurin
@@ -80,7 +80,7 @@ jobs:
         cache: 'gradle'
 
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
+      uses: android-actions/setup-android@v3
       if: matrix.cfg.target == 'android'
 
     - name: Set up environment
@@ -114,7 +114,7 @@ jobs:
         GCLOUD_CREDENTIALS_IV: ${{ secrets.GCLOUD_CREDENTIALS_IV }}
 
     - name: Upload android cmake logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       if: failure() && matrix.cfg.target == 'android'
       with:
         name: android-cmake-logs
@@ -132,7 +132,7 @@ jobs:
           cp "${file}" artifacts/
         done
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: artifacts
         path: ${{ github.workspace }}/artifacts
@@ -154,7 +154,7 @@ jobs:
     runs-on: ${{ matrix.cfg.os }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install rustup
       shell: bash
