@@ -414,6 +414,8 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 
 void EnterAutoResolveMode(const SGPSector& ubSector)
 {
+	//fix empty creatures' lair bug
+	gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
 	//Set up mapscreen for removal
 	SetPendingNewScreen( AUTORESOLVE_SCREEN );
 	CreateDestroyMapInvButton();
