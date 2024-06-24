@@ -51,7 +51,6 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
-#include <memory>
 #include <stdexcept>
 #include <string_theory/format>
 #include <string_theory/string>
@@ -260,7 +259,6 @@ static SGPVObject* guiBULLSEYE;
 
 #define POPUP_MILITIA_ICONS_PER_ROW 5 // max 6 rows gives the limit of 30 militia
 #define MEDIUM_MILITIA_ICON_SPACING 5
-#define LARGE_MILITIA_ICON_SPACING  6
 
 #define MILITIA_BTN_OFFSET_X 26
 #define MILITIA_BTN_HEIGHT 11
@@ -410,8 +408,7 @@ void InitMapScreenInterfaceMap()
 	pTownPoints.clear();
 	pTownPoints.push_back(SGPPoint());
 
-	auto towns = GCM->getTowns();
-	for (auto& pair : GCM->getTowns())
+	for (auto const& pair : GCM->getTowns())
 	{
 		auto town = pair.second;
 		sBaseSectorList.push_back(town->getBaseSector());
@@ -1955,11 +1952,14 @@ void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 
 bool IsTheCursorAllowedToHighLightThisSector(const SGPSector& sMap)
 {
+	// It is not strictly necessary to construct a new SGPSector above because
+	// AsByte() would ignore the z member anyway. It is done here to avoid
+	// possible confusion; accessing the SectorInfo array with only covers
+	// ground level sectors with an underground SGPSector may look wrong.
 	return
 		sMap.IsValid() &&
-		sMap.z == 0 &&
-		(SectorInfo[sMap.AsByte()].ubTraversability[THROUGH_STRATEGIC_MOVE]
-			!= EDGEOFWORLD);
+		(SectorInfo[SGPSector{ sMap.x, sMap.y, 0 }.AsByte()]
+			.ubTraversability[THROUGH_STRATEGIC_MOVE] != EDGEOFWORLD);
 }
 
 
