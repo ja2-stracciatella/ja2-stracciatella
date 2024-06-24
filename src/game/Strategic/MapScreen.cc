@@ -2097,7 +2097,7 @@ void DrawStringRight(const ST::string& str, UINT16 x, UINT16 y, UINT16 w, UINT16
 }
 
 
-static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary);
+static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor);
 static void RestoreMapSectorCursor(const SGPSector& sMap);
 
 
@@ -2137,7 +2137,7 @@ static void RenderMapCursorsIndexesAnims(void)
 			}
 
 			// draw WHITE highlight rectangle
-			RenderMapHighlight(gsHighlightSector, Get16BPPColor(RGB_WHITE), FALSE);
+			RenderMapHighlight(gsHighlightSector, Get16BPPColor(RGB_WHITE));
 
 			sPrevHighlightedMap = gsHighlightSector;
 			fHighlightChanged = TRUE;
@@ -2189,7 +2189,7 @@ static void RenderMapCursorsIndexesAnims(void)
 		}
 
 		// always render this one, it's too much of a pain detecting overlaps with the white cursor otherwise
-		RenderMapHighlight(sSelMap, usCursorColor, TRUE);
+		RenderMapHighlight(sSelMap, usCursorColor);
 
 		if (sPrevSelectedMap != sSelMap)
 		{
@@ -3252,10 +3252,8 @@ static SGPSector GetSectorAtXY(INT16 relX, INT16 relY)
 }
 
 
-static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary)
+static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor)
 {
-	Assert(sMap.IsValid());
-
 	// if we are not allowed to highlight, leave
 	if (!IsTheCursorAllowedToHighLightThisSector(sMap))
 	{
