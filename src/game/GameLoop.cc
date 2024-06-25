@@ -114,8 +114,7 @@ try
 	InputAtom InputEvent;
 	ScreenID uiOldScreen = guiCurrentScreen;
 
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
+	auto const MousePos{ GetMousePos() };
 	// Hook into mouse stuff for MOVEMENT MESSAGES
 	MouseSystemHook(MOUSE_POS, 0, MousePos.iX, MousePos.iY);
 	MusicPoll();

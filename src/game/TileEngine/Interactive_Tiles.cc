@@ -317,8 +317,7 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 	ConvertGridNoToCellXY(sGridNo, &sXMapPos, &sYMapPos);
 
 	// Set mouse stuff
-	SGPPoint cursorPosition = {};
-	GetCursorPos(cursorPosition);
+	auto const cursorPosition{ GetCursorPos() };
 
 	for (LEVELNODE const* n = gpWorldLevelData[sGridNo].pStructHead; n; n = n->pNext)
 	{

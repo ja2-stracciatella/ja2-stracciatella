@@ -183,8 +183,7 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 		return( FALSE );
 	}
 
-	SGPPoint cursorPosition;
-	GetCursorPos(cursorPosition);
+	auto const cursorPosition{ GetCursorPos() };
 	sOffsetX = cursorPosition.iX - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
 	sOffsetY = cursorPosition.iY - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
 

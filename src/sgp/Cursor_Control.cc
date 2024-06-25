@@ -38,14 +38,9 @@ static MOUSEBLT_HOOK gMouseBltOverride = NULL;
 
 std::optional<SGPPoint> gManualCursorPos = std::nullopt;
 
-void GetCursorPos(SGPPoint& point)
+SGPPoint GetCursorPos()
 {
-	if (gManualCursorPos) {
-		point.iX = gManualCursorPos->iX;
-		point.iY = gManualCursorPos->iY;
-		return;
-	}
-	GetMousePos(&point);
+	return gManualCursorPos ? *gManualCursorPos : GetMousePos();
 }
 
 void SetManualCursorPos(SGPPoint point) {
