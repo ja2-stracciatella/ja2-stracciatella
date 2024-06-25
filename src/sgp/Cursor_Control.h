@@ -69,7 +69,7 @@ extern INT16 gsGlobalCursorYOffset;
 extern UINT16 gsCurMouseHeight;
 extern UINT16 gsCurMouseWidth;
 
-void GetCursorPos(SGPPoint& Point);
+SGPPoint GetCursorPos();
 
 // Sets an override for the cursor position
 void SetManualCursorPos(SGPPoint Point);

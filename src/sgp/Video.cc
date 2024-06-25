@@ -548,8 +548,7 @@ void RefreshScreen(void)
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 	}
 
-	SGPPoint cursorPos;
-	GetCursorPos(cursorPos);
+	auto const cursorPos{ GetCursorPos() };
 	SDL_Rect src;
 	src.x = 0;
 	src.y = 0;
