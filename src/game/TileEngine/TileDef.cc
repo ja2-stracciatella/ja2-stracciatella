@@ -124,7 +124,7 @@ void CreateTileDatabase()
 				if (TileElement.usRegionIndex == 0 && (TileElement.pDBStructureRef->pDBStructure->fFlags & (STRUCTURE_DDOOR_RIGHT|STRUCTURE_DDOOR_LEFT)))
 				{
 					// if a door in an open state takes up 1 tile and is flagged as outside-oriented...
-					if (TileElement.usWallOrientation = OUTSIDE_TOP_RIGHT && TileElement.pDBStructureRef[4].pDBStructure->ubNumberOfTiles == 1)
+					if (TileElement.usWallOrientation == OUTSIDE_TOP_RIGHT && TileElement.pDBStructureRef[4].pDBStructure->ubNumberOfTiles == 1)
 					{
 						// ... we found our problematic tile surface to be fixed
 						TileElement.usWallOrientation = INSIDE_TOP_RIGHT;
@@ -152,8 +152,7 @@ void CreateTileDatabase()
 		// Handle underflow
 		for (; cnt2 < gNumTilesPerType[cnt1]; ++cnt2)
 		{
-			TILE_ELEMENT TileElement;
-			TileElement = TILE_ELEMENT{};
+			TILE_ELEMENT TileElement{};
 			TileElement.usRegionIndex  = 0;
 			TileElement.hTileSurface   = TileSurf->vo;
 			TileElement.fType          = (UINT16)TileSurf->fType;
