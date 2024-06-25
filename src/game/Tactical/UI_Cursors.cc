@@ -466,8 +466,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 
 	if (recalc)
 	{
-		SGPPoint cursorPosition{};
-		GetCursorPos(cursorPosition);
+		auto const cursorPosition{ GetCursorPos() };
 
 		// Always set aim location to nothing
 		s->bAimShotLocation = AIM_SHOT_RANDOM;

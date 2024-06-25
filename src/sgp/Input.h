@@ -59,7 +59,7 @@ void FingerMove(const SDL_TouchFingerEvent*);
 void FingerDown(const SDL_TouchFingerEvent*);
 void FingerUp(const SDL_TouchFingerEvent*);
 
-void GetMousePos(SGPPoint *Point);
+SGPPoint GetMousePos();
 // TRUE = specified mouse button is down, FALSE = specified mouse button is up
 bool IsMouseButtonDown(UINT32 mouseButton);
 // TRUE = Main finger is down. Multitouch gesture is not detected, FALSE = Main finger is up or multitouch gesture is in progress

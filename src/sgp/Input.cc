@@ -493,10 +493,9 @@ void TextInput(const SDL_TextInputEvent* TextEv) {
 }
 
 
-void GetMousePos(SGPPoint* Point)
+SGPPoint GetMousePos()
 {
-	Point->iX = gusMouseXPos;
-	Point->iY = gusMouseYPos;
+	return { gusMouseXPos, gusMouseYPos };
 }
 
 bool IsMouseButtonDown(UINT32 mouseButton) {

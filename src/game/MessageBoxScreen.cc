@@ -87,7 +87,7 @@ static_assert(NUMBER_OF_MSG_BOX_STYLES == std::size(g_msg_box_style));
 
 void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect)
 {
-	GetMousePos(&pOldMousePosition);
+	pOldMousePosition = GetMousePos();
 
 	//this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
 	gfDontOverRideSaveBuffer = TRUE;
@@ -350,8 +350,7 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 
 	if (fCursorLockedToArea)
 	{
-		SGPPoint pPosition;
-		GetMousePos(&pPosition);
+		auto const pPosition{ GetMousePos() };
 
 		if (pPosition.iX > MessageBoxRestrictedCursorRegion.iRight ||
 				(pPosition.iX > MessageBoxRestrictedCursorRegion.iLeft && pPosition.iY < MessageBoxRestrictedCursorRegion.iTop && pPosition.iY > MessageBoxRestrictedCursorRegion.iBottom))
