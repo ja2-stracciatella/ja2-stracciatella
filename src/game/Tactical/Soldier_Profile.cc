@@ -804,10 +804,10 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 	// update sector values to current
 	p.sSector = s->sSector;
 
-	gMercProfiles[pid].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
-	gMercProfiles[pid].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-	gMercProfiles[pid].usStrategicInsertionData = s->sGridNo;
-	gMercProfiles[pid].fUseProfileInsertionInfo = TRUE;
+	p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
+	p.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+	p.usStrategicInsertionData = s->sGridNo;
+	p.fUseProfileInsertionInfo = TRUE;
 
 	ChangeSoldierTeam(s, CIV_TEAM);
 	UpdateTeamPanelAssignments();
