@@ -646,7 +646,6 @@ void SetUpHelicopterForPlayer(const SGPSector& sMap)
 		SetUpHelicopterForMovement( );
 		UpdateRefuelSiteAvailability( );
 		fSkyRiderSetUp = TRUE;
-		gMercProfiles[ SKYRIDER ].fUseProfileInsertionInfo = FALSE;
 	}
 }
 

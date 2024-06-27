@@ -43,6 +43,7 @@
 #include "content/ContentMercs.h"
 #include "WeaponModels.h"
 #include "MercProfile.h"
+#include "Strategic.h"
 
 extern BOOLEAN gfProfileDataLoaded;
 
@@ -801,23 +802,12 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 	p.ubMiscFlags &= ~PROFILE_MISC_FLAG_EPCACTIVE;
 
 	// update sector values to current
+	p.sSector = s->sSector;
 
-	// check to see if this person should disappear from the map after this
-	if ((pid == JOHN || pid == MARY) &&
-			s->sSector.x == 13            &&
-			s->sSector.y == MAP_ROW_B     &&
-			s->sSector.z == 0)
-	{
-		p.sSector = SGPSector();
-	}
-	else
-	{
-		p.sSector = s->sSector;
-	}
-
-	// how do we decide whether or not to set this?
-	p.fUseProfileInsertionInfo  = TRUE;
-	p.ubMiscFlags3             |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
+	p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
+	p.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+	p.usStrategicInsertionData = s->sGridNo;
+	p.fUseProfileInsertionInfo = TRUE;
 
 	ChangeSoldierTeam(s, CIV_TEAM);
 	UpdateTeamPanelAssignments();
