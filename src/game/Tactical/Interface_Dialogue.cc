@@ -2589,6 +2589,26 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					case JOHN:
 						UnRecruitEPC( MARY );
 						break;
+					case SKYRIDER:
+						if (ubQuoteNum == 15) // quote triggered by proximity to the helicopter
+						{
+							// make him always appear at his map editor placement spot in the airport sector
+							gMercProfiles[SKYRIDER].fUseProfileInsertionInfo = FALSE;
+						}
+						break;
+					case JOEY:
+						if (ubQuoteNum == 9) // quote triggered by proximity to Martha
+						{
+							// since he has no map editor placement in Cambria, make him spawn in the room he was sent to
+							gMercProfiles[JOEY].usStrategicInsertionData = 18326;
+						}
+						break;
+				}
+				if ((ubTargetNPC == JOHN || ubTargetNPC == MARY) && ubQuoteNum == 13) // quote triggered by proximity to the airplane
+				{
+					// make them disappear after unloading the sector
+					gMercProfiles[JOHN].sSector = SGPSector();
+					gMercProfiles[MARY].sSector = SGPSector();
 				}
 				break;
 
