@@ -15,6 +15,7 @@
 #include "TileDef.h"
 #include "WorldMan.h"
 
+#include <type_traits>
 #include <vector>
 
 
@@ -44,7 +45,6 @@ UINT16 gus2ndEastEdgepointMiddleIndex			= 0;
 UINT16 gus2ndSouthEdgepointMiddleIndex		= 0;
 UINT16 gus2ndWestEdgepointMiddleIndex			= 0;
 
-BOOLEAN gfEdgepointsExist = FALSE;
 BOOLEAN gfGeneratingMapEdgepoints = FALSE;
 
 INT16 gsTLGridNo = 13286;
@@ -109,8 +109,7 @@ static void ValidateMapEdge(SOLDIERTYPE& s, UINT16& middle_idx, std::vector<INT1
 	* edge, but a fence blocks it from direct access to the edge of the map. */
 static void ValidateEdgepoints()
 {
-	SOLDIERTYPE s;
-	s = SOLDIERTYPE{};
+	SOLDIERTYPE s{};
 	s.bTeam = ENEMY_TEAM;
 
 	ValidateMapEdge(s, gus1stNorthEdgepointMiddleIndex, gps1stNorthEdgepointArray);
@@ -261,10 +260,9 @@ static void InternallyClassifyEdgepoints(SOLDIERTYPE* pSoldier, INT16 sGridNo, s
 
 static void ClassifyEdgepoints(void)
 {
-	SOLDIERTYPE Soldier;
+	SOLDIERTYPE Soldier{};
 	INT16 sGridNo = -1;
 
-	Soldier = SOLDIERTYPE{};
 	Soldier.bTeam = 1;
 
 	//north
@@ -832,30 +830,40 @@ bool LoadMapEdgepoints(HWFILE const f)
 }
 
 
-UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
-{
-	std::vector<INT16>* pEdgepoints = nullptr;
+namespace {
+using edgepoints_vec = decltype(gps1stEastEdgepointArray);
+using edgepoints_ptr = std::add_pointer_t<std::add_const_t<edgepoints_vec>>;
 
-	//First validate and get access to the correct array based on strategic direction.
-	//We will use the selected array to choose insertion gridno's.
-	switch( ubStrategicInsertionCode )
+enum edgepoints_kind { PRIMARY, SECONDARY };
+edgepoints_ptr GetEdgepointsVector(UINT8 insertionCode, edgepoints_kind which)
+{
+	switch (insertionCode)
 	{
 		case INSERTION_CODE_NORTH:
-			pEdgepoints = &gps1stNorthEdgepointArray;
-			break;
+			return which == PRIMARY ? &gps1stNorthEdgepointArray : &gps2ndNorthEdgepointArray;
 		case INSERTION_CODE_EAST:
-			pEdgepoints = &gps1stEastEdgepointArray;
-			break;
+			return which == PRIMARY ? &gps1stEastEdgepointArray  : &gps2ndEastEdgepointArray;
 		case INSERTION_CODE_SOUTH:
-			pEdgepoints = &gps1stSouthEdgepointArray;
-			break;
+			return which == PRIMARY ? &gps1stSouthEdgepointArray : &gps2ndSouthEdgepointArray;
 		case INSERTION_CODE_WEST:
-			pEdgepoints = &gps1stWestEdgepointArray;
-			break;
+			return which == PRIMARY ? &gps1stWestEdgepointArray  : &gps2ndWestEdgepointArray;
 		default:
-			SLOGA("ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
-			break;
+			SLOGE("Failed to pass a valid strategic insertion code.");
+			return nullptr;
 	}
+}
+
+INT16 *gpReservedGridNos{};
+INT16 gsReservedIndex{};
+}
+
+
+GridNo ChooseMapEdgepoint(UINT8 ubStrategicInsertionCode)
+{
+	//First validate and get access to the correct array based on strategic direction.
+	//We will use the selected array to choose insertion gridno's.
+	auto * const pEdgepoints{ GetEdgepointsVector(ubStrategicInsertionCode, PRIMARY) };
+
 	if (!pEdgepoints || pEdgepoints->size() == 0)
 	{
 		return NOWHERE;
@@ -871,29 +879,7 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 
 	/* First validate and get access to the correct array based on strategic
 	 * direction.  We will use the selected array to choose insertion gridno's. */
-	std::vector<INT16>* pEdgepoints = nullptr;
-	switch (ubStrategicInsertionCode)
-	{
-		case INSERTION_CODE_NORTH:
-			pEdgepoints = &gps1stNorthEdgepointArray;
-			break;
-
-		case INSERTION_CODE_EAST:
-			pEdgepoints = &gps1stEastEdgepointArray;
-			break;
-
-		case INSERTION_CODE_SOUTH:
-			pEdgepoints = &gps1stSouthEdgepointArray;
-			break;
-
-		case INSERTION_CODE_WEST:
-			pEdgepoints = &gps1stWestEdgepointArray;
-			break;
-
-		default:
-			SLOGA("ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
-			break;
-	}
+	auto * const pEdgepoints{ GetEdgepointsVector(ubStrategicInsertionCode, PRIMARY) };
 	pMapEdgepointInfo->ubStrategicInsertionCode = ubStrategicInsertionCode;
 
 	if (!pEdgepoints || pEdgepoints->size() == 0)
@@ -941,9 +927,6 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 }
 
 
-INT16 *gpReservedGridNos = NULL;
-INT16 gsReservedIndex	= 0;
-
 void BeginMapEdgepointSearch()
 {
 	INT16 sGridNo;
@@ -978,11 +961,11 @@ void EndMapEdgepointSearch()
 }
 
 
+namespace {
 //THIS CODE ISN'T RECOMMENDED FOR TIME CRITICAL AREAS.
-INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
+GridNo SearchClosestMapEdgepoint(GridNo sGridNo, edgepoints_ptr pEdgepoints)
 {
 	INT32 i, iDirectionLoop;
-	std::vector<INT16>* pEdgepoints = nullptr;
 	INT16 sRadius, sDistance, sDirection, sOriginalGridNo;
 	BOOLEAN fReserved;
 
@@ -990,25 +973,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	{ //Everything is reserved.
 		SLOGA("All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
 	}
-	switch( ubInsertionCode )
-	{
-		case INSERTION_CODE_NORTH:
-			pEdgepoints = &gps1stNorthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any north mapedgepoints. LC:1", gWorldSector));
-			break;
-		case INSERTION_CODE_EAST:
-			pEdgepoints = &gps1stEastEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any east mapedgepoints. LC:1", gWorldSector));
-			break;
-		case INSERTION_CODE_SOUTH:
-			pEdgepoints = &gps1stSouthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any south mapedgepoints. LC:1", gWorldSector));
-			break;
-		case INSERTION_CODE_WEST:
-			pEdgepoints = &gps1stWestEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any west mapedgepoints. LC:1", gWorldSector));
-			break;
-	}
+
 	if (!pEdgepoints || pEdgepoints->size() == 0)
 	{
 		return NOWHERE;
@@ -1046,7 +1011,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	sRadius = 1;
 	sDirection = WORLD_COLS;
 	sOriginalGridNo = sGridNo;
-	while (sRadius < (INT16)(gWorldSector.z ? 30 : 10))
+	while (sRadius < (gWorldSector.z ? 30 : 10))
 	{
 		sGridNo = sOriginalGridNo + (-1 - WORLD_COLS)*sRadius; //start at the TOP-LEFT gridno
 		for( iDirectionLoop = 0; iDirectionLoop < 4; iDirectionLoop++ )
@@ -1092,119 +1057,16 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	}
 	return NOWHERE ;
 }
+}
 
-INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
+GridNo SearchForClosestPrimaryMapEdgepoint(GridNo sGridNo, UINT8 ubInsertionCode)
 {
-	INT32 i, iDirectionLoop;
-	std::vector<INT16>* pEdgepoints = nullptr;
-	INT16 sRadius, sDistance, sDirection, sOriginalGridNo;
-	BOOLEAN fReserved;
+	return SearchClosestMapEdgepoint(sGridNo, GetEdgepointsVector(ubInsertionCode, PRIMARY));
+}
 
-	if( gsReservedIndex >= 20 )
-	{ //Everything is reserved.
-		SLOGA("All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
-	}
-	switch( ubInsertionCode )
-	{
-		case INSERTION_CODE_NORTH:
-			pEdgepoints = &gps2ndNorthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated north mapedgepoints. KM:1", gWorldSector));
-			break;
-		case INSERTION_CODE_EAST:
-			pEdgepoints = &gps2ndEastEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated east mapedgepoints. KM:1", gWorldSector));
-			break;
-		case INSERTION_CODE_SOUTH:
-			pEdgepoints = &gps2ndSouthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated south mapedgepoints. KM:1", gWorldSector));
-			break;
-		case INSERTION_CODE_WEST:
-			pEdgepoints = &gps2ndWestEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated west mapedgepoints. KM:1", gWorldSector));
-			break;
-	}
-	if (!pEdgepoints || pEdgepoints->size() == 0)
-	{
-		return NOWHERE;
-	}
-
-	//Check the initial gridno, to see if it is available and an edgepoint.
-	fReserved = FALSE;
-	for( i = 0; i < gsReservedIndex; i++ )
-	{
-		if( gpReservedGridNos[ i ] == sGridNo )
-		{
-			fReserved = TRUE;
-			break;
-		}
-	}
-	if( !fReserved )
-	{	//Not reserved, so see if we can find this gridno in the edgepoint array.
-		for (INT16 edgepoint : *pEdgepoints)
-		{
-			if (edgepoint == sGridNo)
-			{ //Yes, the gridno is in the edgepoint array.
-				gpReservedGridNos[ gsReservedIndex ] = sGridNo;
-				gsReservedIndex++;
-				return sGridNo;
-			}
-		}
-	}
-
-	//spiral outwards, until we find an unreserved mapedgepoint.
-	//
-	// 09 08 07 06
-	// 10	01 00 05
-	// 11 02 03 04
-	// 12 13 14 15 ..
-	sRadius = 1;
-	sDirection = WORLD_COLS;
-	sOriginalGridNo = sGridNo;
-	while( sRadius < (INT16)(gWorldSector.z ? 30 : 10) )
-	{
-		sGridNo = sOriginalGridNo + (-1 - WORLD_COLS)*sRadius; //start at the TOP-LEFT gridno
-		for( iDirectionLoop = 0; iDirectionLoop < 4; iDirectionLoop++ )
-		{
-			switch( iDirectionLoop )
-			{
-				case 0:	sDirection = WORLD_COLS;	break;
-				case 1:	sDirection = 1;						break;
-				case 2:	sDirection = -WORLD_COLS;	break;
-				case 3:	sDirection = -1;					break;
-			}
-			sDistance = sRadius * 2;
-			while( sDistance-- )
-			{
-				sGridNo += sDirection;
-				if( sGridNo < 0 || sGridNo >= WORLD_MAX )
-					continue;
-				//Check the gridno, to see if it is available and an edgepoint.
-				fReserved = FALSE;
-				for( i = 0; i < gsReservedIndex; i++ )
-				{
-					if( gpReservedGridNos[ i ] == sGridNo )
-					{
-						fReserved = TRUE;
-						break;
-					}
-				}
-				if( !fReserved )
-				{	//Not reserved, so see if we can find this gridno in the edgepoint array.
-					for (INT16 edgepoint : *pEdgepoints)
-					{
-						if (edgepoint == sGridNo)
-						{ //Yes, the gridno is in the edgepoint array.
-							gpReservedGridNos[ gsReservedIndex ] = sGridNo;
-							gsReservedIndex++;
-							return sGridNo;
-						}
-					}
-				}
-			}
-		}
-		sRadius++;
-	}
-	return NOWHERE ;
+GridNo SearchForClosestSecondaryMapEdgepoint(GridNo sGridNo, UINT8 ubInsertionCode)
+{
+	return SearchClosestMapEdgepoint(sGridNo, GetEdgepointsVector(ubInsertionCode, SECONDARY));
 }
 
 
@@ -1328,14 +1190,13 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 
 UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 {
-	SOLDIERTYPE Soldier;
+	SOLDIERTYPE Soldier{};
 	std::vector<INT16>* pEdgepoints1 = nullptr;
 	std::vector<INT16>* pEdgepoints2 = nullptr;
 	INT16			sClosestSpot1 = NOWHERE, sClosestDist1 = 0x7FFF, sTempDist;
 	INT16			sClosestSpot2 = NOWHERE, sClosestDist2 = 0x7FFF;
 	BOOLEAN		fPrimaryValid = FALSE, fSecondaryValid = FALSE;
 
-	Soldier = SOLDIERTYPE{};
 	Soldier.bTeam = 1;
 	Soldier.sGridNo = sGridNo;
 
@@ -1416,7 +1277,7 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 }
 
 
-static bool ShowMapEdgepoint(std::vector<INT16>& edgepoints, UINT16 const idx)
+static auto ShowMapEdgepoint(std::vector<INT16>& edgepoints, UINT16 const idx)
 {
 	INT32              n_illegal = 0;
 	for (INT16 edgepoint : edgepoints)
