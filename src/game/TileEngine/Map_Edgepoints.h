@@ -1,7 +1,7 @@
 #ifndef __MAP_EDGEPOINTS_H
 #define __MAP_EDGEPOINTS_H
 
-#include "Types.h"
+#include "JA2Types.h"
 
 #include <vector>
 
@@ -12,7 +12,7 @@ struct MAPEDGEPOINTINFO
 	UINT16 sGridNo[ 32 ];
 };
 
-UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
+GridNo ChooseMapEdgepoint(UINT8 ubStrategicInsertionCode);
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints );
 void GenerateMapEdgepoints(void);
 
@@ -55,8 +55,8 @@ extern UINT16 gus2ndWestEdgepointMiddleIndex;
 //code shouldn't be used for enemies or anybody else.
 void BeginMapEdgepointSearch(void);
 void EndMapEdgepointSearch(void);
-INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode );
-INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode );
+GridNo SearchForClosestPrimaryMapEdgepoint(GridNo sGridNo, UINT8 ubInsertionCode);
+GridNo SearchForClosestSecondaryMapEdgepoint(GridNo sGridNo, UINT8 ubInsertionCode);
 
 //There are two classes of edgepoints.
 //PRIMARY		: The default list of edgepoints.  This list includes edgepoints that are easily accessible from the
@@ -65,7 +65,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 //						to these areas is possible.  Examples would be isolated sections of Grumm or Alma, which you can't
 //						immediately
 //
-UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo );
+UINT8 CalcMapEdgepointClassInsertionCode(GridNo sGridNo);
 
 void ShowMapEdgepoints(void);
 void HideMapEdgepoints(void);
