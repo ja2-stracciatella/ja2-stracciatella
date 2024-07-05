@@ -6,14 +6,10 @@ android {
     compileSdkVersion 31
     ndkVersion "25.0.8775105"
 
-    lintOptions {
-        disable 'NewApi'
-        disable 'ExpiredTargetSdkVersion'
-    }
 
     defaultConfig {
         applicationId "io.github.ja2stracciatella"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 26
 
         // Version name is the semver version
@@ -82,6 +78,10 @@ android {
                 srcDirs = [ "../../assets" ]
             }
         }
+    }
+    namespace 'io.github.ja2stracciatella'
+    lint {
+        disable 'NewApi', 'ExpiredTargetSdkVersion'
     }
 }
 
