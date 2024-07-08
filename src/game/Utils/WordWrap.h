@@ -4,6 +4,7 @@
 #include "Types.h"
 
 #include <string_theory/string>
+#include <vector>
 
 
 //Flags for DrawTextToScreen()
@@ -38,15 +39,10 @@ inline UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 
 #define IAN_WRAP_NO_SHADOW	32
 
 
-struct WRAPPED_STRING
-{
-	WRAPPED_STRING* pNextWrappedString;
-	ST::utf32_buffer codepoints;
-};
+using WrappedString = std::vector<ST::utf32_buffer>;
 
-
-WRAPPED_STRING* LineWrap(SGPFont, UINT16 usLineWidthPixels, const ST::utf32_buffer& codepoints);
-inline WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::string& str)
+WrappedString LineWrap(SGPFont, UINT16 usLineWidthPixels, const ST::utf32_buffer& codepoints);
+inline WrappedString LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::string& str)
 {
 	return LineWrap(font, usLineWidthPixels, str.to_utf32());
 }
