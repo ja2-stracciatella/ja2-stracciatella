@@ -29,20 +29,12 @@ inline void SkipSpace(const char32_t** codepoints)
 	}
 }
 
-static WRAPPED_STRING* AllocWrappedString(const char32_t* data, size_t size)
-{
-	WRAPPED_STRING* const ws = new WRAPPED_STRING{};
-	ws->codepoints = ST::utf32_buffer(data, size);
-	return ws;
-}
 
-
-WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::utf32_buffer& codepoints)
+WrappedString LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::utf32_buffer& codepoints)
 {
 	size_t const max_w = usLineWidthPixels;
 
-	WRAPPED_STRING*  head   = 0;
-	WRAPPED_STRING** anchor = &head;
+	WrappedString result;
 
 	const char32_t* i = codepoints.data();
 	while (*i == U' ') ++i; // Skip leading spaces
@@ -68,10 +60,9 @@ WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::utf32
 		{
 			if (line_start != i) // Append last line
 			{
-				WRAPPED_STRING* const ws = AllocWrappedString(line_start, i - line_start);
-				*anchor = ws;
+				result.emplace_back(line_start, i - line_start);
 			}
-			return head;
+			return result;
 		}
 		size_t const w = GetCharWidth(font, *i);
 		word_w += w;
@@ -84,9 +75,7 @@ WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::utf32
 				word_start = i;
 				word_w     = 0;
 			}
-			WRAPPED_STRING* const ws = AllocWrappedString(line_start, line_end - line_start);
-			*anchor    = ws;
-			anchor     = &ws->pNextWrappedString;
+			result.emplace_back(line_start, line_end - line_start);
 			line_start = word_start;
 			line_end   = word_start;
 			line_w     = word_w;
@@ -114,12 +103,9 @@ UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont fon
 {
 	UINT16       total_h = 0;
 	UINT16 const h       = GetFontHeight(font) + gap;
-	for (WRAPPED_STRING* i = LineWrap(font, w, codepoints); i;)
+	for (auto const& codepoints : LineWrap(font, w, codepoints))
 	{
-		DrawTextToScreen(i->codepoints, x, y, w, font, foreground, background, flags);
-		WRAPPED_STRING* const del = i;
-		i = i->pNextWrappedString;
-		delete del;
+		DrawTextToScreen(codepoints, x, y, w, font, foreground, background, flags);
 		total_h += h;
 		y       += h;
 	}
