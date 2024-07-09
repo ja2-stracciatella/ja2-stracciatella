@@ -20,6 +20,7 @@
 #include "MagazineModel.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
+#include "Soldier_Profile_Type.h"
 #include "VehicleModel.h"
 #include "WeaponModels.h"
 #include "army/ArmyCompositionModel.h"
@@ -50,6 +51,7 @@
 #include "strings/Localization.h"
 #include "tactical/MapItemReplacementModel.h"
 #include "tactical/NpcActionParamsModel.h"
+#include "tacticalai/NPCQuoteInfo.h"
 
 #include "Logger.h"
 #include "Strategic_AI.h"
@@ -735,6 +737,13 @@ bool DefaultContentManager::loadGameData()
 
 	loadTranslationTable();
 
+	m_scriptRecords.resize(NUM_PROFILES);
+	loadAllScriptRecords("script-records-NPCs.json");
+	loadAllScriptRecords("script-records-RPCs.json");
+	// these are purely for schema validation - no data is supposed to be extracted from them on game startup
+	readJsonDataFileWithSchema("script-records-meanwhiles.json");
+	readJsonDataFileWithSchema("script-records-recruited.json");
+
 	std::unique_ptr<SGPFile> const translation { openGameResForReading(ST::format(
 		"strings/translation{}.json", L10n::GetSuffix(m_gameVersion, false)))};
 	g_langRes = std::make_unique<L10n::L10n_t>(translation.get());
@@ -1107,6 +1116,18 @@ void DefaultContentManager::loadTranslationTable()
 	}
 }
 
+void DefaultContentManager::loadAllScriptRecords(const ST::string& jsonPath)
+{
+	auto json = readJsonDataFileWithSchema(jsonPath);
+	for (auto& element : json.toVec())
+	{
+		auto reader = element.toObject();
+		ST::string jsonProfileName = reader.GetString("profile");
+		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
+		m_scriptRecords[jsonProfileId] = NPCQuoteInfo::deserialize(element, this, this);
+	}
+}
+
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
 {
 	return m_bloodCatPlacements;
@@ -1331,6 +1352,41 @@ const VehicleModel* DefaultContentManager::getVehicle(uint8_t const vehicleID) c
 		throw std::out_of_range(error.to_std_string());
 	}
 	return m_vehicles[vehicleID];
+}
+
+NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId) const
+{
+	MercProfile profile(profileId);
+	ST::string filename;
+	if (profile.isPlayerMerc() || (profile.isRPC() && profile.isRecruited()))
+	{
+		filename = "script-records-recruited.json";
+		auto json = readJsonDataFile(filename);
+		return NPCQuoteInfo::deserialize(json.toVec()[0], this, this);
+	}
+	else
+	{
+		return (NPCQuoteInfo*)m_scriptRecords[profileId];
+	}
+	return nullptr;
+}
+NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const
+{
+	auto json = readJsonDataFile("script-records-meanwhiles.json");
+	for (auto& element : json.toVec())
+	{
+		auto reader = element.toObject();
+		if (reader.GetUInt("meanwhileIndex") == meanwhileId)
+		{
+			ST::string jsonProfileName = reader.GetString("profile");
+			uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
+			if (jsonProfileId == profileId)
+			{
+				return NPCQuoteInfo::deserialize(element, this, this);
+			}
+		}
+	}
+	return nullptr;
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const

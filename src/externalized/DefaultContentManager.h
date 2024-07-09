@@ -155,6 +155,9 @@ public:
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const override;
 	virtual const VehicleModel* getVehicle(uint8_t vehicleID) const override;
 
+	NPCQuoteInfo* getScriptRecords(uint8_t profileId) const override;
+	NPCQuoteInfo* getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const override;
+
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const override;
 	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
@@ -193,6 +196,8 @@ protected:
 	std::vector<ST::string> m_calibreNamesBobbyRay;
 
 	std::vector<AmmoTypeModel const *> m_ammoTypes;
+
+	std::vector<const NPCQuoteInfo*> m_scriptRecords;
 
 	/** Mapping of calibre names to objects. */
 	std::map<ST::string, const AmmoTypeModel*> m_ammoTypeMap;
@@ -276,6 +281,7 @@ protected:
 	bool loadMercsData();
 	void loadVehicles();
 	void loadTranslationTable();
+	void loadAllScriptRecords(const ST::string& jsonPath);
 
 	JsonValue readJsonFromString(const ST::string& jsonData, const ST::string& label) const;
 	JsonValue readJsonDataFileWithSchema(const ST::string& jsonPath) const;
