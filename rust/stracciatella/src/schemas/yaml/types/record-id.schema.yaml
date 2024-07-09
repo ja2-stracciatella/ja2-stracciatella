@@ -1,0 +1,7 @@
+type: integer
+title: Script record index
+description: >-
+  What other records refer to with their triggerRecord property. Must be unique.
+  Allowed to be out of order
+minimum: 0
+maximum: 49

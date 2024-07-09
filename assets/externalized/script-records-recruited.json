@@ -1,0 +1,91 @@
+/* Script records are the same for all mercs and RPCs that are recruited */
+[
+    {
+        "profile": "",
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "factMustBeTrue": 24, // unnamed fact
+                "factMustBeFalse": 81, // FACT_NPC_IS_ENEMY
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13,
+                "numQuotes": 1,
+                "triggerSelf": true,
+                "triggerRecord": 1,
+                "userInterface": "TURN_UI_OFF",
+                "goToGridno": 12722
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12722,
+                "factMustBeTrue": 24, // unnamed fact
+                "factMustBeFalse": 81, // FACT_NPC_IS_ENEMY
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "index": 102 // NPC_ACTION_LEAVE_HIDEOUT
+                }
+            },
+            {
+                "index": 2,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "userInterface": "SPECIAL_TURN_UI_OFF",
+                "goToGridno": 9541
+            },
+            {
+                "index": 3,
+                "requiredGridNo": 9541,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "userInterface": "SPECIAL_TURN_UI_ON"
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 11291
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 11291,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "triggerNPC": "DARYL",
+                "triggerRecord": 14,
+                "actionData": {
+                    "index": 262 // NPC_ACTION_REMOVE_MERC_FOR_MARRIAGE
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "numQuotes": 1
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 26,
+                "numQuotes": 1,
+                "triggerNPC": "MATT",
+                "triggerRecord": 13
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 27,
+                "numQuotes": 1,
+                "actionData": {
+                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            }
+        ]
+    }
+]

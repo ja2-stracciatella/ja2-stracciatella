@@ -1,0 +1,159 @@
+$schema: 'http://json-schema.org/draft-04/schema#'
+title: Script Records
+description: >-
+  Script records define conditions for triggering actions
+  (dialogue included) performed by NPCs
+type: array
+items:
+  type: object
+  properties:
+    profile:
+      type: string
+      description: >-
+        The name of the scripted NPC. Must correspond to the value of the
+        internalName property defined in mercs-profile-info.json
+    meanwhileIndex:
+      $ref: types/uint8.schema.yaml
+    records:
+      type: array
+      items:
+        type: object
+        properties:
+          index:
+            $ref: types/record-id.schema.yaml
+          alreadySaid:
+            type: boolean
+          eraseOnceSaid:
+            type: boolean
+          sayOncePerConvo:
+            type: boolean
+          requiredAnyItem:
+            type: boolean
+          requiredAnyRifle:
+            type: boolean
+          requiredItem:
+            type: string
+            description: >-
+              Item to give to the NPC as a condition to trigger their action.
+              Must correspond to the value of the internalName property in
+              items.json
+          requiredGridNo:
+            $ref: types/uint16.schema.yaml
+          factMustBeTrue:
+            $ref: types/uint16.schema.yaml
+          factMustBeFalse:
+            $ref: types/uint16.schema.yaml
+          quest:
+            type: object
+            properties:
+              index:
+                $ref: types/quest-id.schema.yaml
+              status:
+                type: string
+                enum:
+                  - NOTSTARTED
+                  - INPROGRESS
+                  - DONE
+            required:
+              - index
+              - status
+          firstDay:
+            $ref: types/uint8.schema.yaml
+          lastDay:
+            $ref: types/uint8.schema.yaml
+          requiredApproach:
+            type: string
+            default: TRIGGER_NPC
+          requiredOpinion:
+            $ref: types/uint8.schema.yaml
+          quoteNum:
+            $ref: types/uint8.schema.yaml
+          numQuotes:
+            $ref: types/uint8.schema.yaml
+          startQuest:
+            $ref: types/quest-id.schema.yaml
+          endQuest:
+            $ref: types/quest-id.schema.yaml
+          triggerClosestMerc:
+            type: boolean
+          triggerSelf:
+            type: boolean
+          triggerNPC:
+            type: string
+            description: >-
+              Name of the NPC whose record will be triggered. Must correspond to
+              the value of the internalName property in mercs-profile-info.json
+          triggerRecord:
+            $ref: types/uint8.schema.yaml
+          setFactTrue:
+            $ref: types/uint16.schema.yaml
+          giftItem:
+            type: string
+            description: >-
+              Item that the NPC gives away. Must correspond to the value of the
+              internalName property in items.json
+          userInterface:
+            type: string
+          goToGridno:
+            $ref: types/uint16.schema.yaml
+          actionData:
+            type: object
+            properties:
+              turnToFace:
+                type: string
+                description: >-
+                  Name of the NPC to turn to. Must correspond to the value of
+                  the internalName property in mercs-profile-info.json
+              index:
+                $ref: types/uint16.schema.yaml
+              doFirst:
+                type: boolean
+                description: >-
+                  Defines if the action will be performed before or after saying
+                  a quote or doing an action
+            oneOf:
+              - required:
+                  - turnToFace
+              - required:
+                  - index
+        required:
+          - index
+        dependentRequired:
+          triggerNPC:
+            - triggerRecord
+          triggerSelf:
+            - triggerRecord
+          triggerClosestMerc:
+            - triggerRecord
+        not:
+          anyOf:
+            - required:
+                - giftItem
+                - userInterface
+            - required:
+                - triggerNPC
+                - triggerSelf
+            - required:
+                - triggerNPC
+                - triggerClosestMerc
+            - required:
+                - triggerSelf
+                - triggerClosestMerc
+            - required:
+                - requiredItem
+                - requiredAnyItem
+            - required:
+                - requiredItem
+                - requiredAnyRifle
+            - required:
+                - requiredItem
+                - requiredGridNo
+            - required:
+                - requiredGridNo
+                - requiredAnyItem
+            - required:
+                - requiredGridNo
+                - requiredAnyRifle
+            - required:
+                - requiredAnyRifle
+                - requiredAnyItem
