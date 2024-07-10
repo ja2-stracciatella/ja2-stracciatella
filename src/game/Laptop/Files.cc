@@ -92,7 +92,7 @@ enum
 
 
 // the highlighted line
-static INT32 iHighLightFileLine = -1;
+static INT32 iHighLightFileLine;
 
 
 // the files record list
@@ -142,16 +142,10 @@ static FileInfo const g_file_info[] =
 
 
 // buttons for next and previous pages
+// (previous button at index 0, next button at index 1)
 static GUIButtonRef giFilesPageButtons[2];
 static MOUSE_REGION g_scroll_region;
 
-
-// the previous and next pages buttons
-
-enum{
-	PREVIOUS_FILES_PAGE_BUTTON=0,
-	NEXT_FILES_PAGE_BUTTON,
-};
 // mouse regions
 static MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 
@@ -190,6 +184,7 @@ void GameInitFiles(void)
 {
 	GCM->tempFiles()->deleteFile(FILES_DATA_FILE);
 	ClearFilesList( );
+	iHighLightFileLine = -1;
 
 	// add background check by RIS
 	AddFilesToPlayersLog(ENRICO_BACKGROUND);
@@ -524,9 +519,18 @@ static void DisplayFormattedText(void)
 
 	// Get the file that was highlighted
 	FilesUnit* fu = pFilesListHead;
-	for (INT32 n = iHighLightFileLine; n != 0; --n)
+	for (INT32 n = iHighLightFileLine; n != 0 && fu != nullptr; --n)
 	{
 		fu = fu->Next;
+	}
+
+	if (fu == nullptr)
+	{
+		// iHighLiftFileLine can be stale if one quits out of a game where the
+		// terrorist files were available and then loads a game where they are
+		// not. Reset state to initial in this case.
+		iHighLightFileLine = -1;
+		return;
 	}
 
 	fu->fRead = TRUE;
