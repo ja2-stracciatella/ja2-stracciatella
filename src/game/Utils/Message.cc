@@ -18,7 +18,6 @@
 #include "SoundMan.h"
 #include "Dialogue_Control.h"
 #include "Game_Clock.h"
-#include <stdarg.h>
 #include "VSurface.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
@@ -46,8 +45,6 @@ struct ScrollStringSt
 #define MAP_LINE_WIDTH 300
 #define WIDTH_BETWEEN_NEW_STRINGS 5
 
-#define BETAVERSION_COLOR FONT_ORANGE
-#define TESTVERSION_COLOR FONT_GREEN
 #define DEBUG_COLOR FONT_RED
 #define DIALOGUE_COLOR FONT_WHITE
 #define INTERFACE_COLOR FONT_YELLOW
@@ -316,25 +313,10 @@ void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 }
 
 
-// clear up a linked list of wrapped strings
-static void ClearWrappedStrings(WRAPPED_STRING* pStringWrapperHead)
-{
-	WRAPPED_STRING* i = pStringWrapperHead;
-	while (i != NULL)
-	{
-		WRAPPED_STRING* del = i;
-		i = i->pNextWrappedString;
-		delete del;
-	}
-}
-
-
 // this function sets up the string into several single line structures
 static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::string& str)
 {
 	if (IsTimeBeingCompressed()) return;
-
-	ST::string msg = str;
 
 	switch (priority)
 	{
@@ -342,21 +324,17 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::str
 		case MSG_INTERFACE: colour = INTERFACE_COLOR; break;
 	}
 
-	WRAPPED_STRING* const head = LineWrap(TINYFONT1, LINE_WIDTH, msg);
-
 	ScrollStringSt** anchor = &pStringS;
 	while (*anchor) anchor = &(*anchor)->pNext;
 
 	BOOLEAN new_string = TRUE;
-	for (WRAPPED_STRING* i = head; i; i = i->pNextWrappedString)
+	for (auto const& codepoints : LineWrap(TINYFONT1, LINE_WIDTH, str))
 	{
-		ScrollStringSt* const tmp = AddString(i->codepoints, colour, new_string);
+		auto * const tmp{ AddString(codepoints, colour, new_string) };
 		*anchor    = tmp;
 		anchor     = &tmp->pNext;
 		new_string = FALSE;
 	}
-
-	ClearWrappedStrings(head);
 }
 
 
@@ -366,7 +344,11 @@ static void AddStringToMapScreenMessageList(const ST::string& pString, UINT16 us
 // this function sets up the string into several single line structures
 void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 {
+#if defined _DEBUG
 	ST::string DestString = str;
+#else
+	ST::string const& DestString{ str };
+#endif
 
 	switch (ubPriority)
 	{
@@ -391,20 +373,14 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 		case MSG_INTERFACE: usColor = INTERFACE_COLOR; break;
 	}
 
-	WRAPPED_STRING* pStringWrapperHead = LineWrap(MAP_SCREEN_MESSAGE_FONT, MAP_LINE_WIDTH, DestString);
-	WRAPPED_STRING* pStringWrapper = pStringWrapperHead;
-	if (!pStringWrapper) return;
+	if (DestString.empty()) return;
 
 	BOOLEAN fNewString = TRUE;
-	do
+	for (auto const& codepoints : LineWrap(MAP_SCREEN_MESSAGE_FONT, MAP_LINE_WIDTH, DestString))
 	{
-		AddStringToMapScreenMessageList(pStringWrapper->codepoints, usColor, fNewString);
+		AddStringToMapScreenMessageList(codepoints, usColor, fNewString);
 		fNewString = FALSE;
-		pStringWrapper = pStringWrapper->pNextWrappedString;
 	}
-	while (pStringWrapper != NULL);
-
-	ClearWrappedStrings(pStringWrapperHead);
 
 	MoveToEndOfMapScreenMessageList();
 }
