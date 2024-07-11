@@ -1366,7 +1366,7 @@ NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId) const
 	}
 	else
 	{
-		return (NPCQuoteInfo*)m_scriptRecords[profileId];
+		return const_cast<NPCQuoteInfo*>(m_scriptRecords[profileId]);
 	}
 	return nullptr;
 }
