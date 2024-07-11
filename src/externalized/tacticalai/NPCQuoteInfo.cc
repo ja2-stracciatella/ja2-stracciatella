@@ -52,6 +52,7 @@ NPCQuoteInfo* NPCQuoteInfo::deserialize(const JsonValue& json, const MercSystem*
 		recordIndex = jsonRec.GetUInt("index");
 		NPCQuoteInfo* rec = &buf[recordIndex];
 		rec->ubIdentifier = recordIndex;
+		rec->fFlags = 0;
 		if (jsonRec.getOptionalBool("alreadySaid")) rec->fFlags |= QUOTE_FLAG_SAID;
 		if (jsonRec.getOptionalBool("eraseOnceSaid")) rec->fFlags |= QUOTE_FLAG_ERASE_ONCE_SAID;
 		if (jsonRec.getOptionalBool("sayOncePerConvo")) rec->fFlags |= QUOTE_FLAG_SAY_ONCE_PER_CONVO;
