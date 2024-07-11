@@ -82,7 +82,7 @@ bool ProfileCurrentlyTalkingInDialoguePanel(UINT8 ubProfile);
 void InternalInitTalkingMenu(UINT8 ubCharacterNum, INT16 sX, INT16 sY);
 
 
-enum
+enum NPCAction : UINT16
 {
 	NPC_ACTION_NONE = 0,
 	NPC_ACTION_DONT_ACCEPT_ITEM,
