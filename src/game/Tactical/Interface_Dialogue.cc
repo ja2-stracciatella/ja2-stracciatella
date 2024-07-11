@@ -1,7 +1,6 @@
 #include "Interface_Dialogue.h"
 
 #include "AI.h"
-#include "AIInternals.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "Arms_Dealer_Init.h"
@@ -1558,6 +1557,23 @@ static BOOLEAN NPCOpenThing(SOLDIERTYPE* pSoldier, BOOLEAN fDoor);
 static void DoneFadeOutActionBasement(void);
 static void DoneFadeOutActionLeaveBasement(void);
 static void CarmenLeavesSectorCallback(void);
+
+namespace {
+// Handles both NPC_ACTION_WALTER_GIVEN_MONEY_INITIALLY and
+// NPC_ACTION_WALTER_GIVEN_MONEY.
+void WalterGivenMoney(NPCAction actionCode, NpcActionParamsModel const& params)
+{
+	if (gMercProfiles[WALTER].iBalance >= params.getAmount(WALTER_BRIBE_AMOUNT))
+	{
+		TriggerNPCRecord(WALTER, 16);
+	}
+	else
+	{
+		TriggerNPCRecord(WALTER,
+			actionCode == NPC_ACTION_WALTER_GIVEN_MONEY_INITIALLY ? 14 : 15);
+	}
+}
+}
 
 
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
@@ -4046,24 +4062,8 @@ add_log:
 			}
 
 			case NPC_ACTION_WALTER_GIVEN_MONEY_INITIALLY:
-				if ( gMercProfiles[ WALTER ].iBalance >= params->getGridNo(WALTER_BRIBE_AMOUNT) )
-				{
-					TriggerNPCRecord( WALTER, 16 );
-				}
-				else
-				{
-					TriggerNPCRecord( WALTER, 14 );
-				}
-				break;
 			case NPC_ACTION_WALTER_GIVEN_MONEY:
-				if ( gMercProfiles[ WALTER ].iBalance >= params->getGridNo(WALTER_BRIBE_AMOUNT) )
-				{
-					TriggerNPCRecord( WALTER, 16 );
-				}
-				else
-				{
-					TriggerNPCRecord( WALTER, 15 );
-				}
+				WalterGivenMoney(static_cast<NPCAction>(usActionCode), *params);
 				break;
 			default:
 				SLOGD("No code support for NPC action {}", usActionCode);
