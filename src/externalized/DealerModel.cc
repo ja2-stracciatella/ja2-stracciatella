@@ -2,7 +2,7 @@
 #include "Exceptions.h"
 
 
-DealerModel::DealerModel(UINT8 dealerID_, UINT8 mercID_, ArmsDealerType dealerType_,
+DealerModel::DealerModel(ArmsDealerID dealerID_, UINT8 mercID_, ArmsDealerType dealerType_,
 	FLOAT buyingPrice_, FLOAT sellingPrice_, FLOAT repairSpeed_, FLOAT repairCost_,
 	INT32 initialCash_, std::bitset<ArmsDealerFlag::NUM_FLAGS> flags_)
 	: dealerID(dealerID_), profileID(mercID_), type(dealerType_),
@@ -70,7 +70,7 @@ const DealerModel* DealerModel::deserialize(const JsonValue& json, const MercSys
 	auto profileId = mercProfile->profileID;
 
 	return new DealerModel(
-		dealerIndex,
+		static_cast<ArmsDealerID>(dealerIndex),
 		profileId,
 		parseType(obj.GetString("type")),
 		obj.getOptionalDouble("buyingPrice"),
