@@ -60,9 +60,9 @@ void InitAllArmsDealers()
 	}
 
 	//Initialize the initial status & inventory for each of the arms dealers
-	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
+	for (auto dealer : GCM->getDealers())
 	{
-		InitializeOneArmsDealer( ubArmsDealer );
+		InitializeOneArmsDealer( dealer->dealerID );
 	}
 
 	//make sure certain items are in stock and certain limits are respected
@@ -121,15 +121,15 @@ void ShutDownArmsDealers()
 	UINT16 usItemIndex;
 
 	// loop through all the dealers
-	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
+	for (auto dealer : GCM->getDealers())
 	{
 
 		//loop through all the item types
 		for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 		{
-			if (gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() > 0)
+			if (gArmsDealersInventory[ dealer->dealerID ][ usItemIndex ].SpecialItem.size() > 0)
 			{
-				FreeSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ] );
+				FreeSpecialItemArray( &gArmsDealersInventory[ dealer->dealerID ][ usItemIndex ] );
 			}
 		}
 	}
@@ -163,11 +163,11 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 	}
 
 	// Save special items
-	for (ArmsDealerID dealer = ARMS_DEALER_FIRST; dealer != NUM_ARMS_DEALERS; ++dealer)
+	for (auto dealer : GCM->getDealers())
 	{
 		for (UINT16 item_idx = 1; item_idx != MAXITEMS; ++item_idx)
 		{
-			DEALER_ITEM_HEADER const& di = gArmsDealersInventory[dealer][item_idx];
+			DEALER_ITEM_HEADER const& di = gArmsDealersInventory[dealer->dealerID][item_idx];
 			if (di.SpecialItem.size() == 0) continue;
 			f->write(di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
 		}
@@ -219,11 +219,11 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 	if (savegame_version < 55) InitializeOneArmsDealer(ARMS_DEALER_MANNY);
 
 	// Load special items
-	for (ArmsDealerID dealer = ARMS_DEALER_FIRST; dealer != NUM_ARMS_DEALERS; ++dealer)
+	for (auto dealer : GCM->getDealers())
 	{
 		for (UINT16 item_idx = 1; item_idx != MAXITEMS; ++item_idx)
 		{
-			DEALER_ITEM_HEADER& di = gArmsDealersInventory[dealer][item_idx];
+			DEALER_ITEM_HEADER& di = gArmsDealersInventory[dealer->dealerID][item_idx];
 			if (di.SpecialItem.size() == 0) continue;
 			f->read(di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
 		}
@@ -261,13 +261,15 @@ static void SimulateArmsDealerCustomer(void)
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
 	//loop through all the arms dealers
-	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
+	for (auto dealer : GCM->getDealers())
 	{
+		auto ubArmsDealer = dealer->dealerID;
+
 		if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 			continue;
 
 		//if the arms dealer isn't supposed to have any items (includes all repairmen)
-		if( GCM->getDealer(ubArmsDealer)->hasFlag(ArmsDealerFlag::HAS_NO_INVENTORY ))
+		if( dealer->hasFlag(ArmsDealerFlag::HAS_NO_INVENTORY ))
 			continue;
 
 		//loop through all items of the same type
@@ -325,9 +327,9 @@ void DailyCheckOnItemQuantities()
 	UINT8   ubReorderDays;
 
 	//loop through all the arms dealers
-	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
+	for (auto dealer : GCM->getDealers())
 	{
-		auto dealer = GCM->getDealer(ubArmsDealer);
+		auto ubArmsDealer = dealer->dealerID;
 
 		if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 			continue;
