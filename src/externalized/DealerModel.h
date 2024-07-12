@@ -10,12 +10,12 @@
 class DealerModel
 {
 public:
-	DealerModel(UINT8 dealerID, UINT8 mercID, ArmsDealerType dealerType,
+	DealerModel(ArmsDealerID dealerID, UINT8 mercID, ArmsDealerType dealerType,
 		FLOAT buyingPrice, FLOAT sellingPrice, FLOAT repairSped, FLOAT repairCost,
 		INT32 initialCash, std::bitset<ArmsDealerFlag::NUM_FLAGS> flags
 	);
 
-	const UINT8 dealerID;
+	const ArmsDealerID dealerID;
 
 	// Merc profile Id for the dealer
 	const UINT8 profileID;

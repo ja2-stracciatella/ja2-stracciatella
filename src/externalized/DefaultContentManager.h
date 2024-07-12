@@ -101,11 +101,11 @@ public:
 	virtual const std::vector<PATROL_GROUP>& getPatrolGroups() const override;
 	virtual const std::vector<ARMY_COMPOSITION>& getArmyCompositions() const override;
 
-	virtual const DealerInventory* getDealerInventory(int dealerId) const override;
+	virtual const DealerInventory* getDealerInventory(ArmsDealerID dealerId) const override;
 	virtual const DealerInventory* getBobbyRayNewInventory() const override;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const override;
 
-	virtual const DealerModel* getDealer(uint8_t dealerID) const override;
+	virtual const DealerModel* getDealer(ArmsDealerID dealerID) const override;
 	virtual const std::vector<const DealerModel*> & getDealers() const override;
 
 	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const override;
