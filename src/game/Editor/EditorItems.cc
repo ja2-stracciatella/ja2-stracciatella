@@ -105,7 +105,6 @@ EditorItemsInfo eInfo;
 //isn't calculated every time a player changes categories.
 void EntryInitEditorItemsInfo()
 {
-	INT32 i;
 	eInfo.uiBuffer = 0;
 	eInfo.fActive = 0;
 	eInfo.sScrollIndex = 0;
@@ -120,29 +119,24 @@ void EntryInitEditorItemsInfo()
 		eInfo.uiItemType = TBAR_MODE_ITEM_WEAPONS;
 		//Pre-calculate the number of each item type.
 		eInfo.sNumTriggers = NUMBER_TRIGGERS;
-		for( i=0; i < MAXITEMS; i++ )
+		for (auto item : GCM->getItems())
 		{
-			const ItemModel* item = GCM->getItem(i);
-			if( GCM->getItem(i)->getFlags() & ITEM_NOT_EDITOR )
-				continue;
-			if( i == SWITCH || i == ACTION_ITEM )
-			{
+			const auto itemIdx = item->getItemIndex();
 
-			}
-			else switch( item->getItemClass() )
+			if( item->getFlags() & ITEM_NOT_EDITOR )
+				continue;
+			if( itemIdx == SWITCH || itemIdx == ACTION_ITEM )
+				continue;
+
+			switch( item->getItemClass() )
 			{
 				case IC_GUN:
 				case IC_BLADE:
 				case IC_THROWN:
 				case IC_LAUNCHER:
 				case IC_THROWING_KNIFE:
-					eInfo.sNumWeapons++;
-					break;
 				case IC_PUNCH:
-					if ( i != NOTHING )
-					{
-						eInfo.sNumWeapons++;
-					}
+					eInfo.sNumWeapons++;
 					break;
 				case IC_AMMO:
 					eInfo.sNumAmmo++;

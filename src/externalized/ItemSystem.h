@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ItemRange.h>
+
 #include "stdint.h"
 #include <string_theory/string>
 #include <vector>
@@ -10,6 +12,9 @@ struct ItemModel;
 class ItemSystem
 {
 public:
+	// Returns a range that can be iterated over, without the NOTHING item
+	virtual ItemRange getItems() const = 0;
+
 	// Returns an item by internal name
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const = 0;
 
