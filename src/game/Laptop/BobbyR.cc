@@ -437,20 +437,20 @@ void InitBobbyRayInventory()
 
 static void InitBobbyRayNewInventory(void)
 {
-	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
 
 
 	std::fill_n(LaptopSaveInfo.BobbyRayInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
-	for( i = 0; i < MAXITEMS; i++ )
+	for (auto item : GCM->getItems())
 	{
-		const ItemModel *item = GCM->getItem(i);
+		const auto itemIndex = item->getItemIndex();
+
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
-		if( (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) != 0) && !(item->getFlags() & ITEM_NOT_BUYABLE) && ItemIsLegal( i ) )
+		if( (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) != 0) && !(item->getFlags() & ITEM_NOT_BUYABLE) && ItemIsLegal(itemIndex) )
 		{
-			LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = i;
+			LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = itemIndex;
 			usBobbyrIndex++;
 		}
 	}
@@ -471,24 +471,23 @@ static void InitBobbyRayNewInventory(void)
 
 static void InitBobbyRayUsedInventory(void)
 {
-	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
 
 
 	std::fill_n(LaptopSaveInfo.BobbyRayUsedInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
-	for( i = 0; i < MAXITEMS; i++ )
+	for (auto item : GCM->getItems())
 	{
-		const ItemModel *item = GCM->getItem(i);
+		const auto itemIndex = item->getItemIndex();
 
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
-		if( (GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) != 0) && !(item->getFlags() & ITEM_NOT_BUYABLE) && ItemIsLegal( i ) )
+		if( (GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) != 0) && !(item->getFlags() & ITEM_NOT_BUYABLE) && ItemIsLegal(itemIndex) )
 		{
 			// in case his store inventory list is wrong, make sure this category of item can be sold used
-			if ( CanDealerItemBeSoldUsed( i ) )
+			if ( CanDealerItemBeSoldUsed(itemIndex) )
 			{
-				LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyrIndex ].usItemIndex = i;
+				LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyrIndex ].usItemIndex = itemIndex;
 				usBobbyrIndex++;
 			}
 		}

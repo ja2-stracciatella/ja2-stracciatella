@@ -804,6 +804,11 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 	return true;
 }
 
+ItemRange DefaultContentManager::getItems() const
+{
+	return ItemRange(m_items.begin() + 1, m_items.end());
+}
+
 const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
 {
 	if(itemIndex >= m_items.size())
