@@ -181,8 +181,13 @@ const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
 	return m_bobbyRayUsedInventory.get();
 }
 
-const DealerModel* DefaultContentManager::getDealer(uint8_t dealerID) const
+const DealerModel* DefaultContentManager::getDealer(ArmsDealerID dealerID) const
 {
+	auto dealerIndex = static_cast<std::size_t>(dealerID);
+	if (dealerIndex >= m_dealers.size()) {
+		ST::string err = ST::format("failed to get dealer: invalid dealer ID: {}", dealerID);
+		throw std::runtime_error(err.to_std_string());
+	}
 	return m_dealers[dealerID];
 }
 
@@ -854,7 +859,7 @@ const std::map<uint16_t, uint16_t>& DefaultContentManager::getMapItemReplacement
 	return m_mapItemReplacements;
 }
 
-const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) const
+const DealerInventory* DefaultContentManager::getDealerInventory(ArmsDealerID dealerId) const
 {
 	return m_dealersInventory[dealerId];
 }

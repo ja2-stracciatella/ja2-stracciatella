@@ -172,8 +172,7 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE, UINT32 savegame_version);
 
 void DailyUpdateOfArmsDealersInventory(void);
 
-const DealerModel* GetDealer(UINT8);
-ArmsDealerType GetTypeOfArmsDealer( UINT8 ubDealerID );
+ArmsDealerType GetTypeOfArmsDealer( ArmsDealerID ubDealerID );
 
 BOOLEAN	DoesDealerDoRepairs(ArmsDealerID);
 BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID );

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "Arms_Dealer.h"
 #include "ContentMusic.h"
-
 #include "Facts.h"
 #include "ItemSystem.h"
 #include "MercSystem.h"
@@ -120,10 +120,10 @@ public:
 	virtual const std::vector<PATROL_GROUP>& getPatrolGroups() const = 0;
 	virtual const std::vector<ARMY_COMPOSITION>& getArmyCompositions() const = 0;
 
-	virtual const DealerModel* getDealer(uint8_t dealerID) const = 0;
+	virtual const DealerModel* getDealer(ArmsDealerID dealerID) const = 0;
 	virtual const std::vector<const DealerModel*>& getDealers() const = 0;
 
-	virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
+	virtual const DealerInventory* getDealerInventory(ArmsDealerID dealerId) const = 0;
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const = 0;
 	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const = 0;
