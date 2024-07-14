@@ -1,4 +1,32 @@
-type: integer
-title: Quest index
-minimum: 0
-maximum: 49
+oneOf:
+  - type: string
+    title: Quest name
+    enum:
+      - DELIVER_LETTER
+      - FOOD_ROUTE
+      - KILL_TERRORISTS
+      - KINGPIN_IDOL
+      - KINGPIN_MONEY
+      - RUNAWAY_JOEY
+      - RESCUE_MARIA
+      - CHITZENA_IDOL
+      - HELD_IN_ALMA
+      - INTERROGATION
+      - ARMY_FARM
+      - FIND_SCIENTIST
+      - DELIVER_VIDEO_CAMERA
+      - BLOODCATS
+      - FIND_HERMIT
+      - CREATURES
+      - CHOPPER_PILOT
+      - ESCORT_SKYRIDER
+      - FREE_DYNAMO
+      - ESCORT_TOURISTS
+      - FREE_CHILDREN
+      - LEATHER_SHOP_DREAM
+      - ESTONI_FUEL
+      - KILL_DEIDRANNA
+  - type: integer
+    title: Quest index
+    minimum: 0
+    maximum: 29

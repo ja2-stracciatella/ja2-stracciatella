@@ -739,7 +739,6 @@ bool DefaultContentManager::loadGameData()
 
 	m_scriptRecords.resize(NUM_PROFILES);
 	loadAllScriptRecords("script-records-NPCs.json");
-	loadAllScriptRecords("script-records-RPCs.json");
 	// these are purely for schema validation - no data is supposed to be extracted from them on game startup
 	readJsonDataFileWithSchema("script-records-meanwhiles.json");
 	readJsonDataFileWithSchema("script-records-recruited.json");
@@ -1370,6 +1369,7 @@ NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId) const
 	}
 	return nullptr;
 }
+
 NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const
 {
 	auto json = readJsonDataFile("script-records-meanwhiles.json");

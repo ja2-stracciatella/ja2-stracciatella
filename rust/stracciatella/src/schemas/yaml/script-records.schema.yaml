@@ -46,7 +46,7 @@ items:
           quest:
             type: object
             properties:
-              index:
+              name:
                 $ref: types/quest-id.schema.yaml
               status:
                 type: string
@@ -55,7 +55,7 @@ items:
                   - INPROGRESS
                   - DONE
             required:
-              - index
+              - name
               - status
           firstDay:
             $ref: types/uint8.schema.yaml
@@ -104,7 +104,7 @@ items:
                 description: >-
                   Name of the NPC to turn to. Must correspond to the value of
                   the internalName property in mercs-profile-info.json
-              index:
+              code:
                 $ref: types/uint16.schema.yaml
               doFirst:
                 type: boolean
@@ -115,7 +115,8 @@ items:
               - required:
                   - turnToFace
               - required:
-                  - index
+                  - code
+        additionalProperties: false
         required:
           - index
         dependentRequired:
