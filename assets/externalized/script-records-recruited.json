@@ -25,7 +25,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 102 // NPC_ACTION_LEAVE_HIDEOUT
+                    "code": 102 // NPC_ACTION_LEAVE_HIDEOUT
                 }
             },
             {
@@ -58,7 +58,7 @@
                 "triggerNPC": "DARYL",
                 "triggerRecord": 14,
                 "actionData": {
-                    "index": 262 // NPC_ACTION_REMOVE_MERC_FOR_MARRIAGE
+                    "code": 262 // NPC_ACTION_REMOVE_MERC_FOR_MARRIAGE
                 }
             },
             {
@@ -83,7 +83,7 @@
                 "quoteNum": 27,
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             }
         ]

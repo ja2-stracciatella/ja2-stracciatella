@@ -34,7 +34,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -64,7 +64,7 @@
                 "triggerNPC": "ELLIOT",
                 "triggerRecord": 6,
                 "actionData": {
-                    "index": 215 // NPC_ACTION_TRIGGER_ELLIOT_BY_BATTLE_RESULT
+                    "code": 215 // NPC_ACTION_TRIGGER_ELLIOT_BY_BATTLE_RESULT
                 }
             },
             {
@@ -73,7 +73,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 239 // NPC_ACTION_QUEEN_DECIDE_WHICH_QUOTE_FOR_PLAYER_ATTACK
+                    "code": 239 // NPC_ACTION_QUEEN_DECIDE_WHICH_QUOTE_FOR_PLAYER_ATTACK
                 }
             },
             {
@@ -148,7 +148,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -157,7 +157,7 @@
                 "requiredApproach": "DONE_SLAPPED",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
                 }
             },
             {
@@ -260,7 +260,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -270,7 +270,7 @@
                 "quoteNum": 26, // "Elliot! You idiot!"
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
                 }
             },
             {
@@ -355,7 +355,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -379,7 +379,7 @@
                 "quoteNum": 30, // "Alma? ALMA! ALMA! Elliot! You idiot! The God-damn training facility is there! What are they doing, sleeping?! And the mine! Oh, Elliot, what now!"
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
                 }
             },
             {
@@ -482,7 +482,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -506,7 +506,7 @@
                 "quoteNum": 36, // "Elliot! You idiot! That's not good news! Grumm! For God's sake, when will this end!?"
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
                 }
             },
             {
@@ -560,7 +560,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -621,7 +621,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 5,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -630,7 +630,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -640,7 +640,7 @@
                 "quoteNum": 42, // "Elliot! You idiot! And as for those mercenaries! Well now..."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
                 }
             },
             {
@@ -732,7 +732,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -751,7 +751,7 @@
                 "quoteNum": 135, // "Aghhh... Let me think."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
+                    "code": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
                 }
             },
             {
@@ -763,7 +763,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 10,
                 "actionData": {
-                    "index": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
+                    "code": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
                 }
             },
             {
@@ -800,7 +800,7 @@
                 "quoteNum": 52, // "Well, go on then. What are you waiting for?"
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -849,7 +849,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -868,7 +868,7 @@
                 "quoteNum": 136, // "Aghhh... Give me a minute."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
+                    "code": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
                 }
             },
             {
@@ -880,7 +880,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 10,
                 "actionData": {
-                    "index": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
+                    "code": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
                 }
             },
             {
@@ -956,7 +956,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -975,7 +975,7 @@
                 "quoteNum": 137, // "Okay..."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
+                    "code": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
                 }
             },
             {
@@ -987,7 +987,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 10,
                 "actionData": {
-                    "index": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
+                    "code": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
                 }
             },
             {
@@ -1063,7 +1063,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1075,7 +1075,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 10,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1102,7 +1102,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1120,7 +1120,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             }
         ]
@@ -1169,7 +1169,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1204,7 +1204,7 @@
                 "triggerNPC": "JOE",
                 "triggerRecord": 9,
                 "actionData": {
-                    "index": 16 // NPC_ACTION_FACE_SOUTH_EAST
+                    "code": 16 // NPC_ACTION_FACE_SOUTH_EAST
                 }
             },
             {
@@ -1232,7 +1232,7 @@
                 "quoteNum": 78, // "That's good, Joe. Now, where shall I start with you?"
                 "numQuotes": 2,
                 "actionData": {
-                    "index": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
+                    "code": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
                 }
             },
             {
@@ -1244,7 +1244,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 8,
                 "actionData": {
-                    "index": 259 // NPC_ACTION_SEND_SOLDIERS_TO_OMERTA
+                    "code": 259 // NPC_ACTION_SEND_SOLDIERS_TO_OMERTA
                 }
             },
             {
@@ -1281,7 +1281,7 @@
                 "quoteNum": 84, // "All right. Let's try another, shall we? Now, how many mercenaries have the rebels hired?"
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
+                    "code": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
                 }
             },
             {
@@ -1293,7 +1293,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 16,
                 "actionData": {
-                    "index": 260 // NPC_ACTION_ADD_MORE_ELITES
+                    "code": 260 // NPC_ACTION_ADD_MORE_ELITES
                 }
             },
             {
@@ -1348,7 +1348,7 @@
                 "quoteNum": 92, // "Okay. Now, listen closely. I want to know where your troops are located."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
+                    "code": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
                 }
             },
             {
@@ -1360,7 +1360,7 @@
                 "triggerNPC": "ELLIOT",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 261 // NPC_ACTION_GIVE_KNOWLEDGE_OF_ALL_MERCS
+                    "code": 261 // NPC_ACTION_GIVE_KNOWLEDGE_OF_ALL_MERCS
                 }
             },
             {
@@ -1406,7 +1406,7 @@
                 "numQuotes": 1,
                 "setFactTrue": 246, // unnamed fact
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1434,7 +1434,7 @@
                 "numQuotes": 1,
                 "setFactTrue": 247, // unnamed fact
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1447,7 +1447,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 27,
                 "actionData": {
-                    "index": 15 // NPC_ACTION_FACE_EAST
+                    "code": 15 // NPC_ACTION_FACE_EAST
                 }
             },
             {
@@ -1458,7 +1458,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 28,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -1488,7 +1488,7 @@
                 "triggerNPC": "ELLIOT",
                 "triggerRecord": 5,
                 "actionData": {
-                    "index": 222 // NPC_ACTION_REMOVE_JOE_QUEEN
+                    "code": 222 // NPC_ACTION_REMOVE_JOE_QUEEN
                 }
             }
         ]
@@ -1537,7 +1537,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1658,7 +1658,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1734,7 +1734,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1794,7 +1794,7 @@
                 "quoteNum": 123, // "Aghhhhh! Elliot! You id-EEEE-IT!"
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 38 // NPC_ACTION_SHOOT_ELLIOT
+                    "code": 38 // NPC_ACTION_SHOOT_ELLIOT
                 }
             },
             {
@@ -1878,7 +1878,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1896,7 +1896,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 28 // NPC_ACTION_SLAP
+                    "code": 28 // NPC_ACTION_SLAP
                 }
             },
             {
@@ -1929,7 +1929,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 238 // NPC_ACTION_ELLIOT_DECIDE_WHICH_QUOTE_FOR_PLAYER_ATTACK
+                    "code": 238 // NPC_ACTION_ELLIOT_DECIDE_WHICH_QUOTE_FOR_PLAYER_ATTACK
                 }
             },
             {
@@ -1941,7 +1941,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 2,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -1989,7 +1989,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 7,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2008,7 +2008,7 @@
                 "quoteNum": 15, // "Yes, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2042,7 +2042,7 @@
                 "quoteNum": 15, // "Yes, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2078,7 +2078,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 4,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2088,7 +2088,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2106,7 +2106,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 2,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2134,7 +2134,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2161,7 +2161,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 12,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2171,7 +2171,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2198,7 +2198,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2208,7 +2208,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2226,7 +2226,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2278,7 +2278,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2297,7 +2297,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2324,7 +2324,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2343,7 +2343,7 @@
                 "quoteNum": 15, // "Yes, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2370,7 +2370,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2391,7 +2391,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 8,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2401,7 +2401,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2428,7 +2428,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2438,7 +2438,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2484,7 +2484,7 @@
                 "triggerRecord": 21,
                 "setFactTrue": 364, // unnamed fact
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2497,7 +2497,7 @@
                 "triggerRecord": 24,
                 "setFactTrue": 363, // unnamed fact
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2509,7 +2509,7 @@
                 "triggerNPC": "ELLIOT",
                 "triggerRecord": 6,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2518,7 +2518,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 37 // NPC_ACTION_PUNCH_FIRST_LIVING_PC
+                    "code": 37 // NPC_ACTION_PUNCH_FIRST_LIVING_PC
                 }
             },
             {
@@ -2528,7 +2528,7 @@
                 "numQuotes": 1,
                 "goToGridno": 10469,
                 "actionData": {
-                    "index": 53 // NPC_ACTION_GRANT_EXPERIENCE_4
+                    "code": 53 // NPC_ACTION_GRANT_EXPERIENCE_4
                 }
             },
             {
@@ -2538,7 +2538,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 223 // NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE
+                    "code": 223 // NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE
                 }
             }
         ]
@@ -2565,7 +2565,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 3,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2593,7 +2593,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 224 // NPC_ACTION_NO_SCI_FI_END_MEANWHILE
+                    "code": 224 // NPC_ACTION_NO_SCI_FI_END_MEANWHILE
                 }
             },
             {
@@ -2630,7 +2630,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2666,7 +2666,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 4,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2676,7 +2676,7 @@
                 "quoteNum": 13, // "As you command, Your Highness."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2721,7 +2721,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 5,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2731,7 +2731,7 @@
                 "quoteNum": 55, // "Ahem, yes, Your Highness, very clear."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2783,7 +2783,7 @@
                 "quoteNum": 60, // "Ahem... Apparently...not, Your Highness. I will try harder."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]
@@ -2819,7 +2819,7 @@
                 "triggerNPC": "QUEEN",
                 "triggerRecord": 6,
                 "actionData": {
-                    "index": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
                 }
             },
             {
@@ -2838,7 +2838,7 @@
                 "quoteNum": 75, // "As you wish, my Queen."
                 "numQuotes": 1,
                 "actionData": {
-                    "index": 170 // NPC_ACTION_END_MEANWHILE
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
                 }
             }
         ]

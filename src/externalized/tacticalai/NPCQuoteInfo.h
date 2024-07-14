@@ -3,6 +3,7 @@
 #include "Interface_Dialogue.h"
 #include "ItemSystem.h"
 #include "MercSystem.h"
+#include "Quests.h"
 
 #include <memory>
 
