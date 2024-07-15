@@ -89,6 +89,7 @@ public:
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) override;
 
+	virtual ItemRange getItems() const override;
 	virtual const ItemModel* getItem(uint16_t index) const override;
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
 	virtual const ItemModel* getKeyItemForKeyId(uint16_t usKeyItem) const override;

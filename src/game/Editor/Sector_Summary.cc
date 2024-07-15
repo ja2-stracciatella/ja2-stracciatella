@@ -583,7 +583,6 @@ static void RenderItemDetails(void)
 {
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
-	INT32 index, i;
 	UINT32 uiQuantity, uiExistChance, uiStatus;
 	UINT32 xp, yp;
 	INT8 bFreqIndex;
@@ -599,13 +598,14 @@ static void RenderItemDetails(void)
 		UINT32 uiActionQuantity[8] {};
 		UINT32 uiTriggerExistChance[8] {};
 		UINT32 uiActionExistChance[8] {};
-		for( index = 1; index < MAXITEMS; index++ )
+		for (auto item : GCM->getItems())
 		{
+			const auto index = item->getItemIndex();
 			uiQuantity = 0;
 			uiExistChance = 0;
 			uiStatus = 0;
 			Assert(gpWorldItemsSummaryArray.size() <= INT32_MAX);
-			for (i = 0; i < static_cast<INT32>(gpWorldItemsSummaryArray.size()); i++)
+			for (INT32 i = 0; i < static_cast<INT32>(gpWorldItemsSummaryArray.size()); i++)
 			{
 				if( index == SWITCH || index == ACTION_ITEM )
 				{
@@ -669,7 +669,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, GCM->getItem(index)->getShortName());
+				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
@@ -687,7 +687,7 @@ static void RenderItemDetails(void)
 			}
 		}
 		//Now list the number of actions/triggers of each type
-		for( i = 0; i < 8; i++ )
+		for(INT32 i = 0; i < 8; i++ )
 		{
 			if( uiTriggerQuantity[i] || uiActionQuantity[i] )
 			{
@@ -749,12 +749,14 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		else for( index = 1; index < MAXITEMS; index++ )
+		else for (auto item : GCM->getItems())
 		{
+			const auto index = item->getItemIndex();
+
 			uiQuantity = 0;
 			uiExistChance = 0;
 			uiStatus = 0;
-			for( i = 0; i < gusPEnemyItemsSummaryArraySize; i++ )
+			for(INT32 i = 0; i < gusPEnemyItemsSummaryArraySize; i++ )
 			{
 				if( gpPEnemyItemsSummaryArray[ i ].usItem == index )
 				{
@@ -774,7 +776,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, GCM->getItem(index)->getShortName());
+				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
@@ -816,12 +818,14 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		for( index = 1; index < MAXITEMS; index++ )
+		for (auto item : GCM->getItems())
 		{
+			const auto index = item->getItemIndex();
+
 			uiQuantity = 0;
 			uiExistChance = 0;
 			uiStatus = 0;
-			for( i = 0; i < gusNEnemyItemsSummaryArraySize; i++ )
+			for(INT32 i = 0; i < gusNEnemyItemsSummaryArraySize; i++ )
 			{
 				if( gpNEnemyItemsSummaryArray[ i ].usItem == index )
 				{
@@ -841,7 +845,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				MPrint(xp, yp, GCM->getItem(index)->getShortName());
+				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
 				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
