@@ -10,9 +10,9 @@
 #include "ContentMusic.h"
 #include "IEDT.h"
 #include "IGameDataLoader.h"
-#include "StringEncodingTypes.h"
-#include "RustInterface.h"
 #include "ItemStrings.h"
+#include "RustInterface.h"
+#include "StringEncodingTypes.h"
 
 #include <string_theory/string>
 
@@ -31,7 +31,7 @@ public:
 	void logConfiguration() const override;
 
 	/** Load the game data. */
-	bool loadGameData();
+	virtual bool loadGameData();
 
 	/** Get map file path. */
 	virtual ST::string getMapPath(const ST::string& mapName) const override;
@@ -255,6 +255,7 @@ protected:
 
 	RustPointer<Vfs> m_vfs;
 
+	bool loadGameData(const VanillaItemStrings& vanillaItemStrings);
 	bool loadWeapons(const VanillaItemStrings& vanillaItemStrings);
 	bool loadItems(const VanillaItemStrings& vanillaItemStrings);
 	bool loadMagazines(const VanillaItemStrings& vanillaItemStrings);

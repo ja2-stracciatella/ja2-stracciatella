@@ -1,6 +1,7 @@
 #include "DefaultContentManager.h"
 
 #include "Exceptions.h"
+#include "ItemStrings.h"
 #include "game/Directories.h"
 #include "game/Strategic/Strategic_Status.h"
 
@@ -671,17 +672,18 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<ST
 	}
 }
 
-/** Load the game data. */
+
+/** Load the game data and the item descriptions from the original game resources. */
 bool DefaultContentManager::loadGameData()
 {
-	VanillaItemStrings vanillaItemStrings = {};
-	try {
-		AutoSGPFile f(openGameResForReading(VanillaItemStrings::filename()));
-		vanillaItemStrings = VanillaItemStrings::deserialize(f);
-	} catch (const std::runtime_error& err) {
-		SLOGE("Could not read vanilla item strings from {}: {}", VanillaItemStrings::filename(), err.what());
-	}
+	return loadGameData(VanillaItemStrings::deserialize(
+		AutoSGPFile{ openGameResForReading(VanillaItemStrings::filename()) }));
+}
 
+
+/** Load the game data. */
+bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemStrings)
+{
 	m_items.resize(MAXITEMS);
 	bool result = loadItems(vanillaItemStrings)
 		&& loadCalibres()
