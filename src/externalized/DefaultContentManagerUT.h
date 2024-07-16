@@ -11,4 +11,6 @@ class DefaultContentManagerUT : public DefaultContentManager
 public:
 	/** Create DefaultContentManager for usage in unit testing. */
 	static DefaultContentManagerUT* createDefaultCMForTesting();
+
+	bool loadGameData() override;
 };
