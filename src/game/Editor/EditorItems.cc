@@ -184,8 +184,7 @@ static void DrawItemCentered(const ItemModel * item, SGPVSurface* const vs, INT3
 
 void InitEditorItemsInfo(ToolbarMode const uiItemType)
 {
-	INT16 i, x, y;
-	UINT16 usCounter;
+	INT16 x, y;
 	ST::string pStr;
 	BOOLEAN fTypeMatch;
 	INT32 iEquipCount = 0;
@@ -281,7 +280,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	eInfo.uiBuffer = AddVideoSurface(w, h, PIXEL_DEPTH);
 
 	//copy a blank chunk of the editor interface to the new buffer.
-	for (i = 0; i < w; i += 60)
+	for (auto i = 0; i < w; i += 60)
 	{
 		SGPBox const r = { 100, EDITOR_TASKBAR_POS_Y, 60, 80 };
 		BltVideoSurface(eInfo.uiBuffer, FRAME_BUFFER, i, 0, &r);
@@ -289,16 +288,25 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 
 	x = 0;
 	y = 0;
-	usCounter = 0;
 	SGPRect	NewRect;
 	NewRect.iTop    = 0;
 	NewRect.iBottom = h;
 	NewRect.iLeft   = 0;
 	NewRect.iRight  = w;
 	SGPRect const SaveRect = SetClippingRect(NewRect);
+
+	auto items = GCM->getItems();
+	auto actionItemIt = std::find_if(items.begin(), items.end(), [](const ItemModel* item) -> bool {
+		return item->getItemIndex() == ACTION_ITEM;
+	});
+	auto switchIt = std::find_if(items.begin(), items.end(), [](const ItemModel* item) -> bool {
+		return item->getItemIndex() == SWITCH;
+	});
+
+	auto itemIt = items.begin();
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_KEYS )
 	{ //Keys use a totally different method for determining
-		for( i = 0; i < eInfo.sNumItems; i++ )
+		for(auto i = 0; i < eInfo.sNumItems; i++ )
 		{
 			UINT16 const item_id = KEY_1 + LockTable[i].usKeyItem;
 
@@ -324,26 +332,26 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 			}
 		}
 	}
-	else for( i = 0; i < eInfo.sNumItems; i++ )
+	else for(auto i = 0; i < eInfo.sNumItems; i++ )
 	{
 
 		fTypeMatch = FALSE;
-		while( usCounter<MAXITEMS && !fTypeMatch )
+		while( itemIt < items.end() && !fTypeMatch )
 		{
-			const ItemModel * item = GCM->getItem(usCounter);
-			if( GCM->getItem(usCounter)->getFlags() & ITEM_NOT_EDITOR )
+			auto item = *itemIt;
+			if( item->getFlags() & ITEM_NOT_EDITOR )
 			{
-				usCounter++;
+				itemIt++;
 				continue;
 			}
 			if( eInfo.uiItemType == TBAR_MODE_ITEM_TRIGGERS )
 			{
-				if( i < PRESSURE_ACTION_ID )
-					usCounter = ( i % 2 ) ? ACTION_ITEM : SWITCH;
-				else
-					usCounter = ACTION_ITEM;
+				itemIt = actionItemIt;
+				if( i < PRESSURE_ACTION_ID && !(i % 2) ) {
+					itemIt = switchIt;
+				}
 				fTypeMatch = TRUE;
-				item = GCM->getItem(usCounter);
+				item = *itemIt;
 			}
 			else switch( item->getItemClass() )
 			{
@@ -379,7 +387,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 				case IC_FACE:
 				case IC_MISC:
 				case IC_MONEY:
-					if( usCounter == ACTION_ITEM || usCounter == SWITCH )
+					if( item->getItemIndex() == ACTION_ITEM || item->getItemIndex() == SWITCH )
 						break;
 					if( iEquipCount < 30 )
 						fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EQUIPMENT1;
@@ -393,7 +401,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 			if( fTypeMatch )
 			{
 				//Store these item pointers for later when rendering selected items.
-				eInfo.pusItemIndex[i] = usCounter;
+				eInfo.pusItemIndex[i] = item->getItemIndex();
 
 				SetFontDestBuffer(eInfo.uiBuffer);
 
@@ -409,28 +417,28 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 					}
 					else if( i < 2 )
 					{
-						if( usCounter == SWITCH )
+						if( item->getItemIndex() == SWITCH )
 							pStr = "Panic Trigger1";
 						else
 							pStr = "Panic Action1";
 					}
 					else if( i < 4 )
 					{
-						if( usCounter == SWITCH )
+						if( item->getItemIndex() == SWITCH )
 							pStr = "Panic Trigger2";
 						else
 							pStr = "Panic Action2";
 					}
 					else if( i < 6 )
 					{
-						if( usCounter == SWITCH )
+						if( item->getItemIndex() == SWITCH )
 							pStr = "Panic Trigger3";
 						else
 							pStr = "Panic Action3";
 					}
 					else
 					{
-						if( usCounter == SWITCH )
+						if( item->getItemIndex() == SWITCH )
 							pStr = ST::format("Trigger{}", (i - 4) / 2);
 						else
 							pStr = ST::format("Action{}", (i - 4) / 2);
@@ -451,7 +459,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 					x += 60;
 				}
 			}
-			usCounter++;
+			itemIt++;
 		}
 	}
 	SetFontDestBuffer(FRAME_BUFFER);

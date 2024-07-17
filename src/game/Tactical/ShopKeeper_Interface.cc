@@ -2155,7 +2155,7 @@ static int RepairmanItemQsortCompare(void const* pArg1, void const* pArg2)
 	Assert(inv_slot1.sSpecialItemElement != -1);
 	Assert(inv_slot2.sSpecialItemElement != -1);
 
-	DEALER_ITEM_HEADER const (& dih)[MAXITEMS] = gArmsDealersInventory[gbSelectedArmsDealerID];
+	const auto& dih = gArmsDealersInventory[gbSelectedArmsDealerID];
 	UINT32             const repair_time1      = dih[inv_slot1.sItemIndex].SpecialItem[inv_slot1.sSpecialItemElement].uiRepairDoneTime;
 	UINT32             const repair_time2      = dih[inv_slot2.sItemIndex].SpecialItem[inv_slot2.sSpecialItemElement].uiRepairDoneTime;
 

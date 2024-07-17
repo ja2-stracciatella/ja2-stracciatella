@@ -14,19 +14,14 @@
 // SetupStoreInventory sets up the initial quantity on hand for all of Bobby Ray's inventory items
 void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 {
-	UINT16 i;
-	UINT16 usItemIndex;
-	UINT8 ubNumBought;
-
 	//loop through all items BR can stock to init a starting quantity on hand
-	for(i = 0; i < LaptopSaveInfo.usInventoryListLength[fUsed]; i++)
+	for(UINT16 i = 0; i < LaptopSaveInfo.usInventoryListLength[fUsed]; i++)
 	{
-		usItemIndex = pInventoryArray[ i ].usItemIndex;
-		Assert(usItemIndex < MAXITEMS);
+		auto usItemIndex = pInventoryArray[ i ].usItemIndex;
+		auto item = GCM->getItem(usItemIndex);
 
-		const ItemModel *item = GCM->getItem(usItemIndex);
 		int maxAmount = fUsed ? GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) : GCM->getBobbyRayNewInventory()->getMaxItemAmount(item);
-		ubNumBought = DetermineInitialInvItems(ARMS_DEALER_BOBBYR, usItemIndex, maxAmount, fUsed);
+		auto ubNumBought = DetermineInitialInvItems(ARMS_DEALER_BOBBYR, usItemIndex, maxAmount, fUsed);
 		if ( ubNumBought > 0)
 		{
 			// If doing used items
