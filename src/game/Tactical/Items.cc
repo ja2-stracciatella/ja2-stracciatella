@@ -674,7 +674,7 @@ static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 
 bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 {
-	const ItemModel *itemModel = GCM->getItem(item);
+	auto * itemModel{ GCM->getItem(item, ItemSystem::nothrow) };
 	if (itemModel && itemModel->canBeAttached(attachment))
 	{
 		return true;

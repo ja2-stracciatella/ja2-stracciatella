@@ -528,8 +528,6 @@ void DailyUpdateOfBobbyRaysNewInventory()
 		usItemIndex = LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex;
 		const ItemModel *item = GCM->getItem(usItemIndex);
 
-		Assert(usItemIndex < MAXITEMS);
-
 		// make sure this item is still sellable in the latest version of the store inventory
 		if (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) == 0 )
 		{
@@ -632,7 +630,6 @@ static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, 
 	const DealerInventory *inv = ubBobbyRayNewUsed ? GCM->getBobbyRayUsedInventory() : GCM->getBobbyRayNewInventory();
 	const ItemModel *item = GCM->getItem(usItemIndex);
 
-	Assert(usItemIndex < MAXITEMS);
 	// formulas below will fail if there are more items already in stock than optimal
 	Assert(ubCurrentlyOnHand <= inv->getMaxItemAmount(item));
 	Assert(ubBobbyRayNewUsed < BOBBY_RAY_LISTS);

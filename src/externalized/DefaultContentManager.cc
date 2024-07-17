@@ -818,11 +818,12 @@ ItemRange DefaultContentManager::getItems() const
 
 const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
 {
-	if(itemIndex >= m_items.size())
-	{
-		return nullptr;
-	}
-	return m_items[itemIndex];
+	return m_items.at(itemIndex);
+}
+
+const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex, ItemSystem::nothrow_t const&) const noexcept
+{
+	return itemIndex < m_items.size() ? m_items[itemIndex] : nullptr;
 }
 
 const ItemModel* DefaultContentManager::getItemByName(const ST::string &internalName) const
