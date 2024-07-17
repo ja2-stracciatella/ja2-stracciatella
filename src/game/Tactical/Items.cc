@@ -2616,17 +2616,13 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 		return status;
 	};
 
+	auto item = GCM->getItem(usItem);
 	*pObj = OBJECTTYPE{};
-	if (usItem >= MAXITEMS)
-	{
-		throw std::logic_error("Tried to create item with invalid ID");
-	}
-
-	if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
+	if (item->getItemClass() == IC_GUN)
 	{
 		CreateGun(usItem, checkedStatus(bStatus), pObj);
 	}
-	else if (GCM->getItem(usItem)->getItemClass() == IC_AMMO)
+	else if (item->getItemClass() == IC_AMMO)
 	{
 		CreateMagazine(usItem, pObj);
 	}
@@ -2647,7 +2643,7 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 		}
 	}
 
-	if (GCM->getItem(usItem)->getFlags() & ITEM_DEFAULT_UNDROPPABLE)
+	if (item->getFlags() & ITEM_DEFAULT_UNDROPPABLE)
 	{
 		pObj->fFlags |= OBJECT_UNDROPPABLE;
 	}

@@ -1697,20 +1697,33 @@ void CycleItemDescriptionItem( )
 	DeleteItemDescriptionBox( );
 
 	// Make new item....
-	auto usOldItem = gpItemDescSoldier->inv[HANDPOS].usItem;
+	const auto oldItemIndex = gpItemDescSoldier->inv[HANDPOS].usItem;
+	auto items = GCM->getItems();
+	auto it = std::find_if(items.begin(), items.end(), [oldItemIndex](const ItemModel* item) -> bool {
+		return item->getItemIndex() == oldItemIndex;
+	});
+	if (it == items.end()) {
+		SLOGE("Failed to find current item {} for cycling", oldItemIndex);
+		return;
+	}
 
 	if (_KeyDown(SDLK_END))
 	{
 		// cycle backwards
-		usOldItem = usOldItem > 1 ? usOldItem - 1 : MAXITEMS - 1;
+		it = it == items.begin() ? items.end() - 1 : it - 1;
 	}
 	else
 	{
 		// cycle forwards
-		usOldItem = usOldItem < MAXITEMS - 1 ? usOldItem + 1 : 1;
+		it = it++;
+		if (it == items.end()) {
+			it = items.begin();
+		}
 	}
 
-	CreateItem(usOldItem, 100, &gpItemDescSoldier->inv[HANDPOS]);
+	const auto newItemIndex = (*it)->getItemIndex();
+
+	CreateItem(newItemIndex, 100, &gpItemDescSoldier->inv[HANDPOS]);
 
 	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), INTERFACE_START_X + 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
 }
