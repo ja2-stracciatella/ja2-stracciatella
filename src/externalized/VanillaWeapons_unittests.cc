@@ -191,4 +191,23 @@ TEST(Items, CompatibleFaceItem)
 	}
 }
 
+TEST(Items, Invalid_ItemIndex_Exception)
+{
+	std::unique_ptr<DefaultContentManager> cm(DefaultContentManagerUT::createDefaultCMForTesting());
+	ASSERT_TRUE(cm->loadGameData());
+	auto const oldGCM = std::exchange(GCM, cm.release());
+
+	EXPECT_NO_THROW(GCM->getItem(MAXITEMS - 1));
+	for (uint16_t i = UINT16_MAX; i >= MAXITEMS; --i)
+	{
+		EXPECT_THROW(GCM->getItem(i), std::out_of_range);
+	}
+
+	EXPECT_NO_THROW(GCM->getItem(57000, ItemSystem::nothrow));
+	EXPECT_EQ(GCM->getItem(38000, ItemSystem::nothrow), nullptr);
+
+	delete GCM;
+	GCM = oldGCM;
+}
+
 #endif

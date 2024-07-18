@@ -1678,7 +1678,7 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 
 	// Make sure the guy's actually got a throwable item in his hand
 	UINT16 const in_hand = s.inv[HANDPOS].usItem;
-	const ItemModel *item = GCM->getItem(in_hand);
+	auto * item{ GCM->getItem(in_hand, ItemSystem::nothrow) };
 	if (!item)
 	{
 		SLOGW("MinAPsToThrow - in-hand item is missing");
