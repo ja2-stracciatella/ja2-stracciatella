@@ -513,20 +513,15 @@ static void SimulateBobbyRayCustomer(STORE_INVENTORY* pInventoryArray, BOOLEAN f
 
 void DailyUpdateOfBobbyRaysNewInventory()
 {
-	INT16 i;
-	UINT16 usItemIndex;
-	BOOLEAN fPrevElig;
-
-
 	//simulate other buyers by reducing the current quantity on hand
 	SimulateBobbyRayCustomer(LaptopSaveInfo.BobbyRayInventory, BOBBY_RAY_NEW);
 
 	//loop through all items BR can stock to see what needs reordering
-	for(i = 0; i < LaptopSaveInfo.usInventoryListLength[BOBBY_RAY_NEW]; i++)
+	for(auto i = 0; i < LaptopSaveInfo.usInventoryListLength[BOBBY_RAY_NEW]; i++)
 	{
 		// the index is NOT the item #, get that from the table
-		usItemIndex = LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex;
-		const ItemModel *item = GCM->getItem(usItemIndex);
+		auto usItemIndex = LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex;
+		auto item = GCM->getItem(usItemIndex);
 
 		// make sure this item is still sellable in the latest version of the store inventory
 		if (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) == 0 )
@@ -541,7 +536,7 @@ void DailyUpdateOfBobbyRaysNewInventory()
 			if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand <= (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) / 2 ) )
 			{
 				// remember value of the "previously eligible" flag
-				fPrevElig = LaptopSaveInfo.BobbyRayInventory[ i ].fPreviouslyEligible;
+				auto fPrevElig = LaptopSaveInfo.BobbyRayInventory[ i ].fPreviouslyEligible;
 
 				//determine if any can/should be ordered, and how many
 				LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnOrder = HowManyBRItemsToOrder( usItemIndex, LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand, BOBBY_RAY_NEW);
@@ -569,15 +564,10 @@ void DailyUpdateOfBobbyRaysNewInventory()
 
 void DailyUpdateOfBobbyRaysUsedInventory()
 {
-	INT16 i;
-	UINT16 usItemIndex;
-	BOOLEAN fPrevElig;
-
-
 	//simulate other buyers by reducing the current quantity on hand
 	SimulateBobbyRayCustomer(LaptopSaveInfo.BobbyRayUsedInventory, BOBBY_RAY_USED);
 
-	for(i = 0; i < LaptopSaveInfo.usInventoryListLength[BOBBY_RAY_USED]; i++)
+	for(auto i = 0; i < LaptopSaveInfo.usInventoryListLength[BOBBY_RAY_USED]; i++)
 	{
 		//if the used item isn't already on order
 		if( LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnOrder == 0 )
@@ -586,17 +576,17 @@ void DailyUpdateOfBobbyRaysUsedInventory()
 			if( LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnHand == 0 )
 			{
 				// the index is NOT the item #, get that from the table
-				usItemIndex = LaptopSaveInfo.BobbyRayUsedInventory[ i ].usItemIndex;
-				Assert(usItemIndex < MAXITEMS);
+				auto usItemIndex = LaptopSaveInfo.BobbyRayUsedInventory[ i ].usItemIndex;
+				auto item = GCM->getItem(usItemIndex);
 
 				// make sure this item is still sellable in the latest version of the store inventory
-				if (GCM->getBobbyRayUsedInventory()->getMaxItemAmount(GCM->getItem(usItemIndex)) == 0 )
+				if (GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) == 0 )
 				{
 					continue;
 				}
 
 				// remember value of the "previously eligible" flag
-				fPrevElig = LaptopSaveInfo.BobbyRayUsedInventory[ i ].fPreviouslyEligible;
+				auto fPrevElig = LaptopSaveInfo.BobbyRayUsedInventory[ i ].fPreviouslyEligible;
 
 				//determine if any can/should be ordered, and how many
 				LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnOrder = HowManyBRItemsToOrder(usItemIndex, LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnHand, BOBBY_RAY_USED);
@@ -627,8 +617,8 @@ static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, 
 {
 	UINT8	ubItemsOrdered = 0;
 
-	const DealerInventory *inv = ubBobbyRayNewUsed ? GCM->getBobbyRayUsedInventory() : GCM->getBobbyRayNewInventory();
-	const ItemModel *item = GCM->getItem(usItemIndex);
+	auto inv = ubBobbyRayNewUsed ? GCM->getBobbyRayUsedInventory() : GCM->getBobbyRayNewInventory();
+	auto item = GCM->getItem(usItemIndex);
 
 	// formulas below will fail if there are more items already in stock than optimal
 	Assert(ubCurrentlyOnHand <= inv->getMaxItemAmount(item));
