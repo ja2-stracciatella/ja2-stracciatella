@@ -474,11 +474,12 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 
 static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 {
-	UINT32 const item_class = GCM->getItem(usItemIndex)->getItemClass();
+	auto * const itemModel{ GCM->getItem(usItemIndex) };
+	auto const item_class{ itemModel->getItemClass() };
 
 	// If it's not a weapon, set no weapon class, as this won't be needed
-	UINT8 const weapon_class = usItemIndex < MAX_WEAPONS ?
-		GCM->getWeapon(usItemIndex)->ubWeaponClass : NOGUNCLASS;
+	UINT8 const weapon_class = itemModel->isWeapon() ?
+		itemModel->asWeapon()->ubWeaponClass : NOGUNCLASS;
 
 	// search table until end-of-list marker is encountered
 	for (UINT8 category = 0;; ++category)

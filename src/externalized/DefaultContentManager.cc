@@ -444,14 +444,14 @@ bool DefaultContentManager::loadWeapons(const VanillaItemStrings& vanillaItemStr
 		WeaponModel *w = WeaponModel::deserialize(element, m_calibreMap, vanillaItemStrings);
 		SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
-		if (w->getItemIndex() > MAX_WEAPONS)
+		if (w->getItemIndex() >= m_items.size())
 		{
-			SLOGE("Weapon index must be in the interval 0 - {}", MAX_WEAPONS);
+			SLOGE("Weapon index must be in the interval 0 - {}", m_items.size() - 1);
 			return false;
 		}
 
 		m_items[w->getItemIndex()] = w;
-		m_weaponMap.insert(std::make_pair(w->getInternalName(), w));
+		m_weaponMap.try_emplace(w->getInternalName(), w);
 	}
 
 	return true;

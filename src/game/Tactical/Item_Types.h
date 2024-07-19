@@ -214,12 +214,14 @@ static_assert(sizeof(OBJECTTYPE) == 36 && (offsetof(OBJECTTYPE, usAttachItem) - 
 
 #define EXPLOSIVE_GUN( x )		( x == ROCKET_LAUNCHER || x == TANK_CANNON )
 
-#define MAX_WEAPONS 70
+// This limitation was lifted but the definition is still needed for
+// backwards compatibility.
+constexpr UINT16 MAX_WEAPONS = 70;
 
-#define NOTHING NONE
 enum ITEMDEFINE
 {
 	NONE = 0,
+	NOTHING = NONE,
 
 	// weapons
 	GLOCK_17,

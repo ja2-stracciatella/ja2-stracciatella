@@ -99,7 +99,10 @@ struct STRATEGIC_STATUS
 	UINT8			ubNumNewSectorsVisitedToday;
 	UINT8			ubNumberOfDaysOfInactivity;
 
-	INT8 bPadding[70]; // XXX HACK000B
+	// For all weapons with an item index >= MAX_WEAPONS this array stores
+	// their "already dropped" status as a single bit. The size of this array
+	// must be exactly 70 because the struct size must be 192 bytes.
+	std::array<uint8_t, 70> additionalWeaponsAlreadyDropped;
 };
 
 
@@ -109,7 +112,7 @@ extern STRATEGIC_STATUS	gStrategicStatus;
 
 
 void SaveStrategicStatusToSaveGameFile(HWFILE);
-void LoadStrategicStatusFromSaveGameFile(HWFILE);
+void LoadStrategicStatusFromSaveGameFile(HWFILE, UINT32 saveGameVersion);
 
 UINT8 CalcDeathRate(void);
 
@@ -126,5 +129,8 @@ void TrackEnemiesKilled( UINT8 ubKilledHow, UINT8 ubSoldierClass );
 UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex );
 
 void UpdateLastDayOfPlayerActivity( UINT16 usDay );
+
+void SetWeaponAlreadyDropped(UINT16 itemIndex);
+bool WasWeaponAlreadyDropped(UINT16 itemIndex);
 
 #endif

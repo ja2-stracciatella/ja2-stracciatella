@@ -38,13 +38,11 @@ static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon);
 
 void InitArmyGunTypes(void)
 {
-	UINT8 ubWeapon;
-
 	// set all flags that track whether this weapon type has been dropped before to FALSE
-	for (ubWeapon = 0; ubWeapon < MAX_WEAPONS; ubWeapon++)
-	{
-		gStrategicStatus.fWeaponDroppedAlready[ubWeapon] = FALSE;
-	}
+	std::fill(std::begin(gStrategicStatus.fWeaponDroppedAlready),
+		std::end(gStrategicStatus.fWeaponDroppedAlready), FALSE);
+
+	gStrategicStatus.additionalWeaponsAlreadyDropped.fill(0);
 
 	// avoid auto-drops for the gun class with the crappiest guns in it
 	MarkAllWeaponsOfSameGunClassAsDropped( SW38 );
@@ -73,24 +71,18 @@ static INT8 GetWeaponClass(UINT16 usGun)
 
 static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon)
 {
-	INT8 bGunClass;
-	UINT32 uiLoop;
-
-
 	// mark that item itself as dropped, whether or not it's part of a gun class
-	gStrategicStatus.fWeaponDroppedAlready[ usWeapon ] = TRUE;
+	SetWeaponAlreadyDropped(usWeapon);
 
-	bGunClass = GetWeaponClass( usWeapon );
+	auto const bGunClass{ GetWeaponClass(usWeapon) };
 
 	// if the gun belongs to a gun class (mortars, GLs, LAWs, etc. do not and are handled independently)
-	const std::vector<std::vector<const WeaponModel*> > & gunChoice = GCM->getExtendedGunChoice();
-
 	if ( bGunClass != -1 )
 	{
 		// then mark EVERY gun in that class as dropped
-		for ( uiLoop = 0; uiLoop < gunChoice[bGunClass].size(); uiLoop++ )
+		for (auto * const weaponModel : GCM->getExtendedGunChoice()[bGunClass])
 		{
-			gStrategicStatus.fWeaponDroppedAlready[gunChoice[bGunClass][uiLoop]->getItemIndex()] = TRUE;
+			SetWeaponAlreadyDropped(weaponModel->getItemIndex());
 		}
 	}
 }
@@ -1649,13 +1641,13 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 		{
 			usItem = pp->Inv[ i ].usItem;
 			// if it's a weapon (monster parts included - they won't drop due to checks elsewhere!)
-			if ((usItem > NONE) && (usItem < MAX_WEAPONS))
+			if (usItem > NONE && GCM->getItem(usItem)->isWeapon())
 			{
 				// and we're allowed to change its flags
 				if(! (pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE ))
 				{
 					// and it's never been dropped before in this game
-					if (!gStrategicStatus.fWeaponDroppedAlready[usItem])
+					if (WasWeaponAlreadyDropped(usItem))
 					{
 						// mark it as droppable, and remember we did so.  If the player never kills this particular dude,
 						// oh well, tough luck, he missed his chance for an easy reward, he'll have to wait til next
