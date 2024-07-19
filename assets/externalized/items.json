@@ -5774,32 +5774,6 @@
         }
     },
     {
-        "itemIndex": 331,
-        "internalName": "UNUSED_29",
-        "usItemClass": 1,
-        "ubClassIndex": 0,
-        "ubCursor": 0,
-        "inventoryGraphics": {
-            "small": {
-                "path": "interface/mdguns.sti",
-                "subImageIndex": 0
-            },
-            "big": {
-                "path": "bigitems/gun00.sti"
-            }
-        },
-        "ubWeight": 0,
-        "ubPerPocket": 0,
-        "usPrice": 0,
-        "ubCoolness": 0,
-        "bReliability": 0,
-        "bRepairEase": 0,
-        "tileGraphic": {
-            "type": "GUNS",
-            "subIndex": 1
-        }
-    },
-    {
         "itemIndex": 332,
         "internalName": "UNUSED_30",
         "usItemClass": 1,

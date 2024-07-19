@@ -3016,5 +3016,58 @@
             "type": "GUNS",
             "subIndex": 1
         }
+    },
+    {
+        "itemIndex": 331,
+        "internalName": "M14COPY",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 27
+            },
+            "big": {
+                "path": "bigitems/gun27.sti"
+            }
+        },
+        "ubWeight": 29,
+        "ubPerPocket": 0,
+        "usPrice": 2120,
+        "ubCoolness": 7,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 750,
+        "calibre": "AMMO762N",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 11,
+        "ubBulletSpeed": 20,
+        "ubImpact": 33,
+        "ubDeadliness": 33,
+        "ubMagSize": 20,
+        "usRange": 330,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 28
+        },
+        "shortName": "M14 copy",
+        "name": "M14 test copy",
+        "description": "This weapon exists only to test item indices > 70 and is normally never generated. It is safe to replace this weapon."
     }
 ]

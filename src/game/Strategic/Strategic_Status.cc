@@ -1,5 +1,7 @@
 #include "Strategic_Status.h"
+#include "GameVersion.h"
 #include "Inventory_Choosing.h"
+#include "Item_Types.h"
 #include "SGPFile.h"
 #include "Soldier_Profile.h"
 #include "Campaign.h"
@@ -30,10 +32,15 @@ void SaveStrategicStatusToSaveGameFile(HWFILE const hFile)
 }
 
 
-void LoadStrategicStatusFromSaveGameFile(HWFILE const hFile)
+void LoadStrategicStatusFromSaveGameFile(HWFILE const hFile, UINT32 const version)
 {
 	//Load the Strategic Status structure from the saved game file
 	hFile->read(&gStrategicStatus, sizeof(STRATEGIC_STATUS));
+
+	if (version < SAVE_GAME_VERSION_MORE_WEAPONS)
+	{
+		gStrategicStatus.additionalWeaponsAlreadyDropped.fill(0);
+	}
 }
 
 
@@ -382,12 +389,74 @@ UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex )
 }
 
 
+void SetWeaponAlreadyDropped(UINT16 const itemIndex)
+{
+	if (itemIndex < MAX_WEAPONS)
+	{
+		gStrategicStatus.fWeaponDroppedAlready[itemIndex] = TRUE;
+	}
+	else
+	{
+		auto const offset{ itemIndex - MAX_WEAPONS };
+		gStrategicStatus.additionalWeaponsAlreadyDropped.at(offset / 8) |= 1 << (offset % 8);
+	}
+}
+
+
+bool WasWeaponAlreadyDropped(UINT16 const itemIndex)
+{
+	if (itemIndex < MAX_WEAPONS)
+	{
+		return gStrategicStatus.fWeaponDroppedAlready[itemIndex];
+	}
+
+	auto const offset{ itemIndex - MAX_WEAPONS };
+	return gStrategicStatus.additionalWeaponsAlreadyDropped.at(offset / 8) & (1 << (offset % 8));
+}
+
+
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 
 TEST(StrategicStatus, asserts)
 {
 	EXPECT_EQ(sizeof(STRATEGIC_STATUS), 192u);
+}
+
+TEST(StrategicStatus, SetWeaponAlreadyDropped_Old_Weapons_Limit)
+{
+	gStrategicStatus = {};
+	for (UINT16 i = 0; i < MAX_WEAPONS; ++i)
+	{
+		EXPECT_FALSE(WasWeaponAlreadyDropped(i));
+		SetWeaponAlreadyDropped(i);
+		EXPECT_TRUE(WasWeaponAlreadyDropped(i));
+	}
+}
+
+TEST(StrategicStatus, SetWeaponAlreadyDropped_Additional_Weapons)
+{
+	gStrategicStatus = {};
+	for (UINT16 i = MAX_WEAPONS; i < MAXITEMS; ++i)
+	{
+		EXPECT_FALSE(WasWeaponAlreadyDropped(i));
+		SetWeaponAlreadyDropped(i);
+		EXPECT_TRUE(WasWeaponAlreadyDropped(i));
+	}
+}
+
+TEST(StrategicStatus, AlreadyDropped_Index_Limit)
+{
+	// The theoretical limit of the already dropped functions is
+	// 69 (MAX_WEAPONS - 1) + 70 (bytes) * 8 (bits per byte) = 629.
+	constexpr uint16_t limit{ (MAX_WEAPONS - 1) + 70 * 8 };
+
+	EXPECT_NO_THROW(WasWeaponAlreadyDropped(limit));
+	EXPECT_THROW(WasWeaponAlreadyDropped(limit + 1), std::out_of_range);
+
+	EXPECT_NO_THROW(SetWeaponAlreadyDropped(limit));
+	EXPECT_TRUE(WasWeaponAlreadyDropped(limit));
+	EXPECT_THROW(SetWeaponAlreadyDropped(limit + 1), std::out_of_range);
 }
 
 #endif
