@@ -1,142 +1,29 @@
-$schema: http://json-schema.org/draft-04/schema#
+$schema: http://json-schema.org/schema#
 type: array
 title: Items
 description: |
   **Limitations**: Some items are still referenced in source code, so they should not be changed.
 items:
-  title: Item
-  description: |
-    An item defines item properties of an item available in the game.
+  allOf:
+    - title: Base Item
+      $ref: types/base-item.schema.yaml
+    - title: Item
+      description: |
+        An item defines item properties of an item available in the game.
 
-    Note that weapons and magazines are not part of this list, but have their own definitions.
-  type: object
-  properties:
-    itemIndex:
-      title: Item Index
-      $ref: types/uint16.schema.yaml
-    internalName:
-      title: Internal name
-      $ref: types/id.schema.yaml
-    shortName:
-      title: Short name
-      type: string
-    name:
-      title: Name
-      type: string
-    description:
-      title: Description
-      type: string
-    usItemClass:
-      title: Item class
-      $ref: types/uint32.schema.yaml
-    ubClassIndex:
-      title: Item class index
-      $ref: types/uint8.schema.yaml
-    ubCursor:
-      title: Cursor
-      $ref: types/uint8.schema.yaml
-    inventoryGraphics:
-      title: Inventory Graphics
-      description: Graphics that are used in the inventory interface for this item
+        Note that weapons and magazines are not part of this list, but have their own definitions.
       type: object
       properties:
-        small:
-          title: Small
-          description: Small graphics. Used e.g. in strategic & tactical inventory
-          $ref: types/graphic.schema.yaml
-        big:
-          title: Big
-          description: Big graphics. Used e.g. in item detail view
-          $ref: types/graphic.schema.yaml
+        usItemClass:
+          title: Item class
+          $ref: types/uint32.schema.yaml
+        ubClassIndex:
+          title: Item class index
+          $ref: types/uint8.schema.yaml
+        ubCursor:
+          title: Cursor
+          $ref: types/uint8.schema.yaml
       required:
-        - small
-        - big
-    tileGraphic:
-      title: Tile graphic index
-      description: Graphic that is used when the item is shown on the tactical map
-      $ref: types/tileset-tile-index.schema.yaml
-    ubWeight:
-      title: Weight
-      $ref: types/uint8.schema.yaml
-    ubPerPocket:
-      title: Per pocket
-      description: |
-        Defines item size and amount per inventory slot
-
-        - Items with value `0` are big and only fit into big pockets
-        - Items with value a value above `0` are small. The value determines how many stack into one small pocket.
-      $ref: types/uint8.schema.yaml
-    usPrice:
-      title: Price
-      $ref: types/uint16.schema.yaml
-    ubCoolness:
-      title: Coolness
-      $ref: types/uint8.schema.yaml
-    bReliability:
-      title: Reliability
-      $ref: types/int8.schema.yaml
-    bRepairEase:
-      title: Repair ease
-      $ref: types/int8.schema.yaml
-    bDamageable:
-      title: Is damageable?
-      type: boolean
-    bRepairable:
-      title: Is repairable?
-      type: boolean
-    bWaterDamages:
-      title: Is damaged by water?
-      type: boolean
-    bMetal:
-      title: Is metal?
-      type: boolean
-    bSinks:
-      title: Sinks in water?
-      type: boolean
-    bShowStatus:
-      title: Show status?
-      type: boolean
-    bHiddenAddon:
-      title: Is hidden addon?
-      type: boolean
-    bTwoHanded:
-      title: Is two handed?
-      type: boolean
-    bNotBuyable:
-      title: Is not buyable?
-      type: boolean
-    bAttachment:
-      title: Is an attachment?
-      type: boolean
-    bBigGunList:
-      title: Is a big gun?
-      type: boolean
-    bNotEditor:
-      title: Dont show in editor?
-      type: boolean
-    bDefaultUndroppable:
-      title: Is not droppable by default?
-      type: boolean
-    bUnaerodynamic:
-      title: Is unaerodynamic?
-      type: boolean
-    bElectronic:
-      title: Is electronic?
-      type: boolean
-    bInseparable:
-      title: Is inseparable?
-      type: boolean
-  required:
-  - itemIndex
-  - internalName
-  - usItemClass
-  - ubClassIndex
-  - ubCursor
-  - inventoryGraphics
-  - tileGraphic
-  - ubWeight
-  - ubPerPocket
-  - usPrice
-  - ubCoolness
-  - bReliability
-  - bRepairEase
+      - usItemClass
+      - ubClassIndex
+      - ubCursor
