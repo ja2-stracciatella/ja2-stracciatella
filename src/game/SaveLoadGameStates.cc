@@ -177,9 +177,8 @@ void AddModInfoToGameStates(SavedGameStates &states) {
 
 		arr.push(obj.toValue());
 	}
-	auto result = arr.toValue().serialize();
 
-	g_gameStates.Set(MODS_KEY, result);
+	states.Set(MODS_KEY, arr.toValue().serialize());
 }
 
 std::vector<std::pair<ST::string, ST::string>> GetModInfoFromGameStates(const SavedGameStates &states) {

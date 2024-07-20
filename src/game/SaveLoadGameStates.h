@@ -76,7 +76,7 @@ public:
 	}
 
 	template<typename T>
-	void SetVector(const ST::string& key, std::vector<T> vec)
+	void SetVector(const ST::string& key, std::vector<T> && vec)
 	{
 		std::vector<PRIMITIVE_VALUE> stored;
 		for (auto const& v : vec)
