@@ -3,6 +3,7 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "WeaponModels.h"
 
 
 //Enemy is allowed to capture the player after certain day
@@ -79,7 +80,9 @@ struct STRATEGIC_STATUS
 	UINT8			ubHighestProgress;			// the highest level of progress player has attained thus far in the game (0-100)
 
 	UINT8			notUsedGunIndeces[ARMY_GUN_LEVELS];
-	BOOLEAN		fWeaponDroppedAlready[MAX_WEAPONS];				// flag that tracks whether this weapon type has been dropped before
+	// Was flag that tracks whether this weapon type has been dropped before.
+	// no longer used but gets synthesized when saving the game.
+	BOOLEAN		fWeaponDroppedAlready[MAX_WEAPONS];
 
 	UINT8			ubMercDeaths;						// how many soldiers have bit it while in the player's employ (0-100)
 	UINT32		uiManDaysPlayed;				// once per day, # living mercs on player's team is added to this running total
@@ -99,10 +102,7 @@ struct STRATEGIC_STATUS
 	UINT8			ubNumNewSectorsVisitedToday;
 	UINT8			ubNumberOfDaysOfInactivity;
 
-	// For all weapons with an item index >= MAX_WEAPONS this array stores
-	// their "already dropped" status as a single bit. The size of this array
-	// must be exactly 70 because the struct size must be 192 bytes.
-	std::array<uint8_t, 70> additionalWeaponsAlreadyDropped;
+	INT8 bPadding[70]; // XXX HACK000B
 };
 
 
@@ -112,7 +112,7 @@ extern STRATEGIC_STATUS	gStrategicStatus;
 
 
 void SaveStrategicStatusToSaveGameFile(HWFILE);
-void LoadStrategicStatusFromSaveGameFile(HWFILE, UINT32 saveGameVersion);
+void LoadStrategicStatusFromSaveGameFile(HWFILE);
 
 UINT8 CalcDeathRate(void);
 
@@ -130,7 +130,8 @@ UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex );
 
 void UpdateLastDayOfPlayerActivity( UINT16 usDay );
 
-void SetWeaponAlreadyDropped(UINT16 itemIndex);
-bool WasWeaponAlreadyDropped(UINT16 itemIndex);
+void ClearAllWeaponsAlreadyDropped();
+void SetWeaponAlreadyDropped(WeaponModel const *);
+bool WasWeaponAlreadyDropped(WeaponModel const *);
 
 #endif

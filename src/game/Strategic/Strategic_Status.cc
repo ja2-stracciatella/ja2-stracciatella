@@ -1,20 +1,65 @@
 #include "Strategic_Status.h"
-#include "GameVersion.h"
 #include "Inventory_Choosing.h"
 #include "Item_Types.h"
 #include "SGPFile.h"
+#include "SaveLoadGameStates.h"
 #include "Soldier_Profile.h"
 #include "Campaign.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
 #include "Strategic_Mines.h"
 #include "EMail.h"
+#include "FunctionsLibrary.h"
 #include "Game_Clock.h"
 #include "GameSettings.h"
 #include "History.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Debug.h"
+#include "WeaponModels.h"
+#include <set>
 
 
 STRATEGIC_STATUS gStrategicStatus;
+
+namespace {
+std::set<uint16_t> alreadyDroppedWeapons;
+ST::string const GameStatesKey{ "StrategicStatus::alreadyDroppedWeapons" };
+
+void TrySetWeaponAlreadyDropped(uint16_t const itemIndex)
+{
+	auto * const itemModel{ GCM->getItem(itemIndex) };
+	if (itemModel->isWeapon())
+	{
+		SetWeaponAlreadyDropped(itemModel->asWeapon());
+	}
+}
+
+
+void RestoreDroppedWeaponsFromGameState()
+{
+	ClearAllWeaponsAlreadyDropped();
+
+	if (g_gameStates.HasKey(GameStatesKey))
+	{
+		for (auto const idx : g_gameStates.GetVector<int32_t>(GameStatesKey))
+		{
+			TrySetWeaponAlreadyDropped(static_cast<uint16_t>(idx));
+		}
+	}
+	else
+	{
+		// Save produced by an older game version.
+		for (uint16_t idx = 1; idx < MAX_WEAPONS; ++idx)
+		{
+			if (gStrategicStatus.fWeaponDroppedAlready[idx])
+			{
+				TrySetWeaponAlreadyDropped(idx);
+			}
+		}
+	}
+}
+}
+
 
 void InitStrategicStatus(void)
 {
@@ -27,20 +72,38 @@ void InitStrategicStatus(void)
 
 void SaveStrategicStatusToSaveGameFile(HWFILE const hFile)
 {
+	// Synthesize the old fWeaponDroppedAlready array just in case somebody
+	// wants to load this file with an older version of the game.
+	auto & wda{ gStrategicStatus.fWeaponDroppedAlready };
+	wda[0] = FALSE; // NOTHING aka NONE
+	for (uint16_t idx = 1; idx < MAX_WEAPONS; ++idx)
+	{
+		auto * const itemModel{ GCM->getItem(idx) };
+		if (itemModel->isWeapon())
+		{
+			wda[idx] = WasWeaponAlreadyDropped(itemModel->asWeapon());
+		}
+		else
+		{
+			// ROCK, ROCK2, BRASS_KNUCKLES and CROWBAR return false
+			// for isWeapon(). Is this intentional?
+			wda[idx] = FALSE;
+		}
+	}
+
 	//Save the Strategic Status structure to the saved game file
 	hFile->write(&gStrategicStatus, sizeof(STRATEGIC_STATUS));
+
+	g_gameStates.SetVector(GameStatesKey, std::vector<int32_t>
+		{ alreadyDroppedWeapons.begin(), alreadyDroppedWeapons.end() });
 }
 
 
-void LoadStrategicStatusFromSaveGameFile(HWFILE const hFile, UINT32 const version)
+void LoadStrategicStatusFromSaveGameFile(HWFILE const hFile)
 {
 	//Load the Strategic Status structure from the saved game file
 	hFile->read(&gStrategicStatus, sizeof(STRATEGIC_STATUS));
-
-	if (version < SAVE_GAME_VERSION_MORE_WEAPONS)
-	{
-		gStrategicStatus.additionalWeaponsAlreadyDropped.fill(0);
-	}
+	OnGameLoaded.addListener(GameStatesKey, RestoreDroppedWeaponsFromGameState);
 }
 
 
@@ -389,74 +452,61 @@ UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex )
 }
 
 
-void SetWeaponAlreadyDropped(UINT16 const itemIndex)
+void ClearAllWeaponsAlreadyDropped()
 {
-	if (itemIndex < MAX_WEAPONS)
-	{
-		gStrategicStatus.fWeaponDroppedAlready[itemIndex] = TRUE;
-	}
-	else
-	{
-		auto const offset{ itemIndex - MAX_WEAPONS };
-		gStrategicStatus.additionalWeaponsAlreadyDropped.at(offset / 8) |= 1 << (offset % 8);
-	}
+	alreadyDroppedWeapons.clear();
 }
 
 
-bool WasWeaponAlreadyDropped(UINT16 const itemIndex)
+void SetWeaponAlreadyDropped(WeaponModel const * const wm)
 {
-	if (itemIndex < MAX_WEAPONS)
-	{
-		return gStrategicStatus.fWeaponDroppedAlready[itemIndex];
-	}
+	alreadyDroppedWeapons.insert(wm->getItemIndex());
+}
 
-	auto const offset{ itemIndex - MAX_WEAPONS };
-	return gStrategicStatus.additionalWeaponsAlreadyDropped.at(offset / 8) & (1 << (offset % 8));
+
+bool WasWeaponAlreadyDropped(WeaponModel const * const wm)
+{
+	return alreadyDroppedWeapons.count(wm->getItemIndex()) == 1;
 }
 
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
+#include "DefaultContentManagerUT.h"
 
 TEST(StrategicStatus, asserts)
 {
 	EXPECT_EQ(sizeof(STRATEGIC_STATUS), 192u);
 }
 
-TEST(StrategicStatus, SetWeaponAlreadyDropped_Old_Weapons_Limit)
+using AlreadyDroppedTest = DefaultContentManagerUT::BaseTest;
+
+TEST_F(AlreadyDroppedTest, SetWeaponAlreadyDropped_Old_Weapons_Limit)
 {
-	gStrategicStatus = {};
-	for (UINT16 i = 0; i < MAX_WEAPONS; ++i)
+	ClearAllWeaponsAlreadyDropped();
+	for (uint16_t i = GLOCK_17; i < MAX_WEAPONS; ++i)
 	{
-		EXPECT_FALSE(WasWeaponAlreadyDropped(i));
-		SetWeaponAlreadyDropped(i);
-		EXPECT_TRUE(WasWeaponAlreadyDropped(i));
+		auto * const itemModel{ GCM->getItem(i) };
+		if (!itemModel->isWeapon()) continue;
+		auto * const weaponModel{ itemModel->asWeapon() };
+
+		EXPECT_FALSE(WasWeaponAlreadyDropped(weaponModel));
+		SetWeaponAlreadyDropped(weaponModel);
+		EXPECT_TRUE(WasWeaponAlreadyDropped(weaponModel));
 	}
 }
 
-TEST(StrategicStatus, SetWeaponAlreadyDropped_Additional_Weapons)
+TEST_F(AlreadyDroppedTest, SetWeaponAlreadyDropped_Additional_Weapons)
 {
-	gStrategicStatus = {};
-	for (UINT16 i = MAX_WEAPONS; i < MAXITEMS; ++i)
-	{
-		EXPECT_FALSE(WasWeaponAlreadyDropped(i));
-		SetWeaponAlreadyDropped(i);
-		EXPECT_TRUE(WasWeaponAlreadyDropped(i));
-	}
-}
+	ClearAllWeaponsAlreadyDropped();
 
-TEST(StrategicStatus, AlreadyDropped_Index_Limit)
-{
-	// The theoretical limit of the already dropped functions is
-	// 69 (MAX_WEAPONS - 1) + 70 (bytes) * 8 (bits per byte) = 629.
-	constexpr uint16_t limit{ (MAX_WEAPONS - 1) + 70 * 8 };
+	// The special weapon defined for testing purposes in weapons.json.
+	auto * const testWeapon{ GCM->getWeapon(331) };
+	ASSERT_NE(testWeapon, nullptr);
 
-	EXPECT_NO_THROW(WasWeaponAlreadyDropped(limit));
-	EXPECT_THROW(WasWeaponAlreadyDropped(limit + 1), std::out_of_range);
-
-	EXPECT_NO_THROW(SetWeaponAlreadyDropped(limit));
-	EXPECT_TRUE(WasWeaponAlreadyDropped(limit));
-	EXPECT_THROW(SetWeaponAlreadyDropped(limit + 1), std::out_of_range);
+	EXPECT_FALSE(WasWeaponAlreadyDropped(testWeapon));
+	SetWeaponAlreadyDropped(testWeapon);
+	EXPECT_TRUE(WasWeaponAlreadyDropped(testWeapon));
 }
 
 #endif

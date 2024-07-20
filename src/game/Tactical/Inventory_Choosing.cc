@@ -39,10 +39,7 @@ static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon);
 void InitArmyGunTypes(void)
 {
 	// set all flags that track whether this weapon type has been dropped before to FALSE
-	std::fill(std::begin(gStrategicStatus.fWeaponDroppedAlready),
-		std::end(gStrategicStatus.fWeaponDroppedAlready), FALSE);
-
-	gStrategicStatus.additionalWeaponsAlreadyDropped.fill(0);
+	ClearAllWeaponsAlreadyDropped();
 
 	// avoid auto-drops for the gun class with the crappiest guns in it
 	MarkAllWeaponsOfSameGunClassAsDropped( SW38 );
@@ -71,8 +68,11 @@ static INT8 GetWeaponClass(UINT16 usGun)
 
 static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon)
 {
+	auto * const itemModel{ GCM->getItem(usWeapon) };
+	if (!itemModel->isWeapon()) return;
+
 	// mark that item itself as dropped, whether or not it's part of a gun class
-	SetWeaponAlreadyDropped(usWeapon);
+	SetWeaponAlreadyDropped(itemModel->asWeapon());
 
 	auto const bGunClass{ GetWeaponClass(usWeapon) };
 
@@ -80,10 +80,8 @@ static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon)
 	if ( bGunClass != -1 )
 	{
 		// then mark EVERY gun in that class as dropped
-		for (auto * const weaponModel : GCM->getExtendedGunChoice()[bGunClass])
-		{
-			SetWeaponAlreadyDropped(weaponModel->getItemIndex());
-		}
+		auto const& gunChoice{ GCM->getExtendedGunChoice()[bGunClass] };
+		std::for_each(gunChoice.begin(), gunChoice.end(), SetWeaponAlreadyDropped);
 	}
 }
 
@@ -1524,9 +1522,7 @@ static void MakeOneItemOfClassDroppable(SOLDIERCREATE_STRUCT* const sc, UINT32 c
 static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 bSoldierClass)
 {
 	INT32 i;
-	//UINT16 usRandomNum;
 	UINT32 uiItemClass;
-	UINT16 usItem;
 	UINT8 ubAmmoDropRate;
 	UINT8 ubGrenadeDropRate;
 	UINT8 ubOtherDropRate;
@@ -1639,15 +1635,16 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 		// SPECIAL handling for weapons: we'll always drop a weapon type that has never been dropped before
 		for( i = 0; i < NUM_INV_SLOTS; i++ )
 		{
-			usItem = pp->Inv[ i ].usItem;
+			auto const usItem{ pp->Inv[ i ].usItem };
+			auto * const itemModel{ GCM->getItem(usItem) };
 			// if it's a weapon (monster parts included - they won't drop due to checks elsewhere!)
-			if (usItem > NONE && GCM->getItem(usItem)->isWeapon())
+			if (usItem > NONE && itemModel->isWeapon())
 			{
 				// and we're allowed to change its flags
 				if(! (pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE ))
 				{
 					// and it's never been dropped before in this game
-					if (WasWeaponAlreadyDropped(usItem))
+					if (WasWeaponAlreadyDropped(itemModel->asWeapon()))
 					{
 						// mark it as droppable, and remember we did so.  If the player never kills this particular dude,
 						// oh well, tough luck, he missed his chance for an easy reward, he'll have to wait til next

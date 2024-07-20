@@ -883,7 +883,7 @@ void LoadSavedGame(const ST::string &saveName)
 	BAR(1, "Strategic Status...");
 	if (version	>= 28)
 	{
-		LoadStrategicStatusFromSaveGameFile(f, version);
+		LoadStrategicStatusFromSaveGameFile(f);
 	}
 
 	BAR(1, "Strategic AI...");
