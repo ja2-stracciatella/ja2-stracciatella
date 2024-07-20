@@ -225,20 +225,24 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 
 static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 {
+	const NPCQuoteInfo* m_arr;
+
 	if ( AreInMeanwhile( ) )
 	{
-		// If we are the queen....
 		if ( ubNPC == QUEEN || ubNPC == ELLIOT)
 		{
-			return GCM->getScriptRecords(ubNPC, GetMeanwhileID());
+			m_arr = GCM->getScriptRecords(ubNPC, GetMeanwhileID());
 		}
 		else
 		{
-			return GCM->getScriptRecords(ubNPC);
+			m_arr = GCM->getScriptRecords(ubNPC);
 		}
 	}
+	else m_arr = GCM->getScriptRecords(ubNPC);
 
-	return GCM->getScriptRecords(ubNPC);
+	NPCQuoteInfo* arr_copy{ new NPCQuoteInfo[NUM_NPC_QUOTE_RECORDS] };
+	std::copy(m_arr, m_arr + NUM_NPC_QUOTE_RECORDS, arr_copy);
+	return arr_copy;
 }
 
 static void RevertToOriginalQuoteFile(UINT8 ubNPC)
