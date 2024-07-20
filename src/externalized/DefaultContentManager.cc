@@ -136,6 +136,14 @@ void deleteElements(std::vector<const T*> & vec)
 	}
 }
 
+void deleteElements(std::vector<const NPCQuoteInfo*>& vec)
+{
+	for (auto elem : vec)
+	{
+		delete[] elem;
+	}
+}
+
 template <typename K, typename V>
 void deleteElements(std::map<K, const V*> & map)
 {
@@ -143,6 +151,20 @@ void deleteElements(std::map<K, const V*> & map)
 	{
 		delete kv.second;
 	}
+}
+
+void deleteElements(std::map<std::pair<uint8_t, uint8_t>, const NPCQuoteInfo*>& map)
+{
+	for (auto& kv : map)
+	{
+		delete[] kv.second;
+	}
+}
+
+template <class T>
+void deleteElements(const T* arr)
+{
+	delete[] arr;
 }
 
 DefaultContentManager::~DefaultContentManager()
@@ -172,6 +194,9 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
 	deleteElements(m_vehicles);
+	deleteElements(m_scriptRecords);
+	deleteElements(m_scriptRecordsMeanwhiles);
+	deleteElements(m_scriptRecordsRecruited);
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -745,10 +770,7 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 	loadTranslationTable();
 
 	m_scriptRecords.resize(NUM_PROFILES);
-	loadAllScriptRecords("script-records-NPCs.json");
-	// these are purely for schema validation - no data is supposed to be extracted from them on game startup
-	readJsonDataFileWithSchema("script-records-meanwhiles.json");
-	readJsonDataFileWithSchema("script-records-recruited.json");
+	loadAllScriptRecords();
 
 	std::unique_ptr<SGPFile> const translation { openGameResForReading(ST::format(
 		"strings/translation{}.json", L10n::GetSuffix(m_gameVersion, false)))};
@@ -1128,9 +1150,9 @@ void DefaultContentManager::loadTranslationTable()
 	}
 }
 
-void DefaultContentManager::loadAllScriptRecords(const ST::string& jsonPath)
+void DefaultContentManager::loadAllScriptRecords()
 {
-	auto json = readJsonDataFileWithSchema(jsonPath);
+	auto json = readJsonDataFileWithSchema("script-records-NPCs.json");
 	for (auto& element : json.toVec())
 	{
 		auto reader = element.toObject();
@@ -1138,6 +1160,19 @@ void DefaultContentManager::loadAllScriptRecords(const ST::string& jsonPath)
 		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
 		m_scriptRecords[jsonProfileId] = NPCQuoteInfo::deserialize(element, this, this);
 	}
+
+	auto json2 = readJsonDataFileWithSchema("script-records-meanwhiles.json");
+	for (auto& element : json2.toVec())
+	{
+		auto reader = element.toObject();
+		ST::string jsonProfileName = reader.GetString("profile");
+		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
+		uint8_t jsonMeanwhileId = reader.GetUInt("meanwhileIndex");
+		m_scriptRecordsMeanwhiles.insert_or_assign({ jsonMeanwhileId, jsonProfileId }, NPCQuoteInfo::deserialize(element, this, this));
+	}
+
+	auto json3 = readJsonDataFileWithSchema("script-records-recruited.json");
+	m_scriptRecordsRecruited = NPCQuoteInfo::deserialize(json3.toVec()[0], this, this);
 }
 
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
@@ -1366,40 +1401,23 @@ const VehicleModel* DefaultContentManager::getVehicle(uint8_t const vehicleID) c
 	return m_vehicles[vehicleID];
 }
 
-NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId) const
+const NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId) const
 {
 	MercProfile profile(profileId);
-	ST::string filename;
 	if (profile.isPlayerMerc() || (profile.isRPC() && profile.isRecruited()))
 	{
-		filename = "script-records-recruited.json";
-		auto json = readJsonDataFile(filename);
-		return NPCQuoteInfo::deserialize(json.toVec()[0], this, this);
+		return m_scriptRecordsRecruited;
 	}
 	else
 	{
-		return const_cast<NPCQuoteInfo*>(m_scriptRecords[profileId]);
+		return m_scriptRecords[profileId];
 	}
 	return nullptr;
 }
 
-NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const
+const NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const
 {
-	auto json = readJsonDataFile("script-records-meanwhiles.json");
-	for (auto& element : json.toVec())
-	{
-		auto reader = element.toObject();
-		if (reader.GetUInt("meanwhileIndex") == meanwhileId)
-		{
-			ST::string jsonProfileName = reader.GetString("profile");
-			uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
-			if (jsonProfileId == profileId)
-			{
-				return NPCQuoteInfo::deserialize(element, this, this);
-			}
-		}
-	}
-	return nullptr;
+	return m_scriptRecordsMeanwhiles.at({ meanwhileId , profileId });
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
