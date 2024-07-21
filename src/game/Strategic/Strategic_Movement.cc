@@ -2530,13 +2530,20 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 	f->seek(32, FILE_SEEK_FROM_CURRENT);
 }
 
+namespace {
+UINT8 PlayerGroupSize(GROUP const& group)
+{
+	UINT8 size{ 0 };
+	CFOR_EACH_PLAYER_IN_GROUP(unused, &group) ++size;
+	return size;
+}
+}
 
 // Saves the Player's group list to the saved game file
 static void SavePlayerGroupList(HWFILE const f, GROUP const* const g)
 {
 	// Save the number of nodes in the list
-	UINT32 uiNumberOfNodesInList = 0;
-	CFOR_EACH_PLAYER_IN_GROUP(p, g) ++uiNumberOfNodesInList;
+	UINT32 const uiNumberOfNodesInList{PlayerGroupSize(*g) };
 	f->write(&uiNumberOfNodesInList, sizeof(UINT32));
 
 	// Loop through and save only the players profile id
@@ -2595,6 +2602,14 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 
 		*anchor = pg;
 		anchor  = &pg->next;
+	}
+
+	// We might have to correct the group size.
+	auto const actualSize{ PlayerGroupSize(*g) };
+	if (actualSize != g->ubGroupSize)
+	{
+		SLOGW("Fixed size for group {}: old {} new {}", g->ubGroupID, g->ubGroupSize, actualSize);
+		g->ubGroupSize = actualSize;
 	}
 }
 
