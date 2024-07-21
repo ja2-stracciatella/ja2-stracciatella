@@ -32,6 +32,7 @@
 #include "Queen_Command.h"
 #include "Quests.h"
 #include "SAM_Sites.h"
+#include "Soldier_Control.h"
 #include "Soldier_Macros.h"
 #include "Squads.h"
 #include "Strategic.h"
@@ -2529,13 +2530,20 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 	f->seek(32, FILE_SEEK_FROM_CURRENT);
 }
 
+namespace {
+UINT8 PlayerGroupSize(GROUP const& group)
+{
+	UINT8 size{ 0 };
+	CFOR_EACH_PLAYER_IN_GROUP(unused, &group) ++size;
+	return size;
+}
+}
 
 // Saves the Player's group list to the saved game file
 static void SavePlayerGroupList(HWFILE const f, GROUP const* const g)
 {
 	// Save the number of nodes in the list
-	UINT32 uiNumberOfNodesInList = 0;
-	CFOR_EACH_PLAYER_IN_GROUP(p, g) ++uiNumberOfNodesInList;
+	UINT32 const uiNumberOfNodesInList{PlayerGroupSize(*g) };
 	f->write(&uiNumberOfNodesInList, sizeof(UINT32));
 
 	// Loop through and save only the players profile id
@@ -2566,11 +2574,42 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(profile_id);
 		//Should never happen
 		//Assert(s != NULL);
+
+		// Sanity check because apparently a vehicle can somehow end up
+		// in the wrong group (issue #2037).
+		if (s->ubGroupID != g->ubGroupID)
+		{
+			SLOGE("{} found in wrong group {}, ignored!", s->name, g->ubGroupID);
+			// We have to set this vehicle's between sectors flag from its
+			// correct group but that group might not have been loaded yet.
+			// so we delay this until the game is fully loaded.
+			auto const * const correctGroup{ GetGroup(s->ubGroupID) };
+			s->fBetweenSectors = correctGroup
+				// If the correct group was already loaded we copy its
+				// between sectors flag to this vehicle.
+				? correctGroup->fBetweenSectors
+				// Clear the flag; losing a movement command is easier
+				// to fix for the player than a vehicle that is stuck
+				// between sectors.
+				: FALSE;
+
+			delete pg;
+			continue;
+		}
+
 		pg->pSoldier = s;
 		pg->next     = NULL;
 
 		*anchor = pg;
 		anchor  = &pg->next;
+	}
+
+	// We might have to correct the group size.
+	auto const actualSize{ PlayerGroupSize(*g) };
+	if (actualSize != g->ubGroupSize)
+	{
+		SLOGW("Fixed size for group {}: old {} new {}", g->ubGroupID, g->ubGroupSize, actualSize);
+		g->ubGroupSize = actualSize;
 	}
 }
 
