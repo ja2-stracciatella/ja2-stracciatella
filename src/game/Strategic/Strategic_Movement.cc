@@ -32,6 +32,7 @@
 #include "Queen_Command.h"
 #include "Quests.h"
 #include "SAM_Sites.h"
+#include "Soldier_Control.h"
 #include "Soldier_Macros.h"
 #include "Squads.h"
 #include "Strategic.h"
@@ -2566,6 +2567,29 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(profile_id);
 		//Should never happen
 		//Assert(s != NULL);
+
+		// Sanity check because apparently a vehicle can somehow end up
+		// in the wrong group (issue #2037).
+		if (s->ubGroupID != g->ubGroupID)
+		{
+			SLOGE("{} found in wrong group {}, ignored!", s->name, g->ubGroupID);
+			// We have to set this vehicle's between sectors flag from its
+			// correct group but that group might not have been loaded yet.
+			// so we delay this until the game is fully loaded.
+			auto const * const correctGroup{ GetGroup(s->ubGroupID) };
+			s->fBetweenSectors = correctGroup
+				// If the correct group was already loaded we copy its
+				// between sectors flag to this vehicle.
+				? correctGroup->fBetweenSectors
+				// Clear the flag; losing a movement command is easier
+				// to fix for the player than a vehicle that is stuck
+				// between sectors.
+				: FALSE;
+
+			delete pg;
+			continue;
+		}
+
 		pg->pSoldier = s;
 		pg->next     = NULL;
 
