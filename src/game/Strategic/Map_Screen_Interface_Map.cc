@@ -563,7 +563,7 @@ void DrawMap(void)
 		ShowSAMSitesOnStrategicMap();
 
 		// draw mine icons and descriptive text
-		auto mines = GCM->getMines();
+		auto && mines{ GCM->getMines() };
 		for (UINT32 i = 0; i < mines.size(); ++i)
 		{
 			SGPSector sMap(mines[i]->entranceSector);

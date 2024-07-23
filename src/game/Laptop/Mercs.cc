@@ -627,7 +627,7 @@ ProfileID GetProfileIDFromMERCListing(const MERCListingModel* listing)
 //Gets the actual merc id from the array
 ProfileID GetProfileIDFromMERCListingIndex(UINT8 ubMercIndex)
 {
-	auto mercsListing = GCM->getMERCListings();
+	auto && mercsListing{ GCM->getMERCListings() };
 	return GetProfileIDFromMERCListing(mercsListing.at(ubMercIndex));
 }
 
@@ -958,7 +958,7 @@ static void MakeBiffAwayForCoupleOfDays(void);
 
 static BOOLEAN IsSpeckTryingToRecruit()
 {
-	auto listings = GCM->getMERCListings();
+	auto && listings{ GCM->getMERCListings() };
 	if (LaptopSaveInfo.gubLastMercIndex >= (listings.size() - 1))
 	{
 		// we have got all mercs already
@@ -1333,7 +1333,7 @@ static BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage(void)
 	//if the merc came from the hire screen
 	if( gfJustHiredAMercMerc )
 	{
-		auto listing = GCM->getMERCListings();
+		auto && listing{ GCM->getMERCListings() };
 		HandlePlayerHiringMerc(listing[gubCurMercIndex]);
 
 		//get speck to say the thank you
