@@ -2,7 +2,7 @@
 
 #include "ItemModel.h"
 #include "Json.h"
-#include "tacticalai/NPCQuoteInfo.h"
+#include "content/NPCQuoteInfo.h"
 
 static uint8_t getApproachEnumFromString(const ST::string& s)
 {

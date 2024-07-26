@@ -26,6 +26,7 @@
 #include "army/ArmyCompositionModel.h"
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
+#include "content/NPCQuoteInfo.h"
 #include "mercs/MERCListingModel.h"
 #include "MercProfile.h"
 #include "mercs/MercProfileInfo.h"
@@ -51,7 +52,6 @@
 #include "strings/Localization.h"
 #include "tactical/MapItemReplacementModel.h"
 #include "tactical/NpcActionParamsModel.h"
-#include "tacticalai/NPCQuoteInfo.h"
 
 #include "Logger.h"
 #include "Strategic_AI.h"

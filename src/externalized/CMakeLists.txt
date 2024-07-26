@@ -9,7 +9,6 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/strategic")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/strings")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tileset")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tactical")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tacticalai")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
 file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
