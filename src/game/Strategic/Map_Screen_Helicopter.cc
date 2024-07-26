@@ -759,7 +759,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 			SkyriderDialogue(MENTION_DRASSEN_SAM_SITE);
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
-			auto samList = GCM->getSamSites();
+			auto && samList{ GCM->getSamSites() };
 			if (StrategicMap[SGPSector(samList[SAM_SITE_TWO]->sectorId).AsStrategicIndex()].fEnemyControlled)
 			{
 				SkyriderDialogue(SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE);
@@ -893,7 +893,7 @@ void HandleAnimationOfSectors( void )
 	static BOOLEAN fOldShowEstoniRefuelHighLight = FALSE;
 	static BOOLEAN fOldShowOtherSAMHighLight = FALSE;
 
-	auto samList = GCM->getSamSites();
+	auto && samList{ GCM->getSamSites() };
 
 	// find out which mode we are in and animate for that mode
 

@@ -439,7 +439,7 @@ bool AreInMeanwhile()
 
 static void ProcessImplicationsOfMeanwhile()
 {
-	auto samList = GCM->getSamSites();
+	auto && samList{ GCM->getSamSites() };
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
 	{
 		case END_OF_PLAYERS_FIRST_BATTLE:

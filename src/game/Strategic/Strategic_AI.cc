@@ -369,9 +369,8 @@ void InitStrategicAI()
 	gubPatrolReinforcementsDenied = new UINT8[gPatrolGroup.size()]{};
 
 	// Initialize the garrison group definitions
-	auto origGarrisonGroups = GCM->getGarrisonGroups();
-	size_t uiGarrisonArraySize = origGarrisonGroups.size();
-	gGarrisonGroup = origGarrisonGroups;
+	gGarrisonGroup = GCM->getGarrisonGroups();
+	size_t uiGarrisonArraySize = gGarrisonGroup.size();
 
 	gubGarrisonReinforcementsDenied = new UINT8[uiGarrisonArraySize]{};
 
@@ -2189,7 +2188,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		EvolveQueenPriorityPhase( TRUE );
 
 		//Recreate the patrol desired sizes
-		auto origPatrolGroup = GCM->getPatrolGroups();
+		auto && origPatrolGroup{ GCM->getPatrolGroups() };
 		for( i = 0; i < gPatrolGroup.size(); i++ )
 		{
 			gPatrolGroup[ i ].bSize = origPatrolGroup[ i ].bSize;

@@ -96,7 +96,7 @@ void InitializeMines( void )
 			return;
 	}
 
-	auto minesData = GCM->getMines();
+	auto && minesData{ GCM->getMines() };
 	while (ubMineProductionIncreases > 0)
 	{
 		// pick a producing mine at random and increase its production
