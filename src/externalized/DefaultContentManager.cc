@@ -136,14 +136,6 @@ void deleteElements(std::vector<const T*> & vec)
 	}
 }
 
-void deleteElements(std::vector<const NPCQuoteInfo*>& vec)
-{
-	for (auto elem : vec)
-	{
-		delete[] elem;
-	}
-}
-
 template <typename K, typename V>
 void deleteElements(std::map<K, const V*> & map)
 {
@@ -151,20 +143,6 @@ void deleteElements(std::map<K, const V*> & map)
 	{
 		delete kv.second;
 	}
-}
-
-void deleteElements(std::map<std::pair<uint8_t, uint8_t>, const NPCQuoteInfo*>& map)
-{
-	for (auto& kv : map)
-	{
-		delete[] kv.second;
-	}
-}
-
-template <class T>
-void deleteElements(const T* arr)
-{
-	delete[] arr;
 }
 
 DefaultContentManager::~DefaultContentManager()
@@ -194,9 +172,6 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
 	deleteElements(m_vehicles);
-	deleteElements(m_scriptRecords);
-	deleteElements(m_scriptRecordsMeanwhiles);
-	deleteElements(m_scriptRecordsRecruited);
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -1406,18 +1381,18 @@ const NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId) c
 	MercProfile profile(profileId);
 	if (profile.isPlayerMerc() || (profile.isRPC() && profile.isRecruited()))
 	{
-		return m_scriptRecordsRecruited;
+		return m_scriptRecordsRecruited.get();
 	}
 	else
 	{
-		return m_scriptRecords[profileId];
+		return m_scriptRecords[profileId].get();
 	}
 	return nullptr;
 }
 
 const NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const
 {
-	return m_scriptRecordsMeanwhiles.at({ meanwhileId , profileId });
+	return m_scriptRecordsMeanwhiles.at({ meanwhileId , profileId }).get();
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const

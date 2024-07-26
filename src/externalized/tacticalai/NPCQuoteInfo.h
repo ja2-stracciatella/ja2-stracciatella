@@ -64,5 +64,5 @@ struct NPCQuoteInfo
 	UINT16  usGoToGridno;
 	INT16   sActionData;        // special action value
 
-	static NPCQuoteInfo* deserialize(const JsonValue& json, const MercSystem* mercSystem, const ItemSystem* itemSystem);
+	static std::unique_ptr<NPCQuoteInfo const []> deserialize(const JsonValue& json, const MercSystem* mercSystem, const ItemSystem* itemSystem);
 };
