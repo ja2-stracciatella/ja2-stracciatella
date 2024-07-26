@@ -70,7 +70,7 @@ static uint8_t getQuestEnumFromString(const ST::string& s)
 	else throw DataError(ST::format("unknown quest name value: {}", s));
 }
 
-NPCQuoteInfo* NPCQuoteInfo::deserialize(const JsonValue& json, const MercSystem* mercSystem, const ItemSystem* itemSystem)
+std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue& json, const MercSystem* mercSystem, const ItemSystem* itemSystem)
 {
 	auto reader = json.toObject();
 	auto jsonRecords = reader["records"].toVec();
@@ -169,6 +169,6 @@ NPCQuoteInfo* NPCQuoteInfo::deserialize(const JsonValue& json, const MercSystem*
 		}
 		else rec->sActionData = NPC_ACTION_NONE;
 	}
-	return buf.release();
+	return buf;
 }
 

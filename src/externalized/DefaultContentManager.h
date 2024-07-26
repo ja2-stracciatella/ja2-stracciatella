@@ -197,9 +197,9 @@ protected:
 
 	std::vector<AmmoTypeModel const *> m_ammoTypes;
 
-	std::map<std::pair<uint8_t, uint8_t>, const NPCQuoteInfo*> m_scriptRecordsMeanwhiles;
-	                          std::vector<const NPCQuoteInfo*> m_scriptRecords;
-	                                      const NPCQuoteInfo*  m_scriptRecordsRecruited;
+	std::map<std::pair<uint8_t, uint8_t>, std::unique_ptr<NPCQuoteInfo const []>> m_scriptRecordsMeanwhiles;
+	                          std::vector<std::unique_ptr<NPCQuoteInfo const []>> m_scriptRecords;
+							              std::unique_ptr<NPCQuoteInfo const []>  m_scriptRecordsRecruited;
 
 	/** Mapping of calibre names to objects. */
 	std::map<ST::string, const AmmoTypeModel*> m_ammoTypeMap;
