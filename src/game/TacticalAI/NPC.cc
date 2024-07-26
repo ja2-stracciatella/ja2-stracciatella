@@ -36,7 +36,7 @@
 #include "Timer_Control.h"
 #include "WeaponModels.h"
 #include "Weapons.h"
-#include "tacticalai/NPCQuoteInfo.h"
+#include "content/NPCQuoteInfo.h"
 #include <memory>
 #include <string_theory/format>
 #include <string_theory/string>
