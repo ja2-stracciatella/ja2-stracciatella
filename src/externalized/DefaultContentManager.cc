@@ -21,11 +21,13 @@
 #include "MagazineModel.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
+#include "Soldier_Profile_Type.h"
 #include "VehicleModel.h"
 #include "WeaponModels.h"
 #include "army/ArmyCompositionModel.h"
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
+#include "content/NPCQuoteInfo.h"
 #include "mercs/MERCListingModel.h"
 #include "MercProfile.h"
 #include "mercs/MercProfileInfo.h"
@@ -742,6 +744,9 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 
 	loadTranslationTable();
 
+	m_scriptRecords.resize(NUM_PROFILES);
+	loadAllScriptRecords();
+
 	std::unique_ptr<SGPFile> const translation { openGameResForReading(ST::format(
 		"strings/translation{}.json", L10n::GetSuffix(m_gameVersion, false)))};
 	g_langRes = std::make_unique<L10n::L10n_t>(translation.get());
@@ -1120,6 +1125,31 @@ void DefaultContentManager::loadTranslationTable()
 	}
 }
 
+void DefaultContentManager::loadAllScriptRecords()
+{
+	auto json = readJsonDataFileWithSchema("script-records-NPCs.json");
+	for (auto& element : json.toVec())
+	{
+		auto reader = element.toObject();
+		ST::string jsonProfileName = reader.GetString("profile");
+		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
+		m_scriptRecords[jsonProfileId] = NPCQuoteInfo::deserialize(element, this, this);
+	}
+
+	auto json2 = readJsonDataFileWithSchema("script-records-meanwhiles.json");
+	for (auto& element : json2.toVec())
+	{
+		auto reader = element.toObject();
+		ST::string jsonProfileName = reader.GetString("profile");
+		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
+		uint8_t jsonMeanwhileId = reader.GetUInt("meanwhileIndex");
+		m_scriptRecordsMeanwhiles.insert_or_assign({ jsonMeanwhileId, jsonProfileId }, NPCQuoteInfo::deserialize(element, this, this));
+	}
+
+	auto json3 = readJsonDataFileWithSchema("script-records-recruited.json");
+	m_scriptRecordsRecruited = NPCQuoteInfo::deserialize(json3.toVec()[0], this, this);
+}
+
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
 {
 	return m_bloodCatPlacements;
@@ -1344,6 +1374,25 @@ const VehicleModel* DefaultContentManager::getVehicle(uint8_t const vehicleID) c
 		throw std::out_of_range(error.to_std_string());
 	}
 	return m_vehicles[vehicleID];
+}
+
+const NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId) const
+{
+	MercProfile profile(profileId);
+	if (profile.isPlayerMerc() || (profile.isRPC() && profile.isRecruited()))
+	{
+		return m_scriptRecordsRecruited.get();
+	}
+	else
+	{
+		return m_scriptRecords[profileId].get();
+	}
+	return nullptr;
+}
+
+const NPCQuoteInfo* DefaultContentManager::getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const
+{
+	return m_scriptRecordsMeanwhiles.at({ meanwhileId , profileId }).get();
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const

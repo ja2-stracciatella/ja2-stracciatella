@@ -1,0 +1,2846 @@
+[
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 0, // END_OF_PLAYERS_FIRST_BATTLE
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 10, // "This better be good."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 11, // "Elliot! You idiot! We crushed those rebels in Omerta! How can it be?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 4
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 12, // "Commando types??? What sort of commando types? From where?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 5
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "What? How would the rebels get the means to recruit mercenaries? Well, no matter. Send me their bodies for examination!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 6,
+                "actionData": {
+                    "code": 215 // NPC_ACTION_TRIGGER_ELLIOT_BY_BATTLE_RESULT
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 239 // NPC_ACTION_QUEEN_DECIDE_WHICH_QUOTE_FOR_PLAYER_ATTACK
+                }
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 134, // "Did they capture the entire town?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 7
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 14, // "Send my troops to the location at once!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 8
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 1, // DRASSEN_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 15, // "You ARE aware that I have other things to do, Elliot?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 16, // "An attack in Drassen! They were summarily slaughtered, I presume. Heh."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 17, // "They... were... victorious? VICTORIOUS! Control DRASSEN? Ah... Elliot! You idiot!"
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 18, // "Two cities! I MUST develop a better plan."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 19, // "How is this happening? Three cities?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 20, // "This is unacceptable! This must be stopped!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 21, // "Spare nothing! We must not fall!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 22, // "Send my best soldiers after these, these, commandos! And send ME their heads when they've finished! Am I making myself clear?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 2, // CAMBRIA_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 23, // "I am a very, very busy woman, Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 24, // "Well, what is it!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 25, // "Elliot! You.... Doughhh... What have they done now! Is there no end to this? Tell me, Elliot, have they been defeated?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 26, // "Elliot! You idiot!"
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 18, // "Two cities! I MUST develop a better plan."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 19, // "How is this happening? Three cities?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 20, // "This is unacceptable! This must be stopped!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 21, // "Spare nothing! We must not fall!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 27, // "Cambria was an important city! My soldiers have let it fall, have they? Well, send this message to those still alive. They kill the mercenaries, or I kill their children. Their fate is of their own choosing."
+                "numQuotes": 2,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 3, // ALMA_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 29, // "I hope, for once, you have a good reason to disturb me."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 30, // "Alma? ALMA! ALMA! Elliot! You idiot! The God-damn training facility is there! What are they doing, sleeping?! And the mine! Oh, Elliot, what now!"
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 18, // "Two cities! I MUST develop a better plan."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 19, // "How is this happening? Three cities?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 20, // "This is unacceptable! This must be stopped!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 21, // "Spare nothing! We must not fall!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 31, // "I provide the best in armor, do I not? The best weapons, the best training and the best soldiers that money can buy."
+                "numQuotes": 2,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 12,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 33, // "Oh, I don't believe this! This time, should we fail there will be hell to pay! Let the soldiers know that. I want all the mercenaries dead. Do you have any idea how much losing a mine costs me?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 13,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 34, // "More than you'll ever make in your entire life, Elliot! In fact, from now on, you can forget your regular paycheck! Now get out of here and give me time to think."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 4, // GRUMM_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 35, // "Oh, allow me to hazard a guess. You bring me bad news."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 36, // "Elliot! You idiot! That's not good news! Grumm! For God's sake, when will this end!?"
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 18, // "Two cities! I MUST develop a better plan."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 19, // "How is this happening? Three cities?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 20, // "This is unacceptable! This must be stopped!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 21, // "Spare nothing! We must not fall!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 37, // "Maybe I should recruit children! They'd do a better job of it."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 12,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 13,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 38, // "Elliot! You idiot! Don't be so stupid. Now, spare nothing, no expense. These mercenaries must be killed. All of them. And bring me the bodies."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 5, // CHITZENA_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 39, // "What is it, Elliot?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 40, // "How bad, Elliot? And might I add that my nerves are especially edgy right now."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 41, // "I am not interested in valiant efforts! I am interested in maintaining my POWER and making MONEY. I can't make money if those mines are not MINE. Don't you see?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 5,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 42, // "Elliot! You idiot! And as for those mercenaries! Well now..."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 29 // NPC_ACTION_TRIGGER_QUEEN_BY_CITIES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 18, // "Two cities! I MUST develop a better plan."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 19, // "How is this happening? Three cities?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 20, // "This is unacceptable! This must be stopped!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 21, // "Spare nothing! We must not fall!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 43, // "Obviously, they are more experienced than I had anticipated. Gather my advisors, Elliot. I'll send these pathetic rebels and their goons a surprise they are not likely to forget."
+                "numQuotes": 2,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 6, // NW_SAM
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 44, // "You are becoming synonymous with trouble, Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 45, // "Elliot! You idiot! Is anyone out there actually doing what I pay them to do? Do you have any idea what this MEANS? Do you know how dangerous this is?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 135, // "Aghhh... Let me think."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 46, // "All right. First, send my elite soldiers to the occupied site and reinforce the others. I want anything that flies or moves shot on sight!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10,
+                "actionData": {
+                    "code": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
+                }
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 47, // "Okay. Listen closely, Elliot. The third site must be guarded carefully. I want my best teams on it around the clock. As for these other two, God! How does this happen!"
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 49, // "They control all three, now, do they? For this, there will be hell, absolute hell, to pay! I want everyone on this! All my troops. Hold nothing back."
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 51, // "Am I making myself clear, Elliot? This is completely unacceptable to me!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 52, // "Well, go on then. What are you waiting for?"
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 7, // NE_SAM
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 53, // "What is it now, Elliot?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 54, // "And they were defeated?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 55, // "By surprise? By SURPRISE! Elliot! You idiot! It's a GODDAMN war, Elliot! What's so surprising about being attacked! Oh, I knew I should have sent more forces."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 136, // "Aghhh... Give me a minute."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 46, // "All right. First, send my elite soldiers to the occupied site and reinforce the others. I want anything that flies or moves shot on sight!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10,
+                "actionData": {
+                    "code": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
+                }
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 47, // "Okay. Listen closely, Elliot. The third site must be guarded carefully. I want my best teams on it around the clock. As for these other two, God! How does this happen!"
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 49, // "They control all three, now, do they? For this, there will be hell, absolute hell, to pay! I want everyone on this! All my troops. Hold nothing back."
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 56, // "Now get out of here and see to it that my orders are carried out."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 8, // CENTRAL_SAM
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 57, // "Hello, Elliot. I am really beginning to dread our little meetings."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 58, // "And what progress have you to report?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 59, // "Did not anticipate it?! Elliot! You idiot! That's not progress! I can't believe this!"
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 137, // "Okay..."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 32 // NPC_ACTION_TRIGGER_QUEEN_BY_SAM_SITES_CONTROLLED
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 46, // "All right. First, send my elite soldiers to the occupied site and reinforce the others. I want anything that flies or moves shot on sight!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10,
+                "actionData": {
+                    "code": 292 // NPC_ACTION_SEND_TROOPS_TO_SAM
+                }
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 47, // "Okay. Listen closely, Elliot. The third site must be guarded carefully. I want my best teams on it around the clock. As for these other two, God! How does this happen!"
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 49, // "They control all three, now, do they? For this, there will be hell, absolute hell, to pay! I want everyone on this! All my troops. Hold nothing back."
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 61, // "The Central SAM is critical, Elliot. Be certain to tell my advisors that this time they had better not fail! Otherwise, they know what punishment they face... and I think they fear that more than death."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 9, // FLOWERS
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 62, // "What is it now, Elliot? I... Oh! Flowers! How lovely and so thoughtful! From my troops, no doubt."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 63, // "WHAT?!?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 64, // "Elll-eee-ooot! You IDIOT! Idiot! Idiot!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 65, // "Is this some kind of joke? Some twisted and sick sense of humor? Oh, yes, this is EXTREMELY funny! I shoot them, I shoot them not. I shoot them!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 66, // "Elliot! You idiot! Say it! Say, "I am an idiot!" Do it, Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 67, // "Yes, yes you are! Now, listen to me! First, I want my elite soldiers to shoot the messenger who brought these."
+                "numQuotes": 2,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 4
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 10, // LOST_TOWN
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 70, // "Elliot, I do have things to do, you know."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 71, // "Well, Elliot! This is indeed a change of pace."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 72, // "Elliot! You idiot! Getting something back that is already MINE is not good news! It shouldn't have been lost in the first place! Now get out of here and leave me be."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 11, // INTERROGATION
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 8074
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 8074,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 73, // "Hello, Elliot.... Joe. Oh! And, my? What do we have here?"
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 9,
+                "actionData": {
+                    "code": 16 // NPC_ACTION_FACE_SOUTH_EAST
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 74, // "Elliot! Yes it is! Heh, heh, heh. Well, where shall I begin with YOU, hm? You know, you have put me through much trouble, and for what? Money? Hah. I could pay you more than those rebels could ever afford."
+                "numQuotes": 3,
+                "triggerNPC": "JOE",
+                "triggerRecord": 10
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 77, // "Just enough to be receptive, I think."
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 11
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 78, // "That's good, Joe. Now, where shall I start with you?"
+                "numQuotes": 2,
+                "actionData": {
+                    "code": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 80, // "Heh. As I thought. And won't they be disappointed. Elliot? Send an attack on their camp, the elite forces, heh, heh. And be certain they know the reason behind it. I will have no more of their little games."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 8,
+                "actionData": {
+                    "code": 259 // NPC_ACTION_SEND_SOLDIERS_TO_OMERTA
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 81, // "Not quite ready to tell the truth, are you? I already know who's employing you. That was just a little test of your honesty and I see you haven't much. Maybe Joe can knock some sense into you."
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 15
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 81, // "Not quite ready to tell the truth, are you? I already know who's employing you. That was just a little test of your honesty and I see you haven't much. Maybe Joe can knock some sense into you."
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 15
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 82, // "Elliot! Find out if this is true!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 84, // "All right. Let's try another, shall we? Now, how many mercenaries have the rebels hired?"
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
+                }
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 85, // "Hmm. It is more than I had thought. How are they doing this? It's, it's unacceptable! That's what it is! Obviously, I will require more troops. You are aware of my elite forces, I gather? Heh."
+                "numQuotes": 2,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 16,
+                "actionData": {
+                    "code": 260 // NPC_ACTION_ADD_MORE_ELITES
+                }
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 87, // "Listen to me. I am tiring of this. And when I get tired, Joe gets angry. Very, very angry. Maybe, Joe, you'd like to show how angry you can get?"
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 19
+            },
+            {
+                "index": 12,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 90, // "Good. I told my advisors that there were only a few of you, but they..."
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 23
+            },
+            {
+                "index": 13,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 89, // "Good. I told my advisors that there were only a few of you, but they doubted me. ME! I'll be certain they get a little thank you for all the undue stress they've caused. Elliot, you know what to send them."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 14,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 88, // "I'll find out soon enough when I count the bodies."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 16
+            },
+            {
+                "index": 15,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 91, // "WHAT!? You're lying to me! I never... Perhaps Joe can teach you the manners your mother missed!"
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 19
+            },
+            {
+                "index": 16,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 92, // "Okay. Now, listen closely. I want to know where your troops are located."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 221 // NPC_ACTION_PROMPT_PLAYER_TO_LIE
+                }
+            },
+            {
+                "index": 17,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 93, // "Very good. Then it is as we suspected. We need to revise our strategies. Joe? Come with me. Elliot? Summon my military advisors."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 261 // NPC_ACTION_GIVE_KNOWLEDGE_OF_ALL_MERCS
+                }
+            },
+            {
+                "index": 18,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 97, // "There is no end to this for you, is there? You are going to die this day for a war that you have no personal stake in! Is this what you call intelligent?"
+                "numQuotes": 2,
+                "triggerNPC": "JOE",
+                "triggerRecord": 25
+            },
+            {
+                "index": 19,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 96, // "Do you think I am some kind of fool? Lying to me? Well..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 18
+            },
+            {
+                "index": 20,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 93, // "Very good. Then it is as we suspected. We need to revise our strategies. Joe? Come with me. Elliot? Summon my military advisors."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            },
+            {
+                "index": 21,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 7914
+            },
+            {
+                "index": 22,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 7914,
+                "factMustBeTrue": 364, // unnamed fact
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "setFactTrue": 246, // unnamed fact
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 23,
+                "eraseOnceSaid": true,
+                "factMustBeTrue": 246, // unnamed fact
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 94, // "Elliot! You idiot! Do you have any brains in your head? NO I don't want you to release anyone!"
+                "numQuotes": 2,
+                "goToGridno": 8870
+            },
+            {
+                "index": 24,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 7914
+            },
+            {
+                "index": 25,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 7914,
+                "factMustBeTrue": 363, // unnamed fact
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "setFactTrue": 247, // unnamed fact
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 26,
+                "eraseOnceSaid": true,
+                "factMustBeTrue": 247, // unnamed fact
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 99, // "Elliot! You idiot! Do you have any brains in your head? NO I don't want you to call a doctor!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 27,
+                "actionData": {
+                    "code": 15 // NPC_ACTION_FACE_EAST
+                }
+            },
+            {
+                "index": 27,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 28,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 28,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 100, // "You're going to regret ever coming here! Joe, follow me. And Elliot? Don't forget to lock up."
+                "numQuotes": 1,
+                "goToGridno": 8870
+            },
+            {
+                "index": 29,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 8870,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 24,
+                "goToGridno": 10149
+            },
+            {
+                "index": 30,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 10149,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 5,
+                "actionData": {
+                    "code": 222 // NPC_ACTION_REMOVE_JOE_QUEEN
+                }
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 12, // CREATURES
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 102, // "If it isn't the Messenger of Gloom himself."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 103, // "Well, out with it Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 104, // "Elliot! You idiot! Say it already!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 105, // "Against ME?!?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 106, // "Agggghhhh...."
+                "numQuotes": 3,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 4
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 127, // "Wait. Elliot, I've just had an idea."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 5
+            },
+            {
+                "index": 9,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 128, // "Stop feeding bodies to the creatures."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 6
+            },
+            {
+                "index": 10,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 129, // "Yes, I want to give the people a little lesson! They no longer support me, do they? This will change their pathetic little minds!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 7
+            },
+            {
+                "index": 11,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 130, // "Elliot, I don't care. I truly... don't... care. Now get out of here, and do as I say."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 8
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 13, // KILL_CHOPPER
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 109, // "Elliot, good. I'm glad you've come. It seems you've forgotten to tell me something."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 110, // "Yes. When did the new helicopter arrive? And how much has it cost me?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 111, // "WHAT?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 112, // "Elliot! You idiot! Why didn't you say so immediately! Do you know what this means? They can just drop in from anywhere! I want this helicopter grounded - permanently! And if Mr. Bullock lives... shoot him."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 14, // AWOL_SCIENTIST
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 113, // "Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 114, // "Let me guess, an urgent report that will undoubtedly upset me. Why can't you ever bring good news, Elliot?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 115, // "Try me, Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 116, // "That so, Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 117, // "Well... Elliot! You idiot! He is the CORE of my team there! The most important one! How could this happen! Bring me the person responsible... and Elliot? I don't care what my elite forces are doing."
+                "numQuotes": 2,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 4
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 15, // OUTSKIRTS_MEDUNA
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 119, // "Hello, Elliot."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 120, // "Not today, Elliot. I can't bear any more bad news. I have important decisions to make."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 121, // "On the outskirts of MEDUNA! For Christ's sake Elliot! They're practically in my back yard! Maybe we should have a barbeque! Invite them over! Have some champagne to celebrate their little victories!"
+                "numQuotes": 2,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 123, // "Aghhhhh! Elliot! You id-EEEE-IT!"
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 38 // NPC_ACTION_SHOOT_ELLIOT
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 29
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 124, // "Hm. Well now. Joe?"
+                "numQuotes": 1,
+                "triggerNPC": "JOE",
+                "triggerRecord": 31
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 125, // "Make sure all my soldiers know their whereabouts, and see to it that these mercenaries are executed. I want their remains, such as they may be, when my forces are finished with them. Oh, and clean up that mess."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 126, // "What?! Oh my lord! Elliot! You idiot! Are you so stupid that you don't even know how to die properly?! Can't you do anything right?"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 4
+            }
+        ]
+    },
+    {
+        "profile": "QUEEN",
+        "meanwhileIndex": 16, // BALIME_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12247
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12247,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 138, // "Elliot, it seems you and my advisors are not keeping me informed."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 0
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 139, // "Balime, Elliot! Those GODDAMN mercenaries have captured BALIME!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 1
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "goToGridno": 12248
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 12248,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 140, // "How do I know? Elliot, you idiot! Have you tried to use a bathroom in the palace? The whole town of Balime is living in my palace, Elliot. There are children crawling all over my throne."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 2
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 28 // NPC_ACTION_SLAP
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_SLAPPED",
+                "quoteNum": 141, // "Elliot, you idiot! They are not visiting, they're LIVING here. Listen carefully, Elliot. I've had just about enough of you. I want you to send the best of my elite guards to Balime to get that town back."
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 3
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 142, // "NOW, Elliot! RIGHT NOW!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 4
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 0, // END_OF_PLAYERS_FIRST_BATTLE
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 238 // NPC_ACTION_ELLIOT_DECIDE_WHICH_QUOTE_FOR_PLAYER_ATTACK
+                }
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 10, // "Forgive the intrusion, Your Highness, but one of our North Patrols has been attacked!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 67, // "Forgive the intrusion, Your Highness, but Administrators in Drassen have been attacked!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 68, // "Forgive the intrusion, Your Highness, but Administrators in Cambria have been attacked!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 11, // "Ahem... from what we have learned, Your Majesty, the rebels seem to have some sort of foreign aid - commando types. We speculate they arrived on the helicopter that was spotted earlier."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 5
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 12, // "They may be hired mercenaries, Your Highness. There weren't many."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 14, // "Ahem... the rebel party seems to have used the element of surprise to their advantage, my Queen. They defeated us."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 7,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 69, // "Not yet, Your Majesty."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 9
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 15, // "Yes, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 1, // DRASSEN_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 16, // "Ahem... yes, Your Highness. I am. I regret the interruption, but it is important. Our reports confirm that the rebel party seems to have grown bolder, my Queen. There was an attack in Drassen."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 17, // "Well, Your Highness, I regret to inform you, but they were victorious. They control Drassen, Your Majesty."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 15, // "Yes, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 2, // CAMBRIA_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 18, // "Ahem... and I would not have bothered you had it not been important, Your Highness."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 19, // "The rebels have..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 20, // "Not exactly, my Queen. They, how shall I say, occupy the city of Cambria."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 4,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 3, // ALMA_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 21, // "Ahem... my Queen, I believe I do. It seems these mercenaries, while a small group, are apparently well trained and equipped. They have recently secured Alma."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 22, // "Yes, Your Majesty."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 12
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 23, // "Yes, Your Highness. Plenty?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 13
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 4, // GRUMM_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 24, // "No, I do have some good news, Your Highness. You are still in power. Ahem... however, it seems that the mercenaries have taken Grumm."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 25, // "You would like me to summon them, my Queen?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 12,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 5, // CHITZENA_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 26, // "Ahem... actually, Your Highness, it is rather bad."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 27, // "Your Highness, these foreigners, these mercenaries, have overrun Chitzena. So far, however, ours has been a valiant effort."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 6, // NW_SAM
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 28, // "Ahem... I regret to inform you, Your Highness, that I do indeed have a troubling report. Our north west SAM site is now in the hands of the rebels."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "firstDay": 255,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 70, // "There is good news, Your Majesty. Your quick thinking troops managed to disable it. It could take the rebels days to repair it so that it's usable."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 29, // "Perfectly clear, Your Majesty."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 7, // NE_SAM
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 30, // "Ahem, Your Highness, I have an urgent report. The rebels attacked us at our north east SAM."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 31, // "No, my Queen, um, rather, we were. Apparently, the guards were taken quite by surprise."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 70, // "There is good news, Your Majesty. Your quick thinking troops managed to disable it. It could take the rebels days to repair it so that it's usable."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 8, // CENTRAL_SAM
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 32, // "Ahem, I am sorry to hear that, Your Highness. I only wish to keep you informed on the progress of our troops."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 33, // "The Central SAM has been overrun by the mercenaries. Our troops did not anticipate..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 70, // "There is good news, Your Majesty. Your quick thinking troops managed to disable it. It could take the rebels days to repair it so that it's usable."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 15, // "Yes, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 9, // FLOWERS
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 34, // "Ahem... Not exactly, Your Highness. From theirs."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 35, // "Ahem... Yes, your majesty, it seems the flowers are a gift to Your Highness from the mercenaries. Perhaps they have taken a fondness toward you?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 36, // "They are rather pretty, Your Highness."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 7
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 37, // "Ahem... I am an idiot, Your Highness."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 8,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 10, // LOST_TOWN
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 38, // "Of course, my Queen. I know that you are a very busy woman. But, I insisted that I see you right away. I bring GREAT news!"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 39, // "Yes, Your Highness, I am pleased to report that we have taken back one of the cities. The report should be coming in soon."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 11, // INTERROGATION
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 40, // "Yes, Your Highness! It is just as you requested, and, while I regret that your troops were not able to capture all of them, this is certainly a start."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 9
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 15, // "Yes, Your Highness."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 16
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 41, // "As you command, Your Highness. Should I release them, then? It has been a most cooperative and informative interrogation."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 21,
+                "setFactTrue": 364, // unnamed fact
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 43, // "As you command, Your Highness. Should I summon the doctor to treat the injuries here?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 24,
+                "setFactTrue": 363, // unnamed fact
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 42, // "he-heh, heh, heh, heh. You idiot!"
+                "numQuotes": 1,
+                "triggerNPC": "ELLIOT",
+                "triggerRecord": 6,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 37 // NPC_ACTION_PUNCH_FIRST_LIVING_PC
+                }
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "DONE_PUNCH_1",
+                "numQuotes": 1,
+                "goToGridno": 10469,
+                "actionData": {
+                    "code": 53 // NPC_ACTION_GRANT_EXPERIENCE_4
+                }
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredGridNo": 10469,
+                "requiredApproach": "TRIGGER_NPC",
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 223 // NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 12, // CREATURES
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 44, // "I am sorry, Your Highness. And I regret that I do indeed bring another troubling report."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 45, // "Ahem... well, it seems, that, how should I say, the people, are, well..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 46, // "Ahem, yes, Your Highness. It seems the people, your subjects, are turning against you."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 47, // "Ahem... well, yes, my Queen. Reports state that some are even speaking openly against you, and there are others who are quietly getting behind the rebel movement."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 7
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 224 // NPC_ACTION_NO_SCI_FI_END_MEANWHILE
+                }
+            },
+            {
+                "index": 5,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 61, // "Splendid, Your Highness. What is it?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 9
+            },
+            {
+                "index": 6,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 62, // "Your... Your Majesty..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 10
+            },
+            {
+                "index": 7,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 63, // "But, but... Ahem, Your Highness, the Crepitus will come out! They'll kill the miners, the people, even our troops! I say this of course, with all due respect."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 11
+            },
+            {
+                "index": 8,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 13, // KILL_CHOPPER
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 48, // "Your Highness?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 49, // "Ahem... Your Highness, that is not our helicopter."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 50, // "Ahem... In fact, I was just now coming to report this to you. The rebel forces, it seems, have secured the services of one Mr. James Bullock, or Skyrider as I believe he is known."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 4,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 13, // "As you command, Your Highness."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 14, // AWOL_SCIENTIST
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 51, // "Hello, Your Highness. I have..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 52, // "Ahem... with all due respect, Your Highness, I feel that I can say nothing which would please my Queen, the country such as it is."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 53, // "Ahem... Dr. Kairns is missing from your research facility in Orta, Your Highness. He has not been seen for quite some time, and no one is certain of his whereabouts."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 4
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 54, // "Yes, Your Highness. It is so."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 5,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 55, // "Ahem, yes, Your Highness, very clear."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 15, // OUTSKIRTS_MEDUNA
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 56, // "Ahem... good day, Your Highness. I have an urgent report for you."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 57, // "Ahem... with all due respect, Your Highness, you need to hear this. The mercenary forces have been spotted on the outskirts of Meduna, and..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 58, // "Would you like me to extend them an offer, my Queen?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 4
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 59, // "Actually, Your Highness... I'll.... I'll clean it up myself. It's not a bother, really..."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 8
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 60, // "Ahem... Apparently...not, Your Highness. I will try harder."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    },
+    {
+        "profile": "ELLIOT",
+        "meanwhileIndex": 16, // BALIME_LIBERATED
+        "records": [
+            {
+                "index": 0,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 71, // "Not keeping you informed, Your Majesty?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 2
+            },
+            {
+                "index": 1,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 72, // "With all due respect, my Queen, are you certain? How do you know?"
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 3
+            },
+            {
+                "index": 2,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 73, // "Oh, you must be so happy, my Highness. I know how much you enjoy it when your friends from Balime visit."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 6,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 3,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 74, // "Yes, Your Majesty, I'll get them right on it. Just as soon as they're finished helping your friends with their bags."
+                "numQuotes": 1,
+                "triggerNPC": "QUEEN",
+                "triggerRecord": 8
+            },
+            {
+                "index": 4,
+                "eraseOnceSaid": true,
+                "requiredApproach": "TRIGGER_NPC",
+                "quoteNum": 75, // "As you wish, my Queen."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 170 // NPC_ACTION_END_MEANWHILE
+                }
+            }
+        ]
+    }
+]

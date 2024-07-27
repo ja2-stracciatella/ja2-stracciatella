@@ -52,6 +52,7 @@ struct WeaponModel;
 struct ARMY_COMPOSITION;
 struct PATROL_GROUP;
 struct GARRISON_GROUP;
+struct NPCQuoteInfo;
 
 class ContentManager : public ItemSystem, public MercSystem
 {
@@ -165,6 +166,9 @@ public:
 	virtual       int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const = 0;
 	virtual const std::map<uint8_t, const NpcPlacementModel*>& listNpcPlacements() const = 0;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const = 0;
+
+	virtual const NPCQuoteInfo* getScriptRecords(uint8_t profileId) const = 0;
+	virtual const NPCQuoteInfo* getScriptRecords(uint8_t profileId, uint8_t meanwhileId) const = 0;
 
 	/* Params for the given NPC_ACTION if found, or return an empty instance */
 	virtual const NpcActionParamsModel* getNpcActionParams(uint16_t actionCode) const = 0;

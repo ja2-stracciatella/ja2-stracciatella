@@ -22,7 +22,6 @@
 #include "Message.h"
 #include "OppList.h"
 #include "Overhead.h"
-#include "Quests.h"
 #include "QuestText.h"
 #include "Render_Fun.h"
 #include "Scheduling.h"
@@ -37,11 +36,12 @@
 #include "Timer_Control.h"
 #include "WeaponModels.h"
 #include "Weapons.h"
+#include "content/NPCQuoteInfo.h"
 #include <memory>
 #include <string_theory/format>
 #include <string_theory/string>
 
-#define NUM_NPC_QUOTE_RECORDS  50
+
 #define NUM_CIVQUOTE_SECTORS   20
 #define MINERS_CIV_QUOTE_INDEX 16
 
@@ -78,28 +78,9 @@ static const SGPSector gsCivQuoteSector[NUM_CIVQUOTE_SECTORS] =
 	{  0, 0         },
 };
 
-constexpr UINT8 NO_QUEST              = 255;
-constexpr UINT8 QUEST_NOT_STARTED_NUM = 100;
-constexpr UINT8 QUEST_DONE_NUM        = 200;
-constexpr UINT8 NO_QUOTE              = 255;
-constexpr UINT8 IRRELEVANT            = 255;
-constexpr UINT8 MUST_BE_NEW_DAY       = 254;
-#define NO_MOVE                 65535
 #define INITIATING_FACTOR       30
 
-#define QUOTE_FLAG_SAID               0x0001
-#define QUOTE_FLAG_ERASE_ONCE_SAID    0x0002
-#define QUOTE_FLAG_SAY_ONCE_PER_CONVO 0x0004
-
-#define TURN_UI_OFF         65000
-#define TURN_UI_ON          65001
-#define SPECIAL_TURN_UI_OFF 65002
-#define SPECIAL_TURN_UI_ON  65003
-
 #define LARGE_AMOUNT_MONEY 1000
-
-#define ACCEPT_ANY_ITEM 1000
-#define ANY_RIFLE       1001
 
 #define NUM_REAL_APPROACHES APPROACH_RECRUIT
 
@@ -119,41 +100,6 @@ enum StandardQuoteIDs
 };
 
 
-struct NPCQuoteInfo
-{
-	UINT32  ubIdentifier;
-
-	UINT16  fFlags;
-
-	// conditions
-	union
-	{
-		INT16 sRequiredItem;      // item NPC must have to say quote
-		INT16 sRequiredGridno;    // location for NPC req'd to say quote
-	};
-	UINT16  usFactMustBeTrue;   // ...before saying quote
-	UINT16  usFactMustBeFalse;  // ...before saying quote
-	UINT8   ubQuest;            // quest must be current to say quote
-	UINT8   ubFirstDay;         // first day quote can be said
-	UINT8   ubLastDay;          // last day quote can be said
-	UINT8   ubApproachRequired; // must use this approach to generate quote
-	UINT8   ubOpinionRequired;  // opinion needed for this quote
-
-	// quote to say (if any)
-	UINT8   ubQuoteNum;         // this is the quote to say
-	UINT8   ubNumQuotes;        // total # of quotes to say
-
-	// actions
-	UINT8   ubStartQuest;
-	UINT8   ubEndQuest;
-	UINT8   ubTriggerNPC;
-	UINT8   ubTriggerNPCRec;
-	UINT16  usSetFactTrue;
-	UINT16  usGiftItem;         // item NPC gives to merc after saying quote
-	UINT16  usGoToGridno;
-	INT16   sActionData;        // special action value
-};
-
 static NPCQuoteInfo* gpNPCQuoteInfoArray[NUM_PROFILES];
 static NPCQuoteInfo* gpBackupNPCQuoteInfoArray[NUM_PROFILES];
 static NPCQuoteInfo* gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS];
@@ -162,10 +108,6 @@ static NPCQuoteInfo* gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS];
 static BOOLEAN gfTriedToLoadQuoteInfoArray[NUM_PROFILES];
 
 INT8 const gbFirstApproachFlags[] = { 0x01, 0x02, 0x04, 0x08 };
-
-
-static UINT8 const gubAlternateNPCFileNumsForQueenMeanwhiles[]  = { 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176 };
-static UINT8 const gubAlternateNPCFileNumsForElliotMeanwhiles[] = { 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196 };
 
 static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 {
@@ -282,52 +224,26 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 
 
 static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
-try
 {
-	ST::string  zFileName;
-	MercProfile profile(ubNPC);
+	const NPCQuoteInfo* m_arr;
 
-	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
-	{
-		// use a copy of Herve's data file instead!
-		zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, HERVE);
-	}
-	else if (profile.isPlayerMerc() || (profile.isRPC() && profile.isRecruited()))
-	{
-		zFileName = ST::format("{}/000.npc", NPCDATADIR);
-	}
-	else
-	{
-		zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, ubNPC);
-	}
-
-	// ATE: Put some stuff i here to use a different NPC file if we are in a meanwhile.....
 	if ( AreInMeanwhile( ) )
 	{
-		// If we are the queen....
-		if ( ubNPC == QUEEN )
+		if ( ubNPC == QUEEN || ubNPC == ELLIOT)
 		{
-			zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, gubAlternateNPCFileNumsForQueenMeanwhiles[GetMeanwhileID()]);
+			m_arr = GCM->getScriptRecords(ubNPC, GetMeanwhileID());
 		}
-
-		// If we are elliot....
-		if ( ubNPC == ELLIOT )
+		else
 		{
-			zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, gubAlternateNPCFileNumsForElliotMeanwhiles[GetMeanwhileID()]);
+			m_arr = GCM->getScriptRecords(ubNPC);
 		}
-
 	}
+	else m_arr = GCM->getScriptRecords(ubNPC);
 
-	AutoSGPFile f(GCM->openGameResForReading(zFileName));
-	return ExtractNPCQuoteInfoArrayFromFile(f);
+	NPCQuoteInfo* arr_copy{ new NPCQuoteInfo[NUM_NPC_QUOTE_RECORDS] };
+	std::copy(m_arr, m_arr + NUM_NPC_QUOTE_RECORDS, arr_copy);
+	return arr_copy;
 }
-catch (const std::exception& e)
-{
-	SLOGE("caught exception: {}", e.what());
-	return 0;
-}
-catch (...) { return 0; }
-
 
 static void RevertToOriginalQuoteFile(UINT8 ubNPC)
 {
@@ -345,7 +261,6 @@ static void BackupOriginalQuoteFile(UINT8 ubNPC)
 	gpBackupNPCQuoteInfoArray[ ubNPC ] = gpNPCQuoteInfoArray[ ubNPC ];
 	gpNPCQuoteInfoArray[ubNPC] = NULL;
 }
-
 
 static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 {
