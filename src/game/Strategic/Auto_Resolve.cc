@@ -2,6 +2,7 @@
 #include "Campaign.h"
 #include "ContentManager.h"
 #include "Creature_Spreading.h"
+#include "Cursors.h"
 #include "Directories.h"
 #include "Easings.h"
 #include "English.h"
@@ -53,6 +54,8 @@
 #include "WeaponModels.h"
 #include "Weapons.h"
 #include "WordWrap.h"
+#include <array>
+#include <memory>
 #include <stdexcept>
 #include <string_theory/format>
 #include <string_theory/string>
@@ -85,7 +88,7 @@ enum
 struct SOLDIERCELL
 {
 	SOLDIERTYPE *pSoldier;
-	MouseRegion* pRegion; // only used for player mercs.
+	std::unique_ptr<MouseRegion> pRegion; // only used for player mercs.
 	SGPVObject* uiVObjectID;
 	UINT16 usIndex;
 	UINT32 uiFlags;
@@ -162,6 +165,12 @@ struct AUTORESOLVE_STRUCT
 	BOOLEAN fCaptureNotPermittedDueToEPCs;
 
 	MOUSE_REGION AutoResolveRegion;
+
+	std::array<SOLDIERCELL, 20> mercs;
+	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
+	std::array<SOLDIERCELL, MAX_ALLOWABLE_MILITIA_PER_SECTOR> civs;
+	//Enemies -- 32 max
+	std::array<SOLDIERCELL, 32> enemies;
 };
 
 //Classifies the type of soldier the soldier cell is
@@ -424,11 +433,11 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 	//Allocate memory for all the globals while we are in this mode.
 	gpAR = new AUTORESOLVE_STRUCT{};
 	//Mercs -- 20 max
-	gpMercs = new SOLDIERCELL[20]{};
+	gpMercs = gpAR->mercs.data();
 	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
-	gpCivs = new SOLDIERCELL[MAX_ALLOWABLE_MILITIA_PER_SECTOR]{};
+	gpCivs = gpAR->civs.data();
 	//Enemies -- 32 max
-	gpEnemies = new SOLDIERCELL[32]{};
+	gpEnemies = gpAR->enemies.data();
 
 	//Set up autoresolve
 	gpAR->fEnteringAutoResolve = TRUE;
@@ -683,7 +692,9 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 				}
 			}
 			SOLDIERCELL& c = gpMercs[index];
-			c.pRegion = new MouseRegion(c.xp, c.yp, 50, 44, MSYS_PRIORITY_HIGH, 0, MercCellMouseMoveCallback, MercCellMouseClickCallback);
+			c.pRegion = std::make_unique<MouseRegion>(c.xp, c.yp, 50, 44,
+				MSYS_PRIORITY_HIGH, CURSOR_NORMAL,
+				MercCellMouseMoveCallback, MercCellMouseClickCallback);
 			c.pRegion->SetUserPtr(&c);
 			if( fReset )
 				RefreshMerc( gpMercs[ index ].pSoldier );
@@ -1731,12 +1742,7 @@ static void RemoveAutoResolveInterface()
 	// Delete all of the faces.
 	for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
 	{
-		SGPVObject*& vo = gpMercs[i].uiVObjectID;
-		if (vo) DeleteVideoObject(vo);
-		vo = 0;
-		MouseRegion*& r = gpMercs[i].pRegion;
-		delete r;
-		r = 0;
+		DeleteVideoObject(gpMercs[i].uiVObjectID);
 	}
 
 	const SGPSector arSector(ar.ubSector.x, ar.ubSector.y);
@@ -1788,7 +1794,6 @@ static void RemoveAutoResolveInterface()
 			}
 		}
 		DeleteAutoResolveSoldier(&s);
-		gpCivs[i] = SOLDIERCELL{};
 	}
 
 	// Record and process all enemy deaths
@@ -1827,7 +1832,6 @@ static void RemoveAutoResolveInterface()
 		SOLDIERCELL& slot = gpEnemies[i];
 		if (!slot.pSoldier) continue;
 		DeleteAutoResolveSoldier(slot.pSoldier);
-		slot = SOLDIERCELL{};
 	}
 
 	for (INT32 i = 0; i != NUM_AR_BUTTONS; ++i)
@@ -1843,16 +1847,11 @@ static void RemoveAutoResolveInterface()
 	// Deallocate all of the global memory.
 	// Everything internal to them, should have already been deleted.
 	delete gpAR;
-	gpAR = 0;
 
-	delete[] gpMercs;
-	gpMercs = 0;
-
-	delete[] gpCivs;
-	gpCivs = 0;
-
-	delete[] gpEnemies;
-	gpEnemies = 0;
+	gpAR = nullptr;
+	gpMercs = nullptr;
+	gpCivs = nullptr;
+	gpEnemies = nullptr;
 
 	//KM : Aug 09, 1999 Patch fix -- Would break future dialog while time compressing
 	gTacticalStatus.ubCurrentTeam = OUR_TEAM;
