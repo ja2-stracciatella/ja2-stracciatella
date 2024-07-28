@@ -774,13 +774,6 @@ void HandleQuestCodeOnSectorEntry(const SGPSector& sNewSector)
 	}
 	*/
 
-	if (sector == SEC_C6 && gubQuest[QUEST_RESCUE_MARIA] == QUESTDONE)
-	{
-		// make sure Maria and Angel are gone
-		gMercProfiles[ MARIA ].sSector = SGPSector();
-		gMercProfiles[ ANGEL ].sSector = SGPSector();
-	}
-
 	if (sector == SEC_D5)
 	{
 		gBoxer[0] = NULL;

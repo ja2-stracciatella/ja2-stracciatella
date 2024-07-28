@@ -2628,11 +2628,6 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				break;
 
-			case NPC_ACTION_REMOVE_DOREEN:
-				// make Doreen disappear next time we do a sector traversal
-				gMercProfiles[ DOREEN ].sSector = SGPSector();
-				break;
-
 			case NPC_ACTION_FREE_KIDS:
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, 420, NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_FREE_KIDS, 1 );
 				break;
