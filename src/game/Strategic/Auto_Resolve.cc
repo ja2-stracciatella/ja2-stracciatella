@@ -467,7 +467,7 @@ static void CreateAutoResolveInterface(void);
 static void DetermineTeamLeader(BOOLEAN fFriendlyTeam);
 static void HandleAutoResolveInput(void);
 static void ProcessBattleFrame(void);
-static void RemoveAutoResolveInterface(bool delete_for_good);
+static void RemoveAutoResolveInterface();
 
 
 ScreenID AutoResolveScreenHandle()
@@ -498,7 +498,7 @@ ScreenID AutoResolveScreenHandle()
 	if( gpAR->fExitAutoResolve )
 	{
 		gfEnteringMapScreen = TRUE;
-		RemoveAutoResolveInterface(true);
+		RemoveAutoResolveInterface();
 		return MAP_SCREEN;
 	}
 	if( gpAR->fPendingSurrender )
@@ -1647,7 +1647,7 @@ static void DeleteAutoResolveSoldier(SOLDIERTYPE *const s)
 }
 
 
-static void RemoveAutoResolveInterface(bool const delete_for_good)
+static void RemoveAutoResolveInterface()
 {
 	AUTORESOLVE_STRUCT& ar = *gpAR;
 
@@ -1657,50 +1657,46 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 	DeleteVideoObject(ar.iIndent);
 	DeleteVideoSurface(ar.iInterfaceBuffer);
 
-	if (delete_for_good)
-	{ // Delete the soldier instances -- done when we are completely finished.
+	/* KM: By request of AM, I have added this bleeding event in cases where
+		* autoresolve is complete and there are bleeding mercs remaining. AM coded
+		* the internals of the strategic event. */
+	if (IsAnybodyWounded())
+	{ // ARM: only one event is needed regardless of how many are bleeding
+		AddStrategicEvent(EVENT_BANDAGE_BLEEDING_MERCS, GetWorldTotalMin() + 1, 0);
+	}
 
-		/* KM: By request of AM, I have added this bleeding event in cases where
-		 * autoresolve is complete and there are bleeding mercs remaining. AM coded
-		 * the internals of the strategic event. */
-		if (IsAnybodyWounded())
-		{ // ARM: only one event is needed regardless of how many are bleeding
-			AddStrategicEvent(EVENT_BANDAGE_BLEEDING_MERCS, GetWorldTotalMin() + 1, 0);
-		}
+	/* ARM: Update assignment flashing: Doctors may now have new patients or
+		* lost them all, etc. */
+	gfReEvaluateEveryonesNothingToDo = TRUE;
 
-		/* ARM: Update assignment flashing: Doctors may now have new patients or
-		 * lost them all, etc. */
-		gfReEvaluateEveryonesNothingToDo = TRUE;
+	if (ar.pRobotCell) UpdateRobotControllerGivenRobot(ar.pRobotCell->pSoldier);
 
-		if (ar.pRobotCell) UpdateRobotControllerGivenRobot(ar.pRobotCell->pSoldier);
-
-		for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
+	for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
+	{
+		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
+		if (i >= ar.iActualMercFaces)
 		{
-			SOLDIERTYPE& s = *gpMercs[i].pSoldier;
-			if (i >= ar.iActualMercFaces)
+			DeleteAutoResolveSoldier(&s);
+		}
+		else
+		{ // Record finishing information for our mercs
+			if (s.bLife == 0)
 			{
-				DeleteAutoResolveSoldier(&s);
+				StrategicHandlePlayerTeamMercDeath(s);
 			}
-			else
-			{ // Record finishing information for our mercs
-				if (s.bLife == 0)
-				{
-					StrategicHandlePlayerTeamMercDeath(s);
-				}
-				else switch (ar.ubBattleStatus)
-				{
-					case BATTLE_SURRENDERED:
-					case BATTLE_CAPTURED:
-						EnemyCapturesPlayerSoldier(&s);
-						break;
+			else switch (ar.ubBattleStatus)
+			{
+				case BATTLE_SURRENDERED:
+				case BATTLE_CAPTURED:
+					EnemyCapturesPlayerSoldier(&s);
+					break;
 
-					case BATTLE_VICTORY:
-						// Merc is alive, so group them at the center gridno.
-						s.ubStrategicInsertionCode = INSERTION_CODE_CENTER;
-						break;
-				}
-				++GetProfile(s.ubProfile).usBattlesFought;
+				case BATTLE_VICTORY:
+					// Merc is alive, so group them at the center gridno.
+					s.ubStrategicInsertionCode = INSERTION_CODE_CENTER;
+					break;
 			}
+			++GetProfile(s.ubProfile).usBattlesFought;
 		}
 
 		bool  first_group      = true;
@@ -1758,7 +1754,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		// members. Thr might get promoted before they're removed.
 		auto const rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
 
-		if (rank && delete_for_good)
+		if (rank)
 		{
 			auto current_rank = *rank;
 
@@ -1795,37 +1791,34 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		gpCivs[i] = SOLDIERCELL{};
 	}
 
-	if (delete_for_good)
+	// Record and process all enemy deaths
+	for (INT32 i = 0; i != 32; ++i)
 	{
-		// Record and process all enemy deaths
-		for (INT32 i = 0; i != 32; ++i)
-		{
-			if (!gpEnemies[i].pSoldier) continue;
-			SOLDIERTYPE& s = *gpEnemies[i].pSoldier;
-			if (s.bLife >= OKLIFE) continue;
-			TrackEnemiesKilled(ENEMY_KILLED_IN_AUTO_RESOLVE, s.ubSoldierClass);
-			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, arSector);
-			ProcessQueenCmdImplicationsOfDeath(&s);
-			AddDeadSoldierToUnLoadedSector(arSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
-		}
+		if (!gpEnemies[i].pSoldier) continue;
+		SOLDIERTYPE& s = *gpEnemies[i].pSoldier;
+		if (s.bLife >= OKLIFE) continue;
+		TrackEnemiesKilled(ENEMY_KILLED_IN_AUTO_RESOLVE, s.ubSoldierClass);
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, arSector);
+		ProcessQueenCmdImplicationsOfDeath(&s);
+		AddDeadSoldierToUnLoadedSector(arSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+	}
 
-		/* Eliminate all excess soldiers (as more than 32 can exist in the same
-		 * battle. Autoresolve only processes 32, so the excess is slaughtered as
-		 * the player never knew they existed. */
-		if (ar.ubBattleStatus == BATTLE_VICTORY)
-		{	/* Get rid of any extra enemies that could be here. It is possible for the
-			 * number of total enemies to exceed 32, but autoresolve can only process
-			 * 32. We basically cheat by eliminating the rest of them. */
-			if (NumEnemiesInSector(arSector))
-			{
-				SLOGI("Eliminating remaining enemies after Autoresolve in ({})", arSector);
-				EliminateAllEnemies(arSector);
-			}
+	/* Eliminate all excess soldiers (as more than 32 can exist in the same
+		* battle. Autoresolve only processes 32, so the excess is slaughtered as
+		* the player never knew they existed. */
+	if (ar.ubBattleStatus == BATTLE_VICTORY)
+	{	/* Get rid of any extra enemies that could be here. It is possible for the
+			* number of total enemies to exceed 32, but autoresolve can only process
+			* 32. We basically cheat by eliminating the rest of them. */
+		if (NumEnemiesInSector(arSector))
+		{
+			SLOGI("Eliminating remaining enemies after Autoresolve in ({})", arSector);
+			EliminateAllEnemies(arSector);
 		}
-		else
-		{ // The enemy won, so repoll movement.
-			ResetMovementForEnemyGroupsInLocation();
-		}
+	}
+	else
+	{ // The enemy won, so repoll movement.
+		ResetMovementForEnemyGroupsInLocation();
 	}
 
 	// Physically delete the soldiers now.
@@ -1843,25 +1836,23 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		RemoveButton(ar.iButton[i]);
 	}
 
-	if (delete_for_good)
-	{ //Warp the game time accordingly
+	//Warp the game time accordingly
 
-		WarpGameTime(ar.uiTotalElapsedBattleTimeInMilliseconds / 1000, WARPTIME_NO_PROCESSING_OF_EVENTS);
+	WarpGameTime(ar.uiTotalElapsedBattleTimeInMilliseconds / 1000, WARPTIME_NO_PROCESSING_OF_EVENTS);
 
-		// Deallocate all of the global memory.
-		// Everything internal to them, should have already been deleted.
-		delete gpAR;
-		gpAR = 0;
+	// Deallocate all of the global memory.
+	// Everything internal to them, should have already been deleted.
+	delete gpAR;
+	gpAR = 0;
 
-		delete[] gpMercs;
-		gpMercs = 0;
+	delete[] gpMercs;
+	gpMercs = 0;
 
-		delete[] gpCivs;
-		gpCivs = 0;
+	delete[] gpCivs;
+	gpCivs = 0;
 
-		delete[] gpEnemies;
-		gpEnemies = 0;
-	}
+	delete[] gpEnemies;
+	gpEnemies = 0;
 
 	//KM : Aug 09, 1999 Patch fix -- Would break future dialog while time compressing
 	gTacticalStatus.ubCurrentTeam = OUR_TEAM;
