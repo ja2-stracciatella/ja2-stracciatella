@@ -2167,75 +2167,6 @@ static void CalculateAutoResolveInfo(void)
 }
 
 
-static void CreateTempPlayerMerc(void);
-
-
-// Debug utilities
-static void ResetAutoResolveInterface(void)
-{
-	guiPreRandomIndex = gpAR->uiPreRandomIndex;
-
-	RemoveAutoResolveInterface(false);
-
-	gpAR->ubBattleStatus = BATTLE_IN_PROGRESS;
-
-	if( !gpAR->ubCivs && !gpAR->ubMercs )
-		gpAR->ubCivs = 1;
-
-	//Make sure the number of enemy portraits is the same as needed.
-	//The debug keypresses may add or remove more than one at a time.
-	while( gpAR->ubElites + gpAR->ubAdmins + gpAR->ubTroops > gpAR->ubEnemies )
-	{
-		switch( PreRandom( 5 ) )
-		{
-			case 0:         if( gpAR->ubElites ) { gpAR->ubElites--; break; }
-			// fallthrough
-			case 1: case 2: if( gpAR->ubAdmins ) { gpAR->ubAdmins--; break; }
-			// fallthrough
-			case 3: case 4: if( gpAR->ubTroops ) { gpAR->ubTroops--; break; }
-		}
-	}
-	while( gpAR->ubElites + gpAR->ubAdmins + gpAR->ubTroops < gpAR->ubEnemies )
-	{
-		switch( PreRandom( 5 ) )
-		{
-			case 0:         gpAR->ubElites++; break;
-			case 1: case 2: gpAR->ubAdmins++; break;
-			case 3: case 4: gpAR->ubTroops++; break;
-		}
-	}
-
-
-	//Do the same for the player mercs.
-	while( gpAR->iNumMercFaces > gpAR->ubMercs && gpAR->iNumMercFaces > gpAR->iActualMercFaces )
-	{ //Removing temp mercs
-		gpAR->iNumMercFaces--;
-		DeleteAutoResolveSoldier(gpMercs[gpAR->iNumMercFaces].pSoldier);
-		gpMercs[gpAR->iNumMercFaces].pSoldier = NULL;
-	}
-	while( gpAR->iNumMercFaces < gpAR->ubMercs && gpAR->iNumMercFaces >= gpAR->iActualMercFaces )
-	{
-		CreateTempPlayerMerc();
-	}
-
-	if( gpAR->uiTimeSlice == 0xffffffff )
-	{
-		gpAR->fSound = TRUE;
-	}
-	gpAR->uiTimeSlice = 1000;
-	gpAR->uiTotalElapsedBattleTimeInMilliseconds = 0;
-	gpAR->uiCurrTime = 0;
-	gpAR->fPlayerRejectedSurrenderOffer = FALSE;
-	gpAR->fPendingSurrender = FALSE;
-	CalculateRowsAndColumns();
-	CalculateSoldierCells( TRUE);
-	CreateAutoResolveInterface();
-	DetermineTeamLeader( TRUE ); //friendly team
-	DetermineTeamLeader( FALSE ); //enemy team
-	CalculateAttackValues();
-}
-
-
 static void CalculateRowsAndColumns(void)
 {
 	//now that we have the number on each team, calculate the number of rows and columns to be used on
@@ -2393,7 +2324,6 @@ static void CalculateRowsAndColumns(void)
 static void HandleAutoResolveInput(void)
 {
 	InputAtom InputEvent;
-	BOOLEAN fResetAutoResolve = FALSE;
 	while( DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS) )
 	{
 		if( InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT )
@@ -2412,10 +2342,6 @@ static void HandleAutoResolveInput(void)
 					break;
 			}
 		}
-	}
-	if( fResetAutoResolve )
-	{
-		ResetAutoResolveInterface();
 	}
 }
 
@@ -2520,36 +2446,6 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	xp = pCell->xp + 25 - StringPixLength( pStr, SMALLCOMPFONT ) / 2;
 	yp = pCell->yp + 33;
 	MPrint(xp, yp, pStr);
-}
-
-
-static UINT8 GetUnusedMercProfileID(void)
-{
-	for (;;)
-	{
-		const ProfileID pid = PreRandom(40);
-		if (FindSoldierByProfileIDOnPlayerTeam(pid) == NULL) return pid;
-	}
-}
-
-
-static void CreateTempPlayerMerc(void)
-{
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-
-	//Init the merc create structure with basic information
-	MercCreateStruct = SOLDIERCREATE_STRUCT{};
-	MercCreateStruct.bTeam									= OUR_TEAM;
-	MercCreateStruct.ubProfile							= GetUnusedMercProfileID();
-	MercCreateStruct.sSector								= gpAR->ubSector;
-	MercCreateStruct.fCopyProfileItemsOver	= TRUE;
-
-	//Create the player soldier
-	gpMercs[gpAR->iNumMercFaces].pSoldier = TacticalCreateSoldier(MercCreateStruct);
-	if( gpMercs[ gpAR->iNumMercFaces ].pSoldier )
-	{
-		gpAR->iNumMercFaces++;
-	}
 }
 
 
