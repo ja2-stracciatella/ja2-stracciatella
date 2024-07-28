@@ -111,10 +111,6 @@ struct AUTORESOLVE_STRUCT
 	SGPVObject* iIndent;
 	SGPVSurface* iInterfaceBuffer;
 	INT32 iNumMercFaces;
-	INT32 iActualMercFaces; //this represents the real number of merc faces.  Because
-				//my debug mode allows to freely add and subtract mercs, we
-				//can add/remove temp mercs, but we don't want to remove the
-				//actual mercs.
 	UINT32 uiTimeSlice;
 	UINT32 uiTotalElapsedBattleTimeInMilliseconds;
 	UINT32 uiPrevTime, uiCurrTime;
@@ -1415,7 +1411,7 @@ static void RenderAutoResolve(void)
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN hide, const ST::string& text)
 {
-	GUIButtonRef const btn = QuickCreateButton(gpAR->iButtonImage[idx], x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButton(gpAR->iButtonImage[idx], x, y, MSYS_PRIORITY_HIGH, std::move(click));
 	gpAR->iButton[idx] = btn;
 	if (!text.empty()) btn->SpecifyGeneralTextAttributes(text, BLOCKFONT2, 169, FONT_NEARBLACK);
 	if (hide) btn->Hide();
@@ -1664,30 +1660,25 @@ static void RemoveAutoResolveInterface()
 	for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
 	{
 		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
-		if (i >= ar.iActualMercFaces)
+		// Record finishing information for our mercs
+		if (s.bLife == 0)
 		{
-			DeleteAutoResolveSoldier(&s);
+			StrategicHandlePlayerTeamMercDeath(s);
 		}
-		else
-		{ // Record finishing information for our mercs
-			if (s.bLife == 0)
-			{
-				StrategicHandlePlayerTeamMercDeath(s);
-			}
-			else switch (ar.ubBattleStatus)
-			{
-				case BATTLE_SURRENDERED:
-				case BATTLE_CAPTURED:
-					EnemyCapturesPlayerSoldier(&s);
-					break;
+		else switch (ar.ubBattleStatus)
+		{
+			case BATTLE_SURRENDERED:
+			case BATTLE_CAPTURED:
+				EnemyCapturesPlayerSoldier(&s);
+				break;
 
-				case BATTLE_VICTORY:
-					// Merc is alive, so group them at the center gridno.
-					s.ubStrategicInsertionCode = INSERTION_CODE_CENTER;
-					break;
-			}
-			++GetProfile(s.ubProfile).usBattlesFought;
+			case BATTLE_VICTORY:
+				// Merc is alive, so group them at the center gridno.
+				s.ubStrategicInsertionCode = INSERTION_CODE_CENTER;
+				break;
 		}
+
+		++GetProfile(s.ubProfile).usBattlesFought;
 
 		bool  first_group      = true;
 		UINT8 current_group_id = 0;
@@ -2130,7 +2121,6 @@ static void CalculateAutoResolveInfo(void)
 		}
 	}
 	gpAR->iNumMercFaces = gpAR->ubMercs;
-	gpAR->iActualMercFaces = gpAR->ubMercs;
 
 	CalculateRowsAndColumns();
 }
