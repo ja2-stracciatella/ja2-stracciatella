@@ -466,7 +466,7 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 
 static void CalculateAttackValues(void);
 static void CalculateAutoResolveInfo(void);
-static void CalculateSoldierCells(BOOLEAN fReset);
+static void CalculateSoldierCells();
 static void CreateAutoResolveInterface(void);
 static void DetermineTeamLeader(BOOLEAN fFriendlyTeam);
 static void HandleAutoResolveInput(void);
@@ -491,7 +491,7 @@ ScreenID AutoResolveScreenHandle()
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 		KillPreBattleInterface();
 		CalculateAutoResolveInfo();
-		CalculateSoldierCells( FALSE );
+		CalculateSoldierCells();
 		CreateAutoResolveInterface();
 		DetermineTeamLeader( TRUE ); //friendly team
 		DetermineTeamLeader( FALSE ); //enemy team
@@ -522,20 +522,6 @@ ScreenID AutoResolveScreenHandle()
 	RenderButtons();
 	RenderFastHelp();
 	return AUTORESOLVE_SCREEN;
-}
-
-
-static void RefreshMerc(SOLDIERTYPE* pSoldier)
-{
-	pSoldier->bLife = pSoldier->bLifeMax;
-	pSoldier->bBleeding = 0;
-	pSoldier->bBreath = pSoldier->bBreathMax = 100;
-	pSoldier->sBreathRed = 0;
-	if( gpAR->pRobotCell)
-	{
-		UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
-	}
-	//gpAR->fUnlimitedAmmo = TRUE;
 }
 
 
@@ -633,7 +619,7 @@ static void MercCellMouseClickCallback(MOUSE_REGION* reg, UINT32 reason);
 static void MercCellMouseMoveCallback(MOUSE_REGION* reg, UINT32 reason);
 
 
-static void CalculateSoldierCells(BOOLEAN fReset)
+static void CalculateSoldierCells()
 {
 	INT32 i, x, y;
 	INT32 index, iStartY, iTop, gapStartRow;
@@ -691,8 +677,6 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 				MSYS_PRIORITY_HIGH, CURSOR_NORMAL,
 				MercCellMouseMoveCallback, MercCellMouseClickCallback);
 			c.pRegion->SetUserPtr(&c);
-			if( fReset )
-				RefreshMerc( gpMercs[ index ].pSoldier );
 			if( !gpMercs[ index ].pSoldier->bLife )
 				gpAR->ubAliveMercs--;
 		}
