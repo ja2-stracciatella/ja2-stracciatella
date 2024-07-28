@@ -61,11 +61,6 @@
 #include <string_theory/string>
 
 
-struct BUTTON_PICS;
-
-
-//#define INVULNERABILITY
-
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
 
 //button images
@@ -3075,11 +3070,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 		if( !pTarget->pSoldier->bLife )
 		{
 			gpAR->fRenderAutoResolve = TRUE;
-			#ifdef INVULNERABILITY
-			if( 1 )
-				RefreshMerc( pTarget->pSoldier );
-			else
-			#endif
+
 			if( pTarget->uiFlags & CELL_MERC )
 			{
 				gpAR->usPlayerAttack -= pTarget->usAttack;
@@ -3248,10 +3239,6 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 				DoMercBattleSound( pTarget->pSoldier, BATTLE_SOUND_DIE1 );
 			}
 		}
-		#ifdef INVULNERABILITY
-			RefreshMerc( pTarget->pSoldier );
-			return;
-		#endif
 	}
 	//Adjust the soldiers stats based on the damage.
 	pTarget->pSoldier->bLife = (INT8)std::max(iNewLife, 0);
