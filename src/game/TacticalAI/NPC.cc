@@ -1878,9 +1878,9 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						{
 							// This check prevents NPCs from forever lingering if the player unloads the sector
 							// before an NPC chosen for removal reaches their destination (issue #750).
-							if (pNPC && pQuotePtr->sActionData == NPC_ACTION_REMOVE_NPC)
+							if (pQuotePtr->sActionData == NPC_ACTION_REMOVE_NPC)
 							{
-								gMercProfiles[pNPC->ubProfile].sSector = SGPSector();
+								p.sSector = SGPSector();
 							}
 							NPCGotoGridNo( ubNPC, pQuotePtr->usGoToGridno, ubRecordNum );
 						}
