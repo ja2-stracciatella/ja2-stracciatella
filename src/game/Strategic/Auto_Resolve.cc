@@ -142,7 +142,6 @@ struct AUTORESOLVE_STRUCT
 	BOOLEAN fPaused;
 	BOOLEAN fDebugInfo;
 	BOOLEAN ubBattleStatus;
-	BOOLEAN fUnlimitedAmmo;
 	BOOLEAN fSound;
 	BOOLEAN ubPlayerDefenceAdvantage;
 	BOOLEAN ubEnemyDefenceAdvantage;
@@ -2780,11 +2779,6 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 		if( GCM->getItem(pItem->usItem)->getItemClass() == IC_GUN )
 		{
 			pAttacker->bWeaponSlot = (INT8)i;
-			if( gpAR->fUnlimitedAmmo )
-			{
-				PlayAutoResolveSample(GCM->getWeapon(pItem->usItem)->sound, 50, 1, MIDDLEPAN);
-				return TRUE;
-			}
 			if( !pItem->ubGunShotsLeft )
 			{
 				AutoReload( pSoldier );
@@ -2826,10 +2820,6 @@ static BOOLEAN TargetHasLoadedGun(SOLDIERTYPE* pSoldier)
 	{
 		if( GCM->getItem(pItem->usItem)->getItemClass() == IC_GUN )
 		{
-			if( gpAR->fUnlimitedAmmo )
-			{
-				return TRUE;
-			}
 			if( pItem->ubGunShotsLeft )
 			{
 				return TRUE;
