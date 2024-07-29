@@ -887,7 +887,7 @@ ArmsDealerID GetArmsDealerIDFromMercID(UINT8 const ubMercID)
 
 ArmsDealerType GetTypeOfArmsDealer(ArmsDealerID ubDealerID)
 {
-	if (ubDealerID >= NUM_ARMS_DEALERS)
+	if (ubDealerID < 0 || ubDealerID >= NUM_ARMS_DEALERS)
 	{
 		return ArmsDealerType::NOT_VALID_DEALER;
 	}
