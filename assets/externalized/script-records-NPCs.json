@@ -5670,6 +5670,19 @@
             },
             {
                 "index": 5,
+                "requiredApproach": "ONE_OF_FOUR_STANDARD",
+                "quest": {
+                    "name": "RUNAWAY_JOEY",
+                    "status": "DONE"
+                },
+                "quoteNum": 9, // "Just leave me alone."
+                "numQuotes": 1,
+                "actionData": {
+                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                }
+            },
+            {
+                "index": 6,
                 "factMustBeTrue": 160, // unnamed fact
                 "factMustBeFalse": 108, // FACT_JOEY_ESCORTED
                 "requiredApproach": "RECRUIT",
@@ -5680,7 +5693,7 @@
                 }
             },
             {
-                "index": 6,
+                "index": 7,
                 "factMustBeTrue": 347, // unnamed fact
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 11, // "Okay, I'll go with you. Just don't let anything happen to me. My mom will be really disappointed if she isn't the one that gets to kill me."
@@ -5690,7 +5703,7 @@
                 }
             },
             {
-                "index": 7,
+                "index": 8,
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 17, // "I tell you what... Since I know you're gonna save my skin with my mom, I'll let you in on something... Somebody's stashing cash down here. There's tons of it!"
                 "numQuotes": 1,
@@ -5699,13 +5712,13 @@
                 }
             },
             {
-                "index": 8,
+                "index": 9,
                 "eraseOnceSaid": true,
                 "firstDay": 255,
                 "numQuotes": 1
             },
             {
-                "index": 9,
+                "index": 10,
                 "eraseOnceSaid": true,
                 "factMustBeTrue": 110, // FACT_JOEY_NEAR_MARTHA
                 "requiredApproach": "TRIGGER_NPC",
@@ -5718,7 +5731,7 @@
                 }
             },
             {
-                "index": 10,
+                "index": 11,
                 "eraseOnceSaid": true,
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 15, // "Okay, Mom... Uhh, dad hasn't been drinking, has he?"
@@ -5729,7 +5742,7 @@
                 "goToGridno": 18326
             },
             {
-                "index": 11,
+                "index": 12,
                 "requiredApproach": "EPC_IN_WRONG_SECTOR",
                 "quoteNum": 12, // "What ya doing? You can't just leave me here! I'll be good... I swear."
                 "numQuotes": 1,
@@ -5739,21 +5752,21 @@
                 }
             },
             {
-                "index": 12,
+                "index": 13,
                 "factMustBeFalse": 109, // FACT_JOEY_IN_C5
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 16, // "I don't want to join you. I don't want to have anything to do with you. I just want to be left alone down here."
                 "numQuotes": 1
             },
             {
-                "index": 13,
+                "index": 14,
                 "factMustBeTrue": 160, // unnamed fact
                 "factMustBeFalse": 108, // FACT_JOEY_ESCORTED
                 "quoteNum": 12, // "What ya doing? You can't just leave me here! I'll be good... I swear."
                 "numQuotes": 1
             },
             {
-                "index": 14,
+                "index": 15,
                 "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 21, // "Make the shooting stop!"
@@ -5763,7 +5776,7 @@
                 }
             },
             {
-                "index": 15,
+                "index": 16,
                 "eraseOnceSaid": true,
                 "factMustBeTrue": 350, // FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE
                 "factMustBeFalse": 109, // FACT_JOEY_IN_C5
@@ -5777,7 +5790,7 @@
                 }
             },
             {
-                "index": 16,
+                "index": 17,
                 "eraseOnceSaid": true,
                 "factMustBeTrue": 109, // FACT_JOEY_IN_C5
                 "requiredApproach": "THREATEN",
@@ -5790,18 +5803,18 @@
                 }
             },
             {
-                "index": 17,
+                "index": 18,
                 "factMustBeFalse": 109, // FACT_JOEY_IN_C5
                 "requiredApproach": "THREATEN",
                 "requiredOpinion": 80,
                 "quoteNum": 11, // "Okay, I'll go with you. Just don't let anything happen to me. My mom will be really disappointed if she isn't the one that gets to kill me."
                 "numQuotes": 1,
                 "triggerNPC": "JOEY",
-                "triggerRecord": 7,
+                "triggerRecord": 8,
                 "setFactTrue": 347 // unnamed fact
             },
             {
-                "index": 18,
+                "index": 19,
                 "factMustBeTrue": 160, // unnamed fact
                 "factMustBeFalse": 108, // FACT_JOEY_ESCORTED
                 "requiredApproach": "THREATEN",
@@ -6772,6 +6785,10 @@
                 "index": 6,
                 "factMustBeTrue": 159, // unnamed fact
                 "factMustBeFalse": 42, // FACT_ESCORTING_SKYRIDER
+                "quest": {
+                    "name": "ESCORT_SKYRIDER",
+                    "status": "INPROGRESS"
+                },
                 "quoteNum": 41, // "What's happenin', Cap? I thought you were gonna get me to my eggbeater..."
                 "numQuotes": 1
             },
@@ -9375,7 +9392,7 @@
                 "quoteNum": 11, // "You go to your room, mister. And you just wait 'til your father gets home."
                 "numQuotes": 1,
                 "triggerNPC": "JOEY",
-                "triggerRecord": 10
+                "triggerRecord": 11
             },
             {
                 "index": 8,
@@ -14991,7 +15008,7 @@
             {
                 "index": 4,
                 "eraseOnceSaid": true,
-                "requiredItem": "EXTENDEDEAR",
+                "requiredItem": "MONEY",
                 "requiredApproach": "GIVINGITEM",
                 "quoteNum": 13, // "That wouldn't buy a minute of my time."
                 "numQuotes": 1,
