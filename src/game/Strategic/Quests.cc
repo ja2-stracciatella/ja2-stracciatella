@@ -216,7 +216,7 @@ static INT8 NumMercsNear(ProfileID const pid, UINT8 const max_dist)
 		SOLDIERTYPE const& s = **i;
 		if (s.bTeam != OUR_TEAM)                        continue;
 		if (s.bLife <  OKLIFE)                             continue;
-		if (PythSpacesAway(gridno, s.sGridNo) <= max_dist) continue;
+		if (PythSpacesAway(gridno, s.sGridNo) >= max_dist) continue;
 		++n;
 	}
 	return n;
