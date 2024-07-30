@@ -5075,7 +5075,7 @@
             {
                 "index": 6,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 116, // FACT_MARIA_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "RESCUE_MARIA",
                     "status": "INPROGRESS"
@@ -5162,7 +5162,7 @@
                 "index": 13,
                 "sayOncePerConvo": true,
                 "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 116, // FACT_MARIA_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
                 "actionData": {
@@ -5172,7 +5172,7 @@
             {
                 "index": 14,
                 "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 116, // FACT_MARIA_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quoteNum": 19, // "What are you doing? Where is Angel?"
                 "numQuotes": 1
             },
@@ -5186,7 +5186,7 @@
             {
                 "index": 16,
                 "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 116, // FACT_MARIA_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
@@ -5198,7 +5198,7 @@
                 "index": 17,
                 "sayOncePerConvo": true,
                 "factMustBeTrue": 322, // unnamed fact
-                "factMustBeFalse": 116, // FACT_MARIA_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
                 "actionData": {
@@ -5218,7 +5218,7 @@
             {
                 "index": 19,
                 "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 116, // FACT_MARIA_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 19, // "What are you doing? Where is Angel?"
                 "numQuotes": 1
@@ -5684,7 +5684,7 @@
             {
                 "index": 6,
                 "factMustBeTrue": 160, // unnamed fact
-                "factMustBeFalse": 108, // FACT_JOEY_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 20, // "No more foolin' around, okay? I'll do exactly what you tell me - I promise!"
                 "numQuotes": 1,
@@ -5761,7 +5761,7 @@
             {
                 "index": 14,
                 "factMustBeTrue": 160, // unnamed fact
-                "factMustBeFalse": 108, // FACT_JOEY_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quoteNum": 12, // "What ya doing? You can't just leave me here! I'll be good... I swear."
                 "numQuotes": 1
             },
@@ -5816,7 +5816,7 @@
             {
                 "index": 19,
                 "factMustBeTrue": 160, // unnamed fact
-                "factMustBeFalse": 108, // FACT_JOEY_ESCORTED
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 12, // "What ya doing? You can't just leave me here! I'll be good... I swear."
                 "numQuotes": 1
@@ -6784,7 +6784,7 @@
             {
                 "index": 6,
                 "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 42, // FACT_ESCORTING_SKYRIDER
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "INPROGRESS"
@@ -6795,7 +6795,7 @@
             {
                 "index": 7,
                 "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 42, // FACT_ESCORTING_SKYRIDER
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 39, // "Better change your tone, Cap! Or you're gonna have to take chopper lessons."
                 "numQuotes": 1
@@ -6914,7 +6914,7 @@
             {
                 "index": 19,
                 "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 42, // FACT_ESCORTING_SKYRIDER
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "INPROGRESS"
@@ -6942,7 +6942,7 @@
             {
                 "index": 21,
                 "factMustBeTrue": 346, // unnamed fact
-                "factMustBeFalse": 42, // FACT_ESCORTING_SKYRIDER
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "NOTSTARTED"
@@ -6956,7 +6956,7 @@
             {
                 "index": 22,
                 "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 42, // FACT_ESCORTING_SKYRIDER
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "INPROGRESS"
@@ -9397,7 +9397,7 @@
             {
                 "index": 8,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 112, // FACT_MERC_NEAR_MARTHA
+                "factMustBeTrue": 112, // FACT_MERC_NEAR_NPC
                 "quest": {
                     "name": "RUNAWAY_JOEY",
                     "status": "DONE"
@@ -11016,7 +11016,7 @@
             {
                 "index": 17,
                 "factMustBeTrue": 161, // unnamed fact
-                "factMustBeFalse": 185, // FACT_JOHN_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 29, // "Ya had me a little worried there. Didn't know if I'd ever see Drassen."
                 "numQuotes": 1,
@@ -11027,7 +11027,7 @@
             {
                 "index": 18,
                 "factMustBeTrue": 161, // unnamed fact
-                "factMustBeFalse": 185, // FACT_JOHN_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quoteNum": 11, // "Excuse me... but I don't remember Drassen looking like this."
                 "numQuotes": 1
             },
@@ -11052,7 +11052,7 @@
             {
                 "index": 21,
                 "factMustBeTrue": 161, // unnamed fact
-                "factMustBeFalse": 185, // FACT_JOHN_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 6, // "Harassing an American abroad can get you in a lot of trouble. You don't want me reporting you to the embassy, do you?"
                 "numQuotes": 1
@@ -11060,7 +11060,7 @@
             {
                 "index": 22,
                 "factMustBeTrue": 345, // unnamed fact
-                "factMustBeFalse": 185, // FACT_JOHN_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "INPROGRESS"
@@ -11075,7 +11075,7 @@
             {
                 "index": 23,
                 "factMustBeTrue": 345, // unnamed fact
-                "factMustBeFalse": 185, // FACT_JOHN_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "NOTSTARTED"
@@ -11263,7 +11263,7 @@
             {
                 "index": 16,
                 "factMustBeTrue": 162, // unnamed fact
-                "factMustBeFalse": 188, // FACT_MARY_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 23, // "Finally. I thought you were going to leave me here forever."
                 "numQuotes": 1,
@@ -11274,7 +11274,7 @@
             {
                 "index": 17,
                 "factMustBeTrue": 162, // unnamed fact
-                "factMustBeFalse": 188, // FACT_MARY_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "quoteNum": 13, // "I don't see the airport."
                 "numQuotes": 1
             },
@@ -11302,7 +11302,7 @@
             {
                 "index": 20,
                 "factMustBeTrue": 162, // unnamed fact
-                "factMustBeFalse": 188, // FACT_MARY_EPC
+                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 6, // "I'll do whatever you say."
                 "numQuotes": 1
