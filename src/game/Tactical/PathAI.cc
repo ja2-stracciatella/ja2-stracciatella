@@ -1092,6 +1092,9 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						if (pDoorStructure)
 						{
 							fDoorIsOpen = (pDoorStructure->fFlags & STRUCTURE_OPEN) != 0;
+							// disallow diagonal travel through closed sliding door
+							if (pDoorStructure->fFlags & STRUCTURE_SLIDINGDOOR && !fDoorIsOpen && ubCnt & 1)
+								goto NEXTDIR;
 						}
 						else
 						{
