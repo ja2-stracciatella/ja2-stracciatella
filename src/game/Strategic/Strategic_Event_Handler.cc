@@ -655,10 +655,8 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 
 			case NPC_ACTION_ADD_JOEY_TO_WORLD:
 				// If Joey is not dead, escorted, or already delivered
-				if ( gMercProfiles[ JOEY ].bMercStatus != MERC_IS_DEAD && !CheckFact( FACT_JOEY_ESCORTED, 0 ) &&
-					gMercProfiles[ JOEY ].sSector.x == 4 &&
-					gMercProfiles[ JOEY ].sSector.y == MAP_ROW_D &&
-					gMercProfiles[ JOEY ].sSector.z == 1 )
+				if ( gMercProfiles[ JOEY ].bMercStatus != MERC_IS_DEAD && !CheckFact( FACT_NPC_ESCORTED, JOEY ) &&
+					 gMercProfiles[ JOEY ].sSector == SGPSector(4, MAP_ROW_D, 1) )
 				{
 					const SOLDIERTYPE* const pJoey = FindSoldierByProfileID(JOEY);
 					if (pJoey )
@@ -669,9 +667,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 					else
 					{
 						// move Joey from caves to San Mona
-						gMercProfiles[ JOEY ].sSector.x = 5;
-						gMercProfiles[ JOEY ].sSector.y = MAP_ROW_C;
-						gMercProfiles[ JOEY ].sSector.z = 0;
+						gMercProfiles[ JOEY ].sSector = SGPSector(5, MAP_ROW_C);
 					}
 				}
 				break;

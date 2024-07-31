@@ -1993,7 +1993,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 				if (CheckFact(FACT_JOEY_NEAR_MARTHA, 0))
 				{
 					EVENT_StopMerc(pSoldier);
-					TriggerNPCRecord(JOEY, 9);
+					TriggerNPCRecord(JOEY, 10);
 				}
 			}
 

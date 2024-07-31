@@ -216,7 +216,7 @@ static INT8 NumMercsNear(ProfileID const pid, UINT8 const max_dist)
 		SOLDIERTYPE const& s = **i;
 		if (s.bTeam != OUR_TEAM)                        continue;
 		if (s.bLife <  OKLIFE)                             continue;
-		if (PythSpacesAway(gridno, s.sGridNo) <= max_dist) continue;
+		if (PythSpacesAway(gridno, s.sGridNo) >= max_dist) continue;
 		++n;
 	}
 	return n;
@@ -643,14 +643,8 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 		case FACT_SOME_MERCS_CLOSE:
 			gubFact[usFact] = ( NumMercsNear( ubProfileID, 3 ) > 0 );
 			break;
-		case FACT_MARIA_ESCORTED:
-			gubFact[usFact] = CheckNPCIsEPC( MARIA );
-			break;
-		case FACT_JOEY_ESCORTED:
-			gubFact[usFact] = CheckNPCIsEPC( JOEY );
-			break;
-		case FACT_ESCORTING_SKYRIDER:
-			gubFact[usFact] = CheckNPCIsEPC( SKYRIDER );
+		case FACT_NPC_ESCORTED:
+			gubFact[usFact] = CheckNPCIsEPC( ubProfileID );
 			break;
 		case FACT_MARIA_ESCORTED_AT_LEATHER_SHOP:
 			gubFact[usFact] = ( CheckNPCIsEPC( MARIA ) && (NPCInRoom( MARIA, 2 )) );
@@ -678,7 +672,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 		case FACT_JOEY_DEAD:
 			gubFact[usFact] = gMercProfiles[ JOEY ].bMercStatus == MERC_IS_DEAD;
 			break;
-		case FACT_MERC_NEAR_MARTHA:
+		case FACT_MERC_NEAR_NPC:
 			gubFact[usFact] = ( NumMercsNear( ubProfileID, 5 ) > 0 );
 			break;
 		case FACT_REBELS_HATE_PLAYER:
@@ -746,12 +740,6 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 		case FACT_DYNAMO_SPEAKING_OR_NEARBY:
 			gubFact[usFact] = ( gpSrcSoldier != NULL && (gpSrcSoldier->ubProfile == DYNAMO || ( CheckNPCWithin( gpSrcSoldier->ubProfile, DYNAMO, 10 ) && CheckGuyVisible( gpSrcSoldier->ubProfile, DYNAMO ) ) ) );
-			break;
-		case FACT_JOHN_EPC:
-			gubFact[usFact] = CheckNPCIsEPC( JOHN );
-			break;
-		case FACT_MARY_EPC:
-			gubFact[usFact] = CheckNPCIsEPC( MARY );
 			break;
 		case FACT_JOHN_AND_MARY_EPCS:
 			gubFact[usFact] = CheckNPCIsEPC( JOHN ) && CheckNPCIsEPC( MARY );
