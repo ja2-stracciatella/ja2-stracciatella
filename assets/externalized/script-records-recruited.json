@@ -1,4 +1,4 @@
-/* Script records are the same for all mercs and RPCs that are recruited */
+/* These records are used for scripting player-controlled characters. They are the same for all mercs and RPCs that are recruited */
 [
     {
         "profile": "",
@@ -8,8 +8,8 @@
                 "eraseOnceSaid": true,
                 "factMustBeTrue": 24, // unnamed fact
                 "factMustBeFalse": 81, // FACT_NPC_IS_ENEMY
-                "requiredApproach": "TRIGGER_NPC",
-                "quoteNum": 13,
+                "requiredApproach": "TRIGGER_NPC", // on Ira's recruitment
+                "quoteNum": 13, // "I'm afraid my marksmanship is a little weak for a soldier. Miguel used me mostly as a medic and a look out. Anyways, I'm sure we'll make out okay. Let's get going... I'll lead the way."
                 "numQuotes": 1,
                 "triggerSelf": true,
                 "triggerRecord": 1,
@@ -30,7 +30,7 @@
             },
             {
                 "index": 2,
-                "requiredApproach": "TRIGGER_NPC",
+                "requiredApproach": "TRIGGER_NPC", // by NPC_ACTION_DOCTOR_ESCORT_PATIENTS
                 "numQuotes": 1,
                 "userInterface": "SPECIAL_TURN_UI_OFF",
                 "goToGridno": 9541
