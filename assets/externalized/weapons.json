@@ -3062,6 +3062,8 @@
         "bSinks": true,
         "bShowStatus": true,
         "bTwoHanded": true,
+        "bNotBuyable": true,
+        "bDefaultUndroppable": true,
         "tileGraphic": {
             "type": "GUNS",
             "subIndex": 28
