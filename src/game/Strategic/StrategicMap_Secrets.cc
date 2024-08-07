@@ -2,8 +2,10 @@
 #include "Buffer.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "JAScreens.h"
 #include "LoadSaveData.h"
 #include "SamSiteModel.h"
+#include "ScreenIDs.h"
 #include "StrategicMapSecretModel.h"
 #include "TownModel.h"
 
@@ -40,6 +42,18 @@ BOOLEAN IsTownFound(INT8 const bTownID)
 
 BOOLEAN IsSecretFoundAt(UINT8 const sectorID)
 {
+	if (guiCurrentScreen == SAVE_LOAD_SCREEN)
+	{
+		// The load screen tries to determine the name of the sector that
+		// was current when the game was saved and the program flow comes
+		// through here. The state of the isSecretFound map is not that of
+		// the save and it is too much effort to retrieve it from the file.
+		// We'll assume the players know the secret if they managed to save
+		// in that sector. Without this extra check the console can get
+		// filled with bogus warning messages.
+		return TRUE;
+	}
+
 	if (isSecretFound.find(sectorID) == isSecretFound.end())
 	{
 		// The game always try to find secrets at J9 and K4, but they

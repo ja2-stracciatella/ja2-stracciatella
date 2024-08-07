@@ -3,6 +3,7 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "WeaponModels.h"
 
 
 //Enemy is allowed to capture the player after certain day
@@ -79,7 +80,9 @@ struct STRATEGIC_STATUS
 	UINT8			ubHighestProgress;			// the highest level of progress player has attained thus far in the game (0-100)
 
 	UINT8			notUsedGunIndeces[ARMY_GUN_LEVELS];
-	BOOLEAN		fWeaponDroppedAlready[MAX_WEAPONS];				// flag that tracks whether this weapon type has been dropped before
+	// Was flag that tracks whether this weapon type has been dropped before.
+	// no longer used but gets synthesized when saving the game.
+	BOOLEAN		fWeaponDroppedAlready[MAX_WEAPONS];
 
 	UINT8			ubMercDeaths;						// how many soldiers have bit it while in the player's employ (0-100)
 	UINT32		uiManDaysPlayed;				// once per day, # living mercs on player's team is added to this running total
@@ -126,5 +129,9 @@ void TrackEnemiesKilled( UINT8 ubKilledHow, UINT8 ubSoldierClass );
 UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex );
 
 void UpdateLastDayOfPlayerActivity( UINT16 usDay );
+
+void ClearAllWeaponsAlreadyDropped();
+void SetWeaponAlreadyDropped(WeaponModel const *);
+bool WasWeaponAlreadyDropped(WeaponModel const *);
 
 #endif
