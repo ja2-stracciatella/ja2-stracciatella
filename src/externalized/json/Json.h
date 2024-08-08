@@ -18,6 +18,7 @@ class JsonValue {
 		JsonValue(const ST::string& value) : m_value(RustPointer<RJsonValue>(RJsonValue_fromString(value.c_str()))) {}
 
 		static JsonValue deserialize(const ST::string& str);
+		static JsonValue deserialize(const ST::string& vanillaStr, const ST::string& patchStr);
 
 		ST::string serialize(bool pretty = false) const;
 		bool isInt() const;
