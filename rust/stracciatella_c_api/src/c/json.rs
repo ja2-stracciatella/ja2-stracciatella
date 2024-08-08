@@ -16,13 +16,9 @@ impl RJsonValue {
         Ok(RJsonValue(value))
     }
 
-    fn deserialize_with_patch(
-        vanilla_value: &str,
-        patch_value: &str
-    ) -> Result<Self, String> {
+    fn deserialize_with_patch(vanilla_value: &str, patch_value: &str) -> Result<Self, String> {
         let mut patched_value = de::from_string(vanilla_value)?;
         let patch_value = de::from_string(patch_value)?;
-        
         let p: Patch = from_value(patch_value).map_err(|e| e.to_string())?;
         patch(&mut patched_value, &p).map_err(|e| e.to_string())?;
 
@@ -182,7 +178,7 @@ pub extern "C" fn RJsonValue_deserialize(value: *const c_char) -> *mut RJsonValu
 #[no_mangle]
 pub extern "C" fn RJsonValue_deserializeWithPatch(
     vanilla_value: *const c_char,
-    patch_value: *const c_char
+    patch_value: *const c_char,
 ) -> *mut RJsonValue {
     forget_rust_error();
     let vanilla_value = str_from_c_str_or_panic(unsafe_c_str(vanilla_value));
