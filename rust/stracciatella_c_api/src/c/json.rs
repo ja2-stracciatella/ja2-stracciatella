@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 
-use serde_json::{Value, from_value};
+use json_patch::{patch, Patch};
+use serde_json::{from_value, Value};
 use stracciatella::json::de;
-use json_patch::{Patch, patch};
 
 use super::{common::*, vec::VecCString};
 
@@ -16,7 +16,10 @@ impl RJsonValue {
         Ok(RJsonValue(value))
     }
 
-    fn deserialize_with_patch(vanilla_value: &str, patch_value: &str) -> Result<Self, String> {
+    fn deserialize_with_patch(
+        vanilla_value: &str,
+        patch_value: &str
+    ) -> Result<Self, String> {
         let mut patched_value = de::from_string(vanilla_value)?;
         let patch_value = de::from_string(patch_value)?;
         
@@ -177,7 +180,10 @@ pub extern "C" fn RJsonValue_deserialize(value: *const c_char) -> *mut RJsonValu
 }
 
 #[no_mangle]
-pub extern "C" fn RJsonValue_deserializeWithPatch(vanilla_value: *const c_char, patch_value: *const c_char) -> *mut RJsonValue {
+pub extern "C" fn RJsonValue_deserializeWithPatch(
+    vanilla_value: *const c_char,
+    patch_value: *const c_char
+) -> *mut RJsonValue {
     forget_rust_error();
     let vanilla_value = str_from_c_str_or_panic(unsafe_c_str(vanilla_value));
     let patch_value = str_from_c_str_or_panic(unsafe_c_str(patch_value));
