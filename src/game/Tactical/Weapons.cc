@@ -124,45 +124,6 @@ ARMOURTYPE const Armour[] =
 	{ARMOURCLASS_VEST,	32,		10}, /* Kevlar 2 jack w Y */
 };
 
-EXPLOSIVETYPE const Explosive[] =
-{
-	//Type,		Yield,	Yield2,	Radius,	Volume,	Volatility,	Animation,	Description
-	//-----		-----	------	------	------	--------- 	------------------
-	{EXPLOSV_STUN,		1,	70,	4,	0,	0,	STUN_BLAST}, /* stun grenade */
-	{EXPLOSV_TEARGAS,	0,	20,	4,	0,	0,	TARGAS_EXP}, /* tear gas grenade */
-	{EXPLOSV_MUSTGAS,	15,	40,	4,	0,	0,	MUSTARD_EXP}, /* mustard gas grenade*/
-	{EXPLOSV_NORMAL,	15,	7,	3,	15,	1,	BLAST_1}, /* mini hand grenade */
-	{EXPLOSV_NORMAL,	25,	10,	4,	25,	1,	BLAST_1}, /* reg hand grenade */
-	{EXPLOSV_NORMAL,	40,	12,	5,	20,	10,	BLAST_2}, /* RDX */
-	{EXPLOSV_NORMAL,	50,	15,	5,	50,	2,	BLAST_2}, /* TNT (="explosives")*/
-	{EXPLOSV_NORMAL,	60,	15,	6,	60,	2,	BLAST_2}, /* HMX (=RDX+TNT) */
-	{EXPLOSV_NORMAL,	55,	15,	6,	55,	0,	BLAST_2}, /* C1 (=RDX+min oil) */
-	{EXPLOSV_NORMAL,	50,	22,	6,	50,	2,	BLAST_2}, /* mortar shell */
-
-	{EXPLOSV_NORMAL,	30,	30,	2,	30,	2,	BLAST_1}, /* mine */
-	{EXPLOSV_NORMAL,	65,	30,	7,	65,	0,	BLAST_1}, /* C4 ("plastique") */
-	{EXPLOSV_FLARE,		0,	0,	10,	0,	0,	BLAST_1}, /* trip flare */
-	{EXPLOSV_NOISE,		0,	0,	50,	50,	0,	BLAST_1}, /* trip klaxon */
-	{EXPLOSV_NORMAL,	20,	0,	1,	20,	0,	BLAST_1}, /* shaped charge */
-	{EXPLOSV_FLARE,		0,	0,	10,	0,	0,	BLAST_1,}, /* break light */
-	{EXPLOSV_NORMAL,	25,	5,	4,	25,	1,	BLAST_1,}, /* GL grenade */
-	{EXPLOSV_TEARGAS,	0,	20,	3,	0,	0,	TARGAS_EXP,}, /* GL tear gas grenade*/
-	{EXPLOSV_STUN,		1,	50,	4,	0,	0,	STUN_BLAST,}, /* GL stun grenade */
-	{EXPLOSV_SMOKE,		0,	0,	3,	0,	0,	SMOKE_EXP,}, /* GL smoke grenade */
-
-	{EXPLOSV_SMOKE,		0,	0,	4,	0,	0,	SMOKE_EXP,}, /* smoke grenade */
-	{EXPLOSV_NORMAL,	60,	20,	6,	60,	2,	BLAST_2,}, /* Tank Shell */
-	{EXPLOSV_NORMAL,	100,	0,	0,	0,	0,	BLAST_1,}, /* Fake structure igniter */
-	{EXPLOSV_NORMAL,	100,	0,	1,	0,	0,	BLAST_1,}, /* creature cocktail */
-	{EXPLOSV_NORMAL,	50,	10,	5,	50,	2,	BLAST_2,}, /* fake struct explosion*/
-	{EXPLOSV_NORMAL,	50,	10,	5,	50,	2,	BLAST_3,}, /* fake vehicle explosion*/
-	{EXPLOSV_TEARGAS,	0,	40,	4,	0,	0,	TARGAS_EXP}, /* big tear gas */
-	{EXPLOSV_CREATUREGAS,	5,	0,	1,	0,	0,	NO_BLAST}, /* small creature gas*/
-	{EXPLOSV_CREATUREGAS,	8,	0,	3,	0,	0,	NO_BLAST}, /* big creature gas*/
-	{EXPLOSV_CREATUREGAS,	0,	0,	0,	0,	0,	NO_BLAST}, /* vry sm creature gas*/
-};
-
-
 // the amount of momentum reduction for the head, torso, and legs
 // used to determine whether the bullet will go through someone
 static const UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };

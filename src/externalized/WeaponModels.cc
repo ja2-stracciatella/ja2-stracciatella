@@ -596,7 +596,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	wep->attachSpringAndBoltUpgrade   = obj.getOptionalBool("attachment_SpringAndBoltUpgrade");
 	wep->attachGunBarrelExtender      = obj.getOptionalBool("attachment_GunBarrelExtender");
 
-	wep->fFlags |= wep->deserializeFlags(obj);
+	wep->fFlags |= ItemModel::deserializeFlags(obj);
 
 	ST::string replacement = obj.getOptionalString("standardReplacement");
 	if (!replacement.empty())

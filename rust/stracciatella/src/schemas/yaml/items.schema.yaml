@@ -11,7 +11,7 @@ items:
       description: |
         An item defines item properties of an item available in the game.
 
-        Note that weapons and magazines are not part of this list, but have their own definitions.
+        Note that explosives, weapons and magazines are not part of this list, but have their own definitions.
       type: object
       properties:
         usItemClass:

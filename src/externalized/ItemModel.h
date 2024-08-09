@@ -10,6 +10,7 @@
 
 class JsonObject;
 class JsonObject;
+struct ExplosiveModel;
 struct MagazineModel;
 struct WeaponModel;
 
@@ -88,6 +89,7 @@ struct ItemModel
 
 	virtual const WeaponModel* asWeapon() const   { return NULL; }
 	virtual const MagazineModel* asAmmo() const   { return NULL; }
+	virtual const ExplosiveModel* asExplosive() const   { return NULL; }
 
 	/** Check if the given attachment can be attached to the item. */
 	virtual bool canBeAttached(uint16_t attachment) const;
@@ -125,5 +127,5 @@ protected:
 	uint16_t   fFlags;
 
 	void serializeFlags(JsonObject &obj) const;
-	uint32_t deserializeFlags(JsonObject &obj) const;
+	static uint16_t deserializeFlags(const JsonObject &obj);
 };

@@ -149,17 +149,6 @@ struct ARMOURTYPE
 	UINT8 ubDegradePercent;
 };
 
-struct EXPLOSIVETYPE
-{
-	UINT8 ubType; // type of explosive
-	UINT8 ubDamage; // damage value
-	UINT8 ubStunDamage; // stun amount / 100
-	UINT8 ubRadius; // radius of effect
-	UINT8 ubVolume; // sound radius of explosion
-	UINT8 ubVolatility; // maximum chance of accidental explosion
-	UINT8 ubAnimationID; // Animation enum to use
-};
-
 enum class FireWeaponResult
 {
 	FAILED, FIRED, FIREABLE, JAMMED, UNJAMMED
@@ -168,7 +157,6 @@ enum class FireWeaponResult
 //GLOBALS
 
 extern ARMOURTYPE    const Armour[];
-extern EXPLOSIVETYPE const Explosive[];
 
 INT8 EffectiveArmour(const OBJECTTYPE* pObj);
 extern INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier );

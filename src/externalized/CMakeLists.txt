@@ -18,6 +18,8 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/DealerModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/DealerInventory.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/DefaultContentManager.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExplosionAnimationModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExplosiveModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GraphicModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/InventoryGraphicsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ItemModel.cc
