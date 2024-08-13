@@ -76,7 +76,10 @@ public:
 		return vec;
 	}
 
-	template<typename T>
+	// This template must be disabled for vector<bool> otherwise the compiler
+	// will choose it as being more specific for some value types of vec, such
+	// as rvalues.
+	template<typename T, std::enable_if_t<!std::is_same_v<bool, T>, bool> = true>
 	void SetVector(const ST::string& key, std::vector<T> && vec)
 	{
 		Set(key, STORABLE_TYPE{
@@ -89,7 +92,7 @@ public:
 
 	// Overload for the problematic vector<bool> to avoid a problem
 	// with Apple Clang or the STL implementation it uses.
-	void SetVector(const ST::string& key, std::vector<bool> const& bvec)
+	void SetVector(ST::string const& key, std::vector<bool> const& bvec)
 	{
 		std::vector<PRIMITIVE_VALUE> temp;
 		for (auto && val : bvec)
