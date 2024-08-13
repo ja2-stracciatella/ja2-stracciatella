@@ -141,12 +141,11 @@ void SavedGameStates::Deserialize(const ST::string& s)
 	for (const auto& key : obj.keys())
 	{
 		auto val = obj[key.c_str()];
-		STORABLE_TYPE v = DeserializeStorableType(val);
-		states[key] = v;
+		states[key] = DeserializeStorableType(val);
 	}
 }
 
-ST::string SavedGameStates::Serialize()
+ST::string SavedGameStates::Serialize() const
 {
 	JsonObject obj;
 	for (const auto& entry : states)
@@ -161,7 +160,7 @@ void SavedGameStates::Clear()
 	states.clear();
 }
 
-StateTable SavedGameStates::GetAll()
+StateTable const& SavedGameStates::GetAll() const noexcept
 {
 	return states;
 }
@@ -187,15 +186,15 @@ std::vector<std::pair<ST::string, ST::string>> GetModInfoFromGameStates(const Sa
 		auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: missing `{}` key", MODS_KEY);
 		throw std::runtime_error(errorMsg.c_str());
 	}
-	auto str = states.Get<ST::string>(MODS_KEY);
+	auto && str{ states.Get<ST::string>(MODS_KEY) };
 	auto json = JsonValue::deserialize(str);
 
 	for (auto& modJson : json.toVec()) {
 		auto obj = modJson.toObject();
-		ST::string name = obj.GetString("name");
-		ST::string version = obj.GetString("version");
-
-		mods.push_back(std::pair<ST::string, ST::string>(name, version));
+		mods.emplace_back(
+			obj.GetString("name"),
+			obj.GetString("version")
+		);
 	}
 
 	return mods;

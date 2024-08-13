@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Types.h"
+#include <iterator>
 #include <map>
-#include <string_theory/string>
 #include <utility>
 #include <variant>
+#include <string_theory/string>
 
 class DataReader;
 class DataWriter;
@@ -50,7 +51,7 @@ public:
 	 * @return
 	 * @throws std::out_of_range if the key was never set; throws std::bad_variant_access if the data type is different from what was set.
 	 */
-	template<typename T> T Get(const ST::string& key) const
+	template<typename T> decltype(auto) Get(const ST::string& key) const
 	{
 		return std::get<T>(states.at(key));
 	}
@@ -64,9 +65,9 @@ public:
 	 * @return a copy of vector
 	 */
 	template<typename T>
-	std::vector<T> GetVector(const ST::string& key)
+	auto GetVector(const ST::string& key) const
 	{
-		auto stored = std::get<std::vector<PRIMITIVE_VALUE>>(states.at(key));
+		auto && stored{ std::get<std::vector<PRIMITIVE_VALUE>>(states.at(key)) };
 		std::vector<T> vec;
 		for (auto& v : stored)
 		{
@@ -78,13 +79,12 @@ public:
 	template<typename T>
 	void SetVector(const ST::string& key, std::vector<T> && vec)
 	{
-		std::vector<PRIMITIVE_VALUE> stored;
-		for (auto const& v : vec)
-		{
-			PRIMITIVE_VALUE var{std::in_place_type<T>, v};
-			stored.push_back(var);
-		}
-		Set(key, STORABLE_TYPE{stored});
+		Set(key, STORABLE_TYPE{
+			std::vector<PRIMITIVE_VALUE> {
+				std::move_iterator{ vec.begin() },
+				std::move_iterator{ vec.end() }
+			}
+		});
 	}
 
 	/**
@@ -94,34 +94,36 @@ public:
 	 * @return a copy of the map
 	 */
 	template<typename V>
-	std::map<ST::string, V> GetMap(const ST::string& key)
+	auto GetMap(const ST::string& key) const
 	{
-		auto stored = std::get<std::map<ST::string, PRIMITIVE_VALUE>>(states.at(key));
+		auto && stored{ std::get<std::map<ST::string, PRIMITIVE_VALUE>>(states.at(key)) };
 		std::map<ST::string, V> map;
 		for (auto& pair : stored)
 		{
-			auto k = pair.first;
-			map[k] = std::get<V>(pair.second);
+			map[pair.first] = std::get<V>(pair.second);
 		}
 		return map;
 	}
 
 	template<typename T>
-	void SetMap(const ST::string& key, std::map<ST::string, T> vec)
+	void SetMap(const ST::string& key, std::map<ST::string, T> && map)
 	{
-		std::map<ST::string, PRIMITIVE_VALUE> stored;
-		stored.insert(vec.begin(), vec.end());
-		Set(key, STORABLE_TYPE{stored});
+		Set(key, STORABLE_TYPE{
+			std::map<ST::string, PRIMITIVE_VALUE> {
+				std::move_iterator{ map.begin() },
+				std::move_iterator{ map.end() }
+			}
+		});
 	}
 
 	void Deserialize(const ST::string&);
-	ST::string Serialize();
+	ST::string Serialize() const;
 
 	// Clears all states
 	void Clear();
 
 	// Returns the entire table of states. Usually you want to use Get<T> instead of this.
-	StateTable GetAll();
+	StateTable const& GetAll() const noexcept;
 private:
 	StateTable states;
 };
