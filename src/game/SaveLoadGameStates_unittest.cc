@@ -81,7 +81,9 @@ TEST(SaveLoadGameStatesTest, serializeJSONVector)
 	s.SetVector("S", std::vector<ST::string>{"a", "b"});
 
 	auto ss = s.Serialize();
-	EXPECT_EQ(ss, R"({"B":[false,true],"F":[4.5],"I":[3],"S":["a","b"]})");
+	ST::string expected{ R"({"B":[false,true],"F":[4.5],"I":[3],"S":["a","b"]})" };
+	EXPECT_TRUE(ss == expected);
+	EXPECT_EQ(ss, expected);
 }
 
 TEST(SaveLoadGameStatesTest, serializeJSONMap)
