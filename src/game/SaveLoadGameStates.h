@@ -92,11 +92,11 @@ public:
 	void SetVector(const ST::string& key, std::vector<bool> const& bvec)
 	{
 		std::vector<PRIMITIVE_VALUE> temp;
-		for (auto val : bvec)
+		for (auto && val : bvec)
 		{
-			temp.emplace_back(val);
+			temp.push_back(bool{val});
 		}
-		Set(key, std::move(temp));
+		Set(key, STORABLE_TYPE{ std::move(temp) });
 	}
 
 	/**
