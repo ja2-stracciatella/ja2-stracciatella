@@ -32,6 +32,17 @@ jobs:
     name: ${{ matrix.cfg.name }} ${{ github.ref }}
     runs-on: ${{ matrix.cfg.os }}
     steps:
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+      if: ${{ startsWith(matrix.cfg.os, 'ubuntu') }}
+      with:
+        tool-cache: false
+        android: false
+        dotnet: true
+        haskell: true
+        large-packages: false
+        docker-images: true
+        swap-storage: true
 
     - name: Context in env
       env:
