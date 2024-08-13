@@ -288,7 +288,6 @@ protected:
 	void loadTranslationTable();
 	void loadAllScriptRecords();
 
-	JsonValue readJsonFromString(const ST::string& jsonData, const ST::string& label) const;
 	JsonValue readJsonDataFileWithSchema(const ST::string& jsonPath) const;
 
 

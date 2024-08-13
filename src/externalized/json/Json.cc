@@ -8,6 +8,12 @@ JsonValue JsonValue::deserialize(const ST::string& str) {
 	return JsonValue(r);
 }
 
+JsonValue JsonValue::deserialize(const ST::string& vanillaStr, const ST::string& patchStr) {
+	auto r = RJsonValue_deserializeWithPatch(vanillaStr.c_str(), patchStr.c_str());
+	throwRustError(!r);
+	return JsonValue(r);
+}
+
 bool JsonValue::isVec() const {
 	return RJsonValue_isArray(m_value.get());
 }

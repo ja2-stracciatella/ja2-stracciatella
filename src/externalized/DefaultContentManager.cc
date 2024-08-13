@@ -754,22 +754,29 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 	return result;
 }
 
-JsonValue DefaultContentManager::readJsonFromString(const ST::string& jsonData, const ST::string& label) const
-{
-	auto r = JsonValue::deserialize(jsonData);
-	return r;
-}
-
 JsonValue DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
 	ST::string jsonData = f->readStringToEnd();
 
+	ST::string patchJsonData;
+	ST::string patchFileName = fileName.replace(".json", ".patch.json");
+	bool doesPatchExist = doesGameResExists(patchFileName);
+	if (doesPatchExist) {
+		AutoSGPFile pf(openGameResForReading(patchFileName));
+		patchJsonData = pf->readStringToEnd();
+	}
+
 	JsonValue v(0);
 	try {
-		v = readJsonFromString(jsonData, fileName);
+		if (doesPatchExist) {
+			v = JsonValue::deserialize(jsonData, patchJsonData);
+		}
+		else {
+			v = JsonValue::deserialize(jsonData);
+		}
 	} catch (const std::runtime_error &ex) {
-		throw std::runtime_error(ST::format("failed to read json file {}: {}", fileName, ex.what()).c_str());
+		throw std::runtime_error(ST::format("failed to read file {} or read/apply {}: {}", fileName, patchFileName, ex.what()).c_str());
 	}
 
 	return v;
