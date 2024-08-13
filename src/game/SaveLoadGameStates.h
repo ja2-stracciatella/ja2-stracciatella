@@ -87,6 +87,18 @@ public:
 		});
 	}
 
+	// Overload for the problematic vector<bool> to avoid a problem
+	// with Apple Clang or the STL implementation it uses.
+	void SetVector(const ST::string& key, std::vector<bool> const& bvec)
+	{
+		std::vector<PRIMITIVE_VALUE> temp;
+		for (auto val : bvec)
+		{
+			temp.emplace_back(val);
+		}
+		Set(key, std::move(temp));
+	}
+
 	/**
 	 * @tparam K
 	 * @tparam V
