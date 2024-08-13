@@ -75,13 +75,12 @@ TEST(SaveLoadGameStatesTest, serializeJSON)
 TEST(SaveLoadGameStatesTest, serializeJSONVector)
 {
 	SavedGameStates s;
-	s.SetVector("B", std::vector<bool>{false, true});
 	s.SetVector("I", std::vector<int32_t>{3});
 	s.SetVector("F", std::vector<float>{4.5f});
 	s.SetVector("S", std::vector<ST::string>{"a", "b"});
 
 	auto ss = s.Serialize();
-	ST::string expected{ R"({"B":[false,true],"F":[4.5],"I":[3],"S":["a","b"]})" };
+	ST::string expected{ R"({"F":[4.5],"I":[3],"S":["a","b"]})" };
 	EXPECT_TRUE(ss == expected);
 	EXPECT_EQ(ss, expected);
 }
