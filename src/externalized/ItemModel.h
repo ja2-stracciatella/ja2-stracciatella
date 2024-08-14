@@ -92,13 +92,20 @@ struct ItemModel
 	/** Check if the given attachment can be attached to the item. */
 	virtual bool canBeAttached(uint16_t attachment) const;
 
-	virtual JsonValue serialize() const;
+	struct InitData
+	{
+		JsonObject const& json;
+		VanillaItemStrings const& strings;
+	};
 
-	static ST::string deserializeShortName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings);
-	static ST::string deserializeName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings);
-	static ST::string deserializeDescription(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings);
+	virtual JsonValue serialize() const;
 	static const ItemModel* deserialize(const JsonValue &json, const VanillaItemStrings& vanillaItemStrings);
+
 protected:
+	static ST::string deserializeShortName(InitData const&);
+	static ST::string deserializeName(InitData const&);
+	static ST::string deserializeDescription(InitData const&);
+
 	uint16_t   itemIndex;
 	ST::string internalName;
 	ST::string shortName;
