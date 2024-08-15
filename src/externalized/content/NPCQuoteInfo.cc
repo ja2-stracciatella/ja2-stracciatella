@@ -1,7 +1,10 @@
+#include "ContentManager.h"
 #include "Exceptions.h"
-
+#include "Interface_Dialogue.h"
 #include "ItemModel.h"
 #include "Json.h"
+#include "NPC.h"
+#include "Quests.h"
 #include "content/NPCQuoteInfo.h"
 
 static uint8_t getApproachEnumFromString(const ST::string& s)
@@ -70,16 +73,15 @@ static uint8_t getQuestEnumFromString(const ST::string& s)
 	else throw DataError(ST::format("unknown quest name value: {}", s));
 }
 
-std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue& json, const MercSystem* mercSystem, const ItemSystem* itemSystem)
+std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue& json, const ContentManager * contentManager)
 {
 	auto reader = json.toObject();
 	auto jsonRecords = reader["records"].toVec();
-	int recordIndex = 0;
 	auto buf = std::make_unique<NPCQuoteInfo[]>(NUM_NPC_QUOTE_RECORDS);
-	for (int i = 0; i < jsonRecords.size(); i++)
+	for (auto const& jsonValue : jsonRecords)
 	{
-		auto jsonRec = jsonRecords[i].toObject();
-		recordIndex = jsonRec.GetUInt("index");
+		auto const jsonRec = jsonValue.toObject();
+		auto const recordIndex = jsonRec.GetUInt("index");
 		NPCQuoteInfo* rec = &buf[recordIndex];
 		rec->ubIdentifier = recordIndex;
 
@@ -93,7 +95,7 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 		else if (jsonRec.has("requiredItem"))
 		{
 			ST::string jsonItem = jsonRec.GetString("requiredItem");
-			const ItemModel* item = itemSystem->getItemByName(jsonItem);
+			const ItemModel* item = contentManager->getItemByName(jsonItem);
 			rec->sRequiredItem = item->getItemIndex();
 		}
 		else rec->sRequiredGridno = -jsonRec.getOptionalInt("requiredGridNo");
@@ -126,8 +128,7 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 		else if (jsonRec.has("triggerNPC"))
 		{
 			ST::string jsonProfileName = jsonRec.GetString("triggerNPC");
-			uint8_t jsonProfileId = (mercSystem->getMercProfileInfoByName(jsonProfileName))->profileID;
-			rec->ubTriggerNPC = jsonProfileId;
+			rec->ubTriggerNPC = contentManager->getMercProfileInfoByName(jsonProfileName)->profileID;
 		}
 		else rec->ubTriggerNPC = IRRELEVANT;
 
@@ -139,7 +140,7 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 			ST::string jsonItem = jsonRec.GetString("giftItem");
 			if (jsonItem != "65535")
 			{
-				const ItemModel* item = itemSystem->getItemByName(jsonItem);
+				const ItemModel* item = contentManager->getItemByName(jsonItem);
 				rec->usGiftItem = item->getItemIndex();
 			}
 			else rec->usGiftItem = 65535;
@@ -160,7 +161,7 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 			if (a.has("turnToFace"))
 			{
 				ST::string jsonProfileName = a.GetString("turnToFace");
-				uint8_t jsonProfileId = (mercSystem->getMercProfileInfoByName(jsonProfileName))->profileID;
+				uint8_t jsonProfileId = contentManager->getMercProfileInfoByName(jsonProfileName)->profileID;
 				result = NPC_ACTION_TURN_TO_FACE_NEAREST_MERC + jsonProfileId;
 			}
 			else if (a.has("code")) result = a.GetInt("code");
