@@ -23,6 +23,7 @@
 #include "OppList.h"
 #include "Overhead.h"
 #include "QuestText.h"
+#include "Quests.h"
 #include "Render_Fun.h"
 #include "Scheduling.h"
 #include "SkillCheck.h"

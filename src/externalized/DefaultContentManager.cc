@@ -1140,7 +1140,7 @@ void DefaultContentManager::loadAllScriptRecords()
 		auto reader = element.toObject();
 		ST::string jsonProfileName = reader.GetString("profile");
 		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
-		m_scriptRecords[jsonProfileId] = NPCQuoteInfo::deserialize(element, this, this);
+		m_scriptRecords[jsonProfileId] = NPCQuoteInfo::deserialize(element, this);
 	}
 
 	auto json2 = readJsonDataFileWithSchema("script-records-meanwhiles.json");
@@ -1150,11 +1150,11 @@ void DefaultContentManager::loadAllScriptRecords()
 		ST::string jsonProfileName = reader.GetString("profile");
 		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
 		uint8_t jsonMeanwhileId = reader.GetUInt("meanwhileIndex");
-		m_scriptRecordsMeanwhiles.insert_or_assign({ jsonMeanwhileId, jsonProfileId }, NPCQuoteInfo::deserialize(element, this, this));
+		m_scriptRecordsMeanwhiles.insert_or_assign({ jsonMeanwhileId, jsonProfileId }, NPCQuoteInfo::deserialize(element, this));
 	}
 
 	auto json3 = readJsonDataFileWithSchema("script-records-recruited.json");
-	m_scriptRecordsRecruited = NPCQuoteInfo::deserialize(json3.toVec()[0], this, this);
+	m_scriptRecordsRecruited = NPCQuoteInfo::deserialize(json3.toVec()[0], this);
 }
 
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const

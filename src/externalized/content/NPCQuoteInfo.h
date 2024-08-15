@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Interface_Dialogue.h"
-#include "ItemSystem.h"
-#include "MercSystem.h"
-#include "Quests.h"
-
+#include "ContentManager.h"
+#include "Json.h"
+#include "Types.h"
 #include <memory>
 
 constexpr UINT8 NO_QUEST = 255;
@@ -64,5 +62,5 @@ struct NPCQuoteInfo
 	UINT16  usGoToGridno;
 	INT16   sActionData;        // special action value
 
-	static std::unique_ptr<NPCQuoteInfo const []> deserialize(const JsonValue& json, const MercSystem* mercSystem, const ItemSystem* itemSystem);
+	static std::unique_ptr<NPCQuoteInfo const []> deserialize(const JsonValue& json, const ContentManager * contentManager);
 };
