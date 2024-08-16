@@ -3,42 +3,32 @@
 #include "Json.h"
 
 #include <map>
-#include <stdexcept>
 #include <stdint.h>
 #include <string_theory/string>
 
-#define NOAMMO (0)
-
 struct CalibreModel
 {
-	CalibreModel(uint16_t index,
-			ST::string internalName,
-			ST::string sound,
-			ST::string burstSound,
-			ST::string silencedSound,
-			ST::string silencedBurstSound,
-			bool showInHelpText,
-			bool monsterWeapon
-	);
+	static constexpr uint16_t NOAMMO = 0;
 
-	// This could be default in C++11
-	virtual ~CalibreModel();
+	[[nodiscard]] const ST::string* getName() const;
 
-	const ST::string* getName() const;
+	[[nodiscard]] JsonValue serialize() const;
+	[[nodiscard]] static CalibreModel* deserialize(const JsonValue &json);
 
-	virtual JsonValue serialize() const;
-	static CalibreModel* deserialize(const JsonValue &json);
+	[[nodiscard]] static const CalibreModel* getNoCalibreObject();
 
-	static const CalibreModel* getNoCalibreObject();
-
-	uint16_t index;
-	ST::string internalName;
+	uint16_t index{ NOAMMO };
+	ST::string internalName{ "NO_CALIBRE" };
 	ST::string sound;
 	ST::string burstSound;
 	ST::string silencedSound;
 	ST::string silencedBurstSound;
-	bool showInHelpText;
-	bool monsterWeapon;
+	bool showInHelpText{ false };
+	bool monsterWeapon{ false };
+
+private:
+	CalibreModel() = default;
+	CalibreModel(JsonObject jsonObj);
 };
 
 const CalibreModel* getCalibre(const ST::string& calibreName,
