@@ -1,8 +1,21 @@
 #include "ItemModel.h"
-
+#include <functional>
 #include <utility>
 
 
+namespace {
+auto deserializeHelper(ItemModel::InitData const& initData,
+	char const * propertyName,
+	decltype(&VanillaItemStrings::getName) getterMethod)
+{
+	auto result{ initData.json.getOptionalString(propertyName) };
+	if (result.empty()) {
+		result = std::invoke(getterMethod, initData.strings,
+		                     initData.json.GetUInt("itemIndex"));
+	}
+	return result;
+}
+}
 
 ItemModel::ItemModel(uint16_t itemIndex,
 			ST::string internalName,
@@ -175,44 +188,33 @@ JsonValue ItemModel::serialize() const
 	return obj.toValue();
 }
 
-ST::string ItemModel::deserializeShortName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
-	uint16_t itemIndex = obj.GetUInt("itemIndex");
-	ST::string shortName = vanillaItemStrings.getShortName(itemIndex);
-	if (!obj.getOptionalString("shortName").empty()) {
-		shortName = obj.getOptionalString("shortName");
-	}
-	return shortName;
+ST::string ItemModel::deserializeShortName(InitData const& initData)
+{
+	return deserializeHelper(initData, "shortName", &VanillaItemStrings::getShortName);
 }
 
-ST::string ItemModel::deserializeName(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
-	uint16_t itemIndex = obj.GetUInt("itemIndex");
-	ST::string name = vanillaItemStrings.getName(itemIndex);
-	if (!obj.getOptionalString("name").empty()) {
-		name = obj.getOptionalString("name");
-	}
-	return name;
+ST::string ItemModel::deserializeName(InitData const& initData)
+{
+	return deserializeHelper(initData, "name", &VanillaItemStrings::getName);
 }
 
-ST::string ItemModel::deserializeDescription(const JsonObject &obj, const VanillaItemStrings& vanillaItemStrings) {
-	uint16_t itemIndex = obj.GetUInt("itemIndex");
-	ST::string description = vanillaItemStrings.getDescription(itemIndex);
-	if (!obj.getOptionalString("description").empty()) {
-		description = obj.getOptionalString("description");
-	}
-	return description;
+ST::string ItemModel::deserializeDescription(InitData const& initData)
+{
+	return deserializeHelper(initData, "description", &VanillaItemStrings::getDescription);
 }
 
 const ItemModel* ItemModel::deserialize(const JsonValue &json, const VanillaItemStrings& vanillaItemStrings)
 {
 	auto obj = json.toObject();
+	InitData const initData{ obj, vanillaItemStrings };
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");
 	auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);
 	auto tileGraphic = TilesetTileIndexModel::deserialize(obj["tileGraphic"]);
 
-	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
-	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
-	auto description = ItemModel::deserializeDescription(obj, vanillaItemStrings);
+	auto shortName = ItemModel::deserializeShortName(initData);
+	auto name = ItemModel::deserializeName(initData);
+	auto description = ItemModel::deserializeDescription(initData);
 
 	auto* item = new ItemModel(
 		itemIndex,

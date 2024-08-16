@@ -2,6 +2,7 @@
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
+#include "ItemModel.h"
 #include <utility>
 
 MagazineModel::MagazineModel(uint16_t itemIndex_,
@@ -63,6 +64,7 @@ MagazineModel* MagazineModel::deserialize(
 	const VanillaItemStrings& vanillaItemStrings)
 {
 	auto obj = json.toObject();
+	ItemModel::InitData const initData{ obj, vanillaItemStrings };
 	int itemIndex                 = obj.GetInt("itemIndex");
 	ST::string internalName       = obj.GetString("internalName");
 	const CalibreModel *calibre   = getCalibre(obj.GetString("calibre"), calibreMap);
@@ -70,9 +72,9 @@ MagazineModel* MagazineModel::deserialize(
 	uint16_t capacity             = obj.GetInt("capacity");
 	const AmmoTypeModel *ammoType = getAmmoType(obj.GetString("ammoType"), ammoTypeMap);
 	bool dontUseAsDefaultMagazine = obj.getOptionalBool("dontUseAsDefaultMagazine");
-	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
-	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
-	auto description = ItemModel::deserializeDescription(obj, vanillaItemStrings);
+	auto shortName = ItemModel::deserializeShortName(initData);
+	auto name = ItemModel::deserializeName(initData);
+	auto description = ItemModel::deserializeDescription(initData);
 	MagazineModel *mag = new MagazineModel(
 		itemIndex,
 		internalName,

@@ -1,5 +1,6 @@
 #include "WeaponModels.h"
 #include "CalibreModel.h"
+#include "ItemModel.h"
 #include "Logger.h"
 #include "MagazineModel.h"
 #include "Points.h"
@@ -118,12 +119,13 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					const VanillaItemStrings& vanillaItemStrings)
 {
 	auto obj = json.toObject();
+	ItemModel::InitData const initData{ obj, vanillaItemStrings };
 	WeaponModel *wep = NULL;
 	int itemIndex = obj.GetInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");
-	auto shortName = ItemModel::deserializeShortName(obj, vanillaItemStrings);
-	auto name = ItemModel::deserializeName(obj, vanillaItemStrings);
-	auto description = ItemModel::deserializeDescription(obj, vanillaItemStrings);
+	auto shortName = ItemModel::deserializeShortName(initData);
+	auto name = ItemModel::deserializeName(initData);
+	auto description = ItemModel::deserializeDescription(initData);
 	ST::string internalType = obj.GetString("internalType");
 
 	if (internalType == WEAPON_TYPE_NOWEAPON)
