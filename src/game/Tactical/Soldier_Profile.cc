@@ -858,7 +858,7 @@ INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const& p)
 		if (buddy < 0)                     continue;
 		if (!IsMercOnTeam(buddy))          continue;
 		if (IsMercDead(GetProfile(buddy))) continue;
-		return buddy;
+		return i;
 	}
 	return -1;
 }

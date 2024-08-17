@@ -719,7 +719,7 @@ void HourlyMoraleUpdate()
 			{
 				INT8 const hated = WhichHated(s->ubProfile, other->ubProfile);
 				INT8 hated_time = 0;
-				if (hated > 2)
+				if (hated > 1)
 				{
 					// Learn to hate which has become full-blown hatred, full strength
 					found_hated = true;
