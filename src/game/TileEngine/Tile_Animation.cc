@@ -313,7 +313,7 @@ void UpdateAniTiles( )
 								Assert(pNode->uiFlags & ANITILE_EXPLOSION);
 								const EXPLOSIONTYPE* const e    = pNode->v.explosion;
 								const UINT16               item = e->usItem;
-								const UINT8 ubExpType = Explosive[GCM->getItem(item)->getClassIndex()].ubType;
+								const UINT8 ubExpType = GCM->getExplosive(item)->getType();
 
 								if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
 									ubExpType == EXPLOSV_SMOKE )
@@ -324,7 +324,7 @@ void UpdateAniTiles( )
 								}
 								else
 								{
-									SpreadEffect(pNode->sGridNo, Explosive[GCM->getItem(item)->getClassIndex()].ubRadius, item, e->owner, FALSE, e->bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, GCM->getExplosive(item)->getRadius(), item, e->owner, FALSE, e->bLevel, NULL);
 								}
 								// Forfait any other animations this frame....
 								return;

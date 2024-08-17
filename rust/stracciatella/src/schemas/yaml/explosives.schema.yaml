@@ -1,0 +1,71 @@
+$schema: http://json-schema.org/schema#
+type: array
+title: Explosives
+description: |
+  **Limitations**: Currently this file should not be changed.
+items:
+  allOf:
+    - title: Base Item
+      $ref: types/base-item.schema.yaml
+    - title: Item
+      description: |
+        An explosive item defines that can be used in game.
+      type: object
+      properties:
+        animation:
+          title: Animation ID
+          description: ID of the explosion animation used for this explosive
+          $ref: types/id.schema.yaml
+        cursor:
+          title: Cursor
+          description: The cursor to use when the item is used
+          $ref: types/item-cursor.schema.yaml
+        damage:
+          title: Damage
+          description: The damage caused by this item
+          $ref: types/uint8.schema.yaml
+        itemClass:
+          title: Item class
+          description: The item class of the item
+          type: string
+          enum:
+            - GRENADE
+            - BOMB
+        radius:
+          title: Radius
+          description: The radius of the effect caused by this item
+          $ref: types/uint8.schema.yaml
+        stunDamage:
+          title: Stun damage
+          description: The stun amount of the effect
+          $ref: types/uint8.schema.yaml
+        type:
+          title: Explosive Type
+          description: What kind of explosive is this?
+          type: string
+          enum:
+            - NORMAL
+            - STUN
+            - TEARGAS
+            - MUSTGAS
+            - FLARE
+            - NOISE
+            - SMOKE
+            - CREATUREGAS
+        noise:
+          title: Noise
+          description: The noise radius of the explosion
+          $ref: types/uint8.schema.yaml
+        volatility:
+          title: Volatility
+          description: Maxium chance of accidential explosion
+          $ref: types/uint8.schema.yaml
+      required:
+      - cursor
+      - damage
+      - itemClass
+      - radius
+      - noise
+      - stunDamage
+      - type
+      - volatility

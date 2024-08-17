@@ -1,0 +1,1040 @@
+[
+    {
+        "itemIndex": 131,
+        "internalName": "STUN_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "STUN_BLAST",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 38
+            },
+            "big": {
+                "path": "bigitems/p1item38.sti"
+            }
+        },
+        "type": "STUN",
+        "damage": 1,
+        "stunDamage": 70,
+        "radius": 4,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 6,
+        "ubPerPocket": 4,
+        "usPrice": 100,
+        "ubCoolness": 6,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 39
+        }
+    },
+    {
+        "itemIndex": 132,
+        "internalName": "TEARGAS_GRENADE",
+        "animation": "TARGAS_EXP",
+        "itemClass": "GRENADE",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 48
+            },
+            "big": {
+                "path": "bigitems/p1item48.sti"
+            }
+        },
+        "type": "TEARGAS",
+        "damage": 0,
+        "stunDamage": 20,
+        "radius": 4,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 6,
+        "ubPerPocket": 4,
+        "usPrice": 120,
+        "ubCoolness": 5,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 49
+        }
+    },
+    {
+        "itemIndex": 133,
+        "internalName": "MUSTARD_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "MUSTARD_EXP",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 41
+            },
+            "big": {
+                "path": "bigitems/p1item41.sti"
+            }
+        },
+        "type": "MUSTGAS",
+        "damage": 15,
+        "stunDamage": 40,
+        "radius": 4,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 6,
+        "ubPerPocket": 4,
+        "usPrice": 500,
+        "ubCoolness": 8,
+        "bReliability": 0,
+        "bRepairEase": -3,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 42
+        }
+    },
+    {
+        "itemIndex": 134,
+        "internalName": "MINI_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "BLAST_1",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 50
+            },
+            "big": {
+                "path": "bigitems/p1item50.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 15,
+        "stunDamage": 7,
+        "radius": 3,
+        "noise": 15,
+        "volatility": 1,
+        "ubWeight": 3,
+        "ubPerPocket": 6,
+        "usPrice": 150,
+        "ubCoolness": 6,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 51
+        }
+    },
+    {
+        "itemIndex": 135,
+        "internalName": "HAND_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "BLAST_1",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 49
+            },
+            "big": {
+                "path": "bigitems/p1item49.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 25,
+        "stunDamage": 10,
+        "radius": 4,
+        "noise": 25,
+        "volatility": 1,
+        "ubWeight": 6,
+        "ubPerPocket": 4,
+        "usPrice": 200,
+        "ubCoolness": 7,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 50
+        }
+    },
+    {
+        "itemIndex": 136,
+        "internalName": "RDX",
+        "itemClass": "BOMB",
+        "animation": "BLAST_2",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 3
+            },
+            "big": {
+                "path": "bigitems/p2item03.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 40,
+        "stunDamage": 12,
+        "radius": 5,
+        "noise": 20,
+        "volatility": 10,
+        "ubWeight": 11,
+        "ubPerPocket": 2,
+        "usPrice": 400,
+        "ubCoolness": 7,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 4
+        }
+    },
+    {
+        "itemIndex": 137,
+        "internalName": "TNT",
+        "itemClass": "BOMB",
+        "animation": "BLAST_2",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p2item00.sti"
+            }
+        },
+        "type": "NORMAL",
+        "stunDamage": 15,
+        "damage": 50,
+        "radius": 5,
+        "noise": 50,
+        "volatility": 2,
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 500,
+        "ubCoolness": 6,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 138,
+        "internalName": "HMX",
+        "itemClass": "BOMB",
+        "animation": "BLAST_2",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 23
+            },
+            "big": {
+                "path": "bigitems/p2item23.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 60,
+        "stunDamage": 15,
+        "radius": 6,
+        "noise": 60,
+        "volatility": 2,
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 1000,
+        "ubCoolness": 8,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 24
+        }
+    },
+    {
+        "itemIndex": 139,
+        "internalName": "C1",
+        "itemClass": "BOMB",
+        "animation": "BLAST_2",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 45
+            },
+            "big": {
+                "path": "bigitems/p1item45.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 55,
+        "stunDamage": 15,
+        "radius": 6,
+        "noise": 55,
+        "volatility": 0,
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 750,
+        "ubCoolness": 7,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 46
+        }
+    },
+    {
+        "itemIndex": 140,
+        "internalName": "MORTAR_SHELL",
+        "itemClass": "BOMB",
+        "animation": "BLAST_2",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 50,
+        "stunDamage": 22,
+        "radius": 6,
+        "noise": 50,
+        "volatility": 2,
+        "ubWeight": 41,
+        "ubPerPocket": 2,
+        "usPrice": 400,
+        "ubCoolness": 9,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
+    },
+    {
+        "itemIndex": 141,
+        "internalName": "MINE",
+        "itemClass": "BOMB",
+        "animation": "BLAST_1",
+        "cursor": "BOMB",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 46
+            },
+            "big": {
+                "path": "bigitems/p1item46.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 30,
+        "stunDamage": 30,
+        "radius": 2,
+        "noise": 30,
+        "volatility": 2,
+        "ubWeight": 8,
+        "ubPerPocket": 1,
+        "usPrice": 300,
+        "ubCoolness": 5,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 47
+        }
+    },
+    {
+        "itemIndex": 142,
+        "internalName": "C4",
+        "itemClass": "BOMB",
+        "animation": "BLAST_1",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 44
+            },
+            "big": {
+                "path": "bigitems/p1item44.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 65,
+        "stunDamage": 30,
+        "radius": 7,
+        "noise": 65,
+        "volatility": 0,
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 1500,
+        "ubCoolness": 9,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 45
+        }
+    },
+    {
+        "itemIndex": 143,
+        "internalName": "TRIP_FLARE",
+        "itemClass": "BOMB",
+        "animation": "BLAST_1",
+        "cursor": "BOMB",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 42
+            },
+            "big": {
+                "path": "bigitems/p1item42.sti"
+            }
+        },
+        "type": "FLARE",
+        "damage": 0,
+        "stunDamage": 0,
+        "radius": 10,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 4,
+        "ubPerPocket": 2,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 43
+        }
+    },
+    {
+        "itemIndex": 144,
+        "internalName": "TRIP_KLAXON",
+        "itemClass": "BOMB",
+        "animation": "BLAST_1",
+        "cursor": "BOMB",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 43
+            },
+            "big": {
+                "path": "bigitems/p1item43.sti"
+            }
+        },
+        "type": "NOISE",
+        "damage": 0,
+        "stunDamage": 0,
+        "radius": 50,
+        "noise": 50,
+        "volatility": 0,
+        "ubWeight": 4,
+        "ubPerPocket": 2,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 44
+        }
+    },
+    {
+        "itemIndex": 145,
+        "internalName": "SHAPED_CHARGE",
+        "itemClass": "BOMB",
+        "animation": "BLAST_1",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 107
+            },
+            "big": {
+                "path": "bigitems/p1item107.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 20,
+        "stunDamage": 0,
+        "radius": 1,
+        "noise": 20,
+        "volatility": 0,
+        "ubWeight": 2,
+        "ubPerPocket": 4,
+        "usPrice": 250,
+        "ubCoolness": 6,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 108
+        }
+    },
+    {
+        "itemIndex": 146,
+        "internalName": "BREAK_LIGHT",
+        "itemClass": "GRENADE",
+        "animation": "BLAST_1",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 24
+            },
+            "big": {
+                "path": "bigitems/p2item24.sti"
+            }
+        },
+        "type": "FLARE",
+        "damage": 0,
+        "stunDamage": 0,
+        "radius": 10,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 1,
+        "ubPerPocket": 6,
+        "usPrice": 50,
+        "ubCoolness": 3,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bDamageable": true,
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 25
+        }
+    },
+    {
+        "itemIndex": 147,
+        "internalName": "GL_HE_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "BLAST_1",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 97
+            },
+            "big": {
+                "path": "bigitems/p1item97.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 25,
+        "stunDamage": 5,
+        "radius": 4,
+        "noise": 25,
+        "volatility": 1,
+        "ubWeight": 10,
+        "ubPerPocket": 4,
+        "usPrice": 400,
+        "ubCoolness": 8,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 98
+        }
+    },
+    {
+        "itemIndex": 148,
+        "internalName": "GL_TEARGAS_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "TARGAS_EXP",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 111
+            },
+            "big": {
+                "path": "bigitems/p1item111.sti"
+            }
+        },
+        "type": "TEARGAS",
+        "damage": 0,
+        "stunDamage": 20,
+        "radius": 3,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 10,
+        "ubPerPocket": 4,
+        "usPrice": 250,
+        "ubCoolness": 6,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 112
+        }
+    },
+    {
+        "itemIndex": 149,
+        "internalName": "GL_STUN_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "STUN_BLAST",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 113
+            },
+            "big": {
+                "path": "bigitems/p1item113.sti"
+            }
+        },
+        "type": "STUN",
+        "damage": 1,
+        "stunDamage": 50,
+        "radius": 4,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 10,
+        "ubPerPocket": 4,
+        "usPrice": 200,
+        "ubCoolness": 5,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 114
+        }
+    },
+    {
+        "itemIndex": 150,
+        "internalName": "GL_SMOKE_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "SMOKE_EXP",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 112
+            },
+            "big": {
+                "path": "bigitems/p1item112.sti"
+            }
+        },
+        "type": "SMOKE",
+        "damage": 0,
+        "stunDamage": 0,
+        "radius": 3,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 10,
+        "ubPerPocket": 4,
+        "usPrice": 100,
+        "ubCoolness": 7,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 113
+        }
+    },
+    {
+        "itemIndex": 151,
+        "internalName": "SMOKE_GRENADE",
+        "itemClass": "GRENADE",
+        "animation": "SMOKE_EXP",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 98
+            },
+            "big": {
+                "path": "bigitems/p1item98.sti"
+            }
+        },
+        "type": "SMOKE",
+        "damage": 0,
+        "stunDamage": 0,
+        "radius": 4,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 6,
+        "ubPerPocket": 4,
+        "usPrice": 50,
+        "ubCoolness": 4,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 99
+        }
+    },
+    {
+        "itemIndex": 152,
+        "internalName": "TANK_SHELL",
+        "itemClass": "BOMB",
+        "animation": "BLAST_2",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 60,
+        "stunDamage": 20,
+        "radius": 6,
+        "noise": 60,
+        "volatility": 2,
+        "ubWeight": 41,
+        "ubPerPocket": 8,
+        "usPrice": 450,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
+    },
+    {
+        "itemIndex": 153,
+        "internalName": "STRUCTURE_IGNITE",
+        "itemClass": "BOMB",
+        "animation": "BLAST_1",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 100,
+        "stunDamage": 0,
+        "radius": 0,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 41,
+        "ubPerPocket": 2,
+        "usPrice": 450,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
+    },
+    {
+        "itemIndex": 154,
+        "internalName": "CREATURE_COCKTAIL",
+        "itemClass": "GRENADE",
+        "animation": "BLAST_1",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 37
+            },
+            "big": {
+                "path": "bigitems/p2item37.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 100,
+        "stunDamage": 0,
+        "radius": 1,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 6,
+        "ubPerPocket": 4,
+        "usPrice": 50,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bDamageable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 38
+        }
+    },
+    {
+        "itemIndex": 155,
+        "internalName": "STRUCTURE_EXPLOSION",
+        "itemClass": "BOMB",
+        "animation": "BLAST_2",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 50,
+        "stunDamage": 10,
+        "radius": 5,
+        "noise": 50,
+        "volatility": 2,
+        "ubWeight": 41,
+        "ubPerPocket": 2,
+        "usPrice": 450,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
+    },
+    {
+        "itemIndex": 156,
+        "internalName": "GREAT_BIG_EXPLOSION",
+        "itemClass": "BOMB",
+        "animation": "BLAST_3",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
+        "type": "NORMAL",
+        "damage": 50,
+        "stunDamage": 10,
+        "radius": 5,
+        "noise": 50,
+        "volatility": 2,
+        "ubWeight": 41,
+        "ubPerPocket": 2,
+        "usPrice": 450,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "bDamageable": true,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
+    },
+    {
+        "itemIndex": 157,
+        "internalName": "BIG_TEAR_GAS",
+        "itemClass": "GRENADE",
+        "animation": "TARGAS_EXP",
+        "cursor": "TOSS",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 48
+            },
+            "big": {
+                "path": "bigitems/p1item48.sti"
+            }
+        },
+        "type": "TEARGAS",
+        "damage": 0,
+        "stunDamage": 40,
+        "radius": 4,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 6,
+        "ubPerPocket": 4,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 49
+        }
+    },
+    {
+        "itemIndex": 158,
+        "internalName": "SMALL_CREATURE_GAS",
+        "itemClass": "GRENADE",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "type": "CREATUREGAS",
+        "damage": 5,
+        "stunDamage": 0,
+        "radius": 1,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 0,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 159,
+        "internalName": "LARGE_CREATURE_GAS",
+        "itemClass": "GRENADE",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "type": "CREATUREGAS",
+        "damage": 8,
+        "stunDamage": 0,
+        "radius": 3,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 0,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 160,
+        "internalName": "VERY_SMALL_CREATURE_GAS",
+        "itemClass": "GRENADE",
+        "cursor": "INVALID",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "type": "CREATUREGAS",
+        "damage": 0,
+        "stunDamage": 0,
+        "radius": 0,
+        "noise": 0,
+        "volatility": 0,
+        "ubWeight": 0,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    }
+]

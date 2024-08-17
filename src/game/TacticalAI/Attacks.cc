@@ -24,6 +24,7 @@
 
 #include "CalibreModel.h"
 #include "ContentManager.h"
+#include "ExplosiveModel.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
@@ -421,7 +422,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		{
 			return;	// no shells, can't fire the MORTAR
 		}
-		ubSafetyMargin = Explosive[ GCM->getItem(MORTAR_SHELL)->getClassIndex() ].ubRadius;
+		ubSafetyMargin = GCM->getExplosive(MORTAR_SHELL)->getRadius();
 	}
 	// if he's got a GL in his hand, make sure he has some type of GRENADE avail.
 	else if (usInHand == GLAUNCHER)
@@ -432,7 +433,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		{
 			return;	// no grenades, can't fire the GLAUNCHER
 		}
-		ubSafetyMargin = Explosive[ GCM->getItem(pSoldier->inv[ bPayloadPocket ].usItem)->getClassIndex() ].ubRadius;
+		ubSafetyMargin = GCM->getExplosive(pSoldier->inv[ bPayloadPocket ].usItem)->getRadius();
 		usGrenade = pSoldier->inv[ bPayloadPocket ].usItem;
 	}
 	else if (usInHand == ROCKET_LAUNCHER)
@@ -440,7 +441,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		// put in hand
 		bPayloadPocket = HANDPOS;
 		// as C1
-		ubSafetyMargin = Explosive[ GCM->getItem(C1)->getClassIndex() ].ubRadius;
+		ubSafetyMargin = GCM->getExplosive(C1)->getRadius();
 	}
 	else if (usInHand == TANK_CANNON)
 	{
@@ -449,14 +450,14 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		{
 			return;	// no grenades, can't fire the GLAUNCHER
 		}
-		ubSafetyMargin = Explosive[ GCM->getItem(TANK_SHELL)->getClassIndex() ].ubRadius;
+		ubSafetyMargin = GCM->getExplosive(TANK_SHELL)->getRadius();
 
 	}
 	else
 	{
 		// else it's a plain old grenade, now in his hand
 		bPayloadPocket = HANDPOS;
-		ubSafetyMargin = Explosive[ GCM->getItem(pSoldier->inv[ bPayloadPocket ].usItem)->getClassIndex() ].ubRadius;
+		ubSafetyMargin = GCM->getExplosive(pSoldier->inv[ bPayloadPocket ].usItem)->getRadius();
 		usGrenade = pSoldier->inv[ bPayloadPocket ].usItem;
 
 		if (usGrenade == BREAK_LIGHT)
@@ -1446,8 +1447,8 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 			case CREATURE_OLD_MALE_SPIT: gas = SMALL_CREATURE_GAS;      break;
 			default:                     gas = VERY_SMALL_CREATURE_GAS; break;
 		}
-		const EXPLOSIVETYPE* const e = &Explosive[GCM->getItem(gas)->getClassIndex()];
-		iDamage += e->ubDamage * NumMercsCloseTo(pOpponent->sGridNo, e->ubRadius) * 3 / 2;
+		const ExplosiveModel* e = GCM->getExplosive(gas);
+		iDamage += e->getDamage() * NumMercsCloseTo(pOpponent->sGridNo, e->getRadius()) * 3 / 2;
 	}
 
 	if (iDamage < 1)
@@ -1459,10 +1460,10 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 
 static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIERTYPE* pOpponent, INT16 sGridno)
 {
-	UINT8 ubExplosiveIndex;
 	INT32 iExplosDamage, iBreathDamage, iArmourAmount, iDamage = 0;
 	INT8  bSlot;
 
+	const ExplosiveModel* explosive = nullptr;
 	switch ( pSoldier->inv[ ubItemPos ].usItem )
 	{
 		case GL_SMOKE_GRENADE:
@@ -1472,10 +1473,10 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 			// too high
 			return( 5 );
 		case ROCKET_LAUNCHER:
-			ubExplosiveIndex = GCM->getItem(C1)->getClassIndex();
+			explosive = GCM->getExplosive(C1);
 			break;
 		default:
-			ubExplosiveIndex = GCM->getItem(pSoldier->inv[ubItemPos].usItem)->getClassIndex();
+			explosive = GCM->getExplosive(pSoldier->inv[ubItemPos].usItem);
 			break;
 	}
 
@@ -1486,10 +1487,10 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 	}
 
 
-	iExplosDamage = ( ( (INT32) Explosive[ ubExplosiveIndex ].ubDamage ) * 3) / 2;
-	iBreathDamage = ( ( (INT32) Explosive[ ubExplosiveIndex ].ubStunDamage ) * 5) / 4;
+	iExplosDamage = ( ( (INT32) explosive->getDamage() ) * 3) / 2;
+	iBreathDamage = ( ( (INT32) explosive->getStunDamage() ) * 5) / 4;
 
-	if ( Explosive[ ubExplosiveIndex ].ubType == EXPLOSV_TEARGAS || Explosive[ ubExplosiveIndex ].ubType == EXPLOSV_MUSTGAS )
+	if ( explosive->getType() == EXPLOSV_TEARGAS || explosive->getType() == EXPLOSV_MUSTGAS )
 	{
 		// if target gridno is outdoors (where tear gas lasts only 1-2 turns)
 		if (gpWorldLevelData[sGridno].ubTerrainID != FLAT_FLOOR)

@@ -21,6 +21,8 @@ class CacheSectorsModel;
 class CreatureLairModel;
 class DealerInventory;
 class DealerModel;
+class ExplosionAnimationModel;
+class ExplosiveModel;
 class FactParamsModel;
 class GamePolicy;
 class GarrisonGroupModel;
@@ -114,6 +116,10 @@ public:
 	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const = 0;
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
+
+	virtual const ExplosionAnimationModel* getExplosionAnimation(uint8_t id) = 0;
+	virtual const ExplosiveModel* getExplosive(uint16_t index) = 0;
+	virtual const ExplosiveModel* getExplosiveByName(const ST::string &name) = 0;
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const = 0;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const = 0;

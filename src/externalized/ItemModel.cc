@@ -138,7 +138,7 @@ void ItemModel::serializeFlags(JsonObject &obj) const
 	if(getFlags() & ITEM_INSEPARABLE)         { obj.set("bInseparable", true);    }
 }
 
-uint32_t ItemModel::deserializeFlags(JsonObject &obj) const
+uint16_t ItemModel::deserializeFlags(const JsonObject &obj)
 {
 	uint32_t flags = 0;
 	if(obj.getOptionalBool("bDamageable"))        { flags |= ITEM_DAMAGEABLE;             }
@@ -215,8 +215,9 @@ const ItemModel* ItemModel::deserialize(const JsonValue &json, const VanillaItem
 	auto shortName = ItemModel::deserializeShortName(initData);
 	auto name = ItemModel::deserializeName(initData);
 	auto description = ItemModel::deserializeDescription(initData);
+	auto flags = ItemModel::deserializeFlags(obj);
 
-	auto* item = new ItemModel(
+	return new ItemModel(
 		itemIndex,
 		internalName,
 		shortName,
@@ -233,8 +234,6 @@ const ItemModel* ItemModel::deserialize(const JsonValue &json, const VanillaItem
 		obj.GetUInt("ubCoolness"),
 		obj.GetInt("bReliability"),
 		obj.GetInt("bRepairEase"),
-		0
+		flags
 	);
-	item->fFlags = item->deserializeFlags(obj);
-	return item;
 }

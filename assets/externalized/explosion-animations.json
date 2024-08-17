@@ -1,0 +1,99 @@
+[
+    {
+        "id": 1,
+        "name": "BLAST_1",
+        "blastSpeed": 80,
+        "damageKeyframe": 3,
+        "graphics": "tilecache/zgrav_d.sti",
+        "sounds": [
+            "sounds/explode1.wav",
+            "sounds/explosion 10.wav"
+        ],
+        "transparentKeyframe": 17,
+        "waterAnimation": "WATER_BLAST"
+    },
+    {
+        "id": 2,
+        "name": "BLAST_2",
+        "blastSpeed": 80,
+        "damageKeyframe": 5,
+        "graphics": "tilecache/zgrav_c.sti",
+        "sounds": [
+            "sounds/explosion 12.wav"
+        ],
+        "transparentKeyframe": 28,
+        "waterAnimation": "WATER_BLAST"
+    },
+    {
+        "id": 3,
+        "name": "BLAST_3",
+        "blastSpeed": 80,
+        "damageKeyframe": 5,
+        "graphics": "tilecache/zgrav_b.sti",
+        "sounds": [
+            "sounds/explosion 12.wav"
+        ],
+        "transparentKeyframe": 24,
+        "waterAnimation": "WATER_BLAST"
+    },
+    {
+        "id": 4,
+        "name": "STUN_BLAST",
+        "blastSpeed": 20,
+        "damageKeyframe": 5,
+        "graphics": "tilecache/shckwave.sti",
+        "sounds": [
+            "sounds/explode1.wav",
+            "sounds/explosion 10.wav"
+        ],
+        "transparentKeyframe": 1,
+        "waterAnimation": "WATER_BLAST"
+    },
+    {
+        "id": 5,
+        "name": "WATER_BLAST",
+        "blastSpeed": 80,
+        "damageKeyframe": 18,
+        "graphics": "tilecache/wat_exp.sti",
+        "sounds": [
+            "sounds/air escaping.wav"
+        ],
+        "transparentKeyframe": 1
+    },
+    {
+        "id": 6,
+        "name": "TARGAS_EXP",
+        "blastSpeed": 80,
+        "damageKeyframe": 18,
+        "graphics": "tilecache/tear_exp.sti",
+        "sounds": [
+            "sounds/air escaping.wav"
+        ],
+        "transparentKeyframe": 1,
+        "waterAnimation": "WATER_BLAST"
+    },
+    {
+        "id": 7,
+        "name": "SMOKE_EXP",
+        "blastSpeed": 80,
+        "damageKeyframe": 18,
+        "graphics": "tilecache/tear_exp.sti",
+        "sounds": [
+            "sounds/air escaping.wav"
+        ],
+        "transparentKeyframe": 1,
+        "waterAnimation": "WATER_BLAST"
+    },
+    {
+        "id": 8,
+        "name": "MUSTARD_EXP",
+        "blastSpeed": 80,
+        "damageKeyframe": 18,
+        "graphics": "tilecache/must_exp.sti",
+        "sounds": [
+            "sounds/air escaping.wav"
+        ],
+        "transparentKeyframe": 1,
+        "waterAnimation": "WATER_BLAST"
+    }
+]

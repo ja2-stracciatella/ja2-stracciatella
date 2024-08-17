@@ -1,0 +1,45 @@
+$schema: http://json-schema.org/schema#
+type: array
+title: Explosion Animations
+items:
+  type: object
+  title: Explosion Animation
+  description: Animation that can be used for explosions
+  properties:
+    blastSpeed:
+      title: Blast speed
+      $ref: types/uint8.schema.yaml
+    damageKeyframe:
+      title: Damage keyframe
+      $ref: types/uint8.schema.yaml
+    graphics:
+      title: Graphics
+      $ref: types/resource-path.schema.yaml
+    id:
+      title: Internal numeric id.
+      $ref: types/uint8.schema.yaml
+    name:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    sounds:
+      title: Sounds
+      description: A random sound from this list will be chosen when the explosion happens
+      type: array
+      minLength: 1
+      items:
+        $ref: types/resource-path.schema.yaml
+    transparentKeyframe:
+      title: Transparent keyframe
+      $ref: types/uint8.schema.yaml
+    waterAnimation:
+      title: Water Animation
+      description: Cross reference to another explosion animation that is used when the explosion happens on water
+      $ref: types/id.schema.yaml
+  required:
+    - blastSpeed
+    - damageKeyframe
+    - graphics
+    - id
+    - name
+    - sounds
+    - transparentKeyframe

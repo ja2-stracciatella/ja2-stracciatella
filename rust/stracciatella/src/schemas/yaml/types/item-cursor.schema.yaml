@@ -1,0 +1,28 @@
+$schema: http://json-schema.org/schema#
+type: string
+title: Item Cursor
+description: The cursor when the item is used
+enum:
+  - INVALID
+  - QUEST
+  - PUNCH
+  - TARGET
+  - KNIFE
+  - AID
+  - TOSS
+  - MINE
+  - LPICK
+  - MDETECT
+  - CROWBAR
+  - SURVCAM
+  - CAMERA
+  - KEY
+  - SAW
+  - WIRECUT
+  - REMOTE
+  - BOMB
+  - REPAIR
+  - TRAJECTORY
+  - JAR
+  - TINCAN
+  - REFUEL

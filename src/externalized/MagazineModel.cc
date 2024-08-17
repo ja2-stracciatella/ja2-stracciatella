@@ -88,7 +88,7 @@ MagazineModel* MagazineModel::deserialize(
 		dontUseAsDefaultMagazine
 	);
 
-	mag->fFlags = mag->deserializeFlags(obj);
+	mag->fFlags = ItemModel::deserializeFlags(obj);
 
 	const auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);
 	const auto tileGraphic = TilesetTileIndexModel::deserialize(obj["tileGraphic"]);

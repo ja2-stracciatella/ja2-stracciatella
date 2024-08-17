@@ -1523,7 +1523,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 					bPosOfMask = NO_SLOT;
 				}
 
-				EXPLOSIVETYPE const* pExplosive = 0;
+				const ExplosiveModel* pExplosive = nullptr;
 				if (!AM_A_ROBOT(pSoldier))
 				{
 					if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_TEARGAS)
@@ -1531,14 +1531,14 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						if (!(pSoldier->fHitByGasFlags & HIT_BY_TEARGAS) && bPosOfMask == NO_SLOT)
 						{
 							// check for gas mask
-							pExplosive = &Explosive[GCM->getItem(TEARGAS_GRENADE)->getClassIndex()];
+							pExplosive = GCM->getExplosive(TEARGAS_GRENADE);
 						}
 					}
 					if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_MUSTARDGAS)
 					{
 						if (!(pSoldier->fHitByGasFlags & HIT_BY_MUSTARDGAS) && bPosOfMask == NO_SLOT)
 						{
-							pExplosive = &Explosive[GCM->getItem(MUSTARD_GRENADE)->getClassIndex()];
+							pExplosive = GCM->getExplosive(MUSTARD_GRENADE);
 						}
 					}
 				}
@@ -1546,14 +1546,14 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					if (!(pSoldier->fHitByGasFlags & HIT_BY_CREATUREGAS)) // gas mask doesn't help vs creaturegas
 					{
-						pExplosive = &Explosive[GCM->getItem(SMALL_CREATURE_GAS)->getClassIndex()];
+						pExplosive = GCM->getExplosive(SMALL_CREATURE_GAS);
 					}
 				}
 				if (pExplosive)
 				{
 					EVENT_StopMerc(pSoldier);
 					fDontContinue = TRUE;
-					DishOutGasDamage(pSoldier, pExplosive, TRUE, FALSE, pExplosive->ubDamage + PreRandom(pExplosive->ubDamage), 100 * (pExplosive->ubStunDamage + PreRandom(pExplosive->ubStunDamage / 2)), NULL);
+					DishOutGasDamage(pSoldier, pExplosive, TRUE, FALSE, pExplosive->getDamage() + PreRandom(pExplosive->getDamage()), 100 * (pExplosive->getStunDamage() + PreRandom(pExplosive->getStunDamage() / 2)), NULL);
 				}
 			}
 

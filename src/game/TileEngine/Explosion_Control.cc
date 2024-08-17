@@ -6,6 +6,7 @@
 #include "ContentManager.h"
 #include "Debug.h"
 #include "Directories.h"
+#include "ExplosionAnimationModel.h"
 #include "FOV.h"
 #include "GameInstance.h"
 #include "GameSettings.h"
@@ -58,28 +59,6 @@
 #include "WorldMan.h"
 #include "World_Items.h"
 
-struct ExplosionInfo
-{
-	const char* blast_anim;
-	SoundID     sound;
-	UINT8       blast_speed;
-	UINT8       transparent_key_frame;
-	UINT8       damage_key_frame;
-};
-
-static const ExplosionInfo explosion_info[] =
-{
-	{ "",                           EXPLOSION_1,        0,  0,  0 },
-	{ TILECACHEDIR "/zgrav_d.sti",  EXPLOSION_1,       80, 17,  3 },
-	{ TILECACHEDIR "/zgrav_c.sti",  EXPLOSION_BLAST_2, 80, 28,  5 },
-	{ TILECACHEDIR "/zgrav_b.sti",  EXPLOSION_BLAST_2, 80, 24,  5 },
-	{ TILECACHEDIR "/shckwave.sti", EXPLOSION_1,       20,  1,  5 },
-	{ TILECACHEDIR "/wat_exp.sti",  AIR_ESCAPING_1,    80,  1, 18 },
-	{ TILECACHEDIR "/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
-	{ TILECACHEDIR "/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
-	{ TILECACHEDIR "/must_exp.sti", AIR_ESCAPING_1,    80,  1, 18 }
-};
-
 
 #define BOMB_QUEUE_DELAY (1000 + Random( 500 ) )
 
@@ -113,9 +92,12 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 // GENERATE EXPLOSION
 void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const BOOLEAN fLocate, const INT8 bLevel)
 {
+	auto explosive = GCM->getExplosive(usItem);
+
 	// Double check that we are using an explosive!
-	if ( !( GCM->getItem(usItem)->isExplosive() ) )
+	if ( !explosive )
 	{
+		SLOGE("Called InternalIgniteExplosion for non-explosive item '{}'", GCM->getItem(usItem)->getInternalName());
 		return;
 	}
 
@@ -134,10 +116,19 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 	SLOGD("Incrementing Attack: Explosion gone off, Count now {}", gTacticalStatus.ubAttackBusyCount);
 
 	EXPLOSIONTYPE* const e = GetFreeExplosion();
-	if (e == NULL) return;
+	if (e == NULL) {
+		SLOGE("Could not get free explosion pointer in InternalIgniteExplosion");
+		return;
+	}
+
+	auto animation = explosive->getAnimation();
+	if ( !animation ) {
+		SLOGE("Tried to call InternalIgniteExplosion explosion for explosive item '{}' without animation", explosive->getInternalName());
+		return;
+	}
 
 	e->owner         = owner;
-	e->ubTypeID      = Explosive[GCM->getItem(usItem)->getClassIndex()].ubAnimationID;
+	e->ubTypeID      = animation->getID();
 	e->usItem        = usItem;
 	e->sX            = sX;
 	e->sY            = sY;
@@ -191,22 +182,25 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	// OK, if we are over water.... use water explosion...
 	ubTerrainType = GetTerrainType( sGridNo );
 
-	const ExplosionInfo* inf = &explosion_info[pExplosion->ubTypeID];
+	auto explosionAnimation = GCM->getExplosionAnimation(pExplosion->ubTypeID);
 
 	// Setup explosion!
 	AniParams = ANITILE_PARAMS{};
 
 	AniParams.sGridNo							= sGridNo;
 	AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
-	AniParams.sDelay              = inf->blast_speed;
+	AniParams.sDelay              = explosionAnimation->getBlastSpeed();
 	AniParams.sStartFrame					= pExplosion->sCurrentFrame;
 	AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_EXPLOSION;
 
 	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
 	{
 		// Change type to water explosion...
-		inf = &explosion_info[WATER_BLAST];
-		AniParams.uiFlags						|= ANITILE_ALWAYS_TRANSLUCENT;
+		auto waterAnimation = explosionAnimation->getWaterAnimation();
+		if (waterAnimation) {
+			explosionAnimation = waterAnimation;
+			AniParams.uiFlags |= ANITILE_ALWAYS_TRANSLUCENT;
+		}
 	}
 
 	if ( sZ < WALL_HEIGHT )
@@ -218,14 +212,14 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	AniParams.sY = sY;
 	AniParams.sZ = sZ;
 
-	AniParams.ubKeyFrame1     = inf->transparent_key_frame;
+	AniParams.ubKeyFrame1     = explosionAnimation->getTransparentKeyframe();
 	AniParams.uiKeyFrame1Code = ANI_KEYFRAME_BEGIN_TRANSLUCENCY;
 
-	AniParams.ubKeyFrame2     = inf->damage_key_frame;
+	AniParams.ubKeyFrame2     = explosionAnimation->getDamageKeyframe();
 	AniParams.uiKeyFrame2Code = ANI_KEYFRAME_BEGIN_DAMAGE;
 	AniParams.v.explosion     = pExplosion;
 
-	AniParams.zCachedFile = inf->blast_anim;
+	AniParams.zCachedFile = explosionAnimation->getGraphics().c_str();
 	CreateAnimationTile( &AniParams );
 
 	//  set light source....
@@ -244,17 +238,14 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		}
 	}
 
-	SoundID uiSoundID = inf->sound;
-	if ( uiSoundID == EXPLOSION_1 )
+	auto soundCandidates = explosionAnimation->getSounds();
+	auto sound = soundCandidates.at(0);
+	if ( soundCandidates.size() > 1 )
 	{
-		// Randomize
-		if ( Random( 2 ) == 0 )
-		{
-			uiSoundID = EXPLOSION_ALT_BLAST_1;
-		}
+		sound = soundCandidates.at(Random(soundCandidates.size()));
 	}
 
-	PlayLocationJA2Sample(sGridNo, uiSoundID, HIGHVOLUME, 1);
+	PlayLocationJA2Sample(sGridNo, sound, HIGHVOLUME, 1);
 }
 
 
@@ -778,7 +769,7 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 }
 
 
-BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE const* const pExplosive, INT16 const sSubsequent, BOOLEAN const fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
+BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, const ExplosiveModel* pExplosive, INT16 const sSubsequent, BOOLEAN const fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
 {
 	INT8 bPosOfMask = NO_SLOT;
 
@@ -787,7 +778,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE const* const
 		return( fRecompileMovementCosts );
 	}
 
-	if ( pExplosive->ubType == EXPLOSV_CREATUREGAS )
+	if ( pExplosive->getType() == EXPLOSV_CREATUREGAS )
 	{
 		if ( pSoldier->uiStatusFlags & SOLDIER_MONSTER )
 		{
@@ -803,7 +794,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE const* const
 	else // no gas mask help from creature attacks
 	// ATE/CJC: gas stuff
 	{
-		if ( pExplosive->ubType == EXPLOSV_TEARGAS )
+		if ( pExplosive->getType() == EXPLOSV_TEARGAS )
 		{
 			if ( AM_A_ROBOT( pSoldier ) )
 			{
@@ -817,7 +808,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE const* const
 				return( fRecompileMovementCosts );
 			}
 		}
-		else if ( pExplosive->ubType == EXPLOSV_MUSTGAS )
+		else if ( pExplosive->getType() == EXPLOSV_MUSTGAS )
 		{
 			if ( AM_A_ROBOT( pSoldier ) )
 			{
@@ -892,7 +883,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE const* const
 
 	if ( sWoundAmt != 0 || sBreathAmt != 0 )
 	{
-		switch( pExplosive->ubType )
+		switch( pExplosive->getType() )
 		{
 			case EXPLOSV_CREATUREGAS:
 				pSoldier->fHitByGasFlags |= HIT_BY_CREATUREGAS;
@@ -984,17 +975,16 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 	}
 
 
-	// OK, here we:
-	// Get explosive data from table
-	EXPLOSIVETYPE const* const pExplosive = &Explosive[GCM->getItem(usItem)->getClassIndex()];
+	// OK, here we: Get explosive data
+	const ExplosiveModel* pExplosive =  GCM->getExplosive(usItem);
 
 	uiRoll = PreRandom( 100 );
 
 	// Calculate wound amount
-	sWoundAmt = pExplosive->ubDamage + (INT16) ( (pExplosive->ubDamage * uiRoll) / 100 );
+	sWoundAmt = pExplosive->getDamage() + (INT16) ( (pExplosive->getDamage() * uiRoll) / 100 );
 
 	// Calculate breath amount ( if stun damage applicable )
-	sBreathAmt = ( pExplosive->ubStunDamage * 100 ) + (INT16) ( ( ( pExplosive->ubStunDamage / 2 ) * 100 * uiRoll ) / 100 ) ;
+	sBreathAmt = ( pExplosive->getStunDamage() * 100 ) + (INT16) ( ( ( pExplosive->getStunDamage() / 2 ) * 100 * uiRoll ) / 100 ) ;
 
 	// ATE: Make sure guys get pissed at us!
 	HandleBuldingDestruction(sGridNo, owner);
@@ -1007,21 +997,21 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 		// If radius is 5, damage % is (100)/80/60/40/20/10
 		// If radius is 8, damage % is (100)/88/75/63/50/37/25/13/6
 
-		if ( pExplosive->ubRadius == 0 )
+		if ( pExplosive->getRadius() == 0 )
 		{
 			// leave as is, has to be at range 0 here
 		}
-		else if (uiDist < pExplosive->ubRadius)
+		else if (uiDist < pExplosive->getRadius())
 		{
 			// if radius is 5, go down by 5ths ~ 20%
-			sWoundAmt -= (INT16)  (sWoundAmt * uiDist / pExplosive->ubRadius );
-			sBreathAmt -= (INT16) (sBreathAmt * uiDist / pExplosive->ubRadius );
+			sWoundAmt -= (INT16)  (sWoundAmt * uiDist / pExplosive->getRadius() );
+			sBreathAmt -= (INT16) (sBreathAmt * uiDist / pExplosive->getRadius() );
 		}
 		else
 		{
 			// at the edge of the explosion, do half the previous damage
-			sWoundAmt = (INT16) ( (sWoundAmt / pExplosive->ubRadius) / 2);
-			sBreathAmt = (INT16) ( (sBreathAmt / pExplosive->ubRadius) / 2);
+			sWoundAmt = (INT16) ( (sWoundAmt / pExplosive->getRadius()) / 2);
+			sBreathAmt = (INT16) ( (sBreathAmt / pExplosive->getRadius()) / 2);
 		}
 
 		if (sWoundAmt < 0)
@@ -1031,7 +1021,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			sBreathAmt = 0;
 
 		// damage structures
-		if ( uiDist <= std::max(1U, (UINT32) (pExplosive->ubDamage / 30)))
+		if ( uiDist <= std::max(1U, (UINT32) (pExplosive->getDamage() / 30)))
 		{
 			if ( GCM->getItem(usItem)->isGrenade() )
 			{
@@ -1073,7 +1063,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 		}
 
 		// NB radius can be 0 so cannot divide it by 2 here
-		if (!fStunEffect && (uiDist * 2 <= pExplosive->ubRadius)  )
+		if (!fStunEffect && (uiDist * 2 <= pExplosive->getRadius())  )
 		{
 			const ITEM_POOL* pItemPool = GetItemPool(sGridNo, bLevel);
 
@@ -1717,7 +1707,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 	if ( fSubsequent != BLOOD_SPREAD_EFFECT )
 	{
-		MakeNoise(NULL, sGridNo, bLevel, Explosive[GCM->getItem(usItem)->getClassIndex()].ubVolume, NOISE_EXPLOSION);
+		MakeNoise(NULL, sGridNo, bLevel, GCM->getExplosive(usItem)->getNoise(), NOISE_EXPLOSION);
 	}
 }
 

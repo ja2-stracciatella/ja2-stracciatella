@@ -2,221 +2,125 @@ $schema: http://json-schema.org/schema#
 type: array
 title: Weapons
 items:
-  type: object
-  title: Weapon
-  properties:
-    itemIndex:
-      title: Item index
-      $ref: types/uint16.schema.yaml
-    internalName:
-      title: Internal name
-      $ref: types/id.schema.yaml
-    shortName:
-      title: Short name
-      type: string
-    name:
-      title: Name
-      type: string
-    description:
-      title: Description
-      type: string
-    internalType:
-      title: Internal type
-      type: string
-      enum:
-      - PUNCH
-      - PISTOL
-      - M_PISTOL
-      - SMG
-      - RIFLE
-      - SN_RIFLE
-      - ASRIFLE
-      - SHOTGUN
-      - LMG
-      - BLADE
-      - THROWINGBLADE
-      - THROWN
-      - LAUNCHER
-      - MONSTSPIT
-      - PUNCHWEAPON
-      - LAW
-      - CANNON
-      - NOWEAPON
-    sound:
-      title: Shot sound
-      description: Path to sound that is played when a single shot is fired.
-      $ref: types/resource-path.schema.yaml
-    burstSound:
-      title: Burst sound
-      description: |
-        Path to sounds that are played as burst sounds for this calibre.
-
-        %d will replaced with the amount of bullets left in the gun.
-      $ref: types/resource-path.schema.yaml
-    silencedSound:
-      title: Silenced shot sound
-      description: Path to sound that is played when a single shot is fired and gun is silenced somehow.
-      $ref: types/resource-path.schema.yaml
-    silencedBurstSound:
-      title: Silenced burst sound
-      description: |
-        Path to sounds that are played as burst sounds for this calibre when the gun is silenced somehow.
-
-        %d will replaced with the amount of bullets left in the gun.
-      $ref: types/resource-path.schema.yaml
-    inventoryGraphics:
-      title: Inventory Graphics
-      description: Graphics that are used in the inventory interface for this item
-      type: object
+  allOf:
+    - title: Base Item
+      $ref: types/base-item.schema.yaml
+    - type: object
+      title: Weapon
       properties:
-        small:
-          title: Small
-          description: Small graphics. Used e.g. in strategic & tactical inventory
-          $ref: types/graphic.schema.yaml
-        big:
-          title: Big
-          description: Big graphics. Used e.g. in item detail view
-          $ref: types/graphic.schema.yaml
+        internalType:
+          title: Internal type
+          type: string
+          enum:
+          - PUNCH
+          - PISTOL
+          - M_PISTOL
+          - SMG
+          - RIFLE
+          - SN_RIFLE
+          - ASRIFLE
+          - SHOTGUN
+          - LMG
+          - BLADE
+          - THROWINGBLADE
+          - THROWN
+          - LAUNCHER
+          - MONSTSPIT
+          - PUNCHWEAPON
+          - LAW
+          - CANNON
+          - NOWEAPON
+        sound:
+          title: Shot sound
+          description: Path to sound that is played when a single shot is fired.
+          $ref: types/resource-path.schema.yaml
+        burstSound:
+          title: Burst sound
+          description: |
+            Path to sounds that are played as burst sounds for this calibre.
+
+            %d will replaced with the amount of bullets left in the gun.
+          $ref: types/resource-path.schema.yaml
+        silencedSound:
+          title: Silenced shot sound
+          description: Path to sound that is played when a single shot is fired and gun is silenced somehow.
+          $ref: types/resource-path.schema.yaml
+        silencedBurstSound:
+          title: Silenced burst sound
+          description: |
+            Path to sounds that are played as burst sounds for this calibre when the gun is silenced somehow.
+
+            %d will replaced with the amount of bullets left in the gun.
+          $ref: types/resource-path.schema.yaml
+        rateOfFire:
+          title: Rate of fire
+          $ref: types/int32.schema.yaml
+        usRange:
+          title: Range
+          $ref: types/uint16.schema.yaml
+        calibre:
+          title: Calibre
+          $ref: types/id.schema.yaml
+        ubReadyTime:
+          title: Ready time
+          $ref: types/uint8.schema.yaml
+        ubShotsPer4Turns:
+          title: Shots per 4 turns
+          $ref: types/uint8.schema.yaml
+        ubBulletSpeed:
+          title: Bullet speed
+          $ref: types/uint8.schema.yaml
+        ubImpact:
+          title: Impact
+          $ref: types/uint8.schema.yaml
+        ubDeadliness:
+          title: Deadliness
+          $ref: types/uint8.schema.yaml
+        ubMagSize:
+          title: Magazine size
+          $ref: types/uint8.schema.yaml
+        ubAttackVolume:
+          title: Attack volume
+          $ref: types/uint8.schema.yaml
+        ubHitVolume:
+          title: Hit volume
+          $ref: types/uint8.schema.yaml
+        attachment_Silencer:
+          title: Attachment silencer?
+          type: boolean
+        attachment_LaserScope:
+          title: Attachment laser scope?
+          type: boolean
+        attachment_SpringAndBoltUpgrade:
+          title: Attachment spring and bolt?
+          type: boolean
+        attachment_GunBarrelExtender:
+          title: Attachment gun barrel extender?
+          type: boolean
+        standardReplacement:
+          title: Standard replacement
+          $ref: types/id.schema.yaml
+        ubShotsPerBurst:
+          title: Shots per burst
+          $ref: types/uint8.schema.yaml
+        ubBurstPenalty:
+          title: Burst penalty
+          $ref: types/uint8.schema.yaml
+        attachment_SniperScope:
+          title: Attachment sniper scope?
+          type: boolean
+        attachment_UnderGLauncher:
+          title: Attachment under grenade launcher?
+          type: boolean
+        attachment_Bipod:
+          title: Attachment bipod?
+          type: boolean
+        attachment_Duckbill:
+          title: Attachment duckbill?
+          type: boolean
+        usSmokeEffect:
+          title: Smoke effect
+          $ref: types/uint16.schema.yaml
       required:
-        - small
-        - big
-    tileGraphic:
-      title: Tile graphic index
-      description: Graphic that is used when the item is shown on the tactical map
-      $ref: types/tileset-tile-index.schema.yaml
-    ubWeight:
-      title: Weight
-      $ref: types/uint8.schema.yaml
-    ubPerPocket:
-      title: Per pocket
-      $ref: types/uint8.schema.yaml
-    usPrice:
-      title: Price
-      $ref: types/uint16.schema.yaml
-    ubCoolness:
-      title: Coolness
-      $ref: types/uint8.schema.yaml
-    bReliability:
-      title: Reliability
-      $ref: types/int8.schema.yaml
-    bRepairEase:
-      title: Repair ease
-      $ref: types/int8.schema.yaml
-    rateOfFire:
-      title: Rate of fire
-      $ref: types/int32.schema.yaml
-    usRange:
-      title: Range
-      $ref: types/uint16.schema.yaml
-    bNotBuyable:
-      title: Not buyable?
-      type: boolean
-    calibre:
-      title: Calibre
-      $ref: types/id.schema.yaml
-    ubReadyTime:
-      title: Ready time
-      $ref: types/uint8.schema.yaml
-    ubShotsPer4Turns:
-      title: Shots per 4 turns
-      $ref: types/uint8.schema.yaml
-    ubBulletSpeed:
-      title: Bullet speed
-      $ref: types/uint8.schema.yaml
-    ubImpact:
-      title: Impact
-      $ref: types/uint8.schema.yaml
-    ubDeadliness:
-      title: Deadliness
-      $ref: types/uint8.schema.yaml
-    ubMagSize:
-      title: Magazine size
-      $ref: types/uint8.schema.yaml
-    ubAttackVolume:
-      title: Attack volume
-      $ref: types/uint8.schema.yaml
-    ubHitVolume:
-      title: Hit volume
-      $ref: types/uint8.schema.yaml
-    attachment_Silencer:
-      title: Attachment silencer?
-      type: boolean
-    attachment_LaserScope:
-      title: Attachment laser scope?
-      type: boolean
-    attachment_SpringAndBoltUpgrade:
-      title: Attachment spring and bolt?
-      type: boolean
-    attachment_GunBarrelExtender:
-      title: Attachment gun barrel extender?
-      type: boolean
-    bDamageable:
-      title: Is damageable?
-      type: boolean
-    bRepairable:
-      title: Is repairable?
-      type: boolean
-    bWaterDamages:
-      title: Damaged by water?
-      type: boolean
-    bMetal:
-      title: Is metal?
-      type: boolean
-    bSinks:
-      title: Sinks in water?
-      type: boolean
-    bShowStatus:
-      title: Show status?
-      type: boolean
-    standardReplacement:
-      title: Standard replacement
-      $ref: types/id.schema.yaml
-    ubShotsPerBurst:
-      title: Shots per burst
-      $ref: types/uint8.schema.yaml
-    ubBurstPenalty:
-      title: Burst penalty
-      $ref: types/uint8.schema.yaml
-    bBigGunList:
-      title: Big gun list?
-      type: boolean
-    bTwoHanded:
-      title: Is two handed?
-      type: boolean
-    attachment_SniperScope:
-      title: Attachment sniper scope?
-      type: boolean
-    attachment_UnderGLauncher:
-      title: Attachment under grenade launcher?
-      type: boolean
-    attachment_Bipod:
-      title: Attachment bipod?
-      type: boolean
-    attachment_Duckbill:
-      title: Attachment duckbill?
-      type: boolean
-    bNotEditor:
-      title: Dont show in editor?
-      type: boolean
-    bDefaultUndroppable:
-      title: Undroppable by default?
-      type: boolean
-    usSmokeEffect:
-      title: Smoke effect
-      $ref: types/uint16.schema.yaml
-    bElectronic:
-      title: Is electronic?
-      type: boolean
-  required:
-  - bReliability
-  - bRepairEase
-  - internalName
-  - internalType
-  - itemIndex
-  - rateOfFire
-  - ubCoolness
-  - inventoryGraphics
-  - tileGraphic
-  - ubPerPocket
-  - ubWeight
-  - usPrice
+        - internalType
+        - rateOfFire

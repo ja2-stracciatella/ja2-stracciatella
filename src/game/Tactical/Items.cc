@@ -3086,7 +3086,7 @@ static BOOLEAN CheckForChainReaction(UINT16 usItem, INT8 bStatus, INT8 bDamage, 
 {
 	INT32 iChance;
 
-	iChance = Explosive[GCM->getItem(usItem)->getClassIndex()].ubVolatility;
+	iChance = GCM->getExplosive(usItem)->getVolatility();
 	if (iChance > 0)
 	{
 

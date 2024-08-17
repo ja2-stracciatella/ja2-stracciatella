@@ -645,7 +645,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 		// Not sure if this makes sense, but the explosive is small.
 		// Double the damage here as we are damaging a lock rather than a person
-		if (pDoor->damageLock(Explosive[GCM->getItem(SHAPED_CHARGE)->getClassIndex()].ubDamage * 2))
+		if (pDoor->damageLock(GCM->getExplosive(SHAPED_CHARGE)->getDamage() * 2))
 		{
 			// Lock destroyed, award experience points?
 			return( TRUE );
