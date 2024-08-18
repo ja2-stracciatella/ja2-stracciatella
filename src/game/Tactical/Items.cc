@@ -2463,7 +2463,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
 	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
 	for (const MagazineModel* mag : magazines)
 	{
-		if (mag->calibre->index == NOAMMO)      break;
+		if (mag->calibre->index == CalibreModel::NOAMMO) break;
 		if (mag->dontUseAsDefaultMagazine) continue;
 		if (mag->calibre->index != w->calibre->index) continue;
 		if (mag->capacity != w->ubMagSize) continue;
@@ -2480,7 +2480,7 @@ UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_siz
 	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
 	for (const MagazineModel* mag : magazines)
 	{
-		if (mag->calibre->index == NOAMMO)   break;
+		if (mag->calibre->index == CalibreModel::NOAMMO) break;
 		if (mag->calibre->index != calibre->index)  continue;
 		if (mag->capacity != mag_size) continue;
 

@@ -68,7 +68,7 @@ MagazineModel* MagazineModel::deserialize(
 	int itemIndex                 = obj.GetInt("itemIndex");
 	ST::string internalName       = obj.GetString("internalName");
 	const CalibreModel *calibre   = getCalibre(obj.GetString("calibre"), calibreMap);
-	uint32_t itemClass            = (calibre->index != NOAMMO) ? IC_AMMO : IC_NONE;
+	uint32_t itemClass            = (calibre->index != CalibreModel::NOAMMO) ? IC_AMMO : IC_NONE;
 	uint16_t capacity             = obj.GetInt("capacity");
 	const AmmoTypeModel *ammoType = getAmmoType(obj.GetString("ammoType"), ammoTypeMap);
 	bool dontUseAsDefaultMagazine = obj.getOptionalBool("dontUseAsDefaultMagazine");
