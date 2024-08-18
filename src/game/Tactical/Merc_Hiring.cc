@@ -390,8 +390,8 @@ void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 		// hates the merc who has arrived and is going to gripe about it!
 		switch (WhichHated(other->ubProfile, s.ubProfile))
 		{
-			case 0:  TacticalCharacterDialogue(other, QUOTE_HATED_1_ARRIVES); break;
-			case 1:  TacticalCharacterDialogue(other, QUOTE_HATED_2_ARRIVES); break;
+			case HATED_SLOT1:  TacticalCharacterDialogue(other, QUOTE_HATED_1_ARRIVES); break;
+			case HATED_SLOT2:  TacticalCharacterDialogue(other, QUOTE_HATED_2_ARRIVES); break;
 			default: break;
 		}
 	}

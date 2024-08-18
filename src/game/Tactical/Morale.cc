@@ -574,7 +574,7 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 				if (other.ubProfile == NO_PROFILE) continue;
 
 				// We hate 'em anyways
-				if (WhichHated(other.ubProfile, pSoldier->ubProfile) != -1) continue;
+				if (WhichHated(other.ubProfile, pSoldier->ubProfile) != HATED_NOT_FOUND) continue;
 
 				MERCPROFILESTRUCT const& p = GetProfile(other.ubProfile);
 				if (p.bSex == FEMALE)
@@ -717,15 +717,15 @@ void HourlyMoraleUpdate()
 			INT8 opinion = p.bMercOpinion[other->ubProfile];
 			if (opinion == HATED_OPINION)
 			{
-				INT8 const hated = WhichHated(s->ubProfile, other->ubProfile);
+				HatedSlot const hated = WhichHated(s->ubProfile, other->ubProfile);
 				INT8 hated_time = 0;
-				if (hated > 1)
+				if (hated >= LEARNED_TO_HATE_SLOT)
 				{
 					// Learn to hate which has become full-blown hatred, full strength
 					found_hated = true;
 					break;
 				}
-				else if (hated >= 0)
+				else if (hated >= HATED_SLOT1)
 				{
 					hated_time = p.bHatedTime[hated];
 					if (p.bHatedCount[hated] <= hated_time)
