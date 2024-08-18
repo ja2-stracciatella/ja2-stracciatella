@@ -90,7 +90,6 @@
 #define SIZE_MERC_ADDITIONAL_INFO		160
 
 #define MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES	6 * 60
-#define NUMBER_HATED_MERCS_ONTEAM		3
 
 
 #define STATS_X					IMAGE_OFFSET_X + 121
@@ -1782,11 +1781,11 @@ static BOOLEAN CanMercBeHired(void)
 		return FALSE;
 	}
 
-	INT const buddy = GetFirstBuddyOnTeam(p);
+	BuddySlot const buddy = GetFirstBuddyOnTeam(p);
 
 	// loop through the list of people the merc hates
 	UINT16 join_quote = QUOTE_NONE;
-	for (UINT8 i = 0; i < NUMBER_HATED_MERCS_ONTEAM; ++i)
+	for (UINT8 i = HATED_SLOT1; i < NUM_HATED_SLOTS; ++i)
 	{
 		//see if someone the merc hates is on the team
 		INT8 const bMercID = p.bHated[i];
@@ -1799,9 +1798,9 @@ static BOOLEAN CanMercBeHired(void)
 		switch (buddy)
 		{
 			UINT16 quote;
-			case 0: quote = QUOTE_JOINING_CAUSE_BUDDY_1_ON_TEAM;               goto join_buddy;
-			case 1: quote = QUOTE_JOINING_CAUSE_BUDDY_2_ON_TEAM;               goto join_buddy;
-			case 2: quote = QUOTE_JOINING_CAUSE_LEARNED_TO_LIKE_BUDDY_ON_TEAM; goto join_buddy;
+			case BUDDY_SLOT1:          quote = QUOTE_JOINING_CAUSE_BUDDY_1_ON_TEAM;               goto join_buddy;
+			case BUDDY_SLOT2:          quote = QUOTE_JOINING_CAUSE_BUDDY_2_ON_TEAM;               goto join_buddy;
+			case LEARNED_TO_LIKE_SLOT: quote = QUOTE_JOINING_CAUSE_LEARNED_TO_LIKE_BUDDY_ON_TEAM; goto join_buddy;
 join_buddy:
 				InitVideoFaceTalking(pid, quote);
 				return TRUE;
@@ -1811,7 +1810,7 @@ join_buddy:
 		UINT16 quote;
 		switch (i)
 		{
-			case 0:
+			case HATED_SLOT1:
 				if (p.bHatedTime[i] >= 24)
 				{
 					join_quote = QUOTE_PERSONALITY_BIAS_WITH_MERC_1;
@@ -1820,7 +1819,7 @@ join_buddy:
 				quote = QUOTE_HATE_MERC_1_ON_TEAM;
 				break;
 
-			case 1:
+			case HATED_SLOT2:
 				if (p.bHatedTime[i] >= 24)
 				{
 					join_quote = QUOTE_PERSONALITY_BIAS_WITH_MERC_2;
@@ -1838,7 +1837,7 @@ join_buddy:
 		return FALSE;
 	}
 
-	if (buddy >= 0) return TRUE;
+	if (buddy != BUDDY_NOT_FOUND) return TRUE;
 
 	// Check the players Death rate
 	if (MercThinksDeathRateTooHigh(p))

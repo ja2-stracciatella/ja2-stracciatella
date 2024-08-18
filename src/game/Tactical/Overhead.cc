@@ -2295,12 +2295,12 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 		{
 			if (s->bInSector && s->bLife >= OKLIFE)
 			{
-				const INT8 bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
+				const BuddySlot bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
 				switch (bBuddyIndex)
 				{
-					case 0:  TacticalCharacterDialogue(s, QUOTE_BUDDY_ONE_KILLED);            break;
-					case 1:  TacticalCharacterDialogue(s, QUOTE_BUDDY_TWO_KILLED);            break;
-					case 2:  TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_LIKE_MERC_KILLED); break;
+					case BUDDY_SLOT1:           TacticalCharacterDialogue(s, QUOTE_BUDDY_ONE_KILLED);            break;
+					case BUDDY_SLOT2:           TacticalCharacterDialogue(s, QUOTE_BUDDY_TWO_KILLED);            break;
+					case LEARNED_TO_LIKE_SLOT:  TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_LIKE_MERC_KILLED); break;
 					default: break;
 				}
 			}

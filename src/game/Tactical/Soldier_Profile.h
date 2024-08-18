@@ -205,10 +205,10 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum );
 BOOLEAN RecruitEPC( UINT8 ubCharNum );
 BOOLEAN UnRecruitEPC(ProfileID);
 
-INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy );
-INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated );
+BuddySlot WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy );
+HatedSlot WhichHated( UINT8 ubCharNum, UINT8 ubHated );
 
-INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const&);
+BuddySlot GetFirstBuddyOnTeam(MERCPROFILESTRUCT const&);
 
 SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE*, UINT8 team);
 

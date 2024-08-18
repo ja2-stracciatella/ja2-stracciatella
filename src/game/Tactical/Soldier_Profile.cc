@@ -815,52 +815,52 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 }
 
 
-INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
+BuddySlot WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 {
 	if (ubCharNum == NO_PROFILE)
 	{
-		return -1;
+		return BUDDY_NOT_FOUND;
 	}
 
 	MERCPROFILESTRUCT const& p = GetProfile(ubCharNum);
-	for (INT8 bLoop = 0; bLoop < 3; bLoop++)
+	for (INT8 bLoop = BUDDY_SLOT1; bLoop < NUM_BUDDY_SLOTS; bLoop++)
 	{
 		if (p.bBuddy[bLoop] == ubBuddy)
 		{
-			return( bLoop );
+			return static_cast<BuddySlot>(bLoop);
 		}
 	}
-	return( -1 );
+	return BUDDY_NOT_FOUND;
 }
 
-INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
+HatedSlot WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 {
 	INT8								bLoop;
 
 	MERCPROFILESTRUCT const& p = GetProfile(ubCharNum);
 
-	for (bLoop = 0; bLoop < 3; bLoop++)
+	for (bLoop = HATED_SLOT1; bLoop < NUM_HATED_SLOTS; bLoop++)
 	{
 		if (p.bHated[bLoop] == ubHated)
 		{
-			return( bLoop );
+			return static_cast<HatedSlot>(bLoop);
 		}
 	}
-	return( -1 );
+	return HATED_NOT_FOUND;
 }
 
 
-INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const& p)
+BuddySlot GetFirstBuddyOnTeam(MERCPROFILESTRUCT const& p)
 {
-	for (INT i = 0; i != 3; ++i)
+	for (INT i = BUDDY_SLOT1; i < NUM_BUDDY_SLOTS; ++i)
 	{
 		INT8 const buddy = p.bBuddy[i];
 		if (buddy < 0)                     continue;
 		if (!IsMercOnTeam(buddy))          continue;
 		if (IsMercDead(GetProfile(buddy))) continue;
-		return buddy;
+		return static_cast<BuddySlot>(i);
 	}
-	return -1;
+	return BUDDY_NOT_FOUND;
 }
 
 

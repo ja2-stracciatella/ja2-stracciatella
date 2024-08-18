@@ -158,6 +158,24 @@ enum CharacterEvolution
 #define BUDDY_OPINION						+25
 #define HATED_OPINION						-25
 
+enum BuddySlot
+{
+	BUDDY_NOT_FOUND = -1,
+	BUDDY_SLOT1,
+	BUDDY_SLOT2,
+	LEARNED_TO_LIKE_SLOT,
+	NUM_BUDDY_SLOTS
+};
+
+enum HatedSlot
+{
+	HATED_NOT_FOUND = -1,
+	HATED_SLOT1,
+	HATED_SLOT2,
+	LEARNED_TO_HATE_SLOT,
+	NUM_HATED_SLOTS
+};
+
 struct MERCPROFILESTRUCT
 {
 	ST::string zName;

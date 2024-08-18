@@ -425,20 +425,20 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 			{
 				if (!OkControllableMerc(s)) continue;
 
-				const INT8 bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
-				if (bBuddyIndex >= 0 && SpacesAway(pSoldier->sGridNo, s->sGridNo) < 15)
+				const BuddySlot bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
+				if (bBuddyIndex != BUDDY_NOT_FOUND && SpacesAway(pSoldier->sGridNo, s->sGridNo) < 15)
 				{
 					switch (bBuddyIndex)
 					{
-						case 0:
+						case BUDDY_SLOT1:
 							// buddy #1 did something good!
 							TacticalCharacterDialogue(s, QUOTE_BUDDY_1_GOOD);
 							break;
-						case 1:
+						case BUDDY_SLOT2:
 							// buddy #2 did something good!
 							TacticalCharacterDialogue(s, QUOTE_BUDDY_2_GOOD);
 							break;
-						case 2:
+						case LEARNED_TO_LIKE_SLOT:
 							// learn to like buddy did something good!
 							TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_LIKE_WITNESSED);
 							break;

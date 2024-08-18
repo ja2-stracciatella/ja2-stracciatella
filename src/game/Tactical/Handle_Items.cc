@@ -242,7 +242,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		}
 		// buddies won't shoot each other
 		if (tgt->ubProfile != NO_PROFILE &&
-			WhichBuddy(s->ubProfile, tgt->ubProfile) != -1)
+			WhichBuddy(s->ubProfile, tgt->ubProfile) != BUDDY_NOT_FOUND)
 		{
 			TacticalCharacterDialogue(s, QUOTE_REFUSING_ORDER);
 			return ITEM_HANDLE_REFUSAL;

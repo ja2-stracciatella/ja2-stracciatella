@@ -50,12 +50,12 @@ static void HandleSoldierDeadComments(SOLDIERTYPE const* const dead)
 		if (s->bLife < OKLIFE) continue;
 
 		UINT16     quote_num;
-		INT8 const buddy_idx = WhichBuddy(s->ubProfile, dead->ubProfile);
+		BuddySlot const buddy_idx = WhichBuddy(s->ubProfile, dead->ubProfile);
 		switch (buddy_idx)
 		{
-			case 0: quote_num = QUOTE_BUDDY_ONE_KILLED;            break;
-			case 1: quote_num = QUOTE_BUDDY_TWO_KILLED;            break;
-			case 2: quote_num = QUOTE_LEARNED_TO_LIKE_MERC_KILLED; break;
+			case BUDDY_SLOT1:          quote_num = QUOTE_BUDDY_ONE_KILLED;            break;
+			case BUDDY_SLOT2:          quote_num = QUOTE_BUDDY_TWO_KILLED;            break;
+			case LEARNED_TO_LIKE_SLOT: quote_num = QUOTE_LEARNED_TO_LIKE_MERC_KILLED; break;
 
 			default: continue;
 		}
