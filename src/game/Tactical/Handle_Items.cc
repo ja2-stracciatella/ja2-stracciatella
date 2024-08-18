@@ -869,7 +869,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 
 			s->fDontChargeAPsForStanceChange = TRUE;
 		}
-		else if (usHandItem == GLAUNCHER || usHandItem == UNDER_GLAUNCHER)
+		else if (item->isLauncher())
 		{
 			BOOLEAN fAddingTurningCost  = FALSE;
 			BOOLEAN fAddingRaiseGunCost = FALSE;

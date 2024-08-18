@@ -24,6 +24,7 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/InventoryGraphicsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ItemModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/JsonUtility.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExplosiveCalibreModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/LoadingScreenModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/MagazineModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ModPackContentManager.cc

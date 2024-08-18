@@ -137,6 +137,7 @@ ExplosiveModel::ExplosiveModel(
 			uint8_t noise,
 			uint8_t volatility,
 			uint8_t type,
+			const ExplosiveCalibreModel* calibre,
 			const ExplosionAnimationModel *animation
 	) : ItemModel(itemIndex, internalName, shortName, name, description, itemClass, 0, cursor, inventoryGraphics, tileGraphic, weight, perPocket, price, coolness, reliability, repairEase, flags) {
 	this->damage = damage;
@@ -145,10 +146,11 @@ ExplosiveModel::ExplosiveModel(
 	this->noise = noise;
 	this->volatiltiy = volatility;
 	this->type = type;
+	this->calibre = calibre;
 	this->animation = animation;
 }
 
-ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::vector<const ExplosionAnimationModel*> &animations, const VanillaItemStrings& vanillaItemStrings) {
+ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres, const std::vector<const ExplosionAnimationModel*> &animations, const VanillaItemStrings& vanillaItemStrings) {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, vanillaItemStrings };
 
@@ -163,6 +165,18 @@ ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::ve
 	auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);
 	auto tileGraphic = TilesetTileIndexModel::deserialize(obj["tileGraphic"]);
 	auto cursor = deserializeItemCursor(obj.GetString("cursor"));
+
+	auto calibreStr = obj.getOptionalString("calibre");
+	const ExplosiveCalibreModel* calibre = nullptr;
+	if (calibreStr != "") {
+		auto calibreIt = std::find_if(explosiveCalibres.begin(), explosiveCalibres.end(), [&calibreStr](const ExplosiveCalibreModel* item) -> bool {
+			return item->getName() == calibreStr;
+		});
+		if (calibreIt == explosiveCalibres.end()) {
+			throw DataError(ST::format("Could not find explosive calibre '{}'", calibreStr));
+		}
+		calibre = *calibreIt;
+	}
 
 	auto animationStr = obj.getOptionalString("animation");
 	const ExplosionAnimationModel* animation = nullptr;
@@ -199,6 +213,7 @@ ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::ve
 		obj.GetUInt("noise"),
 		obj.GetUInt("volatility"),
 		type,
+		calibre,
 		animation
 	);
 
@@ -227,6 +242,14 @@ uint8_t ExplosiveModel::getVolatility() const {
 
 uint8_t ExplosiveModel::getType() const {
 	return type;
+}
+
+bool ExplosiveModel::isLaunchable() const {
+	return calibre;
+}
+
+const ExplosiveCalibreModel* ExplosiveModel::getExplosiveCalibre() const {
+	return calibre;
 }
 
 const ExplosionAnimationModel* ExplosiveModel::getAnimation() const {

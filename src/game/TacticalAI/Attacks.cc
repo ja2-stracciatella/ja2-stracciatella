@@ -44,40 +44,21 @@
 
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 {
-	UINT16 usInHand;
-	INT8 bPayloadPocket;
+	UINT16 usInHand = pSoldier->inv[HANDPOS].usItem;
+	auto item = GCM->getItem(usInHand, ItemSystem::nothrow);
+	if (!item || !item->isWeapon()) {
+		return;
+	}
 
-	usInHand = pSoldier->inv[HANDPOS].usItem;
+	auto weapon = item->asWeapon();
+	if (!weapon->shootsExplosiveCalibre()) {
+		return;
+	}
 
-	// if he's got a MORTAR in his hand, make sure he has a MORTARSHELL avail.
-	if (usInHand == MORTAR)
+	INT8 bPayloadPocket = FindLaunchable( pSoldier, usInHand );
+	if (bPayloadPocket == NO_SLOT)
 	{
-		bPayloadPocket = FindObj( pSoldier, MORTAR_SHELL );
-		if (bPayloadPocket == NO_SLOT)
-		{
-			return;	// no shells, can't fire the MORTAR
-		}
-	}
-	// if he's got a GL in his hand, make sure he has some type of GRENADE avail.
-	else if (usInHand == GLAUNCHER)
-	{
-		bPayloadPocket = FindGLGrenade( pSoldier );
-		if (bPayloadPocket == NO_SLOT)
-		{
-			return;	// no grenades, can't fire the GLAUNCHER
-		}
-	}
-	else if (usInHand == TANK_CANNON)
-	{
-		bPayloadPocket = FindLaunchable( pSoldier, TANK_CANNON );
-		if (bPayloadPocket == NO_SLOT)
-		{
-			return;
-		}
-	}
-	else
-	{
-		// regular hand-thrown grenade in hand, nothing to load!
+		// no ammo, can't fire
 		return;
 	}
 
@@ -405,36 +386,24 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	usInHand = pSoldier->inv[HANDPOS].usItem;
 	usGrenade = NOTHING;
 
+	auto weapon = GCM->getWeapon(usInHand);
 	if ( EXPLOSIVE_GUN( usInHand ) )
 	{
-		iTossRange = GCM->getWeapon( usInHand )->usRange / CELL_X_SIZE;
+		iTossRange = weapon->usRange / CELL_X_SIZE;
 	}
 	else
 	{
 		iTossRange = CalcMaxTossRange( pSoldier, usInHand, TRUE );
 	}
 
-	// if he's got a MORTAR in his hand, make sure he has a MORTARSHELL avail.
-	if (usInHand == MORTAR)
-	{
-		bPayloadPocket = FindObj( pSoldier, MORTAR_SHELL );
+	if (weapon->shootsExplosiveCalibre()) {
+		bPayloadPocket = FindLaunchable( pSoldier, usInHand );
 		if (bPayloadPocket == NO_SLOT)
 		{
-			return;	// no shells, can't fire the MORTAR
+			return;	// no ammo, can't fire
 		}
-		ubSafetyMargin = GCM->getExplosive(MORTAR_SHELL)->getRadius();
-	}
-	// if he's got a GL in his hand, make sure he has some type of GRENADE avail.
-	else if (usInHand == GLAUNCHER)
-	{
-		// use up pocket 2 first, they get left as drop items
-		bPayloadPocket = FindGLGrenade( pSoldier );
-		if (bPayloadPocket == NO_SLOT)
-		{
-			return;	// no grenades, can't fire the GLAUNCHER
-		}
-		ubSafetyMargin = GCM->getExplosive(pSoldier->inv[ bPayloadPocket ].usItem)->getRadius();
-		usGrenade = pSoldier->inv[ bPayloadPocket ].usItem;
+		usGrenade = pSoldier->inv[bPayloadPocket].usItem;
+		ubSafetyMargin = GCM->getExplosive(usGrenade)->getRadius();
 	}
 	else if (usInHand == ROCKET_LAUNCHER)
 	{
@@ -442,16 +411,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		bPayloadPocket = HANDPOS;
 		// as C1
 		ubSafetyMargin = GCM->getExplosive(C1)->getRadius();
-	}
-	else if (usInHand == TANK_CANNON)
-	{
-		bPayloadPocket = FindObj( pSoldier, TANK_SHELL );
-		if (bPayloadPocket == NO_SLOT)
-		{
-			return;	// no grenades, can't fire the GLAUNCHER
-		}
-		ubSafetyMargin = GCM->getExplosive(TANK_SHELL)->getRadius();
-
 	}
 	else
 	{

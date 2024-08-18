@@ -1,5 +1,7 @@
 #include "WeaponModels.h"
 #include "CalibreModel.h"
+#include "Exceptions.h"
+#include "ExplosiveCalibreModel.h"
 #include "ItemModel.h"
 #include "Logger.h"
 #include "MagazineModel.h"
@@ -59,6 +61,7 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
 	sReloadSound         = NO_WEAPON_SOUND;
 	sLocknLoadSound      = NO_WEAPON_SOUND;
 	usSmokeEffect        = NONE;
+	explosiveCalibre     = nullptr;
 }
 
 void WeaponModel::serializeTo(JsonObject &obj) const
@@ -114,8 +117,33 @@ ST::string readOptionalString(JsonObject &obj, const char* key, const ST::string
 	return sound;
 }
 
+const ExplosiveCalibreModel* readExplosiveCalibreWithFallbacks(const ST::string& internalName, JsonObject &obj, const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres, std::map<ST::string, ST::string> fallback) {
+	auto calibreStr = obj.getOptionalString("calibre");
+
+	if (calibreStr == "") {
+		SLOGW("Missing property `calibre` for launcher weapon '{}'. This is deprectated, using vanilla default.", internalName);
+
+		auto fallbackIt = fallback.find(internalName);
+		if (fallbackIt == fallback.end()) {
+			throw DataError(ST::format("Could not determine fallback explosive calibre for launcher weapon '{}'", internalName));
+		}
+
+		calibreStr = (*fallbackIt).second;
+	}
+
+	auto calibreIt = std::find_if(explosiveCalibres.begin(), explosiveCalibres.end(), [&calibreStr](const ExplosiveCalibreModel* item) -> bool {
+		return item->getName() == calibreStr;
+	});
+	if (calibreIt == explosiveCalibres.end()) {
+		throw DataError(ST::format("Could not find explosive calibre '{}' for launcher weapon '{}'", calibreStr, internalName));
+	}
+
+	return *calibreIt;
+}
+
 WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					const std::map<ST::string, const CalibreModel*> &calibreMap,
+					const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 					const VanillaItemStrings& vanillaItemStrings)
 {
 	auto obj = json.toObject();
@@ -484,6 +512,11 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "LAUNCHER")
 	{
+		auto calibre = readExplosiveCalibreWithFallbacks(internalName, obj, explosiveCalibres, {
+			{"GLAUNCHER", "40MM_GRENADE"},
+			{"UNDER_GLAUNCHER", "40MM_GRENADE"},
+			{"MORTAR", "MORTAR_SHELL"}
+		});
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  BulletSpeed     = obj.GetInt("ubBulletSpeed");
@@ -493,6 +526,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		ST::string Sound         = obj.getOptionalString("sound");
 		wep = new Launcher(itemIndex, internalName, shortName, name, description,
+					calibre,
 					BulletSpeed,
 					ReadyTime,
 					ShotsPer4Turns,
@@ -524,6 +558,9 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "CANNON")
 	{
+		auto calibre = readExplosiveCalibreWithFallbacks(internalName, obj, explosiveCalibres, {
+			{"TANK_CANNON", "TANK_SHELL"},
+		});
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  BulletSpeed     = obj.GetInt("ubBulletSpeed");
@@ -533,6 +570,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		ST::string Sound       = obj.getOptionalString("sound");
 		wep = new Cannon(itemIndex, internalName, shortName, name, description,
+					calibre,
 					BulletSpeed,
 					ReadyTime,
 					ShotsPer4Turns,
@@ -607,6 +645,9 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	return wep;
 }
 
+bool WeaponModel::shootsExplosiveCalibre() const {
+	return this->explosiveCalibre;
+}
 
 bool WeaponModel::matches(const CalibreModel *calibre) const
 {
@@ -617,6 +658,14 @@ bool WeaponModel::matches(const MagazineModel *mag) const
 {
 	return (this->calibre->index == mag->calibre->index)
 		&& (ubMagSize == mag->capacity);
+}
+
+bool WeaponModel::matches(const ExplosiveCalibreModel *calibre) const
+{
+	if (!this->shootsExplosiveCalibre()) {
+		return false;
+	}
+	return (this->explosiveCalibre->getID() == calibre->getID());
 }
 
 bool WeaponModel::isSameMagCapacity(const MagazineModel *mag) const
@@ -1269,6 +1318,7 @@ JsonValue PunchWeapon::serialize() const
 }
 
 Launcher::Launcher(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+			const ExplosiveCalibreModel* explosiveCalibre,
 			uint8_t BulletSpeed,
 			uint8_t ReadyTime,
 			uint8_t ShotsPer4Turns,
@@ -1290,6 +1340,7 @@ Launcher::Launcher(uint16_t itemIndex, ST::string internalName, ST::string short
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
 	this->sound          = Sound;
+	this->explosiveCalibre = explosiveCalibre;
 }
 
 JsonValue Launcher::serialize() const
@@ -1352,6 +1403,7 @@ JsonValue LAW::serialize() const
 }
 
 Cannon::Cannon(uint16_t itemIndex, ST::string internalName, ST::string shortName, ST::string name, ST::string description,
+		const ExplosiveCalibreModel* explosiveCalibre,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
 		uint8_t ShotsPer4Turns,
@@ -1374,6 +1426,7 @@ Cannon::Cannon(uint16_t itemIndex, ST::string internalName, ST::string shortName
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
 	this->sound          = Sound;
+	this->explosiveCalibre = explosiveCalibre;
 }
 
 JsonValue Cannon::serialize() const
