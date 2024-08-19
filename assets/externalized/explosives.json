@@ -315,6 +315,7 @@
         "internalName": "MORTAR_SHELL",
         "itemClass": "BOMB",
         "animation": "BLAST_2",
+        "calibre": "MORTAR_SHELL",
         "cursor": "INVALID",
         "inventoryGraphics": {
             "small": {
@@ -560,6 +561,7 @@
         "internalName": "GL_HE_GRENADE",
         "itemClass": "GRENADE",
         "animation": "BLAST_1",
+        "calibre": "40MM_GRENADE",
         "cursor": "INVALID",
         "inventoryGraphics": {
             "small": {
@@ -595,6 +597,7 @@
         "internalName": "GL_TEARGAS_GRENADE",
         "itemClass": "GRENADE",
         "animation": "TARGAS_EXP",
+        "calibre": "40MM_GRENADE",
         "cursor": "INVALID",
         "inventoryGraphics": {
             "small": {
@@ -630,6 +633,7 @@
         "internalName": "GL_STUN_GRENADE",
         "itemClass": "GRENADE",
         "animation": "STUN_BLAST",
+        "calibre": "40MM_GRENADE",
         "cursor": "INVALID",
         "inventoryGraphics": {
             "small": {
@@ -665,6 +669,7 @@
         "internalName": "GL_SMOKE_GRENADE",
         "itemClass": "GRENADE",
         "animation": "SMOKE_EXP",
+        "calibre": "40MM_GRENADE",
         "cursor": "INVALID",
         "inventoryGraphics": {
             "small": {
@@ -735,6 +740,7 @@
         "internalName": "TANK_SHELL",
         "itemClass": "BOMB",
         "animation": "BLAST_2",
+        "calibre": "TANK_SHELL",
         "cursor": "INVALID",
         "inventoryGraphics": {
             "small": {

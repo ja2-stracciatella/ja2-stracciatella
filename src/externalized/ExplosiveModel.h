@@ -2,6 +2,7 @@
 
 #include "ExplosionAnimationModel.h"
 #include "ItemModel.h"
+#include "ExplosiveCalibreModel.h"
 
 struct ExplosiveModel : ItemModel
 {
@@ -28,12 +29,14 @@ struct ExplosiveModel : ItemModel
 		uint8_t noise,
 		uint8_t volatility,
 		uint8_t type,
+		const ExplosiveCalibreModel *calibre,
 		const ExplosionAnimationModel *animation
 	);
 
 	virtual const ExplosiveModel* asExplosive() const { return this; }
 
 	static ExplosiveModel* deserialize(const JsonValue &json,
+						const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 						const std::vector<const ExplosionAnimationModel*> &animations,
 						const VanillaItemStrings& vanillaItemStrings);
 
@@ -45,6 +48,8 @@ struct ExplosiveModel : ItemModel
 	uint8_t getType() const;
 	const ExplosionAnimationModel* getAnimation() const;
 
+	bool isLaunchable() const;
+	const ExplosiveCalibreModel* getExplosiveCalibre() const;
 
 	protected:
 		uint8_t damage;
@@ -54,4 +59,5 @@ struct ExplosiveModel : ItemModel
 		uint8_t volatiltiy;
 		uint8_t type;
 		const ExplosionAnimationModel *animation;
+		const ExplosiveCalibreModel *calibre;
 };

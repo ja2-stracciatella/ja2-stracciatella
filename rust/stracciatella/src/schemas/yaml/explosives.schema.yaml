@@ -16,6 +16,10 @@ items:
           title: Animation ID
           description: ID of the explosion animation used for this explosive
           $ref: types/id.schema.yaml
+        calibre:
+          title: Calibre
+          description: The calibre of the launcher weapon that must be used to launch this explosive.
+          $ref: types/id.schema.yaml
         cursor:
           title: Cursor
           description: The cursor to use when the item is used

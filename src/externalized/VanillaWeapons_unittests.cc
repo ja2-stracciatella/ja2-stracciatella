@@ -109,6 +109,11 @@ TEST(Items, bug120_spas15DefaultMag)
 
 TEST(Items, ValidLaunchable)
 {
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
+	ASSERT_TRUE(cm->loadGameData());
+
+	GCM = cm;
+
 	EXPECT_TRUE(ValidLaunchable(MORTAR_SHELL, MORTAR));
 	EXPECT_FALSE(ValidLaunchable(MORTAR_SHELL, MORTAR_SHELL));
 	EXPECT_FALSE(ValidLaunchable(MORTAR_SHELL, TANK_CANNON));
@@ -119,10 +124,17 @@ TEST(Items, ValidLaunchable)
 	// Check if the function handles some random garbage input
 	EXPECT_FALSE(ValidLaunchable(BATTERIES, WINE));
 	EXPECT_FALSE(ValidLaunchable(0xf123, 0x97b2));
+
+	delete cm;
 }
 
 TEST(Items, GetLauncherFromLaunchable)
 {
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
+	ASSERT_TRUE(cm->loadGameData());
+
+	GCM = cm;
+
 	EXPECT_EQ(GetLauncherFromLaunchable(GL_TEARGAS_GRENADE), GLAUNCHER);
 	EXPECT_EQ(GetLauncherFromLaunchable(MORTAR_SHELL), MORTAR);
 	EXPECT_EQ(GetLauncherFromLaunchable(TANK_SHELL), TANK_CANNON);
@@ -131,6 +143,8 @@ TEST(Items, GetLauncherFromLaunchable)
 	// Check if the function handles some random garbage input
 	EXPECT_EQ(GetLauncherFromLaunchable(G11), NOTHING);
 	EXPECT_EQ(GetLauncherFromLaunchable(0xe941), NOTHING);
+
+	delete cm;
 }
 
 TEST(Items, ValidAttachment)

@@ -1,0 +1,13 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Explosive calibres
+items:
+  type: object
+  title: Explosive calibre
+  description: A calibre for launcher weapons in the game. This is used to determine which launcher or cannon can launch which explosive.
+  properties:
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+  required:
+    - internalName

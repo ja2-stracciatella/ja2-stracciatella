@@ -2146,7 +2146,8 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	//pSoldier->sLastTarget = sTargetGridNo;
 	pSoldier->target = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 
-	if (GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isGun())
+	auto item = GCM->getItem(pSoldier->inv[HANDPOS].usItem);
+	if (item->isGun())
 	{
 		if (pSoldier->bDoBurst)
 		{
@@ -2199,13 +2200,8 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 				}
 
 				// Check if our weapon has no intermediate anim...
-				switch( pSoldier->inv[ HANDPOS ].usItem )
-				{
-					case ROCKET_LAUNCHER:
-					case MORTAR:
-					case GLAUNCHER:
-						fDoFireRightAway = TRUE;
-						break;
+				if (item->isLauncher() || item->getItemIndex() == ROCKET_LAUNCHER) {
+					fDoFireRightAway = TRUE;
 				}
 
 				if ( fDoFireRightAway )
@@ -2517,8 +2513,8 @@ UINT16 PickSoldierReadyAnimation(SOLDIERTYPE* pSoldier, BOOLEAN fEndReady)
 	}
 
 	// Check if we have a gun.....
-	if ( GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->getItemClass() != IC_GUN &&
-		pSoldier->inv[ HANDPOS ].usItem != GLAUNCHER )
+	auto item = GCM->getItem(pSoldier->inv[ HANDPOS ].usItem);
+	if (item->getItemClass() != IC_GUN && !item->isLauncher())
 	{
 		return( INVALID_ANIMATION );
 	}

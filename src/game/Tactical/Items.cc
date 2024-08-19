@@ -116,16 +116,6 @@ static std::map<UINT16, decltype(g_helmets) *> const g_attachments_mod
 	{ADRENALINE_BOOSTER, &g_leggings}
 };
 
-static std::map<UINT16, std::set<UINT16> const> const Launchable
-{
-	{GL_HE_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
-	{GL_TEARGAS_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
-	{GL_STUN_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
-	{GL_SMOKE_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
-	{MORTAR_SHELL, {MORTAR}},
-	{TANK_SHELL, {TANK_CANNON}}
-};
-
 static std::initializer_list<std::array<UINT16, 2> const> const CompatibleFaceItems
 {
 	{ NIGHTGOGGLES, EXTENDEDEAR },
@@ -508,36 +498,6 @@ INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper
 	return( ITEM_NOT_FOUND );
 }
 
-
-static BOOLEAN GLGrenadeInSlot(const SOLDIERTYPE* pSoldier, INT8 bSlot)
-{
-	switch (pSoldier->inv[bSlot].usItem)
-	{
-		case GL_HE_GRENADE:
-		case GL_TEARGAS_GRENADE:
-		case GL_STUN_GRENADE:
-		case GL_SMOKE_GRENADE:
-			return(TRUE);
-		default:
-			return(FALSE);
-	}
-}
-
-// for grenade launchers
-INT8 FindGLGrenade( const SOLDIERTYPE * pSoldier )
-{
-	INT8 bLoop;
-
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
-	{
-		if (GLGrenadeInSlot( pSoldier, bLoop ))
-		{
-			return( bLoop );
-		}
-	}
-	return( NO_SLOT );
-}
-
 INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
@@ -566,9 +526,12 @@ INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 
 	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
 	{
-		if ( (GCM->getItem(pSoldier->inv[ bLoop ].usItem)->isGrenade()) && !GLGrenadeInSlot( pSoldier, bLoop ) )
-		{
-			return( bLoop );
+		if (GCM->getItem(pSoldier->inv[ bLoop ].usItem)->isGrenade()) {
+			auto explosive = GCM->getExplosive(pSoldier->inv[ bLoop ].usItem);
+
+			if (!explosive->isLaunchable()) {
+				return bLoop;
+			}
 		}
 	}
 	return( NO_SLOT );
@@ -798,20 +761,45 @@ BOOLEAN CompatibleFaceItem(UINT16 const item1, UINT16 const item2)
 
 BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
 {
-	auto const it = Launchable.find(usLaunchable);
-	if (it != Launchable.end())
-	{
-		return it->second.count(usItem) == 1;
+	auto launchable = GCM->getItem(usLaunchable, ItemSystem::nothrow);
+	if (!launchable || !launchable->asExplosive()) {
+		return false;
+	}
+	auto explosiveCalibre = launchable->asExplosive()->getExplosiveCalibre();
+	if (!explosiveCalibre) {
+		return false;
+	}
+	auto item = GCM->getItem(usItem, ItemSystem::nothrow);
+	if (!item || !item->isWeapon()) {
+		return false;
 	}
 
-	return FALSE;
+	return item->asWeapon()->matches(explosiveCalibre);
 }
 
 
 UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 {
-	auto const it = Launchable.find(usLaunchable);
-	return it != Launchable.end() ? *it->second.begin() : NOTHING;
+	auto launchable = GCM->getItem(usLaunchable, ItemSystem::nothrow);
+	if (!launchable || !launchable->asExplosive()) {
+		return NOTHING;
+	}
+	auto explosiveCalibre = launchable->asExplosive()->getExplosiveCalibre();
+	if (!explosiveCalibre) {
+		return NOTHING;
+	}
+
+	for (auto item : GCM->getItems()) {
+		auto weapon = item->asWeapon();
+		if (!weapon) {
+			continue;
+		}
+
+		if (weapon->matches(explosiveCalibre)) {
+			return weapon->getItemIndex();
+		}
+	}
+	return NOTHING;
 }
 
 
@@ -1400,10 +1388,15 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 
 	if (pSoldier == NULL)
 	{
-		return( NO_SLOT );
+		return NO_SLOT;
 	}
 	pObj = &(pSoldier->inv[bWeaponIn]);
-	if ( GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN && pObj->usItem != TANK_CANNON )
+	auto item = GCM->getItem(pObj->usItem, ItemSystem::nothrow);
+	if ( !item || !item->isWeapon() ) {
+		return NO_SLOT;
+	}
+	auto weapon = item->asWeapon();
+	if ( weapon->getItemClass() == IC_GUN && !weapon->shootsExplosiveCalibre() )
 	{
 		// look for same ammo as before
 		bSlot = FindObjExcludingSlot( pSoldier, pObj->usGunAmmoItem, bExcludeSlot );
@@ -1413,7 +1406,7 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 			return( bSlot );
 		}
 		// look for any ammo that matches which is of the same calibre and magazine size
-		bSlot = FindAmmo( pSoldier, GCM->getWeapon(pObj->usItem)->calibre, GCM->getWeapon(pObj->usItem)->ubMagSize, bExcludeSlot );
+		bSlot = FindAmmo( pSoldier, weapon->calibre, weapon->ubMagSize, bExcludeSlot );
 		if (bSlot != NO_SLOT)
 		{
 			return( bSlot );
@@ -1421,24 +1414,25 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 		else
 		{
 			// look for any ammo that matches which is of the same calibre (different size okay)
-			return( FindAmmo( pSoldier, GCM->getWeapon(pObj->usItem)->calibre, ANY_MAGSIZE, bExcludeSlot ) );
+			return( FindAmmo( pSoldier, weapon->calibre, ANY_MAGSIZE, bExcludeSlot ) );
 		}
 	}
-	else
+	else if (weapon->shootsExplosiveCalibre())
 	{
-		switch( pObj->usItem )
-		{
-			case MORTAR:
-				return( FindObj( pSoldier, MORTAR_SHELL ) );
-			case TANK_CANNON:
-				return( FindObj( pSoldier, TANK_SHELL ) );
-			case GLAUNCHER:
-			case UNDER_GLAUNCHER:
-				return( FindObjInObjRange( pSoldier, GL_HE_GRENADE, GL_SMOKE_GRENADE ) );
-			default:
-				return( NO_SLOT );
+		for (auto item : GCM->getItems()) {
+			auto explosive = item->asExplosive();
+			if (explosive && explosive->isLaunchable()) {
+				if (explosive->getExplosiveCalibre()->getID() == weapon->explosiveCalibre->getID()) {
+					auto slot = FindObj(pSoldier, explosive->getItemIndex());
+					if (slot != NO_SLOT) {
+						return slot;
+					}
+				}
+			}
 		}
 	}
+
+	return NO_SLOT;
 }
 
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
@@ -1542,13 +1536,14 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 {
 	OBJECTTYPE& target     = *pTargetObj;
 	OBJECTTYPE& attachment = *pAttachment;
-	bool const valid_launchable = ValidLaunchable(attachment.usItem, target.usItem);
-	if (valid_launchable || ValidItemAttachment(&target, attachment.usItem, TRUE))
+	bool const validLaunchable = ValidLaunchable(attachment.usItem, target.usItem);
+	bool validUGGrenade = ValidLaunchable(attachment.usItem, UNDER_GLAUNCHER);
+	if (validLaunchable || ValidItemAttachment(&target, attachment.usItem, TRUE))
 	{
 		// find an attachment position...
 		// second half of this 'if' is for attaching GL grenades to a gun
 		INT8 attach_pos;
-		if (valid_launchable || (GL_HE_GRENADE <= attachment.usItem && attachment.usItem <= GL_SMOKE_GRENADE))
+		if (validLaunchable || validUGGrenade)
 		{
 			// try replacing if possible
 			attach_pos = FindAttachmentByClass(&target, GCM->getItem(attachment.usItem)->getItemClass());

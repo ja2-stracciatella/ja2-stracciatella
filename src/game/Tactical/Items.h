@@ -24,7 +24,6 @@ extern INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8
 extern INT8 FindExactObj( const SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
 INT8 FindObjInObjRange(const SOLDIERTYPE* s, UINT16 usItem1, UINT16 usItem2);
 extern INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon );
-extern INT8 FindGLGrenade( const SOLDIERTYPE * pSoldier );
 extern INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier );
 extern INT8 FindUsableObj( const SOLDIERTYPE * pSoldier, UINT16 usItem );
 

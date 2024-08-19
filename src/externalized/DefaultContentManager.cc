@@ -19,6 +19,7 @@
 #include "DealerInventory.h"
 #include "DealerModel.h"
 #include "JsonUtility.h"
+#include "ExplosiveCalibreModel.h"
 #include "LoadingScreenModel.h"
 #include "MagazineModel.h"
 #include "RustInterface.h"
@@ -484,7 +485,7 @@ bool DefaultContentManager::loadWeapons(const VanillaItemStrings& vanillaItemStr
 {
 	auto json = readJsonDataFileWithSchema("weapons.json");
 	for (auto& element : json.toVec()) {
-		WeaponModel *w = WeaponModel::deserialize(element, m_calibreMap, vanillaItemStrings);
+		WeaponModel *w = WeaponModel::deserialize(element, m_calibreMap, m_explosiveCalibres, vanillaItemStrings);
 		SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
 		if (w->getItemIndex() >= m_items.size())
@@ -509,11 +510,24 @@ bool DefaultContentManager::loadExplosionAnimations()
 	return true;
 }
 
+bool DefaultContentManager::loadExplosiveCalibres()
+{
+	auto json = readJsonDataFileWithSchema("explosive-calibres.json");
+
+	uint16_t idx = 1;
+	for (auto& element : json.toVec()) {
+		m_explosiveCalibres.push_back(ExplosiveCalibreModel::deserialize(idx, element));
+		idx++;
+	}
+
+	return true;
+}
+
 bool DefaultContentManager::loadExplosives(const VanillaItemStrings& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations)
 {
 	auto json = readJsonDataFileWithSchema("explosives.json");
 	for (auto& element : json.toVec()) {
-		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosionAnimations, vanillaItemStrings);
+		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_explosionAnimations, vanillaItemStrings);
 		SLOGD("Loaded explosive {} {}", e->getItemIndex(), e->getInternalName());
 
 		m_items[e->getItemIndex()] = e;
@@ -758,6 +772,7 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 	m_items.resize(MAXITEMS);
 	bool result = loadItems(vanillaItemStrings)
 		&& loadCalibres()
+		&& loadExplosiveCalibres()
 		&& loadAmmoTypes()
 		&& loadMagazines(vanillaItemStrings)
 		&& loadWeapons(vanillaItemStrings)

@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 enum SoundID;
+class ExplosiveCalibreModel;
 struct CalibreModel;
 struct MagazineModel;
 
@@ -37,12 +38,15 @@ struct WeaponModel : ItemModel
 
 	static WeaponModel* deserialize(const JsonValue &json,
 	const std::map<ST::string, const CalibreModel*> &calibreMap,
+	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 	const VanillaItemStrings& vanillaItemStrings);
 
 	virtual const WeaponModel* asWeapon() const   { return this; }
 
+	bool shootsExplosiveCalibre() const;
 	bool matches(const CalibreModel *calibre) const;
 	bool matches(const MagazineModel *mag) const;
+	bool matches(const ExplosiveCalibreModel *explosiveCalibre) const;
 	bool isSameMagCapacity(const MagazineModel *mag) const;
 
 	/** Check if the given attachment can be attached to the item. */
@@ -72,6 +76,7 @@ struct WeaponModel : ItemModel
 	UINT8    ubWeaponClass;    // handgun/shotgun/rifle/knife
 	UINT8    ubWeaponType;     // exact type (for display purposes)
 	const CalibreModel *calibre;  // type of ammunition needed
+	const ExplosiveCalibreModel *explosiveCalibre;  // type of ammunition needed
 	UINT8    ubReadyTime;      // APs to ready/unready weapon
 	UINT8    ubShotsPer4Turns; // maximum (mechanical) firing rate
 	UINT8    ubShotsPerBurst;
@@ -375,6 +380,7 @@ struct Launcher : WeaponModel
 		ST::string shortName,
 		ST::string name,
 		ST::string description,
+		const ExplosiveCalibreModel* explosiveCalibre,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
 		uint8_t ShotsPer4Turns,
@@ -415,6 +421,7 @@ struct Cannon : WeaponModel
 		ST::string shortName,
 		ST::string name,
 		ST::string description,
+		const ExplosiveCalibreModel* explosiveCalibre,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
 		uint8_t ShotsPer4Turns,

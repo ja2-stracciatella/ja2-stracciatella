@@ -218,6 +218,7 @@ protected:
 	std::multimap<MusicMode, const ST::string> m_musicMap;
 
 	std::vector<const ExplosionAnimationModel*> m_explosionAnimations;
+	std::vector<const ExplosiveCalibreModel*> m_explosiveCalibres;
 
 	std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
 	std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
@@ -276,6 +277,7 @@ protected:
 	bool loadExplosives(const VanillaItemStrings& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations);
 	bool loadItems(const VanillaItemStrings& vanillaItemStrings);
 	bool loadMagazines(const VanillaItemStrings& vanillaItemStrings);
+	bool loadExplosiveCalibres();
 	bool loadCalibres();
 	bool loadAmmoTypes();
 	bool loadArmyData();
