@@ -56,7 +56,7 @@ LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex );
 void AddLandToHead(UINT32 iMapIndex, UINT16 usIndex);
 LEVELNODE* FindTypeInLandLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
-BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
+LEVELNODE * TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
 void ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex);
 void DeleteAllLandLayers(UINT32 iMapIndex);
 void InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);

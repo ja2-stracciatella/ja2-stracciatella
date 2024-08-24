@@ -185,6 +185,39 @@ LEVELNODE * TypeRangeExistsInNodeChain(LEVELNODE * node, UINT32 lower, UINT32 up
 	// Could not find it.
 	return nullptr;
 }
+
+// Common removal function template for the LEVELNODE linked lists that do not
+// require any special treatment: Topmost, Roof, OnRoof, and Shadow.
+template<typename T>
+bool Remove(LEVELNODE *& headReference, T removeThis)
+{
+	// Holds the address of either the head member in the MAP_ELEMENT or the
+	// pNext pointer of the node before the one we want to remove.
+	LEVELNODE ** previous{ &headReference };
+
+	// Search the levelnode chain for the given index or levelnode.
+	for (LEVELNODE * current{ headReference }; current != nullptr;
+		 current = current->pNext, previous = &((*previous)->pNext))
+	{
+		if constexpr (std::is_same_v<T, LEVELNODE *>)
+		{
+			if (current != removeThis) continue;
+		}
+		else
+		{
+			static_assert(std::is_same_v<T, UINT16>);
+			if (current->usIndex != removeThis) continue;
+		}
+
+		// Remove current node from list.
+		*previous = current->pNext;
+		delete current;
+		return true;
+	}
+
+	// Could not find it.
+	return false;
+}
 }
 
 
@@ -369,10 +402,10 @@ LEVELNODE* FindTypeInLandLayer(UINT32 const map_idx, UINT32 const type)
 }
 
 
-BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
+LEVELNODE * TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
 	// Look through all objects and Search for type
-	return TypeRangeExistsInNodeChain(gpWorldLevelData[iMapIndex].pLandHead, fStartType, fEndType) != nullptr;
+	return TypeRangeExistsInNodeChain(gpWorldLevelData[iMapIndex].pLandHead, fStartType, fEndType);
 }
 
 
@@ -941,63 +974,13 @@ LEVELNODE* AddShadowToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex)
 {
 	// Look through all shadows and remove index if found
-	LEVELNODE* pOldShadow = NULL;
-	for (LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow != NULL; pShadow = pShadow->pNext)
-	{
-		if (pShadow->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldShadow == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pShadowHead = pShadow->pNext;
-			}
-			else
-			{
-				pOldShadow->pNext = pShadow->pNext;
-			}
-
-			delete pShadow;
-			return TRUE;
-		}
-
-		pOldShadow = pShadow;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pShadowHead, usIndex);
 }
 
 
 BOOLEAN RemoveShadowFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 {
-	LEVELNODE* pOldShadow = NULL;
-	for (LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow != NULL; pShadow = pShadow->pNext)
-	{
-		if (pShadow == pNode)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldShadow == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pShadowHead = pShadow->pNext;
-			}
-			else
-			{
-				pOldShadow->pNext = pShadow->pNext;
-			}
-
-			delete pShadow;
-			return TRUE;
-		}
-
-		pOldShadow = pShadow;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pShadowHead, pNode);
 }
 
 
@@ -1221,33 +1204,7 @@ LEVELNODE* AddRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 BOOLEAN RemoveRoof(UINT32 iMapIndex, UINT16 usIndex)
 {
 	// Look through all Roofs and remove index if found
-	LEVELNODE* pOldRoof = NULL;
-	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL; pRoof = pRoof->pNext)
-	{
-		if (pRoof->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldRoof == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pRoofHead = pRoof->pNext;
-			}
-			else
-			{
-				pOldRoof->pNext = pRoof->pNext;
-			}
-
-			DeleteStructureFromWorld(pRoof->pStructureData);
-			delete pRoof;
-			return TRUE;
-		}
-
-		pOldRoof = pRoof;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pRoofHead, usIndex);
 }
 
 
@@ -1362,66 +1319,13 @@ LEVELNODE* AddOnRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 
 BOOLEAN RemoveOnRoof(UINT32 iMapIndex, UINT16 usIndex)
 {
-	LEVELNODE* pOldOnRoof = NULL;
-
-	// Look through all OnRoofs and remove index if found
-	for (LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof != NULL; pOnRoof = pOnRoof->pNext)
-	{
-		if (pOnRoof->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldOnRoof == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pOnRoofHead = pOnRoof->pNext;
-			}
-			else
-			{
-				pOldOnRoof->pNext = pOnRoof->pNext;
-			}
-
-			delete pOnRoof;
-			return TRUE;
-		}
-
-		pOldOnRoof = pOnRoof;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pOnRoofHead, usIndex);
 }
 
 
-BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
+BOOLEAN RemoveOnRoofFromLevelNode(UINT32 iMapIndex, LEVELNODE *pNode)
 {
-	LEVELNODE* pOldOnRoof = NULL;
-
-	for (LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof != NULL; pOnRoof = pOnRoof->pNext)
-	{
-		if (pOnRoof == pNode)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldOnRoof == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pOnRoofHead = pOnRoof->pNext;
-			}
-			else
-			{
-				pOldOnRoof->pNext = pOnRoof->pNext;
-			}
-
-			delete pOnRoof;
-			return TRUE;
-		}
-
-		pOldOnRoof = pOnRoof;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pOnRoofHead, pNode);
 }
 
 
@@ -1504,64 +1408,14 @@ LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 BOOLEAN RemoveTopmost(UINT32 iMapIndex, UINT16 usIndex)
 {
 	// Look through all topmosts and remove index if found
-	LEVELNODE* pOldTopmost = NULL;
-	for (LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead; pTopmost != NULL; pTopmost = pTopmost->pNext)
-	{
-		if (pTopmost->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldTopmost == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pTopmostHead = pTopmost->pNext;
-			}
-			else
-			{
-				pOldTopmost->pNext = pTopmost->pNext;
-			}
-
-			delete pTopmost;
-			return TRUE;
-		}
-
-		pOldTopmost = pTopmost;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pTopmostHead, usIndex);
 }
 
 
 BOOLEAN RemoveTopmostFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 {
-	// Look through all topmosts and remove index if found
-	LEVELNODE* pOldTopmost = NULL;
-	for (LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead; pTopmost != NULL; pTopmost = pTopmost->pNext)
-	{
-		if (pTopmost == pNode)
-		{
-			// OK, set links
-			// Check for head or tail
-			if (pOldTopmost == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pTopmostHead = pTopmost->pNext;
-			}
-			else
-			{
-				pOldTopmost->pNext = pTopmost->pNext;
-			}
-
-			delete pTopmost;
-			return TRUE;
-		}
-
-		pOldTopmost = pTopmost;
-	}
-
-	// Could not find it
-	return FALSE;
+	// Look through all topmosts and remove levelnode if found
+	return Remove(gpWorldLevelData[iMapIndex].pTopmostHead, pNode);
 }
 
 

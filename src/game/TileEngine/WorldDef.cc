@@ -2991,18 +2991,7 @@ static void RemoveWorldWireFrameTiles()
 
 static void RemoveWireFrameTiles(GridNo const gridno)
 {
-	for (LEVELNODE* i = gpWorldLevelData[gridno].pTopmostHead; i;)
-	{
-		LEVELNODE* const next = i->pNext;
-
-		if (i->usIndex < NUMBEROFTILES &&
-				gTileDatabase[i->usIndex].fType == WIREFRAMES)
-		{
-			RemoveTopmost(gridno, i->usIndex);
-		}
-
-		i = next;
-	}
+	RemoveAllTopmostsOfTypeRange(gridno, WIREFRAMES, WIREFRAMES);
 }
 
 
