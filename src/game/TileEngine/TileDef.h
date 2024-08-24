@@ -3,7 +3,7 @@
 
 #include "JA2Types.h"
 #include "TileDat.h"
-
+#include <optional>
 
 // CATEGORY TYPES
 #define NO_TILE				64000
@@ -132,6 +132,7 @@ UINT16 GetTypeSubIndexFromTileIndex(UINT32 uiCheckType, UINT16 usIndex);
 
 UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex);
 UINT32 GetTileType(UINT16 usIndex);
+std::optional<UINT32> GetTileTypeSafe(UINT16 tileIndex);
 UINT32 GetTileFlags(UINT16 usIndex);
 
 UINT8 GetTileTypeLogicalHeight(UINT32 type);

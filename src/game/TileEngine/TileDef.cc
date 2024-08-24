@@ -1,3 +1,4 @@
+#include <optional>
 #include <stdexcept>
 
 #include "HImage.h"
@@ -255,6 +256,15 @@ UINT32 GetTileType(const UINT16 usIndex)
 {
 	Assert(usIndex < lengthof(gTileDatabase));
 	return gTileDatabase[usIndex].fType;
+}
+
+std::optional<UINT32> GetTileTypeSafe(UINT16 tileIndex)
+{
+	if (tileIndex < std::size(gTileDatabase))
+	{
+		return { gTileDatabase[tileIndex].fType };
+	}
+	return std::nullopt;
 }
 
 

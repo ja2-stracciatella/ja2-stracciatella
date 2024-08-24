@@ -22,7 +22,6 @@ TODO0021
 - TODO0003 Implement sound streaming
 - TODO0005 Make it endian agnostic
 - TODO0007 Deduct AIM_PENALTY_SMG when firing a SMG even when second hand is free?
-- TODO0009 Possible endless loop
 - TODO000A Memory leak?
 - TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
 - TODO000F Only half of the data gets saved/loaded

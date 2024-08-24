@@ -94,15 +94,7 @@ UINT16 SearchForRoofType(UINT32 const map_idx)
 
 static bool RoofAtGridNo(UINT32 const map_idx)
 {
-	for (LEVELNODE const* i = gpWorldLevelData[map_idx].pRoofHead; i;)
-	{
-		if (i->usIndex == NO_TILE) continue;
-
-		UINT32 const tile_type = GetTileType(i->usIndex);
-		if (FIRSTROOF <= tile_type && tile_type <= SECONDSLANTROOF) return true;
-		i = i->pNext; // XXX TODO0009 if i->usIndex == NO_TILE this is an endless loop
-	}
-	return false;
+	return TypeRangeExistsInRoofLayer(map_idx, FIRSTROOF, SECONDSLANTROOF) != nullptr;
 }
 
 

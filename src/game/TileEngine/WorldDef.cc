@@ -57,6 +57,7 @@
 #include "World_Items.h"
 #include "WorldDat.h"
 #include "WorldMan.h"
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 #include <string_theory/format>
@@ -121,15 +122,7 @@ BOOLEAN OpenableAtGridNo(const UINT32 iMapIndex)
 
 bool FloorAtGridNo(UINT32 const map_idx)
 {
-	for (LEVELNODE const* i = gpWorldLevelData[map_idx].pLandHead; i;)
-	{
-		if (i->usIndex == NO_TILE) continue;
-
-		UINT32 const tile_type = GetTileType(i->usIndex);
-		if (FIRSTFLOOR <= tile_type && tile_type <= LASTFLOOR) return true;
-		i = i->pNext; // XXX TODO0009 if i->usIndex == NO_TILE this is an endless loop
-	}
-	return false;
+	return TypeRangeExistsInLandLayer(map_idx, FIRSTFLOOR, LASTFLOOR);
 }
 
 
