@@ -1,3 +1,4 @@
+#include "JA2Types.h"
 #include "AI.h"
 #include "Animation_Control.h"
 #include "OppList.h"
@@ -356,38 +357,26 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 {
 	// September 9, 1998: added code for LAWs (CJC)
 	UINT8 ubLoop2;
-	INT32 iAttackValue;
-	INT32 iHitRate, iThreatValue, iTotalThreatValue,iOppThreatValue[MAXMERCS];
-	INT16 sGridNo, sEndGridNo, sFriendTile[MAXMERCS], sOpponentTile[MAXMERCS];
+	INT32 iOppThreatValue[MAXMERCS];
+	INT16 sEndGridNo, sFriendTile[MAXMERCS], sOpponentTile[MAXMERCS];
 	INT8  bFriendLevel[MAXMERCS], bOpponentLevel[MAXMERCS];
-	INT32 iEstDamage;
 	UINT8 ubFriendCnt = 0;
 	UINT8 ubOpponentCnt = 0;
 	SOLDIERTYPE* opponents[MAXMERCS];
 	UINT8 ubRawAPCost,ubMaxPossibleAimTime;
-	UINT8 ubChanceToHit,ubChanceToGetThrough,ubChanceToReallyHit;
-	UINT32 uiPenalty;
-	UINT8 ubSearchRange;
-	UINT16 usOppDist;
-	BOOLEAN fFriendsNearby;
-	UINT16 usInHand, usGrenade;
-	UINT8 ubOppsInRange, ubOppsAdjacent;
-	BOOLEAN fSkipLocation;
+	UINT8 ubChanceToHit,ubChanceToGetThrough;
 	INT8  bPayloadPocket;
-	INT8  bMaxLeft,bMaxRight,bMaxUp,bMaxDown,bXOffset,bYOffset;
-	INT8  bPersOL, bPublOL;
 	static INT16 sExcludeTile[100]; // This array is for storing tiles that we have
 	UINT8 ubNumExcludedTiles = 0;		// already considered, to prevent duplication of effort
 	INT32 iTossRange;
 	UINT8 ubSafetyMargin = 0;
-	UINT8 ubDiff;
 	INT8  bEndLevel;
 
-	usInHand = pSoldier->inv[HANDPOS].usItem;
-	usGrenade = NOTHING;
+	UINT16 const usInHand{ pSoldier->inv[HANDPOS].usItem };
+	UINT16 usGrenade{ NOTHING };
 
 	auto weapon = GCM->getWeapon(usInHand);
-	if ( EXPLOSIVE_GUN( usInHand ) )
+	if (EXPLOSIVE_GUN(usInHand) && weapon)
 	{
 		iTossRange = weapon->usRange / CELL_X_SIZE;
 	}
@@ -396,7 +385,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		iTossRange = CalcMaxTossRange( pSoldier, usInHand, TRUE );
 	}
 
-	if (weapon->shootsExplosiveCalibre()) {
+	if (weapon && weapon->shootsExplosiveCalibre()) {
 		bPayloadPocket = FindLaunchable( pSoldier, usInHand );
 		if (bPayloadPocket == NO_SLOT)
 		{
@@ -426,7 +415,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		}
 	}
 
-	ubDiff = SoldierDifficultyLevel( pSoldier );
+	auto const ubDiff{ SoldierDifficultyLevel(pSoldier) };
 
 	// make a list of tiles one's friends are positioned in
 	FOR_EACH_MERC(i)
@@ -480,11 +469,11 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		}
 
 
-		bPersOL = pSoldier->bOppList[pOpponent->ubID];
+		auto const bPersOL{ pSoldier->bOppList[pOpponent->ubID] };
 
 		if ((usInHand == MORTAR) || (usInHand == GLAUNCHER))
 		{
-			bPublOL = gbPublicOpplist[pSoldier->bTeam][pOpponent->ubID];
+			auto const bPublOL{ gbPublicOpplist[pSoldier->bTeam][pOpponent->ubID] };
 			// allow long range firing, where target doesn't PERSONALLY see opponent
 			if ((bPersOL != SEEN_CURRENTLY) && (bPublOL != SEEN_CURRENTLY))
 			{
@@ -620,27 +609,25 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	for (UINT8 ubLoop = 0; ubLoop < ubOpponentCnt; ++ubLoop)
 	{
 		// search all tiles within 2 squares of this opponent
-		ubSearchRange = MAX_TOSS_SEARCH_DIST;
+		constexpr INT8 ubSearchRange = MAX_TOSS_SEARCH_DIST;
 
 		// determine maximum horizontal limits
 		//bMaxLeft  = std::min(ubSearchRange,(sOpponentTile[ubLoop] % MAXCOL));
-		bMaxLeft = ubSearchRange;
+		constexpr INT8 bMaxLeft = ubSearchRange;
 		//bMaxRight = std::min(ubSearchRange,MAXCOL - ((sOpponentTile[ubLoop] % MAXCOL) + 1));
-		bMaxRight = ubSearchRange;
+		constexpr INT8 bMaxRight = ubSearchRange;
 
 		// determine maximum vertical limits
-		bMaxUp   = ubSearchRange;
-		bMaxDown = ubSearchRange;
+		constexpr INT8 bMaxUp   = ubSearchRange;
+		constexpr INT8 bMaxDown = ubSearchRange;
 
 		// evaluate every tile for its opponent-damaging potential
-		for (bYOffset = -bMaxUp; bYOffset <= bMaxDown; bYOffset++)
+		for (INT8 bYOffset = -bMaxUp; bYOffset <= bMaxDown; ++bYOffset)
 		{
-			for (bXOffset = -bMaxLeft; bXOffset <= bMaxRight; bXOffset++)
+			for (INT8 bXOffset = -bMaxLeft; bXOffset <= bMaxRight; ++bXOffset)
 			{
-				//HandleMyMouseCursor(KEYBOARDALSO);
-
 				// calculate the next potential gridno near this opponent
-				sGridNo = sOpponentTile[ubLoop] + bXOffset + (MAXCOL * bYOffset);
+				GridNo const sGridNo = sOpponentTile[ubLoop] + bXOffset + (MAXCOL * bYOffset);
 
 				// this shouldn't ever happen
 				if ((sGridNo < 0) || (sGridNo >= GRIDSIZE))
@@ -686,19 +673,11 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					}
 				}
 
-				fSkipLocation = FALSE;
 				// Check to see if we have considered this tile before:
-				for (ubLoop2 = 0; ubLoop2 < ubNumExcludedTiles; ubLoop2++)
+				if (std::find(sExcludeTile, sExcludeTile + ubNumExcludedTiles, sGridNo)
+					== sExcludeTile + ubNumExcludedTiles)
 				{
-					if (sExcludeTile[ubLoop2] == sGridNo)
-					{
-						// already checked!
-						fSkipLocation = TRUE;
-						break;
-					}
-				}
-				if (fSkipLocation)
-				{
+					// already checked!
 					continue;
 				}
 
@@ -710,8 +689,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					continue;              // next gridno
 
 				// check whether there are any friends standing near this gridno
-				fFriendsNearby = FALSE;
-
+				bool fFriendsNearby{ false };
 				for (ubLoop2 = 0; ubLoop2 < ubFriendCnt; ubLoop2++)
 				{
 					if ( (bFriendLevel[ubLoop2] == bOpponentLevel[ubLoop]) && ( PythSpacesAway(sFriendTile[ubLoop2],sGridNo) <= ubSafetyMargin ) )
@@ -725,25 +703,25 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					continue;      // this location is no good, move along now
 
 				// Well this place shows some promise, evaluate its "damage potential"
-				iTotalThreatValue = 0;
-				ubOppsInRange = 0;
-				ubOppsAdjacent = 0;
+				int iTotalThreatValue = 0;
+				UINT8 ubOppsInRange = 0;
+				UINT8 ubOppsAdjacent = 0;
 				// skip this location unless it's right on top of an enemy or
 				// adjacent to more than 1
-				fSkipLocation = TRUE;
+				bool fSkipLocation{ true };
 
 				for (ubLoop2 = 0; ubLoop2 < ubOpponentCnt; ubLoop2++)
 				{
-					usOppDist = PythSpacesAway( sOpponentTile[ubLoop2], sGridNo );
+					auto const usOppDist{ PythSpacesAway( sOpponentTile[ubLoop2], sGridNo ) };
 
 					// if this opponent is close enough to the target gridno
 					if (usOppDist <= 3)
 					{
 						// start with this opponents base threat value
-						iThreatValue = iOppThreatValue[ubLoop2];
+						auto const iThreatValue{ iOppThreatValue[ubLoop2] };
 
 						// estimate how much damage this tossed item would do to him
-						iEstDamage = EstimateThrowDamage(pSoldier, bPayloadPocket, opponents[ubLoop2], sGridNo);
+						auto iEstDamage{ EstimateThrowDamage(pSoldier, bPayloadPocket, opponents[ubLoop2], sGridNo) };
 
 						if (usOppDist)
 						{
@@ -830,7 +808,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 							// rate "chance of hitting" according to how far away this is from the target
 							// but keeping in mind that we don't want to hit far, subtract 1 from the radius here
 							// to penalize being far from the target
-							uiPenalty = 100 * PythSpacesAway( sGridNo, sEndGridNo ) / (ubSafetyMargin - 1);
+							int const uiPenalty{ 100 * PythSpacesAway( sGridNo, sEndGridNo ) / (ubSafetyMargin - 1) };
 							if ( uiPenalty < 100 )
 							{
 								ubChanceToGetThrough = 100 - (UINT8) uiPenalty;
@@ -890,10 +868,10 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					}
 				}
 
-				iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubMaxPossibleAimTime);
+				int const iHitRate{ (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubMaxPossibleAimTime) };
 
 				// calculate chance to REALLY hit: throw accurately AND get past cover
-				ubChanceToReallyHit = (ubChanceToHit * ubChanceToGetThrough) / 100;
+				UINT8 const ubChanceToReallyHit = (ubChanceToHit * ubChanceToGetThrough) / 100;
 
 				// if we can't REALLY hit at all
 				if (ubChanceToReallyHit == 0)
@@ -902,7 +880,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				// calculate the combined "attack value" for this opponent
 				// maximum possible attack value here should be about 140 million
 				// typical attack value here should be about 500 thousand
-				iAttackValue = (iHitRate * ubChanceToReallyHit * iTotalThreatValue) / 1000;
+				int const iAttackValue{ (iHitRate * ubChanceToReallyHit * iTotalThreatValue) / 1000 };
 
 				// unlike SHOOTing and STABbing, find strictly the highest attackValue
 				if (iAttackValue > pBestThrow->iAttackValue)
