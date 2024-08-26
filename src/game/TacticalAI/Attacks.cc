@@ -675,7 +675,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 				// Check to see if we have considered this tile before:
 				if (std::find(sExcludeTile, sExcludeTile + ubNumExcludedTiles, sGridNo)
-					== sExcludeTile + ubNumExcludedTiles)
+					!= sExcludeTile + ubNumExcludedTiles)
 				{
 					// already checked!
 					continue;
