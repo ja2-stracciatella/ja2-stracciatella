@@ -769,129 +769,95 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 }
 
 
-BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, const ExplosiveModel* pExplosive, INT16 const sSubsequent, BOOLEAN const fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
+BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, const SmokeEffectModel* smokeEffect, INT16 const sSubsequent, BOOLEAN const fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
 {
 	INT8 bPosOfMask = NO_SLOT;
 
 	if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->bLife || AM_A_ROBOT( pSoldier ) )
 	{
-		return( fRecompileMovementCosts );
+		return fRecompileMovementCosts;
+	}
+	if (!smokeEffect->dealsAnyDamage()) {
+		return fRecompileMovementCosts;
+	}
+	if (!smokeEffect->getAffectsMonsters() && pSoldier->uiStatusFlags & SOLDIER_MONSTER) {
+		return fRecompileMovementCosts;
+	}
+	if (!smokeEffect->getAffectsRobot() && AM_A_ROBOT(pSoldier)) {
+		return fRecompileMovementCosts;
+	}
+	if ( sSubsequent && IsSoldierAlreadyAffectedBySmokeEffect(pSoldier, smokeEffect) ) {
+		return fRecompileMovementCosts;
 	}
 
-	if ( pExplosive->getType() == EXPLOSV_CREATUREGAS )
+	if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].bStatus[0] >= USABLE )
 	{
-		if ( pSoldier->uiStatusFlags & SOLDIER_MONSTER )
-		{
-			// unaffected by own gas effects
-			return( fRecompileMovementCosts );
-		}
-		if ( sSubsequent && pSoldier->fHitByGasFlags & HIT_BY_CREATUREGAS )
-		{
-			// already affected by creature gas this turn
-			return( fRecompileMovementCosts );
-		}
+		bPosOfMask = HEAD1POS;
 	}
-	else // no gas mask help from creature attacks
-	// ATE/CJC: gas stuff
+	else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].bStatus[0] >= USABLE )
 	{
-		if ( pExplosive->getType() == EXPLOSV_TEARGAS )
+		bPosOfMask = HEAD2POS;
+	}
+
+	if ( bPosOfMask != NO_SLOT && !smokeEffect->getIgnoresGasMask()  )
+	{
+		if ( pSoldier->inv[ bPosOfMask ].bStatus[0] < GASMASK_MIN_STATUS )
 		{
-			if ( AM_A_ROBOT( pSoldier ) )
+			// GAS MASK reduces breath loss by its work% (it leaks if not at least 70%)
+			sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
+			if ( sBreathAmt > 500 )
 			{
-				return( fRecompileMovementCosts );
+				// if at least 500 of breath damage got through
+				// the soldier within the blast radius is gassed for at least one
+				// turn, possibly more if it's tear gas (which hangs around a while)
+				pSoldier->uiStatusFlags |= SOLDIER_GASSED;
 			}
 
-			// ignore whether subsequent or not if hit this turn
-			if ( pSoldier->fHitByGasFlags & HIT_BY_TEARGAS )
+			if ( pSoldier->uiStatusFlags & SOLDIER_PC )
 			{
-				// already affected by creature gas this turn
-				return( fRecompileMovementCosts );
-			}
-		}
-		else if ( pExplosive->getType() == EXPLOSV_MUSTGAS )
-		{
-			if ( AM_A_ROBOT( pSoldier ) )
-			{
-				return( fRecompileMovementCosts );
-			}
 
-			if ( sSubsequent && pSoldier->fHitByGasFlags & HIT_BY_MUSTARDGAS )
-			{
-				// already affected by creature gas this turn
-				return( fRecompileMovementCosts );
-			}
-
-		}
-
-		if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].bStatus[0] >= USABLE )
-		{
-			bPosOfMask = HEAD1POS;
-		}
-		else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].bStatus[0] >= USABLE )
-		{
-			bPosOfMask = HEAD2POS;
-		}
-
-		if ( bPosOfMask != NO_SLOT  )
-		{
-			if ( pSoldier->inv[ bPosOfMask ].bStatus[0] < GASMASK_MIN_STATUS )
-			{
-				// GAS MASK reduces breath loss by its work% (it leaks if not at least 70%)
-				sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
-				if ( sBreathAmt > 500 )
+				if ( sWoundAmt > 1 )
 				{
-					// if at least 500 of breath damage got through
-					// the soldier within the blast radius is gassed for at least one
-					// turn, possibly more if it's tear gas (which hangs around a while)
-					pSoldier->uiStatusFlags |= SOLDIER_GASSED;
+					pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
+					sWoundAmt = ( sWoundAmt * ( 100 -  pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
 				}
-
-				if ( pSoldier->uiStatusFlags & SOLDIER_PC )
+				else if ( sWoundAmt == 1 )
 				{
-
-					if ( sWoundAmt > 1 )
-					{
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
-						sWoundAmt = ( sWoundAmt * ( 100 -  pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
-					}
-					else if ( sWoundAmt == 1 )
-					{
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
-					}
+					pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
 				}
 			}
-			else
-			{
-				sBreathAmt = 0;
-				if ( sWoundAmt > 0 )
-				{
-					if ( sWoundAmt == 1 )
-					{
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
-					}
-					else
-					{
-						// use up gas mask
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
-					}
-				}
-				sWoundAmt = 0;
-			}
-
 		}
+		else
+		{
+			sBreathAmt = 0;
+			if ( sWoundAmt > 0 )
+			{
+				if ( sWoundAmt == 1 )
+				{
+					pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
+				}
+				else
+				{
+					// use up gas mask
+					pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
+				}
+			}
+			sWoundAmt = 0;
+		}
+
 	}
 
 	if ( sWoundAmt != 0 || sBreathAmt != 0 )
 	{
-		switch( pExplosive->getType() )
+		switch( smokeEffect->getID() )
 		{
-			case EXPLOSV_CREATUREGAS:
+			case SmokeEffectID::CREATUREGAS:
 				pSoldier->fHitByGasFlags |= HIT_BY_CREATUREGAS;
 				break;
-			case EXPLOSV_TEARGAS:
+			case SmokeEffectID::TEARGAS:
 				pSoldier->fHitByGasFlags |= HIT_BY_TEARGAS;
 				break;
-			case EXPLOSV_MUSTGAS:
+			case SmokeEffectID::MUSTARDGAS:
 				pSoldier->fHitByGasFlags |= HIT_BY_MUSTARDGAS;
 				break;
 			default:
@@ -923,7 +889,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 	BOOLEAN fRecompileMovementCosts = FALSE;
 	BOOLEAN fSmokeEffect=FALSE;
 	BOOLEAN fStunEffect = FALSE;
-	SmokeEffectKind bSmokeEffectType = NO_SMOKE_EFFECT;
+	SmokeEffectID smokeEffectID = SmokeEffectID::NOTHING;
 	BOOLEAN	fBlastEffect = TRUE;
 	INT16		sNewGridNo;
 	UINT32	uiRoll;
@@ -940,7 +906,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 		{
 			case MUSTARD_GRENADE:
 				fSmokeEffect = TRUE;
-				bSmokeEffectType = MUSTARDGAS_SMOKE_EFFECT;
+				smokeEffectID = SmokeEffectID::MUSTARDGAS;
 				fBlastEffect = FALSE;
 				break;
 
@@ -948,14 +914,14 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			case GL_TEARGAS_GRENADE:
 			case BIG_TEAR_GAS:
 				fSmokeEffect = TRUE;
-				bSmokeEffectType = TEARGAS_SMOKE_EFFECT;
+				smokeEffectID = SmokeEffectID::TEARGAS;
 				fBlastEffect = FALSE;
 				break;
 
 			case SMOKE_GRENADE:
 			case GL_SMOKE_GRENADE:
 				fSmokeEffect = TRUE;
-				bSmokeEffectType = NORMAL_SMOKE_EFFECT;
+				smokeEffectID = SmokeEffectID::SMOKE;
 				fBlastEffect = FALSE;
 				break;
 
@@ -968,7 +934,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			case LARGE_CREATURE_GAS:
 			case VERY_SMALL_CREATURE_GAS:
 				fSmokeEffect = TRUE;
-				bSmokeEffectType = CREATURE_SMOKE_EFFECT;
+				smokeEffectID = SmokeEffectID::CREATUREGAS;
 				fBlastEffect = FALSE;
 				break;
 		}
@@ -1090,7 +1056,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 		}
 		else if ( sSubsequent != REDO_SPREAD_EFFECT )
 		{
-			AddSmokeEffectToTile(smoke, bSmokeEffectType, sGridNo, bLevel);
+			AddSmokeEffectToTile(smoke, GCM->getSmokeEffect(smokeEffectID), sGridNo, bLevel);
 		}
 	}
 	else
@@ -1133,136 +1099,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			if (pSoldier == NULL) return fRecompileMovementCosts;
 			// someone is here, and they're gonna get hurt
 
-			fRecompileMovementCosts = DishOutGasDamage(pSoldier, pExplosive, sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, owner);
-/*
-			if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->bLife || AM_A_ROBOT( pSoldier ) )
-			{
-				return( fRecompileMovementCosts );
-			}
-
-			if ( pExplosive->ubType == EXPLOSV_CREATUREGAS )
-			{
-				if ( pSoldier->uiStatusFlags & SOLDIER_MONSTER )
-				{
-					// unaffected by own gas effects
-					return( fRecompileMovementCosts );
-				}
-				if ( sSubsequent && pSoldier->fHitByGasFlags & HIT_BY_CREATUREGAS )
-				{
-					// already affected by creature gas this turn
-					return( fRecompileMovementCosts );
-				}
-			}
-			else // no gas mask help from creature attacks
-				// ATE/CJC: gas stuff
-				{
-					INT8 bPosOfMask = NO_SLOT;
-
-
-				if ( pExplosive->ubType == EXPLOSV_TEARGAS )
-				{
-					// ignore whether subsequent or not if hit this turn
-					if ( pSoldier->fHitByGasFlags & HIT_BY_TEARGAS )
-					{
-						// already affected by creature gas this turn
-						return( fRecompileMovementCosts );
-					}
-				}
-				else if ( pExplosive->ubType == EXPLOSV_MUSTGAS )
-				{
-					if ( sSubsequent && pSoldier->fHitByGasFlags & HIT_BY_MUSTARDGAS )
-					{
-						// already affected by creature gas this turn
-						return( fRecompileMovementCosts );
-					}
-
-				}
-
-				if ( sSubsequent && pSoldier->fHitByGasFlags & HIT_BY_CREATUREGAS )
-				{
-					// already affected by creature gas this turn
-					return( fRecompileMovementCosts );
-				}
-
-
-				if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].bStatus[0] >= USABLE )
-				{
-					bPosOfMask = HEAD1POS;
-				}
-				else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].bStatus[0] >= USABLE )
-				{
-					bPosOfMask = HEAD2POS;
-				}
-
-				if ( bPosOfMask != NO_SLOT  )
-				{
-					if ( pSoldier->inv[ bPosOfMask ].bStatus[0] < GASMASK_MIN_STATUS )
-					{
-						// GAS MASK reduces breath loss by its work% (it leaks if not at least 70%)
-						sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
-						if ( sBreathAmt > 500 )
-						{
-							// if at least 500 of breath damage got through
-							// the soldier within the blast radius is gassed for at least one
-							// turn, possibly more if it's tear gas (which hangs around a while)
-							pSoldier->uiStatusFlags |= SOLDIER_GASSED;
-						}
-
-						if ( sWoundAmt > 1 )
-						{
-							pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
-							sWoundAmt = ( sWoundAmt * ( 100 -  pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
-						}
-						else if ( sWoundAmt == 1 )
-						{
-							pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
-						}
-					}
-					else
-					{
-						sBreathAmt = 0;
-						if ( sWoundAmt > 0 )
-						{
-							if ( sWoundAmt == 1 )
-							{
-								pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
-							}
-							else
-							{
-								// use up gas mask
-								pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
-							}
-						}
-						sWoundAmt = 0;
-					}
-
-				}
-			}
-
-			if ( sWoundAmt != 0 || sBreathAmt != 0 )
-			{
-				switch( pExplosive->ubType )
-				{
-					case EXPLOSV_CREATUREGAS:
-						pSoldier->fHitByGasFlags |= HIT_BY_CREATUREGAS;
-						break;
-					case EXPLOSV_TEARGAS:
-						pSoldier->fHitByGasFlags |= HIT_BY_TEARGAS;
-						break;
-					case EXPLOSV_MUSTGAS:
-						pSoldier->fHitByGasFlags |= HIT_BY_MUSTARDGAS;
-						break;
-					default:
-						break;
-				}
-				// a gas effect, take damage directly...
-				SoldierTakeDamage(pSoldier, sWoundAmt, sBreathAmt, TAKE_DAMAGE_GAS, NULL);
-				if ( pSoldier->bLife >= CONSCIOUSNESS )
-				{
-					DoMercBattleSound(pSoldier, BATTLE_SOUND_HIT1);
-				}
-			}
-			*/
+			fRecompileMovementCosts = DishOutGasDamage(pSoldier, GCM->getSmokeEffect(smokeEffectID), sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, owner);
 		}
 
 		(*pfMercHit) = TRUE;

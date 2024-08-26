@@ -15,6 +15,7 @@
 #include "Buildings.h"
 #include "Soldier_Macros.h"
 #include "Render_Fun.h"
+#include "SmokeEffects.h"
 #include "StrategicMap.h"
 #include "Environment.h"
 #include "Lighting.h"

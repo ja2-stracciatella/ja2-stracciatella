@@ -21,6 +21,7 @@
 #include "Rotting_Corpses.h"
 #include "Keys.h"
 #include "Message.h"
+#include "SmokeEffects.h"
 #include "Structure_Wrap.h"
 #include "Campaign.h"
 #include "Environment.h"
@@ -1250,16 +1251,16 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 		// leaving a tile, check to see if it had gas in it
 		INT32 iCubesZ = CONVERT_HEIGHTUNITS_TO_INDEX(FIXEDPT_TO_INT32(qCurrZ));
 		UINT8 bTileLevel = iCubesZ > 3 ? 1 : 0;
-		if (pMapElement->ubExtFlags[bTileLevel] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS))
+
+		auto smokeEffectID = FromWorldFlagsToSmokeType(pMapElement->ubExtFlags[bTileLevel]);
+		if (smokeEffectID != SmokeEffectID::NOTHING)
 		{
-			if ((pMapElement->ubExtFlags[bTileLevel] & MAPELEMENT_EXT_SMOKE) && !fSmell)
+			auto smokeEffect = GCM->getSmokeEffect(smokeEffectID);
+			if (smokeEffect->getMaxVisibility() && !fSmell)
 			{
 				bSmoke++;
 
-				// we can only see 3 tiles in smoke
-				// (2 if we're IN smoke)
-
-				if ( bSmoke >= 3 )
+				if ( bSmoke >= smokeEffect->getMaxVisibility() )
 				{
 					iAdjSightLimit = 0;
 				}
@@ -1273,10 +1274,9 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 					iAdjSightLimit -= iSightLimit / 6;
 				}*/
 			}
-			else
-			{
+			if (smokeEffect->getLostVisibilityPerTile()) {
 				// reduce by 2 tiles per tile of tear gas or mustard gas
-				iAdjSightLimit -= 2 * CELL_X_SIZE;
+				iAdjSightLimit -= smokeEffect->getLostVisibilityPerTile() * CELL_X_SIZE;
 			}
 
 			if ( iAdjSightLimit <= 0 )

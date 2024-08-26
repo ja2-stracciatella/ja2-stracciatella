@@ -38,6 +38,7 @@
 #include "Meanwhile.h"
 #include "WorldMan.h"
 #include "SkillCheck.h"
+#include "SmokeEffects.h"
 #include "Smell.h"
 #include "GameSettings.h"
 #include "Game_Clock.h"
@@ -1014,9 +1015,12 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 		sDistVisible = std::max(sDistVisible + 5, int(MaxDistanceVisible()));
 	}
 
-	if ( gpWorldLevelData[ pSoldier->sGridNo ].ubExtFlags[ bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) )
+	auto smokeEffectID = GetSmokeEffectOnTile(pSoldier->sGridNo, bLevel);
+	if ( smokeEffectID != SmokeEffectID::NOTHING )
 	{
-		if (!IsWearingHeadGear(*pSoldier, GASMASK))
+		auto smokeEffect = GCM->getSmokeEffect(smokeEffectID);
+		auto maxVisibilityWhenAffected = smokeEffect->getMaxVisibilityWhenAffected();
+		if (maxVisibilityWhenAffected != 0 && (!IsWearingHeadGear(*pSoldier, GASMASK) || smokeEffect->getIgnoresGasMask()))
 		{
 			// in gas without a gas mask; reduce max distance visible to 2 tiles at most
 			sDistVisible = std::min(2, sDistVisible);

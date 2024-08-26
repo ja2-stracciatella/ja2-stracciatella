@@ -1,3 +1,4 @@
+#include "Debug.h"
 #include "ExplosionAnimationModel.h"
 #include "Exceptions.h"
 
@@ -38,6 +39,7 @@ std::vector<const ExplosionAnimationModel*> ExplosionAnimationModel::deserialize
 
 	for (auto& element : jsonVec) {
 		auto model = ExplosionAnimationModel::deserialize(element);
+		SLOGD("Loaded explosion animation {} {}", static_cast<uint16_t>(model->getID()), model->getName());
 
 		explosionAnimations.push_back(model);
 	}
