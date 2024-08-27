@@ -165,16 +165,6 @@ struct LEVELNODE
 };
 
 
-#define LAND_START_INDEX			1
-#define OBJECT_START_INDEX			2
-#define STRUCT_START_INDEX			3
-#define SHADOW_START_INDEX			4
-#define MERC_START_INDEX			5
-#define ROOF_START_INDEX			6
-#define ONROOF_START_INDEX			7
-#define TOPMOST_START_INDEX			8
-
-
 struct MAP_ELEMENT
 {
 	union
@@ -214,6 +204,18 @@ struct MAP_ELEMENT
 	UINT8 ubReservedSoldierID;
 	UINT8 ubBloodInfo;
 	UINT8 ubSmellInfo;
+
+	enum NodeIndex : UINT8
+	{
+		LAND_START_INDEX    = 1,
+		OBJECT_START_INDEX  = 2,
+		STRUCT_START_INDEX  = 3,
+		SHADOW_START_INDEX  = 4,
+		MERC_START_INDEX    = 5,
+		ROOF_START_INDEX    = 6,
+		ONROOF_START_INDEX  = 7,
+		TOPMOST_START_INDEX = 8
+	};
 };
 
 /**
