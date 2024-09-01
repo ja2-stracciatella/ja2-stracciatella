@@ -339,6 +339,9 @@ if(BUILD_LAUNCHER)
     endif()
 endif()
 
+set_target_properties(${JA2_BINARY} PROPERTIES
+    UNITY_BUILD_MODE "GROUP")
+
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
