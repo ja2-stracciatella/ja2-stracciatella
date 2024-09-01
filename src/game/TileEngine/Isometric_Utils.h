@@ -31,7 +31,7 @@ extern const UINT8 gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIREC
 
 //                                                |Check for map bounds------------------------------------------|   |Invalid-|   |Valid-------------------|
 #define MAPROWCOLTOPOS( r, c )									( ( (r < 0) || (r >= WORLD_ROWS) || (c < 0) || (c >= WORLD_COLS) ) ? ( 0xffff ) : ( (r) * WORLD_COLS + (c) ) )
-
+constexpr UINT16 FASTMAPROWCOLTOPOS(int r,  int c) { return static_cast<UINT16>(r * WORLD_COLS + c); }
 #define GETWORLDINDEXFROMWORLDCOORDS( r, c )		( (INT16) ( r / CELL_X_SIZE ) ) * WORLD_COLS + ( (INT16) ( c / CELL_Y_SIZE ) )
 
 void ConvertGridNoToXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos );

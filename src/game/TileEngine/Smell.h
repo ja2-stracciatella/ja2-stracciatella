@@ -1,3 +1,5 @@
+#pragma once
+
 #include "JA2Types.h"
 
 

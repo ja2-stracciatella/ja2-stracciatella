@@ -6213,7 +6213,6 @@ static void HandleBrothelWallDestroyed(INT16 const sSectorX, INT16 const sSector
 }
 
 #ifdef WITH_UNITTESTS
-#undef FAIL
 #include "gtest/gtest.h"
 
 TEST(Overhead, asserts)

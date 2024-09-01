@@ -58,8 +58,6 @@ extern SOLDIERINITNODE *gpSelected;
 #define NORMAL_MAP_SCREEN_BY		2400
 #define NORMAL_MAP_SCREEN_TY		860
 
-#define FASTMAPROWCOLTOPOS( r, c )	( (r) * WORLD_COLS + (c) )
-
 
 struct SMALL_TILE_SURF
 {
