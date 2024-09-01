@@ -1748,11 +1748,13 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 							if ( bOldSlot != NO_SLOT  )
 							{
 								// rearrange profile... NB # of guns can only be 1 so this is easy
-								p.inv[bOldSlot]        = NOTHING;
-								p.bInvNumber[bOldSlot] = 0;
-
 								p.inv[bNewSlot]        = usGun;
 								p.bInvNumber[bNewSlot] = 1;
+								p.bInvStatus[bNewSlot] = p.bInvStatus[bOldSlot];
+
+								p.inv[bOldSlot]        = NOTHING;
+								p.bInvNumber[bOldSlot] = 0;
+								p.bInvStatus[bOldSlot] = 0;
 							}
 						}
 					}
