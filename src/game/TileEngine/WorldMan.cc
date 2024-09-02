@@ -168,21 +168,63 @@ BOOLEAN RemoveObject(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
+namespace {
+LEVELNODE * TypeRangeExistsInNodeChain(LEVELNODE * node, UINT32 lower, UINT32 upper)
+{
+	// Look through all nodes and search for type.
+	while (node)
+	{
+		if (auto const fTileType{ GetTileTypeSafe(node->usIndex).value_or(UINT32_MAX) };
+			lower <= fTileType && fTileType <= upper)
+		{
+			return node;
+		}
+		node = node->pNext;
+	}
+
+	// Could not find it.
+	return nullptr;
+}
+
+// Common removal function template for the LEVELNODE linked lists that do not
+// require any special treatment: Topmost, Roof, OnRoof, and Shadow.
+template<typename T>
+bool Remove(LEVELNODE *& headReference, T removeThis)
+{
+	// Holds the address of either the head member in the MAP_ELEMENT or the
+	// pNext pointer of the node before the one we want to remove.
+	LEVELNODE ** previous{ &headReference };
+
+	// Search the levelnode chain for the given index or levelnode.
+	for (LEVELNODE * current{ headReference }; current != nullptr;
+		 current = current->pNext, previous = &((*previous)->pNext))
+	{
+		if constexpr (std::is_same_v<T, LEVELNODE *>)
+		{
+			if (current != removeThis) continue;
+		}
+		else
+		{
+			static_assert(std::is_same_v<T, UINT16>);
+			if (current->usIndex != removeThis) continue;
+		}
+
+		// Remove current node from list.
+		*previous = current->pNext;
+		delete current;
+		return true;
+	}
+
+	// Could not find it.
+	return false;
+}
+}
+
+
 LEVELNODE* TypeRangeExistsInObjectLayer(UINT32 const iMapIndex, UINT32 const fStartType, UINT32 const fEndType)
 {
 	// Look through all objects and Search for type
-	for (LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead; pObject != NULL; pObject = pObject->pNext)
-	{
-		if (pObject->usIndex == NO_TILE || pObject->usIndex >= NUMBEROFTILES) continue;
-
-		UINT32 const fTileType = GetTileType(pObject->usIndex);
-		if (fTileType < fStartType || fEndType < fTileType) continue;
-
-		return pObject;
-	}
-
-	// Could not find it
-	return 0;
+	return TypeRangeExistsInNodeChain(gpWorldLevelData[iMapIndex].pObjectHead, fStartType, fEndType);
 }
 
 
@@ -360,26 +402,10 @@ LEVELNODE* FindTypeInLandLayer(UINT32 const map_idx, UINT32 const type)
 }
 
 
-BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
+LEVELNODE * TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
 	// Look through all objects and Search for type
-	for (const LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead; pLand != NULL; )
-	{
-		if (pLand->usIndex != NO_TILE)
-		{
-			const UINT32 fTileType = GetTileType(pLand->usIndex);
-
-			pLand = pLand->pNext; // XXX TODO0009 if pLand->usIndex == NO_TILE this is an endless loop
-
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				return TRUE;
-			}
-		}
-	}
-
-	// Could not find it
-	return FALSE;
+	return TypeRangeExistsInNodeChain(gpWorldLevelData[iMapIndex].pLandHead, fStartType, fEndType);
 }
 
 
@@ -391,20 +417,17 @@ BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 	// Look through all objects and Search for type
 	while (pLand != NULL)
 	{
-		if (pLand->usIndex != NO_TILE)
+		auto const fTileType{ GetTileTypeSafe(pLand->usIndex).value_or(UINT32_MAX) };
+		const LEVELNODE* Next = pLand->pNext;
+
+		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
-			const LEVELNODE* Next = pLand->pNext;
-
-			const UINT32 fTileType = GetTileType(pLand->usIndex);
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				// Remove Item
-				RemoveLand(iMapIndex, pLand->usIndex);
-				fRetVal = TRUE;
-			}
-
-			pLand = Next; // XXX TODO0009 if pLand->usIndex == NO_TILE this is an endless loop
+			// Remove Item
+			RemoveLand(iMapIndex, pLand->usIndex);
+			fRetVal = TRUE;
 		}
+
+		pLand = Next;
 	}
 	return fRetVal;
 }
@@ -743,7 +766,7 @@ BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all structs and Search for type
-	for (const LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead; pStruct != NULL;)
+	for (const LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead; pStruct;)
 	{
 		if (pStruct->uiFlags & LEVELNODE_CACHEDANITILE)
 		{
@@ -751,25 +774,22 @@ BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 			continue;
 		}
 
-		if (pStruct->usIndex != NO_TILE)
+		auto const fTileType{ GetTileTypeSafe(pStruct->usIndex).value_or(UINT32_MAX) };
+
+		// Advance to next
+		auto * const next{ pStruct->pNext };
+
+		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
-			const UINT32 fTileType = GetTileType(pStruct->usIndex);
-
-			// Advance to next
-			const LEVELNODE* pOldStruct = pStruct;
-			pStruct = pStruct->pNext; // XXX TODO0009 if pStruct->usIndex == NO_TILE this is an endless loop
-
-			if (fTileType >= fStartType && fTileType <= fEndType)
+			UINT16 usIndex = pStruct->usIndex;
+			if (usIndex < NUMBEROFTILES)
 			{
-				UINT16 usIndex = pOldStruct->usIndex;
-				if (usIndex < NUMBEROFTILES)
-				{
-					RemoveStruct(iMapIndex, usIndex);
-					fRetVal = TRUE;
-					RemoveShadowBuddy(iMapIndex, usIndex);
-				}
+				RemoveStruct(iMapIndex, usIndex);
+				fRetVal = TRUE;
+				RemoveShadowBuddy(iMapIndex, usIndex);
 			}
 		}
+		pStruct = next;
 	}
 	return fRetVal;
 }
@@ -954,63 +974,13 @@ LEVELNODE* AddShadowToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex)
 {
 	// Look through all shadows and remove index if found
-	LEVELNODE* pOldShadow = NULL;
-	for (LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow != NULL; pShadow = pShadow->pNext)
-	{
-		if (pShadow->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldShadow == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pShadowHead = pShadow->pNext;
-			}
-			else
-			{
-				pOldShadow->pNext = pShadow->pNext;
-			}
-
-			delete pShadow;
-			return TRUE;
-		}
-
-		pOldShadow = pShadow;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pShadowHead, usIndex);
 }
 
 
 BOOLEAN RemoveShadowFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 {
-	LEVELNODE* pOldShadow = NULL;
-	for (LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow != NULL; pShadow = pShadow->pNext)
-	{
-		if (pShadow == pNode)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldShadow == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pShadowHead = pShadow->pNext;
-			}
-			else
-			{
-				pOldShadow->pNext = pShadow->pNext;
-			}
-
-			delete pShadow;
-			return TRUE;
-		}
-
-		pOldShadow = pShadow;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pShadowHead, pNode);
 }
 
 
@@ -1019,22 +989,19 @@ BOOLEAN RemoveAllShadowsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all shadows and Search for type
-	for (const LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow != NULL;)
+	for (const LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow;)
 	{
-		if (pShadow->usIndex != NO_TILE)
+		auto const fTileType{ GetTileTypeSafe(pShadow->usIndex).value_or(UINT32_MAX) };
+
+		// Advance to next
+		auto * const next{ pShadow->pNext };
+
+		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
-			const UINT32 fTileType = GetTileType(pShadow->usIndex);
-
-			// Advance to next
-			const LEVELNODE* pOldShadow = pShadow;
-			pShadow = pShadow->pNext;
-
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				RemoveShadow(iMapIndex, pOldShadow->usIndex);
-				fRetVal = TRUE;
-			}
+			RemoveShadow(iMapIndex, pShadow->usIndex);
+			fRetVal = TRUE;
 		}
+		pShadow = next;
 	}
 	return fRetVal;
 }
@@ -1046,15 +1013,13 @@ BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 
 	for (LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow != NULL;)
 	{
+		auto * const next{ pShadow->pNext };
 		if (pShadow->usIndex != NO_TILE)
 		{
-			// Advance to next
-			const LEVELNODE* pOldShadow = pShadow;
-			pShadow = pShadow->pNext;
-
-			RemoveShadow(iMapIndex, pOldShadow->usIndex);
+			RemoveShadow(iMapIndex, pShadow->usIndex);
 			fRetVal = TRUE;
 		}
+		pShadow = next;
 	}
 	return fRetVal;
 }
@@ -1239,33 +1204,7 @@ LEVELNODE* AddRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 BOOLEAN RemoveRoof(UINT32 iMapIndex, UINT16 usIndex)
 {
 	// Look through all Roofs and remove index if found
-	LEVELNODE* pOldRoof = NULL;
-	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL; pRoof = pRoof->pNext)
-	{
-		if (pRoof->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldRoof == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pRoofHead = pRoof->pNext;
-			}
-			else
-			{
-				pOldRoof->pNext = pRoof->pNext;
-			}
-
-			DeleteStructureFromWorld(pRoof->pStructureData);
-			delete pRoof;
-			return TRUE;
-		}
-
-		pOldRoof = pRoof;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pRoofHead, usIndex);
 }
 
 
@@ -1277,22 +1216,7 @@ LEVELNODE* FindTypeInRoofLayer(UINT32 const map_idx, UINT32 const type)
 
 LEVELNODE* TypeRangeExistsInRoofLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	// Look through all objects and Search for type
-	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof;)
-	{
-		if (pRoof->usIndex != NO_TILE)
-		{
-			const UINT32 fTileType = GetTileType(pRoof->usIndex);
-			if (fStartType <= fTileType && fTileType <= fEndType)
-			{
-				return pRoof;
-			}
-			pRoof = pRoof->pNext; // XXX TODO0009 if pRoof->usIndex == NO_TILE this is an endless loop
-		}
-	}
-
-	// Could not find it
-	return 0;
+	return TypeRangeExistsInNodeChain(gpWorldLevelData[iMapIndex].pRoofHead, fStartType, fEndType);
 }
 
 
@@ -1307,22 +1231,19 @@ BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fE
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all Roofs and Search for type
-	for (const LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
+	for (const LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof;)
 	{
-		if (pRoof->usIndex != NO_TILE)
+		auto const fTileType{ GetTileTypeSafe(pRoof->usIndex).value_or(UINT32_MAX) };
+
+		// Advance to next
+		auto * const next{ pRoof->pNext };
+
+		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
-			const UINT32 fTileType = GetTileType(pRoof->usIndex);
-
-			// Advance to next
-			const LEVELNODE* pOldRoof = pRoof;
-			pRoof = pRoof->pNext; // XXX TODO0009 if pRoof->usIndex == NO_TILE this is an endless loop
-
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				RemoveRoof(iMapIndex, pOldRoof->usIndex);
-				fRetVal = TRUE;
-			}
+			RemoveRoof(iMapIndex, pRoof->usIndex);
+			fRetVal = TRUE;
 		}
+		pRoof = next;
 	}
 
 	// Could not find it
@@ -1333,16 +1254,13 @@ BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fE
 void RemoveRoofIndexFlagsFromTypeRange(UINT32 const iMapIndex, UINT32 const fStartType, UINT32 const fEndType, LevelnodeFlags const uiFlags)
 {
 	// Look through all Roofs and Search for type
-	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
+	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof; pRoof = pRoof->pNext)
 	{
-		if (pRoof->usIndex != NO_TILE)
+		auto const fTileType{ GetTileTypeSafe(pRoof->usIndex).value_or(UINT32_MAX) };
+
+		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
-			const UINT32 fTileType = GetTileType(pRoof->usIndex);
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				pRoof->uiFlags &= ~uiFlags;
-			}
-			pRoof = pRoof->pNext; // XXX TODO0009 if pRoof->usIndex == NO_TILE this is an endless loop
+			pRoof->uiFlags &= ~uiFlags;
 		}
 	}
 }
@@ -1351,16 +1269,12 @@ void RemoveRoofIndexFlagsFromTypeRange(UINT32 const iMapIndex, UINT32 const fSta
 void SetRoofIndexFlagsFromTypeRange(UINT32 const iMapIndex, UINT32 const fStartType, UINT32 const fEndType, LevelnodeFlags const uiFlags)
 {
 	// Look through all Roofs and Search for type
-	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
+	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof; pRoof = pRoof->pNext)
 	{
-		if (pRoof->usIndex != NO_TILE)
+		auto const fTileType{ GetTileTypeSafe(pRoof->usIndex).value_or(UINT32_MAX) };
+		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
-			const UINT32 fTileType = GetTileType(pRoof->usIndex);
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				pRoof->uiFlags |= uiFlags;
-			}
-			pRoof = pRoof->pNext; // XXX TODO0009 if pRoof->usIndex == NO_TILE this is an endless loop
+			pRoof->uiFlags |= uiFlags;
 		}
 	}
 }
@@ -1405,66 +1319,13 @@ LEVELNODE* AddOnRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 
 BOOLEAN RemoveOnRoof(UINT32 iMapIndex, UINT16 usIndex)
 {
-	LEVELNODE* pOldOnRoof = NULL;
-
-	// Look through all OnRoofs and remove index if found
-	for (LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof != NULL; pOnRoof = pOnRoof->pNext)
-	{
-		if (pOnRoof->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldOnRoof == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pOnRoofHead = pOnRoof->pNext;
-			}
-			else
-			{
-				pOldOnRoof->pNext = pOnRoof->pNext;
-			}
-
-			delete pOnRoof;
-			return TRUE;
-		}
-
-		pOldOnRoof = pOnRoof;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pOnRoofHead, usIndex);
 }
 
 
-BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
+BOOLEAN RemoveOnRoofFromLevelNode(UINT32 iMapIndex, LEVELNODE *pNode)
 {
-	LEVELNODE* pOldOnRoof = NULL;
-
-	for (LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof != NULL; pOnRoof = pOnRoof->pNext)
-	{
-		if (pOnRoof == pNode)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldOnRoof == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pOnRoofHead = pOnRoof->pNext;
-			}
-			else
-			{
-				pOldOnRoof->pNext = pOnRoof->pNext;
-			}
-
-			delete pOnRoof;
-			return TRUE;
-		}
-
-		pOldOnRoof = pOnRoof;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pOnRoofHead, pNode);
 }
 
 
@@ -1473,7 +1334,7 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all OnRoofs and Search for type
-	for (const LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof != NULL;)
+	for (const LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof;)
 	{
 		if (pOnRoof->uiFlags & LEVELNODE_CACHEDANITILE)
 		{
@@ -1481,20 +1342,17 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 			continue;
 		}
 
-		if (pOnRoof->usIndex != NO_TILE)
+		auto const fTileType{ GetTileTypeSafe(pOnRoof->usIndex).value_or(UINT32_MAX) };
+
+		// Advance to next
+		auto * const next{ pOnRoof->pNext };
+
+		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
-			const UINT32 fTileType = GetTileType(pOnRoof->usIndex);
-
-			// Advance to next
-			const LEVELNODE* pOldOnRoof = pOnRoof;
-			pOnRoof = pOnRoof->pNext; // XXX TODO0009 if pOnRoof->usIndex == NO_TILE this is an endless loop
-
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				RemoveOnRoof(iMapIndex, pOldOnRoof->usIndex);
-				fRetVal = TRUE;
-			}
+			RemoveOnRoof(iMapIndex, pOnRoof->usIndex);
+			fRetVal = TRUE;
 		}
+		pOnRoof = next;
 	}
 	return fRetVal;
 }
@@ -1550,64 +1408,14 @@ LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 BOOLEAN RemoveTopmost(UINT32 iMapIndex, UINT16 usIndex)
 {
 	// Look through all topmosts and remove index if found
-	LEVELNODE* pOldTopmost = NULL;
-	for (LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead; pTopmost != NULL; pTopmost = pTopmost->pNext)
-	{
-		if (pTopmost->usIndex == usIndex)
-		{
-			// OK, set links
-			// Check for head
-			if (pOldTopmost == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pTopmostHead = pTopmost->pNext;
-			}
-			else
-			{
-				pOldTopmost->pNext = pTopmost->pNext;
-			}
-
-			delete pTopmost;
-			return TRUE;
-		}
-
-		pOldTopmost = pTopmost;
-	}
-
-	// Could not find it
-	return FALSE;
+	return Remove(gpWorldLevelData[iMapIndex].pTopmostHead, usIndex);
 }
 
 
 BOOLEAN RemoveTopmostFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 {
-	// Look through all topmosts and remove index if found
-	LEVELNODE* pOldTopmost = NULL;
-	for (LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead; pTopmost != NULL; pTopmost = pTopmost->pNext)
-	{
-		if (pTopmost == pNode)
-		{
-			// OK, set links
-			// Check for head or tail
-			if (pOldTopmost == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pTopmostHead = pTopmost->pNext;
-			}
-			else
-			{
-				pOldTopmost->pNext = pTopmost->pNext;
-			}
-
-			delete pTopmost;
-			return TRUE;
-		}
-
-		pOldTopmost = pTopmost;
-	}
-
-	// Could not find it
-	return FALSE;
+	// Look through all topmosts and remove levelnode if found
+	return Remove(gpWorldLevelData[iMapIndex].pTopmostHead, pNode);
 }
 
 
@@ -1730,7 +1538,7 @@ bool WaterTooDeepForAttacks(GridNo const grid_no)
 void SetStructAframeFlags(UINT32 const iMapIndex, LevelnodeFlags const uiFlags)
 {
 	// Look through all Roofs and Search for type
-	for (LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pRoofHead; pStruct != NULL;)
+	for (LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pRoofHead; pStruct; pStruct = pStruct->pNext)
 	{
 		if ( pStruct->usIndex != NO_TILE )
 		{
@@ -1738,7 +1546,6 @@ void SetStructAframeFlags(UINT32 const iMapIndex, LevelnodeFlags const uiFlags)
 			{
 				pStruct->uiFlags |= uiFlags;
 			}
-			pStruct = pStruct->pNext; // XXX TODO0009 if pStruct->usIndex == NO_TILE this is an endless loop
 		}
 	}
 }
