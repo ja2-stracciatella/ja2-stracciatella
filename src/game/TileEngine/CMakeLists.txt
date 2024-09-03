@@ -1,7 +1,6 @@
 file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
-set(JA2_SOURCES
-    ${JA2_SOURCES}
-    ${LOCAL_JA2_HEADERS}
+
+set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Ambient_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Buildings.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Environment.cc
@@ -41,8 +40,32 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/WorldDat.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/WorldDef.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/WorldMan.cc
+)
+
+set_property(
+    SOURCE ${LOCAL_JA2_SOURCES}
+    DIRECTORY ${CMAKE_SOURCE_DIR}
+    PROPERTY UNITY_GROUP "TileEngine"
+)
+
+set_property(
+    SOURCE
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveExplosionType.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveLightEffect.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveLightSprite.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveRealObject.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveSmokeEffect.cc
+    DIRECTORY ${CMAKE_SOURCE_DIR}
+    PROPERTY UNITY_GROUP "LoadSaveDataTypes"
+)
+
+set(JA2_SOURCES
+    ${JA2_SOURCES}
+    ${LOCAL_JA2_SOURCES}
+    ${LOCAL_JA2_HEADERS}
     PARENT_SCOPE
 )
+
 set(JA2_INCLUDES
     ${JA2_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}

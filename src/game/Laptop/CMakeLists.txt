@@ -61,6 +61,29 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Store_Inventory.cc
     PARENT_SCOPE
 )
+
+# Laptop has many files that cannot be compiled together because they all have
+# their own MakeButton function, for example. The following group is a
+# hand-picked list of unproblematic sources.
+set_property(
+    SOURCE
+        ${CMAKE_CURRENT_SOURCE_DIR}/AIM.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/AIMArchives.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/AIMFacialIndex.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/AIMLinks.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/AIMSort.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/BobbyR.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/BrokenLink.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/CharProfile.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Funeral.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/IMPVideoObjects.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Laptop.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Mercs.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Store_Inventory.cc
+    DIRECTORY ${CMAKE_SOURCE_DIR}
+    PROPERTY UNITY_GROUP "Laptop"
+)
+
 set(JA2_INCLUDES
     ${JA2_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}

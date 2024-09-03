@@ -49,6 +49,16 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Town_Militia.cc
     PARENT_SCOPE
 )
+
+set_property(
+    SOURCE
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveSectorInfo.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveStrategicMapElement.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveUndergroundSectorInfo.cc
+    DIRECTORY ${CMAKE_SOURCE_DIR}
+    PROPERTY UNITY_GROUP "LoadSaveDataTypes"
+)
+
 set(JA2_INCLUDES
     ${JA2_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
