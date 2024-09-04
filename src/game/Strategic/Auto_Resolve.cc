@@ -110,7 +110,6 @@ struct AUTORESOLVE_STRUCT
 	INT32 iMercFaces[20]; //for each merc face
 	SGPVObject* iIndent;
 	SGPVSurface* iInterfaceBuffer;
-	INT32 iNumMercFaces;
 	UINT32 uiTimeSlice;
 	UINT32 uiTotalElapsedBattleTimeInMilliseconds;
 	UINT32 uiPrevTime, uiCurrTime;
@@ -1656,7 +1655,7 @@ static void RemoveAutoResolveInterface()
 
 	if (ar.pRobotCell) UpdateRobotControllerGivenRobot(ar.pRobotCell->pSoldier);
 
-	for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
+	for (UINT8 i{ 0 }; i != ar.ubMercs; ++i)
 	{
 		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
 		// Record finishing information for our mercs
@@ -1678,38 +1677,36 @@ static void RemoveAutoResolveInterface()
 		}
 
 		++GetProfile(s.ubProfile).usBattlesFought;
+	}
 
-		bool  first_group      = true;
-		UINT8 current_group_id = 0;
-		for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
-		{
-			SOLDIERTYPE*& slot = gpMercs[i].pSoldier;
-			SOLDIERTYPE&  s    = *slot;
-			slot = 0;
+	bool  first_group      = true;
+	UINT8 current_group_id = 0;
+	for (UINT8 i{ 0 }; i != ar.ubMercs; ++i)
+	{
+		SOLDIERTYPE & s{ *gpMercs[i].pSoldier };
 
-			if (ar.ubBattleStatus != BATTLE_VICTORY) continue;
-			if (s.bLife < OKLIFE)                    continue;
-			if (s.ubGroupID == current_group_id)     continue;
-			current_group_id = s.ubGroupID;
+		if (ar.ubBattleStatus != BATTLE_VICTORY) continue;
+		if (s.bLife < OKLIFE)                    continue;
+		if (s.ubGroupID == current_group_id)     continue;
+		current_group_id = s.ubGroupID;
 
-			/* Look for NPCs to stop for, anyone is too tired to keep going, if all OK
-			 * rebuild waypoints & continue movement.
-			 * NOTE: Only the first group found will stop for NPCs, it's just too much
-			 * hassle to stop them all */
-			PlayerGroupArrivedSafelyInSector(*GetGroup(s.ubGroupID), first_group);
-			first_group = false;
-		}
+		/* Look for NPCs to stop for, anyone is too tired to keep going, if all OK
+			* rebuild waypoints & continue movement.
+			* NOTE: Only the first group found will stop for NPCs, it's just too much
+			* hassle to stop them all */
+		PlayerGroupArrivedSafelyInSector(*GetGroup(s.ubGroupID), first_group);
+		first_group = false;
+	}
 
-		// End capture squence
-		if (ar.ubBattleStatus == BATTLE_SURRENDERED ||
-				ar.ubBattleStatus == BATTLE_CAPTURED)
-		{
-			EndCaptureSequence();
-		}
+	// End capture squence
+	if (ar.ubBattleStatus == BATTLE_SURRENDERED ||
+			ar.ubBattleStatus == BATTLE_CAPTURED)
+	{
+		EndCaptureSequence();
 	}
 
 	// Delete all of the faces.
-	for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
+	for (UINT8 i{ 0 }; i != ar.ubMercs; ++i)
 	{
 		DeleteVideoObject(gpMercs[i].uiVObjectID);
 	}
@@ -2119,7 +2116,6 @@ static void CalculateAutoResolveInfo(void)
 			}
 		}
 	}
-	gpAR->iNumMercFaces = gpAR->ubMercs;
 
 	CalculateRowsAndColumns();
 }
