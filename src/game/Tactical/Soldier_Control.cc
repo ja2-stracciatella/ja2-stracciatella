@@ -8999,7 +8999,6 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE* const s)
 
 
 #ifdef WITH_UNITTESTS
-#undef FAIL
 #include "gtest/gtest.h"
 
 TEST(SoldierControl, asserts)

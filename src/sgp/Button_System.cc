@@ -91,8 +91,6 @@ static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 static BOOLEAN gfDelayButtonDeletion   = FALSE;
 static BOOLEAN gfPendingButtonDeletion = FALSE;
 
-extern MOUSE_REGION* MSYS_PrevRegion;
-
 
 // Finds an available slot for loading button pictures
 static BUTTON_PICS* FindFreeButtonSlot(void)

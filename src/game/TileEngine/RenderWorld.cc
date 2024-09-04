@@ -148,9 +148,6 @@ INT16 gsBottomY;    // Bottom edge of the current map in screen coordinates.
 double gdScaleX;
 double gdScaleY;
 
-#define FASTMAPROWCOLTOPOS(r, c) ((r) * WORLD_COLS + (c))
-
-
 bool g_scroll_inertia = false;
 
 

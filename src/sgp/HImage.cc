@@ -331,7 +331,6 @@ void ConvertRGBDistribution565ToAny(UINT16* const p16BPPData, UINT32 const uiNum
 
 
 #ifdef WITH_UNITTESTS
-#undef FAIL
 #include "gtest/gtest.h"
 
 TEST(HImage, asserts)

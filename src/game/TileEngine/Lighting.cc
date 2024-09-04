@@ -2097,7 +2097,6 @@ const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 
 
 #ifdef WITH_UNITTESTS
-#undef FAIL
 #include "gtest/gtest.h"
 
 TEST(Lighting, asserts)

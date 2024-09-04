@@ -228,10 +228,6 @@
 #define SOLDIER_HAND_X (STD_SCREEN_X + 6)
 #define SOLDIER_HAND_Y (STD_SCREEN_Y + 81)
 
-#define CLOCK_X (STD_SCREEN_X + 554)
-#define CLOCK_Y (STD_SCREEN_Y + 459)
-
-
 #define RGB_WHITE	( FROMRGB( 255, 255, 255 ) )
 #define RGB_YELLOW	( FROMRGB( 255, 255,   0 ) )
 #define RGB_NEAR_BLACK	( FROMRGB(   0,   0,   1 ) )
