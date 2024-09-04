@@ -6,6 +6,7 @@
 
 
 #define NUM_PROFILES						170
+#define NUM_RECRUTABLE						75
 
 #define NAME_LENGTH						30
 #define NICKNAME_LENGTH					10
@@ -180,60 +181,147 @@ struct MERCPROFILESTRUCT
 {
 	ST::string zName;
 	ST::string zNickname;
-	UINT8 ubFaceIndex;
-	ST::string PANTS;
-	ST::string VEST;
-	ST::string SKIN;
-	ST::string HAIR;
 	INT8 bSex;
-	INT8 bArmourAttractiveness;
-	UINT8 ubMiscFlags2;
-	INT8 bEvolution;
+	UINT8 ubCivilianGroup;
+
 	UINT8 ubMiscFlags;
-	UINT8 bSexist;
-	INT8 bLearnToHate;
-
-	// skills
-	UINT8 ubQuoteRecord;
-	INT8 bDeathRate;
-
-	INT16 sExpLevelGain;
-	INT16 sLifeGain;
-	INT16 sAgilityGain;
-	INT16 sDexterityGain;
-	INT16 sWisdomGain;
-	INT16 sMarksmanshipGain;
-	INT16 sMedicalGain;
-	INT16 sMechanicGain;
-	INT16 sExplosivesGain;
+	UINT8 ubMiscFlags2;
+	UINT8 ubMiscFlags3;
 
 	UINT8 ubBodyType;
-	INT8 bMedical;
-
+	UINT32 uiBodyTypeSubFlags; // BODY TYPE SUBSITUTIONS
+	/* Portrait */
+	UINT8 ubFaceIndex; // overwritten with the char's ID on profile load
 	UINT16 usEyesX;
 	UINT16 usEyesY;
 	UINT16 usMouthX;
 	UINT16 usMouthY;
-	UINT32 uiBlinkFrequency;
-	UINT32 uiExpressionFrequency;
-	SGPSector sSector;
+	UINT32 uiBlinkFrequency{ 3000 };
+	UINT32 uiExpressionFrequency{ 2000 };
 
-	UINT32 uiDayBecomesAvailable; //day the merc will be available. used with the bMercStatus
+	ST::string PANTS;
+	ST::string VEST;
+	ST::string SKIN;
+	ST::string HAIR;
+	/* stats */
+	INT8 bEvolution;
 
-	INT8 bStrength;
+	INT8 bLifeMax{ 15 };
+	INT8 bLife{ 15 };
+	INT8 bAgility{ 1 }; // agility (speed) value
+	INT8 bDexterity{ 1 }; // dexterity (hand coord) value
+	INT8 bStrength{ 1 };
+	INT8 bLeadership{ 1 };
+	INT8 bWisdom{ 1 };
+	INT8 bExpLevel{ 1 }; // general experience level
+	INT8 bMarksmanship{ 0 };
+	INT8 bExplosive{ 0 };
+	INT8 bMechanical{ 0 };
+	INT8 bMedical{ 0 };
+	UINT8 ubNeedForSleep{ 7 };
 
-	INT8 bLifeMax;
-	INT8 bExpLevelDelta;
+	INT16 sLifeGain;
 	INT8 bLifeDelta;
+	INT16 sAgilityGain;
 	INT8 bAgilityDelta;
+	INT16 sDexterityGain;
 	INT8 bDexterityDelta;
-	INT8 bWisdomDelta;
-	INT8 bMarksmanshipDelta;
-	INT8 bMedicalDelta;
-	INT8 bMechanicDelta;
-	INT8 bExplosivesDelta;
+	INT16 sStrengthGain;
 	INT8 bStrengthDelta;
+	INT16 sLeadershipGain;
 	INT8 bLeadershipDelta;
+	INT16 sWisdomGain;
+	INT8 bWisdomDelta;
+	INT16 sExpLevelGain;
+	INT8 bExpLevelDelta;
+	INT16 sMarksmanshipGain;
+	INT8 bMarksmanshipDelta;
+	INT16 sExplosivesGain;
+	INT8 bExplosivesDelta;
+	INT16 sMechanicGain;
+	INT8 bMechanicDelta;
+	INT16 sMedicalGain;
+	INT8 bMedicalDelta;
+
+	UINT16 usStatChangeChances[12]; // used strictly for balancing, never shown!
+	UINT16 usStatChangeSuccesses[12]; // used strictly for balancing, never shown!
+
+	INT8 bPersonalityTrait;
+	INT8 bSkillTrait;
+	INT8 bSkillTrait2;
+	INT8 bAttitude;
+	UINT8 bSexist;
+
+	/* Contract */
+	INT8 bMercStatus; //The status of the merc. If negative, see flags at the top of this file. Positive: The number of days the merc is away for. 0: Not hired but ready to be.
+	INT8 bReputationTolerance;
+	INT8 bDeathRate;
+	UINT32 uiDayBecomesAvailable; //day the merc will be available. used with the bMercStatus
+	INT16 sSalary;
+	UINT32 uiWeeklySalary;
+	UINT32 uiBiWeeklySalary;
+	INT8 bMedicalDeposit; // Is medical deposit required?
+	UINT16 sMedicalDepositAmount;
+	INT32 iMercMercContractLength; //Used for MERC mercs, specifies how many days the merc has gone since last page
+	UINT16 usOptionalGearCost;
+	UINT8 ubSuspiciousDeath;
+	UINT8 ubDaysOfMoraleHangover; // used only when merc leaves team while having poor morale
+	/* Locations */
+	SGPSector sSector;
+	INT16 sGridNo; // The Gridno the NPC was in before leaving the sector
+	INT16 sPreCombatGridNo;
+	UINT8 ubStrategicInsertionCode;
+	UINT16 usStrategicInsertionData;
+	BOOLEAN fUseProfileInsertionInfo; // Set to various flags, ( contained in TacticalSave.h )
+	INT8 bTown;
+	INT8 bTownAttachment;
+	UINT8 ubRoomRangeStart[2];
+	UINT8 ubRoomRangeEnd[2];
+
+	INT8 bBuddy[5]{ -1, -1, -1, -1, -1 }; // Only indices 0, 1, 2 are used. Contain id's for friend1, friend2 and eventual friend respectively
+	INT8 bHated[5]{ -1, -1, -1, -1, -1 }; // Only indices 0, 1, 2 are used. Contain id's for enemy1, enemy2 and eventual enemy respectively
+	INT8 bHatedCount[5]; // Only indices 0, 1, 2 are used. Contain remaining decrements till contract termination due to an enemy present on the team
+	INT8 bHatedTime[5]; // Only indices 0, 1, 2 are used. Contain decrements till contract termination due to an enemy present on the team
+	INT8 bLearnToLike{ -1 }; // eventual friend's id
+	INT8 bLearnToLikeCount; // remaining decrements till the eventual friend becomes an actual friend
+	INT8 bLearnToLikeTime; // how many decrements till the eventual friend becomes an actual friend
+	INT8 bLearnToHate{ -1 }; // eventual enemy's id
+	INT8 bLearnToHateCount; // remaining decrements till the eventual enemy becomes an actual enemy
+	INT8 bLearnToHateTime; // how many decrements till the eventual enemy becomes an actual enemy
+	// Flags used for the precedent to repeating oneself in Contract negotiations. Used for quote 80 - ~107. Gets reset every day
+	UINT8 ubTimeTillNextHatedComplaint;
+
+	INT8 bMercOpinion[75];
+
+	UINT16 inv[19];
+	UINT8 bInvNumber[19];
+	UINT8 bInvStatus[19];
+	UINT8 ubInvUndroppable;
+	UINT32 uiMoney;
+	INT8 bArmourAttractiveness;
+	INT8 bMainGunAttractiveness;
+
+	INT32 iBalance; // if negative the player owes money to this NPC (e.g. for Skyrider's services)
+	UINT8 ubNumTimesDrugUseInLifetime; // The # times a drug has been used in the player's lifetime...
+	/* Specific quest or script related */
+	INT8 bNPCData; // NPC specific
+	INT8 bNPCData2; // NPC specific
+	/* Dialogue and script records */
+	UINT8 ubQuoteRecord;
+	UINT8 ubLastQuoteSaid;
+	UINT32 uiPrecedentQuoteSaid;
+	UINT8 bLastQuoteSaidWasSpecial;
+	UINT8 ubLastDateSpokenTo;
+	UINT8 ubQuoteActionID;
+	INT8 bFriendlyOrDirectDefaultResponseUsedRecently;
+	INT8 bRecruitDefaultResponseUsedRecently;
+	INT8 bThreatenDefaultResponseUsedRecently;
+
+	INT8 bApproached;
+	UINT16 usApproachFactor[4];
+	UINT8 ubApproachVal[4];
+	UINT8 ubApproachMod[3][4];
+	/* Statistics */
 	UINT16 usKills;
 	UINT16 usAssists;
 	UINT16 usShotsFired;
@@ -241,116 +329,18 @@ struct MERCPROFILESTRUCT
 	UINT16 usBattlesFought;
 	UINT16 usTimesWounded;
 	UINT16 usTotalDaysServed;
-
-	INT16 sLeadershipGain;
-	INT16 sStrengthGain;
-
-
-
-	// BODY TYPE SUBSITUTIONS
-	UINT32 uiBodyTypeSubFlags;
-
-	INT16 sSalary;
-	INT8 bLife;
-	INT8 bDexterity; // dexterity (hand coord) value
-	INT8 bPersonalityTrait;
-	INT8 bSkillTrait;
-
-	INT8 bReputationTolerance;
-	INT8 bExplosive;
-	INT8 bSkillTrait2;
-	INT8 bLeadership;
-
-	INT8 bBuddy[5];
-	INT8 bHated[5];
-	INT8 bExpLevel; // general experience level
-
-	INT8 bMarksmanship;
-	INT8 bWisdom;
-
-	UINT8 bInvStatus[19];
-	UINT8 bInvNumber[19];
-	UINT16 usApproachFactor[4];
-
-	INT8 bMainGunAttractiveness;
-	INT8 bAgility; // agility (speed) value
-
-	BOOLEAN fUseProfileInsertionInfo; // Set to various flags, ( contained in TacticalSave.h )
-	INT16 sGridNo; // The Gridno the NPC was in before leaving the sector
-	UINT8 ubQuoteActionID;
-	INT8 bMechanical;
-
-	UINT8 ubInvUndroppable;
-	UINT8 ubRoomRangeStart[2];
-	UINT16 inv[19];
-
-	UINT16 usStatChangeChances[ 12 ]; // used strictly for balancing, never shown!
-	UINT16 usStatChangeSuccesses[ 12 ]; // used strictly for balancing, never shown!
-
-	UINT8 ubStrategicInsertionCode;
-
-	UINT8 ubRoomRangeEnd[2];
-
-	UINT8 ubLastQuoteSaid;
-
-	INT8 bRace;
-	INT8 bNationality;
-	INT8 bAppearance;
-	INT8 bAppearanceCareLevel;
-	INT8 bRefinement;
-	INT8 bRefinementCareLevel;
-	INT8 bHatedNationality;
-	INT8 bHatedNationalityCareLevel;
-	INT8 bRacist;
-	UINT32 uiWeeklySalary;
-	UINT32 uiBiWeeklySalary;
-	INT8 bMedicalDeposit;
-	INT8 bAttitude;
-	UINT16 sMedicalDepositAmount;
-
-	INT8 bLearnToLike;
-	UINT8 ubApproachVal[4];
-	UINT8 ubApproachMod[3][4];
-	INT8 bTown;
-	INT8 bTownAttachment;
-	UINT16 usOptionalGearCost;
-	INT8 bMercOpinion[75];
-	INT8 bApproached;
-	INT8 bMercStatus; //The status of the merc. If negative, see flags at the top of this file. Positive: The number of days the merc is away for. 0: Not hired but ready to be.
-	INT8 bHatedTime[5];
-	INT8 bLearnToLikeTime;
-	INT8 bLearnToHateTime;
-	INT8 bHatedCount[5];
-	INT8 bLearnToLikeCount;
-	INT8 bLearnToHateCount;
-	UINT8 ubLastDateSpokenTo;
-	UINT8 bLastQuoteSaidWasSpecial;
-	INT8 bSectorZ;
-	UINT16 usStrategicInsertionData;
-	INT8 bFriendlyOrDirectDefaultResponseUsedRecently;
-	INT8 bRecruitDefaultResponseUsedRecently;
-	INT8 bThreatenDefaultResponseUsedRecently;
-	INT8 bNPCData; // NPC specific
-	INT32 iBalance;
-	UINT8 ubCivilianGroup;
-	UINT8 ubNeedForSleep;
-	UINT32 uiMoney;
-	INT8 bNPCData2; // NPC specific
-
-	UINT8 ubMiscFlags3;
-
-	UINT8 ubDaysOfMoraleHangover; // used only when merc leaves team while having poor morale
-	UINT8 ubNumTimesDrugUseInLifetime; // The # times a drug has been used in the player's lifetime...
-
-	// Flags used for the precedent to repeating oneself in Contract negotiations. Used for quote 80 - ~107. Gets reset every day
-	UINT32 uiPrecedentQuoteSaid;
-	INT16 sPreCombatGridNo;
-	UINT8 ubTimeTillNextHatedComplaint;
-	UINT8 ubSuspiciousDeath;
-
-	INT32 iMercMercContractLength; //Used for MERC mercs, specifies how many days the merc has gone since last page
-
 	UINT32 uiTotalCostToDate; // The total amount of money that has been paid to the merc for their salary
+
+	INT8 bSectorZ; // unused
+	INT8 bRace; // unused
+	INT8 bRacist; // unused
+	INT8 bNationality; // unused
+	INT8 bAppearance; // unused
+	INT8 bAppearanceCareLevel; // unused
+	INT8 bRefinement; // unused
+	INT8 bRefinementCareLevel; // unused
+	INT8 bHatedNationality; // unused
+	INT8 bHatedNationalityCareLevel; // unused
 };
 
 

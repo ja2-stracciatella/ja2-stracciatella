@@ -159,6 +159,7 @@ public:
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const override;
+	virtual void resetMercProfileStructs() const override;
 	virtual const VehicleModel* getVehicle(uint8_t vehicleID) const override;
 
 	const NPCQuoteInfo* getScriptRecords(uint8_t profileId) const override;
@@ -268,6 +269,7 @@ protected:
 	std::vector<const MercProfile*> m_mercProfiles;
 	std::map<uint8_t, const MercProfileInfo*> m_mercProfileInfo;
 	std::map<UINT32, UINT16> m_translationTable;
+	std::vector<const MERCPROFILESTRUCT*> m_mercStructs;
 
 	RustPointer<Vfs> m_vfs;
 

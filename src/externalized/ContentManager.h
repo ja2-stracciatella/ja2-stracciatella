@@ -189,6 +189,9 @@ public:
 	//returns the full list of character profiles
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const = 0;
 
+	/* Resets named characters' structs with values initially extracted from mercs-profiles.json (previously prof.dat) */
+	virtual void resetMercProfileStructs() const = 0;
+
 	/* Gets eyes and mouths offsets for the RPC small portraits. Returns null if none defined. */
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const = 0;
 

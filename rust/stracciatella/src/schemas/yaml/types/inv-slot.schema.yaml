@@ -1,0 +1,21 @@
+type: string
+enum:
+    - HELMET
+    - VEST
+    - LEG
+    - HEAD1
+    - HEAD2
+    - HAND
+    - SECONDHAND
+    - BIGPOCK1
+    - BIGPOCK2
+    - BIGPOCK3
+    - BIGPOCK4
+    - SMALLPOCK1
+    - SMALLPOCK2
+    - SMALLPOCK3
+    - SMALLPOCK4
+    - SMALLPOCK5
+    - SMALLPOCK6
+    - SMALLPOCK7
+    - SMALLPOCK8

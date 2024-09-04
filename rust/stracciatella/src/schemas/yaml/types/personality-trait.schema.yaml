@@ -1,0 +1,10 @@
+type: string
+enum:
+    - NO_PERSONALITYTRAIT
+    - HEAT_INTOLERANT
+    - NERVOUS
+    - CLAUSTROPHOBIC
+    - NONSWIMMER
+    - FEAR_OF_INSECTS
+    - FORGETFUL
+    - PSYCHO

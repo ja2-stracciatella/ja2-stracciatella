@@ -1,0 +1,6 @@
+type: string
+enum:
+    - FRIENDLY
+    - DIRECT
+    - THREATEN
+    - RECRUIT

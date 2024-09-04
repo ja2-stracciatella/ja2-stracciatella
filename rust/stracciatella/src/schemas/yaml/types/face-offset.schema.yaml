@@ -1,0 +1,9 @@
+title: Eyes or Mouth Offset
+description: The XY offset of the eyes or mouth animation frame.
+type: array
+minItems: 2
+maxItems: 2
+items:
+  type: integer
+  minimum: 0
+  maximum: 255

@@ -1,0 +1,18 @@
+type: string
+enum:
+    - NO_SKILLTRAIT
+    - LOCKPICKING
+    - HANDTOHAND
+    - ELECTRONICS
+    - NIGHTOPS
+    - THROWING
+    - TEACHING
+    - HEAVY_WEAPS
+    - AUTO_WEAPS
+    - STEALTHY
+    - AMBIDEXT
+    - THIEF
+    - MARTIALARTS
+    - KNIFING
+    - ONROOF
+    - CAMOUFLAGED
