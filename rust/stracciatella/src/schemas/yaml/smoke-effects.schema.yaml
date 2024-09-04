@@ -1,0 +1,69 @@
+$schema: http://json-schema.org/schema#
+type: array
+title: Smoke Effects
+description: |
+  **Limitations**: No smoke effects can be added or removed currently as they are referenced in source code.
+minItems: 4
+maxItems: 4
+items:
+  allOf:
+    - title: Smoke effect
+      description: |
+        A smoke effect that can affect tiles.
+      type: object
+      properties:
+        name:
+          title: Name
+          description: The internal name used for this smoke effect
+          $ref: types/id.schema.yaml
+        graphics:
+          title: Graphics
+          description: The animation used for the smoke effect
+          $ref: types/resource-path.schema.yaml
+        dissipatingGraphics:
+          title: Dissipating graphics
+          description: The animation used for the smoke effect when dissipating
+          $ref: types/resource-path.schema.yaml
+        staticGraphics:
+          title: Static graphics
+          description: The animation used for the smoke effect when user disabled smoke animation
+          $ref: types/resource-path.schema.yaml
+        breathDamage:
+          title: Breath Damage
+          description: The breath damage caused by this smoke effect per round
+          $ref: types/uint8.schema.yaml
+        damage:
+          title: Damage
+          description: The damage caused by this smoke effect per round
+          $ref: types/uint8.schema.yaml
+        lostVisibilityPerTile:
+          title: Lose visibility per tile
+          description: Lose this amount of tiles of visibility when LOS passes this smoke effect
+          $ref: types/uint8.schema.yaml
+        maxVisibility:
+          title: Max Visibility
+          description: The maximum number of tiles of this smoke effect the LOS can pass without losing visibility
+          $ref: types/uint8.schema.yaml
+        maxVisibilityWhenAffected:
+          title: Max Visibility When Affected
+          description: The maximum number of tiles the merc can see when they are affected by the smoke effect
+        ignoresGasMask:
+          title: Ignores Gas Mask
+          description: Does this smoke effect ignore the mercs gas mask and affect them anyways.
+          type: boolean
+          default: false
+        affectsRobot:
+          title: Affects Robot
+          description: Does this smoke effect affect the robot?
+          type: boolean
+          default: false
+        affectsMonsters:
+          title: Affects Monsters
+          description: Does this smoke effect affect monsters?
+          type: boolean
+          default: true
+      required:
+        - name
+        - graphics
+        - dissipatingGraphics
+        - staticGraphics

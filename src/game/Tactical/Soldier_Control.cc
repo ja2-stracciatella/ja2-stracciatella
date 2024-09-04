@@ -2067,7 +2067,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 	}
 
 	// Are we now standing in tear gas without a decently working gas mask?
-	if (GetSmokeEffectOnTile(new_grid_no, s.bLevel) != NO_SMOKE_EFFECT &&
+	if (GetSmokeEffectOnTile(new_grid_no, s.bLevel) != SmokeEffectID::NOTHING &&
 		(s.inv[HEAD1POS].usItem != GASMASK || s.inv[HEAD1POS].bStatus[0] < GASMASK_MIN_STATUS) &&
 		(s.inv[HEAD2POS].usItem != GASMASK || s.inv[HEAD2POS].bStatus[0] < GASMASK_MIN_STATUS))
 	{
@@ -4047,7 +4047,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 	{
 		// Must get a gas mask or leave the gassed area to get over it
 		if (IsWearingHeadGear(s, GASMASK) ||
-			GetSmokeEffectOnTile(s.sGridNo, s.bLevel) == NO_SMOKE_EFFECT)
+			GetSmokeEffectOnTile(s.sGridNo, s.bLevel) == SmokeEffectID::NOTHING)
 		{
 			// Turn off gassed flag
 			s.uiStatusFlags &= ~SOLDIER_GASSED;

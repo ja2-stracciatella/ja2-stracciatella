@@ -2,6 +2,7 @@ file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 set(JA2_SOURCES
     ${JA2_SOURCES}
     ${LOCAL_JA2_HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/SmokeEffectModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/MapItemReplacementModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/NpcActionParamsModel.cc
     PARENT_SCOPE

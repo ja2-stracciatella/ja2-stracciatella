@@ -89,6 +89,8 @@ public:
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) override;
 
+	virtual const SmokeEffectModel* getSmokeEffect(SmokeEffectID id) const override;
+
 	virtual const ExplosionAnimationModel* getExplosionAnimation(uint8_t id) override;
 	virtual const ExplosiveModel* getExplosive(uint16_t index) override;
 	virtual const ExplosiveModel* getExplosiveByName(const ST::string &name) override;
@@ -217,6 +219,7 @@ protected:
 	std::map<uint16_t, uint16_t> m_mapItemReplacements;
 	std::multimap<MusicMode, const ST::string> m_musicMap;
 
+	std::vector<const SmokeEffectModel*> m_smokeEffects;
 	std::vector<const ExplosionAnimationModel*> m_explosionAnimations;
 	std::vector<const ExplosiveCalibreModel*> m_explosiveCalibres;
 
@@ -273,6 +276,7 @@ protected:
 
 	bool loadGameData(const VanillaItemStrings& vanillaItemStrings);
 	bool loadWeapons(const VanillaItemStrings& vanillaItemStrings);
+	bool loadSmokeEffects();
 	bool loadExplosionAnimations();
 	bool loadExplosives(const VanillaItemStrings& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations);
 	bool loadItems(const VanillaItemStrings& vanillaItemStrings);

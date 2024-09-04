@@ -90,6 +90,7 @@
 #include "End_Game.h"
 #include "Strategic_Status.h"
 #include "PreBattle_Interface.h"
+#include "SmokeEffects.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -1523,37 +1524,26 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 					bPosOfMask = NO_SLOT;
 				}
 
-				const ExplosiveModel* pExplosive = nullptr;
-				if (!AM_A_ROBOT(pSoldier))
+				const SmokeEffectModel* smokeEffect = nullptr;
+				auto smokeEffectID = GetSmokeEffectOnTile(pSoldier->sGridNo, pSoldier->bLevel);
+				if (smokeEffectID != SmokeEffectID::NOTHING)
 				{
-					if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_TEARGAS)
-					{
-						if (!(pSoldier->fHitByGasFlags & HIT_BY_TEARGAS) && bPosOfMask == NO_SLOT)
-						{
-							// check for gas mask
-							pExplosive = GCM->getExplosive(TEARGAS_GRENADE);
-						}
-					}
-					if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_MUSTARDGAS)
-					{
-						if (!(pSoldier->fHitByGasFlags & HIT_BY_MUSTARDGAS) && bPosOfMask == NO_SLOT)
-						{
-							pExplosive = GCM->getExplosive(MUSTARD_GRENADE);
-						}
-					}
+					smokeEffect = GCM->getSmokeEffect(smokeEffectID);
 				}
-				if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_CREATUREGAS)
-				{
-					if (!(pSoldier->fHitByGasFlags & HIT_BY_CREATUREGAS)) // gas mask doesn't help vs creaturegas
-					{
-						pExplosive = GCM->getExplosive(SMALL_CREATURE_GAS);
-					}
+
+				// check the cases where we dont take damage
+				if (bPosOfMask != NO_SLOT && !smokeEffect->getIgnoresGasMask()) {
+					smokeEffect = nullptr;
 				}
-				if (pExplosive)
+				if (AM_A_ROBOT(pSoldier) && !smokeEffect->getAffectsRobot()) {
+					smokeEffect = nullptr;
+				}
+
+				if (smokeEffect && smokeEffect->dealsAnyDamage() && !IsSoldierAlreadyAffectedBySmokeEffect(pSoldier, smokeEffect))
 				{
 					EVENT_StopMerc(pSoldier);
 					fDontContinue = TRUE;
-					DishOutGasDamage(pSoldier, pExplosive, TRUE, FALSE, pExplosive->getDamage() + PreRandom(pExplosive->getDamage()), 100 * (pExplosive->getStunDamage() + PreRandom(pExplosive->getStunDamage() / 2)), NULL);
+					DishOutGasDamage(pSoldier, smokeEffect, TRUE, FALSE, smokeEffect->getDamage() + PreRandom(smokeEffect->getDamage()), 100 * (smokeEffect->getBreathDamage() + PreRandom(smokeEffect->getBreathDamage() / 2)), NULL);
 				}
 			}
 

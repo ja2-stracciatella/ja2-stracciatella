@@ -14,6 +14,7 @@
 #include "CacheSectorsModel.h"
 #include "CalibreModel.h"
 #include "ContentMusic.h"
+#include "SmokeEffectModel.h"
 #include "ExplosionAnimationModel.h"
 #include "ExplosiveModel.h"
 #include "DealerInventory.h"
@@ -156,6 +157,8 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_items);
 	deleteElements(m_calibres);
 	deleteElements(m_ammoTypes);
+	deleteElements(m_smokeEffects);
+	deleteElements(m_explosiveCalibres);
 	deleteElements(m_explosionAnimations);
 	deleteElements(m_dealersInventory);
 	deleteElements(m_dealers);
@@ -470,6 +473,16 @@ const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 	return m_ammoTypes[index];
 }
 
+const SmokeEffectModel* DefaultContentManager::getSmokeEffect(SmokeEffectID id) const
+{
+	auto numID = static_cast<size_t>(id);
+	if (numID == 0 || numID > m_smokeEffects.size()) {
+		throw std::runtime_error(ST::format("smoke effect '{}' was not found", numID).to_std_string());
+	}
+
+	return m_smokeEffects[numID - 1];
+}
+
 const ExplosionAnimationModel* DefaultContentManager::getExplosionAnimation(uint8_t id)
 {
 	auto it = std::find_if(m_explosionAnimations.begin(), m_explosionAnimations.end(), [id](const ExplosionAnimationModel* item) -> bool {
@@ -501,6 +514,21 @@ bool DefaultContentManager::loadWeapons(const VanillaItemStrings& vanillaItemStr
 	return true;
 }
 
+bool DefaultContentManager::loadSmokeEffects()
+{
+	auto json = readJsonDataFileWithSchema("smoke-effects.json");
+
+	uint16_t idx = 1;
+	for (auto& element : json.toVec()) {
+		auto smokeEffect = SmokeEffectModel::deserialize(idx, element);
+		SLOGD("Loaded smoke effect {} {}", static_cast<uint16_t>(smokeEffect->getID()), smokeEffect->getName());
+		m_smokeEffects.push_back(smokeEffect);
+		idx++;
+	}
+
+	return true;
+}
+
 bool DefaultContentManager::loadExplosionAnimations()
 {
 	auto json = readJsonDataFileWithSchema("explosion-animations.json");
@@ -516,7 +544,10 @@ bool DefaultContentManager::loadExplosiveCalibres()
 
 	uint16_t idx = 1;
 	for (auto& element : json.toVec()) {
-		m_explosiveCalibres.push_back(ExplosiveCalibreModel::deserialize(idx, element));
+		auto calibre = ExplosiveCalibreModel::deserialize(idx, element);
+		SLOGD("Loaded explosive calibre {} {}", calibre->getID(), calibre->getName());
+
+		m_explosiveCalibres.push_back(calibre);
 		idx++;
 	}
 
@@ -776,6 +807,7 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 		&& loadAmmoTypes()
 		&& loadMagazines(vanillaItemStrings)
 		&& loadWeapons(vanillaItemStrings)
+		&& loadSmokeEffects()
 		&& loadExplosionAnimations()
 		&& loadExplosives(vanillaItemStrings, m_explosionAnimations)
 		&& loadArmyData()

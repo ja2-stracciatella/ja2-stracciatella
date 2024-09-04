@@ -1,0 +1,40 @@
+[
+    {
+        "name": "SMOKE",
+        "graphics": "tilecache/smoke.sti",
+        "dissipatingGraphics": "tilecache/smalsmke.sti",
+        "staticGraphics": "tilecache/smkechze.sti",
+        "maxVisibility": 3
+    },
+    {
+        "name": "TEARGAS",
+        "graphics": "tilecache/teargas.sti",
+        "dissipatingGraphics": "tilecache/smaltear.sti",
+        "staticGraphics": "tilecache/tearchze.sti",
+        "damage": 0,
+        "breathDamage": 20,
+        "lostVisibilityPerTile": 2,
+        "maxVisibilityWhenAffected": 2
+    },
+    {
+        "name": "MUSTARDGAS",
+        "graphics": "tilecache/mustard2.sti",
+        "dissipatingGraphics": "tilecache/smalmust.sti",
+        "staticGraphics": "tilecache/mustchze.sti",
+        "damage": 15,
+        "breathDamage": 40,
+        "lostVisibilityPerTile": 2,
+        "maxVisibilityWhenAffected": 2
+    },
+    {
+        "name": "CREATUREGAS",
+        "graphics": "tilecache/spit_gas.sti",
+        "dissipatingGraphics": "tilecache/spit_gas.sti",
+        "staticGraphics": "tilecache/spit_gas.sti",
+        "damage": 5,
+        "breathDamage": 0,
+        "ignoresGasMask": true,
+        "affectsRobot": true,
+        "affectsMonsters": false
+    }
+]

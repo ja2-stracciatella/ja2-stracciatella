@@ -57,12 +57,8 @@ static SMOKEEFFECT* GetFreeSmokeEffect(void)
 	return NULL;
 }
 
-
-static SmokeEffectKind FromWorldFlagsToSmokeType(UINT8 ubWorldFlags);
-
-
 // Returns NO_SMOKE_EFFECT if none there...
-SmokeEffectKind GetSmokeEffectOnTile(INT16 const sGridNo, INT8 const bLevel)
+SmokeEffectID GetSmokeEffectOnTile(INT16 const sGridNo, INT8 const bLevel)
 {
 	UINT8		ubExtFlags;
 
@@ -75,51 +71,79 @@ SmokeEffectKind GetSmokeEffectOnTile(INT16 const sGridNo, INT8 const bLevel)
 		return( FromWorldFlagsToSmokeType( ubExtFlags ) );
 	}
 
-	return( NO_SMOKE_EFFECT );
+	return( SmokeEffectID::NOTHING );
 }
 
 
-static SmokeEffectKind FromWorldFlagsToSmokeType(UINT8 ubWorldFlags)
+SmokeEffectID FromWorldFlagsToSmokeType(UINT8 ubWorldFlags)
 {
 	if ( ubWorldFlags & MAPELEMENT_EXT_SMOKE )
 	{
-		return( NORMAL_SMOKE_EFFECT );
+		return( SmokeEffectID::SMOKE );
 	}
 	else if ( ubWorldFlags & MAPELEMENT_EXT_TEARGAS )
 	{
-		return( TEARGAS_SMOKE_EFFECT );
+		return( SmokeEffectID::TEARGAS );
 	}
 	else if ( ubWorldFlags & MAPELEMENT_EXT_MUSTARDGAS )
 	{
-		return( MUSTARDGAS_SMOKE_EFFECT );
+		return( SmokeEffectID::MUSTARDGAS );
 	}
 	else if ( ubWorldFlags & MAPELEMENT_EXT_CREATUREGAS )
 	{
-		return( CREATURE_SMOKE_EFFECT );
+		return( SmokeEffectID::CREATUREGAS );
 	}
 	else
 	{
-		return( NO_SMOKE_EFFECT );
+		return( SmokeEffectID::NOTHING );
 	}
 }
 
 
-static UINT8 FromSmokeTypeToWorldFlags(SmokeEffectKind const bType)
+static UINT8 FromSmokeTypeToWorldFlags(SmokeEffectID const bType)
 {
 	switch( bType )
 	{
-		case NORMAL_SMOKE_EFFECT:     return MAPELEMENT_EXT_SMOKE;
-		case TEARGAS_SMOKE_EFFECT:    return MAPELEMENT_EXT_TEARGAS;
-		case MUSTARDGAS_SMOKE_EFFECT: return MAPELEMENT_EXT_MUSTARDGAS;
-		case CREATURE_SMOKE_EFFECT:   return MAPELEMENT_EXT_CREATUREGAS;
+		case SmokeEffectID::SMOKE:     return MAPELEMENT_EXT_SMOKE;
+		case SmokeEffectID::TEARGAS:    return MAPELEMENT_EXT_TEARGAS;
+		case SmokeEffectID::MUSTARDGAS: return MAPELEMENT_EXT_MUSTARDGAS;
+		case SmokeEffectID::CREATUREGAS:   return MAPELEMENT_EXT_CREATUREGAS;
 		default:                      return 0;
 	}
+}
+
+bool IsSoldierAlreadyAffectedBySmokeEffect(const SOLDIERTYPE* soldier, const SmokeEffectModel* smokeEffect) {
+	if (!soldier) {
+		SLOGE("Called IsSoldierAlreadyAffectedBySmokeEffect with nullptr for soldier");
+		return false;
+	}
+	if (!smokeEffect) {
+		SLOGE("Called IsSoldierAlreadyAffectedBySmokeEffect with nullptr for smokeEffect");
+		return false;
+	}
+
+	uint8_t flag = 0;
+	switch (smokeEffect->getID()) {
+		case SmokeEffectID::CREATUREGAS:
+			flag = HIT_BY_CREATUREGAS;
+			break;
+		case SmokeEffectID::TEARGAS:
+			flag = HIT_BY_TEARGAS;
+			break;
+		case SmokeEffectID::MUSTARDGAS:
+			flag = HIT_BY_MUSTARDGAS;
+			break;
+		default:
+			break;
+	}
+
+	return soldier->fHitByGasFlags & flag;
 }
 
 
 void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel, SOLDIERTYPE* const owner)
 {
-	INT8				bSmokeEffectType=0;
+	SmokeEffectID			smokeEffectID = SmokeEffectID::NOTHING;
 	UINT8				ubDuration=0;
 	UINT8				ubStartRadius=0;
 
@@ -144,20 +168,20 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 	{
 		case MUSTARD_GRENADE:
 
-			bSmokeEffectType	=	MUSTARDGAS_SMOKE_EFFECT;
+			smokeEffectID	=	SmokeEffectID::MUSTARDGAS;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
 
 		case TEARGAS_GRENADE:
 		case GL_TEARGAS_GRENADE:
-			bSmokeEffectType	=	TEARGAS_SMOKE_EFFECT;
+			smokeEffectID	=	SmokeEffectID::TEARGAS;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
 
 		case BIG_TEAR_GAS:
-			bSmokeEffectType	=	TEARGAS_SMOKE_EFFECT;
+			smokeEffectID	=	SmokeEffectID::TEARGAS;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
@@ -165,26 +189,26 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 		case SMOKE_GRENADE:
 		case GL_SMOKE_GRENADE:
 
-			bSmokeEffectType	=	NORMAL_SMOKE_EFFECT;
+			smokeEffectID	=	SmokeEffectID::SMOKE;
 			ubDuration				= 5;
 			ubStartRadius			= 1;
 			break;
 
 		case SMALL_CREATURE_GAS:
-			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
+			smokeEffectID	=	SmokeEffectID::CREATUREGAS;
 			ubDuration				= 3;
 			ubStartRadius			= 1;
 			break;
 
 		case LARGE_CREATURE_GAS:
-			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
+			smokeEffectID	=	SmokeEffectID::CREATUREGAS;
 			ubDuration				= 3;
 			ubStartRadius			= GCM->getExplosive(LARGE_CREATURE_GAS)->getRadius();
 			break;
 
 		case VERY_SMALL_CREATURE_GAS:
 
-			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
+			smokeEffectID	=	SmokeEffectID::CREATUREGAS;
 			ubDuration				= 2;
 			ubStartRadius			= 0;
 			break;
@@ -196,7 +220,7 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 	pSmoke->ubRadius    = ubStartRadius;
 	pSmoke->bAge				= 0;
 	pSmoke->fAllocated  = TRUE;
-	pSmoke->bType				= bSmokeEffectType;
+	pSmoke->bType				= static_cast<int8_t>(smokeEffectID);
 	pSmoke->owner       = owner;
 
 	if ( pSmoke->bFlags & SMOKE_EFFECT_INDOORS )
@@ -217,7 +241,7 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const bType, INT16 const sGridNo, INT8 const bLevel)
+void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, const SmokeEffectModel* smokeEffect, INT16 const sGridNo, INT8 const bLevel)
 {
 	BOOLEAN dissipating = FALSE;
 	if (smoke->ubDuration - smoke->bAge < 2)
@@ -238,39 +262,18 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 	{
 		if (dissipating)
 		{
-			switch (bType)
-			{
-				case NORMAL_SMOKE_EFFECT:     cached_file = TILECACHEDIR "/smalsmke.sti"; break;
-				case TEARGAS_SMOKE_EFFECT:    cached_file = TILECACHEDIR "/smaltear.sti"; break;
-				case MUSTARDGAS_SMOKE_EFFECT: cached_file = TILECACHEDIR "/smalmust.sti"; break;
-				case CREATURE_SMOKE_EFFECT:   cached_file = TILECACHEDIR "/spit_gas.sti"; break;
-				default: throw std::logic_error("Invalid smoke effect type");
-			}
+			cached_file = smokeEffect->getDissipatingGraphics().c_str();
 		}
 		else
 		{
-			switch (bType)
-			{
-				case NORMAL_SMOKE_EFFECT:     cached_file = TILECACHEDIR "/smoke.sti";    break;
-				case TEARGAS_SMOKE_EFFECT:    cached_file = TILECACHEDIR "/teargas.sti";  break;
-				case MUSTARDGAS_SMOKE_EFFECT: cached_file = TILECACHEDIR "/mustard2.sti"; break;
-				case CREATURE_SMOKE_EFFECT:   cached_file = TILECACHEDIR "/spit_gas.sti"; break;
-				default: throw std::logic_error("Invalid smoke effect type");
-			}
+			cached_file = smokeEffect->getGraphics().c_str();
 		}
 		start_frame  = Random(5);
 		ani_flags   |= ANITILE_ALWAYS_TRANSLUCENT;
 	}
 	else
 	{
-		switch (bType)
-		{
-			case NORMAL_SMOKE_EFFECT:     cached_file = TILECACHEDIR "/smkechze.sti"; break;
-			case TEARGAS_SMOKE_EFFECT:    cached_file = TILECACHEDIR "/tearchze.sti"; break;
-			case MUSTARDGAS_SMOKE_EFFECT: cached_file = TILECACHEDIR "/mustchze.sti"; break;
-			case CREATURE_SMOKE_EFFECT:   cached_file = TILECACHEDIR "/spit_gas.sti"; break;
-			default: throw std::logic_error("Invalid smoke effect type");
-		}
+		cached_file = smokeEffect->getStaticGraphics().c_str();
 		start_frame  = 0;
 		ani_flags   |= ANITILE_PAUSED;
 	}
@@ -288,7 +291,7 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 	ani_params.sZ          = 0;
 	CreateAnimationTile(&ani_params);
 
-	gpWorldLevelData[sGridNo].ubExtFlags[bLevel] |= FromSmokeTypeToWorldFlags(bType);
+	gpWorldLevelData[sGridNo].ubExtFlags[bLevel] |= FromSmokeTypeToWorldFlags(smokeEffect->getID());
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
