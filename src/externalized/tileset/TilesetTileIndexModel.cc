@@ -1,10 +1,190 @@
 #include "TilesetTileIndexModel.h"
+#include "TileDat.h"
+#include <array>
+#include <stdexcept>
+#include <string_theory/string>
 
-TilesetTileIndexModel::TilesetTileIndexModel(TileTypeDefines tileType_, uint16_t subIndex_) : tileType(tileType_), subIndex(subIndex_) {
+namespace {
+constexpr std::array<char const *, TileTypeDefines::NUMBEROFTILETYPES> namesArray
+{
+// These strings must be in the correct order, see TileDat.h.
+	"FIRSTTEXTURE",
+	"SECONDTEXTURE",
+	"THIRDTEXTURE",
+	"FOURTHTEXTURE",
+	"FIFTHTEXTURE",
+	"SIXTHTEXTURE",
+	"SEVENTHTEXTURE",
+	"REGWATERTEXTURE",
+	"DEEPWATERTEXTURE",
+	"FIRSTCLIFFHANG",
+	"FIRSTCLIFF",
+	"FIRSTCLIFFSHADOW",
+	"FIRSTOSTRUCT",
+	"SECONDOSTRUCT",
+	"THIRDOSTRUCT",
+	"FOURTHOSTRUCT",
+	"FIFTHOSTRUCT",
+	"SIXTHOSTRUCT",
+	"SEVENTHOSTRUCT",
+	"EIGHTOSTRUCT",
+	"FIRSTFULLSTRUCT",
+	"SECONDFULLSTRUCT",
+	"THIRDFULLSTRUCT",
+	"FOURTHFULLSTRUCT",
+	"FIRSTSHADOW",
+	"SECONDSHADOW",
+	"THIRDSHADOW",
+	"FOURTHSHADOW",
+	"FIFTHSHADOW",
+	"SIXTHSHADOW",
+	"SEVENTHSHADOW",
+	"EIGHTSHADOW",
+	"FIRSTFULLSHADOW",
+	"SECONDFULLSHADOW",
+	"THIRDFULLSHADOW",
+	"FOURTHFULLSHADOW",
+	"FIRSTWALL",
+	"SECONDWALL",
+	"THIRDWALL",
+	"FOURTHWALL",
+	"FIRSTDOOR",
+	"SECONDDOOR",
+	"THIRDDOOR",
+	"FOURTHDOOR",
+	"FIRSTDOORSHADOW",
+	"SECONDDOORSHADOW",
+	"THIRDDOORSHADOW",
+	"FOURTHDOORSHADOW",
+	"SLANTROOFCEILING",
+	"ANOTHERDEBRIS",
+	"ROADPIECES",
+	"FOURTHWINDOW",
+	"FIRSTDECORATIONS",
+	"SECONDDECORATIONS",
+	"THIRDDECORATIONS",
+	"FOURTHDECORATIONS",
+	"FIRSTWALLDECAL",
+	"SECONDWALLDECAL",
+	"THIRDWALLDECAL",
+	"FOURTHWALLDECAL",
+	"FIRSTFLOOR",
+	"SECONDFLOOR",
+	"THIRDFLOOR",
+	"FOURTHFLOOR",
+	"FIRSTROOF",
+	"SECONDROOF",
+	"THIRDROOF",
+	"FOURTHROOF",
+	"FIRSTSLANTROOF",
+	"SECONDSLANTROOF",
+	"FIRSTONROOF",
+	"SECONDONROOF",
+	"MOCKFLOOR",
+	"FIRSTISTRUCT",
+	"SECONDISTRUCT",
+	"THRIDISTRUCT",
+	"FOURTHISTRUCT",
+	"FIRSTCISTRUCT",
+	"FIRSTROAD",
+	"DEBRISROCKS",
+	"DEBRISWOOD",
+	"DEBRISWEEDS",
+	"DEBRISGRASS",
+	"DEBRISSAND",
+	"DEBRISMISC",
+	"ANIOSTRUCT",
+	"FENCESTRUCT",
+	"FENCESHADOW",
+	"FIRSTVEHICLE",
+	"SECONDVEHICLE",
+	"FIRSTVEHICLESHADOW",
+	"SECONDVEHICLESHADOW",
+	"DEBRIS2MISC",
+	"FIRSTDEBRISSTRUCT",
+	"SECONDDEBRISSTRUCT",
+	"FIRSTDEBRISSTRUCTSHADOW",
+	"SECONDDEBRISSTRUCTSHADOW",
+	"NINTHOSTRUCT",
+	"TENTHOSTRUCT",
+	"NINTHOSTRUCTSHADOW",
+	"TENTHOSTRUCTSHADOW",
+	"FIRSTEXPLDEBRIS",
+	"SECONDEXPLDEBRIS",
+	"FIRSTLARGEEXPDEBRIS",
+	"SECONDLARGEEXPDEBRIS",
+	"FIRSTLARGEEXPDEBRISSHADOW",
+	"SECONDLARGEEXPDEBRISSHADOW",
+	"FIFTHISTRUCT",
+	"SIXTHISTRUCT",
+	"SEVENTHISTRUCT",
+	"EIGHTISTRUCT",
+	"FIRSTHIGHROOF",
+	"SECONDHIGHROOF",
+	"FIFTHWALLDECAL",
+	"SIXTHWALLDECAL",
+	"SEVENTHWALLDECAL",
+	"EIGTHWALLDECAL",
+	"HUMANBLOOD",
+	"CREATUREBLOOD",
+	"FIRSTSWITCHES",
+	"REVEALEDSLANTROOFS",
+	"FIRSTREVEALEDHIGHROOFS",
+	"SECONDREVEALEDHIGHROOFS",
+	"GUNS",
+	"P1ITEMS",
+	"P2ITEMS",
+	"WINDOWSHATTER",
+	"P3ITEMS",
+	"BODYEXPLOSION",
+	"EXITTEXTURE",
+	"FOOTPRINTS",
+	"FIRSTPOINTERS",
+	"SECONDPOINTERS",
+	"THIRDPOINTERS",
+	"GOODRUN",
+	"GOODWALK",
+	"GOODSWAT",
+	"GOODPRONE",
+	"CONFIRMMOVE",
+	"VEHICLEMOVE",
+	"ACTIONTWO",
+	"XMARKER",
+	"GOODRING",
+	"ROTATINGKEY",
+	"SELRING",
+	"SPECIALTILES",
+	"BULLETTILE",
+	"FIRSTMISS",
+	"SECONDMISS",
+	"THIRDMISS",
+	"WIREFRAMES"
+};
+
+TileTypeDefines deserializeTileTypeDefine(ST::string const& str)
+{
+	// This is a really simple, brute-force way to get a TileTypeDefines value
+	// for a string, but since this function is only called once per item at
+	// startup it's hardly worth it to "optimize" this.
+	auto const posInArray{ std::find_if(
+		namesArray.begin(), namesArray.end(),
+		[&str](auto name) {
+			return str.compare(name) == 0;
+		})
+	};
+
+	if (posInArray == namesArray.end()) throw std::runtime_error("Unknown TileType");
+
+	return static_cast<TileTypeDefines>(std::distance(namesArray.begin(), posInArray));
 }
 
-TileTypeDefines deserializeTileTypeDefine(const ST::string& str);
-ST::string serializeTileTypeDefine(TileTypeDefines t);
+ST::string serializeTileTypeDefine(TileTypeDefines tt)
+{
+	return tt < TileTypeDefines::NUMBEROFTILETYPES
+		? namesArray[tt]
+		: "UNKNOWNTILETYPE";
+}
+}
 
 TilesetTileIndexModel TilesetTileIndexModel::deserialize(const JsonValue &json) {
 	auto obj = json.toObject();
@@ -23,163 +203,28 @@ JsonValue TilesetTileIndexModel::serialize() const {
 	return v.toValue();
 }
 
-TileTypeDefines deserializeTileTypeDefine(const ST::string& str) {
-	  if (str == "FIRSTTEXTURE") return TileTypeDefines::FIRSTTEXTURE;
-	  if (str == "SECONDTEXTURE") return TileTypeDefines::SECONDTEXTURE;
-	  if (str == "THIRDTEXTURE") return TileTypeDefines::THIRDTEXTURE;
-	  if (str == "FOURTHTEXTURE") return TileTypeDefines::FOURTHTEXTURE;
-	  if (str == "FIFTHTEXTURE") return TileTypeDefines::FIFTHTEXTURE;
-	  if (str == "SIXTHTEXTURE") return TileTypeDefines::SIXTHTEXTURE;
-	  if (str == "SEVENTHTEXTURE") return TileTypeDefines::SEVENTHTEXTURE;
-	  if (str == "REGWATERTEXTURE") return TileTypeDefines::REGWATERTEXTURE;
-	  if (str == "DEEPWATERTEXTURE") return TileTypeDefines::DEEPWATERTEXTURE;
-	  if (str == "FIRSTCLIFFHANG") return TileTypeDefines::FIRSTCLIFFHANG;
-	  if (str == "FIRSTCLIFF") return TileTypeDefines::FIRSTCLIFF;
-	  if (str == "FIRSTCLIFFSHADOW") return TileTypeDefines::FIRSTCLIFFSHADOW;
-	  if (str == "FIRSTOSTRUCT") return TileTypeDefines::FIRSTOSTRUCT;
-	  if (str == "SECONDOSTRUCT") return TileTypeDefines::SECONDOSTRUCT;
-	  if (str == "THIRDOSTRUCT") return TileTypeDefines::THIRDOSTRUCT;
-	  if (str == "FOURTHOSTRUCT") return TileTypeDefines::FOURTHOSTRUCT;
-	  if (str == "FIFTHOSTRUCT") return TileTypeDefines::FIFTHOSTRUCT;
-	  if (str == "SIXTHOSTRUCT") return TileTypeDefines::SIXTHOSTRUCT;
-	  if (str == "SEVENTHOSTRUCT") return TileTypeDefines::SEVENTHOSTRUCT;
-	  if (str == "EIGHTOSTRUCT") return TileTypeDefines::EIGHTOSTRUCT;
-	  if (str == "FIRSTFULLSTRUCT") return TileTypeDefines::FIRSTFULLSTRUCT;
-	  if (str == "SECONDFULLSTRUCT") return TileTypeDefines::SECONDFULLSTRUCT;
-	  if (str == "THIRDFULLSTRUCT") return TileTypeDefines::THIRDFULLSTRUCT;
-	  if (str == "FOURTHFULLSTRUCT") return TileTypeDefines::FOURTHFULLSTRUCT;
-	  if (str == "FIRSTSHADOW") return TileTypeDefines::FIRSTSHADOW;
-	  if (str == "SECONDSHADOW") return TileTypeDefines::SECONDSHADOW;
-	  if (str == "THIRDSHADOW") return TileTypeDefines::THIRDSHADOW;
-	  if (str == "FOURTHSHADOW") return TileTypeDefines::FOURTHSHADOW;
-	  if (str == "FIFTHSHADOW") return TileTypeDefines::FIFTHSHADOW;
-	  if (str == "SIXTHSHADOW") return TileTypeDefines::SIXTHSHADOW;
-	  if (str == "SEVENTHSHADOW") return TileTypeDefines::SEVENTHSHADOW;
-	  if (str == "EIGHTSHADOW") return TileTypeDefines::EIGHTSHADOW;
-	  if (str == "FIRSTFULLSHADOW") return TileTypeDefines::FIRSTFULLSHADOW;
-	  if (str == "SECONDFULLSHADOW") return TileTypeDefines::SECONDFULLSHADOW;
-	  if (str == "THIRDFULLSHADOW") return TileTypeDefines::THIRDFULLSHADOW;
-	  if (str == "FOURTHFULLSHADOW") return TileTypeDefines::FOURTHFULLSHADOW;
-	  if (str == "FIRSTWALL") return TileTypeDefines::FIRSTWALL;
-	  if (str == "SECONDWALL") return TileTypeDefines::SECONDWALL;
-	  if (str == "THIRDWALL") return TileTypeDefines::THIRDWALL;
-	  if (str == "FOURTHWALL") return TileTypeDefines::FOURTHWALL;
-	  if (str == "FIRSTDOOR") return TileTypeDefines::FIRSTDOOR;
-	  if (str == "SECONDDOOR") return TileTypeDefines::SECONDDOOR;
-	  if (str == "THIRDDOOR") return TileTypeDefines::THIRDDOOR;
-	  if (str == "FOURTHDOOR") return TileTypeDefines::FOURTHDOOR;
-	  if (str == "FIRSTDOORSHADOW") return TileTypeDefines::FIRSTDOORSHADOW;
-	  if (str == "SECONDDOORSHADOW") return TileTypeDefines::SECONDDOORSHADOW;
-	  if (str == "THIRDDOORSHADOW") return TileTypeDefines::THIRDDOORSHADOW;
-	  if (str == "FOURTHDOORSHADOW") return TileTypeDefines::FOURTHDOORSHADOW;
-	  if (str == "SLANTROOFCEILING") return TileTypeDefines::SLANTROOFCEILING;
-	  if (str == "ANOTHERDEBRIS") return TileTypeDefines::ANOTHERDEBRIS;
-	  if (str == "ROADPIECES") return TileTypeDefines::ROADPIECES;
-	  if (str == "FOURTHWINDOW") return TileTypeDefines::FOURTHWINDOW;
-	  if (str == "FIRSTDECORATIONS") return TileTypeDefines::FIRSTDECORATIONS;
-	  if (str == "SECONDDECORATIONS") return TileTypeDefines::SECONDDECORATIONS;
-	  if (str == "THIRDDECORATIONS") return TileTypeDefines::THIRDDECORATIONS;
-	  if (str == "FOURTHDECORATIONS") return TileTypeDefines::FOURTHDECORATIONS;
-	  if (str == "FIRSTWALLDECAL") return TileTypeDefines::FIRSTWALLDECAL;
-	  if (str == "SECONDWALLDECAL") return TileTypeDefines::SECONDWALLDECAL;
-	  if (str == "THIRDWALLDECAL") return TileTypeDefines::THIRDWALLDECAL;
-	  if (str == "FOURTHWALLDECAL") return TileTypeDefines::FOURTHWALLDECAL;
-	  if (str == "FIRSTFLOOR") return TileTypeDefines::FIRSTFLOOR;
-	  if (str == "SECONDFLOOR") return TileTypeDefines::SECONDFLOOR;
-	  if (str == "THIRDFLOOR") return TileTypeDefines::THIRDFLOOR;
-	  if (str == "FOURTHFLOOR") return TileTypeDefines::FOURTHFLOOR;
-	  if (str == "FIRSTROOF") return TileTypeDefines::FIRSTROOF;
-	  if (str == "SECONDROOF") return TileTypeDefines::SECONDROOF;
-	  if (str == "THIRDROOF") return TileTypeDefines::THIRDROOF;
-	  if (str == "FOURTHROOF") return TileTypeDefines::FOURTHROOF;
-	  if (str == "FIRSTSLANTROOF") return TileTypeDefines::FIRSTSLANTROOF;
-	  if (str == "SECONDSLANTROOF") return TileTypeDefines::SECONDSLANTROOF;
-	  if (str == "FIRSTONROOF") return TileTypeDefines::FIRSTONROOF;
-	  if (str == "SECONDONROOF") return TileTypeDefines::SECONDONROOF;
-	  if (str == "MOCKFLOOR") return TileTypeDefines::MOCKFLOOR;
-	  if (str == "FIRSTISTRUCT") return TileTypeDefines::FIRSTISTRUCT;
-	  if (str == "SECONDISTRUCT") return TileTypeDefines::SECONDISTRUCT;
-	  if (str == "THRIDISTRUCT") return TileTypeDefines::THRIDISTRUCT;
-	  if (str == "FOURTHISTRUCT") return TileTypeDefines::FOURTHISTRUCT;
-	  if (str == "FIRSTCISTRUCT") return TileTypeDefines::FIRSTCISTRUCT;
-	  if (str == "FIRSTROAD") return TileTypeDefines::FIRSTROAD;
-	  if (str == "DEBRISROCKS") return TileTypeDefines::DEBRISROCKS;
-	  if (str == "DEBRISWOOD") return TileTypeDefines::DEBRISWOOD;
-	  if (str == "DEBRISWEEDS") return TileTypeDefines::DEBRISWEEDS;
-	  if (str == "DEBRISGRASS") return TileTypeDefines::DEBRISGRASS;
-	  if (str == "DEBRISSAND") return TileTypeDefines::DEBRISSAND;
-	  if (str == "DEBRISMISC") return TileTypeDefines::DEBRISMISC;
-	  if (str == "ANIOSTRUCT") return TileTypeDefines::ANIOSTRUCT;
-	  if (str == "FENCESTRUCT") return TileTypeDefines::FENCESTRUCT;
-	  if (str == "FENCESHADOW") return TileTypeDefines::FENCESHADOW;
-	  if (str == "FIRSTVEHICLE") return TileTypeDefines::FIRSTVEHICLE;
-	  if (str == "SECONDVEHICLE") return TileTypeDefines::SECONDVEHICLE;
-	  if (str == "FIRSTVEHICLESHADOW") return TileTypeDefines::FIRSTVEHICLESHADOW;
-	  if (str == "SECONDVEHICLESHADOW") return TileTypeDefines::SECONDVEHICLESHADOW;
-	  if (str == "DEBRIS2MISC") return TileTypeDefines::DEBRIS2MISC;
-	  if (str == "FIRSTDEBRISSTRUCT") return TileTypeDefines::FIRSTDEBRISSTRUCT;
-	  if (str == "SECONDDEBRISSTRUCT") return TileTypeDefines::SECONDDEBRISSTRUCT;
-	  if (str == "FIRSTDEBRISSTRUCTSHADOW") return TileTypeDefines::FIRSTDEBRISSTRUCTSHADOW;
-	  if (str == "SECONDDEBRISSTRUCTSHADOW") return TileTypeDefines::SECONDDEBRISSTRUCTSHADOW;
-	  if (str == "NINTHOSTRUCT") return TileTypeDefines::NINTHOSTRUCT;
-	  if (str == "TENTHOSTRUCT") return TileTypeDefines::TENTHOSTRUCT;
-	  if (str == "NINTHOSTRUCTSHADOW") return TileTypeDefines::NINTHOSTRUCTSHADOW;
-	  if (str == "TENTHOSTRUCTSHADOW") return TileTypeDefines::TENTHOSTRUCTSHADOW;
-	  if (str == "FIRSTEXPLDEBRIS") return TileTypeDefines::FIRSTEXPLDEBRIS;
-	  if (str == "SECONDEXPLDEBRIS") return TileTypeDefines::SECONDEXPLDEBRIS;
-	  if (str == "FIRSTLARGEEXPDEBRIS") return TileTypeDefines::FIRSTLARGEEXPDEBRIS;
-	  if (str == "SECONDLARGEEXPDEBRIS") return TileTypeDefines::SECONDLARGEEXPDEBRIS;
-	  if (str == "FIRSTLARGEEXPDEBRISSHADOW") return TileTypeDefines::FIRSTLARGEEXPDEBRISSHADOW;
-	  if (str == "SECONDLARGEEXPDEBRISSHADOW") return TileTypeDefines::SECONDLARGEEXPDEBRISSHADOW;
-	  if (str == "FIFTHISTRUCT") return TileTypeDefines::FIFTHISTRUCT;
-	  if (str == "SIXTHISTRUCT") return TileTypeDefines::SIXTHISTRUCT;
-	  if (str == "SEVENTHISTRUCT") return TileTypeDefines::SEVENTHISTRUCT;
-	  if (str == "EIGHTISTRUCT") return TileTypeDefines::EIGHTISTRUCT;
-	  if (str == "FIRSTHIGHROOF") return TileTypeDefines::FIRSTHIGHROOF;
-	  if (str == "SECONDHIGHROOF") return TileTypeDefines::SECONDHIGHROOF;
-	  if (str == "FIFTHWALLDECAL") return TileTypeDefines::FIFTHWALLDECAL;
-	  if (str == "SIXTHWALLDECAL") return TileTypeDefines::SIXTHWALLDECAL;
-	  if (str == "SEVENTHWALLDECAL") return TileTypeDefines::SEVENTHWALLDECAL;
-	  if (str == "EIGTHWALLDECAL") return TileTypeDefines::EIGTHWALLDECAL;
-	  if (str == "HUMANBLOOD") return TileTypeDefines::HUMANBLOOD;
-	  if (str == "CREATUREBLOOD") return TileTypeDefines::CREATUREBLOOD;
-	  if (str == "FIRSTSWITCHES") return TileTypeDefines::FIRSTSWITCHES;
-	  if (str == "REVEALEDSLANTROOFS") return TileTypeDefines::REVEALEDSLANTROOFS;
-	  if (str == "FIRSTREVEALEDHIGHROOFS") return TileTypeDefines::FIRSTREVEALEDHIGHROOFS;
-	  if (str == "SECONDREVEALEDHIGHROOFS") return TileTypeDefines::SECONDREVEALEDHIGHROOFS;
-	  if (str == "GUNS") return TileTypeDefines::GUNS;
-	  if (str == "P1ITEMS") return TileTypeDefines::P1ITEMS;
-	  if (str == "P2ITEMS") return TileTypeDefines::P2ITEMS;
-	  if (str == "WINDOWSHATTER") return TileTypeDefines::WINDOWSHATTER;
-	  if (str == "P3ITEMS") return TileTypeDefines::P3ITEMS;
-	  if (str == "BODYEXPLOSION") return TileTypeDefines::BODYEXPLOSION;
-	  if (str == "EXITTEXTURE") return TileTypeDefines::EXITTEXTURE;
-	  if (str == "FOOTPRINTS") return TileTypeDefines::FOOTPRINTS;
-	  if (str == "FIRSTPOINTERS") return TileTypeDefines::FIRSTPOINTERS;
-	  if (str == "SECONDPOINTERS") return TileTypeDefines::SECONDPOINTERS;
-	  if (str == "THIRDPOINTERS") return TileTypeDefines::THIRDPOINTERS;
-	  if (str == "GOODRUN") return TileTypeDefines::GOODRUN;
-	  if (str == "GOODWALK") return TileTypeDefines::GOODWALK;
-	  if (str == "GOODSWAT") return TileTypeDefines::GOODSWAT;
-	  if (str == "GOODPRONE") return TileTypeDefines::GOODPRONE;
-	  if (str == "CONFIRMMOVE") return TileTypeDefines::CONFIRMMOVE;
-	  if (str == "VEHICLEMOVE") return TileTypeDefines::VEHICLEMOVE;
-	  if (str == "ACTIONTWO") return TileTypeDefines::ACTIONTWO;
-	  if (str == "XMARKER") return TileTypeDefines::XMARKER;
-	  if (str == "GOODRING") return TileTypeDefines::GOODRING;
-	  if (str == "ROTATINGKEY") return TileTypeDefines::ROTATINGKEY;
-	  if (str == "SELRING") return TileTypeDefines::SELRING;
-	  if (str == "SPECIALTILES") return TileTypeDefines::SPECIALTILES;
-	  if (str == "BULLETTILE") return TileTypeDefines::BULLETTILE;
-	  if (str == "FIRSTMISS") return TileTypeDefines::FIRSTMISS;
-	  if (str == "SECONDMISS") return TileTypeDefines::SECONDMISS;
-	  if (str == "THIRDMISS") return TileTypeDefines::THIRDMISS;
-	  if (str == "WIREFRAMES") return TileTypeDefines::WIREFRAMES;
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
 
-	auto errorMessage = ST::format("unknown tile type: `{}`", str);
-	throw std::runtime_error(errorMessage.c_str());
+TEST(TilesetTileIndexModel, allArraySlotsUsed)
+{
+	EXPECT_EQ(std::count(namesArray.begin(), namesArray.end(), nullptr), 0);
 }
 
-ST::string serializeTileTypeDefine(TileTypeDefines t) {
-	return "";
+TEST(TilesetTileIndexModel, deserialize)
+{
+	EXPECT_EQ(deserializeTileTypeDefine("XMARKER"), TileTypeDefines::XMARKER);
+	EXPECT_THROW(deserializeTileTypeDefine("random nonsense"), std::runtime_error);
 }
+
+TEST(TilesetTileIndexModel, serialize)
+{
+	EXPECT_EQ(serializeTileTypeDefine(TileTypeDefines::DEBRIS2MISC).compare("DEBRIS2MISC"), 0);
+	EXPECT_EQ(serializeTileTypeDefine(TileTypeDefines(8765)).compare("UNKNOWNTILETYPE"), 0);
+
+	for (int i{ 0 }; i < TileTypeDefines::NUMBEROFTILETYPES; ++i)
+	{  
+		EXPECT_NE(serializeTileTypeDefine(TileTypeDefines(i)).compare("UNKNOWNTILETYPE"), 0);
+	}
+}
+#endif
