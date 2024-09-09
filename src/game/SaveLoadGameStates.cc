@@ -11,18 +11,13 @@
 
 SavedGameStates g_gameStates;
 
-uint32_t SaveStatesSize()
-{
-	auto str = g_gameStates.Serialize().to_std_string();
-	return str.size();
-}
-
-void SaveStatesToSaveGameFile(HWFILE const hFile)
+uint32_t SaveStatesToSaveGameFile(SGPFile & hFile)
 {
 	std::string data = g_gameStates.Serialize().to_std_string();
-	UINT32      len  = data.length();
-	hFile->write(&len, sizeof(UINT32));
-	hFile->write(data.c_str(), len);
+	uint32_t const len{ static_cast<uint32_t>(data.length()) };
+	hFile.write(&len, sizeof(len));
+	hFile.write(data.data(), len);
+	return len;
 }
 
 void LoadStatesFromSaveFile(HWFILE const hFile, SavedGameStates &states)

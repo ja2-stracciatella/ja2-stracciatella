@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SGPFile.h"
 #include "Types.h"
 #include <iterator>
 #include <map>
@@ -34,8 +35,7 @@ typedef std::map<ST::string, STORABLE_TYPE> StateTable;
  */
 extern SavedGameStates g_gameStates;
 
-uint32_t SaveStatesSize();
-void SaveStatesToSaveGameFile(HWFILE);
+uint32_t SaveStatesToSaveGameFile(SGPFile &);
 void LoadStatesFromSaveFile(HWFILE, SavedGameStates &states);
 void ResetGameStates();
 
