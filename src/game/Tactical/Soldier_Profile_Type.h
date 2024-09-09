@@ -6,7 +6,7 @@
 
 
 #define NUM_PROFILES						170
-#define NUM_RECRUTABLE						75
+#define NUM_RECRUITABLE						75
 
 #define NAME_LENGTH						30
 #define NICKNAME_LENGTH					10

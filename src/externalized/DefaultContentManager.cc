@@ -175,7 +175,6 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_MERCListings);
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
-	deleteElements(m_mercStructs);
 	deleteElements(m_vehicles);
 }
 
@@ -1136,15 +1135,27 @@ bool DefaultContentManager::loadTacticalLayerData()
 bool DefaultContentManager::loadMercsData()
 {
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
-	auto json = readJsonDataFileWithSchema("mercs-profile-info.json");
-	for (auto& element : json.toVec())
-	{
+
+	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> temp_mercStructs(NUM_PROFILES);
+	auto json = readJsonDataFileWithSchema("mercs-profiles.json");
+	for (auto& element : json.toVec()) {
 		auto profileInfo = MercProfileInfo::deserialize(element);
 		ProfileID profileID = profileInfo->profileID;
 		m_mercProfileInfo[profileID] = profileInfo;
 		m_mercProfiles.push_back(new MercProfile(profileID));
+		temp_mercStructs[profileID] = MercProfile::deserializeStruct(element, this);
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
+
+	json = readJsonDataFileWithSchema("mercs-relations.json");
+	for (auto& element : json.toVec()) {
+		JsonObject reader = element.toObject();
+		const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
+		MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
+	}
+	for (auto& element : temp_mercStructs) {
+		m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>( *element ) );
+	}
 
 	json = readJsonDataFileWithSchema("mercs-rpc-small-faces.json");
 
@@ -1163,25 +1174,6 @@ bool DefaultContentManager::loadMercsData()
 		m_MERCListings.push_back(item);
 	}
 	MERCListingModel::validateData(m_MERCListings);
-
-	std::vector<MERCPROFILESTRUCT*> temp_mercStructs;
-	temp_mercStructs.resize(NUM_PROFILES);
-
-	json = readJsonDataFileWithSchema("mercs-profiles.json");
-	for (auto& element : json.toVec()) {
-		JsonObject reader = element.toObject();
-		const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
-		temp_mercStructs[inf->profileID] = MercProfile::deserializeStruct(reader, this);
-	}
-
-	json = readJsonDataFileWithSchema("mercs-relations.json");
-	for (auto& element : json.toVec()) {
-		JsonObject reader = element.toObject();
-		const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));		
-		MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID], reader, this);
-	}
-
-	m_mercStructs.assign(temp_mercStructs.begin(), temp_mercStructs.end());
 
 	return true;
 }

@@ -754,3 +754,30 @@ const Towns Internals::getTownEnumFromString(const ST::string& s)
 	else if (s == "CHITZENA") return Towns::CHITZENA;
 	else throw DataError(ST::format("unknown town name value: {}", s));
 }
+
+const char* Internals::getMercTypeName(enum MercType mercType)
+{
+	switch (mercType)
+	{
+		case MercType::NOT_USED:		return "NOT_USED";
+		case MercType::AIM:				return "AIM";
+		case MercType::MERC:			return "MERC";
+		case MercType::IMP:				return "IMP";
+		case MercType::RPC:				return "RPC";
+		case MercType::NPC:				return "NPC";
+		case MercType::VEHICLE:			return "VEHICLE";
+		default:						return "???";
+	}
+}
+
+const MercType Internals::getMercTypeEnumFromString(const ST::string& s)
+{
+	if (s == "" || s == "NOT_USED") return MercType::NOT_USED;
+	else if (s == "AIM")			return MercType::AIM;
+	else if (s == "MERC")			return MercType::MERC;
+	else if (s == "IMP")			return MercType::IMP;
+	else if (s == "RPC")			return MercType::RPC;
+	else if (s == "NPC")			return MercType::NPC;
+	else if (s == "VEHICLE")		return MercType::VEHICLE;
+	else throw DataError(ST::format("unknown merc type value: {}", s));
+}

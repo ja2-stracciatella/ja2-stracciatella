@@ -3,6 +3,7 @@
 #include "Animation_Data.h"
 #include "game/TacticalAI/NPC.h"
 #include "MapScreen.h"
+#include "MercProfileInfo.h"
 #include "Overhead_Types.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
@@ -46,4 +47,7 @@ namespace Internals
 	// TODO: Should be refactored away by adding internalName property to TownModel and strategic-map-towns.json
 	const char* getTownName(enum Towns town);
 	const Towns getTownEnumFromString(const ST::string& s);
+
+	const char* getMercTypeName(enum MercType mercType);
+	const MercType getMercTypeEnumFromString(const ST::string& s);
 }

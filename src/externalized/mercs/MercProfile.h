@@ -59,7 +59,7 @@ public:
 
 	JsonValue serializeStruct(const ContentManager* contentManager) const;
 	JsonValue serializeStructRelations(const ContentManager* contentManager) const;
-	static MERCPROFILESTRUCT* deserializeStruct(const JsonObject& json, const ContentManager* contentManager);
+	static std::unique_ptr<MERCPROFILESTRUCT> deserializeStruct(const JsonValue& json, const ContentManager* contentManager);
 	static void deserializeStructRelations(MERCPROFILESTRUCT* prof, const JsonObject& json, const ContentManager* contentManager);
 
 protected:

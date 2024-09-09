@@ -98,8 +98,8 @@ void MercProfile::deserializeStructRelations(MERCPROFILESTRUCT* prof, const Json
 	for (auto& element : json["relations"].toVec()) {
 		JsonObject r = element.toObject();
 		uint8_t idx = contentManager->getMercProfileInfoByName(r.GetString("target"))->profileID;
-		if (idx >= NUM_RECRUTABLE) {
-			throw DataError(ST::format("{}'s profile id must be less than {}", r.GetString("target"), NUM_RECRUTABLE));
+		if (idx >= NUM_RECRUITABLE) {
+			throw DataError(ST::format("{}'s profile id must be less than {}", r.GetString("target"), NUM_RECRUITABLE));
 		}
 		prof->bMercOpinion[idx] = r.GetInt("opinion");
 		if (r.getOptionalBool("friend1")) {
@@ -127,30 +127,31 @@ void MercProfile::deserializeStructRelations(MERCPROFILESTRUCT* prof, const Json
 	}
 }
 
-MERCPROFILESTRUCT* MercProfile::deserializeStruct(const JsonObject& json, const ContentManager* contentManager)
+std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValue& json, const ContentManager* contentManager)
 {
-	MERCPROFILESTRUCT* prof = new MERCPROFILESTRUCT();
+	JsonObject r = json.toObject();
+	std::unique_ptr<MERCPROFILESTRUCT> prof = std::make_unique<MERCPROFILESTRUCT>();
 
-	prof->zName = json.getOptionalString("fullName");
-	prof->zNickname = json.getOptionalString("nickname");
-	if (json.getOptionalString("sex") == "F") {
+	prof->zName = r.getOptionalString("fullName");
+	prof->zNickname = r.getOptionalString("nickname");
+	if (r.getOptionalString("sex") == "F") {
 		prof->bSex = Sexes::FEMALE;
 	}
-	prof->ubCivilianGroup = Internals::getCivilianGroupEnumFromString(json.getOptionalString("civilianGroup"));
-	if (json.getOptionalBool("isGoodGuy")) {
+	prof->ubCivilianGroup = Internals::getCivilianGroupEnumFromString(r.getOptionalString("civilianGroup"));
+	if (r.getOptionalBool("isGoodGuy")) {
 		prof->ubMiscFlags |= PROFILE_MISC_FLAG3_GOODGUY;
 	}
 
-	prof->ubBodyType = Internals::getBodyTypeEnumFromString(json.getOptionalString("bodyType"));
-	ST::string jAnimFlag = json.getOptionalString("bodyTypeSubstitution");
+	prof->ubBodyType = Internals::getBodyTypeEnumFromString(r.getOptionalString("bodyType"));
+	ST::string jAnimFlag = r.getOptionalString("bodyTypeSubstitution");
 	if (jAnimFlag == "SUB_ANIM_BIGGUYSHOOT2") {
 		prof->uiBodyTypeSubFlags |= SUB_ANIM_BIGGUYSHOOT2;
 	}
 	else if (jAnimFlag == "SUB_ANIM_BIGGUYTHREATENSTANCE") {
 		prof->uiBodyTypeSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;
 	}
-	if (json.has("face")) {
-		JsonObject portrait = json["face"].toObject();
+	if (r.has("face")) {
+		JsonObject portrait = r["face"].toObject();
 		std::vector<JsonValue> eyesXY = portrait["eyesXY"].toVec();
 		std::vector<JsonValue> mouthXY = portrait["mouthXY"].toVec();
 		prof->usEyesX = eyesXY[0].toInt();
@@ -160,12 +161,12 @@ MERCPROFILESTRUCT* MercProfile::deserializeStruct(const JsonObject& json, const 
 		prof->uiBlinkFrequency = portrait.getOptionalUInt("blinkFrequency", 3000);
 		prof->uiExpressionFrequency = portrait.getOptionalUInt("expressionFrequency", 2000);
 	}
-	prof->SKIN = json.getOptionalString("skinColor");
-	prof->HAIR = json.getOptionalString("hairColor");
-	prof->VEST = json.getOptionalString("vestColor");
-	prof->PANTS = json.getOptionalString("pantsColor");
+	prof->SKIN = r.getOptionalString("skinColor");
+	prof->HAIR = r.getOptionalString("hairColor");
+	prof->VEST = r.getOptionalString("vestColor");
+	prof->PANTS = r.getOptionalString("pantsColor");
 
-	ST::string jSexismMode = json.getOptionalString("sexismMode");
+	ST::string jSexismMode = r.getOptionalString("sexismMode");
 	if (jSexismMode == "GENTLEMAN") {
 		prof->bSexist = SexistLevels::GENTLEMAN;
 	}
@@ -176,8 +177,8 @@ MERCPROFILESTRUCT* MercProfile::deserializeStruct(const JsonObject& json, const 
 		prof->bSexist = SexistLevels::VERY_SEXIST;
 	}
 
-	if (json.has("stats")) {
-		JsonObject stats = json["stats"].toObject();
+	if (r.has("stats")) {
+		JsonObject stats = r["stats"].toObject();
 		ST::string jEvolution = stats.getOptionalString("evolution");
 		if (jEvolution == "NONE") {
 			prof->bEvolution = CharacterEvolution::NO_EVOLUTION;
@@ -199,12 +200,12 @@ MERCPROFILESTRUCT* MercProfile::deserializeStruct(const JsonObject& json, const 
 		prof->bMechanical = stats.getOptionalUInt("mechanical");
 		prof->ubNeedForSleep = stats.getOptionalUInt("sleepiness", 7);
 	}
-	prof->bPersonalityTrait = Internals::getPersonalityTraitEnumFromString(json.getOptionalString("personalityTrait"));
-	prof->bSkillTrait = Internals::getSkillTraitEnumFromString(json.getOptionalString("skillTrait"));
-	prof->bSkillTrait2 = Internals::getSkillTraitEnumFromString(json.getOptionalString("skillTrait2"));
-	prof->bAttitude = Internals::getAttitudeEnumFromString(json.getOptionalString("attitude"));
+	prof->bPersonalityTrait = Internals::getPersonalityTraitEnumFromString(r.getOptionalString("personalityTrait"));
+	prof->bSkillTrait = Internals::getSkillTraitEnumFromString(r.getOptionalString("skillTrait"));
+	prof->bSkillTrait2 = Internals::getSkillTraitEnumFromString(r.getOptionalString("skillTrait2"));
+	prof->bAttitude = Internals::getAttitudeEnumFromString(r.getOptionalString("attitude"));
 
-	ST::string jSector = json.getOptionalString("sector");
+	ST::string jSector = r.getOptionalString("sector");
 	if (!jSector.empty()) {
 		std::vector<ST::string> jLong = jSector.split("-");
 		ST::string jShort = jLong[0];
@@ -214,13 +215,13 @@ MERCPROFILESTRUCT* MercProfile::deserializeStruct(const JsonObject& json, const 
 		}
 	}
 
-	prof->bTown = Internals::getTownEnumFromString(json.getOptionalString("town"));
-	prof->bTownAttachment = json.getOptionalUInt("townAttachment");
-	if (json.getOptionalBool("isTownIndifferentIfDead")) {
+	prof->bTown = Internals::getTownEnumFromString(r.getOptionalString("town"));
+	prof->bTownAttachment = r.getOptionalUInt("townAttachment");
+	if (r.getOptionalBool("isTownIndifferentIfDead")) {
 		prof->ubMiscFlags3 |= PROFILE_MISC_FLAG3_TOWN_DOESNT_CARE_ABOUT_DEATH;
 	}
-	if (json.has("ownedRooms")) {
-		JsonObject rooms = json["ownedRooms"].toObject();
+	if (r.has("ownedRooms")) {
+		JsonObject rooms = r["ownedRooms"].toObject();
 		if (rooms.has("range1")) {
 			std::vector<JsonValue> range1 = rooms["range1"].toVec();
 			prof->ubRoomRangeStart[0] = range1[0].toInt();
@@ -233,18 +234,18 @@ MERCPROFILESTRUCT* MercProfile::deserializeStruct(const JsonObject& json, const 
 		}
 	}
 
-	prof->bReputationTolerance = json.getOptionalUInt("toleranceForPlayersReputation", 101);
-	prof->bDeathRate = json.getOptionalUInt("toleranceForPlayersDeathRate", 101);
-	if (json.has("contract")) {
-		JsonObject c = json["contract"].toObject();
+	prof->bReputationTolerance = r.getOptionalUInt("toleranceForPlayersReputation", 101);
+	prof->bDeathRate = r.getOptionalUInt("toleranceForPlayersDeathRate", 101);
+	if (r.has("contract")) {
+		JsonObject c = r["contract"].toObject();
 		prof->sSalary = c.getOptionalUInt("dailySalary");
 		prof->uiWeeklySalary = c.getOptionalUInt("weeklySalary");
 		prof->uiBiWeeklySalary = c.getOptionalUInt("biWeeklySalary");
 		prof->bMedicalDeposit = c.getOptionalBool("isMedicalDepositRequired");
 	}
 
-	if (json.has("inventory")) {
-		for (auto& element : json.GetValue("inventory").toVec()) {
+	if (r.has("inventory")) {
+		for (auto& element : r.GetValue("inventory").toVec()) {
 			JsonObject s = element.toObject();
 			InvSlotPos slotIdx = Internals::getInventorySlotEnumFromString(s.GetString("slot"));
 			prof->inv[slotIdx] = contentManager->getItemByName(s.GetString("item"))->getItemIndex();
@@ -255,10 +256,10 @@ MERCPROFILESTRUCT* MercProfile::deserializeStruct(const JsonObject& json, const 
 			}
 		}
 	}
-	prof->uiMoney = json.getOptionalUInt("money");
+	prof->uiMoney = r.getOptionalUInt("money");
 
-	if (json.has("dialogue")) {
-		for (auto& element : json.GetValue("dialogue").toVec()) {
+	if (r.has("dialogue")) {
+		for (auto& element : r.GetValue("dialogue").toVec()) {
 			JsonObject a = element.toObject();
 			Approach jApproach = Internals::getApproachEnumFromString(a.GetString("approach"));
 			if (jApproach > 0 && jApproach < 5) {
@@ -278,20 +279,23 @@ JsonValue MercProfile::serializeStruct(const ContentManager* contentManager) con
 {
 	MERCPROFILESTRUCT* prof = this->m_profile;
 	JsonObject obj;
-	obj.set("000profile", this->getInfo().internalName);
+	// triple digits prepended to field names is a workaround to sort them in convenient order instead of alphabetically
+	obj.set("000profileID", this->getInfo().profileID);
+	obj.set("001internalName", this->getInfo().internalName);
+	obj.set("002type", Internals::getMercTypeName(static_cast<MercType>(this->getInfo().mercType)));
 	if (!prof->zName.empty()) {
-		obj.set("001fullName", prof->zName);
+		obj.set("003fullName", prof->zName);
 	}
 	if (!prof->zNickname.empty()) {
-		obj.set("002nickname", prof->zNickname);
+		obj.set("004nickname", prof->zNickname);
 	}
-	obj.set("003sex", prof->bSex == Sexes::MALE ? "M" : "F");
+	obj.set("005sex", prof->bSex == Sexes::MALE ? "M" : "F");
 	if (prof->ubCivilianGroup > 0) {
 		obj.set("006civilianGroup", Internals::getCivilianGroupName(static_cast<CivilianGroup>(prof->ubCivilianGroup)));
 	}
 	// flags
 	if (prof->ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) {
-		obj.set("004isGoodGuy", true);
+		obj.set("007isGoodGuy", true);
 	}
 	// appearance
 	obj.set("050bodyType", Internals::getBodyTypeName(static_cast<SoldierBodyType>(prof->ubBodyType)));
@@ -467,6 +471,7 @@ JsonValue MercProfile::serializeStructRelations(const ContentManager* contentMan
 {
 	MERCPROFILESTRUCT *prof = this->m_profile;
 	JsonObject obj;
+	// triple digits prepended to field names is a workaround to sort them in convenient order instead of alphabetically
 	obj.set("000profile", this->getInfo().internalName);
 	JsonArray opinions;
 	for (uint8_t i = 0; i < lengthof(prof->bMercOpinion); i++) {

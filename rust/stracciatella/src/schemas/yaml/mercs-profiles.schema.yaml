@@ -4,8 +4,14 @@ title: Named characters' profiles
 items:
   type: object
   properties:
-    profile:
+    profileID:
+      minimum: 0
+      maximum: 169
+      $ref: types/uint8.schema.yaml
+    internalName:
       type: string
+    type:
+      $ref: types/merc-type.schema.yaml
     fullName:
       type: string
     nickname:
@@ -147,6 +153,10 @@ items:
           - item
     money:
       $ref: types/uint32.schema.yaml
+    weaponSaleModifier:
+      minimum: 10
+      maximum: 180
+      $ref: types/uint8.schema.yaml
     dialogue:
       type: array
       items:
@@ -165,5 +175,7 @@ items:
           threatenMod:
             $ref: types/uint8.schema.yaml
   required:
-    - profile
+    - profileID
+    - internalName
+    - type
   additionalProperties: false

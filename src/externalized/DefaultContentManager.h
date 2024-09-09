@@ -269,7 +269,7 @@ protected:
 	std::vector<const MercProfile*> m_mercProfiles;
 	std::map<uint8_t, const MercProfileInfo*> m_mercProfileInfo;
 	std::map<UINT32, UINT16> m_translationTable;
-	std::vector<const MERCPROFILESTRUCT*> m_mercStructs;
+	std::vector<std::unique_ptr<const MERCPROFILESTRUCT>> m_mercStructs;
 
 	RustPointer<Vfs> m_vfs;
 
