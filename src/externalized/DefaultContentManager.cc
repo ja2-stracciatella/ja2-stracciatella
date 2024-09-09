@@ -1154,7 +1154,12 @@ bool DefaultContentManager::loadMercsData()
 		MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
 	}
 	for (auto& element : temp_mercStructs) {
-		m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>( *element ) );
+		if (element != nullptr) {
+			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>( *element ) );
+		}
+		else {
+			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>() );
+		}
 	}
 
 	json = readJsonDataFileWithSchema("mercs-rpc-small-faces.json");
@@ -1474,9 +1479,7 @@ const std::vector<const MercProfile*>& DefaultContentManager::listMercProfiles()
 void DefaultContentManager::resetMercProfileStructs() const
 {
 	for (size_t i = 0; i < NUM_PROFILES; i++) {
-		if (m_mercStructs[i] != nullptr) {
-			gMercProfiles[i] = *m_mercStructs[i];
-		}
+		gMercProfiles[i] = *m_mercStructs[i];
 	}
 }
 
