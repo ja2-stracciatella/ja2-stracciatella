@@ -48,10 +48,10 @@ try
 
 	SGP::PODObj<TILE_IMAGERY> pTileSurf;
 
-	if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
+	if (pStructureFileRef && !pStructureFileRef->pAuxData.empty())
 	{
-		pTileSurf->pAuxData = pStructureFileRef->pAuxData;
-		pTileSurf->pTileLocData = pStructureFileRef->pTileLocData;
+		pTileSurf->pAuxData = pStructureFileRef->pAuxData.data();
+		pTileSurf->pTileLocData = pStructureFileRef->pTileLocData.data();
 	}
 	else if (hImage->uiAppDataSize == hVObject->SubregionCount() * sizeof(AuxObjectData))
 	{

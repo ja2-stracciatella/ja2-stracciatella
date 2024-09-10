@@ -7,6 +7,8 @@
 //
 
 #include "Types.h"
+#include <cstddef>
+#include <vector>
 
 // A few words about the overall structure scheme:
 //
@@ -192,13 +194,13 @@ struct STRUCTURE_FILE_REF
 {
 	STRUCTURE_FILE_REF* pPrev;
 	STRUCTURE_FILE_REF* pNext;
-	AuxObjectData*      pAuxData;
-	RelTileLoc*         pTileLocData;
-	UINT8*              pubStructureData;
+	std::vector<AuxObjectData> pAuxData;
+	std::vector<RelTileLoc>    pTileLocData;
+	std::vector<std::byte>     pubStructureData;
 	DB_STRUCTURE_REF*   pDBStructureRef; // dynamic array
 	UINT16              usNumberOfStructures;
 	UINT16              usNumberOfStructuresStored;
-}; // 24 bytes
+};
 
 #define STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA		0x01
 #define STRUCTURE_FILE_CONTAINS_STRUCTUREDATA		0x02

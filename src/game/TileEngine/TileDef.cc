@@ -76,7 +76,7 @@ void CreateTileDatabase()
 
 			// Structure database stuff!
 			STRUCTURE_FILE_REF const* const sfr = TileSurf->pStructureFileRef;
-			if (sfr && sfr->pubStructureData /* XXX testing wrong attribute? */)
+			if (sfr && !sfr->pubStructureData.empty())
 			{
 				DB_STRUCTURE_REF* const sr = &sfr->pDBStructureRef[cnt2];
 				if (sr->pDBStructure) TileElement.pDBStructureRef	= sr;
