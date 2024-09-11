@@ -1,6 +1,7 @@
 #include "HImage.h"
 #include "LoadSaveData.h"
 #include "Soldier_Control.h"
+#include "Structure_Internals.h"
 #include "Types.h"
 #include "VObject.h"
 #include "WCheck.h"
@@ -169,22 +170,18 @@ static UINT8 FilledTilePositions(DB_STRUCTURE_TILE const* const t)
 //
 // Structure database functions
 //
-namespace
+STRUCTURE_FILE_REF::~STRUCTURE_FILE_REF()
 {
 	/* Free all of the memory associated with a file reference, including the file
 	 * reference structure itself */
-	void FreeStructureFileRef(STRUCTURE_FILE_REF* const f)
+	if (DB_STRUCTURE_REF* const sr{ pDBStructureRef })
 	{
-		if (DB_STRUCTURE_REF* const sr = f->pDBStructureRef)
+		DB_STRUCTURE_REF const* const end = &sr[usNumberOfStructures];
+		for (DB_STRUCTURE_REF* i = sr; i != end; ++i)
 		{
-			DB_STRUCTURE_REF const* const end = sr + f->usNumberOfStructures;
-			for (DB_STRUCTURE_REF* i = sr; i != end; ++i)
-			{
-				if (i->ppTile) delete[] i->ppTile;
-			}
-			delete[] sr;
+			if (i->ppTile) delete[] i->ppTile;
 		}
-		delete f;
+		delete[] sr;
 	}
 }
 
@@ -195,8 +192,9 @@ void FreeAllStructureFiles()
 	for (STRUCTURE_FILE_REF* i = gpStructureFileRefs; i; i = next)
 	{
 		next = i->pNext;
-		FreeStructureFileRef(i);
+		delete i;
 	}
+	gpStructureFileRefs = nullptr;
 }
 
 
@@ -210,7 +208,7 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
 	*(prev != NULL ? &prev->pNext : &gpStructureFileRefs) = next;
 	if (next) next->pPrev = prev;
 
-	FreeStructureFileRef(sfr);
+	delete sfr;
 }
 
 
@@ -371,14 +369,14 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 
 STRUCTURE_FILE_REF* LoadStructureFile(ST::string const& filename)
 { // NB should be passed in expected number of structures so we can check equality
-	SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFileRef> sfr(new STRUCTURE_FILE_REF{});
-	UINT32 const data_size{ LoadStructureData(filename, sfr) };
-	if (!sfr->pubStructureData.empty()) CreateFileStructureArrays(sfr, data_size);
+	auto sfr{ std::make_unique<STRUCTURE_FILE_REF>() };
+	UINT32 const data_size{ LoadStructureData(filename, sfr.get()) };
+	if (!sfr->pubStructureData.empty()) CreateFileStructureArrays(sfr.get(), data_size);
 	// Add the file reference to the master list, at the head for convenience
-	if (gpStructureFileRefs) gpStructureFileRefs->pPrev = sfr;
+	if (gpStructureFileRefs) gpStructureFileRefs->pPrev = sfr.get();
 	sfr->pNext = gpStructureFileRefs;
-	gpStructureFileRefs = sfr;
-	return sfr.Release();
+	gpStructureFileRefs = sfr.get();
+	return sfr.release();
 }
 
 

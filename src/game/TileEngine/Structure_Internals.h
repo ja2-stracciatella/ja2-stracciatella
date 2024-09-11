@@ -198,8 +198,13 @@ struct STRUCTURE_FILE_REF
 	std::vector<RelTileLoc>    pTileLocData;
 	std::vector<std::byte>     pubStructureData;
 	DB_STRUCTURE_REF*   pDBStructureRef; // dynamic array
+
+	 // number of elements in the pAuxData vector, should always be == pAuxData.size()
 	UINT16              usNumberOfStructures;
+	// number of elements pDBStructureRef points to.
 	UINT16              usNumberOfStructuresStored;
+
+	~STRUCTURE_FILE_REF();
 };
 
 #define STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA		0x01
