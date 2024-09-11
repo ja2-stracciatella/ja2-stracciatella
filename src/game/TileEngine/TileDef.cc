@@ -75,11 +75,11 @@ void CreateTileDatabase()
 			if (zsi && zsi[cnt2]) TileElement.uiFlags |= MULTI_Z_TILE;
 
 			// Structure database stuff!
-			STRUCTURE_FILE_REF const* const sfr = TileSurf->pStructureFileRef;
+			STRUCTURE_FILE_REF * const sfr = TileSurf->pStructureFileRef;
 			if (sfr && !sfr->pubStructureData.empty())
 			{
-				DB_STRUCTURE_REF* const sr = &sfr->pDBStructureRef[cnt2];
-				if (sr->pDBStructure) TileElement.pDBStructureRef	= sr;
+				auto & sr = sfr->pDBStructureRef[cnt2];
+				if (sr.pDBStructure) TileElement.pDBStructureRef = &sr;
 			}
 
 			TileElement.fType             = (UINT16)TileSurf->fType;

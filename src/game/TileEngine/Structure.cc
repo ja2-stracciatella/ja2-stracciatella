@@ -174,14 +174,9 @@ STRUCTURE_FILE_REF::~STRUCTURE_FILE_REF()
 {
 	/* Free all of the memory associated with a file reference, including the file
 	 * reference structure itself */
-	if (DB_STRUCTURE_REF* const sr{ pDBStructureRef })
+	for (auto const& dbs : pDBStructureRef)
 	{
-		DB_STRUCTURE_REF const* const end = &sr[usNumberOfStructures];
-		for (DB_STRUCTURE_REF* i = sr; i != end; ++i)
-		{
-			if (i->ppTile) delete[] i->ppTile;
-		}
-		delete[] sr;
+		delete[] dbs.ppTile;
 	}
 }
 
@@ -321,8 +316,9 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 { /* Based on a file chunk, creates all the dynamic arrays for the structure
 	 * definitions contained within */
 	auto * pCurrent{ pFileRef->pubStructureData.data() };
-	DB_STRUCTURE_REF* const pDBStructureRef = new DB_STRUCTURE_REF[pFileRef->usNumberOfStructures]{};
-	pFileRef->pDBStructureRef = pDBStructureRef;
+	auto & pDBStructureRef{ pFileRef->pDBStructureRef };
+	pDBStructureRef.resize(pFileRef->usNumberOfStructures);
+
 	for (UINT16 usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; ++usLoop)
 	{
 		if (uiDataSize < sizeof(DB_STRUCTURE))

@@ -160,7 +160,7 @@ struct DB_STRUCTURE_REF
 {
 	DB_STRUCTURE * 												pDBStructure;
 	DB_STRUCTURE_TILE **									ppTile; // dynamic array
-}; // 8 bytes
+};
 
 struct STRUCTURE
 {
@@ -188,20 +188,17 @@ struct STRUCTURE
 	UINT8													ubVehicleHitLocation;
 	UINT8													ubStructureHeight; // if 0, then unset; otherwise stores height of structure when last calculated
 	UINT8													ubUnused[1]; // XXX HACK000B
-}; // 32 bytes
+};
 
 struct STRUCTURE_FILE_REF
 {
 	STRUCTURE_FILE_REF* pPrev;
 	STRUCTURE_FILE_REF* pNext;
-	std::vector<AuxObjectData> pAuxData;
-	std::vector<RelTileLoc>    pTileLocData;
-	std::vector<std::byte>     pubStructureData;
-	DB_STRUCTURE_REF*   pDBStructureRef; // dynamic array
-
-	 // number of elements in the pAuxData vector, should always be == pAuxData.size()
+	std::vector<AuxObjectData>    pAuxData;
+	std::vector<RelTileLoc>       pTileLocData;
+	std::vector<std::byte>        pubStructureData;
+	std::vector<DB_STRUCTURE_REF> pDBStructureRef;
 	UINT16              usNumberOfStructures;
-	// number of elements pDBStructureRef points to.
 	UINT16              usNumberOfStructuresStored;
 
 	~STRUCTURE_FILE_REF();
