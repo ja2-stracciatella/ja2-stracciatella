@@ -1,0 +1,12 @@
+type: string
+enum:
+    - NORMAL
+    - FRIENDLY
+    - LONER
+    - OPTIMIST
+    - PESSIMIST
+    - AGGRESSIVE
+    - ARROGANT
+    - BIG_SHOT
+    - ASSHOLE
+    - COWARD

@@ -71,8 +71,6 @@ BOOLEAN gfProfiledEnemyAdded = FALSE;
 
 UINT32 guiCurrentUniqueSoldierId = 1;
 
-// CJC note: trust me, it's easiest just to put this here; this is the only
-// place it should need to be used
 UINT8 gubItemDroppableFlag[NUM_INV_SLOTS] =
 {
 	0x01,

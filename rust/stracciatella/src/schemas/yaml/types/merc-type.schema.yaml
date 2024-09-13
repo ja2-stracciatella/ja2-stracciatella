@@ -1,0 +1,9 @@
+type: string
+enum:
+    - AIM
+    - MERC
+    - IMP
+    - RPC
+    - NPC
+    - VEHICLE
+    - NOT_USED

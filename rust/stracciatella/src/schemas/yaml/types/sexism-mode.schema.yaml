@@ -1,0 +1,6 @@
+type: string
+enum:
+    - NOT_SEXIST
+    - SOMEWHAT_SEXIST
+    - VERY_SEXIST
+    - GENTLEMAN

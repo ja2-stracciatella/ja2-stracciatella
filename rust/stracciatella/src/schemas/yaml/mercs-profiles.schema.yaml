@@ -1,0 +1,181 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Named characters' profiles
+items:
+  type: object
+  properties:
+    profileID:
+      minimum: 0
+      maximum: 169
+      $ref: types/uint8.schema.yaml
+    internalName:
+      type: string
+    type:
+      $ref: types/merc-type.schema.yaml
+    fullName:
+      type: string
+    nickname:
+      type: string
+    sex:
+      type: string
+      enum:
+        - M
+        - F
+    bodyType:
+      $ref: types/body-type.schema.yaml
+    bodyTypeSubstitution:
+      type: string
+      enum:
+        - SUB_ANIM_BIGGUYSHOOT2
+        - SUB_ANIM_BIGGUYTHREATENSTANCE
+    isGoodGuy:
+      type: boolean
+    civilianGroup:
+      $ref: types/civ-group.schema.yaml
+    face:
+      type: object
+      properties:
+        eyesXY:
+          $ref: types/face-offset.schema.yaml
+        mouthXY:
+          $ref: types/face-offset.schema.yaml
+        blinkFrequency:
+          $ref: types/uint16.schema.yaml
+        expressionFrequency:
+          $ref: types/uint16.schema.yaml
+      required:
+        - eyesXY
+        - mouthXY
+    skinColor:
+      type: string
+    hairColor:
+      type: string
+    vestColor:
+      type: string
+    pantsColor:
+      type: string
+    stats:
+      type: object
+      properties:
+        evolution:
+          $ref: types/evolution.schema.yaml
+        health:
+          $ref: types/percentage.schema.yaml
+        agility:
+          $ref: types/percentage.schema.yaml
+        dexterity:
+          $ref: types/percentage.schema.yaml
+        strength:
+          $ref: types/percentage.schema.yaml
+        leadership:
+          $ref: types/percentage.schema.yaml
+        wisdom:
+          $ref: types/percentage.schema.yaml
+        marksmanship:
+          $ref: types/percentage.schema.yaml
+        medical:
+          $ref: types/percentage.schema.yaml
+        explosive:
+          $ref: types/percentage.schema.yaml
+        mechanical:
+          $ref: types/percentage.schema.yaml
+        experience:
+          $ref: types/stat-experience.schema.yaml
+        sleepiness:
+          $ref: types/stat-sleepiness.schema.yaml
+    personalityTrait:
+      $ref: types/personality-trait.schema.yaml
+    skillTrait:
+      $ref: types/skill-trait.schema.yaml
+    skillTrait2:
+      $ref: types/skill-trait.schema.yaml
+    attitude:
+      $ref: types/attitude.schema.yaml
+    sexismMode:
+      $ref: types/sexism-mode.schema.yaml
+    toleranceForPlayersReputation:
+      $ref: types/tolerance.schema.yaml
+    toleranceForPlayersDeathRate:
+      $ref: types/tolerance.schema.yaml
+    contract:
+      type: object
+      properties:
+        dailySalary:
+          $ref: types/uint32.schema.yaml
+        weeklySalary:
+          $ref: types/uint32.schema.yaml
+        biWeeklySalary:
+          $ref: types/uint32.schema.yaml
+        isMedicalDepositRequired:
+          type: boolean
+    sector:
+      $ref: types/sector-id-long.schema.yaml
+    town:
+      $ref: types/town.schema.yaml
+    townAttachment:
+      $ref: types/percentage.schema.yaml
+    isTownIndifferentIfDead:
+      type: boolean
+    ownedRooms:
+      type: object
+      properties:
+        range1:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items:
+            $ref: types/uint8.schema.yaml
+        range2:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items:
+            $ref: types/uint8.schema.yaml
+      required:
+        - range1
+    inventory:
+      type: array
+      items:
+        type: object
+        properties:
+          item:
+            type: string
+          slot:
+            $ref: types/inv-slot.schema.yaml
+          quantity:
+            $ref: types/inv-quantity.schema.yaml
+          status:
+            $ref: types/percentage.schema.yaml
+          isUndroppable:
+            type: boolean
+        required:
+          - slot
+          - item
+    money:
+      $ref: types/uint32.schema.yaml
+    weaponSaleModifier:
+      minimum: 10
+      maximum: 180
+      $ref: types/uint8.schema.yaml
+    dialogue:
+      type: array
+      items:
+        type: object
+        properties:
+          approach:
+            $ref: types/approach.schema.yaml
+          effectiveness:
+            $ref: types/uint16.schema.yaml
+          desireToTalk:
+            $ref: types/uint8.schema.yaml
+          friendlyMod:
+            $ref: types/uint8.schema.yaml
+          directMod:
+            $ref: types/uint8.schema.yaml
+          threatenMod:
+            $ref: types/uint8.schema.yaml
+  required:
+    - profileID
+    - internalName
+    - type
+  additionalProperties: false

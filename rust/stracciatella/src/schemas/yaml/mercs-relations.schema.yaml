@@ -1,0 +1,55 @@
+$schema: 'http://json-schema.org/draft-04/schema#'
+title: Opinions
+type: array
+items:
+  type: object
+  properties:
+    profile:
+      type: string
+    relations:
+      type: array
+      items:
+        type: object
+        properties:
+          target:
+            type: string
+          opinion:
+            $ref: types/opinion.schema.yaml
+          enemy1:
+            type: boolean
+          enemy2:
+            type: boolean
+          tolerance:
+            $ref: types/uint8.schema.yaml
+          eventualEnemy:
+            type: boolean
+          resistanceToMakingEnemy:
+            $ref: types/uint8.schema.yaml
+          friend1:
+            type: boolean
+          friend2:
+            type: boolean
+          eventualFriend:
+            type: boolean
+          resistanceToBefriending:
+            $ref: types/uint8.schema.yaml
+        additionalProperties: false
+        required:
+          - target
+          - opinion
+        dependentRequired:
+          tolerance:
+            - enemy1
+            - enemy2
+          resistanceToMakingEnemy:
+            - eventualEnemy
+          resistanceToBefriending:
+            - eventualFriend
+        not:
+          anyOf:
+            - required:
+                - enemy1
+                - enemy2
+            - required:
+                - friend1
+                - friend2

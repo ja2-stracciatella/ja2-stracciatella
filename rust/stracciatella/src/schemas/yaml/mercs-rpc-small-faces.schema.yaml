@@ -12,21 +12,9 @@ items:
       description: The profile for which to define the small face
       $ref: types/id.schema.yaml
     eyesXY:
-      title: Eyes Offset
-      description: The XY offset of the eyes animation frame.
-      type: array
-      minItems: 2
-      maxItems: 2
-      items:
-        $ref: types/int8.schema.yaml
+      $ref: types/face-offset.schema.yaml
     mouthXY:
-      title: Mouth Offset
-      description: The XY offset of the mouth animation frame.
-      type: array
-      minItems: 2
-      maxItems: 2
-      items:
-        $ref: types/int8.schema.yaml
+      $ref: types/face-offset.schema.yaml
   required:
   - profile
   - eyesXY

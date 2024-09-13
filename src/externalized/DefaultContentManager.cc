@@ -1167,15 +1167,32 @@ bool DefaultContentManager::loadTacticalLayerData()
 bool DefaultContentManager::loadMercsData()
 {
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
-	auto json = readJsonDataFileWithSchema("mercs-profile-info.json");
-	for (auto& element : json.toVec())
-	{
+
+	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> temp_mercStructs(NUM_PROFILES);
+	auto json = readJsonDataFileWithSchema("mercs-profiles.json");
+	for (auto& element : json.toVec()) {
 		auto profileInfo = MercProfileInfo::deserialize(element);
 		ProfileID profileID = profileInfo->profileID;
 		m_mercProfileInfo[profileID] = profileInfo;
 		m_mercProfiles.push_back(new MercProfile(profileID));
+		temp_mercStructs[profileID] = MercProfile::deserializeStruct(element, this);
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
+
+	json = readJsonDataFileWithSchema("mercs-relations.json");
+	for (auto& element : json.toVec()) {
+		JsonObject reader = element.toObject();
+		const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
+		MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
+	}
+	for (auto& element : temp_mercStructs) {
+		if (element != nullptr) {
+			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>( *element ) );
+		}
+		else {
+			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>() );
+		}
+	}
 
 	json = readJsonDataFileWithSchema("mercs-rpc-small-faces.json");
 
@@ -1489,6 +1506,13 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfoByName(const ST:
 const std::vector<const MercProfile*>& DefaultContentManager::listMercProfiles() const
 {
 	return m_mercProfiles;
+}
+
+void DefaultContentManager::resetMercProfileStructs() const
+{
+	for (size_t i = 0; i < NUM_PROFILES; i++) {
+		gMercProfiles[i] = *m_mercStructs[i];
+	}
 }
 
 const VehicleModel* DefaultContentManager::getVehicle(uint8_t const vehicleID) const

@@ -1,5 +1,6 @@
 #include "internals/enums.h"
 
+#include "Exceptions.h"
 #include "game/Tactical/Animation_Control.h"
 #include "game/Tactical/Soldier_Control.h"
 
@@ -8,39 +9,75 @@ const char* Internals::getApproachName(enum Approach approach)
 {
 	switch(approach)
 	{
-		case APPROACH_NONE:                           return "APPROACH_NONE";
-		case APPROACH_FRIENDLY:                       return "APPROACH_FRIENDLY";
-		case APPROACH_DIRECT:                         return "APPROACH_DIRECT";
-		case APPROACH_THREATEN:                       return "APPROACH_THREATEN";
-		case APPROACH_RECRUIT:                        return "APPROACH_RECRUIT";
-		case APPROACH_REPEAT:                         return "APPROACH_REPEAT";
-		case APPROACH_GIVINGITEM:                     return "APPROACH_GIVINGITEM";
+		case APPROACH_NONE:                           return "NONE";
+		case APPROACH_FRIENDLY:                       return "FRIENDLY";
+		case APPROACH_DIRECT:                         return "DIRECT";
+		case APPROACH_THREATEN:                       return "THREATEN";
+		case APPROACH_RECRUIT:                        return "RECRUIT";
+		case APPROACH_REPEAT:                         return "REPEAT";
+		case APPROACH_GIVINGITEM:                     return "GIVINGITEM";
 		case NPC_INITIATING_CONV:                     return "NPC_INITIATING_CONV";
 		case NPC_INITIAL_QUOTE:                       return "NPC_INITIAL_QUOTE";
 		case NPC_WHOAREYOU:                           return "NPC_WHOAREYOU";
 		case TRIGGER_NPC:                             return "TRIGGER_NPC";
-		case APPROACH_GIVEFIRSTAID:                   return "APPROACH_GIVEFIRSTAID";
-		case APPROACH_SPECIAL_INITIAL_QUOTE:          return "APPROACH_SPECIAL_INITIAL_QUOTE";
-		case APPROACH_ENEMY_NPC_QUOTE:                return "APPROACH_ENEMY_NPC_QUOTE";
-		case APPROACH_DECLARATION_OF_HOSTILITY:       return "APPROACH_DECLARATION_OF_HOSTILITY";
-		case APPROACH_EPC_IN_WRONG_SECTOR:            return "APPROACH_EPC_IN_WRONG_SECTOR";
-		case APPROACH_EPC_WHO_IS_RECRUITED:           return "APPROACH_EPC_WHO_IS_RECRUITED";
-		case APPROACH_INITIAL_QUOTE:                  return "APPROACH_INITIAL_QUOTE";
-		case APPROACH_CLOSING_SHOP:                   return "APPROACH_CLOSING_SHOP";
-		case APPROACH_SECTOR_NOT_SAFE:                return "APPROACH_SECTOR_NOT_SAFE";
-		case APPROACH_DONE_SLAPPED:                   return "APPROACH_DONE_SLAPPED";
-		case APPROACH_DONE_PUNCH_0:                   return "APPROACH_DONE_PUNCH_0";
-		case APPROACH_DONE_PUNCH_1:                   return "APPROACH_DONE_PUNCH_1";
-		case APPROACH_DONE_PUNCH_2:                   return "APPROACH_DONE_PUNCH_2";
-		case APPROACH_DONE_OPEN_STRUCTURE:            return "APPROACH_DONE_OPEN_STRUCTURE";
-		case APPROACH_DONE_GET_ITEM:                  return "APPROACH_DONE_GET_ITEM";
-		case APPROACH_DONE_GIVING_ITEM:               return "APPROACH_DONE_GIVING_ITEM";
-		case APPROACH_DONE_TRAVERSAL:                 return "APPROACH_DONE_TRAVERSAL";
-		case APPROACH_BUYSELL:                        return "APPROACH_BUYSELL";
-		case APPROACH_ONE_OF_FOUR_STANDARD:           return "APPROACH_ONE_OF_FOUR_STANDARD";
-		case APPROACH_FRIENDLY_DIRECT_OR_RECRUIT:     return "APPROACH_FRIENDLY_DIRECT_OR_RECRUIT";
+		case APPROACH_GIVEFIRSTAID:                   return "GIVEFIRSTAID";
+		case APPROACH_SPECIAL_INITIAL_QUOTE:          return "SPECIAL_INITIAL_QUOTE";
+		case APPROACH_ENEMY_NPC_QUOTE:                return "ENEMY_NPC_QUOTE";
+		case APPROACH_DECLARATION_OF_HOSTILITY:       return "DECLARATION_OF_HOSTILITY";
+		case APPROACH_EPC_IN_WRONG_SECTOR:            return "EPC_IN_WRONG_SECTOR";
+		case APPROACH_EPC_WHO_IS_RECRUITED:           return "EPC_WHO_IS_RECRUITED";
+		case APPROACH_INITIAL_QUOTE:                  return "INITIAL_QUOTE";
+		case APPROACH_CLOSING_SHOP:                   return "CLOSING_SHOP";
+		case APPROACH_SECTOR_NOT_SAFE:                return "SECTOR_NOT_SAFE";
+		case APPROACH_DONE_SLAPPED:                   return "DONE_SLAPPED";
+		case APPROACH_DONE_PUNCH_0:                   return "DONE_PUNCH_0";
+		case APPROACH_DONE_PUNCH_1:                   return "DONE_PUNCH_1";
+		case APPROACH_DONE_PUNCH_2:                   return "DONE_PUNCH_2";
+		case APPROACH_DONE_OPEN_STRUCTURE:            return "DONE_OPEN_STRUCTURE";
+		case APPROACH_DONE_GET_ITEM:                  return "DONE_GET_ITEM";
+		case APPROACH_DONE_GIVING_ITEM:               return "DONE_GIVING_ITEM";
+		case APPROACH_DONE_TRAVERSAL:                 return "DONE_TRAVERSAL";
+		case APPROACH_BUYSELL:                        return "BUYSELL";
+		case APPROACH_ONE_OF_FOUR_STANDARD:           return "ONE_OF_FOUR_STANDARD";
+		case APPROACH_FRIENDLY_DIRECT_OR_RECRUIT:     return "FRIENDLY_DIRECT_OR_RECRUIT";
 		default:                                      return NULL;
 	}
+}
+
+const Approach Internals::getApproachEnumFromString(const ST::string& s)
+{
+			if (s == "" || s == "NONE") return Approach::APPROACH_NONE;
+			else if (s == "FRIENDLY") return Approach::APPROACH_FRIENDLY;
+			else if (s == "DIRECT") return Approach::APPROACH_DIRECT;
+			else if (s == "THREATEN") return Approach::APPROACH_THREATEN;
+			else if (s == "RECRUIT") return Approach::APPROACH_RECRUIT;
+			else if (s == "REPEAT") return Approach::APPROACH_REPEAT;
+			else if (s == "GIVINGITEM") return Approach::APPROACH_GIVINGITEM;
+			else if (s == "NPC_INITIATING_CONV") return Approach::NPC_INITIATING_CONV;
+			else if (s == "NPC_INITIAL_QUOTE") return Approach::NPC_INITIAL_QUOTE;
+			else if (s == "NPC_WHOAREYOU") return Approach::NPC_WHOAREYOU;
+			else if (s == "TRIGGER_NPC") return Approach::TRIGGER_NPC;
+			else if (s == "GIVEFIRSTAID") return Approach::APPROACH_GIVEFIRSTAID;
+			else if (s == "SPECIAL_INITIAL_QUOTE") return Approach::APPROACH_SPECIAL_INITIAL_QUOTE;
+			else if (s == "ENEMY_NPC_QUOTE") return Approach::APPROACH_ENEMY_NPC_QUOTE;
+			else if (s == "DECLARATION_OF_HOSTILITY") return Approach::APPROACH_DECLARATION_OF_HOSTILITY;
+			else if (s == "EPC_IN_WRONG_SECTOR") return Approach::APPROACH_EPC_IN_WRONG_SECTOR;
+			else if (s == "EPC_WHO_IS_RECRUITED") return Approach::APPROACH_EPC_WHO_IS_RECRUITED;
+			else if (s == "INITIAL_QUOTE") return Approach::APPROACH_INITIAL_QUOTE;
+			else if (s == "CLOSING_SHOP") return Approach::APPROACH_CLOSING_SHOP;
+			else if (s == "SECTOR_NOT_SAFE") return Approach::APPROACH_SECTOR_NOT_SAFE;
+			else if (s == "DONE_SLAPPED") return Approach::APPROACH_DONE_SLAPPED;
+			else if (s == "DONE_PUNCH_0") return Approach::APPROACH_DONE_PUNCH_0;
+			else if (s == "DONE_PUNCH_1") return Approach::APPROACH_DONE_PUNCH_1;
+			else if (s == "DONE_PUNCH_2") return Approach::APPROACH_DONE_PUNCH_2;
+			else if (s == "DONE_OPEN_STRUCTURE") return Approach::APPROACH_DONE_OPEN_STRUCTURE;
+			else if (s == "DONE_GET_ITEM") return Approach::APPROACH_DONE_GET_ITEM;
+			else if (s == "DONE_GIVING_ITEM") return Approach::APPROACH_DONE_GIVING_ITEM;
+			else if (s == "DONE_TRAVERSAL") return Approach::APPROACH_DONE_TRAVERSAL;
+			else if (s == "BUYSELL") return Approach::APPROACH_BUYSELL;
+			else if (s == "ONE_OF_FOUR_STANDARD") return Approach::APPROACH_ONE_OF_FOUR_STANDARD;
+			else if (s == "FRIENDLY_DIRECT_OR_RECRUIT") return Approach::APPROACH_FRIENDLY_DIRECT_OR_RECRUIT;
+			else throw DataError(ST::format("unknown approach name value: {}", s));
 }
 
 const char* Internals::getActionName(UINT8 action)
@@ -388,4 +425,359 @@ const char* Internals::getAnimationName(UINT16 animation)
 		case LOCKPICK_CROUCHED:               return "LOCKPICK_CROUCHED";
 		default:                              return "???";
 	}
+}
+
+/** Get inventory slot name. */
+const char* Internals::getInventorySlotName(enum InvSlotPos slot)
+{
+	switch (slot)
+	{
+		case HELMETPOS:							return "HELMET";
+		case VESTPOS:							return "VEST";
+		case LEGPOS:							return "LEG";
+		case HEAD1POS:							return "HEAD1";
+		case HEAD2POS:							return "HEAD2";
+		case HANDPOS:							return "HAND";
+		case SECONDHANDPOS:						return "SECONDHAND";
+		case BIGPOCK1POS:						return "BIGPOCK1";
+		case BIGPOCK2POS:						return "BIGPOCK2";
+		case BIGPOCK3POS:						return "BIGPOCK3";
+		case BIGPOCK4POS:						return "BIGPOCK4";
+		case SMALLPOCK1POS:						return "SMALLPOCK1";
+		case SMALLPOCK2POS:						return "SMALLPOCK2";
+		case SMALLPOCK3POS:						return "SMALLPOCK3";
+		case SMALLPOCK4POS:						return "SMALLPOCK4";
+		case SMALLPOCK5POS:						return "SMALLPOCK5";
+		case SMALLPOCK6POS:						return "SMALLPOCK6";
+		case SMALLPOCK7POS:						return "SMALLPOCK7";
+		case SMALLPOCK8POS:						return "SMALLPOCK8";
+		default:								return "???";
+	}
+}
+
+const InvSlotPos Internals::getInventorySlotEnumFromString(const ST::string& s)
+{
+			if (s == "HELMET") return InvSlotPos::HELMETPOS;
+			else if (s == "VEST") return InvSlotPos::VESTPOS;
+			else if (s == "LEG") return InvSlotPos::LEGPOS;
+			else if (s == "HEAD1") return InvSlotPos::HEAD1POS;
+			else if (s == "HEAD2") return InvSlotPos::HEAD2POS;
+			else if (s == "HAND") return InvSlotPos::HANDPOS;
+			else if (s == "SECONDHAND") return InvSlotPos::SECONDHANDPOS;
+			else if (s == "BIGPOCK1") return InvSlotPos::BIGPOCK1POS;
+			else if (s == "BIGPOCK2") return InvSlotPos::BIGPOCK2POS;
+			else if (s == "BIGPOCK3") return InvSlotPos::BIGPOCK3POS;
+			else if (s == "BIGPOCK4") return InvSlotPos::BIGPOCK4POS;
+			else if (s == "SMALLPOCK1") return InvSlotPos::SMALLPOCK1POS;
+			else if (s == "SMALLPOCK2") return InvSlotPos::SMALLPOCK2POS;
+			else if (s == "SMALLPOCK3") return InvSlotPos::SMALLPOCK3POS;
+			else if (s == "SMALLPOCK4") return InvSlotPos::SMALLPOCK4POS;
+			else if (s == "SMALLPOCK5") return InvSlotPos::SMALLPOCK5POS;
+			else if (s == "SMALLPOCK6") return InvSlotPos::SMALLPOCK6POS;
+			else if (s == "SMALLPOCK7") return InvSlotPos::SMALLPOCK7POS;
+			else if (s == "SMALLPOCK8") return InvSlotPos::SMALLPOCK8POS;
+			else throw DataError(ST::format("unknown inventory slot name value: {}", s));
+}
+
+/** Get civilian group name. */
+const char* Internals::getCivilianGroupName(enum CivilianGroup group)
+{
+	switch (group)
+	{
+		case NON_CIV_GROUP:						return "NON_CIV";
+		case REBEL_CIV_GROUP:					return "REBEL";
+		case KINGPIN_CIV_GROUP:					return "KINGPIN";
+		case SANMONA_ARMS_GROUP:				return "SANMONA_ARMS";
+		case ANGELS_GROUP:						return "ANGEL";
+		case BEGGARS_CIV_GROUP:					return "BEGGARS";
+		case TOURISTS_CIV_GROUP:				return "TOURISTS";
+		case ALMA_MILITARY_CIV_GROUP:			return "ALMA_MILITARY";
+		case DOCTORS_CIV_GROUP:					return "DOCTORS";
+		case COUPLE1_CIV_GROUP:					return "COUPLE1";
+		case HICKS_CIV_GROUP:					return "HICKS";
+		case WARDEN_CIV_GROUP:					return "WARDEN";
+		case JUNKYARD_CIV_GROUP:				return "JUNKYARD";
+		case FACTORY_KIDS_GROUP:				return "FACTORY";
+		case QUEENS_CIV_GROUP:					return "QUEEN";
+		case UNNAMED_CIV_GROUP_15:				return "UNNAMED_15";
+		case UNNAMED_CIV_GROUP_16:				return "UNNAMED_16";
+		case UNNAMED_CIV_GROUP_17:				return "UNNAMED_17";
+		case UNNAMED_CIV_GROUP_18:				return "UNNAMED_18";
+		case UNNAMED_CIV_GROUP_19:				return "UNNAMED_19";
+		default:								return "???";
+	}
+}
+
+const CivilianGroup Internals::getCivilianGroupEnumFromString(const ST::string& s)
+{
+	if (s.empty() || s == "NON_CIV") return CivilianGroup::NON_CIV_GROUP;
+	else if (s == "REBEL") return CivilianGroup::REBEL_CIV_GROUP;
+	else if (s == "KINGPIN") return CivilianGroup::KINGPIN_CIV_GROUP;
+	else if (s == "SANMONA_ARMS") return CivilianGroup::SANMONA_ARMS_GROUP;
+	else if (s == "ANGEL") return CivilianGroup::ANGELS_GROUP;
+	else if (s == "BEGGARS") return CivilianGroup::BEGGARS_CIV_GROUP;
+	else if (s == "TOURISTS") return CivilianGroup::TOURISTS_CIV_GROUP;
+	else if (s == "ALMA_MILITARY") return CivilianGroup::ALMA_MILITARY_CIV_GROUP;
+	else if (s == "DOCTORS") return CivilianGroup::DOCTORS_CIV_GROUP;
+	else if (s == "COUPLE1") return CivilianGroup::COUPLE1_CIV_GROUP;
+	else if (s == "HICKS") return CivilianGroup::HICKS_CIV_GROUP;
+	else if (s == "WARDEN") return CivilianGroup::WARDEN_CIV_GROUP;
+	else if (s == "JUNKYARD") return CivilianGroup::JUNKYARD_CIV_GROUP;
+	else if (s == "FACTORY") return CivilianGroup::FACTORY_KIDS_GROUP;
+	else if (s == "QUEEN") return CivilianGroup::QUEENS_CIV_GROUP;
+	else if (s == "UNNAMED_15") return CivilianGroup::UNNAMED_CIV_GROUP_15;
+	else if (s == "UNNAMED_16") return CivilianGroup::UNNAMED_CIV_GROUP_16;
+	else if (s == "UNNAMED_17") return CivilianGroup::UNNAMED_CIV_GROUP_17;
+	else if (s == "UNNAMED_18") return CivilianGroup::UNNAMED_CIV_GROUP_18;
+	else if (s == "UNNAMED_19") return CivilianGroup::UNNAMED_CIV_GROUP_19;
+	else throw DataError(ST::format("unknown civilian group value: {}", s));
+}
+
+/** Get body type name. */
+const char* Internals::getBodyTypeName(enum SoldierBodyType type)
+{
+	switch (type)
+	{
+		case BODY_RANDOM:						return "BODY_RANDOM";
+		case REGMALE:							return "REGMALE";
+		case BIGMALE:							return "BIGMALE";
+		case STOCKYMALE:						return "STOCKYMALE";
+		case REGFEMALE:							return "REGFEMALE";
+		case ADULTFEMALEMONSTER:				return "ADULTFEMALEMONSTER";
+		case AM_MONSTER:						return "AM_MONSTER";
+		case YAF_MONSTER:						return "YAF_MONSTER";
+		case YAM_MONSTER:						return "YAM_MONSTER";
+		case LARVAE_MONSTER:					return "LARVAE_MONSTER";
+		case INFANT_MONSTER:					return "INFANT_MONSTER";
+		case QUEENMONSTER:						return "QUEENMONSTER";
+		case FATCIV:							return "FATCIV";
+		case MANCIV:							return "MANCIV";
+		case MINICIV:							return "MINICIV";
+		case DRESSCIV:							return "DRESSCIV";
+		case HATKIDCIV:							return "HATKIDCIV";
+		case KIDCIV:							return "KIDCIV";
+		case CRIPPLECIV:						return "CRIPPLECIV";
+		case COW:								return "COW";
+		case CROW:								return "CROW";
+		case BLOODCAT:							return "BLOODCAT";
+		case ROBOTNOWEAPON:						return "ROBOTNOWEAPON";
+		case HUMVEE:							return "HUMVEE";
+		case TANK_NW:							return "TANK_NW";
+		case TANK_NE:							return "TANK_NE";
+		case ELDORADO:							return "ELDORADO";
+		case ICECREAMTRUCK:						return "ICECREAMTRUCK";
+		case JEEP:								return "JEEP";
+		default:								return "???";
+	}
+}
+
+const SoldierBodyType Internals::getBodyTypeEnumFromString(const ST::string& s)
+{
+	if (s == "BODY_RANDOM") return SoldierBodyType::BODY_RANDOM;
+	else if (s == "" || s == "REGMALE") return SoldierBodyType::REGMALE;
+	else if (s == "BIGMALE") return SoldierBodyType::BIGMALE;
+	else if (s == "STOCKYMALE") return SoldierBodyType::STOCKYMALE;
+	else if (s == "REGFEMALE") return SoldierBodyType::REGFEMALE;
+	else if (s == "ADULTFEMALEMONSTER") return SoldierBodyType::ADULTFEMALEMONSTER;
+	else if (s == "AM_MONSTER") return SoldierBodyType::AM_MONSTER;
+	else if (s == "YAF_MONSTER") return SoldierBodyType::YAF_MONSTER;
+	else if (s == "YAM_MONSTER") return SoldierBodyType::YAM_MONSTER;
+	else if (s == "LARVAE_MONSTER") return SoldierBodyType::LARVAE_MONSTER;
+	else if (s == "INFANT_MONSTER") return SoldierBodyType::INFANT_MONSTER;
+	else if (s == "QUEENMONSTER") return SoldierBodyType::QUEENMONSTER;
+	else if (s == "FATCIV") return SoldierBodyType::FATCIV;
+	else if (s == "MANCIV") return SoldierBodyType::MANCIV;
+	else if (s == "MINICIV") return SoldierBodyType::MINICIV;
+	else if (s == "DRESSCIV") return SoldierBodyType::DRESSCIV;
+	else if (s == "HATKIDCIV") return SoldierBodyType::HATKIDCIV;
+	else if (s == "KIDCIV") return SoldierBodyType::KIDCIV;
+	else if (s == "CRIPPLECIV") return SoldierBodyType::CRIPPLECIV;
+	else if (s == "COW") return SoldierBodyType::COW;
+	else if (s == "CROW") return SoldierBodyType::CROW;
+	else if (s == "BLOODCAT") return SoldierBodyType::BLOODCAT;
+	else if (s == "ROBOTNOWEAPON") return SoldierBodyType::ROBOTNOWEAPON;
+	else if (s == "HUMVEE") return SoldierBodyType::HUMVEE;
+	else if (s == "TANK_NW") return SoldierBodyType::TANK_NW;
+	else if (s == "TANK_NE") return SoldierBodyType::TANK_NE;
+	else if (s == "ELDORADO") return SoldierBodyType::ELDORADO;
+	else if (s == "ICECREAMTRUCK") return SoldierBodyType::ICECREAMTRUCK;
+	else if (s == "JEEP") return SoldierBodyType::JEEP;
+	else throw DataError(ST::format("unknown body type value: {}", s));
+}
+
+/** Get attitude name. */
+const char* Internals::getAttitudeName(enum Attitudes attitude)
+{
+	switch (attitude)
+	{
+		case ATT_NORMAL:						return "NORMAL";
+		case ATT_FRIENDLY:						return "FRIENDLY";
+		case ATT_LONER:							return "LONER";
+		case ATT_OPTIMIST:						return "OPTIMIST";
+		case ATT_PESSIMIST:						return "PESSIMIST";
+		case ATT_AGGRESSIVE:					return "AGGRESSIVE";
+		case ATT_ARROGANT:						return "ARROGANT";
+		case ATT_BIG_SHOT:						return "BIG_SHOT";
+		case ATT_ASSHOLE:						return "ASSHOLE";
+		case ATT_COWARD:						return "COWARD";
+		default:								return "???";
+	}
+}
+
+const Attitudes Internals::getAttitudeEnumFromString(const ST::string& s)
+{
+	if (s == "" || s == "NORMAL") return Attitudes::ATT_NORMAL;
+	else if (s == "FRIENDLY") return Attitudes::ATT_FRIENDLY;
+	else if (s == "LONER") return Attitudes::ATT_LONER;
+	else if (s == "OPTIMIST") return Attitudes::ATT_OPTIMIST;
+	else if (s == "PESSIMIST") return Attitudes::ATT_PESSIMIST;
+	else if (s == "AGGRESSIVE") return Attitudes::ATT_AGGRESSIVE;
+	else if (s == "ARROGANT") return Attitudes::ATT_ARROGANT;
+	else if (s == "BIG_SHOT") return Attitudes::ATT_BIG_SHOT;
+	else if (s == "ASSHOLE") return Attitudes::ATT_ASSHOLE;
+	else if (s == "COWARD") return Attitudes::ATT_COWARD;
+	else throw DataError(ST::format("unknown attitude value: {}", s));
+}
+
+/** Get personality trait name. */
+const char* Internals::getPersonalityTraitName(enum PersonalityTrait trait)
+{
+	switch (trait)
+	{
+		case NO_PERSONALITYTRAIT:				return "NO_PERSONALITYTRAIT";
+		case HEAT_INTOLERANT:					return "HEAT_INTOLERANT";
+		case NERVOUS:							return "NERVOUS";
+		case CLAUSTROPHOBIC:					return "CLAUSTROPHOBIC";
+		case NONSWIMMER:						return "NONSWIMMER";
+		case FEAR_OF_INSECTS:					return "FEAR_OF_INSECTS";
+		case FORGETFUL:							return "FORGETFUL";
+		case PSYCHO:							return "PSYCHO";
+		default:								return "???";
+	}
+}
+
+const PersonalityTrait Internals::getPersonalityTraitEnumFromString(const ST::string& s)
+{
+	if (s == "" || s == "NO_PERSONALITYTRAIT") return PersonalityTrait::NO_PERSONALITYTRAIT;
+	else if (s == "HEAT_INTOLERANT") return PersonalityTrait::HEAT_INTOLERANT;
+	else if (s == "NERVOUS") return PersonalityTrait::NERVOUS;
+	else if (s == "CLAUSTROPHOBIC") return PersonalityTrait::CLAUSTROPHOBIC;
+	else if (s == "NONSWIMMER") return PersonalityTrait::NONSWIMMER;
+	else if (s == "FEAR_OF_INSECTS") return PersonalityTrait::FEAR_OF_INSECTS;
+	else if (s == "FORGETFUL") return PersonalityTrait::FORGETFUL;
+	else if (s == "PSYCHO") return PersonalityTrait::PSYCHO;
+	else throw DataError(ST::format("unknown personality trait value: {}", s));
+}
+
+/** Get skill trait name. */
+const char* Internals::getSkillTraitName(enum SkillTrait trait)
+{
+	switch (trait)
+	{
+		case NO_SKILLTRAIT:						return "NO_SKILLTRAIT";
+		case LOCKPICKING:						return "LOCKPICKING";
+		case HANDTOHAND:						return "HANDTOHAND";
+		case ELECTRONICS:						return "ELECTRONICS";
+		case NIGHTOPS:							return "NIGHTOPS";
+		case THROWING:							return "THROWING";
+		case TEACHING:							return "TEACHING";
+		case HEAVY_WEAPS:						return "HEAVY_WEAPS";
+		case AUTO_WEAPS:						return "AUTO_WEAPS";
+		case STEALTHY:							return "STEALTHY";
+		case AMBIDEXT:							return "AMBIDEXT";
+		case THIEF:								return "THIEF";
+		case MARTIALARTS:						return "MARTIALARTS";
+		case KNIFING:							return "KNIFING";
+		case ONROOF:							return "ONROOF";
+		case CAMOUFLAGED:						return "CAMOUFLAGED";
+		default:								return "???";
+	}
+}
+
+const SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
+{
+	if (s == "" || s == "NO_SKILLTRAIT") return SkillTrait::NO_SKILLTRAIT;
+	else if (s == "LOCKPICKING") return SkillTrait::LOCKPICKING;
+	else if (s == "HANDTOHAND") return SkillTrait::HANDTOHAND;
+	else if (s == "ELECTRONICS") return SkillTrait::ELECTRONICS;
+	else if (s == "NIGHTOPS") return SkillTrait::NIGHTOPS;
+	else if (s == "THROWING") return SkillTrait::THROWING;
+	else if (s == "TEACHING") return SkillTrait::TEACHING;
+	else if (s == "HEAVY_WEAPS") return SkillTrait::HEAVY_WEAPS;
+	else if (s == "AUTO_WEAPS") return SkillTrait::AUTO_WEAPS;
+	else if (s == "STEALTHY") return SkillTrait::STEALTHY;
+	else if (s == "AMBIDEXT") return SkillTrait::AMBIDEXT;
+	else if (s == "THIEF") return SkillTrait::THIEF;
+	else if (s == "MARTIALARTS") return SkillTrait::MARTIALARTS;
+	else if (s == "KNIFING") return SkillTrait::KNIFING;
+	else if (s == "ONROOF") return SkillTrait::ONROOF;
+	else if (s == "CAMOUFLAGED") return SkillTrait::CAMOUFLAGED;
+	else throw DataError(ST::format("unknown skill trait value: {}", s));
+}
+
+// TODO: Should be refactored away by adding internalName property to TownModel and strategic-map-towns.json
+const char* Internals::getTownName(enum Towns town)
+{
+	switch (town)
+	{
+		case BLANK_SECTOR:				return "BLANK_SECTOR";
+		case OMERTA:					return "OMERTA";
+		case DRASSEN:					return "DRASSEN";
+		case ALMA:						return "ALMA";
+		case GRUMM:						return "GRUMM";
+		case TIXA:						return "TIXA";
+		case CAMBRIA:					return "CAMBRIA";
+		case SAN_MONA:					return "SAN_MONA";
+		case ESTONI:					return "ESTONI";
+		case ORTA:						return "ORTA";
+		case BALIME:					return "BALIME";
+		case MEDUNA:					return "MEDUNA";
+		case CHITZENA:					return "CHITZENA";
+		default:						return "???";
+	}
+}
+
+const Towns Internals::getTownEnumFromString(const ST::string& s)
+{
+	if (s == "") return Towns::BLANK_SECTOR;
+	else if (s == "OMERTA") return Towns::OMERTA;
+	else if (s == "DRASSEN") return Towns::DRASSEN;
+	else if (s == "ALMA") return Towns::ALMA;
+	else if (s == "GRUMM") return Towns::GRUMM;
+	else if (s == "TIXA") return Towns::TIXA;
+	else if (s == "CAMBRIA") return Towns::CAMBRIA;
+	else if (s == "SAN_MONA") return Towns::SAN_MONA;
+	else if (s == "ESTONI") return Towns::ESTONI;
+	else if (s == "ORTA") return Towns::ORTA;
+	else if (s == "BALIME") return Towns::BALIME;
+	else if (s == "MEDUNA") return Towns::MEDUNA;
+	else if (s == "CHITZENA") return Towns::CHITZENA;
+	else throw DataError(ST::format("unknown town name value: {}", s));
+}
+
+const char* Internals::getMercTypeName(enum MercType mercType)
+{
+	switch (mercType)
+	{
+		case MercType::NOT_USED:		return "NOT_USED";
+		case MercType::AIM:				return "AIM";
+		case MercType::MERC:			return "MERC";
+		case MercType::IMP:				return "IMP";
+		case MercType::RPC:				return "RPC";
+		case MercType::NPC:				return "NPC";
+		case MercType::VEHICLE:			return "VEHICLE";
+		default:						return "???";
+	}
+}
+
+const MercType Internals::getMercTypeEnumFromString(const ST::string& s)
+{
+	if (s == "" || s == "NOT_USED") return MercType::NOT_USED;
+	else if (s == "AIM")			return MercType::AIM;
+	else if (s == "MERC")			return MercType::MERC;
+	else if (s == "IMP")			return MercType::IMP;
+	else if (s == "RPC")			return MercType::RPC;
+	else if (s == "NPC")			return MercType::NPC;
+	else if (s == "VEHICLE")		return MercType::VEHICLE;
+	else throw DataError(ST::format("unknown merc type value: {}", s));
 }

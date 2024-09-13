@@ -120,8 +120,8 @@ static void StartSomeMercsOnAssignment(void);
 
 void LoadMercProfiles()
 {
-	{ AutoSGPFile f(GCM->openGameResForReading(BINARYDATADIR "/prof.dat"));
-		LoadRawMercProfiles(f, NUM_PROFILES, gMercProfiles, getDataFilesEncodingCorrector());
+	{
+		GCM->resetMercProfileStructs();
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
 			MERCPROFILESTRUCT& p = gMercProfiles[i];

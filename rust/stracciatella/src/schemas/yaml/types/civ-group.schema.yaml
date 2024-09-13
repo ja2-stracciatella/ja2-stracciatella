@@ -1,0 +1,22 @@
+type: string
+enum:
+    - NON_CIV
+    - REBEL
+    - KINGPIN
+    - SANMONA_ARMS
+    - ANGEL
+    - BEGGARS
+    - TOURISTS
+    - ALMA_MILITARY
+    - DOCTORS
+    - COUPLE1
+    - HICKS
+    - WARDEN
+    - JUNKYARD
+    - FACTORY
+    - QUEEN
+    - UNNAMED_15
+    - UNNAMED_16
+    - UNNAMED_17
+    - UNNAMED_18
+    - UNNAMED_19

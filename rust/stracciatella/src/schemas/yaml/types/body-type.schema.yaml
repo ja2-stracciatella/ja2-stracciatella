@@ -1,0 +1,31 @@
+type: string
+enum:
+    - BODY_RANDOM
+    - REGMALE
+    - BIGMALE
+    - STOCKYMALE
+    - REGFEMALE
+    - ADULTFEMALEMONSTER
+    - AM_MONSTER
+    - YAF_MONSTER
+    - YAM_MONSTER
+    - LARVAE_MONSTER
+    - INFANT_MONSTER
+    - QUEENMONSTER
+    - FATCIV
+    - MANCIV
+    - MINICIV
+    - DRESSCIV
+    - HATKIDCIV
+    - KIDCIV
+    - CRIPPLECIV
+    - COW
+    - CROW
+    - BLOODCAT
+    - ROBOTNOWEAPON
+    - HUMVEE
+    - TANK_NW
+    - TANK_NE
+    - ELDORADO
+    - ICECREAMTRUCK
+    - JEEP
