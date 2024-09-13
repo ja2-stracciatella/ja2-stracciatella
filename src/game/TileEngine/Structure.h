@@ -40,7 +40,6 @@ enum StructureDamageReason
 // functions at the structure database level
 STRUCTURE_FILE_REF* LoadStructureFile(ST::string const& fileName);
 void FreeAllStructureFiles( void );
-void FreeStructureFile(STRUCTURE_FILE_REF*);
 
 //
 // functions at the structure instance level

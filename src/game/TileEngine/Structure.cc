@@ -1,5 +1,6 @@
 #include "HImage.h"
 #include "LoadSaveData.h"
+#include "SGPFile.h"
 #include "Soldier_Control.h"
 #include "Structure_Internals.h"
 #include "Types.h"
@@ -180,7 +181,18 @@ STRUCTURE_FILE_REF::~STRUCTURE_FILE_REF()
 	{
 		delete[] dbs.ppTile;
 	}
-	gpStructureFileRefs.erase(this);
+
+	try
+	{
+		if (gpStructureFileRefs.erase(this) != 1)
+		{
+			SLOGE("Deleting a STRUCTURE_FILE_REF that is not tracked.");
+		}
+	}
+	catch (...)
+	{
+		// Ignore any exceptions thrown by erase or SLOGE.
+	}
 }
 
 
@@ -208,12 +220,10 @@ void FreeAllStructureFiles()
 
 
 // Loads a structure file's data as a honking chunk o' memory
-static auto LoadStructureData(ST::string const& filename, STRUCTURE_FILE_REF* const sfr)
+STRUCTURE_FILE_REF::STRUCTURE_FILE_REF(SGPFile & jsdFile)
 {
-	AutoSGPFile f(GCM->openGameResForReading(filename));
-
 	BYTE data[16];
-	f->read(data, sizeof(data));
+	jsdFile.read(data, sizeof(data));
 
 	char   id[4];
 	UINT16 n_structures;
@@ -238,27 +248,25 @@ static auto LoadStructureData(ST::string const& filename, STRUCTURE_FILE_REF* co
 		throw std::runtime_error("Failed to load structure file, because header is invalid");
 	}
 
-	sfr->usNumberOfStructures = n_structures;
+	usNumberOfStructures = n_structures;
 	if (flags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
 	{
-		sfr->pAuxData.resize(n_structures);
-		f->read(sfr->pAuxData.data(), sizeof(AuxObjectData) * n_structures);
+		pAuxData.resize(n_structures);
+		jsdFile.read(pAuxData.data(), sizeof(AuxObjectData) * n_structures);
 
 		if (n_tile_locs_stored > 0)
 		{
-			sfr->pTileLocData.resize(n_tile_locs_stored);
-			f->read(sfr->pTileLocData.data(), sizeof(RelTileLoc) * n_tile_locs_stored);
+			pTileLocData.resize(n_tile_locs_stored);
+			jsdFile.read(pTileLocData.data(), sizeof(RelTileLoc) * n_tile_locs_stored);
 		}
 	}
 
 	if (flags & STRUCTURE_FILE_CONTAINS_STRUCTUREDATA)
 	{
-		sfr->usNumberOfStructuresStored = n_structures_stored;
-		sfr->pubStructureData.resize(data_size);
-		f->read(sfr->pubStructureData.data(), data_size);
+		usNumberOfStructuresStored = n_structures_stored;
+		pubStructureData.resize(data_size);
+		jsdFile.read(pubStructureData.data(), data_size);
 	}
-
-	return data_size;
 }
 
 void NormalizeStructureTiles(DB_STRUCTURE_TILE** pTiles, UINT8 ubNumTiles)
@@ -299,14 +307,15 @@ void NormalizeStructureTiles(DB_STRUCTURE_TILE** pTiles, UINT8 ubNumTiles)
 	}
 }
 
-static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32 uiDataSize)
+static void CreateFileStructureArrays(STRUCTURE_FILE_REF & pFileRef)
 { /* Based on a file chunk, creates all the dynamic arrays for the structure
 	 * definitions contained within */
-	auto * pCurrent{ pFileRef->pubStructureData.data() };
-	auto & pDBStructureRef{ pFileRef->pDBStructureRef };
-	pDBStructureRef.resize(pFileRef->usNumberOfStructures);
+	auto * pCurrent{ pFileRef.pubStructureData.data() };
+	auto & pDBStructureRef{ pFileRef.pDBStructureRef };
+	pDBStructureRef.resize(pFileRef.usNumberOfStructures);
+	size_t uiDataSize{ pFileRef.pubStructureData.size() };
 
-	for (UINT16 usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; ++usLoop)
+	for (UINT16 usLoop = 0; usLoop < pFileRef.usNumberOfStructuresStored; ++usLoop)
 	{
 		if (uiDataSize < sizeof(DB_STRUCTURE))
 		{	// gone past end of file block?!
@@ -352,9 +361,12 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 
 STRUCTURE_FILE_REF* LoadStructureFile(ST::string const& filename)
 { // NB should be passed in expected number of structures so we can check equality
-	auto sfr{ std::make_unique<STRUCTURE_FILE_REF>() };
-	UINT32 const data_size{ LoadStructureData(filename, sfr.get()) };
-	if (!sfr->pubStructureData.empty()) CreateFileStructureArrays(sfr.get(), data_size);
+	std::unique_ptr<SGPFile> jsdFile{ GCM->openGameResForReading(filename) };
+	auto sfr{ std::make_unique<STRUCTURE_FILE_REF>(*jsdFile) };
+	if (!sfr->pubStructureData.empty())
+	{
+		CreateFileStructureArrays(*sfr);
+	}
 	// Add the file reference to the master list.
 	gpStructureFileRefs.emplace(sfr.get(), filename);
 	return sfr.release();

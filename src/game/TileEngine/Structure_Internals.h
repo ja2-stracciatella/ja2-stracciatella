@@ -6,6 +6,7 @@
 // structure_extern.h, not structure.h!
 //
 
+#include "SGPFile.h"
 #include "Types.h"
 #include <cstddef>
 #include <vector>
@@ -199,6 +200,7 @@ struct STRUCTURE_FILE_REF
 	UINT16              usNumberOfStructures;
 	UINT16              usNumberOfStructuresStored;
 
+	STRUCTURE_FILE_REF(SGPFile & jsdFile);
 	~STRUCTURE_FILE_REF();
 };
 
