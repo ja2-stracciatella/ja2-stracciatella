@@ -390,7 +390,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 						}
 
 						// CHECK IF WE CLICKED-HELD
-						if (COUNTERDONE(LMOUSECLICK_DELAY_COUNTER, false) && gpItemPointer)
+						if (COUNTERDONE(LMOUSECLICK_DELAY_COUNTER, false))
 						{
 							// LEFT CLICK-HOLD EVENT
 							// Switch on UI mode
