@@ -31,6 +31,7 @@
 
 #include <array>
 #include <climits>
+#include <map>
 #include <memory>
 #include <stdexcept>
 #include <string_theory/format>
@@ -61,7 +62,8 @@ constexpr UINT16 FIRST_AVAILABLE_STRUCTURE_ID = INVALID_STRUCTURE_ID + 2;
 
 static UINT16 gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
 
-static STRUCTURE_FILE_REF* gpStructureFileRefs;
+// This keeps track of all currently loaded .jsd files.
+static std::map<STRUCTURE_FILE_REF *, ST::string> gpStructureFileRefs;
 
 
 static SoundID const guiMaterialHitSound[NUM_MATERIAL_TYPES] =
@@ -178,32 +180,17 @@ STRUCTURE_FILE_REF::~STRUCTURE_FILE_REF()
 	{
 		delete[] dbs.ppTile;
 	}
+	gpStructureFileRefs.erase(this);
 }
 
 
 void FreeAllStructureFiles()
 { // Free all of the structure database
-	STRUCTURE_FILE_REF* next;
-	for (STRUCTURE_FILE_REF* i = gpStructureFileRefs; i; i = next)
+
+	while (!gpStructureFileRefs.empty())
 	{
-		next = i->pNext;
-		delete i;
+		delete gpStructureFileRefs.begin()->first;
 	}
-	gpStructureFileRefs = nullptr;
-}
-
-
-void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
-{
-	CHECKV(sfr);
-
-	STRUCTURE_FILE_REF* const next = sfr->pNext;
-	STRUCTURE_FILE_REF* const prev = sfr->pPrev;
-	Assert((prev == NULL) == (gpStructureFileRefs == sfr));
-	*(prev != NULL ? &prev->pNext : &gpStructureFileRefs) = next;
-	if (next) next->pPrev = prev;
-
-	delete sfr;
 }
 
 
@@ -368,10 +355,8 @@ STRUCTURE_FILE_REF* LoadStructureFile(ST::string const& filename)
 	auto sfr{ std::make_unique<STRUCTURE_FILE_REF>() };
 	UINT32 const data_size{ LoadStructureData(filename, sfr.get()) };
 	if (!sfr->pubStructureData.empty()) CreateFileStructureArrays(sfr.get(), data_size);
-	// Add the file reference to the master list, at the head for convenience
-	if (gpStructureFileRefs) gpStructureFileRefs->pPrev = sfr.get();
-	sfr->pNext = gpStructureFileRefs;
-	gpStructureFileRefs = sfr.get();
+	// Add the file reference to the master list.
+	gpStructureFileRefs.emplace(sfr.get(), filename);
 	return sfr.release();
 }
 

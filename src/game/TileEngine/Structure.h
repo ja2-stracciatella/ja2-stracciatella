@@ -1,7 +1,6 @@
 #ifndef STRUCTURE_H
 #define STRUCTURE_H
 
-#include "AutoObj.h"
 #include "JA2Types.h"
 #include "Structure_Internals.h"
 #include "Overhead_Types.h"
@@ -138,7 +137,5 @@ UINT8				StructureFlagToType( UINT32 uiFlag );
 SoundID GetStructureOpenSound(STRUCTURE const*, bool closing);
 
 extern const UINT8 gubMaterialArmour[];
-
-typedef SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFile> AutoStructureFileRef;
 
 #endif

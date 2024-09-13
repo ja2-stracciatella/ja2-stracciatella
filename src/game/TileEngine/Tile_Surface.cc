@@ -31,19 +31,19 @@ try
 	// Start by hacking the image filename into that for the structure data
 	ST::string cStructureFilename(FileMan::replaceExtension(cFilename, "jsd"));
 
-	AutoStructureFileRef pStructureFileRef;
+	std::unique_ptr<STRUCTURE_FILE_REF> pStructureFileRef;
 	if (GCM->doesGameResExists( cStructureFilename ))
 	{
 		SLOGD("loading tile {}", cStructureFilename);
 
-		pStructureFileRef = LoadStructureFile(cStructureFilename);
+		pStructureFileRef.reset(LoadStructureFile(cStructureFilename));
 
 		if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
 		{
 			throw std::runtime_error("Structure file error");
 		}
 
-		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef, FALSE, 0);
+		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef.get(), FALSE, 0);
 	}
 
 	SGP::PODObj<TILE_IMAGERY> pTileSurf;
@@ -64,7 +64,7 @@ try
 	}
 
 	pTileSurf->vo                = hVObject.release();
-	pTileSurf->pStructureFileRef = pStructureFileRef.Release();
+	pTileSurf->pStructureFileRef = pStructureFileRef.release();
 	return pTileSurf.Release();
 }
 catch (...)
@@ -78,7 +78,7 @@ void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 {
 	if ( pTileSurf->pStructureFileRef != NULL )
 	{
-		FreeStructureFile( pTileSurf->pStructureFileRef );
+		delete pTileSurf->pStructureFileRef;
 	}
 	else
 	{

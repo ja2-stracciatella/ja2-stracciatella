@@ -192,8 +192,6 @@ struct STRUCTURE
 
 struct STRUCTURE_FILE_REF
 {
-	STRUCTURE_FILE_REF* pPrev;
-	STRUCTURE_FILE_REF* pNext;
 	std::vector<AuxObjectData>    pAuxData;
 	std::vector<RelTileLoc>       pTileLocData;
 	std::vector<std::byte>        pubStructureData;
