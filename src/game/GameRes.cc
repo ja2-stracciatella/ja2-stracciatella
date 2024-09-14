@@ -1,8 +1,6 @@
 #include "GameRes.h"
 #include "Directories.h"
-#include "EncodingCorrectors.h"
 #include "VObject.h"
-#include <locale.h>
 #include <stdexcept>
 
 
@@ -55,19 +53,6 @@ bool isRussianGoldVersion()
 bool isChineseVersion()
 {
 	return s_gameVersion == GameVersion::SIMPLIFIED_CHINESE;
-}
-
-/**
- * Get encoding corrector for strings in data files.
- * @return NULL when no encoding corrector is required */
-const IEncodingCorrector* getDataFilesEncodingCorrector()
-{
-	static RussianEncodingCorrector s_russianFixer;
-	if(isRussianVersion() || isRussianGoldVersion())
-	{
-		return &s_russianFixer;
-	}
-	return NULL;
 }
 
 /** Get major map version. */
