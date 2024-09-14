@@ -1,13 +1,10 @@
 #ifndef LOADSAVEDATA_H
 #define LOADSAVEDATA_H
 
-#include "Types.h"
-#include "IEncodingCorrector.h"
-
-#include <string_theory/string>
-
-#include <algorithm>
+#include <cstdint>
+#include <cstring>
 #include <type_traits>
+#include <string_theory/string>
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -37,11 +34,6 @@ public:
 	 * @param numChars Number of `char16_t` characters to write. */
 	void writeUTF16(const ST::string& str, size_t numChars);
 
-	/** Write UTF-32 encoded string.
-	 * @param str      String to write
-	 * @param numChars Number of `char32_t` characters to write. */
-	void writeUTF32(const ST::string& str, size_t numChars);
-
 	void writeU8 (uint8_t  value);        /**< Write uint8_t */
 	void writeU16(uint16_t value);        /**< Write uint16_t */
 	void writeU32(uint32_t value);        /**< Write uint32_t */
@@ -51,8 +43,8 @@ public:
 	void write(const T& value)
 	{
 		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
-		size_t numBytes = sizeof(T);
-		memcpy(m_buf, &value, numBytes);
+		constexpr size_t numBytes = sizeof(T);
+		std::memcpy(m_buf, &value, numBytes);
 		move(numBytes);
 	}
 
@@ -62,7 +54,7 @@ public:
 	{
 		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
 		size_t numBytes = len * sizeof(T);
-		memcpy(m_buf, arr, numBytes);
+		std::memcpy(m_buf, arr, numBytes);
 		move(numBytes);
 	}
 
@@ -70,14 +62,21 @@ public:
 	void skip(size_t numBytes);
 
 	/** Get number of the consumed bytes during writing. */
-	size_t getConsumed() const;
+	constexpr size_t getConsumed() const noexcept
+	{
+		return m_buf - m_original;
+	}
+
 
 protected:
 	uint8_t* m_buf;
 	uint8_t* m_original;
 
 	/** Move pointer to \a numBytes bytes forward. */
-	void move(size_t numBytes);
+	constexpr void move(size_t const numBytes) noexcept
+	{
+		m_buf += numBytes;
+	}
 };
 
 
@@ -105,14 +104,26 @@ public:
 
 	/** Read UTF-16 encoded string.
 	 * @param numChars Number of `char16_t` characters to read.
-	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text.
 	 * @param validation What happens with invalid character sequences. */
-	ST::string readUTF16(size_t numChars, const IEncodingCorrector* fixer = nullptr, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
+	ST::string readUTF16(size_t numChars, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
 
 	/** Read UTF-32 encoded string.
 	 * @param numChars Number of `char32_t` characters to read.
 	 * @param validation What happens with invalid character sequences. */
 	ST::string readUTF32(size_t numChars, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
+
+	/** Read a string that is either UTF-32 or UTF-16 encoded.
+	 * @param numChars Number of `char32_t` characters to read.
+	 * @param stracLinuxFormat true if the data was written using the
+	   short-lived file format where string were UTF-32 encoded on Unix
+	   platforms or the current, Windows-like file format with UTF-16
+	   encoded strings.	*/
+	auto readString(size_t const numChars, bool const stracLinuxFormat)
+	{
+		return std::invoke(
+			stracLinuxFormat ? &DataReader::readUTF32 : &DataReader::readUTF16,
+			this, numChars, ST_DEFAULT_VALIDATION);
+	}
 
 	uint8_t  readU8();            /**< Read uint8_t */
 	uint16_t readU16();           /**< Read uint16_t */
@@ -128,7 +139,7 @@ public:
 		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
 		size_t numBytes = sizeof(T);
 		T value;
-		memcpy(&value, m_buf, numBytes);
+		std::memcpy(&value, m_buf, numBytes);
 		move(numBytes);
 		return value;
 	}
@@ -139,22 +150,31 @@ public:
 	{
 		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
 		size_t numBytes = len * sizeof(T);
-		memcpy(arr, m_buf, numBytes);
+		std::memcpy(arr, m_buf, numBytes);
 		move(numBytes);
 	}
 
 	/* Read and discard bytes. */
-	void skip(size_t numBytes);
+	constexpr void skip(size_t const numBytes) noexcept
+	{
+		move(numBytes);
+	}
 
 	/** Get number of the consumed bytes during reading. */
-	size_t getConsumed() const;
+	constexpr size_t getConsumed() const noexcept
+	{
+		return m_buf - m_original;
+	}
 
 protected:
 	const uint8_t* m_buf;
 	const uint8_t* m_original;
 
 	/** Move pointer to \a numBytes bytes forward. */
-	void move(size_t numBytes);
+	constexpr void move(size_t numBytes) noexcept
+	{
+		m_buf += numBytes;
+	}
 };
 
 
@@ -168,11 +188,11 @@ protected:
 #define INJ_BOOL(D, S)   (D).write<BOOLEAN>((S));
 #define INJ_BYTE(D, S)   (D).write<BYTE>((S));
 #define INJ_I8(D, S)     (D).write<INT8>((S));
-#define INJ_U8(D, S)     (D).write<UINT8>((S));
+#define INJ_U8(D, S)     (D).writeU8((S));
 #define INJ_I16(D, S)    (D).write<INT16>((S));
-#define INJ_U16(D, S)    (D).write<UINT16>((S));
+#define INJ_U16(D, S)    (D).writeU16((S));
 #define INJ_I32(D, S)    (D).write<INT32>((S));
-#define INJ_U32(D, S)    (D).write<UINT32>((S));
+#define INJ_U32(D, S)    (D).writeU32((S));
 #define INJ_FLOAT(D, S)  (D).write<FLOAT>((S));
 #define INJ_DOUBLE(D, S) (D).write<DOUBLE>((S));
 #define INJ_PTR(D, S) INJ_SKIP(D, 4)
@@ -196,11 +216,11 @@ static inline void INJ_AUTO(DataWriter & D, T S) { D.write(S); }
 #define EXTR_BOOL(S, D)   (D) = (S).read<BOOLEAN>();
 #define EXTR_BYTE(S, D)   (D) = (S).read<BYTE>();
 #define EXTR_I8(S, D)     (D) = (S).read<INT8>();
-#define EXTR_U8(S, D)     (D) = (S).read<UINT8>();
+#define EXTR_U8(S, D)     (D) = (S).readU8();
 #define EXTR_I16(S, D)    (D) = (S).read<INT16>();
-#define EXTR_U16(S, D)    (D) = (S).read<UINT16>();
+#define EXTR_U16(S, D)    (D) = (S).readU16();
 #define EXTR_I32(S, D)    (D) = (S).read<INT32>();
-#define EXTR_U32(S, D)    (D) = (S).read<UINT32>();
+#define EXTR_U32(S, D)    (D) = (S).readU32();
 #define EXTR_FLOAT(S, D)  (D) = (S).read<FLOAT>();
 #define EXTR_DOUBLE(S, D) (D) = (S).read<DOUBLE>();
 #define EXTR_PTR(S, D) (D) = NULL; (S).skip(4);

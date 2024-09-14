@@ -116,6 +116,7 @@
 
 #include <regex>
 #include <algorithm>
+#include <array>
 #include <stdexcept>
 #include <utility>
 
@@ -527,14 +528,7 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	DataReader d{data};
 	EXTR_U32(   d, h.uiSavedGameVersion);
 	EXTR_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber));
-	if(stracLinuxFormat)
-	{
-		h.sSavedGameDesc = d.readUTF32(SIZE_OF_SAVE_GAME_DESC);
-	}
-	else
-	{
-		h.sSavedGameDesc = d.readUTF16(SIZE_OF_SAVE_GAME_DESC);
-	}
+	h.sSavedGameDesc = d.readString(SIZE_OF_SAVE_GAME_DESC, stracLinuxFormat);
 	EXTR_SKIP(  d, 4)
 	EXTR_U32(   d, h.uiDay)
 	EXTR_U8(    d, h.ubHour)
@@ -1286,14 +1280,14 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 	// Loop through all the profiles to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
 		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
-	FOR_EACH(MERCPROFILESTRUCT, i, gMercProfiles)
+	for (auto & profile : gMercProfiles)
 	{
 		UINT32 checksum;
+		std::array<BYTE, std::max(MERC_PROFILE_SIZE_STRAC_LINUX, MERC_PROFILE_SIZE)> data;
 		UINT32 dataSize = stracLinuxFormat ? MERC_PROFILE_SIZE_STRAC_LINUX : MERC_PROFILE_SIZE;
-		std::vector<BYTE> data(dataSize);
 		reader(f, data.data(), dataSize);
-		ExtractMercProfile(data.data(), *i, stracLinuxFormat, &checksum, NULL);
-		if (checksum != SoldierProfileChecksum(*i))
+		ExtractMercProfile(data.data(), profile, stracLinuxFormat, &checksum);
+		if (checksum != SoldierProfileChecksum(profile))
 		{
 			throw std::runtime_error("Merc profile checksum mismatch");
 		}

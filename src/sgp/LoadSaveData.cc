@@ -1,5 +1,5 @@
 #include "LoadSaveData.h"
-
+#include "Logger.h"
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -40,18 +40,6 @@ void DataWriter::writeUTF16(const ST::string& str, size_t numChars)
 	skip(sizeof(char16_t) * (numChars - n));
 }
 
-void DataWriter::writeUTF32(const ST::string& str, size_t numChars)
-{
-	ST::utf32_buffer buf = str.to_utf32();
-	size_t n = std::min<size_t>(buf.size() + 1, numChars);
-	if (buf.size() > n)
-	{
-		SLOGW("DataWriter::writeUTF32: truncating '{}' {}->{}", str, buf.size(), n);
-	}
-	writeArray(buf.c_str(), n);
-	skip(sizeof(char32_t) * (numChars - n));
-}
-
 void DataWriter::writeU8 (uint8_t  value)
 {
 	write(value);
@@ -73,18 +61,6 @@ void DataWriter::skip(size_t numBytes)
 	move(numBytes);
 }
 
-/** Move pointer to \a numBytes bytes forward. */
-void DataWriter::move(size_t numBytes)
-{
-	m_buf += numBytes;
-}
-
-/** Get number of the consumed bytes during writing. */
-size_t DataWriter::getConsumed() const
-{
-	return m_buf - m_original;
-}
-
 ////////////////////////////////////////////////////////////////////////////
 // DataReader
 ////////////////////////////////////////////////////////////////////////////
@@ -102,21 +78,10 @@ ST::string DataReader::readUTF8(size_t numChars, ST::utf_validation_t validation
 	return ST::string(buf.c_str(), ST_AUTO_SIZE, validation);
 }
 
-ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector* fixer, ST::utf_validation_t validation)
+ST::string DataReader::readUTF16(size_t numChars, ST::utf_validation_t validation)
 {
 	ST::utf16_buffer buf{numChars, u'\0'};
 	readArray(buf.data(), numChars);
-	if (fixer)
-	{
-		for (char16_t& c : buf)
-		{
-			c = fixer->fix(c);
-			if (c == u'\0')
-			{
-				break;
-			}
-		}
-	}
 	return ST::string(buf.c_str(), ST_AUTO_SIZE, validation);
 }
 
@@ -140,21 +105,6 @@ uint16_t DataReader::readU16()
 uint32_t DataReader::readU32()
 {
 	return read<uint32_t>();
-}
-
-void DataReader::skip(size_t numBytes)
-{
-	move(numBytes);
-}
-
-void DataReader::move(size_t numBytes)
-{
-	m_buf += numBytes;
-}
-
-size_t DataReader::getConsumed() const
-{
-	return m_buf - m_original;
 }
 
 ////////////////////////////////////////////////////////////////////////////

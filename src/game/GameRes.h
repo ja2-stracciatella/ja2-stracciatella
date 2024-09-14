@@ -3,7 +3,6 @@
 /* Game resources */
 
 #include "Types.h"
-#include "IEncodingCorrector.h"
 #include "StringEncodingTypes.h"
 
 #include <string_theory/string>
@@ -59,11 +58,6 @@ SGPVObject* AddVideoObjectFromFile(MultiLanguageGraphic);
 
 /** Choose game version. */
 void setGameVersion(GameVersion ver);
-
-/**
- * Get encoding corrector for strings in data files.
- * @return NULL when no encoding corrector is required */
-const IEncodingCorrector* getDataFilesEncodingCorrector();
 
 /** Check if this is English version of the game. */
 bool isEnglishVersion();
