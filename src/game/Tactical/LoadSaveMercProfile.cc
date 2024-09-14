@@ -6,6 +6,7 @@
 #include "Soldier_Profile_Type.h"
 #include "Tactical_Save.h"
 
+#include <array>
 #include <string_theory/string>
 
 
