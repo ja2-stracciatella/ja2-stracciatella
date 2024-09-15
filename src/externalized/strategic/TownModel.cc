@@ -3,8 +3,8 @@
 #include "JsonUtility.h"
 #include <utility>
 
-TownModel::TownModel(int8_t townId_, std::vector<uint8_t> sectorIDs_, SGPPoint townPoint_, bool isMilitiaTrainingAllowed_)
-		: townId(townId_), sectorIDs(std::move(sectorIDs_)), townPoint(townPoint_), isMilitiaTrainingAllowed(isMilitiaTrainingAllowed_) {}
+TownModel::TownModel(int8_t townId_, ST::string internalName_, std::vector<uint8_t> sectorIDs_, SGPPoint townPoint_, bool isMilitiaTrainingAllowed_)
+		: townId(townId_), internalName(internalName_), sectorIDs(std::move(sectorIDs_)), townPoint(townPoint_), isMilitiaTrainingAllowed(isMilitiaTrainingAllowed_) {}
 
 SGPSector TownModel::getBaseSector() const
 {
@@ -28,6 +28,7 @@ TownModel* TownModel::deserialize(const JsonValue& json)
 
 	return new TownModel(
 		obj.GetInt("townId"),
+		obj.GetString("internalName"),
 		sectorIDs,
 		townPoint,
 		obj.getOptionalBool("isMilitiaTrainingAllowed")

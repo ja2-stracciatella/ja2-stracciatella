@@ -2,6 +2,7 @@
 
 #include "JsonUtility.h"
 #include "Strategic_Mines.h"
+#include "TownModel.h"
 #include <utility>
 
 MineModel::MineModel(const uint8_t mineId_, const uint8_t entranceSector_, const uint8_t associatedTownId_,
@@ -46,7 +47,7 @@ std::vector<std::array<uint8_t, 2>> readMineSectors(const JsonValue& sectorsJson
 	return sectors;
 }
 
-MineModel* MineModel::deserialize(uint8_t index, const JsonValue& json)
+MineModel* MineModel::deserialize(uint8_t index, const JsonValue& json, const ContentManager* contentManager)
 {
 	auto obj = json.toObject();
 	auto entrance = JsonUtility::parseSectorID(obj["entranceSector"]);
@@ -55,7 +56,7 @@ MineModel* MineModel::deserialize(uint8_t index, const JsonValue& json)
 	return new MineModel(
 		index,
 		entrance,
-		obj.GetUInt("associatedTownId"),
+		contentManager->getTownByName( obj.GetString("associatedTown") )->townId,
 		mineTypeFromString(obj.GetString("mineType")),
 		obj.GetUInt("minimumMineProduction"),
 		obj.getOptionalBool("headMinerAssigned"),

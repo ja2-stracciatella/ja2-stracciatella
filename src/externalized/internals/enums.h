@@ -44,10 +44,6 @@ namespace Internals
 	const char* getSkillTraitName(enum SkillTrait trait);
 	const SkillTrait getSkillTraitEnumFromString(const ST::string& s);
 
-	// TODO: Should be refactored away by adding internalName property to TownModel and strategic-map-towns.json
-	const char* getTownName(enum Towns town);
-	const Towns getTownEnumFromString(const ST::string& s);
-
 	const char* getMercTypeName(enum MercType mercType);
 	const MercType getMercTypeEnumFromString(const ST::string& s);
 }
