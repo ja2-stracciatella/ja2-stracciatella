@@ -14,10 +14,10 @@ items:
       title: Entrance Sector
       description: Sector of the mine entrance on the surface level.
       $ref: types/sector-id.schema.yaml
-    associatedTownId:
-      title: Associated Town ID
-      description: ID of the associated town, refer to strategic-map-towns.json.
-      $ref: types/uint8.schema.yaml
+    associatedTown:
+      title: Associated Town
+      description: Name of the associated town, refer to strategic-map-towns.json.
+      $ref: types/town.schema.yaml
     mineType:
       title: Mine Type
       description: Type of mine.
@@ -70,7 +70,7 @@ items:
       type: boolean
   required:
   - entranceSector
-  - associatedTownId
+  - associatedTown
   - mineType
   - minimumMineProduction
   - mineSectors

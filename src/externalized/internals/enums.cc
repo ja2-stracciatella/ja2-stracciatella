@@ -744,7 +744,7 @@ MercType Internals::getMercTypeEnumFromString(const ST::string& s)
 
 Quests Internals::getQuestEnumFromString(const ST::string& s)
 {
-	if (s.empty()) return Quests::NO_QUEST;
+	if (s.empty() || s == "NO_QUEST") return Quests::NO_QUEST;
 	else if (s == "DELIVER_LETTER") return Quests::QUEST_DELIVER_LETTER;
 	else if (s == "FOOD_ROUTE") return Quests::QUEST_FOOD_ROUTE;
 	else if (s == "KILL_TERRORISTS") return Quests::QUEST_KILL_TERRORISTS;

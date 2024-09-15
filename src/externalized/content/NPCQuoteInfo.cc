@@ -44,7 +44,7 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 			else if (qStatus == "NOTSTARTED") rec->ubQuest = qCode + QUEST_NOT_STARTED_NUM;
 			else if (qStatus == "INPROGRESS") rec->ubQuest = qCode;
 		}
-		else rec->ubQuest = NO_QUEST;
+		else rec->ubQuest = Internals::getQuestEnumFromString("NO_QUEST");
 
 		rec->ubFirstDay = jsonRec.getOptionalUInt("firstDay");
 		rec->ubLastDay = jsonRec.getOptionalUInt("lastDay", IRRELEVANT);
