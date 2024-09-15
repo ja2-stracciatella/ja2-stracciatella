@@ -741,3 +741,33 @@ MercType Internals::getMercTypeEnumFromString(const ST::string& s)
 	else if (s == "VEHICLE")		return MercType::VEHICLE;
 	else throw DataError(ST::format("unknown merc type value: {}", s));
 }
+
+Quests Internals::getQuestEnumFromString(const ST::string& s)
+{
+	if (s.empty()) return Quests::NO_QUEST;
+	else if (s == "DELIVER_LETTER") return Quests::QUEST_DELIVER_LETTER;
+	else if (s == "FOOD_ROUTE") return Quests::QUEST_FOOD_ROUTE;
+	else if (s == "KILL_TERRORISTS") return Quests::QUEST_KILL_TERRORISTS;
+	else if (s == "KINGPIN_IDOL") return Quests::QUEST_KINGPIN_IDOL;
+	else if (s == "KINGPIN_MONEY") return Quests::QUEST_KINGPIN_MONEY;
+	else if (s == "RUNAWAY_JOEY") return Quests::QUEST_RUNAWAY_JOEY;
+	else if (s == "RESCUE_MARIA") return Quests::QUEST_RESCUE_MARIA;
+	else if (s == "CHITZENA_IDOL") return Quests::QUEST_CHITZENA_IDOL;
+	else if (s == "HELD_IN_ALMA") return Quests::QUEST_HELD_IN_ALMA;
+	else if (s == "INTERROGATION") return Quests::QUEST_INTERROGATION;
+	else if (s == "ARMY_FARM") return Quests::QUEST_ARMY_FARM;
+	else if (s == "FIND_SCIENTIST") return Quests::QUEST_FIND_SCIENTIST;
+	else if (s == "DELIVER_VIDEO_CAMERA") return Quests::QUEST_DELIVER_VIDEO_CAMERA;
+	else if (s == "BLOODCATS") return Quests::QUEST_BLOODCATS;
+	else if (s == "FIND_HERMIT") return Quests::QUEST_FIND_HERMIT;
+	else if (s == "CREATURES") return Quests::QUEST_CREATURES;
+	else if (s == "CHOPPER_PILOT") return Quests::QUEST_CHOPPER_PILOT;
+	else if (s == "ESCORT_SKYRIDER") return Quests::QUEST_ESCORT_SKYRIDER;
+	else if (s == "FREE_DYNAMO") return Quests::QUEST_FREE_DYNAMO;
+	else if (s == "ESCORT_TOURISTS") return Quests::QUEST_ESCORT_TOURISTS;
+	else if (s == "FREE_CHILDREN") return Quests::QUEST_FREE_CHILDREN;
+	else if (s == "LEATHER_SHOP_DREAM") return Quests::QUEST_LEATHER_SHOP_DREAM;
+	else if (s == "ESTONI_FUEL") return Quests::QUEST_ESTONI_FUEL;
+	else if (s == "KILL_DEIDRANNA") return Quests::QUEST_KILL_DEIDRANNA;
+	else throw DataError(ST::format("unknown quest name value: {}", s));
+}

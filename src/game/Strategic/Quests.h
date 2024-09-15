@@ -68,7 +68,9 @@ enum Quests
 	QUEST_LEATHER_SHOP_DREAM,
 	QUEST_ESTONI_FUEL,
 
-	QUEST_KILL_DEIDRANNA = 25
+	QUEST_KILL_DEIDRANNA = 25,
+
+	NO_QUEST = 255
 };
 /*
 // The first quest is mandatory. Player must find Miguel and deliver letter to him. The tough
