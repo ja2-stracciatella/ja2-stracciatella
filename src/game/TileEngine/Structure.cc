@@ -1,7 +1,8 @@
-#include "Buffer.h"
 #include "HImage.h"
 #include "LoadSaveData.h"
+#include "SGPFile.h"
 #include "Soldier_Control.h"
+#include "Structure_Internals.h"
 #include "Types.h"
 #include "VObject.h"
 #include "WCheck.h"
@@ -29,7 +30,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <array>
 #include <climits>
+#include <map>
 #include <memory>
 #include <stdexcept>
 #include <string_theory/format>
@@ -54,13 +57,12 @@
  *    starting with the deletion of a MULTI SPECIAL structure
  */
 
-UINT8 AtHeight[PROFILE_Z_SIZE] = { 0x01, 0x02, 0x04, 0x08 };
-
 constexpr UINT16 FIRST_AVAILABLE_STRUCTURE_ID = INVALID_STRUCTURE_ID + 2;
 
 static UINT16 gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
 
-static STRUCTURE_FILE_REF* gpStructureFileRefs;
+// This keeps track of all currently loaded .jsd files.
+static std::map<STRUCTURE_FILE_REF *, ST::string> gpStructureFileRefs;
 
 
 static SoundID const guiMaterialHitSound[NUM_MATERIAL_TYPES] =
@@ -169,54 +171,36 @@ static UINT8 FilledTilePositions(DB_STRUCTURE_TILE const* const t)
 //
 // Structure database functions
 //
-namespace
+STRUCTURE_FILE_REF::~STRUCTURE_FILE_REF()
 {
 	/* Free all of the memory associated with a file reference, including the file
 	 * reference structure itself */
-	void FreeStructureFileRef(STRUCTURE_FILE_REF* const f)
+	for (auto const& dbs : pDBStructureRef)
 	{
-		if (DB_STRUCTURE_REF* const sr = f->pDBStructureRef)
+		delete[] dbs.ppTile;
+	}
+
+	try
+	{
+		if (gpStructureFileRefs.erase(this) != 1)
 		{
-			DB_STRUCTURE_REF const* const end = sr + f->usNumberOfStructures;
-			for (DB_STRUCTURE_REF* i = sr; i != end; ++i)
-			{
-				if (i->ppTile) delete[] i->ppTile;
-			}
-			delete[] sr;
+			SLOGE("Deleting a STRUCTURE_FILE_REF that is not tracked.");
 		}
-		if (f->pubStructureData) delete[] f->pubStructureData;
-		if (f->pAuxData)
-		{
-			delete[] f->pAuxData;
-			if (f->pTileLocData) delete[] f->pTileLocData;
-		}
-		delete f;
+	}
+	catch (...)
+	{
+		// Ignore any exceptions thrown by erase or SLOGE.
 	}
 }
 
 
 void FreeAllStructureFiles()
 { // Free all of the structure database
-	STRUCTURE_FILE_REF* next;
-	for (STRUCTURE_FILE_REF* i = gpStructureFileRefs; i; i = next)
+
+	while (!gpStructureFileRefs.empty())
 	{
-		next = i->pNext;
-		FreeStructureFileRef(i);
+		delete gpStructureFileRefs.begin()->first;
 	}
-}
-
-
-void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
-{
-	CHECKV(sfr);
-
-	STRUCTURE_FILE_REF* const next = sfr->pNext;
-	STRUCTURE_FILE_REF* const prev = sfr->pPrev;
-	Assert((prev == NULL) == (gpStructureFileRefs == sfr));
-	*(prev != NULL ? &prev->pNext : &gpStructureFileRefs) = next;
-	if (next) next->pPrev = prev;
-
-	FreeStructureFileRef(sfr);
 }
 
 
@@ -234,12 +218,13 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
 
 
 // Loads a structure file's data as a honking chunk o' memory
-static void LoadStructureData(ST::string const& filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
+STRUCTURE_FILE_REF::STRUCTURE_FILE_REF(SGPFile & jsdFile)
 {
-	AutoSGPFile f(GCM->openGameResForReading(filename));
+	constexpr UINT8 STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA  = 0x01;
+	constexpr UINT8 STRUCTURE_FILE_CONTAINS_STRUCTUREDATA = 0x02;
 
 	BYTE data[16];
-	f->read(data, sizeof(data));
+	jsdFile.read(data, sizeof(data));
 
 	char   id[4];
 	UINT16 n_structures;
@@ -264,34 +249,25 @@ static void LoadStructureData(ST::string const& filename, STRUCTURE_FILE_REF* co
 		throw std::runtime_error("Failed to load structure file, because header is invalid");
 	}
 
-	SGP::Buffer<AuxObjectData> aux_data;
-	SGP::Buffer<RelTileLoc>    tile_loc_data;
-	sfr->usNumberOfStructures = n_structures;
+	usNumberOfStructures = n_structures;
 	if (flags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
 	{
-		aux_data.Allocate(n_structures);
-		f->read(aux_data, sizeof(*aux_data) * n_structures);
+		pAuxData.resize(n_structures);
+		jsdFile.read(pAuxData.data(), sizeof(AuxObjectData) * n_structures);
 
 		if (n_tile_locs_stored > 0)
 		{
-			tile_loc_data.Allocate(n_tile_locs_stored);
-			f->read(tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs_stored);
+			pTileLocData.resize(n_tile_locs_stored);
+			jsdFile.read(pTileLocData.data(), sizeof(RelTileLoc) * n_tile_locs_stored);
 		}
 	}
 
-	SGP::Buffer<UINT8> structure_data;
 	if (flags & STRUCTURE_FILE_CONTAINS_STRUCTUREDATA)
 	{
-		sfr->usNumberOfStructuresStored = n_structures_stored;
-		structure_data.Allocate(data_size);
-		f->read(structure_data, data_size);
-
-		*structure_data_size = data_size;
+		usNumberOfStructuresStored = n_structures_stored;
+		pubStructureData.resize(data_size);
+		jsdFile.read(pubStructureData.data(), data_size);
 	}
-
-	sfr->pAuxData         = aux_data.Release();
-	sfr->pTileLocData     = tile_loc_data.Release();
-	sfr->pubStructureData = structure_data.Release();
 }
 
 void NormalizeStructureTiles(DB_STRUCTURE_TILE** pTiles, UINT8 ubNumTiles)
@@ -332,13 +308,15 @@ void NormalizeStructureTiles(DB_STRUCTURE_TILE** pTiles, UINT8 ubNumTiles)
 	}
 }
 
-static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32 uiDataSize)
+static void CreateFileStructureArrays(STRUCTURE_FILE_REF & pFileRef)
 { /* Based on a file chunk, creates all the dynamic arrays for the structure
 	 * definitions contained within */
-	UINT8*                  pCurrent        = pFileRef->pubStructureData;
-	DB_STRUCTURE_REF* const pDBStructureRef = new DB_STRUCTURE_REF[pFileRef->usNumberOfStructures]{};
-	pFileRef->pDBStructureRef = pDBStructureRef;
-	for (UINT16 usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; ++usLoop)
+	auto * pCurrent{ pFileRef.pubStructureData.data() };
+	auto & pDBStructureRef{ pFileRef.pDBStructureRef };
+	pDBStructureRef.resize(pFileRef.usNumberOfStructures);
+	size_t uiDataSize{ pFileRef.pubStructureData.size() };
+
+	for (UINT16 usLoop = 0; usLoop < pFileRef.usNumberOfStructuresStored; ++usLoop)
 	{
 		if (uiDataSize < sizeof(DB_STRUCTURE))
 		{	// gone past end of file block?!
@@ -384,15 +362,15 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 
 STRUCTURE_FILE_REF* LoadStructureFile(ST::string const& filename)
 { // NB should be passed in expected number of structures so we can check equality
-	SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFileRef> sfr(new STRUCTURE_FILE_REF{});
-	UINT32 data_size = 0;
-	LoadStructureData(filename, sfr, &data_size);
-	if (sfr->pubStructureData) CreateFileStructureArrays(sfr, data_size);
-	// Add the file reference to the master list, at the head for convenience
-	if (gpStructureFileRefs) gpStructureFileRefs->pPrev = sfr;
-	sfr->pNext = gpStructureFileRefs;
-	gpStructureFileRefs = sfr;
-	return sfr.Release();
+	std::unique_ptr<SGPFile> jsdFile{ GCM->openGameResForReading(filename) };
+	auto sfr{ std::make_unique<STRUCTURE_FILE_REF>(*jsdFile) };
+	if (!sfr->pubStructureData.empty())
+	{
+		CreateFileStructureArrays(*sfr);
+	}
+	// Add the file reference to the master list.
+	gpStructureFileRefs.emplace(sfr.get(), filename);
+	return sfr.release();
 }
 
 
@@ -704,7 +682,10 @@ try
 	 * STRUCTURE elements created in the first stage.  This array gets given to
 	 * the base tile so there is an easy way to remove an entire object from the
 	 * world quickly */
-	SGP::Buffer<STRUCTURE*> structures(pDBStructure->ubNumberOfTiles);
+
+	// Reserve enough space for the theoretical maximum of tiles one
+	// DB_STRUCTURE can have.
+	std::array<STRUCTURE *, 255> structures;
 
 	for (UINT8 i = BASE_TILE; i < pDBStructure->ubNumberOfTiles; ++i)
 	{ // for each tile, create the appropriate STRUCTURE struct
@@ -800,8 +781,7 @@ try
 			// not level ground! abort!
 			for (UINT8 k = BASE_TILE; k < i; ++k)
 			{
-				STRUCTURE* const s = structures[k];
-				DeleteStructureFromTile(&gpWorldLevelData[s->sGridNo], s);
+				DeleteStructureFromTile(me, structures[k]);
 			}
 			return 0;
 		}

@@ -31,27 +31,27 @@ try
 	// Start by hacking the image filename into that for the structure data
 	ST::string cStructureFilename(FileMan::replaceExtension(cFilename, "jsd"));
 
-	AutoStructureFileRef pStructureFileRef;
+	std::unique_ptr<STRUCTURE_FILE_REF> pStructureFileRef;
 	if (GCM->doesGameResExists( cStructureFilename ))
 	{
 		SLOGD("loading tile {}", cStructureFilename);
 
-		pStructureFileRef = LoadStructureFile(cStructureFilename);
+		pStructureFileRef.reset(LoadStructureFile(cStructureFilename));
 
 		if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
 		{
 			throw std::runtime_error("Structure file error");
 		}
 
-		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef, FALSE, 0);
+		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef.get(), FALSE, 0);
 	}
 
 	SGP::PODObj<TILE_IMAGERY> pTileSurf;
 
-	if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
+	if (pStructureFileRef && !pStructureFileRef->pAuxData.empty())
 	{
-		pTileSurf->pAuxData = pStructureFileRef->pAuxData;
-		pTileSurf->pTileLocData = pStructureFileRef->pTileLocData;
+		pTileSurf->pAuxData = pStructureFileRef->pAuxData.data();
+		pTileSurf->pTileLocData = pStructureFileRef->pTileLocData.data();
 	}
 	else if (hImage->uiAppDataSize == hVObject->SubregionCount() * sizeof(AuxObjectData))
 	{
@@ -64,7 +64,7 @@ try
 	}
 
 	pTileSurf->vo                = hVObject.release();
-	pTileSurf->pStructureFileRef = pStructureFileRef.Release();
+	pTileSurf->pStructureFileRef.swap(pStructureFileRef);
 	return pTileSurf.Release();
 }
 catch (...)
@@ -76,19 +76,12 @@ catch (...)
 
 void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 {
-	if ( pTileSurf->pStructureFileRef != NULL )
-	{
-		FreeStructureFile( pTileSurf->pStructureFileRef );
-	}
-	else
+	if (!pTileSurf->pStructureFileRef)
 	{
 		// If a structure file exists, it will free the auxdata.
 		// Since there is no structure file in this instance, we
 		// free it ourselves.
-		if (pTileSurf->pAuxData != NULL)
-		{
-			delete[] pTileSurf->pAuxData;
-		}
+		delete[] pTileSurf->pAuxData;
 	}
 
 	DeleteVideoObject(pTileSurf->vo);
