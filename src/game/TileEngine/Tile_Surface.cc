@@ -64,7 +64,7 @@ try
 	}
 
 	pTileSurf->vo                = hVObject.release();
-	pTileSurf->pStructureFileRef = pStructureFileRef.release();
+	pTileSurf->pStructureFileRef.swap(pStructureFileRef);
 	return pTileSurf.Release();
 }
 catch (...)
@@ -76,19 +76,12 @@ catch (...)
 
 void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 {
-	if ( pTileSurf->pStructureFileRef != NULL )
-	{
-		delete pTileSurf->pStructureFileRef;
-	}
-	else
+	if (!pTileSurf->pStructureFileRef)
 	{
 		// If a structure file exists, it will free the auxdata.
 		// Since there is no structure file in this instance, we
 		// free it ourselves.
-		if (pTileSurf->pAuxData != NULL)
-		{
-			delete[] pTileSurf->pAuxData;
-		}
+		delete[] pTileSurf->pAuxData;
 	}
 
 	DeleteVideoObject(pTileSurf->vo);

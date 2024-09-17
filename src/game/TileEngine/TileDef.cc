@@ -64,8 +64,7 @@ void CreateTileDatabase()
 		UINT32 cnt2;
 		for (cnt2 = 0; cnt2 < NumRegions; ++cnt2)
 		{
-			TILE_ELEMENT TileElement;
-			TileElement = TILE_ELEMENT{};
+			TILE_ELEMENT TileElement{};
 			TileElement.usRegionIndex = (UINT16)cnt2;
 			TileElement.hTileSurface	= TileSurf->vo;
 			TileElement.sBuddyNum			= -1;
@@ -75,7 +74,7 @@ void CreateTileDatabase()
 			if (zsi && zsi[cnt2]) TileElement.uiFlags |= MULTI_Z_TILE;
 
 			// Structure database stuff!
-			STRUCTURE_FILE_REF * const sfr = TileSurf->pStructureFileRef;
+			auto const& sfr{ TileSurf->pStructureFileRef };
 			if (sfr && !sfr->pubStructureData.empty())
 			{
 				auto & sr = sfr->pDBStructureRef[cnt2];

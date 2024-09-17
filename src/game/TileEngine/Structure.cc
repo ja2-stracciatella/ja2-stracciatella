@@ -57,8 +57,6 @@
  *    starting with the deletion of a MULTI SPECIAL structure
  */
 
-UINT8 AtHeight[PROFILE_Z_SIZE] = { 0x01, 0x02, 0x04, 0x08 };
-
 constexpr UINT16 FIRST_AVAILABLE_STRUCTURE_ID = INVALID_STRUCTURE_ID + 2;
 
 static UINT16 gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
@@ -222,6 +220,9 @@ void FreeAllStructureFiles()
 // Loads a structure file's data as a honking chunk o' memory
 STRUCTURE_FILE_REF::STRUCTURE_FILE_REF(SGPFile & jsdFile)
 {
+	constexpr UINT8 STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA  = 0x01;
+	constexpr UINT8 STRUCTURE_FILE_CONTAINS_STRUCTUREDATA = 0x02;
+
 	BYTE data[16];
 	jsdFile.read(data, sizeof(data));
 

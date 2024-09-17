@@ -3,6 +3,7 @@
 
 #include "JA2Types.h"
 #include "TileDat.h"
+#include <memory>
 #include <optional>
 
 // CATEGORY TYPES
@@ -39,7 +40,7 @@ enum WallOrientationDefines
 };
 
 // TERRAIN ID VALUES.
-enum TerrainTypeDefines
+enum TerrainTypeDefines : UINT8
 {
 	NO_TERRAIN,
 	FLAT_GROUND,
@@ -60,15 +61,12 @@ enum TerrainTypeDefines
 struct TILE_IMAGERY
 {
 	HVOBJECT           vo;
-	UINT32             fType;
 	AuxObjectData      *pAuxData;
 	RelTileLoc         *pTileLocData;
-	STRUCTURE_FILE_REF *pStructureFileRef;
-	UINT8              ubTerrainID;
-	BYTE               bRaisedObjectType;
-
-	// Reserved for added room and 32-byte boundaries
-	BYTE               bReserved[2];
+	std::unique_ptr<STRUCTURE_FILE_REF> pStructureFileRef;
+	TileTypeDefines    fType;
+	TerrainTypeDefines ubTerrainID;
+	bool               bRaisedObjectType;
 };
 
 struct TILE_ANIMATION_DATA

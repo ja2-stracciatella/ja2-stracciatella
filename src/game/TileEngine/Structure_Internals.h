@@ -44,9 +44,9 @@
 #define STRUCTURE_ON_GROUND_MAX PROFILE_Z_SIZE
 #define STRUCTURE_ON_ROOF_MAX PROFILE_Z_SIZE * 2
 
-typedef UINT8 PROFILE[PROFILE_X_SIZE][PROFILE_Y_SIZE];
+using PROFILE = const UINT8[PROFILE_X_SIZE][PROFILE_Y_SIZE];
 
-extern UINT8 AtHeight[PROFILE_Z_SIZE];
+constexpr UINT8 AtHeight[PROFILE_Z_SIZE] { 0x01, 0x02, 0x04, 0x08 };
 
 // MAP_ELEMENT may get later:
 // PROFILE *		CombinedLOSProfile;
@@ -188,7 +188,6 @@ struct STRUCTURE
 	UINT8													ubWallOrientation;
 	UINT8													ubVehicleHitLocation;
 	UINT8													ubStructureHeight; // if 0, then unset; otherwise stores height of structure when last calculated
-	UINT8													ubUnused[1]; // XXX HACK000B
 };
 
 struct STRUCTURE_FILE_REF
@@ -197,14 +196,11 @@ struct STRUCTURE_FILE_REF
 	std::vector<RelTileLoc>       pTileLocData;
 	std::vector<std::byte>        pubStructureData;
 	std::vector<DB_STRUCTURE_REF> pDBStructureRef;
-	UINT16              usNumberOfStructures;
-	UINT16              usNumberOfStructuresStored;
+	UINT16                        usNumberOfStructures{ 0 };
+	UINT16                        usNumberOfStructuresStored{ 0 };
 
 	STRUCTURE_FILE_REF(SGPFile & jsdFile);
 	~STRUCTURE_FILE_REF();
 };
-
-#define STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA		0x01
-#define STRUCTURE_FILE_CONTAINS_STRUCTUREDATA		0x02
 
 #endif
