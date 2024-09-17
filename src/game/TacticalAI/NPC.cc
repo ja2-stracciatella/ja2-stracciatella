@@ -241,9 +241,12 @@ static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 	}
 	else m_arr = GCM->getScriptRecords(ubNPC);
 
-	NPCQuoteInfo* arr_copy{ new NPCQuoteInfo[NUM_NPC_QUOTE_RECORDS] };
-	std::copy(m_arr, m_arr + NUM_NPC_QUOTE_RECORDS, arr_copy);
-	return arr_copy;
+	if (m_arr != nullptr) {
+		NPCQuoteInfo* arr_copy{ new NPCQuoteInfo[NUM_NPC_QUOTE_RECORDS] };
+		std::copy(m_arr, m_arr + NUM_NPC_QUOTE_RECORDS, arr_copy);
+		return arr_copy;
+	}
+	else return nullptr;
 }
 
 static void RevertToOriginalQuoteFile(UINT8 ubNPC)
