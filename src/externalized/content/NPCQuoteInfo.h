@@ -5,7 +5,6 @@
 #include "Types.h"
 #include <memory>
 
-constexpr UINT8 NO_QUEST = 255;
 constexpr UINT8 QUEST_NOT_STARTED_NUM = 100;
 constexpr UINT8 QUEST_DONE_NUM = 200;
 constexpr UINT8 NO_QUOTE = 255;
