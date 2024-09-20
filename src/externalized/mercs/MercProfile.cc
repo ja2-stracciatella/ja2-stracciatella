@@ -140,7 +140,7 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValu
 	}
 	prof->ubCivilianGroup = Internals::getCivilianGroupEnumFromString(r.getOptionalString("civilianGroup"));
 	if (r.getOptionalBool("isGoodGuy")) {
-		prof->ubMiscFlags |= PROFILE_MISC_FLAG3_GOODGUY;
+		prof->ubMiscFlags3 |= PROFILE_MISC_FLAG3_GOODGUY;
 	}
 
 	prof->ubBodyType = Internals::getBodyTypeEnumFromString(r.getOptionalString("bodyType"));
