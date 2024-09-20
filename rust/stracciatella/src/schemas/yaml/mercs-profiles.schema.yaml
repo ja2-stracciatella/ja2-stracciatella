@@ -111,7 +111,7 @@ items:
     sector:
       $ref: types/sector-id-long.schema.yaml
     town:
-      $ref: types/town.schema.yaml
+      type: string
     townAttachment:
       $ref: types/percentage.schema.yaml
     isTownIndifferentIfDead:

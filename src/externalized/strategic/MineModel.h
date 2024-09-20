@@ -1,9 +1,9 @@
 #pragma once
 
+#include "ContentManager.h"
 #include "Json.h"
 
 #include <array>
-#include <string>
 #include <vector>
 
 class MineModel
@@ -29,6 +29,6 @@ public:
 
 	const int16_t faceDisplayYOffset;
 
-	static MineModel* deserialize(uint8_t index, const JsonValue& json);
+	static MineModel* deserialize(uint8_t index, const JsonValue& json, const ContentManager* contentManager);
 	static void validateData(std::vector<const MineModel*>& models);
 };

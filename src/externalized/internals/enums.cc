@@ -715,46 +715,6 @@ const SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
 	else throw DataError(ST::format("unknown skill trait value: {}", s));
 }
 
-// TODO: Should be refactored away by adding internalName property to TownModel and strategic-map-towns.json
-const char* Internals::getTownName(enum Towns town)
-{
-	switch (town)
-	{
-		case BLANK_SECTOR:				return "BLANK_SECTOR";
-		case OMERTA:					return "OMERTA";
-		case DRASSEN:					return "DRASSEN";
-		case ALMA:						return "ALMA";
-		case GRUMM:						return "GRUMM";
-		case TIXA:						return "TIXA";
-		case CAMBRIA:					return "CAMBRIA";
-		case SAN_MONA:					return "SAN_MONA";
-		case ESTONI:					return "ESTONI";
-		case ORTA:						return "ORTA";
-		case BALIME:					return "BALIME";
-		case MEDUNA:					return "MEDUNA";
-		case CHITZENA:					return "CHITZENA";
-		default:						return "???";
-	}
-}
-
-const Towns Internals::getTownEnumFromString(const ST::string& s)
-{
-	if (s == "") return Towns::BLANK_SECTOR;
-	else if (s == "OMERTA") return Towns::OMERTA;
-	else if (s == "DRASSEN") return Towns::DRASSEN;
-	else if (s == "ALMA") return Towns::ALMA;
-	else if (s == "GRUMM") return Towns::GRUMM;
-	else if (s == "TIXA") return Towns::TIXA;
-	else if (s == "CAMBRIA") return Towns::CAMBRIA;
-	else if (s == "SAN_MONA") return Towns::SAN_MONA;
-	else if (s == "ESTONI") return Towns::ESTONI;
-	else if (s == "ORTA") return Towns::ORTA;
-	else if (s == "BALIME") return Towns::BALIME;
-	else if (s == "MEDUNA") return Towns::MEDUNA;
-	else if (s == "CHITZENA") return Towns::CHITZENA;
-	else throw DataError(ST::format("unknown town name value: {}", s));
-}
-
 const char* Internals::getMercTypeName(enum MercType mercType)
 {
 	switch (mercType)

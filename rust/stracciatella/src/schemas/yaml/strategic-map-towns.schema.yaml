@@ -10,6 +10,8 @@ items:
       title: Town ID
       description: The numeric ID of the town as set in codebase
       $ref: types/int8.schema.yaml
+    internalName:
+      type: string
     sectors:
       title: Sectors
       description: List of sectors belonging to the town.
@@ -40,6 +42,7 @@ items:
       type: boolean
   required:
   - townId
+  - internalName
   - sectors
   - townPoint
   - isMilitiaTrainingAllowed

@@ -3,6 +3,7 @@
 #include "MercProfile.h"
 #include "MercProfileInfo.h"
 #include "Soldier_Profile_Type.h"
+#include "TownModel.h"
 
 MercProfile::MercProfile(ProfileID profileID) : m_profileID(profileID)
 {
@@ -215,7 +216,10 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValu
 		}
 	}
 
-	prof->bTown = Internals::getTownEnumFromString(r.getOptionalString("town"));
+	ST::string jTown = r.getOptionalString("town");
+	if (!jTown.empty()) {
+		prof->bTown = contentManager->getTownByName(jTown)->townId;
+	}
 	prof->bTownAttachment = r.getOptionalUInt("townAttachment");
 	if (r.getOptionalBool("isTownIndifferentIfDead")) {
 		prof->ubMiscFlags3 |= PROFILE_MISC_FLAG3_TOWN_DOESNT_CARE_ABOUT_DEATH;
@@ -380,7 +384,7 @@ JsonValue MercProfile::serializeStruct(const ContentManager* contentManager) con
 		else obj.set("075sector", prof->sSector.AsShortString());
 	}
 	if (prof->bTown > 0) {
-		obj.set("076town", Internals::getTownName(static_cast<Towns>(prof->bTown)));
+		obj.set("076town", contentManager->getTown(prof->bTown)->internalName);
 	}
 	if (prof->bTownAttachment > 0) {
 		obj.set("077townAttachment", prof->bTownAttachment);
