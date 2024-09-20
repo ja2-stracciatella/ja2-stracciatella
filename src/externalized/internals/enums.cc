@@ -44,7 +44,7 @@ const char* Internals::getApproachName(enum Approach approach)
 	}
 }
 
-const Approach Internals::getApproachEnumFromString(const ST::string& s)
+Approach Internals::getApproachEnumFromString(const ST::string& s)
 {
 			if (s == "" || s == "NONE") return Approach::APPROACH_NONE;
 			else if (s == "FRIENDLY") return Approach::APPROACH_FRIENDLY;
@@ -455,7 +455,7 @@ const char* Internals::getInventorySlotName(enum InvSlotPos slot)
 	}
 }
 
-const InvSlotPos Internals::getInventorySlotEnumFromString(const ST::string& s)
+InvSlotPos Internals::getInventorySlotEnumFromString(const ST::string& s)
 {
 			if (s == "HELMET") return InvSlotPos::HELMETPOS;
 			else if (s == "VEST") return InvSlotPos::VESTPOS;
@@ -508,7 +508,7 @@ const char* Internals::getCivilianGroupName(enum CivilianGroup group)
 	}
 }
 
-const CivilianGroup Internals::getCivilianGroupEnumFromString(const ST::string& s)
+CivilianGroup Internals::getCivilianGroupEnumFromString(const ST::string& s)
 {
 	if (s.empty() || s == "NON_CIV") return CivilianGroup::NON_CIV_GROUP;
 	else if (s == "REBEL") return CivilianGroup::REBEL_CIV_GROUP;
@@ -571,7 +571,7 @@ const char* Internals::getBodyTypeName(enum SoldierBodyType type)
 	}
 }
 
-const SoldierBodyType Internals::getBodyTypeEnumFromString(const ST::string& s)
+SoldierBodyType Internals::getBodyTypeEnumFromString(const ST::string& s)
 {
 	if (s == "BODY_RANDOM") return SoldierBodyType::BODY_RANDOM;
 	else if (s == "" || s == "REGMALE") return SoldierBodyType::REGMALE;
@@ -624,7 +624,7 @@ const char* Internals::getAttitudeName(enum Attitudes attitude)
 	}
 }
 
-const Attitudes Internals::getAttitudeEnumFromString(const ST::string& s)
+Attitudes Internals::getAttitudeEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NORMAL") return Attitudes::ATT_NORMAL;
 	else if (s == "FRIENDLY") return Attitudes::ATT_FRIENDLY;
@@ -656,7 +656,7 @@ const char* Internals::getPersonalityTraitName(enum PersonalityTrait trait)
 	}
 }
 
-const PersonalityTrait Internals::getPersonalityTraitEnumFromString(const ST::string& s)
+PersonalityTrait Internals::getPersonalityTraitEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NO_PERSONALITYTRAIT") return PersonalityTrait::NO_PERSONALITYTRAIT;
 	else if (s == "HEAT_INTOLERANT") return PersonalityTrait::HEAT_INTOLERANT;
@@ -694,7 +694,7 @@ const char* Internals::getSkillTraitName(enum SkillTrait trait)
 	}
 }
 
-const SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
+SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NO_SKILLTRAIT") return SkillTrait::NO_SKILLTRAIT;
 	else if (s == "LOCKPICKING") return SkillTrait::LOCKPICKING;
@@ -730,7 +730,7 @@ const char* Internals::getMercTypeName(enum MercType mercType)
 	}
 }
 
-const MercType Internals::getMercTypeEnumFromString(const ST::string& s)
+MercType Internals::getMercTypeEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NOT_USED") return MercType::NOT_USED;
 	else if (s == "AIM")			return MercType::AIM;
