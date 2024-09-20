@@ -6,6 +6,7 @@
 #include "Overhead_Types.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
+#include "Quests.h"
 
 namespace Internals
 {
@@ -45,4 +46,6 @@ namespace Internals
 
 	const char* getMercTypeName(enum MercType mercType);
 	MercType getMercTypeEnumFromString(const ST::string& s);
+
+	Quests getQuestEnumFromString(const ST::string& s);
 }

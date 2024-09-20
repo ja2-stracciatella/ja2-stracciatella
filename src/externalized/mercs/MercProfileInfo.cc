@@ -1,27 +1,12 @@
+#include "Enums.h"
 #include "MercProfileInfo.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
-#include <string_theory/format>
-#include <string_theory/string>
 #include <algorithm>
 #include <utility>
 
 
 std::function<const MercProfileInfo*(ProfileID)> MercProfileInfo::load = {};
-
-static MercType MercTypeFromString(const ST::string& name)
-{
-	if (name == "NOT_USED")     return MercType::NOT_USED;
-	else if (name == "AIM")     return MercType::AIM;
-	else if (name == "MERC")    return MercType::MERC;
-	else if (name == "IMP")     return MercType::IMP;
-	else if (name == "RPC")     return MercType::RPC;
-	else if (name == "NPC")     return MercType::NPC;
-	else if (name == "VEHICLE") return MercType::VEHICLE;
-
-	ST::string err = ST::format("unsupported MercType: '{}'", name);
-	throw std::runtime_error(err.to_std_string());
-}
 
 MercProfileInfo::MercProfileInfo(uint8_t profileID_, ST::string internalName_, MercType mercType_, uint8_t weaponSaleModifier_)
 	: internalName(std::move(internalName_)), profileID(profileID_), mercType(mercType_), weaponSaleModifier(weaponSaleModifier_)
@@ -39,7 +24,7 @@ MercProfileInfo *MercProfileInfo::deserialize(const JsonValue& json)
 	return new MercProfileInfo(
 		r.GetUInt("profileID"),
 		r.GetString("internalName"),
-		MercTypeFromString(r.GetString("type")),
+		Internals::getMercTypeEnumFromString(r.GetString("type")),
 		std::clamp(r.getOptionalInt("weaponSaleModifier", 100), 10, 180)
 		);
 }

@@ -2,7 +2,6 @@
 #include "ContentManager.h"
 #include "Soldier_Profile.h"
 #include "JA2Types.h"
-#include <functional>
 
 enum class MercType : int8_t;
 class MercProfileInfo;
