@@ -1,5 +1,5 @@
 #include "ContentManager.h"
-#include "Enums.h"
+#include "enums.h"
 #include "Interface_Dialogue.h"
 #include "ItemModel.h"
 #include "Json.h"
