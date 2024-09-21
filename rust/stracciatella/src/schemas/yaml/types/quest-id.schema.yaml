@@ -24,7 +24,7 @@ oneOf:
       - ESCORT_TOURISTS
       - FREE_CHILDREN
       - LEATHER_SHOP_DREAM
-      - ESTONI_FUEL
+      - FREE_SHANK
       - KILL_DEIDRANNA
   - type: integer
     title: Quest index

@@ -767,7 +767,7 @@ Quests Internals::getQuestEnumFromString(const ST::string& s)
 	else if (s == "ESCORT_TOURISTS") return Quests::QUEST_ESCORT_TOURISTS;
 	else if (s == "FREE_CHILDREN") return Quests::QUEST_FREE_CHILDREN;
 	else if (s == "LEATHER_SHOP_DREAM") return Quests::QUEST_LEATHER_SHOP_DREAM;
-	else if (s == "ESTONI_FUEL") return Quests::QUEST_ESTONI_FUEL;
+	else if (s == "FREE_SHANK") return Quests::QUEST_FREE_SHANK;
 	else if (s == "KILL_DEIDRANNA") return Quests::QUEST_KILL_DEIDRANNA;
 	else throw DataError(ST::format("unknown quest name value: {}", s));
 }
