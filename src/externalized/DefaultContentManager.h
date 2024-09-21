@@ -147,6 +147,7 @@ public:
 	virtual const SamSiteModel* findSamSiteBySector(uint8_t sectorId) const override;
 	virtual       int8_t getControllingSamSite(uint8_t sectorId) const override;
 	virtual const TownModel* getTown(int8_t townId) const  override;
+	virtual const TownModel* getTownByName(const ST::string& name) const  override;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const override;
 	virtual const ST::string getTownName(uint8_t townId) const override;
 	virtual const ST::string getTownLocative(uint8_t townId) const override;
@@ -277,6 +278,9 @@ protected:
 	RustPointer<Vfs> m_vfs;
 
 	bool loadGameData(const VanillaItemStrings& vanillaItemStrings);
+	/* Extracts the content that requires load precedence and it can't be resolved
+	   by changing the order of execution of other functions. */
+	bool loadPrioritizedData();
 	bool loadWeapons(const VanillaItemStrings& vanillaItemStrings);
 	bool loadSmokeEffects();
 	bool loadExplosionAnimations();

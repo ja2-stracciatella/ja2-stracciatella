@@ -44,7 +44,7 @@ const char* Internals::getApproachName(enum Approach approach)
 	}
 }
 
-const Approach Internals::getApproachEnumFromString(const ST::string& s)
+Approach Internals::getApproachEnumFromString(const ST::string& s)
 {
 			if (s == "" || s == "NONE") return Approach::APPROACH_NONE;
 			else if (s == "FRIENDLY") return Approach::APPROACH_FRIENDLY;
@@ -455,7 +455,7 @@ const char* Internals::getInventorySlotName(enum InvSlotPos slot)
 	}
 }
 
-const InvSlotPos Internals::getInventorySlotEnumFromString(const ST::string& s)
+InvSlotPos Internals::getInventorySlotEnumFromString(const ST::string& s)
 {
 			if (s == "HELMET") return InvSlotPos::HELMETPOS;
 			else if (s == "VEST") return InvSlotPos::VESTPOS;
@@ -508,7 +508,7 @@ const char* Internals::getCivilianGroupName(enum CivilianGroup group)
 	}
 }
 
-const CivilianGroup Internals::getCivilianGroupEnumFromString(const ST::string& s)
+CivilianGroup Internals::getCivilianGroupEnumFromString(const ST::string& s)
 {
 	if (s.empty() || s == "NON_CIV") return CivilianGroup::NON_CIV_GROUP;
 	else if (s == "REBEL") return CivilianGroup::REBEL_CIV_GROUP;
@@ -571,7 +571,7 @@ const char* Internals::getBodyTypeName(enum SoldierBodyType type)
 	}
 }
 
-const SoldierBodyType Internals::getBodyTypeEnumFromString(const ST::string& s)
+SoldierBodyType Internals::getBodyTypeEnumFromString(const ST::string& s)
 {
 	if (s == "BODY_RANDOM") return SoldierBodyType::BODY_RANDOM;
 	else if (s == "" || s == "REGMALE") return SoldierBodyType::REGMALE;
@@ -624,7 +624,7 @@ const char* Internals::getAttitudeName(enum Attitudes attitude)
 	}
 }
 
-const Attitudes Internals::getAttitudeEnumFromString(const ST::string& s)
+Attitudes Internals::getAttitudeEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NORMAL") return Attitudes::ATT_NORMAL;
 	else if (s == "FRIENDLY") return Attitudes::ATT_FRIENDLY;
@@ -656,7 +656,7 @@ const char* Internals::getPersonalityTraitName(enum PersonalityTrait trait)
 	}
 }
 
-const PersonalityTrait Internals::getPersonalityTraitEnumFromString(const ST::string& s)
+PersonalityTrait Internals::getPersonalityTraitEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NO_PERSONALITYTRAIT") return PersonalityTrait::NO_PERSONALITYTRAIT;
 	else if (s == "HEAT_INTOLERANT") return PersonalityTrait::HEAT_INTOLERANT;
@@ -694,7 +694,7 @@ const char* Internals::getSkillTraitName(enum SkillTrait trait)
 	}
 }
 
-const SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
+SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NO_SKILLTRAIT") return SkillTrait::NO_SKILLTRAIT;
 	else if (s == "LOCKPICKING") return SkillTrait::LOCKPICKING;
@@ -715,46 +715,6 @@ const SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
 	else throw DataError(ST::format("unknown skill trait value: {}", s));
 }
 
-// TODO: Should be refactored away by adding internalName property to TownModel and strategic-map-towns.json
-const char* Internals::getTownName(enum Towns town)
-{
-	switch (town)
-	{
-		case BLANK_SECTOR:				return "BLANK_SECTOR";
-		case OMERTA:					return "OMERTA";
-		case DRASSEN:					return "DRASSEN";
-		case ALMA:						return "ALMA";
-		case GRUMM:						return "GRUMM";
-		case TIXA:						return "TIXA";
-		case CAMBRIA:					return "CAMBRIA";
-		case SAN_MONA:					return "SAN_MONA";
-		case ESTONI:					return "ESTONI";
-		case ORTA:						return "ORTA";
-		case BALIME:					return "BALIME";
-		case MEDUNA:					return "MEDUNA";
-		case CHITZENA:					return "CHITZENA";
-		default:						return "???";
-	}
-}
-
-const Towns Internals::getTownEnumFromString(const ST::string& s)
-{
-	if (s == "") return Towns::BLANK_SECTOR;
-	else if (s == "OMERTA") return Towns::OMERTA;
-	else if (s == "DRASSEN") return Towns::DRASSEN;
-	else if (s == "ALMA") return Towns::ALMA;
-	else if (s == "GRUMM") return Towns::GRUMM;
-	else if (s == "TIXA") return Towns::TIXA;
-	else if (s == "CAMBRIA") return Towns::CAMBRIA;
-	else if (s == "SAN_MONA") return Towns::SAN_MONA;
-	else if (s == "ESTONI") return Towns::ESTONI;
-	else if (s == "ORTA") return Towns::ORTA;
-	else if (s == "BALIME") return Towns::BALIME;
-	else if (s == "MEDUNA") return Towns::MEDUNA;
-	else if (s == "CHITZENA") return Towns::CHITZENA;
-	else throw DataError(ST::format("unknown town name value: {}", s));
-}
-
 const char* Internals::getMercTypeName(enum MercType mercType)
 {
 	switch (mercType)
@@ -770,7 +730,7 @@ const char* Internals::getMercTypeName(enum MercType mercType)
 	}
 }
 
-const MercType Internals::getMercTypeEnumFromString(const ST::string& s)
+MercType Internals::getMercTypeEnumFromString(const ST::string& s)
 {
 	if (s == "" || s == "NOT_USED") return MercType::NOT_USED;
 	else if (s == "AIM")			return MercType::AIM;
@@ -780,4 +740,34 @@ const MercType Internals::getMercTypeEnumFromString(const ST::string& s)
 	else if (s == "NPC")			return MercType::NPC;
 	else if (s == "VEHICLE")		return MercType::VEHICLE;
 	else throw DataError(ST::format("unknown merc type value: {}", s));
+}
+
+Quests Internals::getQuestEnumFromString(const ST::string& s)
+{
+	if (s.empty() || s == "NO_QUEST") return Quests::NO_QUEST;
+	else if (s == "DELIVER_LETTER") return Quests::QUEST_DELIVER_LETTER;
+	else if (s == "FOOD_ROUTE") return Quests::QUEST_FOOD_ROUTE;
+	else if (s == "KILL_TERRORISTS") return Quests::QUEST_KILL_TERRORISTS;
+	else if (s == "KINGPIN_IDOL") return Quests::QUEST_KINGPIN_IDOL;
+	else if (s == "KINGPIN_MONEY") return Quests::QUEST_KINGPIN_MONEY;
+	else if (s == "RUNAWAY_JOEY") return Quests::QUEST_RUNAWAY_JOEY;
+	else if (s == "RESCUE_MARIA") return Quests::QUEST_RESCUE_MARIA;
+	else if (s == "CHITZENA_IDOL") return Quests::QUEST_CHITZENA_IDOL;
+	else if (s == "HELD_IN_ALMA") return Quests::QUEST_HELD_IN_ALMA;
+	else if (s == "INTERROGATION") return Quests::QUEST_INTERROGATION;
+	else if (s == "ARMY_FARM") return Quests::QUEST_ARMY_FARM;
+	else if (s == "FIND_SCIENTIST") return Quests::QUEST_FIND_SCIENTIST;
+	else if (s == "DELIVER_VIDEO_CAMERA") return Quests::QUEST_DELIVER_VIDEO_CAMERA;
+	else if (s == "BLOODCATS") return Quests::QUEST_BLOODCATS;
+	else if (s == "FIND_HERMIT") return Quests::QUEST_FIND_HERMIT;
+	else if (s == "CREATURES") return Quests::QUEST_CREATURES;
+	else if (s == "CHOPPER_PILOT") return Quests::QUEST_CHOPPER_PILOT;
+	else if (s == "ESCORT_SKYRIDER") return Quests::QUEST_ESCORT_SKYRIDER;
+	else if (s == "FREE_DYNAMO") return Quests::QUEST_FREE_DYNAMO;
+	else if (s == "ESCORT_TOURISTS") return Quests::QUEST_ESCORT_TOURISTS;
+	else if (s == "FREE_CHILDREN") return Quests::QUEST_FREE_CHILDREN;
+	else if (s == "LEATHER_SHOP_DREAM") return Quests::QUEST_LEATHER_SHOP_DREAM;
+	else if (s == "FREE_SHANK") return Quests::QUEST_FREE_SHANK;
+	else if (s == "KILL_DEIDRANNA") return Quests::QUEST_KILL_DEIDRANNA;
+	else throw DataError(ST::format("unknown quest name value: {}", s));
 }

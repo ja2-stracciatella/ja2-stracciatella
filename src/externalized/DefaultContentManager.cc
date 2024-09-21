@@ -800,6 +800,8 @@ bool DefaultContentManager::loadGameData()
 /** Load the game data. */
 bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemStrings)
 {
+	loadPrioritizedData();
+
 	m_items.resize(MAXITEMS);
 	bool result = loadItems(vanillaItemStrings)
 		&& loadCalibres()
@@ -913,6 +915,17 @@ JsonValue DefaultContentManager::readJsonDataFileWithSchema(const ST::string& js
 		throw DataError(ST::format("JSON schema validation error(s) occurred when validating JSON file `{}`", jsonPath));
 	}
 	return value;
+}
+
+bool DefaultContentManager::loadPrioritizedData()
+{
+	auto json = readJsonDataFileWithSchema("strategic-map-towns.json");
+	for (auto& element : json.toVec()) {
+		auto town = TownModel::deserialize(element);
+		m_towns.insert(std::make_pair(town->townId, town));
+	}
+
+	return true;
 }
 
 const DealerInventory * DefaultContentManager::loadDealerInventory(const ST::string& fileName)
@@ -1084,7 +1097,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	for (auto& element : json.toVec())
 	{
 		m_mines.push_back(
-			MineModel::deserialize(i, element)
+			MineModel::deserialize(i, element, this)
 		);
 		i++;
 	}
@@ -1101,13 +1114,6 @@ bool DefaultContentManager::loadStrategicLayerData()
 	json = readJsonDataFileWithSchema("strategic-map-sam-sites-air-control.json");
 	m_samSitesAirControl.reset(SamSiteAirControlModel::deserialize(json));
 	SamSiteAirControlModel::validateData(m_samSitesAirControl.get(), m_samSites.size());
-
-	json = readJsonDataFileWithSchema("strategic-map-towns.json");
-	for (auto& element : json.toVec())
-	{
-		auto town = TownModel::deserialize(element);
-		m_towns.insert(std::make_pair(town->townId, town));
-	}
 
 	loadStringRes("strings/strategic-map-town-names", m_townNames);
 	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
@@ -1372,6 +1378,16 @@ const TownModel* DefaultContentManager::getTown(int8_t townId) const
 {
 	auto iter = m_towns.find(townId);
 	return (iter != m_towns.end()) ? iter->second : NULL;
+}
+
+const TownModel* DefaultContentManager::getTownByName(const ST::string& name) const
+{
+	for (auto i = m_towns.begin(); i != m_towns.end(); i++) {
+		if (i->second->internalName == name) {
+			return i->second;
+		}
+	}
+	throw DataError(ST::format("TownModel is not defined for {}", name));
 }
 
 const std::vector<const SamSiteModel*>& DefaultContentManager::getSamSites() const

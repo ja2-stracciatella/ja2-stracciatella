@@ -3,91 +3,92 @@
  *
  * Field definitions:
  *  - townId:    The numeric ID of the town as set in codebase
+ *  - internalName:    The name to refer to this town from other json files
  *  - sectors:    List of sectors belonging to the town.
  *  - townPoint:    Position of town names on the map. These are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town.
  *  - isMilitiaTrainingAllowed:   Whether or not militia is allowed in town
  */
 [
-	// OMERTA
 	{ 
 		"townId": 1,
+		"internalName": "OMERTA",
 		"sectors": [ "A9", "A10" ],
 		"townPoint": { "x": 90, "y": 10 },
 		"isMilitiaTrainingAllowed": false
 	},
-	// DRASSEN
 	{ 
 		"townId": 2,
+		"internalName": "DRASSEN",
 		"sectors": [ "B13", "C13", "D13" ],
 		"townPoint": { "x": 125, "y": 40 },
 		"isMilitiaTrainingAllowed": true
 	},
-	// ALMA
 	{ 
 		"townId": 3,
+		"internalName": "ALMA",
 		"sectors": [ "H13", "H14", "I13", "I14" ],
 		"townPoint": { "x": 130, "y": 90 },
 		"isMilitiaTrainingAllowed": true
 	},
-	// GRUMM
 	{
 		"townId": 4,
+		"internalName": "GRUMM",
 		"sectors": [ "G1", "G2", "H1", "H2", "H3" ],
 		"townPoint": { "x": 15, "y": 80 },
 		"isMilitiaTrainingAllowed": true
 	},
-	// TIXA
 	{
 		"townId": 5,
+		"internalName": "TIXA",
 		"sectors": [ "J9" ],
 		"townPoint": { "x": 85, "y": 100 },
 		"isMilitiaTrainingAllowed": false
 	},
-	// CAMBRIA
 	{
 		"townId": 6,
+		"internalName": "CAMBRIA",
 		"sectors": [ "F8", "F9", "G8", "G9", "H8" ],
 		"townPoint": { "x": 95, "y": 70 },
 		"isMilitiaTrainingAllowed": true
 	},
-	// SAN_MONA
 	{
 		"townId": 7,
+		"internalName": "SAN_MONA",
 		"sectors": [ "C5", "C6", "D4", "D5" ],
 		"townPoint": { "x": 45, "y": 40 },
 		"isMilitiaTrainingAllowed": false
 	},
-	// ESTONI
 	{
 		"townId": 8,
+		"internalName": "ESTONI",
 		"sectors": [ "I6" ],
 		"townPoint": { "x": 55, "y": 90 },
 		"isMilitiaTrainingAllowed": false
 	},
-	// ORTA
 	{
 		"townId": 9,
+		"internalName": "ORTA",
 		"sectors": [ "K4" ],
 		"townPoint": { "x": 35, "y": 110 },
 		"isMilitiaTrainingAllowed": false
 	},
-	// BALIME
 	{
 		"townId": 10,
+		"internalName": "BALIME",
 		"sectors": [ "L11", "L12" ],
 		"townPoint": { "x": 110, "y": 120 },
 		"isMilitiaTrainingAllowed": true
 	},
-	// MEDUNA
 	{
 		"townId": 11,
+		"internalName": "MEDUNA",
 		"sectors": [ "N3", "N4", "N5", "O3", "O4", "P3" ],
 		"townPoint": { "x": 45, "y": 150 },
 		"isMilitiaTrainingAllowed": true
 	},
-	// CHITZENA
 	{ 
 		"townId": 12,
+		"internalName": "CHITZENA",
 		"sectors": [ "A2", "B2" ],
 		"townPoint": { "x": 15, "y": 20 },
 		"isMilitiaTrainingAllowed": true

@@ -1496,7 +1496,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 25, // "You get me to Estoni and I could probably make some arrangements to get some fuel. Don't know if it interests you, but it's a thought."
                 "numQuotes": 1,
-                "startQuest": "ESTONI_FUEL",
+                "startQuest": "FREE_SHANK",
                 "actionData": {
                     "code": 23 // NPC_ACTION_RECRUIT_WITH_SALARY
                 }
@@ -10030,7 +10030,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 34, // "Ya know, if you're looking for fuel, I'd be one of the few places in the country where ya can get it. Got myself a nice little black market going."
                 "numQuotes": 1,
-                "endQuest": "ESTONI_FUEL",
+                "endQuest": "FREE_SHANK",
                 "setFactTrue": 277, // FACT_ESTONI_REFUELLING_POSSIBLE
                 "actionData": {
                     "code": 256 // NPC_ACTION_MAKE_ESTONI_A_FUEL_SITE
