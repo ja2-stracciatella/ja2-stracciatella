@@ -1,4 +1,4 @@
-#include "Enums.h"
+#include "enums.h"
 #include "MercProfileInfo.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
