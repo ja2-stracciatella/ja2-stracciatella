@@ -942,21 +942,26 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 
 	// OK, here we: Get explosive data
-	const ExplosiveModel* pExplosive =  GCM->getExplosive(usItem);
+	const ExplosiveModel* pExplosive = nullptr;
 
-	uiRoll = PreRandom( 100 );
+	// Some explosions dont have an explosive associated with them, e.g. corpses
+	if (usItem != NOTHING) {
+		pExplosive = GCM->getExplosive(usItem);
 
-	// Calculate wound amount
-	sWoundAmt = pExplosive->getDamage() + (INT16) ( (pExplosive->getDamage() * uiRoll) / 100 );
+		uiRoll = PreRandom( 100 );
 
-	// Calculate breath amount ( if stun damage applicable )
-	sBreathAmt = ( pExplosive->getStunDamage() * 100 ) + (INT16) ( ( ( pExplosive->getStunDamage() / 2 ) * 100 * uiRoll ) / 100 ) ;
+		// Calculate wound amount
+		sWoundAmt = pExplosive->getDamage() + (INT16) ( (pExplosive->getDamage() * uiRoll) / 100 );
+
+		// Calculate breath amount ( if stun damage applicable )
+		sBreathAmt = ( pExplosive->getStunDamage() * 100 ) + (INT16) ( ( ( pExplosive->getStunDamage() / 2 ) * 100 * uiRoll ) / 100 );
+	}
 
 	// ATE: Make sure guys get pissed at us!
 	HandleBuldingDestruction(sGridNo, owner);
 
 
-	if ( fBlastEffect )
+	if ( pExplosive && fBlastEffect )
 	{
 		// lower effects for distance away from center of explosion
 		// If radius is 3, damage % is (100)/66/33/17
