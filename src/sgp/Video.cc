@@ -119,7 +119,6 @@ static void GetRGBDistribution();
 void InitializeVideoManager(const VideoScaleQuality quality,
                             const int32_t targetFPS)
 {
-	SLOGD("Initializing the video manager");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
 	ScaleQuality = quality;
@@ -241,8 +240,6 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 
 void ShutdownVideoManager(void)
 {
-	SLOGD("Shutting down the video manager");
-
 	// ScreenBuffer SDL surface freed by its SGPVSurface wrapper.
 	ScreenBuffer = nullptr;
 
@@ -270,7 +267,10 @@ void ShutdownVideoManager(void)
 }
 
 
-void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
+namespace {
+void AddToGivenRegionsList(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom,
+	decltype(DirtyRegions) & regions,
+	decltype(guiDirtyRegionCount) & regionCount)
 {
 	if (gfForceFullScreenRefresh)
 	{
@@ -278,7 +278,7 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 		return;
 	}
 
-	if (guiDirtyRegionCount < MAX_DIRTY_REGIONS)
+	if (regionCount < MAX_DIRTY_REGIONS)
 	{
 		// Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
 
@@ -292,11 +292,13 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 		if (iRight - iLeft <= 0) return;
 		if (iBottom - iTop <= 0) return;
 
-		DirtyRegions[guiDirtyRegionCount].x = iLeft;
-		DirtyRegions[guiDirtyRegionCount].y = iTop;
-		DirtyRegions[guiDirtyRegionCount].w = iRight  - iLeft;
-		DirtyRegions[guiDirtyRegionCount].h = iBottom - iTop;
-		guiDirtyRegionCount++;
+		auto & newRegion{ regions[regionCount] };
+
+		newRegion.x = iLeft;
+		newRegion.y = iTop;
+		newRegion.w = iRight  - iLeft;
+		newRegion.h = iBottom - iTop;
+		++regionCount;
 	}
 	else
 	{
@@ -306,8 +308,17 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 	}
 }
 
+void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
+{
+	AddToGivenRegionsList(iLeft, iTop, iRight, iBottom, DirtyRegionsEx, guiDirtyRegionExCount);
+}
+}
 
-static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
+void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
+{
+	AddToGivenRegionsList(iLeft, iTop, iRight, iBottom, DirtyRegions, guiDirtyRegionCount);
+}
+
 
 
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
@@ -330,33 +341,6 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 	else
 	{
 		AddRegionEx(iLeft, iTop, iRight, iBottom);
-	}
-}
-
-
-static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
-{
-	if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
-	{
-		// DO SOME PRELIMINARY CHECKS FOR VALID RECTS
-		if (iLeft < 0) iLeft = 0;
-		if (iTop  < 0) iTop  = 0;
-
-		if (iRight  > SCREEN_WIDTH)  iRight  = SCREEN_WIDTH;
-		if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
-
-		if (iRight - iLeft <= 0) return;
-		if (iBottom - iTop <= 0) return;
-
-		DirtyRegionsEx[guiDirtyRegionExCount].x = iLeft;
-		DirtyRegionsEx[guiDirtyRegionExCount].y = iTop;
-		DirtyRegionsEx[guiDirtyRegionExCount].w = iRight  - iLeft;
-		DirtyRegionsEx[guiDirtyRegionExCount].h = iBottom - iTop;
-		guiDirtyRegionExCount++;
-	}
-	else
-	{
-		InvalidateScreen();
 	}
 }
 
@@ -658,8 +642,6 @@ void InitializeVideoSurfaceManager(void)
 
 void ShutdownVideoSurfaceManager(void)
 {
-	SLOGD("Shutting down the Video Surface manager");
-
 	// Delete primary viedeo surfaces
 	DeletePrimaryVideoSurfaces();
 
