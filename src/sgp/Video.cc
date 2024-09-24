@@ -60,7 +60,6 @@ static SDL_Texture* ScaledScreenTexture;
 static Uint32       g_window_flags = 0;
 static VideoScaleQuality ScaleQuality = VideoScaleQuality::LINEAR;
 static std::chrono::steady_clock::duration TimeBetweenRefreshScreens;
-static std::chrono::steady_clock::time_point LastRefresh;
 
 static void DeletePrimaryVideoSurfaces(void);
 
@@ -479,13 +478,6 @@ void RefreshScreen(void)
 
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
 
-	auto const now = std::chrono::steady_clock::now();
-	if (!scrolling && now - LastRefresh < TimeBetweenRefreshScreens)
-	{
-		return;
-	}
-	LastRefresh = now;
-
 	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
 
 	// This variable will hold the union of all modified regions.
@@ -578,6 +570,23 @@ void RefreshScreen(void)
 	gfForceFullScreenRefresh = FALSE;
 	guiDirtyRegionCount = 0;
 	guiDirtyRegionExCount = 0;
+}
+
+
+// This is a semi-private function that is supposed to be called only
+// by GameLoop(). This is why is has external linkage but is not
+// declared in Video.h.
+void RefreshScreenCapped()
+{
+	static std::chrono::steady_clock::time_point LastRefresh;
+
+	auto const now{ std::chrono::steady_clock::now() };
+	if (gsScrollXIncrement != 0 || gsScrollYIncrement != 0 ||
+	    now - LastRefresh >= TimeBetweenRefreshScreens)
+	{
+		LastRefresh = now;
+		RefreshScreen();
+	}
 }
 
 
