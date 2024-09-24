@@ -445,12 +445,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	SDL_FillRect(Dest, NULL, 0);
 #endif
 
-	{
-		SurfaceUniquePtr Source(SDL_CreateRGBSurfaceWithFormat(0,
-			ScreenBuffer->w, ScreenBuffer->h, 0, ScreenBuffer->format->format));
-		SDL_BlitSurface(ScreenBuffer, nullptr, Source.get(), nullptr);
-		SDL_BlitSurface(Source.get(), &SrcRect, Dest, &DstRect);
-	}
+	SDL_BlitSurface(Dest, &SrcRect, Dest, &DstRect);
 
 	for (UINT i = 0; i < NumStrips; i++)
 	{
