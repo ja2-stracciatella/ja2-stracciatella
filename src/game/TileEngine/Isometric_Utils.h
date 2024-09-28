@@ -26,6 +26,18 @@ static inline UINT8 OneCDirection(UINT dir)     { return (dir + 1) % NUM_WORLD_D
 
 extern const UINT8 gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS];
 
+constexpr INT16 DirIncrementer[8]
+{
+	-MAPWIDTH,        //N
+	1-MAPWIDTH,       //NE
+	1,                //E
+	1+MAPWIDTH,       //SE
+	MAPWIDTH,         //S
+	MAPWIDTH-1,       //SW
+	-1,               //W
+	-MAPWIDTH-1       //NW
+};
+
 // Macros
 
 
@@ -42,6 +54,10 @@ void ConvertGridNoToCenterCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos );
 // GRID NO MANIPULATION FUNCTIONS
 INT16 NewGridNo(INT16 sGridno, INT16 sDirInc);
 INT16 DirectionInc(UINT8 sDirection);
+constexpr auto DirectionInc(WorldDirections direction)
+{
+	return DirIncrementer[direction];
+}
 INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno);
 
 
@@ -89,7 +105,5 @@ BOOLEAN IsFacingClimableWindow(SOLDIERTYPE const*);
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
 INT16 RandomGridNo(void);
-
-extern const INT16 DirIncrementer[8];
 
 #endif
