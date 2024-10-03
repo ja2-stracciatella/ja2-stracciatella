@@ -558,7 +558,7 @@ bool DefaultContentManager::loadExplosives(const VanillaItemStrings& vanillaItem
 {
 	auto json = readJsonDataFileWithSchema("explosives.json");
 	for (auto& element : json.toVec()) {
-		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_explosionAnimations, vanillaItemStrings);
+		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_smokeEffects, m_explosionAnimations, vanillaItemStrings);
 		SLOGD("Loaded explosive {} {}", e->getItemIndex(), e->getInternalName());
 
 		m_items[e->getItemIndex()] = e;

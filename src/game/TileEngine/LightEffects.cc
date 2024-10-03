@@ -71,11 +71,8 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 }
 
 
-LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
+LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, UINT8 radius, UINT8 duration)
 {
-	UINT8				ubDuration=0;
-	UINT8				ubStartRadius=0;
-
 	LIGHTEFFECT* const l = GetFreeLightEffect();
 	if (l == NULL) return NULL;
 
@@ -83,22 +80,10 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 
 	// Set some values...
 	l->sGridNo            = sGridNo;
-	l->bType              = bType;
 	l->light              = NULL;
 	l->uiTimeOfLastUpdate = GetWorldTotalSeconds();
-
-	switch( bType )
-	{
-		case LIGHT_FLARE_MARK_1:
-
-			ubDuration    = 6;
-			ubStartRadius = 6;
-			break;
-
-	}
-
-	l->ubDuration = ubDuration;
-	l->bRadius    = ubStartRadius;
+	l->ubDuration = duration;
+	l->bRadius    = radius;
 	l->bAge       = 0;
 	l->fAllocated = TRUE;
 

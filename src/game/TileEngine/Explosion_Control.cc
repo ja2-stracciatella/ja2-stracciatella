@@ -769,9 +769,11 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 }
 
 
-BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, const SmokeEffectModel* smokeEffect, INT16 const sSubsequent, BOOLEAN const fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
+BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, const SmokeEffectModel* smokeEffect, INT16 const sSubsequent, BOOLEAN const fRecompileMovementCosts, SOLDIERTYPE* const owner)
 {
 	INT8 bPosOfMask = NO_SLOT;
+	INT16 sWoundAmt = smokeEffect->getDamage() + PreRandom(smokeEffect->getDamage());
+	INT16 sBreathAmt = 100 * (smokeEffect->getBreathDamage() + PreRandom(smokeEffect->getBreathDamage() / 2));
 
 	if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->bLife || AM_A_ROBOT( pSoldier ) )
 	{
@@ -881,190 +883,144 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, const SmokeEffectModel* sm
 
 static void HandleBuldingDestruction(INT16 sGridNo, const SOLDIERTYPE* owner);
 
+// lower effects for distance away from center of explosion
+// If radius is 3, damage % is (100)/66/33/17
+// If radius is 5, damage % is (100)/80/60/40/20/10
+// If radius is 8, damage % is (100)/88/75/63/50/37/25/13/6
+INT16 ReduceDamageAmount(INT16 damage, UINT8 radius, UINT32 distance) {
+	auto newDamage = damage;
+	if ( radius == 0 )
+	{
+		// leave as is, has to be at range 0 here
+	}
+	else if (distance < radius)
+	{
+		// if radius is 5, go down by 5ths ~ 20%
+		newDamage -= (INT16)  (newDamage * distance / radius );
+	}
+	else
+	{
+		// at the edge of the explosion, do half the previous damage
+		newDamage = (INT16) ( (newDamage / radius) / 2);
+	}
+	if (newDamage < 0) {
+		return 0;
+	}
+	return newDamage;
+}
 
 // Spreads the effects of explosions...
 static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, SOLDIERTYPE* const owner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
-	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
+	INT16 sWoundAmt = 0, sBreathAmt = 0;
 	BOOLEAN fRecompileMovementCosts = FALSE;
-	BOOLEAN fSmokeEffect=FALSE;
-	BOOLEAN fStunEffect = FALSE;
-	SmokeEffectID smokeEffectID = SmokeEffectID::NOTHING;
-	BOOLEAN	fBlastEffect = TRUE;
+	const ExplosiveModel* pExplosive = nullptr;
+	const ExplosiveBlastEffect* blastEffect = nullptr;
+	const ExplosiveStunEffect* stunEffect = nullptr;
+	const ExplosiveSmokeEffect* smokeEffect = nullptr;
 	INT16		sNewGridNo;
-	UINT32	uiRoll;
 
-	if ( sSubsequent == BLOOD_SPREAD_EFFECT )
-	{
-		fSmokeEffect = FALSE;
-		fBlastEffect = FALSE;
-	}
-	else
-	{
-		// Turn off blast effect if some types of items...
-		switch( usItem )
-		{
-			case MUSTARD_GRENADE:
-				fSmokeEffect = TRUE;
-				smokeEffectID = SmokeEffectID::MUSTARDGAS;
-				fBlastEffect = FALSE;
-				break;
 
-			case TEARGAS_GRENADE:
-			case GL_TEARGAS_GRENADE:
-			case BIG_TEAR_GAS:
-				fSmokeEffect = TRUE;
-				smokeEffectID = SmokeEffectID::TEARGAS;
-				fBlastEffect = FALSE;
-				break;
-
-			case SMOKE_GRENADE:
-			case GL_SMOKE_GRENADE:
-				fSmokeEffect = TRUE;
-				smokeEffectID = SmokeEffectID::SMOKE;
-				fBlastEffect = FALSE;
-				break;
-
-			case STUN_GRENADE:
-			case GL_STUN_GRENADE:
-				fStunEffect = TRUE;
-				break;
-
-			case SMALL_CREATURE_GAS:
-			case LARGE_CREATURE_GAS:
-			case VERY_SMALL_CREATURE_GAS:
-				fSmokeEffect = TRUE;
-				smokeEffectID = SmokeEffectID::CREATUREGAS;
-				fBlastEffect = FALSE;
-				break;
+	// Some explosions dont have an explosive associated with them, e.g. corpses
+	if (usItem != NOTHING && sSubsequent != BLOOD_SPREAD_EFFECT) {
+		auto item = GCM->getItem(usItem);
+		pExplosive = item->asExplosive();
+		if (pExplosive) {
+			if (!smoke) {
+				// Only apply blast and stun effect if we are not applying the smoke effect
+				blastEffect = pExplosive->getBlastEffect();
+				stunEffect = pExplosive->getStunEffect();
+			}
+			smokeEffect = pExplosive->getSmokeEffect();
+		} else {
+			SLOGE("ExpAffect called with non-explosive item '{}'", item->getInternalName());
+			return fRecompileMovementCosts;
 		}
 	}
 
-
-	// OK, here we: Get explosive data
-	const ExplosiveModel* pExplosive = nullptr;
-
-	// Some explosions dont have an explosive associated with them, e.g. corpses
-	if (usItem != NOTHING) {
-		pExplosive = GCM->getExplosive(usItem);
-
+	// If we do damage, we need a random number
+	UINT32 uiRoll;
+	if (blastEffect || stunEffect) {
 		uiRoll = PreRandom( 100 );
-
-		// Calculate wound amount
-		sWoundAmt = pExplosive->getDamage() + (INT16) ( (pExplosive->getDamage() * uiRoll) / 100 );
-
-		// Calculate breath amount ( if stun damage applicable )
-		sBreathAmt = ( pExplosive->getStunDamage() * 100 ) + (INT16) ( ( ( pExplosive->getStunDamage() / 2 ) * 100 * uiRoll ) / 100 );
 	}
 
 	// ATE: Make sure guys get pissed at us!
 	HandleBuldingDestruction(sGridNo, owner);
 
-
-	if ( pExplosive && fBlastEffect )
+	if ( blastEffect )
 	{
-		// lower effects for distance away from center of explosion
-		// If radius is 3, damage % is (100)/66/33/17
-		// If radius is 5, damage % is (100)/80/60/40/20/10
-		// If radius is 8, damage % is (100)/88/75/63/50/37/25/13/6
+		// Calculate wound amount
+		sWoundAmt = blastEffect->damage + (INT16) ( (blastEffect->damage * uiRoll) / 100 );
+		sWoundAmt = ReduceDamageAmount(sWoundAmt, blastEffect->radius, uiDist);
 
-		if ( pExplosive->getRadius() == 0 )
-		{
-			// leave as is, has to be at range 0 here
-		}
-		else if (uiDist < pExplosive->getRadius())
-		{
-			// if radius is 5, go down by 5ths ~ 20%
-			sWoundAmt -= (INT16)  (sWoundAmt * uiDist / pExplosive->getRadius() );
-			sBreathAmt -= (INT16) (sBreathAmt * uiDist / pExplosive->getRadius() );
-		}
-		else
-		{
-			// at the edge of the explosion, do half the previous damage
-			sWoundAmt = (INT16) ( (sWoundAmt / pExplosive->getRadius()) / 2);
-			sBreathAmt = (INT16) ( (sBreathAmt / pExplosive->getRadius()) / 2);
-		}
-
-		if (sWoundAmt < 0)
-			sWoundAmt = 0;
-
-		if (sBreathAmt < 0)
-			sBreathAmt = 0;
-
-		// damage structures
-		if ( uiDist <= std::max(1U, (UINT32) (pExplosive->getDamage() / 30)))
-		{
-			if ( GCM->getItem(usItem)->isGrenade() )
+		if (sWoundAmt > 0) {
+			// damage structures
+			if ( uiDist <= std::max(1U, (UINT32) (blastEffect->damage / 30)))
 			{
-				sStructDmgAmt = sWoundAmt / 3;
-			}
-			else // most explosives
-			{
-				sStructDmgAmt = sWoundAmt;
-			}
-
-			ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, FALSE, -1, owner, bLevel);
-
-			// ATE: Look for damage to walls ONLY for next two gridnos
-			sNewGridNo = NewGridNo( sGridNo, DirectionInc( NORTH ) );
-
-			if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
-			{
-				ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
-			}
-
-			// ATE: Look for damage to walls ONLY for next two gridnos
-			sNewGridNo = NewGridNo( sGridNo, DirectionInc( WEST ) );
-
-			if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
-			{
-				ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
-			}
-		}
-
-		// Add burn marks to ground randomly....
-		if ( Random( 50 ) < 15 && uiDist == 1 )
-		{
-			//if (!TypeRangeExistsInObjectLayer(sGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
-			//{
-			//	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(SECONDEXPLDEBRIS, Random(10) + 1);
-			//	AddObjectToHead( sGridNo, usTileIndex );
-			//	SetRenderFlags(RENDER_FLAG_FULL);
-			//}
-		}
-
-		// NB radius can be 0 so cannot divide it by 2 here
-		if (!fStunEffect && (uiDist * 2 <= pExplosive->getRadius())  )
-		{
-			const ITEM_POOL* pItemPool = GetItemPool(sGridNo, bLevel);
-
-			while( pItemPool )
-			{
-				const ITEM_POOL* pItemPoolNext = pItemPool->pNext;
-
-				WORLDITEM& wi = GetWorldItem(pItemPool->iItemIndex);
-				if (DamageItemOnGround(&wi.o, sGridNo, bLevel, sWoundAmt * 2, owner))
+				INT16 sStructDmgAmt = sWoundAmt;
+				if ( blastEffect->structuralDamageDisivor != 0 )
 				{
-					// item was destroyed
-					RemoveItemFromPool(wi);
+					sStructDmgAmt = sStructDmgAmt / static_cast<INT16>(blastEffect->structuralDamageDisivor);
 				}
-				pItemPool = pItemPoolNext;
+
+				ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, FALSE, -1, owner, bLevel);
+
+				// ATE: Look for damage to walls ONLY for next two gridnos
+				sNewGridNo = NewGridNo( sGridNo, DirectionInc( NORTH ) );
+
+				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
+				{
+					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+				}
+
+				// ATE: Look for damage to walls ONLY for next two gridnos
+				sNewGridNo = NewGridNo( sGridNo, DirectionInc( WEST ) );
+
+				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
+				{
+					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+				}
+			}
+
+			// The damage amount of 10 is used because the stun grenades in vanilla didn't do damage to items
+			// NB radius can be 0 so cannot divide it by 2 here
+			if (blastEffect->damage > 10 && uiDist * 2 <= blastEffect->radius)
+			{
+				const ITEM_POOL* pItemPool = GetItemPool(sGridNo, bLevel);
+
+				while( pItemPool )
+				{
+					const ITEM_POOL* pItemPoolNext = pItemPool->pNext;
+
+					WORLDITEM& wi = GetWorldItem(pItemPool->iItemIndex);
+					if (DamageItemOnGround(&wi.o, sGridNo, bLevel, sWoundAmt * 2, owner))
+					{
+						// item was destroyed
+						RemoveItemFromPool(wi);
+					}
+					pItemPool = pItemPoolNext;
+				}
 			}
 		}
 	}
-	else if ( fSmokeEffect )
+	if (stunEffect) {
+		// Calculate breath amount ( if stun damage applicable )
+		sBreathAmt = ( stunEffect->breathDamage * 100 ) + (INT16) ( ( ( stunEffect->breathDamage / 2 ) * 100 * uiRoll ) / 100 );
+		sBreathAmt = ReduceDamageAmount(sBreathAmt, stunEffect->radius, uiDist);
+	}
+	if (smokeEffect)
 	{
 		// If tear gar, determine turns to spread.....
 		if ( sSubsequent == ERASE_SPREAD_EFFECT )
 		{
 			RemoveSmokeEffectFromTile( sGridNo, bLevel );
 		}
-		else if ( sSubsequent != REDO_SPREAD_EFFECT )
+		else if ( sSubsequent != REDO_SPREAD_EFFECT && smoke )
 		{
-			AddSmokeEffectToTile(smoke, GCM->getSmokeEffect(smokeEffectID), sGridNo, bLevel);
+			AddSmokeEffectToTile(smoke, smokeEffect->smokeEffect, sGridNo, bLevel);
 		}
 	}
-	else
+	if (sSubsequent == BLOOD_SPREAD_EFFECT)
 	{
 		// Drop blood ....
 		// Get blood quantity....
@@ -1074,8 +1030,8 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 	if ( sSubsequent != ERASE_SPREAD_EFFECT && sSubsequent != BLOOD_SPREAD_EFFECT )
 	{
-		// if an explosion effect....
-		if ( fBlastEffect )
+		// if it does damage
+		if (sWoundAmt || sBreathAmt)
 		{
 			// don't hurt anyone who is already dead & waiting to be removed
 			SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, bLevel);
@@ -1098,13 +1054,11 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 				}
 			}
 		}
-		else
-		{
+		if (smokeEffect) {
 			SOLDIERTYPE* const pSoldier = WhoIsThere2(sGridNo, bLevel);
 			if (pSoldier == NULL) return fRecompileMovementCosts;
 			// someone is here, and they're gonna get hurt
-
-			fRecompileMovementCosts = DishOutGasDamage(pSoldier, GCM->getSmokeEffect(smokeEffectID), sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, owner);
+			fRecompileMovementCosts = DishOutGasDamage(pSoldier, smokeEffect->smokeEffect, sSubsequent, fRecompileMovementCosts, owner);
 		}
 
 		(*pfMercHit) = TRUE;
@@ -1352,19 +1306,9 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	BOOLEAN fAnyMercHit = FALSE;
 	BOOLEAN fSmokeEffect = FALSE;
 
-	switch( usItem )
-	{
-		case MUSTARD_GRENADE:
-		case TEARGAS_GRENADE:
-		case GL_TEARGAS_GRENADE:
-		case BIG_TEAR_GAS:
-		case SMOKE_GRENADE:
-		case GL_SMOKE_GRENADE:
-		case SMALL_CREATURE_GAS:
-		case LARGE_CREATURE_GAS:
-		case VERY_SMALL_CREATURE_GAS:
-			fSmokeEffect = TRUE;
-			break;
+	if (usItem != NOTHING) {
+		auto explosive = GCM->getExplosive(usItem);
+		fSmokeEffect = explosive->getSmokeEffect() != NULL && smoke != NULL;
 	}
 
 	// Set values for recompile region to optimize area we need to recompile for MPs
@@ -1381,7 +1325,6 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	{
 		fRecompileMovement = TRUE;
 	}
-
 
 	for (ubDir = NORTH; ubDir <= NORTHWEST; ubDir++ )
 	{
@@ -1547,7 +1490,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 		FOR_EACH_MERC(i) (*i)->ubMiscSoldierFlags &= ~SOLDIER_MISC_HURT_BY_EXPLOSION;
 	}
 
-	if ( fSubsequent != BLOOD_SPREAD_EFFECT )
+	if ( fSubsequent != BLOOD_SPREAD_EFFECT && usItem != NOTHING )
 	{
 		MakeNoise(NULL, sGridNo, bLevel, GCM->getExplosive(usItem)->getNoise(), NOISE_EXPLOSION);
 	}
@@ -2047,9 +1990,11 @@ void HandleExplosionQueue()
 			PlayLocationJA2Sample(gridno, KLAXON_ALARM, MIDVOLUME, 5);
 			CallAvailableEnemiesTo(gridno);
 		}
+		// FIXME: Get rid of explicit item check and dont assume a light effect exists
 		else if (o.usBombItem == TRIP_FLARE)
 		{
-			NewLightEffect(gridno, LIGHT_FLARE_MARK_1);
+			auto lightEffect = GCM->getExplosive(o.usBombItem)->getLightEffect();
+			NewLightEffect(gridno, lightEffect->radius, lightEffect->duration);
 			RemoveItemFromPool(wi);
 		}
 		else

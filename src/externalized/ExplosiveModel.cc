@@ -13,34 +13,6 @@ uint32_t deserializeItemClass(const ST::string& s) {
 	throw DataError(ST::format("Item class '{}' not allowed for explosives", s));
 }
 
-uint8_t deserializeExplosiveType(const ST::string& s) {
-	if (s == "NORMAL") {
-		return EXPLOSV_NORMAL;
-	}
-	if (s == "STUN") {
-		return EXPLOSV_STUN;
-	}
-	if (s == "TEARGAS") {
-		return EXPLOSV_TEARGAS;
-	}
-	if (s == "MUSTGAS") {
-		return EXPLOSV_MUSTGAS;
-	}
-	if (s == "FLARE") {
-		return EXPLOSV_FLARE;
-	}
-	if (s == "NOISE") {
-		return EXPLOSV_NOISE;
-	}
-	if (s == "SMOKE") {
-		return EXPLOSV_SMOKE;
-	}
-	if (s == "CREATUREGAS") {
-		return EXPLOSV_CREATUREGAS;
-	}
-	throw DataError(ST::format("Unknown explosive type '{}'", s));
-}
-
 ItemCursor deserializeItemCursor(const ST::string& s) {
 	if (s == "INVALID") {
 		return INVALIDCURS;
@@ -131,26 +103,40 @@ ExplosiveModel::ExplosiveModel(
 			int8_t reliability,
 			int8_t repairEase,
 			uint32_t flags,
-			uint8_t damage,
-			uint8_t stunDamage,
-			uint8_t radius,
 			uint8_t noise,
 			uint8_t volatility,
-			uint8_t type,
+			const ExplosiveBlastEffect *blastEffect,
+			const ExplosiveStunEffect *stunEffect,
+			const ExplosiveSmokeEffect *smokeEffect,
+			const ExplosiveLightEffect *lightEffect,
 			const ExplosiveCalibreModel* calibre,
 			const ExplosionAnimationModel *animation
 	) : ItemModel(itemIndex, internalName, shortName, name, description, itemClass, 0, cursor, inventoryGraphics, tileGraphic, weight, perPocket, price, coolness, reliability, repairEase, flags) {
-	this->damage = damage;
-	this->stunDamage = stunDamage;
-	this->radius = radius;
 	this->noise = noise;
 	this->volatiltiy = volatility;
 	this->type = type;
+	this->blastEffect = blastEffect;
+	this->stunEffect = stunEffect;
+	this->smokeEffect = smokeEffect;
+	this->lightEffect = lightEffect;
 	this->calibre = calibre;
 	this->animation = animation;
 }
 
-ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres, const std::vector<const ExplosionAnimationModel*> &animations, const VanillaItemStrings& vanillaItemStrings) {
+ExplosiveModel::~ExplosiveModel() {
+	delete blastEffect;
+	delete stunEffect;
+	delete smokeEffect;
+	delete lightEffect;
+}
+
+ExplosiveModel* ExplosiveModel::deserialize(
+	const JsonValue &json,
+	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
+	const std::vector<const SmokeEffectModel*> &smokeEffects,
+	const std::vector<const ExplosionAnimationModel*> &animations,
+	const VanillaItemStrings& vanillaItemStrings
+) {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, vanillaItemStrings };
 
@@ -160,7 +146,6 @@ ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::ve
 	auto name = ItemModel::deserializeName(initData);
 	auto description = ItemModel::deserializeDescription(initData);
 	auto itemClass = deserializeItemClass(obj.GetString("itemClass"));
-	auto type = deserializeExplosiveType(obj.GetString("type"));
 	auto flags = ItemModel::deserializeFlags(obj);
 	auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);
 	auto tileGraphic = TilesetTileIndexModel::deserialize(obj["tileGraphic"]);
@@ -190,7 +175,50 @@ ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::ve
 		animation = *animationIt;
 	}
 
-	auto explosive = new ExplosiveModel(
+	ExplosiveBlastEffect* blastEffect = nullptr;
+	if (obj.has("blastEffect")) {
+		auto bObj = obj.GetValue("blastEffect").toObject();
+		blastEffect = new ExplosiveBlastEffect();
+		blastEffect->damage = bObj.GetUInt("damage");
+		blastEffect->radius = bObj.GetUInt("radius");
+		blastEffect->structuralDamageDisivor = bObj.getOptionalUInt("structuralDamageDisivor");
+	}
+
+	ExplosiveStunEffect* stunEffect = nullptr;
+	if (obj.has("stunEffect")) {
+		auto bObj = obj.GetValue("stunEffect").toObject();
+		stunEffect = new ExplosiveStunEffect();
+		stunEffect->breathDamage = bObj.GetUInt("breathDamage");
+		stunEffect->radius = bObj.GetUInt("radius");
+	}
+
+	ExplosiveSmokeEffect* smokeEffect = nullptr;
+	if (obj.has("smokeEffect")) {
+		auto bObj = obj.GetValue("smokeEffect").toObject();
+		smokeEffect = new ExplosiveSmokeEffect();
+		smokeEffect->initialRadius = bObj.GetUInt("initialRadius");
+		smokeEffect->maxRadius = bObj.GetUInt("maxRadius");
+		smokeEffect->duration = bObj.GetUInt("duration");
+
+		auto typeStr = bObj.getOptionalString("type");
+		auto smokeEffectIt = std::find_if(smokeEffects.begin(), smokeEffects.end(), [&typeStr](const SmokeEffectModel* item) -> bool {
+			return item->getName() == typeStr;
+		});
+		if (smokeEffectIt == smokeEffects.end()) {
+			throw DataError(ST::format("Could not find smoke effect '{}'", typeStr));
+		}
+		smokeEffect->smokeEffect = *smokeEffectIt;
+	}
+
+	ExplosiveLightEffect* lightEffect = nullptr;
+	if (obj.has("lightEffect")) {
+		auto bObj = obj.GetValue("lightEffect").toObject();
+		lightEffect = new ExplosiveLightEffect();
+		lightEffect->radius = bObj.GetUInt("radius");
+		lightEffect->duration = bObj.GetUInt("duration");
+	}
+
+	return new ExplosiveModel(
 		itemIndex,
 		internalName,
 		shortName,
@@ -207,41 +235,56 @@ ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::ve
 		obj.GetInt("bReliability"),
 		obj.GetInt("bRepairEase"),
 		flags,
-		obj.GetUInt("damage"),
-		obj.GetUInt("stunDamage"),
-		obj.GetUInt("radius"),
 		obj.GetUInt("noise"),
 		obj.GetUInt("volatility"),
-		type,
+		blastEffect,
+		stunEffect,
+		smokeEffect,
+		lightEffect,
 		calibre,
 		animation
 	);
-
-	return explosive;
 }
 
-uint8_t ExplosiveModel::getDamage() const {
-	return damage;
+const ExplosiveBlastEffect* ExplosiveModel::getBlastEffect() const {
+	return blastEffect;
 }
 
-uint8_t ExplosiveModel::getStunDamage() const {
-	return stunDamage;
+const ExplosiveStunEffect* ExplosiveModel::getStunEffect() const {
+	return stunEffect;
 }
 
-uint8_t ExplosiveModel::getRadius() const {
-	return radius;
+const ExplosiveSmokeEffect* ExplosiveModel::getSmokeEffect() const {
+	return smokeEffect;
+}
+
+const ExplosiveLightEffect* ExplosiveModel::getLightEffect() const {
+	return lightEffect;
 }
 
 uint8_t ExplosiveModel::getNoise() const {
 	return noise;
 }
 
-uint8_t ExplosiveModel::getVolatility() const {
-	return volatiltiy;
+uint8_t ExplosiveModel::getSafetyMargin() const {
+	uint8_t margin = 0;
+	if (blastEffect && blastEffect->radius > margin) {
+		margin = blastEffect->radius;
+	}
+	if (stunEffect && stunEffect->radius > margin) {
+		margin = stunEffect->radius;
+	}
+	if (smokeEffect && smokeEffect->maxRadius > margin) {
+		margin = smokeEffect->maxRadius;
+	}
+	if (lightEffect && lightEffect->radius / 2 > margin) {
+		margin = lightEffect->radius / 2;
+	}
+	return margin;
 }
 
-uint8_t ExplosiveModel::getType() const {
-	return type;
+uint8_t ExplosiveModel::getVolatility() const {
+	return volatiltiy;
 }
 
 bool ExplosiveModel::isLaunchable() const {
