@@ -14,6 +14,7 @@
 #include "Timer_Control.h"
 #include "SysUtil.h"
 #include "Soldier_Profile.h"
+#include "Soldier_Profile_Type.h"
 #include "Soldier_Control.h"
 #include "Interface_Items.h"
 #include "WordWrap.h"
@@ -1804,6 +1805,8 @@ static BOOLEAN CanMercBeHired(void)
 join_buddy:
 				InitVideoFaceTalking(pid, quote);
 				return TRUE;
+			case BUDDY_NOT_FOUND: break;
+			default: /* std::unreachable(); */ break;
 		}
 
 		// the merc doesnt like anybody on the team
