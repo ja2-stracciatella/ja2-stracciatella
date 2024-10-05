@@ -15,7 +15,7 @@ if (NOT LOCAL_STRING_THEORY_LIB)
 
     # interface library
     add_library(string_theory-internal INTERFACE)
-    target_include_directories(string_theory-internal INTERFACE ${STRING_THEORY_INCLUDE_DIRS})
+    target_include_directories(string_theory-internal SYSTEM INTERFACE ${STRING_THEORY_INCLUDE_DIRS})
     return()
 endif()
 
@@ -45,6 +45,6 @@ execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_BINARY_DIR}/bu
 # interface library
 include("${INSTALL_PREFIX}/lib/cmake/string_theory/string_theory-config.cmake")
 add_library(string_theory-internal INTERFACE)
-target_include_directories(string_theory-internal INTERFACE "${STRING_THEORY_INCLUDE_DIRS}")
+target_include_directories(string_theory-internal SYSTEM INTERFACE "${STRING_THEORY_INCLUDE_DIRS}")
 
 message(STATUS "</string_theory>")
