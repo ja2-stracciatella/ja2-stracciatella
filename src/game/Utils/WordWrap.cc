@@ -540,11 +540,13 @@ ST::string ReduceStringLength(const ST::utf32_buffer& codepoints, UINT32 widthTo
 		UINT32 charWidth = GetCharWidth(font, c);
 		if (width + charWidth + dotsWidth > widthToFitIn) break;
 		buf += c;
+		width += charWidth;
 	}
 	for (size_t i = 0; i < numDots; ++i)
 	{
 		if (width + dotWidth > widthToFitIn) break;
 		buf += dot;
+		width += dotWidth;
 	}
 	return buf;
 }
