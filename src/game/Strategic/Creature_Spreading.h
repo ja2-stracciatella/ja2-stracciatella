@@ -27,10 +27,6 @@ bool GetWarpOutOfMineCodes(SGPSector& sector, GridNo* insertion_grid_no);
 extern INT16 gsCreatureInsertionCode;
 extern INT16 gsCreatureInsertionGridNo;
 extern UINT8 gubNumCreaturesAttackingTown;
-extern UINT8 gubYoungMalesAttackingTown;
-extern UINT8 gubYoungFemalesAttackingTown;
-extern UINT8 gubAdultMalesAttackingTown;
-extern UINT8 gubAdultFemalesAttackingTown;
 extern UINT8 gubSectorIDOfCreatureAttack;
 enum{
 	CREATURE_BATTLE_CODE_NONE,

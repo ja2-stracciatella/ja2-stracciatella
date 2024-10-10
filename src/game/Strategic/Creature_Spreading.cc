@@ -110,10 +110,6 @@ INT32 giDestroyedLairID = 0;
 INT16 gsCreatureInsertionCode = 0;
 INT16 gsCreatureInsertionGridNo = 0;
 UINT8 gubNumCreaturesAttackingTown = 0;
-UINT8 gubYoungMalesAttackingTown = 0;
-UINT8 gubYoungFemalesAttackingTown = 0;
-UINT8 gubAdultMalesAttackingTown = 0;
-UINT8 gubAdultFemalesAttackingTown = 0;
 UINT8 gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
 UINT8 gubSectorIDOfCreatureAttack = 0;
 
@@ -476,10 +472,6 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 	gsCreatureInsertionCode      = 0;
 	gsCreatureInsertionGridNo    = 0;
 	gubNumCreaturesAttackingTown = 0;
-	gubYoungMalesAttackingTown   = 0;
-	gubYoungFemalesAttackingTown = 0;
-	gubAdultMalesAttackingTown   = 0;
-	gubAdultFemalesAttackingTown = 0;
 	gubCreatureBattleCode        = CREATURE_BATTLE_CODE_NONE;
 	gubSectorIDOfCreatureAttack  = 0;
 	AllTeamsLookForAll(FALSE);
