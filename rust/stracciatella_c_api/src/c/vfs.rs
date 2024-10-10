@@ -132,11 +132,7 @@ pub extern "C" fn VfsFile_isProvidedByMod(vfs: *mut Vfs, path: *const c_char) ->
         Ok(file) => {
             let full_path = file.to_string();
             let v: Vec<&str> = full_path.split(r"\\").collect();
-            if v[v.len() - 3] == MODS_DIR {
-                true
-            } else {
-                false
-            }
+            v[v.len() - 3] == MODS_DIR
         }
     }
 }
