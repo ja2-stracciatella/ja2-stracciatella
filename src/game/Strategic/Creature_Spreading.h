@@ -40,7 +40,7 @@ enum{
 	CREATURE_BATTLE_CODE_AUTORESOLVE,
 };
 
-enum
+enum CreatureHabitat : uint8_t
 {
 	QUEEN_LAIR,		//where the queen lives.  Highly protected
 	LAIR,			//part of the queen's lair -- lots of babies and defending mothers
