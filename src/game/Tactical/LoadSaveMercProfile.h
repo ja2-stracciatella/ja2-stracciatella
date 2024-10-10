@@ -20,10 +20,4 @@ void ExtractImpProfileFromFile(SGPFile *file, INT32 *iProfileId, INT32 *iPortrai
 void InjectMercProfile(BYTE* Dst, MERCPROFILESTRUCT const&);
 void InjectMercProfileIntoFile(HWFILE, MERCPROFILESTRUCT const&);
 
-/** Load raw merc profiles.
-* @param f Open file with profile data.
-* @param numProfiles Number of profiles to load
-* @param profiles Array for storing profile data */
-void LoadRawMercProfiles(HWFILE const f, int numProfiles, MERCPROFILESTRUCT *profiles);
-
 #endif

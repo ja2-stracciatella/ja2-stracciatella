@@ -58,7 +58,10 @@ public:
 
 	JsonValue serializeStruct(const ContentManager* contentManager) const;
 	JsonValue serializeStructRelations(const ContentManager* contentManager) const;
+
+	// Extract merc profile from the json data.
 	static std::unique_ptr<MERCPROFILESTRUCT> deserializeStruct(const JsonValue& json, const ContentManager* contentManager);
+	// Extract relations tables for merc profiles from the json data.
 	static void deserializeStructRelations(MERCPROFILESTRUCT* prof, const JsonObject& json, const ContentManager* contentManager);
 
 protected:

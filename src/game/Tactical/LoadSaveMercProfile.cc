@@ -404,20 +404,3 @@ void InjectMercProfileIntoFile(HWFILE const f, MERCPROFILESTRUCT const& p)
 	InjectMercProfile(Data, p);
 	f->write(Data, sizeof(Data));
 }
-
-
-/** Load raw merc profiles.
-* @param f Open file with profile data.
-* @param numProfiles Number of profiles to load
-* @param profiles Array for storing profile data */
-void LoadRawMercProfiles(HWFILE const f, int numProfiles, MERCPROFILESTRUCT *profiles)
-{
-	for (int i = 0; i != numProfiles; ++i)
-	{
-		BYTE data[MERC_PROFILE_SIZE];
-		JA2EncryptedFileRead(f, data, sizeof(data));
-		UINT32 checksum;
-		ExtractMercProfile(data, profiles[i], false, &checksum);
-		// not checking the checksum
-	}
-}

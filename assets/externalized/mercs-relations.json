@@ -1,4 +1,7 @@
-/* PCs' and NPCs' relations and opinions toward members of the player's team. */
+/**
+  * PCs' and NPCs' relations and opinions toward members of the player's team.
+  * WORK IN PROGRESS: Field names, their values or the number of profile-related json files are subject to change.
+ */
 [
     {
         "profile": "BARRY",     // Required. Must correspond to the internalName field in mercs-profile-info.json

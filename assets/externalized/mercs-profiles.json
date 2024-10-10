@@ -1,3 +1,4 @@
+/* WORK IN PROGRESS: Field names, their values or the number of profile-related json files are subject to change. */
 [
     {
         "profileID": 0,            // Required. Limited: 0 to 169
