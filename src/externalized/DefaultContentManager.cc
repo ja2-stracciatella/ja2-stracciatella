@@ -22,10 +22,12 @@
 #include "JsonUtility.h"
 #include "ExplosiveCalibreModel.h"
 #include "LoadingScreenModel.h"
+#include "LoadSaveMercProfile.h"
 #include "MagazineModel.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Profile_Type.h"
+#include "Tactical_Save.h"
 #include "VehicleModel.h"
 #include "WeaponModels.h"
 #include "army/ArmyCompositionModel.h"
@@ -333,6 +335,12 @@ bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 {
 	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	return static_cast<bool>(vfile.get());
+}
+
+/* Checks if a game resource comes with a mod. */
+bool DefaultContentManager::doesGameResBelongToMod(const ST::string& filename) const
+{
+	return VfsFile_isProvidedByMod(m_vfs.get(), filename.c_str());
 }
 
 DirFs *DefaultContentManager::tempFiles() const
@@ -1185,18 +1193,32 @@ bool DefaultContentManager::loadMercsData()
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
 
-	json = readJsonDataFileWithSchema("mercs-relations.json");
-	for (auto& element : json.toVec()) {
-		JsonObject reader = element.toObject();
-		const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
-		MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
-	}
-	for (auto& element : temp_mercStructs) {
-		if (element != nullptr) {
-			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>( *element ) );
+	if (!doesGameResBelongToMod(BINARYDATADIR "/prof.dat")) {
+		json = readJsonDataFileWithSchema("mercs-relations.json");
+		for (auto& element : json.toVec()) {
+			JsonObject reader = element.toObject();
+			const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
+			MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
 		}
-		else {
-			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>() );
+		for (auto& element : temp_mercStructs) {
+			if (element != nullptr) {
+				m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>(*element));
+			}
+			else {
+				m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>());
+			}
+		}
+	}
+	else {
+		AutoSGPFile f(openGameResForReading(BINARYDATADIR "/prof.dat"));
+		for (int i = 0; i != NUM_PROFILES; ++i) {
+			BYTE data[MERC_PROFILE_SIZE];
+			JA2EncryptedFileRead(f, data, sizeof(data));
+			std::unique_ptr<MERCPROFILESTRUCT> prof = std::make_unique<MERCPROFILESTRUCT>();
+			UINT32 checksum;
+			ExtractMercProfile(data, *prof, false, &checksum);
+			// not checking the checksum
+			m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>(*prof));
 		}
 	}
 
