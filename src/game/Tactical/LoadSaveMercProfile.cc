@@ -4,10 +4,8 @@
 #include "Overhead_Types.h"
 #include "SGPFile.h"
 #include "Soldier_Profile_Type.h"
-#include "Tactical_Save.h"
 
 #include <array>
-#include <string_theory/string>
 
 
 /** Calculates soldier profile checksum. */
@@ -35,12 +33,18 @@ UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)
 
 /**
 * Extract merc profile from the binary data. */
-void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum)
+void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum, bool const isCorrectlyEncoded)
 {
 	DataReader S{Src};
 
-	p.zName = S.readString(NAME_LENGTH, stracLinuxFormat);
-	p.zNickname = S.readString(NICKNAME_LENGTH, stracLinuxFormat);
+	if (isCorrectlyEncoded) {
+		p.zName = S.readString(NAME_LENGTH, stracLinuxFormat);
+		p.zNickname = S.readString(NICKNAME_LENGTH, stracLinuxFormat);
+	}
+	else {
+		p.zName = S.readUTF16(NAME_LENGTH, false);
+		p.zNickname = S.readUTF16(NICKNAME_LENGTH, false);
+	}
 	EXTR_SKIP(S, 28)
 	EXTR_U8(S, p.ubFaceIndex)
 	p.PANTS = S.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
@@ -227,7 +231,7 @@ void ExtractImpProfileFromFile(SGPFile *hFile, INT32 *iProfileId, INT32 *iPortra
 	bool const isOldUnixFormat{ fileSize >= MERC_PROFILE_SIZE_STRAC_LINUX };
 	hFile->read(data.data(),
 		isOldUnixFormat ? MERC_PROFILE_SIZE_STRAC_LINUX : MERC_PROFILE_SIZE);
-	ExtractMercProfile(data.data(), p, isOldUnixFormat, &checksum);
+	ExtractMercProfile(data.data(), p, isOldUnixFormat, &checksum, true);
 }
 
 

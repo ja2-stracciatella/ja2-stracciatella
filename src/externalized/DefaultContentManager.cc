@@ -1211,12 +1211,13 @@ bool DefaultContentManager::loadMercsData()
 	}
 	else {
 		AutoSGPFile f(openGameResForReading(BINARYDATADIR "/prof.dat"));
+		bool const isCorrectlyEncoded = !(isRussianVersion() || isRussianGoldVersion());
 		for (int i = 0; i != NUM_PROFILES; ++i) {
 			BYTE data[MERC_PROFILE_SIZE];
 			JA2EncryptedFileRead(f, data, sizeof(data));
 			std::unique_ptr<MERCPROFILESTRUCT> prof = std::make_unique<MERCPROFILESTRUCT>();
 			UINT32 checksum;
-			ExtractMercProfile(data, *prof, false, &checksum);
+			ExtractMercProfile(data, *prof, false, &checksum, isCorrectlyEncoded);
 			// not checking the checksum
 			m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>(*prof));
 		}

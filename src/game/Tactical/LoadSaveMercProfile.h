@@ -8,7 +8,7 @@
 
 /**
 * Extract merc profile from the binary data. */
-void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum);
+void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum, bool const isCorrectlyEncoded);
 
 /** Calculates soldier profile checksum. */
 UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p);
