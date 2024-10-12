@@ -1028,6 +1028,7 @@ bool GetWarpOutOfMineCodes(SGPSector& sector, INT16* const insertion_grid_no)
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
+#include <numeric>
 
 TEST(CreatureSpreading, CreatureWeightsAddUpTo100Percent)
 {
