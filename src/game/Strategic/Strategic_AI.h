@@ -46,11 +46,6 @@ void WakeUpQueen(void);
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID );
 
 size_t FindPatrolGroupIndexForGroupID( UINT8 ubGroupID );
-size_t FindPatrolGroupIndexForGroupIDPending( UINT8 ubGroupID );
-size_t FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID );
-
-GROUP* FindPendingGroupInSector( UINT8 ubSectorID );
-
 
 void RepollSAIGroup( GROUP *pGroup );
 

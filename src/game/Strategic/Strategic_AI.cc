@@ -3393,38 +3393,6 @@ size_t FindPatrolGroupIndexForGroupID( UINT8 ubGroupID )
 }
 
 
-size_t FindPatrolGroupIndexForGroupIDPending( UINT8 ubGroupID )
-{
-	for( size_t sPatrolIndex = 0; sPatrolIndex < gPatrolGroup.size(); sPatrolIndex++ )
-	{
-		if ( gPatrolGroup[ sPatrolIndex ].ubPendingGroupID == ubGroupID )
-		{
-			// found it
-			return( sPatrolIndex );
-		}
-	}
-
-	// not there!
-	return( -1 );
-}
-
-
-size_t FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
-{
-	for( size_t sGarrisonIndex = 0; sGarrisonIndex < gGarrisonGroup.size(); sGarrisonIndex++ )
-	{
-		if ( gGarrisonGroup[ sGarrisonIndex ].ubPendingGroupID == ubGroupID )
-		{
-			// found it
-			return( sGarrisonIndex );
-		}
-	}
-
-	// not there!
-	return( -1 );
-}
-
-
 static void TransferGroupToPool(GROUP** pGroup)
 {
 	giReinforcementPool += (*pGroup)->ubGroupSize;
