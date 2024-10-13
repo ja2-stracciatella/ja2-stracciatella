@@ -39,6 +39,10 @@ items:
           title: Volatility
           description: Maxium chance of accidential explosion
           $ref: types/uint8.schema.yaml
+        isPressureTriggered:
+          title: Is Pressure Triggered
+          description: Whether this explosive is triggered by pressure. The default is false.
+          type: boolean
         blastEffect:
           type: object
           title: Blast Effect

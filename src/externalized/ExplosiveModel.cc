@@ -105,6 +105,7 @@ ExplosiveModel::ExplosiveModel(
 			uint32_t flags,
 			uint8_t noise,
 			uint8_t volatility,
+			bool isPressureTriggered,
 			const ExplosiveBlastEffect *blastEffect,
 			const ExplosiveStunEffect *stunEffect,
 			const ExplosiveSmokeEffect *smokeEffect,
@@ -113,7 +114,8 @@ ExplosiveModel::ExplosiveModel(
 			const ExplosionAnimationModel *animation
 	) : ItemModel(itemIndex, internalName, shortName, name, description, itemClass, 0, cursor, inventoryGraphics, tileGraphic, weight, perPocket, price, coolness, reliability, repairEase, flags) {
 	this->noise = noise;
-	this->volatiltiy = volatility;
+	this->volatility = volatility;
+	this->pressureActivated = isPressureTriggered;
 	this->type = type;
 	this->blastEffect = blastEffect;
 	this->stunEffect = stunEffect;
@@ -237,6 +239,7 @@ ExplosiveModel* ExplosiveModel::deserialize(
 		flags,
 		obj.GetUInt("noise"),
 		obj.GetUInt("volatility"),
+		obj.getOptionalBool("isPressureTriggered"),
 		blastEffect,
 		stunEffect,
 		smokeEffect,
@@ -284,7 +287,11 @@ uint8_t ExplosiveModel::getSafetyMargin() const {
 }
 
 uint8_t ExplosiveModel::getVolatility() const {
-	return volatiltiy;
+	return volatility;
+}
+
+bool ExplosiveModel::isPressureTriggered() const {
+	return pressureActivated;
 }
 
 bool ExplosiveModel::isLaunchable() const {

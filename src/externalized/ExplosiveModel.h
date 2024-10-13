@@ -53,6 +53,7 @@ struct ExplosiveModel : ItemModel
 		uint32_t flags,
 		uint8_t noise,
 		uint8_t volatility,
+		bool isPressureTriggered,
 		const ExplosiveBlastEffect *blastEffect,
 		const ExplosiveStunEffect *stunEffect,
 		const ExplosiveSmokeEffect *smokeEffect,
@@ -78,6 +79,7 @@ struct ExplosiveModel : ItemModel
 	uint8_t getSafetyMargin() const;
 	uint8_t getNoise() const;
 	uint8_t getVolatility() const;
+	bool isPressureTriggered() const;
 	const ExplosionAnimationModel* getAnimation() const;
 
 	bool isLaunchable() const;
@@ -85,7 +87,8 @@ struct ExplosiveModel : ItemModel
 
 	protected:
 		uint8_t noise;
-		uint8_t volatiltiy;
+		uint8_t volatility;
+		bool pressureActivated;
 		uint8_t type;
 		const ExplosiveBlastEffect *blastEffect;
 		const ExplosiveStunEffect *stunEffect;

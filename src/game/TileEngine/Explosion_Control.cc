@@ -982,7 +982,8 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 				}
 			}
 
-			// The damage amount of 10 is used because the stun grenades in vanilla didn't do damage to items
+			// The damage amount of 10 is used because the stun grenades in vanilla which had a max damage of 2 didn't do damage to items
+			// All other vanilla explosives have damage > 10
 			// NB radius can be 0 so cannot divide it by 2 here
 			if (blastEffect->damage > 10 && uiDist * 2 <= blastEffect->radius)
 			{
@@ -1985,37 +1986,45 @@ void HandleExplosionQueue()
 		{
 			PerformItemAction(gridno, &o);
 		}
-		else if (o.usBombItem == TRIP_KLAXON)
-		{
-			PlayLocationJA2Sample(gridno, KLAXON_ALARM, MIDVOLUME, 5);
-			CallAvailableEnemiesTo(gridno);
-		}
-		// FIXME: Get rid of explicit item check and dont assume a light effect exists
-		else if (o.usBombItem == TRIP_FLARE)
-		{
-			auto lightEffect = GCM->getExplosive(o.usBombItem)->getLightEffect();
-			NewLightEffect(gridno, lightEffect->radius, lightEffect->duration);
-			RemoveItemFromPool(wi);
-		}
-		else
-		{
-			gfExplosionQueueMayHaveChangedSight = TRUE;
-
-			/* Remove the item first to prevent the explosion from detonating it a
-			 * second time. */
-			RemoveItemFromPool(wi);
-
-			// Make sure no one thinks there is a bomb here any more
-			UINT16& flags = gpWorldLevelData[gridno].uiFlags;
-			if (flags & MAPELEMENT_PLAYER_MINE_PRESENT)
-			{
-				RemoveBlueFlag(gridno, level);
+		else {
+			auto item = GCM->getItem(o.usBombItem);
+			auto explosive = item->asExplosive();
+			if (!explosive) {
+				SLOGE("Non explosive item {} as bomb item in explosion queue", item->getInternalName());
+				e.fExists = false;
+				continue;
 			}
-			flags &= ~MAPELEMENT_ENEMY_MINE_PRESENT;
+			auto causesExplosion = explosive->getBlastEffect() || explosive->getStunEffect() || explosive->getSmokeEffect();
+			if (!causesExplosion) {
+				auto lightEffect = explosive->getLightEffect();
+				auto noise = explosive->getNoise();
+				if (noise) {
+					PlayLocationJA2Sample(gridno, KLAXON_ALARM, MIDVOLUME, 5);
+					CallAvailableEnemiesTo(gridno);
+				}
+				if (lightEffect) {
+					NewLightEffect(gridno, lightEffect->radius, lightEffect->duration);
+					RemoveItemFromPool(wi);
+				}
+			} else {
+				gfExplosionQueueMayHaveChangedSight = TRUE;
 
-			// Bomb objects only store the side who placed the bomb.
-			SOLDIERTYPE* const owner = o.ubBombOwner > 1 ? ID2SOLDIER(o.ubBombOwner - 2) : 0;
-			IgniteExplosion(owner, 0, gridno, o.usBombItem, level);
+				/* Remove the item first to prevent the explosion from detonating it a
+				* second time. */
+				RemoveItemFromPool(wi);
+
+				// Make sure no one thinks there is a bomb here any more
+				UINT16& flags = gpWorldLevelData[gridno].uiFlags;
+				if (flags & MAPELEMENT_PLAYER_MINE_PRESENT)
+				{
+					RemoveBlueFlag(gridno, level);
+				}
+				flags &= ~MAPELEMENT_ENEMY_MINE_PRESENT;
+
+				// Bomb objects only store the side who placed the bomb.
+				SOLDIERTYPE* const owner = o.ubBombOwner > 1 ? ID2SOLDIER(o.ubBombOwner - 2) : 0;
+				IgniteExplosion(owner, 0, gridno, o.usBombItem, level);
+			}
 		}
 
 		e.fExists = FALSE;
@@ -2203,8 +2212,12 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 				{
 					// ignore this unless it is a mine, etc which would have to have been placed by the
 					// player, seeing as how the others are all marked as known to the AI.
-					if (o.usItem != MINE && o.usItem != TRIP_FLARE && o.usItem != TRIP_KLAXON)
-					{
+					auto item = GCM->getItem(o.usItem, ItemSystem::nothrow);
+					if (!item) {
+						continue;
+					}
+					auto explosive = item->asExplosive();
+					if (!explosive || !explosive->isPressureTriggered()) {
 						continue;
 					}
 				}
