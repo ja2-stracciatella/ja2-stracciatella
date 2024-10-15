@@ -34,6 +34,9 @@
 #include "MineModel.h"
 
 #include <algorithm>
+#include <array>
+#include <cstddef>
+#include <random>
 #include <stdexcept>
 #include <vector>
 
@@ -480,7 +483,6 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 
 static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 {
-	const CreatureAttackSector* attackDetails = NULL;
 	if (gLairModel == NULL)
 	{
 		SLOGA("gLairModel is NULL. Something wrong!");
@@ -488,7 +490,7 @@ static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 
 	// determine town sector to attack
-	attackDetails = (fSpecificSector) ?
+	auto const * const attackDetails = (fSpecificSector) ?
 		gLairModel->getTownAttackDetails(ubSectorID) : // attack the given sector
 		gLairModel->chooseTownSectorToAttack()         // pick a sector to attack
 	;
@@ -577,7 +579,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	else if (!StrategicMap[sector.AsStrategicIndex()].fEnemyControlled)
 	{ //player controlled sector -- eat some civilians
 		AdjustLoyaltyForCivsEatenByMonsters(sector, gubNumCreaturesAttackingTown);
-		SectorInfo[ ubSectorID ].ubDayOfLastCreatureAttack = (UINT8)GetWorldDay();
+		SectorInfo[ ubSectorID ].ubDayOfLastCreatureAttack = GetWorldDay();
 		return;
 	}
 	else
@@ -585,7 +587,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 		return;
 	}
 
-	SectorInfo[ ubSectorID ].ubDayOfLastCreatureAttack = (UINT8)GetWorldDay();
+	SectorInfo[ ubSectorID ].ubDayOfLastCreatureAttack = GetWorldDay();
 	switch( gubCreatureBattleCode )
 	{
 		case CREATURE_BATTLE_CODE_AUTORESOLVE:
@@ -701,38 +703,56 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 	return TRUE;
 }
 
+namespace {
+using Weights = std::array<UINT8, 6>;
+constexpr std::array CreatureWeightsByHabitat
+{
+	//        Larvae, Infant, YoungMale, YoungFemale, AdultMale, AdultFemale
+	// QUEEN_LAIR
+	Weights{      20,     40,         0,           0,        30,          10 },
+	// LAIR
+	Weights{      15,     35,        10,           5,        25,          10 },
+	// LAIR_ENTRANCE
+	Weights{       0,     15,        30,          10,        35,          10 },
+	// INNER_MINE
+	Weights{       0,      0,        20,          40,        10,          30 },
+	// OUTER_MINE
+	Weights{       0,      0,        10,          65,         5,          20 },
+	// FEEDING GROUNDS (currently set in Editor, not randomly generated)
+	Weights{      25,     25,        25,          25,         0,           0 },
+	// MINE_EXIT
+	Weights{       0,      0,        10,          65,         5,          20 },
+};
+static_assert(CreatureWeightsByHabitat.size() == CreatureHabitat::MINE_EXIT + 1);
+
+
+Weights DistributeCreaturesByWeight(UINT8 const numOfCreatures,
+	Weights const& weights)
+{
+	std::discrete_distribution<size_t> distribution{ weights.begin(), weights.end() };
+	Weights result{};
+
+	for (int i{ 0 }; i != numOfCreatures; ++i)
+	{
+		++result[distribution(gRandomEngine)];
+	}
+
+	return result;
+}
+}
+
 void DetermineCreatureTownComposition(UINT8 ubNumCreatures,
 					UINT8 *pubNumYoungMales, UINT8 *pubNumYoungFemales,
 					UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales)
 {
-	INT32 i, iRandom;
-	UINT8 ubYoungMalePercentage = 10;
-	UINT8 ubYoungFemalePercentage = 65;
-	UINT8 ubAdultMalePercentage = 5;
-	UINT8 ubAdultFemalePercentage = 20;
+	auto const distributedCreatures{ DistributeCreaturesByWeight(
+		ubNumCreatures, CreatureWeightsByHabitat[CreatureHabitat::MINE_EXIT]) };
 
-	//First step is to convert the percentages into the numbers we will use.
-	ubYoungFemalePercentage += ubYoungMalePercentage;
-	ubAdultMalePercentage += ubYoungFemalePercentage;
-	ubAdultFemalePercentage += ubAdultMalePercentage;
-	if( ubAdultFemalePercentage != 100 )
-	{
-		SLOGA("Percentage for adding creatures don't add up to 100." );
-	}
-	//Second step is to determine the breakdown of the creatures randomly.
-	i = ubNumCreatures;
-	while( i-- )
-	{
-		iRandom = Random( 100 );
-		if( iRandom < ubYoungMalePercentage )
-			(*pubNumYoungMales)++;
-		else if( iRandom < ubYoungFemalePercentage )
-			(*pubNumYoungFemales)++;
-		else if( iRandom < ubAdultMalePercentage )
-			(*pubNumAdultMales)++;
-		else
-			(*pubNumAdultFemales)++;
-	}
+	// There are no larvae or infants in town attacks.
+	*pubNumYoungMales   = distributedCreatures[2];
+	*pubNumYoungFemales = distributedCreatures[3];
+	*pubNumAdultMales   = distributedCreatures[4];
+	*pubNumAdultFemales = distributedCreatures[5];
 }
 
 void DetermineCreatureTownCompositionBasedOnTacticalInformation(UINT8 *pubNumCreatures,
@@ -777,21 +797,7 @@ void DetermineCreatureTownCompositionBasedOnTacticalInformation(UINT8 *pubNumCre
 BOOLEAN PrepareCreaturesForBattle()
 {
 	UNDERGROUND_SECTORINFO *pSector;
-	INT32 i, iRandom;
-	BOOLEAN fQueen;
-	UINT8 ubLarvaePercentage;
-	UINT8 ubInfantPercentage;
-	UINT8 ubYoungMalePercentage;
-	UINT8 ubYoungFemalePercentage;
-	UINT8 ubAdultMalePercentage;
-	UINT8 ubAdultFemalePercentage;
 	UINT8 ubCreatureHabitat;
-	UINT8 ubNumLarvae = 0;
-	UINT8 ubNumInfants = 0;
-	UINT8 ubNumYoungMales = 0;
-	UINT8 ubNumYoungFemales = 0;
-	UINT8 ubNumAdultMales = 0;
-	UINT8 ubNumAdultFemales = 0;
 	UINT8 ubNumCreatures;
 
 	if( !gubCreatureBattleCode )
@@ -824,91 +830,21 @@ BOOLEAN PrepareCreaturesForBattle()
 		ubNumCreatures = gubNumCreaturesAttackingTown;
 	}
 
-	switch( ubCreatureHabitat )
+	bool const fQueen{ ubCreatureHabitat == QUEEN_LAIR };
+	if (fQueen)
 	{
-		case QUEEN_LAIR:
-			fQueen = TRUE;
-			ubLarvaePercentage = 20;
-			ubInfantPercentage = 40;
-			ubYoungMalePercentage = 0;
-			ubYoungFemalePercentage = 0;
-			ubAdultMalePercentage = 30;
-			ubAdultFemalePercentage = 10;
-			break;
-		case LAIR:
-			fQueen = FALSE;
-			ubLarvaePercentage = 15;
-			ubInfantPercentage = 35;
-			ubYoungMalePercentage = 10;
-			ubYoungFemalePercentage = 5;
-			ubAdultMalePercentage = 25;
-			ubAdultFemalePercentage = 10;
-			break;
-		case LAIR_ENTRANCE:
-			fQueen = FALSE;
-			ubLarvaePercentage = 0;
-			ubInfantPercentage = 15;
-			ubYoungMalePercentage = 30;
-			ubYoungFemalePercentage = 10;
-			ubAdultMalePercentage = 35;
-			ubAdultFemalePercentage = 10;
-			break;
-		case INNER_MINE:
-			fQueen = FALSE;
-			ubLarvaePercentage = 0;
-			ubInfantPercentage = 0;
-			ubYoungMalePercentage = 20;
-			ubYoungFemalePercentage = 40;
-			ubAdultMalePercentage = 10;
-			ubAdultFemalePercentage = 30;
-			break;
-		case OUTER_MINE:
-		case MINE_EXIT:
-			fQueen = FALSE;
-			ubLarvaePercentage = 0;
-			ubInfantPercentage = 0;
-			ubYoungMalePercentage = 10;
-			ubYoungFemalePercentage = 65;
-			ubAdultMalePercentage = 5;
-			ubAdultFemalePercentage = 20;
-			break;
-		default:
-			SLOGE("Invalid creature habitat ID of {} for PrepareCreaturesForBattle.  Ignoring...", ubCreatureHabitat);
-			return FALSE;
+		// Subtract queen but ensure at least one other creature.
+		ubNumCreatures = std::max(1U, ubNumCreatures - 1U);
 	}
 
-	//First step is to convert the percentages into the numbers we will use.
-	if( fQueen )
-	{
-		ubNumCreatures--;
-	}
-	ubInfantPercentage += ubLarvaePercentage;
-	ubYoungMalePercentage += ubInfantPercentage;
-	ubYoungFemalePercentage += ubYoungMalePercentage;
-	ubAdultMalePercentage += ubYoungFemalePercentage;
-	ubAdultFemalePercentage += ubAdultMalePercentage;
-	if( ubAdultFemalePercentage != 100 )
-	{
-		SLOGA("Percentage for adding creatures don't add up to 100." );
-	}
-	//Second step is to determine the breakdown of the creatures randomly.
-	i = ubNumCreatures;
-	while( i-- )
-	{
-		iRandom = Random( 100 );
-		if( iRandom < ubLarvaePercentage )
-			ubNumLarvae++;
-		else if( iRandom < ubInfantPercentage )
-			ubNumInfants++;
-		else if( iRandom < ubYoungMalePercentage )
-			ubNumYoungMales++;
-		else if( iRandom < ubYoungFemalePercentage )
-			ubNumYoungFemales++;
-		else if( iRandom < ubAdultMalePercentage )
-			ubNumAdultMales++;
-		else
-			ubNumAdultFemales++;
-	}
+	auto const [
+		ubNumLarvae,
+		ubNumInfants,
+		ubNumYoungMales,
+		ubNumYoungFemales,
+		ubNumAdultMales,
+		ubNumAdultFemales ] { DistributeCreaturesByWeight(
+			ubNumCreatures, CreatureWeightsByHabitat[ubCreatureHabitat]) };
 
 	if (gWorldSector.z)
 	{
@@ -1081,3 +1017,40 @@ bool GetWarpOutOfMineCodes(SGPSector& sector, INT16* const insertion_grid_no)
 	}
 	return false;
 }
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+#include <numeric>
+
+TEST(CreatureSpreading, CreatureWeightsAddUpTo100Percent)
+{
+	for (Weights const& w : CreatureWeightsByHabitat)
+	{
+		EXPECT_EQ(100, std::accumulate(w.begin(), w.end(), 0));
+	}
+}
+
+TEST(CreatureSpreading, DetermineCreatureTownCompositionProducesCorrectDistribution)
+{
+	gRandomEngine.seed(12345);
+
+	UINT8 ym, yf, am, af;
+
+	ym = yf = am = af = 0;
+	DetermineCreatureTownComposition(250, &ym, &yf, &am, &af);
+	EXPECT_EQ(250, ym + yf + am + af);
+	EXPECT_EQ(26, ym);  // 250 * 10% = 25
+	EXPECT_EQ(152, yf); // 250 * 65% = 162.5
+	EXPECT_EQ(16, am);  // 250 *  5% = 12.5
+	EXPECT_EQ(56, af);  // 250 * 20% = 50
+
+	// Again to verify that the distribution is different.
+	ym = yf = am = af = 0;
+	DetermineCreatureTownComposition(250, &ym, &yf, &am, &af);
+	EXPECT_EQ(250, ym + yf + am + af);
+	EXPECT_EQ(24, ym);
+	EXPECT_EQ(166, yf);
+	EXPECT_EQ(11, am);
+	EXPECT_EQ(49, af);
+}
+#endif
