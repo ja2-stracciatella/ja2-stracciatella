@@ -2488,7 +2488,9 @@ SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(std::move(n
 			if (savedGameHeader.uiSaveStateSize == 0) {
 				throw std::runtime_error("save state size was 0");
 			}
-			file->seek(-savedGameHeader.uiSaveStateSize - sizeof(UINT32), FileSeekMode::FILE_SEEK_FROM_END);
+			file->seek(-static_cast<INT32>(
+				savedGameHeader.uiSaveStateSize + sizeof(UINT32)),
+				FileSeekMode::FILE_SEEK_FROM_END);
 			SavedGameStates states;
 			LoadStatesFromSaveFile(file, states);
 			this->enabledMods = GetModInfoFromGameStates(states);
