@@ -1,9 +1,5 @@
 #include "LoadSaveData.h"
 #include "Logger.h"
-#include <string_theory/format>
-#include <string_theory/string>
-
-#include <algorithm>
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -78,10 +74,21 @@ ST::string DataReader::readUTF8(size_t numChars, ST::utf_validation_t validation
 	return ST::string(buf.c_str(), ST_AUTO_SIZE, validation);
 }
 
-ST::string DataReader::readUTF16(size_t numChars, ST::utf_validation_t validation)
+ST::string DataReader::readUTF16(size_t numChars, bool const isCorrectlyEncoded, ST::utf_validation_t validation)
 {
 	ST::utf16_buffer buf{numChars, u'\0'};
 	readArray(buf.data(), numChars);
+
+	/* The Russian data files are incorrectly encoded. The original texts seem to
+	 * be encoded in CP1251, but then they were converted from CP1252 (!) to
+	 * UTF-16 to store them in the data files. Undo this damage here. */
+	if (!isCorrectlyEncoded) {
+		for (char16_t& c : buf) {
+			if (0xC0 <= c && c <= 0xFF) c += 0x350;
+			if (c == u'\0') break;
+		}
+	}
+
 	return ST::string(buf.c_str(), ST_AUTO_SIZE, validation);
 }
 

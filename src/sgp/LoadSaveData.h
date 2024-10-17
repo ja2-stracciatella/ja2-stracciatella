@@ -104,8 +104,9 @@ public:
 
 	/** Read UTF-16 encoded string.
 	 * @param numChars Number of `char16_t` characters to read.
+	 * @param isCorrectlyEncoded Used for fixing incorrectly encoded text.
 	 * @param validation What happens with invalid character sequences. */
-	ST::string readUTF16(size_t numChars, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
+	ST::string readUTF16(size_t numChars, bool const isCorrectlyEncoded = true, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
 
 	/** Read UTF-32 encoded string.
 	 * @param numChars Number of `char32_t` characters to read.
@@ -120,9 +121,10 @@ public:
 	   encoded strings.	*/
 	auto readString(size_t const numChars, bool const stracLinuxFormat)
 	{
-		return std::invoke(
-			stracLinuxFormat ? &DataReader::readUTF32 : &DataReader::readUTF16,
-			this, numChars, ST_DEFAULT_VALIDATION);
+		if (stracLinuxFormat) {
+			return std::invoke(&DataReader::readUTF32, this, numChars, ST_DEFAULT_VALIDATION);
+		}
+		return std::invoke(&DataReader::readUTF16, this, numChars, true, ST_DEFAULT_VALIDATION);
 	}
 
 	uint8_t  readU8();            /**< Read uint8_t */
