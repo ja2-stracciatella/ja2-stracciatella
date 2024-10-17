@@ -1543,7 +1543,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					EVENT_StopMerc(pSoldier);
 					fDontContinue = TRUE;
-					DishOutGasDamage(pSoldier, smokeEffect, TRUE, FALSE, smokeEffect->getDamage() + PreRandom(smokeEffect->getDamage()), 100 * (smokeEffect->getBreathDamage() + PreRandom(smokeEffect->getBreathDamage() / 2)), NULL);
+					DishOutGasDamage(pSoldier, smokeEffect, TRUE, FALSE, NULL);
 				}
 			}
 

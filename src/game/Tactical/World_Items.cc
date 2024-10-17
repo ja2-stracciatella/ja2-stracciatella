@@ -17,6 +17,7 @@
 #include "GameInstance.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include "ExplosiveModel.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -321,22 +322,24 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			}
 		}
 
-		switch (o.usItem)
+		if (o.usItem == ACTION_ITEM)
 		{
-			case ACTION_ITEM:
-				// If we are loading a pit, they are typically loaded without being armed.
-				if (o.bActionValue == ACTION_ITEM_SMALL_PIT ||
-					o.bActionValue == ACTION_ITEM_LARGE_PIT)
-				{
-					wi.usFlags      &= ~WORLD_ITEM_ARMED_BOMB;
-					wi.bVisible      = BURIED;
-					o.bDetonatorType = 0;
-				}
-				break;
+			// If we are loading a pit, they are typically loaded without being armed.
+			if (o.bActionValue == ACTION_ITEM_SMALL_PIT ||
+				o.bActionValue == ACTION_ITEM_LARGE_PIT)
+			{
+				wi.usFlags      &= ~WORLD_ITEM_ARMED_BOMB;
+				wi.bVisible      = BURIED;
+				o.bDetonatorType = 0;
+			}
+		} else {
+			auto item = GCM->getItem(o.usItem, ItemSystem::nothrow);
+			const ExplosiveModel* explosive = nullptr;
+			if (item) {
+				explosive = item->asExplosive();
+			}
 
-			case MINE:
-			case TRIP_FLARE:
-			case TRIP_KLAXON:
+			if (explosive && explosive->isPressureTriggered()) {
 				if (wi.bVisible == HIDDEN_ITEM && o.bTrap > 0)
 				{
 					ArmBomb(&o, BOMB_PRESSURE);
@@ -344,7 +347,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 					// this is coming from the map so the enemy must know about it.
 					gpWorldLevelData[wi.sGridNo].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
 				}
-				break;
+			}
 		}
 
 		// All armed bombs are buried

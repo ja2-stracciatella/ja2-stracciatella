@@ -1869,7 +1869,10 @@ try
 	l->uiFlags |= LIGHT_SPR_ACTIVE;
 	return l;
 }
-catch (...) { return 0; }
+catch (const std::runtime_error& err) {
+	SLOGE("Failed to create light sprite {}: {}", pName, err.what());
+	return nullptr;
+}
 
 
 BOOLEAN LightSpriteFake(LIGHT_SPRITE* const l)

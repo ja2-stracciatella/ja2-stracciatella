@@ -2684,6 +2684,13 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 	BOOLEAN fTimed = FALSE;
 	[[maybe_unused]] BOOLEAN fSwitch = FALSE; // only used as a code hint to improve readability
 
+	// Get explosive if applicable
+	auto item = GCM->getItem(pObj->usItem, ItemSystem::nothrow);
+	const ExplosiveModel* explosive = nullptr;
+	if (item) {
+		explosive = item->asExplosive();
+	}
+
 	if (pObj->usItem == ACTION_ITEM)
 	{
 		switch( pObj->bActionValue )
@@ -2706,7 +2713,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 	{
 		fRemote = TRUE;
 	}
-	else if ( pObj->usItem == MINE || pObj->usItem == TRIP_FLARE || pObj->usItem == TRIP_KLAXON || pObj->usItem == ACTION_ITEM )
+	else if ( (explosive && explosive->isPressureTriggered()) || pObj->usItem == ACTION_ITEM )
 	{
 		fPressure = TRUE;
 	}

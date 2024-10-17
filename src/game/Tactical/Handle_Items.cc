@@ -2641,14 +2641,15 @@ static void BombMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot)
 {
 	BOOLEAN fItemJustBroke = FALSE, fItemWorks = TRUE;
-	OBJECTTYPE *pObj;
-
-	pObj = &( pSoldier->inv[ bSlot ] );
+	OBJECTTYPE *pObj = &( pSoldier->inv[ bSlot ] );
+	auto item = GCM->getItem(pObj->usItem);
+	auto explosive = item->asExplosive();
+	auto isPressureTriggeredExplosive = explosive && explosive->isPressureTriggered();
 
 	// if the item can be damaged, than we must check that it's in good enough
 	// shape to be usable, and doesn't break during use.
 	// Exception: land mines.  You can bury them broken, they just won't blow!
-	if ( (GCM->getItem(pObj->usItem)->getFlags() & ITEM_DAMAGEABLE) && (pObj->usItem != MINE) && (GCM->getItem(pObj->usItem)->getItemClass() != IC_MEDKIT) && pObj->usItem != GAS_CAN )
+	if ( (item->getFlags() & ITEM_DAMAGEABLE) && !isPressureTriggeredExplosive && (item->getItemClass() != IC_MEDKIT) && pObj->usItem != GAS_CAN )
 	{
 		// if it's still usable, check whether it breaks
 		if ( pObj->bStatus[0] >= USABLE)
@@ -2680,7 +2681,7 @@ static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot)
 		}
 	}
 
-	if ( fItemWorks && bSlot == HANDPOS && GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN )
+	if ( fItemWorks && bSlot == HANDPOS && item->getItemClass() == IC_GUN )
 	{
 		// are we using two guns at once?
 		if ( GCM->getItem(pSoldier->inv[SECONDHANDPOS].usItem)->getItemClass() == IC_GUN &&
