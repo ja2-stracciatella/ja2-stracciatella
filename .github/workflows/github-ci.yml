@@ -22,7 +22,7 @@ jobs:
           target: linux-mingw64
 
         - name: Mac
-          os: macos-12
+          os: macos-latest
           target: mac
 
         - name: Android
