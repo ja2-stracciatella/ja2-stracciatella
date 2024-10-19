@@ -99,7 +99,7 @@ void UnloadFont(SGPFont const font)
 
 
 /* Returns the width of a given character in the font. */
-static UINT32 GetWidth(HVOBJECT const hSrcVObject, GlyphIdx const ssIndex)
+static UINT32 GetWidth(SGPFont const hSrcVObject, GlyphIdx const ssIndex)
 {
 	// Get Offsets from Index into structure
 	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(ssIndex);
@@ -144,7 +144,7 @@ void RestoreFontSettings(void)
 
 
 /* Returns the height of a given character in the font. */
-static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
+static UINT32 GetHeight(SGPFont hSrcVObject, INT16 ssIndex)
 {
 	// Get Offsets from Index into structure
 	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(ssIndex);
@@ -182,7 +182,7 @@ static GlyphIdx GetGlyphIndex(char32_t c)
 }
 
 
-UINT32 GetCharWidth(HVOBJECT SGPFont, char32_t c)
+UINT32 GetCharWidth(SGPFont SGPFont, char32_t c)
 {
 	return GetWidth(SGPFont, GetGlyphIndex(c));
 }
@@ -288,11 +288,4 @@ void MPrint(INT32 x, INT32 y, const ST::utf32_buffer& codepoints)
 {
 	SGPVSurface::Lock l(FontDestBuffer);
 	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), x, y, codepoints);
-}
-
-
-void InitializeFontManager(void)
-{
-	FontDefault    = 0;
-	SetFontDestBuffer(BACKBUFFER);
 }

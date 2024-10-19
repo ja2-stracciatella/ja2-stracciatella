@@ -2,8 +2,6 @@
 #define FONT_H
 
 #include "Types.h"
-
-#include <map>
 #include <string_theory/string>
 
 
@@ -70,7 +68,7 @@ UINT16  GetFontHeight(SGPFont);
 void    InitializeFontManager(void);
 void    UnloadFont(SGPFont);
 
-UINT32 GetCharWidth(HVOBJECT SGPFont, char32_t c);
+UINT32 GetCharWidth(SGPFont SGPFont, char32_t c);
 
 INT16 StringPixLength(const ST::utf32_buffer& codepoints, SGPFont font);
 inline INT16 StringPixLength(const ST::string& str, SGPFont font)
