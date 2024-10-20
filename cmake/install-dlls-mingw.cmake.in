@@ -15,7 +15,7 @@ set(MINGW_CORE_DLLS
     "imm32.dll"
     "kernel32.dll"
     "msvcrt.dll"
-	"ntdll.dll"
+    "ntdll.dll"
     "ole32.dll"
     "oleaut32.dll"
     "setupapi.dll"
@@ -24,7 +24,7 @@ set(MINGW_CORE_DLLS
     "userenv.dll"
     "version.dll"
     "winmm.dll"
-	"ws2_32.dll"
+    "ws2_32.dll"
 )
 
 #
