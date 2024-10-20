@@ -3267,7 +3267,8 @@ static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const UINT16 usW
 
 	if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 	{
-		if ( GCM->getExplosive(usWeaponIndex)->getRadius() >= 3 &&
+		auto blastEffect = GCM->getExplosive(usWeaponIndex)->getBlastEffect();
+		if ( blastEffect && blastEffect->radius >= 3 &&
 			pSoldier->bLife == 0 && gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
 		{
 			if ( sRange >= 2 && sRange <= 4 )

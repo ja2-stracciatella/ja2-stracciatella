@@ -313,18 +313,27 @@ void UpdateAniTiles( )
 								Assert(pNode->uiFlags & ANITILE_EXPLOSION);
 								const EXPLOSIONTYPE* const e    = pNode->v.explosion;
 								const UINT16               item = e->usItem;
-								const UINT8 ubExpType = GCM->getExplosive(item)->getType();
+								auto explosive = GCM->getExplosive(item);
+								auto smokeEffect = explosive->getSmokeEffect();
+								auto blastEffect = explosive->getBlastEffect();
+								auto stunEffect = explosive->getStunEffect();
 
-								if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
-									ubExpType == EXPLOSV_SMOKE )
+								if ( smokeEffect )
 								{
 									// Do sound....
 									// PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
 									NewSmokeEffect(pNode->sGridNo, item, e->bLevel, e->owner);
 								}
-								else
+								if (blastEffect || stunEffect)
 								{
-									SpreadEffect(pNode->sGridNo, GCM->getExplosive(item)->getRadius(), item, e->owner, FALSE, e->bLevel, NULL);
+									auto radius = 0;
+									if (blastEffect) {
+										radius = blastEffect->radius;
+									}
+									if (stunEffect && radius < stunEffect->radius) {
+										radius = stunEffect->radius;
+									}
+									SpreadEffect(pNode->sGridNo, radius, item, e->owner, FALSE, e->bLevel, NULL);
 								}
 								// Forfait any other animations this frame....
 								return;

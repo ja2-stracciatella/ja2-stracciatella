@@ -392,27 +392,21 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 			return;	// no ammo, can't fire
 		}
 		usGrenade = pSoldier->inv[bPayloadPocket].usItem;
-		ubSafetyMargin = GCM->getExplosive(usGrenade)->getRadius();
+		ubSafetyMargin = GCM->getExplosive(usGrenade)->getSafetyMargin();
 	}
 	else if (usInHand == ROCKET_LAUNCHER)
 	{
 		// put in hand
 		bPayloadPocket = HANDPOS;
 		// as C1
-		ubSafetyMargin = GCM->getExplosive(C1)->getRadius();
+		ubSafetyMargin = GCM->getExplosive(C1)->getBlastEffect()->radius;
 	}
 	else
 	{
 		// else it's a plain old grenade, now in his hand
 		bPayloadPocket = HANDPOS;
-		ubSafetyMargin = GCM->getExplosive(pSoldier->inv[ bPayloadPocket ].usItem)->getRadius();
+		ubSafetyMargin = GCM->getExplosive(pSoldier->inv[ bPayloadPocket ].usItem)->getSafetyMargin();
 		usGrenade = pSoldier->inv[ bPayloadPocket ].usItem;
-
-		if (usGrenade == BREAK_LIGHT)
-		{
-			// JA2Gold: light isn't as nasty as explosives
-			ubSafetyMargin /= 2;
-		}
 	}
 
 	auto const ubDiff{ SoldierDifficultyLevel(pSoldier) };
@@ -1384,8 +1378,9 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 			case CREATURE_OLD_MALE_SPIT: gas = SMALL_CREATURE_GAS;      break;
 			default:                     gas = VERY_SMALL_CREATURE_GAS; break;
 		}
-		const ExplosiveModel* e = GCM->getExplosive(gas);
-		iDamage += e->getDamage() * NumMercsCloseTo(pOpponent->sGridNo, e->getRadius()) * 3 / 2;
+		auto e = GCM->getExplosive(gas);
+		auto smokeEffect = e->getSmokeEffect();
+		iDamage += smokeEffect->smokeEffect->getDamage() * NumMercsCloseTo(pOpponent->sGridNo, smokeEffect->maxRadius) * 3 / 2;
 	}
 
 	if (iDamage < 1)
@@ -1397,7 +1392,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 
 static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIERTYPE* pOpponent, INT16 sGridno)
 {
-	INT32 iExplosDamage, iBreathDamage, iArmourAmount, iDamage = 0;
+	INT32 iExplosDamage = 0, iBreathDamage = 0, iArmourAmount = 0, iDamage = 0;
 	INT8  bSlot;
 
 	const ExplosiveModel* explosive = nullptr;
@@ -1424,10 +1419,21 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 	}
 
 
-	iExplosDamage = ( ( (INT32) explosive->getDamage() ) * 3) / 2;
-	iBreathDamage = ( ( (INT32) explosive->getStunDamage() ) * 5) / 4;
+	auto blastEffect = explosive->getBlastEffect();
+	auto stunEffect = explosive->getStunEffect();
+	auto smokeEffect = explosive->getSmokeEffect();
+	if (blastEffect) {
+		iExplosDamage = ( ( (INT32) blastEffect->damage ) * 3) / 2;
+	}
+	if (stunEffect) {
+		iBreathDamage = ( ( (INT32) stunEffect->breathDamage ) * 5) / 4;
+	}
+	if (smokeEffect) {
+		iExplosDamage += ( ( (INT32) smokeEffect->smokeEffect->getDamage() ) * 3) / 2;
+		iBreathDamage += ( ( (INT32) smokeEffect->smokeEffect->getBreathDamage() ) * 5) / 4;
+	}
 
-	if ( explosive->getType() == EXPLOSV_TEARGAS || explosive->getType() == EXPLOSV_MUSTGAS )
+	if ( smokeEffect && (smokeEffect->smokeEffect->getDamage() || smokeEffect->smokeEffect->getBreathDamage()) )
 	{
 		// if target gridno is outdoors (where tear gas lasts only 1-2 turns)
 		if (gpWorldLevelData[sGridno].ubTerrainID != FLAT_FLOOR)
