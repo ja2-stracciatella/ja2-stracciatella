@@ -276,7 +276,7 @@ set(
     string_theory-internal
 )
 if (MINGW)
-    LIST(APPEND JA2_LIBRARIES mingw_stdthreads)
+    LIST(APPEND JA2_LIBRARIES mingw_stdthreads ntdll)
 endif()
 if (ANDROID)
     LIST(APPEND JA2_LIBRARIES android log)
