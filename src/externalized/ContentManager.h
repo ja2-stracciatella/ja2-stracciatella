@@ -91,6 +91,9 @@ public:
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const = 0;
 
+	/* Checks if a game resource belongs to a mod. */
+	virtual bool doesGameResBelongToMod(const ST::string& filename) const = 0;
+
 	/** User private file (e.g. settings) */
 	virtual DirFs* userPrivateFiles() const = 0;
 
