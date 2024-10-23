@@ -35,6 +35,7 @@
 #include "StrategicAIPolicy.h"
 #include "StrategicMap.h"
 #include "Town_Militia.h"
+#include <memory>
 #include <vector>
 
 #define SAI_VERSION		29
@@ -137,8 +138,7 @@ extern UINT8 gubNumGroupsArrivedSimultaneously;
 //group.  When the queen wants to send forces to attack a town that is defended, the initial number of forces that
 //she would send would be considered too weak.  So, instead, she will send that force to the sector's adjacent sector,
 //and stage, while
-UINT8 *gubGarrisonReinforcementsDenied = NULL;
-UINT8 *gubPatrolReinforcementsDenied = NULL;
+std::unique_ptr<UINT8 []> gubGarrisonReinforcementsDenied;
 
 //Unsaved vars
 BOOLEAN gfDisplayStrategicAILogs = FALSE;
@@ -366,13 +366,12 @@ void InitStrategicAI()
 
 	// Initialize the patrol group definitions
 	gPatrolGroup = GCM->getPatrolGroups();
-	gubPatrolReinforcementsDenied = new UINT8[gPatrolGroup.size()]{};
 
 	// Initialize the garrison group definitions
 	gGarrisonGroup = GCM->getGarrisonGroups();
 	size_t uiGarrisonArraySize = gGarrisonGroup.size();
 
-	gubGarrisonReinforcementsDenied = new UINT8[uiGarrisonArraySize]{};
+	gubGarrisonReinforcementsDenied = std::make_unique<UINT8 []>(uiGarrisonArraySize);
 
 	// Modify initial force sizes?
 	INT32 const force_percentage = giForcePercentage;
@@ -567,16 +566,6 @@ void KillStrategicAI()
 	gPatrolGroup.clear();
 	gGarrisonGroup.clear();
 
-	if( gubPatrolReinforcementsDenied )
-	{
-		delete[] gubPatrolReinforcementsDenied;
-		gubPatrolReinforcementsDenied = NULL;
-	}
-	if( gubGarrisonReinforcementsDenied )
-	{
-		delete[] gubGarrisonReinforcementsDenied;
-		gubGarrisonReinforcementsDenied = NULL;
-	}
 	DeleteAllStrategicEventsOfType( EVENT_EVALUATE_QUEEN_SITUATION );
 }
 
@@ -2087,9 +2076,10 @@ void SaveStrategicAI(HWFILE const hFile)
 		hFile->write(&gEmptyGarrisonGroup, sizeof(GARRISON_GROUP));
 	}
 
-	hFile->write(gubPatrolReinforcementsDenied, gPatrolGroup.size());
+	// Skip over the removed (because unused) gubPatrolReinforcementsDenied.
+	hFile->seek(static_cast<INT32>(gPatrolGroup.size()), FileSeekMode::FILE_SEEK_FROM_CURRENT);
 
-	hFile->write(gubGarrisonReinforcementsDenied, gGarrisonGroup.size());
+	hFile->write(gubGarrisonReinforcementsDenied.get(), gGarrisonGroup.size());
 }
 
 
@@ -2162,23 +2152,12 @@ void LoadStrategicAI(HWFILE const hFile)
 	}
 	ArmyCompositionModel::validateLoadedData(gArmyComp);
 
-	//Load the list of reinforcement patrol points.
-	if( gubPatrolReinforcementsDenied )
-	{
-		delete[] gubPatrolReinforcementsDenied;
-		gubPatrolReinforcementsDenied = NULL;
-	}
-	gubPatrolReinforcementsDenied = new UINT8[iPatrolArraySize]{};
-	hFile->read(gubPatrolReinforcementsDenied, iPatrolArraySize);
+	// Skip over the removed (because unused) gubPatrolReinforcementsDenied.
+	hFile->seek(iPatrolArraySize, FileSeekMode::FILE_SEEK_FROM_CURRENT);
 
 	//Load the list of reinforcement garrison points.
-	if( gubGarrisonReinforcementsDenied )
-	{
-		delete[] gubGarrisonReinforcementsDenied;
-		gubGarrisonReinforcementsDenied = NULL;
-	}
-	gubGarrisonReinforcementsDenied = new UINT8[iGarrisonArraySize]{};
-	hFile->read(gubGarrisonReinforcementsDenied, iGarrisonArraySize);
+	gubGarrisonReinforcementsDenied = std::make_unique<UINT8 []>(iGarrisonArraySize);
+	hFile->read(gubGarrisonReinforcementsDenied.get(), iGarrisonArraySize);
 
 	if( ubSAIVersion < 6 )
 	{ //Reinitialize the costs since they have changed.
