@@ -18,7 +18,7 @@ auto deserializeHelper(ItemModel::InitData const& initData,
 }
 
 ItemModel::ItemModel(uint16_t itemIndex,
-			ST::string internalName,
+			ST::string&& internalName,
 			uint32_t usItemClass,
 			uint8_t classIndex,
 			ItemCursor cursor) :
@@ -40,15 +40,15 @@ ItemModel::ItemModel(uint16_t itemIndex,
 }
 
 ItemModel::ItemModel(uint16_t   itemIndex,
-			ST::string internalName,
-			ST::string shortName,
-			ST::string name,
-			ST::string description,
+			ST::string&& internalName,
+			ST::string&& shortName,
+			ST::string&& name,
+			ST::string&& description,
 			uint32_t   usItemClass,
 			uint8_t    ubClassIndex,
 			ItemCursor ubCursor,
-			InventoryGraphicsModel inventoryGraphics_,
-			TilesetTileIndexModel tileGraphic_,
+			InventoryGraphicsModel&& inventoryGraphics_,
+			TilesetTileIndexModel&& tileGraphic_,
 			uint8_t    ubWeight,
 			uint8_t    ubPerPocket,
 			uint16_t   usPrice,
@@ -58,10 +58,10 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 			uint16_t   fFlags) : inventoryGraphics(std::move(inventoryGraphics_)), tileGraphic(tileGraphic_)
 {
 	this->itemIndex             = itemIndex;
-	this->internalName          = internalName;
-	this->shortName             = shortName;
-	this->name                  = name;
-	this->description           = description;
+	this->internalName          = std::move(internalName);
+	this->shortName             = std::move(shortName);
+	this->name                  = std::move(name);
+	this->description           = std::move(description);
 	this->usItemClass           = usItemClass;
 	this->ubClassIndex          = ubClassIndex;
 	this->ubCursor              = ubCursor;
@@ -219,15 +219,15 @@ const ItemModel* ItemModel::deserialize(const JsonValue &json, const VanillaItem
 
 	return new ItemModel(
 		itemIndex,
-		internalName,
-		shortName,
-		name,
-		description,
+		std::move(internalName),
+		std::move(shortName),
+		std::move(name),
+		std::move(description),
 		obj.GetUInt("usItemClass"),
 		obj.GetUInt("ubClassIndex"),
 		(ItemCursor)obj.GetUInt("ubCursor"),
-		inventoryGraphics,
-		tileGraphic,
+		std::move(inventoryGraphics),
+		std::move(tileGraphic),
 		obj.GetUInt("ubWeight"),
 		obj.GetUInt("ubPerPocket"),
 		obj.GetUInt("usPrice"),

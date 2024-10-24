@@ -4,7 +4,7 @@
 
 class ExplosiveCalibreModel {
 	public:
-		ExplosiveCalibreModel(uint16_t id, ST::string name);
+		ExplosiveCalibreModel(uint16_t id, ST::string&& name);
 
 		uint16_t getID() const;
 		const ST::string& getName() const;

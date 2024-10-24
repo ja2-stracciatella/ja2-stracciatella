@@ -88,14 +88,14 @@ ItemCursor deserializeItemCursor(const ST::string& s) {
 
 ExplosiveModel::ExplosiveModel(
 			uint16_t itemIndex,
-			ST::string internalName,
-			ST::string shortName,
-			ST::string name,
-			ST::string description,
+			ST::string&& internalName,
+			ST::string&& shortName,
+			ST::string&& name,
+			ST::string&& description,
 			uint32_t  itemClass,
 			ItemCursor cursor,
-			InventoryGraphicsModel inventoryGraphics,
-			TilesetTileIndexModel tileGraphic,
+			InventoryGraphicsModel&& inventoryGraphics,
+			TilesetTileIndexModel&& tileGraphic,
 			uint8_t weight,
 			uint8_t perPocket,
 			uint16_t price,
@@ -112,7 +112,7 @@ ExplosiveModel::ExplosiveModel(
 			const ExplosiveLightEffect *lightEffect,
 			const ExplosiveCalibreModel* calibre,
 			const ExplosionAnimationModel *animation
-	) : ItemModel(itemIndex, internalName, shortName, name, description, itemClass, 0, cursor, inventoryGraphics, tileGraphic, weight, perPocket, price, coolness, reliability, repairEase, flags) {
+	) : ItemModel(itemIndex, std::move(internalName), std::move(shortName), std::move(name), std::move(description), itemClass, 0, cursor, std::move(inventoryGraphics), std::move(tileGraphic), weight, perPocket, price, coolness, reliability, repairEase, flags) {
 	this->noise = noise;
 	this->volatility = volatility;
 	this->pressureActivated = isPressureTriggered;
@@ -222,14 +222,14 @@ ExplosiveModel* ExplosiveModel::deserialize(
 
 	return new ExplosiveModel(
 		itemIndex,
-		internalName,
-		shortName,
-		name,
-		description,
+		std::move(internalName),
+		std::move(shortName),
+		std::move(name),
+		std::move(description),
 		itemClass,
 		cursor,
-		inventoryGraphics,
-		tileGraphic,
+		std::move(inventoryGraphics),
+		std::move(tileGraphic),
 		obj.GetUInt("ubWeight"),
 		obj.GetUInt("ubPerPocket"),
 		obj.GetUInt("usPrice"),

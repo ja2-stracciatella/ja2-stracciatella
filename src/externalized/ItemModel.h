@@ -18,22 +18,22 @@ struct ItemModel
 {
 	ItemModel(
 		uint16_t itemIndex,
-		ST::string internalName,
+		ST::string&& internalName,
 		uint32_t usItemClass,
 		uint8_t classIndex=0,
 		ItemCursor cursor=INVALIDCURS);
 
 	ItemModel(
 		uint16_t   itemIndex,
-		ST::string internalName,
-		ST::string shortName,
-		ST::string name,
-		ST::string description,
+		ST::string&& internalName,
+		ST::string&& shortName,
+		ST::string&& name,
+		ST::string&& description,
 		uint32_t   usItemClass,
 		uint8_t    ubClassIndex,
 		ItemCursor ubCursor,
-		InventoryGraphicsModel inventoryGraphics,
-		TilesetTileIndexModel tileGraphic,
+		InventoryGraphicsModel&& inventoryGraphics,
+		TilesetTileIndexModel&& tileGraphic,
 		uint8_t    ubWeight, // In hectogram, so f.e. ubWeight==4 means 400 grams.
 		uint8_t    ubPerPocket,
 		uint16_t   usPrice,

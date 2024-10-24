@@ -1,8 +1,8 @@
 #include "ExplosiveCalibreModel.h"
 
-ExplosiveCalibreModel::ExplosiveCalibreModel(uint16_t id, ST::string name) {
+ExplosiveCalibreModel::ExplosiveCalibreModel(uint16_t id, ST::string&& name) {
 	this->id = id;
-	this->name = name;
+	this->name = std::move(name);
 }
 
 ExplosiveCalibreModel* ExplosiveCalibreModel::deserialize(uint16_t id, const JsonValue &json) {
