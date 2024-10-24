@@ -4,7 +4,7 @@
 
 #include <string_theory/format>
 
-ExplosionAnimationModel::ExplosionAnimationModel(uint8_t id, ST::string name, uint8_t blastSpeed, uint8_t damageKeyframe, ST::string graphics, std::vector<ST::string> sounds, uint8_t transparentKeyframe) {
+ExplosionAnimationModel::ExplosionAnimationModel(uint8_t id, ST::string&& name, uint8_t blastSpeed, uint8_t damageKeyframe, ST::string&& graphics, std::vector<ST::string>&& sounds, uint8_t transparentKeyframe) {
 	this->id = id;
 	this->name = std::move(name);
 	this->blastSpeed = blastSpeed;
