@@ -128,13 +128,12 @@ void MercProfile::deserializeStructRelations(MERCPROFILESTRUCT* prof, const Json
 	}
 }
 
-std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValue& json, const ContentManager* contentManager)
+std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROFILESTRUCT* binaryProf, const JsonObject& r, const ContentManager* contentManager)
 {
-	JsonObject r = json.toObject();
 	std::unique_ptr<MERCPROFILESTRUCT> prof = std::make_unique<MERCPROFILESTRUCT>();
 
-	prof->zName = r.getOptionalString("fullName");
-	prof->zNickname = r.getOptionalString("nickname");
+	prof->zName = r.has("fullName") ? r.GetString("fullName") : binaryProf->zName;
+	prof->zNickname = r.has("nickname") ? r.GetString("nickname") : binaryProf->zNickname;
 	if (r.getOptionalString("sex") == "F") {
 		prof->bSex = Sexes::FEMALE;
 	}

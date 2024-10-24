@@ -32,7 +32,7 @@ public:
 	// avoid a circular reference to ContentManager.
 	// This function must be initialized at init
 	static std::function<const MercProfileInfo *(ProfileID)> load;
-	static MercProfileInfo* deserialize(const JsonValue& json);
+	static MercProfileInfo* deserialize(const JsonObject& json);
 	static void validateData(const std::map<uint8_t, const MercProfileInfo*>& models);
 
 protected:

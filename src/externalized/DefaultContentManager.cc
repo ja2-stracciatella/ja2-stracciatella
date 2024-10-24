@@ -22,10 +22,12 @@
 #include "JsonUtility.h"
 #include "ExplosiveCalibreModel.h"
 #include "LoadingScreenModel.h"
+#include "LoadSaveMercProfile.h"
 #include "MagazineModel.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Profile_Type.h"
+#include "Tactical_Save.h"
 #include "VehicleModel.h"
 #include "WeaponModels.h"
 #include "army/ArmyCompositionModel.h"
@@ -1174,14 +1176,35 @@ bool DefaultContentManager::loadMercsData()
 {
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
 
+	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> binary_mercStructs(NUM_PROFILES);
+	AutoSGPFile f(openGameResForReading(BINARYDATADIR "/prof.dat"));
+	bool const isCorrectlyEncoded = !(isRussianVersion() || isRussianGoldVersion());
+	for (ProfileID profileID = 0; profileID != NUM_PROFILES; ++profileID) {
+		BYTE data[MERC_PROFILE_SIZE];
+		JA2EncryptedFileRead(f, data, sizeof(data));
+		auto prof = std::make_unique<MERCPROFILESTRUCT>();
+		UINT32 checksum;
+		ExtractMercProfile(data, *prof, false, &checksum, isCorrectlyEncoded);
+		// not checking the checksum
+		binary_mercStructs[profileID] = std::move(prof);
+	}
+
 	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> temp_mercStructs(NUM_PROFILES);
 	auto json = readJsonDataFileWithSchema("mercs-profiles.json");
 	for (auto& element : json.toVec()) {
-		auto profileInfo = MercProfileInfo::deserialize(element);
+		auto charProperties = element.toObject();
+		auto profileInfo = MercProfileInfo::deserialize(charProperties);
 		ProfileID profileID = profileInfo->profileID;
 		m_mercProfileInfo[profileID] = profileInfo;
 		m_mercProfiles.push_back(new MercProfile(profileID));
-		temp_mercStructs[profileID] = MercProfile::deserializeStruct(element, this);
+		// If there are no json fields beside the 3 mandatory ones (profileID, internalName, type)
+		if (charProperties.keys().size() == 3) {
+			// use only the prof.dat data
+			temp_mercStructs[profileID] = std::move(binary_mercStructs[profileID]);
+		}
+		else {
+			temp_mercStructs[profileID] = MercProfile::deserializeStruct(binary_mercStructs[profileID].get(), charProperties, this);
+		}
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
 
@@ -1193,10 +1216,10 @@ bool DefaultContentManager::loadMercsData()
 	}
 	for (auto& element : temp_mercStructs) {
 		if (element != nullptr) {
-			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>( *element ) );
+			m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>(*element));
 		}
 		else {
-			m_mercStructs.push_back( std::make_unique<const MERCPROFILESTRUCT>() );
+			m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>());
 		}
 	}
 
