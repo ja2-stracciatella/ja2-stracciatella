@@ -25,9 +25,6 @@ if [[ "$CI_TARGET" == "linux" ]]; then
     # sccache for compilation caching
     linux-install-sccache
 
-    # Google Cloud SDK for Artifact Upload
-    linux-install-google-cloud-sdk
-
     # Rust via Rustup
     unix-install-rustup
 
@@ -41,9 +38,6 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
 
     # sccache for compilation caching
     linux-install-sccache
-
-    # Google Cloud SDK for Artifact Upload
-    linux-install-google-cloud-sdk
 
     # Rust via Rustup
     unix-install-rustup x86_64-pc-windows-gnu
@@ -79,9 +73,6 @@ elif [[ "$CI_TARGET" == "android" ]]; then
 
     # sccache for compilation caching
     linux-install-sccache
-
-    # Google Cloud SDK for Artifact Upload
-    linux-install-google-cloud-sdk
 
     # Rust via Rustup
     unix-install-rustup armv7-linux-androideabi aarch64-linux-android i686-linux-android x86_64-linux-android
