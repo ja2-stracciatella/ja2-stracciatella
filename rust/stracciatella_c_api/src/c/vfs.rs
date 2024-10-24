@@ -11,8 +11,6 @@ use stracciatella::vfs::{Vfs, VfsLayer};
 use crate::c::common::*;
 use crate::c::vec::VecCString;
 
-static MODS_DIR: &str = "mods";
-
 /// Creates a virtual filesystem.
 /// coverity[+alloc]
 #[no_mangle]
@@ -112,27 +110,5 @@ pub extern "C" fn VfsFile_open(vfs: *mut Vfs, path: *const c_char) -> *mut VFile
             std::ptr::null_mut()
         }
         Ok(file) => into_ptr(file.into()),
-    }
-}
-
-/// Checks if a virtual file comes with a mod.
-/// Returns true if the file is in the mods dir, false otherwise.
-/// Sets the rust error.
-/// coverity[+alloc]
-#[no_mangle]
-pub extern "C" fn VfsFile_isProvidedByMod(vfs: *mut Vfs, path: *const c_char) -> bool {
-    forget_rust_error();
-    let vfs = unsafe_mut(vfs);
-    let path = str_from_c_str_or_panic(unsafe_c_str(path));
-    match vfs.open(&Nfc::caseless_path(path)) {
-        Err(err) => {
-            remember_rust_error(format!("VfsFile_open {:?}: {}", path, err));
-            false
-        }
-        Ok(file) => {
-            let full_path = file.to_string();
-            let v: Vec<&str> = full_path.split(r"\\").collect();
-            v[v.len() - 3] == MODS_DIR
-        }
     }
 }

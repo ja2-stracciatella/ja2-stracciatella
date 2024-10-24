@@ -122,9 +122,9 @@ public:
 	auto readString(size_t const numChars, bool const stracLinuxFormat)
 	{
 		if (stracLinuxFormat) {
-			return std::invoke(&DataReader::readUTF32, this, numChars, ST_DEFAULT_VALIDATION);
+			return readUTF32(numChars, ST_DEFAULT_VALIDATION);
 		}
-		return std::invoke(&DataReader::readUTF16, this, numChars, true, ST_DEFAULT_VALIDATION);
+		return readUTF16(numChars, true, ST_DEFAULT_VALIDATION);
 	}
 
 	uint8_t  readU8();            /**< Read uint8_t */

@@ -337,12 +337,6 @@ bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 	return static_cast<bool>(vfile.get());
 }
 
-/* Checks if a game resource comes with a mod. */
-bool DefaultContentManager::doesGameResBelongToMod(const ST::string& filename) const
-{
-	return VfsFile_isProvidedByMod(m_vfs.get(), filename.c_str());
-}
-
 DirFs *DefaultContentManager::tempFiles() const
 {
 	return m_tempFiles.get();
@@ -1182,44 +1176,50 @@ bool DefaultContentManager::loadMercsData()
 {
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
 
+	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> binary_mercStructs(NUM_PROFILES);
+	AutoSGPFile f(openGameResForReading(BINARYDATADIR "/prof.dat"));
+	bool const isCorrectlyEncoded = !(isRussianVersion() || isRussianGoldVersion());
+	for (ProfileID profileID = 0; profileID != NUM_PROFILES; ++profileID) {
+		BYTE data[MERC_PROFILE_SIZE];
+		JA2EncryptedFileRead(f, data, sizeof(data));
+		auto prof = std::make_unique<MERCPROFILESTRUCT>();
+		UINT32 checksum;
+		ExtractMercProfile(data, *prof, false, &checksum, isCorrectlyEncoded);
+		// not checking the checksum
+		binary_mercStructs[profileID] = std::move(prof);
+	}
+
 	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> temp_mercStructs(NUM_PROFILES);
 	auto json = readJsonDataFileWithSchema("mercs-profiles.json");
 	for (auto& element : json.toVec()) {
-		auto profileInfo = MercProfileInfo::deserialize(element);
+		auto charProperties = element.toObject();
+		auto profileInfo = MercProfileInfo::deserialize(charProperties);
 		ProfileID profileID = profileInfo->profileID;
 		m_mercProfileInfo[profileID] = profileInfo;
 		m_mercProfiles.push_back(new MercProfile(profileID));
-		temp_mercStructs[profileID] = MercProfile::deserializeStruct(element, this);
+		// If there are no json fields beside the 3 mandatory ones (profileID, internalName, type)
+		if (charProperties.keys().size() == 3) {
+			// use only the prof.dat data
+			temp_mercStructs[profileID] = std::move(binary_mercStructs[profileID]);
+		}
+		else {
+			temp_mercStructs[profileID] = MercProfile::deserializeStruct(binary_mercStructs[profileID].get(), charProperties, this);
+		}
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
 
-	if (!doesGameResBelongToMod(BINARYDATADIR "/prof.dat")) {
-		json = readJsonDataFileWithSchema("mercs-relations.json");
-		for (auto& element : json.toVec()) {
-			JsonObject reader = element.toObject();
-			const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
-			MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
-		}
-		for (auto& element : temp_mercStructs) {
-			if (element != nullptr) {
-				m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>(*element));
-			}
-			else {
-				m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>());
-			}
-		}
+	json = readJsonDataFileWithSchema("mercs-relations.json");
+	for (auto& element : json.toVec()) {
+		JsonObject reader = element.toObject();
+		const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
+		MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
 	}
-	else {
-		AutoSGPFile f(openGameResForReading(BINARYDATADIR "/prof.dat"));
-		bool const isCorrectlyEncoded = !(isRussianVersion() || isRussianGoldVersion());
-		for (int i = 0; i != NUM_PROFILES; ++i) {
-			BYTE data[MERC_PROFILE_SIZE];
-			JA2EncryptedFileRead(f, data, sizeof(data));
-			std::unique_ptr<MERCPROFILESTRUCT> prof = std::make_unique<MERCPROFILESTRUCT>();
-			UINT32 checksum;
-			ExtractMercProfile(data, *prof, false, &checksum, isCorrectlyEncoded);
-			// not checking the checksum
-			m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>(*prof));
+	for (auto& element : temp_mercStructs) {
+		if (element != nullptr) {
+			m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>(*element));
+		}
+		else {
+			m_mercStructs.push_back(std::make_unique<const MERCPROFILESTRUCT>());
 		}
 	}
 

@@ -66,9 +66,6 @@ public:
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const override;
 
-	/* Checks if a game resource belongs to a mod. */
-	virtual bool doesGameResBelongToMod(const ST::string& filename) const override;
-
 	/** Load encrypted string from game resource file. */
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const override;
 
