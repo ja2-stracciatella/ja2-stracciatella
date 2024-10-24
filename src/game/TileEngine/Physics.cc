@@ -2117,37 +2117,33 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 
 	if ( fDoImpact )
 	{
-		if ( pObject->Obj.usItem == BREAK_LIGHT )
+		auto item = GCM->getItem(pObject->Obj.usItem);
+		auto explosive = item->asExplosive();
+		auto lightEffect = explosive->getLightEffect();
+		auto causesExplosion = explosive->getBlastEffect() || explosive->getStunEffect() || explosive->getSmokeEffect();
+
+		if (lightEffect)
 		{
 			//if the light object will be created OFF the ground
 			if (pObject->Position.z > 0)
 			{
 				//we cannot create the light source above the ground, or on a roof.  The system doesnt support it.
-				AddItemToPool(pObject->sGridNo, &(pObject->Obj), VISIBLE, 1, 0, -1);
+				//if it causes any other type of effect we still make it explode, otherwise we just add the item
+				if (!causesExplosion) {
+					AddItemToPool(pObject->sGridNo, &(pObject->Obj), VISIBLE, 1, 0, -1);
+				}
 			}
 			else
 			{
 				// Add a light effect...
-				NewLightEffect(pObject->sGridNo, LIGHT_FLARE_MARK_1);
+				NewLightEffect(pObject->sGridNo, lightEffect->radius, lightEffect->duration);
 			}
 		}
-		else if ( GCM->getItem(pObject->Obj.usItem)->isGrenade()  )
+		if (explosive->isGrenade() && causesExplosion)
 		{
-/* ARM: Removed.  Rewards even missed throws, and pulling a pin doesn't really teach anything about explosives
-			if (pObject->owner->bTeam == OUR_TEAM && gTacticalStatus.uiFlags & INCOMBAT)
-			{
-				// tossed grenade, not a dud, so grant xp
-				// EXPLOSIVES GAIN (10):  Tossing grenade
-				if (pObject->owner != NULL)
-				{
-					StatChange(*pObject->owner, EXPLODEAMT, 10, FALSE);
-				}
-			}
-*/
-
 			IgniteExplosionXY(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z - CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight)));
 		}
-		else if ( pObject->Obj.usItem == MORTAR_SHELL )
+		if (pObject->Obj.usItem == MORTAR_SHELL)
 		{
 			sZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
 
