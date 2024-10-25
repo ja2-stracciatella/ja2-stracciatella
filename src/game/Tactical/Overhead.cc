@@ -1524,18 +1524,14 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 					bPosOfMask = NO_SLOT;
 				}
 
-				const SmokeEffectModel* smokeEffect = nullptr;
 				auto smokeEffectID = GetSmokeEffectOnTile(pSoldier->sGridNo, pSoldier->bLevel);
-				if (smokeEffectID != SmokeEffectID::NOTHING)
-				{
-					smokeEffect = GCM->getSmokeEffect(smokeEffectID);
-				}
+				auto smokeEffect = GCM->getSmokeEffect(smokeEffectID);
+				Assert(smokeEffect != nullptr);
 
 				// check the cases where we dont take damage
-				if (bPosOfMask != NO_SLOT && !smokeEffect->getIgnoresGasMask()) {
-					smokeEffect = nullptr;
-				}
-				if (AM_A_ROBOT(pSoldier) && !smokeEffect->getAffectsRobot()) {
+				auto ignoredByGasMask = bPosOfMask != NO_SLOT && !smokeEffect->getIgnoresGasMask();
+				auto ignoredForRobot = AM_A_ROBOT(pSoldier) && !smokeEffect->getAffectsRobot();
+				if (ignoredByGasMask || ignoredForRobot) {
 					smokeEffect = nullptr;
 				}
 
