@@ -116,7 +116,6 @@ ExplosiveModel::ExplosiveModel(
 	this->noise = noise;
 	this->volatility = volatility;
 	this->pressureActivated = isPressureTriggered;
-	this->type = type;
 	this->blastEffect = blastEffect;
 	this->stunEffect = stunEffect;
 	this->smokeEffect = smokeEffect;

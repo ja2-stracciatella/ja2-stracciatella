@@ -89,7 +89,6 @@ struct ExplosiveModel : ItemModel
 		uint8_t noise;
 		uint8_t volatility;
 		bool pressureActivated;
-		uint8_t type;
 		const ExplosiveBlastEffect *blastEffect;
 		const ExplosiveStunEffect *stunEffect;
 		const ExplosiveSmokeEffect *smokeEffect;
