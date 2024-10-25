@@ -27,7 +27,7 @@ struct WeaponModel : ItemModel
 			uint8_t weaponType,
 			uint8_t cursor,
 			uint16_t itemIndex,
-			ST::string & internalName);
+			ST::string&& internalName);
 
 	virtual JsonValue serialize() const;
 	virtual void serializeTo(JsonObject &obj) const;
@@ -95,9 +95,9 @@ protected:
 
 struct NoWeapon : WeaponModel
 {
-	NoWeapon(uint16_t indexIndex, ST::string & internalName);
+	NoWeapon(uint16_t indexIndex, ST::string&& internalName);
 
-	NoWeapon(uint16_t itemIndex, ST::string & internalName, uint32_t itemClass, uint8_t cursor);
+	NoWeapon(uint16_t itemIndex, ST::string&& internalName, uint32_t itemClass, uint8_t cursor);
 
 	virtual JsonValue serialize() const;
 };
@@ -105,7 +105,7 @@ struct NoWeapon : WeaponModel
 struct Pistol : WeaponModel
 {
 	Pistol(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -127,7 +127,7 @@ struct Pistol : WeaponModel
 struct MPistol : WeaponModel
 {
 	MPistol(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -153,7 +153,7 @@ struct MPistol : WeaponModel
 struct SMG : WeaponModel
 {
 	SMG(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -178,7 +178,7 @@ struct SMG : WeaponModel
 struct SniperRifle : WeaponModel
 {
 	SniperRifle(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -199,7 +199,7 @@ struct SniperRifle : WeaponModel
 struct Rifle : WeaponModel
 {
 	Rifle(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -220,7 +220,7 @@ struct Rifle : WeaponModel
 struct AssaultRifle : WeaponModel
 {
 	AssaultRifle(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -245,7 +245,7 @@ struct AssaultRifle : WeaponModel
 struct Shotgun : WeaponModel
 {
 	Shotgun(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -270,7 +270,7 @@ struct Shotgun : WeaponModel
 struct LMG : WeaponModel
 {
 	LMG(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -295,7 +295,7 @@ struct LMG : WeaponModel
 struct Blade : WeaponModel
 {
 	Blade(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		uint8_t Impact,
 		uint8_t ShotsPer4Turns,
 		uint8_t Deadliness,
@@ -310,7 +310,7 @@ struct Blade : WeaponModel
 struct ThrowingBlade : WeaponModel
 {
 	ThrowingBlade(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		uint8_t Impact,
 		uint8_t ShotsPer4Turns,
 		uint8_t Deadliness,
@@ -325,7 +325,7 @@ struct ThrowingBlade : WeaponModel
 struct PunchWeapon : WeaponModel
 {
 	PunchWeapon(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		uint8_t Impact,
 		uint8_t ShotsPer4Turns,
 		uint8_t Deadliness,
@@ -339,7 +339,7 @@ struct PunchWeapon : WeaponModel
 struct Launcher : WeaponModel
 {
 	Launcher(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const ExplosiveCalibreModel* explosiveCalibre,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
@@ -357,7 +357,7 @@ struct Launcher : WeaponModel
 struct LAW : WeaponModel
 {
 	LAW(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
 		uint8_t ShotsPer4Turns,
@@ -374,7 +374,7 @@ struct LAW : WeaponModel
 struct Cannon : WeaponModel
 {
 	Cannon(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const ExplosiveCalibreModel* explosiveCalibre,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
@@ -392,7 +392,7 @@ struct Cannon : WeaponModel
 struct MonsterSpit : WeaponModel
 {
 	MonsterSpit(uint16_t indexIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t Impact,
 		uint8_t ShotsPer4Turns,

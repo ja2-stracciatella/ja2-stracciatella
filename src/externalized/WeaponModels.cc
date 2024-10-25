@@ -25,7 +25,7 @@ enum
 	GUN_SHOTGUN
 };
 
-WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor, uint16_t itemIndex, ST::string & internalName_)
+WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor, uint16_t itemIndex, ST::string&& internalName_)
 	:ItemModel(itemIndex, std::move(internalName_), itemClass, itemIndex, (ItemCursor)cursor),
 	sound(NO_WEAPON_SOUND_STR),
 	burstSound(NO_WEAPON_SOUND_STR),
@@ -151,16 +151,16 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 
 	if (internalType == WEAPON_TYPE_NOWEAPON)
 	{
-		wep = new NoWeapon(itemIndex, internalName);
+		wep = new NoWeapon(itemIndex, std::move(internalName));
 	}
 	else if (internalType == WEAPON_TYPE_PUNCH)
 	{
-		wep = new NoWeapon(itemIndex, internalName, IC_PUNCH, PUNCHCURS);
+		wep = new NoWeapon(itemIndex, std::move(internalName), IC_PUNCH, PUNCHCURS);
 		internalType = WEAPON_TYPE_NOWEAPON;
 	}
 	else if (internalType == WEAPON_TYPE_THROWN)
 	{
-		wep = new NoWeapon(itemIndex, internalName, IC_THROWN, TOSSCURS);
+		wep = new NoWeapon(itemIndex, std::move(internalName), IC_THROWN, TOSSCURS);
 		internalType = WEAPON_TYPE_NOWEAPON;
 	}
 	else if (internalType == "PISTOL")
@@ -178,7 +178,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto sound = readOptionalString(obj, "sound", calibre->sound);
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 
-		wep = new Pistol(itemIndex, internalName,
+		wep = new Pistol(itemIndex, std::move(internalName),
 					calibre,
 					BulletSpeed,
 					Impact,
@@ -214,7 +214,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 		auto silencedBurstSound = readOptionalString(obj, "silencedBurstSound", calibre->silencedBurstSound);
 
-		wep = new MPistol(itemIndex, internalName,
+		wep = new MPistol(itemIndex, std::move(internalName),
 					calibre,
 					BulletSpeed,
 					Impact,
@@ -254,7 +254,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 		auto silencedBurstSound = readOptionalString(obj, "silencedBurstSound", calibre->silencedBurstSound);
 
-		wep = new SMG(itemIndex, internalName,
+		wep = new SMG(itemIndex, std::move(internalName),
 				calibre,
 				BulletSpeed,
 				Impact,
@@ -292,7 +292,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto sound = readOptionalString(obj, "sound", calibre->sound);
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 
-		wep = new SniperRifle(itemIndex, internalName,
+		wep = new SniperRifle(itemIndex, std::move(internalName),
 					calibre,
 					BulletSpeed,
 					Impact,
@@ -326,7 +326,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto sound = readOptionalString(obj, "sound", calibre->sound);
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 
-		wep = new Rifle(itemIndex, internalName,
+		wep = new Rifle(itemIndex, std::move(internalName),
 				calibre,
 				BulletSpeed,
 				Impact,
@@ -362,7 +362,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 		auto silencedBurstSound = readOptionalString(obj, "silencedBurstSound", calibre->silencedBurstSound);
 
-		wep = new AssaultRifle(itemIndex, internalName,
+		wep = new AssaultRifle(itemIndex, std::move(internalName),
 					calibre,
 					BulletSpeed,
 					Impact,
@@ -402,7 +402,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 		auto silencedBurstSound = readOptionalString(obj, "silencedBurstSound", calibre->silencedBurstSound);
 
-		wep = new Shotgun(itemIndex, internalName,
+		wep = new Shotgun(itemIndex, std::move(internalName),
 					calibre,
 					BulletSpeed,
 					Impact,
@@ -441,7 +441,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		auto burstSound = readOptionalString(obj, "burstSound", calibre->burstSound);
 		auto silencedSound = readOptionalString(obj, "silencedSound", calibre->silencedSound);
 		auto silencedBurstSound = readOptionalString(obj, "silencedBurstSound", calibre->silencedBurstSound);
-		wep = new LMG(itemIndex, internalName,
+		wep = new LMG(itemIndex, std::move(internalName),
 				calibre,
 				BulletSpeed,
 				Impact,
@@ -467,7 +467,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint16_t Range           = obj.GetInt("usRange");
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		ST::string Sound       = obj.getOptionalString("sound");
-		wep = new Blade(itemIndex, internalName,
+		wep = new Blade(itemIndex, std::move(internalName),
 				Impact,
 				ShotsPer4Turns,
 				Deadliness,
@@ -483,7 +483,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint16_t Range           = obj.GetInt("usRange");
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		ST::string Sound         = obj.getOptionalString("sound");
-		wep = new ThrowingBlade(itemIndex, internalName,
+		wep = new ThrowingBlade(itemIndex, std::move(internalName),
 					Impact,
 					ShotsPer4Turns,
 					Deadliness,
@@ -498,7 +498,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint8_t  Deadliness      = obj.GetInt("ubDeadliness");
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		ST::string Sound         = obj.getOptionalString("sound");
-		wep = new PunchWeapon(itemIndex, internalName,
+		wep = new PunchWeapon(itemIndex, std::move(internalName),
 					Impact,
 					ShotsPer4Turns,
 					Deadliness,
@@ -520,7 +520,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		ST::string Sound         = obj.getOptionalString("sound");
-		wep = new Launcher(itemIndex, internalName,
+		wep = new Launcher(itemIndex, std::move(internalName),
 					calibre,
 					BulletSpeed,
 					ReadyTime,
@@ -541,7 +541,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		ST::string Sound       = obj.getOptionalString("sound");
-		wep = new LAW(itemIndex, internalName,
+		wep = new LAW(itemIndex, std::move(internalName),
 				BulletSpeed,
 				ReadyTime,
 				ShotsPer4Turns,
@@ -564,7 +564,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		ST::string Sound       = obj.getOptionalString("sound");
-		wep = new Cannon(itemIndex, internalName,
+		wep = new Cannon(itemIndex, std::move(internalName),
 					calibre,
 					BulletSpeed,
 					ReadyTime,
@@ -587,7 +587,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		ST::string Sound         = obj.getOptionalString("sound");
 		uint16_t smokeEffect     = obj.GetInt("usSmokeEffect");
-		wep = new MonsterSpit(itemIndex, internalName,
+		wep = new MonsterSpit(itemIndex, std::move(internalName),
 					calibre,
 					Impact,
 					ShotsPer4Turns,
@@ -701,13 +701,13 @@ int WeaponModel::getRateOfFire() const
 //
 ////////////////////////////////////////////////////////////
 
-NoWeapon::NoWeapon(uint16_t itemIndex, ST::string & internalName)
-	:NoWeapon(itemIndex, internalName, IC_NONE, INVALIDCURS)
+NoWeapon::NoWeapon(uint16_t itemIndex, ST::string&& internalName)
+	:NoWeapon(itemIndex, std::move(internalName), IC_NONE, INVALIDCURS)
 {
 }
 
-NoWeapon::NoWeapon(uint16_t itemIndex, ST::string & internalName, uint32_t itemClass, uint8_t cursor)
-	: WeaponModel(itemClass, NOT_GUN, cursor, itemIndex, internalName)
+NoWeapon::NoWeapon(uint16_t itemIndex, ST::string&& internalName, uint32_t itemClass, uint8_t cursor)
+	: WeaponModel(itemClass, NOT_GUN, cursor, itemIndex, std::move(internalName))
 {
 }
 
@@ -723,7 +723,7 @@ JsonValue NoWeapon::serialize() const
 
 
 Pistol::Pistol(uint16_t itemIndex,
-		ST::string & internalName,
+		ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -736,7 +736,7 @@ Pistol::Pistol(uint16_t itemIndex,
 		uint8_t HitVolume,
 		ST::string sound,
 		ST::string silencedSound)
-	: WeaponModel(IC_GUN, GUN_PISTOL, TARGETCURS, itemIndex, internalName)
+	: WeaponModel(IC_GUN, GUN_PISTOL, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = HANDGUNCLASS;
 	this->calibre        = calibre;
@@ -778,7 +778,7 @@ JsonValue Pistol::serialize() const
 }
 
 MPistol::MPistol(uint16_t itemIndex,
-			ST::string & internalName,
+			ST::string&& internalName,
 			const CalibreModel *calibre,
 			uint8_t BulletSpeed,
 			uint8_t Impact,
@@ -795,7 +795,7 @@ MPistol::MPistol(uint16_t itemIndex,
 			ST::string burstSound,
 			ST::string silencedSound,
 			ST::string silencedBurstSound)
-	:WeaponModel(IC_GUN, GUN_M_PISTOL, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, GUN_M_PISTOL, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = HANDGUNCLASS;
 	this->calibre        = calibre;
@@ -844,7 +844,7 @@ JsonValue MPistol::serialize() const
 	return obj.toValue();
 }
 
-SMG::SMG(uint16_t itemIndex, ST::string & internalName,
+SMG::SMG(uint16_t itemIndex, ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -861,7 +861,7 @@ SMG::SMG(uint16_t itemIndex, ST::string & internalName,
 		ST::string burstSound,
 		ST::string silencedSound,
 		ST::string silencedBurstSound)
-	:WeaponModel(IC_GUN, GUN_SMG, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, GUN_SMG, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = SMGCLASS;
 	this->calibre        = calibre;
@@ -910,7 +910,7 @@ JsonValue SMG::serialize() const
 	return obj.toValue();
 }
 
-SniperRifle::SniperRifle(uint16_t itemIndex, ST::string & internalName,
+SniperRifle::SniperRifle(uint16_t itemIndex, ST::string&& internalName,
 				const CalibreModel *calibre,
 				uint8_t BulletSpeed,
 				uint8_t Impact,
@@ -923,7 +923,7 @@ SniperRifle::SniperRifle(uint16_t itemIndex, ST::string & internalName,
 				uint8_t HitVolume,
 				ST::string sound,
 				ST::string silencedSound)
-	:WeaponModel(IC_GUN, GUN_SN_RIFLE, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, GUN_SN_RIFLE, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
 	this->calibre        = calibre;
@@ -964,7 +964,7 @@ JsonValue SniperRifle::serialize() const
 	return obj.toValue();
 }
 
-Rifle::Rifle(uint16_t itemIndex, ST::string & internalName,
+Rifle::Rifle(uint16_t itemIndex, ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -977,7 +977,7 @@ Rifle::Rifle(uint16_t itemIndex, ST::string & internalName,
 		uint8_t HitVolume,
 		ST::string sound,
 		ST::string silencedSound)
-	:WeaponModel(IC_GUN, GUN_RIFLE, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, GUN_RIFLE, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
 	this->calibre        = calibre;
@@ -1018,7 +1018,7 @@ JsonValue Rifle::serialize() const
 	return obj.toValue();
 }
 
-AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string & internalName,
+AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string&& internalName,
 				const CalibreModel *calibre,
 				uint8_t BulletSpeed,
 				uint8_t Impact,
@@ -1035,7 +1035,7 @@ AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string & internalName,
 				ST::string burstSound,
 				ST::string silencedSound,
 				ST::string silencedBurstSound)
-	:WeaponModel(IC_GUN, GUN_AS_RIFLE, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, GUN_AS_RIFLE, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
 	this->calibre        = calibre;
@@ -1084,7 +1084,7 @@ JsonValue AssaultRifle::serialize() const
 	return obj.toValue();
 }
 
-Shotgun::Shotgun(uint16_t itemIndex, ST::string & internalName,
+Shotgun::Shotgun(uint16_t itemIndex, ST::string&& internalName,
 			const CalibreModel *calibre,
 			uint8_t BulletSpeed,
 			uint8_t Impact,
@@ -1101,7 +1101,7 @@ Shotgun::Shotgun(uint16_t itemIndex, ST::string & internalName,
 			ST::string burstSound,
 			ST::string silencedSound,
 			ST::string silencedBurstSound)
-	:WeaponModel(IC_GUN, GUN_SHOTGUN, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, GUN_SHOTGUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = SHOTGUNCLASS;
 	this->calibre        = calibre;
@@ -1150,7 +1150,7 @@ JsonValue Shotgun::serialize() const
 	return obj.toValue();
 }
 
-LMG::LMG(uint16_t itemIndex, ST::string & internalName,
+LMG::LMG(uint16_t itemIndex, ST::string&& internalName,
 		const CalibreModel *calibre,
 		uint8_t BulletSpeed,
 		uint8_t Impact,
@@ -1167,7 +1167,7 @@ LMG::LMG(uint16_t itemIndex, ST::string & internalName,
 		ST::string burstSound,
 		ST::string silencedSound,
 		ST::string silencedBurstSound)
-	:WeaponModel(IC_GUN, GUN_LMG, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, GUN_LMG, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = MGCLASS;
 	this->calibre        = calibre;
@@ -1216,14 +1216,14 @@ JsonValue LMG::serialize() const
 	return obj.toValue();
 }
 
-Blade::Blade(uint16_t itemIndex, ST::string & internalName,
+Blade::Blade(uint16_t itemIndex, ST::string&& internalName,
 		uint8_t Impact,
 		uint8_t ShotsPer4Turns,
 		uint8_t Deadliness,
 		uint16_t Range,
 		uint8_t AttackVolume,
 		ST::string Sound)
-	:WeaponModel(IC_BLADE, NOT_GUN, KNIFECURS, itemIndex, internalName)
+	:WeaponModel(IC_BLADE, NOT_GUN, KNIFECURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = KNIFECLASS;
 	ubReadyTime          = AP_READY_KNIFE;
@@ -1251,14 +1251,14 @@ JsonValue Blade::serialize() const
 	return obj.toValue();
 }
 
-ThrowingBlade::ThrowingBlade(uint16_t itemIndex, ST::string & internalName,
+ThrowingBlade::ThrowingBlade(uint16_t itemIndex, ST::string&& internalName,
 				uint8_t Impact,
 				uint8_t ShotsPer4Turns,
 				uint8_t Deadliness,
 				uint16_t Range,
 				uint8_t AttackVolume,
 				ST::string Sound)
-	:WeaponModel(IC_THROWING_KNIFE, NOT_GUN, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_THROWING_KNIFE, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = KNIFECLASS;
 	ubReadyTime          = AP_READY_KNIFE;
@@ -1286,13 +1286,13 @@ JsonValue ThrowingBlade::serialize() const
 	return obj.toValue();
 }
 
-PunchWeapon::PunchWeapon(uint16_t itemIndex, ST::string & internalName,
+PunchWeapon::PunchWeapon(uint16_t itemIndex, ST::string&& internalName,
 				uint8_t Impact,
 				uint8_t ShotsPer4Turns,
 				uint8_t Deadliness,
 				uint8_t AttackVolume,
 				ST::string Sound)
-	:WeaponModel(IC_PUNCH, NOT_GUN, PUNCHCURS, itemIndex, internalName)
+	:WeaponModel(IC_PUNCH, NOT_GUN, PUNCHCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = KNIFECLASS;
 	ubShotsPer4Turns     = ShotsPer4Turns;
@@ -1319,7 +1319,7 @@ JsonValue PunchWeapon::serialize() const
 	return obj.toValue();
 }
 
-Launcher::Launcher(uint16_t itemIndex, ST::string & internalName,
+Launcher::Launcher(uint16_t itemIndex, ST::string&& internalName,
 			const ExplosiveCalibreModel* explosiveCalibre,
 			uint8_t BulletSpeed,
 			uint8_t ReadyTime,
@@ -1329,7 +1329,7 @@ Launcher::Launcher(uint16_t itemIndex, ST::string & internalName,
 			uint8_t AttackVolume,
 			uint8_t HitVolume,
 			ST::string Sound)
-	:WeaponModel(IC_LAUNCHER, NOT_GUN, TRAJECTORYCURS, itemIndex, internalName)
+	:WeaponModel(IC_LAUNCHER, NOT_GUN, TRAJECTORYCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
 	ubReadyTime          = ReadyTime;
@@ -1362,7 +1362,7 @@ JsonValue Launcher::serialize() const
 	return obj.toValue();
 }
 
-LAW::LAW(uint16_t itemIndex, ST::string & internalName,
+LAW::LAW(uint16_t itemIndex, ST::string&& internalName,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
 		uint8_t ShotsPer4Turns,
@@ -1371,7 +1371,7 @@ LAW::LAW(uint16_t itemIndex, ST::string & internalName,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
 		ST::string Sound)
-	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
 	ubReadyTime          = ReadyTime;
@@ -1404,7 +1404,7 @@ JsonValue LAW::serialize() const
 	return obj.toValue();
 }
 
-Cannon::Cannon(uint16_t itemIndex, ST::string & internalName,
+Cannon::Cannon(uint16_t itemIndex, ST::string&& internalName,
 		const ExplosiveCalibreModel* explosiveCalibre,
 		uint8_t BulletSpeed,
 		uint8_t ReadyTime,
@@ -1414,7 +1414,7 @@ Cannon::Cannon(uint16_t itemIndex, ST::string & internalName,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
 		ST::string Sound)
-	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
 	ubReadyTime          = ReadyTime;
@@ -1448,7 +1448,7 @@ JsonValue Cannon::serialize() const
 	return obj.toValue();
 }
 
-MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string & internalName,
+MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string&& internalName,
 				const CalibreModel *calibre,
 				uint8_t Impact,
 				uint8_t ShotsPer4Turns,
@@ -1459,7 +1459,7 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string & internalName,
 				uint8_t HitVolume,
 				ST::string Sound,
 				uint16_t smokeEffect)
-	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName)
+	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = MONSTERCLASS;
 	this->calibre        = calibre;

@@ -36,14 +36,14 @@ struct ExplosiveModel : ItemModel
 {
 	ExplosiveModel(
 		uint16_t itemIndex,
-		ST::string internalName,
-		ST::string shortName,
-		ST::string name,
-		ST::string description,
+		ST::string&& internalName,
+		ST::string&& shortName,
+		ST::string&& name,
+		ST::string&& description,
 		uint32_t  itemClass,
 		ItemCursor cursor,
-		InventoryGraphicsModel inventoryGraphics,
-		TilesetTileIndexModel tileGraphic,
+		InventoryGraphicsModel&& inventoryGraphics,
+		TilesetTileIndexModel&& tileGraphic,
 		uint8_t weight,
 		uint8_t perPocket,
 		uint16_t price,
@@ -89,7 +89,6 @@ struct ExplosiveModel : ItemModel
 		uint8_t noise;
 		uint8_t volatility;
 		bool pressureActivated;
-		uint8_t type;
 		const ExplosiveBlastEffect *blastEffect;
 		const ExplosiveStunEffect *stunEffect;
 		const ExplosiveSmokeEffect *smokeEffect;
