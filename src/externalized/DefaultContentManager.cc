@@ -876,30 +876,9 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 
 JsonValue DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
-	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = f->readStringToEnd();
-
-	ST::string patchJsonData;
-	ST::string patchFileName = fileName.replace(".json", ".patch.json");
-	bool doesPatchExist = doesGameResExists(patchFileName);
-	if (doesPatchExist) {
-		AutoSGPFile pf(openGameResForReading(patchFileName));
-		patchJsonData = pf->readStringToEnd();
-	}
-
-	JsonValue v(0);
-	try {
-		if (doesPatchExist) {
-			v = JsonValue::deserialize(jsonData, patchJsonData);
-		}
-		else {
-			v = JsonValue::deserialize(jsonData);
-		}
-	} catch (const std::runtime_error &ex) {
-		throw std::runtime_error(ST::format("failed to read file {} or read/apply {}: {}", fileName, patchFileName, ex.what()).c_str());
-	}
-
-	return v;
+	auto r = VfsFile_readPatchedJson(m_vfs.get(), fileName.c_str());
+	throwRustError(!r);
+	return JsonValue(r);
 }
 
 JsonValue DefaultContentManager::readJsonDataFileWithSchema(const ST::string& jsonPath) const

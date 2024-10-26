@@ -11,6 +11,8 @@ use stracciatella::vfs::{Vfs, VfsLayer};
 use crate::c::common::*;
 use crate::c::vec::VecCString;
 
+use super::json::RJsonValue;
+
 /// Creates a virtual filesystem.
 /// coverity[+alloc]
 #[no_mangle]
@@ -110,5 +112,23 @@ pub extern "C" fn VfsFile_open(vfs: *mut Vfs, path: *const c_char) -> *mut VFile
             std::ptr::null_mut()
         }
         Ok(file) => into_ptr(file.into()),
+    }
+}
+
+/// Opens a virtual file for reading.
+/// Returns the file on success, null otherwise.
+/// Sets the rust error.
+/// coverity[+alloc]
+#[no_mangle]
+pub extern "C" fn VfsFile_readPatchedJson(vfs: *mut Vfs, path: *const c_char) -> *mut RJsonValue {
+    forget_rust_error();
+    let vfs = unsafe_mut(vfs);
+    let path = str_from_c_str_or_panic(unsafe_c_str(path));
+    match vfs.read_patched_json(&Nfc::caseless_path(path)) {
+        Err(err) => {
+            remember_rust_error(format!("VfsFile_readPatchedJson {:?}: {}", path, err));
+            std::ptr::null_mut()
+        }
+        Ok(file) => into_ptr(RJsonValue::from_value(file)),
     }
 }

@@ -197,6 +197,11 @@ impl VfsLayer for AssetManagerFs {
         ))
     }
 
+    fn exists(&self, file_path: &Nfc) -> io::Result<bool> {
+        let candidates = self.canonicalize(file_path)?;
+        Ok(!candidates.is_empty())
+    }
+
     fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
         let file_path = file_path.trim_end_matches('/');
         let candidates = self.canonicalize(file_path)?;
