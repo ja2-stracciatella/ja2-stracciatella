@@ -88,6 +88,9 @@ public:
 	/* Note: filename is passed by value here, it will be moved to SGPFile. */
 	virtual SGPFile* openGameResForReading(ST::string filename) const = 0;
 
+	/* Open a game resource file for reading, evaluating all layers, I will return highest priority layer first. */
+	virtual std::vector<std::unique_ptr<SGPFile>> openGameResForReadingOnAllLayers(const ST::string& filename) const = 0;
+
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const = 0;
 

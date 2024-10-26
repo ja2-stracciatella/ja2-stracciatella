@@ -318,7 +318,7 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(ST::string filename) const
 {
-	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	RustPointer<VFile> vfile(Vfs_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
@@ -328,10 +328,35 @@ SGPFile* DefaultContentManager::openGameResForReading(ST::string filename) const
 	return new SGPFile(vfile.release(), std::move(filename));
 }
 
+/* Open a game resource file for reading, evaluating all layers, I will return highest priority layer first. */
+std::vector<std::unique_ptr<SGPFile>> DefaultContentManager::openGameResForReadingOnAllLayers(const ST::string& filename) const
+{
+	RustPointer<VecUSize> layers(Vfs_readLayers(m_vfs.get(), filename.c_str()));
+	if (!layers)
+	{
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("openGameResForReadingOnAllLayers: {}", err.get()).to_std_string());
+	}
+	std::vector<std::unique_ptr<SGPFile>> result;
+	auto numLayers = VecUSize_len(layers.get());
+	for (uintptr_t i = 0; i < numLayers; i++) {
+		auto layerIndex = VecUSize_get(layers.get(), i);
+		RustPointer<VFile> vfile(Vfs_openInLayer(m_vfs.get(), layerIndex, filename.c_str()));
+		if (!vfile)
+		{
+			RustPointer<char> err{getRustError()};
+			throw std::runtime_error(ST::format("openGameResForReadingOnAllLayers: {}", err.get()).to_std_string());
+		}
+		SLOGD("Opened resource file from VFS layer {}: '{}'", layerIndex, filename);
+		result.push_back(std::make_unique<SGPFile>(vfile.release(), filename));
+	}
+	return result;
+}
+
 /* Checks if a game resource exists. */
 bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 {
-	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	RustPointer<VFile> vfile(Vfs_open(m_vfs.get(), filename.c_str()));
 	return static_cast<bool>(vfile.get());
 }
 
@@ -876,7 +901,7 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 
 JsonValue DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
-	auto r = VfsFile_readPatchedJson(m_vfs.get(), fileName.c_str());
+	auto r = Vfs_readPatchedJson(m_vfs.get(), fileName.c_str());
 	throwRustError(!r);
 	return JsonValue(r);
 }

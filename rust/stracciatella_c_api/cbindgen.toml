@@ -26,14 +26,15 @@ struct RustDelete
 	void operator()(TempDir* ptr) const { TempDir_destroy(ptr); }
 	void operator()(VecCString* ptr) const { VecCString_destroy(ptr); }
 	void operator()(VecU8* ptr) const { VecU8_destroy(ptr); }
+	void operator()(VecUSize* ptr) const { VecUSize_destroy(ptr); }
 	void operator()(Vfs* ptr) const { Vfs_destroy(ptr); }
 	void operator()(ModManager* ptr) const { ModManager_destroy(ptr); }
 	void operator()(Mod* ptr) const { Mod_destroy(ptr); }
 	void operator()(SchemaManager* ptr) const { SchemaManager_destroy(ptr); }
 	void operator()(SubProcess* ptr) const { SubProcess_destroy(ptr); }
-    void operator()(RJsonValue* ptr) const { RJsonValue_destroy(ptr); }
-    void operator()(RJsonArray* ptr) const { RJsonArray_destroy(ptr); }
-    void operator()(RJsonObject* ptr) const { RJsonObject_destroy(ptr); }
+	void operator()(RJsonValue* ptr) const { RJsonValue_destroy(ptr); }
+	void operator()(RJsonArray* ptr) const { RJsonArray_destroy(ptr); }
+	void operator()(RJsonObject* ptr) const { RJsonObject_destroy(ptr); }
 };
 
 /// Alias to a std::unique_ptr that deletes with RustDelete.

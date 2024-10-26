@@ -144,22 +144,19 @@ mod vfs {
         // Error cases
         assert_eq!(
             vfs.read_patched_json(&Nfc::caseless_path("nonexistant.sti"))
-                .err()
-                .expect("error")
+                .expect_err("error")
                 .to_string(),
             "patched json must end in .json extension"
         );
         assert_eq!(
             vfs.read_patched_json(&Nfc::caseless_path("nonexistant.json"))
-                .err()
-                .expect("error")
+                .expect_err("error")
                 .to_string(),
             "entity not found"
         );
         assert!(vfs
             .read_patched_json(&Nfc::caseless_path("invalid.json"))
-            .err()
-            .expect("error")
+            .expect_err("error")
             .to_string()
             .contains("failed to deserialize json"));
 
