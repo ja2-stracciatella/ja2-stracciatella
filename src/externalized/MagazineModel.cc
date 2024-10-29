@@ -6,10 +6,10 @@
 #include <utility>
 
 MagazineModel::MagazineModel(uint16_t itemIndex_,
-				ST::string internalName_,
-				ST::string shortName_,
-				ST::string name_,
-				ST::string description_,
+				ST::string&& internalName_,
+				ST::string&& shortName_,
+				ST::string&& name_,
+				ST::string&& description_,
 				uint32_t itemClass_,
 				const CalibreModel *calibre_,
 				uint16_t capacity_,
@@ -20,9 +20,9 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 	calibre(calibre_), capacity(capacity_), ammoType(ammoType_),
 	dontUseAsDefaultMagazine(dontUseAsDefaultMagazine_)
 {
-	this->shortName = shortName_;
-	this->name = name_;
-	this->description = description_;
+	this->shortName = std::move(shortName_);
+	this->name = std::move(name_);
+	this->description = std::move(description_);
 }
 
 
@@ -77,10 +77,10 @@ MagazineModel* MagazineModel::deserialize(
 	auto description = ItemModel::deserializeDescription(initData);
 	MagazineModel *mag = new MagazineModel(
 		itemIndex,
-		internalName,
-		shortName,
-		name,
-		description,
+		std::move(internalName),
+		std::move(shortName),
+		std::move(name),
+		std::move(description),
 		itemClass,
 		calibre,
 		capacity,

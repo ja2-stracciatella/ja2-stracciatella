@@ -5,7 +5,7 @@
 
 #include <utility>
 
-NpcPlacementModel::NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t> sectorIds_,
+NpcPlacementModel::NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t>&& sectorIds_,
 		bool isPlacedAtStart_, bool useAlternateMap_, bool isSciFiOnly_)
 	:profileId(profileId_),  sectorIds(std::move(sectorIds_)),
 	isPlacedAtStart(isPlacedAtStart_), useAlternateMap(useAlternateMap_), isSciFiOnly(isSciFiOnly_) {}
@@ -22,7 +22,7 @@ NpcPlacementModel* NpcPlacementModel::deserialize(const JsonValue& json, const M
 
 	return new NpcPlacementModel(
 		mercProfile->profileID,
-		sectorIds,
+		std::move(sectorIds),
 		element.GetBool("placedAtStart"),
 		element.getOptionalBool("useAlternateMap"),
 		element.getOptionalBool("sciFiOnly")

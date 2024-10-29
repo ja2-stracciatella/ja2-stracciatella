@@ -8,7 +8,7 @@
 
 MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, uint8_t bioIndex_,
 	uint32_t minTotalSpending_, uint32_t minDays_,
-	std::vector<SpeckQuote> quotes_
+	std::vector<SpeckQuote>&& quotes_
 	) : index(index_), profileID(profileID_), bioIndex(bioIndex_),
 	    minTotalSpending(minTotalSpending_), minDays(minDays_),
 	    quotes(std::move(quotes_)) {}
@@ -86,7 +86,7 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const JsonValue& 
 		reader.GetUInt("bioIndex"),
 		reader.getOptionalInt("minTotalSpending"),
 		reader.getOptionalInt("minDays"),
-		quotes
+		std::move(quotes)
 	);
 
 }

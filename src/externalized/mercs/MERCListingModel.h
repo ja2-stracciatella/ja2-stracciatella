@@ -12,7 +12,7 @@ typedef std::shared_ptr<MERCSpeckQuote> SpeckQuote;
 class MERCListingModel
 {
 public:
-	MERCListingModel(uint8_t index_, uint8_t profileID_, uint8_t bioIndex_, uint32_t minTotalSpending_, uint32_t mindays, std::vector<SpeckQuote> quotes_);
+	MERCListingModel(uint8_t index_, uint8_t profileID_, uint8_t bioIndex_, uint32_t minTotalSpending_, uint32_t mindays, std::vector<SpeckQuote>&& quotes_);
 	const uint8_t index;
 
 	// If we are coming from M.E.R.C., we should always use the GetProfileIDFromMERCListing

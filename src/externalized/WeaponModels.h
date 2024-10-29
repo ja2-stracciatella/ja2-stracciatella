@@ -116,8 +116,8 @@ struct Pistol : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string SilencedSound);
+		ST::string&& Sound,
+		ST::string&& SilencedSound);
 
 	JsonValue serialize() const override;
 };
@@ -140,10 +140,10 @@ struct MPistol : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string BurstSound,
-		ST::string SilencedSound,
-		ST::string SilencedBurstSound);
+		ST::string&& Sound,
+		ST::string&& BurstSound,
+		ST::string&& SilencedSound,
+		ST::string&& SilencedBurstSound);
 
 	JsonValue serialize() const override;
 };
@@ -166,10 +166,10 @@ struct SMG : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string BurstSound,
-		ST::string SilencedSound,
-		ST::string SilencedBurstSound);
+		ST::string&& Sound,
+		ST::string&& BurstSound,
+		ST::string&& SilencedSound,
+		ST::string&& SilencedBurstSound);
 
 	JsonValue serialize() const override;
 };
@@ -189,8 +189,8 @@ struct SniperRifle : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string SilencedSound);
+		ST::string&& Sound,
+		ST::string&& SilencedSound);
 
 	JsonValue serialize() const override;
 };
@@ -210,8 +210,8 @@ struct Rifle : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string SilencedSound);
+		ST::string&& Sound,
+		ST::string&& SilencedSound);
 
 	JsonValue serialize() const override;
 };
@@ -233,10 +233,10 @@ struct AssaultRifle : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string BurstSound,
-		ST::string SilencedSound,
-		ST::string SilencedBurstSound);
+		ST::string&& Sound,
+		ST::string&& BurstSound,
+		ST::string&& SilencedSound,
+		ST::string&& SilencedBurstSound);
 
 	JsonValue serialize() const override;
 };
@@ -258,10 +258,10 @@ struct Shotgun : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string BurstSound,
-		ST::string SilencedSound,
-		ST::string SilencedBurstSound);
+		ST::string&& Sound,
+		ST::string&& BurstSound,
+		ST::string&& SilencedSound,
+		ST::string&& SilencedBurstSound);
 
 	JsonValue serialize() const override;
 };
@@ -283,10 +283,10 @@ struct LMG : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
-		ST::string BurstSound,
-		ST::string SilencedSound,
-		ST::string SilencedBurstSound);
+		ST::string&& Sound,
+		ST::string&& BurstSound,
+		ST::string&& SilencedSound,
+		ST::string&& SilencedBurstSound);
 
 	JsonValue serialize() const override;
 };
@@ -301,7 +301,7 @@ struct Blade : WeaponModel
 		uint8_t Deadliness,
 		uint16_t Range,
 		uint8_t AttackVolume,
-		ST::string Sound);
+		ST::string&& Sound);
 
 	JsonValue serialize() const override;
 };
@@ -316,7 +316,7 @@ struct ThrowingBlade : WeaponModel
 		uint8_t Deadliness,
 		uint16_t Range,
 		uint8_t AttackVolume,
-		ST::string Sound);
+		ST::string&& Sound);
 
 	JsonValue serialize() const override;
 };
@@ -330,7 +330,7 @@ struct PunchWeapon : WeaponModel
 		uint8_t ShotsPer4Turns,
 		uint8_t Deadliness,
 		uint8_t AttackVolume,
-		ST::string Sound);
+		ST::string&& Sound);
 
 	JsonValue serialize() const override;
 };
@@ -348,7 +348,7 @@ struct Launcher : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound);
+		ST::string&& Sound);
 
 	JsonValue serialize() const override;
 };
@@ -365,7 +365,7 @@ struct LAW : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound);
+		ST::string&& Sound);
 
 	JsonValue serialize() const override;
 };
@@ -383,7 +383,7 @@ struct Cannon : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound);
+		ST::string&& Sound);
 
 	JsonValue serialize() const override;
 };
@@ -401,7 +401,7 @@ struct MonsterSpit : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound,
+		ST::string&& Sound,
 		uint16_t smokeEffect);
 
 	JsonValue serialize() const override;
