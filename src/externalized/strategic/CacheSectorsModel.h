@@ -9,7 +9,7 @@
 class CacheSectorsModel
 {
 public:
-	CacheSectorsModel(std::vector<uint8_t> sectors_,
+	CacheSectorsModel(std::vector<uint8_t>&& sectors_,
 		std::array<uint8_t, NUM_DIF_LEVELS> numTroops_,
 		std::array<uint8_t, NUM_DIF_LEVELS> numTroopsVariance_);
 

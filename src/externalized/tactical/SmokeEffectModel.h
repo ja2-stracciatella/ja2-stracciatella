@@ -14,10 +14,10 @@ class SmokeEffectModel {
 	public:
 		SmokeEffectModel(
 			SmokeEffectID index,
-			ST::string name,
-			ST::string graphics,
-			ST::string dissipatingGraphics,
-			ST::string staticGraphics,
+			ST::string&& name,
+			ST::string&& graphics,
+			ST::string&& dissipatingGraphics,
+			ST::string&& staticGraphics,
 			uint8_t damage,
 			uint8_t breathDamage,
 			uint8_t lostVisibilityPerTile,

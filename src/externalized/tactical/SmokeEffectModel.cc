@@ -2,10 +2,10 @@
 
 SmokeEffectModel::SmokeEffectModel(
 	SmokeEffectID id,
-	ST::string name,
-	ST::string graphics,
-	ST::string dissipatingGraphics,
-	ST::string staticGraphics,
+	ST::string&& name,
+	ST::string&& graphics,
+	ST::string&& dissipatingGraphics,
+	ST::string&& staticGraphics,
 	uint8_t damage,
 	uint8_t breathDamage,
 	uint8_t lostVisibilityPerTile,
@@ -16,10 +16,10 @@ SmokeEffectModel::SmokeEffectModel(
 	bool affectsMonsters
 ) {
 	this->id = id;
-	this->name = name;
-	this->graphics = graphics;
-	this->dissipatingGraphics = dissipatingGraphics;
-	this->staticGraphics = staticGraphics;
+	this->name = std::move(name);
+	this->graphics = std::move(graphics);
+	this->dissipatingGraphics = std::move(dissipatingGraphics);
+	this->staticGraphics = std::move(staticGraphics);
 	this->damage = damage;
 	this->breathDamage = breathDamage;
 	this->lostVisibilityPerTile = lostVisibilityPerTile;
@@ -46,7 +46,21 @@ SmokeEffectModel* SmokeEffectModel::deserialize(uint16_t index, const JsonValue&
 	bool affectsRobot = obj.getOptionalBool("affectsRobot");
 	bool affectsMonsters = obj.getOptionalBool("affectsMonsters", true);
 
-	return new SmokeEffectModel(id, name, graphics, dissipatingGraphics, staticGraphics, damage, breathDamage, lostVisibilityPerTile, maxVisibility, maxVisibilityWhenAffected, ignoresGasMask, affectsRobot, affectsMonsters);
+	return new SmokeEffectModel(
+		id,
+		std::move(name),
+		std::move(graphics),
+		std::move(dissipatingGraphics),
+		std::move(staticGraphics),
+		damage,
+		breathDamage,
+		lostVisibilityPerTile,
+		maxVisibility,
+		maxVisibilityWhenAffected,
+		ignoresGasMask,
+		affectsRobot,
+		affectsMonsters
+	);
 }
 
 SmokeEffectID SmokeEffectModel::getID() const {

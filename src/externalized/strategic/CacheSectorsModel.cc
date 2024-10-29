@@ -3,7 +3,7 @@
 #include "Random.h"
 #include <utility>
 
-CacheSectorsModel::CacheSectorsModel(std::vector<uint8_t> sectors_,
+CacheSectorsModel::CacheSectorsModel(std::vector<uint8_t> &&sectors_,
 	std::array<uint8_t, NUM_DIF_LEVELS> numTroops_,
 	std::array<uint8_t, NUM_DIF_LEVELS> numTroopsVariance_)
 	: sectors(std::move(sectors_)), numTroops(numTroops_), numTroopsVariance(numTroopsVariance_) {}
@@ -12,7 +12,7 @@ const CacheSectorsModel* CacheSectorsModel::deserialize(const JsonValue& doc)
 {
 	auto sectorIDs = JsonUtility::parseSectorList(doc, "sectors");
 	return new CacheSectorsModel(
-		sectorIDs,
+		std::move(sectorIDs),
 		JsonUtility::readIntArrayByDiff(doc, "numTroops"),
 		JsonUtility::readIntArrayByDiff(doc, "numTroopsVariance")
 		);

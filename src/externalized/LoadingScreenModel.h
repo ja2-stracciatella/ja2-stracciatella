@@ -10,7 +10,7 @@
 // Definition of a Loading Screen
 struct LoadingScreen
 {
-	LoadingScreen(uint8_t index_, ST::string internalName_, ST::string filename_)
+	LoadingScreen(uint8_t index_, ST::string&& internalName_, ST::string&& filename_)
 		: index(index_), internalName(std::move(internalName_)), filename(std::move(filename_)) {}
 
 	uint8_t index;
@@ -31,7 +31,7 @@ struct LoadingScreenMapping
 class LoadingScreenModel
 {
 public:
-	LoadingScreenModel(std::vector<LoadingScreen> screensList, std::vector<LoadingScreenMapping> screensMapping);
+	LoadingScreenModel(std::vector<LoadingScreen>&& screensList, std::vector<LoadingScreenMapping>&& screensMapping);
 
 	// returns NULL if the given sector is not mapped
 	const LoadingScreen* getScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const;

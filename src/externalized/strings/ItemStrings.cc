@@ -52,7 +52,7 @@ VanillaItemStrings VanillaItemStrings::deserialize(SGPFile* file) {
 			auto name = LoadEncryptedString(file, seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
 			auto description = LoadEncryptedString(file, seek + SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME, SIZE_ITEM_INFO);
 
-			itemStrings.items.emplace(std::make_pair(index, VanillaItem{shortName, name, description}));
+			itemStrings.items.emplace(std::make_pair(index, VanillaItem{std::move(shortName), std::move(name), std::move(description)}));
 
 			index++;
 		} catch (const std::runtime_error& error) {

@@ -39,7 +39,7 @@ const std::vector<LoadingScreen> PREDEFINED_SCREENS = {
 	LoadingScreen(LOADINGSCREEN_NIGHTSAM,      "NIGHTSAM",      "/ls_nightsam.sti")
 };
 
-LoadingScreenModel::LoadingScreenModel(std::vector<LoadingScreen> screensList_, std::vector<LoadingScreenMapping> screensMapping_)
+LoadingScreenModel::LoadingScreenModel(std::vector<LoadingScreen>&& screensList_, std::vector<LoadingScreenMapping>&& screensMapping_)
 	: screensList(std::move(screensList_)), screensMapping(std::move(screensMapping_)) {}
 
 const LoadingScreen* LoadingScreenModel::getScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
@@ -107,7 +107,7 @@ LoadingScreenModel* LoadingScreenModel::deserialize(const JsonValue& screensList
 			});
 	}
 
-	return new LoadingScreenModel(screens, mappings);
+	return new LoadingScreenModel(std::move(screens), std::move(mappings));
 }
 
 

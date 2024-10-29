@@ -189,8 +189,8 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					sound,
-					silencedSound);
+					std::move(sound),
+					std::move(silencedSound));
 	}
 	else if (internalType == "M_PISTOL")
 	{
@@ -227,10 +227,10 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					sound,
-					burstSound,
-					silencedSound,
-					silencedBurstSound);
+					std::move(sound),
+					std::move(burstSound),
+					std::move(silencedSound),
+					std::move(silencedBurstSound));
 	}
 	else if (internalType == "SMG")
 	{
@@ -267,10 +267,10 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 				Range,
 				AttackVolume,
 				HitVolume,
-				sound,
-				burstSound,
-				silencedSound,
-				silencedBurstSound);
+				std::move(sound),
+				std::move(burstSound),
+				std::move(silencedSound),
+				std::move(silencedBurstSound));
 	}
 	else if (internalType == "SN_RIFLE")
 	{
@@ -303,8 +303,8 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					sound,
-					silencedSound);
+					std::move(sound),
+					std::move(silencedSound));
 	}
 	else if(internalType == "RIFLE")
 	{
@@ -337,8 +337,8 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 				Range,
 				AttackVolume,
 				HitVolume,
-				sound,
-				silencedSound);
+				std::move(sound),
+				std::move(silencedSound));
 	}
 	else if (internalType == "ASRIFLE")
 	{
@@ -375,10 +375,10 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					sound,
-					burstSound,
-					silencedSound,
-					silencedBurstSound);
+					std::move(sound),
+					std::move(burstSound),
+					std::move(silencedSound),
+					std::move(silencedBurstSound));
 	}
 	else if (internalType == "SHOTGUN")
 	{
@@ -415,10 +415,10 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					sound,
-					burstSound,
-					silencedSound,
-					silencedBurstSound);
+					std::move(sound),
+					std::move(burstSound),
+					std::move(silencedSound),
+					std::move(silencedBurstSound));
 	}
 	else if (internalType == "LMG")
 	{
@@ -454,10 +454,10 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 				Range,
 				AttackVolume,
 				HitVolume,
-				sound,
-				burstSound,
-				silencedSound,
-				silencedBurstSound);
+				std::move(sound),
+				std::move(burstSound),
+				std::move(silencedSound),
+				std::move(silencedBurstSound));
 	}
 	else if (internalType == "BLADE")
 	{
@@ -473,7 +473,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 				Deadliness,
 				Range,
 				AttackVolume,
-				Sound);
+				std::move(Sound));
 	}
 	else if (internalType == "THROWINGBLADE")
 	{
@@ -489,7 +489,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Deadliness,
 					Range,
 					AttackVolume,
-					Sound);
+					std::move(Sound));
 	}
 	else if (internalType == "PUNCHWEAPON")
 	{
@@ -503,7 +503,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					ShotsPer4Turns,
 					Deadliness,
 					AttackVolume,
-					Sound);
+					std::move(Sound));
 	}
 	else if (internalType == "LAUNCHER")
 	{
@@ -529,7 +529,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					Sound);
+					std::move(Sound));
 	}
 	else if (internalType == "LAW")
 	{
@@ -549,7 +549,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 				Range,
 				AttackVolume,
 				HitVolume,
-				Sound);
+				std::move(Sound));
 	}
 	else if (internalType == "CANNON")
 	{
@@ -573,7 +573,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					Sound);
+					std::move(Sound));
 	}
 	else if (internalType == "MONSTSPIT")
 	{
@@ -596,7 +596,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					Range,
 					AttackVolume,
 					HitVolume,
-					Sound,
+					std::move(Sound),
 					smokeEffect);
 	}
 
@@ -734,8 +734,8 @@ Pistol::Pistol(uint16_t itemIndex,
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string sound,
-		ST::string silencedSound)
+		ST::string&& sound,
+		ST::string&& silencedSound)
 	: WeaponModel(IC_GUN, GUN_PISTOL, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = HANDGUNCLASS;
@@ -750,8 +750,8 @@ Pistol::Pistol(uint16_t itemIndex,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->silencedSound  = silencedSound;
+	this->sound          = std::move(sound);
+	this->silencedSound  = std::move(silencedSound);
 	sReloadSound         = S_RELOAD_PISTOL;
 	sLocknLoadSound      = S_LNL_PISTOL;
 }
@@ -791,10 +791,10 @@ MPistol::MPistol(uint16_t itemIndex,
 			uint16_t Range,
 			uint8_t AttackVolume,
 			uint8_t HitVolume,
-			ST::string sound,
-			ST::string burstSound,
-			ST::string silencedSound,
-			ST::string silencedBurstSound)
+			ST::string&& sound,
+			ST::string&& burstSound,
+			ST::string&& silencedSound,
+			ST::string&& silencedBurstSound)
 	:WeaponModel(IC_GUN, GUN_M_PISTOL, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = HANDGUNCLASS;
@@ -811,10 +811,10 @@ MPistol::MPistol(uint16_t itemIndex,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->burstSound     = burstSound;
-	this->silencedSound  = silencedSound;
-	this->silencedBurstSound = silencedBurstSound;
+	this->sound          = std::move(sound);
+	this->burstSound     = std::move(burstSound);
+	this->silencedSound  = std::move(silencedSound);
+	this->silencedBurstSound = std::move(silencedBurstSound);
 	sReloadSound         = S_RELOAD_PISTOL;
 	sLocknLoadSound      = S_LNL_PISTOL;
 }
@@ -857,10 +857,10 @@ SMG::SMG(uint16_t itemIndex, ST::string&& internalName,
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string sound,
-		ST::string burstSound,
-		ST::string silencedSound,
-		ST::string silencedBurstSound)
+		ST::string&& sound,
+		ST::string&& burstSound,
+		ST::string&& silencedSound,
+		ST::string&& silencedBurstSound)
 	:WeaponModel(IC_GUN, GUN_SMG, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = SMGCLASS;
@@ -877,10 +877,10 @@ SMG::SMG(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->burstSound     = burstSound;
-	this->silencedSound  = silencedSound;
-	this->silencedBurstSound = silencedBurstSound;
+	this->sound          = std::move(sound);
+	this->burstSound     = std::move(burstSound);
+	this->silencedSound  = std::move(silencedSound);
+	this->silencedBurstSound = std::move(silencedBurstSound);
 	sReloadSound         = S_RELOAD_SMG;
 	sLocknLoadSound      = S_LNL_SMG;
 }
@@ -921,8 +921,8 @@ SniperRifle::SniperRifle(uint16_t itemIndex, ST::string&& internalName,
 				uint16_t Range,
 				uint8_t AttackVolume,
 				uint8_t HitVolume,
-				ST::string sound,
-				ST::string silencedSound)
+				ST::string&& sound,
+				ST::string&& silencedSound)
 	:WeaponModel(IC_GUN, GUN_SN_RIFLE, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
@@ -937,8 +937,8 @@ SniperRifle::SniperRifle(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->silencedSound  = silencedSound;
+	this->sound          = std::move(sound);
+	this->silencedSound  = std::move(silencedSound);
 	sReloadSound         = S_RELOAD_RIFLE;
 	sLocknLoadSound      = S_LNL_RIFLE;
 }
@@ -975,8 +975,8 @@ Rifle::Rifle(uint16_t itemIndex, ST::string&& internalName,
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string sound,
-		ST::string silencedSound)
+		ST::string&& sound,
+		ST::string&& silencedSound)
 	:WeaponModel(IC_GUN, GUN_RIFLE, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
@@ -991,8 +991,8 @@ Rifle::Rifle(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->silencedSound  = silencedSound;
+	this->sound          = std::move(sound);
+	this->silencedSound  = std::move(silencedSound);
 	sReloadSound         = S_RELOAD_RIFLE;
 	sLocknLoadSound      = S_LNL_RIFLE;
 }
@@ -1031,10 +1031,10 @@ AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string&& internalName,
 				uint16_t Range,
 				uint8_t AttackVolume,
 				uint8_t HitVolume,
-				ST::string sound,
-				ST::string burstSound,
-				ST::string silencedSound,
-				ST::string silencedBurstSound)
+				ST::string&& sound,
+				ST::string&& burstSound,
+				ST::string&& silencedSound,
+				ST::string&& silencedBurstSound)
 	:WeaponModel(IC_GUN, GUN_AS_RIFLE, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
@@ -1051,10 +1051,10 @@ AssaultRifle::AssaultRifle(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->burstSound     = burstSound;
-	this->silencedSound  = silencedSound;
-	this->silencedBurstSound = silencedBurstSound;
+	this->sound          = std::move(sound);
+	this->burstSound     = std::move(burstSound);
+	this->silencedSound  = std::move(silencedSound);
+	this->silencedBurstSound = std::move(silencedBurstSound);
 	sReloadSound         = S_RELOAD_RIFLE;
 	sLocknLoadSound      = S_LNL_RIFLE;
 }
@@ -1097,10 +1097,10 @@ Shotgun::Shotgun(uint16_t itemIndex, ST::string&& internalName,
 			uint16_t Range,
 			uint8_t AttackVolume,
 			uint8_t HitVolume,
-			ST::string sound,
-			ST::string burstSound,
-			ST::string silencedSound,
-			ST::string silencedBurstSound)
+			ST::string&& sound,
+			ST::string&& burstSound,
+			ST::string&& silencedSound,
+			ST::string&& silencedBurstSound)
 	:WeaponModel(IC_GUN, GUN_SHOTGUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = SHOTGUNCLASS;
@@ -1117,10 +1117,10 @@ Shotgun::Shotgun(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->burstSound     = burstSound;
-	this->silencedSound  = silencedSound;
-	this->silencedBurstSound = silencedBurstSound;
+	this->sound          = std::move(sound);
+	this->burstSound     = std::move(burstSound);
+	this->silencedSound  = std::move(silencedSound);
+	this->silencedBurstSound = std::move(silencedBurstSound);
 	sReloadSound         = S_RELOAD_SHOTGUN;
 	sLocknLoadSound      = S_LNL_SHOTGUN;
 }
@@ -1163,10 +1163,10 @@ LMG::LMG(uint16_t itemIndex, ST::string&& internalName,
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string sound,
-		ST::string burstSound,
-		ST::string silencedSound,
-		ST::string silencedBurstSound)
+		ST::string&& sound,
+		ST::string&& burstSound,
+		ST::string&& silencedSound,
+		ST::string&& silencedBurstSound)
 	:WeaponModel(IC_GUN, GUN_LMG, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = MGCLASS;
@@ -1183,10 +1183,10 @@ LMG::LMG(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = sound;
-	this->burstSound     = burstSound;
-	this->silencedSound  = silencedSound;
-	this->silencedBurstSound = silencedBurstSound;
+	this->sound          = std::move(sound);
+	this->burstSound     = std::move(burstSound);
+	this->silencedSound  = std::move(silencedSound);
+	this->silencedBurstSound = std::move(silencedBurstSound);
 	sReloadSound         = S_RELOAD_LMG;
 	sLocknLoadSound      = S_LNL_LMG;
 }
@@ -1222,7 +1222,7 @@ Blade::Blade(uint16_t itemIndex, ST::string&& internalName,
 		uint8_t Deadliness,
 		uint16_t Range,
 		uint8_t AttackVolume,
-		ST::string Sound)
+		ST::string&& Sound)
 	:WeaponModel(IC_BLADE, NOT_GUN, KNIFECURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = KNIFECLASS;
@@ -1233,7 +1233,7 @@ Blade::Blade(uint16_t itemIndex, ST::string&& internalName,
 	usRange              = Range;
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
-	this->sound          = Sound;
+	this->sound          = std::move(Sound);
 }
 
 JsonValue Blade::serialize() const
@@ -1257,7 +1257,7 @@ ThrowingBlade::ThrowingBlade(uint16_t itemIndex, ST::string&& internalName,
 				uint8_t Deadliness,
 				uint16_t Range,
 				uint8_t AttackVolume,
-				ST::string Sound)
+				ST::string&& Sound)
 	:WeaponModel(IC_THROWING_KNIFE, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = KNIFECLASS;
@@ -1268,7 +1268,7 @@ ThrowingBlade::ThrowingBlade(uint16_t itemIndex, ST::string&& internalName,
 	usRange              = Range;
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
-	this->sound          = Sound;
+	this->sound          = std::move(Sound);
 }
 
 JsonValue ThrowingBlade::serialize() const
@@ -1291,7 +1291,7 @@ PunchWeapon::PunchWeapon(uint16_t itemIndex, ST::string&& internalName,
 				uint8_t ShotsPer4Turns,
 				uint8_t Deadliness,
 				uint8_t AttackVolume,
-				ST::string Sound)
+				ST::string&& Sound)
 	:WeaponModel(IC_PUNCH, NOT_GUN, PUNCHCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = KNIFECLASS;
@@ -1301,7 +1301,7 @@ PunchWeapon::PunchWeapon(uint16_t itemIndex, ST::string&& internalName,
 	usRange              = 10;
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
-	this->sound          = Sound;
+	this->sound          = std::move(Sound);
 }
 
 
@@ -1328,7 +1328,7 @@ Launcher::Launcher(uint16_t itemIndex, ST::string&& internalName,
 			uint16_t Range,
 			uint8_t AttackVolume,
 			uint8_t HitVolume,
-			ST::string Sound)
+			ST::string&& Sound)
 	:WeaponModel(IC_LAUNCHER, NOT_GUN, TRAJECTORYCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
@@ -1341,7 +1341,7 @@ Launcher::Launcher(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = Sound;
+	this->sound          = std::move(Sound);
 	this->explosiveCalibre = explosiveCalibre;
 }
 
@@ -1370,7 +1370,7 @@ LAW::LAW(uint16_t itemIndex, ST::string&& internalName,
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound)
+		ST::string&& Sound)
 	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
@@ -1384,7 +1384,7 @@ LAW::LAW(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = Sound;
+	this->sound          = std::move(Sound);
 }
 
 JsonValue LAW::serialize() const
@@ -1413,7 +1413,7 @@ Cannon::Cannon(uint16_t itemIndex, ST::string&& internalName,
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound)
+		ST::string&& Sound)
 	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
 	ubWeaponClass        = RIFLECLASS;
@@ -1427,7 +1427,7 @@ Cannon::Cannon(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = Sound;
+	this->sound          = std::move(Sound);
 	this->explosiveCalibre = explosiveCalibre;
 }
 
@@ -1457,7 +1457,7 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string&& internalName,
 				uint16_t Range,
 				uint8_t AttackVolume,
 				uint8_t HitVolume,
-				ST::string Sound,
+				ST::string&& Sound,
 				uint16_t smokeEffect)
 	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, std::move(internalName))
 {
@@ -1473,7 +1473,7 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, ST::string&& internalName,
 	usReloadDelay        = 200;
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
-	this->sound          = Sound;
+	this->sound          = std::move(Sound);
 	usSmokeEffect        = smokeEffect;
 }
 

@@ -10,7 +10,7 @@
 class NpcPlacementModel
 {
 public:
-	NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t> sectorIds_,
+	NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t>&& sectorIds_,
 		bool isPlacedAtStart_, bool useAlternateMap_, bool isSciFiOnly_);
 
 	static NpcPlacementModel* deserialize(const JsonValue& element, const MercSystem* mercSystem);
