@@ -17,6 +17,7 @@ libc = "0.2"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 json_comments = "0.2"
+json-patch = "2.0.0"
 jsonschema = { version = "0.16", default-features = false, features = ["resolve-file"] }
 dirs = "4.0"
 byteorder = "1.4"

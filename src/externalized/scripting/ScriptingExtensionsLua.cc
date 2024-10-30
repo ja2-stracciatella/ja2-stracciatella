@@ -73,17 +73,21 @@ void RunEntryPoint()
 {
 	auto luaName = ENTRYPOINT_SCRIPT;
 	auto fileName = SCRIPTS_DIR "/" ENTRYPOINT_SCRIPT;
-	
-	SLOGD("Loading LUA script file: {}", luaName);
-	AutoSGPFile f{GCM->openGameResForReading(fileName)};
-	std::string scriptbody = f->readStringToEnd().to_std_string();
-	auto result = lua.safe_script(scriptbody, ST::format("@{}", luaName).to_std_string());
-	if (!result.valid())
-	{
-		sol::error err = result;
-		SLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:");
-		SLOGE(err.what());
-		isLuaDisabled = true;
+
+	SLOGD("Loading LUA script files: {}", luaName);
+	auto files = GCM->openGameResForReadingOnAllLayers(fileName);
+	for (auto it = files.rbegin(); it != files.rend(); ++it) {
+		std::string scriptbody = (*it)->readStringToEnd().to_std_string();
+
+		auto result = lua.safe_script(scriptbody, ST::format("@{}", luaName).to_std_string());
+		if (!result.valid())
+		{
+			sol::error err = result;
+			SLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:");
+			SLOGE(err.what());
+			isLuaDisabled = true;
+			break;
+		}
 	}
 }
 
@@ -121,7 +125,7 @@ void InitScriptingEngine()
 		RunEntryPoint();
 
 		isLuaInitialized = true;
-	} 
+	}
 	catch (const std::exception &ex)
 	{
 		SLOGE("Lua script engine has failed to initialize:\n {}", ex.what());
@@ -188,7 +192,7 @@ static void RegisterUserTypes()
 		"fTurnTimeLimit", &GAME_OPTIONS::fTurnTimeLimit,
 		"ubGameSaveMode", &GAME_OPTIONS::ubGameSaveMode
 		);
-	
+
 	lua.new_usertype<SOLDIERTYPE>("SOLDIERTYPE",
 		"ubID", &SOLDIERTYPE::ubID,
 		"ubProfile", &SOLDIERTYPE::ubProfile,
@@ -311,7 +315,7 @@ static void RegisterGlobals()
 	lua.set_function("GetCurrentSector", GetCurrentSector);
 	lua.set_function("GetSectorInfo", GetSectorInfo);
 	lua.set_function("GetUndergroundSectorInfo", GetUndergroundSectorInfo);
-	
+
 	lua.set_function("CreateItem", CreateItem);
 	lua.set_function("CreateMoney", CreateMoney);
 	lua.set_function("PlaceItem", PlaceItem);
@@ -380,7 +384,7 @@ static void InvokeFunction(ST::string functionName, A... args)
 {
 	if (isLuaDisabled)
 	{
-		SLOGE("Scripting engine has been disabled due to a previous error"); 
+		SLOGE("Scripting engine has been disabled due to a previous error");
 		return;
 	}
 
@@ -392,7 +396,7 @@ static void InvokeFunction(ST::string functionName, A... args)
 		isLuaDisabled = true;
 		return;
 	}
-	
+
 	auto result = func.call(args...);
 	if (!result.valid())
 	{
