@@ -3,6 +3,11 @@
 cmake_minimum_required (VERSION 3.18.1)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+if(POLICY CMP0156)
+    # de-deduplicate libraries when calling the linker
+    cmake_policy(SET CMP0156 NEW)
+endif()
+
 ## Some macros
 
 macro(add_custom_templated_target NAME)
