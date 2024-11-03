@@ -42,8 +42,8 @@ add_dependencies(${LAUNCHER_BINARY} stracciatella)
 target_link_libraries(${LAUNCHER_BINARY} PRIVATE
     ${FLTK_LIBRARIES}
     ${STRACCIATELLA_LIBRARIES}
-    ${LAUNCHER_LIBRARIES}
     ${SDL2_LIBRARY}
+    string_theory-internal
 )
 
 target_include_directories(${LAUNCHER_BINARY} PRIVATE

@@ -2,9 +2,21 @@
 
 option(LOCAL_MAGICENUM_LIB "Download and build magic_enum instead of searching the system" ON)
 
-if (NOT WITH_MAGICENUM)
+if(NOT WITH_MAGICENUM)
+    target_compile_definitions(${JA2_BINARY} PRIVATE NO_MAGICENUM_LIB)
     return()
 endif()
+
+function(verify_header test_dir)
+    include(CheckIncludeFileCXX)
+    set(CMAKE_REQUIRED_INCLUDES "${test_dir}")
+    unset(MAGICENUM_FOUND CACHE)
+    CHECK_INCLUDE_FILE_CXX("magic_enum.hpp" MAGICENUM_FOUND)
+    if (NOT MAGICENUM_FOUND)
+        message(FATAL_ERROR "magic_enum.hpp not found")
+    endif()
+    target_include_directories(${JA2_BINARY} PRIVATE "${test_dir}" SYSTEM)
+endfunction()
 
 if (NOT LOCAL_MAGICENUM_LIB)
     message(STATUS "Using system magic_enum")
@@ -13,16 +25,7 @@ if (NOT LOCAL_MAGICENUM_LIB)
         message(FATAL_ERROR "MAGICENUM_INCLUDE_DIR var not set")
     endif()
 
-    include(CheckIncludeFileCXX)
-    set (CMAKE_REQUIRED_INCLUDES "${MAGICENUM_INCLUDE_DIR}")
-
-    CHECK_INCLUDE_FILE_CXX("magic_enum.hpp" MAGICENUM_FOUND)
-    if (NOT MAGICENUM_FOUND)
-        message(FATAL_ERROR "magic_enum.hpp not found")
-    endif()
-
-    set(MAGICENUM_INCLUDE_DIR "${MAGICENUM_INCLUDE_DIR}" PARENT_SCOPE)
-
+    verify_header("${MAGICENUM_INCLUDE_DIR}")
     return()
 endif()
 
@@ -40,6 +43,6 @@ configure_file(
 execute_process(COMMAND ${CMAKE_COMMAND} . "-G${CMAKE_GENERATOR}" "-DCMAKE_SYSTEM_VERSION=${CMAKE_SYSTEM_VERSION}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/getter")
 execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_BINARY_DIR}/getter")
 
-set(MAGICENUM_INCLUDE_DIR ${SRC_DIR}/include PARENT_SCOPE)
+verify_header("${SRC_DIR}/include")
 
 message(STATUS "</magic_enum>")

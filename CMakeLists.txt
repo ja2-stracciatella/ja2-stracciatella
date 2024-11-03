@@ -152,13 +152,13 @@ message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY}; SDL2 Include Dir: ${SDL2_INCLUD
 
 
 # Dependencies must be processed first so the src directory can reliably use them.
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-magic_enum")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-lua")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-sol2")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-stracciatella")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-string_theory")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-miniaudio")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-magic_enum")
 if (MINGW)
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-mingw-std-threads")
 endif()
