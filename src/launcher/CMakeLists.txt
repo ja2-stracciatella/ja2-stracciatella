@@ -55,3 +55,17 @@ target_include_directories(${LAUNCHER_BINARY} PRIVATE
 )
 
 add_warnings(${LAUNCHER_BINARY})
+
+add_custom_target(run-${LAUNCHER_BINARY}
+    COMMAND "$<TARGET_FILE:${LAUNCHER_BINARY}>"
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:${LAUNCHER_BINARY}>"
+    DEPENDS "${LAUNCHER_BINARY}"
+)
+
+if(APPLE)
+    add_custom_command(TARGET ${LAUNCHER_BINARY}
+        POST_BUILD COMMAND
+        ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
+        "$<TARGET_FILE:${LAUNCHER_BINARY}>"
+    )
+endif()

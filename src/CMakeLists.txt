@@ -5,13 +5,12 @@ option(ENABLE_PCH "Use precompiled standard library headers during compilation" 
 option(WITH_ASAN "Build with address sanitizer" OFF)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
-option(WITH_MAGICENUM "Build with magic_enum library" ON)
 
 if(MSVC)
 	# set the source and execution charset
 	add_compile_options("/utf-8")
 	# suppress the min and max macro definitions
-	target_compile_definitions(ja2 PRIVATE NOMINMAX)
+	add_compile_definitions(NOMINMAX)
 endif()
 
 function(add_warnings target)

@@ -87,6 +87,7 @@ option(BUILD_SDL_LIB "Build SDL from source" OFF)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 # @see LOCAL_STRING_THEORY_LIB in dependencies/lib-string_theory/CMakeLists.txt
 option(WITH_UNITTESTS "Build with unittests" ON)
+option(WITH_MAGICENUM "Build with magic_enum library" ON)
 option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 option(WITH_RUST_BINARIES "Include rust binaries in build" ON)
 # @see LOCAL_LUA_LIB in dependencies/lib-lua/CMakeLists.txt
@@ -228,10 +229,6 @@ if (APPLE)
             POST_BUILD COMMAND
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
             "$<TARGET_FILE:${JA2_BINARY}>")
-    add_custom_command(TARGET ${LAUNCHER_BINARY}
-            POST_BUILD COMMAND
-            ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
-            "$<TARGET_FILE:${LAUNCHER_BINARY}>")
 endif()
 
 ## Auxiliary targets
@@ -254,13 +251,6 @@ add_custom_target(run-${JA2_BINARY}-unittests
     DEPENDS "${JA2_BINARY}"
 )
 
-if (TARGET "${LAUNCHER_BINARY}")
-    add_custom_target(run-${LAUNCHER_BINARY}
-        COMMAND "$<TARGET_FILE:${LAUNCHER_BINARY}>"
-        WORKING_DIRECTORY "$<TARGET_FILE_DIR:${LAUNCHER_BINARY}>"
-        DEPENDS "${LAUNCHER_BINARY}"
-    )
-endif()
 
 ## Installing and Packaging
 
