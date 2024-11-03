@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Animation_Data.h"
-#include "game/TacticalAI/NPC.h"
 #include "MercProfileInfo.h"
+#include "NPC.h"
 #include "Overhead_Types.h"
+#include "Quests.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
-#include "Quests.h"
 
 namespace Internals
 {

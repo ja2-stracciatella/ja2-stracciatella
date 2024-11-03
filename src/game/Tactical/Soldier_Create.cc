@@ -39,8 +39,8 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "policy/GamePolicy.h"
-#include "externalized/strategic/BloodCatSpawnsModel.h"
+#include "GamePolicy.h"
+#include "BloodCatSpawnsModel.h"
 
 #include <string_theory/string>
 

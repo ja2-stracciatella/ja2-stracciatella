@@ -2,8 +2,8 @@
 
 #include "DefaultContentManager.h"
 #include "ItemStrings.h"
-#include "sgp/FileMan.h"
-#include "externalized/TestUtils.h"
+#include "FileMan.h"
+#include "TestUtils.h"
 #include <utility>
 
 DefaultContentManagerUT::DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions)

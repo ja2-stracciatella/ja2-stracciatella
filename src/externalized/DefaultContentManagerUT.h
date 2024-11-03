@@ -1,6 +1,6 @@
 #pragma once
 
-#include "externalized/DefaultContentManager.h"
+#include "DefaultContentManager.h"
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 extern ContentManager * GCM;

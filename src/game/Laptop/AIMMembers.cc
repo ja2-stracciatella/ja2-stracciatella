@@ -48,10 +48,10 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
-#include "game/GameRes.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "policy/GamePolicy.h"
+#include "GamePolicy.h"
+#include "GameRes.h"
 
 #include <string_theory/format>
 #include <string_theory/string>

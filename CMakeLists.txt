@@ -84,22 +84,18 @@ set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 # @see CARGO_BUILD_TARGET in dependencies/lib-stracciatella/CMakeLists.txt
 option(BUILD_SDL_LIB "Build SDL from source" OFF)
-option(LOCAL_FLTK_LIB "Build with fltk lib" OFF)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 # @see LOCAL_STRING_THEORY_LIB in dependencies/lib-string_theory/CMakeLists.txt
 option(WITH_UNITTESTS "Build with unittests" ON)
-option(WITH_FIXMES "Build with fixme messages" OFF)
-option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
-option(WITH_MAGICENUM "Build with magic_enum library" ON)
-option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 option(WITH_RUST_BINARIES "Include rust binaries in build" ON)
-option(WITH_ASAN "Build with address sanitizer" OFF)
-option(ENABLE_PCH "Use precompiled standard library headers during compilation" OFF)
 # @see LOCAL_LUA_LIB in dependencies/lib-lua/CMakeLists.txt
 # @see LOCAL_SOL_LIB in dependencies/lib-sol2/CMakeLists.txt
 # @see LOCAL_MINIAUDIO_LIB in dependencies/lib-miniaudio/CMakeLists.txt
 set(WITH_CUSTOM_LOCALE "" CACHE STRING "Set a custom locale at the start, leave empty to disable")
+# Options specific to building C++ files can be found in the list file for
+# the src directory. Options specific to building the launcher application
+# arelocated in the list file for the launcher directory.
 
 if(MSVC)
 	foreach(_var
@@ -130,13 +126,6 @@ else()
     add_executable(${JA2_BINARY})
 endif()
 
-if(MSVC)
-	# set the source and execution charset
-	add_compile_options("/utf-8")
-	# suppress the min and max macro definitions
-	target_compile_definitions(ja2 PRIVATE NOMINMAX)
-endif()
-
 if(NOT "${WITH_CUSTOM_LOCALE}" STREQUAL "")
     add_definitions("-DWITH_CUSTOM_LOCALE=\"${WITH_CUSTOM_LOCALE}\"")
 endif()
@@ -147,16 +136,6 @@ set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 
 message(STATUS "Setting directory for libraries to: ${INSTALL_LIB_DIR}")
 add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
-
-if (WITH_FIXMES)
-    message(STATUS "Building with fixme messages" )
-    target_compile_definitions(ja2 PRIVATE WITH_FIXMES)
-endif()
-
-if (WITH_MAEMO)
-    message(STATUS "Building with right click mapped to F4 (menu button)" )
-    target_compile_definitions(ja2 PRIVATE WITH_MAEMO)
-endif()
 
 if(BUILD_SDL_LIB)
     set(SDL2_LIBRARY "")
@@ -171,35 +150,8 @@ else()
 endif()
 message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY}; SDL2 Include Dir: ${SDL2_INCLUDE_DIR}")
 
-if (NOT WITH_MAGICENUM)
-    message(STATUS "Compiling without magic_enum. This build will not have enum-gen functionalities")
-    target_compile_definitions(ja2 PRIVATE NO_MAGICENUM_LIB)
-endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR ENABLE_ASSERTS)
-    target_compile_definitions(ja2 PRIVATE ENABLE_ASSERTS)
-endif()
-
-if(BUILD_LAUNCHER)
-    if (NOT LOCAL_FLTK_LIB)
-        find_package(FLTK)
-        if(NOT FLTK_FOUND)
-            message(STATUS "FLTK not found. Disabling launcher.")
-            set(BUILD_LAUNCHER OFF)
-        endif()
-    else()
-        set(FLTK_LIBRARIES "")
-        set(FLTK_INCLUDE_DIR "")
-        add_subdirectory("dependencies/lib-fltk")
-    endif()
-endif()
-message(STATUS "Fltk Libraries: ${FLTK_LIBRARIES}")
-
-set(JA2_INCLUDES "")
-set(JA2_SOURCES "")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/game")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
+# Dependencies must be processed first so the src directory can reliably use them.
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-lua")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-sol2")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
@@ -211,40 +163,8 @@ if (MINGW)
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-mingw-std-threads")
 endif()
 
-if(BUILD_LAUNCHER)
-    set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR} ${SDL2_INCLUDE_DIR})
-    set(LAUNCHER_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.cc"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/SGPFile.cc"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/SGPStrings.cc"
-    )
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
-endif()
-
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${JA2_INCLUDES}
-)
-target_include_directories(${JA2_BINARY} SYSTEM PRIVATE
-    ${SDL2_INCLUDE_DIR}
-    ${SOL_INCLUDE_DIR}
-    ${LUA_INCLUDE_DIRS}
-    ${MINIAUDIO_INCLUDE_DIRS}
-    ${MAGICENUM_INCLUDE_DIR}
-)
-
-if(BUILD_LAUNCHER)
-    include_directories(
-        ${LAUNCHER_INCLUDES}
-    )
-endif()
-
-foreach(FILE ${JA2_SOURCES})
-  get_filename_component(PARENT_DIR "${FILE}" PATH)
-  file(RELATIVE_PATH GROUP "${CMAKE_CURRENT_SOURCE_DIR}" "${PARENT_DIR}")
-  string(REPLACE "/" "\\" GROUP "${GROUP}")
-  source_group("${GROUP}" FILES "${FILE}")
-endforeach()
+# Prepare compilation of our own C++ source files.
+add_subdirectory(src)
 
 if (WITH_UNITTESTS)
     message(STATUS "Compiling with unittests" )
@@ -261,8 +181,7 @@ if (WITH_UNITTESTS)
     target_compile_definitions(ja2 PRIVATE WITH_UNITTESTS)
 endif()
 
-set(
-    JA2_LIBRARIES
+target_link_libraries(${JA2_BINARY} PRIVATE
     ${SDL2_LIBRARY}
     ${GTEST_LIBRARIES}
     smacker
@@ -270,79 +189,16 @@ set(
     string_theory-internal
     lua
 )
-set(
-    LAUNCHER_LIBRARIES
-    ${SDL2_LIBRARY}
-    string_theory-internal
-)
 if (MINGW)
-    LIST(APPEND JA2_LIBRARIES mingw_stdthreads ntdll)
+    target_link_libraries(${JA2_BINARY} PRIVATE mingw_stdthreads ntdll)
 endif()
 if (ANDROID)
-    LIST(APPEND JA2_LIBRARIES android log)
-endif()
-
-target_sources(ja2 PRIVATE ${JA2_SOURCES})
-target_link_libraries(${JA2_BINARY} ${JA2_LIBRARIES})
-# target_compile_features(ja2 PRIVATE cxx_std_20)  # not yet...
-
-if (WITH_ASAN)
-    target_compile_options(${JA2_BINARY} PRIVATE -fsanitize=address)
-    target_link_options(${JA2_BINARY} PRIVATE -fsanitize=address)
+    target_link_libraries(${JA2_BINARY} PRIVATE android log)
 endif()
 
 add_dependencies(${JA2_BINARY} stracciatella)
 set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game/GameVersion.cc APPEND PROPERTY COMPILE_DEFINITIONS "GAME_VERSION=v${ja2-stracciatella_VERSION}")
 
-function(add_warnings target)
-    if (NOT MSVC)
-        target_compile_options(${target} PRIVATE -Wall -Wtype-limits -Wignored-qualifiers)
-    else()
-        target_compile_options(${target} PRIVATE /W3 /wd4018 /wd4101 /wd4200 /wd4244 /wd4996)
-        # 4018 : example: signed/unsigned mismatch
-        # 4101 : example: unreferenced local variable
-        # 4200 : example: nonstandard extension used : zero-sized array in struct/union
-        # 4244 : example: conversion from 'int' to 'real', possible loss of data
-        # 4996 : example: This function or variable may be unsafe (sscanf)
-    endif()
-endfunction()
-
-add_warnings(${JA2_BINARY})
-
-if(ENABLE_PCH)
-    target_precompile_headers(ja2 PRIVATE
-        <algorithm>
-        <array>
-        <chrono>
-        <cmath>
-        <functional>
-        <map>
-        <memory>
-        <numeric>
-        <optional>
-        <random>
-        <set>
-        <stdexcept>
-        <stdint.h>
-        <stdlib.h>
-        <type_traits>
-        <utility>
-        <vector>
-    )
-endif()
-
-if(BUILD_LAUNCHER)
-    add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} ${LAUNCHER_LIBRARIES})
-    add_dependencies(${LAUNCHER_BINARY} stracciatella)
-    add_warnings(${LAUNCHER_BINARY})
-    if (MSVC)
-        target_compile_definitions(${LAUNCHER_BINARY} PRIVATE NOMINMAX)
-    endif()
-endif()
-
-set_target_properties(${JA2_BINARY} PROPERTIES
-    UNITY_BUILD_MODE "GROUP")
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD

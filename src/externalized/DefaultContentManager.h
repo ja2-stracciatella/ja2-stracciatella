@@ -4,7 +4,7 @@
  * of this class or inheriting from it there should not be any reason to
  * include this file instead of ContentManager.h.
  */
-#include "game/GameRes.h"
+#include "GameRes.h"
 
 #include "ContentManager.h"
 #include "ContentMusic.h"

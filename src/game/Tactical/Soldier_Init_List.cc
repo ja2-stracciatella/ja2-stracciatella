@@ -30,7 +30,6 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "externalized/strategic/BloodCatSpawnsModel.h"
 
 BOOLEAN gfOriginalList = TRUE;
 

@@ -15,14 +15,14 @@ extern "C" {
 #include "smacker.h"
 }
 
-#include "externalized/ContentManager.h"
-#include "externalized/GameInstance.h"
-#include "game/Utils/Cinematics.h"
-#include "sgp/Debug.h"
-#include "sgp/HImage.h"
-#include "sgp/VObject.h"
-#include "sgp/VSurface.h"
-#include "sgp/SoundMan.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "Cinematics.h"
+#include "Debug.h"
+#include "HImage.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include "SoundMan.h"
 
 struct SMKFLIC
 {
