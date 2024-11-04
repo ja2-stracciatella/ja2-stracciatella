@@ -87,7 +87,6 @@ option(BUILD_SDL_LIB "Build SDL from source" OFF)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 # @see LOCAL_STRING_THEORY_LIB in dependencies/lib-string_theory/CMakeLists.txt
 option(WITH_UNITTESTS "Build with unittests" ON)
-option(WITH_MAGICENUM "Build with magic_enum library" ON)
 option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 option(WITH_RUST_BINARIES "Include rust binaries in build" ON)
 # @see LOCAL_LUA_LIB in dependencies/lib-lua/CMakeLists.txt
@@ -99,6 +98,11 @@ set(WITH_CUSTOM_LOCALE "" CACHE STRING "Set a custom locale at the start, leave 
 # arelocated in the list file for the launcher directory.
 
 if(MSVC)
+    # set the source and execution charset
+    add_compile_options("/utf-8")
+    # suppress the min and max macro definitions
+    add_compile_definitions(NOMINMAX)
+
 	foreach(_var
 		CMAKE_CXX_FLAGS_DEBUG
 		CMAKE_CXX_FLAGS_RELEASE

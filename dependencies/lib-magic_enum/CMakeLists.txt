@@ -1,5 +1,6 @@
 # \file dependencies/lib-magic_enum/CMakeLists.txt
 
+option(WITH_MAGICENUM "Build with magic_enum library" ON)
 option(LOCAL_MAGICENUM_LIB "Download and build magic_enum instead of searching the system" ON)
 
 if(NOT WITH_MAGICENUM)
@@ -15,7 +16,7 @@ function(verify_header test_dir)
     if (NOT MAGICENUM_FOUND)
         message(FATAL_ERROR "magic_enum.hpp not found")
     endif()
-    target_include_directories(${JA2_BINARY} PRIVATE "${test_dir}" SYSTEM)
+    target_include_directories(${JA2_BINARY} SYSTEM PRIVATE "${test_dir}")
 endfunction()
 
 if (NOT LOCAL_MAGICENUM_LIB)
