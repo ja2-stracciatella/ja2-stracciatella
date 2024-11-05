@@ -4,6 +4,7 @@
 #include "ItemModel.h"
 #include "LoadSaveRealObject.h"
 #include "Physics.h"
+#include "Overhead_Types.h"
 #include "Structure.h"
 #include "TileDat.h"
 #include "WCheck.h"
@@ -51,7 +52,6 @@
 #define GLAUNCHER_START_ANGLE			(FLOAT)( PI/8 )
 #define GLAUNCHER_HIGHER_LEVEL_START_ANGLE	(FLOAT)( PI/6 )
 
-#define GET_THROW_HEIGHT( l )			(INT16)( ( l * 256 ) )
 #define GET_SOLDIER_THROW_HEIGHT( l )		(INT16)( ( l * 256 ) + STANDING_HEIGHT )
 
 #define GET_OBJECT_LEVEL( z )			( (INT8)( ( z + 10 ) / HEIGHT_UNITS ) )
@@ -60,13 +60,7 @@
 
 #define MAX_INTEGRATIONS			8
 
-#define TIME_MULTI				1.8
-
-//#define TIME_MULTI				2.2
-
-
-#define DELTA_T					( 1.0 * TIME_MULTI )
-
+constexpr float TIME_MULTI = 1.8f;
 
 #define GRAVITY					( 9.8 * 2.5 )
 //#define GRAVITY				( 9.8 * 2.8 )
@@ -75,17 +69,11 @@
 #define NUM_OBJECT_SLOTS			50
 static REAL_OBJECT ObjectSlots[NUM_OBJECT_SLOTS];
 UINT32  guiNumObjectSlots = 0;
-BOOLEAN fDampingActive = FALSE;
-//real   Kdl = (float)0.5; // LINEAR DAMPENING ( WIND RESISTANCE )
-float   Kdl = (float)( 0.1 * TIME_MULTI ); // LINEAR DAMPENING ( WIND RESISTANCE )
 
-#define EPSILONV				0.5
-#define EPSILONP				(float)0.01
-#define EPSILONPZ				3
+constexpr float EPSILONV = 0.5f;
+constexpr float EPSILONP = 0.01f;
 
-#define CALCULATE_OBJECT_MASS( m )		( (float)( m * 2 ) )
 #define SCALE_VERT_VAL_TO_HORZ( f )		( ( f / HEIGHT_UNITS ) * CELL_X_SIZE )
-#define SCALE_HORZ_VAL_TO_VERT( f )		( ( f / CELL_X_SIZE ) * HEIGHT_UNITS )
 
 
 #define REALOBJ2ID(o) 				((o) - ObjectSlots)
@@ -199,8 +187,7 @@ static BOOLEAN RemoveRealObject(REAL_OBJECT* const o)
 }
 
 
-static void SimulateObject(REAL_OBJECT* pObject, float deltaT);
-
+static void SimulateObject(REAL_OBJECT* pObject);
 
 void SimulateWorld(  )
 {
@@ -218,7 +205,7 @@ void SimulateWorld(  )
 				// Get object
 				pObject = &( ObjectSlots[ cnt ] );
 
-				SimulateObject( pObject, (float)DELTA_T );
+				SimulateObject(pObject);
 			}
 		}
 	}
@@ -243,18 +230,16 @@ void RemoveAllPhysicsObjects( )
 }
 
 
-static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject);
-static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, float DeltaTime);
-static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime);
+static void PhysicsComputeForces(REAL_OBJECT* pObject);
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID);
+static void PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime);
 static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject);
 static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime);
 
 
-static void SimulateObject(REAL_OBJECT* pObject, float deltaT)
+static void SimulateObject(REAL_OBJECT * const pObject)
 {
-	float   DeltaTime = 0;
-	float   CurrentTime = 0;
-	float   TargetTime = DeltaTime;
+	constexpr float deltaT = 1.0f * TIME_MULTI;
 	INT32   iCollisionID;
 	BOOLEAN fEndThisObject = FALSE;
 
@@ -265,26 +250,19 @@ static void SimulateObject(REAL_OBJECT* pObject, float deltaT)
 
 	if ( pObject->fAlive )
 	{
-		CurrentTime = 0;
-		TargetTime = (float)deltaT;
+		float CurrentTime = 0;
+		constexpr float TargetTime = deltaT;
 
 		// Do subtime here....
-		DeltaTime = (float)deltaT / (float)10;
+		constexpr float DeltaTime = deltaT / 10.0f;
 
-		if ( !PhysicsComputeForces( pObject ) )
-		{
-			return;
-		}
+		PhysicsComputeForces(pObject);
 
 		while( CurrentTime < TargetTime )
 		{
-			if ( !PhysicsIntegrate( pObject, DeltaTime ) )
-			{
-				fEndThisObject = TRUE;
-				break;
-			}
+			PhysicsIntegrate(pObject, DeltaTime);
 
-			if ( !PhysicsHandleCollisions( pObject, &iCollisionID, DeltaTime  ) )
+			if (!PhysicsHandleCollisions(pObject, &iCollisionID))
 			{
 				fEndThisObject = TRUE;
 				break;
@@ -312,7 +290,7 @@ static void SimulateObject(REAL_OBJECT* pObject, float deltaT)
 }
 
 
-static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
+static void PhysicsComputeForces(REAL_OBJECT* pObject)
 {
 	vector_3			vTemp;
 
@@ -322,7 +300,7 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 	pObject->Force.z -= (float)GRAVITY;
 
 	// Set intial force to zero
-	pObject->InitialForce = VMultScalar( &(pObject->InitialForce ), 0 );
+	pObject->InitialForce = {};
 
 	if ( pObject->fApplyFriction )
 	{
@@ -331,15 +309,6 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 
 		pObject->fApplyFriction = FALSE;
 	}
-
-	if( fDampingActive )
-	{
-		vTemp = VMultScalar( &(pObject->Velocity), -Kdl );
-		pObject->Force = VAdd( &(vTemp), &(pObject->Force) );
-
-	}
-
-	return( TRUE );
 }
 
 
@@ -458,7 +427,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime)
 }
 
 
-static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
+static void PhysicsIntegrate(REAL_OBJECT * const pObject, float const DeltaTime)
 {
 	vector_3			vTemp;
 
@@ -502,8 +471,6 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
 			}
 		}
 	}
-
-	return( TRUE );
 }
 
 
@@ -511,7 +478,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, float CoefficientOfRestitution);
 
 
-static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, float DeltaTime)
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID)
 {
 	FLOAT dDeltaX, dDeltaY, dDeltaZ;
 
@@ -628,7 +595,6 @@ static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID
 
 static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisionID)
 {
-	vector_3 vTemp;
 	FLOAT    dDeltaX, dDeltaY, dDeltaZ, dX, dY, dZ;
 	INT32    iCollisionCode = COLLISION_NONE;
 	BOOLEAN  fDoCollision = FALSE;
@@ -642,9 +608,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 	dY = pObject->Position.y;
 	dZ = pObject->Position.z;
 
-	vTemp.x = 0;
-	vTemp.y = 0;
-	vTemp.z = 0;
+	vector_3 vTemp{};
 
 	dDeltaX = dX - pObject->OldPosition.x;
 	dDeltaY = dY - pObject->OldPosition.y;
@@ -1441,7 +1405,7 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 	// Alrighty, move this beast until it dies....
 	while( pObject->fAlive )
 	{
-		SimulateObject( pObject, (float)DELTA_T );
+		SimulateObject(pObject);
 	}
 
 	// Calculate gridno from last position
@@ -1476,7 +1440,7 @@ static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE
 	// Alrighty, move this beast until it dies....
 	while( pObject->fAlive )
 	{
-		SimulateObject( pObject, (float)DELTA_T );
+		SimulateObject(pObject);
 	}
 
 
@@ -1501,7 +1465,7 @@ static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE
 
 
 static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees);
-static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, FLOAT dDegrees, const OBJECTTYPE* pItem, BOOLEAN fArmed);
+static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pItem, BOOLEAN fArmed);
 
 
 static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ,  FLOAT* pdMagForce, FLOAT* pdDegrees, INT16* psFinalGridNo, BOOLEAN fArmed)
@@ -1594,7 +1558,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 	FindBestForceForTrajectory( pSoldier->sGridNo, sGridNo, sStartZ, sEndZ, dDegrees, pItem, psFinalGridNo, &dMagForce );
 
 	// Adjust due to max range....
-	dMaxForce   = CalculateSoldierMaxForce( pSoldier, dDegrees, pItem, fArmed );
+	dMaxForce = CalculateSoldierMaxForce(pSoldier, pItem, fArmed);
 
 	if ( fIndoors )
 	{
@@ -1714,12 +1678,12 @@ static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees)
 }
 
 
-static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, FLOAT dDegrees, const OBJECTTYPE* pItem, BOOLEAN fArmed)
+static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pItem, BOOLEAN fArmed)
 {
 	INT32 uiMaxRange;
 	FLOAT dMagForce;
 
-	dDegrees = (FLOAT)( PI/4 );
+	constexpr float dDegrees = float(PI / 4);
 
 	uiMaxRange = CalcMaxTossRange( pSoldier, pItem->usItem, fArmed );
 
@@ -1871,7 +1835,7 @@ static BOOLEAN CheckForCatcher(REAL_OBJECT* const o, UINT16 const structure_id)
 	if (o->fTestObject  != NO_TEST_OBJECT)          return FALSE;
 	if (o->ubActionCode != THROW_TARGET_MERC_CATCH) return FALSE;
 	// Is it a guy?
-	if (structure_id    >= INVALID_STRUCTURE_ID)    return FALSE;
+	if (structure_id    >= MAX_NUM_SOLDIERS)        return FALSE;
 	// Is it the same guy?
 	if (o->target       != &GetMan(structure_id))   return FALSE;
 	if (!DoCatchObject(o))                          return FALSE;
@@ -1886,7 +1850,7 @@ static void CheckForObjectHittingMerc(REAL_OBJECT* const o, UINT16 const structu
 	// Do we want to catch?
 	if (o->fTestObject != NO_TEST_OBJECT)             return;
 	// Is it a guy?
-	if (structure_id   >= INVALID_STRUCTURE_ID)       return;
+	if (structure_id   >= MAX_NUM_SOLDIERS)           return;
 	if (structure_id   == o->ubLastTargetTakenDamage) return;
 
 	SOLDIERTYPE& s      = GetMan(structure_id);
