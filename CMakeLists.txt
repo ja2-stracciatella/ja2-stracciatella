@@ -95,7 +95,7 @@ option(WITH_RUST_BINARIES "Include rust binaries in build" ON)
 set(WITH_CUSTOM_LOCALE "" CACHE STRING "Set a custom locale at the start, leave empty to disable")
 # Options specific to building C++ files can be found in the list file for
 # the src directory. Options specific to building the launcher application
-# arelocated in the list file for the launcher directory.
+# are located in the list file for the launcher directory.
 
 if(MSVC)
     # set the source and execution charset
