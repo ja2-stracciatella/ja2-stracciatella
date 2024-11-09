@@ -162,6 +162,8 @@ void Launcher::show() {
 	populateChoices();
 	initializeInputsFromDefaults();
 
+	playButton->take_focus();
+
 	const Fl_PNG_Image icon("logo32.png", logo32_png, 1374);
 	stracciatellaLauncher->icon(&icon);
 	stracciatellaLauncher->show();
@@ -729,9 +731,9 @@ void Launcher::enableMods(Fl_Widget* widget, void* userdata) {
 	for (auto i = window->availableModsBrowser->size(); i > 0; i--) {
 		if (window->availableModsBrowser->selected(i) && window->availableModsBrowser->visible(i)) {
 			updated = true;
-			window->enabledModsBrowser->insert(1, window->availableModsBrowser->text(i));
-			window->enabledModsBrowser->data(1, window->availableModsBrowser->data(i));
-			window->enabledModsBrowser->select(1, 1);
+			window->enabledModsBrowser->add(window->availableModsBrowser->text(i), window->availableModsBrowser->data(i));
+			window->enabledModsBrowser->select(window->enabledModsBrowser->size());
+			window->enabledModsBrowser->bottomline(window->enabledModsBrowser->size());
 			window->availableModsBrowser->hide(i);
 		}
 	}
@@ -817,7 +819,7 @@ void Launcher::selectGameVersion(Fl_Widget* widget, void* userdata)
 	GameVersion currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
 	if (currentResourceVersion == GameVersion::SIMPLIFIED_CHINESE)
 	{
-		//force enalbe Simplified Chinese Mod
+		//force enable Simplified Chinese Mod
 		for (auto i = window->availableModsBrowser->size(); i > 0; i--)
 		{
 			char* modId = static_cast<char*>(window->availableModsBrowser->data(i));
