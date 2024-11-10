@@ -215,7 +215,7 @@ unsigned int JsonObject::getOptionalUInt(const char* name, unsigned int defaultV
     }
 }
 
-const ST::string JsonObject::getOptionalString(const char *name) const
+const ST::string JsonObject::getOptionalString(const char *name, const ST::string defaultValue) const
 {
     if(has(name))
     {
@@ -223,7 +223,7 @@ const ST::string JsonObject::getOptionalString(const char *name) const
     }
     else
     {
-        return {};
+        return defaultValue;
     }
 }
 

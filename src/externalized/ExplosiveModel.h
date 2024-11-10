@@ -38,7 +38,7 @@ struct ExplosiveModel : ItemModel
 	static ExplosiveModel* deserialize(const JsonValue &json,
 						const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 						const std::vector<const ExplosionAnimationModel*> &animations,
-						const VanillaItemStrings& vanillaItemStrings);
+						const BinaryData& vanillaItemStrings);
 
 	uint8_t getDamage() const;
 	uint8_t getStunDamage() const;

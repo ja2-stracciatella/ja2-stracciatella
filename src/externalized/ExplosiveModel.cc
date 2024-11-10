@@ -150,7 +150,7 @@ ExplosiveModel::ExplosiveModel(
 	this->animation = animation;
 }
 
-ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres, const std::vector<const ExplosionAnimationModel*> &animations, const VanillaItemStrings& vanillaItemStrings) {
+ExplosiveModel* ExplosiveModel::deserialize(const JsonValue &json, const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres, const std::vector<const ExplosionAnimationModel*> &animations, const BinaryData& vanillaItemStrings) {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, vanillaItemStrings };
 

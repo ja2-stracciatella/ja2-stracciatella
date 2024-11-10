@@ -62,7 +62,7 @@ public:
 	// Extract merc profile from the json data.
 	static std::unique_ptr<MERCPROFILESTRUCT> deserializeStruct(const MERCPROFILESTRUCT* binaryProf, const JsonObject& json, const ContentManager* contentManager);
 	// Extract relations tables for merc profiles from the json data.
-	static void deserializeStructRelations(MERCPROFILESTRUCT* prof, const JsonObject& json, const ContentManager* contentManager);
+	static void deserializeStructRelations(const MERCPROFILESTRUCT* binaryProf, MERCPROFILESTRUCT* prof, const JsonObject& json, const ContentManager* contentManager);
 
 protected:
 	const ProfileID m_profileID;

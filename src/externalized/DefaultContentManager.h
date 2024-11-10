@@ -277,16 +277,16 @@ protected:
 
 	RustPointer<Vfs> m_vfs;
 
-	bool loadGameData(const VanillaItemStrings& vanillaItemStrings);
+	bool loadGameData(const BinaryData& vanillaItemStrings);
 	/* Extracts the content that requires load precedence and it can't be resolved
 	   by changing the order of execution of other functions. */
 	bool loadPrioritizedData();
-	bool loadWeapons(const VanillaItemStrings& vanillaItemStrings);
+	bool loadWeapons(const BinaryData& vanillaItemStrings);
 	bool loadSmokeEffects();
 	bool loadExplosionAnimations();
-	bool loadExplosives(const VanillaItemStrings& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations);
-	bool loadItems(const VanillaItemStrings& vanillaItemStrings);
-	bool loadMagazines(const VanillaItemStrings& vanillaItemStrings);
+	bool loadExplosives(const BinaryData& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations);
+	bool loadItems(const BinaryData& vanillaItemStrings);
+	bool loadMagazines(const BinaryData& vanillaItemStrings);
 	bool loadExplosiveCalibres();
 	bool loadCalibres();
 	bool loadAmmoTypes();
@@ -304,7 +304,7 @@ protected:
 
 	bool loadStrategicLayerData();
 	bool loadTacticalLayerData();
-	bool loadMercsData();
+	bool loadMercsData(const BinaryData& binaryProfiles);
 	void loadVehicles();
 	void loadTranslationTable();
 	void loadAllScriptRecords();

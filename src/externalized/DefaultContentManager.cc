@@ -22,12 +22,10 @@
 #include "JsonUtility.h"
 #include "ExplosiveCalibreModel.h"
 #include "LoadingScreenModel.h"
-#include "LoadSaveMercProfile.h"
 #include "MagazineModel.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Profile_Type.h"
-#include "Tactical_Save.h"
 #include "VehicleModel.h"
 #include "WeaponModels.h"
 #include "army/ArmyCompositionModel.h"
@@ -496,7 +494,7 @@ const ExplosionAnimationModel* DefaultContentManager::getExplosionAnimation(uint
 	return *it;
 }
 
-bool DefaultContentManager::loadWeapons(const VanillaItemStrings& vanillaItemStrings)
+bool DefaultContentManager::loadWeapons(const BinaryData& vanillaItemStrings)
 {
 	auto json = readJsonDataFileWithSchema("weapons.json");
 	for (auto& element : json.toVec()) {
@@ -556,7 +554,7 @@ bool DefaultContentManager::loadExplosiveCalibres()
 	return true;
 }
 
-bool DefaultContentManager::loadExplosives(const VanillaItemStrings& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations)
+bool DefaultContentManager::loadExplosives(const BinaryData& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations)
 {
 	auto json = readJsonDataFileWithSchema("explosives.json");
 	for (auto& element : json.toVec()) {
@@ -569,7 +567,7 @@ bool DefaultContentManager::loadExplosives(const VanillaItemStrings& vanillaItem
 	return true;
 }
 
-bool DefaultContentManager::loadItems(const VanillaItemStrings& vanillaItemStrings)
+bool DefaultContentManager::loadItems(const BinaryData& vanillaItemStrings)
 {
 	auto json = readJsonDataFileWithSchema("items.json");
 	for (auto& el : json.toVec())
@@ -591,7 +589,7 @@ bool DefaultContentManager::loadItems(const VanillaItemStrings& vanillaItemStrin
 	return true;
 }
 
-bool DefaultContentManager::loadMagazines(const VanillaItemStrings& vanillaItemStrings)
+bool DefaultContentManager::loadMagazines(const BinaryData& vanillaItemStrings)
 {
 	auto json = readJsonDataFileWithSchema("magazines.json");
 	for (auto& element : json.toVec())
@@ -794,26 +792,27 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<ST
 /** Load the game data and the item descriptions from the original game resources. */
 bool DefaultContentManager::loadGameData()
 {
-	return loadGameData(VanillaItemStrings::deserialize(
-		AutoSGPFile{ openGameResForReading(VanillaItemStrings::filename()) }));
+	return loadGameData(BinaryData::deserialize(
+		AutoSGPFile{ openGameResForReading(BinaryData::itemsFilename()) },
+		AutoSGPFile{ openGameResForReading(BinaryData::profilesFilename()) }));
 }
 
 
 /** Load the game data. */
-bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemStrings)
+bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 {
 	loadPrioritizedData();
 
 	m_items.resize(MAXITEMS);
-	bool result = loadItems(vanillaItemStrings)
+	bool result = loadItems(binaryData)
 		&& loadCalibres()
 		&& loadExplosiveCalibres()
 		&& loadAmmoTypes()
-		&& loadMagazines(vanillaItemStrings)
-		&& loadWeapons(vanillaItemStrings)
+		&& loadMagazines(binaryData)
+		&& loadWeapons(binaryData)
 		&& loadSmokeEffects()
 		&& loadExplosionAnimations()
-		&& loadExplosives(vanillaItemStrings, m_explosionAnimations)
+		&& loadExplosives(binaryData, m_explosionAnimations)
 		&& loadArmyData()
 		&& loadMusic();
 
@@ -826,7 +825,7 @@ bool DefaultContentManager::loadGameData(VanillaItemStrings const& vanillaItemSt
 
 	m_mapItemReplacements = MapItemReplacementModel::deserialize(replacement_json, this);
 
-	loadMercsData();
+	loadMercsData(binaryData);
 	loadAllDealersAndInventory();
 
 	auto game_json = readJsonDataFileWithSchema("game.json");
@@ -1172,22 +1171,9 @@ bool DefaultContentManager::loadTacticalLayerData()
 	return true;
 }
 
-bool DefaultContentManager::loadMercsData()
+bool DefaultContentManager::loadMercsData(const BinaryData& binaryProfiles)
 {
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
-
-	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> binary_mercStructs(NUM_PROFILES);
-	AutoSGPFile f(openGameResForReading(BINARYDATADIR "/prof.dat"));
-	bool const isCorrectlyEncoded = !(isRussianVersion() || isRussianGoldVersion());
-	for (ProfileID profileID = 0; profileID != NUM_PROFILES; ++profileID) {
-		BYTE data[MERC_PROFILE_SIZE];
-		JA2EncryptedFileRead(f, data, sizeof(data));
-		auto prof = std::make_unique<MERCPROFILESTRUCT>();
-		UINT32 checksum;
-		ExtractMercProfile(data, *prof, false, &checksum, isCorrectlyEncoded);
-		// not checking the checksum
-		binary_mercStructs[profileID] = std::move(prof);
-	}
 
 	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> temp_mercStructs(NUM_PROFILES);
 	auto json = readJsonDataFileWithSchema("mercs-profiles.json");
@@ -1197,14 +1183,7 @@ bool DefaultContentManager::loadMercsData()
 		ProfileID profileID = profileInfo->profileID;
 		m_mercProfileInfo[profileID] = profileInfo;
 		m_mercProfiles.push_back(new MercProfile(profileID));
-		// If there are no json fields beside the 3 mandatory ones (profileID, internalName, type)
-		if (charProperties.keys().size() == 3) {
-			// use only the prof.dat data
-			temp_mercStructs[profileID] = std::move(binary_mercStructs[profileID]);
-		}
-		else {
-			temp_mercStructs[profileID] = MercProfile::deserializeStruct(binary_mercStructs[profileID].get(), charProperties, this);
-		}
+		temp_mercStructs[profileID] = MercProfile::deserializeStruct(binaryProfiles.getProfile(profileID), charProperties, this);
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
 
@@ -1212,7 +1191,7 @@ bool DefaultContentManager::loadMercsData()
 	for (auto& element : json.toVec()) {
 		JsonObject reader = element.toObject();
 		const MercProfileInfo* inf = this->getMercProfileInfoByName(reader.GetString("profile"));
-		MercProfile::deserializeStructRelations(temp_mercStructs[inf->profileID].get(), reader, this);
+		MercProfile::deserializeStructRelations(binaryProfiles.getProfile(inf->profileID), temp_mercStructs[inf->profileID].get(), reader, this);
 	}
 	for (auto& element : temp_mercStructs) {
 		if (element != nullptr) {
