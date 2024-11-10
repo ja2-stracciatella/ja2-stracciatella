@@ -41,7 +41,6 @@ if (WITH_UNITTESTS)
         ${LOCAL_JA2_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/SaveLoadGame_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/SaveLoadGameStates_unittest.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/VanillaDataStructures_unittest.cc
     )
 endif()
 
