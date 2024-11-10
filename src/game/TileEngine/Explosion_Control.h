@@ -73,7 +73,7 @@ void RemoveAllActiveTimedBombs( void );
 
 #define GASMASK_MIN_STATUS 70
 
-BOOLEAN DishOutGasDamage(SOLDIERTYPE* pSoldier, const SmokeEffectModel* smokeEffect, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* owner);
+BOOLEAN DishOutGasDamage(SOLDIERTYPE* pSoldier, const SmokeEffectModel* smokeEffect, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, SOLDIERTYPE* owner);
 
 void HandleExplosionQueue();
 

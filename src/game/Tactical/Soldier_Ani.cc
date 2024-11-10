@@ -2603,6 +2603,10 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 							continue;
 						}
 						break;
+
+					default:
+						// C++23: std::unreachable();
+						continue;
 				}
 
 				// TO LOS check to killed

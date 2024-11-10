@@ -318,7 +318,7 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(ST::string filename) const
 {
-	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	RustPointer<VFile> vfile(Vfs_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
@@ -328,10 +328,35 @@ SGPFile* DefaultContentManager::openGameResForReading(ST::string filename) const
 	return new SGPFile(vfile.release(), std::move(filename));
 }
 
+/* Open a game resource file for reading, evaluating all layers, I will return highest priority layer first. */
+std::vector<std::unique_ptr<SGPFile>> DefaultContentManager::openGameResForReadingOnAllLayers(const ST::string& filename) const
+{
+	RustPointer<VecUSize> layers(Vfs_readLayers(m_vfs.get(), filename.c_str()));
+	if (!layers)
+	{
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("openGameResForReadingOnAllLayers: {}", err.get()).to_std_string());
+	}
+	std::vector<std::unique_ptr<SGPFile>> result;
+	auto numLayers = VecUSize_len(layers.get());
+	for (uintptr_t i = 0; i < numLayers; i++) {
+		auto layerIndex = VecUSize_get(layers.get(), i);
+		RustPointer<VFile> vfile(Vfs_openInLayer(m_vfs.get(), layerIndex, filename.c_str()));
+		if (!vfile)
+		{
+			RustPointer<char> err{getRustError()};
+			throw std::runtime_error(ST::format("openGameResForReadingOnAllLayers: {}", err.get()).to_std_string());
+		}
+		SLOGD("Opened resource file from VFS layer {}: '{}'", layerIndex, filename);
+		result.push_back(std::make_unique<SGPFile>(vfile.release(), filename));
+	}
+	return result;
+}
+
 /* Checks if a game resource exists. */
 bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 {
-	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	RustPointer<VFile> vfile(Vfs_open(m_vfs.get(), filename.c_str()));
 	return static_cast<bool>(vfile.get());
 }
 
@@ -558,7 +583,7 @@ bool DefaultContentManager::loadExplosives(const BinaryData& vanillaItemStrings,
 {
 	auto json = readJsonDataFileWithSchema("explosives.json");
 	for (auto& element : json.toVec()) {
-		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_explosionAnimations, vanillaItemStrings);
+		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_smokeEffects, m_explosionAnimations, vanillaItemStrings);
 		SLOGD("Loaded explosive {} {}", e->getItemIndex(), e->getInternalName());
 
 		m_items[e->getItemIndex()] = e;
@@ -877,30 +902,9 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 
 JsonValue DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
-	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = f->readStringToEnd();
-
-	ST::string patchJsonData;
-	ST::string patchFileName = fileName.replace(".json", ".patch.json");
-	bool doesPatchExist = doesGameResExists(patchFileName);
-	if (doesPatchExist) {
-		AutoSGPFile pf(openGameResForReading(patchFileName));
-		patchJsonData = pf->readStringToEnd();
-	}
-
-	JsonValue v(0);
-	try {
-		if (doesPatchExist) {
-			v = JsonValue::deserialize(jsonData, patchJsonData);
-		}
-		else {
-			v = JsonValue::deserialize(jsonData);
-		}
-	} catch (const std::runtime_error &ex) {
-		throw std::runtime_error(ST::format("failed to read file {} or read/apply {}: {}", fileName, patchFileName, ex.what()).c_str());
-	}
-
-	return v;
+	auto r = Vfs_readPatchedJson(m_vfs.get(), fileName.c_str());
+	throwRustError(!r);
+	return JsonValue(r);
 }
 
 JsonValue DefaultContentManager::readJsonDataFileWithSchema(const ST::string& jsonPath) const

@@ -17,7 +17,6 @@ stracciatella = { path = "../stracciatella" }
 tempfile = "3.3"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
-json-patch = "2.0.0"
 
 [target.'cfg(target_os = "android")'.dependencies.jni]
 version = "0.14"

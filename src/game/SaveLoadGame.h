@@ -11,20 +11,16 @@
 #define BYTESINMEGABYTE				1048576 //1024*1024
 #define REQUIRED_FREE_SPACE				(20 * BYTESINMEGABYTE)
 
-#define SIZE_OF_SAVE_GAME_DESC				128
-
 #define NUM_SAVE_GAME_BACKUPS				2
 
-#define GAME_VERSION_LENGTH				16
-
-#define SAVE__ERROR_NUM				99
-#define SAVE__END_TURN_NUM				98
-
-#define SAVED_GAME_HEADER_ON_DISK_SIZE			(432) // Size of SAVED_GAME_HEADER on disk in Vanilla and Stracciatella Windows
-#define SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN	(688) // Size of SAVED_GAME_HEADER on disk in Stracciatella Linux
 
 struct SAVED_GAME_HEADER
 {
+	static constexpr size_t GAME_VERSION_LENGTH{ 16 };
+	static constexpr size_t ON_DISK_SIZE{ 432 }; // Size of SAVED_GAME_HEADER on disk in Vanilla and Stracciatella Windows
+	static constexpr size_t ON_DISK_SIZE_STRAC_LIN{ 688 }; // Size of SAVED_GAME_HEADER on disk in Stracciatella Linux
+	static constexpr size_t SIZE_OF_SAVE_GAME_DESC{ 128 }; // Number of UTF-16 characters reserved for the description string
+
 	UINT32	uiSavedGameVersion;
 	char zGameVersionNumber[GAME_VERSION_LENGTH];
 
@@ -70,10 +66,6 @@ extern bool isValidSavedGameHeader(SAVED_GAME_HEADER& h);
 /** @brief Extract saved game header from a file.
  * Return \a stracLinuxFormat = true, when the file is in "Stracciatella Linux" format. */
 void ExtractSavedGameHeaderFromFile(HWFILE, SAVED_GAME_HEADER&, bool *stracLinuxFormat);
-
-/** @brief Extract saved game header from a save name. Uses GCM to determine save location
- * Return \a stracLinuxFormat = true, when the file is in "Stracciatella Linux" format. */
-void ExtractSavedGameHeaderFromSave(const ST::string &saveName, SAVED_GAME_HEADER&, bool *stracLinuxFormat);
 
 
 extern ScreenID guiScreenToGotoAfterLoadingSavedGame;

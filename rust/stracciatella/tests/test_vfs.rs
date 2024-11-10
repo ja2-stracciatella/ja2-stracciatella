@@ -16,6 +16,272 @@ mod vfs {
     }
 
     #[test]
+    fn read_in_layer() {
+        let (temp, dir, dir_fs) = create_temp_dir();
+        create_file(&dir.join("foo/bar/dironly.txt"));
+        create_file(&dir.join("foo/bar/baz.txt"));
+        create_foo_slf(&dir);
+        create_foobar_slf(&dir);
+
+        let mut vfs = Vfs::new();
+        vfs.add_dir(&dir).expect("dir");
+        add_slf(&mut vfs, &dir_fs, "foo.slf");
+        add_slf(&mut vfs, &dir_fs, "foobar.slf");
+
+        // File exists in dir layer
+        assert_eq!(
+            read_file_data_in_layer(&vfs, 0, "foo/bar/dironly.txt")
+                .expect("read in layer")
+                .expect("content"),
+            b"dironly.txt"
+        );
+        // File exists in multiple layers
+        assert_eq!(
+            read_file_data_in_layer(&vfs, 0, "foo/bar/baz.txt")
+                .expect("read in layer")
+                .expect("content"),
+            b"baz.txt"
+        );
+        assert_eq!(
+            read_file_data_in_layer(&vfs, 1, "foo/bar/baz.txt")
+                .expect("read in layer")
+                .expect("content"),
+            b"foo.slf"
+        );
+        assert_eq!(
+            read_file_data_in_layer(&vfs, 2, "foo/bar/baz.txt")
+                .expect("read in layer")
+                .expect("content"),
+            b"foobar.slf"
+        );
+        // File does not exist
+        assert!(read_file_data_in_layer(&vfs, 0, "foo/foo/baz.txt")
+            .expect("read in layer")
+            .is_none());
+        // File is a directory
+        assert!(read_file_data_in_layer(&vfs, 0, "foo")
+            .expect("read in layer")
+            .is_none());
+
+        temp.close().expect("close temp dir");
+    }
+
+    #[test]
+    fn read_patched_json() {
+        let (temp, dir, _) = create_temp_dir();
+
+        // Invalid json
+        create_file(&dir.join("layer1/invalid.json"));
+
+        // All of the patches should apply
+        create_json_file(&dir.join("layer1/basic.json"), &json!({}));
+        create_json_file(
+            &dir.join("layer1/basic.patch.json"),
+            &json!([ { "op": "add", "path": "/layer1", "value": true } ]),
+        );
+        create_json_file(
+            &dir.join("layer2/basic.patch.json"),
+            &json!([ { "op": "add", "path": "/layer2", "value": true } ]),
+        );
+        create_json_file(
+            &dir.join("layer3/basic.patch.json"),
+            &json!([ { "op": "add", "path": "/layer3", "value": true } ]),
+        );
+
+        // Patch order should be correct
+        create_json_file(&dir.join("layer1/order.json"), &json!([]));
+        create_json_file(
+            &dir.join("layer1/order.patch.json"),
+            &json!([ { "op": "add", "path": "/-", "value": "layer1" } ]),
+        );
+        create_json_file(
+            &dir.join("layer2/order.patch.json"),
+            &json!([ { "op": "add", "path": "/-", "value": "layer2" } ]),
+        );
+        create_json_file(
+            &dir.join("layer3/order.patch.json"),
+            &json!([ { "op": "add", "path": "/-", "value": "layer3" } ]),
+        );
+
+        // Only the higher level patches than the last full file should apply
+        create_json_file(&dir.join("layer1/higher-level.json"), &json!({}));
+        create_json_file(
+            &dir.join("layer2/higher-level.patch.json"),
+            &json!([ { "op": "add", "path": "/layer1", "value": true } ]),
+        );
+        create_json_file(&dir.join("layer2/higher-level.json"), &json!({}));
+        create_json_file(
+            &dir.join("layer2/higher-level.patch.json"),
+            &json!([ { "op": "add", "path": "/layer2", "value": true } ]),
+        );
+        create_json_file(
+            &dir.join("layer3/higher-level.patch.json"),
+            &json!([ { "op": "add", "path": "/layer3", "value": true } ]),
+        );
+
+        let mut vfs = Vfs::new();
+        vfs.add_dir(&dir.join("layer3")).expect("layer3");
+        vfs.add_dir(&dir.join("layer2")).expect("layer2");
+        vfs.add_dir(&dir.join("layer1")).expect("layer1");
+
+        // The sucess cases that were described above
+        assert_eq!(
+            vfs.read_patched_json(&Nfc::caseless_path("basic.json"))
+                .expect("read patched json"),
+            json!({ "layer1": true, "layer2": true, "layer3": true })
+        );
+        assert_eq!(
+            vfs.read_patched_json(&Nfc::caseless_path("order.json"))
+                .expect("read patched json"),
+            json!(["layer1", "layer2", "layer3"])
+        );
+        assert_eq!(
+            vfs.read_patched_json(&Nfc::caseless_path("higher-level.json"))
+                .expect("read patched json"),
+            json!({ "layer2": true, "layer3": true })
+        );
+
+        // Error cases
+        assert_eq!(
+            vfs.read_patched_json(&Nfc::caseless_path("nonexistant.sti"))
+                .expect_err("error")
+                .to_string(),
+            "patched json must end in .json extension"
+        );
+        assert_eq!(
+            vfs.read_patched_json(&Nfc::caseless_path("nonexistant.json"))
+                .expect_err("error")
+                .to_string(),
+            "entity not found"
+        );
+        assert!(vfs
+            .read_patched_json(&Nfc::caseless_path("invalid.json"))
+            .expect_err("error")
+            .to_string()
+            .contains("failed to deserialize json"));
+
+        temp.close().expect("close temp dir");
+    }
+
+    #[test]
+    fn exists() {
+        let (temp, dir, dir_fs) = create_temp_dir();
+        create_file(&dir.join("foo/foo1.txt"));
+        create_file(&dir.join("foo/Foo2.txt"));
+        create_foo_slf(&dir);
+
+        let mut vfs = Vfs::new();
+        vfs.add_dir(&dir).expect("dir");
+        add_slf(&mut vfs, &dir_fs, "foo.slf");
+
+        assert!(vfs
+            .exists(&Nfc::caseless_path("foo/foo1.txt"))
+            .expect("exists should work"));
+        assert!(vfs
+            .exists(&Nfc::caseless_path("foo/foo2.txt"))
+            .expect("exists should work"));
+        assert!(vfs
+            .exists(&Nfc::caseless_path("foo"))
+            .expect("exists should work"));
+        assert!(vfs
+            .exists(&Nfc::caseless_path("Foo"))
+            .expect("exists should work"));
+        assert!(vfs
+            .exists(&Nfc::caseless_path("foo/"))
+            .expect("exists should work"));
+        assert!(vfs
+            .exists(&Nfc::caseless_path("Foo/"))
+            .expect("exists should work"));
+        assert!(!vfs
+            .exists(&Nfc::caseless_path("foo2.txt"))
+            .expect("exists should work"));
+
+        temp.close().expect("close temp dir");
+    }
+
+    #[test]
+    fn read_layers_for_file() {
+        let (temp, dir, dir_fs) = create_temp_dir();
+        create_file(&dir.join("foo/bar/dironly.txt"));
+        create_file(&dir.join("root.txt"));
+        create_foo_slf(&dir);
+        create_foobar_slf(&dir);
+
+        let mut vfs = Vfs::new();
+        vfs.add_dir(&dir).expect("dir");
+        add_slf(&mut vfs, &dir_fs, "foo.slf");
+        add_slf(&mut vfs, &dir_fs, "foobar.slf");
+
+        // Root path
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("root.txt"))
+                .expect("read layers"),
+            vec![0]
+        );
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("Root.txt"))
+                .expect("read layers"),
+            vec![0]
+        );
+
+        // Specific file
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("foo/bar.txt"))
+                .expect("read layers"),
+            vec![1]
+        );
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("foo/Bar.txt"))
+                .expect("read layers"),
+            vec![1]
+        );
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("foo/bar/baz.txt"))
+                .expect("read layers"),
+            vec![1, 2]
+        );
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("foo/bar/baz.txt"))
+                .expect("read layers"),
+            vec![1, 2]
+        );
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("foo/bar/dironly.txt"))
+                .expect("read layers"),
+            vec![0]
+        );
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("foo/bar/dironly.txt"))
+                .expect("read layers"),
+            vec![0]
+        );
+
+        // Directory
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("foo"))
+                .expect("read layers"),
+            vec![0, 1, 2]
+        );
+        assert_eq!(
+            vfs.read_layers(&Nfc::caseless_path("Foo"))
+                .expect("read layers"),
+            vec![0, 1, 2]
+        );
+
+        // Nonexistant stuff
+        assert!(vfs
+            .read_layers(&Nfc::caseless_path("nonexistant.txt"))
+            .expect("read layers")
+            .is_empty());
+        assert!(vfs
+            .read_layers(&Nfc::caseless_path("foo/nonexistant.txt"))
+            .expect("read layers")
+            .is_empty());
+
+        temp.close().expect("close temp dir");
+    }
+
+    #[test]
     fn seek() {
         let (temp, dir, dir_fs) = create_temp_dir();
         create_data_slf(&dir); // data.slf
@@ -159,6 +425,7 @@ mod vfs {
     use std::path::{Path, PathBuf};
     use std::sync::Arc;
 
+    use serde_json::{json, Value};
     use stracciatella::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
     use stracciatella::fs;
     use stracciatella::fs::{OpenOptions, TempDir};
@@ -169,8 +436,24 @@ mod vfs {
     fn read_file_data(vfs: &Vfs, path: &str) -> Vec<u8> {
         let mut file = vfs.open(&Nfc::caseless_path(path)).expect("open");
         let mut data = Vec::new();
-        file.read_to_end(&mut data).expect("Vec<u8>");
+        file.read_to_end(&mut data).expect("read_to_end failed");
         data
+    }
+
+    fn read_file_data_in_layer(
+        vfs: &Vfs,
+        layer_index: usize,
+        path: &str,
+    ) -> std::io::Result<Option<Vec<u8>>> {
+        match vfs.open_in_layer(layer_index, &Nfc::caseless_path(path)) {
+            Ok(mut file) => {
+                let mut data = Vec::new();
+                file.read_to_end(&mut data).expect("read_to_end failed");
+                Ok(Some(data))
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+            Err(e) => Err(e),
+        }
     }
 
     fn assert_vfs_read_dir(vfs: &Vfs, path: &str, expected: &[&str]) {
@@ -222,16 +505,27 @@ mod vfs {
 
     /// The file data is the same as the filename.
     fn create_file(path: &Path) {
-        let dir = path.parent().expect("parent path");
         let name = path
             .file_name()
             .expect("file name")
             .to_str()
             .expect("file name string");
+        create_file_with_content(path, name.as_bytes());
+    }
+
+    /// Create file with json
+    fn create_json_file(path: &Path, content: &Value) {
+        let content = serde_json::to_vec(content).expect("json serialization");
+        create_file_with_content(path, &content);
+    }
+
+    /// Create file with specific content
+    fn create_file_with_content(path: &Path, content: &[u8]) {
+        let dir = path.parent().expect("parent path");
         if !dir.exists() {
             fs::create_dir_all(&dir).expect("create_dir_all");
         }
-        fs::write(&dir.join(&name), name.as_bytes()).expect("write");
+        fs::write(path, content).expect("write");
     }
 
     /// The inner file data is "foobar.slf".

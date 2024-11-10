@@ -16,9 +16,12 @@ use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
+use json_patch::Patch;
 use log::{info, warn};
+use serde_json::Value;
 
 use crate::fs;
+use crate::json;
 use crate::mods::ModManager;
 use crate::mods::ModPath;
 use crate::unicode::Nfc;
@@ -39,8 +42,10 @@ pub trait VfsFile:
 }
 
 pub trait VfsLayer: fmt::Debug + fmt::Display + Send + Sync {
-    // Opens a file in the VFS Layer
+    /// Opens a file in the VFS Layer
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>>;
+    /// Checks if a file exists in the VFS Layer
+    fn exists(&self, file_path: &Nfc) -> io::Result<bool>;
     // Lists a directory in the VFS Layer
     fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>>;
     /// Lists files with a specific extension in a directory in the VFS Layer
@@ -264,11 +269,106 @@ impl Vfs {
 
         Ok(())
     }
+
+    /// Opens a file in a specific VFS layer given by its index
+    pub fn open_in_layer(
+        &self,
+        layer_index: usize,
+        file_path: &Nfc,
+    ) -> io::Result<Box<dyn VfsFile>> {
+        if let Some(layer) = self.entries.get(layer_index) {
+            layer.open(file_path)
+        } else {
+            Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "layer index out of range",
+            ))
+        }
+    }
+
+    /// Returns the indexes of the layers that a path exists in
+    /// The resulting vector is ordered by the highest priority layer last
+    pub fn read_layers(&self, path: &Nfc) -> io::Result<Vec<usize>> {
+        let mut result = vec![];
+
+        for (idx, layer) in self.entries.iter().enumerate() {
+            if layer.exists(path)? {
+                result.push(idx);
+            }
+        }
+
+        Ok(result)
+    }
+
+    /// Opens a json file and applies optional patches on higher priority VFS layers
+    pub fn read_patched_json(&self, path: &Nfc) -> io::Result<Value> {
+        if path
+            .as_str()
+            .rsplit('.')
+            .next()
+            .map(|ext| ext.eq_ignore_ascii_case("json"))
+            != Some(true)
+        {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "patched json must end in .json extension",
+            ));
+        }
+        let patch_path =
+            Nfc::caseless_path(&format!("{}.patch.json", &path.as_str()[..path.len() - 5]));
+        let file_layers = self.read_layers(path)?;
+        let highest_prio_file_layer = if let Some(p) = file_layers.last() {
+            Ok(p)
+        } else {
+            Err(io::Error::new(io::ErrorKind::NotFound, "entity not found"))
+        }?;
+        let mut value: Value = {
+            let mut file = self.open_in_layer(*highest_prio_file_layer, path)?;
+            let mut content = String::new();
+            file.read_to_string(&mut content)?;
+            json::de::from_string(&content).map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    format!("failed to deserialize json: {}", e),
+                )
+            })?
+        };
+
+        let patch_layers = self.read_layers(&patch_path)?;
+        // Order patches from lowest to highest priority
+        for patch_layer in patch_layers.iter().rev() {
+            // Ignore patches with lower priority than the highest priority layer
+            if patch_layer > highest_prio_file_layer {
+                continue;
+            }
+
+            let patch_value: Patch = {
+                let mut file = self.open_in_layer(*patch_layer, &patch_path)?;
+                let mut content = String::new();
+                file.read_to_string(&mut content)?;
+                json::de::from_string(&content).map_err(|e| {
+                    io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        format!("failed to deserialize json: {}", e),
+                    )
+                })?
+            };
+
+            json_patch::patch(&mut value, &patch_value).map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    format!("failed to apply patch to json: {}", e),
+                )
+            })?;
+        }
+
+        Ok(value)
+    }
 }
 
 impl VfsLayer for Vfs {
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
-        for entry in self.entries.iter() {
+        for entry in &self.entries {
             let file_result = entry.open(file_path);
             if let Err(err) = &file_result {
                 if err.kind() == io::ErrorKind::NotFound {
@@ -278,6 +378,15 @@ impl VfsLayer for Vfs {
             return file_result;
         }
         Err(io::ErrorKind::NotFound.into())
+    }
+
+    fn exists(&self, file_path: &Nfc) -> io::Result<bool> {
+        for entry in &self.entries {
+            if entry.exists(file_path)? {
+                return Ok(true);
+            }
+        }
+        Ok(false)
     }
 
     fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {

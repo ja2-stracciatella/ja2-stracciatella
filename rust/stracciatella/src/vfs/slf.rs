@@ -100,6 +100,24 @@ impl VfsLayer for SlfFs {
         }
     }
 
+    fn exists(&self, file_path: &Nfc) -> io::Result<bool> {
+        if matches!(self.entries.get(file_path), Some(_)) {
+            // A file exists for this path in the SLF
+            return Ok(true);
+        }
+        let file_path = file_path.trim_end_matches('/');
+        if file_path.is_empty() {
+            // Root path always exists in the SLF
+            return Ok(true);
+        }
+        Ok(self
+            .entries
+            .keys()
+            .filter(|x| x.starts_with(file_path))
+            .count()
+            > 0)
+    }
+
     fn read_dir(&self, path: &Nfc) -> io::Result<HashSet<Nfc>> {
         // Remove trailing slashes from directories
         let path = path.trim_end_matches('/');

@@ -224,6 +224,8 @@ endif()
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
+)
+target_include_directories(${JA2_BINARY} SYSTEM PRIVATE
     ${SDL2_INCLUDE_DIR}
     ${SOL_INCLUDE_DIR}
     ${LUA_INCLUDE_DIRS}
@@ -274,7 +276,7 @@ set(
     string_theory-internal
 )
 if (MINGW)
-    LIST(APPEND JA2_LIBRARIES mingw_stdthreads)
+    LIST(APPEND JA2_LIBRARIES mingw_stdthreads ntdll)
 endif()
 if (ANDROID)
     LIST(APPEND JA2_LIBRARIES android log)

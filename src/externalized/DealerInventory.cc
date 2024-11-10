@@ -1,18 +1,14 @@
 #include "DealerInventory.h"
-
 #include "ItemModel.h"
 #include "ItemSystem.h"
 
-#include <string_theory/format>
-
-#include <stdexcept>
 
 DealerInventory::DealerInventory(const JsonValue& json, const ItemSystem *itemSystem)
 {
 	auto obj = json.toObject();
 	for (auto& it : obj.keys())
 	{
-		const ItemModel *item = itemSystem->getItemByName(it.c_str());
+		const ItemModel *item = itemSystem->getItemByName(it);
 		int count = obj.GetInt(it.c_str());
 		m_inventory.insert(std::make_pair(item, count));
 	}

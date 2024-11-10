@@ -1,6 +1,5 @@
 #include "Button_System.h"
 #include "FPS.h"
-#include "Font.h"
 #include "GameLoop.h"
 #include "GameSettings.h"
 #include "Input.h"
@@ -403,11 +402,6 @@ int main(int argc, char* argv[])
 		InitializeVideoSurfaceManager();
 
 		InitJA2SplashScreen();
-
-		// Initialize Font Manager
-		SLOGD("Initializing the Font Manager");
-		// Init the manager and copy the TransTable stuff into it.
-		InitializeFontManager();
 
 		SLOGD("Initializing Sound Manager");
 		InitializeSoundManager();

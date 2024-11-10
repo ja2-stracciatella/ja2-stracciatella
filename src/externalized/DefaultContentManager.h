@@ -63,6 +63,9 @@ public:
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(ST::string filename) const override;
 
+	/* Open a game resource file for reading, evaluating all layers, I will return highest priority layer first. */
+	virtual std::vector<std::unique_ptr<SGPFile>> openGameResForReadingOnAllLayers(const ST::string& filename) const override;
+
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const override;
 

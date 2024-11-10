@@ -11,10 +11,10 @@
 void readTraversibiltyIntoVector(const JsonValue& jsonArray, IntIntVector& vec, const TraversibilityMap& mapping, size_t expectedRows, size_t expectedCols);
 void readIntIntoVector(const JsonValue& jsonArray, IntIntVector& vec, size_t expectedRows, size_t expectedCols);
 
-MovementCostsModel::MovementCostsModel(IntIntVector traverseWE_,
-                                       IntIntVector traverseNS_,
-                                       IntIntVector traverseThrough_,
-                                       IntIntVector travelRatings_)
+MovementCostsModel::MovementCostsModel(IntIntVector&& traverseWE_,
+                                       IntIntVector&& traverseNS_,
+                                       IntIntVector&& traverseThrough_,
+                                       IntIntVector&& travelRatings_)
     : traverseWE(std::move(traverseWE_)), traverseNS(std::move(traverseNS_)),
       traverseThrough(std::move(traverseThrough_)),
       travelRatings(std::move(travelRatings_)) {}
@@ -60,10 +60,10 @@ MovementCostsModel* MovementCostsModel::deserialize(const JsonValue& json, const
 	readIntIntoVector(root["travelRatings"], travelRatings_, 16, 16);
 
 	return new MovementCostsModel(
-		traverseWE_,
-		traverseNS_,
-		traverseThrough_,
-		travelRatings_
+		std::move(traverseWE_),
+		std::move(traverseNS_),
+		std::move(traverseThrough_),
+		std::move(travelRatings_)
 	);
 }
 

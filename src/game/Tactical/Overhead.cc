@@ -1524,18 +1524,14 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 					bPosOfMask = NO_SLOT;
 				}
 
-				const SmokeEffectModel* smokeEffect = nullptr;
 				auto smokeEffectID = GetSmokeEffectOnTile(pSoldier->sGridNo, pSoldier->bLevel);
-				if (smokeEffectID != SmokeEffectID::NOTHING)
-				{
-					smokeEffect = GCM->getSmokeEffect(smokeEffectID);
-				}
+				auto smokeEffect = GCM->getSmokeEffect(smokeEffectID);
+				Assert(smokeEffect != nullptr);
 
 				// check the cases where we dont take damage
-				if (bPosOfMask != NO_SLOT && !smokeEffect->getIgnoresGasMask()) {
-					smokeEffect = nullptr;
-				}
-				if (AM_A_ROBOT(pSoldier) && !smokeEffect->getAffectsRobot()) {
+				auto ignoredByGasMask = bPosOfMask != NO_SLOT && !smokeEffect->getIgnoresGasMask();
+				auto ignoredForRobot = AM_A_ROBOT(pSoldier) && !smokeEffect->getAffectsRobot();
+				if (ignoredByGasMask || ignoredForRobot) {
 					smokeEffect = nullptr;
 				}
 
@@ -1543,7 +1539,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					EVENT_StopMerc(pSoldier);
 					fDontContinue = TRUE;
-					DishOutGasDamage(pSoldier, smokeEffect, TRUE, FALSE, smokeEffect->getDamage() + PreRandom(smokeEffect->getDamage()), 100 * (smokeEffect->getBreathDamage() + PreRandom(smokeEffect->getBreathDamage() / 2)), NULL);
+					DishOutGasDamage(pSoldier, smokeEffect, TRUE, FALSE, NULL);
 				}
 			}
 

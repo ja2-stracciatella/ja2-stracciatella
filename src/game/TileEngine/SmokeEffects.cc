@@ -143,10 +143,6 @@ bool IsSoldierAlreadyAffectedBySmokeEffect(const SOLDIERTYPE* soldier, const Smo
 
 void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel, SOLDIERTYPE* const owner)
 {
-	SmokeEffectID			smokeEffectID = SmokeEffectID::NOTHING;
-	UINT8				ubDuration=0;
-	UINT8				ubStartRadius=0;
-
 	SMOKEEFFECT* const pSmoke = GetFreeSmokeEffect();
 	if (pSmoke == NULL) return;
 
@@ -163,64 +159,13 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 		pSmoke->bFlags |= SMOKE_EFFECT_INDOORS;
 	}
 
+	auto smokeEffect = GCM->getExplosive(usItem)->getSmokeEffect();
 
-	switch( usItem )
-	{
-		case MUSTARD_GRENADE:
-
-			smokeEffectID	=	SmokeEffectID::MUSTARDGAS;
-			ubDuration				= 5;
-			ubStartRadius			= 1;
-			break;
-
-		case TEARGAS_GRENADE:
-		case GL_TEARGAS_GRENADE:
-			smokeEffectID	=	SmokeEffectID::TEARGAS;
-			ubDuration				= 5;
-			ubStartRadius			= 1;
-			break;
-
-		case BIG_TEAR_GAS:
-			smokeEffectID	=	SmokeEffectID::TEARGAS;
-			ubDuration				= 5;
-			ubStartRadius			= 1;
-			break;
-
-		case SMOKE_GRENADE:
-		case GL_SMOKE_GRENADE:
-
-			smokeEffectID	=	SmokeEffectID::SMOKE;
-			ubDuration				= 5;
-			ubStartRadius			= 1;
-			break;
-
-		case SMALL_CREATURE_GAS:
-			smokeEffectID	=	SmokeEffectID::CREATUREGAS;
-			ubDuration				= 3;
-			ubStartRadius			= 1;
-			break;
-
-		case LARGE_CREATURE_GAS:
-			smokeEffectID	=	SmokeEffectID::CREATUREGAS;
-			ubDuration				= 3;
-			ubStartRadius			= GCM->getExplosive(LARGE_CREATURE_GAS)->getRadius();
-			break;
-
-		case VERY_SMALL_CREATURE_GAS:
-
-			smokeEffectID	=	SmokeEffectID::CREATUREGAS;
-			ubDuration				= 2;
-			ubStartRadius			= 0;
-			break;
-	}
-
-
-
-	pSmoke->ubDuration	= ubDuration;
-	pSmoke->ubRadius    = ubStartRadius;
-	pSmoke->bAge				= 0;
+	pSmoke->ubDuration	= smokeEffect->duration;
+	pSmoke->ubRadius    = smokeEffect->initialRadius;
+	pSmoke->bAge		= 0;
 	pSmoke->fAllocated  = TRUE;
-	pSmoke->bType				= static_cast<int8_t>(smokeEffectID);
+	pSmoke->bType		= static_cast<int8_t>(smokeEffect->smokeEffect->getID());
 	pSmoke->owner       = owner;
 
 	if ( pSmoke->bFlags & SMOKE_EFFECT_INDOORS )
@@ -406,8 +351,8 @@ void DecaySmokeEffects(const UINT32 uiTime, const bool updateSightings)
 						// calculate the new cloud radius
 						// cloud expands by 1 every turn outdoors, and every other turn indoors
 
-						// ATE: If radius is < maximun, increase radius, otherwise keep at max
-						if ( pSmoke->ubRadius < GCM->getExplosive(pSmoke->usItem)->getRadius() )
+						// ATE: If radius is < maximum, increase radius, otherwise keep at max
+						if ( pSmoke->ubRadius < GCM->getExplosive(pSmoke->usItem)->getSmokeEffect()->maxRadius )
 						{
 							pSmoke->ubRadius++;
 						}

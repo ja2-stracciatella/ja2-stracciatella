@@ -3,8 +3,9 @@
 set(CMAKE_CXX_COMPILER "@CMAKE_CXX_COMPILER@")
 set(SDL2MAIN_LIBRARY "@SDL2MAIN_LIBRARY@")
 
-# XXX add more core dlls when needed
+# Add more core dlls when needed
 # these dlls will never be installed
+
 set(MINGW_CORE_DLLS
     "advapi32.dll"
     "bcrypt.dll"
@@ -14,6 +15,7 @@ set(MINGW_CORE_DLLS
     "imm32.dll"
     "kernel32.dll"
     "msvcrt.dll"
+    "ntdll.dll"
     "ole32.dll"
     "oleaut32.dll"
     "setupapi.dll"

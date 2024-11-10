@@ -83,8 +83,8 @@ const uint8_t s_savedGameHeaderStracLinux[] = {
 
 TEST(SaveLoadGameTest, structSizes)
 {
-	EXPECT_EQ(sizeof(s_savedGameHeaderVanilla),    static_cast<size_t>(SAVED_GAME_HEADER_ON_DISK_SIZE));
-	EXPECT_EQ(sizeof(s_savedGameHeaderStracLinux), static_cast<size_t>(SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN));
+	EXPECT_EQ(sizeof(s_savedGameHeaderVanilla),    SAVED_GAME_HEADER::ON_DISK_SIZE);
+	EXPECT_EQ(sizeof(s_savedGameHeaderStracLinux), SAVED_GAME_HEADER::ON_DISK_SIZE_STRAC_LIN);
 }
 
 
@@ -164,8 +164,8 @@ TEST(SaveLoadGameTest, savedGameHeaderValidityCheck)
 
 	// parse vanilla header with "strac linux" parser; should be invalid
 	// this needs some padding bytes at the end to avoid a buffer overrun
-	uint8_t paddedVanillaHeader[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN]{};
-	std::copy_n(s_savedGameHeaderVanilla, SAVED_GAME_HEADER_ON_DISK_SIZE, paddedVanillaHeader);
+	uint8_t paddedVanillaHeader[SAVED_GAME_HEADER::ON_DISK_SIZE_STRAC_LIN]{};
+	std::copy_n(s_savedGameHeaderVanilla, SAVED_GAME_HEADER::ON_DISK_SIZE, paddedVanillaHeader);
 	ParseSavedGameHeader(paddedVanillaHeader, header, true);
 	EXPECT_EQ(isValidSavedGameHeader(header), false);
 

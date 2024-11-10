@@ -80,6 +80,7 @@
 #include "Quests.h"
 #include "Random.h"
 #include "RenderWorld.h"
+#include "SGPFile.h"
 #include "SaveLoadGame.h"
 #include "SaveLoadGameStates.h"
 #include "SaveLoadScreen.h"
@@ -210,6 +211,41 @@ static void InjectGameOptions(DataWriter& d, GAME_OPTIONS const& g)
 	Assert(d.getConsumed() == start + 12);
 }
 
+namespace {
+// This function must be called after setting the file seek position back
+// to the start of the file! It expects to be allowed to overwrite the first
+// 432 bytes.
+void SaveHeader(SGPFile & file, SAVED_GAME_HEADER const& header)
+{
+	// Save the savegame header
+	BYTE data[SAVED_GAME_HEADER::ON_DISK_SIZE];
+	DataWriter d{data};
+	INJ_U32(   d, header.uiSavedGameVersion)
+	INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
+	d.writeUTF16(header.sSavedGameDesc, SAVED_GAME_HEADER::SIZE_OF_SAVE_GAME_DESC);
+	INJ_SKIP(  d, 4)
+	INJ_U32(   d, header.uiDay)
+	INJ_U8(    d, header.ubHour)
+	INJ_U8(    d, header.ubMin)
+	INJ_I16(   d, header.sSector.x)
+	INJ_I16(   d, header.sSector.y)
+	INJ_I8(    d, header.sSector.z)
+	INJ_U8(    d, header.ubNumOfMercsOnPlayersTeam)
+	INJ_I32(   d, header.iCurrentBalance)
+	INJ_U32(   d, header.uiCurrentScreen)
+	INJ_BOOL(  d, header.fAlternateSector)
+	INJ_BOOL(  d, header.fWorldLoaded)
+	INJ_U8(    d, header.ubLoadScreenID)
+	InjectGameOptions(d, header.sInitialGameOptions);
+	INJ_SKIP(  d, 1)
+	INJ_U32(   d, header.uiRandom)
+	INJ_U32(   d, header.uiSaveStateSize)
+	INJ_SKIP(  d, 108)
+	Assert(d.getConsumed() == SAVED_GAME_HEADER::ON_DISK_SIZE);
+
+	file.write(data, SAVED_GAME_HEADER::ON_DISK_SIZE);
+}
+}
 
 static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const&);
 static void PauseBeforeSaveGame(void);
@@ -286,8 +322,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		//Save the current sectors open temp files to the disk
 		SaveCurrentSectorsInformationToTempItemFile();
 
-		SAVED_GAME_HEADER header;
-		header = SAVED_GAME_HEADER{};
+		SAVED_GAME_HEADER header{};
 
 		if (gameDesc.empty())
 		{
@@ -341,35 +376,10 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		}
 
 		header.uiRandom = Random(RAND_MAX);
-		header.uiSaveStateSize = SaveStatesSize();
 
-		// Save the savegame header
-		BYTE  data[432];
-		DataWriter d{data};
-		INJ_U32(   d, header.uiSavedGameVersion)
-		INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
-		d.writeUTF16(header.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
-		INJ_SKIP(  d, 4)
-		INJ_U32(   d, header.uiDay)
-		INJ_U8(    d, header.ubHour)
-		INJ_U8(    d, header.ubMin)
-		INJ_I16(   d, header.sSector.x)
-		INJ_I16(   d, header.sSector.y)
-		INJ_I8(    d, header.sSector.z)
-		INJ_U8(    d, header.ubNumOfMercsOnPlayersTeam)
-		INJ_I32(   d, header.iCurrentBalance)
-		INJ_U32(   d, header.uiCurrentScreen)
-		INJ_BOOL(  d, header.fAlternateSector)
-		INJ_BOOL(  d, header.fWorldLoaded)
-		INJ_U8(    d, header.ubLoadScreenID)
-		InjectGameOptions(d, header.sInitialGameOptions);
-		INJ_SKIP(  d, 1)
-		INJ_U32(   d, header.uiRandom)
-		INJ_U32(   d, header.uiSaveStateSize)
-		INJ_SKIP(  d, 108)
-		Assert(d.getConsumed() == lengthof(data));
-
-		f->write(data, sizeof(data));
+		// Just reserve space for the header at the start for now, the
+		// actual header data will be written last.
+		f->seek(SAVED_GAME_HEADER::ON_DISK_SIZE, FILE_SEEK_FROM_START);
 
 		CalcJA2EncryptionSet(header);
 
@@ -465,7 +475,15 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
 
-		SaveStatesToSaveGameFile(f);
+		// Compute this last, after all save functions had the opportunity to
+		// add more data to the SaveStates.
+		header.uiSaveStateSize = SaveStatesToSaveGameFile(*f);
+		f->seek(0, FileSeekMode::FILE_SEEK_FROM_START);
+
+		SaveHeader(*f, header);
+
+		// Close the file.
+		f.Deallocate();
 
 		FileMan::moveFile(GCM->tempFiles()->absolutePath(savegameTempPath), GCM->saveGameFiles()->absolutePath(savegamePath));
 
@@ -528,7 +546,7 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	DataReader d{data};
 	EXTR_U32(   d, h.uiSavedGameVersion);
 	EXTR_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber));
-	h.sSavedGameDesc = d.readString(SIZE_OF_SAVE_GAME_DESC, stracLinuxFormat);
+	h.sSavedGameDesc = d.readString(SAVED_GAME_HEADER::SIZE_OF_SAVE_GAME_DESC, stracLinuxFormat);
 	EXTR_SKIP(  d, 4)
 	EXTR_U32(   d, h.uiDay)
 	EXTR_U8(    d, h.ubHour)
@@ -586,7 +604,7 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 	// first try Strac Linux format
 	try
 	{
-		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN];
+		BYTE data[SAVED_GAME_HEADER::ON_DISK_SIZE_STRAC_LIN];
 		f->read(data, sizeof(data));
 		ParseSavedGameHeader(data, h, true);
 		if(isValidSavedGameHeader(h))
@@ -599,7 +617,7 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 
 	{
 		// trying vanilla format
-		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE];
+		BYTE data[SAVED_GAME_HEADER::ON_DISK_SIZE];
 		f->seek(0, FILE_SEEK_FROM_START);
 		f->read(data, sizeof(data));
 		ParseSavedGameHeader(data, h, false);
@@ -607,12 +625,6 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 	}
 }
 
-void ExtractSavedGameHeaderFromSave(const ST::string &saveName, SAVED_GAME_HEADER& h, bool *stracLinuxFormat)
-{
-	auto savegamePath = GetSaveGamePath(saveName);
-	AutoSGPFile f(GCM->saveGameFiles()->openForReading(savegamePath));
-	ExtractSavedGameHeaderFromFile(f, h, stracLinuxFormat);
-}
 
 static void HandleOldBobbyRMailOrders(void);
 static void LoadGeneralInfo(HWFILE, UINT32 savegame_version);
@@ -2476,7 +2488,9 @@ SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(std::move(n
 			if (savedGameHeader.uiSaveStateSize == 0) {
 				throw std::runtime_error("save state size was 0");
 			}
-			file->seek(-savedGameHeader.uiSaveStateSize - sizeof(UINT32), FileSeekMode::FILE_SEEK_FROM_END);
+			file->seek(-static_cast<INT32>(
+				savedGameHeader.uiSaveStateSize + sizeof(UINT32)),
+				FileSeekMode::FILE_SEEK_FROM_END);
 			SavedGameStates states;
 			LoadStatesFromSaveFile(file, states);
 			this->enabledMods = GetModInfoFromGameStates(states);

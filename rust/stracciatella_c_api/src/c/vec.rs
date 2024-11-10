@@ -109,3 +109,58 @@ pub extern "C" fn VecU8_push(vec: *mut VecU8, value: u8) {
     let vec = unsafe_mut(vec);
     vec.inner.push(value)
 }
+
+/// A wrapper around `Vec<usize>` for C.
+#[derive(Default)]
+pub struct VecUSize {
+    inner: Vec<usize>,
+}
+
+impl From<Vec<usize>> for VecUSize {
+    fn from(vec: Vec<usize>) -> Self {
+        Self { inner: vec }
+    }
+}
+
+/// Creates an empty vector.
+/// coverity[+alloc]
+#[no_mangle]
+pub extern "C" fn VecUSize_create() -> *mut VecUSize {
+    let vec = VecUSize::default();
+    into_ptr(vec)
+}
+
+/// Destroys the vector.
+/// coverity[+free : arg-0]
+#[no_mangle]
+pub extern "C" fn VecUSize_destroy(vec: *mut VecUSize) {
+    let _drop_me = from_ptr(vec);
+}
+
+/// Returns the raw pointer to the vector data.
+#[no_mangle]
+pub extern "C" fn VecUSize_as_ptr(vec: *mut VecUSize) -> *const usize {
+    let vec = unsafe_ref(vec);
+    vec.inner.as_ptr()
+}
+
+/// Returns the length of the vector.
+#[no_mangle]
+pub extern "C" fn VecUSize_len(vec: *mut VecUSize) -> usize {
+    let vec = unsafe_ref(vec);
+    vec.inner.len()
+}
+
+/// Returns the `usize` value at the vector index.
+#[no_mangle]
+pub extern "C" fn VecUSize_get(vec: *mut VecUSize, index: usize) -> usize {
+    let vec = unsafe_ref(vec);
+    vec.inner[index]
+}
+
+/// Adds a `usize` value to the end of the vector.
+#[no_mangle]
+pub extern "C" fn VecUSize_push(vec: *mut VecUSize, value: usize) {
+    let vec = unsafe_mut(vec);
+    vec.inner.push(value)
+}

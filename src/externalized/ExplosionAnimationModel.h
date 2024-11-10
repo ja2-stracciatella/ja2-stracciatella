@@ -6,7 +6,7 @@
 
 class ExplosionAnimationModel {
 	public:
-		ExplosionAnimationModel(uint8_t id, ST::string name, uint8_t blastSpeed, uint8_t damageKeyframe, ST::string graphics, std::vector<ST::string> sounds, uint8_t transparentKeyframe);
+		ExplosionAnimationModel(uint8_t id, ST::string&& name, uint8_t blastSpeed, uint8_t damageKeyframe, ST::string&& graphics, std::vector<ST::string>&& sounds, uint8_t transparentKeyframe);
 
 		uint8_t getID() const;
 		const ST::string& getName() const;

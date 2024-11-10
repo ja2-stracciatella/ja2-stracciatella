@@ -24,10 +24,6 @@ items:
           title: Cursor
           description: The cursor to use when the item is used
           $ref: types/item-cursor.schema.yaml
-        damage:
-          title: Damage
-          description: The damage caused by this item
-          $ref: types/uint8.schema.yaml
         itemClass:
           title: Item class
           description: The item class of the item
@@ -35,27 +31,6 @@ items:
           enum:
             - GRENADE
             - BOMB
-        radius:
-          title: Radius
-          description: The radius of the effect caused by this item
-          $ref: types/uint8.schema.yaml
-        stunDamage:
-          title: Stun damage
-          description: The stun amount of the effect
-          $ref: types/uint8.schema.yaml
-        type:
-          title: Explosive Type
-          description: What kind of explosive is this?
-          type: string
-          enum:
-            - NORMAL
-            - STUN
-            - TEARGAS
-            - MUSTGAS
-            - FLARE
-            - NOISE
-            - SMOKE
-            - CREATUREGAS
         noise:
           title: Noise
           description: The noise radius of the explosion
@@ -64,12 +39,95 @@ items:
           title: Volatility
           description: Maxium chance of accidential explosion
           $ref: types/uint8.schema.yaml
+        isPressureTriggered:
+          title: Is Pressure Triggered
+          description: Whether this explosive is triggered by pressure. The default is false.
+          type: boolean
+        blastEffect:
+          type: object
+          title: Blast Effect
+          description: |
+            The effects of the damaging blast by the explosive. The stunning blast does damage to mercs, structures and objects.
+
+            If not set, the explosive will not have a damaging blast.
+          properties:
+            damage:
+              title: Damage
+              $ref: types/uint8.schema.yaml
+            radius:
+              title: Radius
+              $ref: types/uint8.schema.yaml
+            structuralDamageDivisor:
+              title: Structural damage divisor
+              description: If set, this reduces the damage to structures of the explosive by dividing by this value.
+              $ref: types/uint8.schema.yaml
+          required:
+            - damage
+            - radius
+        stunEffect:
+          type: object
+          title: Blast Effect
+          description: |
+            The effects of the stunning blast by the explosive. The stunning blast does damage to stamina.
+
+            If not set, the explosive will not have a stunning blast.
+          properties:
+            breathDamage:
+              title: Breath Damage
+              $ref: types/uint8.schema.yaml
+            radius:
+              title: Radius
+              $ref: types/uint8.schema.yaml
+          required:
+            - breathDamage
+            - radius
+        smokeEffect:
+          type: object
+          title: Smoke Effect
+          description: |
+            Smoke effect triggered by the explosive.
+
+            If not set, the explosive will not have a smoke effect.
+          properties:
+            type:
+              title: Type
+              $ref: types/id.schema.yaml
+            initialRadius:
+              title: Initial Radius
+              $ref: types/uint8.schema.yaml
+            maxRadius:
+              title: Maximum Radius
+              $ref: types/uint8.schema.yaml
+            duration:
+              title: Duration
+              $ref: types/uint8.schema.yaml
+          required:
+            - type
+            - initialRadius
+            - maxRadius
+            - duration
+        lightEffect:
+          type: object
+          title: Light Effect
+          description: |
+            Light effect triggered by the explosive.
+
+            If not set, the explosive will not have a light effect.
+          properties:
+            radius:
+              title: Radius
+              type: integer
+              minimum: 1
+              # This is currently limited by the light templates that are available
+              maximum: 6
+            duration:
+              title: Duration
+              $ref: types/uint8.schema.yaml
+          required:
+            - radius
+            - duration
       required:
       - cursor
-      - damage
       - itemClass
-      - radius
       - noise
-      - stunDamage
-      - type
       - volatility
