@@ -50,7 +50,7 @@
 static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, std::vector<STCISubImage>& subImages, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, UINT32 fFlags);
 
 
-void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT16 sWidth, const INT16 sHeight, const char* const cOutputName, const UINT32 fFlags, const UINT32 uiAppDataSize)
+void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT16 sWidth, const INT16 sHeight, ST::string const& cOutputName, const UINT32 fFlags, const UINT32 uiAppDataSize)
 {
 	UINT32							uiOriginalSize;
 	UINT8 *							pOutputBuffer = NULL;

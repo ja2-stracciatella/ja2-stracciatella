@@ -4,18 +4,7 @@
 #include "Button_System.h"
 
 
-// Editor Tabs
-void TaskTerrainCallback(GUI_BUTTON *btn,UINT32 reason);
-void TaskBuildingCallback(GUI_BUTTON *btn,UINT32 reason);
-void TaskItemsCallback(GUI_BUTTON *btn,UINT32 reason);
-void TaskMercsCallback(GUI_BUTTON *btn,UINT32 reason);
-void TaskMapInfoCallback(GUI_BUTTON *btn,UINT32 reason);
-void TaskOptionsCallback(GUI_BUTTON *btn,UINT32 reason);
 // Options Tab Callbacks
-void BtnLoadCallback(GUI_BUTTON *btn,UINT32 reason);
-void BtnSaveCallback(GUI_BUTTON *btn,UINT32 reason);
-void BtnCancelCallback(GUI_BUTTON *btn,UINT32 reason);
-void BtnQuitCallback( GUI_BUTTON *btn, UINT32 reason );
 void BtnNewMapCallback(GUI_BUTTON *btn,UINT32 reason);
 void BtnNewBasementCallback( GUI_BUTTON *btn, UINT32 reason );
 void BtnNewCavesCallback( GUI_BUTTON *btn, UINT32 reason );

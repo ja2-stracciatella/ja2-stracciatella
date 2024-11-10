@@ -17,6 +17,7 @@
 #include "HImage.h"
 #include "Isometric_Utils.h"
 #include "JA2Types.h"
+#include "JAScreens.h"
 #include "Keys.h"
 #include "LightEffects.h"
 #include "Lighting.h"
@@ -2471,7 +2472,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 	{ // We are above ground.
 		gfBasement = FALSE;
 		gfCaves    = FALSE;
-		if (!gfEditMode)
+		if (!gfEditMode && guiCurrentScreen != MAPUTILITY_SCREEN)
 		{
 			ubAmbientLightLevel = GetTimeOfDayAmbientLightLevel();
 		}
@@ -2595,7 +2596,8 @@ void LoadWorldFromSGPFile(SGPFile *f)
 
 	gfWorldLoaded = TRUE;
 
-	GenerateBuildings();
+	// ATE: Not while updating maps!
+	if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();
 
 	RenderProgressBar(0, 100);
 }

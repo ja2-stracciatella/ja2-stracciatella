@@ -1,5 +1,6 @@
 #include "Debug.h"
 #include "Environment.h"
+#include "JAScreens.h"
 #include "LoadSaveData.h"
 #include "LoadSaveLightSprite.h"
 #include "SGPFile.h"
@@ -31,7 +32,8 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 
 	LIGHT_SPRITE* const l = LightSpriteCreate(template_name);
 	// if this fails, then we will ignore the light.
-	if (l)
+	// ATE: Don't add ANY lights of mapscreen util is on
+	if (l != NULL && guiCurrentScreen != MAPUTILITY_SCREEN)
 	{
 		// power only valid lights
 		if (gfEditMode ||

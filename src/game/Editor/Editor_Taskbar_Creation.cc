@@ -1,6 +1,7 @@
 //sgp
 #include "Button_System.h"
 #include "Directories.h"
+#include "EditScreen.h"
 #include "Font_Control.h"
 //editor
 #include "EditorDefines.h"
@@ -16,6 +17,8 @@
 
 #include <string_theory/format>
 #include <string_theory/string>
+#include <string_view>
+#include <utility>
 
 
 static void InitEditorItemStatsButtons(void)
@@ -27,32 +30,32 @@ static void InitEditorItemStatsButtons(void)
 }
 
 
-static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const ST::string& help)
+static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, std::string_view help)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, x, TASKBAR_Y + y, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, x, TASKBAR_Y + y, MSYS_PRIORITY_NORMAL, std::move(click));
 	iEditorButton[idx] = btn;
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	btn->SetFastHelpText(help);
 }
 
 
-static void MakeCheck(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const ST::string& help)
+static void MakeCheck(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, std::string_view help)
 {
-	GUIButtonRef const btn = CreateCheckBoxButton(x, TASKBAR_Y + y, gfx, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = CreateCheckBoxButton(x, TASKBAR_Y + y, gfx, MSYS_PRIORITY_NORMAL, std::move(click));
 	iEditorButton[idx] = btn;
 	btn->SetFastHelpText(help);
 }
 
 
-static GUIButtonRef MakeRadio(INT16 const x, INT16 const y, GUI_CALLBACK const click)
+static GUIButtonRef MakeRadio(INT16 const x, INT16 const y, GUI_CALLBACK click)
 {
-	return CreateCheckBoxButton(x, TASKBAR_Y + y, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, click);
+	return CreateCheckBoxButton(x, TASKBAR_Y + y, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, std::move(click));
 }
 
 
 static void MakeButtonTeam(UINT idx, INT16 y, GUI_CALLBACK click, const ST::string& text)
 {
-	GUIButtonRef const btn = CreateTextButton(text, BLOCKFONT, 165, FONT_BLACK, 20, TASKBAR_Y + y, 78, 19, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = CreateTextButton(text, BLOCKFONT, 165, FONT_BLACK, 20, TASKBAR_Y + y, 78, 19, MSYS_PRIORITY_NORMAL, std::move(click));
 	iEditorButton[idx] = btn;
 	btn->SpecifyDownTextColors(FONT_YELLOW, FONT_BLACK);
 }
@@ -60,7 +63,7 @@ static void MakeButtonTeam(UINT idx, INT16 y, GUI_CALLBACK click, const ST::stri
 
 static GUIButtonRef MakeTextButton(const ST::string& text, INT16 fore_colour, INT16 x, INT16 y, INT16 w, INT16 h, GUI_CALLBACK click)
 {
-	return CreateTextButton(text, SMALLCOMPFONT, fore_colour, FONT_BLACK, x, TASKBAR_Y + y, w, h, MSYS_PRIORITY_NORMAL, click);
+	return CreateTextButton(text, SMALLCOMPFONT, fore_colour, FONT_BLACK, x, TASKBAR_Y + y, w, h, MSYS_PRIORITY_NORMAL, std::move(click));
 }
 
 
@@ -113,7 +116,8 @@ static void MakeButtonRank(UINT idx, INT16 y, INT32 rank)
 
 static void MakeButtonSchedule(UINT idx, INT16 x, INT16 y, INT16 w, INT16 h, GUI_CALLBACK click, const ST::string& text)
 {
-	iEditorButton[idx] = CreateTextButton(text, FONT10ARIAL, FONT_YELLOW, FONT_BLACK, x, TASKBAR_Y + y, w, h, MSYS_PRIORITY_NORMAL, click);
+	iEditorButton[idx] = CreateTextButton(text, FONT10ARIAL, FONT_YELLOW,
+		FONT_BLACK, x, TASKBAR_Y + y, w, h, MSYS_PRIORITY_NORMAL, std::move(click));
 }
 
 
@@ -124,6 +128,24 @@ static void MakeButtonInventory(UINT idx, INT16 x, INT16 y, INT32 pos)
 	btn->SetUserData(pos);
 }
 
+namespace {
+// This function serves as a replacement for the trivial button click callbacks
+// that simply set a global variable to a new value.
+template<typename TMode>
+GUI_CALLBACK MakeCB(TMode * const globalModeVariablePtr, TMode const newMode)
+{
+	return [=](GUI_BUTTON *, UINT32 const reason) {
+		if (reason & MSYS_CALLBACK_REASON_POINTER_UP) {
+			*globalModeVariablePtr = newMode;
+		}
+	};
+}
+
+GUI_CALLBACK MakeCB(ToolbarMode const newMode)
+{
+	return MakeCB(&iEditorToolbarState, newMode);
+}
+}
 
 static void InitEditorMercsToolbar(void)
 {
@@ -339,7 +361,7 @@ static void InitEditorItemsToolbar(void)
 
 static void InitEditorMapInfoToolbar(void)
 {
-	MakeButton(MAPINFO_ADD_LIGHT1_SOURCE, 10, 2, BtnDrawLightsCallback, EDITORDIR "/light.sti", L"Add ambient light source");
+	MakeButton(MAPINFO_ADD_LIGHT1_SOURCE, 10, 2, BtnDrawLightsCallback, EDITORDIR "/light.sti", "Add ambient light source");
 
 	INT16 const y = TASKBAR_Y;
 	iEditorButton[MAPINFO_LIGHT_PANEL]     = CreateLabel({}, 0, 0, 0, 45, y + 2, 60, 50, MSYS_PRIORITY_NORMAL);
@@ -373,11 +395,12 @@ static void InitEditorOptionsToolbar(void)
 	MakeButton(OPTIONS_NEW_MAP,         71, 41, BtnNewMapCallback,        EDITORDIR "/new.sti",     "New map");
 	MakeButton(OPTIONS_NEW_BASEMENT,   101, 41, BtnNewBasementCallback,   EDITORDIR "/new.sti",     "New basement");
 	MakeButton(OPTIONS_NEW_CAVES,      131, 41, BtnNewCavesCallback,      EDITORDIR "/new.sti",     "New cave level");
-	MakeButton(OPTIONS_SAVE_MAP,       161, 41, BtnSaveCallback,          EDITORDIR "/save.sti",    "Save map");
-	MakeButton(OPTIONS_LOAD_MAP,       191, 41, BtnLoadCallback,          EDITORDIR "/load.sti",    "Load map");
+	MakeButton(OPTIONS_SAVE_MAP,       161, 41, MakeCB(TBAR_MODE_SAVE),   EDITORDIR "/save.sti",    "Save map");
+	MakeButton(OPTIONS_LOAD_MAP,       191, 41, MakeCB(TBAR_MODE_LOAD),   EDITORDIR "/load.sti",    "Load map");
 	MakeButton(OPTIONS_CHANGE_TILESET, 221, 41, BtnChangeTilesetCallback, EDITORDIR "/tileset.sti", "Select tileset");
-	MakeButton(OPTIONS_LEAVE_EDITOR,   251, 41, BtnCancelCallback,        EDITORDIR "/cancel.sti",  "Leave Editor mode");
-	MakeButton(OPTIONS_QUIT_GAME,      281, 41, BtnQuitCallback,          EDITORDIR "/cancel.sti",  "Exit game.");
+	MakeButton(OPTIONS_LEAVE_EDITOR,   251, 41, MakeCB(TBAR_MODE_EXIT_EDIT), EDITORDIR "/cancel.sti", "Leave Editor mode");
+	MakeButton(OPTIONS_QUIT_GAME,      281, 41, MakeCB(TBAR_MODE_QUIT_GAME), EDITORDIR "/cancel.sti", "Exit game.");
+	MakeButton(OPTIONS_RADARMAP,       311, 41, MakeCB(TBAR_MODE_RADARMAP),  EDITORDIR "/new.sti",  "Start radar map utility");
 }
 
 
@@ -400,9 +423,11 @@ static void InitEditorTerrainToolbar(void)
 }
 
 
-static void MakeButtonTab(UINT idx, INT16 x, GUI_CALLBACK click, const ST::string& text)
+static void MakeButtonTab(UINT const idx, INT16 const x, TaskMode const newTaskMode, char const * const text)
 {
-	GUIButtonRef const btn = CreateTextButton(text, SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, x, TASKBAR_Y + 100, 90, 20, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateTextButton(text, SMALLFONT1, FONT_LTKHAKI,
+		FONT_DKKHAKI, x, TASKBAR_Y + 100, 90, 20, MSYS_PRIORITY_HIGH,
+		MakeCB(&iTaskMode, newTaskMode));
 	iEditorButton[idx] = btn;
 	btn->SpecifyDownTextColors(FONT_YELLOW, FONT_ORANGE);
 }
@@ -411,12 +436,12 @@ static void MakeButtonTab(UINT idx, INT16 x, GUI_CALLBACK click, const ST::strin
 void CreateEditorTaskbarInternal()
 {
 	//Create the tabs for the editor taskbar
-	MakeButtonTab(TAB_TERRAIN,   100, TaskTerrainCallback,  "Terrain");
-	MakeButtonTab(TAB_BUILDINGS, 190, TaskBuildingCallback, "Buildings");
-	MakeButtonTab(TAB_ITEMS,     280, TaskItemsCallback,    "Items");
-	MakeButtonTab(TAB_MERCS,     370, TaskMercsCallback,    "Mercs");
-	MakeButtonTab(TAB_MAPINFO,   460, TaskMapInfoCallback,  "Map Info");
-	MakeButtonTab(TAB_OPTIONS,   550, TaskOptionsCallback,  "Options");
+	MakeButtonTab(TAB_TERRAIN,   100, TASK_TERRAIN,   "Terrain");
+	MakeButtonTab(TAB_BUILDINGS, 190, TASK_BUILDINGS, "Buildings");
+	MakeButtonTab(TAB_ITEMS,     280, TASK_ITEMS,     "Items");
+	MakeButtonTab(TAB_MERCS,     370, TASK_MERCS,     "Mercs");
+	MakeButtonTab(TAB_MAPINFO,   460, TASK_MAPINFO,   "Map Info");
+	MakeButtonTab(TAB_OPTIONS,   550, TASK_OPTIONS,   "Options");
 
 	//Create the buttons within each tab.
 	InitEditorTerrainToolbar();
