@@ -1,5 +1,4 @@
 #include "Input.h"
-#include "MapUtility.h"
 #include "Overhead_Types.h"
 #include "SDL_keycode.h"
 #include "SDL_timer.h"
@@ -18,6 +17,7 @@
 #include "WorldDat.h"
 #include "Map_Information.h"
 #include "Line.h"
+#include "ScreenIDs.h"
 #include "Video.h"
 #include "Quantize.h"
 #include "UILayout.h"
@@ -39,7 +39,7 @@ static float     gdYStep;
 // quantizes it into an 8-bit image ans writes it to an sti file in radarmaps.
 
 
-ScreenID MapUtilScreenHandle()
+template<> ScreenID HandleScreen<MAPUTILITY_SCREEN>()
 {
 	static auto p24BitValues{ std::make_unique<SGPPaletteEntry[]>(MINIMAP_X_SIZE * MINIMAP_Y_SIZE) };
 

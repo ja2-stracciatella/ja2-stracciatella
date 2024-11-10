@@ -32,4 +32,6 @@ enum ScreenID
 	NO_PENDING_SCREEN = 0xFFFF
 };
 
+template<ScreenID> ScreenID HandleScreen();
+
 #endif

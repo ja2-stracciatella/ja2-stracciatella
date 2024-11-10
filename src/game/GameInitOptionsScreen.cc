@@ -7,7 +7,6 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "Options_Screen.h"
-#include "GameInitOptionsScreen.h"
 #include "GameSettings.h"
 #include "Input.h"
 #include "Intro.h"
@@ -17,6 +16,7 @@
 #include "ContentMusic.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
+#include "ScreenIDs.h"
 #include "SysUtil.h"
 #include "Text.h"
 #include "Types.h"
@@ -186,7 +186,7 @@ static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue);
 static void ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack(MessageBoxReturnValue);
 
 
-ScreenID GameInitOptionsScreenHandle(void)
+template<> ScreenID HandleScreen<GAME_INIT_OPTIONS_SCREEN>()
 {
 	if (gfGIOScreenEntry)
 	{
