@@ -550,6 +550,27 @@ void InitAnimationSystem()
 			if (GCM->doesGameResExists(Filename))
 			{
 				STRUCTURE_FILE_REF* pStructureFileRef = LoadStructureFile(Filename);
+
+				// fix non-base prone tiles by making them all passable (#2115)
+				if ((cnt1 >= REGMALE && cnt1 <= REGFEMALE) && cnt2 == P_STRUCT)
+				{
+					for (UINT8 dirIdx = 0; dirIdx < 8; dirIdx++)
+					{
+						DB_STRUCTURE_REF const* const pDBStructureRef = &pStructureFileRef->pDBStructureRef[dirIdx];
+						DB_STRUCTURE_TILE** ppTile = pDBStructureRef->ppTile;
+						UINT8 const n_tiles = pDBStructureRef->pDBStructure->ubNumberOfTiles;
+
+						for (UINT8 tileIdx = 0; tileIdx < n_tiles; tileIdx++)
+						{
+							// if not a base tile
+							if (ppTile[tileIdx]->sPosRelToBase != 0)
+							{
+								ppTile[tileIdx]->fFlags |= TILE_PASSABLE;
+							}
+						}
+					}
+				}
+
 				gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef = pStructureFileRef;
 			}
 		}
