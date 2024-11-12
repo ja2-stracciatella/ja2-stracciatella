@@ -551,7 +551,7 @@ void InitAnimationSystem()
 			{
 				STRUCTURE_FILE_REF* pStructureFileRef = LoadStructureFile(Filename);
 
-				// fix non-base prone tiles by making them all passable (#2115)
+				// fix non-base prone tiles by making them all passable (#2116)
 				if ((cnt1 >= REGMALE && cnt1 <= REGFEMALE) && cnt2 == P_STRUCT)
 				{
 					for (UINT8 dirIdx = 0; dirIdx < 8; dirIdx++)
