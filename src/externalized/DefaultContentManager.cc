@@ -2,13 +2,12 @@
 
 #include "Exceptions.h"
 #include "ItemStrings.h"
-#include "game/Directories.h"
-#include "game/Strategic/Strategic_Status.h"
+#include "Directories.h"
 
 // XXX: GameRes.h should be integrated to ContentManager
-#include "game/GameRes.h"
+#include "GameRes.h"
 
-#include "sgp/FileMan.h"
+#include "FileMan.h"
 
 #include "AmmoTypeModel.h"
 #include "CacheSectorsModel.h"
@@ -60,6 +59,7 @@
 
 #include "Logger.h"
 #include "Strategic_AI.h"
+#include "Strategic_Status.h"
 
 #include <string_theory/format>
 #include <string_theory/string>

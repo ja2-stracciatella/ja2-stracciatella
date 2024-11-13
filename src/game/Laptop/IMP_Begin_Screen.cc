@@ -5,6 +5,7 @@
 #include "Font_Control.h"
 #include "Font.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 #include "HImage.h"
 #include "IMP_Begin_Screen.h"
 #include "IMP_MainPage.h"
@@ -22,10 +23,8 @@
 #include "Text.h"
 #include "Timer_Control.h"
 #include "Video.h"
+#include "VObject.h"
 #include "VSurface.h"
-
-#include "policy/GamePolicy.h"
-#include "sgp/VObject.h"
 
 #include <string_theory/string>
 

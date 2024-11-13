@@ -2,7 +2,7 @@
 
 #include "GameSettings.h"
 #include "SaveLoadGame.h"
-#include "externalized/TestUtils.h"
+#include "TestUtils.h"
 #include <algorithm>
 
 const uint8_t s_savedGameHeaderVanilla[] = {

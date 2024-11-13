@@ -1,7 +1,6 @@
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 
-#include "game/Tactical/Items.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
@@ -9,6 +8,7 @@
 #include "DefaultContentManagerUT.h"
 #include "GameInstance.h"
 #include "GamePolicy.h"
+#include "Items.h"
 #include "MagazineModel.h"
 #include "Weapons.h"
 #include "WeaponModels.h"
