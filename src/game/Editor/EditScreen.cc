@@ -1,9 +1,9 @@
-#include "Editor_Callback_Prototypes.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "HImage.h"
 #include "SGP.h"
 #include "Button_System.h"
+#include "ScreenIDs.h"
 #include "Structure_Internals.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
@@ -23,7 +23,6 @@
 #include "Lighting.h"
 #include "Overhead_Types.h"
 #include "Overhead.h"
-#include "Soldier_Control.h"
 #include "Handle_UI.h"
 #include "Event_Pump.h"
 #include "LoadScreen.h"
@@ -1103,6 +1102,10 @@ static void HandleJA2ToolbarSelection(void)
 			iCurrentAction = ACTION_LOAD_MAP;
 			break;
 
+		case TBAR_MODE_RADARMAP:
+			iCurrentAction = ACTION_RADARMAP;
+			break;
+
 		case TBAR_MODE_UNDO:
 			iCurrentAction = ACTION_UNDO;
 			break;
@@ -2059,6 +2062,9 @@ static ScreenID PerformSelectedAction(void)
 		case ACTION_LOAD_MAP:
 			UpdateLastActionBeforeLeaving();
 			return LOADSAVE_SCREEN;
+
+		case ACTION_RADARMAP:
+			return MAPUTILITY_SCREEN;
 
 		case ACTION_UNDO:
 			ExecuteUndoList( );
@@ -3042,53 +3048,6 @@ static void HideEntryPoints()
 	if (m.sWestGridNo  != -1) RemoveAllTopmostsOfTypeRange(m.sWestGridNo,  FIRSTPOINTERS, FIRSTPOINTERS);
 }
 
-void TaskOptionsCallback(GUI_BUTTON *btn,UINT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		iTaskMode = TASK_OPTIONS;
-	}
-}
-
-void TaskTerrainCallback(GUI_BUTTON *btn,UINT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		iTaskMode = TASK_TERRAIN;
-	}
-}
-
-void TaskBuildingCallback(GUI_BUTTON *btn,UINT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		iTaskMode = TASK_BUILDINGS;
-	}
-}
-
-void TaskItemsCallback(GUI_BUTTON *btn,UINT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		iTaskMode = TASK_ITEMS;
-	}
-}
-
-void TaskMercsCallback(GUI_BUTTON *btn,UINT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		iTaskMode = TASK_MERCS;
-	}
-}
-
-void TaskMapInfoCallback(GUI_BUTTON *btn,UINT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
-	{
-		iTaskMode = TASK_MAPINFO;
-	}
-}
 
 void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 {

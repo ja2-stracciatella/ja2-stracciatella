@@ -10,6 +10,7 @@
 #include "LoadScreen.h"
 #include "MainMenuScreen.h"
 #include "MapScreen.h"
+#include "MapUtility.h"
 #include "MessageBoxScreen.h"
 #include "Options_Screen.h"
 #include "Quest_Debug_System.h"
@@ -32,7 +33,7 @@ Screens const GameScreens[] =
 	{ MapScreenInit,        MapScreenHandle,             MapScreenShutdown        },
 	{ LaptopScreenInit,     LaptopScreenHandle,          LaptopScreenShutdown     },
 	{ NULL,                 LoadSaveScreenHandle,        NULL                     },
-	{ NULL,                 NULL,                        NULL                     }, // was MapUtilityScreen
+	{ NULL,                 MapUtilScreenHandle,         NULL                     },
 	{ NULL,                 FadeScreenHandle,            NULL                     },
 	{ NULL,                 MessageBoxScreenHandle,      MessageBoxScreenShutdown },
 	{ NULL,                 MainMenuScreenHandle,        NULL                     },
