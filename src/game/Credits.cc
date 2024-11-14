@@ -1,4 +1,3 @@
-#include "Credits.h"
 #include "Cursors.h"
 #include "Debug.h"
 #include "Directories.h"
@@ -9,6 +8,7 @@
 #include "MouseSystem.h"
 #include "Random.h"
 #include "Render_Dirty.h"
+#include "ScreenIDs.h"
 #include "SysUtil.h"
 #include "Text.h"
 #include "Timer_Control.h"
@@ -170,7 +170,7 @@ static void GetCreditScreenUserInput(void);
 static void HandleCreditScreen(void);
 
 
-ScreenID CreditScreenHandle(void)
+template<> ScreenID HandleScreen<CREDIT_SCREEN>()
 {
 	if (!g_credits_active)
 	{
