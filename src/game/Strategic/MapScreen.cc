@@ -59,6 +59,7 @@
 #include "RenderWorld.h"
 #include "SAM_Sites.h"
 #include "SaveLoadScreen.h"
+#include "ScreenIDs.h"
 #include "Soldier_Control.h"
 #include "Soldier_Macros.h"
 #include "Squads.h"
@@ -371,7 +372,6 @@ static bool fLockOutMapScreenInterface = false;
 
 
 extern BOOLEAN fDeletedNode;
-extern BOOLEAN gfStartedFromMapScreen;
 
 
 extern PathSt* pTempCharacterPath;
@@ -7860,9 +7860,9 @@ BOOLEAN CanDrawSectorCursor(void)
 		GetNumberOfMercsInUpdateList() == 0 &&
 		sSelectedMilitiaTown == 0           &&
 		!gfMilitiaPopupCreated              &&
-		!gfStartedFromMapScreen             &&
 		!fShowMapScreenMovementList         &&
 		ghMoveBox == NO_POPUP_BOX           &&
+		guiPendingScreen != MSG_BOX_SCREEN  &&
 		!fMapInventoryItem;
 }
 

@@ -134,7 +134,6 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiE
 
 	if (fInMapMode)
 	{
-		gfStartedFromMapScreen = TRUE;
 		fMapPanelDirty         = TRUE;
 	}
 
@@ -400,23 +399,13 @@ ScreenID MessageBoxScreenHandle()
 	if (gfNewMessageBox)
 	{
 		// If in game screen....
-		if (gfStartedFromGameScreen || gfStartedFromMapScreen)
+		if (gfStartedFromGameScreen)
 		{
-			if (gfStartedFromGameScreen)
-			{
-				HandleTacticalUILoseCursorFromOtherScreen();
-			}
-			else
-			{
-				HandleMAPUILoseCursorFromOtherScreen();
-			}
-
+			HandleTacticalUILoseCursorFromOtherScreen();
 			gfStartedFromGameScreen = FALSE;
-			gfStartedFromMapScreen  = FALSE;
 		}
 
 		gfNewMessageBox = FALSE;
-
 		return MSG_BOX_SCREEN;
 	}
 
