@@ -335,9 +335,6 @@ void UpdateCharRegionHelpText( void );
 // find this soldier in mapscreen character list and set as contract
 void FindAndSetThisContractSoldier( SOLDIERTYPE *pSoldier );
 
-// lose the cursor, re-render
-void HandleMAPUILoseCursorFromOtherScreen( void );
-
 void RenderMapRegionBackground( void );
 
 // update mapscreen assignment positions

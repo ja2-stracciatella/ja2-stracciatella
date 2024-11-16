@@ -6,6 +6,7 @@
 #include "Finances.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "GameLoop.h"
 #include "Game_Clock.h"
 #include "Game_Event_Hook.h"
 #include "Game_Init.h"
@@ -38,6 +39,7 @@
 #include "RenderWorld.h"
 #include "SAM_Sites.h"
 #include "SamSiteModel.h"
+#include "ScreenIDs.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Macros.h"
 #include "SoundMan.h"
@@ -799,18 +801,23 @@ void EnableTeamInfoPanels( void )
 void DoMapMessageBoxWithRect(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect)
 {	// reset the highlighted line
 	giHighLine = -1;
+
+	// Suppresses the cursor interaction over the map ofArulco, checked
+	// by CanDrawSectorCursor().
+	guiPendingScreen = MSG_BOX_SCREEN;
+
+	// Force redraw.
+	MapScreenHandle();
+
 	DoMessageBox(ubStyle, str, uiExitScreen, usFlags, ReturnCallback, centering_rect);
 }
 
 
 void DoMapMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	// reset the highlighted line
-	giHighLine = -1;
-
 	// do message box and return
 	SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoMessageBox(ubStyle, str, uiExitScreen, usFlags, ReturnCallback, &centering_rect);
+	DoMapMessageBoxWithRect(ubStyle, str, uiExitScreen, usFlags, ReturnCallback, &centering_rect);
 }
 
 
@@ -1313,18 +1320,6 @@ void FindAndSetThisContractSoldier( SOLDIERTYPE *pSoldier )
 			fTeamPanelDirty = TRUE;
 			fCharacterInfoPanelDirty = TRUE;
 		}
-	}
-}
-
-
-void HandleMAPUILoseCursorFromOtherScreen( void )
-{
-	// rerender map without cursors
-	fMapPanelDirty = TRUE;
-
-	if ( fInMapMode )
-	{
-		RenderMapRegionBackground( );
 	}
 }
 
