@@ -3,7 +3,6 @@
 
 #include <stdexcept>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 #include <utility>
 #include <string_theory/string>

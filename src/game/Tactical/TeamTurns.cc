@@ -1110,12 +1110,6 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		return(FALSE);
 	}
 
-
-#ifdef RECORDINTERRUPT
-	// this usually starts a new series of logs, so that's why the blank line
-	fprintf(InterruptFile, "\nStandardInterruptConditionsMet by %d vs. %d\n", pSoldier->guynum, pOpponent->ubID);
-#endif
-
 	return(TRUE);
 }
 
