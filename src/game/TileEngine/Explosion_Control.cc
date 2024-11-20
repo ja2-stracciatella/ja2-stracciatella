@@ -238,14 +238,10 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		}
 	}
 
-	auto soundCandidates = explosionAnimation->getSounds();
-	auto sound = soundCandidates.at(0);
-	if ( soundCandidates.size() > 1 )
-	{
-		sound = soundCandidates.at(Random(soundCandidates.size()));
-	}
-
-	PlayLocationJA2Sample(sGridNo, sound, HIGHVOLUME, 1);
+	auto && soundCandidates{ explosionAnimation->getSounds() };
+	PlayLocationJA2Sample(sGridNo, soundCandidates.at(
+			Random(static_cast<UINT32>(soundCandidates.size()))),
+		HIGHVOLUME, 1);
 }
 
 
