@@ -2106,15 +2106,6 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 
 	// Adjust speed based on terrain, etc
 	SetSoldierAniSpeed(&s);
-
-	if (s.bTeam == ENEMY_TEAM &&
-		(!gpWorldLevelData[s.sGridNo].pMercHead ||
-	     !gpWorldLevelData[s.sGridNo].pMercHead->pStructureData))
-	{
-		// Debug help for issue #1681: set a break point here and check who
-		// is calling this function without calling InternalIsValidStance first.
-		SLOGW("SetSoldierGridNo: ID {} ({}) has no structure", s.ubID, s.name);
-	}
 }
 
 
