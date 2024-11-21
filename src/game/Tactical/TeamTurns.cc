@@ -642,10 +642,16 @@ static void StartInterrupt(void)
 
 
 		// here we have to rebuilt the AI list!
-		BuildAIListForTeam( bTeam );
+		if (!BuildAIListForTeam(bTeam))
+		{
+			// Nobody on that team matched the conditions to get added to the
+			// AI list which means we don't have anyone left for this interrupt.
+			return EndInterrupt(false);
+		}
 
 		// set to the new first interrupter
 		SOLDIERTYPE* const pSoldier = RemoveFirstAIListEntry();
+		AssertMsg(pSoldier, "BuildAIListForTeam returned true but list is empty");
 
 		//if ( gTacticalStatus.ubCurrentTeam == OUR_TEAM)
 		if ( pSoldier->bTeam != OUR_TEAM )
