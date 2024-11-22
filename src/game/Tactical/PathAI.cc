@@ -499,15 +499,12 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	//BOOLEAN fTurnBased;
 	BOOLEAN fPathingForPlayer;
 	INT32   iDoorGridNo=-1;
-	INT32	iDoorGridNo2 = -1;
+	INT32	iDoor2GridNo = -1;
 	BOOLEAN fDoorIsObstacleIfClosed= 0; // if false, door is obstacle if it is open
-	DOOR_STATUS *pDoorStatus;
-	DOOR_STATUS *pDoorStatus2;
 	DOOR    *pDoor;
-	STRUCTURE *pDoorStructure;
-	STRUCTURE *pDoorStructure2;
 	BOOLEAN fDoorIsOpen = FALSE;
-	BOOLEAN fDoorIsOpen2 = FALSE;
+	StructureFlags  doorState{};
+	StructureFlags  door2State{};
 	BOOLEAN fNonFenceJumper;
 	BOOLEAN fNonSwimmer;
 	BOOLEAN fPathAroundPeople;
@@ -1065,111 +1062,37 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				}
 				else if ( IS_TRAVELCOST_DOOR( nextCost ) )
 				{
-					fDoorIsObstacleIfClosed = IsDoorObstacleIfClosed(nextCost, newLoc, &iDoorGridNo, &iDoorGridNo2);
-					
-					if ( fPathingForPlayer && gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT )
-					{
-						// check door status
-						pDoorStatus = GetDoorStatus( (INT16) iDoorGridNo );
-						if (pDoorStatus)
-						{
-							fDoorIsOpen = (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+					fDoorIsObstacleIfClosed = IsDoorObstacleIfClosed(nextCost, newLoc, &iDoorGridNo, &iDoor2GridNo);
+					doorState = GetDoorState(iDoorGridNo, fPathingForPlayer);
+
+					if (iDoor2GridNo == -1)
+					{ // this travel direction depends on the state of only one door structure
+						if ( !(doorState & STRUCTURE_ANYDOOR) )
+						{ // door destroyed?
+							nextCost = gTileTypeMovementCost[gpWorldLevelData[newLoc].ubTerrainID];
 						}
 						else
 						{
-							// if there is no second door
-							if (iDoorGridNo2 == -1)
-							{
-								// door destroyed?
-								nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
+							fDoorIsOpen = doorState & STRUCTURE_OPEN;
+							if (doorState & STRUCTURE_SLIDINGDOOR && ubCnt & 1 && !fDoorIsOpen)
+							{  // cancel diagonal pathfinding through a closed sliding door
+								goto NEXTDIR;
 							}
 						}
 					}
 					else
-					{
-						// check door structure
-						pDoorStructure = FindStructure( (INT16) iDoorGridNo, STRUCTURE_ANYDOOR );
-						if (pDoorStructure)
-						{
-							fDoorIsOpen = (pDoorStructure->fFlags & STRUCTURE_OPEN) != 0;
-							// disallow diagonal travel through closed sliding door
-							if (pDoorStructure->fFlags & STRUCTURE_SLIDINGDOOR && !fDoorIsOpen && ubCnt & 1)
-								goto NEXTDIR;
+					{ // ... or two door structures and it's always diagonal
+						door2State = GetDoorState(iDoor2GridNo, fPathingForPlayer);
+						if ( !(doorState & STRUCTURE_ANYDOOR) && !(door2State & STRUCTURE_ANYDOOR) )
+						{ // both doors destroyed?
+							nextCost = gTileTypeMovementCost[gpWorldLevelData[newLoc].ubTerrainID];
 						}
-						else
-						{
-							// if there is no second door
-							if (iDoorGridNo2 == -1)
-							{
-								// door destroyed?
-								nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
-							}
+						else if ( !(doorState & STRUCTURE_OPEN) || !(door2State & STRUCTURE_OPEN) )
+						{ // cancel it if at least one of the doors is closed 
+							goto NEXTDIR;
 						}
+						fDoorIsOpen = TRUE;
 					}
-
-					// two door dependent direction?
-					if (iDoorGridNo2 != -1)
-					{
-						pDoorStatus = GetDoorStatus((INT16)iDoorGridNo);
-						if (fPathingForPlayer && gpWorldLevelData[iDoorGridNo2].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT && pDoorStatus)
-						{
-							// check second door status
-							pDoorStatus2 = GetDoorStatus((INT16)iDoorGridNo2);
-							if (pDoorStatus2)
-							{
-								fDoorIsOpen2 = (pDoorStatus2->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
-							}
-							// both doors destroyed?
-							if (!pDoorStatus && !pDoorStatus2)
-							{
-								nextCost = gTileTypeMovementCost[gpWorldLevelData[newLoc].ubTerrainID];
-							}
-							else
-							{
-								// one or both closed?
-								if ((pDoorStatus && !fDoorIsOpen) || (pDoorStatus2 && !fDoorIsOpen2))
-								{
-									fDoorIsOpen = FALSE;
-								}
-								// both open (destroyed means open)
-								else
-								{
-									fDoorIsOpen = TRUE;
-								}
-							}
-						}
-						else
-						{
-							// check second door structure
-							pDoorStructure = FindStructure((INT16)iDoorGridNo, STRUCTURE_ANYDOOR);
-							pDoorStructure2 = FindStructure((INT16)iDoorGridNo2, STRUCTURE_ANYDOOR);
-							if (pDoorStructure2)
-							{
-								fDoorIsOpen2 = (pDoorStructure2->fFlags & STRUCTURE_OPEN) != 0;
-							}							
-							// both doors destroyed?
-							if (!pDoorStructure && !pDoorStructure2)
-							{
-								nextCost = gTileTypeMovementCost[gpWorldLevelData[newLoc].ubTerrainID];
-							}
-							else
-							{
-								// one or both closed?
-								if ((pDoorStructure && !fDoorIsOpen) || (pDoorStructure2 && !fDoorIsOpen2))
-								{
-									iDoorGridNo2 = -1;
-									//don't let anyone path diagonally through doors of which one or both are closed
-									goto NEXTDIR;
-								}
-								// both open (destroyed means open)
-								else
-								{
-									fDoorIsOpen = TRUE;
-								}
-							}
-						}
-						iDoorGridNo2 = -1;
-					} 
 					// now determine movement cost... if it hasn't been changed already
 					if ( IS_TRAVELCOST_DOOR( nextCost ) )
 					{
@@ -2512,21 +2435,18 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 	// travel cost, depending on whether or not the door is open or closed etc.
 	BOOLEAN fDoorIsObstacleIfClosed=FALSE;
 	INT32 iDoorGridNo=-1;
-	INT32 iDoorGridNo2 = -1;
-	DOOR_STATUS *pDoorStatus{};
-	DOOR_STATUS *pDoorStatus2{};
+	INT32 iDoor2GridNo = -1;
 	DOOR *pDoor;
-	STRUCTURE *pDoorStructure{};
-	STRUCTURE *pDoorStructure2{};
 	BOOLEAN fDoorIsOpen{};
-	BOOLEAN fDoorIsOpen2{};
+	StructureFlags  doorState{};
+	StructureFlags  door2State{};
 	UINT8 ubReplacementCost;
 
 	if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 	{
 		ubReplacementCost = ubMovementCost;
 
-		fDoorIsObstacleIfClosed = IsDoorObstacleIfClosed(ubMovementCost, iGridNo, &iDoorGridNo, &iDoorGridNo2);		
+		fDoorIsObstacleIfClosed = IsDoorObstacleIfClosed(ubMovementCost, iGridNo, &iDoorGridNo, &iDoor2GridNo);		
 
 		if (fDoorIsObstacleIfClosed)
 		{
@@ -2544,103 +2464,29 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 			// return gridno of door through pointer
 			*piDoorGridNo = iDoorGridNo;
 		}
+
+		doorState = GetDoorState(iDoorGridNo, fReturnPerceivedValue);
 		
-		if (fReturnPerceivedValue &&
-			gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT)
-		{
-			// check door status
-			pDoorStatus = GetDoorStatus( (INT16) iDoorGridNo );
-			if (pDoorStatus)
-			{
-				fDoorIsOpen = (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+		if (iDoor2GridNo == -1)
+		{ // this travel direction depends on the state of only one door structure
+			if ( !(doorState & STRUCTURE_ANYDOOR) )
+			{ // door destroyed?
+				return ubMovementCost;
 			}
-			else
-			{
-				// if there is no second door
-				if (iDoorGridNo2 == -1)
-				{
-					// abort!
-					return(ubMovementCost);
-				}				
-			}
+			fDoorIsOpen = doorState & STRUCTURE_OPEN;
 		}
 		else
-		{
-			// check door structure
-			pDoorStructure = FindStructure( (INT16) iDoorGridNo, STRUCTURE_ANYDOOR );
-			if (pDoorStructure)
-			{
-				fDoorIsOpen = (pDoorStructure->fFlags & STRUCTURE_OPEN) != 0;
+		{ // ... or two door structures
+			door2State = GetDoorState(iDoor2GridNo, fReturnPerceivedValue);
+			if ( !(doorState & STRUCTURE_ANYDOOR) && !(door2State & STRUCTURE_ANYDOOR) )
+			{ // both doors destroyed?
+				return ubMovementCost;
 			}
-			else
-			{
-				// if there is no second door
-				if (iDoorGridNo2 == -1)
-				{
-					// abort!
-					return( ubMovementCost );
-				}
+			else if ( !(doorState & STRUCTURE_OPEN) || !(door2State & STRUCTURE_OPEN) )
+			{ // this direction is always diagonal so block it if one of the doors is closed 
+				return ubReplacementCost;
 			}
-		}
-		// two door dependent direction?
-		if (iDoorGridNo2 != -1)
-		{
-			pDoorStatus = GetDoorStatus((INT16)iDoorGridNo);
-			if (fReturnPerceivedValue && gpWorldLevelData[iDoorGridNo2].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT && pDoorStatus)
-			{
-				// check second door status
-				pDoorStatus2 = GetDoorStatus((INT16)iDoorGridNo2);
-				if (pDoorStatus2)
-				{
-					fDoorIsOpen2 = (pDoorStatus2->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
-				}
-				// both doors destroyed?
-				if (!pDoorStatus && !pDoorStatus2)
-				{
-					return(ubMovementCost);
-				}
-				else
-				{
-					// one or both closed?
-					if ((pDoorStatus && !fDoorIsOpen) || (pDoorStatus2 && !fDoorIsOpen2))
-					{
-						return(ubReplacementCost);
-					}
-					// both open (destroyed means open)
-					else
-					{
-						fDoorIsOpen = TRUE;
-					}
-				}
-			}
-			else
-			{
-				// check second door structure
-				pDoorStructure = FindStructure((INT16)iDoorGridNo, STRUCTURE_ANYDOOR);
-				pDoorStructure2 = FindStructure((INT16)iDoorGridNo2, STRUCTURE_ANYDOOR);
-				if (pDoorStructure2)
-				{
-					fDoorIsOpen2 = (pDoorStructure2->fFlags & STRUCTURE_OPEN) != 0;
-				}
-				// both doors destroyed?
-				if (!pDoorStructure && !pDoorStructure2)
-				{
-					return(ubMovementCost);
-				}
-				else
-				{
-					// one or both both closed?
-					if ((pDoorStructure && !fDoorIsOpen) || (pDoorStructure2 && !fDoorIsOpen2))
-					{						
-						return(ubReplacementCost);
-					}
-					// both open (destroyed means open)
-					else
-					{
-						fDoorIsOpen = TRUE;
-					}
-				}
-			}						
+			fDoorIsOpen = TRUE;
 		}
 		// now determine movement cost
 		if (fDoorIsOpen)
@@ -2707,6 +2553,7 @@ UINT8 DoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovemen
 
 BOOLEAN IsDoorObstacleIfClosed(UINT8 ubMovementCost, INT32 iGridNo, INT32* iDoorGridNo, INT32* iDoorGridNo2)
 {
+	*iDoorGridNo2 = -1;
 	switch (ubMovementCost)
 	{
 	case TRAVELCOST_DOORS_CLOSED_W_SW:
@@ -2825,4 +2672,30 @@ BOOLEAN IsDoorObstacleIfClosed(UINT8 ubMovementCost, INT32 iGridNo, INT32* iDoor
 		return(FALSE);
 		break;
 	}
+}
+
+StructureFlags GetDoorState(int32_t iDoorGridNo, bool returnPerceivedValue)
+{
+	StructureFlags doorState{};
+	if (returnPerceivedValue && gpWorldLevelData[iDoorGridNo].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT) {
+		DOOR_STATUS* pDoorStatus{ GetDoorStatus( static_cast<GridNo>(iDoorGridNo) ) };
+		if (pDoorStatus) {
+			doorState |= STRUCTURE_DOOR;
+			if (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) {
+				doorState |= STRUCTURE_OPEN;
+			}
+			return doorState;
+		}
+	}
+	else {
+		STRUCTURE* pDoorStructure{ FindStructure( static_cast<GridNo>(iDoorGridNo), STRUCTURE_ANYDOOR) };
+		if (pDoorStructure) {
+			doorState = static_cast<StructureFlags>(pDoorStructure->fFlags);
+			return doorState;
+		}
+	}
+	// door destroyed?
+	doorState |= STRUCTURE_OPEN;
+	doorState &= ~STRUCTURE_ANYDOOR;
+	return doorState;
 }
