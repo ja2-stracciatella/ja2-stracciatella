@@ -10,6 +10,7 @@
 #define _PATHAI_H
 
 #include "JA2Types.h"
+#include "Structure_Internals.h"
 
 
 void InitPathAI(void);
@@ -28,6 +29,7 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius );
 UINT8 DoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32* piDoorGridNo);
 UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32* piDoorGridNo, BOOLEAN fReturnDoorCost);
 BOOLEAN IsDoorObstacleIfClosed(UINT8 ubMovementCost, INT32 iGridNo, INT32* iDoorGridNo, INT32* iDoorGridNo2);
+StructureFlags GetDoorState(int32_t iDoorGridNo, bool returnPerceivedValue);
 
 INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode );
 
