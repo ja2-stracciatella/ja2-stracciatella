@@ -8,8 +8,8 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 
 function(add_warnings target)
     target_compile_options(${target} PRIVATE
-        $<$<CXX_COMPILER_ID:Clang>:-Wall -Wtype-limits -Wignored-qualifiers -Wstring-conversion>
-        $<$<CXX_COMPILER_ID:GNU>:-Wall -Wtype-limits -Wignored-qualifiers>
+        $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wstring-conversion>
+        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall -Wtype-limits -Wignored-qualifiers>
         $<$<CXX_COMPILER_ID:MSVC>:/W3 /wd4018 /wd4101 /wd4244 /wd4996>
             # 4018 : example: signed/unsigned mismatch
             # 4101 : example: unreferenced local variable
