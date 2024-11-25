@@ -7,16 +7,15 @@ option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 
 function(add_warnings target)
-    if(NOT MSVC)
-        target_compile_options(${target} PRIVATE -Wall -Wtype-limits -Wignored-qualifiers)
-    else()
-        target_compile_options(${target} PRIVATE /W3 /wd4018 /wd4101 /wd4244 /wd4996)
-        # 4018 : example: signed/unsigned mismatch
-        # 4101 : example: unreferenced local variable
-        # 4200 : example: nonstandard extension used : zero-sized array in struct/union
-        # 4244 : example: conversion from 'int' to 'real', possible loss of data
-        # 4996 : example: This function or variable may be unsafe (sscanf)
-    endif()
+    target_compile_options(${target} PRIVATE
+        $<$<CXX_COMPILER_ID:Clang>:-Wall -Wtype-limits -Wignored-qualifiers -Wstring-conversion>
+        $<$<CXX_COMPILER_ID:GNU>:-Wall -Wtype-limits -Wignored-qualifiers>
+        $<$<CXX_COMPILER_ID:MSVC>:/W3 /wd4018 /wd4101 /wd4244 /wd4996>
+            # 4018 : example: signed/unsigned mismatch
+            # 4101 : example: unreferenced local variable
+            # 4244 : example: conversion from 'int' to 'real', possible loss of data
+            # 4996 : example: This function or variable may be unsafe (sscanf)
+    )
 endfunction()
 
 target_include_directories(${JA2_BINARY} SYSTEM PRIVATE

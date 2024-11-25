@@ -16,6 +16,7 @@ class JsonValue {
 		JsonValue(double value) : m_value(RustPointer<RJsonValue>(RJsonValue_fromDouble(value))) {}
 		JsonValue(bool value) : m_value(RustPointer<RJsonValue>(RJsonValue_fromBool(value))) {}
 		JsonValue(const ST::string& value) : m_value(RustPointer<RJsonValue>(RJsonValue_fromString(value.c_str()))) {}
+		JsonValue(char const * const value) : m_value{ RJsonValue_fromString(value) } {}
 
 		static JsonValue deserialize(const ST::string& str);
 		static JsonValue deserialize(const ST::string& vanillaStr, const ST::string& patchStr);
