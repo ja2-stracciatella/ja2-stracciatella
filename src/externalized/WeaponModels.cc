@@ -140,7 +140,7 @@ const ExplosiveCalibreModel* readExplosiveCalibreWithFallbacks(const ST::string&
 WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 					const std::map<ST::string, const CalibreModel*> &calibreMap,
 					const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
-					const VanillaItemStrings& vanillaItemStrings)
+					const BinaryData& vanillaItemStrings)
 {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, vanillaItemStrings };
