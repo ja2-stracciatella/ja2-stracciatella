@@ -1499,38 +1499,6 @@ void SaveSoldierInitListLinks(HWFILE const hfile)
 }
 
 
-void LoadSoldierInitListLinks(HWFILE const f)
-{
-	UINT8 slots;
-	f->read(&slots, 1);
-	for (UINT8 n = slots; n != 0; --n)
-	{
-		UINT8 node_id;
-		UINT8 soldier_id;
-		f->read(&node_id,    1);
-		f->read(&soldier_id, 1);
-
-		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
-
-		FOR_EACH_SOLDIERINITNODE(curr)
-		{
-			if (curr->ubNodeID != node_id) continue;
-
-			curr->ubSoldierID = soldier_id;
-			TacticalTeamType const* const team = gTacticalStatus.Team;
-			if ((team[ENEMY_TEAM].bFirstID <= soldier_id &&
-				soldier_id <= team[CREATURE_TEAM].bLastID) ||
-				(team[CIV_TEAM].bFirstID <= soldier_id &&
-				soldier_id <= team[CIV_TEAM].bLastID))
-			{
-				// only enemies, creatures and civilians
-				curr->pSoldier = &GetMan(soldier_id);
-			}
-		}
-	}
-}
-
-
 void AddSoldierInitListBloodcats()
 {
 	SECTORINFO *pSector;
@@ -1704,8 +1672,7 @@ void AddProfilesUsingProfileInsertionData()
 		if (!ps)
 		{
 			// Create a new soldier, as this one doesn't exist
-			SOLDIERCREATE_STRUCT c;
-			c = SOLDIERCREATE_STRUCT{};
+			SOLDIERCREATE_STRUCT c{};
 			c.bTeam     = CIV_TEAM;
 			c.ubProfile = i;
 			c.sSector  = gWorldSector;
