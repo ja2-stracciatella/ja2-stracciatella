@@ -1178,42 +1178,11 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 	}
 }
 
-#define LOCAL_RADIUS 4
 
 void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 {
-	INT16		usGridNo;
-	INT16		sGridX, sGridY;
-	INT16		sCentreGridX, sCentreGridY;
-	INT8		bDirLoop;
-
-	ConvertGridNoToXY( sCentreGridNo, &sCentreGridX, &sCentreGridY );
-	for( sGridY = sCentreGridY - LOCAL_RADIUS; sGridY < sCentreGridY + LOCAL_RADIUS; sGridY++ )
-	{
-		for( sGridX = sCentreGridX - LOCAL_RADIUS; sGridX < sCentreGridX + LOCAL_RADIUS; sGridX++ )
-		{
-			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-			if (isValidGridNo(usGridNo))
-			{
-				for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
-				{
-					gubWorldMovementCosts[usGridNo][bDirLoop][0] = 0;
-					gubWorldMovementCosts[usGridNo][bDirLoop][1] = 0;
-				}
-			}
-		}
-	}
-
-	// note the radius used in this loop is larger, to guarantee that the
-	// edges of the recompiled areas are correct (i.e. there could be spillover)
-	for( sGridY = sCentreGridY - LOCAL_RADIUS - 1; sGridY < sCentreGridY + LOCAL_RADIUS + 1; sGridY++ )
-	{
-		for( sGridX = sCentreGridX - LOCAL_RADIUS - 1; sGridX < sCentreGridX + LOCAL_RADIUS + 1; sGridX++ )
-		{
-			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-			CompileTileMovementCosts( usGridNo );
-		}
-	}
+	constexpr INT8 LOCAL_RADIUS{ 4 };
+	RecompileLocalMovementCostsFromRadius(sCentreGridNo, LOCAL_RADIUS);
 }
 
 
