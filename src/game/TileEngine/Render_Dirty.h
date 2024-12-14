@@ -99,11 +99,6 @@ void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* buffer);
 void RemoveVideoOverlay(VIDEO_OVERLAY*);
 void RestoreShiftedVideoOverlays(INT16 sShiftX, INT16 sShiftY);
 void EnableVideoOverlay(BOOLEAN fEnable, VIDEO_OVERLAY*);
-void SetVideoOverlayText(VIDEO_OVERLAY* v, const ST::utf32_buffer& codepoints);
-inline void SetVideoOverlayText(VIDEO_OVERLAY* v, const ST::string& str)
-{
-	SetVideoOverlayText(v, str.to_utf32());
-}
 void SetVideoOverlayPos(VIDEO_OVERLAY*, INT16 X, INT16 Y);
 
 void BlitBufferToBuffer(SGPVSurface* src, SGPVSurface* dst, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight);

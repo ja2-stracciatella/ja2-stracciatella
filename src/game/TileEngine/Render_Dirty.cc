@@ -546,13 +546,6 @@ void EnableVideoOverlay(const BOOLEAN fEnable, VIDEO_OVERLAY* const v)
 }
 
 
-void SetVideoOverlayText(VIDEO_OVERLAY* v, const ST::utf32_buffer& codepoints)
-{
-	if (!v) return;
-	v->codepoints = codepoints;
-}
-
-
 void SetVideoOverlayPos(VIDEO_OVERLAY* const v, const INT16 X, const INT16 Y)
 {
 	if (!v) return;
