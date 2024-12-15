@@ -163,7 +163,7 @@ BOOLEAN HasSaveGameExtension(const ST::string &fileName) {
 
 ST::string GetAutoSaveName(uint32_t index) {
 	return ST::format("{}{02}", g_autosave_prefix, index);
-};
+}
 
 BOOLEAN IsAutoSaveName(const ST::string &saveName) {
 	return std::regex_match(saveName.c_str(), g_autosave_regex);
@@ -171,19 +171,19 @@ BOOLEAN IsAutoSaveName(const ST::string &saveName) {
 
 ST::string GetQuickSaveName() {
 	return g_quicksave_name;
-};
+}
 
 BOOLEAN IsQuickSaveName(const ST::string &saveName) {
 	return saveName.compare(g_quicksave_name, ST::case_insensitive) == 0;
-};
+}
 
 BOOLEAN IsErrorSaveName(const ST::string &saveName) {
 	return saveName.compare(g_error_save_name, ST::case_insensitive) == 0;
-};
+}
 
 ST::string GetErrorSaveName() {
 	return g_error_save_name;
-};
+}
 
 
 static void ExtractGameOptions(DataReader& d, GAME_OPTIONS& g)

@@ -3,9 +3,6 @@
 
 #include "Types.h"
 
-#include <string_theory/string>
-
-
 void CreateLoadingScreenProgressBar(void);
 void RemoveLoadingScreenProgressBar(void);
 
@@ -39,7 +36,7 @@ void RemoveProgressBar( UINT8 ubID );
 //As the process animates using UpdateProgressBar( 0 to 100 ), the total progress bar will only reach 30%
 //at the 100% mark within UpdateProgressBar.  At that time, you would go onto the next step, resetting the
 //relative start and end percentage from 30 to whatever, until your done.
-void SetRelativeStartAndEndPercentage(UINT8 id, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, const ST::string& str);
+void SetRelativeStartAndEndPercentage(UINT8 id, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, ST::string const& unused);
 
 //This part renders the progress bar at the percentage level that you specify.  If you have set relative
 //percentage values in the above function, then the uiPercentage will be reflected based off of the relative
@@ -49,8 +46,5 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage );
 
 //Sets the color of the progress bars main color.
 void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGreen, UINT8 ubColorFillBlue );
-
-//Pass in TRUE to display the strings.
-void SetProgressBarTextDisplayFlag( UINT8 ubID, BOOLEAN fDisplayText, BOOLEAN fUseSaveBuffer, BOOLEAN fSaveScreenToFrameBuffer );
 
 #endif

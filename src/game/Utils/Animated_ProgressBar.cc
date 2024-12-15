@@ -7,10 +7,8 @@
 #include "VObject.h"
 #include "VSurface.h"
 #include "Video.h"
-#include "Render_Dirty.h"
 #include "Music_Control.h"
 #include "Timer_Control.h"
-#include "SysUtil.h"
 #include "UILayout.h"
 
 #include <string_theory/string>
@@ -22,8 +20,6 @@ enum ProgressBarFlags
 {
 	PROGRESS_NONE           = 0,
 	PROGRESS_PANEL          = 1 << 0,
-	PROGRESS_DISPLAY_TEXT   = 1 << 1,
-	PROGRESS_USE_SAVEBUFFER = 1 << 2, // use the save buffer when display the text
 	PROGRESS_LOAD_BAR       = 1 << 3
 };
 ENUM_BITSET(ProgressBarFlags)
@@ -162,7 +158,7 @@ void RemoveProgressBar( UINT8 ubID )
  * the 100% mark within UpdateProgressBar.  At that time, you would go onto the
  * next step, resetting the relative start and end percentage from 30 to
  * whatever, until your done. */
-void SetRelativeStartAndEndPercentage(UINT8 id, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, const ST::string& str)
+void SetRelativeStartAndEndPercentage(UINT8 id, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, ST::string const&)
 {
 	Assert(id < MAX_PROGRESSBARS);
 	PROGRESSBAR* const bar = pBar[id];
@@ -189,21 +185,6 @@ void SetRelativeStartAndEndPercentage(UINT8 id, UINT32 uiRelStartPerc, UINT32 ui
 			SetFontAttributes(font, bar->ubTitleFontForeColor, bar->ubTitleFontShadowColor);
 			MPrint(x, t + 3, bar->title);
 		}
-	}
-
-	if (bar->flags & PROGRESS_DISPLAY_TEXT && !str.empty())
-	{ // Draw message
-		INT32 const x    = bar->pos.x;
-		INT32 const y    = bar->pos.y + bar->pos.h;
-		SGPFont  const font = bar->usMsgFont;
-		if (bar->flags & PROGRESS_USE_SAVEBUFFER)
-		{
-			UINT16 const h = GetFontHeight(font);
-			RestoreExternBackgroundRect(x, y, bar->pos.w, h + 3);
-		}
-
-		SetFontAttributes(font, bar->ubMsgFontForeColor, bar->ubMsgFontShadowColor);
-		MPrint(x, y + 3, str);
 	}
 }
 
@@ -281,31 +262,4 @@ void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGre
 		return;
 
 	pCurr->fill_colour = FROMRGB(ubColorFillRed, ubColorFillGreen, ubColorFillBlue);
-}
-
-
-void SetProgressBarTextDisplayFlag( UINT8 ubID, BOOLEAN fDisplayText, BOOLEAN fUseSaveBuffer, BOOLEAN fSaveScreenToFrameBuffer )
-{
-	PROGRESSBAR *pCurr=NULL;
-
-
-	Assert( ubID < MAX_PROGRESSBARS );
-
-	pCurr = pBar[ubID];
-	if( pCurr == NULL )
-		return;
-
-	ProgressBarFlags flags = pCurr->flags & ~(PROGRESS_DISPLAY_TEXT | PROGRESS_USE_SAVEBUFFER);
-	if (fDisplayText)   flags |= PROGRESS_DISPLAY_TEXT;
-	if (fUseSaveBuffer) flags |= PROGRESS_USE_SAVEBUFFER;
-	pCurr->flags = flags;
-
-	//if we are to use the save buffer, blit the portion of the screen to the save buffer
-	if( fSaveScreenToFrameBuffer )
-	{
-		UINT16 usFontHeight = GetFontHeight( pCurr->usMsgFont )+3;
-
-		//blit everything to the save buffer ( cause the save buffer can bleed through )
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, pCurr->pos.x, pCurr->pos.y + pCurr->pos.h, pCurr->pos.w, usFontHeight);
-	}
 }
