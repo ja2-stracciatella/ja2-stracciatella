@@ -29,7 +29,6 @@ static INT8 gbDeathSongCount   = 0;
 static INT8 gbFadeSpeed = 1;
 
 
-BOOLEAN        gfForceMusicToTense = FALSE;
 static BOOLEAN gfDontRestartSong   = FALSE;
 
 
