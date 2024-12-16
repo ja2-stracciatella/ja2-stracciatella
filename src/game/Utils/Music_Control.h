@@ -6,7 +6,6 @@
 #include <string_theory/string>
 
 extern MusicMode gubMusicMode;
-extern BOOLEAN	gfForceMusicToTense;
 
 
 void SetMusicMode(MusicMode ubMusicMode);

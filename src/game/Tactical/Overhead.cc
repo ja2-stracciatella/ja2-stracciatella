@@ -4036,8 +4036,6 @@ void ExitCombatMode( )
 	}
 
 	// Change music modes
-	gfForceMusicToTense = TRUE;
-
 	SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
 	BetweenTurnsVisibilityAdjustments();
@@ -4327,7 +4325,6 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 		}*/
 
 		// Begin tense music....
-		gfForceMusicToTense = TRUE;
 		SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
 		return( TRUE );
