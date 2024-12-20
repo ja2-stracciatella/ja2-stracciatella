@@ -21,6 +21,48 @@
 #define FONT_FCOLOR_ORANGE	76
 #define FONT_FCOLOR_PURPLE	160
 
+struct IAlignment
+{
+	virtual SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const noexcept = 0;
+	virtual ~IAlignment() = default;
+};
+
+// Horizontally align the given text right. Vertically the coordinate is
+// returned without change (top aligned).
+struct RightAlign : public IAlignment
+{
+	int width;
+	constexpr RightAlign(int w) : width{ w } {}
+	SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const noexcept override;
+};
+
+// Center align the given text right horizontally. Vertically the coordinate is
+// returned without change (top aligned).
+struct CenterAlign : public IAlignment
+{
+	int width;
+	constexpr CenterAlign(int w) : width{ w } {}
+	SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const noexcept override;
+};
+
+// Horizontally align the given text right. Vertically the coordinate is
+// centered as well.
+struct HRightVCenterAlign : public IAlignment
+{
+	int width, height;
+	constexpr HRightVCenterAlign(int w, int h) : width{ w }, height{ h } {}
+	SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const noexcept override;
+};
+
+// Center align the given text right horizontally. Vertically the coordinate is
+// centered as well.
+struct HCenterVCenterAlign : public IAlignment
+{
+	int width, height;
+	constexpr HCenterVCenterAlign(int w, int h) : width{ w }, height{ h } {}
+	SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const noexcept override;
+};
+
 
 extern SGPFont FontDefault;
 
@@ -52,6 +94,8 @@ inline void MPrint(INT32 x, INT32 y, const ST::string& str)
 {
 	MPrint(x, y, str.to_utf32());
 }
+
+void MPrint(int x, int y, ST::string const& text, IAlignment const& alignment);
 
 /* Sets the destination buffer for printing to and the clipping rectangle. */
 void SetFontDestBuffer(SGPVSurface* dst, INT32 x1, INT32 y1, INT32 x2, INT32 y2);

@@ -377,20 +377,18 @@ static void DisplayHistoryListHeaders(void)
 	// this procedure will display the headers to each column in History
 	SetFontAttributes(HISTORY_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 
-	INT16 usX;
-	INT16 usY;
-
 	// the date header
-	FindFontCenterCoordinates(RECORD_DATE_X + 5,0,RECORD_DATE_WIDTH,0, pHistoryHeaders[0], HISTORY_TEXT_FONT,&usX, &usY);
-	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[0]);
+	int x{ RECORD_DATE_X + 5 };
+	MPrint(x, RECORD_HEADER_Y, pHistoryHeaders[0], CenterAlign(RECORD_DATE_WIDTH));
 
-	// the date header
-	FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
-	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[3]);
+	// Location header
+	x += RECORD_DATE_WIDTH;
+	MPrint(x, RECORD_HEADER_Y, pHistoryHeaders[3], CenterAlign(RECORD_LOCATION_WIDTH));
 
 	// event header
-	FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + RECORD_LOCATION_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
-	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[4]);
+	x += RECORD_LOCATION_WIDTH;
+	MPrint(x, RECORD_HEADER_Y, pHistoryHeaders[4], CenterAlign(292));
+
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 }

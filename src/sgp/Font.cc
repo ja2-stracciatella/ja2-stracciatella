@@ -226,23 +226,19 @@ void SetFontDestBuffer(SGPVSurface* const dst)
 
 void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const ST::utf32_buffer& codepoints, SGPFont font, INT16* psNewX, INT16* psNewY)
 {
-	// Compute the coordinates to right justify the text
-	INT16 xp = sWidth - StringPixLength(codepoints, font) + sLeft;
-	INT16 yp = (sHeight - GetFontHeight(font)) / 2 + sTop;
-
-	*psNewX = xp;
-	*psNewY = yp;
+	// Compute the coordinates to center the text
+	auto const pt{ HRightVCenterAlign{ sWidth, sHeight }(sLeft, sTop, codepoints, font) };
+	*psNewX = static_cast<INT16>(pt.x);
+	*psNewY = static_cast<INT16>(pt.y);
 }
 
 
 void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const ST::utf32_buffer& codepoints, SGPFont font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to center the text
-	INT16 xp = (sWidth - StringPixLength(codepoints, font) + 1) / 2 + sLeft;
-	INT16 yp = (sHeight - GetFontHeight(font)) / 2 + sTop;
-
-	*psNewX = xp;
-	*psNewY = yp;
+	auto const pt{ HCenterVCenterAlign{ sWidth, sHeight }(sLeft, sTop, codepoints, font) };
+	*psNewX = static_cast<INT16>(pt.x);
+	*psNewY = static_cast<INT16>(pt.y);
 }
 
 
@@ -288,4 +284,42 @@ void MPrint(INT32 x, INT32 y, const ST::utf32_buffer& codepoints)
 {
 	SGPVSurface::Lock l(FontDestBuffer);
 	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), x, y, codepoints);
+}
+
+
+void MPrint(int const x, int const y, ST::string const& text, IAlignment const& alignment)
+{
+	auto const codepoints{ text.to_utf32() };
+	auto const alignedPosition{ alignment(x, y, codepoints, FontDefault) };
+	MPrint(alignedPosition.x, alignedPosition.y, codepoints);
+}
+
+
+SDL_Point CenterAlign::operator()(int x, int y,
+	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+{
+	return { (width - StringPixLength(codepoints, font) + 1) / 2 + x, y };
+}
+
+
+SDL_Point RightAlign::operator()(int x, int y,
+	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+{
+	return { width - StringPixLength(codepoints, font) + x, y };
+}
+
+
+SDL_Point HCenterVCenterAlign::operator()(int x, int y,
+	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+{
+	return { (width - StringPixLength(codepoints, font) + 1) / 2 + x,
+		(height - GetFontHeight(font)) / 2 + y };
+}
+
+
+SDL_Point HRightVCenterAlign::operator()(int x, int y,
+	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+{
+	return { width - StringPixLength(codepoints, font) + x,
+		(height - GetFontHeight(font)) / 2 + y };
 }
