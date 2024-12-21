@@ -335,7 +335,7 @@ static void RenderRubberBanding(void)
 
 	if (l != r)
 	{
-		if (l > r) Swap(l, r);
+		if (l > r) std::swap(l, r);
 		LineDraw(TRUE, l, t, r, t, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, r - l + 1, 1);
 		LineDraw(TRUE, l, b, r, b, colour, pDestBuf);
@@ -344,7 +344,7 @@ static void RenderRubberBanding(void)
 
 	if (t != b)
 	{
-		if (t > b) Swap(t, b);
+		if (t > b) std::swap(t, b);
 		LineDraw(TRUE, l, t, l, b, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, 1, b - t + 1);
 		LineDraw(TRUE, r, t, r, b, colour, pDestBuf);

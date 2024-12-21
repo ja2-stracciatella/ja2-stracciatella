@@ -26,14 +26,6 @@
 #define FOR_EACHX(type, iter, array, x) for (type* iter = (array); iter != endof((array)); (x), ++iter)
 #define FOR_EACH(type, iter, array)     FOR_EACHX(type, iter, (array), (void)0)
 
-template<typename T> static inline void Swap(T& a, T& b)
-{
-	T t(a);
-	a = b;
-	b = t;
-}
-
-
 typedef int32_t     INT;
 typedef int32_t     INT32;
 typedef uint32_t    UINT;
