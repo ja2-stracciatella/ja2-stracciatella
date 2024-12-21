@@ -387,7 +387,9 @@ static void DisplayHistoryListHeaders(void)
 
 	// event header
 	x += RECORD_LOCATION_WIDTH;
-	MPrint(x, RECORD_HEADER_Y, pHistoryHeaders[4], CenterAlign(292));
+	// 471 is the width in pixels of one row (the width of guiSHADELINE index 0).
+	constexpr int RECORD_EVENT_WIDTH{ 471 - RECORD_DATE_WIDTH - RECORD_LOCATION_WIDTH };
+	MPrint(x, RECORD_HEADER_Y, pHistoryHeaders[4], CenterAlign(RECORD_EVENT_WIDTH));
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
