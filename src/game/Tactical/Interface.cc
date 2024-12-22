@@ -1842,10 +1842,7 @@ static void CreateTopMessage(void)
 		default: abort();
 	}
 
-	INT16 sX;
-	INT16 sY;
-	FindFontCenterCoordinates(bar->x, bar->y, bar->w, bar->h, msg, TINYFONT1, &sX, &sY);
-	MPrint(sX, sY, msg);
+	MPrint(bar->x, bar->y, msg, HCenterVCenterAlign(bar->w, bar->h));
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
