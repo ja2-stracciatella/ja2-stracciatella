@@ -1141,11 +1141,7 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 	SetFontAttributes(TINYFONT1, foreground);
 
 	RestoreExternBackgroundRect(x, y, w, h);
-	ST::string buf = ST::format("{}", ap);
-	INT16 sFontX;
-	INT16 sFontY;
-	FindFontCenterCoordinates(x, y, w, h, buf, TINYFONT1, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, buf);
+	MPrint(x, y, ST::string::from_int(ap), HCenterVCenterAlign(w, h));
 }
 
 
@@ -1350,10 +1346,7 @@ no_plate:
 		INT16 const w = SM_SELMERCNAME_WIDTH;
 		INT16 const h = SM_SELMERCNAME_HEIGHT;
 		RestoreExternBackgroundRect(x, y, w, h);
-		INT16 sFontX;
-		INT16 sFontY;
-		FindFontCenterCoordinates(x, y, w, h, s.name, BLOCKFONT2, &sFontX, &sFontY);
-		MPrint(sFontX, sFontY, s.name);
+		MPrint(x, y, s.name, HCenterVCenterAlign(w, h));
 	}
 
 	if (*dirty_level != DIRTYLEVEL0)
@@ -2435,11 +2428,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 
 				// RENDER ON SAVE BUFFER!
 				SetFontDestBuffer(guiSAVEBUFFER);
-				INT16 sFontX;
-				INT16 sFontY;
-				FindFontCenterCoordinates(dx + TM_NAME_X, dy + TM_NAME_Y, TM_NAME_WIDTH, TM_NAME_HEIGHT,
-								s->name, BLOCKFONT2, &sFontX, &sFontY);
-				MPrint(sFontX, sFontY, s->name);
+				MPrint(dx + TM_NAME_X, dy + TM_NAME_Y, s->name,
+					HCenterVCenterAlign(TM_NAME_WIDTH, TM_NAME_HEIGHT));
 				// reset to frame buffer!
 				SetFontDestBuffer(FRAME_BUFFER);
 			}
@@ -3189,14 +3179,12 @@ static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot& tp)
 
 void RenderTownIDString(void)
 {
-	INT16 sFontX, sFontY;
-
 	// Render town, position
 	SetFontAttributes(COMPFONT, 183);
 	ST::string zTownIDString = GetSectorIDString(gWorldSector, TRUE);
 	zTownIDString = ReduceStringLength(zTownIDString, 80, COMPFONT);
-	FindFontCenterCoordinates(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + 50, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, zTownIDString);
+	MPrint(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + 50,
+		SCREEN_HEIGHT - 55, zTownIDString, HCenterVCenterAlign(80, 16));
 }
 
 

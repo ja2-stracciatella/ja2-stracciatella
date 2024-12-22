@@ -250,9 +250,8 @@ void RenderClock(void)
 	INT16 y = CLOCK_Y;
 	RestoreExternBackgroundRect(x, y, CLOCK_WIDTH, CLOCK_HEIGHT);
 
-	ST::string const& str = gfPauseDueToPlayerGamePause ? pPausedGameText[0] : WORLDTIMESTR;
-	FindFontCenterCoordinates(x, y, CLOCK_WIDTH, CLOCK_HEIGHT, str, CLOCK_FONT, &x, &y);
-	MPrint(x, y, str);
+	MPrint(x, y, gfPauseDueToPlayerGamePause ? pPausedGameText[0] : WORLDTIMESTR,
+		HCenterVCenterAlign(CLOCK_WIDTH, CLOCK_HEIGHT));
 }
 
 bool DidGameJustStart()

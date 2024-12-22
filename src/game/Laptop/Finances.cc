@@ -462,10 +462,7 @@ static void DrawRecordsColumnHeadersText(void)
 
 static void DrawStringCentered(INT32 x, INT32 y, INT32 w, const ST::string& str)
 {
-	INT16 sx;
-	INT16 sy;
-	FindFontCenterCoordinates(x, 0, w, 0, str, FINANCE_TEXT_FONT, &sx, &sy);
-	MPrint(sx, y, str);
+	MPrint(x, y, str, CenterAlign(w));
 }
 
 

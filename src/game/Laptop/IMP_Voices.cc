@@ -301,11 +301,9 @@ static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReaso
 
 static void RenderVoiceIndex(void)
 {
-	INT16 sX, sY;
-
 	// render the voice index value on the the blank portrait
-	ST::string sString = ST::format("{} {}", pIMPVoicesStrings, iCurrentVoices + 1);
-	FindFontCenterCoordinates( 290 + LAPTOP_UL_X, 0, 100, 0, sString, FONT12ARIAL, &sX, &sY );
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
-	MPrint(sX, 320, sString);
+	MPrint(290 + LAPTOP_UL_X, 320,
+		ST::format("{} {}", pIMPVoicesStrings, iCurrentVoices + 1),
+		CenterAlign(100));
 }

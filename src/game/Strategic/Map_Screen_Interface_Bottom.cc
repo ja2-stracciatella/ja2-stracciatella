@@ -349,10 +349,7 @@ static void DrawNameOfLoadedSector()
 	ST::string buf = GetSectorIDString(sSelMap, TRUE);
 	buf = ReduceStringLength(buf, 80, font);
 
-	INT16 x;
-	INT16 y;
-	FindFontCenterCoordinates(STD_SCREEN_X + 548, STD_SCREEN_Y + 426, 80, 16, buf, font, &x, &y);
-	MPrint(x, y, buf);
+	MPrint(STD_SCREEN_X + 548, STD_SCREEN_Y + 426, buf, HCenterVCenterAlign(80, 16));
 }
 
 
@@ -523,7 +520,6 @@ static void EnableDisableMessageScrollButtonsAndRegions(void)
 
 static void DisplayCompressMode(void)
 {
-	INT16 sX, sY;
 	static UINT8 usColor = FONT_LTGREEN;
 
 	// get compress speed
@@ -556,8 +552,8 @@ static void DisplayCompressMode(void)
 	}
 
 	SetFontAttributes(COMPFONT, usColor);
-	FindFontCenterCoordinates(STD_SCREEN_X + 489, STD_SCREEN_Y + 457, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);
-	MPrint(sX, sY, Time);
+	MPrint(STD_SCREEN_X + 489, STD_SCREEN_Y + 457, Time,
+		HCenterVCenterAlign(522 - 489, 467 - 454));
 }
 
 
@@ -877,19 +873,12 @@ BOOLEAN AllowedToTimeCompress( void )
 
 static void DisplayCurrentBalanceTitleForMapBottom(void)
 {
-	ST::string sString;
-	INT16 sFontX, sFontY;
-
 	SetFontDestBuffer(guiSAVEBUFFER);
 	SetFontAttributes(COMPFONT, MAP_BOTTOM_FONT_COLOR);
+	HCenterVCenterAlign const alignment{ 437 - 359, 10 };
 
-	sString = pMapScreenBottomText;
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, sString);
-
-	sString = zMarksMapScreenText[2];
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, sString);
+	MPrint(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 - 14, pMapScreenBottomText, alignment);
+	MPrint(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 - 14, zMarksMapScreenText[2], alignment);
 
 	SetFontDestBuffer(FRAME_BUFFER);
 }
@@ -898,13 +887,11 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 static void DisplayCurrentBalanceForMapBottom(void)
 {
 	// show the current balance for the player on the map panel bottom
-	INT16 sFontX, sFontY;
-
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontAttributes(COMPFONT, 183);
-	ST::string sString = SPrintMoney(LaptopSaveInfo.iCurrentBalance);
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, sString);
+	MPrint(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 + 2,
+		SPrintMoney(LaptopSaveInfo.iCurrentBalance),
+		HCenterVCenterAlign(437 - 359, 10));
 }
 
 
@@ -946,7 +933,6 @@ static void DisplayProjectedDailyMineIncome(void)
 {
 	INT32 iRate = 0;
 	static INT32 iOldRate = -1;
-	INT16 sFontX, sFontY;
 
 	// grab the rate from the financial system
 	iRate = GetProjectedTotalDailyIncome( );
@@ -962,9 +948,8 @@ static void DisplayProjectedDailyMineIncome(void)
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontAttributes(COMPFONT, 183);
-	ST::string sString = SPrintMoney(iRate);
-	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, sString);
+	MPrint(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 + 2,
+		SPrintMoney(iRate), HCenterVCenterAlign(437 - 359, 10));
 }
 
 

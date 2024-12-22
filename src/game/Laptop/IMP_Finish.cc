@@ -275,13 +275,11 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void RenderCharFullName(void)
 {
-	INT16 sX, sY;
-
 	// render the characters full name
 	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
-	ST::string sString = st_format_printf(pIMPFinishStrings, pFullName);
-	FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
-	MPrint(sX, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);
+	MPrint(LAPTOP_SCREEN_UL_X, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 33,
+		st_format_printf(pIMPFinishStrings, pFullName),
+		CenterAlign(LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X));
 }
 
 
