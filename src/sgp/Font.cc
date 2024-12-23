@@ -296,21 +296,21 @@ void MPrint(int const x, int const y, ST::string const& text, IAlignment const& 
 
 
 SDL_Point CenterAlign::operator()(int x, int y,
-	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+	ST::utf32_buffer const& codepoints, SGPFont const font) const
 {
 	return { (width - StringPixLength(codepoints, font) + 1) / 2 + x, y };
 }
 
 
 SDL_Point RightAlign::operator()(int x, int y,
-	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+	ST::utf32_buffer const& codepoints, SGPFont const font) const
 {
 	return { width - StringPixLength(codepoints, font) + x, y };
 }
 
 
 SDL_Point HCenterVCenterAlign::operator()(int x, int y,
-	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+	ST::utf32_buffer const& codepoints, SGPFont const font) const
 {
 	return { (width - StringPixLength(codepoints, font) + 1) / 2 + x,
 		(height - GetFontHeight(font)) / 2 + y };
@@ -318,7 +318,7 @@ SDL_Point HCenterVCenterAlign::operator()(int x, int y,
 
 
 SDL_Point HRightVCenterAlign::operator()(int x, int y,
-	ST::utf32_buffer const& codepoints, SGPFont const font) const noexcept
+	ST::utf32_buffer const& codepoints, SGPFont const font) const
 {
 	return { width - StringPixLength(codepoints, font) + x,
 		(height - GetFontHeight(font)) / 2 + y };
