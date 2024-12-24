@@ -5,6 +5,7 @@
 #include "VSurface.h"
 #include "Logger.h"
 
+#include "SDL.h"
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -145,27 +146,16 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 
 	auto vs = std::make_unique<SGPVSurface>(img->usWidth, img->usHeight, img->ubBitDepth);
 
-	UINT8 const dst_bpp = vs->BPP();
-	UINT32      buffer_bpp;
-	switch (dst_bpp)
-	{
-		case  8: buffer_bpp = BUFFER_8BPP;  break;
-		case 16: buffer_bpp = BUFFER_16BPP; break;
-		default: throw std::logic_error("Invalid bpp");
-	}
-
-	{ SGPVSurface::Lock l(vs.get());
-		UINT8*  const dst   = l.Buffer<UINT8>();
-		UINT16  const pitch = l.Pitch() / (dst_bpp / 8); // pitch in pixels
-		SGPBox  const box   = { 0, 0, img->usWidth, img->usHeight };
-		BOOLEAN const Ret   = CopyImageToBuffer(img.get(), buffer_bpp, dst, pitch, vs->Height(), 0, 0, &box);
-		if (!Ret)
-		{
-			SLOGE("Error Occured Copying SGPImage to video surface");
-		}
-	}
-
+	// Copy palette from the SGPImage to the SGPVSurface if necessary.
 	if (img->ubBitDepth == 8) vs->SetPalette(img->pPalette);
+
+	auto && sdlSurface{ vs->GetSDLSurface() };
+	auto const format{ sdlSurface.format->format };
+
+	// Leave it to SDL to copy the pixel data from the image to the surface.
+	SDL_ConvertPixels(img->usWidth, img->usHeight,
+		format, &*img->pImageData, img->usWidth * img->ubBitDepth / 8,
+		format, sdlSurface.pixels, sdlSurface.pitch);
 
 	return vs.release();
 }
