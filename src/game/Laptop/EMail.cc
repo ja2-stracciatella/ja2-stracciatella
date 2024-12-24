@@ -1538,27 +1538,22 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	SetFontAttributes(MESSAGE_FONT, FONT_BLACK, NO_SHADOW);
 
 	// all headers, but not info are right justified
-	INT16 usX;
-	INT16 usY;
+	RightAlign const alignment{ MESSAGE_HEADER_WIDTH };
 
 	// print from
-	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_FROM_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_FROM_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[0], MESSAGE_FONT, &usX, &usY);
-	MPrint(usX, MESSAGE_FROM_Y + iViewerY, pEmailHeaders[0]);
+	MPrint(MESSAGE_HEADER_X - 20, MESSAGE_FROM_Y + iViewerY, pEmailHeaders[0], alignment);
 
 	// the actual from info
 	MPrint( MESSAGE_HEADER_X+MESSAGE_HEADER_WIDTH-13, MESSAGE_FROM_Y + iViewerY, pSenderNameList[pMail->ubSender]);
 
-
 	// print date
-	FindFontRightCoordinates(MESSAGE_HEADER_X + 168, MESSAGE_DATE_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_DATE_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[2], MESSAGE_FONT, &usX, &usY);
-	MPrint(usX, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2]);
+	MPrint(MESSAGE_HEADER_X + 168, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2], alignment);
 
 	// the actual date info
 	MPrint(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, ST::format("{}", pMail->iDate / (24 * 60)));
 
 	// print subject
-	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_SUBJECT_Y, MESSAGE_HEADER_WIDTH, MESSAGE_SUBJECT_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[1], MESSAGE_FONT, &usX, &usY);
-	MPrint(usX, MESSAGE_SUBJECT_Y + iViewerY, pEmailHeaders[1]);
+	MPrint(MESSAGE_HEADER_X - 20, MESSAGE_SUBJECT_Y + iViewerY, pEmailHeaders[1], alignment);
 
  	// the actual subject info
 	IanDisplayWrappedString(SUBJECT_LINE_X + 2, SUBJECT_LINE_Y + 2 + iViewerY, SUBJECT_LINE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pMail->pSubject, 0, 0);
@@ -2267,11 +2262,9 @@ static void DisplayNumberOfPagesToThisEmail(INT32 const iViewerY)
 	// display the indent for the display of pages to this email..along with the current page/number of pages
 	SetFontAttributes(FONT12ARIAL, FONT_BLACK, NO_SHADOW);
 
-	ST::string str = ST::format("{} / {}", giMessagePage + 1, giNumberOfPagesToCurrentEmail - 1);
-	INT16 sX;
-	INT16 sY;
-	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0, INDENT_X_WIDTH, 0, str, FONT12ARIAL, &sX, &sY);
-	MPrint(sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, str);
+	MPrint(VIEWER_X + INDENT_X_OFFSET, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2,
+		ST::format("{} / {}", giMessagePage + 1, giNumberOfPagesToCurrentEmail - 1),
+		CenterAlign(INDENT_X_WIDTH));
 
 	SetFontShadow(DEFAULT_SHADOW);
 }

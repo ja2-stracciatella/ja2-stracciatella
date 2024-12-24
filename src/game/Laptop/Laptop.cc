@@ -1657,6 +1657,7 @@ static void DisplayBookMarks(void)
 	INT32 const h  = BOOK_HEIGHT + 6;
 	INT32 const sy = BOOK_TOP_Y + 6 + h;
 	INT32       y  = sy;
+	HCenterVCenterAlign const alignment{ BOOK_WIDTH - 3, h };
 	for (INT32 i = 0;; ++i)
 	{
 		bool              const highlighted = iHighLightBookLine == i;
@@ -1665,11 +1666,8 @@ static void DisplayBookMarks(void)
 
 		SetFontForeground(highlighted ? FONT_WHITE : FONT_BLACK);
 		INT32          const idx = LaptopSaveInfo.iBookMarkList[i];
-		ST::string txt = pBookMarkStrings[idx != -1 ? idx : CANCEL_STRING];
-		INT16                sX;
-		INT16                sY;
-		FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, h, txt, BOOK_FONT, &sX, &sY);
-		MPrint(sX, sY, txt);
+		MPrint(BOOK_X + 3, y + 2,
+			pBookMarkStrings[idx != -1 ? idx : CANCEL_STRING], alignment);
 		y += h;
 		if (idx == -1) break;
 	}
@@ -1956,11 +1954,8 @@ static void DisplayLoadPending(void)
 	SetFontAttributes(DOWNLOAD_FONT, FONT_WHITE, NO_SHADOW);
 
 	// reload or download?
-	ST::string str = (fFastLoadFlag ? pDownloadString[1] : pDownloadString[0]);
-	INT16 sXPosition = 0;
-	INT16 sYPosition = 0;
-	FindFontCenterCoordinates(328, 0, 446 - 328, 0, str, DOWNLOAD_FONT, &sXPosition, &sYPosition);
-	MPrint(STD_SCREEN_X + sXPosition, DOWN_STRING_Y, str);
+	MPrint(STD_SCREEN_X + 328, DOWN_STRING_Y,
+		pDownloadString[fFastLoadFlag ? 1 : 0], CenterAlign(446 - 328));
 
 	BltVideoObject(FRAME_BUFFER, guiGRAPHWINDOW, 0, LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
 

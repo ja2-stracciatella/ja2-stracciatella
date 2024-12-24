@@ -1922,17 +1922,12 @@ static void EnableDisableDeparturesButtons(void)
 static void DisplayDepartedCharName(MERCPROFILESTRUCT const& p, const INT32 iState)
 {
 	// get merc's nickName, assignment, and sector location info
-	INT16 sX, sY;
 
 	SetFontAttributes(CHAR_NAME_FONT, PERS_TEXT_FONT_COLOR);
+	CenterAlign const alignment{ CHAR_NAME_LOC_WIDTH };
 
-	ST::string name = p.zNickname;
-	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, name, CHAR_NAME_FONT, &sX, &sY);
-	MPrint(sX, CHAR_NAME_Y, name);
-
-	ST::string state_txt = pPersonnelDepartedStateStrings[iState];
-	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, state_txt, CHAR_NAME_FONT, &sX, &sY);
-	MPrint(sX, CHAR_LOC_Y, state_txt);
+	MPrint(CHAR_NAME_LOC_X, CHAR_NAME_Y, p.zNickname, alignment);
+	MPrint(CHAR_NAME_LOC_X, CHAR_LOC_Y, pPersonnelDepartedStateStrings[iState], alignment);
 }
 
 

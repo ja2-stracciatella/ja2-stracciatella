@@ -639,11 +639,9 @@ void RenderTalkingMenu()
 
 	// Render name
 	SetFontAttributes(MILITARYFONT1, tp->fOnName ? FONT_WHITE : 33);
-	ST::string name = GetProfile(pid).zNickname;
-	INT16 sFontX;
-	INT16 sFontY;
-	FindFontCenterCoordinates(tp->sX + TALK_PANEL_NAME_X, tp->sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, name, MILITARYFONT1, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, name);
+	MPrint(tp->sX + TALK_PANEL_NAME_X, tp->sY + TALK_PANEL_NAME_Y,
+		GetProfile(pid).zNickname,
+		HCenterVCenterAlign(TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT));
 
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -760,10 +758,7 @@ void RenderTalkingMenu()
 		{
 			str = zTalkMenuStrings[cnt];
 		}
-		INT16 sFontX;
-		INT16 sFontY;
-		FindFontCenterCoordinates(x, y, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, str, MILITARYFONT1, &sFontX, &sFontY);
-		MPrint(sFontX, sFontY, str);
+		MPrint(x, y, str, HCenterVCenterAlign(TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT));
 
 		y += TALK_PANEL_MENUTEXT_SPACEY;
 	}
