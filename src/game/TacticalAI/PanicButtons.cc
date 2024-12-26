@@ -126,7 +126,7 @@ void MakeClosestEnemyChosenOne()
 
 			// if he can't get to a spot where he could get at the panic trigger
 			/*
-			if (FindAdjacentGridEx(pSoldier, gTacticalStatus.sPanicTriggerGridno, NULL, NULL, FALSE, FALSE) == -1)
+			if (FindAdjacentGridEx(pSoldier, gTacticalStatus.sPanicTriggerGridno, NULL, NULL, false, false) == -1)
 			{
 				pSoldier->bHasKeys = bOldKeys;
 				continue;          // next merc
@@ -140,7 +140,7 @@ void MakeClosestEnemyChosenOne()
 		if (pSoldier->sGridNo != sPanicTriggerGridNo)
 		{
 			// get the AP cost for this enemy to go to target position
-			sPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, WALKING, 0);
+			sPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, false, false, WALKING, 0);
 		}
 		else
 		{
@@ -172,7 +172,7 @@ void MakeClosestEnemyChosenOne()
 		}
 		SetNewSituation(closest_enemy); // set new situation for the chosen one
 		closest_enemy->bHasKeys = (closest_enemy->bHasKeys << 1) | 1; // cheat and give him keys to every door
-		//closest_enemy->bHasKeys = TRUE;
+		//closest_enemy->bHasKeys = true;
 	}
 }
 
@@ -218,7 +218,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 	iAPCost = AP_PULL_TRIGGER;
 	if (pSoldier->sGridNo != sPanicTriggerGridNo)
 	{
-		iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, RUNNING, 0);
+		iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, false, false, RUNNING, 0);
 		if (iPathCost == 0)
 		{
 			//pSoldier->bHasKeys = bOldKeys;
@@ -243,7 +243,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 {
-	BOOLEAN		fFoundRoute = FALSE;
+	BOOLEAN		fFoundRoute = false;
 	INT8			bSlot;
 	INT32			iPathCost;
 	INT8			bPanicTrigger;
@@ -295,15 +295,15 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			if (pSoldier->sGridNo != sPanicTriggerGridNo)
 			{
 				// determine whether we can still get there
-				iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, RUNNING, 0);
+				iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, false, false, RUNNING, 0);
 				if (iPathCost != 0)
 				{
-					fFoundRoute = TRUE;
+					fFoundRoute = true;
 				}
 			}
 			else
 			{
-				fFoundRoute = TRUE;
+				fFoundRoute = true;
 			}
 
 			// if we managed to find an adjacent spot
@@ -340,7 +340,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 						if (LegalNPCDestination(pSoldier,sPanicTriggerGridNo,ENSURE_PATH,NOWATER,0))
 						{
 							pSoldier->usActionData = sPanicTriggerGridNo;
-							pSoldier->bPathStored = TRUE;
+							pSoldier->bPathStored = true;
 							return(AI_ACTION_GET_CLOSER);
 						}
 						else       // Oh oh, the chosen one can't get to the trigger!
@@ -444,7 +444,7 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 			gTacticalStatus.the_chosen_one != NULL)
 	{
 		// already done!
-		return( FALSE );
+		return false;
 	}
 
 	if (gWorldSector == tixa)
@@ -452,12 +452,12 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 		const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(WARDEN);
 		if (!pSoldier || pSoldier == gTacticalStatus.the_chosen_one)
 		{
-			return( FALSE ); // in tixa only the warden
+			return false; // in tixa only the warden
 		}
 	}
 	else if (!IsTeamActive(ENEMY_TEAM))
 	{
-		return FALSE; // in other places only the army
+		return false; // in other places only the army
 	}
 
 	uiPercentEnemiesKilled = PercentEnemiesKilled();
@@ -467,11 +467,11 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 		// if the bomb exists and its tolerance has been exceeded
 		if ( (gTacticalStatus.sPanicTriggerGridNo[ bLoop ] != NOWHERE) && ( uiPercentEnemiesKilled >= gTacticalStatus.ubPanicTolerance[ bLoop ] ) )
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 

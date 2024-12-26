@@ -162,7 +162,7 @@ enum
 #define EXIT_LAPTOP_DELAY_TIME 100
 
 static SGPVSurface* guiTitleBarSurface;
-static BOOLEAN gfTitleBarSurfaceAlreadyActive = FALSE;
+static BOOLEAN gfTitleBarSurfaceAlreadyActive = false;
 
 #define LAPTOP__NEW_FILE_ICON_X  (83 + STD_SCREEN_X)
 #define LAPTOP__NEW_FILE_ICON_Y (412 + STD_SCREEN_Y)
@@ -181,42 +181,42 @@ INT32  giCurrentSubPage;
 
 
 static INT32 iHighLightBookLine = -1;
-BOOLEAN fFastLoadFlag = FALSE;
-static BOOLEAN gfEnterLapTop=TRUE;
-BOOLEAN gfShowBookmarks=FALSE;
+BOOLEAN fFastLoadFlag = false;
+static BOOLEAN gfEnterLapTop=true;
+BOOLEAN gfShowBookmarks=false;
 
 // in progress of loading a page?
-BOOLEAN fLoadPendingFlag=FALSE;
+BOOLEAN fLoadPendingFlag=false;
 
 // mark buttons dirty?
-static BOOLEAN fMarkButtonsDirtyFlag = TRUE;
+static BOOLEAN fMarkButtonsDirtyFlag = true;
 
 // redraw afer rendering buttons?
-BOOLEAN fReDrawPostButtonRender = FALSE;
+BOOLEAN fReDrawPostButtonRender = false;
 
 // in laptop right now?
-BOOLEAN fCurrentlyInLaptop = FALSE;
+BOOLEAN fCurrentlyInLaptop = false;
 
 // exit due to a message box pop up?..don't really leave LAPTOP
-BOOLEAN fExitDueToMessageBox = FALSE;
+BOOLEAN fExitDueToMessageBox = false;
 
 // exit laptop during a load?
-static BOOLEAN fExitDuringLoad = FALSE;
+static BOOLEAN fExitDuringLoad = false;
 
 // done loading?
-BOOLEAN fDoneLoadPending = FALSE;
+BOOLEAN fDoneLoadPending = false;
 
 // going a subpage of a web page?..faster access time
-BOOLEAN fConnectingToSubPage = FALSE;
+BOOLEAN fConnectingToSubPage = false;
 
 // is this our first time in laptop?
-static BOOLEAN fFirstTimeInLaptop = TRUE;
+static BOOLEAN fFirstTimeInLaptop = true;
 
 // redraw the book mark info panel .. for blitting on top of animations
-BOOLEAN fReDrawBookMarkInfo = FALSE;
+BOOLEAN fReDrawBookMarkInfo = false;
 
 // show the 2 second info about bookmarks being accessed by clicking on web
-BOOLEAN fShowBookmarkInfo = FALSE;
+BOOLEAN fShowBookmarkInfo = false;
 
 //GLOBAL FOR WHICH SCREEN TO EXIT TO FOR LAPTOP
 static ScreenID guiExitScreen = MAP_SCREEN;
@@ -224,7 +224,7 @@ static ScreenID guiExitScreen = MAP_SCREEN;
 // Laptop screen graphic handle
 static SGPVObject* guiLAPTOP;
 
-static BOOLEAN fNewWWW = TRUE;
+static BOOLEAN fNewWWW = true;
 
 //Used to store the site to go to after the 'rain delay' message
 extern UINT32 guiRainLoop;
@@ -248,14 +248,14 @@ SGPVObject* guiTITLEBARICONS;
 static SGPVSurface* guiDESKTOP;
 
 // enter new laptop mode due to sliding bars
-static BOOLEAN fEnteredNewLapTopDueToHandleSlidingBars = FALSE;
+static BOOLEAN fEnteredNewLapTopDueToHandleSlidingBars = false;
 
 
 // whether or not we are initing the slide in title bar
-static BOOLEAN fInitTitle = TRUE;
+static BOOLEAN fInitTitle = true;
 
 // tab handled
-static BOOLEAN fTabHandled = FALSE;
+static BOOLEAN fTabHandled = false;
 
 static GUIButtonRef gLaptopButton[7];
 
@@ -266,27 +266,27 @@ static GUIButtonRef gLaptopMinButton;
 static INT32 gLaptopProgramStates[LAPTOP_PROGRAM_HISTORY + 1];
 
 // process of mazimizing
-static BOOLEAN fMaximizingProgram = FALSE;
+static BOOLEAN fMaximizingProgram = false;
 
 // program we are maximizing
 static INT8 bProgramBeingMaximized = -1;
 
 // are we minimizing
-static BOOLEAN fMinizingProgram = FALSE;
+static BOOLEAN fMinizingProgram = false;
 
 
 // process openned queue
 static INT32 gLaptopProgramQueueList[6];
 
 
-BOOLEAN fExitingLaptopFlag = FALSE;
+BOOLEAN fExitingLaptopFlag = false;
 
 // HD and power lights on
-static BOOLEAN fPowerLightOn = TRUE;
-static BOOLEAN fHardDriveLightOn = FALSE;
+static BOOLEAN fPowerLightOn = true;
+static BOOLEAN fHardDriveLightOn = false;
 
 // HD flicker
-static BOOLEAN fFlickerHD = FALSE;
+static BOOLEAN fFlickerHD = false;
 
 // the screens limiting rect
 static const SGPRect LaptopScreenRect = { LAPTOP_UL_X, (UINT16)(LAPTOP_UL_Y - 5), (UINT16)(LAPTOP_SCREEN_LR_X + 2), (UINT16)(LAPTOP_SCREEN_LR_Y + 5 + 19) };
@@ -307,8 +307,8 @@ static MOUSE_REGION gNewFileIconRegion;
 LaptopSaveInfoStruct LaptopSaveInfo;
 
 
-BOOLEAN fReDrawScreenFlag=FALSE;
-BOOLEAN fPausedReDrawScreenFlag=FALSE; //used in the handler functions to redraw the screen, after the current frame
+BOOLEAN fReDrawScreenFlag=false;
+BOOLEAN fPausedReDrawScreenFlag=false; //used in the handler functions to redraw the screen, after the current frame
 void PrintBalance(void);
 
 
@@ -326,13 +326,13 @@ void SetLaptopExitScreen(ScreenID const uiExitScreen)
 
 void SetLaptopNewGameFlag(void)
 {
-	LaptopSaveInfo.gfNewGameLaptop = TRUE;
+	LaptopSaveInfo.gfNewGameLaptop = true;
 }
 
 
 static void GetLaptopKeyboardInput(void)
 {
-	fTabHandled = FALSE;
+	fTabHandled = false;
 
 	InputAtom InputEvent;
 	while (DequeueSpecificEvent(&InputEvent, KEYBOARD_EVENTS))
@@ -351,20 +351,20 @@ void LaptopScreenInit(void)
 	//Memset the whole structure, to make sure of no 'JUNK'
 	LaptopSaveInfo = LaptopSaveInfoStruct{};
 
-	LaptopSaveInfo.gfNewGameLaptop = TRUE;
+	LaptopSaveInfo.gfNewGameLaptop = true;
 
 	//reset the id of the last hired merc
 	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
 
 	//reset the flag that enables the 'just hired merc' popup
-	LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop = FALSE;
+	LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop = false;
 
 	//Initialize all vars
 	guiCurrentLaptopMode  = LAPTOP_MODE_EMAIL;
 	guiPreviousLaptopMode = LAPTOP_MODE_NONE;
 	guiCurrentWWWMode     = LAPTOP_MODE_NONE;
 
-	gfShowBookmarks = FALSE;
+	gfShowBookmarks = false;
 	InitBookMarkList();
 	GameInitAIM();
 	GameInitAimSort();
@@ -379,7 +379,7 @@ void LaptopScreenInit(void)
 	// init program states
 	std::fill(std::begin(gLaptopProgramStates), std::end(gLaptopProgramStates), LAPTOP_PROGRAM_MINIMIZED);
 
-	gfAtLeastOneMercWasHired = FALSE;
+	gfAtLeastOneMercWasHired = false;
 
 	//No longer inits the laptop screens, now InitLaptopAndLaptopScreens() does
 }
@@ -391,10 +391,10 @@ void InitLaptopAndLaptopScreens(void)
 	GameInitHistory();
 
 	//Reset the flag so we can create a new IMP character
-	LaptopSaveInfo.fIMPCompletedFlag = FALSE;
+	LaptopSaveInfo.fIMPCompletedFlag = false;
 
 	//Reset the flag so that BOBBYR's isnt available at the begining of the game
-	LaptopSaveInfo.fBobbyRSiteCanBeAccessed = FALSE;
+	LaptopSaveInfo.fBobbyRSiteCanBeAccessed = false;
 }
 
 
@@ -434,7 +434,7 @@ static void EnterLaptop(void)
 		gRadarRegion.Disable();
 	}
 
-	gfDontStartTransitionFromLaptop = FALSE;
+	gfDontStartTransitionFromLaptop = false;
 
 	// ATE: Disable messages....
 	DisableScrollMessages();
@@ -462,11 +462,11 @@ static void EnterLaptop(void)
 	PauseGame();
 
 	// set the fact we are currently in laptop, for rendering purposes
-	fCurrentlyInLaptop = TRUE;
+	fCurrentlyInLaptop = true;
 
 	// reset redraw flag and redraw new mail
-	fReDrawScreenFlag  = FALSE;
-	fReDrawNewMailFlag = TRUE;
+	fReDrawScreenFlag  = false;
+	fReDrawNewMailFlag = true;
 
 	// sub page
 	giCurrentSubPage = 0;
@@ -498,7 +498,7 @@ static void EnterLaptop(void)
 	RenderLapTopImage();
 
 	// reset bookmarks flags
-	fFirstTimeInLaptop = TRUE;
+	fFirstTimeInLaptop = true;
 
 	// reset all bookmark visits
 	std::fill(std::begin(LaptopSaveInfo.fVisitedBookmarkAlready), std::end(LaptopSaveInfo.fVisitedBookmarkAlready), 0);
@@ -507,24 +507,24 @@ static void EnterLaptop(void)
 	std::fill(std::begin(gLaptopProgramStates), std::end(gLaptopProgramStates), LAPTOP_PROGRAM_MINIMIZED);
 
 	// turn the power on
-	fPowerLightOn = TRUE;
+	fPowerLightOn = true;
 
 	// we are not exiting laptop right now, we just got here
-	fExitingLaptopFlag = FALSE;
+	fExitingLaptopFlag = false;
 
 	// reset program we are maximizing
 	bProgramBeingMaximized = -1;
 
 	// reset fact we are maximizing/ mining
-	fMaximizingProgram = FALSE;
-	fMinizingProgram = FALSE;
+	fMaximizingProgram = false;
+	fMinizingProgram = false;
 
 
 	// initialize open queue
 	InitLaptopOpenQueue();
 
 
-	gfShowBookmarks = FALSE;
+	gfShowBookmarks = false;
 	LoadBookmark();
 	SetBookMark(AIM_BOOKMARK);
 	LoadLoadPending();
@@ -557,7 +557,7 @@ void ExitLaptop(void)
 	// exit is called due to message box, leave
 	if (fExitDueToMessageBox)
 	{
-		fExitDueToMessageBox = FALSE;
+		fExitDueToMessageBox = false;
 		return;
 	}
 
@@ -585,15 +585,15 @@ void ExitLaptop(void)
 	FreeMouseCursor();
 
 	// set the fact we are currently not in laptop, for rendering purposes
-	fCurrentlyInLaptop = FALSE;
+	fCurrentlyInLaptop = false;
 
 	//Deallocate, save data -- leaving laptop.
 	SetRenderFlags(RENDER_FLAG_FULL);
 
 	ExitLaptopMode(fExitDuringLoad ? guiPreviousLaptopMode : guiCurrentLaptopMode);
 
-	fExitDuringLoad  = FALSE;
-	fLoadPendingFlag = FALSE;
+	fExitDuringLoad  = false;
+	fLoadPendingFlag = false;
 
 
 	DeleteVideoObject(guiLAPTOP);
@@ -616,7 +616,7 @@ void ExitLaptop(void)
 	}
 	if (fNewMailFlag)
 	{
-		fNewMailFlag = FALSE;
+		fNewMailFlag = false;
 		CreateDestroyNewMailButton();
 	}
 
@@ -624,16 +624,16 @@ void ExitLaptop(void)
 	CreateDestroyMinimizeButtonForCurrentMode();
 
 	//MSYS_SetCurrentCursor(CURSOR_NORMAL);
-	gfEnterLapTop=TRUE;
+	gfEnterLapTop=true;
 	DeleteLapTopButtons();
 	DeleteLapTopMouseRegions();
-	gfShowBookmarks = FALSE;
+	gfShowBookmarks = false;
 	CreateDestoryBookMarkRegions();
 
-	fNewWWW = TRUE;
+	fNewWWW = true;
 	DeleteBookmark();
 	DeleteLoadPending();
-	fReDrawNewMailFlag = FALSE;
+	fReDrawNewMailFlag = false;
 
 	//pause the game because we dont want time to advance in the laptop
 	UnPauseGame();
@@ -655,7 +655,7 @@ static void RenderLaptop(void)
 {
 	if (fMaximizingProgram || fMinizingProgram)
 	{
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 		return;
 	}
 
@@ -732,7 +732,7 @@ static void RenderLaptop(void)
 		return;
 	}
 
-	DisplayProgramBoundingBox(FALSE);
+	DisplayProgramBoundingBox(false);
 
 	// mark the buttons dirty at this point
 	MarkButtonsDirty();
@@ -745,11 +745,11 @@ static void SetSubSiteAsVisted(void);
 
 static void EnterNewLaptopMode(void)
 {
-	static BOOLEAN fOldLoadFlag = FALSE;
+	static BOOLEAN fOldLoadFlag = false;
 
 	if (fExitingLaptopFlag) return;
 	// cause flicker, as we are going to a new program/WEB page
-	fFlickerHD = TRUE;
+	fFlickerHD = true;
 
 	// handle maximizing of programs
 	UINT           prog;
@@ -800,11 +800,11 @@ static void EnterNewLaptopMode(void)
 	{
 		if (!fMaximizingProgram)
 		{
-			fInitTitle = TRUE;
+			fInitTitle = true;
 			InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, title, guiTITLEBARICONS, gfx_idx);
 			ExitLaptopMode(guiPreviousLaptopMode);
 		}
-		fMaximizingProgram         = TRUE;
+		fMaximizingProgram         = true;
 		bProgramBeingMaximized     = prog;
 		gLaptopProgramStates[prog] = LAPTOP_PROGRAM_OPEN;
 		return;
@@ -815,12 +815,12 @@ do_nothing:
 
 	if (fOldLoadFlag && !fLoadPendingFlag)
 	{
-		fOldLoadFlag = FALSE;
+		fOldLoadFlag = false;
 	}
 	else if (fLoadPendingFlag && !fOldLoadFlag)
 	{
 		ExitLaptopMode(guiPreviousLaptopMode);
-		fOldLoadFlag = TRUE;
+		fOldLoadFlag = true;
 		return;
 	}
 	else if (fOldLoadFlag && fLoadPendingFlag)
@@ -857,7 +857,7 @@ do_nothing:
 	if (guiCurrentLaptopMode >= LAPTOP_MODE_WWW)
 	{
 		RenderWWWProgramTitleBar();
-		if (guiPreviousLaptopMode >= LAPTOP_MODE_WWW) gfShowBookmarks = FALSE;
+		if (guiPreviousLaptopMode >= LAPTOP_MODE_WWW) gfShowBookmarks = false;
 	}
 
 	guiLastExitedLaptopMode = LAPTOP_MODE_NONE;
@@ -916,8 +916,8 @@ do_nothing:
 	// first time using webbrowser in this laptop session
 	if (fFirstTimeInLaptop && guiCurrentLaptopMode >= LAPTOP_MODE_WWW)
 	{
-		gfShowBookmarks    = TRUE;
-		fFirstTimeInLaptop = FALSE;
+		gfShowBookmarks    = true;
+		fFirstTimeInLaptop = false;
 	}
 
 	if (!fLoadPendingFlag)
@@ -927,7 +927,7 @@ do_nothing:
 		SetSubSiteAsVisted();
 	}
 
-	DisplayProgramBoundingBox(TRUE);
+	DisplayProgramBoundingBox(true);
 }
 
 
@@ -994,14 +994,14 @@ ScreenID LaptopScreenHandle()
 	{
 		EnterLaptop();
 		CreateLaptopButtons();
-		gfEnterLapTop = FALSE;
+		gfEnterLapTop = false;
 	}
 
 	if (gfStartMapScreenToLaptopTransition)
 	{ //Everything is set up to start the transition animation.
 		SetCurrentCursorFromDatabase(VIDEO_NO_CURSOR);
 		//Step 1:  Build the laptop image into the save buffer.
-		gfStartMapScreenToLaptopTransition = FALSE;
+		gfStartMapScreenToLaptopTransition = false;
 		RestoreBackgroundRects();
 		RenderLapTopImage();
 		RenderLaptop();
@@ -1060,13 +1060,13 @@ ScreenID LaptopScreenHandle()
 			InvalidateScreen();
 			RefreshScreen();
 		}
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 
 	//This determines if the help screen should be active
-	if (ShouldTheHelpScreenComeUp(HELP_SCREEN_LAPTOP, FALSE))
+	if (ShouldTheHelpScreenComeUp(HELP_SCREEN_LAPTOP, false))
 	{
 		// handle the help screen
 		HelpScreenHandler();
@@ -1093,7 +1093,7 @@ ScreenID LaptopScreenHandle()
 
 	if (guiCurrentLaptopMode != guiPreviousLaptopMode)
 	{
-		if (guiCurrentLaptopMode <=LAPTOP_MODE_WWW) fLoadPendingFlag = FALSE;
+		if (guiCurrentLaptopMode <=LAPTOP_MODE_WWW) fLoadPendingFlag = false;
 
 		if (!fMaximizingProgram && !fMinizingProgram)
 		{
@@ -1117,8 +1117,8 @@ ScreenID LaptopScreenHandle()
 	}
 	if (fPausedReDrawScreenFlag)
 	{
-		fReDrawScreenFlag       = TRUE;
-		fPausedReDrawScreenFlag = FALSE;
+		fReDrawScreenFlag       = true;
+		fPausedReDrawScreenFlag = false;
 	}
 
 	if (fReDrawScreenFlag)
@@ -1132,8 +1132,8 @@ ScreenID LaptopScreenHandle()
 	{
 		if (fLoadPendingFlag)
 		{
-			fLoadPendingFlag = FALSE;
-			fExitDuringLoad  = TRUE;
+			fLoadPendingFlag = false;
+			fExitDuringLoad  = true;
 		}
 		LeaveLapTopScreen();
 	}
@@ -1178,7 +1178,7 @@ ScreenID LaptopScreenHandle()
 	{
 		if (fExitingLaptopFlag)
 		{
-			gfShowBookmarks = FALSE;
+			gfShowBookmarks = false;
 		}
 		else
 		{
@@ -1219,7 +1219,7 @@ ScreenID LaptopScreenHandle()
 	if (fReDrawScreenFlag)
 	{
 		InvalidateScreen();
-		fReDrawScreenFlag = FALSE;
+		fReDrawScreenFlag = false;
 	}
 
 	ExecuteVideoOverlays();
@@ -1304,7 +1304,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const 
 	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/buttonsforlaptop.sti", idx, idx + 8, (29 + STD_SCREEN_X), (y + STD_SCREEN_Y), MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
 	btn->SetFastHelpText(help_text);
-	btn->SpecifyTextOffsets(off_x, 11, TRUE);
+	btn->SpecifyTextOffsets(off_x, 11, true);
 	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, 2, 0);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
@@ -1345,7 +1345,7 @@ static void BtnOnCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		if (HandleExit()) fExitingLaptopFlag = TRUE;
+		if (HandleExit()) fExitingLaptopFlag = true;
 	}
 }
 
@@ -1363,23 +1363,23 @@ static void LeaveLapTopScreen(void)
 		{
 			if (LaptopSaveInfo.gfNewGameLaptop)
 			{
-				LaptopSaveInfo.gfNewGameLaptop = FALSE;
-				fExitingLaptopFlag = TRUE;
+				LaptopSaveInfo.gfNewGameLaptop = false;
+				fExitingLaptopFlag = true;
 				InitNewGame();
-				gfDontStartTransitionFromLaptop = TRUE;
+				gfDontStartTransitionFromLaptop = true;
 				return;
 			}
 		}
 		else
 		{
-			gfDontStartTransitionFromLaptop = TRUE;
+			gfDontStartTransitionFromLaptop = true;
 		}
 
 		SetPendingNewScreen(guiExitScreen);
 
 		if (!gfDontStartTransitionFromLaptop)
 		{
-			gfDontStartTransitionFromLaptop = TRUE;
+			gfDontStartTransitionFromLaptop = true;
 			SetCurrentCursorFromDatabase(VIDEO_NO_CURSOR);
 			//Step 1:  Build the laptop image into the save buffer.
 			RestoreBackgroundRects();
@@ -1457,12 +1457,12 @@ static BOOLEAN HandleExit(void)
 		if (!LaptopSaveInfo.fIMPCompletedFlag && !LaptopSaveInfo.fSentImpWarningAlready)
 		{
 			AddFutureDayStrategicEvent(EVENT_HAVENT_MADE_IMP_CHARACTER_EMAIL, (8 + Random(4)) * 60, 0, 1);
-			fExitingLaptopFlag = TRUE;
-			return FALSE;
+			fExitingLaptopFlag = true;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void HaventMadeImpMercEmailCallBack()
@@ -1470,7 +1470,7 @@ void HaventMadeImpMercEmailCallBack()
 	//if the player STILL hasnt made an imp merc yet
 	if (!LaptopSaveInfo.fIMPCompletedFlag && !LaptopSaveInfo.fSentImpWarningAlready)
 	{
-		LaptopSaveInfo.fSentImpWarningAlready = TRUE;
+		LaptopSaveInfo.fSentImpWarningAlready = true;
 		AddEmail(IMP_EMAIL_AGAIN,IMP_EMAIL_AGAIN_LENGTH, 1, GetWorldTotalMin());
 	}
 }
@@ -1498,8 +1498,8 @@ static void FinancialRegionButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 	{
 		if (gfShowBookmarks)
 		{
-			gfShowBookmarks = FALSE;
-			fReDrawScreenFlag = TRUE;
+			gfShowBookmarks = false;
+			fReDrawScreenFlag = true;
 		}
 		guiCurrentLaptopMode = LAPTOP_MODE_FINANCES;
 
@@ -1515,10 +1515,10 @@ static void PersonnelRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		guiCurrentLaptopMode = LAPTOP_MODE_PERSONNEL;
 		if (gfShowBookmarks)
 		{
-			gfShowBookmarks = FALSE;
-			fReDrawScreenFlag = TRUE;
+			gfShowBookmarks = false;
+			fReDrawScreenFlag = true;
 		}
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_PERSONNEL);
 	}
@@ -1530,9 +1530,9 @@ static void EmailRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_EMAIL;
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_MAILER);
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -1542,8 +1542,8 @@ static void WWWRegionButtonCallbackPrimary(GUI_BUTTON *btn, UINT32 reason)
 	// reset show bookmarks
 	if (guiCurrentLaptopMode < LAPTOP_MODE_WWW)
 	{
-		gfShowBookmarks = FALSE;
-		fShowBookmarkInfo = TRUE;
+		gfShowBookmarks = false;
+		fShowBookmarkInfo = true;
 	}
 	else
 	{
@@ -1553,7 +1553,7 @@ static void WWWRegionButtonCallbackPrimary(GUI_BUTTON *btn, UINT32 reason)
 	if (fNewWWW)
 	{
 		// no longer a new WWW mode
-		fNewWWW = FALSE;
+		fNewWWW = false;
 
 		// make sure program is maximized
 		if (gLaptopProgramStates[LAPTOP_PROGRAM_WEB_BROWSER] == LAPTOP_PROGRAM_OPEN)
@@ -1566,13 +1566,13 @@ static void WWWRegionButtonCallbackPrimary(GUI_BUTTON *btn, UINT32 reason)
 	guiCurrentLaptopMode = (guiCurrentWWWMode == LAPTOP_MODE_NONE ? LAPTOP_MODE_WWW : guiCurrentWWWMode);
 
 	UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_WEB_BROWSER);
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 }
 
 static void WWWRegionButtonCallbackSecondary(GUI_BUTTON *btn, UINT32 reason)
 {
 	guiCurrentLaptopMode = (guiCurrentWWWMode == LAPTOP_MODE_NONE ? LAPTOP_MODE_WWW : guiCurrentWWWMode);
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 }
 
 
@@ -1582,12 +1582,12 @@ static void HistoryRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		if (gfShowBookmarks)
 		{
-			gfShowBookmarks = FALSE;
+			gfShowBookmarks = false;
 		}
 		guiCurrentLaptopMode = LAPTOP_MODE_HISTORY;
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_HISTORY);
-		gfShowBookmarks = FALSE;
-		fReDrawScreenFlag = TRUE;
+		gfShowBookmarks = false;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -1598,11 +1598,11 @@ static void FilesRegionButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		if (gfShowBookmarks)
 		{
-			gfShowBookmarks = FALSE;
+			gfShowBookmarks = false;
 		}
 		guiCurrentLaptopMode = LAPTOP_MODE_FILES;
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_FILES);
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -1726,17 +1726,17 @@ static void DeleteBookmarkRegions(void)
 static void CreateDestoryBookMarkRegions(void)
 {
 	// checks to see if a bookmark needs to be created or destroyed
-	static BOOLEAN fOldShowBookmarks = FALSE;
+	static BOOLEAN fOldShowBookmarks = false;
 
 	if (gfShowBookmarks && !fOldShowBookmarks)
 	{
 		CreateBookMarkMouseRegions();
-		fOldShowBookmarks = TRUE;
+		fOldShowBookmarks = true;
 	}
 	else if (!gfShowBookmarks && fOldShowBookmarks)
 	{
 		DeleteBookmarkRegions();
-		fOldShowBookmarks = FALSE;
+		fOldShowBookmarks = false;
 	}
 }
 
@@ -1756,8 +1756,8 @@ static void BookmarkCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 		}
 		else
 		{
-			gfShowBookmarks   = FALSE;
-			fReDrawScreenFlag = TRUE;
+			gfShowBookmarks   = false;
+			fReDrawScreenFlag = true;
 		}
 	}
 }
@@ -1783,8 +1783,8 @@ void GoToWebPage(INT32 iPageId)
 		giRainDelayInternetSite = -1;
 	}
 
-	gfShowBookmarks   = FALSE;
-	fReDrawScreenFlag = TRUE;
+	gfShowBookmarks   = false;
+	fReDrawScreenFlag = true;
 
 	switch (iPageId)
 	{
@@ -1807,7 +1807,7 @@ void GoToWebPage(INT32 iPageId)
 		case MERC_BOOKMARK:
 			//if the mercs server has gone down, but hasnt come up yet
 			if (LaptopSaveInfo.fMercSiteHasGoneDownYet &&
-					LaptopSaveInfo.fFirstVisitSinceServerWentDown == FALSE)
+					LaptopSaveInfo.fFirstVisitSinceServerWentDown == false)
 			{
 				guiCurrentWWWMode    = LAPTOP_MODE_BROKEN_LINK;
 				guiCurrentLaptopMode = LAPTOP_MODE_BROKEN_LINK;
@@ -1839,8 +1839,8 @@ void GoToWebPage(INT32 iPageId)
 
 	// do we have to have a World Wide Wait
 	fFastLoadFlag = LaptopSaveInfo.fVisitedBookmarkAlready[iPageId];
-	LaptopSaveInfo.fVisitedBookmarkAlready[iPageId] = TRUE;
-	fLoadPendingFlag = TRUE;
+	LaptopSaveInfo.fVisitedBookmarkAlready[iPageId] = true;
+	fLoadPendingFlag = true;
 }
 
 
@@ -1907,9 +1907,9 @@ static void DisplayLoadPending(void)
 	// we are now waiting on a web page to download, reset counter
 	if (!fLoadPendingFlag)
 	{
-		fDoneLoadPending     = FALSE;
-		fFastLoadFlag        = FALSE;
-		fConnectingToSubPage = FALSE;
+		fDoneLoadPending     = false;
+		fFastLoadFlag        = false;
+		fConnectingToSubPage = false;
 		uiBaseTime           = 0;
 		uiTotalTime          = 0;
 		return;
@@ -1920,13 +1920,13 @@ static void DisplayLoadPending(void)
 	if (uiTotalTime >= uiLoadTime)
 	{
 		// done loading, redraw screen
-		fLoadPendingFlag        = FALSE;
-		fFastLoadFlag           = FALSE;
+		fLoadPendingFlag        = false;
+		fFastLoadFlag           = false;
 		uiTotalTime             = 0;
 		uiBaseTime              = 0;
-		fDoneLoadPending        = TRUE;
-		fConnectingToSubPage    = FALSE;
-		fPausedReDrawScreenFlag = TRUE;
+		fDoneLoadPending        = true;
+		fConnectingToSubPage    = false;
+		fPausedReDrawScreenFlag = true;
 		return;
 	}
 
@@ -2013,7 +2013,7 @@ static void CheckMarkButtonsDirtyFlag(void)
 	{
 		// flag set, mark buttons and reset
 		MarkButtonsDirty();
-		fMarkButtonsDirtyFlag = FALSE;
+		fMarkButtonsDirtyFlag = false;
 	}
 }
 
@@ -2054,7 +2054,7 @@ void HandleLapTopESCKey(void)
 	if (fNewMailFlag)
 	{
 		// get rid of new mail warning box
-		fNewMailFlag = FALSE;
+		fNewMailFlag = false;
 		CreateDestroyNewMailButton();
 	}
 	else if (MailToDelete != NULL)
@@ -2066,19 +2066,19 @@ void HandleLapTopESCKey(void)
 	else if (gfShowBookmarks)
 	{
 		// get rid of bookmarks
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 		RenderLapTopImage();
 	}
 	else
 	{
 		// leave
-		fExitingLaptopFlag = TRUE;
+		fExitingLaptopFlag = true;
 		HandleExit();
 		return;
 	}
 
 	// force redraw
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 	RenderLaptop();
 }
 
@@ -2089,7 +2089,7 @@ void HandleRightButtonUpEvent(void)
 	if (fNewMailFlag)
 	{
 		// get rid of new mail warning box
-		fNewMailFlag = FALSE;
+		fNewMailFlag = false;
 		CreateDestroyNewMailButton();
 	}
 	else if (MailToDelete != NULL)
@@ -2101,22 +2101,22 @@ void HandleRightButtonUpEvent(void)
 	else if (gfShowBookmarks)
 	{
 		// get rid of bookmarks
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 		RenderLapTopImage();
 	}
 	else if (fDisplayMessageFlag)
 	{
-		fDisplayMessageFlag = FALSE;
+		fDisplayMessageFlag = false;
 		RenderLapTopImage();
 	}
 	else
 	{
-		fShowBookmarkInfo = FALSE;
+		fShowBookmarkInfo = false;
 		return;
 	}
 
 	// force redraw
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 	RenderLaptop();
 }
 
@@ -2127,16 +2127,16 @@ static void HandleLeftButtonUpEvent(void)
 	if (gfShowBookmarks)
 	{
 		// get rid of bookmarks
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 
 		// force redraw
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		RenderLapTopImage();
 		RenderLaptop();
 	}
 	else if (fShowBookmarkInfo)
 	{
-		fShowBookmarkInfo = FALSE;
+		fShowBookmarkInfo = false;
 	}
 }
 
@@ -2162,7 +2162,7 @@ void DoLapTopMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, Screen
 void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect)
 {
 	// reset exit mode
-	fExitDueToMessageBox = TRUE;
+	fExitDueToMessageBox = true;
 
 	// do message box and return
 	DoMessageBox(ubStyle, str, uiExitScreen, usFlags, ReturnCallback, centering_rect);
@@ -2217,8 +2217,8 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 
 	if (fInit)
 	{
-		if (gfTitleBarSurfaceAlreadyActive) return FALSE;
-		gfTitleBarSurfaceAlreadyActive = TRUE;
+		if (gfTitleBarSurfaceAlreadyActive) return false;
+		gfTitleBarSurfaceAlreadyActive = true;
 		if (fForward)
 		{
 			ubCount = 1;
@@ -2229,14 +2229,14 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 		}
 	}
 
-	FLOAT dTemp;
-	dTemp = (LAPTOP_TITLE_BAR_TOP_LEFT_X  - usTopLeftX)  / (FLOAT)NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS;
+	float dTemp;
+	dTemp = (LAPTOP_TITLE_BAR_TOP_LEFT_X  - usTopLeftX)  / (float)NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS;
 	const INT16 sPosX       = usTopLeftX  + dTemp * ubCount;
 
-	dTemp = (LAPTOP_TITLE_BAR_TOP_RIGHT_X - usTopRightX) / (FLOAT)NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS;
+	dTemp = (LAPTOP_TITLE_BAR_TOP_RIGHT_X - usTopRightX) / (float)NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS;
 	const INT16 sPosRightX  = usTopRightX + dTemp * ubCount;
 
-	dTemp = (LAPTOP_TITLE_BAR_TOP_LEFT_Y  - usTopLeftY)  / (FLOAT)NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS;
+	dTemp = (LAPTOP_TITLE_BAR_TOP_LEFT_Y  - usTopLeftY)  / (float)NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS;
 	const INT16 sPosY       = usTopLeftY  + dTemp * ubCount;
 
 	const INT16 sPosBottomY = LAPTOP_TITLE_BAR_HEIGHT;
@@ -2300,26 +2300,26 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 	{
 		if (ubCount == NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS)
 		{
-			gfTitleBarSurfaceAlreadyActive = FALSE;
-			return TRUE;
+			gfTitleBarSurfaceAlreadyActive = false;
+			return true;
 		}
 		else
 		{
 			ubCount++;
-			return FALSE;
+			return false;
 		}
 	}
 	else
 	{
 		if (ubCount == 0)
 		{
-			gfTitleBarSurfaceAlreadyActive = FALSE;
-			return TRUE;
+			gfTitleBarSurfaceAlreadyActive = false;
+			return true;
 		}
 		else
 		{
 			ubCount--;
-			return FALSE;
+			return false;
 		}
 	}
 }
@@ -2349,14 +2349,14 @@ static void HandleSlidingTitleBar(void)
 			default: goto no_display_max;
 		}
 
-		fMaximizingProgram = !DisplayTitleBarMaximizeGraphic(TRUE, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
+		fMaximizingProgram = !DisplayTitleBarMaximizeGraphic(true, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
 		if (!fMaximizingProgram)
 		{
 			RemoveTitleBarMaximizeGraphics();
-			fEnteredNewLapTopDueToHandleSlidingBars = TRUE;
+			fEnteredNewLapTopDueToHandleSlidingBars = true;
 			EnterNewLaptopMode();
-			fEnteredNewLapTopDueToHandleSlidingBars = FALSE;
-			fPausedReDrawScreenFlag = TRUE;
+			fEnteredNewLapTopDueToHandleSlidingBars = false;
+			fPausedReDrawScreenFlag = true;
 		}
 
 no_display_max:
@@ -2377,13 +2377,13 @@ no_display_max:
 			default: goto no_display_min;
 		}
 
-		fMinizingProgram = !DisplayTitleBarMaximizeGraphic(FALSE, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
+		fMinizingProgram = !DisplayTitleBarMaximizeGraphic(false, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
 		if (!fMinizingProgram)
 		{
 			RemoveTitleBarMaximizeGraphics();
 			EnterNewLaptopMode();
-			fEnteredNewLapTopDueToHandleSlidingBars = FALSE;
-			fPausedReDrawScreenFlag = TRUE;
+			fEnteredNewLapTopDueToHandleSlidingBars = false;
+			fPausedReDrawScreenFlag = true;
 		}
 
 no_display_min:;
@@ -2394,7 +2394,7 @@ no_display_min:;
 	}
 
 	// reset init
-	fInitTitle = FALSE;
+	fInitTitle = false;
 }
 
 
@@ -2411,7 +2411,7 @@ static void FlickerHDLight(void)
 	static UINT32 uiBaseTime       = 0;
 	static UINT32 uiTotalDifference = 0;
 
-	if (fLoadPendingFlag) fFlickerHD = TRUE;
+	if (fLoadPendingFlag) fFlickerHD = true;
 	if (!fFlickerHD) return;
 
 	if (uiBaseTime == 0) uiBaseTime = GetJA2Clock();
@@ -2421,10 +2421,10 @@ static void FlickerHDLight(void)
 	if (uiTotalDifference > HD_FLICKER_TIME && !fLoadPendingFlag)
 	{
 		uiBaseTime         = GetJA2Clock();
-		fHardDriveLightOn = FALSE;
+		fHardDriveLightOn = false;
 		uiBaseTime         = 0;
 		uiTotalDifference  = 0;
-		fFlickerHD        = FALSE;
+		fFlickerHD        = false;
 		InvalidateRegion(88, 466, 102, 477);
 		return;
 	}
@@ -2444,16 +2444,16 @@ static void FlickerHDLight(void)
 static BOOLEAN ExitLaptopDone(void)
 {
 	// check if this is the first time, to reset counter
-	static BOOLEAN fOldLeaveLaptopState = FALSE;
+	static BOOLEAN fOldLeaveLaptopState = false;
 	static UINT32  uiBaseTime            = 0;
 
 	if (!fOldLeaveLaptopState)
 	{
-		fOldLeaveLaptopState = TRUE;
+		fOldLeaveLaptopState = true;
 		uiBaseTime = GetJA2Clock();
 	}
 
-	fPowerLightOn = FALSE;
+	fPowerLightOn = false;
 
 	InvalidateRegion(44, 466, 58, 477);
 	// get the current difference
@@ -2463,12 +2463,12 @@ static BOOLEAN ExitLaptopDone(void)
 	if (iDifference > EXIT_LAPTOP_DELAY_TIME)
 	{
 		uiBaseTime = 0;
-		fOldLeaveLaptopState = FALSE;
-		return TRUE;
+		fOldLeaveLaptopState = false;
+		return true;
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
@@ -2482,42 +2482,42 @@ static void DestroyMinimizeRegionsForLaptopProgramIcons(void);
 static void CreateDestroyMinimizeButtonForCurrentMode(void)
 {
 	// will create the minimize button
-	static BOOLEAN fAlreadyCreated = FALSE;
+	static BOOLEAN fAlreadyCreated = false;
 	// state of creation of minimize button
-	BOOLEAN fCreateMinimizeButton = FALSE;
+	BOOLEAN fCreateMinimizeButton = false;
 	// check to see if created, if so, do nothing
 
 	// check current mode
 	if (guiCurrentLaptopMode == LAPTOP_MODE_NONE && guiPreviousLaptopMode != LAPTOP_MODE_NONE)
 	{
-		fCreateMinimizeButton = FALSE;
+		fCreateMinimizeButton = false;
 	}
 	else if (guiCurrentLaptopMode != LAPTOP_MODE_NONE)
 	{
-		fCreateMinimizeButton = TRUE;
+		fCreateMinimizeButton = true;
 	}
 	else if (guiPreviousLaptopMode != LAPTOP_MODE_NONE)
 	{
-		fCreateMinimizeButton = FALSE;
+		fCreateMinimizeButton = false;
 	}
 
 	// leaving laptop, get rid of the button
 	if (fExitingLaptopFlag)
 	{
-		fCreateMinimizeButton = FALSE;
+		fCreateMinimizeButton = false;
 	}
 
 	if (!fAlreadyCreated && fCreateMinimizeButton)
 	{
 		// not created, create
-		fAlreadyCreated = TRUE;
+		fAlreadyCreated = true;
 		CreateMinimizeButtonForCurrentMode();
 		CreateMinimizeRegionsForLaptopProgramIcons();
 	}
 	else if (fAlreadyCreated && !fCreateMinimizeButton)
 	{
 		// created and must be destroyed
-		fAlreadyCreated = FALSE;
+		fAlreadyCreated = false;
 		DestroyMinimizeButtonForCurrentMode();
 		DestroyMinimizeRegionsForLaptopProgramIcons();
 	}
@@ -2587,7 +2587,7 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 			case LAPTOP_MODE_NONE: return; // nothing
 
 			default:
-				gfShowBookmarks = FALSE;
+				gfShowBookmarks = false;
 				prog    = LAPTOP_PROGRAM_WEB_BROWSER;
 				title   = pLaptopIcons[7];
 				gfx_idx = 1;
@@ -2596,8 +2596,8 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 		gLaptopProgramStates[prog] = LAPTOP_PROGRAM_MINIMIZED;
 		InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, title, guiTITLEBARICONS, gfx_idx);
 		SetCurrentToLastProgramOpened();
-		fMinizingProgram = TRUE;
-		fInitTitle = TRUE;
+		fMinizingProgram = true;
+		fInitTitle = true;
 	}
 }
 
@@ -2664,7 +2664,7 @@ static void SetCurrentToLastProgramOpened(void)
 		case LAPTOP_PROGRAM_WEB_BROWSER:
 			// last www mode
 			guiCurrentLaptopMode = (guiCurrentWWWMode == 0 ? LAPTOP_MODE_WWW : guiCurrentWWWMode);
-			fShowBookmarkInfo = TRUE;
+			fShowBookmarkInfo = true;
 			break;
 	}
 }
@@ -2796,7 +2796,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			{
 				HandleAltTabKeyInLaptop();
 			}
-			fTabHandled = TRUE;
+			fTabHandled = true;
 			break;
 
 		case 'b':
@@ -2804,7 +2804,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			{
 				if (usKeyState & ALT_DOWN)
 				{
-					LaptopSaveInfo.fBobbyRSiteCanBeAccessed = TRUE;
+					LaptopSaveInfo.fBobbyRSiteCanBeAccessed = true;
 				}
 				else if (usKeyState & CTRL_DOWN)
 				{
@@ -2818,7 +2818,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			break;
 
 		case SDLK_h:
-			ShouldTheHelpScreenComeUp(HELP_SCREEN_LAPTOP, TRUE);
+			ShouldTheHelpScreenComeUp(HELP_SCREEN_LAPTOP, true);
 			break;
 
 		case '=':
@@ -2866,7 +2866,7 @@ void RenderWWWProgramTitleBar(void)
 	}
 
 	BlitTitleBarIcons();
-	DisplayProgramBoundingBox(FALSE);
+	DisplayProgramBoundingBox(false);
 }
 
 
@@ -2935,12 +2935,12 @@ static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, UINT32 iRea
 				gLaptopProgramStates[LAPTOP_PROGRAM_WEB_BROWSER] = LAPTOP_PROGRAM_MINIMIZED;
 				InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pWebTitle, guiTITLEBARICONS, 1);
 				SetCurrentToLastProgramOpened();
-				gfShowBookmarks = FALSE;
-				fShowBookmarkInfo = FALSE;
+				gfShowBookmarks = false;
+				fShowBookmarkInfo = false;
 				break;
 		}
-		fMinizingProgram = TRUE;
-		fInitTitle = TRUE;
+		fMinizingProgram = true;
+		fInitTitle = true;
 	}
 }
 
@@ -2975,12 +2975,12 @@ static void NewFileIconCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 static void CreateDestroyMouseRegionForNewMailIcon(void)
 {
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	// will toggle creation/destruction of the mouse regions used by the new mail icon
 	if (!fCreated)
 	{
-		fCreated = TRUE;
+		fCreated = true;
 		{
 			const UINT16 x = LAPTOP__NEW_EMAIL_ICON_X;
 			const UINT16 y = LAPTOP__NEW_EMAIL_ICON_Y;
@@ -2997,7 +2997,7 @@ static void CreateDestroyMouseRegionForNewMailIcon(void)
 	}
 	else
 	{
-		fCreated = FALSE;
+		fCreated = false;
 		MSYS_RemoveRegion(&gNewMailIconRegion);
 		MSYS_RemoveRegion(&gNewFileIconRegion);
 	}
@@ -3010,7 +3010,7 @@ static void NewEmailIconCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	{
 		if (fUnReadMailFlag)
 		{
-			fOpenMostRecentUnReadFlag = TRUE;
+			fOpenMostRecentUnReadFlag = true;
 			guiCurrentLaptopMode = LAPTOP_MODE_EMAIL;
 		}
 	}
@@ -3023,7 +3023,7 @@ static void NewFileIconCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	{
 		if (fNewFilesInFileViewer)
 		{
-			fEnteredFileViewerFromNewFileIcon = TRUE;
+			fEnteredFileViewerFromNewFileIcon = true;
 			guiCurrentLaptopMode = LAPTOP_MODE_FILES;
 		}
 	}
@@ -3043,20 +3043,20 @@ static void HandleWWWSubSites(void)
 		return;
 	}
 
-	fLoadPendingFlag = TRUE;
-	fConnectingToSubPage = TRUE;
+	fLoadPendingFlag = true;
+	fConnectingToSubPage = true;
 
 	// fast or slow load?
 	bool& visited = gfWWWaitSubSitesVisitedFlags[guiCurrentLaptopMode - (LAPTOP_MODE_WWW + 1)];
-	if (visited) fFastLoadFlag = TRUE;
+	if (visited) fFastLoadFlag = true;
 	visited = true; // Set fact we were here
 
 	//Dont show the dlownload screen when switching between these pages
 	if ((guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS              && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX) ||
 			(guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS))
 	{
-		fFastLoadFlag = FALSE;
-		fLoadPendingFlag = FALSE;
+		fFastLoadFlag = false;
+		fLoadPendingFlag = false;
 
 		// set fact we were here
 		gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX - (LAPTOP_MODE_WWW + 1)] = true;
@@ -3070,7 +3070,7 @@ static void UpdateStatusOfDisplayingBookMarks(void)
 	// this function will disable showing of bookmarks if in process of download or if we miniming web browser
 	if (fLoadPendingFlag || guiCurrentLaptopMode < LAPTOP_MODE_WWW)
 	{
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 	}
 }
 
@@ -3114,7 +3114,7 @@ static void HandleShiftAltTabKeyInLaptop(void)
 		default:                    guiCurrentLaptopMode = LAPTOP_MODE_EMAIL;     break;
 	}
 
-	fPausedReDrawScreenFlag = TRUE;
+	fPausedReDrawScreenFlag = true;
 }
 
 
@@ -3136,7 +3136,7 @@ static void HandleAltTabKeyInLaptop(void)
 		default:                    guiCurrentLaptopMode = LAPTOP_MODE_FILES;     break;
 	}
 
-	fPausedReDrawScreenFlag = TRUE;
+	fPausedReDrawScreenFlag = true;
 }
 
 
@@ -3146,7 +3146,7 @@ static void HandleWebBookMarkNotifyTimer(void);
 // display the 2 second book mark instruction
 static void DisplayWebBookMarkNotify(void)
 {
-	static BOOLEAN fOldShow = FALSE;
+	static BOOLEAN fOldShow = false;
 
 	// handle the timer for this thing
 	HandleWebBookMarkNotifyTimer();
@@ -3154,8 +3154,8 @@ static void DisplayWebBookMarkNotify(void)
 	// are we about to start showing box? or did we just stop?
 	if ((!fOldShow || fReDrawBookMarkInfo) && fShowBookmarkInfo)
 	{
-		fOldShow = TRUE;
-		fReDrawBookMarkInfo = FALSE;
+		fOldShow = true;
+		fReDrawBookMarkInfo = false;
 
 		// show background objects
 		BltVideoObject(FRAME_BUFFER, guiDOWNLOADTOP,   0,DOWNLOAD_X,     DOWNLOAD_Y);
@@ -3178,8 +3178,8 @@ static void DisplayWebBookMarkNotify(void)
 	}
 	else if (fOldShow && !fShowBookmarkInfo)
 	{
-		fOldShow = FALSE;
-		fPausedReDrawScreenFlag = TRUE;
+		fOldShow = false;
+		fPausedReDrawScreenFlag = true;
 	}
 }
 
@@ -3188,13 +3188,13 @@ static void DisplayWebBookMarkNotify(void)
 static void HandleWebBookMarkNotifyTimer(void)
 {
 	static UINT32  uiBaseTime            = 0;
-	static BOOLEAN fOldShowBookMarkInfo = FALSE;
+	static BOOLEAN fOldShowBookMarkInfo = false;
 
 	// check if maxing or mining?
 	if (fMaximizingProgram || fMinizingProgram)
 	{
 		fOldShowBookMarkInfo |= fShowBookmarkInfo;
-		fShowBookmarkInfo     = FALSE;
+		fShowBookmarkInfo     = false;
 		return;
 	}
 
@@ -3202,16 +3202,16 @@ static void HandleWebBookMarkNotifyTimer(void)
 	fShowBookmarkInfo |= fOldShowBookMarkInfo;
 
 	// reset old flag
-	fOldShowBookMarkInfo = FALSE;
+	fOldShowBookMarkInfo = false;
 
 	// if current mode is too low, then reset
 	if (guiCurrentLaptopMode < LAPTOP_MODE_WWW)
 	{
-		fShowBookmarkInfo = FALSE;
+		fShowBookmarkInfo = false;
 	}
 
 	// if showing bookmarks, don't show help
-	if (gfShowBookmarks) fShowBookmarkInfo = FALSE;
+	if (gfShowBookmarks) fShowBookmarkInfo = false;
 
 	// check if flag false, is so, leave
 	if (!fShowBookmarkInfo)
@@ -3229,13 +3229,13 @@ static void HandleWebBookMarkNotifyTimer(void)
 
 	const UINT32 uiDifference = GetJA2Clock() - uiBaseTime;
 
-	fReDrawBookMarkInfo = TRUE;
+	fReDrawBookMarkInfo = true;
 
 	if (uiDifference > DISPLAY_TIME_FOR_WEB_BOOKMARK_NOTIFY)
 	{
 		// waited long enough, stop showing
 		uiBaseTime = 0;
-		fShowBookmarkInfo = FALSE;
+		fShowBookmarkInfo = false;
 	}
 }
 

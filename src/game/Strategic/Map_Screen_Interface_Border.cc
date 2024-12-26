@@ -55,12 +55,12 @@ static SGPVObject* guiMapBorderEtaPopUp; // the map border eta pop up
 INT32 giScrollButtonState = -1;
 
 // flags
-BOOLEAN fShowTownFlag = FALSE;
-BOOLEAN fShowMineFlag = FALSE;
-BOOLEAN fShowTeamFlag = FALSE;
-BOOLEAN fShowMilitia = FALSE;
-BOOLEAN fShowAircraftFlag = FALSE;
-BOOLEAN fShowItemsFlag = FALSE;
+BOOLEAN fShowTownFlag = false;
+BOOLEAN fShowMineFlag = false;
+BOOLEAN fShowTeamFlag = false;
+BOOLEAN fShowMilitia = false;
+BOOLEAN fShowAircraftFlag = false;
+BOOLEAN fShowItemsFlag = false;
 
 
 // buttons & button images
@@ -285,34 +285,34 @@ void ToggleShowTownsMode( void )
 {
 	if (fShowTownFlag)
 	{
-		fShowTownFlag = FALSE;
+		fShowTownFlag = false;
 		MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
 	}
 	else
 	{
-		fShowTownFlag = TRUE;
+		fShowTownFlag = true;
 		MapBorderButtonOn( MAP_BORDER_TOWN_BTN );
 
 		if (fShowMineFlag)
 		{
-			fShowMineFlag = FALSE;
+			fShowMineFlag = false;
 			MapBorderButtonOff( MAP_BORDER_MINE_BTN );
 		}
 
 		if (fShowAircraftFlag)
 		{
-			fShowAircraftFlag = FALSE;
+			fShowAircraftFlag = false;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 
 		if (fShowItemsFlag)
 		{
-			fShowItemsFlag = FALSE;
+			fShowItemsFlag = false;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
 		}
 	}
 
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -320,34 +320,34 @@ void ToggleShowMinesMode( void )
 {
 	if (fShowMineFlag)
 	{
-		fShowMineFlag = FALSE;
+		fShowMineFlag = false;
 		MapBorderButtonOff( MAP_BORDER_MINE_BTN );
 	}
 	else
 	{
-		fShowMineFlag = TRUE;
+		fShowMineFlag = true;
 		MapBorderButtonOn( MAP_BORDER_MINE_BTN );
 
 		if (fShowTownFlag)
 		{
-			fShowTownFlag = FALSE;
+			fShowTownFlag = false;
 			MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
 		}
 
 		if (fShowAircraftFlag)
 		{
-			fShowAircraftFlag = FALSE;
+			fShowAircraftFlag = false;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 
 		if (fShowItemsFlag)
 		{
-			fShowItemsFlag = FALSE;
+			fShowItemsFlag = false;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
 		}
 	}
 
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -358,19 +358,19 @@ void ToggleShowMilitiaMode( void )
 {
 	if (fShowMilitia)
 	{
-		fShowMilitia = FALSE;
+		fShowMilitia = false;
 		MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
 	}
 	else
 	{
 		// toggle militia ON
-		fShowMilitia = TRUE;
+		fShowMilitia = true;
 		MapBorderButtonOn( MAP_BORDER_MILITIA_BTN );
 
 		// if Team is ON, turn it OFF
 		if (fShowTeamFlag)
 		{
-			fShowTeamFlag = FALSE;
+			fShowTeamFlag = false;
 			MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
 		}
 
@@ -378,14 +378,14 @@ void ToggleShowMilitiaMode( void )
 		// if Airspace is ON, turn it OFF
 		if (fShowAircraftFlag)
 		{
-			fShowAircraftFlag = FALSE;
+			fShowAircraftFlag = false;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 */
 
 		if (fShowItemsFlag)
 		{
-			fShowItemsFlag = FALSE;
+			fShowItemsFlag = false;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
 		}
 
@@ -413,7 +413,7 @@ void ToggleShowMilitiaMode( void )
 		}
 	}
 
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -422,13 +422,13 @@ void ToggleShowTeamsMode( void )
 	if (fShowTeamFlag)
 	{
 		// turn show teams OFF
-		fShowTeamFlag = FALSE;
+		fShowTeamFlag = false;
 		MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
 
 		// dirty regions
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fCharacterInfoPanelDirty = true;
 	}
 	else
 	{	// turn show teams ON
@@ -442,7 +442,7 @@ void ToggleAirspaceMode( void )
 	if (fShowAircraftFlag)
 	{
 		// turn airspace OFF
-		fShowAircraftFlag = FALSE;
+		fShowAircraftFlag = false;
 		MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 
 		if (fPlotForHelicopter)
@@ -451,9 +451,9 @@ void ToggleAirspaceMode( void )
 		}
 
 		// dirty regions
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fCharacterInfoPanelDirty = true;
 	}
 	else
 	{	// turn airspace ON
@@ -470,13 +470,13 @@ void ToggleItemsFilter( void )
 	if (fShowItemsFlag)
 	{
 		// turn items OFF
-		fShowItemsFlag = FALSE;
+		fShowItemsFlag = false;
 		MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
 
 		// dirty regions
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fCharacterInfoPanelDirty = true;
 	}
 	else
 	{
@@ -557,7 +557,7 @@ void DisableMapBorderRegion( void )
 	DeleteMapBorderGraphics( );
 
 
-	fDisabledMapBorder = TRUE;
+	fDisabledMapBorder = true;
 }
 
 void EnableMapBorderRegion( void )
@@ -573,7 +573,7 @@ void EnableMapBorderRegion( void )
 	// re load graphics and buttons
 	LoadMapBorderGraphics( );
 
-	fDisabledMapBorder = FALSE;
+	fDisabledMapBorder = false;
 
 }
 */
@@ -585,33 +585,33 @@ void TurnOnShowTeamsMode( void )
 
 	if (!fShowTeamFlag)
 	{
-		fShowTeamFlag = TRUE;
+		fShowTeamFlag = true;
 		MapBorderButtonOn( MAP_BORDER_TEAMS_BTN );
 
 		if (fShowMilitia)
 		{
-			fShowMilitia = FALSE;
+			fShowMilitia = false;
 			MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
 		}
 
 /*
 		if (fShowAircraftFlag)
 		{
-			fShowAircraftFlag = FALSE;
+			fShowAircraftFlag = false;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 */
 
 		if (fShowItemsFlag)
 		{
-			fShowItemsFlag = FALSE;
+			fShowItemsFlag = false;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
 		}
 
 		// dirty regions
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fCharacterInfoPanelDirty = true;
 	}
 }
 
@@ -623,20 +623,20 @@ void TurnOnAirSpaceMode( void )
 
 	if (!fShowAircraftFlag)
 	{
-		fShowAircraftFlag = TRUE;
+		fShowAircraftFlag = true;
 		MapBorderButtonOn( MAP_BORDER_AIRSPACE_BTN );
 
 
 		// Turn off towns & mines (mostly because town/mine names overlap SAM site names)
 		if (fShowTownFlag)
 		{
-			fShowTownFlag = FALSE;
+			fShowTownFlag = false;
 			MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
 		}
 
 		if (fShowMineFlag)
 		{
-			fShowMineFlag = FALSE;
+			fShowMineFlag = false;
 			MapBorderButtonOff( MAP_BORDER_MINE_BTN );
 		}
 
@@ -644,13 +644,13 @@ void TurnOnAirSpaceMode( void )
 		// Turn off teams and militia
 		if (fShowTeamFlag)
 		{
-			fShowTeamFlag = FALSE;
+			fShowTeamFlag = false;
 			MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
 		}
 
 		if (fShowMilitia)
 		{
-			fShowMilitia = FALSE;
+			fShowMilitia = false;
 			MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
 		}
 */
@@ -658,7 +658,7 @@ void TurnOnAirSpaceMode( void )
 		// Turn off items
 		if (fShowItemsFlag)
 		{
-			fShowItemsFlag = FALSE;
+			fShowItemsFlag = false;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
 		}
 
@@ -676,9 +676,9 @@ void TurnOnAirSpaceMode( void )
 		}
 
 		// dirty regions
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fCharacterInfoPanelDirty = true;
 	}
 }
 
@@ -689,38 +689,38 @@ static void TurnOnItemFilterMode(void)
 
 	if (!fShowItemsFlag)
 	{
-		fShowItemsFlag = TRUE;
+		fShowItemsFlag = true;
 		MapBorderButtonOn( MAP_BORDER_ITEM_BTN );
 
 
 		// Turn off towns, mines, teams, militia & airspace if any are on
 		if (fShowTownFlag)
 		{
-			fShowTownFlag = FALSE;
+			fShowTownFlag = false;
 			MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
 		}
 
 		if (fShowMineFlag)
 		{
-			fShowMineFlag = FALSE;
+			fShowMineFlag = false;
 			MapBorderButtonOff( MAP_BORDER_MINE_BTN );
 		}
 
 		if (fShowTeamFlag)
 		{
-			fShowTeamFlag = FALSE;
+			fShowTeamFlag = false;
 			MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
 		}
 
 		if (fShowMilitia)
 		{
-			fShowMilitia = FALSE;
+			fShowMilitia = false;
 			MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
 		}
 
 		if (fShowAircraftFlag)
 		{
-			fShowAircraftFlag = FALSE;
+			fShowAircraftFlag = false;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 
@@ -730,9 +730,9 @@ static void TurnOnItemFilterMode(void)
 		}
 
 		// dirty regions
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fCharacterInfoPanelDirty = true;
 	}
 }
 
@@ -820,14 +820,14 @@ static void CommonBtnCallbackBtnDownChecks(void)
 
 void InitMapScreenFlags( void )
 {
-	fShowTownFlag = TRUE;
-	fShowMineFlag = FALSE;
+	fShowTownFlag = true;
+	fShowMineFlag = false;
 
-	fShowTeamFlag = TRUE;
-	fShowMilitia = FALSE;
+	fShowTeamFlag = true;
+	fShowMilitia = false;
 
-	fShowAircraftFlag = FALSE;
-	fShowItemsFlag = FALSE;
+	fShowAircraftFlag = false;
+	fShowItemsFlag = false;
 }
 
 

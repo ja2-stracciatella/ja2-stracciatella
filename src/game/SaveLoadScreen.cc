@@ -134,9 +134,9 @@ enum
 	SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE,
 };
 
-static BOOLEAN gfSaveLoadScreenEntry = TRUE;
-static BOOLEAN gfSaveLoadScreenExit	= FALSE;
-BOOLEAN        gfRedrawSaveLoadScreen = TRUE;
+static BOOLEAN gfSaveLoadScreenEntry = true;
+static BOOLEAN gfSaveLoadScreenExit	= false;
+BOOLEAN        gfRedrawSaveLoadScreen = true;
 
 static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
@@ -145,34 +145,34 @@ static int32_t gCurrentScrollTop = 0;
 static INT32 gbSelectedSaveLocation = -1;
 static INT32 gbHighLightedLocation  = -1;
 
-static BOOLEAN gfDoingQuickLoad = FALSE;
+static BOOLEAN gfDoingQuickLoad = false;
 
 //This flag is used to differentiate between loading a game and saving a game.
-// gfSaveGame=TRUE		For saving a game
-// gfSaveGame=FALSE		For loading a game
-BOOLEAN		gfSaveGame=TRUE;
+// gfSaveGame=true		For saving a game
+// gfSaveGame=false		For loading a game
+BOOLEAN		gfSaveGame=true;
 
-static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
+static BOOLEAN gfSaveLoadScreenButtonsCreated = false;
 
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
 static SGPVObject* guiSlgAddonsStracciatella;
 static SGPVObject* guiSlgScrollbarStracciatella;
 
-static BOOLEAN gfUserInTextInputMode = FALSE;
+static BOOLEAN gfUserInTextInputMode = false;
 static UINT8   gubSaveGameNextPass   = 0;
 
-static BOOLEAN gfStartedFadingOut = FALSE;
+static BOOLEAN gfStartedFadingOut = false;
 
 
-BOOLEAN		gfCameDirectlyFromGame = FALSE;
+BOOLEAN		gfCameDirectlyFromGame = false;
 
 
-BOOLEAN		gfLoadedGame = FALSE;	//Used to know when a game has been loaded, the flag in gtacticalstatus might have been reset already
+BOOLEAN		gfLoadedGame = false;	//Used to know when a game has been loaded, the flag in gtacticalstatus might have been reset already
 
-BOOLEAN		gfLoadGameUponEntry = FALSE;
+BOOLEAN		gfLoadGameUponEntry = false;
 
-static BOOLEAN gfHadToMakeBasementLevels = FALSE;
+static BOOLEAN gfHadToMakeBasementLevels = false;
 
 
 //
@@ -209,8 +209,8 @@ ScreenID SaveLoadScreenHandle()
 	if( gfSaveLoadScreenEntry )
 	{
 		EnterSaveLoadScreen();
-		gfSaveLoadScreenEntry = FALSE;
-		gfSaveLoadScreenExit = FALSE;
+		gfSaveLoadScreenEntry = false;
+		gfSaveLoadScreenExit = false;
 
 		PauseGame();
 
@@ -226,7 +226,7 @@ ScreenID SaveLoadScreenHandle()
 		GetSaveLoadScreenUserInput();
 	}
 	else
-		gfRedrawSaveLoadScreen = FALSE;
+		gfRedrawSaveLoadScreen = false;
 
 	//if we have exited the save load screen, exit
 	if( !gfSaveLoadScreenButtonsCreated )
@@ -238,7 +238,7 @@ ScreenID SaveLoadScreenHandle()
 		MarkButtonsDirty( );
 		RenderButtons();
 
-		gfRedrawSaveLoadScreen = FALSE;
+		gfRedrawSaveLoadScreen = false;
 	}
 	RenderAllTextFields();
 
@@ -306,7 +306,7 @@ static void SetSaveLoadExitScreen(ScreenID const uiScreen)
 		EnterTacticalScreen( );
 	}
 
-	gfSaveLoadScreenExit	= TRUE;
+	gfSaveLoadScreenExit	= true;
 
 	guiSaveLoadExitScreen = uiScreen;
 
@@ -314,7 +314,7 @@ static void SetSaveLoadExitScreen(ScreenID const uiScreen)
 
 	if( gfDoingQuickLoad )
 	{
-		fFirstTimeInGameScreen = TRUE;
+		fFirstTimeInGameScreen = true;
 		SetPendingNewScreen( uiScreen );
 	}
 
@@ -362,18 +362,18 @@ static void EnterSaveLoadScreen()
 	// Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
 	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
 	{
-		gfSaveGame = TRUE;
+		gfSaveGame = true;
 	}
 
 	// This is a hack to get sector names, but if the underground sector is NOT loaded
 	if (!gpUndergroundSectorInfoHead)
 	{
 		BuildUndergroundSectorInfoList();
-		gfHadToMakeBasementLevels = TRUE;
+		gfHadToMakeBasementLevels = true;
 	}
 	else
 	{
-		gfHadToMakeBasementLevels = FALSE;
+		gfHadToMakeBasementLevels = false;
 	}
 
 	guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
@@ -392,7 +392,7 @@ static void EnterSaveLoadScreen()
 		}
 		else
 		{ // else the save is not valid, so do not load it
-			gfLoadGameUponEntry = FALSE;
+			gfLoadGameUponEntry = false;
 		}
 	}
 
@@ -466,14 +466,14 @@ static void EnterSaveLoadScreen()
 	RenderSaveLoadScreen();
 
 	// Save load buttons are created
-	gfSaveLoadScreenButtonsCreated = TRUE;
+	gfSaveLoadScreenButtonsCreated = true;
 
-	gfDoingQuickLoad   = FALSE;
-	gfStartedFadingOut = FALSE;
+	gfDoingQuickLoad   = false;
+	gfStartedFadingOut = false;
 
 	DisableScrollMessages();
 
-	gfLoadedGame = FALSE;
+	gfLoadedGame = false;
 
 	if (gfLoadGameUponEntry)
 	{
@@ -482,7 +482,7 @@ static void EnterSaveLoadScreen()
 		FRAME_BUFFER->Fill(0);
 	}
 
-	gfGettingNameFromSaveLoadScreen = FALSE;
+	gfGettingNameFromSaveLoadScreen = false;
 }
 
 
@@ -491,13 +491,13 @@ static void ExitSaveLoadScreen(void)
 	INT8	i;
 
 
-	gfLoadGameUponEntry = FALSE;
+	gfLoadGameUponEntry = false;
 
 	if( !gfSaveLoadScreenButtonsCreated )
 		return;
 
-	gfSaveLoadScreenExit = FALSE;
-	gfSaveLoadScreenEntry = TRUE;
+	gfSaveLoadScreenExit = false;
+	gfSaveLoadScreenEntry = true;
 
 	UnloadButtonImage( guiSlgButtonImage );
 
@@ -527,8 +527,8 @@ static void ExitSaveLoadScreen(void)
 
 	MSYS_RemoveRegion( &gSLSEntireScreenRegion );
 
-	gfSaveLoadScreenEntry = TRUE;
-	gfSaveLoadScreenExit = FALSE;
+	gfSaveLoadScreenEntry = true;
+	gfSaveLoadScreenExit = false;
 
 	if( !gfLoadedGame )
 	{
@@ -536,15 +536,15 @@ static void ExitSaveLoadScreen(void)
 		UnPauseGame();
 	}
 
-	gfSaveLoadScreenButtonsCreated = FALSE;
+	gfSaveLoadScreenButtonsCreated = false;
 
-	gfCameDirectlyFromGame = FALSE;
+	gfCameDirectlyFromGame = false;
 
 	//unload the basement sectors
 	if( gfHadToMakeBasementLevels )
 		TrashUndergroundSectorInfo();
 
-	gfGettingNameFromSaveLoadScreen = FALSE;
+	gfGettingNameFromSaveLoadScreen = false;
 }
 
 
@@ -638,7 +638,7 @@ static void GetSaveLoadScreenUserInput(void)
 					else
 					{ // Reset selected slot
 						gbSelectedSaveLocation = -1;
-						gfRedrawSaveLoadScreen = TRUE;
+						gfRedrawSaveLoadScreen = true;
 						DestroySaveLoadTextInputBoxes();
 						DisableButton(guiSlgSaveLoadBtn);
 					}
@@ -659,7 +659,7 @@ static void GetSaveLoadScreenUserInput(void)
 					}
 					else
 					{
-						gfRedrawSaveLoadScreen = TRUE;
+						gfRedrawSaveLoadScreen = true;
 					}
 					break;
 
@@ -820,11 +820,11 @@ static void DisplaySaveGameList(void)
 
 static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& entry)
 {
-	if (entry < gSavedGamesList.begin() || entry >= gSavedGamesList.end()) return TRUE;
+	if (entry < gSavedGamesList.begin() || entry >= gSavedGamesList.end()) return true;
 	// If we are going to be instantly leaving the screen, dont draw the numbers
-	if (gfLoadGameUponEntry) return TRUE;
+	if (gfLoadGameUponEntry) return true;
 	// If we are currently fading out, leave
-	if (gfStartedFadingOut) return TRUE;
+	if (gfStartedFadingOut) return true;
 
 	auto start = gSavedGamesList.begin() + gCurrentScrollTop;
 	auto index = std::distance(gSavedGamesList.begin(), entry);
@@ -925,9 +925,9 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 		ST::string location;
 		if (header.sSector.IsValid())
 		{
-			gfGettingNameFromSaveLoadScreen = TRUE;
-			location = GetSectorIDString(header.sSector, FALSE);
-			gfGettingNameFromSaveLoadScreen = FALSE;
+			gfGettingNameFromSaveLoadScreen = true;
+			location = GetSectorIDString(header.sSector, false);
+			gfGettingNameFromSaveLoadScreen = false;
 		}
 		else if (header.uiDay * NUM_SEC_IN_DAY + header.ubHour * NUM_SEC_IN_HOUR + header.ubMin * NUM_SEC_IN_MIN <= STARTING_TIME)
 		{
@@ -974,7 +974,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 	SetFontShadow(DEFAULT_SHADOW);
 
 	InvalidateRegion(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
-	return TRUE;
+	return true;
 }
 
 static void ScrollUp() {
@@ -1049,7 +1049,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 		bSelected = -1;
 	}
 
-	if (iReason & MSYS_CALLBACK_REASON_POINTER_DOUBLECLICK) {
+	if (iReason & MSYS_CALLBACK_REASON_POINTER_doubleCLICK) {
 		if (bSelected == -1) {
 			DisableButton(guiSlgSaveLoadBtn);
 		} else if (gbSelectedSaveLocation == bSelected && !gfUserInTextInputMode) {
@@ -1072,7 +1072,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 				DisableButton(guiSlgSaveLoadBtn);
 			}
 
-			gfRedrawSaveLoadScreen = TRUE;
+			gfRedrawSaveLoadScreen = true;
 		} else if (gfSaveGame && bSelected == 0 && !gfUserInTextInputMode) {
 			// Clicking twice on the new save item shows input
 			InitSaveLoadScreenTextInputBoxes();
@@ -1130,14 +1130,14 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 	AddTextInputField(x, y, SLG_SAVELOCATION_WIDTH - SLG_SAVE_GAME_DESC_X - 7, 17, MSYS_PRIORITY_HIGH + 2, {}, 46, INPUTTYPE_FULL_TEXT);
 	SetActiveField(1);
 
-	gfUserInTextInputMode = TRUE;
+	gfUserInTextInputMode = true;
 }
 
 
 static void DestroySaveLoadTextInputBoxes(void)
 {
 	SetActiveField(-1);
-	gfUserInTextInputMode = FALSE;
+	gfUserInTextInputMode = false;
 	KillAllTextInputModes();
 	SetTextInputCursor( CURSOR_IBEAM );
 }
@@ -1189,7 +1189,7 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue);
 static void DoneFadeOutForSaveLoadScreen(void)
 {
 	// Make sure we DON'T reset the levels if we are loading a game
-	gfHadToMakeBasementLevels = FALSE;
+	gfHadToMakeBasementLevels = false;
 
 	try
 	{
@@ -1206,7 +1206,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 		}
 		else
 		{ // We are to go to the Tactical screen after loading
-			PauseTime(FALSE);
+			PauseTime(false);
 			FadeInGameScreen();
 		}
 	}
@@ -1217,7 +1217,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 		DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
 		NextLoopCheckForEnoughFreeHardDriveSpace();
 	}
-	gfStartedFadingOut = FALSE;
+	gfStartedFadingOut = false;
 }
 
 
@@ -1264,7 +1264,7 @@ static void DisableSelectedSlot(void)
 {
 	//reset selected slot
 	gbSelectedSaveLocation = -1;
-	gfRedrawSaveLoadScreen = TRUE;
+	gfRedrawSaveLoadScreen = true;
 	DestroySaveLoadTextInputBoxes();
 
 	if( !gfSaveGame )
@@ -1433,7 +1433,7 @@ void DoQuickLoad()
 	if (gbSelectedSaveLocation == -1) return;
 
 	StartFadeOutForSaveLoadScreen();
-	gfDoingQuickLoad = TRUE;
+	gfDoingQuickLoad = true;
 }
 
 
@@ -1451,7 +1451,7 @@ static void MoveSelectionDown()
 		if (gbSelectedSaveLocation >= gCurrentScrollTop + NUM_SAVE_GAMES && gCurrentScrollTop < ScrollPositionTopMax()) {
 			gCurrentScrollTop += 1;
 		}
-		gfRedrawSaveLoadScreen = TRUE;
+		gfRedrawSaveLoadScreen = true;
 	}
 }
 
@@ -1465,7 +1465,7 @@ static void MoveSelectionUp()
 		if (gbSelectedSaveLocation < gCurrentScrollTop) {
 			gCurrentScrollTop -= 1;
 		}
-		gfRedrawSaveLoadScreen = TRUE;
+		gfRedrawSaveLoadScreen = true;
 	}
 }
 
@@ -1511,11 +1511,11 @@ static void StartFadeOutForSaveLoadScreen(void)
 	//if the game is paused, and we are in tactical, unpause
 	if( guiPreviousOptionScreen == GAME_SCREEN )
 	{
-		PauseTime( FALSE );
+		PauseTime( false );
 	}
 
 	gFadeOutDoneCallback = DoneFadeOutForSaveLoadScreen;
 
 	FadeOutNextFrame( );
-	gfStartedFadingOut = TRUE;
+	gfStartedFadingOut = true;
 }

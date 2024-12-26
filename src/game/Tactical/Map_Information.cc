@@ -56,14 +56,14 @@ UINT8 gubMinorMapVersion = MINOR_MAP_VERSION;
 
 
 //EntryPoints can't be placed on the top two gridnos in a map.  So all we do in this case
-//is return the closest gridno.  Returns TRUE if the mapindex changes.
+//is return the closest gridno.  Returns true if the mapindex changes.
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sTopLimit, sBottomLimit;
 
 	if( *sGridNo < 0 )
-		return FALSE; //entry point is non-existant
+		return false; //entry point is non-existant
 
 	sTopLimit = 80;
 	sBottomLimit = gsBottomY - gsTopY - 40;
@@ -81,10 +81,10 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 	}
 	else
 	{
-		return FALSE; //already valid
+		return false; //already valid
 	}
 
-	return TRUE; //modified
+	return true; //modified
 }
 
 

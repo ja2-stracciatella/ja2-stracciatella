@@ -43,10 +43,10 @@
 #define NUMBER_MERC_FACES_AUTOBANDAGE_BOX 4
 
 
-static BOOLEAN gfBeginningAutoBandage = FALSE;
+static BOOLEAN gfBeginningAutoBandage = false;
 static UINT32  guiAutoBandageSeconds  = 0;
-static BOOLEAN fAutoBandageComplete   = FALSE;
-static BOOLEAN fEndAutoBandage        = FALSE;
+static BOOLEAN fAutoBandageComplete   = false;
+static BOOLEAN fEndAutoBandage        = false;
 
 BOOLEAN gfAutoBandageFailed;
 
@@ -65,7 +65,7 @@ static const SOLDIERTYPE* gpatient_list[MAX_CHARACTER_COUNT];
 static SGPVObject* giAutoBandagesSoldierFaces[2 * MAX_CHARACTER_COUNT];
 
 // has the button for autobandage end been setup yet
-static BOOLEAN fAutoEndBandageButtonCreated = FALSE;
+static BOOLEAN fAutoEndBandageButtonCreated = false;
 
 
 static void BeginAutoBandageCallBack(MessageBoxReturnValue);
@@ -73,8 +73,8 @@ static void BeginAutoBandageCallBack(MessageBoxReturnValue);
 
 void BeginAutoBandage( )
 {
-	BOOLEAN fFoundAGuy = FALSE;
-	BOOLEAN fFoundAMedKit = FALSE;
+	BOOLEAN fFoundAGuy = false;
+	BOOLEAN fFoundAMedKit = false;
 
 	// If we are in combat, we con't...
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) || (NumEnemyInSector() != 0) )
@@ -95,7 +95,7 @@ void BeginAutoBandage( )
 		// can this character be helped out by a teammate?
 		if (CanCharacterBeAutoBandagedByTeammate(pSoldier))
 		{
-			fFoundAGuy = TRUE;
+			fFoundAGuy = true;
 			if ( fFoundAGuy && fFoundAMedKit )
 			{
 				break;
@@ -103,7 +103,7 @@ void BeginAutoBandage( )
 		}
 		if ( FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT )
 		{
-			fFoundAMedKit = TRUE;
+			fFoundAMedKit = true;
 			if ( fFoundAGuy && fFoundAMedKit )
 			{
 				break;
@@ -122,7 +122,7 @@ void BeginAutoBandage( )
 	}
 	else
 	{
-		if ( ! CanAutoBandage( FALSE ) )
+		if ( ! CanAutoBandage( false ) )
 		{
 			DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[CANT_AUTOBANDAGE_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 		}
@@ -168,7 +168,7 @@ void HandleAutoBandagePending( )
 
 
 		// If here, all's a go!
-		gTacticalStatus.fAutoBandagePending = FALSE;
+		gTacticalStatus.fAutoBandagePending = false;
 		BeginAutoBandage( );
 	}
 }
@@ -195,10 +195,10 @@ void ShouldBeginAutoBandage( )
 		return;
 	}
 
-	if ( CanAutoBandage( FALSE ) )
+	if ( CanAutoBandage( false ) )
 	{
 	// OK, now setup as a pending event...
-		SetAutoBandagePending( TRUE );
+		SetAutoBandagePending( true );
 	}
 }
 
@@ -245,32 +245,32 @@ BOOLEAN HandleAutoBandage( )
 					((InputEvent.usParam == SDLK_RETURN ||
 					InputEvent.usParam == SDLK_SPACE) && fAutoBandageComplete))
 				{
-					AutoBandage( FALSE );
+					AutoBandage( false );
 				}
 			}
 		}
 
-		gfBeginningAutoBandage = FALSE;
+		gfBeginningAutoBandage = false;
 
 		if( fEndAutoBandage )
 		{
-			AutoBandage( FALSE );
-			fEndAutoBandage = FALSE;
+			AutoBandage( false );
+			fEndAutoBandage = false;
 		}
 
-		return( TRUE );
+		return true;
 	}
 
 
 
-	return( FALSE );
+	return false;
 }
 
 
 void SetAutoBandageComplete( void )
 {
 	// this will set the fact autobandage is complete
-	fAutoBandageComplete = TRUE;
+	fAutoBandageComplete = true;
 }
 
 
@@ -283,10 +283,10 @@ void AutoBandage( BOOLEAN fStart )
 {
 	if ( fStart )
 	{
-		gTacticalStatus.fAutoBandageMode = TRUE;
+		gTacticalStatus.fAutoBandageMode = true;
 		gTacticalStatus.uiFlags |= OUR_MERCS_AUTO_MOVE;
 
-		gfAutoBandageFailed = FALSE;
+		gfAutoBandageFailed = false;
 
 
 		// ste up the autobandage panel
@@ -309,12 +309,12 @@ void AutoBandage( BOOLEAN fStart )
 		// build a mask
 		MSYS_DefineRegion(&gAutoBandageRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-		gfBeginningAutoBandage = TRUE;
+		gfBeginningAutoBandage = true;
 
 	}
 	else
 	{
-		gTacticalStatus.fAutoBandageMode = FALSE;
+		gTacticalStatus.fAutoBandageMode = false;
 		gTacticalStatus.uiFlags &= ( ~OUR_MERCS_AUTO_MOVE );
 
 		FOR_EACH_IN_TEAM(s, OUR_TEAM)
@@ -370,7 +370,7 @@ void AutoBandage( BOOLEAN fStart )
 		{
 			// inform player some mercs could not be bandaged
 			DoScreenIndependantMessageBox(pDoctorWarningString[ 1 ], MSG_BOX_FLAG_OK, NULL );
-			gfAutoBandageFailed = FALSE;
+			gfAutoBandageFailed = false;
 		}
 	}
 	guiAutoBandageSeconds = 0;
@@ -383,8 +383,8 @@ static void BeginAutoBandageCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-		fRestoreBackgroundForMessageBox = TRUE;
-		AutoBandage( TRUE );
+		fRestoreBackgroundForMessageBox = true;
+		AutoBandage( true );
 	}
 }
 
@@ -414,7 +414,7 @@ static void SetUpAutoBandageUpdatePanel(void)
 	// now add the faces
 	AddFacesToAutoBandageBox( );
 
-	fAutoBandageComplete = FALSE;
+	fAutoBandageComplete = false;
 }
 
 
@@ -779,7 +779,7 @@ static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY)
 		return;
 	}
 
-	fAutoEndBandageButtonCreated = TRUE;
+	fAutoEndBandageButtonCreated = true;
 
 	MakeButton(0, sX,      sY, zMarksMapScreenText[15]); // the continue button
 	MakeButton(1, sX + 70, sY, zMarksMapScreenText[16]); // the cancel button
@@ -790,7 +790,7 @@ static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fEndAutoBandage = TRUE;
+		fEndAutoBandage = true;
 	}
 }
 
@@ -804,7 +804,7 @@ static void DestroyTerminateAutoBandageButton(void)
 		return;
 	}
 
-	fAutoEndBandageButtonCreated = FALSE;
+	fAutoEndBandageButtonCreated = false;
 
 	// remove button
 	RemoveButton( iEndAutoBandageButton[ 0 ] );
@@ -896,7 +896,7 @@ static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCu
 
 	// is the merc alive?
 	if( !pSoldier->bLife )
-		return( FALSE );
+		return false;
 
 
 	//yellow one for bleeding
@@ -934,5 +934,5 @@ static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCu
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+43, iStartY, sCurrentXPosition+44,
 					sCurrentYPosition+29, Get16BPPColor(FROMRGB(8, 107, 8)));
 
-	return( TRUE );
+	return true;
 }

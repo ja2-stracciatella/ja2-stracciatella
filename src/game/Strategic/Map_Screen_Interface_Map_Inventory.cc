@@ -74,10 +74,10 @@ static const SGPBox g_sector_inv_page_box   = { 505, 337,  50,  10 };
 
 // the current highlighted item
 INT32 iCurrentlyHighLightedItem = -1;
-BOOLEAN fFlashHighLightInventoryItemOnradarMap = FALSE;
+BOOLEAN fFlashHighLightInventoryItemOnradarMap = false;
 
 // whether we are showing the inventory pool graphic
-BOOLEAN fShowMapInventoryPool = FALSE;
+BOOLEAN fShowMapInventoryPool = false;
 
 // the v-object index value for the background
 static SGPVObject* guiMapInventoryPoolBackground;
@@ -95,7 +95,7 @@ INT16 sObjectSourceGridNo = 0;
 static MOUSE_REGION MapInventoryPoolSlots[MAP_INVENTORY_POOL_SLOT_COUNT];
 static MOUSE_REGION MapInventoryPoolMask;
 BOOLEAN fMapInventoryItemCompatable[ MAP_INVENTORY_POOL_SLOT_COUNT ];
-static BOOLEAN      fChangedInventorySlots = FALSE;
+static BOOLEAN      fChangedInventorySlots = false;
 
 // the unseen items list...have to save this
 static std::vector<WORLDITEM> pUnSeenItems;
@@ -105,7 +105,7 @@ UINT32 guiCompatibleItemBaseTime = 0;
 
 static GUIButtonRef guiMapInvenButton[3];
 
-static BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
+static BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = false;
 
 
 // load the background panel graphics for inventory
@@ -193,7 +193,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	const WORLDITEM& item = pInventoryPoolList[iCurrentSlot + iFirstSlotOnPage];
 
 	// check if anything there
-	if (item.o.ubNumberOfObjects == 0) return FALSE;
+	if (item.o.ubNumberOfObjects == 0) return false;
 
 	const SGPBox* const slot_box = &g_sector_inv_slot_box;
 	const INT32 dx = STD_SCREEN_X + slot_box->x + slot_box->w * (iCurrentSlot / MAP_INV_SLOT_ROWS);
@@ -235,7 +235,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 
 	SetFontDestBuffer(FRAME_BUFFER);
 
-	return TRUE;
+	return true;
 }
 
 
@@ -276,12 +276,12 @@ static void SaveSeenAndUnseenItems(void);
 // create and remove buttons for inventory
 void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 {
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 /* player can leave items underground, no?
 	if( iCurrentMapSectorZ )
 	{
-		fShowMapInventoryPool = FALSE;
+		fShowMapInventoryPool = false;
 	}
 */
 	auto const& sector{ sSelMap };
@@ -296,7 +296,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 		// destroy buttons for map border
 		DeleteMapBorderButtons( );
 
-		fCreated = TRUE;
+		fCreated = true;
 
 		// also create the inventory slot
 		CreateMapInventoryPoolSlots( );
@@ -309,8 +309,8 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 
 		CreateMapInventoryPoolDoneButton( );
 
-		fMapPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
+		fMapPanelDirty = true;
+		fMapScreenBottomDirty = true;
 	}
 	else if (!fShowMapInventoryPool && fCreated)
 	{
@@ -321,7 +321,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 			// recreate mapborder buttons
 			CreateButtonsForMapBorder( );
 		}
-		fCreated = FALSE;
+		fCreated = false;
 
 		// destroy the map inventory slots
 		DestroyMapInventoryPoolSlots( );
@@ -338,9 +338,9 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 
 
 
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fCharacterInfoPanelDirty = true;
 
 		//DEF: added to remove the 'item blip' from staying on the radar map
 		iCurrentlyHighLightedItem = -1;
@@ -360,7 +360,7 @@ void CancelSectorInventoryDisplayIfOn( BOOLEAN fExitFromMapScreen )
 	if ( fShowMapInventoryPool )
 	{
 		// get rid of sector inventory mode & buttons
-		fShowMapInventoryPool = FALSE;
+		fShowMapInventoryPool = false;
 		CreateDestroyMapInventoryPoolButtons( fExitFromMapScreen );
 	}
 }
@@ -392,8 +392,8 @@ static void SaveSeenAndUnseenItems(void)
 				// get entry grid location
 			}
 		}
-		si.fExists = TRUE;
-		si.bVisible = TRUE;
+		si.fExists = true;
+		si.bVisible = true;
 		pSeenItemsList.push_back(si);
 	}
 
@@ -417,7 +417,7 @@ static void InventoryNextPage()
 	if (iCurrentInventoryPoolPage < iLastInventoryPoolPage)
 	{
 		++iCurrentInventoryPoolPage;
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 	}
 }
 
@@ -427,7 +427,7 @@ static void InventoryPrevPage()
 	if (iCurrentInventoryPoolPage > 0)
 	{
 		--iCurrentInventoryPoolPage;
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 	}
 }
 
@@ -435,7 +435,7 @@ static void InventoryPrevPage()
 // the screen mask bttn callaback...to disable the inventory and lock out the map itself
 static void MapInvenPoolScreenMaskCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	fShowMapInventoryPool = FALSE;
+	fShowMapInventoryPool = false;
 }
 
 static void MapInvenPoolScreenMaskCallbackScroll(MOUSE_REGION* pRegion, UINT32 iReason)
@@ -502,14 +502,14 @@ static void MapInvenPoolSlotsMove(MOUSE_REGION* pRegion, UINT32 iReason)
 	if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		iCurrentlyHighLightedItem = iCounter;
-		fChangedInventorySlots = TRUE;
-		gfCheckForCursorOverMapSectorInventoryItem = TRUE;
+		fChangedInventorySlots = true;
+		gfCheckForCursorOverMapSectorInventoryItem = true;
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		iCurrentlyHighLightedItem = -1;
-		fChangedInventorySlots = TRUE;
-		gfCheckForCursorOverMapSectorInventoryItem = FALSE;
+		fChangedInventorySlots = true;
+		gfCheckForCursorOverMapSectorInventoryItem = false;
 
 		// re render radar map
 		RenderRadarScreen( );
@@ -609,12 +609,12 @@ static void MapInvenPoolSlotsPrimary(MOUSE_REGION* const pRegion, const UINT32 i
 	}
 
 	// dirty region, force update
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 static void MapInvenPoolSlotsSecondary(MOUSE_REGION* const pRegion, const UINT32 iReason)
 {
-	if (gpItemPointer == NULL) fShowMapInventoryPool = FALSE;
+	if (gpItemPointer == NULL) fShowMapInventoryPool = false;
 }
 
 static void MapInvenPoolSlotsScroll(MOUSE_REGION* const pRegion, const UINT32 iReason)
@@ -737,7 +737,7 @@ static BOOLEAN RemoveObjectFromStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTYPE*
 
 static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 {
-	BOOLEAN fOk = FALSE;
+	BOOLEAN fOk = false;
 
 	// If not null return
 	if ( gpItemPointer != NULL )
@@ -761,7 +761,7 @@ static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 	if (fOk)
 	{
 		// Dirty interface
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 		SetItemPointer(&gItemPointer, 0);
 		SetMapCursorItem();
 
@@ -770,8 +770,8 @@ static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 			SOLDIERTYPE* const s = GetSelectedInfoChar();
 			if (s != NULL)
 			{
-				ReevaluateItemHatches(s, FALSE);
-				fTeamPanelDirty = TRUE;
+				ReevaluateItemHatches(s, false);
+				fTeamPanelDirty = true;
 			}
 		}
 	}
@@ -784,7 +784,7 @@ static BOOLEAN GetObjFromInventoryStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTY
 	// item ptr
 	if (!pItemPtr )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if there are only one item in slot, just copy
@@ -804,7 +804,7 @@ static BOOLEAN GetObjFromInventoryStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTY
 		RemoveObjFrom( pInventorySlot, 0 );
 	}
 
-	return ( TRUE );
+	return ( true );
 }
 
 
@@ -812,13 +812,13 @@ static BOOLEAN RemoveObjectFromStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTYPE*
 {
 	if (pInventorySlot -> ubNumberOfObjects == 0)
 	{
-		return( FALSE );
+		return false;
 	}
 	else
 	{
 		*pItemPtr = *pInventorySlot;
 		DeleteObj( pInventorySlot );
-		return( TRUE );
+		return true;
 	}
 }
 
@@ -899,7 +899,7 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 				SwapObjs( pItemPtr, pInventorySlot );
 		}
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -964,7 +964,7 @@ static void MapInventoryPoolDoneBtn(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fShowMapInventoryPool = FALSE;
+		fShowMapInventoryPool = false;
 	}
 }
 
@@ -1168,7 +1168,7 @@ void HandleFlashForHighLightedItem( void )
 	// if there is an invalid item, reset
 	if( iCurrentlyHighLightedItem == -1 )
 	{
-		fFlashHighLightInventoryItemOnradarMap = FALSE;
+		fFlashHighLightInventoryItemOnradarMap = false;
 		guiFlashHighlightedItemBaseTime = 0;
 	}
 
@@ -1205,7 +1205,7 @@ static void ResetMapSectorInventoryPoolHighLights();
 static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	static BOOLEAN fItemWasHighLighted = FALSE;
+	static BOOLEAN fItemWasHighLighted = false;
 
 	if( iCurrentSlot == -1 )
 	{
@@ -1215,7 +1215,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 	if (fChangedInventorySlots)
 	{
 		guiCompatibleItemBaseTime = 0;
-		fChangedInventorySlots = FALSE;
+		fChangedInventorySlots = false;
 	}
 
 	// reset the base time to the current game clock
@@ -1225,9 +1225,9 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 
 		if (fItemWasHighLighted)
 		{
-			fTeamPanelDirty = TRUE;
-			fMapPanelDirty = TRUE;
-			fItemWasHighLighted = FALSE;
+			fTeamPanelDirty = true;
+			fMapPanelDirty = true;
+			fItemWasHighLighted = false;
 		}
 	}
 
@@ -1248,14 +1248,14 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 			const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 			if( pSoldier )
 			{
-				if( HandleCompatibleAmmoUIForMapScreen( pSoldier, iCurrentSlot + ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ), TRUE, FALSE ) )
+				if( HandleCompatibleAmmoUIForMapScreen( pSoldier, iCurrentSlot + ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ), true, false ) )
 				{
 					if( GetJA2Clock( ) - guiCompatibleItemBaseTime > 100 )
 					{
 						if (!fItemWasHighLighted)
 						{
-							fTeamPanelDirty = TRUE;
-							fItemWasHighLighted = TRUE;
+							fTeamPanelDirty = true;
+							fItemWasHighLighted = true;
 						}
 					}
 				}
@@ -1274,14 +1274,14 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 		// check if any compatable items in the soldier inventory matches with this item
 		if( gfCheckForCursorOverMapSectorInventoryItem )
 		{
-			if( HandleCompatibleAmmoUIForMapInventory( pSoldier, iCurrentSlot, ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) , TRUE, FALSE ) )
+			if( HandleCompatibleAmmoUIForMapInventory( pSoldier, iCurrentSlot, ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) , true, false ) )
 			{
 				if( GetJA2Clock( ) - guiCompatibleItemBaseTime > 100 )
 				{
 					if (!fItemWasHighLighted)
 					{
-						fItemWasHighLighted = TRUE;
-						fMapPanelDirty = TRUE;
+						fItemWasHighLighted = true;
+						fMapPanelDirty = true;
 					}
 				}
 			}
@@ -1296,7 +1296,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 
 static void ResetMapSectorInventoryPoolHighLights()
 { // Reset the highlight list for the map sector inventory.
-	FOR_EACH(BOOLEAN, i, fMapInventoryItemCompatable) *i = FALSE;
+	FOR_EACH(BOOLEAN, i, fMapInventoryItemCompatable) *i = false;
 }
 
 
@@ -1316,10 +1316,10 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM& wi)
 			wi.o.usItem != ACTION_ITEM &&
 			wi.o.bTrap <= 0 )
 	{
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1395,7 +1395,7 @@ static BOOLEAN CanPlayerUseSectorInventory(void)
 {
 	SGPSector sector;
 	return
-		!GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(sector) ||
+		!GetCurrentBattleSectorXYZAndReturntrueIfThereIsABattle(sector) ||
 		sSelMap.x           != sector.x ||
 		sSelMap.y           != sector.y ||
 		iCurrentMapSectorZ != sector.z;

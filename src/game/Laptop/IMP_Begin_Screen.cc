@@ -140,7 +140,7 @@ void EnterIMPBeginScreen( void )
 	// render the screen on entry
 	RenderIMPBeginScreen( );
 
-	fFirstIMPAttribTime = TRUE;
+	fFirstIMPAttribTime = true;
 
 	// create mouse regions
 	CreateIMPBeginScreenMouseRegions( );
@@ -289,7 +289,7 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 			}
 
 			iCurrentImpPage = IMP_MAIN_PAGE;
-			fButtonPendingFlag = TRUE;
+			fButtonPendingFlag = true;
 		}
 		else if (GCM->getGamePolicy()->imp_load_saved_merc_by_nickname && IMPSavedProfileDoesFileExist(pNickNameString))
 		{
@@ -299,7 +299,7 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 			iPortraitNumber = profile_saved.ubFaceIndex - 200;
 			fCharacterIsMale = ( profile_saved.bSex == MALE );
 			iCurrentImpPage = IMP_CONFIRM;
-			fButtonPendingFlag = TRUE;
+			fButtonPendingFlag = true;
 		}
 		else
 		{
@@ -345,7 +345,7 @@ static void DisplayCheckboxFocus(INT32 x)
 	UINT16 currentColor = Get16BPPColor(GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL ? FROMRGB(0, 255, 0) : FROMRGB(0, 0, 0));
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT16>());
+	RectangleDraw(true, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT16>());
 	InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
 }
 

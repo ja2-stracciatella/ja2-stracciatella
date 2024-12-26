@@ -231,11 +231,11 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 			continue;          // next opponent
 
 		// really limit knife throwing so it doesn't look wrong
-		if ( GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_THROWING_KNIFE && (ubChanceToReallyHit < 30 || ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > CalcMaxTossRange( pSoldier, THROWING_KNIFE, FALSE ) / 2 ) ) )
+		if ( GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_THROWING_KNIFE && (ubChanceToReallyHit < 30 || ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > CalcMaxTossRange( pSoldier, THROWING_KNIFE, false ) / 2 ) ) )
 			continue; // don't bother... next opponent
 
 		// calculate this opponent's threat value (factor in my cover from him)
-		iThreatValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,TRUE,pSoldier);
+		iThreatValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,true,pSoldier);
 
 		// estimate the damage this shot would do to this opponent
 		iEstDamage = EstimateShotDamage(pSoldier,pOpponent,ubBestChanceToHit);
@@ -278,7 +278,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 			}
 
 			// OOOF!  That was a lot of work!  But we've got a new best target!
-			pBestShot->ubPossible          = TRUE;
+			pBestShot->ubPossible          = true;
 			pBestShot->opponent            = pOpponent;
 			pBestShot->ubAimTime           = ubBestAimTime;
 			pBestShot->ubChanceToReallyHit = ubChanceToReallyHit;
@@ -307,11 +307,11 @@ static BOOLEAN CloseEnoughForGrenadeToss(INT16 sGridNo, INT16 sGridNo2)
 			ubMovementCost = gubWorldMovementCosts[ sTempGridNo ][ bDirection ][ 0 ];
 			if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 			{
-				ubMovementCost = DoorTravelCost( NULL, sTempGridNo, ubMovementCost, FALSE, NULL );
+				ubMovementCost = DoorTravelCost( NULL, sTempGridNo, ubMovementCost, false, NULL );
 			}
 			if ( ubMovementCost >= TRAVELCOST_BLOCKED)
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 	}
@@ -319,7 +319,7 @@ static BOOLEAN CloseEnoughForGrenadeToss(INT16 sGridNo, INT16 sGridNo2)
 	{
 		if ( CardinalSpacesAway( sGridNo, sGridNo2 ) > 2 )
 		{
-			return( FALSE );
+			return false;
 		}
 
 		// we are within 1 space diagonally or at most 2 horizontally or vertically,
@@ -337,16 +337,16 @@ static BOOLEAN CloseEnoughForGrenadeToss(INT16 sGridNo, INT16 sGridNo2)
 			ubMovementCost = gubWorldMovementCosts[ sTempGridNo ][ bDirection ][ 0 ];
 			if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 			{
-				ubMovementCost = DoorTravelCost( NULL, sTempGridNo, ubMovementCost, FALSE, NULL );
+				ubMovementCost = DoorTravelCost( NULL, sTempGridNo, ubMovementCost, false, NULL );
 			}
 			if ( ubMovementCost >= TRAVELCOST_BLOCKED)
 			{
-				return( FALSE );
+				return false;
 			}
 		} while( sTempGridNo != sGridNo2 );
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -382,7 +382,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	}
 	else
 	{
-		iTossRange = CalcMaxTossRange( pSoldier, usInHand, TRUE );
+		iTossRange = CalcMaxTossRange( pSoldier, usInHand, true );
 	}
 
 	if (weapon && weapon->shootsExplosiveCalibre()) {
@@ -564,7 +564,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		opponents[ubOpponentCnt] = pOpponent;
 
 		// remember how relatively dangerous this opponent is (ignore my cover)
-		iOppThreatValue[ubOpponentCnt] = CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier);
+		iOppThreatValue[ubOpponentCnt] = CalcManThreatValue(pOpponent,pSoldier->sGridNo,false,pSoldier);
 
 		ubOpponentCnt++;
 	}
@@ -688,7 +688,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				{
 					if ( (bFriendLevel[ubLoop2] == bOpponentLevel[ubLoop]) && ( PythSpacesAway(sFriendTile[ubLoop2],sGridNo) <= ubSafetyMargin ) )
 					{
-						fFriendsNearby = TRUE;
+						fFriendsNearby = true;
 						break;       // don't bother checking any other friends
 					}
 				}
@@ -726,7 +726,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 						else
 						{
 							// throwing right on top of someone... always consider this
-							fSkipLocation = FALSE;
+							fSkipLocation = false;
 						}
 
 						// add the product of his threat value & damage caused to total
@@ -741,7 +741,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 								ubOppsAdjacent++;
 								if (ubOppsAdjacent > 1 || usGrenade == BREAK_LIGHT)
 								{
-									fSkipLocation = FALSE;
+									fSkipLocation = false;
 									// add to exclusion list so we don't consider it again
 								}
 							}
@@ -793,7 +793,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				else
 				{
 					ubChanceToGetThrough = 100 * CalculateLaunchItemChanceToGetThrough( pSoldier, &(pSoldier->inv[ HANDPOS ] ),
-									sGridNo, bOpponentLevel[ubLoop], 0, &sEndGridNo, TRUE, &bEndLevel, FALSE );
+									sGridNo, bOpponentLevel[ubLoop], 0, &sEndGridNo, true, &bEndLevel, false );
 					// if we can't possibly get through all the cover
 					if (ubChanceToGetThrough == 0 )
 					{
@@ -882,7 +882,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					SLOGD("CalcBestThrow: new best attackValue vs {} = {}\n", opponents[ubLoop]->ubID, iAttackValue);
 
 					// OOOF!  That was a lot of work!  But we've got a new best target!
-					pBestThrow->ubPossible           = TRUE;
+					pBestThrow->ubPossible           = true;
 					pBestThrow->opponent            = opponents[ubLoop];
 					pBestThrow->ubAimTime           = ubMaxPossibleAimTime;
 					pBestThrow->ubChanceToReallyHit = ubChanceToReallyHit;
@@ -904,14 +904,14 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 			// don't use unless have a 70% chance to hit
 			if (pBestThrow->ubChanceToReallyHit < 70)
 			{
-				pBestThrow->ubPossible = FALSE;
+				pBestThrow->ubPossible = false;
 			}
 			break;
 		case 2:
 			// don't use unless have a 50% chance to hit
 			if (pBestThrow->ubChanceToReallyHit < 50)
 			{
-				pBestThrow->ubPossible = FALSE;
+				pBestThrow->ubPossible = false;
 			}
 			break;
 		default:
@@ -1007,17 +1007,17 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		ubRawAPCost = std::max<UINT8>(1, ubRawAPCost);
 
 		// determine if this is a surprise stab (must be next to opponent & unseen)
-		fSurpriseStab = FALSE;        // assume it is not a surprise stab
+		fSurpriseStab = false;        // assume it is not a surprise stab
 
 		// if opponent doesn't see the attacker
 		if (pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY)
 		{
-			fSurpriseStab = TRUE;
+			fSurpriseStab = true;
 
 			// and he's only one space away from attacker
 			if (SpacesAway(pSoldier->sGridNo,pOpponent->sGridNo) == 1)
 			{
-				fSurpriseStab = TRUE;   // we got 'im lined up where we want 'im!
+				fSurpriseStab = true;   // we got 'im lined up where we want 'im!
 			}
 		}
 
@@ -1066,7 +1066,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
 		// calculate this opponent's threat value
 		// NOTE: ignore my cover!  By the time I run beside him I won't have any!
-		iThreatValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier);
+		iThreatValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,false,pSoldier);
 
 
 		// estimate the damage this stab would do to this opponent
@@ -1104,7 +1104,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 			}
 
 			// OOOF!  That was a lot of work!  But we've got a new best target!
-			pBestStab->ubPossible          = TRUE;
+			pBestStab->ubPossible          = true;
 			pBestStab->opponent            = pOpponent;
 			pBestStab->ubAimTime           = ubBestAimTime;
 			pBestStab->ubChanceToReallyHit = ubChanceToReallyHit;
@@ -1213,10 +1213,10 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
 		// calculate this opponent's threat value
 		// NOTE: ignore my cover!  By the time I run beside him I won't have any!
-		iThreatValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier);
+		iThreatValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,false,pSoldier);
 
 		// estimate the damage this stab would do to this opponent
-		iEstDamage = EstimateStabDamage(pSoldier,pOpponent,ubBestChanceToHit, TRUE );
+		iEstDamage = EstimateStabDamage(pSoldier,pOpponent,ubBestChanceToHit, true );
 
 		// calculate the combined "attack value" for this opponent
 		// highest possible value before division should be about 1 billion...
@@ -1228,7 +1228,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 		if (iAttackValue > 0)
 		{
 			// OOOF!  That was a lot of work!  But we've got a new best target!
-			pBestStab->ubPossible          = TRUE;
+			pBestStab->ubPossible          = true;
 			pBestStab->opponent            = pOpponent;
 			pBestStab->ubAimTime           = ubBestAimTime;
 			pBestStab->ubChanceToReallyHit = ubChanceToReallyHit;
@@ -1538,7 +1538,7 @@ static INT8 TryToReload(SOLDIERTYPE* const s)
 	const WeaponModel *weapon = GCM->getWeapon(hand.usItem);
 	INT8 const slot = FindAmmo(s, weapon->calibre, weapon->ubMagSize, NO_SLOT);
 	return slot != NO_SLOT && ReloadGun(s, &hand, &s->inv[slot]) ?
-		TRUE : NOSHOOT_NOAMMO;
+		true : NOSHOOT_NOAMMO;
 }
 
 
@@ -1549,7 +1549,7 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 
 	// NEUTRAL civilians are not allowed to attack, but those that are not
 	// neutral (KILLNPC mission guynums, escorted guys) can, if they're armed
-	if (IsOnCivTeam(pSoldier) && pSoldier->bNeutral) return FALSE;
+	if (IsOnCivTeam(pSoldier) && pSoldier->bNeutral) return false;
 
 	// test if if we are able to attack (in general, not at any specific target)
 	bCanAttack = OKToAttack(pSoldier,NOWHERE);
@@ -1938,7 +1938,7 @@ INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetL
 			}
 		}
 		AIPickBurstLocations( pSoldier, bTargets, pTargets );
-		pSoldier->fDoSpread = TRUE;
+		pSoldier->fDoSpread = true;
 	}
 	return( sFirstTarget );
 }

@@ -238,7 +238,7 @@ void AddCave( INT32 iMapIndex, UINT16 usIndex )
 	//First toast any existing wall (caves)
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );
 	//Now, add this piece
-	if( !AddWallToStructLayer( iMapIndex, usIndex, TRUE ) )
+	if( !AddWallToStructLayer( iMapIndex, usIndex, true ) )
 		return;
 	//Set the cave flag
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
@@ -560,7 +560,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 	sIndex = PickAWallPiece( ubWallClass );
 	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 	AddToUndoList( iMapIndex );
-	AddWallToStructLayer( iMapIndex, usTileIndex, FALSE );
+	AddWallToStructLayer( iMapIndex, usTileIndex, false );
 }
 
 
@@ -595,7 +595,7 @@ void RebuildRoofUsingFloorInfo(INT32 const map_idx, UINT16 roof_type)
 	UINT16 const tile_idx = GetTileIndexFromTypeSubIndex(roof_type, roof_idx);
 	AddRoofToHead(map_idx, tile_idx);
 	// If the editor view roofs is off, then the new roofs need to be hidden.
-	if (!fBuildingShowRoofs) HideStructOfGivenType(map_idx, roof_type, TRUE);
+	if (!fBuildingShowRoofs) HideStructOfGivenType(map_idx, roof_type, true);
 }
 
 
@@ -632,7 +632,7 @@ void RebuildRoof(UINT32 const map_idx, UINT16 roof_type)
 	UINT16 const tile_idx = GetTileIndexFromTypeSubIndex(roof_type, roof_idx);
 	AddRoofToHead(map_idx, tile_idx);
 	// If the editor view roofs is off, then the new roofs need to be hidden.
-	if (!fBuildingShowRoofs) HideStructOfGivenType(map_idx, roof_type, TRUE);
+	if (!fBuildingShowRoofs) HideStructOfGivenType(map_idx, roof_type, true);
 }
 
 
@@ -916,7 +916,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 	UINT32 iMapIndex;
 	UINT16 usFloorType, usWallType;
 	BOOLEAN fNewBuilding;
-	BOOLEAN fSlantRoof = FALSE;
+	BOOLEAN fSlantRoof = false;
 	BOOLEAN fVertical;
 	BOOLEAN fFloor;
 	top = pSelectRegion->iTop;
@@ -948,7 +948,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 	//  that signifies that we are concantenating this building to an existing one.  Otherwise,
 	//  we are just drawing an individual building.  If we find a floor, extract the type so
 	//  we know how to draw it later.
-	fNewBuilding = TRUE;
+	fNewBuilding = true;
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
@@ -956,7 +956,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 		{
 			LEVELNODE *pFloor;
 			//If a floor is found, then we are adding to an existing structure.
-			fNewBuilding = FALSE;
+			fNewBuilding = false;
 			//Extract the floor type.  We already checked if there was a floor here, so it is assumed.
 			pFloor = gpWorldLevelData[ iMapIndex ].pLandHead;
 			while( pFloor )
@@ -992,7 +992,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 			if( usRoofType != 0xffff )
 			{
 				if( !gfBasement )
-					fSlantRoof = TRUE;
+					fSlantRoof = true;
 				else
 					usRoofType = FIRSTROOF;
 			}
@@ -1082,7 +1082,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 	//Slant roofs always have a width or height of 8 tiles.
 	if( fSlantRoof )
 	{
-		fVertical = (bottom - top == 7) ? FALSE : TRUE;
+		fVertical = (bottom - top == 7) ? false : true;
 		BuildSlantRoof( left, top, right, bottom, usWallType, usRoofType, fVertical );
 	}
 

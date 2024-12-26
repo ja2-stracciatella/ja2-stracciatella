@@ -305,7 +305,7 @@ static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 			if (!gfTriedToLoadQuoteInfoArray[ubNPC]) // don't report the error a second time
 			{
 				SLOGE("NPC needs NPC file: {}.", ubNPC);
-				gfTriedToLoadQuoteInfoArray[ubNPC] = TRUE;
+				gfTriedToLoadQuoteInfoArray[ubNPC] = true;
 			}
 			// error message at this point!
 		}
@@ -326,7 +326,7 @@ bool ReloadQuoteFile(UINT8 const ubNPC)
 static bool ReloadQuoteFileIfLoaded(UINT8 const ubNPC)
 {
 	NPCQuoteInfo*& q = gpNPCQuoteInfoArray[ubNPC];
-	if (!q) return TRUE;
+	if (!q) return true;
 	FreeNullArray(q);
 	return EnsureQuoteFileLoaded(ubNPC);
 }
@@ -1075,7 +1075,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 			SLOGD("Quote Already Said, leaving");
 		}
 		// skip quotes already said
-		return( FALSE );
+		return false;
 	}
 
 	/* quest ∈ [0, MAX_QUESTS) : Quest in progress
@@ -1095,19 +1095,19 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		{
 			if (gubQuest[quest - QUEST_DONE_NUM] != QUESTDONE)
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 		else if (quest > QUEST_NOT_STARTED_NUM)
 		{
 			if (gubQuest[quest - QUEST_NOT_STARTED_NUM] != QUESTNOTSTARTED)
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 		else if (gubQuest[quest] != QUESTINPROGRESS)
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
@@ -1121,7 +1121,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 						pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue],
 						fTrue ? "True" : "False, returning");
 		}
-		if (!fTrue) return FALSE;
+		if (!fTrue) return false;
 	}
 
 	if (pNPCQuoteInfo->usFactMustBeFalse != FACT_NONE)
@@ -1131,9 +1131,9 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		{
 			SLOGD("Fact({}:'{}') Must be False status is  {}",
 						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse],
-						(fTrue == TRUE) ? "True, return" : "FALSE" );
+						(fTrue == true) ? "True, return" : "false" );
 		}
-		if (fTrue)	return( FALSE );
+		if (fTrue)	return false;
 	}
 
 	// check for required approach
@@ -1145,26 +1145,26 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		{
 			SLOGD("Approach Taken({}) must equal required Approach({}) = {}",
 						ubApproach, pNPCQuoteInfo->ubApproachRequired,
-						(ubApproach != pNPCQuoteInfo->ubApproachRequired) ? "TRUE, return" : "FALSE" );
+						(ubApproach != pNPCQuoteInfo->ubApproachRequired) ? "true, return" : "false" );
 		}
 		if ( pNPCQuoteInfo->ubApproachRequired == APPROACH_ONE_OF_FOUR_STANDARD )
 		{
 			// friendly to recruit will match
 			if ( ubApproach < APPROACH_FRIENDLY || ubApproach > APPROACH_RECRUIT )
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 		else if ( pNPCQuoteInfo->ubApproachRequired == APPROACH_FRIENDLY_DIRECT_OR_RECRUIT )
 		{
 			if ( ubApproach != APPROACH_FRIENDLY && ubApproach != APPROACH_DIRECT && ubApproach != APPROACH_RECRUIT )
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 		else if (ubApproach != pNPCQuoteInfo->ubApproachRequired)
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
@@ -1175,13 +1175,13 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		{
 			SLOGD("Time constraints. Current Day({}) must <= Day last spoken too ({}) : {}",
 						uiDay, pNPCProfile->ubLastDateSpokenTo,
-						(uiDay <= pNPCProfile->ubLastDateSpokenTo) ? "TRUE, return" : "FALSE" );
+						(uiDay <= pNPCProfile->ubLastDateSpokenTo) ? "true, return" : "false" );
 		}
 
 		if (uiDay <= pNPCProfile->ubLastDateSpokenTo)
 		{
 			// too early!
-			return( FALSE );
+			return false;
 		}
 	}
 	else if (uiDay < pNPCQuoteInfo->ubFirstDay)
@@ -1193,7 +1193,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 						(uiDay < pNPCQuoteInfo->ubFirstDay) ? "False, returning" : "True" );
 		}
 		// too early!
-		return( FALSE );
+		return false;
 	}
 
 	if (uiDay > pNPCQuoteInfo->ubLastDay && uiDay < 255 )
@@ -1202,10 +1202,10 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		{
 			SLOGD("Current Day({}) is after Required first day({}) = {}",
 						uiDay, pNPCQuoteInfo->ubFirstDay,
-						(uiDay > pNPCQuoteInfo->ubLastDay) ? "TRUE, returning" : "FALSE" );
+						(uiDay > pNPCQuoteInfo->ubLastDay) ? "true, returning" : "false" );
 		}
 		// too late!
-		return( FALSE );
+		return false;
 	}
 
 	// check opinion required
@@ -1220,16 +1220,16 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 
 		if (ubTalkDesire < pNPCQuoteInfo->ubOpinionRequired )
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
 	if (ubApproach != NPC_INITIATING_CONV)
 	{
-		SLOGD("Return the quote opinion value! = TRUE");
+		SLOGD("Return the quote opinion value! = true");
 	}
 	// Return the quote opinion value!
-	return( TRUE );
+	return true;
 
 }
 
@@ -1349,7 +1349,7 @@ static void ReturnItemToPlayer(ProfileID const merc, OBJECTTYPE* const o)
 	if (!s) return;
 
 	// Try to auto place object and then if it fails, put into cursor
-	if (!AutoPlaceObject(s, o, FALSE))
+	if (!AutoPlaceObject(s, o, false))
 	{
 		InternalBeginItemPointer(s, o, NO_SLOT);
 	}
@@ -1468,7 +1468,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			}
 			TalkingMenuDialogue( ubQuoteNum );
 			p.ubLastQuoteSaid          = ubQuoteNum;
-			p.bLastQuoteSaidWasSpecial = FALSE;
+			p.bLastQuoteSaidWasSpecial = false;
 			break;
 		case NPC_WHOAREYOU:
 			ubQuoteNum = QUOTE_INTRO;
@@ -1560,7 +1560,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						else
 						{
 							ubQuoteNum = QUOTE_FRIENDLY_DEFAULT1 + (UINT8) Random( 2 );
-							p.bFriendlyOrDirectDefaultResponseUsedRecently = TRUE;
+							p.bFriendlyOrDirectDefaultResponseUsedRecently = true;
 						}
 						break;
 					case APPROACH_DIRECT:
@@ -1571,7 +1571,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						else
 						{
 							ubQuoteNum = QUOTE_DIRECT_DEFAULT;
-							p.bFriendlyOrDirectDefaultResponseUsedRecently = TRUE;
+							p.bFriendlyOrDirectDefaultResponseUsedRecently = true;
 						}
 						break;
 					case APPROACH_THREATEN:
@@ -1582,7 +1582,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						else
 						{
 							ubQuoteNum = QUOTE_THREATEN_DEFAULT;
-							p.bThreatenDefaultResponseUsedRecently = TRUE;
+							p.bThreatenDefaultResponseUsedRecently = true;
 						}
 						break;
 					case APPROACH_RECRUIT:
@@ -1593,7 +1593,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						else
 						{
 							ubQuoteNum = QUOTE_RECRUIT_NO;
-							p.bRecruitDefaultResponseUsedRecently = TRUE;
+							p.bRecruitDefaultResponseUsedRecently = true;
 						}
 						break;
 					case APPROACH_GIVINGITEM:
@@ -1612,7 +1612,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				}
 				TalkingMenuDialogue( ubQuoteNum );
 				p.ubLastQuoteSaid          = ubQuoteNum;
-				p.bLastQuoteSaidWasSpecial = FALSE;
+				p.bLastQuoteSaidWasSpecial = false;
 				if (ubQuoteNum == QUOTE_GETLOST)
 				{
 					if (ubNPC == 70 || ubNPC == 120)
@@ -1671,7 +1671,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						TalkingMenuDialogue( (UINT8)( pQuotePtr->ubQuoteNum + ubLoop  ) );
 					}
 					p.ubLastQuoteSaid          = ubRecordNum;
-					p.bLastQuoteSaidWasSpecial = TRUE;
+					p.bLastQuoteSaidWasSpecial = true;
 				}
 				// set to "said" if we should do so
 				if (pQuotePtr->fFlags & QUOTE_FLAG_ERASE_ONCE_SAID || pQuotePtr->fFlags & QUOTE_FLAG_SAY_ONCE_PER_CONVO)
@@ -1715,7 +1715,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 							SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 							// Try to auto place object and then if it fails, put into cursor
-							if (!AutoPlaceObject(pSoldier, o, FALSE))
+							if (!AutoPlaceObject(pSoldier, o, false))
 							{
 								InternalBeginItemPointer(pSoldier, o, NO_SLOT);
 							}
@@ -1849,13 +1849,13 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					if (pNPC && ubNPC == KYLE)
 					{
 						// make sure he has keys
-						pNPC->bHasKeys = TRUE;
+						pNPC->bHasKeys = true;
 					}
 					if (pNPC && pNPC->sGridNo == pQuotePtr->usGoToGridno )
 					{
 						// search for quotes to trigger immediately!
 						pNPC->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
-						NPCReachedDestination(pNPC, TRUE);
+						NPCReachedDestination(pNPC, true);
 					}
 					else
 					{
@@ -1865,7 +1865,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 							if (pNPC->uiStatusFlags & SOLDIER_COWERING)
 							{
 								//pNPC->uiStatusFlags &= ~SOLDIER_COWERING;
-								EVENT_InitNewSoldierAnim(pNPC, STANDING, 0 , FALSE);
+								EVENT_InitNewSoldierAnim(pNPC, STANDING, 0 , false);
 							}
 
 							pNPC->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
@@ -1876,7 +1876,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 							BumpAnyExistingMerc( pQuotePtr->usGoToGridno );
 							TeleportSoldier(*pNPC, pQuotePtr->usGoToGridno, false);
 							// search for quotes to trigger immediately!
-							NPCReachedDestination(pNPC, FALSE);
+							NPCReachedDestination(pNPC, false);
 						}
 						else
 						{
@@ -2190,10 +2190,10 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 	NPCQuoteInfo *				pQuotePtr;
 
 	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
+	if (!pNPCQuoteInfoArray) return false; // error
 
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
-	if (!pSoldier) return FALSE;
+	if (!pSoldier) return false;
 	// Clear values!
 	pSoldier->ubQuoteRecord = 0;
 
@@ -2209,11 +2209,11 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 			{
 				// trigger this quote IMMEDIATELY!
 				TriggerNPCRecordImmediately( ubNPC, ubLoop );
-				return( TRUE );
+				return true;
 			}
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -2258,7 +2258,7 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 						if (!MayExecute()) return true;
 
 						SOLDIERTYPE const& s = soldier_;
-						ExecuteCharacterDialogue(s.ubProfile, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO, s.face, DIALOGUE_TACTICAL_UI, TRUE, false);
+						ExecuteCharacterDialogue(s.ubProfile, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO, s.face, DIALOGUE_TACTICAL_UI, true, false);
 
 						// Setup face with data!
 						FACETYPE& f = *gpCurrentTalkingFace;
@@ -2286,7 +2286,7 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 	UINT8					ubLoop;
 
 	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubTriggerNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
+	if (!pNPCQuoteInfoArray) return false; // error
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
 	{
@@ -2295,10 +2295,10 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 			// trigger this quote!
 			NPCTriggerNPC(ubTriggerNPC, ubLoop, APPROACH_DECLARATION_OF_HOSTILITY, true);
 			gMercProfiles[ ubTriggerNPC ].ubMiscFlags |= PROFILE_MISC_FLAG_SAID_HOSTILE_QUOTE;
-			return( TRUE );
+			return true;
 		}
 	}
-	return( FALSE );
+	return false;
 
 }
 
@@ -2308,14 +2308,14 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach(UINT8 const ubNPC, Approach const ap
 	// Check if we have a quote that could be used
 
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
-	if (!quotes) return FALSE; // error
+	if (!quotes) return false; // error
 
 	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
 		if (!NPCConsiderQuote(ubNPC, 0, approach, i, 0, quotes)) continue;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2326,16 +2326,16 @@ BOOLEAN NPCHasUnusedHostileRecord(UINT8 const ubNPC, Approach const approach)
 	 */
 	// Check if we have a quote that could be used
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
-	if (!quotes) return FALSE; // error
+	if (!quotes) return false; // error
 
 	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
 		if (!NPCConsiderQuote(ubNPC, 0, approach, i, 0, quotes)) continue;
 		NPCQuoteInfo const& q = quotes[i];
 		if (q.usFactMustBeTrue == FACT_NPC_HOSTILE_OR_PISSED_OFF) continue;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2344,7 +2344,7 @@ BOOLEAN NPCWillingToAcceptItem(UINT8 const ubNPC, UINT8 const ubMerc, OBJECTTYPE
 	// Check if we have a quote that could be used, that applies to this item
 
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
-	if (!quotes) return FALSE; // error
+	if (!quotes) return false; // error
 
 	NPCQuoteInfo* q;
 	UINT8         ubQuoteNum;
@@ -2357,7 +2357,7 @@ BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fa
 {
 	// Check if we have a quote that could be used
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
-	if (!quotes) return FALSE; // error
+	if (!quotes) return false; // error
 
 	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
@@ -2365,9 +2365,9 @@ BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fa
 		NPCQuoteInfo const& q = quotes[i];
 		*pusQuoteNum      = q.ubQuoteNum;
 		*fact_to_set_true = (Fact)q.usSetFactTrue;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2376,7 +2376,7 @@ BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, Approach const app
 	// Check if we have a quote to trigger...
 
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubTriggerNPC);
-	if (!quotes) return FALSE; // error
+	if (!quotes) return false; // error
 
 	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
@@ -2384,9 +2384,9 @@ BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, Approach const app
 
 		bool const show_panel = quotes[i].ubQuoteNum != IRRELEVANT;
 		NPCTriggerNPC(ubTriggerNPC, i, approach, show_panel);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2573,7 +2573,7 @@ UINT8 ActionIDForMovementRecord(UINT8 const ubNPC, UINT8 const record)
 {
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
-	if (!quotes) return FALSE; // error
+	if (!quotes) return false; // error
 
 	switch (quotes[record].sActionData)
 	{
@@ -2632,7 +2632,7 @@ void HandleVictoryInNPCSector(const SGPSector& sector)
 			}
 
 			// check if keith is out of business
-			if (CheckFact(FACT_KEITH_OUT_OF_BUSINESS, KEITH) == TRUE)
+			if (CheckFact(FACT_KEITH_OUT_OF_BUSINESS, KEITH) == true)
 			{
 				SetFactFalse(FACT_KEITH_OUT_OF_BUSINESS);
 			}
@@ -2649,23 +2649,23 @@ BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum )
 		case( KEITH ):
 		{
 			// if keith out of business, do action and leave
-			if( CheckFact( FACT_KEITH_OUT_OF_BUSINESS, KEITH ) == TRUE )
+			if( CheckFact( FACT_KEITH_OUT_OF_BUSINESS, KEITH ) == true )
 			{
 				TriggerNPCRecord( KEITH, 11 );
 
-				return( TRUE );
+				return true;
 			}
-			else if( CheckFact( FACT_LOYALTY_LOW, KEITH ) == TRUE )
+			else if( CheckFact( FACT_LOYALTY_LOW, KEITH ) == true )
 			{
 				// loyalty is too low
 				TriggerNPCRecord( KEITH, 7 );
 
-				return( TRUE );
+				return true;
 			}
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
@@ -2701,7 +2701,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 BOOLEAN RecordHasDialogue(UINT8 const ubNPC, UINT8 const ubRecord)
 {
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
-	if (!quotes) return FALSE; // error
+	if (!quotes) return false; // error
 	NPCQuoteInfo const& q = quotes[ubRecord];
 	return q.ubQuoteNum != NO_QUOTE && q.ubQuoteNum != 0;
 }

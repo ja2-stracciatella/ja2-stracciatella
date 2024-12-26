@@ -17,7 +17,7 @@
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.  true = pressed, false = not pressed.
 static std::bitset<2 * SDL_NUM_SCANCODES> gfKeyState;
-static BOOLEAN fCursorWasClipped = FALSE;
+static BOOLEAN fCursorWasClipped = false;
 static SGPRect gCursorClipRect;
 
 static void QueuePointerEvent(UINT16 eventType, UINT32 param);
@@ -43,13 +43,13 @@ struct ButtonState {
 	public:
 		void handleDown() {
 			repeatTimer = GetClock() + REPEAT_TIMEOUT;
-			ButtonStates[StateIndex] = TRUE;
+			ButtonStates[StateIndex] = true;
 			QueuePointerEvent(DOWN_EVENT, BUTTON);
 		}
 
 		void handleUp() {
 			repeatTimer = 0;
-			ButtonStates[StateIndex] = FALSE;
+			ButtonStates[StateIndex] = false;
 			QueuePointerEvent(UP_EVENT, BUTTON);
 		}
 
@@ -148,17 +148,17 @@ BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 BOOLEAN DequeueEvent(InputAtom* Event)
 {
-	if (gusQueueCount == 0) return FALSE;
+	if (gusQueueCount == 0) return false;
 
 	*Event = gEventQueue[gusHeadIndex];
 	gusHeadIndex = (gusHeadIndex + 1) % lengthof(gEventQueue);
 	gusQueueCount--;
-	return TRUE;
+	return true;
 }
 
 #if defined(WITH_MAEMO) || defined __APPLE__
@@ -167,7 +167,7 @@ static BOOLEAN g_down_right;
 
 void MouseMove(const SDL_MouseMotionEvent* event) {
 	if (event->which == SDL_TOUCH_MOUSEID) return;
-	gfIsUsingTouch = FALSE;
+	gfIsUsingTouch = false;
 
 	SetSafeMousePosition(event->x, event->y);
 }
@@ -175,7 +175,7 @@ void MouseMove(const SDL_MouseMotionEvent* event) {
 void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 {
 	if (BtnEv->which == SDL_TOUCH_MOUSEID) return;
-	gfIsUsingTouch = FALSE;
+	gfIsUsingTouch = false;
 
 	SetSafeMousePosition(BtnEv->x, BtnEv->y);
 	switch (BtnEv->button)
@@ -543,7 +543,7 @@ void RestrictMouseCursor(const SGPRect* pRectangle)
 #else
 	ClipCursor((RECT*)pRectangle);
 #endif
-	fCursorWasClipped = TRUE;
+	fCursorWasClipped = true;
 }
 
 
@@ -553,7 +553,7 @@ void FreeMouseCursor(void)
 #else
 	ClipCursor(NULL);
 #endif
-	fCursorWasClipped = FALSE;
+	fCursorWasClipped = false;
 }
 
 void GetRestrictedClipCursor(SGPRect* pRectangle)

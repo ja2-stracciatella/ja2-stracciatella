@@ -118,17 +118,17 @@ void FromCellToScreenCoordinates( INT16 sCellX, INT16 sCellY, INT16 *psScreenX, 
 void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX, INT16 *psCellY )
 {
 	// isometric to cartesian
-	*psCellX = floor((FLOAT(sScreenX) / HALF_TILE_WIDTH + FLOAT(sScreenY) / HALF_TILE_HEIGHT) / 2.0f);
-	*psCellY = floor((FLOAT(sScreenY) / HALF_TILE_HEIGHT - FLOAT(sScreenX) / HALF_TILE_WIDTH) / 2.0f);
+	*psCellX = floor((float(sScreenX) / HALF_TILE_WIDTH + float(sScreenY) / HALF_TILE_HEIGHT) / 2.0f);
+	*psCellY = floor((float(sScreenY) / HALF_TILE_HEIGHT - float(sScreenX) / HALF_TILE_WIDTH) / 2.0f);
 }
 
 // These two functions take into account that our world is projected and attached
 // to the screen (0,0) in a specific way, and we MUSt take that into account then
 // determining screen coords
 
-void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScreenX, FLOAT *pdScreenY )
+void FloatFromCellToScreenCoordinates( float dCellX, float dCellY, float *pdScreenX, float *pdScreenY )
 {
-	FLOAT dScreenX, dScreenY;
+	float dScreenX, dScreenY;
 
 	dScreenX = ( 2 * dCellX ) - ( 2 * dCellY );
 	dScreenY = dCellX + dCellY;
@@ -146,14 +146,14 @@ BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
 	{
 		(*psMouseX) = 0;
 		(*psMouseY) = 0;
-		return( FALSE );
+		return false;
 	}
 
 	// Find start block
 	(*psMouseX) = ( sWorldX / CELL_X_SIZE );
 	(*psMouseY) = ( sWorldY / CELL_Y_SIZE );
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -168,7 +168,7 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 	{
 		*psMouseX = 0;
 		*psMouseY = 0;
-		return( FALSE );
+		return false;
 	}
 
 	auto const cursorPosition{ GetCursorPos() };
@@ -194,7 +194,7 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 	{
 		*psMouseX = 0;
 		*psMouseY = 0;
-		return( FALSE );
+		return false;
 	}
 
 	// Determine Start block and render offsets
@@ -203,7 +203,7 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 	(*psMouseX) = sStartPointX_W;
 	(*psMouseY) = sStartPointY_W;
 
-	return( TRUE );
+	return true;
 }
 
 void GetAbsoluteScreenXYFromMapPos(const GridNo pos, INT16* const psWorldScreenX, INT16* const psWorldScreenY)
@@ -271,20 +271,20 @@ INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno)
 			if (sGridno < LASTROWSTART)	// if we're above bottom row
 				if (sGridno > MAXCOL)	// if we're below top row
 				// Everything's OK - we're not on the edge of the map
-					return(FALSE);
+					return(false);
 
 
 	// if we've got this far, there's a potential problem - check it out!
 
 	if (sProposedGridno < 0)
-		return(TRUE);
+		return(true);
 
 	sPropMod = sProposedGridno % MAXCOL;
 
 	if (sMod == 0 && sPropMod == RIGHTMOSTGRID)
-		return(TRUE);
+		return(true);
 	else if (sMod == RIGHTMOSTGRID && sPropMod == 0)
-		return TRUE;
+		return true;
 	else
 		return (sGridno >= LASTROWSTART && sProposedGridno >= GRIDSIZE);
 }
@@ -396,11 +396,11 @@ BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRec
 		(*sXRel) = pRect->iLeft - sXPos;
 		(*sYRel) = sYPos - (INT16)pRect->iTop;
 
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -458,7 +458,7 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 	for (UINT8 cnt = 0; cnt != 8; cnt += 2)
 	{
 		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(cnt));
-		if (!NewOKDestination(s, new_grid_no, TRUE, 1)) continue;
+		if (!NewOKDestination(s, new_grid_no, true, 1)) continue;
 
 		// Check if this tile has a higher level
 		if (!IsHeigherLevel(new_grid_no)) continue;
@@ -491,7 +491,7 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 	for (UINT8 dir = 0; dir != 8; dir += 2)
 	{
 		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(dir));
-		if (!NewOKDestination(s, new_grid_no, TRUE, 0)) continue;
+		if (!NewOKDestination(s, new_grid_no, true, 0)) continue;
 		// Make sure there is NOT a roof here
 		if (FindStructure(new_grid_no, STRUCTURE_ROOF)) continue;
 
@@ -550,10 +550,10 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 	if (sWorldX > 0 && sWorldX < (gsRightX - gsLeftX - 20) &&
 		sWorldY > 20 && sWorldY < (gsBottomY - gsTopY - 20))
 	{
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -569,10 +569,10 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 		//if ( !GridNoOnVisibleWorldTile( (INT16) (sGridNo + DirectionInc( bDir ) ) ) )
 		{
 			*pbDirection = bDir;
-			return( TRUE );
+			return true;
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN IsFacingClimableWindow( SOLDIERTYPE const* const pSoldier )
@@ -588,7 +588,7 @@ BOOLEAN IsFacingClimableWindow( SOLDIERTYPE const* const pSoldier )
 		// IF there is a fence in this gridno, return false!
 		if ( IsJumpableWindowPresentAtGridNo( sGridNo, bStartingDir ) )
 		{
-			return( FALSE );
+			return false;
 		}
 
 		sNewGridNo = NewGridNo( sGridNo, (UINT16)DirectionInc( (UINT8)bStartingDir ) );
@@ -602,7 +602,7 @@ BOOLEAN IsFacingClimableWindow( SOLDIERTYPE const* const pSoldier )
 	}
 
 	// ATE: Check if there is somebody waiting here.....
-	if (! NewOKDestination( pSoldier, sOtherSideOfWindow, TRUE, 0 ) ) return false;
+	if (! NewOKDestination( pSoldier, sOtherSideOfWindow, true, 0 ) ) return false;
 
 	// Check if we have a window here
 	if (!IsJumpableWindowPresentAtGridNo( sNewGridNo , bStartingDir) ) return false;
@@ -613,7 +613,7 @@ BOOLEAN IsFacingClimableWindow( SOLDIERTYPE const* const pSoldier )
 BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const out_direction)
 {
 	GridNo  sNewGridNo, sOtherSideOfFence;
-	BOOLEAN fFound = FALSE;
+	BOOLEAN fFound = false;
 	UINT8   bMinNumTurns = 100;
 	UINT8   bMinDirection = 0;
 
@@ -621,7 +621,7 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const o
 	// IF there is a fence in this gridno, return false!
 	if ( IsJumpableFencePresentAtGridno( sGridNo ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// LOOP THROUGH ALL 8 DIRECTIONS
@@ -632,7 +632,7 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const o
 		sNewGridNo = NewGridNo( sGridNo, DirectionInc( cnt ) );
 		sOtherSideOfFence = NewGridNo( sNewGridNo, DirectionInc( cnt ) );
 
-		if ( NewOKDestination( pSoldier, sOtherSideOfFence, TRUE, 0 ) )
+		if ( NewOKDestination( pSoldier, sOtherSideOfFence, true, 0 ) )
 		{
 			// ATE: Check if there is somebody waiting here.....
 
@@ -640,7 +640,7 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const o
 			// Check if we have a fence here
 			if ( IsJumpableFencePresentAtGridno( sNewGridNo ) )
 			{
-				fFound = TRUE;
+				fFound = true;
 
 				// FInd how many turns we should go to get here
 				UINT8 bNumTurns = FindNumTurnsBetweenDirs( cnt, bStartingDir );
@@ -657,10 +657,10 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const o
 	if ( fFound )
 	{
 		if (out_direction) *out_direction = bMinDirection;
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)

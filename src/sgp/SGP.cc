@@ -56,7 +56,7 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 //
 ////////////////////////////////////////////////////////////////////////////
 
-static BOOLEAN gfGameInitialized = FALSE;
+static BOOLEAN gfGameInitialized = false;
 
 /** Deinitialize the game an exit. */
 static void shutdownGame()
@@ -274,7 +274,7 @@ int main(int argc, char* argv[])
 		#ifdef __ANDROID__
 		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
 
-		if (setGlobalJniEnv(jniEnv) == FALSE) {
+		if (setGlobalJniEnv(jniEnv) == false) {
 			auto rustError = getRustError();
 			if (rustError != NULL) {
 				SLOGE("Failed to set global JNI env for Android: {}", rustError);
@@ -317,13 +317,13 @@ int main(int argc, char* argv[])
 		}
 
 		if (EngineOptions_shouldStartInFullscreen(params.get())) {
-			VideoSetFullScreen(TRUE);
+			VideoSetFullScreen(true);
 		} else if (EngineOptions_shouldStartInWindow(params.get())) {
-			VideoSetFullScreen(FALSE);
+			VideoSetFullScreen(false);
 		}
 
 		if (EngineOptions_shouldStartWithoutSound(params.get())) {
-			SoundEnableSound(FALSE);
+			SoundEnableSound(false);
 		}
 
 		if (EngineOptions_shouldStartInDebugMode(params.get())) {
@@ -354,7 +354,7 @@ int main(int argc, char* argv[])
 
 		VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params.get());
 
-		FLOAT brightness = EngineOptions_getBrightness(params.get());
+		float brightness = EngineOptions_getBrightness(params.get());
 
 		////////////////////////////////////////////////////////////
 
@@ -414,7 +414,7 @@ int main(int argc, char* argv[])
 		// Initialize the Game
 		InitializeGame();
 
-		gfGameInitialized = TRUE;
+		gfGameInitialized = true;
 
 		if(isEnglishVersion() || isChineseVersion())
 		{

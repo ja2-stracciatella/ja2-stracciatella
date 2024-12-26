@@ -17,12 +17,12 @@
 #include "Text.h"
 
 
-BOOLEAN gfLoadingExitGrids = FALSE;
+BOOLEAN gfLoadingExitGrids = false;
 
 //used by editor.
 EXITGRID gExitGrid = {0, {1, 1, 0}};
 
-BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
+BOOLEAN gfOverrideInsertionWithExitGrid = false;
 
 
 static INT32 ConvertExitGridToINT32(EXITGRID* pExitGrid)
@@ -55,13 +55,13 @@ BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
 		if ( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{
 			ConvertINT32ToExitGrid( pShadow->iExitGridInfo, pExitGrid );
-			return TRUE;
+			return true;
 		}
 		pShadow = pShadow->pNext;
 	}
 	pExitGrid->ubGotoSector = SGPSector(0, 0, 0);
 	pExitGrid->usGridNo = 0;
-	return FALSE;
+	return false;
 }
 
 BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
@@ -73,11 +73,11 @@ BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
 	{
 		if ( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{
-			return TRUE;
+			return true;
 		}
 		pShadow = pShadow->pNext;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -138,7 +138,7 @@ void LoadExitGrids(HWFILE const f)
 	EXITGRID exitGrid;
 	UINT16 usNumSaved;
 	UINT16 usMapIndex;
-	gfLoadingExitGrids = TRUE;
+	gfLoadingExitGrids = true;
 	f->read(&usNumSaved, sizeof(usNumSaved));
 	for (UINT16 x = 0; x < usNumSaved; x++)
 	{
@@ -149,7 +149,7 @@ void LoadExitGrids(HWFILE const f)
 		f->read(&exitGrid.ubGotoSector.z, 1);
 		AddExitGridToWorld( usMapIndex, &exitGrid );
 	}
-	gfLoadingExitGrids = FALSE;
+	gfLoadingExitGrids = false;
 }
 
 
@@ -183,7 +183,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 		if (gExitGrid.ubGotoSector.z != look_for_level) continue;
 		// found an exit grid leading to the goal sector!
 
-		gfOverrideInsertionWithExitGrid = TRUE;
+		gfOverrideInsertionWithExitGrid = true;
 		/* change all current mercs in the loaded sector, and move them to the new
 		 * sector. */
 		SGPSector const adjustedSector(gWorldSector.x, gWorldSector.y, look_for_level);
@@ -197,7 +197,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 			ScreenMsg(FONT_YELLOW, MSG_INTERFACE, pMessageStrings[MSG_LEAVING_BASEMENT]);
 		}
 		SetCurrentWorldSector(adjustedSector);
-		gfOverrideInsertionWithExitGrid = FALSE;
+		gfOverrideInsertionWithExitGrid = false;
 		break;
 	}
 }
@@ -216,7 +216,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 	SGPSector ubGotoSector;
 
 	// Turn off at end of function...
-	gfPlotPathToExitGrid = TRUE;
+	gfPlotPathToExitGrid = true;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.
@@ -276,7 +276,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 				// Go on sweet stop
 				// ATE: Added this check because for all intensive purposes, cavewalls will be not an OKDEST
 				// but we want thenm too...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
+				if ( NewOKDestination( pSoldier, sGridNo, true, pSoldier->bLevel ) )
 				{
 					if ( GetExitGrid( sGridNo, &ExitGrid ) )
 					{
@@ -297,7 +297,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 		}
 	}
 
-	gfPlotPathToExitGrid = FALSE;
+	gfPlotPathToExitGrid = false;
 
 	return sLowestGridNo;
 }

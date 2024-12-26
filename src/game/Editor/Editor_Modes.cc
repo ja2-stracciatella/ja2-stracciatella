@@ -15,7 +15,7 @@
 #include "WorldMan.h"
 
 
-BOOLEAN gfShowExitGrids = FALSE;
+BOOLEAN gfShowExitGrids = false;
 
 void SetEditorItemsTaskbarMode( UINT16 usNewMode )
 {
@@ -97,27 +97,27 @@ void SetEditorBuildingTaskbarMode( UINT16 usNewMode )
 	UnclickEditorButton( BUILDING_DRAW_ROOMNUM );
 	ClickEditorButton( usNewMode );
 
-	gfRenderDrawingMode = TRUE;
+	gfRenderDrawingMode = true;
 
 	//Clicking on certain buttons will automatically activate/deactive certain views.
 	switch( usNewMode )
 	{
 		case BUILDING_KILL_BUILDING://Show everything
-			fNewWalls = TRUE;
-			fNewRoofs = TRUE;
-			fNewRoomInfo = TRUE;
+			fNewWalls = true;
+			fNewRoofs = true;
+			fNewRoomInfo = true;
 			break;
 		case BUILDING_NEW_ROOF:
 		case BUILDING_PLACE_ROOFS:
-			fNewWalls = TRUE;
-			fNewRoofs = TRUE;
-			fNewRoomInfo = FALSE;
+			fNewWalls = true;
+			fNewRoofs = true;
+			fNewRoomInfo = false;
 			break;
 		case BUILDING_DRAW_ROOMNUM: //Show room info
 		case BUILDING_ERASE_ROOMNUM: //Show room info
 			fNewWalls = NO_EFFECT;
-			fNewRoofs = gfBasement ? TRUE : FALSE;
-			fNewRoomInfo = TRUE;
+			fNewRoofs = gfBasement ? true : false;
+			fNewRoomInfo = true;
 			break;
 		case BUILDING_PLACE_DOORS:
 		case BUILDING_PLACE_WINDOWS:
@@ -137,9 +137,9 @@ void SetEditorBuildingTaskbarMode( UINT16 usNewMode )
 		case BUILDING_COPY_BUILDING:
 		case BUILDING_MOVE_BUILDING:
 		case BUILDING_CAVE_DRAWING:
-			fNewRoofs = gfBasement ? TRUE : FALSE;
-			fNewWalls =	TRUE;
-			fNewRoomInfo = FALSE;
+			fNewRoofs = gfBasement ? true : false;
+			fNewWalls =	true;
+			fNewRoomInfo = false;
 			if( usNewMode == BUILDING_PLACE_FLOORS )
 				gusSelectionType = gusSavedSelectionType;
 			break;
@@ -172,7 +172,7 @@ void SetEditorBuildingTaskbarMode( UINT16 usNewMode )
 		else
 			UnclickEditorButton( BUILDING_TOGGLE_INFO_VIEW );
 		fBuildingShowRoomInfo = fNewRoomInfo;
-		gfRenderWorld = TRUE;
+		gfRenderWorld = true;
 	}
 }
 
@@ -188,7 +188,7 @@ void SetEditorTerrainTaskbarMode( UINT16 usNewMode )
 	UnclickEditorButton( TERRAIN_FILL_AREA );
 	TerrainTileDrawMode=0;
 
-	gfRenderDrawingMode = TRUE;
+	gfRenderDrawingMode = true;
 
 	switch( usNewMode )
 	{
@@ -245,7 +245,7 @@ static void ShowExitGrids(void)
 	UINT16 i;
 	if( gfShowExitGrids )
 		return;
-	gfShowExitGrids = TRUE;
+	gfShowExitGrids = true;
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
 		if (ExitGridAtGridNo(i))
@@ -260,7 +260,7 @@ void HideExitGrids()
 	UINT16 i;
 	if( !gfShowExitGrids )
 		return;
-	gfShowExitGrids = FALSE;
+	gfShowExitGrids = false;
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
 		if (ExitGridAtGridNo(i))
@@ -281,7 +281,7 @@ void HideExitGrids()
 
 void SetEditorMapInfoTaskbarMode( UINT16 usNewMode )
 {
-	BOOLEAN fShowExitGrids = FALSE;
+	BOOLEAN fShowExitGrids = false;
 	UnclickEditorButton( MAPINFO_ADD_LIGHT1_SOURCE );
 	UnclickEditorButton( MAPINFO_DRAW_EXITGRIDS );
 	UnclickEditorButton( MAPINFO_NORTH_POINT );
@@ -299,7 +299,7 @@ void SetEditorMapInfoTaskbarMode( UINT16 usNewMode )
 		case MAPINFO_DRAW_EXITGRIDS:
 			iDrawMode = DRAW_MODE_EXITGRID;
 			gusSelectionType = gusSavedSelectionType;
-			fShowExitGrids = TRUE;
+			fShowExitGrids = true;
 			break;
 		case MAPINFO_NORTH_POINT:
 			iDrawMode = DRAW_MODE_NORTHPOINT;
@@ -321,15 +321,15 @@ void SetEditorMapInfoTaskbarMode( UINT16 usNewMode )
 			break;
 		case MAPINFO_RADIO_NORMAL:
 			SetEditorSmoothingMode( SMOOTHING_NORMAL );
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			break;
 		case MAPINFO_RADIO_BASEMENT:
 			SetEditorSmoothingMode( SMOOTHING_BASEMENT );
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			break;
 		case MAPINFO_RADIO_CAVES:
 			SetEditorSmoothingMode( SMOOTHING_CAVES );
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			break;
 	}
 	if( fShowExitGrids )
@@ -348,8 +348,8 @@ void SetEditorSmoothingMode( UINT8 ubNewMode )
 	UnclickEditorButtons( MAPINFO_RADIO_NORMAL, MAPINFO_RADIO_CAVES );
 	if( iCurrentTaskbar == TASK_BUILDINGS )
 		HideEditorButtons( BUILDING_NEW_ROOM, BUILDING_CAVE_DRAWING );
-	gfBasement = FALSE;
-	gfCaves = FALSE;
+	gfBasement = false;
+	gfCaves = false;
 	gMapInformation.ubEditorSmoothingType = SMOOTHING_NORMAL;
 	switch( ubNewMode )
 	{
@@ -360,14 +360,14 @@ void SetEditorSmoothingMode( UINT8 ubNewMode )
 			EnableEditorButtons( BUILDING_SMART_WALLS, BUILDING_SMART_BROKEN_WALLS );
 			break;
 		case SMOOTHING_BASEMENT:
-			gfBasement = TRUE;
+			gfBasement = true;
 			ClickEditorButton( MAPINFO_RADIO_BASEMENT );
 			if( iCurrentTaskbar == TASK_BUILDINGS )
 				ShowEditorButtons( BUILDING_NEW_ROOM, BUILDING_KILL_BUILDING );
 			EnableEditorButtons( BUILDING_SMART_WALLS, BUILDING_SMART_BROKEN_WALLS );
 			break;
 		case SMOOTHING_CAVES:
-			gfCaves = TRUE;
+			gfCaves = true;
 			ClickEditorButton( MAPINFO_RADIO_CAVES );
 			if( iCurrentTaskbar == TASK_BUILDINGS )
 				ShowEditorButton( BUILDING_CAVE_DRAWING );

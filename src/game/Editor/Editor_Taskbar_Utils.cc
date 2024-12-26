@@ -135,7 +135,7 @@ static void InitEditorRegions()
 		MSYS_SetRegionUserData(&r, 0, idx++);
 		r.Disable();
 	}
-	gfShowTerrainTileButtons = FALSE;
+	gfShowTerrainTileButtons = false;
 
 	// Create the region for the items selection window.
 	// Ends above the secondary row of tabs.
@@ -304,7 +304,7 @@ void DoTaskbar(void)
 		return;
 	}
 
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 
 	HideEditorToolbar( iCurrentTaskbar );
 
@@ -324,7 +324,7 @@ void DoTaskbar(void)
 			HideItemStatsPanel();
 			if( eInfo.fActive )
 				ClearEditorItemsInfo();
-			gfShowPits = FALSE;
+			gfShowPits = false;
 			RemoveAllPits();
 			break;
 		case TASK_MERCS:
@@ -358,7 +358,7 @@ void DoTaskbar(void)
 			ClickEditorButton( MERCS_ENEMY);
 			iDrawMode = DRAW_MODE_ENEMY;
 			SetMercEditingMode( MERC_TEAMMODE );
-			fBuildingShowRoofs = FALSE;
+			fBuildingShowRoofs = false;
 			UpdateRoofsView();
 			break;
 		case TASK_TERRAIN:
@@ -396,7 +396,7 @@ void DoTaskbar(void)
 			ClickEditorButton(static_cast<INT32>(ITEMS_WEAPONS) + static_cast<INT32>(eInfo.uiItemType) - static_cast<INT32>(TBAR_MODE_ITEM_WEAPONS));
 			InitEditorItemsInfo( eInfo.uiItemType );
 			ShowItemStatsPanel();
-			gfShowPits = TRUE;
+			gfShowPits = true;
 			AddAllPits();
 			iDrawMode = DRAW_MODE_PLACE_ITEM;
 			break;
@@ -852,24 +852,24 @@ extern BOOLEAN gfGotoGridNoUI;
 
 void ProcessEditorRendering()
 {
-	BOOLEAN fSaveBuffer = FALSE;
+	BOOLEAN fSaveBuffer = false;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{
 		ClearTaskbarRegion(0, 0, SCREEN_WIDTH, EDITOR_TASKBAR_HEIGHT);
 		RenderTerrainTileButtons();
 		MarkButtonsDirty();
-		gfRenderTaskbar = FALSE;
-		fSaveBuffer = TRUE;
-		gfRenderDrawingMode = TRUE;
-		gfRenderHilights = FALSE;
-		gfRenderMercInfo = TRUE;
+		gfRenderTaskbar = false;
+		fSaveBuffer = true;
+		gfRenderDrawingMode = true;
+		gfRenderHilights = false;
+		gfRenderMercInfo = true;
 	}
 	if( gfRenderDrawingMode )
 	{
 		if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS )
 		{
 			ShowCurrentDrawingMode();
-			gfRenderDrawingMode = FALSE;
+			gfRenderDrawingMode = false;
 		}
 	}
 	//render dynamically changed buttons only
@@ -905,10 +905,10 @@ void ProcessEditorRendering()
 	if( fSaveBuffer )
 		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, EDITOR_TASKBAR_POS_Y, SCREEN_WIDTH, EDITOR_TASKBAR_HEIGHT);
 
-	//Make sure this is TRUE at all times.
+	//Make sure this is true at all times.
 	//It is set to false when before we save the buffer, so the buttons don't get
 	//rendered with hilites, in case the mouse is over one.
-	gfRenderHilights = TRUE;
+	gfRenderHilights = true;
 
 	RenderFastHelp();
 

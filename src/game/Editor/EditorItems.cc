@@ -210,7 +210,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	EnableEditorRegion( ITEM_REGION_ID );
 
 	eInfo.uiItemType = uiItemType;
-	eInfo.fActive = TRUE;
+	eInfo.fActive = true;
 	//Begin initialization of data.
 	switch(uiItemType)
 	{
@@ -335,7 +335,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	else for(auto i = 0; i < eInfo.sNumItems; i++ )
 	{
 
-		fTypeMatch = FALSE;
+		fTypeMatch = false;
 		while( itemIt < items.end() && !fTypeMatch )
 		{
 			auto item = *itemIt;
@@ -350,7 +350,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 				if( i < PRESSURE_ACTION_ID && !(i % 2) ) {
 					itemIt = switchIt;
 				}
-				fTypeMatch = TRUE;
+				fTypeMatch = true;
 				item = *itemIt;
 			}
 			else switch( item->getItemClass() )
@@ -369,7 +369,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 					}
 					else
 					{
-						fTypeMatch = FALSE;
+						fTypeMatch = false;
 					}
 					break;
 				case IC_AMMO:
@@ -464,7 +464,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	}
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetClippingRect(SaveRect);
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 }
 
 void DetermineItemsScrolling()
@@ -628,7 +628,7 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 			if( sIndex < eInfo.sNumItems )
 			{
 				if( eInfo.sHilitedItemIndex != sIndex )
-					gfRenderTaskbar = TRUE;
+					gfRenderTaskbar = true;
 				//this index will now highlight in yellow.
 				eInfo.sHilitedItemIndex = sIndex;
 			}
@@ -638,11 +638,11 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 			{
 				//this index will now highlight in red.
 				if( eInfo.sSelItemIndex != sIndex )
-					gfRenderTaskbar = TRUE;
+					gfRenderTaskbar = true;
 				eInfo.sSelItemIndex = sIndex;
 				if( gfMercGetItem )
 				{
-					gfMercGetItem = FALSE;
+					gfMercGetItem = false;
 					gusMercsNewItemIndex = eInfo.pusItemIndex[ eInfo.sSelItemIndex ];
 					SetMercEditingMode( MERC_INVENTORYMODE );
 					ClearEditorItemsInfo();
@@ -652,7 +652,7 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 		case GUI_RCLICK_EVENT:
 			if( gfMercGetItem )
 			{
-				gfMercGetItem = FALSE;
+				gfMercGetItem = false;
 				gusMercsNewItemIndex = 0xffff;
 				SetMercEditingMode( MERC_INVENTORYMODE );
 				ClearEditorItemsInfo();
@@ -660,7 +660,7 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 			else if( sIndex < eInfo.sNumItems )
 			{
 				eInfo.sSelItemIndex = sIndex;
-				gfRenderTaskbar = TRUE;
+				gfRenderTaskbar = true;
 				if( CountNumberOfEditorPlacementsInWorld( eInfo.sSelItemIndex, &usQuantity ) )
 				{
 					FindNextItemOfSelectedType();

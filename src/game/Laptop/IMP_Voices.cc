@@ -33,7 +33,7 @@ static BUTTON_PICS* giIMPVoicesButtonImage[3];
 
 
 // redraw protrait screen
-static BOOLEAN fReDrawVoicesScreenFlag = FALSE;
+static BOOLEAN fReDrawVoicesScreenFlag = false;
 
 // the portrait region, for player to click on and re-hear voice
 static MOUSE_REGION gVoicePortraitRegion;
@@ -106,7 +106,7 @@ void HandleIMPVoices( void )
 		RenderIMPVoices( );
 
 		// reset redraw flag
-		fReDrawVoicesScreenFlag = FALSE;
+		fReDrawVoicesScreenFlag = false;
 	}
 }
 
@@ -191,7 +191,7 @@ static void BtnIMPVoicesNextCallback(GUI_BUTTON *btn, UINT32 reason)
 		IncrementVoice();
 		if (SoundIsPlaying(uiVocVoiceSound)) SoundStop(uiVocVoiceSound);
 		PlayVoice();
-		fReDrawVoicesScreenFlag = TRUE;
+		fReDrawVoicesScreenFlag = true;
 	}
 }
 
@@ -203,7 +203,7 @@ static void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn, UINT32 reason)
 		DecrementVoice();
 		if (SoundIsPlaying(uiVocVoiceSound)) SoundStop(uiVocVoiceSound);
 		PlayVoice();
-		fReDrawVoicesScreenFlag = TRUE;
+		fReDrawVoicesScreenFlag = true;
 	}
 }
 
@@ -235,7 +235,7 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 		LaptopSaveInfo.iVoiceId = iCurrentVoices + (fCharacterIsMale ? 0 : 3);
 
 		// set button up image pending
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 

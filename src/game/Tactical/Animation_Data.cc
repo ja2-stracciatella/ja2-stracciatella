@@ -647,7 +647,7 @@ static STRUCTURE_FILE_REF* InternalGetAnimationStructureRef(const SOLDIERTYPE* c
 
 STRUCTURE_FILE_REF* GetAnimationStructureRef(const SOLDIERTYPE* const s, const UINT16 usSurfaceIndex, const UINT16 usAnimState)
 {
-	return InternalGetAnimationStructureRef(s, usSurfaceIndex, usAnimState, FALSE);
+	return InternalGetAnimationStructureRef(s, usSurfaceIndex, usAnimState, false);
 }
 
 
@@ -688,7 +688,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 			a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
 
 			// get structure data if any
-			const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
+			const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, true);
 			if (pStructureFileRef != NULL)
 			{
 				INT16 sStartFrame = 0;
@@ -701,7 +701,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 					sStartFrame = -1;
 				}
 
-				AddZStripInfoToVObject(hVObject.get(), pStructureFileRef, TRUE, sStartFrame);
+				AddZStripInfoToVObject(hVObject.get(), pStructureFileRef, true, sStartFrame);
 			}
 
 			// Set video object index

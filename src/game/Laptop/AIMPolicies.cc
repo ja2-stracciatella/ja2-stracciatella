@@ -152,9 +152,9 @@ static GUIButtonRef guiPoliciesMenuButton[AIM_POLICY_MENU_BUTTON_AMOUNT];
 
 
 static UINT8       gubCurPageNum;
-static BOOLEAN     gfInPolicyToc            = FALSE;
-static BOOLEAN     gfInAgreementPage        = FALSE;
-static BOOLEAN     gfAimPolicyMenuBarLoaded = FALSE;
+static BOOLEAN     gfInPolicyToc            = false;
+static BOOLEAN     gfInAgreementPage        = false;
+static BOOLEAN     gfAimPolicyMenuBarLoaded = false;
 static SGPVObject* guiContentButton;
 static BOOLEAN     gfExitingAimPolicy;
 static BOOLEAN     AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
@@ -175,13 +175,13 @@ void EnterAimPolicies()
 
 	gubCurPageNum = (UINT8) giCurrentSubPage;
 
-	gfAimPolicyMenuBarLoaded = FALSE;
-	gfExitingAimPolicy = FALSE;
+	gfAimPolicyMenuBarLoaded = false;
+	gfExitingAimPolicy = false;
 
 	if( gubCurPageNum != 0)
 		InitAimPolicyMenuBar();
 
-	gfInPolicyToc = FALSE;
+	gfInPolicyToc = false;
 
 	// load the Content Buttons graphic and add it
 	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/contentbutton.sti");
@@ -197,7 +197,7 @@ static void ExitAimPolicyTocMenu();
 
 void ExitAimPolicies()
 {
-	gfExitingAimPolicy = TRUE;
+	gfExitingAimPolicy = true;
 
 	DeleteVideoObject(guiContentButton);
 
@@ -221,16 +221,16 @@ void HandleAimPolicies()
 	{
 		InitAimPolicyMenuBar();
 		//RenderAimPolicies();
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 	}
 
 }
 
 
 static void DisableAimPolicyButton(void);
-static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber);
+static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, float fNumber);
 static void DisplayAimPolicyStatement(void);
-static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber);
+static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, float fNumber);
 static void DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum);
 static void DisplayAimPolicyTitleText(void);
 static void DrawAimPolicyMenu(void);
@@ -267,75 +267,75 @@ void RenderAimPolicies()
 			//Display the Definitions title
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, DEFINITIONS);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_1, (FLOAT)1.1) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_2, (FLOAT)1.2) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_3, (FLOAT)1.3) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_4, (FLOAT)1.4);
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_1, (float)1.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_2, (float)1.2) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_3, (float)1.3) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, DEFINITIONS_4, (float)1.4);
 			break;
 
 		case 3:
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, LENGTH_OF_ENGAGEMENT);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1, (FLOAT)2.1) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1_1, (FLOAT)2.11) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1_2, (FLOAT)2.12) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1_3, (FLOAT)2.13) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_2, (FLOAT)2.2) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1, (float)2.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1_1, (float)2.11) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1_2, (float)2.12) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_1_3, (float)2.13) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LENGTH_OF_ENGAGEMENT_2, (float)2.2) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 
 		case 4:
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, LOCATION_0F_ENGAGEMENT);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_1, (FLOAT)3.1) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2, (FLOAT)3.2) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_1, (float)3.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2, (float)3.2) + AIM_POLICY_PARAGRAPH_GAP;
 
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_1, (FLOAT)3.21) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_2, (FLOAT)3.22) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_3, (FLOAT)3.23) + AIM_POLICY_PARAGRAPH_GAP;
-			//usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_4, (FLOAT)3.24) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_1, (float)3.21) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_2, (float)3.22) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_3, (float)3.23) + AIM_POLICY_PARAGRAPH_GAP;
+			//usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_4, (float)3.24) + AIM_POLICY_PARAGRAPH_GAP;
 
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_4, (FLOAT)3.3) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_2_4, (float)3.3) + AIM_POLICY_PARAGRAPH_GAP;
 
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_3, (FLOAT)3.4) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, LOCATION_0F_ENGAGEMENT_3, (float)3.4) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 
 		case 5:
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, CONTRACT_EXTENSIONS);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, CONTRACT_EXTENSIONS_1, (FLOAT)4.1) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, CONTRACT_EXTENSIONS_2, (FLOAT)4.2) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, CONTRACT_EXTENSIONS_3, (FLOAT)4.3) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, CONTRACT_EXTENSIONS_1, (float)4.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, CONTRACT_EXTENSIONS_2, (float)4.2) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, CONTRACT_EXTENSIONS_3, (float)4.3) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 
 		case 6:
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, TERMS_OF_PAYMENT);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_PAYMENT_1, (FLOAT)5.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_PAYMENT_1, (float)5.1) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 
 		case 7:
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, TERMS_OF_ENGAGEMENT);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_ENGAGEMENT_1, (FLOAT)6.1) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_ENGAGEMENT_2A, (FLOAT)6.2) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_ENGAGEMENT_2B, (FLOAT)0.0) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_ENGAGEMENT_1, (float)6.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_ENGAGEMENT_2A, (float)6.2) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, TERMS_OF_ENGAGEMENT_2B, (float)0.0) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 
 		case 8:
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, ENGAGEMENT_TERMINATION);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1, (FLOAT)7.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1, (float)7.1) + AIM_POLICY_PARAGRAPH_GAP;
 
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1_1, (FLOAT)7.11) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1_2, (FLOAT)7.12) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1_3, (FLOAT)7.13) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1_1, (float)7.11) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1_2, (float)7.12) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicySubParagraph(usNumPixles, ENGAGEMENT_TERMINATION_1_3, (float)7.13) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 
 		case 9:
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, EQUIPMENT_AND_INVENTORY);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, EQUIPMENT_AND_INVENTORY_1, (FLOAT)8.1) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, EQUIPMENT_AND_INVENTORY_2, (FLOAT)8.2) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, EQUIPMENT_AND_INVENTORY_1, (float)8.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, EQUIPMENT_AND_INVENTORY_2, (float)8.2) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 
 		case 10:
@@ -343,11 +343,11 @@ void RenderAimPolicies()
 
 			DisplayAimPolicyTitle(AIM_POLICY_SUBTITLE_Y, POLICY_MEDICAL);
 			usNumPixles = AIM_POLICY_PARAGRAPH_Y;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_1, (FLOAT)9.1) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_2, (FLOAT)9.2) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_3A, (FLOAT)9.3) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_3B, (FLOAT)0.0) + AIM_POLICY_PARAGRAPH_GAP;
-			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_4, (FLOAT)9.4) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_1, (float)9.1) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_2, (float)9.2) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_3A, (float)9.3) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_3B, (float)0.0) + AIM_POLICY_PARAGRAPH_GAP;
+			usNumPixles += DisplayAimPolicyParagraph(usNumPixles, POLICY_MEDICAL_4, (float)9.4) + AIM_POLICY_PARAGRAPH_GAP;
 			break;
 	}
 
@@ -365,7 +365,7 @@ static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, UINT32 reason);
 static void InitAimPolicyMenuBar()
 {
 	if (gfAimPolicyMenuBarLoaded) return;
-	gfAimPolicyMenuBarLoaded = TRUE;
+	gfAimPolicyMenuBarLoaded = true;
 
 	// Load graphic for buttons
 	BUTTON_PICS* const gfx = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
@@ -388,7 +388,7 @@ static void InitAimPolicyMenuBar()
 static void ExitAimPolicyMenuBar()
 {
 	if (!gfAimPolicyMenuBarLoaded) return;
-	gfAimPolicyMenuBarLoaded = FALSE;
+	gfAimPolicyMenuBarLoaded = false;
 	FOR_EACH(GUIButtonRef, i, guiPoliciesMenuButton) RemoveButton(*i);
 	UnloadButtonImage(guiPoliciesMenuButtonImage);
 }
@@ -424,7 +424,7 @@ static void DrawAimPolicyMenu(void)
 
 		usPosY += AIM_POLICY_TOC_GAP_Y;
 	}
-	gfInPolicyToc = TRUE;
+	gfInPolicyToc = true;
 }
 
 
@@ -434,7 +434,7 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, UINT32 iRea
 static void InitAimPolicyTocMenu()
 {
 	if (gfInPolicyToc) return;
-	gfInPolicyToc = TRUE;
+	gfInPolicyToc = true;
 
 	UINT16 const x    = AIM_POLICY_TOC_X;
 	UINT16       y    = AIM_POLICY_TOC_Y;
@@ -451,7 +451,7 @@ static void InitAimPolicyTocMenu()
 
 static void ExitAimPolicyTocMenu()
 {
-	gfInPolicyToc = FALSE;
+	gfInPolicyToc = false;
 	FOR_EACH(MOUSE_REGION, i, gSelectedPolicyTocMenuRegion) MSYS_RemoveRegion(&*i);
 }
 
@@ -519,7 +519,7 @@ static void InitAgreementRegion()
 		b->SetUserData(idx++);
 		*i = b;
 	}
-	gfInAgreementPage = TRUE;
+	gfInAgreementPage = true;
 }
 
 
@@ -527,7 +527,7 @@ static void ExitAgreementButton()
 {
 	FOR_EACH(GUIButtonRef, i, guiPoliciesAgreeButton) RemoveButton(*i);
 	UnloadButtonImage(guiPoliciesButtonImage);
-	gfInAgreementPage = FALSE;
+	gfInAgreementPage = false;
 }
 
 
@@ -538,7 +538,7 @@ static void DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum)
 }
 
 
-static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
+static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, float fNumber)
 {
 	ST::string sTemp;
 	UINT16	usNumPixels;
@@ -559,7 +559,7 @@ static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fN
 }
 
 
-static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
+static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, float fNumber)
 {
 	ST::string sTemp;
 	UINT16	usNumPixels;
@@ -579,7 +579,7 @@ static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT
 
 static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	static BOOLEAN fOnPage = TRUE;
+	static BOOLEAN fOnPage = true;
 
 	if (fOnPage)
 	{
@@ -587,7 +587,7 @@ static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		{
 			UINT8 const ubRetValue = btn->GetUserData();
 
-			fOnPage = FALSE;
+			fOnPage = false;
 			if (ubRetValue == 1)
 			{
 				// Agree
@@ -599,7 +599,7 @@ static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 				// Disagree
 				guiCurrentLaptopMode = LAPTOP_MODE_AIM;
 			}
-			fOnPage = TRUE;
+			fOnPage = true;
 		}
 	}
 }
@@ -607,7 +607,7 @@ static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	static BOOLEAN fOnPage = TRUE;
+	static BOOLEAN fOnPage = true;
 
 	if (fOnPage)
 	{
@@ -642,18 +642,18 @@ static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 						gubCurPageNum++;
 						ChangingAimPoliciesSubPage(gubCurPageNum);
 
-						fOnPage = FALSE;
+						fOnPage = false;
 						if (gfInPolicyToc)
 						{
 							ExitAimPolicyTocMenu();
 						}
-						fOnPage = TRUE;
+						fOnPage = true;
 					}
 					break;
 			}
 			ResetAimPolicyButtons();
 			DisableAimPolicyButton();
-			fOnPage = TRUE;
+			fOnPage = true;
 		}
 	}
 }
@@ -686,18 +686,18 @@ static void DisableAimPolicyButton(void)
 
 static void ChangingAimPoliciesSubPage(UINT8 ubSubPageNumber)
 {
-	fLoadPendingFlag = TRUE;
+	fLoadPendingFlag = true;
 
 	if (!AimPoliciesSubPagesVisitedFlag[ubSubPageNumber])
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = FALSE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = false;
 
-		AimPoliciesSubPagesVisitedFlag[ ubSubPageNumber ] = TRUE;
+		AimPoliciesSubPagesVisitedFlag[ ubSubPageNumber ] = true;
 	}
 	else
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = TRUE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = true;
 	}
 }

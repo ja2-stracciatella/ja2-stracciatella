@@ -215,7 +215,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 			return;
 		}
 
-		pCurr->rLastActual = ( DOUBLE )( ( INT32)( rActual * 100 ) * 0.01 );
+		pCurr->rLastActual = ( double )( ( INT32)( rActual * 100 ) * 0.01 );
 
 		INT32 const x   = pCurr->pos.x;
 		INT32 const y   = pCurr->pos.y;

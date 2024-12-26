@@ -41,10 +41,10 @@
 // GLOBAL FOR PAL EDITOR
 UINT8 CurrentPalette = 0;
 static BACKGROUND_SAVE* guiBackgroundRect = NO_BGND_RECT;
-BOOLEAN gfExitPalEditScreen = FALSE;
-BOOLEAN gfExitDebugScreen = FALSE;
-static BOOLEAN FirstTime = TRUE;
-BOOLEAN gfDoneWithSplashScreen = FALSE;
+BOOLEAN gfExitPalEditScreen = false;
+BOOLEAN gfExitDebugScreen = false;
+static BOOLEAN FirstTime = true;
+BOOLEAN gfDoneWithSplashScreen = false;
 
 
 INT8 gCurDebugPage = 0;
@@ -73,14 +73,14 @@ void SET_ERROR(const ST::string& msg)
 
 	SetPendingNewScreen( ERROR_SCREEN );
 
-	gfGlobalError = TRUE;
+	gfGlobalError = true;
 }
 
 
 ScreenID ErrorScreenHandle(void)
 {
 	InputAtom  InputEvent;
-	static BOOLEAN	fFirstTime = FALSE;
+	static BOOLEAN	fFirstTime = false;
 
 	// Create string
 	SetFontAttributes(LARGEFONT1, FONT_MCOLOR_LTGRAY);
@@ -92,7 +92,7 @@ ScreenID ErrorScreenHandle(void)
 	if ( !fFirstTime )
 	{
 		SLOGE("Runtime Error: {} ", gubErrorText);
-		fFirstTime = TRUE;
+		fFirstTime = true;
 	}
 
 	// For quick setting of new video stuff / to be changed
@@ -193,12 +193,12 @@ static void PalEditRenderHook(void);
 
 ScreenID PalEditScreenHandle(void)
 {
-	static BOOLEAN FirstTime = TRUE;
+	static BOOLEAN FirstTime = true;
 
 	if ( gfExitPalEditScreen )
 	{
-		gfExitPalEditScreen = FALSE;
-		FirstTime = TRUE;
+		gfExitPalEditScreen = false;
+		FirstTime = true;
 		FreeBackgroundRect(guiBackgroundRect);
 		guiBackgroundRect = NO_BGND_RECT;
 		SetRenderHook(NULL);
@@ -208,7 +208,7 @@ ScreenID PalEditScreenHandle(void)
 
 	if ( FirstTime )
 	{
-		FirstTime = FALSE;
+		FirstTime = false;
 
 		SetRenderHook(PalEditRenderHook);
 		SetUIKeyboardHook(PalEditKeyboardHook);
@@ -271,23 +271,23 @@ static void CyclePaletteReplacement(SOLDIERTYPE& s, ST::string& pal)
 
 static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 {
-	if (pInputEvent->usEvent != KEY_DOWN) return FALSE;
+	if (pInputEvent->usEvent != KEY_DOWN) return false;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel == NULL) return FALSE;
+	if (sel == NULL) return false;
 
 	switch (pInputEvent->usParam)
 	{
-		case SDLK_ESCAPE: gfExitPalEditScreen = TRUE; break;
+		case SDLK_ESCAPE: gfExitPalEditScreen = true; break;
 
 		case 'h': CyclePaletteReplacement(*sel, sel->HeadPal);  break;
 		case 'v': CyclePaletteReplacement(*sel, sel->VestPal);  break;
 		case 'p': CyclePaletteReplacement(*sel, sel->PantsPal); break;
 		case 's': CyclePaletteReplacement(*sel, sel->SkinPal);  break;
 
-		default: return FALSE;
+		default: return false;
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -295,18 +295,18 @@ static BOOLEAN CheckForAndExitTacticalDebug(void)
 {
 	if ( gfExitDebugScreen )
 	{
-		FirstTime = TRUE;
-		gfExitDebugScreen = FALSE;
-		gfDoVideoScroll = TRUE;
+		FirstTime = true;
+		gfExitDebugScreen = false;
+		gfDoVideoScroll = true;
 		FreeBackgroundRect( guiBackgroundRect );
 		guiBackgroundRect = NO_BGND_RECT;
 		SetRenderHook(NULL);
 		SetUIKeyboardHook(NULL);
 
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -329,8 +329,8 @@ ScreenID DebugScreenHandle(void)
 
 	if ( FirstTime )
 	{
-		gfDoVideoScroll = FALSE;
-		FirstTime = FALSE;
+		gfDoVideoScroll = false;
+		FirstTime = false;
 
 		SetRenderHook(DebugRenderHook);
 		SetUIKeyboardHook(DebugKeyboardHook);
@@ -359,8 +359,8 @@ static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 		switch (pInputEvent->usParam)
 		{
 			case 'q':
-				gfExitDebugScreen = TRUE;
-				return TRUE;
+				gfExitDebugScreen = true;
+				return true;
 
 			case SDLK_PAGEUP:
 				gCurDebugPage++;
@@ -378,7 +378,7 @@ static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 

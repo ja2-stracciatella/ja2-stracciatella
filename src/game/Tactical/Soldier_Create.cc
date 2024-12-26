@@ -67,7 +67,7 @@
 
 Observable<SOLDIERTYPE*> OnSoldierCreated = {};
 
-BOOLEAN gfProfiledEnemyAdded = FALSE;
+BOOLEAN gfProfiledEnemyAdded = false;
 
 UINT32 guiCurrentUniqueSoldierId = 1;
 
@@ -220,8 +220,8 @@ try
 	if (team_id == CIV_TEAM)
 	{
 		s->bNeutral =
-			profile            == WARDEN        ? FALSE :
-			s->ubCivilianGroup == NON_CIV_GROUP ? TRUE  :
+			profile            == WARDEN        ? false :
+			s->ubCivilianGroup == NON_CIV_GROUP ? true  :
 			gTacticalStatus.fCivGroupHostile[s->ubCivilianGroup] != CIV_GROUP_HOSTILE;
 
 		// Weaken stats based on the bodytype of the civilian.
@@ -262,7 +262,7 @@ try
 		// bloodcats are neutral to start out
 		if (s->ubBodyType == BLOODCAT)
 		{
-			s->bNeutral = TRUE;
+			s->bNeutral = true;
 		}
 		// otherwise (creatures) false
 	}
@@ -395,17 +395,17 @@ try
 			{
 				case HUMVEE:
 					ubVehicleID = HUMMER;
-					s->bNeutral = TRUE;
+					s->bNeutral = true;
 					break;
 
 				case ELDORADO:
 					ubVehicleID = ELDORADO_CAR;
-					s->bNeutral = TRUE;
+					s->bNeutral = true;
 					break;
 
 				case ICECREAMTRUCK:
 					ubVehicleID = ICE_CREAM_TRUCK;
-					s->bNeutral = TRUE;
+					s->bNeutral = true;
 					break;
 
 				case JEEP:
@@ -473,7 +473,7 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 
 	if (s.ubBodyType == HUMVEE || s.ubBodyType == ICECREAMTRUCK)
 	{
-		s.bNeutral = TRUE;
+		s.bNeutral = true;
 	}
 
 	CreateSoldierCommon(s);
@@ -720,11 +720,11 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 	//merc clothing scheme often ( actually 60% of the time ).
 	if (pSoldier->PantsPal.empty() || pSoldier->VestPal.empty())
 	{
-		fMercClothingScheme = TRUE;
+		fMercClothingScheme = true;
 		if( pSoldier->bTeam == CIV_TEAM && Random( 100 ) < 40 )
 		{
 			//40% chance of using cheezy civilian colors
-			fMercClothingScheme = FALSE;
+			fMercClothingScheme = false;
 		}
 		if( !fMercClothingScheme ) //CHEEZY CIVILIAN COLORS
 		{
@@ -920,7 +920,7 @@ static void InitSoldierStruct(SOLDIERTYPE& s)
 	s.next_to_previous_attacker = 0;
 	s.light                     = 0;
 	s.ubDesiredHeight           = NO_DESIRED_HEIGHT;
-	s.bInSector                 = FALSE;
+	s.bInSector                 = false;
 	s.sGridNo                   = NOWHERE;
 	s.muzzle_flash              = 0;
 	s.usPendingAnimation        = NO_PENDING_ANIMATION;
@@ -930,8 +930,8 @@ static void InitSoldierStruct(SOLDIERTYPE& s)
 	s.bLastRenderVisibleValue   = -1;
 	s.bBreath                   = 99;
 	s.bBreathMax                = 100;
-	s.bActive                   = TRUE;
-	s.fShowLocator              = FALSE;
+	s.bActive                   = true;
+	s.fShowLocator              = false;
 	s.sLastTarget               = NOWHERE;
 	s.sAbsoluteFinalDestination = NOWHERE;
 	s.sZLevelOverride           = -1;
@@ -939,7 +939,7 @@ static void InitSoldierStruct(SOLDIERTYPE& s)
 	s.ubAttackingHand           = HANDPOS;
 	s.usAnimState               = STANDING;
 	s.bInterruptDuelPts         = NO_INTERRUPT;
-	s.bMoved                    = FALSE;
+	s.bMoved                    = false;
 	s.robot_remote_holder       = 0;
 	s.sNoiseGridno              = NOWHERE;
 	s.ubPrevSectorID            = 255;
@@ -1017,7 +1017,7 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 
 void TacticalRemoveSoldier(SOLDIERTYPE& s)
 {
-	InternalTacticalRemoveSoldier(s, TRUE);
+	InternalTacticalRemoveSoldier(s, true);
 }
 
 
@@ -1125,10 +1125,10 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 	if( !pp || !bp )
 		return;
-	pp->fStatic = FALSE;
+	pp->fStatic = false;
 	pp->ubProfile = NO_PROFILE;
 	pp->sInsertionGridNo = bp->usStartingGridNo;
-	pp->fCopyProfileItemsOver = FALSE;
+	pp->fCopyProfileItemsOver = false;
 	pp->bTeam = bp->bTeam;
 	pp->ubSoldierClass = bp->ubSoldierClass;
 	pp->ubCivilianGroup = bp->ubCivilianGroup;
@@ -1259,7 +1259,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 		case 4:	bExpLevelModifier += +1; bStatsModifier += +1; break;
 
 		default:
-			AssertMsg(FALSE, ST::format("Invalid bRelativeAttributeLevel = {}", bp->bRelativeAttributeLevel));
+			AssertMsg(false, ST::format("Invalid bRelativeAttributeLevel = {}", bp->bRelativeAttributeLevel));
 			break;
 	}
 
@@ -1398,10 +1398,10 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	if( !spp || !bp )
 		return;
 	*spp = SOLDIERCREATE_STRUCT{};
-	spp->fStatic = TRUE;
+	spp->fStatic = true;
 	spp->ubProfile = NO_PROFILE;
 	spp->sInsertionGridNo = bp->usStartingGridNo;
-	spp->fCopyProfileItemsOver = FALSE;
+	spp->fCopyProfileItemsOver = false;
 	spp->bTeam = bp->bTeam;
 	spp->ubSoldierClass = bp->ubSoldierClass;
 	spp->ubCivilianGroup = bp->ubCivilianGroup;
@@ -1461,7 +1461,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 
 	*pp = SOLDIERCREATE_STRUCT{};
 	pp->fOnRoof = spp->fOnRoof = bp->fOnRoof;
-	pp->fStatic = FALSE;
+	pp->fStatic = false;
 	pp->ubSoldierClass = bp->ubSoldierClass;
 	//Generate the new placement
 	pp->ubProfile = spp->ubProfile;
@@ -1908,7 +1908,7 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 			break;
 
 		default:
-			Assert( FALSE );
+			Assert( false );
 			*pbRelLevel = 2;
 			break;
 	}
@@ -1956,7 +1956,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 
 static BOOLEAN TryToAttach(SOLDIERTYPE* const s, OBJECTTYPE* const o)
 {
-	if (!(GCM->getItem(o->usItem)->getFlags() & ITEM_ATTACHMENT)) return FALSE;
+	if (!(GCM->getItem(o->usItem)->getFlags() & ITEM_ATTACHMENT)) return false;
 
 	// try to find the appropriate item to attach to!
 	for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
@@ -1965,10 +1965,10 @@ static BOOLEAN TryToAttach(SOLDIERTYPE* const s, OBJECTTYPE* const o)
 		if (tgt_o.usItem != NOTHING && ValidAttachment(o->usItem, tgt_o.usItem))
 		{
 			AttachObject(NULL, &tgt_o, o);
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2047,7 +2047,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 
 			OBJECTTYPE o;
 			CreateItems(p.inv[i], p.bInvStatus[i], p.bInvNumber[i], &o);
-			if (!TryToAttach(&s, &o)) AutoPlaceObject(&s, &o, FALSE);
+			if (!TryToAttach(&s, &o)) AutoPlaceObject(&s, &o, false);
 		}
 		p.usOptionalGearCost = 0;
 	}
@@ -2067,13 +2067,13 @@ void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp )
 		{
 			gubFact[ FACT_MIKE_AVAILABLE_TO_ARMY ] = 2; //so it fails all subsequent checks
 			pp->ubProfile = MIKE;
-			gfProfiledEnemyAdded = TRUE;
+			gfProfiledEnemyAdded = true;
 		}
 		else if( gubFact[ FACT_IGGY_AVAILABLE_TO_ARMY ] == 1 && !pp->fOnRoof )
 		{
 			gubFact[ FACT_IGGY_AVAILABLE_TO_ARMY ] = 2; //so it fails all subsequent checks
 			pp->ubProfile = IGGY;
-			gfProfiledEnemyAdded = TRUE;
+			gfProfiledEnemyAdded = true;
 		}
 	}
 }
@@ -2086,7 +2086,7 @@ void TrashAllSoldiers(int const team)
 
 	for (int i = begin; i != end; ++i)
 	{
-		if (Menptr[i].bActive) InternalTacticalRemoveSoldier(Menptr[i], TRUE);
+		if (Menptr[i].bActive) InternalTacticalRemoveSoldier(Menptr[i], true);
 	}
 }
 

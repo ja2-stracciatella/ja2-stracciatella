@@ -254,16 +254,16 @@ static const INT16 gHelpScreenBtnTextRecordNum[HELP_SCREEN_NUMBER_OF_HELP_SCREEN
 };
 
 
-static BOOLEAN gfHelpScreenEntry = TRUE;
-static BOOLEAN gfHelpScreenExit  = FALSE;
+static BOOLEAN gfHelpScreenEntry = true;
+static BOOLEAN gfHelpScreenExit  = false;
 
 
 static SGPVObject* guiHelpScreenBackGround;
 static SGPVSurface* guiHelpScreenTextBufferSurface;
 
-static BOOLEAN gfScrollBoxIsScrolling = FALSE;
+static BOOLEAN gfScrollBoxIsScrolling = false;
 
-static BOOLEAN gfHaveRenderedFirstFrameToSaveBuffer = FALSE;
+static BOOLEAN gfHaveRenderedFirstFrameToSaveBuffer = false;
 
 
 //  must use this cause you have ur cursor over a button when entering the help screen, the button will burn though.
@@ -300,12 +300,12 @@ void InitHelpScreenSystem()
 	gHelpScreen = HELP_SCREEN_STRUCT{};
 
 	//set it up so we can enter the screen
-	gfHelpScreenEntry = TRUE;
-	gfHelpScreenExit = FALSE;
+	gfHelpScreenEntry = true;
+	gfHelpScreenExit = false;
 
 	gHelpScreen.bCurrentHelpScreenActiveSubPage = -1;
 
-	gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen = FALSE;
+	gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen = false;
 }
 
 
@@ -315,7 +315,7 @@ BOOLEAN ShouldTheHelpScreenComeUp(HelpScreenID const ubScreenID, BOOLEAN const f
 	if( fForceHelpScreenToComeUp )
 	{
 		//Set thefact that the user broughtthe help screen up
-		gHelpScreen.fForceHelpScreenToComeUp = TRUE;
+		gHelpScreen.fForceHelpScreenToComeUp = true;
 
 		goto HELP_SCREEN_SHOULD_COME_UP;
 	}
@@ -323,7 +323,7 @@ BOOLEAN ShouldTheHelpScreenComeUp(HelpScreenID const ubScreenID, BOOLEAN const f
 	//if we are already in the help system, return true
 	if( gHelpScreen.uiFlags & HELP_SCREEN_ACTIVE )
 	{
-		return( TRUE );
+		return true;
 	}
 
 	//has the player been in the screen before
@@ -335,7 +335,7 @@ BOOLEAN ShouldTheHelpScreenComeUp(HelpScreenID const ubScreenID, BOOLEAN const f
 	//if we have already been in the screen, and the user DIDNT press 'h', leave
 	if( gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	//should the screen come up, based on the users choice for it automatically coming up
@@ -345,7 +345,7 @@ BOOLEAN ShouldTheHelpScreenComeUp(HelpScreenID const ubScreenID, BOOLEAN const f
 	}
 
 	//the help screen shouldnt come up
-	return( FALSE );
+	return false;
 
 HELP_SCREEN_WAIT_1_FRAME:
 
@@ -356,7 +356,7 @@ HELP_SCREEN_WAIT_1_FRAME:
 
 		UnmarkButtonsDirty( );
 
-		return( FALSE );
+		return false;
 	}
 
 HELP_SCREEN_SHOULD_COME_UP:
@@ -380,7 +380,7 @@ HELP_SCREEN_SHOULD_COME_UP:
 	// reset
 	gHelpScreen.bDelayEnteringHelpScreenBy1FrameCount = 0;
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -399,8 +399,8 @@ void HelpScreenHandler()
 		//setup the help screen
 		EnterHelpScreen();
 
-		gfHelpScreenEntry = FALSE;
-		gfHelpScreenExit = FALSE;
+		gfHelpScreenEntry = false;
+		gfHelpScreenExit = false;
 	}
 
 	RestoreBackgroundRects();
@@ -433,9 +433,9 @@ void HelpScreenHandler()
 	//if we are leaving the help screen
 	if( gfHelpScreenExit )
 	{
-		gfHelpScreenExit = FALSE;
+		gfHelpScreenExit = false;
 
-		gfHelpScreenEntry = TRUE;
+		gfHelpScreenEntry = true;
 
 		//exit mouse regions etc..
 		ExitHelpScreen();
@@ -533,7 +533,7 @@ static void EnterHelpScreen(void)
 	gHelpScreen.ubHelpScreenDirty = HLP_SCRN_DRTY_LVL_REFRESH_ALL;
 
 	//mark it that we have been in since we enter the current screen
-	gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen = TRUE;
+	gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen = true;
 
 	//set the fact that we have been to the screen
 	gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen &= ~( 1 << gHelpScreen.bCurrentHelpScreen );
@@ -551,10 +551,10 @@ static void EnterHelpScreen(void)
 	ChangeHelpScreenSubPage();
 
 	//reset scroll box flag
-	gfScrollBoxIsScrolling = FALSE;
+	gfScrollBoxIsScrolling = false;
 
 	//reset first frame buffer
-	gfHaveRenderedFirstFrameToSaveBuffer = FALSE;
+	gfHaveRenderedFirstFrameToSaveBuffer = false;
 
 	gubRenderHelpScreenTwiceInaRow = 0;
 }
@@ -578,7 +578,7 @@ static void HandleHelpScreen(void)
 		}
 		else
 		{
-			gfScrollBoxIsScrolling = FALSE;
+			gfScrollBoxIsScrolling = false;
 			gHelpScreen.iLastMouseClickY = -1;
 		}
 	}
@@ -624,7 +624,7 @@ static void RenderHelpScreen(void)
 
 	if( !gfHaveRenderedFirstFrameToSaveBuffer )
 	{
-		gfHaveRenderedFirstFrameToSaveBuffer = TRUE;
+		gfHaveRenderedFirstFrameToSaveBuffer = true;
 
 		//blit everything to the save buffer ( cause the save buffer can bleed through )
 		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, gHelpScreen.usScreenLocX, gHelpScreen.usScreenLocY, gHelpScreen.usScreenWidth, gHelpScreen.usScreenHeight);
@@ -655,12 +655,12 @@ static void ExitHelpScreen(void)
 		//Get the current value of the checkbox
 		if (gHelpScreenDontShowHelpAgainToggle->Clicked())
 		{
-			gGameSettings.fHideHelpInAllScreens = TRUE;
+			gGameSettings.fHideHelpInAllScreens = true;
 			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0;
 		}
 		else
 		{
-			gGameSettings.fHideHelpInAllScreens = FALSE;
+			gGameSettings.fHideHelpInAllScreens = false;
 		}
 
 		//remove the mouse region for the '[ ] dont show help...'
@@ -708,7 +708,7 @@ static void ExitHelpScreen(void)
 	DeleteScrollArrowButtons();
 
 	//reset
-	gHelpScreen.fForceHelpScreenToComeUp = FALSE;
+	gHelpScreen.fForceHelpScreenToComeUp = false;
 
 	SaveGameSettings();
 }
@@ -927,17 +927,17 @@ static void HelpScreenSpecialExitCode(void)
 	switch( gHelpScreen.bCurrentHelpScreen )
 	{
 		case HELP_SCREEN_LAPTOP:
-			fReDrawScreenFlag = TRUE;
+			fReDrawScreenFlag = true;
 			break;
 
 		case HELP_SCREEN_MAPSCREEN_NO_ONE_HIRED:
 		case HELP_SCREEN_MAPSCREEN_NOT_IN_ARULCO:
 		case HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY:
 		case HELP_SCREEN_MAPSCREEN:
-			fCharacterInfoPanelDirty = TRUE;
-			fTeamPanelDirty = TRUE;
-			fMapScreenBottomDirty = TRUE;
-			fMapPanelDirty=TRUE;
+			fCharacterInfoPanelDirty = true;
+			fTeamPanelDirty = true;
+			fMapScreenBottomDirty = true;
+			fMapPanelDirty=true;
 			break;
 
 		case HELP_SCREEN_TACTICAL:
@@ -959,7 +959,7 @@ static void HelpScreenSpecialExitCode(void)
 
 static void PrepareToExitHelpScreen(void)
 {
-	gfHelpScreenExit = TRUE;
+	gfHelpScreenExit = true;
 }
 
 
@@ -1246,7 +1246,7 @@ static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, UINT32 reaso
 //set the fact the we have chmaged to a new screen
 void NewScreenSoResetHelpScreen( )
 {
-	gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen = FALSE;
+	gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen = false;
 	gHelpScreen.bDelayEnteringHelpScreenBy1FrameCount = 0;
 }
 
@@ -1913,12 +1913,12 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		// draw the gold highlite line on the top and left
-		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
-		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
+		LineDraw(false, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
+		LineDraw(false, usPosX, iTopPosScrollBox, usPosX, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
 
 		// draw the shadow line on the bottom and right
-		LineDraw(FALSE, usPosX, iTopPosScrollBox+iSizeOfBox-1, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
-		LineDraw(FALSE, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
+		LineDraw(false, usPosX, iTopPosScrollBox+iSizeOfBox-1, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
+		LineDraw(false, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
 	}
 }
 
@@ -1992,10 +1992,10 @@ static void DeleteScrollArrowButtons(void)
 static void CalculateHeightAndPositionForHelpScreenScrollBox(INT32* piHeightOfScrollBox, INT32* piTopOfScrollBox)
 {
 	INT32 iSizeOfBox, iTopPosScrollBox;
-	FLOAT dPercentSizeOfBox = 0;
-	FLOAT dTemp=0;
+	float dPercentSizeOfBox = 0;
+	float dTemp=0;
 
-	dPercentSizeOfBox = HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER / (FLOAT ) gHelpScreen.usTotalNumberOfLinesInBuffer;
+	dPercentSizeOfBox = HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER / (float ) gHelpScreen.usTotalNumberOfLinesInBuffer;
 
 	//if the # is >= 1 then the box is the full size of the scroll area
 	if( dPercentSizeOfBox >= 1.0 )
@@ -2012,7 +2012,7 @@ static void CalculateHeightAndPositionForHelpScreenScrollBox(INT32* piHeightOfSc
 		//
 		//next, calculate the top position of the box
 		//
-		dTemp = ( HLP_SCRN__HEIGHT_OF_SCROLL_AREA / ( FLOAT ) gHelpScreen.usTotalNumberOfLinesInBuffer ) * gHelpScreen.uiLineAtTopOfTextBuffer;
+		dTemp = ( HLP_SCRN__HEIGHT_OF_SCROLL_AREA / ( float ) gHelpScreen.usTotalNumberOfLinesInBuffer ) * gHelpScreen.uiLineAtTopOfTextBuffer;
 
 		iTopPosScrollBox = (INT32)( dTemp +.5 ) + HLP_SCRN__SCROLL_POSY;
 	}
@@ -2029,12 +2029,12 @@ static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		gfScrollBoxIsScrolling = FALSE;
+		gfScrollBoxIsScrolling = false;
 		gHelpScreen.iLastMouseClickY = -1;
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
-		gfScrollBoxIsScrolling = TRUE;
+		gfScrollBoxIsScrolling = true;
 		HelpScreenMouseMoveScrollBox( pRegion->MouseYPos );
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)

@@ -31,8 +31,8 @@
 #include <algorithm>
 #include <iterator>
 
-BOOLEAN fReDrawCharProfile = FALSE;
-BOOLEAN fButtonPendingFlag = FALSE;
+BOOLEAN fReDrawCharProfile = false;
+BOOLEAN fButtonPendingFlag = false;
 
 INT32 iCurrentImpPage = IMP_HOME_PAGE;
 static INT32 iPreviousImpPage = -1;
@@ -53,7 +53,7 @@ INT32 iExplosives = 55;
 INT32 iMechanical = 55;
 
 // gender
-BOOLEAN fCharacterIsMale = TRUE;
+BOOLEAN fCharacterIsMale = true;
 
 // name and nick name
 ST::string pFullName;
@@ -81,7 +81,7 @@ extern int iCurrentVoices;
 extern	INT32 giMaxPersonalityQuizQuestion;
 extern	BOOLEAN fStartOverFlag;
 
-BOOLEAN fLoadingCharacterForPreviousImpProfile = FALSE;
+BOOLEAN fLoadingCharacterForPreviousImpProfile = false;
 
 extern void SetAttributes( void );
 
@@ -132,7 +132,7 @@ void HandleCharProfile(void)
 	{
 		// re draw
 		RenderCharProfile( );
-		fReDrawCharProfile = FALSE;
+		fReDrawCharProfile = false;
 
 	}
 
@@ -152,22 +152,22 @@ void HandleCharProfile(void)
 
 
 			fFastLoadFlag = HasTheCurrentIMPPageBeenVisited( );
-			fVisitedIMPSubPages[ iCurrentImpPage ] = TRUE;
-			fConnectingToSubPage = TRUE;
+			fVisitedIMPSubPages[ iCurrentImpPage ] = true;
+			fConnectingToSubPage = true;
 
 			if( iPreviousImpPage != -1 )
 			{
-				fLoadPendingFlag = TRUE;
+				fLoadPendingFlag = true;
 				MarkButtonsDirty();
 				return;
 			}
 			else
 			{
-				fDoneLoadPending = TRUE;
+				fDoneLoadPending = true;
 			}
 		}
 
-		fVisitedIMPSubPages[ iCurrentImpPage ] = TRUE;
+		fVisitedIMPSubPages[ iCurrentImpPage ] = true;
 
 		if (fButtonPendingFlag)
 		{
@@ -250,8 +250,8 @@ void RenderCharProfile(void)
 
 	if( fButtonPendingFlag )
 	{
-		fPausedReDrawScreenFlag = TRUE;
-		fButtonPendingFlag = FALSE;
+		fPausedReDrawScreenFlag = true;
+		fButtonPendingFlag = false;
 		return;
 	}
 
@@ -312,7 +312,7 @@ void RenderCharProfile(void)
 
 	RenderWWWProgramTitleBar( );
 
-	DisplayProgramBoundingBox( TRUE );
+	DisplayProgramBoundingBox( true );
 }
 
 
@@ -599,7 +599,7 @@ static void CreateIMPButtons(void)
 							LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
 							BtnIMPCancelCallback);
 
-	giIMPButton[0]->SpecifyTextSubOffsets(0, -1, FALSE);
+	giIMPButton[0]->SpecifyTextSubOffsets(0, -1, false);
 
 	// set up generic www cursor
 	giIMPButton[0]->SetCursor(CURSOR_WWW);
@@ -623,19 +623,19 @@ static void BtnIMPCancelCallback(GUI_BUTTON *btn, UINT32 reason)
 		{
 			case IMP_MAIN_PAGE:
 				iCurrentImpPage = IMP_HOME_PAGE;
-				fButtonPendingFlag = TRUE;
+				fButtonPendingFlag = true;
 				iCurrentProfileMode = 0;
-				fFinishedCharGeneration = FALSE;
+				fFinishedCharGeneration = false;
 				ResetCharacterStats( );
 				break;
 
 			case IMP_FINISH:
 				iCurrentImpPage = IMP_MAIN_PAGE;
 				iCurrentProfileMode = 4;
-				fFinishedCharGeneration = FALSE;
-				fButtonPendingFlag = TRUE;
+				fFinishedCharGeneration = false;
+				fButtonPendingFlag = true;
 				//iCurrentProfileMode = 0;
-				//fFinishedCharGeneration = FALSE;
+				//fFinishedCharGeneration = false;
 				//ResetCharacterStats( );
 				break;
 
@@ -643,10 +643,10 @@ static void BtnIMPCancelCallback(GUI_BUTTON *btn, UINT32 reason)
 			case IMP_SKILLTRAITS:
 			case IMP_PERSONALITY_FINISH:
 				giMaxPersonalityQuizQuestion = 0;
-				fStartOverFlag = TRUE;
+				fStartOverFlag = true;
 				iCurrentAnswer = -1;
 				iCurrentImpPage = IMP_PERSONALITY;
-				fButtonPendingFlag = TRUE;
+				fButtonPendingFlag = true;
 				break;
 
 			case IMP_ATTRIBUTE_PAGE:
@@ -668,7 +668,7 @@ void InitIMPSubPageList( void )
 
 	for(iCounter = 0; iCounter < IMP_CONFIRM; iCounter++ )
 	{
-		fVisitedIMPSubPages[ iCounter ] = FALSE ;
+		fVisitedIMPSubPages[ iCounter ] = false ;
 	}
 }
 

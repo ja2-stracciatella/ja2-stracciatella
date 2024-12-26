@@ -117,11 +117,11 @@ INT32 giNPCReferenceCount = 0;
 static INT16 gsExternPanelXPosition;
 static INT16 gsExternPanelYPosition;
 
-static BOOLEAN        gfDialogueQueuePaused = FALSE;
+static BOOLEAN        gfDialogueQueuePaused = false;
 static UINT16         gusSubtitleBoxWidth;
 static UINT16         gusSubtitleBoxHeight;
 static VIDEO_OVERLAY* g_text_box_overlay = NULL;
-BOOLEAN               gfFacePanelActive = FALSE;
+BOOLEAN               gfFacePanelActive = false;
 static UINT32         guiScreenIDUsedWhenUICreated;
 static MOUSE_REGION   gTextBoxMouseRegion;
 static MOUSE_REGION   gFacePopupMouseRegion;
@@ -129,14 +129,14 @@ static MOUSE_REGION   gFacePopupMouseRegion;
 MercPopUpBox* g_dialogue_box;
 
 
-static BOOLEAN fWasPausedDuringDialogue = FALSE;
+static BOOLEAN fWasPausedDuringDialogue = false;
 
-static INT8 gubLogForMeTooBleeds = FALSE;
+static INT8 gubLogForMeTooBleeds = false;
 
 
 // has the text region been created?
-static BOOLEAN fTextBoxMouseRegionCreated  = FALSE;
-static BOOLEAN fExternFaceBoxRegionCreated = FALSE;
+static BOOLEAN fTextBoxMouseRegionCreated  = false;
+static BOOLEAN fExternFaceBoxRegionCreated = false;
 
 
 static SGPVObject* guiCOMPANEL;
@@ -147,10 +147,10 @@ BOOLEAN DialogueActive( )
 {
 	if ( gpCurrentTalkingFace != NULL )
 	{
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -217,7 +217,7 @@ void EmptyDialogueQueue()
 	while(!ghDialogueQ.empty())
 		ghDialogueQ.pop();
 
-	gfWaitingForTriggerTimer = FALSE;
+	gfWaitingForTriggerTimer = false;
 }
 
 
@@ -231,21 +231,21 @@ BOOLEAN	DialogueQueueIsEmptyAndNobodyIsTalking()
 {
 	if ( gpCurrentTalkingFace != NULL )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if ( !DialogueQueueIsEmpty( ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
-	return( TRUE );
+	return true;
 }
 
 void DialogueAdvanceSpeech( )
 {
 	// Shut them up!
-	InternalShutupaYoFace(gpCurrentTalkingFace, FALSE);
+	InternalShutupaYoFace(gpCurrentTalkingFace, false);
 }
 
 
@@ -254,7 +254,7 @@ void StopAnyCurrentlyTalkingSpeech( )
 	// ATE; Make sure guys stop talking....
 	if ( gpCurrentTalkingFace != NULL )
 	{
-		InternalShutupaYoFace(gpCurrentTalkingFace, TRUE);
+		InternalShutupaYoFace(gpCurrentTalkingFace, true);
 	}
 }
 
@@ -265,7 +265,7 @@ static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, FACETYPE&);
 
 void HandleDialogue()
 {
-	static BOOLEAN fOldEngagedInConvFlagOn = FALSE;
+	static BOOLEAN fOldEngagedInConvFlagOn = false;
 
 	// we don't want to just delay action of some events, we want to pause the whole queue, regardless of the event
 	if (gfDialogueQueuePaused) return;
@@ -284,7 +284,7 @@ void HandleDialogue()
 	if (!fOldEngagedInConvFlagOn && gTacticalStatus.uiFlags & ENGAGED_IN_CONV)
 	{
 		// OK, we have just entered...
-		fOldEngagedInConvFlagOn = TRUE;
+		fOldEngagedInConvFlagOn = true;
 
 		PauseGame();
 		LockPauseState(LOCK_PAUSE_ENGAGED_IN_CONV);
@@ -292,7 +292,7 @@ void HandleDialogue()
 	else if (fOldEngagedInConvFlagOn && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 	{
 		// OK, we left...
-		fOldEngagedInConvFlagOn = FALSE;
+		fOldEngagedInConvFlagOn = false;
 
 		UnLockPauseState();
 		UnPauseGame();
@@ -365,20 +365,20 @@ void HandleDialogue()
 
 					if (fExternFaceBoxRegionCreated)
 					{
-						fExternFaceBoxRegionCreated = FALSE;
+						fExternFaceBoxRegionCreated = false;
 						MSYS_RemoveRegion(&gFacePopupMouseRegion);
 					}
 
 					// Set face inactive....
-					f.fCanHandleInactiveNow = TRUE;
+					f.fCanHandleInactiveNow = true;
 					SetAutoFaceInActive(f);
 					HandleTacticalSpeechUI(gubCurrentTalkingID, f);
 
 					// ATE: Force mapscreen to set face active again.....
-					fReDrawFace = TRUE;
+					fReDrawFace = true;
 					DrawFace();
 
-					gfFacePanelActive = FALSE;
+					gfFacePanelActive = false;
 				}
 
 				guiScreenIDUsedWhenUICreated = guiCurrentScreen;
@@ -424,7 +424,7 @@ void HandleDialogue()
 
 		if (fWasPausedDuringDialogue)
 		{
-			fWasPausedDuringDialogue = FALSE;
+			fWasPausedDuringDialogue = false;
 			UnLockPauseState();
 			UnPauseGame();
 		}
@@ -432,7 +432,7 @@ void HandleDialogue()
 
 	if (empty)
 	{
-		if (gfMikeShouldSayHi == TRUE)
+		if (gfMikeShouldSayHi == true)
 		{
 			SOLDIERTYPE* const pMike = FindSoldierByProfileID(MIKE);
 			if (pMike)
@@ -501,8 +501,8 @@ void MakeCharacterDialogueEventSleep(SOLDIERTYPE& s, bool const sleep)
 				if (!MayExecute()) return true;
 
 				soldier_.fMercAsleep     = sleep_; // wake merc up or put them back down?
-				fCharacterInfoPanelDirty = TRUE;
-				fTeamPanelDirty          = TRUE;
+				fCharacterInfoPanelDirty = true;
+				fTeamPanelDirty          = true;
 				return false;
 			}
 
@@ -534,27 +534,27 @@ static bool CanSayQuote(SOLDIERTYPE const& s, UINT16 const quote)
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
 	if (!CanSayQuote(*pSoldier, usQuoteNum))
-		return FALSE;
-	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, true);
-	return TRUE;
+		return false;
+	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, true, true);
+	return true;
 }
 
 
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 {
 	if (!CanSayQuote(*pSoldier, usQuoteNum))
-		return FALSE;
+		return false;
 
 	if ( AreInMeanwhile( ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// OK, let's check if this is the exact one we just played, if so, skip.
 	if (pSoldier->ubProfile == gTacticalStatus.ubLastQuoteProfileNUm &&
 		usQuoteNum == gTacticalStatus.ubLastQuoteSaid)
 	{
-		return( FALSE );
+		return false;
 	}
 
 
@@ -567,13 +567,13 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 		}
 		else
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
 	if (AM_AN_EPC(pSoldier) &&
 		!(gMercProfiles[pSoldier->ubProfile].ubMiscFlags & PROFILE_MISC_FLAG_FORCENPCQUOTE))
-		return( FALSE );
+		return false;
 
 	// Check for logging of me too bleeds...
 	if ( usQuoteNum == QUOTE_STARTING_TO_BLEED )
@@ -590,8 +590,8 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 		}
 	}
 
-	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE);
-	return TRUE;
+	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, true);
+	return true;
 }
 
 // This function takes a profile num, quote num, faceindex and a UI hander ID.
@@ -640,16 +640,16 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 				{
 					PauseGame();
 					LockPauseState(LOCK_PAUSE_MERC_TALKING);
-					fWasPausedDuringDialogue = TRUE;
+					fWasPausedDuringDialogue = true;
 				}
 
 				if (s && s->fMercAsleep) // wake grunt up to say
 				{
-					s->fMercAsleep = FALSE;
+					s->fMercAsleep = false;
 
 					// refresh map screen
-					fCharacterInfoPanelDirty = TRUE;
-					fTeamPanelDirty = TRUE;
+					fCharacterInfoPanelDirty = true;
+					fTeamPanelDirty = true;
 
 					// allow them to go back to sleep
 					MakeCharacterDialogueEventSleep(*s, true);
@@ -698,7 +698,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 				if (!MayExecute()) return true;
 
 				SOLDIERTYPE const& s = soldier_;
-				ExecuteCharacterDialogue(s.ubProfile, quote_, s.face, handler_, TRUE, true);
+				ExecuteCharacterDialogue(s.ubProfile, quote_, s.face, handler_, true, true);
 				return false;
 			}
 
@@ -730,25 +730,25 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 		// Check vital stats
 		if (pSoldier->bLife < CONSCIOUSNESS )
 		{
-			return( FALSE );
+			return false;
 		}
 
 		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
-			return( FALSE );
+			return false;
 
 		if ( (AM_A_ROBOT( pSoldier )) )
 		{
-			return( FALSE );
+			return false;
 		}
 
 		if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
 		{
-			return( FALSE );
+			return false;
 		}
 
 		if( pSoldier->bAssignment == ASSIGNMENT_POW )
 		{
-			return( FALSE );
+			return false;
 		}
 
 		// sleeping guys don't talk.. go to standby to talk
@@ -758,7 +758,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 			if( ( usQuoteNum == QUOTE_NEED_SLEEP ) || ( usQuoteNum == QUOTE_OUT_OF_BREATH ) )
 			{
 				// leave them alone
-				return ( TRUE );
+				return ( true );
 			}
 
 			// may want to wake up any character that has VERY important dialogue to say
@@ -803,7 +803,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 		// If from a soldier, and he does not exist anymore, donot play!
 		if ( fFromSoldier )
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
@@ -815,7 +815,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr,
 		zSoundString, useAlternateDialogueFile))
 	{
-		return( FALSE );
+		return false;
 	}
 
 	SetFaceTalking(*face, zSoundString, gzQuoteStr);
@@ -826,7 +826,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 
 	guiScreenIDUsedWhenUICreated = guiCurrentScreen;
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -904,7 +904,7 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 		if (!success)
 		{
 			zDialogueText = ST::format("I have no text in the EDT file ({}) {}", usQuoteNum, zFilename);
-			return( FALSE );
+			return false;
 		}
 	}
 
@@ -914,7 +914,7 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 		ProfileCurrentlyTalkingInDialoguePanel(profile.getID()),
 		isRussianVersion() || isRussianGoldVersion());
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -924,8 +924,8 @@ static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, const ST::string& zQuo
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
 	{
-		gTalkPanel.fRenderSubTitlesNow = TRUE;
-		gTalkPanel.fSetupSubTitles = TRUE;
+		gTalkPanel.fRenderSubTitlesNow = true;
+		gTalkPanel.fSetupSubTitles = true;
 	}
 
 	// post message to mapscreen message system
@@ -946,8 +946,8 @@ static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, const ST::string& zQ
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
 	{
-		gTalkPanel.fRenderSubTitlesNow = TRUE;
-		gTalkPanel.fSetupSubTitles = TRUE;
+		gTalkPanel.fRenderSubTitlesNow = true;
+		gTalkPanel.fSetupSubTitles = true;
 	}
 
 	// post message to mapscreen message system
@@ -1005,7 +1005,7 @@ void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::s
 	//Define main region
 	MSYS_DefineRegion(&gTextBoxMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback);
 
-	fTextBoxMouseRegionCreated = TRUE;
+	fTextBoxMouseRegionCreated = true;
 }
 
 
@@ -1043,19 +1043,19 @@ static void HandleExternNPCSpeechFace(FACETYPE& f)
 	// ATE: Create mouse region.......
 	if ( !fExternFaceBoxRegionCreated )
 	{
-		fExternFaceBoxRegionCreated = TRUE;
+		fExternFaceBoxRegionCreated = true;
 
 		//Define main region
 		MSYS_DefineRegion(&gFacePopupMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback);
 	}
 
-	gfFacePanelActive = TRUE;
+	gfFacePanelActive = true;
 }
 
 
 static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 {
-	BOOLEAN fDoExternPanel = FALSE;
+	BOOLEAN fDoExternPanel = false;
 
 	// Get soldier pointer, if there is one...
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharacterNum);
@@ -1064,14 +1064,14 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 
 	if ( pSoldier == NULL )
 	{
-		fDoExternPanel = TRUE;
+		fDoExternPanel = true;
 	}
 	else
 	{
 		// If we are not an active face!
 		if ( guiCurrentScreen != MAP_SCREEN )
 		{
-			fDoExternPanel = TRUE;
+			fDoExternPanel = true;
 		}
 	}
 
@@ -1089,7 +1089,7 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 		{
 			// Make the interface panel dirty..
 			// This will dirty the panel next frame...
-			gfRerenderInterfaceFromHelpText = TRUE;
+			gfRerenderInterfaceFromHelpText = true;
 		}
 
 		INT16 const x = 10;
@@ -1104,14 +1104,14 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 		// ATE: Create mouse region.......
 		if ( !fExternFaceBoxRegionCreated )
 		{
-			fExternFaceBoxRegionCreated = TRUE;
+			fExternFaceBoxRegionCreated = true;
 
 			//Define main region
 			MSYS_DefineRegion(&gFacePopupMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST,
 						CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback);
 		}
 
-		gfFacePanelActive = TRUE;
+		gfFacePanelActive = true;
 
 	}
 	else if ( guiCurrentScreen == MAP_SCREEN )
@@ -1120,7 +1120,7 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 		// If so, set current guy active to talk.....
 		if ( pSoldier != NULL )
 		{
-			ContinueDialogue( pSoldier, FALSE );
+			ContinueDialogue( pSoldier, false );
 		}
 	}
 
@@ -1150,13 +1150,13 @@ void HandleDialogueEnd(FACETYPE& f)
 				if ( gfFacePanelActive )
 				{
 					// Set face inactive!
-					f.fCanHandleInactiveNow = TRUE;
+					f.fCanHandleInactiveNow = true;
 					SetAutoFaceInActive(f);
-					gfFacePanelActive = FALSE;
+					gfFacePanelActive = false;
 
 					if ( fExternFaceBoxRegionCreated )
 					{
-						fExternFaceBoxRegionCreated = FALSE;
+						fExternFaceBoxRegionCreated = false;
 						MSYS_RemoveRegion(&(gFacePopupMouseRegion) );
 					}
 				}
@@ -1166,13 +1166,13 @@ void HandleDialogueEnd(FACETYPE& f)
 				break;
 
 			case DIALOGUE_EXTERNAL_NPC_UI:
-				f.fCanHandleInactiveNow = TRUE;
+				f.fCanHandleInactiveNow = true;
 				SetAutoFaceInActive(f);
-				gfFacePanelActive = FALSE;
+				gfFacePanelActive = false;
 
 				if ( fExternFaceBoxRegionCreated )
 				{
-					fExternFaceBoxRegionCreated = FALSE;
+					fExternFaceBoxRegionCreated = false;
 					MSYS_RemoveRegion(&(gFacePopupMouseRegion) );
 				}
 				break;
@@ -1201,7 +1201,7 @@ void HandleDialogueEnd(FACETYPE& f)
 						g_dialogue_box = 0;
 
 						MSYS_RemoveRegion( &gTextBoxMouseRegion );
-						fTextBoxMouseRegionCreated = FALSE;
+						fTextBoxMouseRegionCreated = false;
 					}
 
 				}
@@ -1215,12 +1215,12 @@ void HandleDialogueEnd(FACETYPE& f)
 				if ( gTalkPanel.fTextRegionOn )
 				{
 					MSYS_RemoveRegion(&(gTalkPanel.TextRegion) );
-					gTalkPanel.fTextRegionOn = FALSE;
+					gTalkPanel.fTextRegionOn = false;
 
 				}
 
 				SetRenderFlags( RENDER_FLAG_FULL );
-				gTalkPanel.fRenderSubTitlesNow = FALSE;
+				gTalkPanel.fRenderSubTitlesNow = false;
 
 				// Delete subtitle box
 				RemoveMercPopupBox(g_interface_dialogue_box);
@@ -1277,7 +1277,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 		// What sector are we in, (and is it the same as ours?)
 		if (s->sSector != gWorldSector || s->fBetweenSectors)
 		{
-			ST::string sector_id = GetSectorIDString(s->sSector, FALSE);
+			ST::string sector_id = GetSectorIDString(s->sSector, false);
 			sector_id = ReduceStringLength(sector_id, 64, BLOCKFONT2);
 			FindFontCenterCoordinates(x + 12, y + 68, 73, 9, sector_id, BLOCKFONT2, &sFontX, &sFontY);
 			MPrint(sFontX, sFontY, sector_id);
@@ -1285,7 +1285,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 
 		SetFontDestBuffer(FRAME_BUFFER);
 
-		DrawSoldierUIBars(*s, x + 69, y + 47, FALSE, dst);
+		DrawSoldierUIBars(*s, x + 69, y + 47, false, dst);
 	}
 	else
 	{
@@ -1408,7 +1408,7 @@ void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UI
 			continue;
 		if (s.fMercAsleep)
 			continue;
-		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE))
+		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), true))
 			continue;
 		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && static_cast<INT8>(Random(100)) > EffectiveWisdom(&s))
 			continue;
@@ -1448,7 +1448,7 @@ void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, 
 			continue;
 		if (s.fMercAsleep)
 			continue;
-		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE))
+		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), true))
 			continue;
 
 		// ATE: This is to check gedner for this quote
@@ -1477,47 +1477,47 @@ void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, 
 
 static void TextOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
+	static BOOLEAN fLButtonDown = false;
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
-		fLButtonDown = TRUE;
+		fLButtonDown = true;
 	}
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP && fLButtonDown )
 	{
 		if(  gpCurrentTalkingFace != NULL )
 		{
-			InternalShutupaYoFace(gpCurrentTalkingFace, FALSE);
+			InternalShutupaYoFace(gpCurrentTalkingFace, false);
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		fLButtonDown = FALSE;
+		fLButtonDown = false;
 	}
 }
 
 
 static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
+	static BOOLEAN fLButtonDown = false;
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
-		fLButtonDown = TRUE;
+		fLButtonDown = true;
 	}
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP && fLButtonDown )
 	{
 		if(  gpCurrentTalkingFace != NULL )
 		{
-			InternalShutupaYoFace(gpCurrentTalkingFace, FALSE);
+			InternalShutupaYoFace(gpCurrentTalkingFace, false);
 		}
 
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		fLButtonDown = FALSE;
+		fLButtonDown = false;
 	}
 }
 
@@ -1637,13 +1637,13 @@ void HandleImportantMercQuoteLocked(SOLDIERTYPE* const s, UINT16 const quote)
 // handle pausing of the dialogue queue
 void PauseDialogueQueue( void )
 {
-	gfDialogueQueuePaused = TRUE;
+	gfDialogueQueuePaused = true;
 }
 
 // unpause the dialogue queue
 void UnPauseDialogueQueue( void )
 {
-	gfDialogueQueuePaused = FALSE;
+	gfDialogueQueuePaused = false;
 }
 
 

@@ -95,10 +95,10 @@ BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLe
 
 	b->pSaveArea.reset((uiFlags & BGND_FLAG_SAVERECT) ? new UINT16[uiBufSize] : nullptr);
 	b->pZSaveArea.reset((uiFlags & BGND_FLAG_SAVE_Z) ? new UINT16[uiBufSize] : nullptr);
-	b->fAllocated  = TRUE;
-	b->fFilled     = FALSE;
-	b->fPendingDelete = FALSE;
-	b->fDisabled   = FALSE;
+	b->fAllocated  = true;
+	b->fFilled     = false;
+	b->fPendingDelete = false;
+	b->fDisabled   = false;
 	b->uiFlags     = uiFlags;
 	b->sLeft       = sLeft;
 	b->sTop        = sTop;
@@ -116,7 +116,7 @@ void RegisterBackgroundRectSingleFilled(INT16 const x, INT16 const y, INT16 cons
 	BACKGROUND_SAVE* const b = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, w, h);
 	if (b == NO_BGND_RECT) return;
 
-	b->fFilled = TRUE;
+	b->fFilled = true;
 	InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 }
 
@@ -174,11 +174,11 @@ void EmptyBackgroundRects(void)
 		{
 			b->pSaveArea.reset();
 			b->pZSaveArea.reset();
-			b->fAllocated     = FALSE;
-			b->fPendingDelete = FALSE;
+			b->fAllocated     = false;
+			b->fPendingDelete = false;
 		}
 
-		b->fFilled = FALSE;
+		b->fFilled = false;
 	}
 }
 
@@ -207,7 +207,7 @@ void SaveBackgroundRects(void)
 			InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 		}
 
-		b->fFilled = TRUE;
+		b->fFilled = true;
 	}
 }
 
@@ -216,7 +216,7 @@ void FreeBackgroundRect(BACKGROUND_SAVE*& b)
 {
 	if (b == NULL) return;
 
-	b->fAllocated = FALSE;
+	b->fAllocated = false;
 	b = nullptr;
 }
 
@@ -225,7 +225,7 @@ void FreeBackgroundRectPending(BACKGROUND_SAVE*& b)
 {
 	if(b)
 	{
-		b->fPendingDelete = TRUE;
+		b->fPendingDelete = true;
 		b = nullptr;
 	}
 }
@@ -233,8 +233,8 @@ void FreeBackgroundRectPending(BACKGROUND_SAVE*& b)
 
 static void FreeBackgroundRectNow(BACKGROUND_SAVE* const b)
 {
-	b->fAllocated  = FALSE;
-	b->fFilled     = FALSE;
+	b->fAllocated  = false;
+	b->fFilled     = false;
 	b->pSaveArea.reset();
 	b->pZSaveArea.reset();
 }
@@ -260,7 +260,7 @@ void InvalidateBackgroundRects(void)
 {
 	for (auto & backsave : gBackSaves)
 	{
-		backsave.fFilled = FALSE;
+		backsave.fFilled = false;
 	}
 }
 
@@ -372,7 +372,7 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 	// Check if we are actively scrolling
 	if (v->fActivelySaving)
 	{
-		v->fDeletionPending = TRUE;
+		v->fDeletionPending = true;
 	}
 	else
 	{
@@ -429,7 +429,7 @@ static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 	const BACKGROUND_SAVE* const bgs      = v->background;
 	UINT32                 const buf_size = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
-	v->fActivelySaving = TRUE;
+	v->fActivelySaving = true;
 	v->pSaveArea.reset(new UINT16[buf_size]{});
 }
 
@@ -470,7 +470,7 @@ void DeleteVideoOverlaysArea(void)
 	FOR_EACH_VIDEO_OVERLAY_SAFE(v)
 	{
 		v->pSaveArea.reset();
-		v->fActivelySaving = FALSE;
+		v->fActivelySaving = false;
 		if (v->fDeletionPending) RemoveVideoOverlay(v);
 	}
 }

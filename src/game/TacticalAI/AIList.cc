@@ -207,7 +207,7 @@ bool BuildAIListForTeam(INT8 const team)
 		if (!SatisfiesAIListConditions(s, &n_done, true)) continue;
 
 		INT8 priority = s.bAlertStatus;
-		if (s.bVisible == TRUE) priority += 3;
+		if (s.bVisible == true) priority += 3;
 
 		InsertIntoAIList(&s, priority);
 		++n;

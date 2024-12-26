@@ -10,20 +10,20 @@ extern Observable<UINT8> OnMapSecretFound;
 // Reset the state of all map secrets
 void InitMapSecrets();
 
-// Whether the town was found by the player. Returns TRUE if the town is not hidden (i.e. not defined in map secrets)
+// Whether the town was found by the player. Returns true if the town is not hidden (i.e. not defined in map secrets)
 BOOLEAN IsTownFound(INT8 bTownID);
 
-// Whether the map secret was known to the player. Returns TRUE with a warning, if there is no secret at the sector ID.
+// Whether the map secret was known to the player. Returns true with a warning, if there is no secret at the sector ID.
 BOOLEAN IsSecretFoundAt(UINT8 sectorID);
 
 // Marks the town's base sector as a found secret
-void SetTownAsFound(INT8 bTownID, BOOLEAN fFound = TRUE);
+void SetTownAsFound(INT8 bTownID, BOOLEAN fFound = true);
 
 // set this SAM site as being found by the player
 void SetSAMSiteAsFound(UINT8 uiSamIndex);
 
 // Marks a sector's secret as found
-void SetSectorSecretAsFound(UINT8 ubSectorID, BOOLEAN fFound = TRUE);
+void SetSectorSecretAsFound(UINT8 ubSectorID, BOOLEAN fFound = true);
 
 const StrategicMapSecretModel* GetMapSecretBySectorID(UINT8 ubSectorID);
 

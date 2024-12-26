@@ -7,7 +7,7 @@
 #include <string_theory/string>
 
 extern ST::string GetWeightUnitString( void );
-extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
+extern float GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 
 //Weapon Name and Description size
 #define SIZE_ITEM_NAME        80

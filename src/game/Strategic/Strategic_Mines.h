@@ -59,7 +59,7 @@ struct MINE_STATUS_TYPE
 	BOOLEAN  fRunningOut;								// whether mine is beginning to run out
 	BOOLEAN  fWarnedOfRunningOut;				// whether mine foreman has already told player the mine's running out
 	BOOLEAN  fShutDownIsPermanent;			// means will never produce again in the game (head miner was attacked & died/quit)
-	BOOLEAN  fShutDown;									// TRUE means mine production has been shut off
+	BOOLEAN  fShutDown;									// true means mine production has been shut off
 	BOOLEAN  fPrevInvadedByMonsters;		// whether or not mine has been previously invaded by monsters
 	BOOLEAN  fSpokeToHeadMiner;					// player doesn't receive income from mine without speaking to the head miner first
 	BOOLEAN  fMineHasProducedForPlayer;	// player has earned income from this mine at least once

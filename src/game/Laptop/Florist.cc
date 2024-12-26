@@ -63,7 +63,7 @@ static SGPVObject* guiLargeTitleSymbol;
 static SGPVObject* guiSmallTitleSymbol;
 
 
-static BOOLEAN gfHomePageActive = FALSE; // Specifies whether or not the home page or the sub pages are active
+static BOOLEAN gfHomePageActive = false; // Specifies whether or not the home page or the sub pages are active
 
 //Buttons
 
@@ -107,7 +107,7 @@ void EnterFlorist()
 
 
 	RenderFlorist();
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 
 	//set some variables for the order form
 	InitFloristOrderFormVariables();
@@ -194,12 +194,12 @@ void DisplayFloristDefaults()
 	//if its the first page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
 	{
-		gfHomePageActive = TRUE;
+		gfHomePageActive = true;
 		BltVideoObject(FRAME_BUFFER, guiLargeTitleSymbol, 0, FLORIST_BIG_TITLE_X, FLORIST_BIG_TITLE_Y);
 	}
 	else
 	{
-		gfHomePageActive = FALSE;
+		gfHomePageActive = false;
 		BltVideoObject(FRAME_BUFFER, guiSmallTitleSymbol, 0, FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y);
 	}
 }

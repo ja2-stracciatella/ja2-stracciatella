@@ -71,7 +71,7 @@ void UpdateAirspaceControl()
 	{
 		for (sMap.y = 1; sMap.y < (MAP_WORLD_Y - 1); sMap.y++)
 		{
-			BOOLEAN fEnemyControlsAir = FALSE;
+			BOOLEAN fEnemyControlsAir = false;
 			INT8 bControllingSAM = GCM->getControllingSamSite(sMap.AsByte());
 			if (bControllingSAM >= 0 && (UINT8)bControllingSAM < samList.size())
 			{
@@ -81,7 +81,7 @@ void UpdateAirspaceControl()
 				// if the enemies own the controlling SAM site, and it's in working condition
 				if ((pSAMStrategicMap->fEnemyControlled) && (pSAMStrategicMap->bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK))
 				{
-					fEnemyControlsAir = TRUE;
+					fEnemyControlsAir = true;
 				}
 			}
 

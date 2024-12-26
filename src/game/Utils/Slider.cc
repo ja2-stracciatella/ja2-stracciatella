@@ -369,7 +369,7 @@ static void OptDisplayLine(UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, iColor, l.Buffer<UINT16>());
+	LineDraw(false, usStartX, usStartY, EndX, EndY, iColor, l.Buffer<UINT16>());
 }
 
 

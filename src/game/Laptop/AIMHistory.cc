@@ -59,7 +59,7 @@
 static SGPVObject* guiContentButton;
 
 static UINT8   gubCurPageNum;
-static BOOLEAN gfInToc =  FALSE;
+static BOOLEAN gfInToc =  false;
 static BOOLEAN gfExitingAimHistory;
 // This flag gets set for the TOC and the actual history pages, therefore we need one more
 static BOOLEAN AimHistorySubPagesVisitedFlag[NUM_AIM_HISTORY_PAGES + 1];
@@ -110,7 +110,7 @@ static void InitAimHistoryMenuBar(void);
 
 void EnterAimHistory()
 {
-	gfExitingAimHistory = FALSE;
+	gfExitingAimHistory = false;
 	InitAimDefaults();
 	InitAimHistoryMenuBar();
 
@@ -131,7 +131,7 @@ static void ExitTocMenu();
 
 void ExitAimHistory()
 {
-	gfExitingAimHistory = TRUE;
+	gfExitingAimHistory = true;
 	RemoveAimDefaults();
 	ExitAimHistoryMenuBar();
 
@@ -320,14 +320,14 @@ static void InitTocMenu(void)
 
 		usPosY += AIM_HISTORY_TOC_GAP_Y;
 	}
-	gfInToc = TRUE;
+	gfInToc = true;
 }
 
 
 static void ExitTocMenu()
 {
 	if (!gfInToc) return;
-	gfInToc = FALSE;
+	gfInToc = false;
 	FOR_EACH(MOUSE_REGION, i, gSelectedHistoryTocMenuRegion) MSYS_RemoveRegion(&*i);
 }
 
@@ -429,18 +429,18 @@ static void DisableAimHistoryButton(void)
 
 static void ChangingAimHistorySubPage(UINT8 ubSubPageNumber)
 {
-	fLoadPendingFlag = TRUE;
+	fLoadPendingFlag = true;
 
 	if (!AimHistorySubPagesVisitedFlag[ubSubPageNumber])
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = FALSE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = false;
 
-		AimHistorySubPagesVisitedFlag[ ubSubPageNumber ] = TRUE;
+		AimHistorySubPagesVisitedFlag[ ubSubPageNumber ] = true;
 	}
 	else
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = TRUE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = true;
 	}
 }

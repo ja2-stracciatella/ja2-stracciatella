@@ -78,7 +78,7 @@ bool isRussianGoldVersion();
 bool isChineseVersion();
 
 /** Get major map version. */
-FLOAT getMajorMapVersion();
+float getMajorMapVersion();
 
 /*************************************************************
  *

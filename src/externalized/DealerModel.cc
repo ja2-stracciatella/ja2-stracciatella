@@ -3,7 +3,7 @@
 
 
 DealerModel::DealerModel(ArmsDealerID dealerID_, UINT8 mercID_, ArmsDealerType dealerType_,
-	FLOAT buyingPrice_, FLOAT sellingPrice_, FLOAT repairSpeed_, FLOAT repairCost_,
+	float buyingPrice_, float sellingPrice_, float repairSpeed_, float repairCost_,
 	INT32 initialCash_, std::bitset<ArmsDealerFlag::NUM_FLAGS> flags_)
 	: dealerID(dealerID_), profileID(mercID_), type(dealerType_),
 		buyingPrice(buyingPrice_), sellingPrice(sellingPrice_), repairSpeed(repairSpeed_), repairCost(repairCost_),

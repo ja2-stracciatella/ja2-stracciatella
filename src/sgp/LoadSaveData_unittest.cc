@@ -179,11 +179,11 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 		float f;
 
 		DataReader S{&buf[0]};
-		EXTR_FLOAT(S, f); EXPECT_EQ(f, 0         );
-		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1         );
-		EXTR_FLOAT(S, f); EXPECT_EQ(f, -1        );
-		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1.1234678f);
-		EXTR_FLOAT(S, f); EXPECT_EQ(f, 12345.678f);
+		EXTR_float(S, f); EXPECT_EQ(f, 0         );
+		EXTR_float(S, f); EXPECT_EQ(f, 1         );
+		EXTR_float(S, f); EXPECT_EQ(f, -1        );
+		EXTR_float(S, f); EXPECT_EQ(f, 1.1234678f);
+		EXTR_float(S, f); EXPECT_EQ(f, 12345.678f);
 		ASSERT_EQ(S.getConsumed(), sizeof(float) * 5);
 	}
 
@@ -194,11 +194,11 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 		double d;
 
 		DataReader S{&buf[0]};
-		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 0         );
-		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1         );
-		EXTR_DOUBLE(S, d); EXPECT_EQ(d, -1        );
-		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1.1234678 );
-		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 12345.678 );
+		EXTR_double(S, d); EXPECT_EQ(d, 0         );
+		EXTR_double(S, d); EXPECT_EQ(d, 1         );
+		EXTR_double(S, d); EXPECT_EQ(d, -1        );
+		EXTR_double(S, d); EXPECT_EQ(d, 1.1234678 );
+		EXTR_double(S, d); EXPECT_EQ(d, 12345.678 );
 		ASSERT_EQ(S.getConsumed(), sizeof(double) * 5);
 	}
 }

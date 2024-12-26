@@ -43,7 +43,7 @@ try
 			throw std::runtime_error("Structure file error");
 		}
 
-		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef.get(), FALSE, 0);
+		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef.get(), false, 0);
 	}
 
 	SGP::PODObj<TILE_IMAGERY> pTileSurf;
@@ -113,7 +113,7 @@ void SetRaisedObjectFlag(ST::string const& filename, TILE_IMAGERY* const t)
 	{
 		if (i.compare_i(rootfile) == 0)
 		{
-			t->bRaisedObjectType = TRUE;
+			t->bRaisedObjectType = true;
 			return;
 		}
 	}

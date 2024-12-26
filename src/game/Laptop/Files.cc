@@ -99,16 +99,16 @@ static INT32 iHighLightFileLine;
 static FilesUnit* pFilesListHead = NULL;
 
 // are we in files mode
-static BOOLEAN fInFilesMode=FALSE;
-static BOOLEAN fOnLastFilesPageFlag = FALSE;
+static BOOLEAN fInFilesMode=false;
+static BOOLEAN fOnLastFilesPageFlag = false;
 
 
 //. did we enter due to new file icon?
-BOOLEAN fEnteredFileViewerFromNewFileIcon = FALSE;
-static BOOLEAN fWaitAFrame = FALSE;
+BOOLEAN fEnteredFileViewerFromNewFileIcon = false;
+static BOOLEAN fWaitAFrame = false;
 
 // are there any new files
-BOOLEAN fNewFilesInFileViewer = FALSE;
+BOOLEAN fNewFilesInFileViewer = false;
 
 // graphics handles
 static SGPVObject* guiTITLE;
@@ -166,7 +166,7 @@ static void AddFilesToPlayersLog(UINT8 ubCode)
 		OpenAndReadFilesFile( );
 
 	// process the actual data
-	ProcessAndEnterAFilesRecord(ubCode, FALSE);
+	ProcessAndEnterAFilesRecord(ubCode, false);
 
 	// set unread flag, if nessacary
 	CheckForUnreadFiles( );
@@ -204,7 +204,7 @@ void EnterFiles(void)
 	LoadFiles( );
 
 	// in files mode now, set the fact
-	fInFilesMode=TRUE;
+	fInFilesMode=true;
 
 	// initialize mouse regions
 	InitializeFilesMouseRegions( );
@@ -225,7 +225,7 @@ void EnterFiles(void)
 	if (fEnteredFileViewerFromNewFileIcon)
 	{
 		OpenFirstUnreadFile( );
-		fEnteredFileViewerFromNewFileIcon = FALSE;
+		fEnteredFileViewerFromNewFileIcon = false;
 	}
 }
 
@@ -247,7 +247,7 @@ void ExitFiles(void)
 	// delete buttons
 	DeleteButtonsForFilesPage( );
 
-	fInFilesMode = FALSE;
+	fInFilesMode = false;
 
 	// remove files
 	RemoveFiles( );
@@ -499,7 +499,7 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 			pFilesList = pFilesList->Next;
 			iCounter++;
 		}
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -510,7 +510,7 @@ static void HandleSpecialTerroristFile(INT32 file_idx);
 
 static void DisplayFormattedText(void)
 {
-	fWaitAFrame = FALSE;
+	fWaitAFrame = false;
 
 	UINT16 const white = Get16BPPColor(FROMRGB(255, 255, 255));
 	INT32  const x     = FILE_VIEWER_X;
@@ -533,7 +533,7 @@ static void DisplayFormattedText(void)
 		return;
 	}
 
-	fu->fRead = TRUE;
+	fu->fRead = true;
 
 	switch (fu->ubCode)
 	{
@@ -755,8 +755,8 @@ static void LoadPreviousPage()
 	if (giFilesPage == 0) return;
 
 	--giFilesPage;
-	fWaitAFrame       = TRUE;
-	fReDrawScreenFlag = TRUE;
+	fWaitAFrame       = true;
+	fReDrawScreenFlag = true;
 	MarkButtonsDirty();
 }
 
@@ -767,8 +767,8 @@ static void LoadNextPage()
 	if (fOnLastFilesPageFlag) return;
 
 	++giFilesPage;
-	fWaitAFrame       = TRUE;
-	fReDrawScreenFlag = TRUE;
+	fWaitAFrame       = true;
+	fReDrawScreenFlag = true;
 	MarkButtonsDirty();
 }
 
@@ -946,11 +946,11 @@ static void OpenFirstUnreadFile(void)
 static void CheckForUnreadFiles(void)
 {
 	// will check for any unread files and set flag if any
-	BOOLEAN any_unread = FALSE;
+	BOOLEAN any_unread = false;
 	for (FilesUnit const* i = pFilesListHead; i; i = i->Next)
 	{
 		if (i->fRead) continue;
-		any_unread = TRUE;
+		any_unread = true;
 		break;
 	}
 

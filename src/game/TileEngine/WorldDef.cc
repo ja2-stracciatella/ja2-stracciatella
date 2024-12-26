@@ -130,10 +130,10 @@ bool FloorAtGridNo(UINT32 const map_idx)
 BOOLEAN GridNoIndoors( UINT32 iMapIndex )
 {
 	if( gfBasement || gfCaves )
-		return TRUE;
+		return true;
 	if( FloorAtGridNo( iMapIndex ) )
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 
@@ -256,7 +256,7 @@ static void AddTileSurface(ST::string const& filename, UINT32 const type)
 
 	slot = t;
 
-	gbNewTileSurfaceLoaded[type] = TRUE;
+	gbNewTileSurfaceLoaded[type] = true;
 }
 
 void BuildTileShadeTables()
@@ -434,7 +434,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 
 		// now consider all structures
 		pStructure = gpWorldLevelData[usGridNo].pStructureHead;
-		fStructuresOnRoof = FALSE;
+		fStructuresOnRoof = false;
 		do
 		{
 			if (pStructure->sCubeOffset == STRUCTURE_ON_GROUND)
@@ -1102,7 +1102,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 			{
 				if (!(pStructure->fFlags & (STRUCTURE_PASSABLE|STRUCTURE_NORMAL_ROOF|STRUCTURE_PERSON)))
 				{
-					fStructuresOnRoof = TRUE;
+					fStructuresOnRoof = true;
 				}
 			}
 			pStructure = pStructure->pNext;
@@ -1418,8 +1418,8 @@ BOOLEAN SaveWorldToSGPFile(SGPFile* f)
 try
 {
 	// Write JA2 Version ID
-	FLOAT mapVersion = getMajorMapVersion();
-	f->write(&mapVersion, sizeof(FLOAT));
+	float mapVersion = getMajorMapVersion();
+	f->write(&mapVersion, sizeof(float));
 	if (mapVersion >= 4.00)
 	{
 		f->write(&gubMinorMapVersion, sizeof(UINT8));
@@ -1471,7 +1471,7 @@ try
 		// Determine # of land
 		UINT8 n_layers = 0;
 		for (LEVELNODE const* i = e.pLandHead; i; i = i->pNext) ++n_layers;
-		if (!LimitCheck(n_layers, cnt, n_warnings, "Land")) return FALSE;
+		if (!LimitCheck(n_layers, cnt, n_warnings, "Land")) return false;
 
 		// Combine # of land layers with worlddef flags (first 4 bits)
 		ubCombine = (n_layers & 0xf) | ((e.uiFlags & 0xf) << 4);
@@ -1489,7 +1489,7 @@ try
 			if (uiTileType >= FIRSTPOINTERS) continue;
 			++n_objects;
 		}
-		if (!LimitCheck(n_objects, cnt, n_warnings, "Object")) return FALSE;
+		if (!LimitCheck(n_objects, cnt, n_warnings, "Object")) return false;
 
 		// Determine # of structs
 		UINT8 n_structs = 0;
@@ -1499,7 +1499,7 @@ try
 			if (i->uiFlags & LEVELNODE_ITEM) continue;
 			++n_structs;
 		}
-		if (!LimitCheck(n_structs, cnt, n_warnings, "Struct")) return FALSE;
+		if (!LimitCheck(n_structs, cnt, n_warnings, "Struct")) return false;
 
 		ubCombine = (n_objects & 0xf) | ((n_structs & 0xf) << 4);
 		f->write(&ubCombine, sizeof(ubCombine));
@@ -1513,7 +1513,7 @@ try
 			if (i->uiFlags & (LEVELNODE_BUDDYSHADOW  | LEVELNODE_EXITGRID)) continue;
 			++n_shadows;
 		}
-		if (!LimitCheck(n_shadows, cnt, n_warnings, "Shadow")) return FALSE;
+		if (!LimitCheck(n_shadows, cnt, n_warnings, "Shadow")) return false;
 
 		// Determine # of Roofs
 		UINT8 n_roofs = 0;
@@ -1523,7 +1523,7 @@ try
 			if (i->usIndex == SLANTROOFCEILING1) continue;
 			++n_roofs;
 		}
-		if (!LimitCheck(n_roofs, cnt, n_warnings, "Roof")) return FALSE;
+		if (!LimitCheck(n_roofs, cnt, n_warnings, "Roof")) return false;
 
 		ubCombine = (n_shadows & 0xf) | ((n_roofs & 0xf) << 4);
 		f->write(&ubCombine, sizeof(ubCombine));
@@ -1535,7 +1535,7 @@ try
 		{
 			++n_on_roofs;
 		}
-		if (!LimitCheck(n_on_roofs, cnt, n_warnings, "OnRoof")) return FALSE;
+		if (!LimitCheck(n_on_roofs, cnt, n_warnings, "OnRoof")) return false;
 
 		// Write combination of onroof and nothing
 		ubCombine = n_on_roofs & 0xf;
@@ -1684,9 +1684,9 @@ try
 		SaveSchedules(f);
 	}
 
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 BOOLEAN SaveWorldAbsolute(const ST::string &absolutePath)
 try
@@ -1694,7 +1694,7 @@ try
 	AutoSGPFile f(FileMan::openForWriting(absolutePath));
 	return SaveWorldToSGPFile(f);
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 static void OptimizeMapForShadows()
 {
@@ -1753,7 +1753,7 @@ void InitLoadedWorld(void)
 	CompileWorldMovementCosts( );
 
 	// COMPILE WORLD VISIBLIY TILES
-	CalculateWorldWireFrameTiles( TRUE );
+	CalculateWorldWireFrameTiles( true );
 
 	LightSpriteRenderAll();
 
@@ -1813,7 +1813,7 @@ try
 	pSummary->dMajorMapVersion = getMajorMapVersion();
 
 	//skip JA2 Version ID
-	FLOAT	dMajorMapVersion;
+	float	dMajorMapVersion;
 	f->read(&dMajorMapVersion, sizeof(dMajorMapVersion));
 	if (dMajorMapVersion >= 4.00)
 	{
@@ -2051,7 +2051,7 @@ try
 				{
 					if (loop >= 4)
 					{
-						pSummary->fTooManyExitGridDests = TRUE;
+						pSummary->fTooManyExitGridDests = true;
 					}
 					else
 					{
@@ -2093,9 +2093,9 @@ try
 	RenderProgressBar(0, 100);
 
 	WriteSectorSummaryUpdate(filename, ubLevel, pSummary);
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 static void LoadMapLights(HWFILE);
@@ -2130,8 +2130,8 @@ catch (const std::runtime_error& err)
 void LoadWorldFromSGPFile(SGPFile *f)
 {
 	// Reset flags for outdoors/indoors
-	gfBasement = FALSE;
-	gfCaves    = FALSE;
+	gfBasement = false;
+	gfCaves    = false;
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, "Trashing world...");
 	TrashWorld();
@@ -2139,7 +2139,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 	LightReset();
 
 	// Read JA2 Version ID
-	FLOAT dMajorMapVersion;
+	float dMajorMapVersion;
 	f->read(&dMajorMapVersion, sizeof(dMajorMapVersion));
 
 	UINT8 ubMinorMapVersion;
@@ -2418,7 +2418,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 		gubMaxRoomNumber = max_room_no;
 	}
 
-	std::fill(std::begin(gubWorldRoomHidden), std::end(gubWorldRoomHidden), TRUE);
+	std::fill(std::begin(gubWorldRoomHidden), std::end(gubWorldRoomHidden), true);
 
 	SetRelativeStartAndEndPercentage(0, 59, 61, "Loading items...");
 	RenderProgressBar(0, 100);
@@ -2439,8 +2439,8 @@ void LoadWorldFromSGPFile(SGPFile *f)
 	}
 	else
 	{ // We are above ground.
-		gfBasement = FALSE;
-		gfCaves    = FALSE;
+		gfBasement = false;
+		gfCaves    = false;
 		if (!gfEditMode && guiCurrentScreen != MAPUTILITY_SCREEN)
 		{
 			ubAmbientLightLevel = GetTimeOfDayAmbientLightLevel();
@@ -2563,7 +2563,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 
 	RenderProgressBar(0, 80);
 
-	gfWorldLoaded = TRUE;
+	gfWorldLoaded = true;
 
 	// ATE: Not while updating maps!
 	if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();
@@ -2586,7 +2586,7 @@ void NewWorld()
 	}
 
 	InitRoomDatabase();
-	gfWorldLoaded = TRUE;
+	gfWorldLoaded = true;
 }
 
 
@@ -2678,7 +2678,7 @@ void TrashWorld(void)
 	TrashMapEdgepoints();
 	TrashDoorStatusArray();
 
-	gfWorldLoaded = FALSE;
+	gfWorldLoaded = false;
 }
 
 
@@ -3002,9 +3002,9 @@ BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 {
 	CFOR_EACH_SOLDIER(s)
 	{
-		if (s->light == l) return TRUE;
+		if (s->light == l) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 

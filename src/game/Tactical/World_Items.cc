@@ -53,7 +53,7 @@ static INT32 AddBombToWorld(INT32 iItemIndex)
 	iBombIndex = GetFreeWorldBombIndex( );
 
 	//Add the new world item to the table.
-	gWorldBombs[ iBombIndex ].fExists = TRUE;
+	gWorldBombs[ iBombIndex ].fExists = true;
 	gWorldBombs[ iBombIndex ].iItemIndex = iItemIndex;
 
 	return ( iBombIndex );
@@ -68,7 +68,7 @@ static void RemoveBombFromWorldByItemIndex(INT32 iItemIndex)
 	{
 		if (wb.iItemIndex != iItemIndex) continue;
 
-		wb.fExists = FALSE;
+		wb.fExists = false;
 		return;
 	}
 }
@@ -126,7 +126,7 @@ void FindPanicBombsAndTriggers(void)
 			gTacticalStatus.ubPanicTolerance[bPanicIndex]     = o.ubTolerance;
 			if (o.fFlags & OBJECT_ALARM_TRIGGER)
 			{
-				gTacticalStatus.bPanicTriggerIsAlarm[bPanicIndex] = TRUE;
+				gTacticalStatus.bPanicTriggerIsAlarm[bPanicIndex] = true;
 			}
 			if (bPanicIndex + 1 == NUM_PANIC_TRIGGERS) return;
 		}
@@ -175,7 +175,7 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 	WORLDITEM& wi = GetWorldItem(iItemIndex);
 
 	//Add the new world item to the table.
-	wi.fExists                  = TRUE;
+	wi.fExists                  = true;
 	wi.sGridNo                  = sGridNo;
 	wi.ubLevel                  = ubLevel;
 	wi.usFlags                  = usFlags;
@@ -203,7 +203,7 @@ void RemoveItemFromWorld(const INT32 iItemIndex)
 	{
 		RemoveBombFromWorldByItemIndex(iItemIndex);
 	}
-	wi.fExists = FALSE;
+	wi.fExists = false;
 }
 
 
@@ -372,7 +372,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 {
 	// only do this after Carmen has talked to player and terrorists have been placed
-	//if ( CheckFact( FACT_CARMEN_EXPLAINED_DEAL, 0 ) == TRUE )
+	//if ( CheckFact( FACT_CARMEN_EXPLAINED_DEAL, 0 ) == true )
 	{
 		CFOR_EACH_WORLD_ITEM(wi)
 		{

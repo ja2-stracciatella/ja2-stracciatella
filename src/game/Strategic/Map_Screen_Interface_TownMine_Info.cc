@@ -37,7 +37,7 @@
 
 
 // flag to say if we are showing town/mine box at all
-BOOLEAN fShowTownInfo = FALSE;
+BOOLEAN fShowTownInfo = false;
 
 PopUpBox* ghTownMineBox;
 SGPPoint TownMinePosition ={ 300, 150 };
@@ -525,16 +525,16 @@ static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fShowMapInventoryPool = TRUE;
-		fMapPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-		fShowTownInfo = FALSE;
+		fShowMapInventoryPool = true;
+		fMapPanelDirty = true;
+		fMapScreenBottomDirty = true;
+		fShowTownInfo = false;
 
 		//since we are bring up the sector inventory, check to see if the help screen should come up
-		if (ShouldTheHelpScreenComeUp(HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY, FALSE))
+		if (ShouldTheHelpScreenComeUp(HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY, false))
 		{
 			//normally this is handled in the screen handler, we have to set up a little different this time around
-			ShouldTheHelpScreenComeUp(HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY, TRUE);
+			ShouldTheHelpScreenComeUp(HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY, true);
 		}
 	}
 }
@@ -544,9 +544,9 @@ static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fMapPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-		fShowTownInfo = FALSE;
+		fMapPanelDirty = true;
+		fMapScreenBottomDirty = true;
+		fShowTownInfo = false;
 	}
 }
 

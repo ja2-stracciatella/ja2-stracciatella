@@ -24,11 +24,11 @@
 
 INT16   gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
 SOLDIERTYPE* gBoxer[NUM_BOXERS];
-BOOLEAN gfBoxerFought[ NUM_BOXERS ] = { FALSE, FALSE, FALSE };
-BOOLEAN gfLastBoxingMatchWonByPlayer = FALSE;
+BOOLEAN gfBoxerFought[ NUM_BOXERS ] = { false, false, false };
+BOOLEAN gfLastBoxingMatchWonByPlayer = false;
 UINT8   gubBoxingMatchesWon = 0;
 UINT8   gubBoxersRests = 0;
-BOOLEAN gfBoxersResting = FALSE;
+BOOLEAN gfBoxersResting = false;
 
 
 void ExitBoxing(void)
@@ -79,7 +79,7 @@ void ExitBoxing(void)
 	DeleteTalkingMenu();
 	EndAllAITurns();
 
-	if (CheckForEndOfCombatMode(FALSE))
+	if (CheckForEndOfCombatMode(false))
 	{
 		EndTopMessage();
 		SetMusicMode(MUSIC_TACTICAL_NOTHING);
@@ -100,7 +100,7 @@ void EndBoxingMatch( SOLDIERTYPE * pLoser )
 	else
 	{
 		SetBoxingState( WON_ROUND );
-		gfLastBoxingMatchWonByPlayer = TRUE;
+		gfLastBoxingMatchWonByPlayer = true;
 		gubBoxingMatchesWon++;
 	}
 	TriggerNPCRecord( DARREN, 22 );
@@ -232,7 +232,7 @@ static void CountPeopleInBoxingRingAndDoActions(void)
 			}
 			// start match!
 			SetBoxingState( BOXING );
-			gfLastBoxingMatchWonByPlayer = FALSE;
+			gfLastBoxingMatchWonByPlayer = false;
 
 			// give the first turn to a randomly chosen boxer
 			EnterCombatMode( pInRing[ Random( 2 ) ]->bTeam );
@@ -301,7 +301,7 @@ static void PickABoxer()
 			RecalculateOppCntsDueToNoLongerNeutral(boxer);
 			CancelAIAction(boxer);
 			RESETTIMECOUNTER(boxer->AICounter, 0);
-			gfBoxerFought[i] = TRUE;
+			gfBoxerFought[i] = true;
 			// Improve stats based on the # of rests these guys have had
 			boxer->bStrength  = std::min(100, boxer->bStrength  + gubBoxersRests * 5);
 			boxer->bDexterity = std::min(100, boxer->bDexterity + gubBoxersRests * 5);
@@ -358,18 +358,18 @@ BOOLEAN AnotherFightPossible( void )
 
 	if ( ubAvailable == NUM_BOXERS || ubAvailable == 0 )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector && s->bLife > OKLIFE + 5 && !s->bCollapsed)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -414,7 +414,7 @@ void SetBoxingState( INT8 bNewState )
 			{
 				// set one boxer to be set as boxed so that the game will allow another
 				// fight to occur
-				gfBoxerFought[ 0 ] = TRUE;
+				gfBoxerFought[ 0 ] = true;
 			}
 
 		}

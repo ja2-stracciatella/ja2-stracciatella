@@ -37,7 +37,7 @@
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
 
-static BOOLEAN gfCheckForFreeSpaceOnHardDrive = FALSE;
+static BOOLEAN gfCheckForFreeSpaceOnHardDrive = false;
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
@@ -147,7 +147,7 @@ try
 			uint64_t uiSpaceOnDrive = std::min(uiSpaceOnDrivePrivate, uiSpaceOnDriveTemp);
 			if( uiSpaceOnDrive < REQUIRED_FREE_SPACE )
 			{
-				ST::string zSpaceOnDrive = ST::format("{.2f}", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE);
+				ST::string zSpaceOnDrive = ST::format("{.2f}", uiSpaceOnDrive / (float)BYTESINMEGABYTE);
 
 				ST::string zText = st_format_printf(pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, "20");
 
@@ -156,7 +156,7 @@ try
 				else
 					DoMessageBox( MSG_BOX_BASIC_STYLE, zText, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL );
 			}
-			gfCheckForFreeSpaceOnHardDrive = FALSE;
+			gfCheckForFreeSpaceOnHardDrive = false;
 		}
 	}
 
@@ -176,7 +176,7 @@ try
 				case MAP_SCREEN:
 					if( guiPendingScreen != MSG_BOX_SCREEN )
 					{
-						EndMapScreen( FALSE );
+						EndMapScreen( false );
 					}
 					break;
 				case LAPTOP_SCREEN:
@@ -320,13 +320,13 @@ void EndGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 	//If we are in the tactical placement gui, we need this flag set so the interface is updated.
 	if( gfTacticalPlacementGUIActive )
 	{
-		gfTacticalPlacementGUIDirty = TRUE;
-		gfValidLocationsChanged = TRUE;
+		gfTacticalPlacementGUIDirty = true;
+		gfValidLocationsChanged = true;
 	}
 }
 
 
 void NextLoopCheckForEnoughFreeHardDriveSpace()
 {
-	gfCheckForFreeSpaceOnHardDrive = TRUE;
+	gfCheckForFreeSpaceOnHardDrive = true;
 }

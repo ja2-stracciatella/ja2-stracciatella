@@ -21,7 +21,7 @@ INT8 gbDefaultLightType = PRIMETIME_LIGHT;
 
 SGPPaletteEntry	gEditorLightColor;
 
-BOOLEAN gfEditorForceShadeTableRebuild = FALSE;
+BOOLEAN gfEditorForceShadeTableRebuild = false;
 
 void SetupTextInputForMapInfo()
 {
@@ -126,31 +126,31 @@ void UpdateMapInfoFields()
 void ExtractAndUpdateMapInfo()
 {
 	INT32 temp;
-	BOOLEAN fUpdateLight1 = FALSE;
+	BOOLEAN fUpdateLight1 = false;
 	//extract light1 colors
 	temp = std::min(GetNumericStrictValueFromField( 1 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.r)
 	{
-		fUpdateLight1 = TRUE;
+		fUpdateLight1 = true;
 		gEditorLightColor.r = (UINT8)temp;
 	}
 	temp = std::min(GetNumericStrictValueFromField( 2 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.g)
 	{
-		fUpdateLight1 = TRUE;
+		fUpdateLight1 = true;
 		gEditorLightColor.g = (UINT8)temp;
 	}
 	temp = std::min(GetNumericStrictValueFromField( 3 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.b)
 	{
-		fUpdateLight1 = TRUE;
+		fUpdateLight1 = true;
 		gEditorLightColor.b = (UINT8)temp;
 	}
 	if( fUpdateLight1 )
 	{
-		gfEditorForceShadeTableRebuild = TRUE;
+		gfEditorForceShadeTableRebuild = true;
 		LightSetColor(&gEditorLightColor);
-		gfEditorForceShadeTableRebuild = FALSE;
+		gfEditorForceShadeTableRebuild = false;
 	}
 
 	//extract radius
@@ -161,7 +161,7 @@ void ExtractAndUpdateMapInfo()
 	if( temp != -1 && temp != gusLightLevel )
 	{
 		gusLightLevel = (UINT16)temp;
-		gfRenderWorld = TRUE;
+		gfRenderWorld = true;
 		ubAmbientLightLevel = (UINT8)(EDITOR_LIGHT_MAX - gusLightLevel);
 		LightSetBaseLevel( ubAmbientLightLevel );
 		LightSpriteRenderAll();
@@ -194,7 +194,7 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	ST::string str;
 	//exit grid input fields
 	if( iCurrentTaskbar != TASK_MAPINFO )
-		return FALSE;
+		return false;
 	str = gExitGrid.ubGotoSector.AsShortString();
 	SetInputFieldString( 7, str );
 	str = ST::format("{}", gExitGrid.ubGotoSector.z);
@@ -202,7 +202,7 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	str = ST::format("{}", gExitGrid.usGridNo);
 	SetInputFieldString( 9, str );
 	SetActiveField( 0 );
-	return TRUE;
+	return true;
 }
 
 

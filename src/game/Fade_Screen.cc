@@ -14,11 +14,11 @@
 
 
 static ScreenID guiExitScreen;
-BOOLEAN gfFadeInitialized = FALSE;
+BOOLEAN gfFadeInitialized = false;
 INT16   gsFadeLimit;
 UINT32  guiTime;
 UINT32  guiFadeDelay;
-BOOLEAN gfFirstTimeInFade = FALSE;
+BOOLEAN gfFirstTimeInFade = false;
 INT16   gsFadeCount;
 static INT8 gbFadeType;
 INT16   gsFadeRealCount;
@@ -31,22 +31,22 @@ FADE_HOOK gFadeInDoneCallback  = NULL;
 FADE_HOOK gFadeOutDoneCallback = NULL;
 
 
-BOOLEAN gfFadeIn      = FALSE;
-BOOLEAN gfFadeOut     = FALSE;
-BOOLEAN gfFadeOutDone = FALSE;
-BOOLEAN gfFadeInDone  = FALSE;
+BOOLEAN gfFadeIn      = false;
+BOOLEAN gfFadeOut     = false;
+BOOLEAN gfFadeOutDone = false;
+BOOLEAN gfFadeInDone  = false;
 
 
 void FadeInNextFrame( )
 {
-	gfFadeIn = TRUE;
-	gfFadeInDone = FALSE;
+	gfFadeIn = true;
+	gfFadeInDone = false;
 }
 
 void FadeOutNextFrame( )
 {
-	gfFadeOut = TRUE;
-	gfFadeOutDone = FALSE;
+	gfFadeOut = true;
+	gfFadeOutDone = false;
 }
 
 
@@ -59,14 +59,14 @@ BOOLEAN HandleBeginFadeIn(ScreenID const uiScreenExit)
 	{
 		BeginFade( uiScreenExit, 35, FADE_IN_REALFADE, 5 );
 
-		gfFadeIn = FALSE;
+		gfFadeIn = false;
 
-		gfFadeInDone = TRUE;
+		gfFadeInDone = true;
 
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN HandleBeginFadeOut(ScreenID const uiScreenExit)
@@ -75,14 +75,14 @@ BOOLEAN HandleBeginFadeOut(ScreenID const uiScreenExit)
 	{
 		BeginFade( uiScreenExit, 35, FADE_OUT_REALFADE, 5 );
 
-		gfFadeOut = FALSE;
+		gfFadeOut = false;
 
-		gfFadeOutDone = TRUE;
+		gfFadeOutDone = true;
 
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -90,7 +90,7 @@ BOOLEAN HandleFadeOutCallback( )
 {
 	if ( gfFadeOutDone )
 	{
-		gfFadeOutDone = FALSE;
+		gfFadeOutDone = false;
 
 		if ( gFadeOutDoneCallback != NULL )
 		{
@@ -98,11 +98,11 @@ BOOLEAN HandleFadeOutCallback( )
 
 			gFadeOutDoneCallback = NULL;
 
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -110,7 +110,7 @@ BOOLEAN HandleFadeInCallback( )
 {
 	if ( gfFadeInDone )
 	{
-		gfFadeInDone = FALSE;
+		gfFadeInDone = false;
 
 		if ( gFadeInDoneCallback != NULL )
 		{
@@ -119,10 +119,10 @@ BOOLEAN HandleFadeInCallback( )
 
 		gFadeInDoneCallback = NULL;
 
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -135,8 +135,8 @@ static void BeginFade(ScreenID const uiExitScreen, INT8 const bFadeValue, INT8 c
 	//Init some paramters
 	guiExitScreen	= uiExitScreen;
 	guiFadeDelay			= uiDelay;
-	gfFadeIn = FALSE;
-	gfFadeInVideo = TRUE;
+	gfFadeIn = false;
+	gfFadeInVideo = true;
 
 
 	// Calculate step;
@@ -146,7 +146,7 @@ static void BeginFade(ScreenID const uiExitScreen, INT8 const bFadeValue, INT8 c
 			gsFadeRealCount = -1;
 			gsFadeLimit			= 8;
 			gFadeFunction = FadeInFrameBufferRealFade;
-			gfFadeInVideo   = FALSE;
+			gfFadeInVideo   = false;
 
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			FRAME_BUFFER->Fill(Get16BPPColor(FROMRGB(0, 0, 0)));
@@ -156,12 +156,12 @@ static void BeginFade(ScreenID const uiExitScreen, INT8 const bFadeValue, INT8 c
 			gsFadeRealCount = -1;
 			gsFadeLimit			= 10;
 			gFadeFunction = FadeFrameBufferRealFade;
-			gfFadeInVideo   = FALSE;
+			gfFadeInVideo   = false;
 			break;
 	}
 
-	gfFadeInitialized = TRUE;
-	gfFirstTimeInFade = TRUE;
+	gfFadeInitialized = true;
+	gfFirstTimeInFade = true;
 	gsFadeCount				= 0;
 	gbFadeType						= bType;
 
@@ -185,7 +185,7 @@ ScreenID FadeScreenHandle()
 
 	if ( gfFirstTimeInFade )
 	{
-		gfFirstTimeInFade = FALSE;
+		gfFirstTimeInFade = false;
 
 		// Calcuate delay
 		guiTime = GetJA2Clock( );
@@ -223,8 +223,8 @@ ScreenID FadeScreenHandle()
 			}
 
 			//End!
-			gfFadeInitialized = FALSE;
-			gfFadeIn = FALSE;
+			gfFadeInitialized = false;
+			gfFadeIn = false;
 
 			return( guiExitScreen );
 		}

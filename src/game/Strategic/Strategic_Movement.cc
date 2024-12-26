@@ -62,10 +62,10 @@ extern BOOLEAN gubNumAwareBattles;
 extern INT8 SquadMovementGroups[ ];
 extern INT8 gubVehicleMovementGroups[ ];
 
-BOOLEAN gfDelayAutoResolveStart = FALSE;
+BOOLEAN gfDelayAutoResolveStart = false;
 
 
-static BOOLEAN gfRandomizingPatrolGroup = FALSE;
+static BOOLEAN gfRandomizingPatrolGroup = false;
 
 UINT8 gubNumGroupsArrivedSimultaneously = 0;
 
@@ -87,7 +87,7 @@ static const char* const gszTerrain[NUM_TRAVTERRAIN_TYPES] =
 	"EDGEOFWORLD"
 };
 
-BOOLEAN gfUndergroundTacticalTraversal = FALSE;
+BOOLEAN gfUndergroundTacticalTraversal = false;
 
 // remembers which player group is the Continue/Stop prompt about?  No need to save as long as you can't save while prompt ON
 static GROUP* gpGroupPrompting = NULL;
@@ -98,7 +98,7 @@ static UINT32 uniqueIDMask[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 static GROUP* gpInitPrebattleGroup = NULL;
 
 // waiting for input from user
-static BOOLEAN gfWaitingForInput = FALSE;
+static BOOLEAN gfWaitingForInput = false;
 
 
 static UINT8 AddGroupToList(GROUP* pGroup);
@@ -116,11 +116,11 @@ GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap)
 	pNew->pWaypoints = NULL;
 	pNew->ubSector = pNew->ubNext = sMap;
 	pNew->ubOriginalSector = sMap.AsByte();
-	pNew->fPlayer = TRUE;
+	pNew->fPlayer = true;
 	pNew->ubMoveType = ONE_WAY;
 	pNew->ubNextWaypointID = 0;
 	pNew->ubTransportationMask = FOOT;
-	pNew->fVehicle = FALSE;
+	pNew->fVehicle = false;
 	pNew->ubCreatedSectorID = pNew->ubOriginalSector;
 	pNew->ubSectorIDOfLastReassignment = 255;
 
@@ -138,8 +138,8 @@ GROUP* CreateNewVehicleGroupDepartingFromSector(const SGPSector& sMap)
 	pNew->ubOriginalSector = sMap.AsByte();
 	pNew->ubMoveType = ONE_WAY;
 	pNew->ubNextWaypointID = 0;
-	pNew->fVehicle = TRUE;
-	pNew->fPlayer = TRUE;
+	pNew->fVehicle = true;
+	pNew->fPlayer = true;
 	pNew->pPlayerList = NULL;
 	pNew->ubCreatedSectorID = pNew->ubOriginalSector;
 	pNew->ubSectorIDOfLastReassignment = 255;
@@ -242,7 +242,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& s
 	if (!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(pGroup, sMap))
 	{
 		// then there's no need to reverse directions
-		return FALSE;
+		return false;
 	}
 
 	//The new direction is reversed, so we have to go back to the sector we just left.
@@ -292,13 +292,13 @@ BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& s
 		// To handle this situation, RebuildWayPointsForGroupPath() will issue it's own call after it's ready for it.
 		if ( !fBuildingWaypoints )
 		{
-			// never really left.  Must set check for battle TRUE in order for HandleNonCombatGroupArrival() to run!
-			GroupArrivedAtSector(*pGroup, TRUE, TRUE);
+			// never really left.  Must set check for battle true in order for HandleNonCombatGroupArrival() to run!
+			GroupArrivedAtSector(*pGroup, true, true);
 		}
 	}
 
 
-	return TRUE;
+	return true;
 }
 
 
@@ -308,7 +308,7 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, cons
 	UINT8 ubNumUnalignedAxes = 0;
 
 	if( !pGroup->fBetweenSectors )
-		return( FALSE );
+		return false;
 
 
 	// Determine the direction the group is currently traveling in
@@ -332,8 +332,8 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, cons
 	// error checking
 	if( ubNumUnalignedAxes > 1 )
 	{
-		AssertMsg(FALSE, ST::format("Checking a diagonal move for direction change, groupID {}. AM-0", pGroup->ubGroupID));
-		return FALSE;
+		AssertMsg(false, ST::format("Checking a diagonal move for direction change, groupID {}. AM-0", pGroup->ubGroupID));
+		return false;
 	}
 
 	// Compare the dx/dy's.  If they're exactly the same, group is travelling in the same direction as before, so we're not
@@ -341,11 +341,11 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, cons
 	// Note that 90-degree orthogonal changes are considered changing direction, as well as the full 180-degree reversal.
 	// That's because the party must return to the previous sector in each of those cases, too.
 	if (currD == newD)
-		return( FALSE );
+		return false;
 
 
 	// yes, we're between sectors, and we'd be changing direction to go to the given sector
-	return( TRUE );
+	return true;
 }
 
 
@@ -357,17 +357,17 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup);
 BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 {
 	AssertMsg(sMap.IsValid(), ST::format("AddWaypointToPGroup with out of range sector values of {}", sMap));
-	if (!g) return FALSE;
+	if (!g) return false;
 
 	/* At this point, we have the group, and a valid coordinate. Now we must
 	 * determine that this waypoint will be aligned exclusively to either the x or
 	 * y axis of the last waypoint in the list. */
 	UINT8     n_aligned_axes      = 0;
-	bool      reversing_direction = FALSE;
+	bool      reversing_direction = false;
 	WAYPOINT* wp                  = g->pWaypoints;
 	if (!wp)
 	{
-		if (GroupReversingDirectionsBetweenSectors(g, sMap, TRUE))
+		if (GroupReversingDirectionsBetweenSectors(g, sMap, true))
 		{
 			if (g->fPlayer)
 			{ /* Because we reversed, we must add the new current sector back at the
@@ -377,7 +377,7 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 
 			/* Very special case that requiring specific coding. Check out the
 			 * comments at the above function for more information. */
-			reversing_direction = TRUE;
+			reversing_direction = true;
 			// ARM:  Kris - new rulez.  Must still fall through and add a waypoint anyway!!!
 		}
 		else
@@ -402,13 +402,13 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 		if (n_aligned_axes == 0)
 		{
 			SLOGE("Invalid DIAGONAL waypoint being added for groupID {}. AM-0", g->ubGroupID);
-			return FALSE;
+			return false;
 		}
 
 		if (n_aligned_axes >= 2)
 		{
 			SLOGE("Invalid IDENTICAL waypoint being added for groupID {}. AM-0", g->ubGroupID);
-			return FALSE;
+			return false;
 		}
 
 		// Has to be different in exactly 1 axis to be a valid new waypoint
@@ -450,7 +450,7 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -478,7 +478,7 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 	pNew->pWaypoints = NULL;
 	pNew->ubSector = SGPSector(uiSector);
 	pNew->ubOriginalSector = (UINT8)uiSector;
-	pNew->fPlayer = FALSE;
+	pNew->fPlayer = false;
 	pNew->ubMoveType = CIRCULAR;
 	pNew->ubNextWaypointID = 0;
 	pNew->pEnemyGroup->ubNumAdmins = ubNumAdmins;
@@ -486,7 +486,7 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 	pNew->pEnemyGroup->ubNumElites = ubNumElites;
 	pNew->ubGroupSize = (UINT8)(ubNumTroops + ubNumElites);
 	pNew->ubTransportationMask = FOOT;
-	pNew->fVehicle = FALSE;
+	pNew->fVehicle = false;
 	pNew->ubCreatedSectorID = pNew->ubOriginalSector;
 	pNew->ubSectorIDOfLastReassignment = 255;
 
@@ -574,7 +574,7 @@ class CharacterDialogueEventBeginPrebattleInterface : public CharacterDialogueEv
 			if (!MayExecute()) return true;
 
 			SOLDIERTYPE const& s = soldier_;
-			ExecuteCharacterDialogue(s.ubProfile, QUOTE_ENEMY_PRESENCE, s.face, DIALOGUE_TACTICAL_UI, TRUE, false);
+			ExecuteCharacterDialogue(s.ubProfile, QUOTE_ENEMY_PRESENCE, s.face, DIALOGUE_TACTICAL_UI, true, false);
 
 			// Setup face with data!
 			FACETYPE& f = *gpCurrentTalkingFace;
@@ -643,7 +643,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 		{
 			if( pPlayerDialogGroup->uiFlags & GROUPFLAG_JUST_RETREATED_FROM_BATTLE )
 			{
-				gfCantRetreatInPBI = TRUE;
+				gfCantRetreatInPBI = true;
 			}
 
 			SOLDIERTYPE* const chosen = mercs_in_group[Random(ubNumMercs)];
@@ -659,7 +659,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 			LockPauseState(LOCK_PAUSE_PREBATTLE_CURRENT_SQUAD);
 
 			if( !gfTacticalTraversal )
-				fDisableMapInterfaceDueToBattle = TRUE;
+				fDisableMapInterfaceDueToBattle = true;
 		}
 		return;
 	}
@@ -670,7 +670,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	{
 		if( pPlayerDialogGroup->uiFlags & GROUPFLAG_JUST_RETREATED_FROM_BATTLE )
 		{
-			gfCantRetreatInPBI = TRUE;
+			gfCantRetreatInPBI = true;
 		}
 
 		SOLDIERTYPE* const chosen = mercs_in_group[Random(ubNumMercs)];
@@ -680,7 +680,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 		LockPauseState(LOCK_PAUSE_PREBATTLE);
 
 		// disable exit from mapscreen and what not until face done talking
-		fDisableMapInterfaceDueToBattle = TRUE;
+		fDisableMapInterfaceDueToBattle = true;
 	}
 	else
 	{
@@ -702,11 +702,11 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 {
 	GROUP *pPlayerDialogGroup = NULL;
 	SOLDIERTYPE *pSoldier;
-	BOOLEAN fBattlePending = FALSE;
-	BOOLEAN fAliveMerc = FALSE;
-	BOOLEAN fMilitiaPresent = FALSE;
-	BOOLEAN fCombatAbleMerc = FALSE;
-	BOOLEAN fBloodCatAmbush = FALSE;
+	BOOLEAN fBattlePending = false;
+	BOOLEAN fAliveMerc = false;
+	BOOLEAN fMilitiaPresent = false;
+	BOOLEAN fCombatAbleMerc = false;
+	BOOLEAN fBloodCatAmbush = false;
 	SGPSector gSector = pGroup->ubSector;
 	SGPSector gSector0(gSector.x, gSector.y, 0);
 
@@ -718,7 +718,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 			if( gTacticalStatus.fEnemyInSector )
 			{
 				HandleArrivalOfReinforcements( pGroup );
-				return( TRUE );
+				return true;
 			}
 		}
 	}
@@ -754,11 +754,11 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 									!AM_AN_EPC( pSoldier ) &&
 									pSoldier->bLife >= OKLIFE )
 								{
-									fCombatAbleMerc = TRUE;
+									fCombatAbleMerc = true;
 								}
 								if( pSoldier->bLife > 0 )
 								{
-									fAliveMerc = TRUE;
+									fAliveMerc = true;
 								}
 							}
 						}
@@ -782,28 +782,28 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 		if (NumEnemiesInSector(gSector))
 		{
-			fBattlePending = TRUE;
+			fBattlePending = true;
 		}
 
 		if( pGroup->uiFlags & GROUPFLAG_HIGH_POTENTIAL_FOR_AMBUSH && fBattlePending )
 		{ //This group has just arrived in a new sector from an adjacent sector that he retreated from
 			//If this battle is an encounter type battle, then there is a 90% chance that the battle will
 			//become an ambush scenario.
-			gfHighPotentialForAmbush = TRUE;
+			gfHighPotentialForAmbush = true;
 		}
 
 		//If there are bloodcats in this sector, then it internally checks and handles it
 		if( TestForBloodcatAmbush( pGroup ) )
 		{
-			fBloodCatAmbush = TRUE;
-			fBattlePending = TRUE;
+			fBloodCatAmbush = true;
+			fBattlePending = true;
 		}
 
 		if( fBattlePending && (!fBloodCatAmbush || gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE) )
 		{
 			if( PossibleToCoordinateSimultaneousGroupArrivals( pGroup ) )
 			{
-				return FALSE;
+				return false;
 			}
 		}
 	}
@@ -811,18 +811,18 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 	{
 		if (CountAllMilitiaInSector(gSector))
 		{
-			fMilitiaPresent = TRUE;
-			fBattlePending = TRUE;
+			fMilitiaPresent = true;
+			fBattlePending = true;
 		}
 		if( fAliveMerc )
 		{
-			fBattlePending = TRUE;
+			fBattlePending = true;
 		}
 	}
 
 	if( !fAliveMerc && !fMilitiaPresent )
 	{ //empty vehicle, everyone dead, don't care.  Enemies don't care.
-		return FALSE;
+		return false;
 	}
 
 	if( fBattlePending )
@@ -851,20 +851,20 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE || gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
 		{
 			NotifyPlayerOfBloodcatBattle(gSector);
-			return TRUE;
+			return true;
 		}
 
 		if( !fCombatAbleMerc )
 		{ //Prepare for instant autoresolve.
-			gfDelayAutoResolveStart = TRUE;
-			gfUsePersistantPBI = TRUE;
+			gfDelayAutoResolveStart = true;
+			gfUsePersistantPBI = true;
 			if( fMilitiaPresent )
 			{
 				NotifyPlayerOfInvasionByEnemyForces(gSector, TriggerPrebattleInterface);
 			}
 			else
 			{
-				ST::string pSectorStr = GetSectorIDString(gSector, TRUE);
+				ST::string pSectorStr = GetSectorIDString(gSector, true);
 				ST::string str = st_format_printf(gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr);
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 			}
@@ -874,9 +874,9 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		{
 			PrepareForPreBattleInterface( pPlayerDialogGroup, pGroup );
 		}
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1030,7 +1030,7 @@ static void AddCorpsesToBloodcatLair(const SGPSector& sSector)
 	// Setup some values!
 	Corpse.ubBodyType        = REGMALE;
 	Corpse.sHeightAdjustment = 0;
-	Corpse.bVisible          = TRUE;
+	Corpse.bVisible          = true;
 
 	Corpse.HeadPal  = "BROWNHEAD";
 	Corpse.VestPal  = "YELLOWVEST";
@@ -1073,7 +1073,7 @@ static INT16 VehicleFuelRemaining(SOLDIERTYPE const&);
 
 void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN const never_left)
 {
-	gfWaitingForInput = FALSE;
+	gfWaitingForInput = false;
 
 	if (g.fPlayer)
 	{
@@ -1173,9 +1173,9 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 
 	g.uiTraverseTime      = 0;
 	g.setArrivalTime(0);
-	g.fBetweenSectors     = FALSE;
-	fMapPanelDirty        = TRUE;
-	fMapScreenBottomDirty = TRUE;
+	g.fBetweenSectors     = false;
+	fMapPanelDirty        = true;
+	fMapScreenBottomDirty = true;
 
 	bool group_destroyed = false;
 	if (g.fPlayer)
@@ -1232,7 +1232,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 			{
 				SOLDIERTYPE& s = *i->pSoldier;
-				s.fBetweenSectors      = FALSE;
+				s.fBetweenSectors      = false;
 				s.sSector              = cSector;
 				s.ubPrevSectorID       = g.ubPrev.AsByte();
 				s.ubInsertionDirection = insertion_direction;
@@ -1269,12 +1269,12 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 
 			// Update vehicle position
 			SetVehicleSectorValues(v, cSector);
-			v.fBetweenSectors = FALSE;
+			v.fBetweenSectors = false;
 
 			if (!IsHelicopter(v))
 			{
 				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
-				vs.fBetweenSectors          = FALSE;
+				vs.fBetweenSectors          = false;
 				vs.sSector                  = cSector;
 				vs.ubInsertionDirection     = insertion_direction;
 				vs.ubStrategicInsertionCode = strategic_insertion_code;
@@ -1286,7 +1286,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 				CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 				{
 					SOLDIERTYPE& s = *i->pSoldier;
-					s.fBetweenSectors = FALSE;
+					s.fBetweenSectors = false;
 					s.sSector = cSector;
 					s.ubInsertionDirection = insertion_direction;
 					s.ubStrategicInsertionCode = strategic_insertion_code;
@@ -1334,8 +1334,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 
 		// Update character info
-		fTeamPanelDirty          = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fTeamPanelDirty          = true;
+		fCharacterInfoPanelDirty = true;
 	}
 
 	if (!group_destroyed)
@@ -1371,7 +1371,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			}
 		}
 	}
-	gfWaitingForInput = FALSE;
+	gfWaitingForInput = false;
 }
 
 
@@ -1389,7 +1389,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		bool const is_heli_group = g.fVehicle && IsGroupTheHelicopterGroup(g);
 		if (!is_heli_group)
 		{ // Take control of sector
-			SetThisSectorAsPlayerControlled(g.ubSector, FALSE);
+			SetThisSectorAsPlayerControlled(g.ubSector, false);
 		}
 
 		// If this is the last sector along their movement path (no more waypoints)
@@ -1453,7 +1453,7 @@ restart:
 		if (g.ubNext != sSector) continue;
 		if (!g.fBetweenSectors) continue;
 
-		GroupArrivedAtSector(g, FALSE, FALSE);
+		GroupArrivedAtSector(g, false, false);
 		g.uiFlags |= GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY;
 		++gubNumGroupsArrivedSimultaneously;
 		DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
@@ -1516,17 +1516,17 @@ static void PrepareGroupsForSimultaneousArrival()
 	first_group.ubNext         = first_group.ubSector;
 	first_group.ubSector       = first_group.ubPrev;
 	first_group.setArrivalTime(latest_arrival_time);
-	first_group.fBetweenSectors = TRUE;
+	first_group.fBetweenSectors = true;
 
 	if (first_group.fVehicle)
 	{
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(first_group);
-		v.fBetweenSectors = TRUE;
+		v.fBetweenSectors = true;
 
 		if (!IsHelicopter(v))
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
-			vs.fBetweenSectors = TRUE;
+			vs.fBetweenSectors = true;
 		}
 	}
 
@@ -1550,8 +1550,8 @@ static void PlanSimultaneousGroupArrivalCallback(MessageBoxReturnValue);
 static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_group)
 {
 	// If the user has already been asked, then don't ask the question again!
-	if (first_group->uiFlags & (GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED)) return FALSE;
-	if (IsGroupTheHelicopterGroup(*first_group)) return FALSE;
+	if (first_group->uiFlags & (GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED)) return false;
+	if (IsGroupTheHelicopterGroup(*first_group)) return false;
 
 	/* Count the number of groups that are scheduled to arrive in the same sector
 	 * and are currently adjacent to the sector in question. */
@@ -1568,7 +1568,7 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 		++n_nearby_groups;
 	}
 
-	if (n_nearby_groups == 0) return FALSE;
+	if (n_nearby_groups == 0) return false;
 
 	// Postpone the battle until the user answers the dialog.
 	InterruptTime();
@@ -1588,8 +1588,8 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 	ST::string str = st_format_printf(pStr, enemy_type, first_group->ubSector);
 	str += ST::format(" {}", gpStrategicString[STR_COORDINATE]);
 	DoMapMessageBox(MSG_BOX_BASIC_STYLE, str, guiCurrentScreen, MSG_BOX_FLAG_YESNO, PlanSimultaneousGroupArrivalCallback);
-	gfWaitingForInput = TRUE;
-	return TRUE;
+	gfWaitingForInput = true;
+	return true;
 }
 
 
@@ -1692,7 +1692,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	ubSector = pGroup->ubSector.AsByte();
 	if (!pGroup->ubSector.z)
 	{
-		BOOLEAN fCalcRegularTime = TRUE;
+		BOOLEAN fCalcRegularTime = true;
 		if( !pGroup->fPlayer )
 		{ //Determine if the enemy group is "sleeping".  If so, then simply delay their arrival time by the amount of time
 			//they are going to be sleeping for.
@@ -1702,7 +1702,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 				{ //2 in 3 chance of going to sleep.
 					pGroup->uiTraverseTime = GetSectorMvtTimeForGroup( ubSector, ubDirection, pGroup );
 					uiSleepMinutes = 360 + Random( 121 ); //6-8 hours sleep
-					fCalcRegularTime = FALSE;
+					fCalcRegularTime = false;
 				}
 			}
 		}
@@ -1740,7 +1740,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	if ( !pGroup->fBetweenSectors )
 	{
 		// put group between sectors
-		pGroup->fBetweenSectors	= TRUE;
+		pGroup->fBetweenSectors	= true;
 		// and set it's arrival time
 		pGroup->setArrivalTime(GetWorldTotalMin() + pGroup->uiTraverseTime);
 	}
@@ -1760,12 +1760,12 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	{
 		// vehicle, set fact it is between sectors too
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
-		v.fBetweenSectors = TRUE;
+		v.fBetweenSectors = true;
 
 		if (!IsHelicopter(v))
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
-			vs.fBetweenSectors = TRUE;
+			vs.fBetweenSectors = true;
 			RemoveSoldierFromTacticalSector(vs);
 		}
 	}
@@ -1785,7 +1785,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		CFOR_EACH_PLAYER_IN_GROUP(curr, pGroup)
 		{
 			SOLDIERTYPE& s = *curr->pSoldier;
-			s.fBetweenSectors = TRUE;
+			s.fBetweenSectors = true;
 			RemoveSoldierFromTacticalSector(s);
 		}
 		CheckAndHandleUnloadingOfCurrentWorld();
@@ -1817,7 +1817,7 @@ void RemoveGroupWaypoints(GROUP& g)
 	g.pWaypoints       = 0;
 }
 
-static BOOLEAN gfRemovingAllGroups = FALSE;
+static BOOLEAN gfRemovingAllGroups = false;
 
 
 void RemoveGroup(GROUP& g)
@@ -1862,12 +1862,12 @@ void RemoveGroup(GROUP& g)
 
 void RemoveAllGroups()
 {
-	gfRemovingAllGroups = TRUE;
+	gfRemovingAllGroups = true;
 	while( gpGroupList )
 	{
 		RemoveGroup(*gpGroupList);
 	}
-	gfRemovingAllGroups = FALSE;
+	gfRemovingAllGroups = false;
 }
 
 void SetGroupSectorValue(const SGPSector& sector, GROUP& g)
@@ -1877,7 +1877,7 @@ void SetGroupSectorValue(const SGPSector& sector, GROUP& g)
 	// Set sector x and y to passed values
 	g.ubSector        = sector;
 	g.ubNext          = sector;
-	g.fBetweenSectors = FALSE;
+	g.fBetweenSectors = false;
 
 	// Set next sectors same as current
 	g.ubOriginalSector = sector.AsByte();
@@ -1888,7 +1888,7 @@ void SetGroupSectorValue(const SGPSector& sector, GROUP& g)
 	{
 		SOLDIERTYPE& s = *i->pSoldier;
 		s.sSector = sector;
-		s.fBetweenSectors = FALSE;
+		s.fBetweenSectors = false;
 	}
 
 	CheckAndHandleUnloadingOfCurrentWorld();
@@ -1903,7 +1903,7 @@ void SetEnemyGroupSector(GROUP& g, UINT8 const sector_id)
 	if (!gfRandomizingPatrolGroup) RemoveGroupWaypoints(g);
 
 	g.ubSector = g.ubNext = SGPSector(sector_id);
-	g.fBetweenSectors = FALSE;
+	g.fBetweenSectors = false;
 }
 
 
@@ -1913,7 +1913,7 @@ static void SetGroupNextSectorValue(const SGPSector& sector, GROUP& g)
 	RemoveGroupWaypoints(g);
 	// Set sector x and y to passed values
 	g.ubNext          = sector;
-	g.fBetweenSectors = FALSE;
+	g.fBetweenSectors = false;
 	// Set next sectors same as current
 	g.ubOriginalSector = g.ubSector.AsByte();
 }
@@ -2278,7 +2278,7 @@ void HandleArrivalOfReinforcements(GROUP const* const g)
 	}
 	else
 	{
-		gfPendingEnemies = TRUE;
+		gfPendingEnemies = true;
 		ResetMortarsOnTeamCount();
 		AddPossiblePendingEnemiesToBattle();
 	}
@@ -2289,7 +2289,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 {
 	*n_enter               = 0;
 	*n_exit                = 0;
-	*about_to_arrive_enter = FALSE;
+	*about_to_arrive_enter = false;
 
 	GROUP const* const bg         = gpBattleGroup;
 	INT16        const sec_battle = bg ? bg->ubSector.AsByte() : -1;
@@ -2342,7 +2342,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 			if (may_retreat_from_battle ||
 					g.uiArrivalTime - GetWorldTotalMin() <= ABOUT_TO_ARRIVE_DELAY)
 			{
-				*about_to_arrive_enter = TRUE;
+				*about_to_arrive_enter = true;
 			}
 		}
 		else if (retreating_from_battle || (sec_cur == sec_dst && sec_next == sec_src))
@@ -2374,7 +2374,7 @@ void MoveAllGroupsInCurrentSectorToSector(const SGPSector& sector)
 		CFOR_EACH_PLAYER_IN_GROUP(p, g)
 		{
 			p->pSoldier->sSector         = sector;
-			p->pSoldier->fBetweenSectors = FALSE;
+			p->pSoldier->fBetweenSectors = false;
 		}
 	}
 	CheckAndHandleUnloadingOfCurrentWorld();
@@ -2591,7 +2591,7 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 				// Clear the flag; losing a movement command is easier
 				// to fix for the player than a vehicle that is stuck
 				// between sectors.
-				: FALSE;
+				: false;
 
 			delete pg;
 			continue;
@@ -2792,13 +2792,13 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	if (g.uiTraverseTime == 0) g.uiTraverseTime = 5;
 
 	g.setArrivalTime(GetWorldTotalMin() + g.uiTraverseTime);
-	g.fBetweenSectors = TRUE;
+	g.fBetweenSectors = true;
 	g.uiFlags        |= GROUPFLAG_JUST_RETREATED_FROM_BATTLE;
 
 	if (g.fVehicle)
 	{ // Vehicle, set fact it is between sectors too
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(g);
-		v.fBetweenSectors = TRUE;
+		v.fBetweenSectors = true;
 	}
 
 	if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
@@ -2815,7 +2815,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 		{
 			SOLDIERTYPE& s = *i->pSoldier;
-			s.fBetweenSectors = TRUE;
+			s.fBetweenSectors = true;
 			RemoveSoldierFromTacticalSector(s);
 		}
 	}
@@ -2860,7 +2860,7 @@ BOOLEAN GroupAtFinalDestination(const GROUP* const pGroup)
 	WAYPOINT *wp;
 
 	if( pGroup->ubMoveType != ONE_WAY )
-		return FALSE; //Group will continue to patrol, hence never stops.
+		return false; //Group will continue to patrol, hence never stops.
 
 	//Determine if we are at the final waypoint.
 	wp = GetFinalWaypoint( pGroup );
@@ -2869,16 +2869,16 @@ BOOLEAN GroupAtFinalDestination(const GROUP* const pGroup)
 	{ //no waypoints, so the group is at it's destination.  This happens when
 		//an enemy group is created in the destination sector (which is legal for
 		//staging groups which always stop adjacent to their real sector destination)
-		return TRUE;
+		return true;
 	}
 
 	// if we're there
 	if (pGroup->ubSector == wp->sSector)
 	{
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -2962,7 +2962,7 @@ static void ResetMovementForEnemyGroup(GROUP* pGroup)
 void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 {
 	INT32   cnt;
-	BOOLEAN fDoChange = FALSE;
+	BOOLEAN fDoChange = false;
 
 	// ATE: If saved game is < 61, we need to do something better!
 	if( uiSavedGameVersion < 61 )
@@ -2973,11 +2973,11 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 			GROUP* const pGroup = GetGroup(cnt);
 			if( pGroup != NULL && pGroup->fPlayer )
 			{
-				pGroup->fPersistant = TRUE;
+				pGroup->fPersistant = true;
 			}
 		}
 
-		fDoChange = TRUE;
+		fDoChange = true;
 	}
 	else if( uiSavedGameVersion < 63 )
 	{
@@ -2987,7 +2987,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 			GROUP* const pGroup = GetGroup(SquadMovementGroups[cnt]);
 			if ( pGroup != NULL )
 			{
-				pGroup->fPersistant = TRUE;
+				pGroup->fPersistant = true;
 			}
 		}
 
@@ -2996,11 +2996,11 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 			GROUP* const pGroup = GetGroup(gubVehicleMovementGroups[cnt]);
 			if ( pGroup != NULL )
 			{
-				pGroup->fPersistant = TRUE;
+				pGroup->fPersistant = true;
 			}
 		}
 
-		fDoChange = TRUE;
+		fDoChange = true;
 	}
 
 	if ( fDoChange )
@@ -3016,7 +3016,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 
 //Determines if any particular group WILL be moving through a given sector given it's current
 //position in the route and the pGroup->ubMoveType must be ONE_WAY.  If the group is currently
-//IN the sector, or just left the sector, it will return FALSE.
+//IN the sector, or just left the sector, it will return false.
 BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 {
 	Assert( pGroup );
@@ -3035,7 +3035,7 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 
 	if( !wp )
 	{ //This is a floating group!?
-		return FALSE;
+		return false;
 	}
 	while( i-- )
 	{ //Traverse through the waypoint list to the next waypoint ID
@@ -3057,13 +3057,13 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 				SLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {}",
 					   pGroup->ubSector, wp->sSector, ubOrig);
 				pGroup->ubSector = ubOrig;
-				return TRUE;
+				return true;
 			}
 			if (!delta.x && !delta.y) //Can't move to position currently at!
 			{
 				SLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {}", wp->sSector, ubOrig);
 				pGroup->ubSector = ubOrig;
-				return TRUE;
+				return true;
 			}
 			//Clip dx/dy value so that the move is for only one sector.
 			if (delta.x >= 1)
@@ -3088,14 +3088,14 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 			if (pGroup->ubSector == sSector)
 			{
 				pGroup->ubSector = ubOrig;
-				return TRUE;
+				return true;
 			}
 		}
 		//Advance to the next waypoint.
 		wp = wp->next;
 	}
 	pGroup->ubSector = ubOrig;
-	return FALSE;
+	return false;
 }
 
 static INT16 VehicleFuelRemaining(SOLDIERTYPE const& vs)
@@ -3242,13 +3242,13 @@ void RandomizePatrolGroupLocation( GROUP *pGroup )
 
 	//Set up this global var to randomize the arrival time of the group from
 	//1 minute to actual traverse time between the sectors.
-	gfRandomizingPatrolGroup = TRUE;
+	gfRandomizingPatrolGroup = true;
 
 	SetEnemyGroupSector(*pGroup, ubSectorID);
 	InitiateGroupMovementToNextSector( pGroup );
 
 	//Immediately turn off the flag once finished.
-	gfRandomizingPatrolGroup = FALSE;
+	gfRandomizingPatrolGroup = false;
 
 }
 
@@ -3264,12 +3264,12 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 	INT8 bDifficultyMaxCats;
 	INT8 bProgressMaxCats;
 	INT8 bNumMercMaxCats;
-	BOOLEAN fAlreadyAmbushed = FALSE;
+	BOOLEAN fAlreadyAmbushed = false;
 
 	SGPSector gSector = pGroup->ubSector;
 	if (gSector.z)
 	{ //no ambushes underground (no bloodcats either)
-		return FALSE;
+		return false;
 	}
 
 	ubSectorID = gSector.AsByte();
@@ -3330,7 +3330,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 	{
 		if( !gfAutoAmbush && PreChance( 95 ) )
 		{ //already ambushed here.  But 5% chance of getting ambushed again!
-			fAlreadyAmbushed = TRUE;
+			fAlreadyAmbushed = true;
 		}
 	}
 
@@ -3345,12 +3345,12 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 		{
 			gubEnemyEncounterCode = ENTERING_BLOODCAT_LAIR_CODE;
 		}
-		return TRUE;
+		return true;
 	}
 	else
 	{
 		gubEnemyEncounterCode = NO_ENCOUNTER_CODE;
-		return FALSE;
+		return false;
 	}
 }
 
@@ -3361,7 +3361,7 @@ static void NotifyPlayerOfBloodcatBattle(const SGPSector& ubSector)
 	ST::string zTempString;
 	if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
 	{
-		zTempString = GetSectorIDString(ubSector, TRUE);
+		zTempString = GetSectorIDString(ubSector, true);
 		str = st_format_printf(pMapErrorString[ 12 ], zTempString);
 	}
 	else if( gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
@@ -3371,13 +3371,13 @@ static void NotifyPlayerOfBloodcatBattle(const SGPSector& ubSector)
 
 	if( guiCurrentScreen == MAP_SCREEN )
 	{	//Force render mapscreen (need to update the position of the group before the dialog appears.
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 		MapScreenHandle();
 		InvalidateScreen();
 		RefreshScreen();
 	}
 
-	gfUsePersistantPBI = TRUE;
+	gfUsePersistantPBI = true;
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 }
 
@@ -3390,7 +3390,7 @@ void PlaceGroupInSector(GROUP& g, const SGPSector& prev, const SGPSector& next, 
 	SetGroupSectorValue(SGPSector(prev.x, prev.y, next.z), g); // only one user cares about Z this way
 	SetGroupNextSectorValue(next, g);
 	// Call arrive event
-	GroupArrivedAtSector(g, check_for_battle, FALSE);
+	GroupArrivedAtSector(g, check_for_battle, false);
 }
 
 void GROUP::setArrivalTime(UINT32 arrival_time)
@@ -3415,7 +3415,7 @@ void GROUP::setArrivalTime(UINT32 arrival_time)
 		UINT32 const now = GetWorldTotalMin();
 		if (arrival_time > now + this->uiTraverseTime)
 		{
-			AssertMsg(FALSE, ST::format("setArrivalTime: Setting invalid arrival time {} for group {}, WorldTime = {}, TraverseTime = {}", arrival_time, this->ubGroupID, now, this->uiTraverseTime));
+			AssertMsg(false, ST::format("setArrivalTime: Setting invalid arrival time {} for group {}, WorldTime = {}, TraverseTime = {}", arrival_time, this->ubGroupID, now, this->uiTraverseTime));
 			// Fix it if assertions are disabled
 			arrival_time = now + this->uiTraverseTime;
 		}
@@ -3441,7 +3441,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP& g)
 	RemoveGroupWaypoints(g);
 	g.uiTraverseTime  = 0;
 	g.setArrivalTime(0);
-	g.fBetweenSectors = FALSE;
+	g.fBetweenSectors = false;
 	g.ubPrev = g.ubSector = g.ubNext = SGPSector();
 }
 
@@ -3452,7 +3452,7 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP&);
 // look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
 void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 {
-	BOOLEAN fPlayerPrompted = FALSE;
+	BOOLEAN fPlayerPrompted = false;
 
 	Assert(g.fPlayer);
 
@@ -3460,7 +3460,7 @@ void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 	if (fCheckForNPCs && HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(g))
 	{
 		// wait for player to answer/confirm prompt before doing anything else
-		fPlayerPrompted = TRUE;
+		fPlayerPrompted = true;
 	}
 
 	// if we're not prompting the player
@@ -3519,7 +3519,7 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 	gpGroupPrompting = &g;
 
 	// Build string for squad.
-	ST::string sector_name = GetSectorIDString(sector, FALSE);
+	ST::string sector_name = GetSectorIDString(sector, false);
 	ST::string msg = st_format_printf(pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, sector_name);
 
 	MessageBoxFlags const flags =
@@ -3586,7 +3586,7 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 		case MSG_BOX_RETURN_YES:
 		case MSG_BOX_RETURN_OK:
 			// NPCs now checked, continue moving if appropriate
-			PlayerGroupArrivedSafelyInSector(g, FALSE);
+			PlayerGroupArrivedSafelyInSector(g, false);
 			break;
 
 		case MSG_BOX_RETURN_NO:
@@ -3598,8 +3598,8 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 				default:
 						break;
 	}
-	fMapPanelDirty        = TRUE;
-	fMapScreenBottomDirty = TRUE;
+	fMapPanelDirty        = true;
+	fMapScreenBottomDirty = true;
 }
 
 

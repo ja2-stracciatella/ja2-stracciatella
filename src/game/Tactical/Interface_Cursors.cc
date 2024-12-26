@@ -183,7 +183,7 @@ const UICursor gUICursors[NUM_UI_CURSORS] =
 
 	{INVALID_ACTION_UICURSOR,            UICURSOR_FREEFLOWING,                                                                                 CURSOR_INVALID_ACTION,     0               },
 
-	{FLOATING_X_UICURSOR,                UICURSOR_FREEFLOWING,                                                                                 CURSOR_X,                  0               },
+	{floatING_X_UICURSOR,                UICURSOR_FREEFLOWING,                                                                                 CURSOR_X,                  0               },
 
 	{EXCHANGE_PLACES_UICURSOR,           UICURSOR_FREEFLOWING,                                                                                 CURSOR_EXCHANGE_PLACES,    0               },
 	{JUMP_OVER_UICURSOR,                 UICURSOR_FREEFLOWING,                                                                                 CURSOR_JUMP_OVER,          0               },
@@ -196,7 +196,7 @@ const UICursor gUICursors[NUM_UI_CURSORS] =
 static UINT32 guiCurUICursor = NO_UICURSOR;
 UINT16  gusCurMousePos;
 UINT16  gusTargetDropPos;
-BOOLEAN gfTargetDropPos = FALSE;
+BOOLEAN gfTargetDropPos = false;
 
 
 void SetUICursor(UICursorID const uiNewCursor)
@@ -263,11 +263,11 @@ void DrawUICursor()
 			}
 		}
 
-		gfTargetDropPos = FALSE;
+		gfTargetDropPos = false;
 
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_FREEFLOWING && !( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_DONTSHOW2NDLEVEL ) )
 		{
-			gfTargetDropPos  = TRUE;
+			gfTargetDropPos  = true;
 			gusTargetDropPos = gusCurMousePos;
 
 			if ( gsInterfaceLevel == I_ROOF_LEVEL )
@@ -351,7 +351,7 @@ void DrawUICursor()
 				case  MOVE_VEHICLE_UICURSOR:
 
 					// Set position for APS
-					gfUIDisplayActionPointsCenter = FALSE;
+					gfUIDisplayActionPointsCenter = false;
 					gUIDisplayActionPointsOffX = 16;
 					gUIDisplayActionPointsOffY = 14;
 					break;
@@ -360,7 +360,7 @@ void DrawUICursor()
 				case	MOVE_RUN_UICURSOR:
 
 					// Set position for APS
-					gfUIDisplayActionPointsCenter = FALSE;
+					gfUIDisplayActionPointsCenter = false;
 					gUIDisplayActionPointsOffX = 16;
 					gUIDisplayActionPointsOffY = 14;
 					break;
@@ -368,7 +368,7 @@ void DrawUICursor()
 				case	MOVE_SWAT_UICURSOR:
 
 					// Set position for APS
-					gfUIDisplayActionPointsCenter = FALSE;
+					gfUIDisplayActionPointsCenter = false;
 					gUIDisplayActionPointsOffX = 16;
 					gUIDisplayActionPointsOffY = 10;
 					break;
@@ -376,7 +376,7 @@ void DrawUICursor()
 				case	MOVE_PRONE_UICURSOR:
 
 					// Set position for APS
-					gfUIDisplayActionPointsCenter = FALSE;
+					gfUIDisplayActionPointsCenter = false;
 					gUIDisplayActionPointsOffX = 16;
 					gUIDisplayActionPointsOffY = 9;
 					break;
@@ -388,7 +388,7 @@ void DrawUICursor()
 
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_CENTERAPS )
 		{
-			gfUIDisplayActionPointsCenter = TRUE;
+			gfUIDisplayActionPointsCenter = true;
 		}
 	}
 }
@@ -449,7 +449,7 @@ void HideUICursor()
 static void DrawSnappingCursor(void)
 {
 	LEVELNODE *pNewUIElem;
-	static BOOLEAN fShowAP = TRUE;
+	static BOOLEAN fShowAP = true;
 
 	// If we are in draw item mode, do nothing here but call the fuctiuon
 	switch ( guiCurUICursor )
@@ -587,7 +587,7 @@ static void DrawSnappingCursor(void)
 		}
 		else
 		{
-			fShowAP = TRUE;
+			fShowAP = true;
 		}
 
 		if ( gsInterfaceLevel > 0 )
@@ -605,7 +605,7 @@ static void DrawSnappingCursor(void)
 
 		if ( !fShowAP )
 		{
-			gfUIDisplayActionPointsBlack = TRUE;
+			gfUIDisplayActionPointsBlack = true;
 		}
 	}
 }

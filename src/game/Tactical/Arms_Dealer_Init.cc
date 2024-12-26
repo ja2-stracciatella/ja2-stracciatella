@@ -98,10 +98,10 @@ static void InitializeOneArmsDealer(ArmsDealerID const ubArmsDealer)
 	{
 		const auto usItemIndex = item->getItemIndex();
 		//Can the item be sold by the arms dealer
-		if( CanDealerTransactItem( ubArmsDealer, usItemIndex, FALSE ) )
+		if( CanDealerTransactItem( ubArmsDealer, usItemIndex, false ) )
 		{
 			//Setup an initial amount for the items (treat items as new, how many are used isn't known yet)
-			ubNumItems = DetermineInitialInvItems( ubArmsDealer, usItemIndex, GetDealersMaxItemAmount( ubArmsDealer, usItemIndex ), FALSE );
+			ubNumItems = DetermineInitialInvItems( ubArmsDealer, usItemIndex, GetDealersMaxItemAmount( ubArmsDealer, usItemIndex ), false );
 
 			//if there are any initial items
 			if( ubNumItems > 0 )
@@ -282,11 +282,11 @@ static void SimulateArmsDealerCustomer(void)
 				if ( usItemIndex == JAR_ELIXIR )
 				{
 					// only allow selling of standard # of items so those converted from blood given by player will be available
-					ubItemsSold = HowManyItemsAreSold(ubArmsDealer, usItemIndex, (UINT8) std::min(UINT8(3), gArmsDealersInventory[ubArmsDealer][usItemIndex].ubPerfectItems), FALSE);
+					ubItemsSold = HowManyItemsAreSold(ubArmsDealer, usItemIndex, (UINT8) std::min(UINT8(3), gArmsDealersInventory[ubArmsDealer][usItemIndex].ubPerfectItems), false);
 				}
 				else
 				{
-					ubItemsSold = HowManyItemsAreSold( ubArmsDealer, usItemIndex, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems, FALSE);
+					ubItemsSold = HowManyItemsAreSold( ubArmsDealer, usItemIndex, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems, false);
 				}
 				if ( ubItemsSold > 0)
 				{
@@ -304,7 +304,7 @@ static void SimulateArmsDealerCustomer(void)
 					if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
 					{
 						// try selling just this one
-						if (HowManyItemsAreSold( ubArmsDealer, usItemIndex, 1, TRUE) > 0)
+						if (HowManyItemsAreSold( ubArmsDealer, usItemIndex, 1, true) > 0)
 						{
 							//Sold, now remove that particular USED one!
 							RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
@@ -347,7 +347,7 @@ void DailyCheckOnItemQuantities()
 			const auto usItemIndex = item->getItemIndex();
 
 			//if the dealer can sell the item type
-			if( CanDealerTransactItem( ubArmsDealer, usItemIndex, FALSE ) )
+			if( CanDealerTransactItem( ubArmsDealer, usItemIndex, false ) )
 			{
 				//if there are no items on order
 				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubQtyOnOrder == 0 )
@@ -361,7 +361,7 @@ void DailyCheckOnItemQuantities()
 						fPrevElig = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].fPreviouslyEligible;
 
 						//determine if the item can be restocked (assume new, use items aren't checked for until the stuff arrives)
-						if (ItemTransactionOccurs( ubArmsDealer, usItemIndex, DEALER_BUYING, FALSE ))
+						if (ItemTransactionOccurs( ubArmsDealer, usItemIndex, DEALER_BUYING, false ))
 						{
 							// figure out how many items to reorder (items are reordered an entire batch at a time)
 							ubNumItems = HowManyItemsToReorder( ubMaxSupply, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
@@ -659,7 +659,7 @@ static void GuaranteeAtLeastOneItemOfType(ArmsDealerID const ubArmsDealer, UINT3
 			if( GetDealersMaxItemAmount( ubArmsDealer, usItemIndex ) > 0)
 			{
 				// and the stage of the game gives him a chance to have it (assume new)
-				ubChance = ChanceOfItemTransaction( ubArmsDealer, usItemIndex, DEALER_BUYING, FALSE );
+				ubChance = ChanceOfItemTransaction( ubArmsDealer, usItemIndex, DEALER_BUYING, false );
 				if ( ubChance > 0 )
 				{
 					usAvailableItem[ uiNumAvailableItems ] = usItemIndex;
@@ -844,7 +844,7 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 			return( 0 );
 
 		default:
-			AssertMsg(FALSE, ST::format("GetArmsDealerItemTypeFromItemNumber(), invalid class {} for item {}. DF 0.",
+			AssertMsg(false, ST::format("GetArmsDealerItemTypeFromItemNumber(), invalid class {} for item {}. DF 0.",
 						GCM->getItem(usItem)->getItemClass(), usItem));
 			break;
 	}
@@ -858,16 +858,16 @@ BOOLEAN IsMercADealer( UINT8 ubMercID )
 	// Manny is not actually a valid dealer unless a particular event sets that fact
 	if( ( ubMercID == MANNY ) && !CheckFact( FACT_MANNY_IS_BARTENDER, 0 ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	//loop through the list of arms dealers
 	for( auto dealer : GCM->getDealers() )
 	{
 		if( dealer->profileID == ubMercID )
-			return( TRUE );
+			return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -903,15 +903,15 @@ BOOLEAN	DoesDealerDoRepairs(ArmsDealerID const ubArmsDealer)
 
 BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 {
-	BOOLEAN fHaveOnlyUnRepairedItems=FALSE;
+	BOOLEAN fHaveOnlyUnRepairedItems=false;
 	UINT8   ubElement;
 
 	ArmsDealerID const bArmsDealer = GetArmsDealerIDFromMercID( ubProfileID );
-	if (bArmsDealer == ARMS_DEALER_INVALID) return FALSE;
+	if (bArmsDealer == ARMS_DEALER_INVALID) return false;
 
 	//if the dealer is not a repair dealer, return
 	if( !DoesDealerDoRepairs( bArmsDealer ) )
-		return( FALSE );
+		return false;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
 	for (auto item : GCM->getItems()) {
@@ -933,11 +933,11 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 						if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
 						{
 							//A repair item is ready, therefore, return false
-							return( FALSE );
+							return false;
 						}
 						else
 						{
-							fHaveOnlyUnRepairedItems = TRUE;
+							fHaveOnlyUnRepairedItems = true;
 						}
 					}
 				}
@@ -960,7 +960,7 @@ BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usIt
 			if ( fPurchaseFromPlayer )
 			{
 				// this dealer only sells stuff to player, so he can't buy anything from him
-				return( FALSE );
+				return false;
 			}
 			break;
 
@@ -968,7 +968,7 @@ BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usIt
 			if ( !fPurchaseFromPlayer )
 			{
 				// this dealer only buys stuff from player, so he can't sell anything to him
-				return( FALSE );
+				return false;
 			}
 			break;
 
@@ -978,7 +978,7 @@ BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usIt
 				if ( fPurchaseFromPlayer )
 				{
 					// these guys will buy nearly anything from the player, regardless of what they carry for sale!
-					return( CalcValueOfItemToDealer( ubArmsDealer, usItemIndex, FALSE ) > 0 );
+					return( CalcValueOfItemToDealer( ubArmsDealer, usItemIndex, false ) > 0 );
 				}
 				//else selling inventory uses their inventory list
 				break;
@@ -992,8 +992,8 @@ BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usIt
 			return( CanDealerRepairItem( ubArmsDealer, usItemIndex ) );
 
 		default:
-			AssertMsg(FALSE, ST::format("CanDealerTransactItem(), type of dealer {}. AM 0.", GCM->getDealer(ubArmsDealer)->type));
-			return(FALSE);
+			AssertMsg(false, ST::format("CanDealerTransactItem(), type of dealer {}. AM 0.", GCM->getDealer(ubArmsDealer)->type));
+			return(false);
 	}
 
 	return( DoesItemAppearInDealerInventoryList( ubArmsDealer, usItemIndex, fPurchaseFromPlayer ) );
@@ -1009,7 +1009,7 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 	// can't repair anything that's not repairable!
 	if ( !( uiFlags & ITEM_REPAIRABLE ) )
 	{
-		return(FALSE);
+		return(false);
 	}
 
 	auto dealer = GCM->getDealer(ubArmsDealer);
@@ -1028,11 +1028,11 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 	}
 	else
 	{
-		AssertMsg(FALSE, ST::format("CanDealerRepairItem(), Arms Dealer {} is not a recognized repairman!.  AM 1.", ubArmsDealer));
+		AssertMsg(false, ST::format("CanDealerRepairItem(), Arms Dealer {} is not a recognized repairman!.  AM 1.", ubArmsDealer));
 	}
 
 	// can't repair this...
-	return(FALSE);
+	return(false);
 }
 
 
@@ -1141,10 +1141,10 @@ static BOOLEAN ItemContainsLiquid(UINT16 usItemIndex)
 		case JAR_QUEEN_CREATURE_BLOOD:
 		case JAR_ELIXIR:
 		case GAS_CAN:
-			return( TRUE );
+			return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1443,7 +1443,7 @@ static void AddItemToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 		do
 		{
 			// search for an already allocated, empty element in the special item array
-			fFoundOne = FALSE;
+			fFoundOne = false;
 			Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
 			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 			{
@@ -1451,7 +1451,7 @@ static void AddItemToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 				{
 					//Great!  Store it here, then.
 					AddSpecialItemToArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement, pSpclItemInfo );
-					fFoundOne = TRUE;
+					fFoundOne = true;
 					break;
 				}
 			}
@@ -1494,7 +1494,7 @@ static void AddSpecialItemToArmsDealerInventoryAtElement(ArmsDealerID const ubAr
 
 
 	//Store the special values in that element, and make it active
-	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive = TRUE;
+	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive = true;
 
 	gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].Info = *pSpclItemInfo;
 
@@ -1592,7 +1592,7 @@ void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID const ubArmsDealer, UI
 			ubWhichOne -= gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems;
 			ubSkippedAlready = 0;
 
-			fFoundIt = FALSE;
+			fFoundIt = false;
 
 			Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
 			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
@@ -1606,7 +1606,7 @@ void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID const ubArmsDealer, UI
 					{
 						// then this one is it!  That's the one we're gonna remove
 						RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
-						fFoundIt = TRUE;
+						fFoundIt = true;
 						break;
 					}
 					else
@@ -1656,12 +1656,12 @@ BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 	if (bArmsDealer == ARMS_DEALER_INVALID)
 	{
 		// not a dealer, that's ok, we get called for every dude that croaks.
-		return( FALSE );
+		return false;
 	}
 
 
 	// mark the dealer as being out of business!
-	gArmsDealerStatus[ bArmsDealer ].fOutOfBusiness = TRUE;
+	gArmsDealerStatus[ bArmsDealer ].fOutOfBusiness = true;
 
 	//loop through all the items in the dealer's inventory, and drop them all where the dealer was set up.
 
@@ -1738,7 +1738,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 	}
 
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -2055,7 +2055,7 @@ static UINT32 CalculateSimpleItemRepairCost(ArmsDealerID const ubArmsDealer, UIN
 	}
 
 	// calculate repair cost, the more broken it is the more it costs, and the difficulty of repair it is also a factor
-	uiRepairCost = (UINT32)( uiItemCost * ( sRepairCostAdj * (100 - bItemCondition) / ((FLOAT)100 * 100) ));
+	uiRepairCost = (UINT32)( uiItemCost * ( sRepairCostAdj * (100 - bItemCondition) / ((float)100 * 100) ));
 
 	/*
 	//if the price is not diviseble by 10, make it so
@@ -2154,13 +2154,13 @@ static BOOLEAN IsItemInfoSpecial(SPECIAL_ITEM_INFO* pSpclItemInfo)
 	// being damaged / in repairs makes an item special
 	if ( pSpclItemInfo->bItemCondition != 100 )
 	{
-		return(TRUE);
+		return(true);
 	}
 
 	// being imprinted makes an item special
 	if (pSpclItemInfo->ubImprintID != NO_PROFILE)
 	{
-		return(TRUE);
+		return(true);
 	}
 
 	// having an attachment makes an item special
@@ -2168,12 +2168,12 @@ static BOOLEAN IsItemInfoSpecial(SPECIAL_ITEM_INFO* pSpclItemInfo)
 	{
 		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
 		{
-			return(TRUE);
+			return(true);
 		}
 	}
 
 	// otherwise, it's just a "perfect" item, nothing special about it
-	return(FALSE);
+	return(false);
 }
 
 
@@ -2223,7 +2223,7 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 
 		// other dealers don't use this system
 		default:
-			if ( DoesItemAppearInDealerInventoryList( ubArmsDealer, usItemIndex, TRUE ) )
+			if ( DoesItemAppearInDealerInventoryList( ubArmsDealer, usItemIndex, true ) )
 			{
 				return( usBasePrice );
 			}
@@ -2238,8 +2238,8 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 
 	// Micky & Gabby specialize in creature parts & such, the others don't buy these at all (exception: jars)
 	if ((usItemIndex != JAR) &&
-		(DoesItemAppearInDealerInventoryList(ARMS_DEALER_MICKY, usItemIndex, TRUE) ||
-		DoesItemAppearInDealerInventoryList(ARMS_DEALER_GABBY, usItemIndex, TRUE)))
+		(DoesItemAppearInDealerInventoryList(ARMS_DEALER_MICKY, usItemIndex, true) ||
+		DoesItemAppearInDealerInventoryList(ARMS_DEALER_GABBY, usItemIndex, true)))
 	{
 		return( 0 );
 	}
@@ -2295,7 +2295,7 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 
 
 	// Tony specializes in guns, weapons, and ammo, so make others pay much less for that kind of stuff
-	if ( DoesItemAppearInDealerInventoryList( ARMS_DEALER_TONY, usItemIndex, TRUE ) )
+	if ( DoesItemAppearInDealerInventoryList( ARMS_DEALER_TONY, usItemIndex, true ) )
 	{
 		// others pay only 1/2 of that value!
 		usValueToThisDealer /= 2;
@@ -2319,16 +2319,16 @@ BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )
 
 	if ( GCM->getItem(usItemIndex)->getItemClass() == IC_GUN )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	/*
 	if ( ItemSlotLimit( usItemIndex, BIGPOCK1POS ) > 1 )
 	{
-		return( TRUE );
+		return true;
 	}*/
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -2344,11 +2344,11 @@ BOOLEAN ItemIsARocketRifle(INT16 sItemIndex)
 {
 	if ( ( sItemIndex == ROCKET_RIFLE ) || ( sItemIndex == AUTO_ROCKET_RIFLE ) )
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -2358,17 +2358,17 @@ static BOOLEAN GetArmsDealerShopHours(ArmsDealerID const ubArmsDealer, UINT32* c
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(GCM->getDealer(ubArmsDealer)->profileID);
 	if ( pSoldier == NULL )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if (!ExtractScheduleDoorLockAndUnlockInfo(pSoldier, puiOpeningTime, puiClosingTime))
 	{
-		return( FALSE );
+		return false;
 	}
 
 	Assert( *puiOpeningTime < *puiClosingTime );
 
-	return( TRUE );
+	return true;
 }
 
 

@@ -91,9 +91,9 @@ void UnLoadCarPortraits(void)
 
 static void DrawBar(UINT32 const XPos, UINT32 const YPos, UINT32 const Height, UINT16 const Color, UINT16 const ShadowColor, UINT16* const DestBuf)
 {
-	LineDraw(TRUE, XPos + 0, YPos, XPos + 0, YPos - Height, ShadowColor, DestBuf);
-	LineDraw(TRUE, XPos + 1, YPos, XPos + 1, YPos - Height, Color,       DestBuf);
-	LineDraw(TRUE, XPos + 2, YPos, XPos + 2, YPos - Height, ShadowColor, DestBuf);
+	LineDraw(true, XPos + 0, YPos, XPos + 0, YPos - Height, ShadowColor, DestBuf);
+	LineDraw(true, XPos + 1, YPos, XPos + 1, YPos - Height, Color,       DestBuf);
+	LineDraw(true, XPos + 2, YPos, XPos + 2, YPos - Height, ShadowColor, DestBuf);
 }
 
 
@@ -237,8 +237,8 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 
 		--max_h; // LineDraw() includes the end point
 		const INT h = max_h * value / 100;
-		LineDraw(TRUE, x,     y, x,     y - h, sColor1, pDestBuf);
-		LineDraw(TRUE, x + 1, y, x + 1, y - h, sColor2, pDestBuf);
+		LineDraw(true, x,     y, x,     y - h, sColor1, pDestBuf);
+		LineDraw(true, x + 1, y, x + 1, y - h, sColor2, pDestBuf);
 	}
 
 	if (uiBuffer == guiSAVEBUFFER)

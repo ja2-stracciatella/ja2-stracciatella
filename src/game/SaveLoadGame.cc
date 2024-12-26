@@ -299,13 +299,13 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 			break;
 
 		case MAP_SCREEN:
-			fMapPanelDirty           = TRUE;
-			fTeamPanelDirty          = TRUE;
-			fCharacterInfoPanelDirty = TRUE;
+			fMapPanelDirty           = true;
+			fTeamPanelDirty          = true;
+			fCharacterInfoPanelDirty = true;
 			break;
 
 		case SAVE_LOAD_SCREEN:
-			gfRedrawSaveLoadScreen = TRUE;
+			gfRedrawSaveLoadScreen = true;
 			break;
 		default:
 			break;
@@ -346,8 +346,8 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		 * saving the sector info struct because the
 		 * NewWayOfSavingEnemyAndCivliansToTempFile() will RESET the civ or enemy
 		 * flag AFTER they have been saved. */
-		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, TRUE,  TRUE);
-		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, FALSE, TRUE);
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, true,  true);
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, false, true);
 
 		// Setup the save game header
 		header.uiSavedGameVersion = SAVE_GAME_VERSION;
@@ -366,12 +366,12 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 
 		if (gfWorldLoaded)
 		{
-			header.fWorldLoaded   = TRUE;
+			header.fWorldLoaded   = true;
 			header.ubLoadScreenID = GetLoadScreenID(gWorldSector);
 		}
 		else
 		{
-			header.fWorldLoaded   = FALSE;
+			header.fWorldLoaded   = false;
 			header.ubLoadScreenID = 0;
 		}
 
@@ -506,7 +506,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		NextLoopCheckForEnoughFreeHardDriveSpace();
 
 		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
-		return FALSE;
+		return false;
 	}
 
 	// If we succesfully saved the game, mark this entry as the last saved game file
@@ -533,7 +533,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 	UnPauseAfterSaveGame();
 
 	NextLoopCheckForEnoughFreeHardDriveSpace();
-	return TRUE;
+	return true;
 }
 
 
@@ -664,7 +664,7 @@ void LoadSavedGame(const ST::string &saveName)
 	ShutdownNPCQuotes();
 
 	//Used in mapescreen to disable the annoying 'swoosh' transitions
-	gfDontStartTransitionFromLaptop = TRUE;
+	gfDontStartTransitionFromLaptop = true;
 
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;
@@ -722,7 +722,7 @@ void LoadSavedGame(const ST::string &saveName)
 	if (SaveGameHeader.fAlternateSector)
 	{
 		SetSectorFlag(gWorldSector, SF_USE_ALTERNATE_MAP);
-		gfUseAlternateMap = TRUE;
+		gfUseAlternateMap = true;
 	}
 
 	//if the world was loaded when saved, reload it, otherwise dont
@@ -963,7 +963,7 @@ void LoadSavedGame(const ST::string &saveName)
 	BAR(1, "Contract renweal sequence stuff...");
 	if (version < 62)
 	{ // The older games had a bug where this flag was never being set
-		gfResetAllPlayerKnowsEnemiesFlags = TRUE;
+		gfResetAllPlayerKnowsEnemiesFlags = true;
 	}
 
 	if (version >= 67)
@@ -1160,7 +1160,7 @@ void LoadSavedGame(const ST::string &saveName)
 		CalcAproximateAmountPaidToSpeck();
 	}
 
-	gfLoadedGame = TRUE;
+	gfLoadedGame = true;
 
 	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, 100, "Done!");
 	RenderProgressBar(0, 100);
@@ -1183,7 +1183,7 @@ void LoadSavedGame(const ST::string &saveName)
 
 	/* The above function LightSetBaseLevel adjusts ALL the level node light
 	 * values including the merc node, we must reset the values */
-	HandlePlayerTogglingLightEffects(FALSE);
+	HandlePlayerTogglingLightEffects(false);
 
 	// on loading a gamestate or getting ambushed from the StrategicMap
 	// We have to call this right after loading a saved game for several reasons:
@@ -1417,7 +1417,7 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 					s->bAssignment != ASSIGNMENT_POW)
 			{
 				// turn off neutral flag
-				s->bNeutral = FALSE;
+				s->bNeutral = false;
 			}
 		}
 		// JA2Gold: fix next-to-previous attacker value
@@ -1842,7 +1842,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_I16(  d, sWorldSectorLocationOfFirstBattle)
 	INJ_BOOL( d, fUnReadMailFlag)
 	INJ_BOOL( d, fNewMailFlag)
-	INJ_BOOL( d, FALSE) // XXX HACK000B
+	INJ_BOOL( d, false) // XXX HACK000B
 	INJ_BOOL( d, fOldNewMailFlag)
 	INJ_BOOL( d, fShowMilitia)
 	INJ_BOOL( d, fNewFilesInFileViewer)
@@ -1979,7 +1979,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, gfInMeanwhile)
 	// Always set gfInMeanwhile to false for Dead is Dead. This must be done because it is saved as true if a Meanwhile event is in the event pipe
 	// Preventing the value to be saved in the first place leads to odd behaviour during the commencing cutscene
-	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) gfInMeanwhile = FALSE;
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) gfInMeanwhile = false;
 	EXTR_SKIP( d, 1)
 	for (INT16 (* i)[NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
 	{
@@ -2357,8 +2357,8 @@ INT8 GetNextIndexForAutoSave()
 	double	LastWriteTime1 = 0;
 	double	LastWriteTime2 = 0;
 
-	fFile1Exist = FALSE;
-	fFile2Exist = FALSE;
+	fFile1Exist = false;
+	fFile2Exist = false;
 
 	//The name of the file
 	ST::string zFileName1 = GCM->saveGameFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(1)));
@@ -2367,13 +2367,13 @@ INT8 GetNextIndexForAutoSave()
 	if( GCM->saveGameFiles()->exists( zFileName1 ) )
 	{
 		LastWriteTime1 = GCM->saveGameFiles()->getLastModifiedTime( zFileName1 );
-		fFile1Exist = TRUE;
+		fFile1Exist = true;
 	}
 
 	if( GCM->saveGameFiles()->exists( zFileName2 ) )
 	{
 		LastWriteTime2 = GCM->saveGameFiles()->getLastModifiedTime( zFileName2 );
-		fFile2Exist = TRUE;
+		fFile2Exist = true;
 	}
 
 	if(fFile1Exist && fFile2Exist) {
@@ -2410,13 +2410,13 @@ static void HandleOldBobbyRMailOrders(void)
 					MAX_PURCHASE_AMOUNT,
 					gpNewBobbyrShipments[ iNewListCnt ].BobbyRayPurchase);
 
-				gpNewBobbyrShipments[ iNewListCnt ].fActive = TRUE;
+				gpNewBobbyrShipments[ iNewListCnt ].fActive = true;
 				gpNewBobbyrShipments[ iNewListCnt ].ubDeliveryLoc = GCM->getPrimaryShippingDestination()->locationId;
 				gpNewBobbyrShipments[ iNewListCnt ].ubDeliveryMethod = 0;
 				gpNewBobbyrShipments[ iNewListCnt ].ubNumberPurchases = LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].ubNumberPurchases;
 				gpNewBobbyrShipments[ iNewListCnt ].uiPackageWeight = 1;
 				gpNewBobbyrShipments[ iNewListCnt ].uiOrderedOnDayNum = GetWorldDay();
-				gpNewBobbyrShipments[ iNewListCnt ].fDisplayedInShipmentPage = TRUE;
+				gpNewBobbyrShipments[ iNewListCnt ].fDisplayedInShipmentPage = true;
 
 				iNewListCnt++;
 			}

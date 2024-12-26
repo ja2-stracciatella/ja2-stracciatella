@@ -75,7 +75,7 @@ void SaveStrategicStatusToSaveGameFile(HWFILE const hFile)
 	// Synthesize the old fWeaponDroppedAlready array just in case somebody
 	// wants to load this file with an older version of the game.
 	auto & wda{ gStrategicStatus.fWeaponDroppedAlready };
-	wda[0] = FALSE; // NOTHING aka NONE
+	wda[0] = false; // NOTHING aka NONE
 	for (uint16_t idx = 1; idx < MAX_WEAPONS; ++idx)
 	{
 		auto * const itemModel{ GCM->getItem(idx) };
@@ -87,7 +87,7 @@ void SaveStrategicStatusToSaveGameFile(HWFILE const hFile)
 		{
 			// ROCK, ROCK2, BRASS_KNUCKLES and CROWBAR return false
 			// for isWeapon(). Is this intentional?
-			wda[idx] = FALSE;
+			wda[idx] = false;
 		}
 	}
 
@@ -144,18 +144,18 @@ BOOLEAN MercThinksDeathRateTooHigh(MERCPROFILESTRUCT const& p)
 	if (bDeathRateTolerance == 101)
 	{
 		// then obviously it CAN'T be too high...
-		return(FALSE);
+		return(false);
 	}
 
 	if (CalcDeathRate() > bDeathRateTolerance)
 	{
 		// too high - sorry
-		return(TRUE);
+		return(true);
 	}
 	else
 	{
 		// within tolerance
-		return(FALSE);
+		return(false);
 	}
 }
 
@@ -168,18 +168,18 @@ BOOLEAN MercThinksBadReputationTooHigh(MERCPROFILESTRUCT const& p)
 	if (bRepTolerance == 101)
 	{
 		// then obviously it CAN'T be too high...
-		return(FALSE);
+		return(false);
 	}
 
 	if (gStrategicStatus.ubBadReputation > bRepTolerance)
 	{
 		// too high - sorry
-		return(TRUE);
+		return(true);
 	}
 	else
 	{
 		// within tolerance
-		return(FALSE);
+		return(false);
 	}
 }
 
@@ -196,7 +196,7 @@ BOOLEAN MercThinksHisMoraleIsTooLow(SOLDIERTYPE const* const pSoldier)
 	if (bRepTolerance == 101)
 	{
 		// that obviously it CAN'T be too low...
-		return(FALSE);
+		return(false);
 	}
 
 
@@ -207,12 +207,12 @@ BOOLEAN MercThinksHisMoraleIsTooLow(SOLDIERTYPE const* const pSoldier)
 	if (pSoldier->bMorale < bMoraleTolerance)
 	{
 		// too low - sorry
-		return(TRUE);
+		return(true);
 	}
 	else
 	{
 		// within tolerance
-		return(FALSE);
+		return(false);
 	}
 }
 

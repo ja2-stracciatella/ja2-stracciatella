@@ -34,9 +34,9 @@ try
 	}
 	Assert(d.getConsumed() == lengthof(data));
 
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 void DisplayPaletteRep(const ST::string& aPalRep, UINT8 ubXPos, UINT8 ubYPos, SGPVSurface* dst)

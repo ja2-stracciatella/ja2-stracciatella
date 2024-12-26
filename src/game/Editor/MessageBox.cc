@@ -13,7 +13,7 @@ GUIButtonRef iMsgBoxBgrnd;
 GUIButtonRef iMsgBoxOk;
 GUIButtonRef iMsgBoxCancel;
 
-BOOLEAN gfMessageBoxResult = FALSE;
+BOOLEAN gfMessageBoxResult = false;
 UINT8 gubMessageBoxStatus = MESSAGEBOX_NONE;
 
 
@@ -46,7 +46,7 @@ void CreateMessageBox(const ST::string& msg)
 	msg_box_rect.iBottom = y + h;
 	RestrictMouseCursor(&msg_box_rect);
 
-	gfMessageBoxResult  = FALSE;
+	gfMessageBoxResult  = false;
 	gubMessageBoxStatus = MESSAGEBOX_WAIT;
 }
 
@@ -64,13 +64,13 @@ BOOLEAN MessageBoxHandled()
 				case SDLK_RETURN:
 				case SDLK_y:
 					gubMessageBoxStatus = MESSAGEBOX_DONE;
-					gfMessageBoxResult = TRUE;
+					gfMessageBoxResult = true;
 					break;
 
 				case SDLK_ESCAPE:
 				case SDLK_n:
 					gubMessageBoxStatus = MESSAGEBOX_DONE;
-					gfMessageBoxResult = FALSE;
+					gfMessageBoxResult = false;
 					break;
 			}
 		}
@@ -101,7 +101,7 @@ static void MsgBoxOkClkCallback(GUI_BUTTON* butn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
-		gfMessageBoxResult = TRUE;
+		gfMessageBoxResult = true;
 	}
 }
 
@@ -111,6 +111,6 @@ static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
-		gfMessageBoxResult = FALSE;
+		gfMessageBoxResult = false;
 	}
 }

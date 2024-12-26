@@ -175,7 +175,7 @@ static INT32 GetFreeSlantRoof(void)
 
 	for(uiCount=0; uiCount < guiNumSlantRoofs; uiCount++)
 	{
-		if( gSlantRoofData[uiCount].fAllocated==FALSE  )
+		if( gSlantRoofData[uiCount].fAllocated==false  )
 			return( (INT32)uiCount );
 	}
 
@@ -193,7 +193,7 @@ void ClearSlantRoofs( void )
 	{
 		if( ( gSlantRoofData[uiCount].fAllocated ) )
 		{
-			gSlantRoofData[uiCount].fAllocated = FALSE;
+			gSlantRoofData[uiCount].fAllocated = false;
 		}
 	}
 	guiNumSlantRoofs = 0;
@@ -209,11 +209,11 @@ static BOOLEAN FindSlantRoofSlot(INT16 sGridNo)
 		{
 			if ( gSlantRoofData[uiCount].sGridNo == sGridNo )
 			{
-				return( TRUE );
+				return true;
 			}
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 void AddSlantRoofFOVSlot( INT16 sGridNo )
@@ -233,7 +233,7 @@ void AddSlantRoofFOVSlot( INT16 sGridNo )
 	{
 		pSlantRoof = &gSlantRoofData[ iSlantRoofSlot ];
 		pSlantRoof->sGridNo = sGridNo;
-		pSlantRoof->fAllocated = TRUE;
+		pSlantRoof->fAllocated = true;
 	}
 }
 
@@ -263,11 +263,11 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 	UINT8   ubRoomNo;
 	UINT8   ubMovementCost;
 	BOOLEAN fTravelCostObs;
-	BOOLEAN fGoneThroughDoor = FALSE;
-	BOOLEAN fThroughWindow = FALSE;
-	BOOLEAN fItemsQuoteSaid = FALSE;
-	BOOLEAN fRevealItems = TRUE;
-	BOOLEAN fStopRevealingItemsAfterThisTile = FALSE;
+	BOOLEAN fGoneThroughDoor = false;
+	BOOLEAN fThroughWindow = false;
+	BOOLEAN fItemsQuoteSaid = false;
+	BOOLEAN fRevealItems = true;
+	BOOLEAN fStopRevealingItemsAfterThisTile = false;
 	INT8    bTallestStructureHeight;
 	INT32   iDoorGridNo;
 	INT8    bStructHeight;
@@ -275,7 +275,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_ENEMY )
 	{
-		//pSoldier->needToLookForItems = FALSE;
+		//pSoldier->needToLookForItems = false;
 		return;
 	}
 
@@ -331,9 +331,9 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 	Dir[5] = pSoldier->bDirection;
 
 	if (dir % 2 == 1)     /* even numbers use ViewPath2 */
-		Path2 = TRUE;
+		Path2 = true;
 	else
-		Path2 = FALSE;
+		Path2 = false;
 
 
 	// ATE: if in this special cercumstance... our guys are moving on their own...
@@ -344,10 +344,10 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 	for (maincnt = 0; maincnt < MAXVIEWPATHS; maincnt++)
 	{
 		marker = pSoldier->sGridNo;
-		Blocking = FALSE;
+		Blocking = false;
 		tilesLeftToSee = 99;
-		fRevealItems = TRUE;
-		fStopRevealingItemsAfterThisTile = FALSE;
+		fRevealItems = true;
+		fStopRevealingItemsAfterThisTile = false;
 
 #ifdef _DEBUG
 		if (_KeyDown(SDLK_NUMLOCKCLEAR))
@@ -360,16 +360,16 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 
 		for (markercnt = 0; markercnt < range; markercnt++)
 		{
-			//fGoneThroughDoor = FALSE;
-			//fThroughWindow   = FALSE;
+			//fGoneThroughDoor = false;
+			//fThroughWindow   = false;
 			prevmarker = marker;
 
 			nextDir = 99;
-			fTravelCostObs = FALSE;
+			fTravelCostObs = false;
 			if ( fStopRevealingItemsAfterThisTile )
 			{
-				fRevealItems = FALSE;
-				fStopRevealingItemsAfterThisTile = FALSE;
+				fRevealItems = false;
+				fStopRevealingItemsAfterThisTile = false;
 			}
 			if (Path2)
 			{
@@ -476,44 +476,44 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 
 				if ( ubMovementCost == TRAVELCOST_WALL || ubMovementCost == TRAVELCOST_DOOR || ubMovementCost == TRAVELCOST_EXITGRID )
 				{
-					fTravelCostObs = TRUE;
-					fRevealItems = FALSE;
+					fTravelCostObs = true;
+					fRevealItems = false;
 				}
 				else
 				{
 					// walls are handled above, so the blocking object is guaranteed not to be a wall
-					bTallestStructureHeight = GetTallestStructureHeight( (INT16) marker, FALSE );
+					bTallestStructureHeight = GetTallestStructureHeight( (INT16) marker, false );
 					if (bTallestStructureHeight >= 3)
 					{
-						fTravelCostObs = TRUE;
-						fStopRevealingItemsAfterThisTile = TRUE;
+						fTravelCostObs = true;
+						fStopRevealingItemsAfterThisTile = true;
 					}
 					else if ( bTallestStructureHeight != 0 )
 					{
 						// stop revealing items after this tile but keep going
-						fStopRevealingItemsAfterThisTile = TRUE;
+						fStopRevealingItemsAfterThisTile = true;
 					}
 				}
 
 				if ( (Dir[markerDir] % 2) == 1 )
 				{
 					// diagonal
-					fTravelCostObs = TRUE;
+					fTravelCostObs = true;
 					// cheap hack... don't reveal items
-					fRevealItems = FALSE;
+					fRevealItems = false;
 				}
 				else
 				{
-					bTallestStructureHeight = GetTallestStructureHeight( (INT16) marker, FALSE );
+					bTallestStructureHeight = GetTallestStructureHeight( (INT16) marker, false );
 					if (bTallestStructureHeight >= 3)
 					{
-						fTravelCostObs = TRUE;
-						fStopRevealingItemsAfterThisTile = TRUE;
+						fTravelCostObs = true;
+						fStopRevealingItemsAfterThisTile = true;
 					}
 					else if ( bTallestStructureHeight != 0 )
 					{
 						// stop revealing items after this tile but keep going
-						fStopRevealingItemsAfterThisTile = TRUE;
+						fStopRevealingItemsAfterThisTile = true;
 					}
 				}
 			}
@@ -545,13 +545,13 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 					// if there IS a direction after this one, nextdir WILL NOT be 99
 					if (nextDir != 99)
 					{
-						Blocking = GetBlockingStructureInfo( (INT16)marker, (INT8)Dir[ markerDir ], (INT8)Dir[ nextDir ], ubLevel, &bStructHeight, &pDummy, FALSE );
+						Blocking = GetBlockingStructureInfo( (INT16)marker, (INT8)Dir[ markerDir ], (INT8)Dir[ nextDir ], ubLevel, &bStructHeight, &pDummy, false );
 					}
 					else
 					{
 						// no "next" direction, so pass in a NOWHERE so that
 						// "SpecialViewObstruction" will know not to take it UINT32o consideration
-						Blocking = GetBlockingStructureInfo( (INT16)marker, (INT8)Dir[markerDir], (INT8)30, ubLevel, &bStructHeight, &pDummy, FALSE  );
+						Blocking = GetBlockingStructureInfo( (INT16)marker, (INT8)Dir[markerDir], (INT8)30, ubLevel, &bStructHeight, &pDummy, false  );
 					}
 
 					if ( gfCaves )
@@ -567,7 +567,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 						{
 							if (markercnt <= 1 )   // Are we right beside it?
 							{
-								fThroughWindow = TRUE;
+								fThroughWindow = true;
 								bThroughWindowDirection = ( INT8 ) Dir[ markerDir ];
 							}
 						}
@@ -579,7 +579,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 						{
 							if (markercnt <= 1 )   // Are we right beside it?
 							{
-								fThroughWindow = TRUE;
+								fThroughWindow = true;
 								bThroughWindowDirection = ( INT8 ) Dir[ markerDir ];
 							}
 						}
@@ -587,11 +587,11 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 
 					if ( Blocking == BLOCKING_TOPLEFT_DOOR )
 					{
-						fGoneThroughDoor = TRUE;
+						fGoneThroughDoor = true;
 					}
 					if ( Blocking == BLOCKING_TOPRIGHT_DOOR )
 					{
-						fGoneThroughDoor = TRUE;
+						fGoneThroughDoor = true;
 					}
 
 					// ATE: If we hit this tile, find item always!
@@ -624,20 +624,20 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 									// ATE: Only if in combat...
 									if ( gTacticalStatus.uiFlags & INCOMBAT )
 									{
-										HaultSoldierFromSighting( pSoldier, FALSE );
+										HaultSoldierFromSighting( pSoldier, false );
 									}
 									else
 									{
 										// ATE: Make sure we show locators...
-										gTacticalStatus.fLockItemLocators = FALSE;
+										gTacticalStatus.fLockItemLocators = false;
 									}
 									if (!fItemsQuoteSaid && !gTacticalStatus.fLockItemLocators)
 									{
-										gTacticalStatus.fLockItemLocators = TRUE;
+										gTacticalStatus.fLockItemLocators = true;
 
 										if ( gTacticalStatus.ubAttackBusyCount > 0 && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 										{
-											gTacticalStatus.fItemsSeenOnAttack           = TRUE;
+											gTacticalStatus.fItemsSeenOnAttack           = true;
 											gTacticalStatus.items_seen_on_attack_soldier = pSoldier;
 											gTacticalStatus.usItemsSeenOnAttackGridNo    = (INT16)marker;
 										}
@@ -651,11 +651,11 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 											else
 											{
 												// Turn off item lock for locators...
-												gTacticalStatus.fLockItemLocators = FALSE;
+												gTacticalStatus.fLockItemLocators = false;
 												SlideToLocation((INT16)marker);
 											}
 										}
-										fItemsQuoteSaid = TRUE;
+										fItemsQuoteSaid = true;
 									}
 								}
 							}
@@ -752,6 +752,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 	} // end of path loop
 	// Loop through all availible slant roofs we collected and perform cool stuff on them
 	ExamineSlantRoofFOVSlots( );
-	//pSoldier->needToLookForItems = FALSE;
+	//pSoldier->needToLookForItems = false;
 	//LookForDoors(pSoldier,UNAWARE);
 }

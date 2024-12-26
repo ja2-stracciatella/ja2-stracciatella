@@ -138,7 +138,7 @@ static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ABOUT_US;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 

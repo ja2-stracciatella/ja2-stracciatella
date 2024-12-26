@@ -49,7 +49,7 @@ extern BOOLEAN gfProfileDataLoaded;
 
 Observable<SOLDIERTYPE*> OnRPCRecruited;
 
-BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
+BOOLEAN	gfPotentialTeamChangeDuringDeath = false;
 
 
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
@@ -187,7 +187,7 @@ void LoadMercProfiles()
 			}
 
 			// These variables to get loaded in
-			p.fUseProfileInsertionInfo = FALSE;
+			p.fUseProfileInsertionInfo = false;
 			p.sGridNo                  = 0;
 
 			// ARM: this is also being done inside the profile editor, but put it here
@@ -204,7 +204,7 @@ void LoadMercProfiles()
 	// Initialize mercs' status
 	StartSomeMercsOnAssignment();
 
-	gfProfileDataLoaded = TRUE;
+	gfProfileDataLoaded = true;
 
 	// no better place..heh?.. will load faces for profiles that are 'extern'.....won't have soldiertype instances
 	PreloadExternalNPCFaces();
@@ -525,7 +525,7 @@ static UINT16 CalcCompetence(MERCPROFILESTRUCT const& p)
 	// count how many he has, don't care what they are
 	uiSpecialSkills = ((p.bSkillTrait != 0) ? 1 : 0) + ((p.bSkillTrait2 != 0) ? 1 : 0);
 
-	usCompetence = (UINT16) ((pow(p.bExpLevel, 0.2) * uiStats * uiSkills * (uiActionPoints - 6) * (1 + (0.05 * (FLOAT)uiSpecialSkills))) / 1000);
+	usCompetence = (UINT16) ((pow(p.bExpLevel, 0.2) * uiStats * uiSkills * (uiActionPoints - 6) * (1 + (0.05 * (float)uiSpecialSkills))) / 1000);
 
 	// this currently varies from about 10 (Flo) to 1200 (Gus)
 	return(usCompetence);
@@ -576,7 +576,7 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	}
 
 	// Remove him from the game.
-	InternalTacticalRemoveSoldier(*old_s, FALSE);
+	InternalTacticalRemoveSoldier(*old_s, false);
 
 	// Create a new one.
 	SOLDIERCREATE_STRUCT c;
@@ -590,7 +590,7 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	if (old_s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		c.ubProfile          = NO_PROFILE;
-		c.fUseGivenVehicle   = TRUE;
+		c.fUseGivenVehicle   = true;
 		c.bUseGivenVehicleID = old_s->bVehicleID;
 	}
 	SOLDIERTYPE* const new_s = TacticalCreateSoldier(c);
@@ -662,7 +662,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharNum);
 	if (!pSoldier)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// OK, set recruit flag..
@@ -709,7 +709,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 				if ( bSlot != SECONDHANDPOS && pNewSoldier->inv[ SECONDHANDPOS ].usItem != NOTHING )
 				{
 					// need to move second hand item out first
-					AutoPlaceObject( pNewSoldier, &(pNewSoldier->inv[ SECONDHANDPOS ]), FALSE );
+					AutoPlaceObject( pNewSoldier, &(pNewSoldier->inv[ SECONDHANDPOS ]), false );
 				}
 			}
 			// swap item to hand
@@ -739,7 +739,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 
 	OnRPCRecruited(pNewSoldier);
 
-	return( TRUE );
+	return true;
 }
 
 BOOLEAN RecruitEPC( UINT8 ubCharNum )
@@ -747,7 +747,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharNum);
 	if (!pSoldier)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// OK, set recruit flag..
@@ -770,7 +770,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 	DirtyMercPanelInterface( pNewSoldier, DIRTYLEVEL2 );
 	// Make the interface panel dirty..
 	// This will dirty the panel next frame...
-	gfRerenderInterfaceFromHelpText = TRUE;
+	gfRerenderInterfaceFromHelpText = true;
 
 
 	// If we are a robot, look to update controller....
@@ -784,15 +784,15 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 
 	UpdateTeamPanelAssignments( );
 
-	return( TRUE );
+	return true;
 }
 
 
 BOOLEAN UnRecruitEPC(ProfileID const pid)
 {
 	SOLDIERTYPE* const s = FindSoldierByProfileID(pid);
-	if (!s) return FALSE;
-	if (s->ubWhatKindOfMercAmI != MERC_TYPE__EPC) return FALSE;
+	if (!s) return false;
+	if (s->ubWhatKindOfMercAmI != MERC_TYPE__EPC) return false;
 
 	if (s->bAssignment < ON_DUTY) ResetDeadSquadMemberList(s->bAssignment);
 
@@ -807,11 +807,11 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 	p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 	p.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 	p.usStrategicInsertionData = s->sGridNo;
-	p.fUseProfileInsertionInfo = TRUE;
+	p.fUseProfileInsertionInfo = true;
 
 	ChangeSoldierTeam(s, CIV_TEAM);
 	UpdateTeamPanelAssignments();
-	return TRUE;
+	return true;
 }
 
 
@@ -882,8 +882,8 @@ BOOLEAN IsProfileAHeadMiner(UINT8 ubProfile)
 		case MATT:
 		case OSWALD:
 		case CALVIN:
-		case CARL:   return TRUE;
-		default:     return FALSE;
+		case CARL:   return true;
+		default:     return false;
 	}
 }
 
@@ -1022,29 +1022,29 @@ BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 	if ( ubRoomInfo == NO_ROOM )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// Are we an NPC?
 	if ( pSoldier->bTeam != CIV_TEAM )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// OK, check both ranges
 	if ( ubRoomInfo >= gMercProfiles[ pSoldier->ubProfile ].ubRoomRangeStart[ 0 ] &&
 			ubRoomInfo <= gMercProfiles[ pSoldier->ubProfile ].ubRoomRangeEnd[ 0 ] )
 	{
-		return( TRUE );
+		return true;
 	}
 
 	if ( ubRoomInfo >= gMercProfiles[ pSoldier->ubProfile ].ubRoomRangeStart[ 1 ] &&
 			ubRoomInfo <= gMercProfiles[ pSoldier->ubProfile ].ubRoomRangeEnd[ 1 ] )
 	{
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN IsProfileIdAnAimOrMERCMerc(UINT8 ubProfileID)

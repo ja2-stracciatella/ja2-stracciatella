@@ -38,7 +38,7 @@ static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon);
 
 void InitArmyGunTypes(void)
 {
-	// set all flags that track whether this weapon type has been dropped before to FALSE
+	// set all flags that track whether this weapon type has been dropped before to false
 	ClearAllWeaponsAlreadyDropped();
 
 	// avoid auto-drops for the gun class with the crappiest guns in it
@@ -111,7 +111,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	//numbers of items
 	INT8 bAmmoClips = 0;
 	INT8 bGrenades = 0;
-	BOOLEAN fAttachment = FALSE;
+	BOOLEAN fAttachment = false;
 	//item levels
 	INT8 bWeaponClass = 0;
 	INT8 bHelmetClass = 0;
@@ -124,9 +124,9 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	INT8 bMiscClass = 0;
 	INT8 bBombClass = 0;
 	//special weapons
-	BOOLEAN fMortar = FALSE;
-	BOOLEAN fGrenadeLauncher = FALSE;
-	BOOLEAN fLAW = FALSE;
+	BOOLEAN fMortar = false;
+	BOOLEAN fGrenadeLauncher = false;
+	BOOLEAN fLAW = false;
 	INT32 i;
 	INT8 bEquipmentModifier;
 	UINT8 ubMaxSpecialWeaponRoll;
@@ -224,7 +224,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( ( bRating >= GOOD_ARMY_EQUIPMENT_RATING ) && ( Random( 100 ) < 33 ) )
 			{
-				fAttachment = TRUE;
+				fAttachment = true;
 				bAttachClass = bRating;
 			}
 
@@ -289,7 +289,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 						if ( pp->bExpLevel >= 3 )
 						{
 							//grenade launcher
-							fGrenadeLauncher = TRUE;
+							fGrenadeLauncher = true;
 							bGrenades = 3 + (INT8)(Random( 3 )); //3-5
 						}
 						break;
@@ -300,7 +300,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 						if ( pp->bExpLevel >= 4 )
 						{
 							// LAW rocket launcher
-							fLAW = TRUE;
+							fLAW = true;
 						}
 						break;
 
@@ -309,7 +309,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 						if ( ( pp->bExpLevel >= 5 ) && ( guiMortarsRolledByTeam < MAX_MORTARS_PER_TEAM ) )
 						{
 							//mortar
-							fMortar = TRUE;
+							fMortar = true;
 							guiMortarsRolledByTeam++;
 
 							// the grenades will actually represent mortar shells in this case
@@ -345,7 +345,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( ( bRating >= AVERAGE_ELITE_EQUIPMENT_RATING ) && ( Random( 100 ) < 75 ) )
 			{
-				fAttachment = TRUE;
+				fAttachment = true;
 				bAttachClass = bRating;
 			}
 
@@ -391,21 +391,21 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					case 1:
 					case 2:
 						//grenade launcher
-						fGrenadeLauncher = TRUE;
+						fGrenadeLauncher = true;
 						bGrenades = 4 + (INT8)(Random( 4 )); //4-7
 						break;
 					case 3:
 					case 4:
 					case 5:
 						// LAW rocket launcher
-						fLAW = TRUE;
+						fLAW = true;
 						break;
 					case 6:
 						// one per team maximum!
 						if ( guiMortarsRolledByTeam < MAX_MORTARS_PER_TEAM )
 						{
 							//mortar
-							fMortar = TRUE;
+							fMortar = true;
 							guiMortarsRolledByTeam++;
 
 							// the grenades will actually represent mortar shells in this case
@@ -443,7 +443,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					}
 					else	// rocket launcher!
 					{
-						fLAW = FALSE;
+						fLAW = false;
 					}
 					break;
 				case IC_AMMO:
@@ -454,8 +454,8 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					bKnifeClass = 0;
 					break;
 				case IC_LAUNCHER:
-					fGrenadeLauncher = FALSE;
-					fMortar = FALSE;
+					fGrenadeLauncher = false;
+					fMortar = false;
 					break;
 				case IC_ARMOUR:
 					if( i == HELMETPOS )
@@ -1453,10 +1453,10 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[i] = *pObject;
-				return TRUE;
+				return true;
 			}
 		}
-		return FALSE;
+		return false;
 	}
 	else
 	{
@@ -1467,7 +1467,7 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[i] = *pObject;
-				return TRUE;
+				return true;
 			}
 		}
 		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
@@ -1476,11 +1476,11 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[i] = *pObject;
-				return TRUE;
+				return true;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1526,14 +1526,14 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 	UINT8 ubAmmoDropRate;
 	UINT8 ubGrenadeDropRate;
 	UINT8 ubOtherDropRate;
-	BOOLEAN fWeapon = FALSE;
-	BOOLEAN fGrenades = FALSE; // this includes all grenades!
-	BOOLEAN fAmmo = FALSE;
-	BOOLEAN fArmour = FALSE;
-	BOOLEAN fKnife = FALSE;
-	BOOLEAN fKit = FALSE;
-	BOOLEAN fFace = FALSE;
-	BOOLEAN fMisc = FALSE;
+	BOOLEAN fWeapon = false;
+	BOOLEAN fGrenades = false; // this includes all grenades!
+	BOOLEAN fAmmo = false;
+	BOOLEAN fArmour = false;
+	BOOLEAN fKnife = false;
+	BOOLEAN fKit = false;
+	BOOLEAN fFace = false;
+	BOOLEAN fMisc = false;
 
 
 	/*
@@ -1551,15 +1551,15 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 	{
 		//31 is the magic number that allows all 5 item classes to be dropped!
 		if( usRandomNum & 16 )
-			fWeapon = TRUE;
+			fWeapon = true;
 		if( usRandomNum & 8 )
-			fAmmo = TRUE;
+			fAmmo = true;
 		if( usRandomNum & 4 )
-			fGrenades = TRUE;
+			fGrenades = true;
 		if( usRandomNum & 2 )
-			fArmour = TRUE;
+			fArmour = true;
 		if( usRandomNum & 1 )
-			fMisc = TRUE;
+			fMisc = true;
 	}
 	else if( usRandomNum < 100 ) //6.8% chance of getting 2-3 different items.
 	{
@@ -1567,34 +1567,34 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 		switch( usRandomNum / 10 )
 		{
 			case 3:
-				fWeapon = TRUE;
-				fAmmo = TRUE;
+				fWeapon = true;
+				fAmmo = true;
 				break;
 			case 4:
-				fWeapon = TRUE;
-				fGrenades = TRUE;
+				fWeapon = true;
+				fGrenades = true;
 				break;
 			case 5:
-				fGrenades = TRUE;
-				fMisc = TRUE;
+				fGrenades = true;
+				fMisc = true;
 				break;
 			case 6:
-				fGrenades = TRUE;
-				fArmour = TRUE;
+				fGrenades = true;
+				fArmour = true;
 				break;
 			case 7:
-				fAmmo = TRUE;
-				fArmour = TRUE;
+				fAmmo = true;
+				fArmour = true;
 				break;
 			case 8:
-				fAmmo = TRUE;
-				fArmour = TRUE;
-				fMisc = TRUE;
+				fAmmo = true;
+				fArmour = true;
+				fMisc = true;
 				break;
 			case 9:
-				fGrenades = TRUE;
-				fAmmo = TRUE;
-				fMisc = TRUE;
+				fGrenades = true;
+				fAmmo = true;
+				fMisc = true;
 				break;
 		}
 	}
@@ -1603,29 +1603,29 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 		switch( usRandomNum / 50 ) //30% chance of getting 1-2 items (no weapons)
 		{
 			case 2:
-				fGrenades = TRUE;
+				fGrenades = true;
 				break;
 			case 3:
-				fAmmo = TRUE;
+				fAmmo = true;
 				break;
 			case 4:
-				fArmour = TRUE;
+				fArmour = true;
 				break;
 			case 5:
-				fMisc = TRUE;
+				fMisc = true;
 				break;
 			case 6:
-				fAmmo = TRUE;
-				fMisc = TRUE;
+				fAmmo = true;
+				fMisc = true;
 				break;
 			case 7:
-				fGrenades = TRUE;
-				fAmmo = TRUE;
+				fGrenades = true;
+				fAmmo = true;
 				break;
 		}
 	}
 
-	fKnife = (Random(3)) ? FALSE : TRUE;*/
+	fKnife = (Random(3)) ? false : true;*/
 
 
 	// only enemy soldiers use auto-drop system!
@@ -1677,28 +1677,28 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 
 
 	if( Random(100) < ubAmmoDropRate )
-		fAmmo = TRUE;
+		fAmmo = true;
 
 	if( Random(100) < ubOtherDropRate )
-		fWeapon = TRUE;
+		fWeapon = true;
 
 	if( Random(100) < ubOtherDropRate )
-		fArmour = TRUE;
+		fArmour = true;
 
 	if( Random(100) < ubOtherDropRate )
-		fKnife = TRUE;
+		fKnife = true;
 
 	if( Random(100) < ubGrenadeDropRate )
-		fGrenades = TRUE;
+		fGrenades = true;
 
 	if( Random(100) < ubOtherDropRate )
-		fKit = TRUE;
+		fKit = true;
 
 	if( Random(100) < (UINT32)(ubOtherDropRate / 3) )
-		fFace = TRUE;
+		fFace = true;
 
 	if( Random(100) < ubOtherDropRate )
-		fMisc = TRUE;
+		fMisc = true;
 
 
 	//Now, that the flags are set for each item, we now have to search through the item slots to
@@ -1756,8 +1756,8 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 {
 	UINT32 uiChanceToDrop = 0;
-	BOOLEAN fMaleCreature = FALSE;
-	BOOLEAN fBloodcat = FALSE;
+	BOOLEAN fMaleCreature = false;
+	BOOLEAN fBloodcat = false;
 
 	// all creature items in this first section are only offensive/defensive placeholders, and
 	// never get dropped, because they're not real items!
@@ -1777,7 +1777,7 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 			CreateItem(CREATURE_OLD_MALE_HIDE, 100, &(pSoldier->inv[VESTPOS]));
 			CreateItem(CREATURE_OLD_MALE_HIDE, 100, &(pSoldier->inv[LEGPOS]));
 			uiChanceToDrop = 30;
-			fMaleCreature = TRUE;
+			fMaleCreature = true;
 			break;
 		case YAF_MONSTER:
 			CreateItem(CREATURE_YOUNG_FEMALE_CLAWS, 100, &(pSoldier->inv[HANDPOS]));
@@ -1793,7 +1793,7 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 			CreateItem(CREATURE_YOUNG_MALE_HIDE, 100, &(pSoldier->inv[VESTPOS]));
 			CreateItem(CREATURE_YOUNG_MALE_HIDE, 100, &(pSoldier->inv[LEGPOS]));
 			uiChanceToDrop = 15;
-			fMaleCreature = TRUE;
+			fMaleCreature = true;
 			break;
 		case INFANT_MONSTER:
 			CreateItem(CREATURE_INFANT_SPIT, 100, &(pSoldier->inv[HANDPOS]));
@@ -1817,12 +1817,12 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 		case BLOODCAT:
 			CreateItem(BLOODCAT_CLAW_ATTACK, 100, &(pSoldier->inv[HANDPOS]));
 			CreateItem(BLOODCAT_BITE, 100, &(pSoldier->inv[SECONDHANDPOS]));
-			fBloodcat = TRUE;
+			fBloodcat = true;
 			uiChanceToDrop = 30;
 			break;
 
 		default:
-			AssertMsg(FALSE, ST::format("Invalid creature bodytype {}", pSoldier->ubBodyType));
+			AssertMsg(false, ST::format("Invalid creature bodytype {}", pSoldier->ubBodyType));
 			return;
 	}
 

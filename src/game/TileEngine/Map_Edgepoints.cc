@@ -45,7 +45,7 @@ UINT16 gus2ndEastEdgepointMiddleIndex			= 0;
 UINT16 gus2ndSouthEdgepointMiddleIndex		= 0;
 UINT16 gus2ndWestEdgepointMiddleIndex			= 0;
 
-BOOLEAN gfGeneratingMapEdgepoints = FALSE;
+BOOLEAN gfGeneratingMapEdgepoints = false;
 
 INT16 gsTLGridNo = 13286;
 INT16 gsTRGridNo = 1043;
@@ -318,7 +318,7 @@ void GenerateMapEdgepoints()
 	//Get rid of the current edgepoint lists.
 	TrashMapEdgepoints();
 
-	gfGeneratingMapEdgepoints = TRUE;
+	gfGeneratingMapEdgepoints = true;
 
 	if( gMapInformation.sNorthGridNo	!= -1 )
 		sGridNo = gMapInformation.sNorthGridNo;
@@ -755,7 +755,7 @@ void GenerateMapEdgepoints()
 		ClassifyEdgepoints();
 	}
 
-	gfGeneratingMapEdgepoints = FALSE;
+	gfGeneratingMapEdgepoints = false;
 }
 
 
@@ -980,12 +980,12 @@ GridNo SearchClosestMapEdgepoint(GridNo sGridNo, edgepoints_ptr pEdgepoints)
 	}
 
 	//Check the initial gridno, to see if it is available and an edgepoint.
-	fReserved = FALSE;
+	fReserved = false;
 	for( i = 0; i < gsReservedIndex; i++ )
 	{
 		if( gpReservedGridNos[ i ] == sGridNo )
 		{
-			fReserved = TRUE;
+			fReserved = true;
 			break;
 		}
 	}
@@ -1030,12 +1030,12 @@ GridNo SearchClosestMapEdgepoint(GridNo sGridNo, edgepoints_ptr pEdgepoints)
 				if( sGridNo < 0 || sGridNo >= WORLD_MAX )
 					continue;
 				//Check the gridno, to see if it is available and an edgepoint.
-				fReserved = FALSE;
+				fReserved = false;
 				for( i = 0; i < gsReservedIndex; i++ )
 				{
 					if( gpReservedGridNos[ i ] == sGridNo )
 					{
-						fReserved = TRUE;
+						fReserved = true;
 						break;
 					}
 				}
@@ -1114,7 +1114,7 @@ static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 	// so we don't consider it
 	//gpWorldLevelData[sEdgepoint].uiFlags &= ~(MAPELEMENT_REACHABLE);
 
-	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
+	// SET UP double-LOOP TO STEP THROUGH POTENTIAL GRID #s
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
 		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
@@ -1130,13 +1130,13 @@ static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 			if (GridNoOnEdgeOfMap( sGridNo, &bDirection ) )
 			{
 				// ok!
-				return TRUE;
+				return true;
 			}
 		}
 	}
 
 	// no spots right on edge of map within 5 tiles
-	return FALSE;
+	return false;
 }
 
 
@@ -1183,9 +1183,9 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 
 	if( FindBestPath( pSoldier, sEdgepoint2, pSoldier->bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE ) )
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
@@ -1195,7 +1195,7 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 	std::vector<INT16>* pEdgepoints2 = nullptr;
 	INT16			sClosestSpot1 = NOWHERE, sClosestDist1 = 0x7FFF, sTempDist;
 	INT16			sClosestSpot2 = NOWHERE, sClosestDist2 = 0x7FFF;
-	BOOLEAN		fPrimaryValid = FALSE, fSecondaryValid = FALSE;
+	BOOLEAN		fPrimaryValid = false, fSecondaryValid = false;
 
 	Soldier.bTeam = 1;
 	Soldier.sGridNo = sGridNo;
@@ -1254,11 +1254,11 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 
 	if( !sClosestDist1 || FindBestPath( &Soldier, sClosestSpot1, 0, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
 	{
-		fPrimaryValid = TRUE;
+		fPrimaryValid = true;
 	}
 	if( !sClosestDist2 || FindBestPath( &Soldier, sClosestSpot2, 0, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
 	{
-		fSecondaryValid = TRUE;
+		fSecondaryValid = true;
 	}
 
 	if( fPrimaryValid == fSecondaryValid )

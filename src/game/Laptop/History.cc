@@ -83,7 +83,7 @@ static GUIButtonRef giHistoryButton[2];
 static MOUSE_REGION g_scroll_region;
 
 
-static BOOLEAN fInHistoryMode = FALSE;
+static BOOLEAN fInHistoryMode = false;
 // current page displayed
 static INT32 iCurrentHistoryPage = 1;
 
@@ -144,13 +144,13 @@ void EnterHistory()
 
 
 	// set the fact we are in the history viewer
-	fInHistoryMode=TRUE;
+	fInHistoryMode=true;
 
 	// build Historys list
 	//OpenAndReadHistoryFile( );
 
 	// force redraw of the entire screen
-	//fReDrawScreenFlag=TRUE;
+	//fReDrawScreenFlag=true;
 
 	// set inital states
 	SetHistoryButtonStates( );
@@ -166,7 +166,7 @@ void ExitHistory()
 	LaptopSaveInfo.iCurrentHistoryPage = iCurrentHistoryPage;
 
 	// not in History system anymore
-	fInHistoryMode=FALSE;
+	fInHistoryMode=false;
 
 	// delete graphics
 	RemoveHistory( );
@@ -293,7 +293,7 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
@@ -307,7 +307,7 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
@@ -454,7 +454,7 @@ static void DrawHistoryRecordsText(void)
 		}
 		else
 		{
-			sString = GetSectorIDString(h->sSector, TRUE);
+			sString = GetSectorIDString(h->sSector, true);
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString, HISTORY_TEXT_FONT, &sX, &sY);
 			sString = ReduceStringLength(sString, RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT);
 			MPrint(sX, y, sString);
@@ -669,13 +669,13 @@ try
 	ClearHistoryList();
 
 	// check if bad page
-	if (uiPage == 0) return FALSE;
+	if (uiPage == 0) return false;
 
 	AutoSGPFile f(GCM->tempFiles()->openForReading(HISTORY_DATA_FILE));
 
 	UINT       entry_count = f->size() / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
-	if (entry_count <= skip) return FALSE;
+	if (entry_count <= skip) return false;
 
 	f->seek(skip * SIZE_OF_HISTORY_FILE_RECORD, FILE_SEEK_FROM_START);
 	entry_count -= skip;
@@ -700,9 +700,9 @@ try
 		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSector);
 	}
 
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 // clear out old list of records, and load in next page worth of records
@@ -718,7 +718,7 @@ static void LoadNextHistoryPage(void)
 		LoadInHistoryRecords( iCurrentHistoryPage );
 	}
 	SetHistoryButtonStates();
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 }
 
 
@@ -728,7 +728,7 @@ static void LoadPreviousHistoryPage(void)
 	if (iCurrentHistoryPage <= 1) return;
 	LoadInHistoryRecords(--iCurrentHistoryPage);
 	SetHistoryButtonStates();
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 }
 
 

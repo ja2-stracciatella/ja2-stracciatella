@@ -65,7 +65,7 @@
 
 static SGPVObject* guiBobbyRShipmentGrid;
 
-static BOOLEAN gfBobbyRShipmentsDirty = FALSE;
+static BOOLEAN gfBobbyRShipmentsDirty = false;
 
 static INT32 giBobbyRShipmentSelectedShipment = -1;
 
@@ -152,7 +152,7 @@ void HandleBobbyRShipments()
 {
 	if( gfBobbyRShipmentsDirty )
 	{
-		gfBobbyRShipmentsDirty = FALSE;
+		gfBobbyRShipmentsDirty = false;
 
 		RenderBobbyRShipments();
 	}
@@ -181,13 +181,13 @@ void RenderBobbyRShipments()
 		gpNewBobbyrShipments[ giBobbyRShipmentSelectedShipment ].fActive &&
 		gpNewBobbyrShipments[ giBobbyRShipmentSelectedShipment ].fDisplayedInShipmentPage )
 	{
-		//DisplayPurchasedItems( FALSE, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], FALSE );
-		DisplayPurchasedItems( FALSE, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &gpNewBobbyrShipments[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], FALSE, giBobbyRShipmentSelectedShipment );
+		//DisplayPurchasedItems( false, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], false );
+		DisplayPurchasedItems( false, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &gpNewBobbyrShipments[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], false, giBobbyRShipmentSelectedShipment );
 	}
 	else
 	{
-		//DisplayPurchasedItems( FALSE, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], TRUE );
-		DisplayPurchasedItems( FALSE, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, NULL, TRUE, giBobbyRShipmentSelectedShipment );
+		//DisplayPurchasedItems( false, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], true );
+		DisplayPurchasedItems( false, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, NULL, true, giBobbyRShipmentSelectedShipment );
 	}
 
 	DisplayShipmentTitles();
@@ -356,7 +356,7 @@ static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, UINT32 
 			}
 		}
 
-		gfBobbyRShipmentsDirty = TRUE;
+		gfBobbyRShipmentsDirty = true;
 	}
 }
 

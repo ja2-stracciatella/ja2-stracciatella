@@ -212,7 +212,7 @@ static SGPVObject* guiGoldArrowImages;
 static SGPVObject* guiPackageWeightImage;
 
 
-static BOOLEAN gfReDrawBobbyOrder = FALSE;
+static BOOLEAN gfReDrawBobbyOrder = false;
 
 static INT32  giGrandTotal;
 static UINT32 guiSubTotal;
@@ -228,7 +228,7 @@ static UINT8 gubDropDownAction;
 static INT8  gbSelectedCity = -1;				//keeps track of the currently selected city
 static UINT8 gubCityAtTopOfList;
 
-static BOOLEAN gfRemoveItemsFromStock = FALSE;
+static BOOLEAN gfRemoveItemsFromStock = false;
 
 std::vector<NewBobbyRayOrderStruct> gpNewBobbyrShipments;
 
@@ -317,10 +317,10 @@ void EnterBobbyRMailOrder()
 {
 	UINT16					i;
 
-	gfReDrawBobbyOrder = FALSE;
-	gfDrawConfirmOrderGrpahic = FALSE;
-	gfDestroyConfirmGrphiArea = FALSE;
-	gfCanAcceptOrder = TRUE;
+	gfReDrawBobbyOrder = false;
+	gfDrawConfirmOrderGrpahic = false;
+	gfDestroyConfirmGrphiArea = false;
+	gfCanAcceptOrder = true;
 	gubDropDownAction = BR_DROP_DOWN_NO_ACTION;
 
 	// load the Order Grid graphic and add it
@@ -358,13 +358,13 @@ void EnterBobbyRMailOrder()
 	guiBobbyRClearOrderImage = LoadButtonImage(LAPTOPDIR "/eraseorderbutton.sti", 0, 1);
 	guiBobbyRClearOrder = MakeButton(guiBobbyRClearOrderImage, BobbyROrderFormText[BOBBYR_CLEAR_ORDER], BOBBYR_CLEAR_ORDER_X, BOBBYR_CLEAR_ORDER_Y + 4, BtnBobbyRClearOrderCallback);
 	guiBobbyRClearOrder->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
-	guiBobbyRClearOrder->SpecifyTextOffsets(39, 10, TRUE);
+	guiBobbyRClearOrder->SpecifyTextOffsets(39, 10, true);
 
 
 	// Accept Order button
 	guiBobbyRAcceptOrderImage = LoadButtonImage(LAPTOPDIR "/acceptorderbutton.sti", 2, 0, -1, 1, -1);
 	guiBobbyRAcceptOrder = MakeButton(guiBobbyRAcceptOrderImage, BobbyROrderFormText[BOBBYR_ACCEPT_ORDER], BOBBYR_ACCEPT_ORDER_X, BOBBYR_ACCEPT_ORDER_Y + 4, BtnBobbyRAcceptOrderCallback);
-	guiBobbyRAcceptOrder->SpecifyTextOffsets(43, 24, TRUE);
+	guiBobbyRAcceptOrder->SpecifyTextOffsets(43, 24, true);
 	guiBobbyRAcceptOrder->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 	if( gbSelectedCity == -1 )
@@ -418,7 +418,7 @@ void EnterBobbyRMailOrder()
 
 	CreateBobbyRayOrderTitle();
 
-	gfRemoveItemsFromStock = FALSE;
+	gfRemoveItemsFromStock = false;
 
 	RenderBobbyRMailOrder();
 }
@@ -487,8 +487,8 @@ void HandleBobbyRMailOrder()
 	if(gfReDrawBobbyOrder)
 	{
 		//RenderBobbyRMailOrder();
-		fPausedReDrawScreenFlag = TRUE;
-		gfReDrawBobbyOrder = FALSE;
+		fPausedReDrawScreenFlag = true;
+		gfReDrawBobbyOrder = false;
 	}
 
 	if(gfDrawConfirmOrderGrpahic)
@@ -498,15 +498,15 @@ void HandleBobbyRMailOrder()
 		BltVideoObject(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X,     BOBBYR_CONFIRM_ORDER_Y);
 		InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 
-		gfDrawConfirmOrderGrpahic = FALSE;
+		gfDrawConfirmOrderGrpahic = false;
 	}
 
 	if( gfDestroyConfirmGrphiArea )
 	{
-		gfDestroyConfirmGrphiArea = FALSE;
-		gfReDrawBobbyOrder = TRUE;
+		gfDestroyConfirmGrphiArea = false;
+		gfReDrawBobbyOrder = true;
 		gSelectedConfirmOrderRegion.Disable();
-		gfCanAcceptOrder = TRUE;
+		gfCanAcceptOrder = true;
 	}
 
 	if( gubDropDownAction != BR_DROP_DOWN_NO_ACTION )
@@ -570,7 +570,7 @@ void RenderBobbyRMailOrder()
 	DrawTextToScreen(BobbyROrderFormText[BOBBYR_STANDARD_SERVICE], BOBBYR_SHIPPING_SPEED_X, usPosY, 0, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//DisplayPurchasedItems();
-	DisplayPurchasedItems( TRUE, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, BobbyRayPurchases, FALSE, -1 );
+	DisplayPurchasedItems( true, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, BobbyRayPurchases, false, -1 );
 
 	DrawShippingSpeedLights(gubSelectedLight);
 
@@ -600,7 +600,7 @@ static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, UINT32 reason)
 	{
 		std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 		gubSelectedLight = 0;
-		gfReDrawBobbyOrder = TRUE;
+		gfReDrawBobbyOrder = true;
 		gbSelectedCity = -1;
 		gubCityAtTopOfList = 0;
 
@@ -727,7 +727,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIRST_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//weight
-			sTemp = ST::format("{3.1f}", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased);
+			sTemp = ST::format("{3.1f}", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (float)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased);
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_SECOND_COLUMN_X - 2, usPosY, BOBBYR_GRID_SECOND_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//Display Items Name
@@ -818,7 +818,7 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 				usStandardCost = 0;
 		}
 
-		iShippingCost = (INT32)( ( gpNewBobbyrShipments[ iOrderNum ].uiPackageWeight / (FLOAT)10 ) * usStandardCost + .5 );
+		iShippingCost = (INT32)( ( gpNewBobbyrShipments[ iOrderNum ].uiPackageWeight / (float)10 ) * usStandardCost + .5 );
 	}
 
 
@@ -873,7 +873,7 @@ static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, UINT32 iRea
 	{
 		gubSelectedLight = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		DrawShippingSpeedLights( gubSelectedLight );
-		DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );
+		DisplayShippingCosts( true, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );
 	}
 }
 
@@ -903,7 +903,7 @@ static void SelectConfirmOrderRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT3
 	//delete the order
 	std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 	gubSelectedLight = 0;
-	gfDestroyConfirmGrphiArea = TRUE;
+	gfDestroyConfirmGrphiArea = true;
 
 	//Goto The homepage
 	guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
@@ -917,7 +917,7 @@ static void SelectConfirmOrderRegionCallBackSecondary(MOUSE_REGION* pRegion, UIN
 	//delete the order
 	std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 	gubSelectedLight = 0;
-	gfDestroyConfirmGrphiArea = TRUE;
+	gfDestroyConfirmGrphiArea = true;
 
 }
 
@@ -934,7 +934,7 @@ static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, U
 static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 {
 	static UINT16 usHeight;
-	static BOOLEAN fMouseRegionsCreated=FALSE;
+	static BOOLEAN fMouseRegionsCreated=false;
 
 	switch( ubDropDownAction )
 	{
@@ -954,7 +954,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 
 				break;
 			}
-			fMouseRegionsCreated = TRUE;
+			fMouseRegionsCreated = true;
 
 			usPosX = BOBBYR_CITY_START_LOCATION_X;
 			usPosY = BOBBYR_CITY_START_LOCATION_Y;
@@ -1045,8 +1045,8 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			//enable the clear order and accept order buttons, (because their rendering interferes with the drop down graphics)
 			EnableButton(guiBobbyRClearOrder);
 
-			gfReDrawBobbyOrder = TRUE;
-			fMouseRegionsCreated  = FALSE;
+			gfReDrawBobbyOrder = true;
+			fMouseRegionsCreated  = false;
 			gubDropDownAction = BR_DROP_DOWN_NO_ACTION;
 		}
 			break;
@@ -1243,7 +1243,7 @@ static void DisplayShippingLocationCity(void)
 	ST::string dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : *(GCM->getShippingDestinationName(gbSelectedCity)));
 	DrawTextToScreen(dest, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );
+	DisplayShippingCosts( true, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );
 
 	if( gubDropDownAction == BR_DROP_DOWN_DISPLAY)
 		return;
@@ -1300,7 +1300,7 @@ static void RemovePurchasedItemsFromBobbyRayInventory()
 		// Remove it from Bobby Rays Inventory
 		qty = qty > p.ubNumberPurchased ? qty - p.ubNumberPurchased : 0;
 	}
-	gfRemoveItemsFromStock = FALSE;
+	gfRemoveItemsFromStock = false;
 }
 
 
@@ -1457,7 +1457,7 @@ static void DrawGoldRectangle(INT8 bCityNum)
 
 	usHeight = usTempHeight / (BOBBYR_ORDER_NUM_SHIPPING_CITIES+1);
 
-	usPosY = usTempPosY + (UINT16)( ( ( BOBBYR_SCROLL_AREA_HEIGHT - 2 * BOBBYR_SCROLL_ARROW_HEIGHT ) /  (FLOAT)(BOBBYR_ORDER_NUM_SHIPPING_CITIES +1) ) * bCityNum );
+	usPosY = usTempPosY + (UINT16)( ( ( BOBBYR_SCROLL_AREA_HEIGHT - 2 * BOBBYR_SCROLL_ARROW_HEIGHT ) /  (float)(BOBBYR_ORDER_NUM_SHIPPING_CITIES +1) ) * bCityNum );
 
 	temp = BOBBYR_SCROLL_AREA_Y + BOBBYR_SCROLL_AREA_HEIGHT - BOBBYR_SCROLL_ARROW_HEIGHT - usHeight - 1;
 
@@ -1472,12 +1472,12 @@ static void DrawGoldRectangle(INT8 bCityNum)
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw the gold highlite line on the top and left
-	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth, usPosY, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX, usPosY, usPosX, usPosY+usHeight, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
+	LineDraw(false, usPosX, usPosY, usPosX+usWidth, usPosY, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
+	LineDraw(false, usPosX, usPosY, usPosX, usPosY+usHeight, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
 
 	// draw the shadow line on the bottom and right
-	LineDraw(FALSE, usPosX, usPosY+usHeight, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX+usWidth, usPosY, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
+	LineDraw(false, usPosX, usPosY+usHeight, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
+	LineDraw(false, usPosX+usWidth, usPosY, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
 }
 
 
@@ -1538,7 +1538,7 @@ static UINT32 CalcCostFromWeightOfPackage(UINT8 ubTypeOfService)
 		uiTotalWeight = MIN_SHIPPING_WEIGHT;
 	}
 
-	uiTotalCost = (UINT32)( ( uiTotalWeight / (FLOAT)10 ) * usStandardCost + .5 );
+	uiTotalCost = (UINT32)( ( uiTotalWeight / (float)10 ) * usStandardCost + .5 );
 
 	return( uiTotalCost );
 }
@@ -1603,23 +1603,23 @@ static void PurchaseBobbyOrder(void)
 	auto dest = GCM->getShippingDestination(gbSelectedCity);
 	if (dest->canDeliver)
 	{
-		gfCanAcceptOrder = FALSE;
+		gfCanAcceptOrder = false;
 
 		//add the delivery
-		AddNewBobbyRShipment( BobbyRayPurchases, gbSelectedCity, gubSelectedLight, TRUE, CalcPackageTotalWeight() );
+		AddNewBobbyRShipment( BobbyRayPurchases, gbSelectedCity, gubSelectedLight, true, CalcPackageTotalWeight() );
 	}
 
 	//Add the transaction to the finance page
 	AddTransactionToPlayersBook(BOBBYR_PURCHASE, 0, GetWorldTotalMin(), -giGrandTotal);
 
 	//display the confirm order graphic
-	gfDrawConfirmOrderGrpahic = TRUE;
+	gfDrawConfirmOrderGrpahic = true;
 
 	//Get rid of the city drop dowm, if it is being displayed
 	gubDropDownAction = BR_DROP_DOWN_DESTROY;
 
 	gSelectedConfirmOrderRegion.Enable();
-	gfRemoveItemsFromStock = TRUE;
+	gfRemoveItemsFromStock = true;
 
 	gbSelectedCity = -1;
 }
@@ -1653,7 +1653,7 @@ void AddJohnsGunShipment()
 	Temp[0].ubNumberPurchased = 2;
 	Temp[0].bItemQuality = 100;
 	Temp[0].usBobbyItemIndex = 0;// does this get used anywhere???
-	Temp[0].fUsed = FALSE;
+	Temp[0].fUsed = false;
 
 	//LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[0] = Temp;
 
@@ -1661,14 +1661,14 @@ void AddJohnsGunShipment()
 	Temp[1].ubNumberPurchased = 2;
 	Temp[1].bItemQuality = 5;
 	Temp[1].usBobbyItemIndex = 0;// does this get used anywhere???
-	Temp[1].fUsed = FALSE;
+	Temp[1].fUsed = false;
 
 	/*
 	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[1] = Temp;
 
 
 	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].ubNumberPurchases = 2;
-	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive = TRUE;
+	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive = true;
 	LaptopSaveInfo.usNumberOfBobbyRayOrderUsed++;*/
 	bDaysAhead = CalculateOrderDelay( 2 ) + 2;
 
@@ -1677,7 +1677,7 @@ void AddJohnsGunShipment()
 
 	//add the delivery ( weight is not needed as it will not be displayed )
 	auto dest = GCM->getPrimaryShippingDestination();
-	AddNewBobbyRShipment( Temp, dest->locationId, bDaysAhead, FALSE, 0 );
+	AddNewBobbyRShipment( Temp, dest->locationId, bDaysAhead, false, 0 );
 }
 
 
@@ -1693,7 +1693,7 @@ void EnterInitBobbyRayOrder()
 {
 	std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 	gubSelectedLight = 0;
-	gfReDrawBobbyOrder = TRUE;
+	gfReDrawBobbyOrder = true;
 	gbSelectedCity = -1;
 	gubCityAtTopOfList = 0;
 
@@ -1727,7 +1727,7 @@ static void DisplayPackageWeight(void)
 {
 	ST::string zTemp;
 	UINT32  uiTotalWeight = CalcPackageTotalWeight();
-	//FLOAT  fWeight = (FLOAT)(uiTotalWeight / 10.0);
+	//float  fWeight = (float)(uiTotalWeight / 10.0);
 
 	//Display the 'Package Weight' text
 	DrawTextToScreen(BobbyROrderFormText[BOBBYR_PACKAGE_WEIGHT], BOBBYR_PACKAXGE_WEIGHT_X + 8, BOBBYR_PACKAXGE_WEIGHT_Y + 4, BOBBYR_PACKAXGE_WEIGHT_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -1807,14 +1807,14 @@ static void AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 
 	//memset the memory
 	gpNewBobbyrShipments[ iFoundSpot ] = NewBobbyRayOrderStruct{};
 
-	gpNewBobbyrShipments[ iFoundSpot ].fActive = TRUE;
+	gpNewBobbyrShipments[ iFoundSpot ].fActive = true;
 	gpNewBobbyrShipments[ iFoundSpot ].ubDeliveryLoc = ubDeliveryLoc;
 	gpNewBobbyrShipments[ iFoundSpot ].ubDeliveryMethod = ubDeliveryMethod;
 
 	if( fPruchasedFromBobbyR )
-		gpNewBobbyrShipments[ iFoundSpot ].fDisplayedInShipmentPage = TRUE;
+		gpNewBobbyrShipments[ iFoundSpot ].fDisplayedInShipmentPage = true;
 	else
-		gpNewBobbyrShipments[ iFoundSpot ].fDisplayedInShipmentPage = FALSE;
+		gpNewBobbyrShipments[ iFoundSpot ].fDisplayedInShipmentPage = false;
 
 	//get the apckage weight, if the weight is "below" the minimum, use the minimum
 	if(  uiPackageWeight < MIN_SHIPPING_WEIGHT )

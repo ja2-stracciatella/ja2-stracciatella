@@ -9,7 +9,7 @@
 
 struct NODE
 {
-	BOOLEAN bIsLeaf;     // TRUE if node has no children
+	BOOLEAN bIsLeaf;     // true if node has no children
 	UINT    nPixelCount; // Number of pixels represented by this leaf
 	UINT    nRedSum;     // Sum of red components
 	UINT    nGreenSum;   // Sum of green components
@@ -98,7 +98,7 @@ static void ReduceTree(void)
 		}
 	}
 
-	node->bIsLeaf    = TRUE;
+	node->bIsLeaf    = true;
 	node->nRedSum    = nRedSum;
 	node->nGreenSum  = nGreenSum;
 	node->nBlueSum   = nBlueSum;

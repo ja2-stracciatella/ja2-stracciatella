@@ -39,7 +39,7 @@
 UINT8 gubTownSectorServerTownId = BLANK_SECTOR;
 SGPSector gsTownSectorServerSkip(-1, -1);
 UINT8 gubTownSectorServerIndex = 0;
-BOOLEAN gfYesNoPromptIsForContinue = FALSE; // this flag remembers whether we're starting new training, or continuing
+BOOLEAN gfYesNoPromptIsForContinue = false; // this flag remembers whether we're starting new training, or continuing
 INT32 giTotalCostOfTraining = 0;
 
 
@@ -75,7 +75,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 
 
 	// force tactical to update militia status
-	gfStrategicMilitiaChangesMade = TRUE;
+	gfStrategicMilitiaChangesMade = true;
 
 	// ok, so what do we do with all this training?  Well, in order of decreasing priority:
 	// 1) If there's room in training sector, create new GREEN militia guys there
@@ -95,7 +95,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 		}
 		else
 		{
-			fFoundOne = FALSE;
+			fFoundOne = false;
 
 			if( ubTownId != BLANK_SECTOR )
 			{
@@ -110,7 +110,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 						// great! Create a new GREEN militia guy in the neighbouring sector
 						StrategicAddMilitiaToSector(sNeighbour, GREEN_MILITIA, 1);
 
-						fFoundOne = TRUE;
+						fFoundOne = true;
 						break;
 					}
 				}
@@ -143,7 +143,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 								// great! Promote a GREEN militia guy in the neighbouring sector to a REGULAR
 								StrategicPromoteMilitiaInSector(sNeighbour, GREEN_MILITIA, 1);
 
-								fFoundOne = TRUE;
+								fFoundOne = true;
 								break;
 							}
 						}
@@ -169,7 +169,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 	if (ubMilitiaTrained > 0)
 	{
 		// update the screen display
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 
 		if( ubTownId != BLANK_SECTOR )
 		{
@@ -181,7 +181,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 
 
 	// the trainer announces to player that he's finished his assignment.  Make his sector flash!
-	AssignmentDone( pTrainer, TRUE, FALSE );
+	AssignmentDone( pTrainer, true, false );
 
 	// handle completion of town by training group
 	HandleCompletionOfTownTrainingByGroupWithTrainer( pTrainer );
@@ -209,7 +209,7 @@ static void StrategicAddMilitiaToSector(const SGPSector& sMap, UINT8 ubRank, UIN
 	pSectorInfo->ubNumberOfCivsAtLevel[ ubRank ] += ubHowMany;
 
 	// update the screen display
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -225,7 +225,7 @@ static void StrategicPromoteMilitiaInSector(const SGPSector& sMap, UINT8 const c
 	si.ubNumberOfCivsAtLevel[current_rank    ] -= n;
 	si.ubNumberOfCivsAtLevel[current_rank + 1] += n;
 
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -245,7 +245,7 @@ void StrategicRemoveMilitiaFromSector(const SGPSector& sMap, UINT8 ubRank, UINT8
 	pSectorInfo->ubNumberOfCivsAtLevel[ ubRank ] -= ubHowMany;
 
 	// update the screen display
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -356,23 +356,23 @@ BOOLEAN SectorOursAndPeaceful(const SGPSector& sector)
 		// and either there are enemies prowling this sector, or combat is in progress
 		if ( gTacticalStatus.fEnemyInSector || ( gTacticalStatus.uiFlags & INCOMBAT ) )
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
 	// if sector is controlled by enemies, it's not ours (duh!)
 	if (!sector.z && StrategicMap[sector.AsStrategicIndex()].fEnemyControlled)
 	{
-		return FALSE;
+		return false;
 	}
 
 	if (NumHostilesInSector(sector))
 	{
-		return FALSE;
+		return false;
 	}
 
 	// safe & secure, s'far as we can tell
-	return(TRUE);
+	return(true);
 }
 
 
@@ -434,7 +434,7 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 	giTotalCostOfTraining = MILITIA_TRAINING_COST * iNumberOfSectors;
 	Assert( giTotalCostOfTraining > 0 );
 
-	gfYesNoPromptIsForContinue = FALSE;
+	gfYesNoPromptIsForContinue = false;
 
 	if( LaptopSaveInfo.iCurrentBalance < giTotalCostOfTraining )
 	{
@@ -476,7 +476,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 
 	pMilitiaTrainerSoldier = pSoldier;
 
-	gfYesNoPromptIsForContinue = TRUE;
+	gfYesNoPromptIsForContinue = true;
 
 	// is there enough loyalty to continue training
 	if (!DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(pSoldier))
@@ -494,7 +494,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 		if ( bTownId == BLANK_SECTOR )
 		{
 			// wilderness SAM site
-			sStringB = GetSectorIDString(pSoldier->sSector, TRUE);
+			sStringB = GetSectorIDString(pSoldier->sSector, true);
 			sString = st_format_printf(pMilitiaConfirmStrings[9], sStringB);
 		}
 		else
@@ -520,7 +520,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 
 	// ok to continue, ask player
 
-	sStringB = GetSectorIDString(pSoldier->sSector, TRUE);
+	sStringB = GetSectorIDString(pSoldier->sSector, true);
 	sString = st_format_printf(pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining);
 
 	// ask player whether he'd like to continue training
@@ -636,7 +636,7 @@ bool CanNearbyMilitiaScoutThisSector(const SGPSector& sMap)
 
 BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector)
 {
-	if (sector.z != 0) return TRUE;
+	if (sector.z != 0) return true;
 
 	UINT32 count_milita = 0;
 	UINT32 max_milita   = 0;
@@ -680,7 +680,7 @@ static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrain
 		if (pSoldier->bAssignment == TRAIN_TOWN && pSoldier->sSector == sSector)
 		{
 			// done assignment
-			AssignmentDone( pSoldier, FALSE, FALSE );
+			AssignmentDone( pSoldier, false, false );
 		}
 	}
 }
@@ -729,7 +729,7 @@ void ClearSectorListForCompletedTrainingOfMilitia()
 void HandleContinueOfTownTraining( void )
 {
 	INT32 iCounter = 0;
-	BOOLEAN fContinueEventPosted = FALSE;
+	BOOLEAN fContinueEventPosted = false;
 
 
 	while (g_list_of_merc_in_sectors_completed_militia_training[iCounter] != NULL)
@@ -738,7 +738,7 @@ void HandleContinueOfTownTraining( void )
 		SOLDIERTYPE& s = *g_list_of_merc_in_sectors_completed_militia_training[iCounter];
 		if (s.bActive)
 		{
-			fContinueEventPosted = TRUE;
+			fContinueEventPosted = true;
 
 			class DialogueEventContinueTrainingMilitia : public CharacterDialogueEvent
 			{
@@ -767,7 +767,7 @@ void HandleContinueOfTownTraining( void )
 		// ATE: If this event happens in tactical mode we will be switching at some time to mapscreen...
 		if ( guiCurrentScreen == GAME_SCREEN )
 		{
-			gfEnteringMapScreen = TRUE;
+			gfEnteringMapScreen = true;
 		}
 
 		//If the militia view isn't currently active, then turn it on when prompting to continue training.
@@ -869,7 +869,7 @@ static void PayForTrainingInSector(UINT8 ubSector)
 	AddTransactionToPlayersBook( TRAIN_TOWN_MILITIA, ubSector, GetWorldTotalMin(), -( MILITIA_TRAINING_COST ) );
 
 	// mark this sector sectors as being paid up
-	SectorInfo[ ubSector ].fMilitiaTrainingPaid = TRUE;
+	SectorInfo[ ubSector ].fMilitiaTrainingPaid = true;
 
 	// reset done flags
 	ResetDoneFlagForAllMilitiaTrainersInSector( ubSector );
@@ -884,7 +884,7 @@ static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 				pSoldier->sSector.AsByte() == ubSector &&
 				pSoldier->sSector.z == 0)
 		{
-			pSoldier->fDoneAssignmentAndNothingToDoFlag = FALSE;
+			pSoldier->fDoneAssignmentAndNothingToDoFlag = false;
 			pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;
 		}
 	}
@@ -893,11 +893,11 @@ static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 
 BOOLEAN MilitiaTrainingAllowedInSector(const SGPSector& sector)
 {
-	BOOLEAN fSamSitePresent = FALSE;
+	BOOLEAN fSamSitePresent = false;
 
 	if (sector.z != 0)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	fSamSitePresent = IsThisSectorASAMSector(sector);
@@ -905,7 +905,7 @@ BOOLEAN MilitiaTrainingAllowedInSector(const SGPSector& sector)
 	if( fSamSitePresent )
 	{
 		// all SAM sites may have militia trained at them
-		return(TRUE);
+		return(true);
 	}
 
 	UINT8 const bTownId = GetTownIdForSector(sector);

@@ -153,7 +153,7 @@ static ST::string gsSpeckDialogueTextPopUp;
 static UINT16  gusSpeckDialogueX;
 static UINT16  gusSpeckDialogueActualWidth;
 
-static BOOLEAN gfInMercSite = FALSE; // this flag is set when inide of the merc site
+static BOOLEAN gfInMercSite = false; // this flag is set when inide of the merc site
 
 //Merc Video Conferencing Mode
 enum
@@ -169,19 +169,19 @@ static BOOLEAN   gfMercVideoIsBeingDisplayed;
 static FACETYPE* g_video_speck_face;
 UINT16		gusMercVideoSpeckSpeech;
 
-static BOOLEAN gfDisplaySpeckTextBox = FALSE;
+static BOOLEAN gfDisplaySpeckTextBox = false;
 
-static BOOLEAN gfJustEnteredMercSite = FALSE;
+static BOOLEAN gfJustEnteredMercSite = false;
 UINT8			gubArrivedFromMercSubSite=MERC_CAME_FROM_OTHER_PAGE;		//the merc is arriving from one of the merc sub pages
-static BOOLEAN gfDoneIntroSpeech     = TRUE;
+static BOOLEAN gfDoneIntroSpeech     = true;
 
-static BOOLEAN gfMercSiteScreenIsReDrawn = FALSE;
+static BOOLEAN gfMercSiteScreenIsReDrawn = false;
 
-BOOLEAN		gfJustHiredAMercMerc=FALSE;
+BOOLEAN		gfJustHiredAMercMerc=false;
 
-static BOOLEAN gfRedrawMercSite = FALSE;
+static BOOLEAN gfRedrawMercSite = false;
 
-static BOOLEAN gfFirstTimeIntoMERCSiteSinceEnteringLaptop = FALSE;
+static BOOLEAN gfFirstTimeIntoMERCSiteSinceEnteringLaptop = false;
 
 // This is not persisted but lasts for the entire game session, and never get reset
 static std::map<UINT8, UINT32> gNumberOfTimesQuoteSaid = {};
@@ -215,10 +215,10 @@ void GameInitMercs()
 	LaptopSaveInfo.gubPlayersMercAccountStatus = MERC_NO_ACCOUNT;
 	gubCurMercIndex = 0;
 
-	MakeNewMercsAvailable(FALSE);
+	MakeNewMercsAvailable(false);
 
 	gubCurrentMercVideoMode = MERC_VIDEO_NO_VIDEO_MODE;
-	gfMercVideoIsBeingDisplayed = FALSE;
+	gfMercVideoIsBeingDisplayed = false;
 
 	gusMercVideoSpeckSpeech = 0;
 }
@@ -235,7 +235,7 @@ void EnterMercs()
 	SetBookMark( MERC_BOOKMARK );
 
 	//Reset a static variable
-	HandleSpeckTalking( TRUE );
+	HandleSpeckTalking( true );
 
 	InitMercBackGround();
 
@@ -285,7 +285,7 @@ void EnterMercs()
 
 	//init the face
 
-	gfJustEnteredMercSite = TRUE;
+	gfJustEnteredMercSite = true;
 
 	//if NOT entering from a subsite
 	if( gubArrivedFromMercSubSite == MERC_CAME_FROM_OTHER_PAGE )
@@ -303,7 +303,7 @@ void EnterMercs()
 	}
 
 
-	GetSpeckConditionalOpening( TRUE );
+	GetSpeckConditionalOpening( true );
 	//gubArrivedFromMercSubSite = MERC_CAME_FROM_OTHER_PAGE;
 
 	//if Speck should start talking
@@ -313,10 +313,10 @@ void EnterMercs()
 	}
 
 	//Reset the some variables
-	HandleSpeckIdleConversation( TRUE );
+	HandleSpeckIdleConversation( true );
 
 	//Since we are in the site, set the flag
-	gfInMercSite = TRUE;
+	gfInMercSite = true;
 }
 
 
@@ -331,9 +331,9 @@ void ExitMercs()
 
 	if( gfMercVideoIsBeingDisplayed )
 	{
-		gfMercVideoIsBeingDisplayed = FALSE;
+		gfMercVideoIsBeingDisplayed = false;
 		DeleteFace(g_video_speck_face);
-		InitDestroyXToCloseVideoWindow( FALSE );
+		InitDestroyXToCloseVideoWindow( false );
 		gubCurrentMercVideoMode = MERC_VIDEO_NO_VIDEO_MODE;
 	}
 
@@ -359,7 +359,7 @@ void ExitMercs()
 	else
 		LaptopSaveInfo.ubPlayerBeenToMercSiteStatus = MERC_SITE_THIRD_OR_MORE_VISITS;*/
 
-	gfJustEnteredMercSite = TRUE;
+	gfJustEnteredMercSite = true;
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
 	//Remove the merc text box if one is available
@@ -368,10 +368,10 @@ void ExitMercs()
 	//Set up so next time we come in, we know we came from a differnt page
 	gubArrivedFromMercSubSite = MERC_CAME_FROM_OTHER_PAGE;
 
-	gfJustHiredAMercMerc = FALSE;
+	gfJustHiredAMercMerc = false;
 
 	//Since we are leaving the site, set the flag
-	gfInMercSite = TRUE;
+	gfInMercSite = true;
 
 	//Empty the Queue cause Speck could still have a quote in waiting
 	EmptyDialogueQueue( );
@@ -388,8 +388,8 @@ void HandleMercs()
 	if( gfRedrawMercSite )
 	{
 		RenderMercs();
-		gfRedrawMercSite = FALSE;
-		gfMercSiteScreenIsReDrawn = TRUE;
+		gfRedrawMercSite = false;
+		gfMercSiteScreenIsReDrawn = true;
 	}
 
 	//if Speck has something to say, say it
@@ -401,12 +401,12 @@ void HandleMercs()
 			// Blt the video window background
 			DrawMercVideoBackGround();
 
-			InitDestroyXToCloseVideoWindow( TRUE );
+			InitDestroyXToCloseVideoWindow( true );
 
 			InitMercVideoFace();
 			gubCurrentMercVideoMode = MERC_VIDEO_INIT_VIDEO_MODE;
 
-			//gfMercSiteScreenIsReDrawn = TRUE;
+			//gfMercSiteScreenIsReDrawn = true;
 		}
 	}
 
@@ -416,7 +416,7 @@ void HandleMercs()
 		// Blt the video window background
 		DrawMercVideoBackGround();
 
-		gfMercSiteScreenIsReDrawn = FALSE;
+		gfMercSiteScreenIsReDrawn = false;
 	}
 
 
@@ -427,7 +427,7 @@ void HandleMercs()
 	}
 
 	//Reset the some variables
-	HandleSpeckIdleConversation( FALSE );
+	HandleSpeckIdleConversation( false );
 
 	if (!fCurrentlyInLaptop)
 	{
@@ -469,7 +469,7 @@ void RenderMercs()
 	RenderWWWProgramTitleBar( );
 
 	//if the page is redrawn, and we are in video conferencing, redraw the VC backgrund graphic
-	gfMercSiteScreenIsReDrawn = TRUE;
+	gfMercSiteScreenIsReDrawn = true;
 
 	guiAccountBoxButton->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
 
@@ -594,7 +594,7 @@ void DailyUpdateOfMercSite()
 
 
 		//Set the fact the site has gone down
-		LaptopSaveInfo.fMercSiteHasGoneDownYet = TRUE;
+		LaptopSaveInfo.fMercSiteHasGoneDownYet = true;
 
 		//Get the site up the next day at 6:00 pm
 		uiTimeInMinutes = GetMidnightOfFutureDayInMinutes( 1 ) + 18 * 60;
@@ -644,7 +644,7 @@ static void InitMercVideoFace(void)
 	RenderAutoFace(f);
 
 	//enables the global flag indicating the the video is being displayed
-	gfMercVideoIsBeingDisplayed = TRUE;
+	gfMercVideoIsBeingDisplayed = true;
 
 }
 
@@ -652,30 +652,30 @@ static void InitMercVideoFace(void)
 static BOOLEAN StartSpeckTalking(UINT16 usQuoteNum)
 {
 	if( usQuoteNum == MERC_VIDEO_SPECK_SPEECH_NOT_TALKING || usQuoteNum == MERC_VIDEO_SPECK_HAS_TO_TALK_BUT_QUOTE_NOT_CHOSEN_YET )
-		return( FALSE );
+		return false;
 
 	//Reset the time for when speck starts to do the random quotes
-	HandleSpeckIdleConversation( TRUE );
+	HandleSpeckIdleConversation( true );
 
 	//Start Speck talking
-	CharacterDialogue(SPECK, usQuoteNum, g_video_speck_face, DIALOGUE_SPECK_CONTACT_PAGE_UI, FALSE);
+	CharacterDialogue(SPECK, usQuoteNum, g_video_speck_face, DIALOGUE_SPECK_CONTACT_PAGE_UI, false);
 
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
-	return(TRUE);
+	return(true);
 }
 
 
 // Performs the frame by frame update
 static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 {
-	static BOOLEAN fWasTheMercTalking=FALSE;
+	static BOOLEAN fWasTheMercTalking=false;
 	BOOLEAN        fIsTheMercTalking;
 
 	if( fReset )
 	{
-		fWasTheMercTalking = FALSE;
-		return( TRUE );
+		fWasTheMercTalking = false;
+		return true;
 	}
 
 	HandleDialogue();
@@ -697,21 +697,21 @@ static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 	//if the merc just stopped talking
 	if(fWasTheMercTalking && !fIsTheMercTalking)
 	{
-		fWasTheMercTalking = FALSE;
+		fWasTheMercTalking = false;
 
 		if( DialogueQueueIsEmpty( ) )
 		{
 			RemoveSpeckPopupTextBox();
 
-			gfDisplaySpeckTextBox = FALSE;
+			gfDisplaySpeckTextBox = false;
 
 			gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
 			//Reset the time for when speck starts to do the random quotes
-			HandleSpeckIdleConversation( TRUE );
+			HandleSpeckIdleConversation( true );
 		}
 		else
-			fIsTheMercTalking = TRUE;
+			fIsTheMercTalking = true;
 	}
 
 	fWasTheMercTalking = fIsTheMercTalking;
@@ -721,7 +721,7 @@ static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 
 static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 {
-	static BOOLEAN fButtonCreated=FALSE;
+	static BOOLEAN fButtonCreated=false;
 
 	//if we are asked to create the buttons and the button isnt already created
 	if( fCreate && !fButtonCreated )
@@ -729,14 +729,14 @@ static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 		guiXToCloseMercVideoButton = QuickCreateButtonImg(LAPTOPDIR "/closebutton.sti", 0, 1, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y, MSYS_PRIORITY_HIGH, BtnXToCloseMercVideoButtonCallback);
 		guiXToCloseMercVideoButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
-		fButtonCreated = TRUE;
+		fButtonCreated = true;
 	}
 
 	//if we are asked to destroy the buttons and the buttons are created
 	if( !fCreate && fButtonCreated )
 	{
 		RemoveButton( guiXToCloseMercVideoButton );
-		fButtonCreated = FALSE;
+		fButtonCreated = false;
 	}
 }
 
@@ -750,7 +750,7 @@ static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		StopSpeckFromTalking();
 
 		//make sure we are done the intro speech
-		gfDoneIntroSpeech = TRUE;
+		gfDoneIntroSpeech = true;
 
 		//remove the video conf mode
 		gubCurrentMercVideoMode = MERC_VIDEO_EXIT_VIDEO_MODE;
@@ -776,10 +776,10 @@ static BOOLEAN DisplayMercVideoIntro(UINT16 usTimeTillFinish)
 	if( (uiCurTime - uiLastTime) > usTimeTillFinish )
 	{
 		uiLastTime = 0;
-		return(TRUE);
+		return(true);
 	}
 	else
-		return(FALSE);
+		return(false);
 }
 
 
@@ -788,7 +788,7 @@ static BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage(void);
 
 static void HandleTalkingSpeck(void)
 {
-	BOOLEAN fIsSpeckTalking = TRUE;
+	BOOLEAN fIsSpeckTalking = true;
 
 	switch( gubCurrentMercVideoMode )
 	{
@@ -821,16 +821,16 @@ static void HandleTalkingSpeck(void)
 
 			if( (gfJustEnteredMercSite && gubArrivedFromMercSubSite != MERC_CAME_FROM_OTHER_PAGE) || gfFirstTimeIntoMERCSiteSinceEnteringLaptop )
 			{
-				gfFirstTimeIntoMERCSiteSinceEnteringLaptop = FALSE;
-				GetSpeckConditionalOpening( FALSE );
-				gfJustEnteredMercSite = FALSE;
+				gfFirstTimeIntoMERCSiteSinceEnteringLaptop = false;
+				GetSpeckConditionalOpening( false );
+				gfJustEnteredMercSite = false;
 			}
 			else
 			{
-				fIsSpeckTalking = HandleSpeckTalking( FALSE );
+				fIsSpeckTalking = HandleSpeckTalking( false );
 
 				if( !fIsSpeckTalking )
-					fIsSpeckTalking = GetSpeckConditionalOpening( FALSE );
+					fIsSpeckTalking = GetSpeckConditionalOpening( false );
 
 				//if speck didnt start talking, see if he just hired someone
 				if( !fIsSpeckTalking )
@@ -877,10 +877,10 @@ static void HandleTalkingSpeck(void)
 
 				//Delete the face
 				DeleteFace(g_video_speck_face);
-				InitDestroyXToCloseVideoWindow( FALSE );
+				InitDestroyXToCloseVideoWindow( false );
 
-				gfRedrawMercSite = TRUE;
-				gfMercVideoIsBeingDisplayed = FALSE;
+				gfRedrawMercSite = true;
+				gfMercVideoIsBeingDisplayed = false;
 
 				//Remove the merc popup
 				RemoveSpeckPopupTextBox();
@@ -912,7 +912,7 @@ void DisplayTextForSpeckVideoPopUp(const ST::string& str)
 	//add the "" around the speech.
 	gsSpeckDialogueTextPopUp = ST::format("\"{}\"", str);
 
-	gfDisplaySpeckTextBox = TRUE;
+	gfDisplaySpeckTextBox = true;
 
 	//Set this so the popup box doesnt render in RenderMercs()
 	MercPopUpBox* const old_merc_popup_box = g_merc_popup_box;
@@ -962,7 +962,7 @@ static BOOLEAN IsSpeckTryingToRecruit()
 	if (LaptopSaveInfo.gubLastMercIndex >= (listings.size() - 1))
 	{
 		// we have got all mercs already
-		return FALSE;
+		return false;
 	}
 
 	auto nextAvailable = listings[LaptopSaveInfo.gubLastMercIndex + 1];
@@ -972,23 +972,23 @@ static BOOLEAN IsSpeckTryingToRecruit()
 static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 {
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
-	BOOLEAN	fCanSayLackOfPaymentQuote = TRUE;
+	BOOLEAN	fCanSayLackOfPaymentQuote = true;
 
 	//If we just entered the screen, reset some variables
 	if( fJustEnteredScreen )
 	{
-		gfDoneIntroSpeech = FALSE;
+		gfDoneIntroSpeech = false;
 		usQuoteToSay = 0;
-		return( FALSE );
+		return false;
 	}
 
 	//if we are done the intro speech, or arrived from a sub page, get out of the function
 	if( gfDoneIntroSpeech || gubArrivedFromMercSubSite != MERC_CAME_FROM_OTHER_PAGE )
 	{
-		return( FALSE );
+		return false;
 	}
 
-	gfDoneIntroSpeech = TRUE;
+	gfDoneIntroSpeech = true;
 
 	//set the opening quote based on if the player has been here before
 	if( LaptopSaveInfo.ubPlayerBeenToMercSiteStatus == MERC_SITE_FIRST_VISIT && usQuoteToSay <= 8 )
@@ -996,7 +996,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		StartSpeckTalking( usQuoteToSay );
 		usQuoteToSay++;
 		if( usQuoteToSay <= 8 )
-			gfDoneIntroSpeech = FALSE;
+			gfDoneIntroSpeech = false;
 	}
 
 	//if its the players second visit
@@ -1008,7 +1008,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 	// We have been here at least 2 times before, Check which quote we should use
 	else
 	{
-		BOOLEAN fCanUseIdleTag = FALSE;
+		BOOLEAN fCanUseIdleTag = false;
 
 		//if the player has not hired any MERC mercs before
 		// CJC Dec 1 2002: fixing this, so near-bankrupt msg will play
@@ -1018,17 +1018,17 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		}
 
 		//else if it is the first visit since the server went down
-		else if( LaptopSaveInfo.fFirstVisitSinceServerWentDown == TRUE )
+		else if( LaptopSaveInfo.fFirstVisitSinceServerWentDown == true )
 		{
 			LaptopSaveInfo.fFirstVisitSinceServerWentDown = 2;
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_9_FIRST_VISIT_SINCE_SERVER_WENT_DOWN );
-			fCanUseIdleTag = TRUE;
+			fCanUseIdleTag = true;
 		}
 		/*
 		//else if new mercs are available
 		else if( LaptopSaveInfo.fNewMercsAvailableAtMercSite )
 		{
-			LaptopSaveInfo.fNewMercsAvailableAtMercSite = FALSE;
+			LaptopSaveInfo.fNewMercsAvailableAtMercSite = false;
 
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_11_NEW_MERCS_AVAILABLE );
 		}*/
@@ -1046,7 +1046,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		{
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_5_PLAYER_OWES_SPECK_ACCOUNT_SUSPENDED );
 
-			fCanSayLackOfPaymentQuote = FALSE;
+			fCanSayLackOfPaymentQuote = false;
 		}
 
 		//else if the player owes speck a large sum of money, have speck say so
@@ -1055,7 +1055,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_6_PLAYER_OWES_SPECK_ALMOST_BANKRUPT_1 );
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_6_PLAYER_OWES_SPECK_ALMOST_BANKRUPT_2 );
 
-			fCanSayLackOfPaymentQuote = FALSE;
+			fCanSayLackOfPaymentQuote = false;
 		}
 
 		else
@@ -1066,26 +1066,26 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 			if( ubRandom < 40 && AreAnyOfTheNewMercsAvailable() && CountNumberOfMercMercsHired() > 1 )
 			{
 				StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_3_BUSINESS_GOOD );
-				fCanUseIdleTag = TRUE;
+				fCanUseIdleTag = true;
 			}
 
 			//or if still trying to recruit ( the last recruit hasnt arrived and the player has paid for some of his mercs )
 			else if( ubRandom < 80 && IsSpeckTryingToRecruit())
 			{
 				StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_4_TRYING_TO_RECRUIT );
-				fCanUseIdleTag = TRUE;
+				fCanUseIdleTag = true;
 			}
 
 			//else use the generic opening
 			else
 			{
 				StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_10_GENERIC_OPENING );
-				fCanUseIdleTag = TRUE;
+				fCanUseIdleTag = true;
 
 				//if the  merc hasnt said the line before
 				if( !LaptopSaveInfo.fSaidGenericOpeningInMercSite )
 				{
-					LaptopSaveInfo.fSaidGenericOpeningInMercSite = TRUE;
+					LaptopSaveInfo.fSaidGenericOpeningInMercSite = true;
 					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_10_TAG_FOR_20 );
 				}
 			}
@@ -1119,7 +1119,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 	//if new mercs are available
 	if( LaptopSaveInfo.fNewMercsAvailableAtMercSite )
 	{
-		LaptopSaveInfo.fNewMercsAvailableAtMercSite = FALSE;
+		LaptopSaveInfo.fNewMercsAvailableAtMercSite = false;
 
 		StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_11_NEW_MERCS_AVAILABLE );
 	}
@@ -1130,7 +1130,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		//if no merc has died before
 		if( !LaptopSaveInfo.fHasAMercDiedAtMercSite )
 		{
-			LaptopSaveInfo.fHasAMercDiedAtMercSite = TRUE;
+			LaptopSaveInfo.fHasAMercDiedAtMercSite = true;
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FIRST_MERC_DIES );
 		}
 
@@ -1175,7 +1175,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		if (!LaptopSaveInfo.fSpeckSaidFloMarriedCousinQuote && !IsMercDead(GetProfile(BIFF)))
 		{
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_MARRIED_A_COUSIN_BIFF_IS_ALIVE );
-			LaptopSaveInfo.fSpeckSaidFloMarriedCousinQuote = TRUE;
+			LaptopSaveInfo.fSpeckSaidFloMarriedCousinQuote = true;
 
 			MakeBiffAwayForCoupleOfDays();
 		}
@@ -1190,7 +1190,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_LARRY_RELAPSED );
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -1202,11 +1202,11 @@ static BOOLEAN IsAnyMercMercsHired(void)
 		ProfileID ubMercID = GetProfileIDFromMERCListing(m);
 		if( IsMercOnTeam( ubMercID ) )
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1217,10 +1217,10 @@ static BOOLEAN IsAnyMercMercsDead(void)
 	{
 		ProfileID mercID = GetProfileIDFromMERCListing(m);
 		if (GetProfile(mercID).bMercStatus == MERC_IS_DEAD)
-			return( TRUE );
+			return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1281,7 +1281,7 @@ static void RemoveSpeckPopupTextBox(void)
 	g_merc_popup_box = 0;
 
 	//redraw the screen
-	gfRedrawMercSite = TRUE;
+	gfRedrawMercSite = true;
 }
 
 
@@ -1320,11 +1320,11 @@ static BOOLEAN IsMercMercAvailable(UINT8 ubMercID)
 		{
 			//if the merc is available, and Not dead
 			if (IsMercHireable(GetProfile(ubMercID)))
-				return( TRUE );
+				return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1341,13 +1341,13 @@ static BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage(void)
 			? SPECK_QUOTE_GENERIC_THANKS_FOR_HIRING_MERCS_1
 			: SPECK_QUOTE_GENERIC_THANKS_FOR_HIRING_MERCS_2);
 
-		gfJustHiredAMercMerc = FALSE;
-		//gfDoneIntroSpeech = TRUE;
+		gfJustHiredAMercMerc = false;
+		//gfDoneIntroSpeech = true;
 
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1358,7 +1358,7 @@ static BOOLEAN ShouldSpeckSayAQuote(void)
 	{
 		//if the merc has something to say
 		if( gusMercVideoSpeckSpeech != MERC_VIDEO_SPECK_SPEECH_NOT_TALKING )
-			return( FALSE );
+			return false;
 	}
 
 
@@ -1366,35 +1366,35 @@ static BOOLEAN ShouldSpeckSayAQuote(void)
 	if( gfJustHiredAMercMerc )
 	{
 		gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_HAS_TO_TALK_BUT_QUOTE_NOT_CHOSEN_YET;
-		return( TRUE );
+		return true;
 
 		/*
 		//if the merc has something to say
 		if( gusMercVideoSpeckSpeech != MERC_VIDEO_SPECK_SPEECH_NOT_TALKING )
-			return( TRUE );
+			return true;
 		else
 		{
 			gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_HAS_TO_TALK_BUT_QUOTE_NOT_CHOSEN_YET;
-			return( TRUE );
+			return true;
 		}*/
 	}
 
 	//If it is the first time into the merc site
 	if( gfFirstTimeIntoMERCSiteSinceEnteringLaptop )
 	{
-		//gfFirstTimeIntoMERCSiteSinceEnteringLaptop = FALSE;
+		//gfFirstTimeIntoMERCSiteSinceEnteringLaptop = false;
 		gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_HAS_TO_TALK_BUT_QUOTE_NOT_CHOSEN_YET;
-		return( TRUE );
+		return true;
 	}
 
 	/*
 	//if we are entering from anywhere except a sub page
 	if( gubArrivedFromMercSubSite == MERC_CAME_FROM_OTHER_PAGE )
 	{
-		GetSpeckConditionalOpening( FALSE );
-		return( TRUE );
+		GetSpeckConditionalOpening( false );
+		return true;
 	}*/
-	return( FALSE );
+	return false;
 }
 
 
@@ -1494,7 +1494,7 @@ static BOOLEAN HasLarryRelapsed(void)
 //Gets Called on each enter into laptop.
 void EnterInitMercSite()
 {
-	gfFirstTimeIntoMERCSiteSinceEnteringLaptop = TRUE;
+	gfFirstTimeIntoMERCSiteSinceEnteringLaptop = true;
 	gubCurMercIndex = 0;
 }
 
@@ -1509,15 +1509,15 @@ static BOOLEAN ShouldTheMercSiteServerGoDown(void)
 	{
 		if( Random( 100 ) < ( uiDay * 2 + 10 ) )
 		{
-			return( TRUE );
+			return true;
 		}
 		else
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1527,7 +1527,7 @@ void GetMercSiteBackOnline()
 	AddEmail( MERC_NEW_SITE_ADDRESS, MERC_NEW_SITE_ADDRESS_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin() );
 
 	//Set a flag indicating that the server just went up ( so speck can make a comment when the player next visits the site )
-	LaptopSaveInfo.fFirstVisitSinceServerWentDown = TRUE;
+	LaptopSaveInfo.fFirstVisitSinceServerWentDown = true;
 }
 
 
@@ -1578,7 +1578,7 @@ static void MakeBiffAwayForCoupleOfDays(void)
 static BOOLEAN AreAnyOfTheNewMercsAvailable(void)
 {
 	if( LaptopSaveInfo.fNewMercsAvailableAtMercSite )
-		return( FALSE );
+		return false;
 
 	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
@@ -1586,19 +1586,19 @@ static BOOLEAN AreAnyOfTheNewMercsAvailable(void)
 
 		ProfileID ubMercID = GetProfileIDFromMERCListing(m);
 		if( IsMercMercAvailable( ubMercID ) )
-			return( TRUE );
+			return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 // Check if any new merc is about to become available
 static void ScheduleNewMercsToBeAvailable(void)
 {
-	BOOLEAN fNewMercAreAvailable = FALSE;
+	BOOLEAN fNewMercAreAvailable = false;
 	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		if (CanMercBeAvailableYet(m)) fNewMercAreAvailable = TRUE;
+		if (CanMercBeAvailableYet(m)) fNewMercAreAvailable = true;
 	}
 
 	//if there is a new merc available
@@ -1615,22 +1615,22 @@ static BOOLEAN CanMercBeAvailableYet(const MERCListingModel* merc)
 	//if the merc is already available
 	if (merc->index <= LaptopSaveInfo.gubLastMercIndex)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	//if the merc is already hired
 	ProfileID profileID = GetProfileIDFromMERCListing(merc);
 	if (!IsMercHireable(GetProfile(profileID)))
-		return( FALSE );
+		return false;
 
 	//if player has paid enough money for the merc to be available, and the it is after the current day
 	if (merc->minTotalSpending <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck
 		&& merc->minDays <= GetWorldDay())
 	{
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 // update the value of ubLastMercAvailableId for save game compatability
@@ -1680,14 +1680,14 @@ void SyncLastMercFromSaveGame()
 // make all can-be-available mercs available immediately
 static void MakeNewMercsAvailable(BOOLEAN fShouldNotifyPlayer)
 {
-	BOOLEAN fNewMercAvailable = FALSE;
+	BOOLEAN fNewMercAvailable = false;
 	for (const MERCListingModel* merc : GCM->getMERCListings())
 	{
 		if (CanMercBeAvailableYet(merc) && LaptopSaveInfo.gubLastMercIndex < merc->index)
 		{
 			LaptopSaveInfo.gubLastMercIndex = merc->index;
 			SetLastMercArrival(merc);
-			fNewMercAvailable = TRUE;
+			fNewMercAvailable = true;
 		}
 	}
 
@@ -1696,13 +1696,13 @@ static void MakeNewMercsAvailable(BOOLEAN fShouldNotifyPlayer)
 		AddEmail(NEW_MERCS_AT_MERC, NEW_MERCS_AT_MERC_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin());
 
 		//new mercs are available
-		LaptopSaveInfo.fNewMercsAvailableAtMercSite = TRUE;
+		LaptopSaveInfo.fNewMercsAvailableAtMercSite = true;
 	}
 }
 
 void NewMercsAvailableAtMercSiteCallBack()
 {
-	MakeNewMercsAvailable(TRUE);
+	MakeNewMercsAvailable(true);
 }
 
 //used for older saves

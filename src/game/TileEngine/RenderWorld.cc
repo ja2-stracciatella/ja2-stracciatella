@@ -112,8 +112,8 @@ BOOLEAN gfRenderFullThisFrame = 0;
 
 
 UINT8   gubCurScrollSpeedID = 1;
-BOOLEAN gfDoVideoScroll     = TRUE;
-BOOLEAN gfScrollPending     = FALSE;
+BOOLEAN gfDoVideoScroll     = true;
+BOOLEAN gfScrollPending     = false;
 
 static RenderLayerFlags uiLayerUsedFlags         = TILES_LAYER_ALL;
 static RenderLayerFlags uiAdditiveLayerUsedFlags = TILES_LAYER_ALL;
@@ -131,9 +131,9 @@ INT16 gsTopLeftWorldX;                                  /**< Top left corner of 
 INT16 gsTopLeftWorldY;                                  /**< Top left corner of the visible portion of the map (in map coordiantes). */
 INT16 gsBottomRightWorldX;                              /**< Bottom right corner of the visible portion of the map (in map coordiantes). */
 INT16 gsBottomRightWorldY;                              /**< Bottom right corner of the visible portion of the map (in map coordiantes). */
-BOOLEAN gfIgnoreScrolling = FALSE;
+BOOLEAN gfIgnoreScrolling = false;
 
-BOOLEAN gfIgnoreScrollDueToCenterAdjust = FALSE;
+BOOLEAN gfIgnoreScrollDueToCenterAdjust = false;
 
 // Map coordiante system
 // ---------------------
@@ -340,7 +340,7 @@ public:
 private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, RenderLayerID const * const psLevelIDs) const
 {
 	HVOBJECT hVObject = NULL; // XXX HACK000E
-	BOOLEAN fPixelate = FALSE;
+	BOOLEAN fPixelate = false;
 	INT16 sMultiTransShadowZBlitterIndex = -1;
 
 	INT16 sZOffsetX = -1;
@@ -446,12 +446,12 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 						bool fZBlitter      = RenderingFX.fZBlitter;
 						bool fShadowBlitter = RenderingFX.fShadowBlitter;
 
-						BOOLEAN fMultiZBlitter            = FALSE;
-						BOOLEAN fIntensityBlitter         = FALSE;
-						BOOLEAN fSaveZ                    = FALSE;
-						BOOLEAN fWallTile                 = FALSE;
-						BOOLEAN fMultiTransShadowZBlitter = FALSE;
-						BOOLEAN fObscuredBlitter          = FALSE;
+						BOOLEAN fMultiZBlitter            = false;
+						BOOLEAN fIntensityBlitter         = false;
+						BOOLEAN fSaveZ                    = false;
+						BOOLEAN fWallTile                 = false;
+						BOOLEAN fMultiTransShadowZBlitter = false;
+						BOOLEAN fObscuredBlitter          = false;
 						UINT32 uiAniTileFlags = 0;
 						INT16 gsForceSoldierZLevel = 0;
 
@@ -466,7 +466,7 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 						}
 
 						// Force z-buffer blitting for marked tiles (even ground!)
-						if (uiFlags & TILES_MARKED) fZBlitter = TRUE;
+						if (uiFlags & TILES_MARKED) fZBlitter = true;
 
 						//Looking up height every time here is alot better than doing it above!
 						INT16 const sTileHeight = me.sHeight;
@@ -474,18 +474,18 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 						INT16 sModifiedTileHeight = (sTileHeight / 80 - 1) * 80;
 						if (sModifiedTileHeight < 0) sModifiedTileHeight = 0;
 
-						BOOLEAN fRenderTile = TRUE;
+						BOOLEAN fRenderTile = true;
 						if (!(uiLevelNodeFlags & LEVELNODE_REVEAL))
 						{
-							fPixelate = FALSE;
+							fPixelate = false;
 						}
 						else if (fDynamic)
 						{
-							fPixelate = TRUE;
+							fPixelate = true;
 						}
 						else
 						{
-							fRenderTile = FALSE;
+							fRenderTile = false;
 						}
 
 						// non-type specific setup
@@ -502,12 +502,12 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 								{
 									if (!(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
 									{
-										fRenderTile = FALSE;
+										fRenderTile = false;
 									}
 								}
 								else if (uiLevelNodeFlags & LEVELNODE_DYNAMIC)
 								{
-									fRenderTile = FALSE;
+									fRenderTile = false;
 								}
 							}
 							else
@@ -540,7 +540,7 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 											}
 											else
 											{
-												fRenderTile = FALSE;
+												fRenderTile = false;
 											}
 										}
 									}
@@ -549,7 +549,7 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 										if (uiTileElemFlags & ANIMATED_TILE ||
 												((uiTileElemFlags & DYNAMIC_TILE || uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiFlags & TILES_OBSCURED)))
 										{
-											fRenderTile = FALSE;
+											fRenderTile = false;
 										}
 									}
 								}
@@ -563,19 +563,19 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 								{
 									if (uiLevelNodeFlags & LEVELNODE_SHOW_THROUGH)
 									{
-										fObscuredBlitter = TRUE;
+										fObscuredBlitter = true;
 									}
 									else
 									{
 										// Do not render if we are not on this render loop!
-										fRenderTile = FALSE;
+										fRenderTile = false;
 									}
 								}
 								else
 								{
 									if (uiLevelNodeFlags & LEVELNODE_SHOW_THROUGH)
 									{
-										fRenderTile = FALSE;
+										fRenderTile = false;
 									}
 								}
 							}
@@ -590,8 +590,8 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 
 								if (uiLevelNodeFlags & LEVELNODE_DYNAMICZ)
 								{
-									fSaveZ  = TRUE;
-									fZWrite = TRUE;
+									fSaveZ  = true;
+									fZWrite = true;
 								}
 
 								if (uiLevelNodeFlags & LEVELNODE_CACHEDANITILE)
@@ -733,16 +733,16 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 							case TILES_STATIC_SHADOWS:
 								if (uiLevelNodeFlags & LEVELNODE_EXITGRID)
 								{
-									fIntensityBlitter = TRUE;
-									fShadowBlitter    = FALSE;
+									fIntensityBlitter = true;
+									fShadowBlitter    = false;
 								}
 								goto zlevel_shadows;
 
 							case TILES_STATIC_STRUCTURES:
 								if (TileElem)
 								{
-									if (TileElem->uiFlags & MULTI_Z_TILE) fMultiZBlitter = TRUE;
-									if (TileElem->uiFlags & WALL_TILE)    fWallTile      = TRUE;
+									if (TileElem->uiFlags & MULTI_Z_TILE) fMultiZBlitter = true;
+									if (TileElem->uiFlags & WALL_TILE)    fWallTile      = true;
 								}
 								goto zlevel_structures;
 
@@ -750,7 +750,7 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 								// ATE: Added for shadows on roofs
 								if (TileElem && TileElem->uiFlags & ROOFSHADOW_TILE)
 								{
-									fShadowBlitter = TRUE;
+									fShadowBlitter = true;
 								}
 								goto zlevel_roof;
 
@@ -936,9 +936,9 @@ zlevel_topmost:
 										}
 										else
 										{
-											fSaveZ                    = TRUE;
-											fMultiTransShadowZBlitter = TRUE;
-											fZBlitter                 = TRUE;
+											fSaveZ                    = true;
+											fMultiTransShadowZBlitter = true;
+											fZBlitter                 = true;
 
 											// ATE: Use one direction for queen!
 											sMultiTransShadowZBlitterIndex =
@@ -1108,7 +1108,7 @@ zlevel_topmost:
 								// ATE: If we are in a gridno that we should not use obscure blitter, set!
 								if (!(me.ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT))
 								{
-									fObscuredBlitter = TRUE;
+									fObscuredBlitter = true;
 								}
 								else
 								{
@@ -1138,18 +1138,18 @@ zlevel_topmost:
 						if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
 						{
 							// Set fmerc flag!
-							fMerc = TRUE;
-							fZWrite = TRUE;
+							fMerc = true;
+							fZWrite = true;
 
-							sMultiTransShadowZBlitterIndex = GetCorpseStructIndex(&pCorpse->def, TRUE);
-							fMultiTransShadowZBlitter      = TRUE;
+							sMultiTransShadowZBlitterIndex = GetCorpseStructIndex(&pCorpse->def, true);
+							fMultiTransShadowZBlitter      = true;
 						}
 
 						if (uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC && !(uiFlags & TILES_DIRTY))
 						{
 							// Remove flags!
 							pNode->uiFlags &= ~LEVELNODE_LASTDYNAMIC;
-							fZWrite = TRUE;
+							fZWrite = true;
 						}
 
 						// RENDER
@@ -1211,7 +1211,7 @@ zlevel_topmost:
 							}
 
 							const BOOLEAN bBlitClipVal = BltIsClippedOrOffScreen(hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-							if (bBlitClipVal == FALSE)
+							if (bBlitClipVal == false)
 							{
 								if (fObscuredBlitter)
 								{
@@ -1222,7 +1222,7 @@ zlevel_topmost:
 									Blt8BPPDataTo16BPPBufferOutlineZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour);
 								}
 							}
-							else if (bBlitClipVal == TRUE)
+							else if (bBlitClipVal == true)
 							{
 								if (fObscuredBlitter)
 								{
@@ -1241,7 +1241,7 @@ zlevel_topmost:
 
 							if (fShadowBlitter)
 							{
-								if (bBlitClipVal == FALSE)
+								if (bBlitClipVal == false)
 								{
 									Blt8BPPDataTo16BPPBufferShadowZNB(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 								}
@@ -1252,11 +1252,11 @@ zlevel_topmost:
 							}
 							else
 							{
-								if (bBlitClipVal == FALSE)
+								if (bBlitClipVal == false)
 								{
 									Blt8BPPDataTo16BPPBufferOutlineZNB(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 								}
-								else if (bBlitClipVal == TRUE)
+								else if (bBlitClipVal == true)
 								{
 									Blt8BPPDataTo16BPPBufferOutlineClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, SGP_TRANSPARENT, &gClippingRect);
 								}
@@ -1306,7 +1306,7 @@ zlevel_topmost:
 							else
 							{
 								const BOOLEAN bBlitClipVal = BltIsClippedOrOffScreen(hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-								if (bBlitClipVal == TRUE)
+								if (bBlitClipVal == true)
 								{
 									if (fPixelate)
 									{
@@ -1418,7 +1418,7 @@ zlevel_topmost:
 										Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 									}
 								}
-								else if (bBlitClipVal == FALSE)
+								else if (bBlitClipVal == false)
 								{
 									if (fPixelate)
 									{
@@ -1609,7 +1609,7 @@ static void ScrollBackground(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 		// Clear z-buffer
 		std::fill_n(gpZBuffer, gsVIEWPORT_END_Y * SCREEN_WIDTH, LAND_Z_LEVEL);
 
-		RenderStaticWorldRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, FALSE);
+		RenderStaticWorldRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, false);
 
 		FreeBackgroundRectType(BGND_FLAG_ANIMATED);
 	}
@@ -1642,7 +1642,7 @@ static void RenderStaticWorld(void);
 // For coordinate transformations
 void RenderWorld(void)
 {
-	gfRenderFullThisFrame = FALSE;
+	gfRenderFullThisFrame = false;
 
 	// If we are testing renderer, set background to pink!
 	if (gTacticalStatus.uiFlags & DEBUGCLIFFS)
@@ -1675,19 +1675,19 @@ void RenderWorld(void)
 
 	if (gRenderFlags & RENDER_FLAG_FULL)
 	{
-		gfRenderFullThisFrame = TRUE;
-		gfTopMessageDirty     = TRUE;
+		gfRenderFullThisFrame = true;
+		gfTopMessageDirty     = true;
 
 		// Dirty the interface...
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
 		// Apply scrolling sets some world variables
-		ApplyScrolling(gsRenderCenterX, gsRenderCenterY, TRUE, FALSE);
+		ApplyScrolling(gsRenderCenterX, gsRenderCenterY, true, false);
 		ResetLayerOptimizing();
 
 		if (gRenderFlags & RENDER_FLAG_NOZ)
 		{
-			RenderStaticWorldRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, FALSE);
+			RenderStaticWorldRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, false);
 		}
 		else
 		{
@@ -1945,7 +1945,7 @@ static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, IN
 		FromScreenToCellCoordinates(scroll_x, 0, &sTempX_W, &sTempY_W);
 		const INT16 sTempRenderCenterX = gsRenderCenterX + sTempX_W;
 		const INT16 sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-		if (!ApplyScrolling(sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly, ScrollType_Horizontal))
+		if (!ApplyScrolling(sTempRenderCenterX, sTempRenderCenterY, false, fCheckOnly, ScrollType_Horizontal))
 		{
 			scroll_x = 0;
 		}
@@ -1959,7 +1959,7 @@ static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, IN
 		FromScreenToCellCoordinates(0, scroll_y, &sTempX_W, &sTempY_W);
 		const INT16 sTempRenderCenterX = gsRenderCenterX + sTempX_W;
 		const INT16 sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-		if (!ApplyScrolling(sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly, ScrollType_Vertical))
+		if (!ApplyScrolling(sTempRenderCenterX, sTempRenderCenterY, false, fCheckOnly, ScrollType_Vertical))
 		{
 			scroll_y = 0;
 		}
@@ -1986,18 +1986,18 @@ static UINT ScrollSpeed(void)
 void ScrollWorld(void)
 {
 	static UINT8   ubOldScrollSpeed        = 0;
-	static BOOLEAN fFirstTimeInSlideToMode = TRUE;
+	static BOOLEAN fFirstTimeInSlideToMode = true;
 
 	if (gfIgnoreScrollDueToCenterAdjust)
 	{
-		//	gfIgnoreScrollDueToCenterAdjust = FALSE;
+		//	gfIgnoreScrollDueToCenterAdjust = false;
 		return;
 	}
 
-	BOOLEAN fIgnoreInput = FALSE;
+	BOOLEAN fIgnoreInput = false;
 
 	if (gfIgnoreScrolling) return;
-	if (gCurrentUIMode == LOCKUI_MODE) fIgnoreInput = TRUE;
+	if (gCurrentUIMode == LOCKUI_MODE) fIgnoreInput = true;
 
 	// If in editor, ignore scrolling if any of the shift keys pressed with arrow keys
 	if (gfEditMode && _KeyDown(CTRL)) return;
@@ -2017,7 +2017,7 @@ void ScrollWorld(void)
 			if (fFirstTimeInSlideToMode)
 			{
 				ubOldScrollSpeed = gubCurScrollSpeedID;
-				fFirstTimeInSlideToMode = FALSE;
+				fFirstTimeInSlideToMode = false;
 			}
 
 			ScrollFlags = 0;
@@ -2038,7 +2038,7 @@ void ScrollWorld(void)
 				};
 
 				ScrollFlags  = gScrollDirectionFlags[bDirection];
-				fIgnoreInput = TRUE;
+				fIgnoreInput = true;
 			}
 			else
 			{
@@ -2053,7 +2053,7 @@ void ScrollWorld(void)
 			{
 				gubCurScrollSpeedID = ubOldScrollSpeed;
 			}
-			fFirstTimeInSlideToMode = TRUE;
+			fFirstTimeInSlideToMode = true;
 		}
 
 		if (!fIgnoreInput)
@@ -2079,9 +2079,9 @@ void ScrollWorld(void)
 			}
 		}
 	}
-	while (FALSE);
+	while (false);
 
-	BOOLEAN fAGoodMove   = FALSE;
+	BOOLEAN fAGoodMove   = false;
 	INT16   sScrollXStep = -1;
 	INT16   sScrollYStep = -1;
 	if (ScrollFlags != 0)
@@ -2091,7 +2091,7 @@ void ScrollWorld(void)
 		sScrollXStep = speed;
 		sScrollYStep = speed / 2;
 
-		fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
+		fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, true);
 	} else if (fIsScrollingByOffset) {
 		if (std::abs(gsScrollXOffset) >= MIN_SCROLL_OFFSET_X || std::abs(gsScrollYOffset) >= MIN_SCROLL_OFFSET_Y) {
 			sScrollXStep = (gsScrollXOffset / MIN_SCROLL_OFFSET_X) * MIN_SCROLL_OFFSET_X;
@@ -2105,7 +2105,7 @@ void ScrollWorld(void)
 			sScrollXStep = std::abs(sScrollXStep);
 			sScrollYStep = std::abs(sScrollYStep);
 
-			fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
+			fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, true);
 		}
 	}
 
@@ -2118,7 +2118,7 @@ void ScrollWorld(void)
 			if (!g_scroll_inertia && !gfScrollPending)
 			{
 				// We are starting to scroll - setup scroll pending
-				gfScrollPending = TRUE;
+				gfScrollPending = true;
 
 				// Remove any interface stuff
 				ClearInterface();
@@ -2128,7 +2128,7 @@ void ScrollWorld(void)
 			}
 
 			// If here, set scroll pending to false
-			gfScrollPending = FALSE;
+			gfScrollPending = false;
 
 			g_scroll_inertia = true;
 
@@ -2138,7 +2138,7 @@ void ScrollWorld(void)
 				gsScrollYOffset %= MIN_SCROLL_OFFSET_Y;
 			}
 			// Now we actually begin our scrolling
-			HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, FALSE);
+			HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, false);
 		}
 	}
 	else
@@ -2147,7 +2147,7 @@ void ScrollWorld(void)
 		if (gfScrollPending)
 		{
 			// Do a complete rebuild!
-			gfScrollPending = FALSE;
+			gfScrollPending = false;
 
 			// Restore Interface!
 			RestoreInterface();
@@ -2167,7 +2167,7 @@ void ScrollWorld(void)
 		}
 
 		g_scroll_inertia = false;
-		gfScrollPending  = FALSE;
+		gfScrollPending  = false;
 	}
 }
 
@@ -2270,13 +2270,13 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	const int mapWidth = (gsRightX + SCROLL_RIGHT_PADDING) - (gsLeftX + SCROLL_LEFT_PADDING);
 	const int screenWidth = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
 
-	BOOLEAN fScrollGood = FALSE;
+	BOOLEAN fScrollGood = false;
 
 	if (!fOutRight && !fOutLeft && !fOutTop && !fOutBottom)
 	{
 		// Nothing goes outside the borders of the map.
 		// Can change render center.
-		fScrollGood = TRUE;
+		fScrollGood = true;
 	}
 	else
 	{
@@ -2288,7 +2288,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 			|| ((sTempRenderCenterX > gsRenderCenterX) && !fOutRight)))            /** moving right */
 		{
 			// can move
-			fScrollGood = TRUE;
+			fScrollGood = true;
 		}
 
 		if((scrollType == ScrollType_Vertical)
@@ -2296,12 +2296,12 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 			|| ((sTempRenderCenterY > gsRenderCenterY) && !fOutBottom)))
 		{
 			// can move
-			fScrollGood = TRUE;
+			fScrollGood = true;
 		}
 	}
 
 	// If in editor, anything goes
-	if (gfEditMode && _KeyDown(SHIFT)) fScrollGood = TRUE;
+	if (gfEditMode && _KeyDown(SHIFT)) fScrollGood = true;
 
 	if (!fScrollGood)
 	{
@@ -2343,7 +2343,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 			FromScreenToCellCoordinates(newScreenCenterX, newScreenCenterY, &sTempPosX_W, &sTempPosY_W);
 			sTempRenderCenterX = sTempPosX_W;
 			sTempRenderCenterY = sTempPosY_W;
-			fScrollGood = TRUE;
+			fScrollGood = true;
 		}
 	}
 
@@ -3733,7 +3733,7 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	BOOLEAN bXOddFlag = FALSE;
+	BOOLEAN bXOddFlag = false;
 	do
 	{
 		INT16 sTempPosX_M = sAnchorPosX_M;
@@ -3807,7 +3807,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	BOOLEAN bXOddFlag = FALSE;
+	BOOLEAN bXOddFlag = false;
 	do
 	{
 		INT16 sTempPosX_M = sAnchorPosX_M;
@@ -3883,7 +3883,7 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	BOOLEAN bXOddFlag = FALSE;
+	BOOLEAN bXOddFlag = false;
 	do
 	{
 		INT16 sTempPosX_M = sAnchorPosX_M;
@@ -3959,7 +3959,7 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	BOOLEAN bXOddFlag = FALSE;
+	BOOLEAN bXOddFlag = false;
 	do
 	{
 		INT16 sTempPosX_M = sAnchorPosX_M;
@@ -4044,7 +4044,7 @@ static void ExamineZBufferForHiddenTiles(INT16 sStartPointX_M, INT16 sStartPoint
 	// Get VObject for firt land peice!
 	const TILE_ELEMENT* const TileElem = &gTileDatabase[FIRSTTEXTURE1];
 
-	BOOLEAN bXOddFlag = FALSE;
+	BOOLEAN bXOddFlag = false;
 	do
 	{
 		INT16       sTempPosX_M = sAnchorPosX_M;
@@ -4084,7 +4084,7 @@ static void ExamineZBufferForHiddenTiles(INT16 sStartPointX_M, INT16 sStartPoint
 				if (gpWorldLevelData[usTileIndex].uiFlags & MAPELEMENT_REEVALUATE_REDUNDENCY)
 				{
 					const INT8 bBlitClipVal = BltIsClippedOrOffScreen(TileElem->hTileSurface, sX, sY, TileElem->usRegionIndex, &gClippingRect);
-					if (bBlitClipVal == FALSE)
+					if (bBlitClipVal == false)
 					{
 						// Set flag to not evaluate again!
 						gpWorldLevelData[usTileIndex].uiFlags &= ~MAPELEMENT_REEVALUATE_REDUNDENCY;
@@ -4161,8 +4161,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP FOUR - Determine Start block
 	// a) Find start block
-	gsStartPointX_M = floor(DOUBLE(sStartPointX_W) / DOUBLE(CELL_X_SIZE));
-	gsStartPointY_M = floor(DOUBLE(sStartPointY_W) / DOUBLE(CELL_Y_SIZE));
+	gsStartPointX_M = floor(double(sStartPointX_W) / double(CELL_X_SIZE));
+	gsStartPointY_M = floor(double(sStartPointY_W) / double(CELL_Y_SIZE));
 
 	// STEP 5 - Determine offsets for tile center and convert to screen values
 	// Make sure these coordinates are multiples of scroll steps
@@ -4199,8 +4199,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP FOUR - Determine Start block
 	// a) Find start block
-	gsLStartPointX_M = floor(DOUBLE(sLStartPointX_W) / DOUBLE(CELL_X_SIZE));
-	gsLStartPointY_M = floor(DOUBLE(sLStartPointY_W) / DOUBLE(CELL_Y_SIZE));
+	gsLStartPointX_M = floor(double(sLStartPointX_W) / double(CELL_X_SIZE));
+	gsLStartPointY_M = floor(double(sLStartPointY_W) / double(CELL_Y_SIZE));
 
 	// STEP 5 - Adjust screen coordinates to tile center, so it matches small viewport
 	gsLStartPointX_S -= sOffsetX_S;
@@ -4217,7 +4217,7 @@ static void ResetRenderParameters(void)
 
 static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
 {
-	BOOLEAN fHidden = TRUE;
+	BOOLEAN fHidden = true;
 
 	Assert(hSrcVObject != NULL);
 
@@ -4254,7 +4254,7 @@ static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 				SrcPtr += data;
 				do
 				{
-					if (*(const UINT16*)ZPtr < usZValue) return FALSE;
+					if (*(const UINT16*)ZPtr < usZValue) return false;
 					ZPtr += 2;
 				}
 				while (--data > 0);
@@ -4272,21 +4272,21 @@ void SetRenderCenter(INT16 sNewX, INT16 sNewY)
 	if (gfIgnoreScrolling) return;
 
 	// Apply these new coordinates to the renderer!
-	ApplyScrolling(sNewX, sNewY, TRUE, FALSE);
+	ApplyScrolling(sNewX, sNewY, true, false);
 
 	// Set flag to ignore scrolling this frame
-	gfIgnoreScrollDueToCenterAdjust = TRUE;
+	gfIgnoreScrollDueToCenterAdjust = true;
 
 	// Set full render flag!
 	// DIRTY THE WORLD!
 	SetRenderFlags(RENDER_FLAG_FULL);
 
-	gfPlotNewMovement = TRUE;
+	gfPlotNewMovement = true;
 
 	if (gfScrollPending)
 	{
 		// Do a complete rebuild!
-		gfScrollPending = FALSE;
+		gfScrollPending = false;
 
 		// Restore Interface!
 		RestoreInterface();

@@ -71,7 +71,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	// Determine what type of drug....
 	if ( ubDrugType == NO_DRUG )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// do switch for Larry!!
@@ -211,7 +211,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	// Dirty panel
 	DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
 
-	return( TRUE );
+	return true;
 }
 
 void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )

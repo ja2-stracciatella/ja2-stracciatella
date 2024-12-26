@@ -38,9 +38,9 @@ BOOLEAN	gfEditingDoor;
 //BEGINNNING OF BUILDING INITIALIZATION FUNCTIONS
 void GameInitEditorBuildingInfo()
 {
-	fBuildingShowRoofs = TRUE;
-	fBuildingShowWalls = TRUE;
-	fBuildingShowRoomInfo = FALSE;
+	fBuildingShowRoofs = true;
+	fBuildingShowWalls = true;
+	fBuildingShowRoomInfo = false;
 	usCurrentMode = BUILDING_PLACE_WALLS;
 	gubCurrRoomNumber = gubMaxRoomNumber = 1;
 }
@@ -57,7 +57,7 @@ void UpdateRoofsView()
 			HideStructOfGivenType(x, usType, !fBuildingShowRoofs);
 		}
 	}
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 }
 
 void UpdateWallsView()
@@ -74,7 +74,7 @@ void UpdateWallsView()
 			SetWallLevelnodeFlags( (INT16)cnt, LEVELNODE_HIDDEN );
 		}
 	}
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 }
 
 void UpdateBuildingsInfo()
@@ -104,7 +104,7 @@ void UpdateBuildingsInfo()
 //6) KillBuilding at x  , y+1.
 void KillBuilding( UINT32 iMapIndex )
 {
-	BOOLEAN fFound = FALSE;
+	BOOLEAN fFound = false;
 
 	if( !gfBasement )
 		fFound |= RemoveAllRoofsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );
@@ -513,7 +513,7 @@ void InitDoorEditing(INT32 const map_idx)
 	// restore the old value in KillDoorEditing().
 	iDrawMode = DRAW_MODE_NOTHING;
 
-	gfEditingDoor = TRUE;
+	gfEditingDoor = true;
 	iDoorMapIndex = map_idx;
 	DisableEditorTaskbar();
 	MSYS_DefineRegion(&DoorRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 2, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
@@ -542,8 +542,8 @@ void ExtractAndUpdateDoorInfo()
 	LEVELNODE* pNode;
 	INT32 num;
 	DOOR door;
-	BOOLEAN fCursor = FALSE;
-	BOOLEAN fCursorExists = FALSE;
+	BOOLEAN fCursor = false;
+	BOOLEAN fCursorExists = false;
 
 	door = DOOR{};
 
@@ -553,13 +553,13 @@ void ExtractAndUpdateDoorInfo()
 	door.ubLockID = (UINT8)num;
 	SetInputFieldStringWithNumericStrictValue( 0, num );
 	if( num >= 0 )
-		fCursor = TRUE;
+		fCursor = true;
 
 	num = std::clamp(GetNumericStrictValueFromField(1), 0, 10);
 	door.ubTrapID = (UINT8)num;
 	SetInputFieldStringWithNumericStrictValue( 1, num );
 	if( num )
-		fCursor = TRUE;
+		fCursor = true;
 
 	num = std::clamp(GetNumericStrictValueFromField(2), 0, 20);
 	if( door.ubTrapID && !num )
@@ -567,7 +567,7 @@ void ExtractAndUpdateDoorInfo()
 	door.ubTrapLevel = (UINT8)num;
 	SetInputFieldStringWithNumericStrictValue( 2, num );
 	if( num )
-		fCursor = TRUE;
+		fCursor = true;
 
 	door.fLocked = iDoorButton[DOOR_LOCKED]->Clicked();
 
@@ -577,7 +577,7 @@ void ExtractAndUpdateDoorInfo()
 	{
 		if( pNode->usIndex == ROTATINGKEY1 )
 		{
-			fCursorExists = TRUE;
+			fCursorExists = true;
 			break;
 		}
 		pNode = pNode->pNext;
@@ -643,7 +643,7 @@ void KillDoorEditing()
 	EnableEditorTaskbar();
 	MSYS_RemoveRegion(&DoorRegion);
 	FOR_EACH(GUIButtonRef, i, iDoorButton) RemoveButton(*i);
-	gfEditingDoor = FALSE;
+	gfEditingDoor = false;
 	// Restore the draw mode that we changed in InitDoorEditing().
 	iDrawMode = DRAW_MODE_DOORKEYS;
 	KillTextInputMode();

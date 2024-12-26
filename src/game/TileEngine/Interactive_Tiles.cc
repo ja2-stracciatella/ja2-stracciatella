@@ -62,11 +62,11 @@ struct INTERACTIVE_TILE_STACK_TYPE
 
 
 static INTERACTIVE_TILE_STACK_TYPE gCurIntTileStack;
-static BOOLEAN                     gfCycleIntTile = FALSE;
+static BOOLEAN                     gfCycleIntTile = false;
 
 
 static CUR_INTERACTIVE_TILE gCurIntTile;
-static BOOLEAN              gfOverIntTile = FALSE;
+static BOOLEAN              gfOverIntTile = false;
 
 // Values to determine if we should check or not
 static INT16  gsINTOldRenderCenterX = 0;
@@ -238,7 +238,7 @@ void SetActionModeDoorCursorText()
 
 static void GetLevelNodeScreenRect(LEVELNODE const& n, SGPRect& rect, INT16 const x, INT16 const y, GridNo const gridno)
 {
-	// Get 'TRUE' merc position
+	// Get 'true' merc position
 	INT16 sTempX_S;
 	INT16 sTempY_S;
 	INT16 const offset_x = x - gsRenderCenterX;
@@ -331,7 +331,7 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 
 		if (!RefineLogicOnStruct(sGridNo, *n)) continue;
 
-		gCurIntTile.fFound = TRUE;
+		gCurIntTile.fFound = true;
 
 		if (gfCycleIntTile) continue;
 
@@ -377,7 +377,7 @@ static LEVELNODE* InternalGetCurInteractiveTile(const BOOLEAN fRejectItemsOnTop)
 
 LEVELNODE* GetCurInteractiveTile(void)
 {
-	return InternalGetCurInteractiveTile(TRUE);
+	return InternalGetCurInteractiveTile(true);
 }
 
 
@@ -411,20 +411,20 @@ LEVELNODE* ConditionalGetCurInteractiveTileGridNoAndStructure(INT16* const psGri
 
 LEVELNODE* GetCurInteractiveTileGridNoAndStructure(INT16* const psGridNo, STRUCTURE** const ppStructure)
 {
-	return ConditionalGetCurInteractiveTileGridNoAndStructure(psGridNo, ppStructure, TRUE);
+	return ConditionalGetCurInteractiveTileGridNoAndStructure(psGridNo, ppStructure, true);
 }
 
 
 void BeginCurInteractiveTileCheck(void)
 {
-	gfOverIntTile = FALSE;
+	gfOverIntTile = false;
 
 	// OK, release our stack, stuff could be different!
-	gfCycleIntTile = FALSE;
+	gfCycleIntTile = false;
 
 	// Reset some highest values
 	gCurIntTile.sHeighestScreenY = 0;
-	gCurIntTile.fFound           = FALSE;
+	gCurIntTile.fFound           = false;
 
 	// Reset stack values
 	gCurIntTileStack.bNum = 0;
@@ -446,18 +446,18 @@ void EndCurInteractiveTileCheck()
 		if (cur_int_tile.pFoundNode->pStructureData)
 		{
 			gCurIntTile.usStructureID = cur_int_tile.pFoundNode->pStructureData->usStructureID;
-			gCurIntTile.fStructure    = TRUE;
+			gCurIntTile.fStructure    = true;
 		}
 		else
 		{
-			gCurIntTile.fStructure = FALSE;
+			gCurIntTile.fStructure = false;
 		}
 
-		gfOverIntTile = TRUE;
+		gfOverIntTile = true;
 	}
 	else
 	{ // If we are in cycle mode, end it
-		gfCycleIntTile = FALSE;
+		gfCycleIntTile = false;
 	}
 }
 
@@ -561,7 +561,7 @@ static BOOLEAN RefinePointCollisionOnStruct(INT16 const test_x, INT16 const test
 // will return true if data found, else false
 BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY)
 {
-	BOOLEAN fDataFound = FALSE;
+	BOOLEAN fDataFound = false;
 	INT32   iTestPos, iStartPos;
 
 	// Assertions
@@ -591,7 +591,7 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 			}
 			else
 			{
-				if (iStartPos < iTestPos && iTestPos <= iStartPos + PxCount) return TRUE;
+				if (iStartPos < iTestPos && iTestPos <= iStartPos + PxCount) return true;
 				SrcPtr += PxCount;
 			}
 			iStartPos += PxCount;
@@ -606,12 +606,12 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 
 BOOLEAN ShouldCheckForMouseDetections( )
 {
-	BOOLEAN fOK = FALSE;
+	BOOLEAN fOK = false;
 
 	if (gsINTOldRenderCenterX != gsRenderCenterX || gsINTOldRenderCenterY != gsRenderCenterY ||
 		gusINTOldMousePosX != gusMouseXPos || gusINTOldMousePosY != gusMouseYPos)
 	{
-		fOK = TRUE;
+		fOK = true;
 	}
 
 	// Set old values
@@ -627,13 +627,13 @@ BOOLEAN ShouldCheckForMouseDetections( )
 
 void CycleIntTileFindStack( UINT16 usMapPos )
 {
-	gfCycleIntTile = TRUE;
+	gfCycleIntTile = true;
 
 	// Cycle around!
 	gCurIntTileStack.bCur++;
 
 	//PLot new movement
-	gfPlotNewMovement = TRUE;
+	gfPlotNewMovement = true;
 
 	if ( gCurIntTileStack.bCur == gCurIntTileStack.bNum )
 	{

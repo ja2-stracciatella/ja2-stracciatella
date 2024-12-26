@@ -11,7 +11,7 @@ class DealerModel
 {
 public:
 	DealerModel(ArmsDealerID dealerID, UINT8 mercID, ArmsDealerType dealerType,
-		FLOAT buyingPrice, FLOAT sellingPrice, FLOAT repairSped, FLOAT repairCost,
+		float buyingPrice, float sellingPrice, float repairSped, float repairCost,
 		INT32 initialCash, std::bitset<ArmsDealerFlag::NUM_FLAGS> flags
 	);
 
@@ -24,16 +24,16 @@ public:
 	const ArmsDealerType type;
 
 	// The price modifier used when this dealer is BUYING something.
-	const FLOAT buyingPrice;
+	const float buyingPrice;
 
 	// The price modifier used when this dealer is SELLING something.
-	const FLOAT sellingPrice;
+	const float sellingPrice;
 
 	// Modifier to the speed at which a repairman repairs things
-	const FLOAT repairSpeed;
+	const float repairSpeed;
 
 	// Modifier to the price a repairman charges for repairs
-	const FLOAT repairCost;
+	const float repairCost;
 
 	// How much cash dealer starts with (we now reset to this amount once / day)
 	const INT32 initialCash;

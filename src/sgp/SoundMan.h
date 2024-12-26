@@ -66,24 +66,24 @@ void SoundStopAllRandom(void);
 
 /* Stops the playing of a sound instance, if still playing.
  *
- * Returns: TRUE if the sample was actually stopped, FALSE if it could not be
+ * Returns: true if the sample was actually stopped, false if it could not be
  *          found, or was not playing. */
 BOOLEAN SoundStop(UINT32 uiSoundID);
 
 void SoundStopRandom(UINT32 uiSample);
 
-// Returns TRUE/FALSE that an instance of a sound is still playing.
+// Returns true/false that an instance of a sound is still playing.
 BOOLEAN SoundIsPlaying(UINT32 uiSoundID);
 
 /* Sets the volume on a currently playing sound.
  *
- * Returns: TRUE if the volume was actually set on the sample, FALSE if the
+ * Returns: true if the volume was actually set on the sample, false if the
  *          sample had already expired or couldn't be found */
 BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume);
 
 /* Sets the pan on a currently playing sound.
  *
- * Returns: TRUE if the pan was actually set on the sample, FALSE if the sample
+ * Returns: true if the pan was actually set on the sample, false if the sample
  *          had already expired or couldn't be found */
 BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan);
 

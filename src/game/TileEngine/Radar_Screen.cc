@@ -50,10 +50,10 @@
 
 
 static SGPVObject* gusRadarImage;
-BOOLEAN   fRenderRadarScreen = TRUE;
+BOOLEAN   fRenderRadarScreen = true;
 static INT16       sSelectedSquadLine = -1;
 
-BOOLEAN		gfRadarCurrentGuyFlash = FALSE;
+BOOLEAN		gfRadarCurrentGuyFlash = false;
 
 
 static MOUSE_REGION gRadarRegionSquadList[NUMBER_OF_SQUADS];
@@ -89,8 +89,8 @@ void LoadRadarScreenBitmap(const ST::string& filename)
 
 	// ATE: Add a shade table!
 	const SGPPaletteEntry* const pal = radar->Palette();
-	radar->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-	radar->pShades[1] = Create16BPPPaletteShaded(pal, 100, 100, 100, FALSE);
+	radar->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, false);
+	radar->pShades[1] = Create16BPPPaletteShaded(pal, 100, 100, 100, false);
 
 	// Dirty interface
 	fInterfacePanelDirty = DIRTYLEVEL1;
@@ -232,7 +232,7 @@ void RenderRadarScreen()
 
 		if (!fInMapMode)
 		{
-			RectangleDraw(TRUE,
+			RectangleDraw(true,
 				RADAR_WINDOW_X + std::max(double(0), round((gsTopLeftWorldX - SCROLL_LEFT_PADDING) * gdScaleX)),
 				RADAR_WINDOW_TM_Y + std::max(double(0), round((gsTopLeftWorldY - SCROLL_TOP_PADDING) * gdScaleY)),
 				RADAR_WINDOW_X + std::min(round((gsBottomRightWorldX - SCROLL_RIGHT_PADDING - SCROLL_LEFT_PADDING) * gdScaleX - 1.0), double(RADAR_WINDOW_WIDTH - 1)),
@@ -262,8 +262,8 @@ void RenderRadarScreen()
 				GetAbsoluteScreenXYFromMapPos(s->sGridNo, &sXSoldScreen, &sYSoldScreen);
 
 				// Get radar x and y postion and add starting relative to interface
-				const INT16 x = floor(DOUBLE(sXSoldScreen) * gdScaleX) + RADAR_WINDOW_X;
-				const INT16 y = floor(DOUBLE(sYSoldScreen) * gdScaleY) + RADAR_WINDOW_TM_Y;
+				const INT16 x = floor(double(sXSoldScreen) * gdScaleX) + RADAR_WINDOW_X;
+				const INT16 y = floor(double(sYSoldScreen) * gdScaleY) + RADAR_WINDOW_TM_Y;
 
 				UINT32 const line_colour =
 					/* flash selected merc */
@@ -276,7 +276,7 @@ void RenderRadarScreen()
 					s->bTeam == CIV_TEAM && !s->bNeutral && s->bSide != OUR_TEAM ? FROMRGB(255,   0,   0) :
 					gTacticalStatus.Team[s->bTeam].RadarColor;
 
-				RectangleDraw(TRUE, x, y, x + 1, y + 1, Get16BPPColor(line_colour), pDestBuf);
+				RectangleDraw(true, x, y, x + 1, y + 1, Get16BPPColor(line_colour), pDestBuf);
 			}
 		}
 		else if (fShowMapInventoryPool)
@@ -299,7 +299,7 @@ void RenderRadarScreen()
 						Get16BPPColor(FROMRGB(  0, 255,   0)) :
 						Get16BPPColor(FROMRGB(255, 255, 255));
 
-					RectangleDraw(TRUE, x, y, x + 1, y + 1, line_colour, pDestBuf);
+					RectangleDraw(true, x, y, x + 1, y + 1, line_colour, pDestBuf);
 				}
 			}
 			InvalidateRegion(RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH, RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT);
@@ -362,7 +362,7 @@ static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void CreateDestroyMouseRegionsForSquadList(void)
 {
 	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	if (!fRenderRadarScreen && !fCreated)
 	{
@@ -396,7 +396,7 @@ static void CreateDestroyMouseRegionsForSquadList(void)
 
 		sSelectedSquadLine = -1;
 
-		fCreated = TRUE;
+		fCreated = true;
 	}
 	else if (fRenderRadarScreen && fCreated)
 	{
@@ -415,7 +415,7 @@ static void CreateDestroyMouseRegionsForSquadList(void)
 			RenderPausedGameBox();
 		}
 
-		fCreated = FALSE;
+		fCreated = false;
 	}
 }
 
@@ -496,10 +496,10 @@ static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 		if (IsSquadOnCurrentTacticalMap(iValue))
 		{
 			// ok, squad is here, set as selected
-			SetCurrentSquad( iValue, FALSE );
+			SetCurrentSquad( iValue, false );
 
 			// stop showing
-			fRenderRadarScreen = TRUE;
+			fRenderRadarScreen = true;
 		}
 	}
 }

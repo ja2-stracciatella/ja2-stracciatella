@@ -74,12 +74,12 @@ struct SMALL_TILE_DB
 static SMALL_TILE_SURF gSmTileSurf[NUMBEROFTILETYPES];
 static SMALL_TILE_DB   gSmTileDB[NUMBEROFTILES];
 static TileSetID       gubSmTileNum                   = TILESET_INVALID;
-static BOOLEAN         gfInOverheadMap = FALSE;
+static BOOLEAN         gfInOverheadMap = false;
 static MOUSE_REGION    OverheadRegion;
 static MOUSE_REGION    OverheadBackgroundRegion;
 static SGPVObject*     uiOVERMAP;
 static SGPVObject*     uiPERSONS;
-BOOLEAN                gfOverheadMapDirty             = FALSE;
+BOOLEAN                gfOverheadMapDirty             = false;
 extern BOOLEAN		gfRadarCurrentGuyFlash;
 static INT16           gsStartRestrictedX;
 static INT16           gsStartRestrictedY;
@@ -265,7 +265,7 @@ static void   RenderOverheadOverlays(void);
 
 void HandleOverheadMap(void)
 {
-	gfInOverheadMap      = TRUE;
+	gfInOverheadMap      = true;
 	gsOveritemPoolGridNo = NOWHERE;
 
 	InitNewOverheadDB(giCurrentTilesetID);
@@ -279,7 +279,7 @@ void HandleOverheadMap(void)
 		DecayLightEffects(GetWorldTotalSeconds(), false);
 	}
 
-	RenderOverheadMap(0, WORLD_COLS / 2, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 320, FALSE);
+	RenderOverheadMap(0, WORLD_COLS / 2, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 320, false);
 
 	HandleTalkingAutoFaces();
 
@@ -378,7 +378,7 @@ static void ClickOverheadRegionCallbackSecondary(MOUSE_REGION* reg, UINT32 reaso
 
 void GoIntoOverheadMap( )
 {
-	gfInOverheadMap = TRUE;
+	gfInOverheadMap = true;
 
 	MSYS_DefineRegion(&OverheadBackgroundRegion, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
@@ -393,11 +393,11 @@ void GoIntoOverheadMap( )
 	// Add shades to persons....
 	SGPVObject*            const vo  = uiPERSONS;
 	SGPPaletteEntry const* const pal = vo->Palette();
-	vo->pShades[0] = Create16BPPPaletteShaded(pal, 256, 256, 256, FALSE);
-	vo->pShades[1] = Create16BPPPaletteShaded(pal, 310, 310, 310, FALSE);
-	vo->pShades[2] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
+	vo->pShades[0] = Create16BPPPaletteShaded(pal, 256, 256, 256, false);
+	vo->pShades[1] = Create16BPPPaletteShaded(pal, 310, 310, 310, false);
+	vo->pShades[2] = Create16BPPPaletteShaded(pal,   0,   0,   0, false);
 
-	gfOverheadMapDirty = TRUE;
+	gfOverheadMapDirty = true;
 
 	if( !gfEditMode )
 	{
@@ -410,7 +410,7 @@ void GoIntoOverheadMap( )
 		{
 			// Handle switch of panel....
 			HandleTacticalPanelSwitch( );
-			DisableTacticalTeamPanelButtons( TRUE );
+			DisableTacticalTeamPanelButtons( true );
 		}
 
 		EmptyBackgroundRects( );
@@ -447,7 +447,7 @@ static void HandleOverheadUI(void)
 
 void KillOverheadMap()
 {
-	gfInOverheadMap = FALSE;
+	gfInOverheadMap = false;
 	SetRenderFlags( RENDER_FLAG_FULL );
 	RenderWorld( );
 
@@ -458,7 +458,7 @@ void KillOverheadMap()
 	DeleteVideoObject(uiPERSONS);
 
 	HandleTacticalPanelSwitch( );
-	DisableTacticalTeamPanelButtons( FALSE );
+	DisableTacticalTeamPanelButtons( false );
 
 }
 
@@ -479,7 +479,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, sStartPointX_S, sStartPointY_S, sEndXS,	sEndYS, 0);
 
 	InvalidateScreen();
-	gfOverheadMapDirty = FALSE;
+	gfOverheadMapDirty = false;
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
@@ -836,7 +836,7 @@ static void RenderOverheadOverlays(void)
 				case VISIBLE:          col = FROMRGB(255, 255, 255); break;
 				default:               abort();
 			}
-			PixelDraw(FALSE, sX, sY, Get16BPPColor(col), pDestBuf);
+			PixelDraw(false, sX, sY, Get16BPPColor(col), pDestBuf);
 			InvalidateRegion(sX, sY, sX + 1, sY + 1);
 		}
 	}

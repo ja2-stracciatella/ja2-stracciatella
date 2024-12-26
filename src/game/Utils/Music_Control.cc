@@ -14,11 +14,11 @@
 
 static UINT32  uiMusicHandle   = NO_SAMPLE;
 static UINT32  uiMusicVolume   = 50;
-static BOOLEAN fMusicPlaying   = FALSE;
-static BOOLEAN fMusicFadingOut = FALSE;
-static BOOLEAN fMusicFadingIn  = FALSE;
+static BOOLEAN fMusicPlaying   = false;
+static BOOLEAN fMusicFadingOut = false;
+static BOOLEAN fMusicFadingIn  = false;
 
-static BOOLEAN gfMusicEnded = FALSE;
+static BOOLEAN gfMusicEnded = false;
 
 MusicMode        gubMusicMode    = MUSIC_NONE;
 static MusicMode gubOldMusicMode = MUSIC_NONE;
@@ -29,7 +29,7 @@ static INT8 gbDeathSongCount   = 0;
 static INT8 gbFadeSpeed = 1;
 
 
-static BOOLEAN gfDontRestartSong   = FALSE;
+static BOOLEAN gfDontRestartSong   = false;
 
 
 static BOOLEAN MusicFadeIn(void);
@@ -47,8 +47,8 @@ void MusicPlay(const ST::string* pFilename)
 	{
 		SLOGD("Music Play {} {}", uiMusicHandle, gubMusicMode);
 
-		gfMusicEnded	= FALSE;
-		fMusicPlaying	= TRUE;
+		gfMusicEnded	= false;
+		fMusicPlaying	= true;
 		MusicFadeIn();
 		return;
 	}
@@ -71,7 +71,7 @@ void MusicSetVolume(UINT32 uiVolume)
 		// get volume and if 0 stop music!
 		if ( uiMusicVolume == 0 )
 		{
-			gfDontRestartSong = TRUE;
+			gfDontRestartSong = true;
 			MusicStop( );
 		}
 		else
@@ -96,7 +96,7 @@ void MusicSetVolume(UINT32 uiVolume)
 //
 //		Gets the volume on the currently playing music.
 //
-//	Returns:	TRUE if the volume was set, FALSE if an error occurred
+//	Returns:	true if the volume was set, false if an error occurred
 //
 //********************************************************************************
 UINT32 MusicGetVolume(void)
@@ -123,35 +123,35 @@ static void MusicStop(void)
 	{
 		SLOGW("expected either music data or the end of the music (mode={}, handle={}, ended={})", gubMusicMode, uiMusicHandle, gfMusicEnded);
 	}
-	fMusicPlaying = FALSE;
+	fMusicPlaying = false;
 }
 
 
 //		Fades out the current song.
 //
-//	Returns:	TRUE if the music has begun fading, FALSE if an error occurred
+//	Returns:	true if the music has begun fading, false if an error occurred
 static BOOLEAN MusicFadeOut(void)
 {
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
-		fMusicFadingOut=TRUE;
-		return(TRUE);
+		fMusicFadingOut=true;
+		return(true);
 	}
-	return(FALSE);
+	return(false);
 }
 
 
 //		Fades in the current song.
 //
-//	Returns:	TRUE if the music has begun fading in, FALSE if an error occurred
+//	Returns:	true if the music has begun fading in, false if an error occurred
 static BOOLEAN MusicFadeIn(void)
 {
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
-		fMusicFadingIn=TRUE;
-		return(TRUE);
+		fMusicFadingIn=true;
+		return(true);
 	}
-	return(FALSE);
+	return(false);
 }
 
 void MusicPoll(void)
@@ -173,7 +173,7 @@ void MusicPoll(void)
 				SoundSetVolume(uiMusicHandle, iVol);
 				if(iVol==(INT32)uiMusicVolume)
 				{
-					fMusicFadingIn=FALSE;
+					fMusicFadingIn=false;
 					gbFadeSpeed = 1;
 				}
 			}
@@ -189,7 +189,7 @@ void MusicPoll(void)
 				if(iVol==0)
 				{
 					MusicStop();
-					fMusicFadingOut=FALSE;
+					fMusicFadingOut=false;
 					gbFadeSpeed = 1;
 				}
 			}
@@ -223,8 +223,8 @@ void MusicPoll(void)
 				}
 			}
 
-			gfMusicEnded = FALSE;
-			gfDontRestartSong = FALSE;
+			gfMusicEnded = false;
+			gfDontRestartSong = false;
 		}
 	}
 }
@@ -308,7 +308,7 @@ static void StartMusicBasedOnMode(void)
 			gbVictorySongCount++;
 			if (gfUseCreatureMusic && !gWorldSector.z) {
 				//We just killed all the creatures that just attacked the town.
-				gfUseCreatureMusic = FALSE;
+				gfUseCreatureMusic = false;
 			}
 			break;
 		case MUSIC_TACTICAL_DEFEAT:
@@ -343,7 +343,7 @@ static void MusicStopCallback(void* pData)
 {
 	SLOGD("Music EndCallback {} {}", uiMusicHandle, gubMusicMode);
 
-	gfMusicEnded  = TRUE;
+	gfMusicEnded  = true;
 	uiMusicHandle = NO_SAMPLE;
 }
 

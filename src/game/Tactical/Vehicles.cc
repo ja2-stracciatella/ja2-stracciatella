@@ -56,7 +56,7 @@ void InitVehicles(void)
 	{
 		// create mvt groups
 		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(SGPSector(1, 1));
-		g->fPersistant = TRUE;
+		g->fPersistant = true;
 		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}
 }
@@ -93,10 +93,10 @@ INT32 AddVehicleToList(const SGPSector& sMap, const INT16 sGridNo, const UINT8 u
 	v->ubMovementGroup = 0;
 	v->sSector         = sMap;
 	v->sGridNo         = sGridNo;
-	v->fValid          = TRUE;
+	v->fValid          = true;
 	v->ubVehicleType   = ubType;
 	v->pMercPath       = NULL;
-	v->fDestroyed      = FALSE;
+	v->fDestroyed      = false;
 	v->ubMovementGroup = gubVehicleMovementGroups[vid];
 
 	// ATE: Add movement mask to group...
@@ -158,7 +158,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 			// Change sides
 			vs = ChangeSoldierTeam(vs, OUR_TEAM);
 			// add it to mapscreen list
-			fReBuildCharacterList = TRUE;
+			fReBuildCharacterList = true;
 		}
 
 		// If vehicle is empty, add to unique squad now that it has somebody in it!
@@ -263,7 +263,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 			// that will initialize interface panels!!!
 			if (guiCurrentScreen == GAME_SCREEN)
 			{
-				SetCurrentSquad(vs->bAssignment, TRUE);
+				SetCurrentSquad(vs->bAssignment, true);
 			}
 		}
 
@@ -348,7 +348,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		if (GetLengthOfMercPath(&vs) > 0)
 		{
 			// cancel the entire path (also handles reversing directions)
-			CancelPathForVehicle(v, FALSE);
+			CancelPathForVehicle(v, false);
 		}
 
 		if (v.fBetweenSectors)
@@ -371,7 +371,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 
 BOOLEAN MoveCharactersPathToVehicle(SOLDIERTYPE* const s)
 {
-	if (!s) return FALSE;
+	if (!s) return false;
 
 	// check if character is in fact in a vehicle
 	INT32 vid;
@@ -386,7 +386,7 @@ BOOLEAN MoveCharactersPathToVehicle(SOLDIERTYPE* const s)
 	else
 	{
 		s->pMercPath = ClearStrategicPathList(s->pMercPath, 0);
-		return FALSE;
+		return false;
 	}
 
 	VEHICLETYPE& v = GetVehicle(vid);
@@ -395,7 +395,7 @@ BOOLEAN MoveCharactersPathToVehicle(SOLDIERTYPE* const s)
 	v.pMercPath = CopyPaths(s->pMercPath);
 
 	s->pMercPath = ClearStrategicPathList(s->pMercPath, 0);
-	return TRUE;
+	return true;
 }
 
 
@@ -451,9 +451,9 @@ BOOLEAN KillAllInVehicle(VEHICLETYPE const& v)
 	// go through list of occupants and kill them
 	CFOR_EACH_PASSENGER(v, i)
 	{
-		if (!KillPersonInVehicle(**i)) return FALSE;
+		if (!KillPersonInVehicle(**i)) return false;
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -486,9 +486,9 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 	VEHICLETYPE const& v = GetVehicle(iId);
 	CFOR_EACH_PASSENGER(v, i)
 	{
-		if (ControllingRobot(*i)) return TRUE;
+		if (ControllingRobot(*i)) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -511,7 +511,7 @@ bool IsEnoughSpaceInVehicle(VEHICLETYPE const& v)
 BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 {
 	// if not in vehicle, don't take out, not much point, now is there?
-	if (s->bAssignment != VEHICLE) return FALSE;
+	if (s->bAssignment != VEHICLE) return false;
 
 	if (s->sSector == gWorldSector &&
 		s->bInSector &&
@@ -559,7 +559,7 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 	s->usStrategicInsertionData = s->sInsertionGridNo;
 	s->iVehicleId               = -1;
 
-	//AllTeamsLookForAll( FALSE );
+	//AllTeamsLookForAll( false );
 	s->bOppList[vs.ubID] = 1;
 
 	// Add to sector....
@@ -573,13 +573,13 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 	// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
 	if (guiCurrentScreen == GAME_SCREEN)
 	{
-		SetCurrentSquad(s->bAssignment, TRUE);
+		SetCurrentSquad(s->bAssignment, true);
 		SelectSoldier(s, SELSOLDIER_FORCE_RESELECT);
 	}
 
 	UINT8 ubVehicleType = pVehicleList[vs.bVehicleID].ubVehicleType;
 	PlayLocationJA2Sample(vs.sGridNo, GCM->getVehicle(ubVehicleType)->enter_sound, HIGHVOLUME, 1);
-	return TRUE;
+	return true;
 }
 
 
@@ -620,7 +620,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
-	BOOLEAN	fMadeCorpse = FALSE;
+	BOOLEAN	fMadeCorpse = false;
 
 	VEHICLETYPE& v  = pVehicleList[ubID];
 	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
@@ -648,7 +648,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 			// Display damage
 
 			// Set Damage display counter
-			vs.fDisplayDamage = TRUE;
+			vs.fDisplayDamage = true;
 			vs.bDisplayDamageCount = 0;
 
 			vs.sDamageX = vs.sBoundingBoxOffsetX;
@@ -658,7 +658,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 
 	if (vs.bLife == 0 && !v.fDestroyed)
 	{
-		v.fDestroyed = TRUE;
+		v.fDestroyed = true;
 
 		// Explode vehicle...
 		IgniteExplosion(att, 0, sGridNo, GREAT_BIG_EXPLOSION, 0);
@@ -779,7 +779,7 @@ void SetVehicleSectorValues(VEHICLETYPE& v, const SGPSector& sMap)
 	{
 		SOLDIERTYPE& s = **i;
 		s.sSector        = sMap;
-		s.fBetweenSectors = FALSE;
+		s.fBetweenSectors = false;
 	}
 }
 
@@ -809,7 +809,7 @@ void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 	{
 		// create mvt groups
 		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(SGPSector(1, 1));
-		g->fPersistant = TRUE;
+		g->fPersistant = true;
 		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}
 }
@@ -846,7 +846,7 @@ BOOLEAN OKUseVehicle( UINT8 ubProfile )
 	}
 	else
 	{
-		return( TRUE );
+		return true;
 	}
 }
 
@@ -959,22 +959,22 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT
 	// not in a vehicle?
 	if( pSoldier->bAssignment != VEHICLE )
 	{
-		return( FALSE );
+		return false;
 	}
 
-	if (InHelicopter(*pSoldier)) return FALSE; // they don't get a squad #
+	if (InHelicopter(*pSoldier)) return false; // they don't get a squad #
 
 	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(pSoldier->iVehicleId));
 
 	// check squad vehicle is on
 	if (vs.bAssignment != bSquadNumber)
 	{
-		return( FALSE );
+		return false;
 	}
 
 
 	// yes, he's in a vehicle assigned to this squad
-	return( TRUE );
+	return true;
 }
 
 

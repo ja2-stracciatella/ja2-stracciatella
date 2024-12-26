@@ -53,10 +53,10 @@
 extern PathSt* pTempHelicopterPath;
 
 // whether helicopted variables have been set up
-BOOLEAN fSkyRiderSetUp = FALSE;
+BOOLEAN fSkyRiderSetUp = false;
 
 // plotting for a helicopter
-BOOLEAN fPlotForHelicopter = FALSE;
+BOOLEAN fPlotForHelicopter = false;
 
 // helicopter vehicle id
 INT32 iHelicopterVehicleId = -1;
@@ -65,7 +65,7 @@ INT32 iHelicopterVehicleId = -1;
 INT32 iTotalAccumulatedCostByPlayer = 0;
 
 // helicopter destroyed
-BOOLEAN fHelicopterDestroyed = FALSE;
+BOOLEAN fHelicopterDestroyed = false;
 
 static const SGPSector hospital(HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y);
 
@@ -92,16 +92,16 @@ enum SkyriderMonologueEvent
 };
 
 // whether or not helicopter can refuel at this site
-BOOLEAN fRefuelingSiteAvailable[ NUMBER_OF_REFUEL_SITES ] = { FALSE, FALSE };
+BOOLEAN fRefuelingSiteAvailable[ NUMBER_OF_REFUEL_SITES ] = { false, false };
 
 // is the heli in the air?
-BOOLEAN fHelicopterIsAirBorne = FALSE;
+BOOLEAN fHelicopterIsAirBorne = false;
 
 // is the pilot returning straight to base?
-BOOLEAN fHeliReturnStraightToBase = FALSE;
+BOOLEAN fHeliReturnStraightToBase = false;
 
 // heli hovering
-BOOLEAN fHoveringHelicopter = FALSE;
+BOOLEAN fHoveringHelicopter = false;
 
 // time started hovering
 UINT32 uiStartHoverTime = 0;
@@ -110,13 +110,13 @@ UINT32 uiStartHoverTime = 0;
 UINT32 guiHelicopterSkyriderTalkState = 0;
 
 // the flags for skyrider events
-BOOLEAN fShowEstoniRefuelHighLight = FALSE;
-BOOLEAN fShowOtherSAMHighLight = FALSE;
-BOOLEAN fShowDrassenSAMHighLight = FALSE;
-BOOLEAN fShowCambriaHospitalHighLight = FALSE;
+BOOLEAN fShowEstoniRefuelHighLight = false;
+BOOLEAN fShowOtherSAMHighLight = false;
+BOOLEAN fShowDrassenSAMHighLight = false;
+BOOLEAN fShowCambriaHospitalHighLight = false;
 UINT32 guiTimeOfLastSkyriderMonologue = 0;
 UINT8 gubHelicopterHitsTaken = 0;
-BOOLEAN gfSkyriderSaidCongratsOnTakingSAM = FALSE;
+BOOLEAN gfSkyriderSaidCongratsOnTakingSAM = false;
 UINT8 gubPlayerProgressSkyriderLastCommentedOn = 0;
 
 static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies);
@@ -140,34 +140,34 @@ void InitializeHelicopter( void )
 	// must be called whenever a new game starts up!
 	iHelicopterVehicleId = -1;
 
-	fSkyRiderSetUp = FALSE;
+	fSkyRiderSetUp = false;
 
-	fHelicopterIsAirBorne = FALSE;
-	fHeliReturnStraightToBase = FALSE;
+	fHelicopterIsAirBorne = false;
+	fHeliReturnStraightToBase = false;
 
-	fHoveringHelicopter = FALSE;
+	fHoveringHelicopter = false;
 	uiStartHoverTime = 0;
 
-	fPlotForHelicopter = FALSE;
+	fPlotForHelicopter = false;
 	pTempHelicopterPath = NULL;
 
 	iTotalAccumulatedCostByPlayer = 0;
 
-	fHelicopterDestroyed = FALSE;
+	fHelicopterDestroyed = false;
 
 	guiHelicopterSkyriderTalkState = 0;
 	guiTimeOfLastSkyriderMonologue = 0;
 
-	fShowEstoniRefuelHighLight = FALSE;
-	fShowOtherSAMHighLight = FALSE;
-	fShowDrassenSAMHighLight = FALSE;
-	fShowCambriaHospitalHighLight = FALSE;
+	fShowEstoniRefuelHighLight = false;
+	fShowOtherSAMHighLight = false;
+	fShowDrassenSAMHighLight = false;
+	fShowCambriaHospitalHighLight = false;
 
-	gfSkyriderEmptyHelpGiven = FALSE;
+	gfSkyriderEmptyHelpGiven = false;
 
 	gubHelicopterHitsTaken = 0;
 
-	gfSkyriderSaidCongratsOnTakingSAM = FALSE;
+	gfSkyriderSaidCongratsOnTakingSAM = false;
 	gubPlayerProgressSkyriderLastCommentedOn = 0;
 }
 
@@ -177,20 +177,20 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 	if( iHelicopterVehicleId == -1 )
 	{
 		// no heli yet
-		return( FALSE );
+		return false;
 	}
 
 	// check if heli is in motion or if on the ground
-	if (fHelicopterIsAirBorne && !fHoveringHelicopter) return FALSE;
+	if (fHelicopterIsAirBorne && !fHoveringHelicopter) return false;
 
 	// is the heli returning to base?..he ain't waiting if so
-	if (fHeliReturnStraightToBase) return FALSE;
+	if (fHeliReturnStraightToBase) return false;
 
 	VEHICLETYPE const& v = GetHelicopter();
 	pSoldier->sSector = v.sSector;
 
 	// reset between sectors
-	pSoldier->fBetweenSectors = FALSE;
+	pSoldier->fBetweenSectors = false;
 
 	// remove from the vehicle
 	return( TakeSoldierOutOfVehicle( pSoldier ) );
@@ -208,7 +208,7 @@ BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 	if (HandleSAMSiteAttackOfHelicopterInSector(sMap))
 	{
 		// destroyed
-		return( TRUE );
+		return true;
 	}
 
 	// count how many enemies are camped there or passing through
@@ -289,13 +289,13 @@ BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 			LandHelicopter();
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 static RefuelSite const& NearestRefuelPoint(bool const fNotifyPlayerIfNoSafeLZ)
 {
 	// Try to find one, any one under the players control
-	RefuelSite const* closest_site = FindClosestRefuelSite(TRUE);
+	RefuelSite const* closest_site = FindClosestRefuelSite(true);
 	if (closest_site) return *closest_site;
 
 	if (fNotifyPlayerIfNoSafeLZ)
@@ -304,7 +304,7 @@ static RefuelSite const& NearestRefuelPoint(bool const fNotifyPlayerIfNoSafeLZ)
 	}
 
 	// Find the closest location regardless
-	closest_site = FindClosestRefuelSite(FALSE);
+	closest_site = FindClosestRefuelSite(false);
 
 	// Always returns a valid refuel point, picking a hostile one if unavoidable
 	Assert(closest_site);
@@ -329,7 +329,7 @@ static RefuelSite const* FindClosestRefuelSite(bool const must_be_available)
 		// find if sector is under control, find distance from heli to it
 		RefuelSite  const& r        = g_refuel_site[i];
 		INT16       const  dest     = r.sector;
-		INT32       const  distance = FindStratPath( sectorID, dest, g, FALSE);
+		INT32       const  distance = FindStratPath( sectorID, dest, g, false);
 		if (distance >= shortest_distance) continue;
 
 		// shorter, copy over
@@ -351,7 +351,7 @@ static void SkyriderDestroyed(void)
 	gMercProfiles[ SKYRIDER ].bLife = 0;
 
 	// destroy helicopter
-	fHelicopterDestroyed = TRUE;
+	fHelicopterDestroyed = true;
 
 	// zero out balance due
 	gMercProfiles[ SKYRIDER ].iBalance = 0;
@@ -367,27 +367,27 @@ BOOLEAN CanHelicopterFly( void )
 	// check if heli is available for flight?
 
 	// is the heli available
-	if (iHelicopterVehicleId == -1) return FALSE;
+	if (iHelicopterVehicleId == -1) return false;
 
 	// is the pilot alive, well, and willing to help us?
-	if (!IsHelicopterPilotAvailable()) return FALSE;
+	if (!IsHelicopterPilotAvailable()) return false;
 
-	if (fHeliReturnStraightToBase) return FALSE;
+	if (fHeliReturnStraightToBase) return false;
 
 	// grounded by enemies in sector?
-	if (!CanHelicopterTakeOff()) return FALSE;
+	if (!CanHelicopterTakeOff()) return false;
 
 	// everything A-OK!
-	return( TRUE );
+	return true;
 }
 
 BOOLEAN IsHelicopterPilotAvailable( void )
 {
 	// what is state of skyrider?
-	if (iHelicopterVehicleId == -1) return FALSE;
+	if (iHelicopterVehicleId == -1) return false;
 
 	// owe any money to skyrider?
-	if( gMercProfiles[ SKYRIDER ].iBalance < 0 ) return( FALSE );
+	if( gMercProfiles[ SKYRIDER ].iBalance < 0 ) return false;
 
 	// last case: Drassen too disloyal to wanna help player? if not, return true
 	return ( !CheckFact( FACT_LOYALTY_LOW, SKYRIDER ) );
@@ -397,13 +397,13 @@ BOOLEAN IsHelicopterPilotAvailable( void )
 static void LandHelicopter(void)
 {
 	// set the helictoper down, call arrive callback for this mvt group
-	fHelicopterIsAirBorne = FALSE;
+	fHelicopterIsAirBorne = false;
 
 	// no longer hovering
-	fHoveringHelicopter = FALSE;
+	fHoveringHelicopter = false;
 
 	// reset fact that we might have returned straight here
-	fHeliReturnStraightToBase = FALSE;
+	fHeliReturnStraightToBase = false;
 	HandleHelicopterOnGround(true);
 
 	// if we'll be unable to take off again (because there are enemies in the sector, or we owe pilot money)
@@ -422,10 +422,10 @@ static void LandHelicopter(void)
 void TakeOffHelicopter( void )
 {
 	// heli in the air
-	fHelicopterIsAirBorne = TRUE;
+	fHelicopterIsAirBorne = true;
 
 	// no longer hovering
-	fHoveringHelicopter = FALSE;
+	fHoveringHelicopter = false;
 	HandleHelicopterOnGround(true);
 }
 
@@ -433,7 +433,7 @@ void TakeOffHelicopter( void )
 static void StartHoverTime(void)
 {
 	// start hover in this sector
-	fHoveringHelicopter = TRUE;
+	fHoveringHelicopter = true;
 
 	// post event for x mins in future, save start time, if event time - delay = start time, then hover has gone on too long
 	uiStartHoverTime = GetWorldTotalMin( );
@@ -487,12 +487,12 @@ static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies)
 	UINT8 ubChance;
 
 	// is the pilot and heli around?
-	if (!CanHelicopterFly()) return FALSE;
+	if (!CanHelicopterFly()) return false;
 
 	// if there aren't any, he obviously won't see them
 	if( ubNumEnemies == 0 )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// figure out what the chance is of seeing them
@@ -500,9 +500,9 @@ static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies)
 	ubChance = 60 + ubNumEnemies;
 	if( PreRandom( 100 ) < ubChance )
 	{
-		return( TRUE );
+		return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 // if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
@@ -563,7 +563,7 @@ void SetUpHelicopterForMovement( void )
 
 static void SkyriderDialogue(UINT16 const quote)
 {
-	CharacterDialogue(SKYRIDER, quote, GetExternalNPCFace(SKYRIDER), DIALOGUE_EXTERNAL_NPC_UI, FALSE);
+	CharacterDialogue(SKYRIDER, quote, GetExternalNPCFace(SKYRIDER), DIALOGUE_EXTERNAL_NPC_UI, false);
 }
 
 static void SkyriderDialogueWithSpecialEvent(SkyriderMonologueEvent const event, UINT32 const special_code)
@@ -626,12 +626,12 @@ void UpdateRefuelSiteAvailability( void )
 				(iCounter == ESTONI_REFUELING_SITE && !CheckFact(FACT_ESTONI_REFUELLING_POSSIBLE, 0)))
 		{
 			// mark refueling site as unavailable
-			fRefuelingSiteAvailable[ iCounter ] = FALSE;
+			fRefuelingSiteAvailable[ iCounter ] = false;
 		}
 		else
 		{
 			// mark refueling site as available
-			fRefuelingSiteAvailable[ iCounter ] = TRUE;
+			fRefuelingSiteAvailable[ iCounter ] = true;
 		}
 	}
 }
@@ -645,7 +645,7 @@ void SetUpHelicopterForPlayer(const SGPSector& sMap)
 		// set up for movement
 		SetUpHelicopterForMovement( );
 		UpdateRefuelSiteAvailability( );
-		fSkyRiderSetUp = TRUE;
+		fSkyRiderSetUp = true;
 	}
 }
 
@@ -655,7 +655,7 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 	INT8 bNewSquad;
 	BOOLEAN fSuccess;
 	UINT8   ubInsertionCode = (UINT8)-1; // XXX HACK000E
-	BOOLEAN fInsertionCodeSet = FALSE;
+	BOOLEAN fInsertionCodeSet = false;
 	UINT16  usInsertionData = (UINT16)-1; // XXX HACK000E
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
@@ -678,7 +678,7 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 		{
 			ubInsertionCode = pSoldier->ubStrategicInsertionCode;
 			usInsertionData = pSoldier->usStrategicInsertionData;
-			fInsertionCodeSet = TRUE;
+			fInsertionCodeSet = true;
 		}
 		else
 		{
@@ -692,7 +692,7 @@ void SkyRiderTalk( UINT16 usQuoteNum )
 {
 	// have skyrider talk to player
 	HeliCharacterDialogue(usQuoteNum);
-	fTeamPanelDirty = TRUE;
+	fTeamPanelDirty = true;
 }
 
 // Skyrider monlogue events for mapscreen
@@ -740,11 +740,11 @@ static void HandleSkyRiderMonologueAboutEstoniRefuel(UINT32 const uiSpecialCode)
 		}
 
 		case 1: // Highlight Estoni
-			fShowEstoniRefuelHighLight = TRUE;
+			fShowEstoniRefuelHighLight = true;
 			break;
 
 		case 2:
-			fShowEstoniRefuelHighLight = FALSE;
+			fShowEstoniRefuelHighLight = false;
 			break;
 	}
 }
@@ -767,19 +767,19 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 			else if (CheckFact(FACT_SKYRIDER_USED_IN_MAPSCREEN, SKYRIDER))
 			{ // Ian says don't use the SAM site quote unless player has tried flying already
 				SkyriderDialogue(SAM_SITE_TAKEN);
-				gfSkyriderSaidCongratsOnTakingSAM = TRUE;
+				gfSkyriderSaidCongratsOnTakingSAM = true;
 			}
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 2);
 			break;
 		}
 
 		case 1: // Highlight Drassen SAM site sector
-			fShowDrassenSAMHighLight = TRUE;
+			fShowDrassenSAMHighLight = true;
 			SetSAMSiteAsFound(SAM_SITE_TWO);
 			break;
 
 		case 2:
-			fShowDrassenSAMHighLight = FALSE;
+			fShowDrassenSAMHighLight = false;
 			break;
 	}
 }
@@ -795,12 +795,12 @@ static void HandleSkyRiderMonologueAboutCambriaHospital(UINT32 const uiSpecialCo
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL, 1);
 
 			// Highlight Cambria hospital sector
-			fShowCambriaHospitalHighLight = TRUE;
+			fShowCambriaHospitalHighLight = true;
 			break;
 		}
 
 		case 1:
-			fShowCambriaHospitalHighLight = FALSE;
+			fShowCambriaHospitalHighLight = false;
 			break;
 	}
 }
@@ -823,7 +823,7 @@ static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 const uiSpecialCode
 		}
 
 		case 1: // Highlight other SAMs
-			fShowOtherSAMHighLight = TRUE;
+			fShowOtherSAMHighLight = true;
 			// Reveal other 3 SAM sites
 			SetSAMSiteAsFound(SAM_SITE_ONE);
 			SetSAMSiteAsFound(SAM_SITE_THREE);
@@ -831,7 +831,7 @@ static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 const uiSpecialCode
 			break;
 
 		case 2:
-			fShowOtherSAMHighLight = FALSE;
+			fShowOtherSAMHighLight = false;
 			break;
 	}
 }
@@ -886,12 +886,12 @@ static void HandleBlitOfSectorLocatorIcon(UINT8 const sector, UINT8 const locato
 
 void HandleAnimationOfSectors( void )
 {
-	BOOLEAN fSkipSpeakersLocator = FALSE;
+	BOOLEAN fSkipSpeakersLocator = false;
 	// these don't need to be saved, they merely turn off the highlights after they stop flashing
-	static BOOLEAN fOldShowDrassenSAMHighLight = FALSE;
-	static BOOLEAN fOldShowCambriaHospitalHighLight = FALSE;
-	static BOOLEAN fOldShowEstoniRefuelHighLight = FALSE;
-	static BOOLEAN fOldShowOtherSAMHighLight = FALSE;
+	static BOOLEAN fOldShowDrassenSAMHighLight = false;
+	static BOOLEAN fOldShowCambriaHospitalHighLight = false;
+	static BOOLEAN fOldShowEstoniRefuelHighLight = false;
+	static BOOLEAN fOldShowOtherSAMHighLight = false;
 
 	auto && samList{ GCM->getSamSites() };
 
@@ -900,57 +900,57 @@ void HandleAnimationOfSectors( void )
 	// Drassen SAM site
 	if( fShowDrassenSAMHighLight )
 	{
-		fOldShowDrassenSAMHighLight = TRUE;
+		fOldShowDrassenSAMHighLight = true;
 		// Drassen's SAM site is #2
 		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_TWO]->sectorId, LOCATOR_COLOR_RED);
-		fSkipSpeakersLocator = TRUE;
+		fSkipSpeakersLocator = true;
 	}
 	else if( fOldShowDrassenSAMHighLight )
 	{
-		fOldShowDrassenSAMHighLight = FALSE;
-		fMapPanelDirty = TRUE;
+		fOldShowDrassenSAMHighLight = false;
+		fMapPanelDirty = true;
 	}
 
 	// Cambria hospital
 	if( fShowCambriaHospitalHighLight )
 	{
-		fOldShowCambriaHospitalHighLight = TRUE;
+		fOldShowCambriaHospitalHighLight = true;
 		HandleBlitOfSectorLocatorIcon(hospital, LOCATOR_COLOR_RED);
-		fSkipSpeakersLocator = TRUE;
+		fSkipSpeakersLocator = true;
 	}
 	else if( fOldShowCambriaHospitalHighLight )
 	{
-		fOldShowCambriaHospitalHighLight = FALSE;
-		fMapPanelDirty = TRUE;
+		fOldShowCambriaHospitalHighLight = false;
+		fMapPanelDirty = true;
 	}
 
 	// show other SAM sites
 	if( fShowOtherSAMHighLight )
 	{
-		fOldShowOtherSAMHighLight = TRUE;
+		fOldShowOtherSAMHighLight = true;
 		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_ONE]->sectorId,   LOCATOR_COLOR_RED);
 		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_THREE]->sectorId, LOCATOR_COLOR_RED);
 		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_FOUR]->sectorId,  LOCATOR_COLOR_RED);
-		fSkipSpeakersLocator = TRUE;
+		fSkipSpeakersLocator = true;
 	}
 	else if( fOldShowOtherSAMHighLight )
 	{
-		fOldShowOtherSAMHighLight = FALSE;
-		fMapPanelDirty = TRUE;
+		fOldShowOtherSAMHighLight = false;
+		fMapPanelDirty = true;
 	}
 
 	// show Estoni site
 	if( fShowEstoniRefuelHighLight )
 	{
-		fOldShowEstoniRefuelHighLight = TRUE;
+		fOldShowEstoniRefuelHighLight = true;
 		INT16 const sec = g_refuel_site[ESTONI_REFUELING_SITE].sector;
 		HandleBlitOfSectorLocatorIcon(SGPSector::FromStrategicIndex(sec), LOCATOR_COLOR_RED);
-		fSkipSpeakersLocator = TRUE;
+		fSkipSpeakersLocator = true;
 	}
 	else if( fOldShowEstoniRefuelHighLight )
 	{
-		fOldShowEstoniRefuelHighLight = FALSE;
-		fMapPanelDirty = TRUE;
+		fOldShowEstoniRefuelHighLight = false;
+		fMapPanelDirty = true;
 	}
 
 	// don't show sector locator over the speaker's sector if he is talking about another sector - it's confusing
@@ -1051,7 +1051,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(const SGPSector& sSector)
 	if (!StrategicMap[sSector.AsStrategicIndex()].fEnemyAirControlled)
 	{
 		// no problem, friendly airspace
-		return( FALSE );
+		return false;
 	}
 
 	// which SAM controls this sector?
@@ -1060,7 +1060,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(const SGPSector& sSector)
 	// if none of them (-1 means the sector is not covered by a SAM)
 	if (bSamSiteID < 0)
 	{
-		return FALSE;
+		return false;
 	}
 
 	// get the condition of that SAM site (NOTE: SAM IDs are 0-3)
@@ -1072,7 +1072,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(const SGPSector& sSector)
 	if( bSAMCondition < MIN_CONDITION_FOR_SAM_SITE_TO_WORK )
 	{
 		// no problem, SAM site not working
-		return( FALSE );
+		return false;
 	}
 
 	// Hostile airspace controlled by a working SAM site, so SAM site fires a SAM at Skyrider!!!
@@ -1126,18 +1126,18 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(const SGPSector& sSector)
 			}
 
 			// special return code indicating heli was destroyed
-			return( TRUE );
+			return true;
 		}
 	}
 	// still flying
-	return( FALSE );
+	return false;
 }
 
 // check if helicopter can take off?
 BOOLEAN CanHelicopterTakeOff( void )
 {
 	// if it's already in the air
-	if (fHelicopterIsAirBorne) return TRUE;
+	if (fHelicopterIsAirBorne) return true;
 
 	VEHICLETYPE const& v = GetHelicopter();
 	// grab location
@@ -1145,9 +1145,9 @@ BOOLEAN CanHelicopterTakeOff( void )
 	// if it's not in enemy control, we can take off
 	if (!StrategicMap[sHelicopterSector].fEnemyControlled)
 	{
-		return( TRUE );
+		return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 static void AddHeliPiece(INT16 const sGridNo, UINT16 const sOStruct)
@@ -1430,11 +1430,11 @@ static void MakeHeliReturnToBase(void)
 
 		ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
 		GROUP& g = *GetGroup(v.ubMovementGroup);
-		v.pMercPath = BuildAStrategicPath( sectorID, refuel_site.sector, g, FALSE);
+		v.pMercPath = BuildAStrategicPath( sectorID, refuel_site.sector, g, false);
 		RebuildWayPointsForGroupPath(v.pMercPath, g);
 
-		fHeliReturnStraightToBase = TRUE;
-		fHoveringHelicopter       = FALSE;
+		fHeliReturnStraightToBase = true;
+		fHoveringHelicopter       = false;
 	}
 	// stop time compression if it's on so player can digest this
 	StopTimeCompression();

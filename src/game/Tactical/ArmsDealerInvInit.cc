@@ -33,28 +33,28 @@ struct ITEM_SORT_ENTRY
 static ITEM_SORT_ENTRY const DealerItemSortInfo[] =
 {
 	//  item class       weapon class  sold used?
-	{ IC_GUN,            HANDGUNCLASS, TRUE  },
-	{ IC_GUN,            SHOTGUNCLASS, TRUE  },
-	{ IC_GUN,            SMGCLASS,     TRUE  },
-	{ IC_GUN,            RIFLECLASS,   TRUE  },
-	{ IC_GUN,            MGCLASS,      FALSE },
-	{ IC_LAUNCHER,       NOGUNCLASS,   FALSE },
-	{ IC_AMMO,           NOGUNCLASS,   FALSE },
-	{ IC_GRENADE,        NOGUNCLASS,   FALSE },
-	{ IC_BOMB,           NOGUNCLASS,   FALSE },
-	{ IC_BLADE,          NOGUNCLASS,   FALSE },
-	{ IC_THROWING_KNIFE, NOGUNCLASS,   FALSE },
-	{ IC_PUNCH,          NOGUNCLASS,   FALSE },
-	{ IC_ARMOUR,         NOGUNCLASS,   TRUE  },
-	{ IC_FACE,           NOGUNCLASS,   TRUE  },
-	{ IC_MEDKIT,         NOGUNCLASS,   FALSE },
-	{ IC_KIT,            NOGUNCLASS,   FALSE },
-	{ IC_MISC,           NOGUNCLASS,   TRUE  },
-	{ IC_THROWN,         NOGUNCLASS,   FALSE },
-	{ IC_KEY,            NOGUNCLASS,   FALSE },
-	{ IC_MONEY,          NOGUNCLASS,   FALSE },
+	{ IC_GUN,            HANDGUNCLASS, true  },
+	{ IC_GUN,            SHOTGUNCLASS, true  },
+	{ IC_GUN,            SMGCLASS,     true  },
+	{ IC_GUN,            RIFLECLASS,   true  },
+	{ IC_GUN,            MGCLASS,      false },
+	{ IC_LAUNCHER,       NOGUNCLASS,   false },
+	{ IC_AMMO,           NOGUNCLASS,   false },
+	{ IC_GRENADE,        NOGUNCLASS,   false },
+	{ IC_BOMB,           NOGUNCLASS,   false },
+	{ IC_BLADE,          NOGUNCLASS,   false },
+	{ IC_THROWING_KNIFE, NOGUNCLASS,   false },
+	{ IC_PUNCH,          NOGUNCLASS,   false },
+	{ IC_ARMOUR,         NOGUNCLASS,   true  },
+	{ IC_FACE,           NOGUNCLASS,   true  },
+	{ IC_MEDKIT,         NOGUNCLASS,   false },
+	{ IC_KIT,            NOGUNCLASS,   false },
+	{ IC_MISC,           NOGUNCLASS,   true  },
+	{ IC_THROWN,         NOGUNCLASS,   false },
+	{ IC_KEY,            NOGUNCLASS,   false },
+	{ IC_MONEY,          NOGUNCLASS,   false },
 
-	{ IC_NONE,           NOGUNCLASS,   FALSE }  // marks end of list
+	{ IC_NONE,           NOGUNCLASS,   false }  // marks end of list
 };
 
 
@@ -289,24 +289,24 @@ BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usIte
 			sInventorySlot = GetInventorySlotForItem(pInventory, usItemIndex, fUsed);
 			if (sInventorySlot == -1)
 			{
-				return(FALSE);
+				return(false);
 			}
-			pInventory[ sInventorySlot ].fPreviouslyEligible = TRUE;
+			pInventory[ sInventorySlot ].fPreviouslyEligible = true;
 		}
 		else
 		{
-			gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].fPreviouslyEligible = TRUE;
+			gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].fPreviouslyEligible = true;
 		}
 	}
 
 	// roll to see if a transaction occurs
 	if (Random(100) < ubChance)
 	{
-		return(TRUE);
+		return(true);
 	}
 	else
 	{
-		return(FALSE);
+		return(false);
 	}
 }
 
@@ -494,7 +494,7 @@ static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 	}
 
 	// should never be trying to locate an item that's not covered in the table!
-	Assert(FALSE);
+	Assert(false);
 	return 0;
 }
 
@@ -503,7 +503,7 @@ static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
 	if ( !( GCM->getItem(usItemIndex)->getFlags() & ITEM_DAMAGEABLE ) )
-		return(FALSE);
+		return(false);
 
 	// certain items, although they're damagable, shouldn't be sold in a used condition
 	return( DealerItemSortInfo[ GetDealerItemCategoryNumber( usItemIndex ) ].fAllowUsed );

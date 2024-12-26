@@ -124,8 +124,8 @@ enum
 	NUM_SCHEDULE_INSTRUCTIONS
 };
 
-BOOLEAN gfSingleAction = FALSE;
-BOOLEAN gfUseScheduleData2 = FALSE;
+BOOLEAN gfSingleAction = false;
+BOOLEAN gfUseScheduleData2 = false;
 UINT8 gubCurrentScheduleActionIndex = 0;
 SCHEDULENODE gCurrSchedule;
 UINT8 gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
@@ -173,19 +173,19 @@ BOOLEAN					gfRoofPlacement;
 //Determines if the user is allowed to edit merc colors.  User must specifically
 //click on the checkbox by the colors to confirm that colors will be specified.  If
 //not, the colors will be randomly generated upon creation in the game.
-BOOLEAN					gfCanEditMercColors							= FALSE;
+BOOLEAN					gfCanEditMercColors							= false;
 //A rendering flag that is set whenever a full update of the merc editing information
 //needs to be done.
-BOOLEAN					gfRenderMercInfo								= FALSE;
+BOOLEAN					gfRenderMercInfo								= false;
 //When the user specifies a profile index for the merc, all editing is disabled.  This is
 //because the profile contains all of the information.  When this happens, all of the editing
 //buttons are disabled, but you are allowed to view stats, inventory, etc., as well as specify
 //orders, attitude, and direction.
-BOOLEAN					gfCanEditMercs									= TRUE;
+BOOLEAN					gfCanEditMercs									= true;
 //When in inventory mode, this flag is set when the user wishes to get an item, which requires hooking
 //into the item editing features.  This is processed during the editor update, which in turn, sets the
 //new mode.
-BOOLEAN					gfMercGetItem										= FALSE;
+BOOLEAN					gfMercGetItem										= false;
 //As soon as an item is selected, the items index is stored here, so the item can be copied into the
 //slot for editing and rendering purposes.  This is a temp store value only when leaving the editor items
 //mode.
@@ -195,11 +195,11 @@ INT32 iEditWhichStat = -1;
 INT32 iEditMercMode = EDIT_MERC_NONE;
 INT32	iEditColorStart[EDIT_NUM_COLORS];
 
-BOOLEAN gfShowPlayers = TRUE;
-BOOLEAN gfShowEnemies = TRUE;
-BOOLEAN gfShowCreatures = TRUE;
-BOOLEAN gfShowRebels = TRUE;
-BOOLEAN gfShowCivilians = TRUE;
+BOOLEAN gfShowPlayers = true;
+BOOLEAN gfShowEnemies = true;
+BOOLEAN gfShowCreatures = true;
+BOOLEAN gfShowRebels = true;
+BOOLEAN gfShowCivilians = true;
 
 
 //information for bodytypes.
@@ -246,7 +246,7 @@ void EntryInitEditorMercsInfo()
 	g_selected_merc      = NULL;
 	gsSelectedMercGridNo = 0;
 
-	gfCanEditMercs = TRUE;
+	gfCanEditMercs = true;
 }
 
 
@@ -357,8 +357,8 @@ void AddMercToWorld( INT32 iMapIndex )
 		SOLDIERINITNODE *pNode;
 
 		//Set up some general information.
-		gTempBasicPlacement.fDetailedPlacement = FALSE;
-		gTempBasicPlacement.fPriorityExistance = FALSE;
+		gTempBasicPlacement.fDetailedPlacement = false;
+		gTempBasicPlacement.fPriorityExistance = false;
 		gTempBasicPlacement.usStartingGridNo = (UINT16)iMapIndex;
 		gTempBasicPlacement.bOrders = gbDefaultOrders;
 		gTempBasicPlacement.bAttitude = gbDefaultAttitude;
@@ -390,15 +390,15 @@ void AddMercToWorld( INT32 iMapIndex )
 			//Move him to the roof if intended and possible.
 			if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
 			{
-				gpSelected->pBasicPlacement->fOnRoof = TRUE;
+				gpSelected->pBasicPlacement->fOnRoof = true;
 				if( gpSelected->pDetailedPlacement )
-					gpSelected->pDetailedPlacement->fOnRoof = TRUE;
+					gpSelected->pDetailedPlacement->fOnRoof = true;
 				SetSoldierHeight( gpSelected->pSoldier, SECOND_LEVEL_Z_OFFSET );
 			}
 			UnclickEditorButtons( FIRST_MERCS_INVENTORY_BUTTON, LAST_MERCS_INVENTORY_BUTTON );
 			for( i = FIRST_MERCS_INVENTORY_BUTTON; i <= LAST_MERCS_INVENTORY_BUTTON; i++ )
 			{
-				SetEnemyDroppableStatus( gbMercSlotTypes[i-FIRST_MERCS_INVENTORY_BUTTON], FALSE );
+				SetEnemyDroppableStatus( gbMercSlotTypes[i-FIRST_MERCS_INVENTORY_BUTTON], false );
 			}
 		}
 	}
@@ -427,16 +427,16 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 		EVENT_SetSoldierPosition(gpSelected->pSoldier, iMapIndex, SSP_NONE);
 		if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
 		{
-			gpSelected->pBasicPlacement->fOnRoof = TRUE;
+			gpSelected->pBasicPlacement->fOnRoof = true;
 			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->fOnRoof = TRUE;
+				gpSelected->pDetailedPlacement->fOnRoof = true;
 			SetSoldierHeight( gpSelected->pSoldier, SECOND_LEVEL_Z_OFFSET );
 		}
 		else
 		{
-			gpSelected->pBasicPlacement->fOnRoof = FALSE;
+			gpSelected->pBasicPlacement->fOnRoof = false;
 			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->fOnRoof = FALSE;
+				gpSelected->pDetailedPlacement->fOnRoof = false;
 			SetSoldierHeight( gpSelected->pSoldier, 0.0 );
 		}
 		gsSelectedMercGridNo = (INT16)iMapIndex;
@@ -517,7 +517,7 @@ void AddMercWaypoint( UINT32 iMapIndex )
 			gpSelected->pDetailedPlacement->sPatrolGrid[iActionParam] = (INT16)iMapIndex;
 		gpSelected->pSoldier->usPatrolGrid[iActionParam] = (UINT16)iMapIndex;
 	}
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 }
 
 void EraseMercWaypoint()
@@ -546,7 +546,7 @@ void EraseMercWaypoint()
 	if( gpSelected->pDetailedPlacement )
 		gpSelected->pDetailedPlacement->bPatrolCnt--;
 	gpSelected->pSoldier->bPatrolCnt--;
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 }
 
 
@@ -576,7 +576,7 @@ void MercsToggleColorModeCallback( GUI_BUTTON *btn, UINT32 reason )
 		if (btn->Clicked())
 		{
 			EnableEditorButtons( FIRST_MERCS_COLOR_BUTTON, LAST_MERCS_COLOR_BUTTON );
-			gpSelected->pDetailedPlacement->fVisible = TRUE;
+			gpSelected->pDetailedPlacement->fVisible = true;
 			gpSelected->pDetailedPlacement->HeadPal = gpSelected->pSoldier->HeadPal;
 			gpSelected->pDetailedPlacement->SkinPal = gpSelected->pSoldier->SkinPal;
 			gpSelected->pDetailedPlacement->VestPal = gpSelected->pSoldier->VestPal;
@@ -585,10 +585,10 @@ void MercsToggleColorModeCallback( GUI_BUTTON *btn, UINT32 reason )
 		else //button is unchecked.
 		{
 			DisableEditorButtons( FIRST_MERCS_COLOR_BUTTON, LAST_MERCS_COLOR_BUTTON );
-			gpSelected->pDetailedPlacement->fVisible = FALSE;
+			gpSelected->pDetailedPlacement->fVisible = false;
 		}
-		gfRenderMercInfo = TRUE;
-		gfRenderTaskbar = TRUE;
+		gfRenderMercInfo = true;
+		gfRenderTaskbar = true;
 	}
 }
 
@@ -604,7 +604,7 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, UINT32 reason )
 			{
 				iEditWhichStat = iBtn - FIRST_MERCS_COLOR_BUTTON;
 				iEditMercMode = EDIT_MERC_NEXT_COLOR;
-				gfRenderMercInfo = TRUE;
+				gfRenderMercInfo = true;
 				return;
 			}
 		}
@@ -618,7 +618,7 @@ void MercsSetBodyTypeCallback( GUI_BUTTON *btn, UINT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
-		gfRenderMercInfo = TRUE;
+		gfRenderMercInfo = true;
 		if (btn == iEditorButton[MERCS_BODYTYPE_DOWN])
 			ChangeBodyType(CBT::next);
 		else
@@ -739,7 +739,7 @@ void DisplayWayPoints(void)
 	INT16 sX,sY;
 	INT16	sXMapPos,sYMapPos;
 	INT16 sScreenX,sScreenY;
-	FLOAT ScrnX,ScrnY,dOffsetX,dOffsetY;
+	float ScrnX,ScrnY,dOffsetX,dOffsetY;
 	INT8	bPoint;
 
 	const SOLDIERTYPE* const pSoldier = g_selected_merc;
@@ -762,8 +762,8 @@ void DisplayWayPoints(void)
 		// Convert it's location to screen coordinates
 		ConvertGridNoToXY( sGridNo, &sXMapPos, &sYMapPos );
 
-		dOffsetX = (FLOAT)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
-		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
+		dOffsetX = (float)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
+		dOffsetY = (float)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
@@ -898,7 +898,7 @@ void IndicateSelectedMerc( INT16 sID )
 			}
 			if( !gpSelected ) //list is empty
 			{
-				SetMercEditability( TRUE );
+				SetMercEditability( true );
 				SetMercEditingMode( MERC_TEAMMODE );
 				return;
 			}
@@ -918,7 +918,7 @@ void IndicateSelectedMerc( INT16 sID )
 			//we have a valid merc now.
 			break;
 		case SELECT_NO_MERC:
-			SetMercEditability( TRUE );
+			SetMercEditability( true );
 			gpSelected = NULL;
 			g_selected_merc  = NULL;
 			gsSelectedGridNo = 0;
@@ -943,7 +943,7 @@ void IndicateSelectedMerc( INT16 sID )
 			{
 				g_selected_merc  = NULL;
 				gsSelectedGridNo = 0;
-				SetMercEditability( TRUE );
+				SetMercEditability( true );
 				SetMercEditingMode( MERC_TEAMMODE );
 				return; //Invalid merc ID.
 			}
@@ -969,7 +969,7 @@ void IndicateSelectedMerc( INT16 sID )
 		}
 		if( !gpSelected ) //list is empty
 		{
-			SetMercEditability( TRUE );
+			SetMercEditability( true );
 			SetMercEditingMode( MERC_TEAMMODE );
 			return;
 		}
@@ -992,7 +992,7 @@ void IndicateSelectedMerc( INT16 sID )
 		{ //we have cycled through the list already, so choose the same guy (if he is on the desired team)...
 			if( !gpSelected->pSoldier || gpSelected->pSoldier->bVisible != 1 || gpSelected->pSoldier->bTeam != bTeam )
 			{
-				SetMercEditability( TRUE );
+				SetMercEditability( true );
 				SetMercEditingMode( MERC_TEAMMODE );
 				return;
 			}
@@ -1003,7 +1003,7 @@ void IndicateSelectedMerc( INT16 sID )
 		gsSelectedMercGridNo = gpSelected->pSoldier->sGridNo;
 	else
 	{
-		SetMercEditability( TRUE );
+		SetMercEditability( true );
 		SetMercEditingMode( MERC_TEAMMODE );
 		return;
 	}
@@ -1018,7 +1018,7 @@ void IndicateSelectedMerc( INT16 sID )
 	{	//We want to center the screen on the next merc, and update the interface.
 		gsRenderCenterX = (INT16)gpSelected->pSoldier->dXPos;
 		gsRenderCenterY = (INT16)gpSelected->pSoldier->dYPos;
-		gfRenderWorld = TRUE;
+		gfRenderWorld = true;
 	}
 
 	//update the merc item slots to reflect what the merc currently has.
@@ -1044,7 +1044,7 @@ void IndicateSelectedMerc( INT16 sID )
 	else
 		SetMercEditingMode( MERC_BASICMODE );
 	//Determine which team button to press.
-	gfRenderMercInfo = TRUE;
+	gfRenderMercInfo = true;
 	//These calls will set the proper button states, even though it redundantly
 	//assigns the soldier with the same orders/attitude.
 	SetMercOrders( gpSelected->pSoldier->bOrders );
@@ -1077,7 +1077,7 @@ void DeleteSelectedMerc()
 		RemoveSoldierNodeFromInitList( gpSelected );
 		gpSelected = NULL;
 		g_selected_merc = NULL;
-		gfRenderWorld = TRUE;
+		gfRenderWorld = true;
 		if( TextInputMode() )
 			KillTextInputMode();
 		IndicateSelectedMerc( SELECT_NO_MERC );
@@ -1217,16 +1217,16 @@ static void ExtractAndUpdateMercProfile(void)
 	if( sNum == -1 )
 	{
 		gpSelected->pDetailedPlacement->ubProfile = NO_PROFILE;
-		gpSelected->pDetailedPlacement->fCopyProfileItemsOver = FALSE;
-		SetMercEditability( TRUE );
+		gpSelected->pDetailedPlacement->fCopyProfileItemsOver = false;
+		SetMercEditability( true );
 	}
 	else if( sPrev != sNum )
 	{
 		gpSelected->pDetailedPlacement->ubProfile = (UINT8)sNum;
-		gpSelected->pDetailedPlacement->fCopyProfileItemsOver = TRUE;
-		gpSelected->pBasicPlacement->fPriorityExistance = TRUE;
+		gpSelected->pDetailedPlacement->fCopyProfileItemsOver = true;
+		gpSelected->pBasicPlacement->fPriorityExistance = true;
 		ClickEditorButton( MERCS_PRIORITYEXISTANCE_CHECKBOX );
-		SetMercEditability( FALSE );
+		SetMercEditability( false );
 	}
 	else
 		return;
@@ -1260,8 +1260,8 @@ static void UpdateScheduleInfo(void);
 void ExtractAndUpdateMercSchedule()
 {
 	INT32 i;
-	BOOLEAN fValidSchedule = FALSE;
-	BOOLEAN fScheduleNeedsUpdate = FALSE;
+	BOOLEAN fValidSchedule = false;
+	BOOLEAN fScheduleNeedsUpdate = false;
 	SCHEDULENODE *pNext = NULL;
 	if( !gpSelected )
 		return;
@@ -1272,7 +1272,7 @@ void ExtractAndUpdateMercSchedule()
 		gCurrSchedule.usTime[i]	= GetExclusive24HourTimeValueFromField( (UINT8)(i+1) );
 		gCurrSchedule.ubAction[i] = iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->GetUserData();
 		if( gCurrSchedule.ubAction[i] )
-			fValidSchedule = TRUE;
+			fValidSchedule = true;
 	}
 
 	if( !gpSelected->pSoldier->ubScheduleID )
@@ -1280,7 +1280,7 @@ void ExtractAndUpdateMercSchedule()
 		if( fValidSchedule )
 		{ //create a new schedule
 			if( SortSchedule( &gCurrSchedule ) )
-				fScheduleNeedsUpdate = TRUE;
+				fScheduleNeedsUpdate = true;
 			CopyScheduleToList( &gCurrSchedule, gpSelected );
 			ShowEditorButton( MERCS_GLOWSCHEDULE );
 			HideEditorButton( MERCS_SCHEDULE );
@@ -1302,7 +1302,7 @@ void ExtractAndUpdateMercSchedule()
 		{ //overwrite the existing schedule with the new one.
 			gCurrSchedule.ubScheduleID = gpSelected->pSoldier->ubScheduleID;
 			if( SortSchedule( &gCurrSchedule ) )
-				fScheduleNeedsUpdate = TRUE;
+				fScheduleNeedsUpdate = true;
 			pNext = pSchedule->next;
 			*pSchedule = gCurrSchedule;
 			pSchedule->next = pNext;
@@ -1340,7 +1340,7 @@ void ExtractCurrentMercModeInfo( BOOLEAN fKillTextInputMode )
 			ExtractAndUpdateMercSchedule();
 			break;
 		default:
-			fKillTextInputMode = FALSE;
+			fKillTextInputMode = false;
 			break;
 	}
 	if( fKillTextInputMode )
@@ -1352,8 +1352,8 @@ void InitDetailedPlacementForMerc()
 	Assert( !gpSelected->pDetailedPlacement );
 
 	gpSelected->pDetailedPlacement = new SOLDIERCREATE_STRUCT{};
-	gpSelected->pBasicPlacement->fDetailedPlacement = TRUE;
-	gpSelected->pBasicPlacement->fPriorityExistance = FALSE;
+	gpSelected->pBasicPlacement->fDetailedPlacement = true;
+	gpSelected->pBasicPlacement->fPriorityExistance = false;
 	CreateStaticDetailedPlacementGivenBasicPlacementInfo( gpSelected->pDetailedPlacement, gpSelected->pBasicPlacement );
 
 	ClearCurrentSchedule();
@@ -1367,8 +1367,8 @@ void KillDetailedPlacementForMerc()
 	Assert( gpSelected->pDetailedPlacement );
 	delete gpSelected->pDetailedPlacement;
 	gpSelected->pDetailedPlacement = NULL;
-	gpSelected->pBasicPlacement->fDetailedPlacement = FALSE;
-	SetMercEditability( TRUE );
+	gpSelected->pBasicPlacement->fDetailedPlacement = false;
+	SetMercEditability( true );
 }
 
 
@@ -1376,8 +1376,8 @@ static void ChangeBodyType(CBT const direction)
 {
 	int const offset = direction == CBT::next ? 1 : -1;
 
-	gfRenderTaskbar  = TRUE;
-	gfRenderMercInfo = TRUE;
+	gfRenderTaskbar  = true;
+	gfRenderMercInfo = true;
 
 	SOLDIERINITNODE const&      sel = *gpSelected;
 	BASIC_SOLDIERCREATE_STRUCT& bp  = *sel.pBasicPlacement;
@@ -1457,7 +1457,7 @@ static void ChangeBodyType(CBT const direction)
 
 static void SetMercEditability(BOOLEAN fEditable)
 {
-	gfRenderMercInfo = TRUE;
+	gfRenderMercInfo = true;
 	if( fEditable == gfCanEditMercs )
 		return;
 	gfCanEditMercs = fEditable;
@@ -1489,11 +1489,11 @@ static void SetMercEditability(BOOLEAN fEditable)
 void SpecifyEntryPoint( UINT32 iMapIndex )
 {
 	INT16 *psEntryGridNo;
-	BOOLEAN fErasing = FALSE;
+	BOOLEAN fErasing = false;
 	if( iDrawMode >= DRAW_MODE_ERASE )
 	{
 		iDrawMode -= DRAW_MODE_ERASE;
-		fErasing = TRUE;
+		fErasing = true;
 	}
 	switch( iDrawMode )
 	{
@@ -1538,7 +1538,7 @@ static void DetermineScheduleEditability(void);
 void SetMercEditingMode( UINT8 ubNewMode )
 {
 	//We need to update the taskbar for the buttons that were erased.
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 
 	//set up the new mode values.
 	if( gubCurrMercMode >= MERC_GENERALMODE )
@@ -1546,7 +1546,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 
 	//Depending on the mode we were just in, we may want to extract and update the
 	//merc first.  Then we change modes...
-	ExtractCurrentMercModeInfo( TRUE );
+	ExtractCurrentMercModeInfo( true );
 
 	//Change modes now.
 	gubPrevMercMode = gubCurrMercMode;
@@ -1560,7 +1560,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 		case MERC_GETITEMMODE:
 			EnableEditorButtons( TAB_TERRAIN, TAB_OPTIONS );
 			HideEditorButtons( FIRST_MERCS_GETITEM_BUTTON, LAST_MERCS_GETITEM_BUTTON );
-			AddNewItemToSelectedMercsInventory( TRUE );
+			AddNewItemToSelectedMercsInventory( true );
 			break;
 		case MERC_INVENTORYMODE:
 			HideItemStatsPanel();
@@ -1803,7 +1803,7 @@ void UpdateMercsInfo()
 
 	//We are rendering it now, so signify that it has been done, so
 	//it doesn't get rendered every frame.
-	gfRenderMercInfo = FALSE;
+	gfRenderMercInfo = false;
 
 	switch( gubCurrMercMode )
 	{
@@ -2011,7 +2011,7 @@ static void DrawRect(SGPRect const * pRect, INT16 color)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, pRect->iLeft + MERCPANEL_X, pRect->iTop + MERCPANEL_Y, pRect->iRight + MERCPANEL_X, pRect->iBottom + MERCPANEL_Y, color, l.Buffer<UINT16>());
+	RectangleDraw(true, pRect->iLeft + MERCPANEL_X, pRect->iTop + MERCPANEL_Y, pRect->iRight + MERCPANEL_X, pRect->iBottom + MERCPANEL_Y, color, l.Buffer<UINT16>());
 }
 
 
@@ -2066,7 +2066,7 @@ void DeleteSelectedMercsItem()
 	if( gbCurrSelect != -1 )
 	{
 		gusMercsNewItemIndex = 0;
-		AddNewItemToSelectedMercsInventory( TRUE );
+		AddNewItemToSelectedMercsInventory( true );
 	}
 }
 
@@ -2096,7 +2096,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 			return;
 		}
 		//Create the item, and set up the slot.
-		fUnDroppable = gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].fFlags & OBJECT_UNDROPPABLE ? TRUE : FALSE;
+		fUnDroppable = gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].fFlags & OBJECT_UNDROPPABLE ? true : false;
 
 		if ( GCM->getItem(gusMercsNewItemIndex)->getItemClass() == IC_KEY )
 		{
@@ -2278,7 +2278,7 @@ void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent )
 				if( PointInRect( &mercRects[x], sX, sY ) )
 				{
 					if( gbCurrHilite != x ) //only render if the slot isn't the same one.
-						gfRenderMercInfo = TRUE;
+						gfRenderMercInfo = true;
 					gbCurrHilite = x;
 					return;
 				}
@@ -2287,7 +2287,7 @@ void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent )
 			if( gbCurrHilite != -1 )
 			{ //only turn off if it isn't already off.  This avoids unecessary rendering.
 				gbCurrHilite = -1;
-				gfRenderMercInfo = TRUE;
+				gfRenderMercInfo = true;
 			}
 			break;
 		case GUI_LCLICK_EVENT:
@@ -2301,12 +2301,12 @@ void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent )
 				{
 					if( gbCurrSelect != x ) //only if it isn't the same slot.
 					{
-						gfRenderMercInfo = TRUE;
+						gfRenderMercInfo = true;
 						if( bEvent == GUI_LCLICK_EVENT )
 							SpecifyItemToEdit( gpMercSlotItem[ x ], -1 );
 					}
 					if( bEvent == GUI_RCLICK_EVENT ) //user r-clicked, so enable item choosing
-						gfMercGetItem = TRUE;
+						gfMercGetItem = true;
 					gbCurrSelect = x;
 					return;
 				}
@@ -2342,7 +2342,7 @@ static void UpdateMercItemSlots(void)
 			//Set the curr select and the addnewitem function will handle the rest, including rebuilding
 			//the nine slot buffers, etc.
 			gbCurrSelect = x;
-			AddNewItemToSelectedMercsInventory( FALSE );
+			AddNewItemToSelectedMercsInventory( false );
 		}
 	}
 	SetDroppableCheckboxesBasedOnMercsInventory();
@@ -2478,7 +2478,7 @@ void RenderMercStrings()
 		INT16 sY;
 		INT16 sXPos;
 		INT16 sYPos;
-		GetSoldierAboveGuyPositions(s, &sXPos, &sYPos, FALSE);
+		GetSoldierAboveGuyPositions(s, &sXPos, &sYPos, false);
 
 		// Display name
 		SetFontAttributes(TINYFONT1, FONT_WHITE);
@@ -2623,8 +2623,8 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 		iEditorButton[MERCS_SCHEDULE_DATA1B + gubCurrentScheduleActionIndex]->SpecifyText(str);
 		DetermineScheduleEditability();
 		gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
-		gfRenderTaskbar = TRUE;
-		gfUseScheduleData2 = FALSE;
+		gfRenderTaskbar = true;
+		gfUseScheduleData2 = false;
 	}
 	else
 	{
@@ -2636,18 +2636,18 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 			case SCHEDULE_ACTION_CLOSEDOOR:
 				if( gfSingleAction )
 				{
-					gfSingleAction = FALSE;
+					gfSingleAction = false;
 					gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
-					gfRenderTaskbar = TRUE;
+					gfRenderTaskbar = true;
 					DetermineScheduleEditability();
 					break;
 				}
 				DisableEditorButton( MERCS_SCHEDULE_DATA1A + gubCurrentScheduleActionIndex );
 				EnableEditorButton( MERCS_SCHEDULE_DATA1B + gubCurrentScheduleActionIndex );
-				gfUseScheduleData2 = TRUE;
+				gfUseScheduleData2 = true;
 				iDrawMode = DRAW_MODE_SCHEDULEACTION;
 				gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_DOOR2;
-				gfRenderTaskbar = TRUE;
+				gfRenderTaskbar = true;
 				break;
 			case SCHEDULE_ACTION_GRIDNO:
 			case SCHEDULE_ACTION_ENTERSECTOR:
@@ -2655,7 +2655,7 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 				iDrawMode = DRAW_MODE_PLAYER + gpSelected->pBasicPlacement->bTeam;
 				DetermineScheduleEditability();
 				gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
-				gfRenderTaskbar = TRUE;
+				gfRenderTaskbar = true;
 				break;
 			case SCHEDULE_ACTION_LEAVESECTOR:
 			case SCHEDULE_ACTION_STAYINSECTOR:
@@ -2675,7 +2675,7 @@ void StartScheduleAction()
 			EnableEditorButtons( MERCS_SCHEDULE_ACTION1, MERCS_SCHEDULE_DATA4B );
 			EnableTextFields( 1, 4 );
 			gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = 0xffff;
 			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffff;
 			break;
@@ -2689,10 +2689,10 @@ void StartScheduleAction()
 			DisableEditorButtons( MERCS_SCHEDULE_ACTION1, MERCS_SCHEDULE_DATA4B );
 			DisableTextFields( 1, 4 );
 			EnableEditorButton( MERCS_SCHEDULE_DATA1A + gubCurrentScheduleActionIndex );
-			gfUseScheduleData2 = FALSE;
+			gfUseScheduleData2 = false;
 			iDrawMode = DRAW_MODE_SCHEDULEACTION;
 			gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_DOOR1;
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			break;
 		case SCHEDULE_ACTION_GRIDNO:
 		case SCHEDULE_ACTION_ENTERSECTOR:
@@ -2702,16 +2702,16 @@ void StartScheduleAction()
 			DisableEditorButtons( MERCS_SCHEDULE_ACTION1, MERCS_SCHEDULE_DATA4B );
 			DisableTextFields( 1, 4 );
 			EnableEditorButton( MERCS_SCHEDULE_DATA1A + gubCurrentScheduleActionIndex );
-			gfUseScheduleData2 = FALSE;
+			gfUseScheduleData2 = false;
 			iDrawMode = DRAW_MODE_SCHEDULEACTION;
 			gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_GRIDNO;
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffff;
 			break;
 		case SCHEDULE_ACTION_LEAVESECTOR:
 		case SCHEDULE_ACTION_STAYINSECTOR:
 			gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = 0xffff;
 			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffff;
 			break;
@@ -2726,7 +2726,7 @@ void UpdateScheduleAction( UINT8 ubNewAction )
 	iEditorButton[MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex]->SetUserData(ubNewAction);
 	//Now, based on this action, disable the other buttons
 	StartScheduleAction();
-	gfSingleAction = FALSE;
+	gfSingleAction = false;
 }
 
 // 0:1A, 1:1B, 2:2A, 3:2B, ...
@@ -2790,15 +2790,15 @@ void ClearCurrentSchedule()
 
 	gubCurrentScheduleActionIndex = 0;
 	DetermineScheduleEditability();
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 	MarkWorldDirty();
 }
 
 
 static void RenderCurrentSchedule(void)
 {
-	FLOAT dOffsetX, dOffsetY;
-	FLOAT ScrnX, ScrnY;
+	float dOffsetX, dOffsetY;
+	float ScrnX, ScrnY;
 	INT32 i;
 	INT32 iMapIndex;
 	INT16 sXMapPos, sYMapPos;
@@ -2817,8 +2817,8 @@ static void RenderCurrentSchedule(void)
 		// Convert it's location to screen coordinates
 		ConvertGridNoToXY( (INT16)iMapIndex, &sXMapPos, &sYMapPos );
 
-		dOffsetX = (FLOAT)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
-		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
+		dOffsetX = (float)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
+		dOffsetY = (float)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
@@ -2893,7 +2893,7 @@ static void UpdateScheduleInfo(void)
 }
 
 
-static BOOLEAN                    gfSaveBuffer = FALSE;
+static BOOLEAN                    gfSaveBuffer = false;
 static BASIC_SOLDIERCREATE_STRUCT gSaveBufferBasicPlacement;
 static SOLDIERCREATE_STRUCT       gSaveBufferDetailedPlacement;
 
@@ -2905,7 +2905,7 @@ void CopyMercPlacement( INT32 iMapIndex )
 		ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, "Placement not copied because no placement selected." );
 		return;
 	}
-	gfSaveBuffer = TRUE;
+	gfSaveBuffer = true;
 	gSaveBufferBasicPlacement = *gpSelected->pBasicPlacement;
 	if( gSaveBufferBasicPlacement.fDetailedPlacement )
 	{
@@ -2958,7 +2958,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		SOLDIERINITNODE *pNode;
 
 		//Set up some general information.
-		//gTempBasicPlacement.fDetailedPlacement = TRUE;
+		//gTempBasicPlacement.fDetailedPlacement = true;
 		gTempBasicPlacement.usStartingGridNo = (UINT16)iMapIndex;
 
 		//Generate detailed placement information given the temp placement information.
@@ -2997,7 +2997,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 			{ //Add the static detailed placement information in the same newly created node as the basic placement.
 				//read static detailed placement from file
 				//allocate memory for new static detailed placement
-				gTempBasicPlacement.fDetailedPlacement = TRUE;
+				gTempBasicPlacement.fDetailedPlacement = true;
 				gTempBasicPlacement.fPriorityExistance = gSaveBufferBasicPlacement.fPriorityExistance;
 				pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT{};
 				//copy the file information from temp var to node in list.
@@ -3011,15 +3011,15 @@ void PasteMercPlacement( INT32 iMapIndex )
 			//Move him to the roof if intended and possible.
 			if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
 			{
-				gpSelected->pBasicPlacement->fOnRoof = TRUE;
+				gpSelected->pBasicPlacement->fOnRoof = true;
 				if( gpSelected->pDetailedPlacement )
-					gpSelected->pDetailedPlacement->fOnRoof = TRUE;
+					gpSelected->pDetailedPlacement->fOnRoof = true;
 				SetSoldierHeight( gpSelected->pSoldier, SECOND_LEVEL_Z_OFFSET );
 			}
 			UnclickEditorButtons( FIRST_MERCS_INVENTORY_BUTTON, LAST_MERCS_INVENTORY_BUTTON );
 			for( i = FIRST_MERCS_INVENTORY_BUTTON; i <= LAST_MERCS_INVENTORY_BUTTON; i++ )
 			{
-				SetEnemyDroppableStatus( gbMercSlotTypes[i-FIRST_MERCS_INVENTORY_BUTTON], FALSE );
+				SetEnemyDroppableStatus( gbMercSlotTypes[i-FIRST_MERCS_INVENTORY_BUTTON], false );
 			}
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "Placement pasted." );
 		}

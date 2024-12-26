@@ -10,7 +10,7 @@
 #include <stdexcept>
 
 
-BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
+BOOLEAN gfStrategicMilitiaChangesMade = false;
 
 
 static void RemoveMilitiaFromTactical(void);
@@ -20,7 +20,7 @@ void ResetMilitia()
 {
 	if( gfStrategicMilitiaChangesMade || gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 	{
-		gfStrategicMilitiaChangesMade = FALSE;
+		gfStrategicMilitiaChangesMade = false;
 		RemoveMilitiaFromTactical();
 		PrepareMilitiaForTactical();
 	}

@@ -56,7 +56,7 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface);
 
 BOOLEAN SmkPollFlics(void)
 {
-	BOOLEAN is_playing = FALSE;
+	BOOLEAN is_playing = false;
 	FOR_EACH(SMKFLIC, sf, gSmkList)
 	{
 		if (!(sf->flags & SMK_FLIC_PLAYING)) continue;
@@ -76,7 +76,7 @@ BOOLEAN SmkPollFlics(void)
 		}
 		else
 		{
-			is_playing = TRUE;
+			is_playing = true;
 			SmkBlitVideoFrame(sf, FRAME_BUFFER);
 		}
 	}

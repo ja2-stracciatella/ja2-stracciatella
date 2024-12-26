@@ -20,9 +20,9 @@
 SGPRect gSelectRegion;
 
 
-static BOOLEAN fValidCursor   = FALSE;
-static BOOLEAN fAnchored      = FALSE;
-static BOOLEAN gfBrushEnabled = TRUE;
+static BOOLEAN fValidCursor   = false;
+static BOOLEAN fAnchored      = false;
+static BOOLEAN gfBrushEnabled = true;
 UINT16 gusSelectionWidth = 1, gusPreserveSelectionWidth = 1;
 UINT16 gusSelectionType = SMALLSELECTION;
 UINT16 gusSelectionDensity = 2;
@@ -32,8 +32,8 @@ static INT16 sBadMarker = -1;
 
 ST::string wszSelType[6]= { "Small", "Medium", "Large", "XLarge", "Width: xx", "Area" };
 
-static BOOLEAN gfAllowRightButtonSelections = FALSE;
-BOOLEAN gfCurrentSelectionWithRightButton = FALSE;
+static BOOLEAN gfAllowRightButtonSelections = false;
+BOOLEAN gfCurrentSelectionWithRightButton = false;
 
 
 //Used for offseting cursor to show that it is on the roof rather than on the ground.
@@ -43,12 +43,12 @@ BOOLEAN gfCurrentSelectionWithRightButton = FALSE;
 static BOOLEAN gfUsingOffset;
 
 //Based on the density level setting and the selection type, this test will
-//randomly choose TRUE or FALSE to reflect the *odds*.
+//randomly choose true or false to reflect the *odds*.
 BOOLEAN PerformDensityTest()
 {
 	if( Random(100) < gusSelectionDensity )
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 
@@ -105,8 +105,8 @@ void RemoveCursors()
 			}
 		}
 	}
-	fValidCursor = FALSE;
-	gfUsingOffset = FALSE;
+	fValidCursor = false;
+	gfUsingOffset = false;
 }
 
 
@@ -154,7 +154,7 @@ void UpdateCursorAreas()
 		{
 			gSelectRegion.iLeft = gSelectRegion.iRight = sGridX;
 			gSelectRegion.iTop = gSelectRegion.iBottom = sGridY;
-			fValidCursor = TRUE;
+			fValidCursor = true;
 			DrawBuildingLayout( iMapIndex );
 		}
 		else switch( gusSelectionType )
@@ -162,7 +162,7 @@ void UpdateCursorAreas()
 			case SMALLSELECTION:
 				gSelectRegion.iLeft = gSelectRegion.iRight = sGridX;
 				gSelectRegion.iTop = gSelectRegion.iBottom = sGridY;
-				fValidCursor = TRUE;
+				fValidCursor = true;
 				break;
 			case MEDIUMSELECTION:
 			case LARGESELECTION:
@@ -173,7 +173,7 @@ void UpdateCursorAreas()
 				gSelectRegion.iLeft = sGridX - gusSelectionType;
 				gSelectRegion.iRight = sGridX + gusSelectionType;
 				ValidateSelectionRegionBoundaries();
-				fValidCursor = TRUE;
+				fValidCursor = true;
 				break;
 			case LINESELECTION:
 				fValidCursor = HandleAreaSelection(sGridX, sGridY);
@@ -217,7 +217,7 @@ void UpdateCursorAreas()
 				if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
 				{
 					AddTopmostToTail( iMapIndex + ROOF_OFFSET, FIRSTPOINTERS5 );
-					gfUsingOffset = TRUE;
+					gfUsingOffset = true;
 				}
 				else
 					AddTopmostToTail( iMapIndex, FIRSTPOINTERS1 );
@@ -287,10 +287,10 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 		if( (!IsMouseButtonDown(MOUSE_BUTTON_LEFT)  && !gfCurrentSelectionWithRightButton) ||
 			(!IsMouseButtonDown(MOUSE_BUTTON_RIGHT) &&  gfCurrentSelectionWithRightButton) )
 		{
-			fAnchored = FALSE;
+			fAnchored = false;
 			ProcessAreaSelection(!gfCurrentSelectionWithRightButton);
-			gfCurrentSelectionWithRightButton = FALSE;
-			return FALSE;
+			gfCurrentSelectionWithRightButton = false;
+			return false;
 		}
 	}
 	//When the user first clicks, anchor the area.
@@ -299,15 +299,15 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 		if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) || (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && gfAllowRightButtonSelections) )
 		{
 			if( IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
-				gfCurrentSelectionWithRightButton = TRUE;
+				gfCurrentSelectionWithRightButton = true;
 			else
-				gfCurrentSelectionWithRightButton = FALSE;
-			fAnchored = TRUE;
+				gfCurrentSelectionWithRightButton = false;
+			fAnchored = true;
 			gSelectAnchor.iX = sGridX;
 			gSelectAnchor.iY = sGridY;
 			gSelectRegion.iLeft = gSelectRegion.iRight = sGridX;
 			gSelectRegion.iTop = gSelectRegion.iBottom = sGridY;
-			return TRUE;
+			return true;
 		}
 	}
 	//If no anchoring, then we are really dealing with a single cursor,
@@ -316,7 +316,7 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 	{
 		gSelectRegion.iLeft = gSelectRegion.iRight = sGridX;
 		gSelectRegion.iTop = gSelectRegion.iBottom = sGridY;
-		return TRUE;
+		return true;
 	}
 	//Base the area from the anchor to the current mouse position.
 	if ( sGridX <= gSelectAnchor.iX )
@@ -339,7 +339,7 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 		gSelectRegion.iBottom = sGridY;
 		gSelectRegion.iTop = gSelectAnchor.iY;
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -366,7 +366,7 @@ static void EnsureSelectionType(void)
 		//erase modes supporting any cursor mode
 		gusSavedSelectionType = gusSelectionType;
 		gusSelectionWidth = gusPreserveSelectionWidth;
-		gfBrushEnabled = TRUE;
+		gfBrushEnabled = true;
 	}
 	else switch( iDrawMode )
 	{ //regular modes
@@ -375,12 +375,12 @@ static void EnsureSelectionType(void)
 		case DRAW_MODE_CAVES:
 			gusSavedBuildingSelectionType = gusSelectionType;
 			gusSelectionWidth = gusPreserveSelectionWidth;
-			gfBrushEnabled = TRUE;
+			gfBrushEnabled = true;
 			break;
 		case DRAW_MODE_SLANTED_ROOF:
 			gusSelectionType = LINESELECTION;
 			gusSelectionWidth = 8;
-			gfBrushEnabled = FALSE;
+			gfBrushEnabled = false;
 			break;
 		case DRAW_MODE_EXITGRID:
 		case DRAW_MODE_ROOMNUM:
@@ -393,12 +393,12 @@ static void EnsureSelectionType(void)
 			//supports all modes
 			gusSavedSelectionType = gusSelectionType;
 			gusSelectionWidth = gusPreserveSelectionWidth;
-			gfBrushEnabled = TRUE;
+			gfBrushEnabled = true;
 			break;
 		default:
 			gusSelectionType = SMALLSELECTION;
 			gusSelectionWidth = gusPreserveSelectionWidth;
-			gfBrushEnabled = FALSE;
+			gfBrushEnabled = false;
 			break;
 	}
 
@@ -433,13 +433,13 @@ static void DrawBuildingLayout(INT32 iMapIndex)
 		iMapIndex = curr->sGridNo + iOffset;
 		if( iMapIndex > 0 && iMapIndex < WORLD_MAX )
 		{
-			fAdd = TRUE;
+			fAdd = true;
 			pNode = gpWorldLevelData[ iMapIndex ].pTopmostHead;
 			while( pNode )
 			{
 				if( pNode->usIndex == FIRSTPOINTERS1 )
 				{
-					fAdd = FALSE;
+					fAdd = false;
 					break;
 				}
 				pNode = pNode->pNext;

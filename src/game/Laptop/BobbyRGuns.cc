@@ -212,7 +212,7 @@ void GameInitBobbyRGuns()
 
 void EnterBobbyRGuns()
 {
-	gfBigImageMouseRegionCreated = FALSE;
+	gfBigImageMouseRegionCreated = false;
 
 	// load the background graphic and add it
 	guiGunBackground = AddVideoObjectFromFile(LAPTOPDIR "/gunbackground.sti");
@@ -401,8 +401,8 @@ static void NextPage()
 	if (gubCurPage == gubNumPages - 1) return;
 	++gubCurPage;
 	DeleteMouseRegionForBigImage();
-	fReDrawScreenFlag       = TRUE;
-	fPausedReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag       = true;
+	fPausedReDrawScreenFlag = true;
 }
 
 
@@ -420,8 +420,8 @@ static void PrevPage()
 	if (gubCurPage == 0) return;
 	--gubCurPage;
 	DeleteMouseRegionForBigImage();
-	fReDrawScreenFlag       = TRUE;
-	fPausedReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag       = true;
+	fPausedReDrawScreenFlag = true;
 }
 
 
@@ -498,7 +498,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 				continue;
 
 			usItemIndex = LaptopSaveInfo.BobbyRayUsedInventory[ i ].usItemIndex;
-			gfOnUsedPage = TRUE;
+			gfOnUsedPage = true;
 		}
 		else
 		{
@@ -507,7 +507,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 				continue;
 
 			usItemIndex = LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex;
-			gfOnUsedPage = FALSE;
+			gfOnUsedPage = false;
 		}
 
 		// skip items that aren't of the right item class
@@ -951,7 +951,7 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 
 	gusFirstItemIndex = (UINT16)sFirst;
 	gusLastItemIndex = (UINT16)sLast;
-	gubNumPages = (UINT8)( ubNumItems / (FLOAT)BOBBYR_NUM_WEAPONS_ON_PAGE );
+	gubNumPages = (UINT8)( ubNumItems / (float)BOBBYR_NUM_WEAPONS_ON_PAGE );
 	if( (ubNumItems % BOBBYR_NUM_WEAPONS_ON_PAGE ) != 0 )
 		gubNumPages += 1;
 }
@@ -989,7 +989,7 @@ void SetFirstLastPagesForUsed()
 
 	gusFirstItemIndex = (UINT16)sFirst;
 	gusLastItemIndex = (UINT16)sLast;
-	gubNumPages = (UINT8)( ubNumItems / (FLOAT)BOBBYR_NUM_WEAPONS_ON_PAGE );
+	gubNumPages = (UINT8)( ubNumItems / (float)BOBBYR_NUM_WEAPONS_ON_PAGE );
 	if( (ubNumItems % BOBBYR_NUM_WEAPONS_ON_PAGE ) != 0 )
 		gubNumPages += 1;
 }
@@ -1046,7 +1046,7 @@ static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const 
 	}
 
 	gubNumItemsOnScreen          = n_regions;
-	gfBigImageMouseRegionCreated = TRUE;
+	gfBigImageMouseRegionCreated = true;
 }
 
 
@@ -1061,7 +1061,7 @@ void DeleteMouseRegionForBigImage()
 		MSYS_RemoveRegion(&gSelectedBigImageRegion[i]);
 	}
 
-	gfBigImageMouseRegionCreated = FALSE;
+	gfBigImageMouseRegionCreated = false;
 	gusOldItemNumOnTopOfPage     = 65535;
 	gubNumItemsOnScreen          = 0;
 }
@@ -1079,23 +1079,23 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 
 		PurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
 
-		fReDrawScreenFlag = TRUE;
-		fPausedReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
+		fPausedReDrawScreenFlag = true;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 
 		UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
-		fReDrawScreenFlag = TRUE;
-		fPausedReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
+		fPausedReDrawScreenFlag = true;
 	}
 	if (iReason & MSYS_CALLBACK_REASON_TFINGER_UP)
 	{
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 
 		// For touch: Upper half increases, lower half decreases
-		auto relY = FLOAT(gusMouseYPos - pRegion->Y()) / FLOAT(pRegion->H());
+		auto relY = float(gusMouseYPos - pRegion->Y()) / float(pRegion->H());
 
 		if (relY <= 0.5) {
 			PurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
@@ -1103,24 +1103,24 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 			UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
 		}
 
-		fReDrawScreenFlag = TRUE;
-		fPausedReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
+		fPausedReDrawScreenFlag = true;
 	}
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 
 		PurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
-		fReDrawScreenFlag = TRUE;
-		fPausedReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
+		fPausedReDrawScreenFlag = true;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_REPEAT)
 	{
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 
 		UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
-		fReDrawScreenFlag = TRUE;
-		fPausedReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
+		fPausedReDrawScreenFlag = true;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
@@ -1158,7 +1158,7 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 					BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased = 1;
 					BobbyRayPurchases[ ubPurchaseNumber ].bItemQuality = LaptopSaveInfo.BobbyRayUsedInventory[ usItemNumber ].ubItemQuality;
 					BobbyRayPurchases[ ubPurchaseNumber ].usBobbyItemIndex = usItemNumber;
-					BobbyRayPurchases[ ubPurchaseNumber ].fUsed = TRUE;
+					BobbyRayPurchases[ ubPurchaseNumber ].fUsed = true;
 				}
 				else
 				{
@@ -1196,7 +1196,7 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 					BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased = 1;
 					BobbyRayPurchases[ ubPurchaseNumber ].bItemQuality = 100;
 					BobbyRayPurchases[ ubPurchaseNumber ].usBobbyItemIndex = usItemNumber;
-					BobbyRayPurchases[ ubPurchaseNumber ].fUsed = FALSE;
+					BobbyRayPurchases[ ubPurchaseNumber ].fUsed = false;
 				}
 				else
 				{
@@ -1312,7 +1312,7 @@ void UpdateButtonText(UINT32	uiCurPage)
 
 UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
-	DOUBLE value;
+	double value;
 	if( fUsed )
 		value = GCM->getItem(LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].usItemIndex)->getPrice() *
 								( .5 + .5 * ( LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].ubItemQuality ) / 100 ) + .5;

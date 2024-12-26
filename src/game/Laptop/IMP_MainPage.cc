@@ -61,7 +61,7 @@ void EnterIMPMainPage( void )
 {
 
 	// turn off review mode
-	fReviewStats = FALSE;
+	fReviewStats = false;
 
 
 	// create buttons
@@ -134,7 +134,7 @@ static void MakeButton(UINT idx, const char* img_file, const ST::string& text, I
 	btn->SetCursor(CURSOR_WWW);
 	if (idx >= 2)
 	{
-		btn->SpecifyTextOffsets(10, 40, TRUE);
+		btn->SpecifyTextOffsets(10, 40, true);
 		btn->SpecifyTextWrappedWidth(MAIN_PAGE_BUTTON_TEXT_WIDTH);
 	}
 }
@@ -154,7 +154,7 @@ static void CreateIMPMainPageButtons(void)
 
 	// the back button button
 	MakeButton(0, LAPTOPDIR "/button_3.sti", pImpButtonText[19], dx + 15, dy + 360, BtnIMPMainPageBackCallback);
-	giIMPMainPageButton[0]->SpecifyTextSubOffsets(0, -1, FALSE);
+	giIMPMainPageButton[0]->SpecifyTextSubOffsets(0, -1, false);
 
 	// the begin profiling button
 	ST::string profiling_text = (iCurrentProfileMode == 0 || iCurrentProfileMode > 2 ? pImpButtonText[1] : pImpButtonText[22]);
@@ -221,9 +221,9 @@ static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_HOME_PAGE;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		iCurrentProfileMode = 0;
-		fFinishedCharGeneration = FALSE;
+		fFinishedCharGeneration = false;
 		ResetCharacterStats();
 	}
 }
@@ -260,7 +260,7 @@ static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, UINT32 reason)
 			{
 				// change name
 				iCurrentImpPage = IMP_BEGIN;
-				fButtonPendingFlag = TRUE;
+				fButtonPendingFlag = true;
 			}
 		}
 	}
@@ -281,7 +281,7 @@ static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_PERSONALITY;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 
@@ -300,7 +300,7 @@ static void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_ENTRANCE;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 
@@ -319,7 +319,7 @@ void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_PORTRAIT;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 
@@ -338,7 +338,7 @@ void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_VOICE;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 
@@ -351,12 +351,12 @@ static BOOLEAN CheckIfFinishedCharacterGeneration(void)
 	if( iCurrentProfileMode == 5 )
 	{
 		// yes
-		return ( TRUE );
+		return ( true );
 	}
 	else
 	{
 		// no
-		return ( FALSE );
+		return ( false );
 	}
 }
 
@@ -482,6 +482,6 @@ static void LoadCharacterPortraitForMainPage(void)
 	if( iCurrentProfileMode >= 4 )
 	{
 		guiCHARACTERPORTRAITFORMAINPAGE = LoadIMPPortait();
-		giIMPMainPageButton[4]->SpecifyIcon(guiCHARACTERPORTRAITFORMAINPAGE, 0, 33, 23, FALSE);
+		giIMPMainPageButton[4]->SpecifyIcon(guiCHARACTERPORTRAITFORMAINPAGE, 0, 33, 23, false);
 	}
 }

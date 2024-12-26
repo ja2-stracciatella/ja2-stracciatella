@@ -121,7 +121,7 @@ UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont fon
 //			The font
 //			the color you want the font
 //			the color of the background
-//			do you want to display it using dirty rects, TRUE or FALSE
+//			do you want to display it using dirty rects, true or false
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
 void DrawTextToScreen(const ST::utf32_buffer& codepoints, UINT16 x, UINT16 y, UINT16 max_w, SGPFont font, UINT8 foreground, UINT8 background, UINT32 flags)
 {
@@ -407,7 +407,7 @@ UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::u
 	UINT16  n_lines            = 1;
 	SGPFont cur_font           = font;
 	UINT16  justification      = LEFT_JUSTIFIED;
-	bool    is_bold            = FALSE;
+	bool    is_bold            = false;
 
 	/* simply a cut and paste operation on Ian Display Wrapped, but will not write
 	 * string to screen since this all we want to do, everything IanWrapped will

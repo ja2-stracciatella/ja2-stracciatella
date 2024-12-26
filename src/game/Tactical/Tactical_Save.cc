@@ -46,7 +46,7 @@
 
 #include <vector>
 
-static BOOLEAN gfWasInMeanwhile = FALSE;
+static BOOLEAN gfWasInMeanwhile = false;
 
 static const SectorFlags sectorFlagBits[] = { SF_ITEM_TEMP_FILE_EXISTS, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,
 	SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, SF_DOOR_TABLE_TEMP_FILES_EXISTS,
@@ -246,7 +246,7 @@ void AddItemsToUnLoadedSector(const SGPSector& sMap, INT16 const sGridNo, UINT32
 		}
 
 		WORLDITEM& wi = wis[cnt];
-		wi.fExists                  = TRUE;
+		wi.fExists                  = true;
 		wi.sGridNo                  = sGridNo;
 		wi.ubLevel                  = ubLevel;
 		wi.usFlags                  = usFlags;
@@ -280,14 +280,14 @@ void SaveCurrentSectorsInformationToTempItemFile()
 	if (gfWasInMeanwhile)
 	{
 		// Don't save a temp file for the meanwhile scene map.
-		gfWasInMeanwhile = FALSE;
+		gfWasInMeanwhile = false;
 		return;
 	}
 
 	bool should_be_in_meanwhile = false;
 	if (AreInMeanwhile())
 	{
-		gfInMeanwhile          = FALSE;
+		gfInMeanwhile          = false;
 		should_be_in_meanwhile = true;
 	}
 
@@ -304,8 +304,8 @@ void SaveCurrentSectorsInformationToTempItemFile()
 	SaveDoorTableToDoorTableTempFile(gWorldSector);
 	SaveRevealedStatusArrayToRevealedTempFile(gWorldSector);
 	SaveDoorStatusArrayToDoorStatusTempFile(gWorldSector);
-	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, TRUE, FALSE);  // Save the enemies
-	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, FALSE, FALSE); // Save the civilian info
+	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, true, false);  // Save the enemies
+	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, false, false); // Save the civilian info
 	SaveSmokeEffectsToMapTempFile(gWorldSector);
 	SaveLightEffectsToMapTempFile(gWorldSector);
 
@@ -315,7 +315,7 @@ void SaveCurrentSectorsInformationToTempItemFile()
 	// Save the time the player was last in the sector
 	SetLastTimePlayerWasInSector();
 
-	if (should_be_in_meanwhile) gfInMeanwhile = TRUE;
+	if (should_be_in_meanwhile) gfInMeanwhile = true;
 }
 
 
@@ -435,9 +435,9 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 
 	if (AreInMeanwhile())
 	{
-		// There will never be a temp file for the meanwhile scene, so return TRUE.
+		// There will never be a temp file for the meanwhile scene, so return true.
 		// However, set a flag to not save it either!
-		gfWasInMeanwhile = TRUE;
+		gfWasInMeanwhile = true;
 
 		// OK  - this is true except for interrogations - we need that item temp
 		// file to be processed!
@@ -449,7 +449,7 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 				LoadAndAddWorldItemsFromTempFile(gWorldSector);
 			}
 
-			gfWasInMeanwhile = FALSE;
+			gfWasInMeanwhile = false;
 		}
 		return;
 	}
@@ -720,7 +720,7 @@ static void SaveNPCInformationToProfileStruct(void)
 		if (p.ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR)       continue;
 		if (p.ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE) continue;
 
-		p.fUseProfileInsertionInfo = TRUE;
+		p.fUseProfileInsertionInfo = true;
 		p.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		p.usStrategicInsertionData = s->sGridNo;
 	}
@@ -738,7 +738,7 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, const SGPSector& sSector)
 	// Carmen no longer traverses out, he is temporarily removed instead
 
 	p.sSector = nextSector;
-	p.fUseProfileInsertionInfo = FALSE;
+	p.fUseProfileInsertionInfo = false;
 }
 
 
@@ -883,7 +883,7 @@ void AddDeadSoldierToUnLoadedSector(const SGPSector& sMap, SOLDIERTYPE* const s,
 	c.ubBodyType        = s->ubBodyType;
 	c.sGridNo           = grid_no;
 	c.sHeightAdjustment = s->sHeightAdjustment;
-	c.bVisible          = TRUE;
+	c.bVisible          = true;
 	c.HeadPal           = s->HeadPal;
 	c.VestPal           = s->VestPal;
 	c.SkinPal           = s->SkinPal;
@@ -932,7 +932,7 @@ static void TempFileLoadErrorMessageReturnCallback(MessageBoxReturnValue const u
 }
 
 
-//if you call this function, make sure you return TRUE (if applicable) to make the game
+//if you call this function, make sure you return true (if applicable) to make the game
 //think it succeeded the load.  This sets up the dialog for the game exit, after the hacker
 //message appears.
 void InitExitGameDialogBecauseFileHackDetected()
@@ -1000,7 +1000,7 @@ void JA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiByte
 ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector)
 {
 	// Convert the current sector location into a file name
-	ST::string zTempName = GetMapFileName(sector, FALSE);
+	ST::string zTempName = GetMapFileName(sector, false);
 
 	const char* prefix;
 	switch (uiType)

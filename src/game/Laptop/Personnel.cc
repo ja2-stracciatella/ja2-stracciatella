@@ -264,7 +264,7 @@ static INT32 iCurrentPersonSelectedId = -1;
 static INT32 giCurrentUpperLeftPortraitNumber = 0;
 
 // which mode are we showing?..current team?...or deadly departed?
-static BOOLEAN fCurrentTeamMode = TRUE;
+static BOOLEAN fCurrentTeamMode = true;
 
 // mouse regions
 static MOUSE_REGION gPortraitMouseRegions[PERSONNEL_PORTRAIT_NUMBER];
@@ -296,7 +296,7 @@ static void SetPersonnelButtonStates(void);
 
 void EnterPersonnel(void)
 {
-	fReDrawScreenFlag=TRUE;
+	fReDrawScreenFlag=true;
 
 	uiCurrentInventoryIndex = 0;
 	guiSliderPosition = 0;
@@ -305,7 +305,7 @@ void EnterPersonnel(void)
 	LoadPersonnelGraphics();
 
 	// show atm panel
-	CreateDestroyStartATMButton(TRUE);
+	CreateDestroyStartATMButton(true);
 
 	// load personnel
 	LoadPersonnelScreenBackgroundGraphics();
@@ -315,8 +315,8 @@ void EnterPersonnel(void)
 	// render screen
 	RenderPersonnel();
 
-	CreateDestroyMouseRegionsForPersonnelPortraits(TRUE);
-	CreateDestroyCurrentDepartedMouseRegions(TRUE);
+	CreateDestroyMouseRegionsForPersonnelPortraits(true);
+	CreateDestroyCurrentDepartedMouseRegions(true);
 
 	// create buttons for screen
 	CreatePersonnelButtons();
@@ -335,10 +335,10 @@ static void RemovePersonnelGraphics(void);
 
 void ExitPersonnel(void)
 {
-	CreateDestroyButtonsForDepartedTeamList(FALSE);
+	CreateDestroyButtonsForDepartedTeamList(false);
 
 	// get rid of atm panel buttons
-	CreateDestroyStartATMButton(FALSE);
+	CreateDestroyStartATMButton(false);
 
 	gubPersonnelInfoState = PRSNL_STATS;
 
@@ -352,8 +352,8 @@ void ExitPersonnel(void)
 	// delete buttons
 	DeletePersonnelButtons();
 
-	CreateDestroyMouseRegionsForPersonnelPortraits(FALSE);
-	CreateDestroyCurrentDepartedMouseRegions(FALSE);
+	CreateDestroyMouseRegionsForPersonnelPortraits(false);
+	CreateDestroyCurrentDepartedMouseRegions(false);
 }
 
 
@@ -474,7 +474,7 @@ try
 	{ AutoSGPVObject guiFACE(LoadBigPortrait(p));
 		if (!alive)
 		{
-			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, true);
 			//set the red pallete to the face
 			guiFACE->CurrentShade(0);
 		}
@@ -540,7 +540,7 @@ static void NextPersonnelFace(void)
 		{
 			++iCurrentPersonSelectedId;
 		}
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -579,7 +579,7 @@ static void PrevPersonnelFace(void)
 		{
 			--iCurrentPersonSelectedId;
 		}
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -615,7 +615,7 @@ static void LeftButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		PrevPersonnelFace();
 		uiCurrentInventoryIndex = 0;
 		guiSliderPosition = 0;
@@ -627,7 +627,7 @@ static void RightButtonCallBack(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		NextPersonnelFace();
 		uiCurrentInventoryIndex = 0;
 		guiSliderPosition = 0;
@@ -905,7 +905,7 @@ static void PersonnelPortraitCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iRe
 static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 {
 	// creates/destroys mouse regions for portraits
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	if (!fCreated && create)
 	{
@@ -920,7 +920,7 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 			MSYS_SetRegionUserData(&gPortraitMouseRegions[i], 0, i);
 		}
 
-		fCreated = TRUE;
+		fCreated = true;
 	}
 	else if (fCreated && !create)
 	{
@@ -930,7 +930,7 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 			MSYS_RemoveRegion(&gPortraitMouseRegions[i]);
 		}
 
-		fCreated = FALSE;
+		fCreated = false;
 	}
 }
 
@@ -950,7 +950,7 @@ try
 		{ AutoSGPVObject guiFACE(LoadSmallPortrait(GetProfile(s->ubProfile)));
 			if (s->bLife <= 0)
 			{
-				guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+				guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, true);
 				//set the red pallete to the face
 				guiFACE->CurrentShade(0);
 			}
@@ -987,7 +987,7 @@ static void PersonnelPortraitCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReas
 		}
 
 		iCurrentPersonSelectedId = iPortraitId;
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 
 		if (iCurrentPersonSelectedId != -1 &&
 				GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW &&
@@ -1003,7 +1003,7 @@ static void PersonnelPortraitCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReas
 			return;
 		}
 		iCurrentPersonSelectedId = iPortraitId;
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 
 	if (iOldPortraitId != iPortraitId)
@@ -1037,7 +1037,7 @@ static void PersonnelPortraitCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iRe
 		}
 
 		iCurrentPersonSelectedId = iPortraitId;
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 
 		uiCurrentInventoryIndex = 0;
 		guiSliderPosition = 0;
@@ -1199,7 +1199,7 @@ static void InventoryUp(void)
 {
 	if (uiCurrentInventoryIndex == 0) return;
 	uiCurrentInventoryIndex--;
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 	FindPositionOfPersInvSlider();
 }
 
@@ -1214,7 +1214,7 @@ static void InventoryDown(void)
 		return;
 	}
 	uiCurrentInventoryIndex++;
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 	FindPositionOfPersInvSlider();
 }
 
@@ -1308,7 +1308,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 static void CreateDestroyPersonnelInventoryScrollButtons(void)
 {
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	if (gubPersonnelInfoState == PRSNL_INV && !fCreated)
 	{
@@ -1323,7 +1323,7 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 		const UINT16 h = INVENTORY_BOX_H;
 		MSYS_DefineRegion(&InventoryRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleInventoryCallBack);
 
-		fCreated = TRUE;
+		fCreated = true;
 	}
 	else if (fCreated && gubPersonnelInfoState != PRSNL_INV)
 	{
@@ -1334,7 +1334,7 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 		MSYS_RemoveRegion(&gMouseScrollPersonnelINV);
 		MSYS_RemoveRegion(&InventoryRegion);
 
-		fCreated = FALSE;
+		fCreated = false;
 	}
 }
 
@@ -1643,7 +1643,7 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
 {
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	// will arbitrate the creation/deletion of mouse regions for current/past team toggles
 
@@ -1660,7 +1660,7 @@ static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
 		bry = tly + PERS_TOGGLE_CUR_DEPART_HEIGHT;
 		MSYS_DefineRegion(&gTogglePastCurrentTeam[1], tlx, tly, brx, bry, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelDepartedTeamCallback);
 
-		fCreated = TRUE;
+		fCreated = true;
 	}
 	else if (!create && fCreated)
 	{
@@ -1668,7 +1668,7 @@ static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create)
 
 		MSYS_RemoveRegion(&gTogglePastCurrentTeam[0]);
 		MSYS_RemoveRegion(&gTogglePastCurrentTeam[1]);
-		fCreated = FALSE;
+		fCreated = false;
 	}
 }
 
@@ -1678,11 +1678,11 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (fCurrentTeamMode) return;
-		fCurrentTeamMode = TRUE;
+		fCurrentTeamMode = true;
 
 		SelectFirstDisplayedMerc();
 		SetPersonnelButtonStates();
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -1692,7 +1692,7 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (!fCurrentTeamMode) return;
-		fCurrentTeamMode = FALSE;
+		fCurrentTeamMode = false;
 
 		SelectFirstDisplayedMerc();
 		SetPersonnelButtonStates();
@@ -1700,7 +1700,7 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		//Switch the panel on the right to be the stat panel
 		gubPersonnelInfoState = PRSNL_STATS;
 
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -1712,7 +1712,7 @@ static void DepartedUpCallBack(GUI_BUTTON* btn, UINT32 reason);
 static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 {
 	// creates/ destroys the buttons for cdeparted team list
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	if (create)
 	{
@@ -1727,7 +1727,7 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 		// created. destroy
 		RemoveButton(g_personnel.depart_up);
 		RemoveButton(g_personnel.depart_dn);
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 	fCreated = create;
 }
@@ -1740,7 +1740,7 @@ static void DepartedUpCallBack(GUI_BUTTON *btn, UINT32 reason)
 		if (giCurrentUpperLeftPortraitNumber - PERSONNEL_PORTRAIT_NUMBER >= 0)
 		{
 			giCurrentUpperLeftPortraitNumber -= PERSONNEL_PORTRAIT_NUMBER;
-			fReDrawScreenFlag = TRUE;
+			fReDrawScreenFlag = true;
 		}
 	}
 }
@@ -1758,7 +1758,7 @@ static void DepartedDownCallBack(GUI_BUTTON *btn, UINT32 reason)
 			{
 				iCurrentPersonSelectedId = n_past - giCurrentUpperLeftPortraitNumber - 1;
 			}
-			fReDrawScreenFlag = TRUE;
+			fReDrawScreenFlag = true;
 		}
 	}
 }
@@ -1780,21 +1780,21 @@ static void DisplayPastMercsPortraits()
 	FOR_EACH(INT16 const, i, l.ubDeadCharactersList)
 	{
 		if (*i == -1) continue;
-		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, TRUE);
+		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, true);
 		if (++pos == PERSONNEL_PORTRAIT_NUMBER) return;
 	}
 
 	FOR_EACH(INT16 const, i, l.ubLeftCharactersList)
 	{
 		if (*i == -1) continue;
-		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, FALSE);
+		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, false);
 		if (++pos == PERSONNEL_PORTRAIT_NUMBER) return;
 	}
 
 	FOR_EACH(INT16 const, i, l.ubOtherCharactersList)
 	{
 		if (*i == -1) continue;
-		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, FALSE);
+		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, false);
 		if (++pos == PERSONNEL_PORTRAIT_NUMBER) return;
 	}
 }
@@ -1839,7 +1839,7 @@ try
 
 	if (fDead)
 	{
-		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, true);
 		//set the red pallete to the face
 		guiFACE->CurrentShade(0);
 	}
@@ -2021,7 +2021,7 @@ BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList(UINT8 ubProfile)
 		{
 			//Reset the fact that they were once hired
 			LaptopSaveInfo.ubDeadCharactersList[i] = -1;
-			return TRUE;
+			return true;
 		}
 
 		// are they already in the other list?
@@ -2029,7 +2029,7 @@ BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList(UINT8 ubProfile)
 		{
 			//Reset the fact that they were once hired
 			LaptopSaveInfo.ubLeftCharactersList[i] = -1;
-			return TRUE;
+			return true;
 		}
 
 		// are they already in the list?
@@ -2037,11 +2037,11 @@ BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList(UINT8 ubProfile)
 		{
 			//Reset the fact that they were once hired
 			LaptopSaveInfo.ubOtherCharactersList[i] = -1;
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -2109,7 +2109,7 @@ static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 
 static void CreateDestroyStartATMButton(const BOOLEAN create)
 {
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 	// create/destroy atm start button as needed
 
 	if (!fCreated && create)
@@ -2119,7 +2119,7 @@ static void CreateDestroyStartATMButton(const BOOLEAN create)
 		MakeButton(PERSONNEL_EMPLOYMENT_BTN, 110, EmployementInfoButtonCallback,    gsAtmStartButtonText[2]);
 		MakeButton(PERSONNEL_INV_BTN,        140, PersonnelINVStartButtonCallback,  gsAtmStartButtonText[1]);
 
-		fCreated = TRUE;
+		fCreated = true;
 	}
 	else if (fCreated && !create)
 	{
@@ -2131,7 +2131,7 @@ static void CreateDestroyStartATMButton(const BOOLEAN create)
 		RemoveButton(giPersonnelATMStartButton[PERSONNEL_INV_BTN]);
 		UnloadButtonImage(giPersonnelATMStartButtonImage[PERSONNEL_INV_BTN]);
 
-		fCreated = FALSE;
+		fCreated = false;
 	}
 }
 
@@ -2165,7 +2165,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			uiCurrentInventoryIndex = new_item_idx;
 
 			// force update
-			fReDrawScreenFlag = TRUE;
+			fReDrawScreenFlag = true;
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
@@ -2190,7 +2190,7 @@ static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		giPersonnelATMStartButton[PERSONNEL_STAT_BTN]->uiFlags       &= ~BUTTON_CLICKED_ON;
 		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -2203,7 +2203,7 @@ static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 		giPersonnelATMStartButton[PERSONNEL_INV_BTN]->uiFlags        &= ~BUTTON_CLICKED_ON;
@@ -2216,7 +2216,7 @@ static void EmployementInfoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		giPersonnelATMStartButton[PERSONNEL_INV_BTN]->uiFlags  &= ~BUTTON_CLICKED_ON;
 		giPersonnelATMStartButton[PERSONNEL_STAT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -2283,7 +2283,7 @@ static void UpDateStateOfStartButton(void)
 				if (gubPersonnelInfoState == PRSNL_INV)
 				{
 					gubPersonnelInfoState = PRSNL_STATS;
-					fPausedReDrawScreenFlag = TRUE;
+					fPausedReDrawScreenFlag = true;
 				}
 			}
 		}

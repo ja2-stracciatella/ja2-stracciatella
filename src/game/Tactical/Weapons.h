@@ -167,7 +167,7 @@ extern INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation );
 INT32 TotalArmourProtection(SOLDIERTYPE&, UINT8 ubHitLocation, INT32 iImpact, UINT8 ubAmmoType);
 INT8 ArmourPercent(const SOLDIERTYPE* pSoldier);
 
-extern void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT *pdXPos, FLOAT *pdYPos, FLOAT *pdZPos );
+extern void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, float *pdXPos, float *pdYPos, float *pdZPos );
 
 FireWeaponResult OKFireWeapon(SOLDIERTYPE *);
 FireWeaponResult CheckForGunJam(SOLDIERTYPE *);

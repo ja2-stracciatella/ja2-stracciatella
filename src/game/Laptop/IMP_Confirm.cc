@@ -169,9 +169,9 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	HireMercStruct.bWhatKindOfMerc = MERC_TYPE__PLAYER_CHARACTER;
 
 	HireMercStruct.sSector = g_merc_arrive_sector;
-	HireMercStruct.fUseLandingZoneForArrival = TRUE;
+	HireMercStruct.fUseLandingZoneForArrival = true;
 
-	HireMercStruct.fCopyProfileItemsOver = TRUE;
+	HireMercStruct.fCopyProfileItemsOver = true;
 
 	// indefinite contract length
 	HireMercStruct.iTotalContractLength = -1;
@@ -185,11 +185,11 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	//if we succesfully hired the merc
 	if (!HireMerc(HireMercStruct))
 	{
-		return(FALSE);
+		return(false);
 	}
 	else
 	{
-		return ( TRUE );
+		return ( true );
 	}
 }
 
@@ -229,7 +229,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
 		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
 
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		iCurrentImpPage = IMP_HOME_PAGE;
 
 		// send email notice
@@ -256,10 +256,10 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason)
 		iCurrentImpPage = IMP_FINISH;
 
 #if 0 // XXX was commented out
-		LaptopSaveInfo.fIMPCompletedFlag = FALSE;
+		LaptopSaveInfo.fIMPCompletedFlag = false;
 		ResetCharacterStats();
 
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		iCurrentImpPage = IMP_HOME_PAGE;
 #endif
 	}

@@ -58,12 +58,12 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 {
 	// NOTE: MapSector must be 16-bit, cause MAX_WORLD_X is actually 18, so the sector numbers exceed 256 although we use only 16x16
 	UINT16 usMapSector = 0;
-	BOOLEAN fWasEnemyControlled = FALSE;
+	BOOLEAN fWasEnemyControlled = false;
 	INT8 bTownId = 0;
 
 	if( AreInMeanwhile( ) )
 	{
-		return FALSE;
+		return false;
 	}
 
 	UINT8 const sector = sMap.AsByte();
@@ -76,19 +76,19 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 		if (StrategicMap[ usMapSector ].fEnemyControlled)
 		{
 			// remember that the enemies have lost it
-			StrategicMap[ usMapSector ].fLostControlAtSomeTime = TRUE;
+			StrategicMap[ usMapSector ].fLostControlAtSomeTime = true;
 		}
 */
 		if (NumHostilesInSector(sMap))
 		{ //too premature:  enemies still in sector.
-			return FALSE;
+			return false;
 		}
 
 		// check if we ever grabbed drassen airport, if so, set fact we can go to BR's
 		auto shippingDest = GCM->getPrimaryShippingDestination();
 		if(sector == shippingDest->getDeliverySector())
 		{
-			LaptopSaveInfo.fBobbyRSiteCanBeAccessed = TRUE;
+			LaptopSaveInfo.fBobbyRSiteCanBeAccessed = true;
 
 			//If the player has been to Bobbyr when it was down, and we havent already sent email, send him an email
 			if( LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction == BOBBYR_BEEN_TO_SITE_ONCE &&  LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction != BOBBYR_ALREADY_SENT_EMAIL )
@@ -100,7 +100,7 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 
 		fWasEnemyControlled = StrategicMap[ usMapSector ].fEnemyControlled;
 
-		StrategicMap[ usMapSector ].fEnemyControlled = FALSE;
+		StrategicMap[ usMapSector ].fEnemyControlled = false;
 
 		bTownId = StrategicMap[ usMapSector ].bNameId;
 
@@ -157,7 +157,7 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 				if ( IsHelicopterPilotAvailable() && ( guiHelicopterSkyriderTalkState >= 1 ) && ( !gfSkyriderSaidCongratsOnTakingSAM ) )
 				{
 					SkyRiderTalk( SAM_SITE_TAKEN );
-					gfSkyriderSaidCongratsOnTakingSAM = TRUE;
+					gfSkyriderSaidCongratsOnTakingSAM = true;
 				}
 
 				if (!SectorInfo[sector].fSurfaceWasEverPlayerControlled)
@@ -196,13 +196,13 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 	{
 		if (sector == SEC_P3 && sMap.z == 1)
 		{ //Basement sector (P3_b1)
-			gfUseAlternateQueenPosition = TRUE;
+			gfUseAlternateQueenPosition = true;
 		}
 	}
 
 	if (sMap.z == 0)
 	{
-		SectorInfo[sector].fSurfaceWasEverPlayerControlled = TRUE;
+		SectorInfo[sector].fSurfaceWasEverPlayerControlled = true;
 	}
 
 	//KM : Aug 11, 1999 -- Patch fix:  Relocated this check so it gets called everytime a sector changes hands,
@@ -211,8 +211,8 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 	UpdateAirspaceControl( );
 
 	// redraw map/income if in mapscreen
-	fMapPanelDirty = TRUE;
-	fMapScreenBottomDirty = TRUE;
+	fMapPanelDirty = true;
+	fMapScreenBottomDirty = true;
 
 	return fWasEnemyControlled;
 }
@@ -221,7 +221,7 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 // ALL changes of control to enemy must be funneled through here!
 BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 {
-	BOOLEAN fWasPlayerControlled = FALSE;
+	BOOLEAN fWasPlayerControlled = false;
 	INT8 bTownId = 0;
 	UINT8 ubTheftChance;
 
@@ -230,7 +230,7 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 	//     battle between militia and enemies.  It will get called again AFTER autoresolve is finished.
 	if( gfAutomaticallyStartAutoResolve )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if (sec.z == 0)
@@ -239,14 +239,14 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 
 		fWasPlayerControlled = !StrategicMap[ usMapSector ].fEnemyControlled;
 
-		StrategicMap[ usMapSector ].fEnemyControlled = TRUE;
+		StrategicMap[ usMapSector ].fEnemyControlled = true;
 
 		// if player lost control to the enemy
 		if ( fWasPlayerControlled )
 		{
 			if (PlayerMercsInSector(sec))
 			{ //too premature:  Player mercs still in sector.
-				return FALSE;
+				return false;
 			}
 
 			UINT8 const sector = sec.AsByte();
@@ -317,8 +317,8 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 	UpdateAirspaceControl( );
 
 	// redraw map/income if in mapscreen
-	fMapPanelDirty = TRUE;
-	fMapScreenBottomDirty = TRUE;
+	fMapPanelDirty = true;
+	fMapScreenBottomDirty = true;
 
 	return fWasPlayerControlled;
 }

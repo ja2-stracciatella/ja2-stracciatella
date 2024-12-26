@@ -380,10 +380,10 @@ enum
 static SGPVObject* guiQdScrollArrowImage;
 
 
-static BOOLEAN gfQuestDebugEntry = TRUE;
-static BOOLEAN gfQuestDebugExit  = FALSE;
+static BOOLEAN gfQuestDebugEntry = true;
+static BOOLEAN gfQuestDebugExit  = false;
 
-static BOOLEAN gfRedrawQuestDebugSystem = TRUE;
+static BOOLEAN gfRedrawQuestDebugSystem = true;
 
 static UINT16 gusQuestDebugBlue;
 
@@ -397,9 +397,9 @@ INT16 gsQdsEnteringGridNo = 0;
 
 
 static UINT8   gubTextEntryAction = QD_DROP_DOWN_NO_ACTION;
-static BOOLEAN gfTextEntryActive  = FALSE;
+static BOOLEAN gfTextEntryActive  = false;
 
-static BOOLEAN gfUseLocalNPCs = FALSE;
+static BOOLEAN gfUseLocalNPCs = false;
 
 static UINT8 gubNPCInventoryPopupAction = QD_DROP_DOWN_NO_ACTION;
 
@@ -410,7 +410,7 @@ static UINT8  gubCurQuestSelected;
 static UINT16 gusCurFactSelected;
 static UINT16 gusFactAtTopOfList;
 
-static BOOLEAN gfNpcLogButton = FALSE;
+static BOOLEAN gfNpcLogButton = false;
 
 
 static INT32 giHaveSelectedItem = -1; // If it is not the first time in, dont reset the Selected ITem
@@ -419,20 +419,20 @@ static INT32 giHaveSelectedNPC  = -1; // If it is not the first time in, dont re
 
 static INT32        giSelectedMercCurrentQuote = -1;
 static SOLDIERTYPE* gTalkingMercSoldier        = NULL;
-static BOOLEAN      gfPauseTalkingMercPopup    = FALSE;
-static BOOLEAN gfAddNpcToTeam                 = FALSE;
-static BOOLEAN gfRpcToSaySectorDesc           = FALSE;
-static BOOLEAN gfNpcPanelIsUsedForTalkingMerc = FALSE;
+static BOOLEAN      gfPauseTalkingMercPopup    = false;
+static BOOLEAN gfAddNpcToTeam                 = false;
+static BOOLEAN gfRpcToSaySectorDesc           = false;
+static BOOLEAN gfNpcPanelIsUsedForTalkingMerc = false;
 extern SOLDIERTYPE* gpDestSoldier;
 
-static BOOLEAN gfBackgroundMaskEnabled = FALSE;
+static BOOLEAN gfBackgroundMaskEnabled = false;
 
-static BOOLEAN gfExitQdsDueToMessageBox = FALSE;
+static BOOLEAN gfExitQdsDueToMessageBox = false;
 
-static BOOLEAN gfInDropDownBox = FALSE;
+static BOOLEAN gfInDropDownBox = false;
 
-static BOOLEAN gfAddKeyNextPass   = FALSE;
-static BOOLEAN gfDropDamagedItems = FALSE;
+static BOOLEAN gfAddKeyNextPass   = false;
+static BOOLEAN gfDropDamagedItems = false;
 
 static MOUSE_REGION gQuestDebugSysScreenRegions;
 
@@ -497,7 +497,7 @@ void QuestDebugScreenInit()
 	UINT16	usListBoxFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 
 	//Set so next time we come in, we can set up
-	gfQuestDebugEntry = TRUE;
+	gfQuestDebugEntry = true;
 
 	gusQuestDebugBlue = Get16BPPColor( FROMRGB(  65,  79,  94 ) );
 
@@ -559,7 +559,7 @@ void QuestDebugScreenInit()
 	gItemListBox.ubCurScrollBoxAction						= QD_DROP_DOWN_NO_ACTION;
 
 
-	gfUseLocalNPCs = FALSE;
+	gfUseLocalNPCs = false;
 
 
 	//Set up the global list box
@@ -583,8 +583,8 @@ ScreenID QuestDebugScreenHandle()
 		PauseGame();
 
 		EnterQuestDebugSystem();
-		gfQuestDebugEntry = FALSE;
-		gfQuestDebugExit = FALSE;
+		gfQuestDebugEntry = false;
+		gfQuestDebugExit = false;
 
 		RenderQuestDebugSystem();
 
@@ -616,7 +616,7 @@ ScreenID QuestDebugScreenHandle()
 	{
 		RenderQuestDebugSystem();
 
-		gfRedrawQuestDebugSystem = FALSE;
+		gfRedrawQuestDebugSystem = false;
 	}
 
 	//if the merc is supposed to be talking
@@ -647,8 +647,8 @@ ScreenID QuestDebugScreenHandle()
 	if( gfQuestDebugExit )
 	{
 		ExitQuestDebugSystem();
-		gfQuestDebugExit = FALSE;
-		gfQuestDebugEntry = TRUE;
+		gfQuestDebugExit = false;
+		gfQuestDebugEntry = true;
 
 		UnPauseGame();
 		return( GAME_SCREEN );
@@ -706,8 +706,8 @@ static void EnterQuestDebugSystem(void)
 
 	if( gfExitQdsDueToMessageBox )
 	{
-		gfRedrawQuestDebugSystem = TRUE;
-		gfExitQdsDueToMessageBox = FALSE;
+		gfRedrawQuestDebugSystem = true;
+		gfExitQdsDueToMessageBox = false;
 		return;
 	}
 
@@ -796,7 +796,7 @@ static void EnterQuestDebugSystem(void)
 	// load Scroll Horizontal Arrow graphic and add it
 	guiQdScrollArrowImage = AddVideoObjectFromFile(INTERFACEDIR "/qd_scrollarrows.sti");
 
-	gfRedrawQuestDebugSystem = TRUE;
+	gfRedrawQuestDebugSystem = true;
 
 
 
@@ -943,7 +943,7 @@ static void HandleQuestDebugSystem(void)
 	{
 		zTemp = ST::format("  Please enter the Keys ID. ( 0 - {} )", NUM_KEYS);
 		TextEntryBox( zTemp, AddKeyToGridNo );
-		gfAddKeyNextPass = FALSE;
+		gfAddKeyNextPass = false;
 	}
 
 }
@@ -1053,7 +1053,7 @@ static void GetUserInput(void)
 					gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
 					CreateDestroyDisplaySelectNpcDropDownBox();
 					gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_NO_ACTION;
-					gfAddKeyNextPass = FALSE;
+					gfAddKeyNextPass = false;
 
 
 
@@ -1098,12 +1098,12 @@ static void GetUserInput(void)
 					}
 					break;
 
-				case SDLK_F11: gfQuestDebugExit = TRUE; break;
+				case SDLK_F11: gfQuestDebugExit = true; break;
 
 				case 'x':
 					if( Event.usKeyState & ALT_DOWN )
 					{
-						gfQuestDebugExit = TRUE;
+						gfQuestDebugExit = true;
 						requestGameExit();
 					}
 					break;
@@ -1245,18 +1245,18 @@ static void DisplaySectionLine(void)
 
 	// draw the line in b/n the first and second section
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	LineDraw(false, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
 
 	// draw the line in b/n the second and third section
 	usStartX = usEndX = QUEST_DBS_FIRST_SECTION_WIDTH + QUEST_DBS_SECOND_SECTION_WIDTH;
-	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	LineDraw(false, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
 
 
 	//draw the horizopntal line under the title
 	usStartX = 0;
 	usEndX   = SCREEN_WIDTH - 1;
 	usStartY = usEndY = 75;
-	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	LineDraw(false, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
 }
 
 
@@ -1296,7 +1296,7 @@ static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		gfQuestDebugExit = TRUE;
+		gfQuestDebugExit = true;
 	}
 }
 
@@ -1422,13 +1422,13 @@ static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 {
-	static	BOOLEAN fMouseRegionsCreated=FALSE;
+	static	BOOLEAN fMouseRegionsCreated=false;
 	UINT16	i;
 	UINT16	usPosX, usPosY;
 
 	//if there are
 	if( gpActiveListBox->usMaxArrayIndex == 0 )
-		return( FALSE );
+		return false;
 
 	switch( gpActiveListBox->ubCurScrollBoxAction )
 	{
@@ -1459,7 +1459,7 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 				usPosY += usFontHeight;
 			}
 
-			fMouseRegionsCreated = TRUE;
+			fMouseRegionsCreated = true;
 
 			//Scroll bars
 			usPosX = gpActiveListBox->usScrollPosX + gpActiveListBox->usScrollWidth;
@@ -1492,11 +1492,11 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 			if( !gfBackgroundMaskEnabled )
 			{
 				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 15, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
-				gfBackgroundMaskEnabled = TRUE;
+				gfBackgroundMaskEnabled = true;
 			}
 
 
-			gfInDropDownBox = TRUE;
+			gfInDropDownBox = true;
 
 			if( gpActiveListBox->sCurSelectedItem == -1 )
 			{
@@ -1518,7 +1518,7 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 				for( i=0; i< gpActiveListBox->usNumDisplayedItems; i++)
 					MSYS_RemoveRegion( &gSelectedNpcListRegion[i]);
 
-				fMouseRegionsCreated = FALSE;
+				fMouseRegionsCreated = false;
 
 				//scroll arrows
 				for( i=0; i< 2; i++)
@@ -1533,14 +1533,14 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 				if( gfBackgroundMaskEnabled )
 				{
 					MSYS_RemoveRegion( &gQuestTextEntryDebugDisableScreenRegion);
-					gfBackgroundMaskEnabled = FALSE;
+					gfBackgroundMaskEnabled = false;
 				}
 
 
 				EnableQDSButtons();
 			}
-			gfRedrawQuestDebugSystem = TRUE;
-			gfInDropDownBox = FALSE;
+			gfRedrawQuestDebugSystem = true;
+			gfInDropDownBox = false;
 		}
 		break;
 
@@ -1553,7 +1553,7 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 		break;
 
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -1809,10 +1809,10 @@ static void DrawQdsScrollRectangle(void)
 	usPosX = gpActiveListBox->usScrollPosX + gpActiveListBox->usScrollWidth;
 	usWidth = gpActiveListBox->usScrollBarWidth;
 
-	usHeight = (UINT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)( usNumEntries ) + .5 );//qq+ 1 );
+	usHeight = (UINT16)(gpActiveListBox->usScrollBarHeight / (float)( usNumEntries ) + .5 );//qq+ 1 );
 
 	if( usNumEntries > gpActiveListBox->usMaxNumDisplayedItems )
-		usPosY = usTempPosY + (UINT16)( ( gpActiveListBox->usScrollBarHeight /  (FLOAT)(usNumEntries +1) ) * ( gpActiveListBox->sCurSelectedItem - gpActiveListBox->usStartIndex ) );
+		usPosY = usTempPosY + (UINT16)( ( gpActiveListBox->usScrollBarHeight /  (float)(usNumEntries +1) ) * ( gpActiveListBox->sCurSelectedItem - gpActiveListBox->usStartIndex ) );
 	else
 		usPosY = usTempPosY;
 
@@ -1833,12 +1833,12 @@ static void DrawQdsScrollRectangle(void)
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw the gold highlite line on the top and left
-	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth-1, usPosY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX, usPosY, usPosX, usPosY+usHeight, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	LineDraw(false, usPosX, usPosY, usPosX+usWidth-1, usPosY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
+	LineDraw(false, usPosX, usPosY, usPosX, usPosY+usHeight, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
 
 	// draw the shadow line on the bottom and right
-	LineDraw(FALSE, usPosX, usPosY+usHeight, usPosX+usWidth-1, usPosY+usHeight, Get16BPPColor( FROMRGB( 112, 110, 112 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX+usWidth-1, usPosY, usPosX+usWidth-1, usPosY+usHeight, Get16BPPColor( FROMRGB( 112, 110, 112 ) ), pDestBuf);
+	LineDraw(false, usPosX, usPosY+usHeight, usPosX+usWidth-1, usPosY+usHeight, Get16BPPColor( FROMRGB( 112, 110, 112 ) ), pDestBuf);
+	LineDraw(false, usPosX+usWidth-1, usPosY, usPosX+usWidth-1, usPosY+usHeight, Get16BPPColor( FROMRGB( 112, 110, 112 ) ), pDestBuf);
 }
 
 
@@ -1925,10 +1925,10 @@ static void CalcPositionOfNewScrollBoxLocation(void)
 {
 	INT16 sMouseYPos;
 	INT16	sIncrementValue;
-	FLOAT	dValue;
+	float	dValue;
 	INT16	sHeight=0;
-//	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex - gpActiveListBox->usStartIndex ) + .5);
-	//INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex ) + .5);
+//	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (float)(gpActiveListBox->usMaxArrayIndex - gpActiveListBox->usStartIndex ) + .5);
+	//INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (float)(gpActiveListBox->usMaxArrayIndex ) + .5);
 	INT16	sStartPosOfScrollArea = gpActiveListBox->usScrollPosY + gpActiveListBox->usScrollArrowHeight;
 
 	sMouseYPos = gusMouseYPos;
@@ -1940,7 +1940,7 @@ static void CalcPositionOfNewScrollBoxLocation(void)
 		sHeight = sMouseYPos - sStartPosOfScrollArea;
 
 
-		dValue = sHeight / (FLOAT)( gpActiveListBox->usScrollBarHeight );
+		dValue = sHeight / (float)( gpActiveListBox->usScrollBarHeight );
 		sIncrementValue = (INT16)( ( dValue ) * ( gpActiveListBox->usMaxArrayIndex - gpActiveListBox->usStartIndex ) + .5 ) + gpActiveListBox->usStartIndex;
 //		sIncrementValue = (INT16)( ( dValue ) * ( gpActiveListBox->usMaxArrayIndex - gpActiveListBox->usStartIndex ) + .5 );
 
@@ -2059,7 +2059,7 @@ static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, UINT32 rea
 		}
 
 		//Give the selected item to the selected merc
-		if (!AutoPlaceObject(s, &Object, TRUE))
+		if (!AutoPlaceObject(s, &Object, true))
 		{
 			//failed to add item, put error message to screen
 		}
@@ -2179,7 +2179,7 @@ static void InitQuestDebugTextInputBoxes(void);
 
 static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const ST::string& pString, TEXT_ENTRY_CALLBACK EntryCallBack)
 {
-	static BOOLEAN	fMouseRegionCreated = FALSE;
+	static BOOLEAN	fMouseRegionCreated = false;
 	static ST::string zString;
 	static TEXT_ENTRY_CALLBACK TextEntryCallback;
 
@@ -2195,13 +2195,13 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const ST::string& p
 			if( fMouseRegionCreated )
 				break;
 
-			fMouseRegionCreated = TRUE;
+			fMouseRegionCreated = true;
 
 			//create a mask to block out the screen
 			if( !gfBackgroundMaskEnabled )
 			{
 				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 40, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
-				gfBackgroundMaskEnabled = TRUE;
+				gfBackgroundMaskEnabled = true;
 			}
 
 			//create the ok button
@@ -2210,7 +2210,7 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const ST::string& p
 
 			zString = pString;
 
-			gfTextEntryActive = TRUE;
+			gfTextEntryActive = true;
 
 			InitQuestDebugTextInputBoxes();
 
@@ -2230,18 +2230,18 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const ST::string& p
 			if( gfBackgroundMaskEnabled )
 			{
 				MSYS_RemoveRegion( &gQuestTextEntryDebugDisableScreenRegion);
-				gfBackgroundMaskEnabled = FALSE;
+				gfBackgroundMaskEnabled = false;
 			}
 
 			//remove the 'ok' button on the text entry field
 			RemoveButton( guiQuestDebugTextEntryOkBtn );
 
 			// Mouse regions are removed
-			fMouseRegionCreated = FALSE;
-			gfTextEntryActive = FALSE;
+			fMouseRegionCreated = false;
+			gfTextEntryActive = false;
 
 			//redraw the entire screen
-			gfRedrawQuestDebugSystem = TRUE;
+			gfRedrawQuestDebugSystem = true;
 
 			ST::string zText = GetStringFromField(0);
 			iTextEntryNumber = 0;
@@ -2409,7 +2409,7 @@ static void AddItemToGridNo(INT32 iGridNo)
 
 	if( GCM->getItem(gItemListBox.sCurSelectedItem)->getItemClass() == IC_KEY )
 	{
-		gfAddKeyNextPass = TRUE;
+		gfAddKeyNextPass = true;
 //		ST::string zTemp = "Please enter the Key ID";
 //		TextEntryBox( zTemp, AddKeyToGridNo );
 	}
@@ -2435,7 +2435,7 @@ static void AddKeyToGridNo(INT32 iKeyID)
 		AddItemToPool(gsQdsEnteringGridNo, &Object, INVISIBLE, 0, 0, 0);
 	}
 	else
-		gfAddKeyNextPass = TRUE;
+		gfAddKeyNextPass = true;
 }
 
 
@@ -2465,7 +2465,7 @@ static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 re
 
 static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 {
-	static BOOLEAN	fMouseRegionCreated = FALSE;
+	static BOOLEAN	fMouseRegionCreated = false;
 	UINT16	usPosY, i;
 
 	switch( ubAction )
@@ -2489,13 +2489,13 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 			if( fMouseRegionCreated )
 				break;
 
-			fMouseRegionCreated = TRUE;
+			fMouseRegionCreated = true;
 
 			//create a mask to block out the screen
 			if( !gfBackgroundMaskEnabled )
 			{
 				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 40, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
-				gfBackgroundMaskEnabled = TRUE;
+				gfBackgroundMaskEnabled = true;
 			}
 
 			//create the ok button
@@ -2509,11 +2509,11 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 
 			if( gfBackgroundMaskEnabled )
 				MSYS_RemoveRegion( &gQuestTextEntryDebugDisableScreenRegion );
-			gfBackgroundMaskEnabled = FALSE;
+			gfBackgroundMaskEnabled = false;
 
-			gfRedrawQuestDebugSystem = TRUE;
+			gfRedrawQuestDebugSystem = true;
 
-			fMouseRegionCreated = FALSE;
+			fMouseRegionCreated = false;
 
 			break;
 
@@ -2572,7 +2572,7 @@ static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, UINT32 re
 	{
 		if( gfUseLocalNPCs )
 		{
-			gfUseLocalNPCs = FALSE;
+			gfUseLocalNPCs = false;
 
 
 			gNpcListBox.sCurSelectedItem							= gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ];
@@ -2584,7 +2584,7 @@ static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, UINT32 re
 		}
 		else
 		{
-			gfUseLocalNPCs = TRUE;
+			gfUseLocalNPCs = true;
 
 			gNpcListBox.sCurSelectedItem							= -1;
 			gNpcListBox.usItemDisplayedOnTopOfList		= 0;
@@ -2615,7 +2615,7 @@ static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, UINT32 re
 			EnableQDSButtons();
 		}
 
-		gfRedrawQuestDebugSystem = TRUE;
+		gfRedrawQuestDebugSystem = true;
 	}
 }
 
@@ -2645,7 +2645,7 @@ static void ChangeQuestState(INT32 iNumber)
 	if( ( iNumber >= 0 ) && ( iNumber <= 2 ) )
 	{
 		gubQuest[ gubCurQuestSelected ] = (UINT8) iNumber;
-		gfRedrawQuestDebugSystem = TRUE;
+		gfRedrawQuestDebugSystem = true;
 	}
 }
 
@@ -2655,7 +2655,7 @@ static void ChangeFactState(INT32 iNumber)
 	if( ( iNumber >= 0 ) && ( iNumber <= 1 ) )
 	{
 		gubFact[ gusCurFactSelected ] = (UINT8) iNumber;
-		gfRedrawQuestDebugSystem = TRUE;
+		gfRedrawQuestDebugSystem = true;
 	}
 }
 
@@ -2671,7 +2671,7 @@ static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 		else
 			gusFactAtTopOfList = 0;
 
-		gfRedrawQuestDebugSystem = TRUE;
+		gfRedrawQuestDebugSystem = true;
 	}
 }
 
@@ -2687,7 +2687,7 @@ static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 		else
 			gusFactAtTopOfList = NUM_FACTS - QUEST_DBS_NUM_DISPLAYED_FACTS;
 
-		gfRedrawQuestDebugSystem = TRUE;
+		gfRedrawQuestDebugSystem = true;
 	}
 }
 
@@ -2717,8 +2717,8 @@ static void EnableQDSButtons(void)
 static void DoQDSMessageBox(const ST::string& zString, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	// reset exit mode
-	gfExitQdsDueToMessageBox = TRUE;
-	gfQuestDebugEntry = TRUE;
+	gfExitQdsDueToMessageBox = true;
+	gfQuestDebugEntry = true;
 
 	// do message box and return
 	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, ubFlags, ReturnCallback, NULL);
@@ -2778,7 +2778,7 @@ static void IncrementActiveDropDownBox(INT16 sIncrementValue)
 static INT16 IsMercInTheSector(UINT16 usMercID)
 {
 	if( usMercID == (UINT16)-1 ) /* XXX */
-		return( FALSE );
+		return false;
 
 	CFOR_EACH_SOLDIER(s)
 	{
@@ -2837,7 +2837,7 @@ static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 	//make sure the current character is created
 	SetQDSMercProfile();
 
-	SetTalkingMercPauseState( FALSE );
+	SetTalkingMercPauseState( false );
 
 	//do some error checks
 	if( iQuoteToStartTalkingFrom < 0 || iQuoteToStartTalkingFrom > uiMaxNumberOfQuotes )
@@ -2855,7 +2855,7 @@ static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 	if( !gfBackgroundMaskEnabled )
 	{
 		MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
-		gfBackgroundMaskEnabled = TRUE;
+		gfBackgroundMaskEnabled = true;
 	}
 
 	DisableFactMouseRegions();
@@ -2871,13 +2871,13 @@ static void EndMercTalking(void)
 	//remove the talking dialogue
 	if( gfNpcPanelIsUsedForTalkingMerc )
 		DeleteTalkingMenu( );
-	gfNpcPanelIsUsedForTalkingMerc = FALSE;
+	gfNpcPanelIsUsedForTalkingMerc = false;
 
 	//remove the mask of the entire screen
 	if( gfBackgroundMaskEnabled )
 	{
 		MSYS_RemoveRegion( &gQuestTextEntryDebugDisableScreenRegion);
-		gfBackgroundMaskEnabled = FALSE;
+		gfBackgroundMaskEnabled = false;
 	}
 
 	giSelectedMercCurrentQuote = -1;
@@ -2930,7 +2930,7 @@ static void HandleQDSTalkingMerc(void)
 				}
 				else
 				{
-					CharacterDialogue(gTalkingMercSoldier->ubProfile, giSelectedMercCurrentQuote, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE);
+					CharacterDialogue(gTalkingMercSoldier->ubProfile, giSelectedMercCurrentQuote, gTalkPanel.face, DIALOGUE_NPC_UI, false);
 				}
 
 				//Incremenet the current quote number
@@ -2946,7 +2946,7 @@ static void HandleQDSTalkingMerc(void)
 		}
 
 		//Redraw the screen
-		gfRedrawQuestDebugSystem = TRUE;
+		gfRedrawQuestDebugSystem = true;
 	}
 }
 
@@ -2955,12 +2955,12 @@ static void SetTalkingMercPauseState(BOOLEAN fState)
 {
 	if( fState )
 	{
-		gfPauseTalkingMercPopup = TRUE;
+		gfPauseTalkingMercPopup = true;
 		if (gTalkingMercSoldier) gTalkingMercSoldier->face->uiFlags |= FACE_POTENTIAL_KEYWAIT;
 	}
 	else
 	{
-		gfPauseTalkingMercPopup = FALSE;
+		gfPauseTalkingMercPopup = false;
 		if (gTalkingMercSoldier) gTalkingMercSoldier->face->uiFlags &= ~FACE_POTENTIAL_KEYWAIT;
 	}
 }
@@ -2993,7 +2993,7 @@ static void SetQDSMercProfile(void)
 		if( gfNpcPanelIsUsedForTalkingMerc )
 			DeleteTalkingMenu( );
 
-		gfNpcPanelIsUsedForTalkingMerc = TRUE;
+		gfNpcPanelIsUsedForTalkingMerc = true;
 
 		InternalInitTalkingMenu( gTalkingMercSoldier->ubProfile, 10, 10 );
 		gpDestSoldier = &GetMan(21);
@@ -3042,9 +3042,9 @@ static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, UINT32 reas
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		if( gfAddNpcToTeam )
-			gfAddNpcToTeam = FALSE;
+			gfAddNpcToTeam = false;
 		else
-			gfAddNpcToTeam = TRUE;
+			gfAddNpcToTeam = true;
 	}
 }
 
@@ -3054,9 +3054,9 @@ static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, UINT32 
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		if( gfRpcToSaySectorDesc )
-			gfRpcToSaySectorDesc = FALSE;
+			gfRpcToSaySectorDesc = false;
 		else
-			gfRpcToSaySectorDesc = TRUE;
+			gfRpcToSaySectorDesc = true;
 	}
 }
 

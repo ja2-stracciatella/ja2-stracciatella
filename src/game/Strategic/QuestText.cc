@@ -79,10 +79,10 @@ const ST::string FactDescText[] =
 	"Current Sector is safe",
 	"Bobby R Shpmnt in transit",
 	"Bobby R Shpmnt in Drassen",
-	"33 is TRUE and it arrived within 2 hours",
-	"33 is TRUE 34 is false more then 2 hours",
+	"33 is true and it arrived within 2 hours",
+	"33 is true 34 is false more then 2 hours",
 	"Player has realized part of shipment is missing",
-	"36 is TRUE and Pablo was injured by player",
+	"36 is true and Pablo was injured by player",
 	"Pablo admitted theft",
 	"Pablo returned goods, set 37 false",
 

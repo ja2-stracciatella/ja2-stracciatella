@@ -60,10 +60,10 @@ static inline SOLDIERTYPE* LatestInterruptGuy(void)
 }
 
 
-#define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( (UINT8) (gubOutOfTurnPersons), TRUE ))
+#define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( (UINT8) (gubOutOfTurnPersons), true ))
 #define INTERRUPTS_OVER		(gubOutOfTurnPersons == 1)
 
-BOOLEAN gfHiddenInterrupt = FALSE;
+BOOLEAN gfHiddenInterrupt = false;
 static SOLDIERTYPE* gLastInterruptedGuy = NULL;
 
 extern SightFlags gubSightFlags;
@@ -88,7 +88,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 	// make sure set properly in gTacticalStatus:
 	gTacticalStatus.ubCurrentTeam = OUR_TEAM;
 
-	InitPlayerUIBar( FALSE );
+	InitPlayerUIBar( false );
 
 
 	// Are we in combat already?
@@ -139,7 +139,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 
 	if ( !fEnteringCombatMode )
 	{
-		CheckForEndOfCombatMode( TRUE );
+		CheckForEndOfCombatMode( true );
 	}
 
 
@@ -148,7 +148,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 
 	// ATE: Reset killed on attack variable.. this is because sometimes timing is such
 	/// that a baddie can die and still maintain it's attacker ID
-	gTacticalStatus.fKilledEnemyOnAttack = FALSE;
+	gTacticalStatus.fKilledEnemyOnAttack = false;
 
 	// Save if we are in Dead is Dead mode
 	DoDeadIsDeadSaveIfNecessary();
@@ -160,7 +160,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 static void FreezeInterfaceForEnemyTurn(void)
 {
 	// Reset flags
-	gfPlotNewMovement = TRUE;
+	gfPlotNewMovement = true;
 
 	// Erase path
 	ErasePath();
@@ -188,7 +188,7 @@ void EndTurn( UINT8 ubNextTeam )
 	DoDeadIsDeadSaveIfNecessary();
 
 	/*
-	if ( CheckForEndOfCombatMode( FALSE ) )
+	if ( CheckForEndOfCombatMode( false ) )
 	{
 		return;
 	}
@@ -196,7 +196,7 @@ void EndTurn( UINT8 ubNextTeam )
 
 	if (INTERRUPT_QUEUED)
 	{
-		EndInterrupt( FALSE );
+		EndInterrupt( false );
 	}
 	else
 	{
@@ -212,10 +212,10 @@ void EndTurn( UINT8 ubNextTeam )
 			// Only do this for mercs that are actually in this sector
 			if (!s->bInSector) continue;
 
-			s->bMoved = TRUE;
+			s->bMoved = true;
 			// Cancel merc movement if continue path was not used
 			const INT16 sAPCost = PtsToMoveDirection(s, s->ubPathingData[0]);
-			if (EnoughPoints(s, sAPCost, 0, FALSE))
+			if (EnoughPoints(s, sAPCost, 0, false))
 			{
 				s->sFinalDestination=s->sGridNo;
 				s->fNoAPToFinishMove = 0;
@@ -234,13 +234,13 @@ void EndAITurn( void )
 {
 	if (INTERRUPT_QUEUED)
 	{
-		EndInterrupt( FALSE );
+		EndInterrupt( false );
 	}
 	else
 	{
 		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
-			s->bMoved = TRUE;
+			s->bMoved = true;
 			// record old life value... for creature AI; the human AI might
 			// want to use this too at some point
 			s->bOldLife = s->bLife;
@@ -257,14 +257,14 @@ void EndAllAITurns( void )
 
 	if (INTERRUPT_QUEUED)
 	{
-		EndInterrupt( FALSE );
+		EndInterrupt( false );
 	}
 
 	if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 	{
 		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
-			s->bMoved = TRUE;
+			s->bMoved = true;
 			s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 			// record old life value... for creature AI; the human AI might
 			// want to use this too at some point
@@ -317,7 +317,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 		}
 
 
-		BeginLoggingForBleedMeToos( TRUE );
+		BeginLoggingForBleedMeToos( true );
 
 		// decay team's public opplist
 		DecayPublicOpplist( ubTeam );
@@ -336,7 +336,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 			return;
 		}
 
-		BeginLoggingForBleedMeToos( FALSE );
+		BeginLoggingForBleedMeToos( false );
 
 
 
@@ -346,7 +346,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 			// ( they could have blead to death above )
 			if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
-				StartPlayerTeamTurn( TRUE, FALSE );
+				StartPlayerTeamTurn( true, false );
 			}
 			break;
 		}
@@ -395,15 +395,15 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	ErasePath();
 
 	// Reset flags
-	gfPlotNewMovement = TRUE;
+	gfPlotNewMovement = true;
 
 	// Stop our guy....
 	SOLDIERTYPE* const latest = LatestInterruptGuy();
 	if (latest)
 	{
-		AdjustNoAPToFinishMove(latest, TRUE);
+		AdjustNoAPToFinishMove(latest, true);
 		// Stop him from going to prone position if doing a turn while prone
-		latest->fTurningFromPronePosition = FALSE;
+		latest->fTurningFromPronePosition = false;
 	}
 
 	// get rid of any old overlay message
@@ -412,7 +412,7 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 					COMPUTER_INTERRUPT_MESSAGE;
 	AddTopMessage(msg);
 
-	gfHiddenInterrupt = FALSE;
+	gfHiddenInterrupt = false;
 }
 
 void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
@@ -439,7 +439,7 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 
 	SetSoldierAsUnderAiControl( pActingSoldier );
 	SLOGD("Giving AI control to {}", pActingSoldier->ubID);
-	pActingSoldier->fTurnInProgress = TRUE;
+	pActingSoldier->fTurnInProgress = true;
 	gTacticalStatus.uiTimeSinceMercAIStart = GetJA2Clock();
 
 	if ( gTacticalStatus.ubTopMessageType != COMPUTER_TURN_MESSAGE)
@@ -469,11 +469,11 @@ static BOOLEAN EveryoneInInterruptListOnSameTeam(void)
 		{
 			if (gOutOfTurnOrder[ubLoop]->bTeam != ubTeam)
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -492,7 +492,7 @@ void SayCloseCallQuotes(void)
 			TacticalCharacterDialogue(s, QUOTE_CLOSE_CALL);
 			s->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
 		}
-		s->fCloseCall = FALSE;
+		s->fCloseCall = false;
 	}
 }
 
@@ -512,12 +512,12 @@ static void StartInterrupt(void)
 		SLOGD("STARTINT: Q position {}: {}", cnt, gOutOfTurnOrder[cnt]->ubID);
 	}
 
-	gTacticalStatus.fInterruptOccurred = TRUE;
+	gTacticalStatus.fInterruptOccurred = true;
 
 	FOR_EACH_SOLDIER(s)
 	{
 		s->bMovedPriorToInterrupt = s->bMoved;
-		s->bMoved                 = TRUE;
+		s->bMoved                 = true;
 	}
 
 	if (first_interrupter->bTeam == OUR_TEAM)
@@ -528,7 +528,7 @@ static void StartInterrupt(void)
 		// build string for display of who gets interrupt
 		while( 1 )
 		{
-			Interrupter->bMoved = FALSE;
+			Interrupter->bMoved = false;
 			SLOGD("INTERRUPT: popping {} off of the interrupt queue", Interrupter->ubID);
 
 			REMOVE_LATEST_INTERRUPT_GUY();
@@ -597,7 +597,7 @@ static void StartInterrupt(void)
 		guiPendingOverrideEvent = LU_ENDUILOCK;
 		HandleTacticalUI( );
 
-		InitPlayerUIBar( TRUE );
+		InitPlayerUIBar( true );
 		//AddTopMessage(PLAYER_INTERRUPT_MESSAGE);
 
 		PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
@@ -613,13 +613,13 @@ static void StartInterrupt(void)
 		FOR_EACH_IN_TEAM(s, first_interrupter->bTeam)
 		{
 			s->bMovedPriorToInterrupt = s->bMoved;
-			s->bMoved                 = TRUE;
+			s->bMoved                 = true;
 		}
 		*/
 
 		while( 1 )
 		{
-			Interrupter->bMoved = FALSE;
+			Interrupter->bMoved = false;
 
 			SLOGD("INTERRUPT: popping {} off of the interrupt queue", Interrupter->ubID);
 
@@ -659,8 +659,8 @@ static void StartInterrupt(void)
 			// we're being interrupted by the computer!
 			// we delay displaying any interrupt message until the computer
 			// does something...
-			gfHiddenInterrupt = TRUE;
-			gTacticalStatus.fUnLockUIAfterHiddenInterrupt = FALSE;
+			gfHiddenInterrupt = true;
+			gTacticalStatus.fUnLockUIAfterHiddenInterrupt = false;
 		}
 		// otherwise it's the AI interrupting another AI team
 
@@ -675,8 +675,8 @@ static void StartInterrupt(void)
 	{
 		// Stop this guy....
 		SOLDIERTYPE* const latest = LatestInterruptGuy();
-		AdjustNoAPToFinishMove(latest, TRUE);
-		latest->fTurningFromPronePosition = FALSE;
+		AdjustNoAPToFinishMove(latest, true);
+		latest->fTurningFromPronePosition = false;
 	}
 }
 
@@ -696,11 +696,11 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 	if ( fMarkInterruptOccurred )
 	{
 		// flag as true if an int occurs which ends an interrupt (int loop)
-		gTacticalStatus.fInterruptOccurred = TRUE;
+		gTacticalStatus.fInterruptOccurred = true;
 	}
 	else
 	{
-		gTacticalStatus.fInterruptOccurred = FALSE;
+		gTacticalStatus.fInterruptOccurred = false;
 	}
 
 	// Loop through all mercs and see if any passed on this interrupt
@@ -708,17 +708,17 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 	{
 		if (s->bInSector && !s->bMoved && s->bActionPoints == s->bIntStartAPs)
 		{
-			ubMinAPsToAttack = MinAPsToAttack(s, s->sLastTarget, FALSE);
+			ubMinAPsToAttack = MinAPsToAttack(s, s->sLastTarget, false);
 			if (0 < ubMinAPsToAttack && ubMinAPsToAttack <= s->bActionPoints)
 			{
-				s->bPassedLastInterrupt = TRUE;
+				s->bPassedLastInterrupt = true;
 			}
 		}
 	}
 
 	if ( !EveryoneInInterruptListOnSameTeam() )
 	{
-		gfHiddenInterrupt = FALSE;
+		gfHiddenInterrupt = false;
 
 		// resume interrupted interrupt
 		StartInterrupt();
@@ -733,11 +733,11 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			// AI guys only here...
 			if (s->bActionPoints == 0)
 			{
-				s->bMoved = TRUE;
+				s->bMoved = true;
 			}
 			else if (s->bTeam != OUR_TEAM && s->bNewSituation == IS_NEW_SITUATION)
 			{
-				s->bMoved = FALSE;
+				s->bMoved = false;
 			}
 			else
 			{
@@ -774,14 +774,14 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			if (gfHiddenInterrupt)
 			{
 				// Try to make things look like nothing happened at all.
-				gfHiddenInterrupt = FALSE;
+				gfHiddenInterrupt = false;
 
 				// If we can continue a move, do so!
 				SOLDIERTYPE* const sel = GetSelectedMan();
 				if (sel->fNoAPToFinishMove && interrupted->ubReasonCantFinishMove != REASON_STOPPED_SIGHT)
 				{
 					// Continue
-					AdjustNoAPToFinishMove(sel, FALSE);
+					AdjustNoAPToFinishMove(sel, false);
 
 					if (sel->sGridNo != sel->sFinalDestination)
 					{
@@ -799,7 +799,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 				if ( gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
 				{
-					gTacticalStatus.fUnLockUIAfterHiddenInterrupt = FALSE;
+					gTacticalStatus.fUnLockUIAfterHiddenInterrupt = false;
 					UnSetUIBusy(interrupted);
 				}
 			}
@@ -838,7 +838,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 		else
 		{
 			// this could be set to true for AI-vs-AI interrupts
-			gfHiddenInterrupt = FALSE;
+			gfHiddenInterrupt = false;
 
 			// Dirty panel interface!
 			fInterfacePanelDirty = DIRTYLEVEL2;
@@ -847,10 +847,10 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			ErasePath();
 
 			// Reset flags
-			gfPlotNewMovement = TRUE;
+			gfPlotNewMovement = true;
 
 			// restart AI with first available soldier
-			fFound = FALSE;
+			fFound = false;
 
 			// rebuild list for this team if anyone on the team is still available
 			INT32 cnt = gTacticalStatus.Team[ENEMY_TEAM].bFirstID;
@@ -858,7 +858,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			{
 				if ( pTempSoldier->bActive && pTempSoldier->bInSector && pTempSoldier->bLife >= OKLIFE )
 				{
-					fFound = TRUE;
+					fFound = true;
 					break;
 				}
 			}
@@ -866,7 +866,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			if ( fFound )
 			{
 				// reset found flag because we are rebuilding the AI list
-				fFound = FALSE;
+				fFound = false;
 
 				if ( BuildAIListForTeam( gTacticalStatus.ubCurrentTeam ) )
 				{
@@ -880,7 +880,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 					SOLDIERTYPE* const s = RemoveFirstAIListEntry();
 					if (s != NULL)
 					{
-						fFound = TRUE;
+						fFound = true;
 						StartNPCAI(*s);
 					}
 				}
@@ -912,12 +912,12 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 
 	if ((gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT))
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if ( gTacticalStatus.ubAttackBusyCount > 0 )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if (pOpponent == NULL)
@@ -926,7 +926,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		// ALEX
 		if (gWhoThrewRock == NULL)
 		{
-			return(FALSE);
+			return(false);
 		}
 	}
 
@@ -939,74 +939,74 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		{
 		// CJC, July 9 1998
 			// NO ONE EVER interrupts his own team
-			return FALSE;
+			return false;
 		}
 		else if ( gTacticalStatus.bBoxingState != NOT_BOXING )
 		{
 			// while anything to do with boxing is going on, skip interrupts!
-			return( FALSE );
+			return false;
 		}
 
 	}
 
 	if ( !(pSoldier->bActive) || !(pSoldier->bInSector ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// soldiers at less than OKLIFE can't perform any actions
 	if (pSoldier->bLife < OKLIFE)
 	{
-		return(FALSE);
+		return(false);
 	}
 
 	// soldiers out of breath are about to fall over, no interrupt
 	if (pSoldier->bBreath < OKBREATH || pSoldier->bCollapsed )
 	{
-		return(FALSE);
+		return(false);
 	}
 
 	// if soldier doesn't have enough APs
 	if ( pSoldier->bActionPoints < MIN_APS_TO_INTERRUPT )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// soldiers gagging on gas are too busy about holding their cookies down...
 	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 	{
-		return(FALSE);
+		return(false);
 	}
 
 	// a soldier already engaged in a life & death battle is too busy doing his
 	// best to survive to worry about "getting the jump" on additional threats
 	if (pSoldier->bUnderFire)
 	{
-		return(FALSE);
+		return(false);
 	}
 
 	if (pSoldier->bCollapsed)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// don't allow neutral folks to get interrupts
 	if (pSoldier->bNeutral)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// no EPCs allowed to get interrupts
 	if ( AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 
 	// don't let mercs on assignment get interrupts
 	if ( pSoldier->bTeam == OUR_TEAM && pSoldier->bAssignment >= ON_DUTY)
 	{
-		return( FALSE );
+		return false;
 	}
 
 
@@ -1022,7 +1022,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 			// human/civilians on same side can't interrupt each other
 			if (pSoldier->uiStatusFlags & SOLDIER_PC || IsOnCivTeam(pSoldier))
 			{
-				return(FALSE);
+				return(false);
 			}
 			else	// enemy
 			{
@@ -1030,7 +1030,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 				// same side (but different teams) can't interrupt each other.
 				if (pSoldier->bTeam != pOpponent->bTeam)
 				{
-					return(FALSE);
+					return(false);
 				}
 			}
 		}
@@ -1043,21 +1043,21 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 			const SOLDIERTYPE* const sel = GetSelectedMan();
 			if (pOpponent != sel && pSoldier->bSide != sel->bSide)
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 		else
 		{
 			if ( !(pOpponent->uiStatusFlags & SOLDIER_UNDERAICONTROL) && (pSoldier->bSide != pOpponent->bSide))
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 
 		// an non-active soldier can't interrupt a soldier who is also non-active!
 		if ((pOpponent->bTeam != gTacticalStatus.ubCurrentTeam) && (pSoldier->bTeam != gTacticalStatus.ubCurrentTeam))
 		{
-			return(FALSE);
+			return(false);
 		}
 
 
@@ -1067,7 +1067,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 			// if pSoldier already saw the opponent last "look" or at least this turn
 			if ((bOldOppList == SEEN_CURRENTLY) || (bOldOppList == SEEN_THIS_TURN))
 			{
-				return(FALSE);     // no interrupt is possible
+				return(false);     // no interrupt is possible
 			}
 
 			// if the soldier is behind him and not very close, forget it
@@ -1077,7 +1077,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 				// directly behind; allow interrupts only within # of tiles equal to level
 				if ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > EffectiveExpLevel( pSoldier ) )
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 
@@ -1098,7 +1098,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 			// if the "interrupter" already heard the active soldier this turn
 			if ((pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY) || (pSoldier->bOppCnt > 0) || (bOldOppList == HEARD_THIS_TURN))
 			{
-				return(FALSE);     // no interrupt is possible
+				return(false);     // no interrupt is possible
 			}
 		}
 	}
@@ -1107,16 +1107,16 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	// soldiers without sufficient APs to do something productive can't interrupt
 	if (pSoldier->bActionPoints < ubMinPtsNeeded)
 	{
-		return(FALSE);
+		return(false);
 	}
 
 	// soldier passed on the chance to react during previous interrupt this turn
 	if (pSoldier->bPassedLastInterrupt && !gamepolicy(multiple_interrupts))
 	{
-		return(FALSE);
+		return(false);
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -1243,8 +1243,8 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 		}
 
 		// GAIN one point if he's previously seen the opponent
-		// check for TRUE because -1 means we JUST saw him (always so here)
-		if (gbSeenOpponents[pSoldier->ubID][opponent->ubID] == TRUE)
+		// check for true because -1 means we JUST saw him (always so here)
+		if (gbSeenOpponents[pSoldier->ubID][opponent->ubID] == true)
 		{
 			bPoints++;  // seen him before, easier to react to him
 		}
@@ -1252,8 +1252,8 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 	else if ( pSoldier->bTeam == ENEMY_TEAM )
 	{
 		// GAIN one point if he's previously seen the opponent
-		// check for TRUE because -1 means we JUST saw him (always so here)
-		if (gbSeenOpponents[pSoldier->ubID][opponent->ubID] == TRUE)
+		// check for true because -1 means we JUST saw him (always so here)
+		if (gbSeenOpponents[pSoldier->ubID][opponent->ubID] == true)
 		{
 			bPoints++;  // seen him before, easier to react to him
 		}
@@ -1281,12 +1281,12 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 
 BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 {
-	BOOLEAN fResult = FALSE;
+	BOOLEAN fResult = false;
 
 	// if opponent can't currently see us and we can see them
 	if ( pSoldier->bOppList[ pOpponent->ubID ] == SEEN_CURRENTLY && pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 	{
-		fResult = TRUE; // we automatically interrupt
+		fResult = true; // we automatically interrupt
 		// fix up our interrupt duel pts if necessary
 		if (pSoldier->bInterruptDuelPts < pOpponent->bInterruptDuelPts)
 		{
@@ -1298,7 +1298,7 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 		// If our total points is HIGHER, then we interrupt him anyway
 		if (pSoldier->bInterruptDuelPts > pOpponent->bInterruptDuelPts)
 		{
-			fResult = TRUE;
+			fResult = true;
 		}
 	}
 	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("Interrupt duel {} ({} pts) vs {} ({} pts)", pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts) );
@@ -1355,7 +1355,7 @@ void AddToIntList(SOLDIERTYPE* const s, const BOOLEAN fGainControl, const BOOLEA
 			{
 				// GAINING control, so delete him from this slot (because later he'll
 				// get added to the end and we don't want him listed more than once!)
-				DeleteFromIntList( ubLoop, FALSE );
+				DeleteFromIntList( ubLoop, false );
 			}
 		}
 	}
@@ -1391,7 +1391,7 @@ static void VerifyOutOfTurnOrderArray(void)
 	UINT8		ubNextIndex;
 	UINT8		ubTeam;
 	UINT8		ubLoop, ubLoop2;
-	BOOLEAN	fFoundLoop = FALSE;
+	BOOLEAN	fFoundLoop = false;
 
 	for (ubLoop = 1; ubLoop <= gubOutOfTurnPersons; ubLoop++)
 	{
@@ -1417,15 +1417,15 @@ static void VerifyOutOfTurnOrderArray(void)
 						while (gOutOfTurnOrder[ubNextIndex] != NextInArrayOnTeam)
 						{
 							// Pause them...
-							AdjustNoAPToFinishMove(gOutOfTurnOrder[ubNextIndex], TRUE);
+							AdjustNoAPToFinishMove(gOutOfTurnOrder[ubNextIndex], true);
 
 							// If they were turning from prone, stop them
-							gOutOfTurnOrder[ubNextIndex]->fTurningFromPronePosition = FALSE;
+							gOutOfTurnOrder[ubNextIndex]->fTurningFromPronePosition = false;
 
-							DeleteFromIntList( ubNextIndex, FALSE );
+							DeleteFromIntList( ubNextIndex, false );
 						}
 
-						fFoundLoop = TRUE;
+						fFoundLoop = true;
 						break;
 					}
 				}
@@ -1434,7 +1434,7 @@ static void VerifyOutOfTurnOrderArray(void)
 			if (fFoundLoop)
 			{
 				// at this point we should restart our outside loop (ugh)
-				fFoundLoop = FALSE;
+				fFoundLoop = false;
 				for (ubLoop2 = 0; ubLoop2 < MAXTEAMS; ubLoop2++)
 				{
 					ubTeamHighest[ ubLoop2 ] = 0;
@@ -1473,12 +1473,12 @@ static void VerifyOutOfTurnOrderArray(void)
 				// remove!
 
 				// Pause them...
-				AdjustNoAPToFinishMove(gOutOfTurnOrder[ubLoop], TRUE);
+				AdjustNoAPToFinishMove(gOutOfTurnOrder[ubLoop], true);
 
 				// If they were turning from prone, stop them
-				gOutOfTurnOrder[ubLoop]->fTurningFromPronePosition = FALSE;
+				gOutOfTurnOrder[ubLoop]->fTurningFromPronePosition = false;
 
-				DeleteFromIntList( ubLoop, FALSE );
+				DeleteFromIntList( ubLoop, false );
 
 				// since we deleted someone from the list, we want to check the same index in the
 				// array again, hence we DON'T increment.
@@ -1497,7 +1497,7 @@ void DoneAddingToIntList(void)
 	VerifyOutOfTurnOrderArray();
 	if (EveryoneInInterruptListOnSameTeam())
 	{
-		EndInterrupt(TRUE);
+		EndInterrupt(true);
 	}
 	else
 	{
@@ -1549,19 +1549,19 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						switch (pOpponent->bInterruptDuelPts)
 						{
 							case NO_INTERRUPT:		// no interrupt possible, no duel necessary
-								fIntOccurs = FALSE;
+								fIntOccurs = false;
 								break;
 
 							case AUTOMATIC_INTERRUPT:	// interrupts occurs automatically
 								pSoldier->bInterruptDuelPts = 0;	// just to have a valid intDiff later
-								fIntOccurs = TRUE;
+								fIntOccurs = true;
 								SLOGD("INTERRUPT: automatic interrupt on {} by {}",
 											pSoldier->ubID, pOpponent->ubID);
 								break;
 
 							default:		// interrupt is possible, run a duel
 								SLOGD("Calculating int duel pts for onlooker in ResolveInterruptsVs");
-								pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier, pOpponent, TRUE);
+								pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier, pOpponent, true);
 								fIntOccurs = InterruptDuel(pOpponent,pSoldier);
 								if (fIntOccurs)
 								{
@@ -1612,7 +1612,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 			// USUALLY pSoldier->guynum, but NOT always, because one enemy can
 			// "interrupt" on another enemy's turn if he hears another team's wound
 			// victim's screaming...  the guy screaming is pSoldier here, it's not his turn!
-			//AddToIntList(GetSelectedMan(), FALSE, TRUE);
+			//AddToIntList(GetSelectedMan(), false, true);
 
 			if ( (gTacticalStatus.ubCurrentTeam != pSoldier->bTeam) && !(gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bHuman) )
 			{
@@ -1624,7 +1624,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 					{
 						// this guy lost control
 						s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
-						AddToIntList(s, FALSE, TRUE);
+						AddToIntList(s, false, true);
 						break;
 					}
 				}
@@ -1633,7 +1633,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 			else
 			{
 				// this guy lost control
-				AddToIntList(pSoldier, FALSE, TRUE);
+				AddToIntList(pSoldier, false, true);
 			}
 
 			// loop once for each opponent who interrupted
@@ -1655,11 +1655,11 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 				if (ubSmallestSlot < MAX_NUM_SOLDIERS)
 				{
 					// add this guy to everyone's interrupt queue
-					AddToIntList(IntList[ubSmallestSlot], TRUE, TRUE);
+					AddToIntList(IntList[ubSmallestSlot], true, true);
 					if (INTERRUPTS_OVER)
 					{
 						// a loop was created which removed all the people in the interrupt queue!
-						EndInterrupt( TRUE );
+						EndInterrupt( true );
 						return;
 					}
 
@@ -1742,8 +1742,8 @@ BOOLEAN NPCFirstDraw( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier )
 		}
 		if ( Random( ubTargetSmallerHalf + 1) + ubTargetLargerHalf > Random( ubSmallerHalf + 1) + ubLargerHalf )
 		{
-			return( TRUE );
+			return true;
 		}
 	}
-	return( FALSE );
+	return false;
 }

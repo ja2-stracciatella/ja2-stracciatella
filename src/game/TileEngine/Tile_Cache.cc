@@ -144,7 +144,7 @@ INT32 GetCachedTile(ST::string const& filename)
 	ST::string root_name(FileMan::getFileNameWithoutExt(filename));
 	STRUCTURE_FILE_REF* const sfr = GetCachedTileStructureRefFromFilename(root_name);
 	tce->struct_file_ref = sfr;
-	if (sfr) AddZStripInfoToVObject(tce->pImagery->vo, sfr, TRUE, 0);
+	if (sfr) AddZStripInfoToVObject(tce->pImagery->vo, sfr, true, 0);
 
 	const AuxObjectData* const aux = tce->pImagery->pAuxData;
 	tce->ubNumFrames = (aux != NULL ? aux->ubNumberOfFrames : 1);

@@ -95,7 +95,7 @@ static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT1
 	const INT16 shadow_col = INS_FONT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	btn->SetCursor(CURSOR_WWW);
-	btn->SpecifyTextOffsets(offset_x, 16, FALSE);
+	btn->SpecifyTextOffsets(offset_x, 16, false);
 	return btn;
 }
 
@@ -234,7 +234,7 @@ static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		if (gubCurrentInsInfoSubPage > 0) gubCurrentInsInfoSubPage--;
 		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
-		//fPausedReDrawScreenFlag = TRUE;
+		//fPausedReDrawScreenFlag = true;
 	}
 }
 
@@ -245,7 +245,7 @@ static void BtnInsNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		if (gubCurrentInsInfoSubPage < INS_INFO_LAST_PAGE - 1) gubCurrentInsInfoSubPage++;
 		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
-		//fPausedReDrawScreenFlag = TRUE;
+		//fPausedReDrawScreenFlag = true;
 	}
 }
 
@@ -404,19 +404,19 @@ static void DisableArrowButtonsIfOnLastOrFirstPage(void)
 
 static void ChangingInsuranceInfoSubPage(UINT8 ubSubPageNumber)
 {
-	fLoadPendingFlag = TRUE;
+	fLoadPendingFlag = true;
 
 	if (!InsuranceInfoSubPagesVisitedFlag[ubSubPageNumber])
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = FALSE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = false;
 
-		InsuranceInfoSubPagesVisitedFlag[ ubSubPageNumber ] = TRUE;
+		InsuranceInfoSubPagesVisitedFlag[ ubSubPageNumber ] = true;
 	}
 	else
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = TRUE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = true;
 	}
 }
 

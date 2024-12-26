@@ -42,7 +42,7 @@ static INT32 giPreviousPersonalityQuizQuestion = -1;
 INT32 giMaxPersonalityQuizQuestion = 0;
 
 // start over flag
-BOOLEAN fStartOverFlag = FALSE;
+BOOLEAN fStartOverFlag = false;
 
 
 #define BTN_FIRST_COLUMN_X 15
@@ -126,7 +126,7 @@ void ExitIMPPersonalityQuiz( void )
 
 	if( fStartOverFlag )
 	{
-		fStartOverFlag = FALSE;
+		fStartOverFlag = false;
 		giCurrentPersonalityQuizQuestion = 0;
 	}
 }
@@ -186,8 +186,8 @@ static void CreateIMPPersonalityQuizButtons(void)
 	giNextQuestionButtonImage = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
 	giNextQuestionButton = MakeButton(giNextQuestionButtonImage, pImpButtonText[13], dx + 417, dy + 361, NextQuestionButtonCallback);
 
-	giNextQuestionButton->SpecifyTextSubOffsets(    0, -1, FALSE);
-	giPreviousQuestionButton->SpecifyTextSubOffsets(0, -1, FALSE);
+	giNextQuestionButton->SpecifyTextSubOffsets(    0, -1, false);
+	giPreviousQuestionButton->SpecifyTextSubOffsets(0, -1, false);
 
 	DisableButton( giPreviousQuestionButton );
 	DisableButton( giNextQuestionButton );
@@ -307,7 +307,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		GUIButtonRef const Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, BtnQuizAnswerCallback);
 		giIMPPersonalityQuizAnswerButton[i] = Button;
 		Button->SetUserData(i);
-		Button->SpecifyTextOffsets(23, 12, TRUE);
+		Button->SpecifyTextOffsets(23, 12, true);
 		ST::string sString = ST::format("{}", i + 1);
 		Button->SpecifyGeneralTextAttributes(sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK);
 		Button->SetCursor(CURSOR_WWW);
@@ -342,7 +342,7 @@ static void BtnQuizAnswerCallback(GUI_BUTTON* const btn, UINT32 const reason)
 		iCurrentAnswer = btn->GetUserData();
 		PrintImpText();
 		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
+		fReDrawCharProfile = true;
 	}
 }
 
@@ -387,10 +387,10 @@ static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, UINT32 reaso
 	{
 		giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
 		giMaxPersonalityQuizQuestion = 0;
-		fStartOverFlag = TRUE;
+		fStartOverFlag = true;
 
 		iCurrentImpPage = IMP_PERSONALITY;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		iCurrentAnswer = -1;
 	}
 }

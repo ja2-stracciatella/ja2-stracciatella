@@ -64,7 +64,7 @@ MoraleEvent gbMoraleEvent[NUM_MORALE_EVENTS] =
 	{STRATEGIC_MORALE_EVENT, +5}, // MORALE_SEX,
 };
 
-BOOLEAN gfSomeoneSaidMoraleQuote = FALSE;
+BOOLEAN gfSomeoneSaidMoraleQuote = false;
 
 
 INT8 GetMoraleModifier( const SOLDIERTYPE * pSoldier )
@@ -177,14 +177,14 @@ void DecayTacticalMoraleModifiers(void)
 					else
 					{
 						// look for anyone else in same sector
-						handle_nervous = TRUE;
+						handle_nervous = true;
 						CFOR_EACH_IN_TEAM(other, OUR_TEAM)
 						{
 							if (other != s &&
 									other->sSector == s->sSector)
 							{
 								// found someone!
-								handle_nervous = FALSE;
+								handle_nervous = false;
 								break;
 							}
 						}
@@ -261,7 +261,7 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 	pSoldier->bMorale = (INT8) std::clamp(iActualMorale, 0, 100);
 
 	// update mapscreen as needed
-	fCharacterInfoPanelDirty = TRUE;
+	fCharacterInfoPanelDirty = true;
 }
 
 
@@ -366,7 +366,7 @@ static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoral
 				// Have we said this quote yet?
 				if ( !(	pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_LOW_MORAL ) )
 				{
-					gfSomeoneSaidMoraleQuote = TRUE;
+					gfSomeoneSaidMoraleQuote = true;
 
 					// ATE: Amde it a DELAYED QUOTE - will be delayed by the dialogue Q until it's our turn...
 					DelayedTacticalCharacterDialogue( pSoldier, QUOTE_STARTING_TO_WHINE );
@@ -393,7 +393,7 @@ static void HandleMoraleEventForSoldier(SOLDIERTYPE* pSoldier, INT8 bMoraleEvent
 
 void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector& sMap)
 {
-	gfSomeoneSaidMoraleQuote = FALSE;
+	gfSomeoneSaidMoraleQuote = false;
 
 	// NOTE: Many morale events are NOT attached to a specific player soldier at all!
 	// Those that do need it have Asserts on a case by case basis below

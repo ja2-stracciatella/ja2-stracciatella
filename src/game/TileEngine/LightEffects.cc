@@ -66,7 +66,7 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 		return;
 	}
 
-	LightSpritePower(l, TRUE);
+	LightSpritePower(l, true);
 	LightSpritePosition(l, CenterX(pLight->sGridNo) / CELL_X_SIZE, CenterY(pLight->sGridNo) / CELL_Y_SIZE);
 }
 
@@ -85,12 +85,12 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, UINT8 radius, UINT8 duration)
 	l->ubDuration = duration;
 	l->bRadius    = radius;
 	l->bAge       = 0;
-	l->fAllocated = TRUE;
+	l->fAllocated = true;
 
 	UpdateLightingSprite(l);
 
 	// Handle sight here....
-	AllTeamsLookForAll( FALSE );
+	AllTeamsLookForAll( false );
 
 	return l;
 }
@@ -108,7 +108,7 @@ void DecayLightEffects(const UINT32 uiTime, const bool updateSightings)
 
 		l->uiTimeOfLastUpdate = uiTime;
 
-		BOOLEAN fDelete = FALSE;
+		BOOLEAN fDelete = false;
 		for (UINT32 i = 0; i < usNumUpdates; ++i)
 		{
 			l->bAge++;
@@ -116,7 +116,7 @@ void DecayLightEffects(const UINT32 uiTime, const bool updateSightings)
 			// if this cloud remains effective (duration not reached)
 			if (l->bAge >= l->ubDuration)
 			{
-				fDelete = TRUE;
+				fDelete = true;
 				break;
 			}
 
@@ -126,7 +126,7 @@ void DecayLightEffects(const UINT32 uiTime, const bool updateSightings)
 
 			if (l->bRadius == 0)
 			{
-				fDelete = TRUE;
+				fDelete = true;
 				break;
 			}
 
@@ -135,12 +135,12 @@ void DecayLightEffects(const UINT32 uiTime, const bool updateSightings)
 
 		if (fDelete)
 		{
-			l->fAllocated = FALSE;
+			l->fAllocated = false;
 			if (l->light != NULL) LightSpriteDestroy(l->light);
 		}
 
 		// Handle sight here....
-		if (updateSightings) AllTeamsLookForAll(FALSE);
+		if (updateSightings) AllTeamsLookForAll(false);
 	}
 }
 

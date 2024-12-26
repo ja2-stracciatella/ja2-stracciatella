@@ -42,7 +42,7 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 					!(flags & (LIGHT_PRIMETIME | LIGHT_NIGHTTIME))
 				)))
 		{
-			LightSpritePower(l, TRUE);
+			LightSpritePower(l, true);
 		}
 		LightSpritePosition(l, x, y);
 		if (flags & LIGHT_PRIMETIME)

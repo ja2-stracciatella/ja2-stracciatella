@@ -12,8 +12,8 @@
 
 //effects whether or not time of day effects the lighting.  Underground
 //maps have an ambient light level that is saved in the map, and doesn't change.
-BOOLEAN gfBasement = FALSE;
-BOOLEAN gfCaves = FALSE;
+BOOLEAN gfBasement = false;
+BOOLEAN gfCaves = false;
 
 /*
 #define DAWNLIGHT_START		( 5 * 60 )
@@ -109,11 +109,11 @@ enum TemperatureEvents
 
 #define HOT_DAY_LIGHTLEVEL 2
 
-BOOLEAN fTimeOfDayControls=TRUE;
+BOOLEAN fTimeOfDayControls=true;
 UINT32  guiEnvTime=0;
 UINT32  guiEnvDay=0;
 UINT8   gubEnvLightValue = 0;
-BOOLEAN gfDoLighting = FALSE;
+BOOLEAN gfDoLighting = false;
 
 UINT8   gubDesertTemperature = 0;
 UINT8   gubGlobalTemperature = 0;
@@ -212,14 +212,14 @@ void EnvironmentController( BOOLEAN fCheckForLights )
 			LightSetBaseLevel( ubLightAdjustFromWeather );
 
 			//Update Merc Lights since the above function modifies it.
-			HandlePlayerTogglingLightEffects( FALSE );
+			HandlePlayerTogglingLightEffects( false );
 
 			// Make teams look for all
-			// AllTeamsLookForAll( FALSE );
+			// AllTeamsLookForAll( false );
 
 			// Set global light value
 			SetRenderFlags(RENDER_FLAG_FULL);
-			gfDoLighting = FALSE;
+			gfDoLighting = false;
 		}
 
 	}
@@ -383,7 +383,7 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 {
 	if( !gfBasement && !gfCaves )
 	{
-		gfDoLighting = TRUE;
+		gfDoLighting = true;
 		SLOGD("Starting Rain...."  );
 
 		if ( ubIntensity == 1 )
@@ -401,7 +401,7 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 
 void EnvEndRainStorm( )
 {
-	gfDoLighting = TRUE;
+	gfDoLighting = true;
 	SLOGD("Ending Rain...."  );
 
 	guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
@@ -416,7 +416,7 @@ void TurnOnNightLights()
 		if (l->uiFlags & LIGHT_NIGHTTIME &&
 			!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
-			LightSpritePower(l, TRUE);
+			LightSpritePower(l, true);
 		}
 	}
 }
@@ -430,7 +430,7 @@ void TurnOffNightLights()
 			l->uiFlags & LIGHT_SPR_ON &&
 			!(l->uiFlags & MERC_LIGHT))
 		{
-			LightSpritePower(l, FALSE);
+			LightSpritePower(l, false);
 		}
 	}
 }
@@ -443,7 +443,7 @@ void TurnOnPrimeLights()
 		if (l->uiFlags & LIGHT_PRIMETIME &&
 				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
-			LightSpritePower(l, TRUE);
+			LightSpritePower(l, true);
 		}
 	}
 }
@@ -457,7 +457,7 @@ void TurnOffPrimeLights()
 			l->uiFlags & LIGHT_SPR_ON &&
 			!(l->uiFlags & MERC_LIGHT))
 		{
-			LightSpritePower(l, FALSE);
+			LightSpritePower(l, false);
 		}
 	}
 }
@@ -485,7 +485,7 @@ void UpdateTemperature( UINT8 ubTemperatureCode )
 			gubGlobalTemperature = 2;
 			break;
 	}
-	gfDoLighting = TRUE;
+	gfDoLighting = true;
 }
 
 INT8 SectorTemperature(UINT32 uiTime, const SGPSector& sector)

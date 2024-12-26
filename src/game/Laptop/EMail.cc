@@ -70,13 +70,13 @@ static Page* pPageList;
 static INT32 iLastPage=-1;
 static INT32 iCurrentPage=0;
 Email* MailToDelete;
-BOOLEAN fUnReadMailFlag=FALSE;
-BOOLEAN fNewMailFlag=FALSE;
-BOOLEAN fOldNewMailFlag=FALSE;
-BOOLEAN fDisplayMessageFlag=FALSE;
-static BOOLEAN fOldDisplayMessageFlag = FALSE;
-static BOOLEAN fReDrawMessageFlag = FALSE;
-BOOLEAN fOpenMostRecentUnReadFlag = FALSE;
+BOOLEAN fUnReadMailFlag=false;
+BOOLEAN fNewMailFlag=false;
+BOOLEAN fOldNewMailFlag=false;
+BOOLEAN fDisplayMessageFlag=false;
+static BOOLEAN fOldDisplayMessageFlag = false;
+static BOOLEAN fReDrawMessageFlag = false;
+BOOLEAN fOpenMostRecentUnReadFlag = false;
 static INT32 iViewerPositionY = 0;
 
 static Email* CurrentMail;
@@ -192,10 +192,10 @@ SGPVObject* guiEmailWarning;
 #define LOWER_BUTTON_Y BUTTON_Y + 299
 
 
-static BOOLEAN fSortDateUpwards = FALSE;
-static BOOLEAN fSortSenderUpwards = FALSE;
-static BOOLEAN fSortSubjectUpwards = FALSE;
-static BOOLEAN gfPageButtonsWereCreated = FALSE;
+static BOOLEAN fSortDateUpwards = false;
+static BOOLEAN fSortSenderUpwards = false;
+static BOOLEAN fSortSubjectUpwards = false;
+static BOOLEAN gfPageButtonsWereCreated = false;
 
 // mouse regions
 static MOUSE_REGION pEmailRegions[MAX_MESSAGES_PAGE];
@@ -235,7 +235,7 @@ enum{
 
 
 // whther or not we need to redraw the new mail box
-BOOLEAN fReDrawNewMailFlag = FALSE;
+BOOLEAN fReDrawNewMailFlag = false;
 static INT32 iTotalHeight = 0;
 
 
@@ -284,7 +284,7 @@ void GameInitEmail()
 	MailToDelete = NULL;
 
 	// reset display message flag
-	fDisplayMessageFlag=FALSE;
+	fDisplayMessageFlag=false;
 
 	// reset page being displayed
 	giMessagePage = 0;
@@ -347,10 +347,10 @@ void ExitEmail()
 	// displayed message?...get rid of it
 	if(fDisplayMessageFlag)
 	{
-		fDisplayMessageFlag = FALSE;
+		fDisplayMessageFlag = false;
 		AddDeleteRegionsToMessageRegion( 0 );
-		fDisplayMessageFlag = TRUE;
-		fReDrawMessageFlag = TRUE;
+		fDisplayMessageFlag = true;
+		fReDrawMessageFlag = true;
 	}
 	else
 	{
@@ -392,7 +392,7 @@ void HandleEmail( void )
 {
 
 	INT32 iViewerY = 0;
-	static BOOLEAN fEmailListBeenDrawAlready = FALSE;
+	static BOOLEAN fEmailListBeenDrawAlready = false;
 
 
 	// check if email message record list needs to be updated
@@ -402,7 +402,7 @@ void HandleEmail( void )
 	if (!fDisplayMessageFlag && !fNewMailFlag && MailToDelete == NULL && !fEmailListBeenDrawAlready)
 	{
 		DisplayEmailList();
-		fEmailListBeenDrawAlready = TRUE;
+		fEmailListBeenDrawAlready = true;
 	}
 	// if the message flag, show message
 	else if((fDisplayMessageFlag)&&(fReDrawMessageFlag))
@@ -412,7 +412,7 @@ void HandleEmail( void )
 
 		// this simply redraws message without button manipulation
 		iViewerY = DisplayEmailMessage(CurrentMail);
-		fEmailListBeenDrawAlready = FALSE;
+		fEmailListBeenDrawAlready = false;
 
 	}
 	else if((fDisplayMessageFlag)&&(!fOldDisplayMessageFlag))
@@ -424,7 +424,7 @@ void HandleEmail( void )
 		// this simply redraws message with button manipulation
 		iViewerY = DisplayEmailMessage(CurrentMail);
 		AddDeleteRegionsToMessageRegion( iViewerY );
-		fEmailListBeenDrawAlready = FALSE;
+		fEmailListBeenDrawAlready = false;
 
 	}
 
@@ -456,7 +456,7 @@ void HandleEmail( void )
 	{
 		// enter email due to email icon on program panel
 		OpenMostRecentUnreadEmail( );
-		fOpenMostRecentUnReadFlag = FALSE;
+		fOpenMostRecentUnReadFlag = false;
 
 	}
 }
@@ -496,19 +496,19 @@ void RenderEmail( void )
 
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData )
 {
-	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, FALSE, iFirstData, uiSecondData);
+	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, false, iFirstData, uiSecondData);
 }
 
 
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
 {
-	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, FALSE, 0, 0);
+	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, false, 0, 0);
 }
 
 
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
 {
-	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, TRUE, 0, 0);
+	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, true, 0, 0);
 }
 
 
@@ -564,7 +564,7 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
 	pTempEmail->Next=NULL;
 
 	// set flag that new mail has arrived
-	fNewMailFlag=TRUE;
+	fNewMailFlag=true;
 
 	// add this message to the pages of email
 	AddMessageToPages(pTempEmail);
@@ -695,7 +695,7 @@ static void SortMessages(EMailSortCriteria Criterium)
 	}
 	pEmailList = NewList;
 
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 }
 
 
@@ -801,14 +801,14 @@ void LookForUnread()
 	Email* pA = pEmailList;
 
 	// reset unread flag
-	fUnReadMailFlag=FALSE;
+	fUnReadMailFlag=false;
 
 	// look for unread mail
 	while(pA)
 	{
 		// unread mail found, set flag
 		if(!(pA->fRead))
-			fUnReadMailFlag=TRUE;
+			fUnReadMailFlag=true;
 		pA=pA->Next;
 	}
 
@@ -854,11 +854,11 @@ static void EmailBtnCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 	// invalid message
 	if (Mail == NULL)
 	{
-		fDisplayMessageFlag=FALSE;
+		fDisplayMessageFlag=false;
 		return;
 	}
 	// Get email and display
-	fDisplayMessageFlag=TRUE;
+	fDisplayMessageFlag=true;
 	giMessagePage = 0;
 	PreviousMail = CurrentMail;
 	CurrentMail = Mail;
@@ -916,13 +916,13 @@ static void BtnMessageXCallback(GUI_BUTTON *btn, UINT32 reason)
 		// X button has been pressed and let up, this means to stop displaying the currently displayed message
 
 		// reset display message flag
-		fDisplayMessageFlag = FALSE;
+		fDisplayMessageFlag = false;
 
 		// reset page being displayed
 		giMessagePage = 0;
 
 		// force update of entire screen
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 	}
 }
 
@@ -993,10 +993,10 @@ static INT32 DisplayEmailMessage(Email* const m)
 	if (!m) return 0;
 
 	// reset redraw email message flag
-	fReDrawMessageFlag = FALSE;
+	fReDrawMessageFlag = false;
 
 	// we KNOW the player is going to "read" this, so mark it as so
-	m->fRead = TRUE;
+	m->fRead = true;
 
 	INT32 const offset = m->usOffset;
 	HandleAnySpecialEmailMessageEvents(offset);
@@ -1061,7 +1061,7 @@ static void BtnNewOkback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fNewMailFlag=FALSE;
+		fNewMailFlag=false;
 	}
 }
 
@@ -1079,7 +1079,7 @@ static void PrevMailPage()
 	if (giMessagePage == 0) return;
 	--giMessagePage;
 	MarkButtonsDirty();
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 }
 
 
@@ -1088,7 +1088,7 @@ static void NextMailPage()
 	if (giMessagePage + 1 >= giNumberOfPagesToCurrentEmail - 1) return;
 	++giMessagePage;
 	MarkButtonsDirty();
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 }
 
 
@@ -1118,7 +1118,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 	{
 
 		// set old flag
-		fOldDisplayMessageFlag=TRUE;
+		fOldDisplayMessageFlag=true;
 
 		// add X button
 		giMessageButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
@@ -1139,18 +1139,18 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 				UINT16 const h = 227;
 				MSYS_DefineRegion(&g_mail_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MailScrollRegionCallback);
 			}
-			gfPageButtonsWereCreated = TRUE;
+			gfPageButtonsWereCreated = true;
 		}
 
 		giMailMessageButtons[2] = MakeButtonNewMail(2, DELETE_BUTTON_X, BUTTON_LOWER_Y + iViewerY + 2, BtnDeleteCallback);
 
 		// force update of screen
-		fReDrawScreenFlag=TRUE;
+		fReDrawScreenFlag=true;
 	}
 	else if((!fDisplayMessageFlag)&&(fOldDisplayMessageFlag))
 	{
 		// delete region
-		fOldDisplayMessageFlag=FALSE;
+		fOldDisplayMessageFlag=false;
 		RemoveButton(giMessageButton);
 
 		// net/previous email page buttons
@@ -1159,11 +1159,11 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 			MSYS_RemoveRegion(&g_mail_scroll_region);
 			RemoveButton(giMailMessageButtons[0] );
 			RemoveButton(giMailMessageButtons[1] );
-			gfPageButtonsWereCreated = FALSE;
+			gfPageButtonsWereCreated = false;
 		}
 		RemoveButton(giMailMessageButtons[2] );
 		// force update of screen
-		fReDrawScreenFlag=TRUE;
+		fReDrawScreenFlag=true;
 	}
 }
 
@@ -1178,7 +1178,7 @@ static GUIButtonRef MakeButtonYesNo(INT32 image, INT16 x, GUI_CALLBACK click)
 
 void CreateDestroyNewMailButton()
 {
-	static BOOLEAN fOldNewMailFlag=FALSE;
+	static BOOLEAN fOldNewMailFlag=false;
 
 	// check if we are video conferencing, if so, do nothing
 	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
@@ -1192,19 +1192,19 @@ void CreateDestroyNewMailButton()
 		// create new mail dialog box button
 
 		// set old flag (stating button has been created)
-		fOldNewMailFlag=TRUE;
+		fOldNewMailFlag=true;
 
 		giNewMailButton = MakeButtonYesNo(0, NEW_BTN_X + 10, BtnNewOkback);
 
 		// set up screen mask region
 		MSYS_DefineRegion(&pScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
 		MarkAButtonDirty(giNewMailButton);
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 	else if((!fNewMailFlag)&&(fOldNewMailFlag))
 	{
 		// reset old flag
-		fOldNewMailFlag=FALSE;
+		fOldNewMailFlag=false;
 
 		// remove the button
 		RemoveButton(giNewMailButton);
@@ -1213,7 +1213,7 @@ void CreateDestroyNewMailButton()
 		MSYS_RemoveRegion( &pScreenMask );
 
 		// redraw screen
-		fPausedReDrawScreenFlag=TRUE;
+		fPausedReDrawScreenFlag=true;
 	}
 }
 
@@ -1255,7 +1255,7 @@ void DisplayNewMailBox(void)
 void ReDrawNewMailBox(void)
 { // check to see if the new mail region needs to be redrawn
 	if (!fReDrawNewMailFlag) return;
-	fReDrawNewMailFlag = FALSE;
+	fReDrawNewMailFlag = false;
 	if (!fNewMailFlag) return;
 	DisplayNewMailBox();
 }
@@ -1302,7 +1302,7 @@ static void BtnDeleteNoback(GUI_BUTTON* btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		MailToDelete = NULL;
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 	}
 }
 
@@ -1314,7 +1314,7 @@ static void BtnDeleteYesback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		DeleteEmail();
 	}
 }
@@ -1322,13 +1322,13 @@ static void BtnDeleteYesback(GUI_BUTTON* btn, UINT32 reason)
 
 void CreateDestroyDeleteNoticeMailButton()
 {
-	static BOOLEAN fOldDeleteMailFlag=FALSE;
+	static BOOLEAN fOldDeleteMailFlag=false;
 	if (MailToDelete != NULL && !fOldDeleteMailFlag)
 	{
 		// confirm delete email buttons
 
 		// YES/NO buttons
-		fOldDeleteMailFlag=TRUE;
+		fOldDeleteMailFlag=true;
 		giDeleteMailButton[0] = MakeButtonYesNo(0, NEW_BTN_X +  1, BtnDeleteYesback);
 		giDeleteMailButton[1] = MakeButtonYesNo(2, NEW_BTN_X + 40, BtnDeleteNoback);
 
@@ -1336,13 +1336,13 @@ void CreateDestroyDeleteNoticeMailButton()
 		MSYS_DefineRegion(&pDeleteScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
 
 		// force update
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 
 	}
 	else if (MailToDelete == NULL && fOldDeleteMailFlag)
 	{
 		// clear out the buttons and screen mask
-		fOldDeleteMailFlag=FALSE;
+		fOldDeleteMailFlag=false;
 		RemoveButton( giDeleteMailButton[0] );
 		RemoveButton( giDeleteMailButton[1] );
 
@@ -1350,7 +1350,7 @@ void CreateDestroyDeleteNoticeMailButton()
 		MSYS_RemoveRegion(&pDeleteScreenMask);
 
 		// force refresh
-		fReDrawScreenFlag=TRUE;
+		fReDrawScreenFlag=true;
 	}
 }
 
@@ -1361,13 +1361,13 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
 	if( !fReDrawScreenFlag )
 	{
 		// no redraw flag, leave
-		return( FALSE );
+		return false;
 	}
 
 	// error check.. no valid message passed
 	if( pMail == NULL )
 	{
-		return ( FALSE );
+		return ( false );
 	}
 
 	BltVideoObject(FRAME_BUFFER, guiEmailWarning, 0, EMAIL_WARNING_X, EMAIL_WARNING_Y);
@@ -1400,7 +1400,7 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
 	// reset font shadow
 	SetFontShadow(DEFAULT_SHADOW);
 
-	return ( TRUE );
+	return ( true );
 }
 
 
@@ -1414,7 +1414,7 @@ static void DeleteEmail(void)
 	MailToDelete = NULL;
 
 	// stop displaying message, if so
-	fDisplayMessageFlag = FALSE;
+	fDisplayMessageFlag = false;
 
 	// upadte list
 	PlaceMessagesinPages();
@@ -1426,7 +1426,7 @@ static void DeleteEmail(void)
 	// rerender mail list
 	RenderEmail();
 
-	fReDrawScreenFlag=TRUE;
+	fReDrawScreenFlag=true;
 
 	InvalidateScreen();
 }
@@ -1692,7 +1692,7 @@ static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 		break;
 		case( MERC_INTRO ):
 			SetBookMark( MERC_BOOKMARK );
-			fReDrawScreenFlag = TRUE;
+			fReDrawScreenFlag = true;
 		break;
 
 
@@ -2253,7 +2253,7 @@ static void OpenMostRecentUnreadEmail(void)
 	CurrentMail = MostRecentMail;
 
 	// valid message, show it
-	if (MostRecentMail != NULL) fDisplayMessageFlag = TRUE;
+	if (MostRecentMail != NULL) fDisplayMessageFlag = true;
 }
 
 

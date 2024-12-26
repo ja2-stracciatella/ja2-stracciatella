@@ -3006,7 +3006,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 /**********************************************************************************************
 BltIsClipped
 
-	Determines whether a given blit will need clipping or not. Returns TRUE/FALSE.
+	Determines whether a given blit will need clipping or not. Returns true/false.
 
 **********************************************************************************************/
 BOOLEAN BltIsClipped(const SGPVObject* const hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const SGPRect* const clipregion)
@@ -3043,18 +3043,18 @@ BOOLEAN BltIsClipped(const SGPVObject* const hSrcVObject, const INT32 iX, const 
 
 	// Calculate rows hanging off each side of the screen
 	if(std::min(ClipX1 - std::min(ClipX1, iTempX), (INT32)usWidth))
-		return(TRUE);
+		return(true);
 
 	if (std::clamp(iTempX + (INT32)usWidth - ClipX2, 0, (INT32)usWidth))
-		return(TRUE);
+		return(true);
 
 	if(std::min(ClipY1 - std::min(ClipY1, iTempY), (INT32)usHeight))
-		return(TRUE);
+		return(true);
 
 	if (std::clamp(iTempY + (INT32)usHeight - ClipY2, 0, (INT32)usHeight))
-		return(TRUE);
+		return(true);
 
-	return(FALSE);
+	return(false);
 }
 
 
@@ -3252,7 +3252,7 @@ UINT16 *DestPtr;
 /**********************************************************************************************
 BltIsClippedOrOffScreen
 
-	Determines whether a given blit will need clipping or not. Returns TRUE/FALSE.
+	Determines whether a given blit will need clipping or not. Returns true/false.
 
 **********************************************************************************************/
 CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion )
@@ -3303,19 +3303,19 @@ CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 
 
 
 	if ( gLeftSkip )
-		return( TRUE );
+		return true;
 
 	if ( gRightSkip )
-		return( TRUE );
+		return true;
 
 	if ( gTopSkip )
-		return( TRUE );
+		return true;
 
 	if ( gBottomSkip )
-		return( TRUE );
+		return true;
 
 
-	return(FALSE);
+	return(false);
 }
 
 

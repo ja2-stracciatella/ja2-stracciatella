@@ -193,14 +193,14 @@ MOUSE_REGION gInvDesc;
 
 OBJECTTYPE *gpItemPointer;
 OBJECTTYPE gItemPointer;
-BOOLEAN gfItemPointerDifferentThanDefault = FALSE;
+BOOLEAN gfItemPointerDifferentThanDefault = false;
 SOLDIERTYPE *gpItemPointerSoldier;
 INT8 gbItemPointerSrcSlot;
 static UINT16 gusItemPointer = 255;
 static UINT32 guiNewlyPlacedItemTimer = 0;
 static BOOLEAN gfBadThrowItemCTGH;
-BOOLEAN gfDontChargeAPsToPickup = FALSE;
-static BOOLEAN gbItemPointerLocateGood = FALSE;
+BOOLEAN gfDontChargeAPsToPickup = false;
+static BOOLEAN gbItemPointerLocateGood = false;
 
 // ITEM DESCRIPTION BOX STUFF
 static SGPVObject *guiItemDescBox;
@@ -209,10 +209,10 @@ static SGPVObject *guiItemGraphic;
 static UINT8 guiItemGraphicIndex;
 static SGPVObject *guiMoneyGraphicsForDescBox;
 static SGPVObject *guiBullet;
-BOOLEAN gfInItemDescBox = FALSE;
+BOOLEAN gfInItemDescBox = false;
 static UINT32 guiCurrentItemDescriptionScreen=0;
 OBJECTTYPE *gpItemDescObject = NULL;
-static BOOLEAN gfItemDescObjectIsAttachment = FALSE;
+static BOOLEAN gfItemDescObjectIsAttachment = false;
 static ST::string gzItemName;
 static ST::string gzItemDesc;
 static ST::string gzItemPros;
@@ -223,7 +223,7 @@ static UINT8 gubItemDescStatusIndex;
 static BUTTON_PICS *giItemDescAmmoButtonImages;
 static GUIButtonRef giItemDescAmmoButton;
 static SOLDIERTYPE *gpItemDescSoldier;
-static BOOLEAN fItemDescDelete = FALSE;
+static BOOLEAN fItemDescDelete = false;
 MOUSE_REGION gItemDescAttachmentRegions[4];
 static MOUSE_REGION gProsAndConsRegions[2];
 
@@ -246,14 +246,14 @@ static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, 
 #define MAP_KEY_RING_ROW_WIDTH				4
 
 // ITEM STACK POPUP STUFF
-static BOOLEAN gfInItemStackPopup = FALSE;
+static BOOLEAN gfInItemStackPopup = false;
 static SGPVObject* guiItemPopupBoxes;
 static OBJECTTYPE* gpItemPopupObject;
 static INT16 gsItemPopupX;
 static INT16 gsItemPopupY;
 static MOUSE_REGION gItemPopupRegions[8];
 static MOUSE_REGION gKeyRingRegions[NUMBER_KEYS_ON_KEYRING];
-BOOLEAN gfInKeyRingPopup = FALSE;
+BOOLEAN gfInKeyRingPopup = false;
 static UINT8 gubNumItemPopups = 0;
 static MOUSE_REGION gItemPopupRegion;
 static INT16 gsItemPopupInvX;
@@ -359,7 +359,7 @@ static const AttachmentGfxInfo g_map_attachment_info =
 };
 
 
-static BOOLEAN gfItemDescHelpTextOffset = FALSE;
+static BOOLEAN gfItemDescHelpTextOffset = false;
 
 
 // A STRUCT USED INTERNALLY FOR INV SLOT REGIONS
@@ -412,7 +412,7 @@ INT8 gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 static UINT16 us16BPPItemCyclePlacedItemColors[20];
 static SGPVObject* guiBodyInvVO[4][2];
 static SGPVObject* guiGoldKeyVO;
-INT8 gbCompatibleApplyItem = FALSE;
+INT8 gbCompatibleApplyItem = false;
 
 
 static SGPVObject *guiMapInvSecondHandBlockout;
@@ -440,12 +440,12 @@ static BOOLEAN AttemptToAddSubstring(ST::string& zDest, const ST::string& zTemp,
 		}
 		zDest += zTemp;
 		*puiStringLength = uiRequiredStringLength;
-		return( TRUE );
+		return true;
 	}
 	else
 	{
 		zDest += DOTDOTDOT;
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -751,13 +751,13 @@ void DisableInvRegions( BOOLEAN fDisable )
 	{
 		gSMInvCamoRegion.Disable();
 		gSM_SELMERCMoneyRegion.Disable();
-		EnableKeyRing( FALSE );
+		EnableKeyRing( false );
 	}
 	else
 	{
 		gSMInvCamoRegion.Enable();
 		gSM_SELMERCMoneyRegion.Enable();
-		EnableKeyRing( TRUE );
+		EnableKeyRing( true );
 	}
 
 }
@@ -923,7 +923,7 @@ static bool CompatibleGunForAmmo(const OBJECTTYPE* pTryObject, const OBJECTTYPE*
 static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* const test)
 {
 	// ATE: If in mapscreen, return false always....
-	if (fInMapMode) return FALSE;
+	if (fInMapMode) return false;
 
 	switch (test->usItem)
 	{
@@ -939,9 +939,9 @@ static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* const test)
 		case BEER:
 		case CANTEEN:
 		case JAR_ELIXIR:
-			return TRUE;
+			return true;
 
-		default: return FALSE;
+		default: return false;
 	}
 }
 
@@ -953,20 +953,20 @@ static BOOLEAN SoldierContainsAnyCompatibleStuff(const SOLDIERTYPE* const s, con
 	{
 		CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 		{
-			if (CompatibleAmmoForGun(i, test)) return TRUE;
+			if (CompatibleAmmoForGun(i, test)) return true;
 		}
 	}
 	else if (item_class & IC_AMMO)
 	{
 		CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 		{
-			if (CompatibleGunForAmmo(i, test)) return TRUE;
+			if (CompatibleGunForAmmo(i, test)) return true;
 		}
 	}
 
 	// ATE: Put attachment checking here.....
 
-	return FALSE;
+	return false;
 }
 
 
@@ -984,11 +984,11 @@ void HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* const o)
 
 		if (o == NULL)
 		{
-			f->fCompatibleItems = FALSE;
+			f->fCompatibleItems = false;
 		}
 		else if (SoldierContainsAnyCompatibleStuff(s, o))
 		{
-			f->fCompatibleItems = TRUE;
+			f->fCompatibleItems = true;
 		}
 	}
 }
@@ -996,7 +996,7 @@ void HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* const o)
 
 BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc)
 {
-	BOOLEAN fFound = FALSE;
+	BOOLEAN fFound = false;
 	INT32 cnt;
 
 	const OBJECTTYPE* pTestObject;
@@ -1025,7 +1025,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
-					fFound = TRUE;
+					fFound = true;
 				}
 
 				// IT's an OK calibere ammo, do something!
@@ -1043,14 +1043,14 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 				// OK, Light up portrait as well.....
 				if ( fOn )
 				{
-					gbCompatibleApplyItem = TRUE;
+					gbCompatibleApplyItem = true;
 				}
 				else
 				{
-					gbCompatibleApplyItem = FALSE;
+					gbCompatibleApplyItem = false;
 				}
 
-				fFound = TRUE;
+				fFound = true;
 			}
 		}
 
@@ -1084,7 +1084,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
-					fFound = TRUE;
+					fFound = true;
 				}
 
 				// IT's an OK calibere ammo, do something!
@@ -1103,7 +1103,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
-					fFound = TRUE;
+					fFound = true;
 				}
 
 				// IT's an OK calibere ammo, do something!
@@ -1120,7 +1120,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
-					fFound = TRUE;
+					fFound = true;
 				}
 
 				// IT's an OK calibere ammo, do something!
@@ -1139,7 +1139,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 {
 	// CJC: ATE, needs fixing here!
 
-	BOOLEAN fFound = FALSE;
+	BOOLEAN fFound = false;
 	INT32 cnt;
 	OBJECTTYPE *pObject, *pTestObject ;
 
@@ -1177,7 +1177,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 		{
 			if ( fOn != fMapInventoryItemCompatable[ cnt ] )
 			{
-				fFound = TRUE;
+				fFound = true;
 			}
 
 			// IT's an OK calibere ammo, do something!
@@ -1197,7 +1197,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 			{
 				if ( fOn != fMapInventoryItemCompatable[ cnt ] )
 				{
-					fFound = TRUE;
+					fFound = true;
 				}
 
 				// IT's an OK calibere ammo, do something!
@@ -1216,7 +1216,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 			{
 				if ( fOn != fMapInventoryItemCompatable[ cnt ] )
 				{
-					fFound = TRUE;
+					fFound = true;
 				}
 
 				// IT's an OK calibere ammo, do something!
@@ -1234,9 +1234,9 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 
 BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pTestObject, BOOLEAN fOn)
 {
-	BOOLEAN fFound = FALSE;
+	BOOLEAN fFound = false;
 	INT32 cnt;
-	//BOOLEAN fFoundAttachment = FALSE;
+	//BOOLEAN fFoundAttachment = false;
 
 	// ATE: If pTest object is NULL, test only for existence of syringes, etc...
 	if ( pTestObject == NULL )
@@ -1247,7 +1247,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
-					fFound = TRUE;
+					fFound = true;
 				}
 
 				// IT's an OK calibere ammo, do something!
@@ -1265,14 +1265,14 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 				// OK, Light up portrait as well.....
 				if ( fOn )
 				{
-					gbCompatibleApplyItem = TRUE;
+					gbCompatibleApplyItem = true;
 				}
 				else
 				{
-					gbCompatibleApplyItem = FALSE;
+					gbCompatibleApplyItem = false;
 				}
 
-				fFound = TRUE;
+				fFound = true;
 			}
 		}
 
@@ -1302,11 +1302,11 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 			ValidLaunchable(b, a) ||
 			ValidLaunchable(a, b) )
 		{
-			//fFoundAttachment = TRUE;
+			//fFoundAttachment = true;
 
 			if ( fOn != gbCompatibleAmmo[ cnt ] )
 			{
-				fFound = TRUE;
+				fFound = true;
 			}
 
 			// IT's an OK calibere ammo, do something!
@@ -1325,7 +1325,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 				{
 					if ( fOn != gbCompatibleAmmo[ cnt ] )
 					{
-						fFound = TRUE;
+						fFound = true;
 					}
 
 					// IT's an OK calibere ammo, do something!
@@ -1343,7 +1343,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 				{
 					if ( fOn != gbCompatibleAmmo[ cnt ] )
 					{
-						fFound = TRUE;
+						fFound = true;
 					}
 
 					// IT's an OK calibere ammo, do something!
@@ -1358,7 +1358,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 			//If we are currently NOT in the Shopkeeper interface
 			if (guiCurrentScreen != SHOPKEEPER_SCREEN)
 			{
-				fFound = TRUE;
+				fFound = true;
 				gbCompatibleApplyItem = fOn;
 			}
 		}
@@ -1371,14 +1371,14 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 		{
 			if ( gbCompatibleAmmo[ cnt ] )
 			{
-				fFound = TRUE;
-				gbCompatibleAmmo[ cnt ] = FALSE;
+				fFound = true;
+				gbCompatibleAmmo[ cnt ] = false;
 			}
 
 			if ( gbCompatibleApplyItem )
 			{
-				fFound = TRUE;
-				gbCompatibleApplyItem = FALSE;
+				fFound = true;
+				gbCompatibleApplyItem = false;
 			}
 		}
 	}
@@ -1395,7 +1395,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 
 void ResetCompatibleItemArray()
 {
-	FOR_EACH(INT8, i, gbCompatibleAmmo) *i = FALSE;
+	FOR_EACH(INT8, i, gbCompatibleAmmo) *i = false;
 }
 
 
@@ -1419,7 +1419,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 					//gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 				}
 				else
-					return( FALSE );
+					return false;
 			}
 			else
 			{
@@ -1429,12 +1429,12 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 				{
 					if ( gbCompatibleAmmo[ cnt ] )
 					{
-						gbCompatibleAmmo[ cnt ] = FALSE;
+						gbCompatibleAmmo[ cnt ] = false;
 					}
 				}
 
 				gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
-				return( TRUE );
+				return true;
 			}
 		}
 		else
@@ -1782,7 +1782,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	gpItemDescObject       = o;
 	gubItemDescStatusIndex = ubStatusIndex;
 	gpItemDescSoldier      = s;
-	fItemDescDelete        = FALSE;
+	fItemDescDelete        = false;
 	MOUSE_CALLBACK itemDescCallback = MouseCallbackPrimarySecondary(ItemDescCallbackPrimary, ItemDescCallbackSecondary);
 
 	// Build a mouse region here that is over any others.....
@@ -1792,7 +1792,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ButtonCallbackPrimarySecondary(ItemDescDoneButtonCallbackPrimary, ItemDescDoneButtonCallbackSecondary));
 
-		fShowDescriptionFlag = TRUE;
+		fShowDescriptionFlag = true;
 	}
 	else
 	{
@@ -1838,7 +1838,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		INT16 usX;
 		INT16 usY;
 		FindFontCenterCoordinates(ITEMDESC_AMMO_TEXT_X, ITEMDESC_AMMO_TEXT_Y, ITEMDESC_AMMO_TEXT_WIDTH, GetFontHeight(TINYFONT1), pStr, TINYFONT1, &usX, &usY);
-		ammo_btn->SpecifyTextOffsets(usX, usY, TRUE);
+		ammo_btn->SpecifyTextOffsets(usX, usY, true);
 	}
 
 	if (ITEM_PROS_AND_CONS(o->usItem))
@@ -1938,7 +1938,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	}
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
-	gfInItemDescBox      = TRUE;
+	gfInItemDescBox      = true;
 
 	ReloadItemDesc();
 
@@ -1969,7 +1969,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		StartShowingInterfaceFastHelpText();
 
 		SetFactTrue(FACT_ATTACHED_ITEM_BEFORE);
-		gfItemDescHelpTextOffset = TRUE;
+		gfItemDescHelpTextOffset = true;
 	}
 }
 
@@ -2013,7 +2013,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, UINT32 const reason)
 		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
 		{
 			SetMapCursorItem();
-			fTeamPanelDirty = TRUE;
+			fTeamPanelDirty = true;
 		}
 		else
 		{
@@ -2021,9 +2021,9 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, UINT32 const reason)
 			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 			{
 				// pick up bullets from weapon into cursor (don't try to sell)
-				BeginSkiItemPointer(PLAYERS_INVENTORY, -1, FALSE);
+				BeginSkiItemPointer(PLAYERS_INVENTORY, -1, false);
 			}
-			fItemDescDelete = TRUE;
+			fItemDescDelete = true;
 		}
 	}
 }
@@ -2045,7 +2045,7 @@ static void DoAttachment(void)
 			{
 				// End Item pickup
 				gpItemPointer = NULL;
-				EnableSMPanelButtons( TRUE , TRUE );
+				EnableSMPanelButtons( true , true );
 
 				gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 				SetCurrentCursorFromDatabase( CURSOR_NORMAL );
@@ -2078,7 +2078,7 @@ static void DoAttachment(void)
 	}
 
 	// re-evaluate repairs
-	gfReEvaluateEveryonesNothingToDo = TRUE;
+	gfReEvaluateEveryonesNothingToDo = true;
 }
 
 
@@ -2113,7 +2113,7 @@ static void ItemDescAttachmentsCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iRe
 	if ( gpItemPointer != NULL )
 	{
 		// nb pointer could be NULL because of inventory manipulation in mapscreen from sector inv
-		if ( !gpItemPointerSoldier || EnoughPoints( gpItemPointerSoldier, AP_RELOAD_GUN, 0, TRUE ) )
+		if ( !gpItemPointerSoldier || EnoughPoints( gpItemPointerSoldier, AP_RELOAD_GUN, 0, true ) )
 		{
 			if ( (GCM->getItem(gpItemPointer->usItem)->getFlags() & ITEM_INSEPARABLE) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
 			{
@@ -2127,7 +2127,7 @@ static void ItemDescAttachmentsCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iRe
 	else
 	{
 		// ATE: Make sure we have enough AP's to drop it if we pick it up!
-		if ( EnoughPoints( gpItemDescSoldier, ( AP_RELOAD_GUN + AP_PICKUP_ITEM ), 0, TRUE ) )
+		if ( EnoughPoints( gpItemDescSoldier, ( AP_RELOAD_GUN + AP_PICKUP_ITEM ), 0, true ) )
 		{
 			// Get attachment if there is one
 			// The follwing function will handle if no attachment is here
@@ -2139,21 +2139,21 @@ static void ItemDescAttachmentsCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iRe
 				if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 				{
 					SetMapCursorItem();
-					fTeamPanelDirty=TRUE;
+					fTeamPanelDirty=true;
 				}
 
 				//if we are currently in the shopkeeper interface
 				else if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 				{
 					// pick up attachment from item into cursor (don't try to sell)
-					BeginSkiItemPointer( PLAYERS_INVENTORY, -1, FALSE );
+					BeginSkiItemPointer( PLAYERS_INVENTORY, -1, false );
 				}
 
 				//Dirty interface
 				fInterfacePanelDirty = DIRTYLEVEL2;
 
 				// re-evaluate repairs
-				gfReEvaluateEveryonesNothingToDo = TRUE;
+				gfReEvaluateEveryonesNothingToDo = true;
 
 				UpdateItemHatches();
 				SetAttachmentTooltips();
@@ -2176,19 +2176,19 @@ static void ItemDescAttachmentsCallbackSecondary(MOUSE_REGION* pRegion, UINT32 i
 
 	if ( gpItemDescObject->usAttachItem[ uiItemPos ] != NOTHING )
 	{
-		BOOLEAN fShopkeeperItem = FALSE;
+		BOOLEAN fShopkeeperItem = false;
 
 		// remember if this is a shopkeeper's item we're viewing ( pShopKeeperItemDescObject will get nuked on deletion )
 		if (guiCurrentScreen == SHOPKEEPER_SCREEN && pShopKeeperItemDescObject)
 		{
-			fShopkeeperItem = TRUE;
+			fShopkeeperItem = true;
 		}
 
 		DeleteItemDescriptionBox( );
 
 		CreateItem(gpItemDescObject->usAttachItem[uiItemPos], gpItemDescObject->bAttachStatus[uiItemPos], &Object2);
 
-		gfItemDescObjectIsAttachment = TRUE;
+		gfItemDescObjectIsAttachment = true;
 		InternalInitItemDescriptionBox(&Object2, gsInvDescX, gsInvDescY, 0, gpItemDescSoldier);
 
 		if (fShopkeeperItem)
@@ -2266,11 +2266,11 @@ void RenderItemDescriptionBox(void)
 	if (OBJECTTYPE const* const ptr_obj = gpItemPointer)
 	{
 		if (GCM->getItem(ptr_obj->usItem)->getFlags() & ITEM_HIDDEN_ADDON || (
-			!ValidItemAttachment(&obj, ptr_obj->usItem, FALSE) &&
+			!ValidItemAttachment(&obj, ptr_obj->usItem, false) &&
 			!ValidMerge(ptr_obj->usItem, obj.usItem) &&
 			!ValidLaunchable(ptr_obj->usItem, obj.usItem)))
 		{
-			hatch_out_attachments = TRUE;
+			hatch_out_attachments = true;
 		}
 	}
 
@@ -2635,7 +2635,7 @@ void HandleItemDescriptionBox(DirtyLevel* const dirty_level)
 	if ( fItemDescDelete )
 	{
 		DeleteItemDescriptionBox( );
-		fItemDescDelete = FALSE;
+		fItemDescDelete = false;
 		*dirty_level = DIRTYLEVEL2;
 	}
 
@@ -2663,23 +2663,23 @@ void DeleteItemDescriptionBox( )
 		if (gpAttachSoldier)
 		{
 			// check for change in attachments, starting with removed attachments
-			fAllFound = TRUE;
+			fAllFound = true;
 			for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
 			{
 				if ( gusOriginalAttachItem[ cnt ] != NOTHING )
 				{
-					fFound = FALSE;
+					fFound = false;
 					for ( cnt2 = 0; cnt2 < MAX_ATTACHMENTS; cnt2++ )
 					{
 						if ( (gusOriginalAttachItem[ cnt ] == gpItemDescObject->usAttachItem[ cnt2 ]) && (gpItemDescObject->bAttachStatus[ cnt2 ] == gbOriginalAttachStatus[ cnt ]) )
 						{
-							fFound = TRUE;
+							fFound = true;
 						}
 					}
 					if (!fFound)
 					{
 						// charge APs
-						fAllFound = FALSE;
+						fAllFound = false;
 						break;
 					}
 				}
@@ -2692,18 +2692,18 @@ void DeleteItemDescriptionBox( )
 				{
 					if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
 					{
-						fFound = FALSE;
+						fFound = false;
 						for ( cnt2 = 0; cnt2 < MAX_ATTACHMENTS; cnt2++ )
 						{
 							if ( (gpItemDescObject->usAttachItem[ cnt ] == gusOriginalAttachItem[ cnt2 ]) && (gbOriginalAttachStatus[ cnt2 ] == gpItemDescObject->bAttachStatus[ cnt ]) )
 							{
-								fFound = TRUE;
+								fFound = true;
 							}
 						}
 						if (!fFound)
 						{
 							// charge APs
-							fAllFound = FALSE;
+							fAllFound = false;
 							break;
 						}
 					}
@@ -2722,7 +2722,7 @@ void DeleteItemDescriptionBox( )
 	DeleteVideoObject(guiBullet);
 	DeleteVideoObject(guiItemGraphic);
 
-	gfInItemDescBox = FALSE;
+	gfInItemDescBox = false;
 
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
@@ -2764,22 +2764,22 @@ void DeleteItemDescriptionBox( )
 	}
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
-		fCharacterInfoPanelDirty=TRUE;
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
+		fCharacterInfoPanelDirty=true;
+		fMapPanelDirty = true;
+		fTeamPanelDirty = true;
+		fMapScreenBottomDirty = true;
 	}
 
 	if (InKeyRingPopup())
 	{
 		DeleteKeyObject(gpItemDescObject);
 		gpItemDescObject = NULL;
-		fShowDescriptionFlag = FALSE;
+		fShowDescriptionFlag = false;
 		fInterfacePanelDirty = DIRTYLEVEL2;
 		return;
 	}
 
-	fShowDescriptionFlag = FALSE;
+	fShowDescriptionFlag = false;
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
 	if( gpItemDescObject->usItem == MONEY )
@@ -2794,9 +2794,9 @@ void DeleteItemDescriptionBox( )
 	}
 
 	if( gfAddingMoneyToMercFromPlayersAccount )
-		gfAddingMoneyToMercFromPlayersAccount = FALSE;
+		gfAddingMoneyToMercFromPlayersAccount = false;
 
-	gfItemDescObjectIsAttachment = FALSE;
+	gfItemDescObjectIsAttachment = false;
 }
 
 
@@ -2817,16 +2817,16 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 	SetItemPointer(&gItemPointer, pSoldier);
 	gbItemPointerSrcSlot = bHandPos;
-	gbItemPointerLocateGood = TRUE;
+	gbItemPointerLocateGood = true;
 
 	CheckForDisabledForGiveItem( );
 
-	EnableSMPanelButtons( FALSE, TRUE );
+	EnableSMPanelButtons( false, true );
 
-	gfItemPointerDifferentThanDefault = FALSE;
+	gfItemPointerDifferentThanDefault = false;
 
 	// re-evaluate repairs
-	gfReEvaluateEveryonesNothingToDo = TRUE;
+	gfReEvaluateEveryonesNothingToDo = true;
 }
 
 void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
@@ -2877,7 +2877,7 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 		if (fInMapMode) SetMapCursorItem();
 	}
 
-	gfItemPointerDifferentThanDefault = FALSE;
+	gfItemPointerDifferentThanDefault = false;
 }
 
 void EndItemPointer( )
@@ -2896,13 +2896,13 @@ void EndItemPointer( )
 		}
 		else
 		{
-			EnableSMPanelButtons( TRUE , TRUE );
+			EnableSMPanelButtons( true , true );
 		}
 
-		gbItemPointerLocateGood = FALSE;
+		gbItemPointerLocateGood = false;
 
 		// re-evaluate repairs
-		gfReEvaluateEveryonesNothingToDo = TRUE;
+		gfReEvaluateEveryonesNothingToDo = true;
 	}
 }
 
@@ -2915,7 +2915,7 @@ void DrawItemFreeCursor( )
 
 static BOOLEAN SoldierCanSeeCatchComing(const SOLDIERTYPE* pSoldier, INT16 sSrcGridNo)
 {
-	return( TRUE );
+	return true;
 	/*
 	INT32 cnt;
 	INT8  bDirection, bTargetDirection;
@@ -2929,7 +2929,7 @@ static BOOLEAN SoldierCanSeeCatchComing(const SOLDIERTYPE* pSoldier, INT16 sSrcG
 	{
 		if ( bDirection == bTargetDirection )
 		{
-			return( TRUE );
+			return true;
 		}
 
 		bDirection = OneCDirection(bDirection);
@@ -2942,14 +2942,14 @@ static BOOLEAN SoldierCanSeeCatchComing(const SOLDIERTYPE* pSoldier, INT16 sSrcG
 	{
 		if ( bDirection == bTargetDirection )
 		{
-			return( TRUE );
+			return true;
 		}
 
 		bDirection = OneCCDirection(bDirection);
 	}
 
 	// If here, nothing good can happen!
-	return( FALSE );*/
+	return false;*/
 
 }
 
@@ -2959,7 +2959,7 @@ void DrawItemTileCursor( )
 	BOOLEAN fRecalc;
 	INT16 sFinalGridNo;
 	UINT32 uiCursorId = CURSOR_ITEM_GOOD_THROW;
-	BOOLEAN fGiveItem = FALSE;
+	BOOLEAN fGiveItem = false;
 	INT16 sActionGridNo;
 	static UINT32 uiOldCursorId = 0;
 	static UINT16 usOldMousePos = 0;
@@ -2977,19 +2977,19 @@ void DrawItemTileCursor( )
 
 		if( gusCurMousePos != usOldMousePos )
 		{
-			gfItemPointerDifferentThanDefault = FALSE;
+			gfItemPointerDifferentThanDefault = false;
 		}
 
 		// Save old one..
 		usOldMousePos = gusCurMousePos;
 
 		// Default to turning adjacent area gridno off....
-		gfUIHandleShowMoveGrid = FALSE;
+		gfUIHandleShowMoveGrid = false;
 
 		// If we are over a talkable guy, set flag
-		if (GetValidTalkableNPCFromMouse(TRUE, FALSE, TRUE) != NULL)
+		if (GetValidTalkableNPCFromMouse(true, false, true) != NULL)
 		{
-			fGiveItem = TRUE;
+			fGiveItem = true;
 		}
 
 
@@ -3000,13 +3000,13 @@ void DrawItemTileCursor( )
 			{
 				// We are targeting a talkable NPC and are using the alternative cursor to
 				// throw instead.
-				fGiveItem = FALSE;
+				fGiveItem = false;
 			}
 			else
 			{
 				// We are using the alternative cursor and the target is not a talkable NPC
 				// Only use the give item cursor if the target is a merc.
-				fGiveItem = GetValidTalkableNPCFromMouse(TRUE, TRUE, FALSE) != NULL;
+				fGiveItem = GetValidTalkableNPCFromMouse(true, true, false) != NULL;
 			}
 		}
 
@@ -3030,13 +3030,13 @@ void DrawItemTileCursor( )
 		// ATE: if good for locate, locate to selected soldier....
 		if ( gbItemPointerLocateGood )
 		{
-			gbItemPointerLocateGood = FALSE;
-			LocateSoldier(GetSelectedMan(), FALSE);
+			gbItemPointerLocateGood = false;
+			LocateSoldier(GetSelectedMan(), false);
 		}
 
 		if ( !fGiveItem )
 		{
-			if ( UIHandleOnMerc( FALSE ) && usMapPos != gpItemPointerSoldier->sGridNo )
+			if ( UIHandleOnMerc( false ) && usMapPos != gpItemPointerSoldier->sGridNo )
 			{
 				// We are on a guy.. check if they can catch or not....
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
@@ -3058,7 +3058,7 @@ void DrawItemTileCursor( )
 							if (SoldierCanSeeCatchComing(tgt, gpItemPointerSoldier->sGridNo))
 							{
 								// OK, set global that this buddy can see catch...
-								gfUIMouseOnValidCatcher = TRUE;
+								gfUIMouseOnValidCatcher = true;
 								gUIValidCatcher         = tgt;
 							}
 						}
@@ -3069,7 +3069,7 @@ void DrawItemTileCursor( )
 			// We're going to toss it!
 			if ( gTacticalStatus.uiFlags & INCOMBAT )
 			{
-				gfUIDisplayActionPoints = TRUE;
+				gfUIDisplayActionPoints = true;
 				gUIDisplayActionPointsOffX = 15;
 				gUIDisplayActionPointsOffY = 15;
 			}
@@ -3090,7 +3090,7 @@ void DrawItemTileCursor( )
 			const SOLDIERTYPE* const tgt = gUIFullTarget;
 			if (tgt != NULL)
 			{
-				UIHandleOnMerc( FALSE );
+				UIHandleOnMerc( false );
 
 				// OK, set global that this buddy can see catch...
 				gfUIMouseOnValidCatcher = 2;
@@ -3105,7 +3105,7 @@ void DrawItemTileCursor( )
 				if (uiCursorFlags == MOUSE_STATIONARY)
 				{
 					// Find adjacent gridno...
-					sActionGridNo = FindAdjacentGridEx(gpItemPointerSoldier, gusCurMousePos, NULL, NULL, FALSE, FALSE);
+					sActionGridNo = FindAdjacentGridEx(gpItemPointerSoldier, gusCurMousePos, NULL, NULL, false, false);
 					if ( sActionGridNo == -1 )
 					{
 						sActionGridNo = gusCurMousePos;
@@ -3113,7 +3113,7 @@ void DrawItemTileCursor( )
 
 					// Display location...
 					gsUIHandleShowMoveGridLocation = sActionGridNo;
-					gfUIHandleShowMoveGrid = TRUE;
+					gfUIHandleShowMoveGrid = true;
 
 
 					// Get AP cost
@@ -3132,7 +3132,7 @@ void DrawItemTileCursor( )
 				// Set value
 				if ( gTacticalStatus.uiFlags & INCOMBAT )
 				{
-					gfUIDisplayActionPoints = TRUE;
+					gfUIDisplayActionPoints = true;
 					gUIDisplayActionPointsOffX = 15;
 					gUIDisplayActionPointsOffY = 15;
 				}
@@ -3173,7 +3173,7 @@ void DrawItemTileCursor( )
 						SetIntTileLocationText(pMessageStrings[MSG_THROW]);
 					}
 
-					gfUIHandlePhysicsTrajectory = TRUE;
+					gfUIHandlePhysicsTrajectory = true;
 
 					if ( fRecalc && usMapPos != gpItemPointerSoldier->sGridNo )
 					{
@@ -3201,13 +3201,13 @@ void DrawItemTileCursor( )
 						}
 
 						// Calculate chance to throw here.....
-						if ( !CalculateLaunchItemChanceToGetThrough( gpItemPointerSoldier, gpItemPointer, usMapPos, (INT8)gsInterfaceLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), &sFinalGridNo, FALSE, &bLevel, TRUE ) )
+						if ( !CalculateLaunchItemChanceToGetThrough( gpItemPointerSoldier, gpItemPointer, usMapPos, (INT8)gsInterfaceLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), &sFinalGridNo, false, &bLevel, true ) )
 						{
-							gfBadThrowItemCTGH = TRUE;
+							gfBadThrowItemCTGH = true;
 						}
 						else
 						{
-							gfBadThrowItemCTGH = FALSE;
+							gfBadThrowItemCTGH = false;
 						}
 
 						BeginPhysicsTrajectoryUI( sFinalGridNo, bLevel, gfBadThrowItemCTGH );
@@ -3271,26 +3271,26 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 	if ( SelectedGuyInBusyAnimation( ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if (g_ui_message_overlay != NULL)
 	{
 		EndUIMessage( );
-		return( FALSE );
+		return false;
 	}
 
 	// Don't allow if our soldier is a # of things...
 	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->bLife < OKLIFE || gpItemPointerSoldier->bOverTerrainType == DEEP_WATER )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// This implies we have no path....
 	if ( gsCurrentActionPoints == 0 )
 	{
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-		return( FALSE );
+		return false;
 	}
 
 	if (gUIFullTarget != NULL)
@@ -3300,13 +3300,13 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 		if (gAnimControl[gUIFullTarget->usAnimState].uiFlags & ANIM_MOVING)
 		{
-			return( FALSE );
+			return false;
 		}
 
 	}
 
 	// Check if we have APs....
-	if ( !EnoughPoints( gpItemPointerSoldier, gsCurrentActionPoints, 0, TRUE ) )
+	if ( !EnoughPoints( gpItemPointerSoldier, gsCurrentActionPoints, 0, true ) )
 	{
 		if ( gfDontChargeAPsToPickup && gsCurrentActionPoints == AP_PICKUP_ITEM )
 		{
@@ -3314,13 +3314,13 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		}
 		else
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
 	// SEE IF WE ARE OVER A TALKABLE GUY!
 	SOLDIERTYPE* const tgt = gUIFullTarget;
-	BOOLEAN fGiveItem = tgt != NULL && IsValidTalkableNPC(tgt, TRUE, FALSE, TRUE);
+	BOOLEAN fGiveItem = tgt != NULL && IsValidTalkableNPC(tgt, true, false, true);
 
 	// OK, if different than default, change....
 	if ( gfItemPointerDifferentThanDefault )
@@ -3329,13 +3329,13 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		{
 			// We are targeting a talkable NPC and are using the alternative cursor to
 			// throw instead.
-			fGiveItem = FALSE;
+			fGiveItem = false;
 		}
 		else
 		{
 			// We are using the alternative cursor and the target is not a talkable NPC
 			// Only give an item if the target is a merc.
-			fGiveItem = tgt != NULL && IsValidTalkableNPC(tgt, TRUE, TRUE, TRUE);
+			fGiveItem = tgt != NULL && IsValidTalkableNPC(tgt, true, true, true);
 		}
 	}
 
@@ -3373,7 +3373,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		//if the user just clicked on an arms dealer
 		if (IsMercADealer(tgt->ubProfile))
 		{
-			if ( EnoughPoints( gpItemPointerSoldier, sAPCost, 0, TRUE ) )
+			if ( EnoughPoints( gpItemPointerSoldier, sAPCost, 0, true ) )
 			{
 				//Enter the shopkeeper interface
 				EnterShopKeeperInterfaceScreen(tgt->ubProfile);
@@ -3381,10 +3381,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				EndItemPointer( );
 			}
 
-			return( TRUE );
+			return true;
 		}*/
 
-		if ( EnoughPoints( gpItemPointerSoldier, sAPCost, 0, TRUE ) )
+		if ( EnoughPoints( gpItemPointerSoldier, sAPCost, 0, true ) )
 		{
 			// If we are a robot, check if this is proper item to reload!
 			if (tgt->uiStatusFlags & SOLDIER_ROBOT)
@@ -3398,7 +3398,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 					// Walk up to him and reload!
 					// See if we can get there to stab
-					sActionGridNo = FindAdjacentGridEx(gpItemPointerSoldier, tgt->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+					sActionGridNo = FindAdjacentGridEx(gpItemPointerSoldier, tgt->sGridNo, &ubDirection, &sAdjustedGridNo, true, false);
 
 					if ( sActionGridNo != -1 && gbItemPointerSrcSlot != NO_SLOT )
 					{
@@ -3420,7 +3420,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 								Soldier{gpItemPointerSoldier}.setPendingAction(MERC_RELOADROBOT);
 
 								// WALK UP TO DEST FIRST
-								EVENT_InternalGetNewSoldierPath( gpItemPointerSoldier, sActionGridNo, gpItemPointerSoldier->usUIMovementMode, FALSE, FALSE );
+								EVENT_InternalGetNewSoldierPath( gpItemPointerSoldier, sActionGridNo, gpItemPointerSoldier->usUIMovementMode, false, false );
 							}
 							else
 							{
@@ -3433,7 +3433,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 				}
 
-				gfDontChargeAPsToPickup = FALSE;
+				gfDontChargeAPsToPickup = false;
 				EndItemPointer( );
 			}
 			else
@@ -3443,7 +3443,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					// Give guy this item.....
 					SoldierGiveItem(gpItemPointerSoldier, tgt, &TempObject, gbItemPointerSrcSlot);
 
-					gfDontChargeAPsToPickup = FALSE;
+					gfDontChargeAPsToPickup = false;
 					EndItemPointer( );
 
 					// If we are giving it to somebody not on our team....
@@ -3455,7 +3455,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			}
 		}
 
-		return( TRUE );
+		return true;
 	}
 
 	// CHECK IF WE ARE NOT ON THE SAME GRIDNO
@@ -3480,7 +3480,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			// Try to drop in an adjacent area....
 			// 1 ) is this not a good OK destination
 			// this will sound strange, but this is OK......
-			if ( !NewOKDestination( gpItemPointerSoldier, usMapPos, FALSE, gpItemPointerSoldier->bLevel ) || FindBestPath( gpItemPointerSoldier, usMapPos, gpItemPointerSoldier->bLevel, WALKING, NO_COPYROUTE, 0 ) == 1 )
+			if ( !NewOKDestination( gpItemPointerSoldier, usMapPos, false, gpItemPointerSoldier->bLevel ) || FindBestPath( gpItemPointerSoldier, usMapPos, gpItemPointerSoldier->bLevel, WALKING, NO_COPYROUTE, 0 ) == 1 )
 			{
 				// Drop
 				if ( !gfDontChargeAPsToPickup )
@@ -3504,7 +3504,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						// Turn towards.....gridno
 						EVENT_SetSoldierDesiredDirectionForward(gpItemPointerSoldier, (INT8)GetDirectionFromGridNo(usMapPos, gpItemPointerSoldier));
 
-						EVENT_InitNewSoldierAnim( gpItemPointerSoldier, DROP_ADJACENT_OBJECT, 0 , FALSE );
+						EVENT_InitNewSoldierAnim( gpItemPointerSoldier, DROP_ADJACENT_OBJECT, 0 , false );
 						break;
 
 					case ANIM_CROUCH:
@@ -3541,18 +3541,18 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			// OK, do the transfer...
 			{
 				{
-					if ( !EnoughPoints( pSoldier, 3, 0, TRUE ) ||
-						!EnoughPoints( gpItemPointerSoldier, 3, 0, TRUE ) )
+					if ( !EnoughPoints( pSoldier, 3, 0, true ) ||
+						!EnoughPoints( gpItemPointerSoldier, 3, 0, true ) )
 					{
-						return( FALSE );
+						return false;
 					}
 
 					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpItemPointerSoldier->sGridNo, gpItemPointerSoldier->bLevel );
 
 					// Check LOS....
-					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->bLevel, 3, (UINT8) sDistVisible, true ) )
 					{
-						return( FALSE );
+						return false;
 					}
 
 					// Charge AP values...
@@ -3562,7 +3562,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					usItem = gpItemPointer->usItem;
 
 					// try to auto place object....
-					if ( AutoPlaceObject( pSoldier, gpItemPointer, TRUE ) )
+					if ( AutoPlaceObject( pSoldier, gpItemPointer, true ) )
 					{
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], GCM->getItem(usItem)->getShortName(), pSoldier->name) );
 
@@ -3587,24 +3587,24 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 							{
 								// Turn to face, then do animation....
 								EVENT_SetSoldierDesiredDirection( pSoldier, ubFacingDirection );
-								pSoldier->fTurningUntilDone = TRUE;
+								pSoldier->fTurningUntilDone = true;
 								pSoldier->usPendingAnimation = PASS_OBJECT;
 							}
 
 							if ( gAnimControl[ gpItemPointerSoldier->usAnimState ].ubEndHeight == ANIM_STAND && !MercInWater( gpItemPointerSoldier ) )
 							{
 								EVENT_SetSoldierDesiredDirection(gpItemPointerSoldier, OppositeDirection(ubFacingDirection));
-								gpItemPointerSoldier->fTurningUntilDone = TRUE;
+								gpItemPointerSoldier->fTurningUntilDone = true;
 								gpItemPointerSoldier->usPendingAnimation = PASS_OBJECT;
 							}
 						}
 
-						return( TRUE );
+						return true;
 					}
 					else
 					{
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_NO_ROOM_TO_PASS_ITEM ], GCM->getItem(usItem)->getShortName(), pSoldier->name) );
-						return( FALSE );
+						return false;
 					}
 				}
 			}
@@ -3615,12 +3615,12 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			if ( gfBadThrowItemCTGH )
 			{
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_THROW_TO_DEST_STR ] );
-				return( FALSE );
+				return false;
 			}
 
 			// Deduct points
 			//DeductPoints( gpItemPointerSoldier, AP_TOSS_ITEM, 0 );
-			gpItemPointerSoldier->fDontChargeTurningAPs = TRUE;
+			gpItemPointerSoldier->fDontChargeTurningAPs = true;
 			// Will be dome later....
 
 			ubThrowActionCode = NO_THROW_ACTION;
@@ -3679,7 +3679,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			// CHANGE DIRECTION AT LEAST
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, gpItemPointerSoldier );
 			EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, ubDirection );
-			gpItemPointerSoldier->fTurningUntilDone = TRUE;
+			gpItemPointerSoldier->fTurningUntilDone = true;
 
 			// Increment attacker count...
 			gTacticalStatus.ubAttackBusyCount++;
@@ -3693,11 +3693,11 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		}
 	}
 
-	gfDontChargeAPsToPickup = FALSE;
+	gfDontChargeAPsToPickup = false;
 	EndItemPointer( );
 
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -3828,11 +3828,11 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
-	gfInItemStackPopup = TRUE;
+	gfInItemStackPopup = true;
 
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
-		EnableSMPanelButtons( FALSE, FALSE );
+		EnableSMPanelButtons( false, false );
 	}
 
 	//Reserict mouse cursor to panel
@@ -3912,7 +3912,7 @@ static void DeleteItemStackPopup(void)
 	MSYS_RemoveRegion( &gItemPopupRegion);
 
 
-	gfInItemStackPopup = FALSE;
+	gfInItemStackPopup = false;
 
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
@@ -3924,7 +3924,7 @@ static void DeleteItemStackPopup(void)
 
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
-		EnableSMPanelButtons( TRUE, FALSE );
+		EnableSMPanelButtons( true, false );
 	}
 
 	FreeMouseCursor( );
@@ -3995,10 +3995,10 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
-		EnableSMPanelButtons( FALSE , FALSE );
+		EnableSMPanelButtons( false , false );
 	}
 
-	gfInKeyRingPopup = TRUE;
+	gfInKeyRingPopup = true;
 
 	//Reserict mouse cursor to panel
 	aRect.iTop = sInvY;
@@ -4085,7 +4085,7 @@ void DeleteKeyRingPopup(void)
 
 	MSYS_RemoveRegion(&gItemPopupRegion);
 
-	gfInKeyRingPopup = FALSE;
+	gfInKeyRingPopup = false;
 
 	for (INT32 i = 0; i < NUMBER_KEYS_ON_KEYRING; i++)
 	{
@@ -4096,7 +4096,7 @@ void DeleteKeyRingPopup(void)
 
 	if (guiCurrentItemDescriptionScreen != MAP_SCREEN)
 	{
-		EnableSMPanelButtons(TRUE, FALSE);
+		EnableSMPanelButtons(true, false);
 	}
 
 	FreeMouseCursor();
@@ -4227,12 +4227,12 @@ static void ItemPopupRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason
 			}
 
 			// re-evaluate repairs
-			gfReEvaluateEveryonesNothingToDo = TRUE;
+			gfReEvaluateEveryonesNothingToDo = true;
 		}
 
 		//Dirty interface
 		//fInterfacePanelDirty = DIRTYLEVEL2;
-		//RenderItemStackPopup( FALSE );
+		//RenderItemStackPopup( false );
 	}
 	else
 	{
@@ -4269,10 +4269,10 @@ static void ItemPopupRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason
 			}
 
 			// re-evaluate repairs
-			gfReEvaluateEveryonesNothingToDo = TRUE;
+			gfReEvaluateEveryonesNothingToDo = true;
 
 			//Dirty interface
-			//RenderItemStackPopup( FALSE );
+			//RenderItemStackPopup( false );
 			//fInterfacePanelDirty = DIRTYLEVEL2;
 		}
 	}
@@ -4313,7 +4313,7 @@ static void ItemPopupFullRegionCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iRe
 	{
 		// end pop up with key in hand
 		DeleteKeyRingPopup( );
-		fTeamPanelDirty = TRUE;
+		fTeamPanelDirty = true;
 
 	}
 }
@@ -4323,12 +4323,12 @@ static void ItemPopupFullRegionCallbackSecondary(MOUSE_REGION* pRegion, UINT32 i
 	if ( InItemStackPopup( ) )
 	{
 		DeleteItemStackPopup( );
-		fTeamPanelDirty = TRUE;
+		fTeamPanelDirty = true;
 	}
 	else
 	{
 		DeleteKeyRingPopup( );
-		fTeamPanelDirty = TRUE;
+		fTeamPanelDirty = true;
 	}
 }
 
@@ -4396,7 +4396,7 @@ struct ITEM_PICKUP_MENU_STRUCT
 
 
 static ITEM_PICKUP_MENU_STRUCT gItemPickupMenu;
-BOOLEAN gfInItemPickupMenu = FALSE;
+BOOLEAN gfInItemPickupMenu = false;
 
 
 // STUFF FOR POPUP ITEM INFO BOX
@@ -4419,8 +4419,8 @@ static void SetupPickupPage(INT8 bPage);
 
 void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, ITEM_POOL* const pItemPool, INT8 const bZLevel)
 {
-	EraseInterfaceMenus(TRUE);
-	LocateSoldier(pSoldier, FALSE);
+	EraseInterfaceMenus(true);
+	LocateSoldier(pSoldier, false);
 
 	ITEM_PICKUP_MENU_STRUCT& menu = gItemPickupMenu;
 	menu = ITEM_PICKUP_MENU_STRUCT{};
@@ -4429,7 +4429,7 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	InterruptTime();
 	PauseGame();
 	LockPauseState(LOCK_PAUSE_ITEM_PICKUP);
-	PauseTime(TRUE);
+	PauseTime(true);
 
 	// Alrighty, cancel lock UI if we havn't done so already
 	UnSetUIBusy(pSoldier);
@@ -4490,10 +4490,10 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	menu.sY           = sY;
 	menu.bCurSelect   = 0;
 	menu.pSoldier     = pSoldier;
-	menu.fHandled     = FALSE;
+	menu.fHandled     = false;
 	menu.sGridNo      = sGridNo;
 	menu.bZLevel      = bZLevel;
-	menu.fAllSelected = FALSE;
+	menu.fAllSelected = false;
 
 	//Load images for buttons
 	BUTTON_PICS* const pics  = LoadButtonImage(INTERFACEDIR "/itembox.sti", 5, 10);
@@ -4546,13 +4546,13 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 
 	SetupPickupPage(0);
 
-	gfInItemPickupMenu = TRUE;
-	gfIgnoreScrolling  = TRUE;
+	gfInItemPickupMenu = true;
+	gfIgnoreScrolling  = true;
 
 	HandleAnyMercInSquadHasCompatibleStuff(NULL);
 	gSelectSMPanelToMerc = pSoldier;
 	ReEvaluateDisabledINVPanelButtons();
-	DisableTacticalTeamPanelButtons(TRUE);
+	DisableTacticalTeamPanelButtons(true);
 }
 
 
@@ -4802,17 +4802,17 @@ void RemoveItemPickupMenu( )
 
 	if ( gfInItemPickupMenu )
 	{
-		gfSMDisableForItems = FALSE;
+		gfSMDisableForItems = false;
 
 		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 
 		UnLockPauseState();
 		UnPauseGame();
 		// UnPause timers as well....
-		PauseTime( FALSE );
+		PauseTime( false );
 
 		// Unfreese guy!
-		gItemPickupMenu.pSoldier->fPauseAllAnimation = FALSE;
+		gItemPickupMenu.pSoldier->fPauseAllAnimation = false;
 
 		DeleteVideoObject(gItemPickupMenu.uiPanelVo);
 
@@ -4853,17 +4853,17 @@ void RemoveItemPickupMenu( )
 		// Rerender world
 		SetRenderFlags( RENDER_FLAG_FULL );
 
-		gfInItemPickupMenu = FALSE;
+		gfInItemPickupMenu = false;
 
-		//gfSMDisableForItems = FALSE;
-		EnableSMPanelButtons( TRUE , TRUE );
-		gfSMDisableForItems = FALSE;
+		//gfSMDisableForItems = false;
+		EnableSMPanelButtons( true , true );
+		gfSMDisableForItems = false;
 
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
 		// Turn off Ignore scrolling
-		gfIgnoreScrolling = FALSE;
-		DisableTacticalTeamPanelButtons( FALSE );
+		gfIgnoreScrolling = false;
+		DisableTacticalTeamPanelButtons( false );
 		gSelectSMPanelToMerc = gpSMCurrentMerc;
 	}
 }
@@ -4897,7 +4897,7 @@ static void ItemPickupAll(GUI_BUTTON* btn, UINT32 reason)
 
 
 		// OK, pickup item....
-		//gItemPickupMenu.fHandled = TRUE;
+		//gItemPickupMenu.fHandled = true;
 		// Tell our soldier to pickup this item!
 		//SoldierGetItemFromWorld( gItemPickupMenu.pSoldier, ITEM_PICKUP_ACTION_ALL, gItemPickupMenu.sGridNo, gItemPickupMenu.bZLevel, NULL );
 		for ( cnt = 0; cnt < gItemPickupMenu.ubTotalItems; cnt++ )
@@ -4915,7 +4915,7 @@ static void ItemPickupOK(GUI_BUTTON* btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// OK, pickup item....
-		gItemPickupMenu.fHandled = TRUE;
+		gItemPickupMenu.fHandled = true;
 
 		// Tell our soldier to pickup this item!
 		SoldierGetItemFromWorld( gItemPickupMenu.pSoldier, ITEM_PICKUP_SELECTION, gItemPickupMenu.sGridNo, gItemPickupMenu.bZLevel, gItemPickupMenu.pfSelectedArray );
@@ -4928,14 +4928,14 @@ static void ItemPickupCancel(GUI_BUTTON* btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// OK, pickup item....
-		gItemPickupMenu.fHandled = TRUE;
+		gItemPickupMenu.fHandled = true;
 	}
 }
 
 
 static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, UINT32 const iReason)
 {
-	static BOOLEAN bChecked = FALSE;
+	static BOOLEAN bChecked = false;
 
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
@@ -4954,23 +4954,23 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, UINT32 co
 		gItemPickupMenu.CompAmmoObject = o;
 
 		HandleAnyMercInSquadHasCompatibleStuff(0); // Turn off first
-		InternalHandleCompatibleAmmoUI(gpSMCurrentMerc, &gItemPickupMenu.CompAmmoObject, TRUE);
+		InternalHandleCompatibleAmmoUI(gpSMCurrentMerc, &gItemPickupMenu.CompAmmoObject, true);
 		HandleAnyMercInSquadHasCompatibleStuff(&o);
 
 		SetItemPickupMenuDirty(DIRTYLEVEL2);
 
-		bChecked = TRUE;
+		bChecked = true;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 		gItemPickupMenu.bCurSelect = 255;
 
-		InternalHandleCompatibleAmmoUI(gpSMCurrentMerc, &gItemPickupMenu.CompAmmoObject, FALSE);
+		InternalHandleCompatibleAmmoUI(gpSMCurrentMerc, &gItemPickupMenu.CompAmmoObject, false);
 		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 
 		SetItemPickupMenuDirty(DIRTYLEVEL2);
 
-		bChecked = FALSE;
+		bChecked = false;
 	}
 }
 
@@ -5016,7 +5016,7 @@ BOOLEAN HandleItemPickupMenu( )
 
 	if ( !gfInItemPickupMenu )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if ( gItemPickupMenu.fHandled )
@@ -5111,7 +5111,7 @@ static void RemoveMoney(void)
 
 			InvSlot = INVENTORY_IN_SLOT{};
 
-			InvSlot.fActive = TRUE;
+			InvSlot.fActive = true;
 			InvSlot.sItemIndex = MONEY;
 			InvSlot.bSlotIdInOtherLocation = -1;
 
@@ -5165,14 +5165,14 @@ static void RemoveMoney(void)
 			if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 			{
 				SetMapCursorItem();
-				fTeamPanelDirty=TRUE;
+				fTeamPanelDirty=true;
 			}
 
 		}
 	}
 
 	//if( gfAddingMoneyToMercFromPlayersAccount )
-	//	gfAddingMoneyToMercFromPlayersAccount = FALSE;
+	//	gfAddingMoneyToMercFromPlayersAccount = false;
 }
 
 
@@ -5247,7 +5247,7 @@ void CancelItemPointer( )
 			// Make sure # of items is 0, if not, auto place somewhere else...
 			if ( gpItemPointer->ubNumberOfObjects > 0 )
 			{
-				if ( !AutoPlaceObject( gpItemPointerSoldier, gpItemPointer, FALSE ) )
+				if ( !AutoPlaceObject( gpItemPointerSoldier, gpItemPointer, false ) )
 				{
 					// Alright, place of the friggen ground!
 					AddItemToPool(gpItemPointerSoldier->sGridNo, gpItemPointer, VISIBLE, gpItemPointerSoldier->bLevel, 0 , -1);
@@ -5324,7 +5324,7 @@ void UpdateItemHatches(void)
 
 	if ( pSoldier != NULL )
 	{
-		ReevaluateItemHatches(pSoldier, FALSE);
+		ReevaluateItemHatches(pSoldier, false);
 	}
 }
 

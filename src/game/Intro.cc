@@ -16,7 +16,7 @@
 #include "UILayout.h"
 
 
-static BOOLEAN gfIntroScreenEntry = TRUE;
+static BOOLEAN gfIntroScreenEntry = true;
 static BOOLEAN gfIntroScreenExit;
 
 static ScreenID guiIntroExitScreen = INTRO_SCREEN;
@@ -93,8 +93,8 @@ ScreenID IntroScreenHandle(void)
 	if( gfIntroScreenEntry )
 	{
 		EnterIntroScreen();
-		gfIntroScreenEntry = FALSE;
-		gfIntroScreenExit = FALSE;
+		gfIntroScreenEntry = false;
+		gfIntroScreenExit = false;
 
 		InvalidateScreen();
 	}
@@ -106,8 +106,8 @@ ScreenID IntroScreenHandle(void)
 	if( gfIntroScreenExit )
 	{
 		ExitIntroScreen();
-		gfIntroScreenExit = FALSE;
-		gfIntroScreenEntry = TRUE;
+		gfIntroScreenExit = false;
+		gfIntroScreenEntry = true;
 	}
 
 	return( guiIntroExitScreen );
@@ -233,7 +233,7 @@ static void PrepareToExitIntroScreen(void)
 		//display a logo when exiting
 		DisplaySirtechSplashScreen();
 
-		gfDoneWithSplashScreen = TRUE;
+		gfDoneWithSplashScreen = true;
 		guiIntroExitScreen = INIT_SCREEN;
 	}
 	else
@@ -245,7 +245,7 @@ static void PrepareToExitIntroScreen(void)
 		guiIntroExitScreen = CREDIT_SCREEN;
 	}
 
-	gfIntroScreenExit = TRUE;
+	gfIntroScreenExit = true;
 }
 
 
@@ -334,7 +334,7 @@ static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay)
 	if( iIndexOfFlicToPlay != -1 )
 	{
 		//start playing a flic
-		gpSmackFlic = SmkPlayFlic( gpzSmackerFileNames[ iIndexOfFlicToPlay ], STD_SCREEN_X, STD_SCREEN_Y , TRUE );
+		gpSmackFlic = SmkPlayFlic( gpzSmackerFileNames[ iIndexOfFlicToPlay ], STD_SCREEN_X, STD_SCREEN_Y , true );
 
 		// Urban Chaos support: UC contains some quasi-empty smacker videos for which
 		// SmkPlayFlic returns nullptr. Ignoring this result will cause us to continue

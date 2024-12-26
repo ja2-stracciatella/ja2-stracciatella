@@ -31,7 +31,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-BOOLEAN gfOriginalList = TRUE;
+BOOLEAN gfOriginalList = true;
 
 SOLDIERINITNODE *gSoldierInitHead = NULL;
 SOLDIERINITNODE *gSoldierInitTail = NULL;
@@ -150,10 +150,10 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 	SOLDIERINITNODE *curr;
 
 	if( !fp )
-		return FALSE;
+		return false;
 
 	if (gMapInformation.ubNumIndividuals > MAX_NUM_SOLDIERS)
-		return FALSE;
+		return false;
 
 	//If we are perhaps in the alternate version of the editor, we don't want bad things to
 	//happen.  This is probably the only place I know where the user gets punished now.  If the
@@ -168,19 +168,19 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 	for( i=0; i < gMapInformation.ubNumIndividuals; i++ )
 	{
 		if( !curr )
-			return FALSE;
+			return false;
 		curr->ubNodeID = (UINT8)i;
 		InjectBasicSoldierCreateStructIntoFile(fp, *curr->pBasicPlacement);
 
 		if( curr->pBasicPlacement->fDetailedPlacement )
 		{
 			if( !curr->pDetailedPlacement )
-				return FALSE;
+				return false;
 			InjectSoldierCreateIntoFile(fp, curr->pDetailedPlacement);
 		}
 		curr = curr->next;
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -636,7 +636,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 	ResetMortarsOnTeamCount();
 
 	//Specs call for only one profiled enemy can be in a sector at a time due to flavor reasons.
-	gfProfiledEnemyAdded = FALSE;
+	gfProfiledEnemyAdded = false;
 
 	//Because the enemy defence forces work differently than the regular map placements, the numbers
 	//of each type of enemy may not be the same.  Elites will choose the best placements, then army, then
@@ -1010,7 +1010,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 				{ //delete the detailed placement information.
 					delete curr->pDetailedPlacement;
 					curr->pDetailedPlacement = NULL;
-					curr->pBasicPlacement->fDetailedPlacement = FALSE;
+					curr->pBasicPlacement->fDetailedPlacement = false;
 				}
 				*/
 				if( AddPlacementToWorld( curr ) )
@@ -1060,7 +1060,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	//First fill up only the priority existance slots (as long as the availability and class are okay)
 	while( curr && curr->pBasicPlacement->fPriorityExistance && ubMaxNum )
 	{
-		fDoPlacement = TRUE;
+		fDoPlacement = true;
 
 		if( curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM )
 		{
@@ -1081,7 +1081,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 				ubNumGreen--;
 			}
 			else
-				fDoPlacement = FALSE;
+				fDoPlacement = false;
 
 			if ( fDoPlacement )
 			{
@@ -1093,7 +1093,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 					//delete the detailed placement information.
 					delete curr->pDetailedPlacement;
 					curr->pDetailedPlacement = NULL;
-					curr->pBasicPlacement->fDetailedPlacement = FALSE;
+					curr->pBasicPlacement->fDetailedPlacement = false;
 					RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeAttributeLevel ), curr->pBasicPlacement->ubSoldierClass );
 					RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeEquipmentLevel ), curr->pBasicPlacement->ubSoldierClass );
 				}
@@ -1248,7 +1248,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 					//delete the detailed placement information.
 					delete curr->pDetailedPlacement;
 					curr->pDetailedPlacement = NULL;
-					curr->pBasicPlacement->fDetailedPlacement = FALSE;
+					curr->pBasicPlacement->fDetailedPlacement = false;
 					RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeAttributeLevel), curr->pBasicPlacement->ubSoldierClass );
 					RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeEquipmentLevel), curr->pBasicPlacement->ubSoldierClass );
 				}
@@ -1288,7 +1288,7 @@ void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumI
 			{
 				if( !AddPlacementToWorld( curr ) )
 				{
-					fQueen = FALSE;
+					fQueen = false;
 					break;
 				}
 			}
@@ -1303,7 +1303,7 @@ void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumI
 	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if (!curr->pBasicPlacement->fPriorityExistance || ubNumCreatures == 0) break;
-		fDoPlacement = TRUE;
+		fDoPlacement = true;
 
 		if( curr->pBasicPlacement->bTeam == CREATURE_TEAM )
 		{
@@ -1321,7 +1321,7 @@ void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumI
 			else if( ubNumAdultFemales && curr->pBasicPlacement->bBodyType == ADULTFEMALEMONSTER )
 				ubNumAdultFemales--;
 			else
-				fDoPlacement = FALSE;
+				fDoPlacement = false;
 			if ( fDoPlacement )
 			{
 				if( AddPlacementToWorld( curr ) )
@@ -1393,7 +1393,7 @@ void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumI
 				{ //delete the detailed placement information.
 					delete curr->pDetailedPlacement;
 					curr->pDetailedPlacement = NULL;
-					curr->pBasicPlacement->fDetailedPlacement = FALSE;
+					curr->pBasicPlacement->fDetailedPlacement = false;
 				}
 				if( AddPlacementToWorld( curr ) )
 				{
@@ -1436,7 +1436,7 @@ SOLDIERINITNODE* FindSoldierInitNodeBySoldier(SOLDIERTYPE const& s)
 void UseEditorOriginalList()
 {
 	SOLDIERINITNODE *curr;
-	gfOriginalList = TRUE;
+	gfOriginalList = true;
 	gSoldierInitHead = gOriginalSoldierInitListHead;
 	curr = gSoldierInitHead;
 	if( curr )
@@ -1451,7 +1451,7 @@ void UseEditorOriginalList()
 void UseEditorAlternateList()
 {
 	SOLDIERINITNODE *curr;
-	gfOriginalList = FALSE;
+	gfOriginalList = false;
 	gSoldierInitHead = gAlternateSoldierInitListHead;
 	curr = gSoldierInitHead;
 	if( curr )
@@ -1694,7 +1694,7 @@ void AddProfilesUsingProfileInsertionData()
 			if (s.ubQuoteActionID == QUOTE_ACTION_ID_CHECKFORDEST)
 			{
 				// Gridno will have been changed to destination, so we're there
-				NPCReachedDestination(&s, FALSE);
+				NPCReachedDestination(&s, false);
 			}
 		}
 
@@ -1818,8 +1818,8 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 
 		delete si.pDetailedPlacement;
 		si.pDetailedPlacement = 0;
-		bp.fDetailedPlacement = FALSE;
-		bp.fPriorityExistance = FALSE;
+		bp.fDetailedPlacement = false;
+		bp.fPriorityExistance = false;
 		bp.bBodyType          = BODY_RANDOM;
 		RandomizeRelativeLevel(&bp.bRelativeAttributeLevel, bp.ubSoldierClass);
 		RandomizeRelativeLevel(&bp.bRelativeEquipmentLevel, bp.ubSoldierClass);

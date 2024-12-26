@@ -300,7 +300,7 @@ static void LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, con
 static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY);
 
 
-// Returns TRUE/FALSE if the tile at the specified tile number can block light.
+// Returns true/false if the tile at the specified tile number can block light.
 static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
 	UINT16 usTileNo, usSrcTileNo;
@@ -310,16 +310,16 @@ static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 
 	if ( usTileNo >= GRIDSIZE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if ( usSrcTileNo >= GRIDSIZE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if(gpWorldLevelData[ usTileNo ].sHeight > gpWorldLevelData[ usSrcTileNo ].sHeight)
-		return(TRUE);
+		return(true);
 	{
 		UINT16 usTileNo;
 		LEVELNODE *pStruct;
@@ -332,7 +332,7 @@ static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 			// IF WE ARE A WINDOW, DO NOT BLOCK!
 			if ( FindStructure( usTileNo, STRUCTURE_WALLNWINDOW ) != NULL )
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 	}
@@ -341,7 +341,7 @@ static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 }
 
 
-// Returns TRUE/FALSE if the tile at the specified coordinates contains a wall.
+// Returns true/false if the tile at the specified coordinates contains a wall.
 static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
 	UINT16 usTileNo;
@@ -354,7 +354,7 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 
 	if ( usTileNo == usSrcTileNo )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	//if ( usTileNo == 10125 || usTileNo == 10126 )
@@ -364,12 +364,12 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 
 	if ( usTileNo >= GRIDSIZE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if ( usSrcTileNo >= GRIDSIZE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// Get direction
@@ -380,16 +380,16 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 
 	if ( ubTravelCost == TRAVELCOST_WALL  )
 	{
-		return( TRUE );
+		return true;
 	}
 
 	if ( IS_TRAVELCOST_DOOR( ubTravelCost ) )
 	{
-		ubTravelCost = DoorTravelCost( NULL, usTileNo, ubTravelCost, TRUE, NULL );
+		ubTravelCost = DoorTravelCost( NULL, usTileNo, ubTravelCost, true, NULL );
 
 		if ( ubTravelCost == TRAVELCOST_OBSTACLE || ubTravelCost == TRAVELCOST_DOOR )
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 
@@ -417,10 +417,10 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 
 	if ( bWallCount )
 	{
-		// ATE: If TWO or more - assume it's BLOCKED and return TRUE
+		// ATE: If TWO or more - assume it's BLOCKED and return true
 		if ( bWallCount != 1 )
 		{
-			return( TRUE );
+			return true;
 		}
 
 		switch(usWallOrientation)
@@ -438,20 +438,20 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 
 #endif
 
-	return(FALSE);
+	return(false);
 }
 
 
 // Removes a light template from the list, and frees up the associated node memory.
 static BOOLEAN LightDelete(LightTemplate* const t)
 {
-	if (t->lights.empty()) return FALSE;
+	if (t->lights.empty()) return false;
 
 	t->lights.clear();
 	t->rays.clear();
 	t->name = ""; // clear() before ST 3.4
 
-	return TRUE;
+	return true;
 }
 
 
@@ -467,8 +467,8 @@ static LightTemplate* LightGetFree(void)
 
 
 /* Calculates the 2D linear distance between two points. Returns the result in
-	* a DOUBLE for greater accuracy. */
-static DOUBLE LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
+	* a double for greater accuracy. */
+static double LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
 {
 	INT32 iDx, iDy;
 
@@ -477,7 +477,7 @@ static DOUBLE LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
 	iDy = std::abs(iY1 - iY2);
 	iDy*=iDy;
 
-	return(sqrt((DOUBLE)(iDx+iDy)));
+	return(sqrt((double)(iDx+iDy)));
 }
 
 /****************************************************************************************
@@ -572,14 +572,14 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 	LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
 	UINT8 ubShadeAdd;
 	UINT32 uiTile;
-	BOOLEAN fLitWall=FALSE;
+	BOOLEAN fLitWall=false;
 	BOOLEAN fFake;
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
 	if ( uiTile >= GRIDSIZE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
@@ -592,11 +592,11 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 
 	if (uiFlags&LIGHT_FAKE)
 	{
-		fFake = TRUE;
+		fFake = true;
 	}
 	else
 	{
-		fFake = FALSE;
+		fFake = false;
 	}
 
 	if(!(uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
@@ -609,31 +609,31 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 				if((gTileDatabase[ pStruct->usIndex ].fType != FIRSTCLIFFHANG) || (uiFlags&LIGHT_EVERYTHING))
 				{
 					if( (uiFlags&LIGHT_IGNORE_WALLS ) || gfCaves )
-						LightAddTileNode(pStruct, ubShadeAdd, FALSE);
+						LightAddTileNode(pStruct, ubShadeAdd, false);
 					else if(LightIlluminateWall(iSrcX, iSrcY, iX, iY, pStruct))
 					{
 						if(LightTileHasWall(iSrcX, iSrcY, iX, iY))
-							fLitWall=TRUE;
+							fLitWall=true;
 
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightAddTileNode(pStruct, std::min(ubShadeAdd, UINT8(SHADE_MAX + 5)), FALSE);
+							LightAddTileNode(pStruct, std::min(ubShadeAdd, UINT8(SHADE_MAX + 5)), false);
 						}
 						else if ( fLitWall )
 						{
-							LightAddTileNode(pStruct, ubShadeAdd, FALSE);
+							LightAddTileNode(pStruct, ubShadeAdd, false);
 						}
 						else if ( !fOnlyWalls )
 						{
-							LightAddTileNode(pStruct, ubShadeAdd, FALSE);
+							LightAddTileNode(pStruct, ubShadeAdd, false);
 						}
 					}
 				}
 			}
 			else
 			{
-				LightAddTileNode(pStruct, ubShadeAdd, FALSE);
+				LightAddTileNode(pStruct, ubShadeAdd, false);
 			}
 			pStruct=pStruct->pNext;
 		}
@@ -658,7 +658,7 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 			{
 				if ( pObject->usIndex < NUMBEROFTILES )
 				{
-					LightAddTileNode(pObject, ubShadeAdd, FALSE);
+					LightAddTileNode(pObject, ubShadeAdd, false);
 				}
 				pObject = pObject->pNext;
 			}
@@ -669,7 +669,7 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 			pMerc = gpWorldLevelData[uiTile].pMercHead;
 			while(pMerc != NULL)
 			{
-				LightAddTileNode(pMerc, ubShadeAdd, FALSE);
+				LightAddTileNode(pMerc, ubShadeAdd, false);
 				pMerc = pMerc->pNext;
 			}
 		}
@@ -690,12 +690,12 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;
 		while(pOnRoof!=NULL)
 		{
-			LightAddTileNode(pOnRoof, ubShadeAdd, FALSE);
+			LightAddTileNode(pOnRoof, ubShadeAdd, false);
 
 			pOnRoof=pOnRoof->pNext;
 		}
 	}
-	return(TRUE);
+	return(true);
 }
 
 
@@ -705,14 +705,14 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 	LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
 	UINT8 ubShadeSubtract;
 	UINT32 uiTile;
-	BOOLEAN fLitWall=FALSE;
-	BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
+	BOOLEAN fLitWall=false;
+	BOOLEAN fFake; // only passed in to land and roof layers; others get fed false
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
 	if ( uiTile >= GRIDSIZE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 
@@ -725,11 +725,11 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 
 	if (uiFlags&LIGHT_FAKE)
 	{
-		fFake = TRUE;
+		fFake = true;
 	}
 	else
 	{
-		fFake = FALSE;
+		fFake = false;
 	}
 
 	if(!(uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
@@ -742,31 +742,31 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 				if((gTileDatabase[ pStruct->usIndex ].fType != FIRSTCLIFFHANG) || (uiFlags&LIGHT_EVERYTHING))
 				{
 					if( (uiFlags&LIGHT_IGNORE_WALLS ) || gfCaves )
-						LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
+						LightSubtractTileNode(pStruct, ubShadeSubtract, false);
 					else if(LightIlluminateWall(iSrcX, iSrcY, iX, iY, pStruct))
 					{
 						if(LightTileHasWall( iSrcX, iSrcY, iX, iY))
-							fLitWall=TRUE;
+							fLitWall=true;
 
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightSubtractTileNode(pStruct, std::max(ubShadeSubtract - 5, 0), FALSE);
+							LightSubtractTileNode(pStruct, std::max(ubShadeSubtract - 5, 0), false);
 						}
 						else if ( fLitWall )
 						{
-							LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
+							LightSubtractTileNode(pStruct, ubShadeSubtract, false);
 						}
 						else if ( !fOnlyWalls )
 						{
-							LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
+							LightSubtractTileNode(pStruct, ubShadeSubtract, false);
 						}
 					}
 				}
 			}
 			else
 			{
-				LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
+				LightSubtractTileNode(pStruct, ubShadeSubtract, false);
 			}
 			pStruct = pStruct->pNext;
 		}
@@ -791,7 +791,7 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 			{
 				if ( pObject->usIndex < NUMBEROFTILES )
 				{
-					LightSubtractTileNode(pObject, ubShadeSubtract, FALSE);
+					LightSubtractTileNode(pObject, ubShadeSubtract, false);
 				}
 				pObject=pObject->pNext;
 			}
@@ -802,7 +802,7 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 			pMerc = gpWorldLevelData[uiTile].pMercHead;
 			while(pMerc!=NULL)
 			{
-				LightSubtractTileNode(pMerc, ubShadeSubtract, FALSE);
+				LightSubtractTileNode(pMerc, ubShadeSubtract, false);
 				pMerc=pMerc->pNext;
 			}
 		}
@@ -825,13 +825,13 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 		{
 			if ( pOnRoof->usIndex < NUMBEROFTILES )
 			{
-				LightSubtractTileNode(pOnRoof, ubShadeSubtract, FALSE);
+				LightSubtractTileNode(pOnRoof, ubShadeSubtract, false);
 			}
 			pOnRoof=pOnRoof->pNext;
 		}
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -897,7 +897,7 @@ static void LightResetAllTiles(void)
 // Creates a new node, and adds it to the end of a light list.
 static void LightAddNode(LightTemplate* const t, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
-	DOUBLE dDistance;
+	double dDistance;
 	UINT8 ubShade;
 	INT32 iLightDecay;
 
@@ -921,7 +921,7 @@ static void LightAddNode(LightTemplate* const t, const INT16 iHotSpotX, const IN
 // Creates a new node, and inserts it after the specified node.
 static void LightInsertNode(LightTemplate* const t, const UINT16 usLightIns, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
-	DOUBLE dDistance;
+	double dDistance;
 	UINT8 ubShade;
 	INT32 iLightDecay;
 
@@ -963,7 +963,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 	INT32 WholeStep, InitialPixelCount, FinalPixelCount, i, j, RunLength;
 	INT16 iXPos, iYPos, iEndY, iEndX;
 	UINT16 usCurNode=0, usFlags=0;
-	BOOLEAN fInsertNodes=FALSE;
+	BOOLEAN fInsertNodes=false;
 
 	if((iEndPointX > 0) && (iEndPointY > 0))
 		usFlags=LIGHT_BACKLIGHT;
@@ -976,7 +976,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 		iEndX=iStartX;
 		iYPos=iEndPointY;
 		iEndY=iStartY;
-		fInsertNodes=TRUE;
+		fInsertNodes=true;
 	}
 	else
 	{
@@ -1002,7 +1002,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 
 	// Check for 0 length ray
 	if((XDelta==0) && (YDelta==0))
-		return(FALSE);
+		return(false);
 
 	SLOGD("Drawing ({},{}) to ({},{})", iXPos, iYPos, iEndX, iEndY);
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
@@ -1029,7 +1029,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 				iYPos++;
 			}
 		}
-		return(TRUE);
+		return(true);
 	}
 	if (YDelta == 0)
 	{
@@ -1050,7 +1050,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 				iXPos+=XAdvance;
 			}
 		}
-		return(TRUE);
+		return(true);
 	}
 	if (XDelta == YDelta)
 	{
@@ -1073,7 +1073,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 				iYPos++;
 			}
 		}
-		return(TRUE);
+		return(true);
 	}
 
 	/* Determine whether the line is X or Y major, and handle accordingly */
@@ -1299,7 +1299,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 		}
 		iXPos+=XAdvance;
 	}
-	return(TRUE);
+	return(true);
 }
 
 
@@ -1308,14 +1308,14 @@ static void LightGenerateElliptical(LightTemplate* const t, const UINT8 iIntensi
 {
 	INT16 iX, iY;
 	INT32 WorkingX, WorkingY;
-	DOUBLE ASquared;
-	DOUBLE BSquared;
-	DOUBLE Temp;
+	double ASquared;
+	double BSquared;
+	double Temp;
 
 	iX=0;
 	iY=0;
-	ASquared = (DOUBLE) iA * iA;
-	BSquared = (DOUBLE) iB * iB;
+	ASquared = (double) iA * iA;
+	BSquared = (double) iB * iB;
 
 	/* Draw the four symmetric arcs for which X advances faster (that is,
 		for which X is the major axis) */
@@ -1341,7 +1341,7 @@ static void LightGenerateElliptical(LightTemplate* const t, const UINT8 iIntensi
 
 		/* Stop if X is no longer the major axis (the arc has passed the
 			45-degree point) */
-		if(((DOUBLE)WorkingY/BSquared) <= ((DOUBLE)WorkingX/ASquared))
+		if(((double)WorkingY/BSquared) <= ((double)WorkingX/ASquared))
 				break;
 
 		/* Draw the 4 symmetries of the current point */
@@ -1375,7 +1375,7 @@ static void LightGenerateElliptical(LightTemplate* const t, const UINT8 iIntensi
 
 		/* Stop if Y is no longer the major axis (the arc has passed the
 			45-degree point) */
-		if (((DOUBLE)WorkingX/ASquared) < ((DOUBLE)WorkingY/BSquared))
+		if (((double)WorkingX/ASquared) < ((double)WorkingY/BSquared))
 			break;
 
 		/* Draw the 4 symmetries of the current point */
@@ -1415,9 +1415,9 @@ void LightSetBaseLevel(UINT8 iIntensity)
 	LightSpriteRenderAll();
 
 	if(iIntensity >= LIGHT_DUSK_CUTOFF)
-		RenderSetShadows(FALSE);
+		RenderSetShadows(false);
 	else
-		RenderSetShadows(TRUE);
+		RenderSetShadows(true);
 }
 
 
@@ -1429,12 +1429,12 @@ void LightAddBaseLevel(const UINT8 iIntensity)
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
-			LightAddTile(iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, FALSE);
+			LightAddTile(iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, false);
 
 	if(ubAmbientLightLevel >= LIGHT_DUSK_CUTOFF)
-		RenderSetShadows(FALSE);
+		RenderSetShadows(false);
 	else
-		RenderSetShadows(TRUE);
+		RenderSetShadows(true);
 }
 
 
@@ -1446,12 +1446,12 @@ void LightSubtractBaseLevel(const UINT8 iIntensity)
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
-			LightSubtractTile(iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, FALSE);
+			LightSubtractTile(iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, false);
 
 	if(ubAmbientLightLevel >= LIGHT_DUSK_CUTOFF)
-		RenderSetShadows(FALSE);
+		RenderSetShadows(false);
 	else
-		RenderSetShadows(TRUE);
+		RenderSetShadows(true);
 }
 
 
@@ -1476,7 +1476,7 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 	switch(usWallOrientation)
 	{
 		case NO_ORIENTATION:
-			return(TRUE);
+			return(true);
 
 		case INSIDE_TOP_RIGHT:
 		case OUTSIDE_TOP_RIGHT:
@@ -1487,11 +1487,11 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 			return(iSourceY >= iTileY);
 
 	}
-	return(FALSE);
+	return(false);
 
 #endif
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -1499,11 +1499,11 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 {
 	UINT32  uiFlags;
 	INT32   iOldX, iOldY;
-	BOOLEAN fBlocked = FALSE;
+	BOOLEAN fBlocked = false;
 	BOOLEAN fOnlyWalls;
 
 	LightTemplate* const t = l->light_template;
-	if (t->lights.empty()) return FALSE;
+	if (t->lights.empty()) return false;
 
 	// clear out all the flags
 	for (LIGHT_NODE& light : t->lights)
@@ -1523,8 +1523,8 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 		const UINT16 usNodeIndex = t->rays[uiCount];
 		if(!(usNodeIndex&LIGHT_NEW_RAY))
 		{
-			fBlocked = FALSE;
-			fOnlyWalls = FALSE;
+			fBlocked = false;
+			fOnlyWalls = false;
 
 			LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 
@@ -1534,8 +1534,8 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 				{
 					uiCount = LightFindNextRay(t, uiCount);
 
-					fOnlyWalls = TRUE;
-					fBlocked = TRUE;
+					fOnlyWalls = true;
+					fBlocked = true;
 				}
 			}
 
@@ -1569,7 +1569,7 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 		}
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, const INT16 sSrcY)
@@ -1589,18 +1589,18 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 		{
 			case INSIDE_TOP_RIGHT:
 			case OUTSIDE_TOP_RIGHT:
-				if (!fDoRightWalls) fDoLeftWalls = FALSE;
+				if (!fDoRightWalls) fDoLeftWalls = false;
 				break;
 
 			case INSIDE_TOP_LEFT:
 			case OUTSIDE_TOP_LEFT:
-				if (!fDoLeftWalls) fDoRightWalls = FALSE;
+				if (!fDoLeftWalls) fDoRightWalls = false;
 				break;
 		}
 	}
 
-	BOOLEAN fHitWall  = FALSE;
-	BOOLEAN fRerender = FALSE;
+	BOOLEAN fHitWall  = false;
+	BOOLEAN fRerender = false;
 	for (LEVELNODE* i = head; i != NULL; i = i->pNext)
 	{
 		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
@@ -1610,21 +1610,21 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 		{
 			case INSIDE_TOP_RIGHT:
 			case OUTSIDE_TOP_RIGHT:
-				fHitWall = TRUE;
+				fHitWall = true;
 				if (fDoRightWalls && sX >= sSrcX)
 				{
 					i->uiFlags &= ~LEVELNODE_REVEAL;
-					fRerender   = TRUE;
+					fRerender   = true;
 				}
 				break;
 
 			case INSIDE_TOP_LEFT:
 			case OUTSIDE_TOP_LEFT:
-				fHitWall = TRUE;
+				fHitWall = true;
 				if (fDoLeftWalls && sY >= sSrcY)
 				{
 					i->uiFlags &= ~LEVELNODE_REVEAL;
-					fRerender   = TRUE;
+					fRerender   = true;
 				}
 				break;
 		}
@@ -1643,7 +1643,7 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 {
 	LightTemplate* const t = &g_light_templates[0];
-	if (t->lights.empty()) return FALSE;
+	if (t->lights.empty()) return false;
 
 	Assert(t->rays.size() <= UINT16_MAX);
 	for (UINT16 uiCount = 0; uiCount < static_cast<UINT16>(t->rays.size()); ++uiCount)
@@ -1666,7 +1666,7 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 		}
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -1675,11 +1675,11 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 {
 	UINT32  uiFlags;
 	INT32   iOldX, iOldY;
-	BOOLEAN fBlocked = FALSE;
+	BOOLEAN fBlocked = false;
 	BOOLEAN fOnlyWalls;
 
 	LightTemplate* const t = l->light_template;
-	if (t->lights.empty()) return FALSE;
+	if (t->lights.empty()) return false;
 
 	// clear out all the flags
 	for (LIGHT_NODE& light : t->lights)
@@ -1698,8 +1698,8 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 		const UINT16 usNodeIndex = t->rays[uiCount];
 		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
-			fBlocked = FALSE;
-			fOnlyWalls = FALSE;
+			fBlocked = false;
+			fOnlyWalls = false;
 
 			LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 
@@ -1709,8 +1709,8 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 				{
 					uiCount = LightFindNextRay(t, uiCount);
 
-					fOnlyWalls = TRUE;
-					fBlocked = TRUE;
+					fOnlyWalls = true;
+					fBlocked = true;
 				}
 			}
 
@@ -1742,7 +1742,7 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 		}
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -1821,7 +1821,7 @@ void LightSetColor(const SGPPaletteEntry* const pPal)
 			pPal->b != g_light_color.b)
 	{	//Set the entire tileset database so that it reloads everything.  It has to because the
 		//colors have changed.
-		SetAllNewTileSurfacesLoaded( TRUE );
+		SetAllNewTileSurfacesLoaded( true );
 	}
 
 	// before doing anything, get rid of all the old palettes
@@ -1880,11 +1880,11 @@ BOOLEAN LightSpriteFake(LIGHT_SPRITE* const l)
 	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
 		l->uiFlags |= MERC_LIGHT;
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -1907,10 +1907,10 @@ BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* const l)
 		}
 
 		l->uiFlags &= ~LIGHT_SPR_ACTIVE;
-		return(TRUE);
+		return(true);
 	}
 
-	return(FALSE);
+	return(false);
 }
 
 
@@ -1962,8 +1962,8 @@ void LightSpritePosition(LIGHT_SPRITE* const l, const INT16 iX, const INT16 iY)
 
 BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* const l, BOOLEAN fOnRoof)
 {
-	if ( fOnRoof &&  (l->uiFlags & LIGHT_SPR_ONROOF)) return FALSE;
-	if (!fOnRoof && !(l->uiFlags & LIGHT_SPR_ONROOF)) return FALSE;
+	if ( fOnRoof &&  (l->uiFlags & LIGHT_SPR_ONROOF)) return false;
+	if (!fOnRoof && !(l->uiFlags & LIGHT_SPR_ONROOF)) return false;
 
 	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
@@ -1997,9 +1997,9 @@ BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* const l, BOOLEAN fOnRoof)
 		}
 	}
 	else
-		return(FALSE);
+		return(false);
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -2053,11 +2053,11 @@ static void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry S
 static void CreateShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256])
 {
 	const UINT16* sl0 = gusShadeLevels[0];
-	Shades[0] = Create16BPPPaletteShaded(ShadePal, sl0[0], sl0[1], sl0[2], TRUE);
+	Shades[0] = Create16BPPPaletteShaded(ShadePal, sl0[0], sl0[1], sl0[2], true);
 	for (UINT i = 1; i < 16; i++)
 	{
 		const UINT16* sl = gusShadeLevels[i];
-		Shades[i] = Create16BPPPaletteShaded(ShadePal, sl[0], sl[1], sl[2], FALSE);
+		Shades[i] = Create16BPPPaletteShaded(ShadePal, sl[0], sl[1], sl[2], false);
 	}
 }
 

@@ -210,7 +210,7 @@ void TacticalTouchUIConfirmCallback(GUI_BUTTON*, UINT32 reason) {
 						}
 					} else {
 						if (returnCode == -2) {
-							BeginDisplayTimedCursor(GetInteractiveTileCursor( guiCurrentUICursor, TRUE ), 300);
+							BeginDisplayTimedCursor(GetInteractiveTileCursor( guiCurrentUICursor, true ), 300);
 
 							if (selected->usAnimState != RUNNING)
 							{
@@ -218,7 +218,7 @@ void TacticalTouchUIConfirmCallback(GUI_BUTTON*, UINT32 reason) {
 							}
 							else if (GetCurInteractiveTile() != NULL)
 							{
-								selected->fUIMovementFast = TRUE;
+								selected->fUIMovementFast = true;
 								guiPendingOverrideEvent = C_MOVE_MERC;
 							}
 						} else if (returnCode == 0) {
@@ -306,7 +306,7 @@ void TacticalTouchUIRunCallback(GUI_BUTTON*, UINT32 reason) {
 		else
 		{
 			sel->usUIMovementMode = RUNNING;
-			gfPlotNewMovement     = TRUE;
+			gfPlotNewMovement     = true;
 		}
 		sel->fUIMovementFast = 1;
 	}

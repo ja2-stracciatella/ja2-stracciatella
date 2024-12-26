@@ -142,21 +142,21 @@ void SetBoxXY(PopUpBox* const box, const INT16 x, const INT16 y)
 {
 	box->pos.x    = x;
 	box->pos.y    = y;
-	box->fUpdated = FALSE;
+	box->fUpdated = false;
 }
 
 
 void SetBoxX(PopUpBox* const box, const INT16 x)
 {
 	box->pos.x    = x;
-	box->fUpdated = FALSE;
+	box->fUpdated = false;
 }
 
 
 void SetBoxY(PopUpBox* const box, const INT16 y)
 {
 	box->pos.y    = y;
-	box->fUpdated = FALSE;
+	box->fUpdated = false;
 }
 
 
@@ -185,11 +185,11 @@ void AddMonoString(PopUpBox* box, const ST::string& str)
 
 	box->Text[iCounter]                      = pStringSt;
 	box->Text[iCounter]->codepoints          = str.to_utf32();
-	box->Text[iCounter]->fShadeFlag          = FALSE;
-	box->Text[iCounter]->fHighLightFlag      = FALSE;
-	box->Text[iCounter]->fSecondaryShadeFlag = FALSE;
+	box->Text[iCounter]->fShadeFlag          = false;
+	box->Text[iCounter]->fHighLightFlag      = false;
+	box->Text[iCounter]->fSecondaryShadeFlag = false;
 
-	box->fUpdated = FALSE;
+	box->fUpdated = false;
 }
 
 
@@ -216,8 +216,8 @@ void AddSecondColumnMonoString(PopUpBox* box, const ST::string& str)
 
 	box->pSecondColumnString[iCounter]                 = pStringSt;
 	box->pSecondColumnString[iCounter]->codepoints     = str.to_utf32();
-	box->pSecondColumnString[iCounter]->fShadeFlag     = FALSE;
-	box->pSecondColumnString[iCounter]->fHighLightFlag = FALSE;
+	box->pSecondColumnString[iCounter]->fShadeFlag     = false;
+	box->pSecondColumnString[iCounter]->fHighLightFlag = false;
 }
 
 
@@ -239,7 +239,7 @@ UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox* const box)
 void SetBoxFont(PopUpBox* const box, SGPFont const font)
 {
 	box->font     = font;
-	box->fUpdated = FALSE;
+	box->fUpdated = false;
 }
 
 
@@ -358,7 +358,7 @@ void HighLightBoxLine(PopUpBox* const box, const INT32 iLineNumber)
 	PopUpString* const line = box->Text[iLineNumber];
 	if (line != NULL)
 	{
-		line->fHighLightFlag = TRUE;
+		line->fHighLightFlag = true;
 	}
 }
 
@@ -369,7 +369,7 @@ BOOLEAN GetBoxShadeFlag(const PopUpBox* const box, const INT32 iLineNumber)
 	{
 		return box->Text[iLineNumber]->fShadeFlag;
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -378,7 +378,7 @@ void UnHighLightBox(PopUpBox* const box)
 	FOR_EACH(PopUpString*, i, box->Text)
 	{
 		PopUpString* const p = *i;
-		if (p) p->fHighLightFlag = FALSE;
+		if (p) p->fHighLightFlag = false;
 	}
 }
 
@@ -393,7 +393,7 @@ void RemoveAllBoxStrings(PopUpBox* const box)
 		RemoveBoxPrimaryText(box, i);
 		RemoveBoxSecondaryText(box, i);
 	}
-	box->fUpdated = FALSE;
+	box->fUpdated = false;
 }
 
 
@@ -417,8 +417,8 @@ void ShowBox(PopUpBox* const box)
 {
 	if (!box->fShowBox)
 	{
-		box->fShowBox = TRUE;
-		box->fUpdated = FALSE;
+		box->fShowBox = true;
+		box->fUpdated = false;
 	}
 }
 
@@ -427,8 +427,8 @@ void HideBox(PopUpBox* const box)
 {
 	if (box->fShowBox)
 	{
-		box->fShowBox = FALSE;
-		box->fUpdated = FALSE;
+		box->fShowBox = false;
+		box->fUpdated = false;
 	}
 }
 
@@ -450,7 +450,7 @@ void DisplayOnePopupBox(PopUpBox* const box, SGPVSurface* const uiBuffer)
 {
 	if (!box->fUpdated && box->fShowBox && box->uiBuffer == uiBuffer)
 	{
-		box->fUpdated = TRUE;
+		box->fUpdated = true;
 		if (box->uiFlags & POPUP_BOX_FLAG_RESIZE) ResizeBoxToText(box);
 		DrawBox(box);
 		DrawBoxText(box);
@@ -460,7 +460,7 @@ void DisplayOnePopupBox(PopUpBox* const box, SGPVSurface* const uiBuffer)
 
 void ForceUpDateOfBox(PopUpBox* const box)
 {
-	box->fUpdated = FALSE;
+	box->fUpdated = false;
 }
 
 
@@ -663,7 +663,7 @@ void ResizeBoxToText(PopUpBox* const box)
 
 BOOLEAN IsBoxShown(const PopUpBox* const box)
 {
-	if (box == NULL) return FALSE;
+	if (box == NULL) return false;
 	return box->fShowBox;
 }
 

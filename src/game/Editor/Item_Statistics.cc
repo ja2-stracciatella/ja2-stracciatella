@@ -188,14 +188,14 @@ void ShowItemStatsPanel()
 	ShowEditorButtons( FIRST_ITEMSTATS_BUTTON, LAST_ITEMSTATS_BUTTON );
 	if( iCurrentTaskbar == TASK_MERCS || !gpItem )
 		HideEditorButton( ITEMSTATS_HIDDEN_BTN );
-	gfShowItemStatsPanel = TRUE;
+	gfShowItemStatsPanel = true;
 }
 
 void HideItemStatsPanel()
 {
 	HideEditorButtons( FIRST_ITEMSTATS_BUTTON, LAST_ITEMSTATS_BUTTON );
 	SpecifyItemToEdit( NULL, -1 );
-	gfShowItemStatsPanel = FALSE;
+	gfShowItemStatsPanel = false;
 }
 
 
@@ -239,7 +239,7 @@ void ExecuteItemStatsCmd( UINT8 ubAction )
 				case EDITING_KEYS:				ExtractAndUpdateKeysGUI();				break;
 			}
 			SetActiveField( 0 );
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			break;
 		case ITEMSTATS_CANCEL:
 			SpecifyItemToEdit( gpItem, gsItemGridNo );
@@ -338,7 +338,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 	else
 		RemoveItemGUI();
 
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 
 	if( !gpItem )
 	{
@@ -1374,7 +1374,7 @@ static void ReEvaluateAttachmentStatii(void)
 		if (!a.button) continue;
 		GUI_BUTTON& b = *a.button;
 		if (b.Clicked()) continue;
-		EnableButton(&b, ValidItemAttachment(gpItem, a.attachment, TRUE));
+		EnableButton(&b, ValidItemAttachment(gpItem, a.attachment, true));
 	}
 }
 

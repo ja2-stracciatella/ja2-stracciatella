@@ -70,7 +70,7 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 	UINT16 usDistToCaller;
 	// communicate call to all creatures on map through ultrasonics
 
-	gTacticalStatus.Team[pCaller->bTeam].bAwareOfOpposition = TRUE;
+	gTacticalStatus.Team[pCaller->bTeam].bAwareOfOpposition = true;
 	// bAction should be AI_ACTION_CREATURE_CALL (new)
 	// usActionData is call enum #
 	switch (pCaller->ubBodyType)
@@ -113,12 +113,12 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 		case AM_MONSTER:
 		case YAM_MONSTER:
 
-			EVENT_InitNewSoldierAnim( pCaller, MONSTER_UP, 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pCaller, MONSTER_UP, 0 , false );
 			break;
 
 		case QUEENMONSTER:
 
-			EVENT_InitNewSoldierAnim( pCaller, QUEEN_CALL, 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pCaller, QUEEN_CALL, 0 , false );
 			break;
 	}
 
@@ -140,12 +140,12 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 				pReceiver->bAlertStatus = STATUS_RED; // our status can't be more than red to begin with
 				pReceiver->ubCaller = pCaller->ubID;
 				pReceiver->sCallerGridNo = pCaller->sGridNo;
-				pReceiver->bCallActedUpon = FALSE;
+				pReceiver->bCallActedUpon = false;
 				CancelAIAction(pReceiver);
 				if ((bPriority > FRENZY_THRESHOLD) && (pReceiver->ubBodyType == ADULTFEMALEMONSTER || pReceiver->ubBodyType == YAF_MONSTER))
 				{
 					// go berzerk!
-					pReceiver->bFrenzied = TRUE;
+					pReceiver->bFrenzied = true;
 				}
 			}
 		}
@@ -580,7 +580,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 	}
 
 
-	// can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
+	// can this guy move to any of the neighbouring squares ? (sets true/false)
 	const UINT8 ubCanMove = (pSoldier->bMobility != CREATURE_IMMOBILE && pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
 	// determine if we happen to be in water (in which case we're in BIG trouble!)
@@ -737,7 +737,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 			// need smell/visibility check?
 			if (PythSpacesAway( pSoldier->sGridNo, pSoldier->usActionData) < MAX_EAT_DIST )
 			{
-				const INT16 sGridNo = FindAdjacentGridEx(pSoldier, pSoldier->usActionData, NULL, NULL, FALSE, FALSE);
+				const INT16 sGridNo = FindAdjacentGridEx(pSoldier, pSoldier->usActionData, NULL, NULL, false, false);
 				if ( sGridNo != -1 )
 				{
 					pSoldier->usActionData = sGridNo;
@@ -821,7 +821,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 	INT8       bSpitIn, bWeaponIn;
 	UINT32     uiChance;
 	ATTACKTYPE BestShot, BestStab, BestAttack, CurrStab;
-	BOOLEAN    fRunAway = FALSE;
+	BOOLEAN    fRunAway = false;
 	BOOLEAN    fChangeLevel;
 
 	// if we have absolutely no action points, we can't do a thing under BLACK!
@@ -896,7 +896,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 		}
 	}
 
-	// can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
+	// can this guy move to any of the neighbouring squares ? (sets true/false)
 	ubCanMove = ((pSoldier->bMobility != CREATURE_IMMOBILE) && (pSoldier->bActionPoints >= MinPtsToMove(pSoldier)));
 
 	// determine if we happen to be in water (in which case we're in BIG trouble!)
@@ -949,12 +949,12 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 	// NPCs in water/tear gas without masks are not permitted to shoot/stab/throw
 	if ((pSoldier->bActionPoints < 2) /*|| bInWater*/ || bInGas)
 	{
-		bCanAttack = FALSE;
+		bCanAttack = false;
 	}
 	else
 	{
 		bCanAttack = CanNPCAttack(pSoldier);
-		if (bCanAttack != TRUE)
+		if (bCanAttack != true)
 		{
 			if ( bCanAttack == NOSHOOT_NOAMMO )
 			{
@@ -973,27 +973,27 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 				if ( bWeaponIn != NO_SLOT )
 				{
 					RearrangePocket(pSoldier,HANDPOS,bWeaponIn,FOREVER);
-					bCanAttack = TRUE;
+					bCanAttack = true;
 				}
 				else
 				{
 					// infants who exhaust their spit should flee!
-					fRunAway = TRUE;
-					bCanAttack = FALSE;
+					fRunAway = true;
+					bCanAttack = false;
 				}
 
 			}
 			else
 			{
-				bCanAttack = FALSE;
+				bCanAttack = false;
 			}
 
 		}
 	}
 
 
-	BestShot.ubPossible  = FALSE;	// by default, assume Shooting isn't possible
-	BestStab.ubPossible  = FALSE;	// by default, assume Stabbing isn't possible
+	BestShot.ubPossible  = false;	// by default, assume Shooting isn't possible
+	BestStab.ubPossible  = false;	// by default, assume Stabbing isn't possible
 
 	BestAttack = ATTACKTYPE{};
 
@@ -1049,7 +1049,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 								if (pSoldier->bAttitude != AGGRESSIVE)
 								{
 									// get the location of the closest CONSCIOUS reachable opponent
-									sClosestDisturbance = ClosestReachableDisturbance(pSoldier,FALSE,&fChangeLevel);
+									sClosestDisturbance = ClosestReachableDisturbance(pSoldier,false,&fChangeLevel);
 
 									// if we found one
 									if (sClosestDisturbance != NOWHERE)
@@ -1057,7 +1057,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 										// don't bother checking GRENADES/KNIVES, he can't have conscious targets
 										// then make decision as if at alert status RED, but make sure
 										// we don't try to SEEK OPPONENT the unconscious guy!
-										return CreatureDecideActionRed(pSoldier, FALSE);
+										return CreatureDecideActionRed(pSoldier, false);
 									}
 									// else kill the guy, he could be the last opponent alive in this sector
 								}
@@ -1147,7 +1147,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 				}
 				else
 				{
-					CalcBestStab(pSoldier, &CurrStab, TRUE);
+					CalcBestStab(pSoldier, &CurrStab, true);
 				}
 
 				if (CurrStab.ubPossible)
@@ -1327,7 +1327,7 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 		break;
 
 		case STATUS_RED:
-			bAction = CreatureDecideActionRed(pSoldier, TRUE);
+			bAction = CreatureDecideActionRed(pSoldier, true);
 			break;
 
 		case STATUS_BLACK:
@@ -1572,7 +1572,7 @@ INT8 CrowDecideAction( SOLDIERTYPE * pSoldier )
 			return( CrowDecideActionRed( pSoldier ) );
 
 		default:
-			Assert( FALSE );
+			Assert( false );
 			return( AI_ACTION_NONE );
 	}
 }

@@ -65,7 +65,7 @@ extern Observable<> BeforePrepareSector;
  * @param sGridNo location on the tactical map affected by the exploson
  * @param pStructure pointer to the structure to be damaged
  * @param uiDist no of grids from the source of explosion
- * @param fSkipDamage damage processing will be skipped if it is set to TRUE
+ * @param fSkipDamage damage processing will be skipped if it is set to true
  * @ingroup observables
  */
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> BeforeStructureDamaged;
@@ -134,7 +134,7 @@ extern Observable<> OnDealerInventoryUpdated;
  * Calls for each item transferred from a dealer in a transaction
  * @param bSelectedArmsDealerID ID of the dealer
  * @param sItemIndex ID of the item being transacted
- * @param fDealerSelling TRUE if the dealer is selling to the player. FALSE if the dealer is buying
+ * @param fDealerSelling true if the dealer is selling to the player. false if the dealer is buying
  * @ingroup observables
  */
 extern Observable<INT8, UINT16, BOOLEAN> OnItemTransacted;
@@ -145,7 +145,7 @@ extern Observable<INT8, UINT16, BOOLEAN> OnItemTransacted;
  * final unit price, to give special discounts, etc.
  * @param gbSelectedArmsDealerID ID of the dealer
  * @param usItemID ID of the item being priced
- * @param fDealerSelling TRUE if the dealer is selling to the player. FALSE if the dealer is buying
+ * @param fDealerSelling true if the dealer is selling to the player. false if the dealer is buying
  * @param uiUnitPriceAdjusted The observer can override this value to change the item price
  * @ingroup observables
  */

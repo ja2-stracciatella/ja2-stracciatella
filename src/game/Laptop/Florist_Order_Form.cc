@@ -159,12 +159,12 @@ static SGPVObject* guiFlowerOrderCheckBoxButtonImage;
 static SGPVObject* guiDropDownBorder;
 
 
-static BOOLEAN gfFLoristCheckBox0Down = FALSE; // next day delviery
-static BOOLEAN gfFLoristCheckBox1Down = TRUE;  // when it gets there delivery
-static BOOLEAN gfFLoristCheckBox2Down = FALSE;
-static BOOLEAN gfFLoristCheckBox3Down = FALSE;
-static BOOLEAN gfFLoristCheckBox4Down = FALSE;
-static BOOLEAN gfFLoristCheckBox5Down = FALSE;
+static BOOLEAN gfFLoristCheckBox0Down = false; // next day delviery
+static BOOLEAN gfFLoristCheckBox1Down = true;  // when it gets there delivery
+static BOOLEAN gfFLoristCheckBox2Down = false;
+static BOOLEAN gfFLoristCheckBox3Down = false;
+static BOOLEAN gfFLoristCheckBox4Down = false;
+static BOOLEAN gfFLoristCheckBox5Down = false;
 
 static UINT32 guiFlowerPrice;
 
@@ -536,54 +536,54 @@ static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, UINT32 iR
 			case 0:
 				if( gfFLoristCheckBox0Down )
 				{
-					gfFLoristCheckBox0Down = FALSE;
-					gfFLoristCheckBox1Down = TRUE;
+					gfFLoristCheckBox0Down = false;
+					gfFLoristCheckBox1Down = true;
 				}
 				else
 				{
-					gfFLoristCheckBox0Down = TRUE;
-					gfFLoristCheckBox1Down = FALSE;
+					gfFLoristCheckBox0Down = true;
+					gfFLoristCheckBox1Down = false;
 				}
 				break;
 			case 1:
 				if( gfFLoristCheckBox1Down )
 				{
-					gfFLoristCheckBox1Down = FALSE;
-					gfFLoristCheckBox0Down = TRUE;
+					gfFLoristCheckBox1Down = false;
+					gfFLoristCheckBox0Down = true;
 				}
 				else
 				{
-					gfFLoristCheckBox1Down = TRUE;
-					gfFLoristCheckBox0Down = FALSE;
+					gfFLoristCheckBox1Down = true;
+					gfFLoristCheckBox0Down = false;
 				}
 				break;
 			case 2:
 				if( gfFLoristCheckBox2Down )
-					gfFLoristCheckBox2Down = FALSE;
+					gfFLoristCheckBox2Down = false;
 				else
-					gfFLoristCheckBox2Down = TRUE;
+					gfFLoristCheckBox2Down = true;
 				break;
 			case 3:
 				if( gfFLoristCheckBox3Down )
-					gfFLoristCheckBox3Down = FALSE;
+					gfFLoristCheckBox3Down = false;
 				else
-					gfFLoristCheckBox3Down = TRUE;
+					gfFLoristCheckBox3Down = true;
 				break;
 			case 4:
 				if( gfFLoristCheckBox4Down )
-					gfFLoristCheckBox4Down = FALSE;
+					gfFLoristCheckBox4Down = false;
 				else
-					gfFLoristCheckBox4Down = TRUE;
+					gfFLoristCheckBox4Down = true;
 				break;
 			case 5:
 				if( gfFLoristCheckBox5Down )
-					gfFLoristCheckBox5Down = FALSE;
+					gfFLoristCheckBox5Down = false;
 				else
-					gfFLoristCheckBox5Down = TRUE;
+					gfFLoristCheckBox5Down = true;
 				break;
 		}
 		DisplayFloristCheckBox();
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 	}
 }
 
@@ -736,7 +736,7 @@ static void GetInputText()
 static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 {
 	static UINT16 usHeight;
-	static BOOLEAN fMouseRegionsCreated=FALSE;
+	static BOOLEAN fMouseRegionsCreated=false;
 
 	switch( ubDropDownMode )
 	{
@@ -755,12 +755,12 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 			if( fMouseRegionsCreated )
 			{
-				return(FALSE);
+				return(false);
 			}
 
 			GetInputText();
 
-			fMouseRegionsCreated = TRUE;
+			fMouseRegionsCreated = true;
 
 			usPosX = FLOWER_ORDER_DROP_DOWN_CITY_START_X;
 			usPosY = FLOWER_ORDER_DROP_DOWN_CITY_START_Y;
@@ -807,8 +807,8 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			//enable the drop down region
 			gSelectedFloristDisableDropDownRegion.Disable();
 
-			fPausedReDrawScreenFlag = TRUE;
-			fMouseRegionsCreated  = FALSE;
+			fPausedReDrawScreenFlag = true;
+			fMouseRegionsCreated  = false;
 			gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_NO_ACTION;
 
 			//enable the text entry fields
@@ -875,7 +875,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 		}
 			break;
 	}
-	return(TRUE);
+	return(true);
 }
 
 
@@ -973,12 +973,12 @@ static void HandleFloristOrderKeyBoardInput(void)
 //Initialize the Florsit Order Page (reset some variables)
 void InitFloristOrderForm()
 {
-	gfFLoristCheckBox0Down = FALSE; // next day delviery
-	gfFLoristCheckBox1Down = TRUE; // when it gets there delivery
-	gfFLoristCheckBox2Down = FALSE;
-	gfFLoristCheckBox3Down = FALSE;
-	gfFLoristCheckBox4Down = FALSE;
-	gfFLoristCheckBox5Down = FALSE;
+	gfFLoristCheckBox0Down = false; // next day delviery
+	gfFLoristCheckBox1Down = true; // when it gets there delivery
+	gfFLoristCheckBox2Down = false;
+	gfFLoristCheckBox3Down = false;
+	gfFLoristCheckBox4Down = false;
+	gfFLoristCheckBox5Down = false;
 
 	guiFlowerPrice = 0;
 

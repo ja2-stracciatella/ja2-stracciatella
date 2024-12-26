@@ -97,7 +97,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// SmoothWaterTerrain rather than the proceeding method
 	if( origType==REGWATERTEXTURE)
 	{
-		SmoothWaterTerrain( gridno, origType, piNewTile, TRUE);
+		SmoothWaterTerrain( gridno, origType, piNewTile, true);
 		return;
 	}
 	pSmoothStruct = gbSmoothStruct;
@@ -169,26 +169,26 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 
 	// Loop through smooth struct
 	cnt = 0;
-	fFound = FALSE;
+	fFound = false;
 
 	while( pSmoothStruct[ cnt ] != -1 )
 	{
 		if ( pSmoothStruct[ cnt ] == temp )
 		{
-			fSameTile = FALSE;
+			fSameTile = false;
 			// If water is it's top type
 			do
 			{
 				// CHeck if it's the same tile
 				if ( pSmoothStruct[ cnt + 2 ] == usOldIndex )
 				{
-						fSameTile = TRUE;
+						fSameTile = true;
 				}
 				if ( pSmoothStruct[ cnt + 3 ] )
 				{
 					if ( pSmoothStruct[ cnt + 3 ] == usOldIndex  )
 					{
-						fSameTile = TRUE;
+						fSameTile = true;
 					}
 				}
 				if ( fSameTile )
@@ -198,8 +198,8 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 				}
 				uiTempIndex = Random(pSmoothStruct[ cnt + 1 ]);
 				land = pSmoothStruct[ cnt + 2 + uiTempIndex ];
-				fFound = TRUE;
-			} while( FALSE );
+				fFound = true;
+			} while( false );
 			break;
 		}
 		cnt += 6;
@@ -232,7 +232,7 @@ void SmoothAllTerrainWorld( void )
 		{
 			if (FindTypeInLandLayer(cnt, uiCheckType))
 			{
-				SmoothTerrain( cnt, uiCheckType, &NewTile, TRUE );
+				SmoothTerrain( cnt, uiCheckType, &NewTile, true );
 
 				if ( NewTile != NO_TILE )
 				{
@@ -449,7 +449,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	}
 	// Loop through smooth struct
 	cnt = 0;
-	fFound = FALSE;
+	fFound = false;
 	// Speed up of this while loop  using double/quick search will result
 	// in an incorrect solution due to multiple instances of bitvalues in the list of
 	// smoothed water textures
@@ -457,19 +457,19 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	{
 		if ( pSmoothStruct[ cnt ] == temp )
 		{
-			fSameTile = FALSE;
+			fSameTile = false;
 			do
 			{
 				// CHeck if it's the same tile
 				if ( pSmoothStruct[ cnt + 2 ] == usOldIndex )
 				{
-					fSameTile = TRUE;
+					fSameTile = true;
 				}
 				if ( pSmoothStruct[ cnt + 3 ] )
 				{
 					if ( pSmoothStruct[ cnt + 3 ] == usOldIndex  )
 					{
-						fSameTile = TRUE;
+						fSameTile = true;
 					}
 				}
 				if ( fSameTile )
@@ -479,8 +479,8 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 				}
 				uiTempIndex = Random(pSmoothStruct[ cnt + 1 ]);
 				land = pSmoothStruct[ cnt + 2 + uiTempIndex ];
-				fFound = TRUE;
-			} while( FALSE );
+				fFound = true;
+			} while( false );
 			break;
 		}
 		cnt += 4;

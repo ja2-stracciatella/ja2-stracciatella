@@ -84,14 +84,14 @@ BOOLEAN gfUpdatingNow;
 static UINT16 gusTotal;
 static UINT16 gusCurrent;
 
-BOOLEAN gfMustForceUpdateAllMaps = FALSE;
+BOOLEAN gfMustForceUpdateAllMaps = false;
 static UINT16 gusNumberOfMapsToBeForceUpdated = 0;
-BOOLEAN gfMajorUpdate = FALSE;
+BOOLEAN gfMajorUpdate = false;
 
 static INT32 giCurrentViewLevel = ALL_LEVELS_MASK;
 
 static BOOLEAN gbSectorLevels[16][16];
-static BOOLEAN gfGlobalSummaryLoaded = FALSE;
+static BOOLEAN gfGlobalSummaryLoaded = false;
 
 static SUMMARYFILE *gpSectorSummary[16][16][8];
 static SUMMARYFILE *gpCurrentSectorSummary;
@@ -133,7 +133,7 @@ static BOOLEAN gfTempFile;
 //When set, only the alternate version of the maps will be displayed.  This is used for alternate maps in
 //particular sectors, such as the SkyRider quest which could be located at one of four maps randomly.  If
 //that particular map is chosen, then the alternate map will be used.
-static BOOLEAN gfAlternateMaps = FALSE;
+static BOOLEAN gfAlternateMaps = false;
 
 
 enum
@@ -144,7 +144,7 @@ enum
 };
 static UINT8 gubSummaryItemMode = ITEMMODE_SCIFI;
 
-static BOOLEAN gfItemDetailsMode = FALSE;
+static BOOLEAN gfItemDetailsMode = false;
 
 static std::vector<WORLDITEM> gpWorldItemsSummaryArray;
 static OBJECTTYPE* gpPEnemyItemsSummaryArray      = 0;
@@ -152,7 +152,7 @@ static UINT16      gusPEnemyItemsSummaryArraySize = 0;
 static OBJECTTYPE* gpNEnemyItemsSummaryArray      = 0;
 static UINT16      gusNEnemyItemsSummaryArraySize = 0;
 
-static BOOLEAN gfSetupItemDetailsMode = TRUE;
+static BOOLEAN gfSetupItemDetailsMode = true;
 
 //Override status.  Hide is when there is nothing to override, readonly, when checked is to override a
 //readonly status file, so that you can write to it, and overwrite, when checked, allows you to save,
@@ -244,7 +244,7 @@ void CreateSummaryWindow()
 	if( !gfGlobalSummaryLoaded )
 	{
 		LoadGlobalSummary();
-		gfGlobalSummaryLoaded = TRUE;
+		gfGlobalSummaryLoaded = true;
 	}
 
 	if( gfSummaryWindowActive )
@@ -255,21 +255,21 @@ void CreateSummaryWindow()
 
 	gsSector = gWorldSector;
 	gsSelSector = gWorldSector;
-	gfSummaryWindowActive = TRUE;
-	gfPersistantSummary = FALSE;
+	gfSummaryWindowActive = true;
+	gfPersistantSummary = false;
 	guiInitTimer = GetJA2Clock();
-	gfDeniedSummaryCreation = FALSE;
-	gfRenderSummary = TRUE;
+	gfDeniedSummaryCreation = false;
+	gfRenderSummary = true;
 	//Create all of the buttons here
 	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel({}, 0, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT, MSYS_PRIORITY_HIGH - 1);
 
 	iSummaryButton[SUMMARY_OKAY] = CreateTextButton("Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, 585, 325, 50, 30, MSYS_PRIORITY_HIGH, SummaryOkayCallback);
 
 	iSummaryButton[SUMMARY_GRIDCHECKBOX] = MakeCheckBox(MAP_LEFT, MAP_BOTTOM + 5, SummaryToggleGridCallback, true);
-	gfRenderGrid = TRUE;
+	gfRenderGrid = true;
 
 	iSummaryButton[SUMMARY_PROGRESSCHECKBOX] = MakeCheckBox(MAP_LEFT + 50, MAP_BOTTOM + 5, SummaryToggleProgressCallback, true);
-	gfRenderProgress = TRUE;
+	gfRenderProgress = true;
 
 	iSummaryButton[SUMMARY_ALL] = CreateTextButton("A",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 110, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == ALL_LEVELS_MASK || giCurrentViewLevel == ALTERNATE_LEVELS_MASK )
@@ -323,12 +323,12 @@ void CreateSummaryWindow()
 
 	//if( gfItemDetailsMode )
 //	{
-		gfItemDetailsMode = FALSE;
-	//	gfSetupItemDetailsMode = TRUE;
+		gfItemDetailsMode = false;
+	//	gfSetupItemDetailsMode = true;
 	//}
 	if( !gfWorldLoaded )
 	{
-		gfConfirmExitFirst = FALSE;
+		gfConfirmExitFirst = false;
 		ReleaseSummaryWindow();
 		DisableButton( iSummaryButton[ SUMMARY_OKAY ] );
 		DisableButton( iSummaryButton[ SUMMARY_SAVE ] );
@@ -347,8 +347,8 @@ void AutoLoadMap()
 	SummaryLoadMapCallback(iSummaryButton[SUMMARY_LOAD], MSYS_CALLBACK_REASON_POINTER_UP);
 	if( gfWorldLoaded )
 		DestroySummaryWindow();
-	gfAutoLoadA9 = FALSE;
-	gfConfirmExitFirst = TRUE;
+	gfAutoLoadA9 = false;
+	gfConfirmExitFirst = true;
 }
 
 
@@ -369,9 +369,9 @@ static void ReleaseSummaryWindow(void)
 		HideButton( iSummaryButton[ SUMMARY_SCIFI ] );
 		HideButton( iSummaryButton[ SUMMARY_ENEMY ] );
 		MapRegion.Enable();
-		gfPersistantSummary = TRUE;
-		gfOverrideDirty = TRUE;
-		gfRenderSummary = TRUE;
+		gfPersistantSummary = true;
+		gfOverrideDirty = true;
+		gfRenderSummary = true;
 	}
 	else
 	{
@@ -387,8 +387,8 @@ void DestroySummaryWindow()
 	FOR_EACH(GUIButtonRef, i, iSummaryButton) RemoveButton(*i);
 	MSYS_RemoveRegion(&MapRegion);
 
-	gfSummaryWindowActive = FALSE;
-	gfPersistantSummary   = FALSE;
+	gfSummaryWindowActive = false;
+	gfPersistantSummary   = false;
 	MarkWorldDirty();
 	KillTextInputMode();
 	EnableEditorTaskbar();
@@ -402,7 +402,7 @@ void DestroySummaryWindow()
 	gpNEnemyItemsSummaryArray = nullptr;
 	gusNEnemyItemsSummaryArraySize = 0;
 
-	if (gfWorldLoaded) gfConfirmExitFirst = TRUE;
+	if (gfWorldLoaded) gfConfirmExitFirst = true;
 }
 
 
@@ -581,7 +581,7 @@ static void RenderSectorInformation(void)
 //2)  CODE TRIGGER/ACTION NAMES
 static void RenderItemDetails(void)
 {
-	FLOAT dAvgExistChance, dAvgStatus;
+	float dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
 	UINT32 uiQuantity, uiExistChance, uiStatus;
 	UINT32 xp, yp;
@@ -666,8 +666,8 @@ static void RenderItemDetails(void)
 				else
 					SetFontForeground( FONT_GRAY2 );
 				//calc averages
-				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
-				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
+				dAvgExistChance = (float)(uiExistChance / 100.0);
+				dAvgStatus = uiStatus / (float)uiQuantity;
 				//Display stats.
 				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
@@ -711,13 +711,13 @@ static void RenderItemDetails(void)
 				}
 				if( i < 7 )
 				{
-					dAvgExistChance = (FLOAT)(uiTriggerExistChance[i] / 100.0);
-					dAvgStatus = (FLOAT)(uiActionExistChance[i] / 100.0);
+					dAvgExistChance = (float)(uiTriggerExistChance[i] / 100.0);
+					dAvgStatus = (float)(uiActionExistChance[i] / 100.0);
 					MPrint(xp, yp, ST::format("{}:  {3.02f} trigger(s), {3.02f} action(s)", Type, dAvgExistChance, dAvgStatus));
 				}
 				else
 				{
-					dAvgExistChance = (FLOAT)(uiActionExistChance[i] / 100.0);
+					dAvgExistChance = (float)(uiActionExistChance[i] / 100.0);
 					MPrint(xp, yp, ST::format("{}:  {3.02f}", Type, dAvgExistChance));
 				}
 				yp += 10;
@@ -773,8 +773,8 @@ static void RenderItemDetails(void)
 				else
 					SetFontForeground( FONT_GRAY2 );
 				//calc averages
-				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
-				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
+				dAvgExistChance = (float)(uiExistChance / 100.0);
+				dAvgStatus = uiStatus / (float)uiQuantity;
 				//Display stats.
 				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
@@ -842,8 +842,8 @@ static void RenderItemDetails(void)
 				else
 					SetFontForeground( FONT_GRAY2 );
 				//calc averages
-				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
-				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
+				dAvgExistChance = (float)(uiExistChance / 100.0);
+				dAvgStatus = uiStatus / (float)uiQuantity;
 				//Display stats.
 				MPrint(xp, yp, item->getShortName());
 				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
@@ -879,14 +879,14 @@ void RenderSummaryWindow()
 	{
 		gfTempFile ^= 1;
 		SetInputFieldString( 1, {} );
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 	}
 	if( gfTempFile ) //constantly extract the temp filename for updating purposes.
 		ExtractTempFilename();
 	if( gfRenderSummary )
 	{
-		gfRenderSummary = FALSE;
-		gfRenderMap = TRUE;
+		gfRenderSummary = false;
+		gfRenderMap = true;
 		for( i = 1; i < NUM_SUMMARY_BUTTONS; i++ )
 		{
 			MarkAButtonDirty( iSummaryButton[ i ] );
@@ -914,7 +914,7 @@ void RenderSummaryWindow()
 		if( gfGlobalSummaryExists )
 		{
 			ST::string str;
-			BOOLEAN fSectorSummaryExists = FALSE;
+			BOOLEAN fSectorSummaryExists = false;
 			if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 			{
 				DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
@@ -958,7 +958,7 @@ void RenderSummaryWindow()
 				{
 					case ALL_LEVELS_MASK:
 						//search for the highest level
-						fSectorSummaryExists = TRUE;
+						fSectorSummaryExists = true;
 						if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 							giCurrLevel = GROUND_LEVEL_MASK;
 						else if( gbSectorLevels[x][y] & BASEMENT1_LEVEL_MASK )
@@ -968,11 +968,11 @@ void RenderSummaryWindow()
 						else if( gbSectorLevels[x][y] & BASEMENT3_LEVEL_MASK )
 							giCurrLevel = BASEMENT3_LEVEL_MASK;
 						else
-							fSectorSummaryExists = FALSE;
+							fSectorSummaryExists = false;
 						break;
 					case ALTERNATE_LEVELS_MASK:
 						//search for the highest alternate level
-						fSectorSummaryExists = TRUE;
+						fSectorSummaryExists = true;
 						if( gbSectorLevels[x][y] & ALTERNATE_GROUND_MASK )
 							giCurrLevel = ALTERNATE_GROUND_MASK;
 						else if( gbSectorLevels[x][y] & ALTERNATE_B1_MASK )
@@ -982,39 +982,39 @@ void RenderSummaryWindow()
 						else if( gbSectorLevels[x][y] & ALTERNATE_B3_MASK )
 							giCurrLevel = ALTERNATE_B3_MASK;
 						else
-							fSectorSummaryExists = FALSE;
+							fSectorSummaryExists = false;
 						break;
 					case GROUND_LEVEL_MASK:
 						if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 					case BASEMENT1_LEVEL_MASK:
 						if( gbSectorLevels[x][y] & BASEMENT1_LEVEL_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 					case BASEMENT2_LEVEL_MASK:
 						if( gbSectorLevels[x][y] & BASEMENT2_LEVEL_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 					case BASEMENT3_LEVEL_MASK:
 						if( gbSectorLevels[x][y] & BASEMENT3_LEVEL_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 					case ALTERNATE_GROUND_MASK:
 						if( gbSectorLevels[x][y] & ALTERNATE_GROUND_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 					case ALTERNATE_B1_MASK:
 						if( gbSectorLevels[x][y] & ALTERNATE_B1_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 					case ALTERNATE_B2_MASK:
 						if( gbSectorLevels[x][y] & ALTERNATE_B2_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 					case ALTERNATE_B3_MASK:
 						if( gbSectorLevels[x][y] & ALTERNATE_B3_MASK )
-							fSectorSummaryExists = TRUE;
+							fSectorSummaryExists = true;
 						break;
 				}
 				if( gbSectorLevels[x][y] )
@@ -1096,8 +1096,8 @@ void RenderSummaryWindow()
 						{
 							if( gfSetupItemDetailsMode )
 							{
-								SetupItemDetailsMode( TRUE );
-								gfSetupItemDetailsMode = FALSE;
+								SetupItemDetailsMode( true );
+								gfSetupItemDetailsMode = false;
 							}
 							MPrint(10, 5, ST::format("ITEM DETAILS -- sector {}", str));
 							RenderItemDetails();
@@ -1210,7 +1210,7 @@ void RenderSummaryWindow()
 		MPrint(354, 18, "Summary");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT16>());
+			RectangleDraw(true, 350, 15, 405, 28, 0, l.Buffer<UINT16>());
 		}
 		FRAME_BUFFER->ShadowRectUsingLowPercentTable(351, 16, 404, 27);
 		if( gpCurrentSectorSummary )
@@ -1227,7 +1227,7 @@ void RenderSummaryWindow()
 		MPrint(354, 33, "Items");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT16>());
+			RectangleDraw(true, 350, 30, 405, 43, 0, l.Buffer<UINT16>());
 		}
 		if( gpCurrentSectorSummary )
 			/*&& gpCurrentSectorSummary->usNumItems ||
@@ -1248,7 +1248,7 @@ void RenderSummaryWindow()
 
 	if( gfRenderMap )
 	{
-		gfRenderMap = FALSE;
+		gfRenderMap = false;
 		BltVideoObject(FRAME_BUFFER, guiOmertaMap, 0, MAP_LEFT - 2, MAP_TOP - 2);
 		InvalidateRegion( MAP_LEFT-1, MAP_TOP-1, MAP_RIGHT+1, MAP_BOTTOM+1 );
 		//Draw the coordinates
@@ -1273,10 +1273,10 @@ void RenderSummaryWindow()
 			{
 				//draw vertical lines
 				pos = (UINT16)(i * 13 + MAP_LEFT);
-				LineDraw( TRUE, pos, MAP_TOP, pos, MAP_BOTTOM-1, 0, pDestBuf );
+				LineDraw( true, pos, MAP_TOP, pos, MAP_BOTTOM-1, 0, pDestBuf );
 				//draw horizontal lines
 				pos = (UINT16)(i * 13 + MAP_TOP);
-				LineDraw( TRUE, MAP_LEFT, pos, MAP_RIGHT-1, pos, 0, pDestBuf );
+				LineDraw( true, MAP_LEFT, pos, MAP_RIGHT-1, pos, 0, pDestBuf );
 			}
 		}
 		if( gfRenderProgress )
@@ -1358,7 +1358,7 @@ void RenderSummaryWindow()
 		{
 			x = MAP_LEFT + (gsSector.x - 1) * 13 + 1;
 			y = MAP_TOP + (gsSector.y - 1) * 13 + 1;
-			RectangleDraw( TRUE, x, y, x+11, y+11, Get16BPPColor( FROMRGB( 50, 50, 200 ) ), pDestBuf );
+			RectangleDraw( true, x, y, x+11, y+11, Get16BPPColor( FROMRGB( 50, 50, 200 ) ), pDestBuf );
 		}
 
 		//Render the grid for the sector currently in focus (red).
@@ -1366,7 +1366,7 @@ void RenderSummaryWindow()
 		{
 			x = MAP_LEFT + (gsSelSector.x - 1) * 13;
 			y = MAP_TOP + (gsSelSector.y - 1) * 13;
-			RectangleDraw( TRUE, x, y, x+13, y+13, Get16BPPColor( FROMRGB( 200, 50, 50 ) ), pDestBuf );
+			RectangleDraw( true, x, y, x+13, y+13, Get16BPPColor( FROMRGB( 200, 50, 50 ) ), pDestBuf );
 		}
 
 		//Render the grid for the sector if the mouse is over it (yellow).
@@ -1374,7 +1374,7 @@ void RenderSummaryWindow()
 		{
 			x = MAP_LEFT + (gsHiSector.x - 1) * 13 - 1;
 			y = MAP_TOP + (gsHiSector.y - 1) * 13 - 1;
-			RectangleDraw( TRUE, x, y, x+15, y+15, Get16BPPColor( FROMRGB( 200, 200, 50 ) ), pDestBuf );
+			RectangleDraw( true, x, y, x+15, y+15, Get16BPPColor( FROMRGB( 200, 200, 50 ) ), pDestBuf );
 		}
 	}
 	//Check to see if the user clicked on one of the hot spot mode change areas.
@@ -1389,16 +1389,16 @@ void RenderSummaryWindow()
 			{
 				if( gusMouseXPos >= 350 && gusMouseYPos >= 30 && gusMouseXPos <= 404 && gusMouseYPos <= 42 )
 				{
-					gfItemDetailsMode = TRUE;
-					gfSetupItemDetailsMode = TRUE;
-					gfRenderSummary = TRUE;
+					gfItemDetailsMode = true;
+					gfSetupItemDetailsMode = true;
+					gfRenderSummary = true;
 				}
 			}
 		}
 		else if( gfItemDetailsMode && gusMouseXPos >= 350 && gusMouseYPos >= 15 && gusMouseXPos <= 404 && gusMouseYPos <= 27 )
 		{
-			gfItemDetailsMode = FALSE;
-			gfRenderSummary = TRUE;
+			gfItemDetailsMode = false;
+			gfRenderSummary = true;
 		}
 	}
 }
@@ -1407,7 +1407,7 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 {
 	ST::string str;
 
-	gfRenderSummary = TRUE;
+	gfRenderSummary = true;
 	//Extract the sector
 	SGPSector tmp;
 	if( gszFilename[2] < '0' || gszFilename[2] > '9' )
@@ -1531,7 +1531,7 @@ static void SummaryToggleGridCallback(GUI_BUTTON* btn, UINT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gfRenderGrid = btn->Clicked();
-		gfRenderMap  = TRUE;
+		gfRenderMap  = true;
 	}
 }
 
@@ -1543,14 +1543,14 @@ static void SummaryToggleAlternateCallback(GUI_BUTTON* btn, UINT32 reason)
 		if (btn->Clicked())
 		{
 			giCurrentViewLevel <<= 4;
-			gfAlternateMaps = TRUE;
+			gfAlternateMaps = true;
 		}
 		else
 		{
 			giCurrentViewLevel >>= 4;
-			gfAlternateMaps = FALSE;
+			gfAlternateMaps = false;
 		}
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 	}
 }
 
@@ -1565,7 +1565,7 @@ static void SummarySciFiCallback(GUI_BUTTON* btn, UINT32 reason)
 		iSummaryButton[SUMMARY_ENEMY]->uiFlags &= ~BUTTON_CLICKED_ON;
 		iSummaryButton[SUMMARY_ENEMY]->uiFlags |= BUTTON_DIRTY;
 		gubSummaryItemMode = ITEMMODE_SCIFI;
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 	}
 }
 
@@ -1580,7 +1580,7 @@ static void SummaryRealCallback(GUI_BUTTON* btn, UINT32 reason)
 		iSummaryButton[SUMMARY_ENEMY]->uiFlags &= ~BUTTON_CLICKED_ON;
 		iSummaryButton[SUMMARY_ENEMY]->uiFlags |= BUTTON_DIRTY;
 		gubSummaryItemMode = ITEMMODE_REAL;
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 	}
 }
 
@@ -1595,7 +1595,7 @@ static void SummaryEnemyCallback(GUI_BUTTON* btn, UINT32 reason)
 		iSummaryButton[SUMMARY_REAL ]->uiFlags |= BUTTON_DIRTY;
 		iSummaryButton[SUMMARY_ENEMY]->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
 		gubSummaryItemMode = ITEMMODE_ENEMY;
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 	}
 }
 
@@ -1605,7 +1605,7 @@ static void SummaryToggleProgressCallback(GUI_BUTTON* btn, UINT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gfRenderProgress = btn->Clicked();
-		gfRenderMap      = TRUE;
+		gfRenderMap      = true;
 	}
 }
 
@@ -1617,7 +1617,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void);
 BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 {
 	if( !gfSummaryWindowActive )
-		return FALSE;
+		return false;
 	if( (!HandleTextInput( pEvent ) && pEvent->usEvent == KEY_DOWN) || pEvent->usEvent == KEY_REPEAT )
 	{
 		if (!gsSelSector.x) gsSelSector.x = 1;
@@ -1630,8 +1630,8 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 					DestroySummaryWindow();
 					pEvent->usParam = 'x';
 					pEvent->usKeyState |= ALT_DOWN;
-					gfOverheadMapDirty = TRUE;
-					return FALSE;
+					gfOverheadMapDirty = true;
+					return false;
 				}
 				break;
 			case SDLK_RETURN:
@@ -1644,60 +1644,60 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 			case SDLK_y:
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 				{
-					gfRenderSummary = TRUE;
+					gfRenderSummary = true;
 					RegenerateSummaryInfoForAllOutdatedMaps();
 				}
 				if( !gfGlobalSummaryExists && !gfDeniedSummaryCreation )
 				{
-					gfGlobalSummaryExists = TRUE;
+					gfGlobalSummaryExists = true;
 					CreateGlobalSummary();
-					gfRenderSummary = TRUE;
+					gfRenderSummary = true;
 				}
 				break;
 
 			case SDLK_n:
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 				{
-					gfOutdatedDenied = TRUE;
-					gfRenderSummary = TRUE;
+					gfOutdatedDenied = true;
+					gfRenderSummary = true;
 				}
 				if( !gfGlobalSummaryExists && !gfDeniedSummaryCreation )
 				{
-					gfDeniedSummaryCreation = TRUE;
-					gfRenderSummary = TRUE;
+					gfDeniedSummaryCreation = true;
+					gfRenderSummary = true;
 				}
 				break;
 			case 'x':
 				if (pEvent->usKeyState & ALT_DOWN )
 				{
 					DestroySummaryWindow();
-					return FALSE;
+					return false;
 				}
 				break;
 
 			case SDLK_RIGHT:
-				gfRenderSummary = TRUE;
+				gfRenderSummary = true;
 				gsSelSector.x++;
 				if (gsSelSector.x > 16)
 					gsSelSector.x = 1;
 				break;
 
 			case SDLK_LEFT:
-				gfRenderSummary = TRUE;
+				gfRenderSummary = true;
 				gsSelSector.x--;
 				if (gsSelSector.x < 1)
 					gsSelSector.x = 16;
 				break;
 
 			case SDLK_UP:
-				gfRenderSummary = TRUE;
+				gfRenderSummary = true;
 				gsSelSector.y--;
 				if (gsSelSector.y < 1)
 					gsSelSector.y = 16;
 				break;
 
 			case SDLK_DOWN:
-				gfRenderSummary = TRUE;
+				gfRenderSummary = true;
 				gsSelSector.y++;
 				if (gsSelSector.y > 16)
 					gsSelSector.y = 1;
@@ -1711,7 +1711,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 			case SDLK_F5: ReleaseSummaryWindow(); break;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -1721,7 +1721,7 @@ static void CreateGlobalSummary(void)
 {
 	SLOGD("Generating GlobalSummary Information...");
 
-	gfGlobalSummaryExists = FALSE;
+	gfGlobalSummaryExists = false;
 
 	GCM->userPrivateFiles()->createDir(DEVINFO_DIR);
 
@@ -1735,7 +1735,7 @@ static void CreateGlobalSummary(void)
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
-	gfRenderSummary = TRUE;
+	gfRenderSummary = true;
 
 	SLOGD("GlobalSummary Information generated successfully.");
 }
@@ -1748,7 +1748,7 @@ static void MapMoveCallback(MOUSE_REGION* reg, UINT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		gsPrev = gsHiSector = SGPSector();
-		gfRenderMap = TRUE;
+		gfRenderMap = true;
 		return;
 	}
 	gsHiSector.x = std::min((reg->RelativeXPos / 13) + 1, 16);
@@ -1756,7 +1756,7 @@ static void MapMoveCallback(MOUSE_REGION* reg, UINT32 reason)
 	if (gsPrev != gsHiSector)
 	{
 		gsPrev = gsHiSector;
-		gfRenderMap = TRUE;
+		gfRenderMap = true;
 	}
 }
 
@@ -1776,7 +1776,7 @@ static void MapClickCallback(MOUSE_REGION* reg, UINT32 reason)
 		gsSelSector.y = std::min((reg->RelativeYPos / 13) + 1, 16);
 		if (gsSelSector != sLast)
 		{ //clicked in a new sector
-			gfOverrideDirty = TRUE;
+			gfOverrideDirty = true;
 			sLast = gsSelSector;
 			auto sectorSummary = gpSectorSummary[gsSelSector.x - 1][gsSelSector.y - 1];
 			switch( giCurrentViewLevel )
@@ -1838,11 +1838,11 @@ static void MapClickCallback(MOUSE_REGION* reg, UINT32 reason)
 						gpPEnemyItemsSummaryArray && gusPEnemyItemsSummaryArraySize ||
 						gpNEnemyItemsSummaryArray && gusNEnemyItemsSummaryArraySize )*/
 				{
-					gfSetupItemDetailsMode = TRUE;
+					gfSetupItemDetailsMode = true;
 				}
 			}
 		}
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 	}
 }
 
@@ -1854,7 +1854,7 @@ static void SummaryToggleLevelCallback(GUI_BUTTON* btn, UINT32 reason)
 	{
 		if( GetActiveFieldID() == 1 )
 			SelectNextField();
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 		for( i = SUMMARY_ALL; i <= SUMMARY_B3; i++ )
 		{
 			if (btn == iSummaryButton[i])
@@ -1894,7 +1894,7 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		ST::string str;
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 
 		SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI);
 
@@ -1909,7 +1909,7 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
 		{
 			EnableButton( iSummaryButton[ SUMMARY_OKAY ] );
 			gsSector = gsSelSector;
-			gfOverrideDirty = TRUE;
+			gfOverrideDirty = true;
 		}
 		RemoveProgressBar( 0 );
 		auto i = gszDisplayName.find("_b");
@@ -1936,8 +1936,8 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
-		gfSummaryWindowSaveRequested = TRUE;
-		gfRenderSummary = TRUE;
+		gfSummaryWindowSaveRequested = true;
+		gfRenderSummary = true;
 	}
 }
 
@@ -1946,8 +1946,8 @@ static void SummaryOverrideCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
-		gfOverride ^= TRUE;
-		gfRenderSummary = TRUE;
+		gfOverride ^= true;
+		gfRenderSummary = true;
 		EnableButton(iSummaryButton[SUMMARY_SAVE], gfOverride);
 	}
 }
@@ -1956,8 +1956,8 @@ static void SummaryOverrideCallback(GUI_BUTTON* btn, UINT32 reason)
 static void CalculateOverrideStatus(void)
 {
 	ST::string filename;
-	gfOverrideDirty = FALSE;
-	gfOverride = FALSE;
+	gfOverrideDirty = false;
+	gfOverride = false;
 	if( gfTempFile )
 	{
 		// if empty, use "test.dat"
@@ -2003,7 +2003,7 @@ static void CalculateOverrideStatus(void)
 static BOOLEAN LoadSummary(const SGPSector& sMap, const UINT8 level, const char* const suffix)
 {
 	ST::string summary_filename = ST::format(DEVINFO_DIR "/{}{}.sum", sMap.AsShortString(), suffix);
-	FLOAT dMajorMapVersion;
+	float dMajorMapVersion;
 	{
 		ST::string filename = ST::format("{}{}.dat", sMap.AsShortString(), suffix);
 		AutoSGPFile f_map;
@@ -2013,10 +2013,10 @@ static BOOLEAN LoadSummary(const SGPSector& sMap, const UINT8 level, const char*
 		}
 		catch (...)
 		{
-			return FALSE;
+			return false;
 		}
 
-		f_map->read(&dMajorMapVersion, sizeof(FLOAT));
+		f_map->read(&dMajorMapVersion, sizeof(float));
 	}
 
 	try {
@@ -2036,7 +2036,7 @@ static BOOLEAN LoadSummary(const SGPSector& sMap, const UINT8 level, const char*
 				dMajorMapVersion      < getMajorMapVersion())
 		{
 			++gusNumberOfMapsToBeForceUpdated;
-			gfMustForceUpdateAllMaps = TRUE;
+			gfMustForceUpdateAllMaps = true;
 		}
 		sum->dMajorMapVersion = dMajorMapVersion;
 		UpdateSummaryInfo(sum);
@@ -2051,7 +2051,7 @@ static BOOLEAN LoadSummary(const SGPSector& sMap, const UINT8 level, const char*
 		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -2059,7 +2059,7 @@ static void LoadGlobalSummary(void)
 {
 	SLOGD("Executing LoadGlobalSummary()...");
 
-	gfMustForceUpdateAllMaps        = FALSE;
+	gfMustForceUpdateAllMaps        = false;
 	gusNumberOfMapsToBeForceUpdated = 0;
 
 	gfGlobalSummaryExists = GCM->userPrivateFiles()->isDir(DEVINFO_DIR);
@@ -2183,7 +2183,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 	DefineProgressBarPanel( 0, 65, 79, 94, 10, 80, 310, 132 );
 	SetProgressBarTitle( 0, "Generating map information", BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 	SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
-	gfUpdatingNow = TRUE;
+	gfUpdatingNow = true;
 
 	gusCurrent = 0;
 	gusTotal = gusNumEntriesWithOutdatedOrNoSummaryInfo;
@@ -2253,7 +2253,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 	}
 	RemoveProgressBar( 0 );
 	RemoveProgressBar( 1 );
-	gfUpdatingNow = FALSE;
+	gfUpdatingNow = false;
 }
 
 
@@ -2276,7 +2276,7 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, UINT32 reason)
 
 		gpSectorSummary[gsSelSector.x][gsSelSector.y][ giCurrLevel ] = gpCurrentSectorSummary;
 
-		gfRenderSummary = TRUE;
+		gfRenderSummary = true;
 
 		RemoveProgressBar( 0 );
 	}
@@ -2289,8 +2289,8 @@ static void ExtractTempFilename(void)
 	if (gszTempFilename != str)
 	{
 		gszTempFilename = str;
-		gfRenderSummary = TRUE;
-		gfOverrideDirty = TRUE;
+		gfRenderSummary = true;
+		gfOverrideDirty = true;
 	}
 	if (str.empty())
 		gszDisplayName = "test.dat";
@@ -2301,7 +2301,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 	ST::string str;
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
-	gfMajorUpdate = TRUE;
+	gfMajorUpdate = true;
 	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel({}, 0, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1);
 	//Draw it
 	iSummaryButton[SUMMARY_BACKGROUND]->Draw();
@@ -2321,7 +2321,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 
 	gusCurrent = 0;
 	gusTotal = gusNumberOfMapsToBeForceUpdated;
-	gfUpdatingNow = TRUE;
+	gfUpdatingNow = true;
 	UpdateMasterProgress();
 
 	SGPSector sMap;
@@ -2414,12 +2414,12 @@ void ApologizeOverrideAndForceUpdateEverything()
 	EvaluateWorld( "p3_m.dat", 0 );
 
 	RemoveProgressBar( 2 );
-	gfUpdatingNow = FALSE;
+	gfUpdatingNow = false;
 	InvalidateScreen();
 
 	RemoveButton( iSummaryButton[ SUMMARY_BACKGROUND ] );
-	gfMajorUpdate = FALSE;
-	gfMustForceUpdateAllMaps = FALSE;
+	gfMajorUpdate = false;
+	gfMustForceUpdateAllMaps = false;
 	gusNumberOfMapsToBeForceUpdated = 0;
 }
 
@@ -2467,7 +2467,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	if( uiNumItems != gpCurrentSectorSummary->usNumItems && fAllowRecursion )
 	{
 		gpCurrentSectorSummary->uiNumItemsPosition = 0;
-		SetupItemDetailsMode( FALSE );
+		SetupItemDetailsMode( false );
 		return;
 	}
 	//Passed the gauntlet, so now allocate memory for it, and load all the world items into this array.

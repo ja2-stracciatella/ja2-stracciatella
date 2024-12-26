@@ -91,8 +91,8 @@
 //When either in a cave level with blue lights or there is a creature presence, then
 //we override the normal music with the creature music.  The conditions are maintained
 //inside the function PrepareCreaturesForBattle() in this module.
-BOOLEAN gfUseCreatureMusic = FALSE;
-BOOLEAN gfCreatureMeanwhileScenePlayed = FALSE;
+BOOLEAN gfUseCreatureMusic = false;
+BOOLEAN gfCreatureMeanwhileScenePlayed = false;
 
 struct CREATURE_DIRECTIVE
 {
@@ -189,7 +189,7 @@ void InitCreatureQuest()
 	{
 		//Start the meanwhile scene for the queen ordering the release of the creatures.
 		HandleCreatureRelease();
-		gfCreatureMeanwhileScenePlayed = TRUE;
+		gfCreatureMeanwhileScenePlayed = true;
 	}
 
 	giHabitatedDistance = 0;
@@ -287,7 +287,7 @@ static void AddCreatureToNode(CREATURE_DIRECTIVE* node)
 static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 {
 	if( !node )
-		return FALSE;
+		return false;
 	//check to see if the creatures are permitted to spread into certain areas.  There are 4 mines (human perspective), and
 	//creatures won't spread to them until the player controls them.  Additionally, if the player has recently cleared the
 	//mine, then temporarily prevent the spreading of creatures.
@@ -308,7 +308,7 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 			// x==6  17%
 			// x>=7   0%
 			AddCreatureToNode( node );
-			return TRUE;
+			return true;
 		}
 	}
 	else if( giHabitatedDistance > iDistance )
@@ -346,7 +346,7 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 					break;
 				default:
 					SLOGA("PlaceNewCreature: invalid habitat type");
-					return FALSE;
+					return false;
 			}
 
 			switch( gGameOptions.ubDifficultyLevel )
@@ -378,7 +378,7 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 					&& iMaxPopulation > node->pLevel->ubNumCreatures) )
 			{
 				AddCreatureToNode( node );
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -386,11 +386,11 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 	{ //we are in a new area, so we will populate it
 		AddCreatureToNode( node );
 		giHabitatedDistance++;
-		return TRUE;
+		return true;
 	}
 	if( PlaceNewCreature( node->next, iDistance + 1 ) )
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 void SpreadCreatures()
@@ -454,7 +454,7 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 	for (SoldierBodyType const body : bodies)
 	{
 		SOLDIERTYPE* const s = TacticalCreateCreature(body);
-		s->bHunting                 = TRUE;
+		s->bHunting                 = true;
 		s->ubInsertionDirection     = desired_direction;
 		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		if (insertion_code == INSERTION_CODE_GRIDNO)
@@ -477,7 +477,7 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 	gubNumCreaturesAttackingTown = 0;
 	gubCreatureBattleCode        = CREATURE_BATTLE_CODE_NONE;
 	gubSectorIDOfCreatureAttack  = 0;
-	AllTeamsLookForAll(FALSE);
+	AllTeamsLookForAll(false);
 }
 
 
@@ -528,13 +528,13 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 		pSector = FindUnderGroundSector(ubSector);
 		if( !pSector )
 		{
-			CreatureAttackTown(ubSectorID, TRUE);
+			CreatureAttackTown(ubSectorID, true);
 			return;
 		}
 		gubNumCreaturesAttackingTown = pSector->ubNumCreatures;
 		if( !gubNumCreaturesAttackingTown )
 		{
-			CreatureAttackTown(ubSectorID, TRUE);
+			CreatureAttackTown(ubSectorID, true);
 			return;
 		}
 
@@ -542,12 +542,12 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 
 		//Choose one of the town sectors to attack.  Sectors closer to
 		//the mine entrance have a greater chance of being chosen.
-		ChooseTownSectorToAttack( ubSectorID, FALSE );
+		ChooseTownSectorToAttack( ubSectorID, false );
 		ubSector = SGPSector(gubSectorIDOfCreatureAttack);
 	}
 	else
 	{
-		ChooseTownSectorToAttack(ubSectorID, TRUE);
+		ChooseTownSectorToAttack(ubSectorID, true);
 		gubNumCreaturesAttackingTown = 5;
 	}
 
@@ -591,7 +591,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	switch( gubCreatureBattleCode )
 	{
 		case CREATURE_BATTLE_CODE_AUTORESOLVE:
-			gfAutomaticallyStartAutoResolve = TRUE;
+			gfAutomaticallyStartAutoResolve = true;
 			/* FALLTHROUGH */
 		case CREATURE_BATTLE_CODE_PREBATTLEINTERFACE:
 			InitPreBattleInterface(0, true);
@@ -697,10 +697,10 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 	{ //mine was previously invaded by creatures.  Don't allow mine production until queen is dead.
 		if( giLairID != -1 )
 		{
-			return FALSE;
+			return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 namespace {
@@ -808,23 +808,23 @@ BOOLEAN PrepareCreaturesForBattle()
 		gfUseCreatureMusic = LightGetColor()->b != 0;
 
 		if (!gWorldSector.z)
-			return FALSE;  //Creatures don't attack overworld with this battle code.
+			return false;  //Creatures don't attack overworld with this battle code.
 		pSector = FindUnderGroundSector(gWorldSector);
 		if( !pSector )
 		{
-			return FALSE;
+			return false;
 		}
 		if( !pSector->ubNumCreatures )
 		{
-			return FALSE;
+			return false;
 		}
-		gfUseCreatureMusic = TRUE; //creatures are here, so play creature music
+		gfUseCreatureMusic = true; //creatures are here, so play creature music
 		ubCreatureHabitat = pSector->ubCreatureHabitat;
 		ubNumCreatures = pSector->ubNumCreatures;
 	}
 	else
 	{ //creatures are attacking a town sector
-		gfUseCreatureMusic = TRUE;
+		gfUseCreatureMusic = true;
 		SetMusicMode( MUSIC_TACTICAL_NOTHING );
 		ubCreatureHabitat = MINE_EXIT;
 		ubNumCreatures = gubNumCreaturesAttackingTown;
@@ -853,7 +853,7 @@ BOOLEAN PrepareCreaturesForBattle()
 		if( !pUndergroundSector )
 		{ //No info?!!!!!
 			SLOGA("Please report underground sector you are in or going to and send save if possible." );
-			return FALSE;
+			return false;
 		}
 		pUndergroundSector->ubCreaturesInBattle = pUndergroundSector->ubNumCreatures;
 	}
@@ -876,9 +876,9 @@ BOOLEAN PrepareCreaturesForBattle()
 			AddCreaturesToBattle( ubNumYoungMales, ubNumYoungFemales, ubNumAdultMales, ubNumAdultFemales );
 			break;
 		case CREATURE_BATTLE_CODE_AUTORESOLVE:
-			return FALSE;
+			return false;
 	}
-	return TRUE;
+	return true;
 }
 
 void CreatureNightPlanning()
@@ -969,7 +969,7 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 {
 	if( giLairID <= 0 )
 	{ //Creature quest inactive
-		return FALSE;
+		return false;
 	}
 
 	//Lair is active, so look for live soldier in any creature level
@@ -984,14 +984,14 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 					pSoldier->sSector == curr->pLevel->ubSector &&
 					!pSoldier->fBetweenSectors )
 			{
-				return TRUE;
+				return true;
 			}
 		}
 		curr = curr->next;
 	}
 
 	//Lair is active, but no mercs are in these sectors
-	return FALSE;
+	return false;
 }
 
 

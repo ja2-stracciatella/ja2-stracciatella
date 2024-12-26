@@ -47,9 +47,9 @@ static BOOLEAN DelayEventIfBattleInProgress(STRATEGICEVENT* pEvent)
 		pNewEvent = AddAdvancedStrategicEvent(static_cast<StrategicEventFrequency>(pEvent->ubEventType), static_cast<StrategicEventKind>(pEvent->ubCallbackID), pEvent->uiTimeStamp + 180 + Random(121), pEvent->uiParam);
 		Assert( pNewEvent );
 		pNewEvent->uiTimeOffset = pEvent->uiTimeOffset;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
@@ -57,7 +57,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 	BOOLEAN fOrigPreventFlag;
 
 	fOrigPreventFlag = gfPreventDeletionOfAnyEvent;
-	gfPreventDeletionOfAnyEvent = TRUE;
+	gfPreventDeletionOfAnyEvent = true;
 	//No events can be posted before this time when gfProcessingGameEvents is set, otherwise,
 	//we have a chance of running into an infinite loop.
 	guiTimeStampOfCurrentlyExecutingEvent = pEvent->uiTimeStamp;
@@ -65,7 +65,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 	if( pEvent->ubFlags & SEF_DELETION_PENDING)
 	{
 		gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
-		return FALSE;
+		return false;
 	}
 
 	BOOLEAN_S eventProcessed = false;
@@ -83,7 +83,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			// Change light to value
 			gubEnvLightValue = (UINT8)pEvent->uiParam;
 			if( !gfBasement && !gfCaves )
-				gfDoLighting = TRUE;
+				gfDoLighting = true;
 			break;
 		case EVENT_CHECKFORQUESTS:
 			CheckForQuests( GetWorldDay() );
@@ -148,7 +148,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		//Whenever any group (player or enemy) arrives in a new sector during movement.
 		case EVENT_GROUP_ARRIVAL:
-			GroupArrivedAtSector(*GetGroup((UINT8)pEvent->uiParam), TRUE, FALSE);
+			GroupArrivedAtSector(*GetGroup((UINT8)pEvent->uiParam), true, false);
 			break;
 		case EVENT_MERC_COMPLAIN_EQUIPMENT:
 			MercComplainAboutEquipment( (UINT8) pEvent->uiParam );
@@ -233,7 +233,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			CreatureNightPlanning();
 			break;
 		case EVENT_CREATURE_ATTACK:
-			CreatureAttackTown( (UINT8)pEvent->uiParam, FALSE );
+			CreatureAttackTown( (UINT8)pEvent->uiParam, false );
 			break;
 		case EVENT_EVALUATE_QUEEN_SITUATION:
 			EvaluateQueenSituation();
@@ -307,5 +307,5 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 	}
 	gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
-	return TRUE;
+	return true;
 }

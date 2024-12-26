@@ -111,7 +111,7 @@ enum
 //
 //*******************************************************************
 
-BOOLEAN gfIST_Redraw=FALSE;
+BOOLEAN gfIST_Redraw=false;
 
 BOOLEAN	gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 
@@ -181,7 +181,7 @@ void EnterIMPSkillTrait( void )
 	if( iCurrentProfileMode != 5 )
 	{
 		//Have the NONE trait initially selected
-		gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NONE ] = TRUE;
+		gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NONE ] = true;
 	}
 
 	HandleSkillTraitButtonStates( );
@@ -227,7 +227,7 @@ void HandleIMPSkillTrait( void )
 	if( gfIST_Redraw )
 	{
 		RenderIMPSkillTrait( );
-		gfIST_Redraw = FALSE;
+		gfIST_Redraw = false;
 	}
 
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
@@ -249,7 +249,7 @@ void AddImpSkillTraitButtons()
 		//if we are not DONE and are just reviewing
 		if( iCurrentProfileMode != 5 )
 		{
-			gfSkillTraitQuestions[ iCnt ] = FALSE;
+			gfSkillTraitQuestions[ iCnt ] = false;
 		}
 
 		//if the merc is a FEMALE, skip this skill cause there isnt any fenmal martial artists
@@ -314,7 +314,7 @@ void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,UINT32 reason)
 
 		INT32 iSkillTrait = btn->GetUserData();
 
-		HandleIMPSkillTraitAnswers( iSkillTrait, FALSE );
+		HandleIMPSkillTraitAnswers( iSkillTrait, false );
 	}
 }
 void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons )
@@ -333,7 +333,7 @@ void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons
 		//loop through all the skill and reset them
 		for( uiCnt=0; uiCnt<IMP_SKILL_TRAITS__NUMBER_SKILLS; uiCnt++ )
 		{
-			gfSkillTraitQuestions[ uiCnt ] = FALSE;
+			gfSkillTraitQuestions[ uiCnt ] = false;
 		}
 		return;
 	}
@@ -357,22 +357,22 @@ void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons
 
 
 	//Set the skill
-	gfSkillTraitQuestions[ uiSkillPressed ] = TRUE;
+	gfSkillTraitQuestions[ uiSkillPressed ] = true;
 
 	//if the NONE trait was selected, clear the rest of the buttons
 	if( uiSkillPressed == IMP_SKILL_TRAITS__NONE )
 	{
 		//reset all the traits
-		HandleIMPSkillTraitAnswers( 0, TRUE );
+		HandleIMPSkillTraitAnswers( 0, true );
 
-		gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NONE ] = TRUE;
+		gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NONE ] = true;
 	}
 
 
 	//make sure the none skill is NOT selected if we select anything else
 	if( uiSkillPressed != IMP_SKILL_TRAITS__NONE )
 	{
-		gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NONE ] = FALSE;
+		gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NONE ] = false;
 	}
 
 	//Play the button sound
@@ -389,7 +389,7 @@ void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons
 	HandleSkillTraitButtonStates( );
 
 	//redraw the screen
-	gfIST_Redraw = TRUE;
+	gfIST_Redraw = true;
 }
 
 INT8	CountNumSkillStraitsSelected( BOOLEAN fIncludeNoneSkill )
@@ -557,7 +557,7 @@ INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 	INT8		bNumSkills=0;
 
 	//Count the number of skills selected
-	bNumSkills = CountNumSkillStraitsSelected( FALSE );
+	bNumSkills = CountNumSkillStraitsSelected( false );
 
 	//if there NONE selected
 	if( bNumSkills == 0 )
@@ -635,7 +635,7 @@ void HandleLastSelectedTraits( INT8 bNewTrait )
 	else
 	{
 		//unselect old trait
-		gfSkillTraitQuestions[ gbLastSelectedTraits[ 1 ] ] = FALSE;
+		gfSkillTraitQuestions[ gbLastSelectedTraits[ 1 ] ] = false;
 
 		gbLastSelectedTraits[ 1 ] = gbLastSelectedTraits[ 0 ];
 		gbLastSelectedTraits[ 0 ] = bNewTrait;

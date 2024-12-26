@@ -182,7 +182,7 @@ static MOUSE_REGION gSelectedBannerRegion;
 static MOUSE_REGION gSelectedAimLogo;
 
 
-static BOOLEAN fFirstTimeIn = TRUE;
+static BOOLEAN fFirstTimeIn = true;
 
 
 static void LaptopInitAim(void);
@@ -274,14 +274,14 @@ void EnterAIM()
 	// disable the region because only certain banners will be 'clickable'
 	gSelectedBannerRegion.Disable();
 
-	fFirstTimeIn = FALSE;
+	fFirstTimeIn = false;
 	RenderAIM();
 }
 
 
 static void LaptopInitAim(void)
 {
-	gfInitAdArea = TRUE;
+	gfInitAdArea = true;
 }
 
 
@@ -314,8 +314,8 @@ static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw);
 
 void HandleAIM()
 {
-	HandleAdAndWarningArea( gfInitAdArea, FALSE );
-	gfInitAdArea = FALSE;
+	HandleAdAndWarningArea( gfInitAdArea, false );
+	gfInitAdArea = false;
 }
 
 void RenderAIM()
@@ -344,7 +344,7 @@ void RenderAIM()
 	// Links
 	DrawTextToScreen(AimBottomMenuText[AIM_LINKS], LINKS_X, LINK_TEXT_Y, LINK_SIZE_X, FONT12ARIAL, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	HandleAdAndWarningArea( gfInitAdArea, TRUE );
+	HandleAdAndWarningArea( gfInitAdArea, true );
 
 	RenderWWWProgramTitleBar( );
 
@@ -560,11 +560,11 @@ static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw)
 		{
 			gubCurrentAdvertisment = GetNextAimAd( gubCurrentAdvertisment );
 
-			fInit = TRUE;
+			fInit = true;
 
 /*
 			UINT32	uiDay = GetWorldDay();
-			BOOLEAN	fSkip=FALSE;
+			BOOLEAN	fSkip=false;
 			gubCurrentAdvertisment++;
 
 			//if the add should be for Bobby rays
@@ -578,12 +578,12 @@ static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw)
 				}
 				else
 				{
-					fSkip = TRUE;
-					fInit = TRUE;
+					fSkip = true;
+					fInit = true;
 				}
 			}
 			else
-				fSkip = FALSE;
+				fSkip = false;
 
 
 			if( !fSkip )
@@ -606,7 +606,7 @@ static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw)
 							gubCurrentAdvertisment = AIM_AD_WARNING_BOX;
 						break;
 				}
-				fInit = TRUE;
+				fInit = true;
 			}
 */
 		}
@@ -677,7 +677,7 @@ static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw)
 				BltVideoObject(FRAME_BUFFER, guiFlowerAdvertisement, 0, WARNING_X, WARNING_Y);
 
 				// redraw new mail warning, and create new mail button, if nessacary
-				fReDrawNewMailFlag = TRUE;
+				fReDrawNewMailFlag = true;
 
 				//Display Aim Warning Text
 				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT14ARIAL, FONT_GREEN, AimScreenText[AIM_INFO_6], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -706,7 +706,7 @@ static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw)
 			BltVideoObject(FRAME_BUFFER, guiFlowerAdvertisement, ubSubImage, WARNING_X, WARNING_Y);
 
 			// redraw new mail warning, and create new mail button, if nessacary
-			fReDrawNewMailFlag = TRUE;
+			fReDrawNewMailFlag = true;
 
 			ubSubImage++;
 		}
@@ -735,7 +735,7 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 
 		// redraw new mail warning, and create new mail button, if nessacary
-		fReDrawNewMailFlag = TRUE;
+		fReDrawNewMailFlag = true;
 
 		if( fInit )
 			uiLastTime = uiCurTime;
@@ -794,7 +794,7 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 				BltVideoObject(FRAME_BUFFER, ad_image, 0, WARNING_X, WARNING_Y);
 
 				// redraw new mail warning, and create new mail button, if nessacary
-				fReDrawNewMailFlag = TRUE;
+				fReDrawNewMailFlag = true;
 
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
@@ -820,7 +820,7 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 				BltVideoObject(FRAME_BUFFER, ad_image, ubSubImage, WARNING_X, WARNING_Y);
 
 				// redraw new mail warning, and create new mail button, if nessacary
-				fReDrawNewMailFlag = TRUE;
+				fReDrawNewMailFlag = true;
 
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
@@ -839,7 +839,7 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 			BltVideoObject(FRAME_BUFFER, ad_image, ubSubImage, WARNING_X, WARNING_Y);
 
 			// redraw new mail warning, and create new mail button, if nessacary
-			fReDrawNewMailFlag = TRUE;
+			fReDrawNewMailFlag = true;
 
 			ubSubImage++;
 		}
@@ -966,7 +966,7 @@ static BOOLEAN DisplayBobbyRAd(BOOLEAN fInit, BOOLEAN fRedraw)
 			}
 
 			// redraw new mail warning, and create new mail button, if nessacary
-			fReDrawNewMailFlag = TRUE;
+			fReDrawNewMailFlag = true;
 
 			InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 		}

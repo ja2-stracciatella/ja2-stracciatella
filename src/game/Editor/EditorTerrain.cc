@@ -24,8 +24,8 @@
 BOOLEAN gfShowTerrainTileButtons;
 UINT8 ubTerrainTileButtonWeight[NUM_TERRAIN_TILE_REGIONS];
 UINT16 usTotalWeight;
-BOOLEAN fPrevShowTerrainTileButtons = TRUE;
-BOOLEAN fUseTerrainWeights = FALSE;
+BOOLEAN fPrevShowTerrainTileButtons = true;
+BOOLEAN fUseTerrainWeights = false;
 INT32 TerrainTileSelected = 0, TerrainForegroundTile, TerrainBackgroundTile;
 INT32 TerrainTileDrawMode = TERRAIN_TILES_NODRAW;
 
@@ -46,8 +46,8 @@ void ResetTerrainTileWeights()
 		ubTerrainTileButtonWeight[x] = 0;
 	}
 	usTotalWeight = 0;
-	fUseTerrainWeights = FALSE;
-	gfRenderTaskbar = TRUE;
+	fUseTerrainWeights = false;
+	gfRenderTaskbar = true;
 }
 
 void HideTerrainTileButtons()
@@ -59,7 +59,7 @@ void HideTerrainTileButtons()
 		{
 			DisableEditorRegion( x );
 		}
-		gfShowTerrainTileButtons=FALSE;
+		gfShowTerrainTileButtons=false;
 	}
 }
 
@@ -72,7 +72,7 @@ void ShowTerrainTileButtons()
 		{
 			EnableEditorRegion( x );
 		}
-		gfShowTerrainTileButtons=TRUE;
+		gfShowTerrainTileButtons=true;
 	}
 }
 
@@ -128,7 +128,7 @@ void TerrainTileButtonRegionCallback(MOUSE_REGION *reg, UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		gfRenderTaskbar = TRUE;
+		gfRenderTaskbar = true;
 		TerrainTileSelected = MSYS_GetRegionUserData(reg,0);
 		if(TerrainTileDrawMode == TERRAIN_TILES_FOREGROUND )
 		{
@@ -137,7 +137,7 @@ void TerrainTileButtonRegionCallback(MOUSE_REGION *reg, UINT32 reason)
 			//iEditorToolbarState = TBAR_MODE_DRAW;
 			if( _KeyDown( SHIFT ) )
 			{
-				fUseTerrainWeights = TRUE;
+				fUseTerrainWeights = true;
 			}
 			if( fUseTerrainWeights )
 			{
@@ -162,7 +162,7 @@ void TerrainTileButtonRegionCallback(MOUSE_REGION *reg, UINT32 reason)
 	}
 	if(reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		gfRenderTaskbar = TRUE;
+		gfRenderTaskbar = true;
 		TerrainTileSelected = MSYS_GetRegionUserData( reg, 0 );
 		if(TerrainTileDrawMode == TERRAIN_TILES_FOREGROUND )
 		{

@@ -70,17 +70,17 @@ enum
 GUIButtonRef iTPButtons[NUM_TP_BUTTONS];
 
 UINT8	gubDefaultButton = CLEAR_BUTTON;
-BOOLEAN gfTacticalPlacementGUIActive = FALSE;
-BOOLEAN gfTacticalPlacementFirstTime = FALSE;
-BOOLEAN gfEnterTacticalPlacementGUI = FALSE;
-BOOLEAN gfKillTacticalGUI = FALSE;
+BOOLEAN gfTacticalPlacementGUIActive = false;
+BOOLEAN gfTacticalPlacementFirstTime = false;
+BOOLEAN gfEnterTacticalPlacementGUI = false;
+BOOLEAN gfKillTacticalGUI = false;
 static SGPVObject* giOverheadPanelImage;
 static BUTTON_PICS* giOverheadButtonImages[NUM_TP_BUTTONS];
 SGPVObject* giMercPanelImage = 0;
-BOOLEAN gfTacticalPlacementGUIDirty = FALSE;
-BOOLEAN gfValidLocationsChanged = FALSE;
-BOOLEAN gfValidCursor = FALSE;
-BOOLEAN gfEveryonePlaced = FALSE;
+BOOLEAN gfTacticalPlacementGUIDirty = false;
+BOOLEAN gfValidLocationsChanged = false;
+BOOLEAN gfValidCursor = false;
+BOOLEAN gfEveryonePlaced = false;
 
 UINT8	gubSelectedGroupID = 0;
 UINT8	gubHilightedGroupID = 0;
@@ -119,10 +119,10 @@ static void SpreadPlacementsCallback(GUI_BUTTON* btn, UINT32 reason);
 
 void InitTacticalPlacementGUI()
 {
-	gfTacticalPlacementGUIActive = TRUE;
-	gfTacticalPlacementGUIDirty  = TRUE;
-	gfValidLocationsChanged      = TRUE;
-	gfTacticalPlacementFirstTime = TRUE;
+	gfTacticalPlacementGUIActive = true;
+	gfTacticalPlacementGUIDirty  = true;
+	gfValidLocationsChanged      = true;
+	gfTacticalPlacementFirstTime = true;
 
 	GoIntoOverheadMap();
 
@@ -185,7 +185,7 @@ void InitTacticalPlacementGUI()
 		MERCPLACEMENT& m = gMercPlacement[i];
 		m.pSoldier                 = s;
 		m.ubStrategicInsertionCode = s->ubStrategicInsertionCode;
-		m.fPlaced                  = FALSE;
+		m.fPlaced                  = false;
 		m.uiVObjectID              = Load65Portrait(GetProfile(m.pSoldier->ubProfile));
 		INT32 const x = STD_SCREEN_X +  91 + i / 2 * 54;
 		INT32 const y = STD_SCREEN_Y + 361 + i % 2 * 51;
@@ -231,7 +231,7 @@ static void RenderTacticalPlacementGUI()
 {
 	if (gfTacticalPlacementFirstTime)
 	{
-		gfTacticalPlacementFirstTime = FALSE;
+		gfTacticalPlacementFirstTime = false;
 		DisableScrollMessages();
 	}
 
@@ -258,7 +258,7 @@ static void RenderTacticalPlacementGUI()
 	{
 		BltVideoObject(buf, giOverheadPanelImage, 0, STD_SCREEN_X + 0, STD_SCREEN_Y + 320);
 		InvalidateRegion(STD_SCREEN_X + 0, STD_SCREEN_Y + 0, STD_SCREEN_X + 320, STD_SCREEN_Y + 480);
-		gfTacticalPlacementGUIDirty = FALSE;
+		gfTacticalPlacementGUIDirty = false;
 		MarkButtonsDirty();
 		for (INT32 i = 0; i != giPlacements; ++i)
 		{ // Render the mercs
@@ -280,7 +280,7 @@ static void RenderTacticalPlacementGUI()
 		}
 
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
-		ST::string str = GetSectorIDString(gubPBSector, TRUE);
+		ST::string str = GetSectorIDString(gubPBSector, true);
 		MPrint(STD_SCREEN_X + 120, STD_SCREEN_Y + 335, ST::format("{} {} -- {}...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]));
 
 		// Shade out the part of the tactical map that isn't considered placable.
@@ -289,7 +289,7 @@ static void RenderTacticalPlacementGUI()
 
 	if (gfValidLocationsChanged)
 	{
-		gfValidLocationsChanged = FALSE;
+		gfValidLocationsChanged = false;
 		BlitBufferToBuffer(guiSAVEBUFFER, buf, STD_SCREEN_X + 4, STD_SCREEN_Y + 4, 636, 320);
 		InvalidateRegion(STD_SCREEN_X + 4, STD_SCREEN_Y + 4, STD_SCREEN_X + 636, STD_SCREEN_Y + 320);
 
@@ -319,7 +319,7 @@ static void RenderTacticalPlacementGUI()
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 		Blt16BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_colour);
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, STD_SCREEN_X + 0, STD_SCREEN_Y + 0, 640, 480);
-		RectangleDraw(TRUE, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_colour, pDestBuf);
+		RectangleDraw(true, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_colour, pDestBuf);
 	}
 
 	bool const is_group = gubDefaultButton == GROUP_BUTTON;
@@ -423,7 +423,7 @@ void TacticalPlacementHandle()
 			}
 		}
 	}
-	gfValidCursor = FALSE;
+	gfValidCursor = false;
 	if( gbSelectedMercID != -1
 		&& (gusMouseYPos >= STD_SCREEN_Y) && (gusMouseYPos < STD_SCREEN_Y + 320)
 		&& (gusMouseXPos >= STD_SCREEN_X) && (gusMouseXPos < STD_SCREEN_X + 640) )
@@ -432,19 +432,19 @@ void TacticalPlacementHandle()
 		{
 			case INSERTION_CODE_NORTH:
 				if( gusMouseYPos <= (STD_SCREEN_Y + 40) )
-					gfValidCursor = TRUE;
+					gfValidCursor = true;
 				break;
 			case INSERTION_CODE_EAST:
 				if( gusMouseXPos >= (STD_SCREEN_X + 600) )
-					gfValidCursor = TRUE;
+					gfValidCursor = true;
 				break;
 			case INSERTION_CODE_SOUTH:
 				if( gusMouseYPos >= (STD_SCREEN_Y + 280) )
-					gfValidCursor = TRUE;
+					gfValidCursor = true;
 				break;
 			case INSERTION_CODE_WEST:
 				if( gusMouseXPos <= (STD_SCREEN_X + 40) )
-					gfValidCursor = TRUE;
+					gfValidCursor = true;
 				break;
 		}
 		if( gubDefaultButton == GROUP_BUTTON )
@@ -499,9 +499,9 @@ static void KillTacticalPlacementGUI(void)
 	gpTacticalPlacementSelectedSoldier = NULL;
 
 	//Destroy the tactical placement gui.
-	gfEnterTacticalPlacementGUI = FALSE;
-	gfTacticalPlacementGUIActive = FALSE;
-	gfKillTacticalGUI = FALSE;
+	gfEnterTacticalPlacementGUI = false;
+	gfTacticalPlacementGUIActive = false;
+	gfKillTacticalGUI = false;
 	//Delete video objects
 	DeleteVideoObject(giOverheadPanelImage);
 	DeleteVideoObject(giMercPanelImage);
@@ -567,7 +567,7 @@ static void ChooseRandomEdgepoints(void)
 
 		PutDownMercPiece(m);
 	}
-	gfEveryonePlaced = TRUE;
+	gfEveryonePlaced = true;
 }
 
 
@@ -583,12 +583,12 @@ static void PlaceMercs(void)
 			gubSelectedGroupID = 0;
 			gbSelectedMercID = 0;
 			SetCursorMerc( 0 );
-			gfEveryonePlaced = FALSE;
+			gfEveryonePlaced = false;
 			break;
 		default:
 			return;
 	}
-	gfTacticalPlacementGUIDirty = TRUE;
+	gfTacticalPlacementGUIDirty = true;
 }
 
 
@@ -712,7 +712,7 @@ static void SelectNextUnplacedUnit(void)
 			gbSelectedMercID = (INT8)i;
 			if( gubDefaultButton == GROUP_BUTTON )
 				gubSelectedGroupID = gMercPlacement[ i ].pSoldier->ubGroupID;
-			gfTacticalPlacementGUIDirty = TRUE;
+			gfTacticalPlacementGUIDirty = true;
 			SetCursorMerc( (INT8)i );
 			gpTacticalPlacementSelectedSoldier = gMercPlacement[ i ].pSoldier;
 			return;
@@ -725,7 +725,7 @@ static void SelectNextUnplacedUnit(void)
 			gbSelectedMercID = (INT8)i;
 			if( gubDefaultButton == GROUP_BUTTON )
 				gubSelectedGroupID = gMercPlacement[ i ].pSoldier->ubGroupID;
-			gfTacticalPlacementGUIDirty = TRUE;
+			gfTacticalPlacementGUIDirty = true;
 			SetCursorMerc( (INT8)i );
 			gpTacticalPlacementSelectedSoldier = gMercPlacement[ i ].pSoldier;
 			return;
@@ -734,12 +734,12 @@ static void SelectNextUnplacedUnit(void)
 	//checked the whole array, and everybody has been placed.  Select nobody.
 	if( !gfEveryonePlaced )
 	{
-		gfEveryonePlaced = TRUE;
+		gfEveryonePlaced = true;
 		SetCursorMerc( -1 );
 		gbSelectedMercID = -1;
 		gubSelectedGroupID = 0;
-		gfTacticalPlacementGUIDirty = TRUE;
-		gfValidLocationsChanged = TRUE;
+		gfTacticalPlacementGUIDirty = true;
+		gfValidLocationsChanged = true;
 		gpTacticalPlacementSelectedSoldier = gMercPlacement[ i ].pSoldier;
 	}
 }
@@ -750,7 +750,7 @@ static void DialogRemoved(MessageBoxReturnValue);
 
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 {
-	BOOLEAN fInvalidArea = FALSE;
+	BOOLEAN fInvalidArea = false;
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{ //if we have a selected merc, move him to the new closest map edgepoint of his side.
 		if( gfValidCursor )
@@ -774,7 +774,7 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 								m.pSoldier->usStrategicInsertionData = SearchForClosestPrimaryMapEdgepoint(sGridNo, m.ubStrategicInsertionCode);
 								if (m.pSoldier->usStrategicInsertionData == NOWHERE)
 								{
-									fInvalidArea = TRUE;
+									fInvalidArea = true;
 									break;
 								}
 							}
@@ -804,14 +804,14 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 						}
 						else
 						{
-							fInvalidArea = TRUE;
+							fInvalidArea = true;
 						}
 
 						//gbSelectedMercID++;
 						//if( gbSelectedMercID == giPlacements )
 						//	gbSelectedMercID = 0;
 						//gpTacticalPlacementSelectedSoldier = gMercPlacement[ gbSelectedMercID ].pSoldier;
-						gfTacticalPlacementGUIDirty = TRUE;
+						gfTacticalPlacementGUIDirty = true;
 						//SetCursorMerc( gbSelectedMercID );
 					}
 					EndMapEdgepointSearch();
@@ -848,7 +848,7 @@ static void SetCursorMerc(INT8 const placement)
 			placement      == -1 ||
 			gMercPlacement[gbCursorMercID].ubStrategicInsertionCode != gMercPlacement[placement].ubStrategicInsertionCode)
 	{
-		gfValidLocationsChanged = TRUE;
+		gfValidLocationsChanged = true;
 	}
 	gbCursorMercID = placement;
 }
@@ -876,23 +876,23 @@ static void PutDownMercPiece(MERCPLACEMENT& m)
 		UINT8 const direction = GetDirectionToGridNoFromGridNo(gridno, CENTER_GRIDNO);
 		EVENT_SetSoldierDirection(&s, direction);
 		s.ubInsertionDirection = s.bDirection;
-		m.fPlaced = TRUE;
-		m.pSoldier->bInSector = TRUE;
+		m.fPlaced = true;
+		m.pSoldier->bInSector = true;
 	}
 }
 
 
 static void PickUpMercPiece(MERCPLACEMENT& m)
 {
-	m.fPlaced = FALSE;
+	m.fPlaced = false;
 	SOLDIERTYPE& s = *m.pSoldier;
 	RemoveSoldierFromGridNo(s);
-	s.bInSector = FALSE;
+	s.bInSector = false;
 }
 
 
 static void DialogRemoved(MessageBoxReturnValue const ubResult)
 {
-	gfTacticalPlacementGUIDirty = TRUE;
-	gfValidLocationsChanged = TRUE;
+	gfTacticalPlacementGUIDirty = true;
+	gfValidLocationsChanged = true;
 }

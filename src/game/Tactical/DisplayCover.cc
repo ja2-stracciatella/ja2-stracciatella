@@ -252,7 +252,7 @@ static void CalculateCoverInRadiusAroundGridno(INT16 const sTargetGridNo, int se
 			SOLDIERTYPE const* tgt = WhoIsThere2(sGridNo, 0);
 			if (!tgt) tgt = WhoIsThere2(sGridNo, 1);
 			//if someone is here, and they are an enemy, skip over them
-			if (tgt && tgt->bVisible == TRUE && tgt->bTeam != pSoldier->bTeam)
+			if (tgt && tgt->bVisible == true && tgt->bTeam != pSoldier->bTeam)
 			{
 				continue;
 			}
@@ -299,7 +299,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 		if (usRange > usSightLimit * CELL_X_SIZE) continue;
 
 		// if actual LOS check fails, then chance to hit is 0, ignore this guy
-		if (SoldierToVirtualSoldierLineOfSightTest(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, usSightLimit, TRUE) == 0)
+		if (SoldierToVirtualSoldierLineOfSightTest(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, usSightLimit, true) == 0)
 		{
 			continue;
 		}
@@ -308,7 +308,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 										pSoldier->bLevel, bStance, NULL);
 		UINT16 const usMaxRange = WeaponInHand(pOpponent) ? GunRange(pOpponent->inv[HANDPOS]) :
 						GCM->getWeapon(GLOCK_18)->usRange;
-		INT32  const iBulletGetThrough = std::clamp(int(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0, 100);
+		INT32  const iBulletGetThrough = std::clamp(int(((usMaxRange - usRange) / (float)usMaxRange + .3) * 100), 0, 100);
 		if (iBulletGetThrough > 5 && iGetThrough > 0)
 		{
 			INT32 const iCover = iGetThrough * iBulletGetThrough / 100;
@@ -495,7 +495,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, int bSear
 	INT16   sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT16   sGridNo;
 	INT16   sCounterX, sCounterY;
-	BOOLEAN fRoof=FALSE;
+	BOOLEAN fRoof=false;
 
 	//clear out the struct
 	for (int i = 0; i < DC__SOLDIER_VISIBLE_RANGE; ++i)
@@ -527,7 +527,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, int bSear
 		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
 		{
 			sGridNo = sTargetGridNo + sXOffset + (MAXCOL * sYOffset);
-			fRoof = FALSE;
+			fRoof = false;
 
 			//record the gridno
 			gVisibleToSoldierStruct[ sCounterX ][ sCounterY ].sGridNo = sGridNo;
@@ -543,7 +543,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, int bSear
 			{
 				if (IsTheRoofVisible(sGridNo) && gWorldSector.z == 0)
 				{
-					fRoof = TRUE;
+					fRoof = true;
 				}
 
 				//if wer havent explored the area yet and we are underground, dont show cover
@@ -565,7 +565,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, int bSear
 			SOLDIERTYPE* tgt = WhoIsThere2(sGridNo, 0);
 			if (tgt == NULL) tgt = WhoIsThere2(sGridNo, 1);
 			//if someone is here, and they are an enemy, skip over them
-			if (tgt != NULL && tgt->bVisible == TRUE && tgt->bTeam != pSoldier->bTeam)
+			if (tgt != NULL && tgt->bVisible == true && tgt->bTeam != pSoldier->bTeam)
 			{
 				continue;
 			}
@@ -701,7 +701,7 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 	INT8    bRetVal=0;
 	INT32   iLosForGridNo=0;
 	UINT16  usSightLimit=0;
-	BOOLEAN bAware=FALSE;
+	BOOLEAN bAware=false;
 
 	const SOLDIERTYPE* const tgt = WhoIsThere2(sTargetGridNo, fRoof ? 1 : 0);
 	if (tgt != NULL)
@@ -712,7 +712,7 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 		// if soldier is known about (SEEN or HEARD within last few turns)
 		if (*pPersOL || *pbPublOL)
 		{
-			bAware = TRUE;
+			bAware = true;
 		}
 	}
 
@@ -752,18 +752,18 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 
 static BOOLEAN IsTheRoofVisible(INT16 sGridNo)
 {
-	if (GetRoom(sGridNo) == NO_ROOM) return FALSE;
+	if (GetRoom(sGridNo) == NO_ROOM) return false;
 
 	if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
 	{
 		if( gTacticalStatus.uiFlags & SHOW_ALL_ROOFS )
-			return( TRUE );
+			return true;
 		else
-			return( FALSE );
+			return false;
 	}
 	else
 	{
-		return( TRUE );
+		return true;
 	}
 }
 

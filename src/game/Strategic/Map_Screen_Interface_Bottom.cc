@@ -93,23 +93,23 @@ enum{
 };
 
 
-BOOLEAN fMapScreenBottomDirty = TRUE;
+BOOLEAN fMapScreenBottomDirty = true;
 
-static BOOLEAN fMapBottomDirtied = FALSE;
+static BOOLEAN fMapBottomDirtied = false;
 
 //Used to flag the transition animation from mapscreen to laptop.
-BOOLEAN gfStartMapScreenToLaptopTransition = FALSE;
+BOOLEAN gfStartMapScreenToLaptopTransition = false;
 
 // leaving map screen
-BOOLEAN fLeavingMapScreen = FALSE;
+BOOLEAN fLeavingMapScreen = false;
 
 // don't start transition from laptop to tactical stuff
-BOOLEAN gfDontStartTransitionFromLaptop = FALSE;
+BOOLEAN gfDontStartTransitionFromLaptop = false;
 
 // exiting to laptop?
-BOOLEAN fLapTop = FALSE;
+BOOLEAN fLapTop = false;
 
-static BOOLEAN gfOneFramePauseOnExit = FALSE;
+static BOOLEAN gfOneFramePauseOnExit = false;
 
 // exit states
 static ExitToWhere gbExitingMapScreenToWhere = MAP_EXIT_TO_INVALID;
@@ -222,7 +222,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 		if (GetSectorFlagStatus(sMap, SF_ALREADY_VISITED))
 		{
-			LoadRadarScreenBitmap(GetMapFileName(sMap, TRUE));
+			LoadRadarScreenBitmap(GetMapFileName(sMap, true));
 		}
 		else
 		{
@@ -244,8 +244,8 @@ void RenderMapScreenInterfaceBottom( void )
 		RenderRadarScreen( );
 
 		// reset dirty flag
-		fMapScreenBottomDirty = FALSE;
-		fMapBottomDirtied = TRUE;
+		fMapScreenBottomDirty = false;
+		fMapBottomDirtied = true;
 	}
 
 	DisplayCompressMode( );
@@ -266,7 +266,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 	EnableDisableBottomButtonsAndRegions( );
 
-	fMapBottomDirtied = FALSE;
+	fMapBottomDirtied = false;
 }
 
 
@@ -309,7 +309,7 @@ static void DestroyButtonsForMapScreenInterfaceBottom()
 	FOR_EACH(GUIButtonRef, i, guiMapBottomExitButtons)    RemoveButton(*i);
 	FOR_EACH(GUIButtonRef, i, guiMapBottomTimeButtons)    RemoveButton(*i);
 	FOR_EACH(GUIButtonRef, i, guiMapMessageScrollButtons) RemoveButton(*i);
-	fMapScreenBottomDirty = TRUE;
+	fMapScreenBottomDirty = true;
 }
 
 
@@ -346,7 +346,7 @@ static void DrawNameOfLoadedSector()
 	SGPFont const font = COMPFONT;
 	SetFontAttributes(font, 183);
 
-	ST::string buf = GetSectorIDString(sSelMap, TRUE);
+	ST::string buf = GetSectorIDString(sSelMap, true);
 	buf = ReduceStringLength(buf, 80, font);
 
 	MPrint(STD_SCREEN_X + 548, STD_SCREEN_Y + 426, buf, HCenterVCenterAlign(80, 16));
@@ -372,7 +372,7 @@ static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, UINT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fMapScreenBottomDirty = TRUE;
+		fMapScreenBottomDirty = true;
 		RequestIncreaseInTimeCompression();
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
@@ -390,7 +390,7 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, UINT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fMapScreenBottomDirty = TRUE;
+		fMapScreenBottomDirty = true;
 		RequestDecreaseInTimeCompression();
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
@@ -769,105 +769,105 @@ BOOLEAN AllowedToTimeCompress( void )
 	// if already leaving, disallow any other attempts to exit
 	if ( fLeavingMapScreen )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if already going someplace
-	if (gbExitingMapScreenToWhere != MAP_EXIT_TO_INVALID) return FALSE;
+	if (gbExitingMapScreenToWhere != MAP_EXIT_TO_INVALID) return false;
 
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// meanwhile coming up
 	if ( gfMeanwhileTryingToStart )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// someone has something to say
 	if ( !DialogueQueueIsEmpty() )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// moving / confirming movement
 	if( ( bSelectedDestChar != -1 ) || fPlotForHelicopter || gfInConfirmMapMoveMode || fShowMapScreenMovementList )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if (fShowAssignmentMenu || fShowTrainingMenu || fShowAttributeMenu || fShowSquadMenu || fShowContractMenu)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if( fShowUpdateBox || fShowTownInfo || ( sSelectedMilitiaTown != 0 ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// renewing contracts
 	if ( gfContractRenewalSquenceOn )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// disabled due to battle?
 	if( ( fDisableMapInterfaceDueToBattle ) || ( fDisableDueToBattleRoster ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if holding an inventory item
 	if ( fMapInventoryItem )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// show the inventory pool?
 	if( fShowMapInventoryPool )
 	{
 		// prevent time compress (items get stolen over time, etc.)
-		return( FALSE );
+		return false;
 	}
 
 	// no mercs have ever been hired
-	if (!gfAtLeastOneMercWasHired) return FALSE;
+	if (!gfAtLeastOneMercWasHired) return false;
 
 
 	// no usable mercs on team!
 	if ( !AnyUsableRealMercenariesOnTeam() )
 	{
-		return( FALSE );
+		return false;
 	}
 
 		// must wait till bombs go off
 	if ( ActiveTimedBombExists() )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// hostile sector / in battle
 	if( (gTacticalStatus.uiFlags & INCOMBAT ) || ( gTacticalStatus.fEnemyInSector ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if( PlayerGroupIsInACreatureInfestedMine() )
 	{
-		return FALSE;
+		return false;
 	}
 
 	// bloodcat ambush?
 	if (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent())
 	{
-		return FALSE;
+		return false;
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -940,7 +940,7 @@ static void DisplayProjectedDailyMineIncome(void)
 	if( iRate != iOldRate )
 	{
 		iOldRate = iRate;
-		fMapScreenBottomDirty = TRUE;
+		fMapScreenBottomDirty = true;
 
 		// if screen was not dirtied, leave
 		if (!fMapBottomDirtied) return;
@@ -959,10 +959,10 @@ BOOLEAN CommonTimeCompressionChecks( void )
 	{
 		// abort plotting movement
 		AbortMovementPlottingMode( );
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1014,7 +1014,7 @@ void RequestTriggerExitFromMapscreen(ExitToWhere const bExitToWhere)
 		gbExitingMapScreenToWhere = bExitToWhere;
 
 		// delay until mapscreen has had a chance to render at least one full frame
-		gfOneFramePauseOnExit = TRUE;
+		gfOneFramePauseOnExit = true;
 	}
 }
 
@@ -1026,52 +1026,52 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 	// if already leaving, disallow any other attempts to exit
 	if ( fLeavingMapScreen )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if already going someplace else
 	if (gbExitingMapScreenToWhere != MAP_EXIT_TO_INVALID &&
 			gbExitingMapScreenToWhere != bExitToWhere)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// someone has something to say
 	if ( !DialogueQueueIsEmpty() )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// meanwhile coming up
 	if ( gfMeanwhileTryingToStart )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if holding an inventory item
-	if (fMapInventoryItem) return FALSE;
+	if (fMapInventoryItem) return false;
 
 	if( fShowUpdateBox || fShowTownInfo || ( sSelectedMilitiaTown != 0 ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// renewing contracts
 	if( gfContractRenewalSquenceOn )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// battle about to occur?
 	if( ( fDisableDueToBattleRoster ) || ( fDisableMapInterfaceDueToBattle ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// the following tests apply to going tactical screen only
@@ -1083,13 +1083,13 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 		BOOLEAN fCurrentSectorSelected = sector == gWorldSector;
 		if (fBattleGoingOn && !fCurrentSectorSelected)
 		{
-			return( FALSE );
+			return false;
 		}
 
 		// must have some mercs there
 		if (!CanGoToTacticalInSector(sector))
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
@@ -1097,11 +1097,11 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 	if( fShowMapInventoryPool )
 	{
 		//dont allow it
-		return( FALSE );
+		return false;
 	}
 
 	// OK to go there, passed all the checks
-	return( TRUE );
+	return true;
 }
 
 
@@ -1113,7 +1113,7 @@ void HandleExitsFromMapScreen( void )
 	// delay all exits by one frame...
 	if (gfOneFramePauseOnExit)
 	{
-		gfOneFramePauseOnExit = FALSE;
+		gfOneFramePauseOnExit = false;
 		return;
 	}
 
@@ -1124,11 +1124,11 @@ void HandleExitsFromMapScreen( void )
 		switch ( gbExitingMapScreenToWhere )
 		{
 			case MAP_EXIT_TO_LAPTOP:
-				fLapTop = TRUE;
+				fLapTop = true;
 				SetPendingNewScreen(LAPTOP_SCREEN);
 
 				BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
-				gfStartMapScreenToLaptopTransition = TRUE;
+				gfStartMapScreenToLaptopTransition = true;
 				break;
 
 			case MAP_EXIT_TO_TACTICAL:
@@ -1142,21 +1142,21 @@ void HandleExitsFromMapScreen( void )
 
 			case MAP_EXIT_TO_SAVE:
 			case MAP_EXIT_TO_LOAD:
-				gfCameDirectlyFromGame = TRUE;
+				gfCameDirectlyFromGame = true;
 				guiPreviousOptionScreen = guiCurrentScreen;
 				SetPendingNewScreen( SAVE_LOAD_SCREEN );
 				break;
 
 			default:
 				// invalid exit type
-				Assert( FALSE );
+				Assert( false );
 		}
 
 		// time compression during mapscreen exit doesn't seem to cause any problems, but turn it off as early as we can
 		StopTimeCompression();
 
 		// now leaving mapscreen
-		fLeavingMapScreen = TRUE;
+		fLeavingMapScreen = true;
 	}
 
 	// cancel exit, either we're on our way, or we're not allowed to go
@@ -1221,5 +1221,5 @@ void ChangeCurrentMapscreenMessageIndex( UINT8 ubNewMessageIndex )
 	gubCurrentMapMessageString = ( gubStartOfMapScreenMessageList + gubFirstMapscreenMessageIndex ) % 256;
 
 	// refresh screen
-	fMapScreenBottomDirty = TRUE;
+	fMapScreenBottomDirty = true;
 }

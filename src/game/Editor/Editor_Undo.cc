@@ -51,16 +51,16 @@ doesn't use the undo methodology.
 */
 
 
-BOOLEAN gfUndoEnabled = FALSE;
+BOOLEAN gfUndoEnabled = false;
 
 void EnableUndo()
 {
-	gfUndoEnabled = TRUE;
+	gfUndoEnabled = true;
 }
 
 void DisableUndo()
 {
-	gfUndoEnabled = FALSE;
+	gfUndoEnabled = false;
 }
 
 // undo node data element
@@ -84,8 +84,8 @@ struct undo_stack
 undo_stack			*gpTileUndoStack = NULL;
 
 
-BOOLEAN fNewUndoCmd = TRUE;
-BOOLEAN gfIgnoreUndoCmdsForLights = FALSE;
+BOOLEAN fNewUndoCmd = true;
+BOOLEAN gfIgnoreUndoCmdsForLights = false;
 
 //New pre-undo binary tree stuff
 //With this, new undo commands will not duplicate saves in the same command.  This will
@@ -129,7 +129,7 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 		top->usMapIndex = usMapIndex;
 		top->left = NULL;
 		top->right = NULL;
-		return TRUE;
+		return true;
 	}
 	curr = top;
 	parent = NULL;
@@ -140,7 +140,7 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 	{
 		parent = curr;
 		if( curr->usMapIndex == usMapIndex ) //found a match, so stop
-			return FALSE;
+			return false;
 		//if the mapIndex is < node's mapIndex, then go left, else right
 		curr = ( usMapIndex < curr->usMapIndex ) ? curr->left : curr->right;
 	}
@@ -156,7 +156,7 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 		parent->left = curr;
 	else
 		parent->right = curr;
-	return TRUE;
+	return true;
 }
 
 
@@ -237,7 +237,7 @@ static void CropStackToMaxLength(INT32 iMaxCmds)
 
 //We are adding a light to the undo list.  We won't save the mapelement, nor will
 //we validate the gridno in the binary tree.  This works differently than a mapelement,
-//because lights work on a different system.  By setting the fLightSaved flag to TRUE,
+//because lights work on a different system.  By setting the fLightSaved flag to true,
 //this will handle the way the undo command is handled.  If there is no lightradius in
 //our saved light, then we intend on erasing the light upon undo execution, otherwise, we
 //save the light radius and light ID, so that we place it during undo execution.
@@ -253,7 +253,7 @@ void AddLightToUndoList(INT32 const iMapIndex, INT32 const iLightRadius)
 	if (gfIgnoreUndoCmdsForLights) return;
 
 	SGP::PODObj<undo_struct> undo_info;
-	undo_info->fLightSaved = TRUE;
+	undo_info->fLightSaved = true;
 	/* if ubLightRadius is 0, then we don't need to save the light information
 	 * because we will erase it when it comes time to execute the undo command. */
 	undo_info->ubLightRadius = iLightRadius;
@@ -279,11 +279,11 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 	static INT32 iCount = 1;
 
 	if(	!gfUndoEnabled )
-		return FALSE;
+		return false;
 	if ( fNewUndoCmd )
 	{
 		iCount = 0;
-		fNewUndoCmd = FALSE;
+		fNewUndoCmd = false;
 	}
 
 	//Check to see if the tile in question is even on the visible map, then
@@ -295,11 +295,11 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 		try
 		{
 			AddToUndoListCmd(iMapIndex, ++iCount);
-			return TRUE;
+			return true;
 		}
 		catch (...) { --iCount; }
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -322,7 +322,7 @@ static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 	// copy the room number information (it's not in the mapelement structure)
 	pUndoInfo->ubRoomNum = gubWorldRoomInfo[ iMapIndex ];
 
-	pUndoInfo->fLightSaved = FALSE;
+	pUndoInfo->fLightSaved = false;
 	pUndoInfo->ubLightRadius = 0;
 	pUndoInfo->pMapTile = pData;
 	pUndoInfo->iMapIndex = iMapIndex;
@@ -372,11 +372,11 @@ BOOLEAN ExecuteUndoList( void )
 	INT32				iUndoMapIndex;
 
 	if(	!gfUndoEnabled )
-		return FALSE;
+		return false;
 
 	// Is there something on the undo stack?
 	if ( gpTileUndoStack == NULL )
-		return( TRUE );
+		return true;
 
 	// Get number of stack entries for this command (top node will tell this)
 	iCmdCount = gpTileUndoStack->iCmdCount;
@@ -387,19 +387,19 @@ BOOLEAN ExecuteUndoList( void )
 	{
 		iUndoMapIndex = gpTileUndoStack->pData->iMapIndex;
 
-		BOOLEAN fExitGrid = FALSE; // XXX HACK000E
+		BOOLEAN fExitGrid = false; // XXX HACK000E
 		// Find which map tile we are to "undo"
 		if( gpTileUndoStack->pData->fLightSaved )
 		{ //We saved a light, so delete that light
 			//Turn on this flag so that the following code, when executed, doesn't attempt to
 			//add lights to the undo list.  That would cause problems...
-			gfIgnoreUndoCmdsForLights = TRUE;
+			gfIgnoreUndoCmdsForLights = true;
 			if( !gpTileUndoStack->pData->ubLightRadius )
 				RemoveLight(iUndoMapIndex);
 			else
 				PlaceLight(gpTileUndoStack->pData->ubLightRadius, iUndoMapIndex);
 			//Turn off the flag so lights can again be added to the undo list.
-			gfIgnoreUndoCmdsForLights = FALSE;
+			gfIgnoreUndoCmdsForLights = false;
 		}
 		else
 		{	// We execute the undo command node by simply swapping the contents
@@ -412,7 +412,7 @@ BOOLEAN ExecuteUndoList( void )
 
 			// Now we smooth out the changes...
 			//SmoothUndoMapTileTerrain( iUndoMapIndex, gpTileUndoStack->pData->pMapTile );
-			SmoothAllTerrainTypeRadius( iUndoMapIndex, 1, TRUE );
+			SmoothAllTerrainTypeRadius( iUndoMapIndex, 1, true );
 		}
 
 		// ...trash the top element of the stack...
@@ -437,7 +437,7 @@ BOOLEAN ExecuteUndoList( void )
 		}
 	}
 
-	return( TRUE );
+	return true;
 }
 
 namespace
@@ -590,7 +590,7 @@ void DetermineUndoState()
 			(!IsMouseButtonDown(MOUSE_BUTTON_RIGHT) &&  gfCurrentSelectionWithRightButton) )
 		{
 			//Clear the mapindex binary tree list, and set up flag for new undo command.
-			fNewUndoCmd = TRUE;
+			fNewUndoCmd = true;
 			ClearUndoMapIndexTree();
 		}
 	}

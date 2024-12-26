@@ -72,7 +72,7 @@
 #define BUTTON_PANEL_HEIGHT					76
 
 
-BOOLEAN	gfInMovementMenu = FALSE;
+BOOLEAN	gfInMovementMenu = false;
 static INT32 giMenuAnchorX;
 static INT32 giMenuAnchorY;
 
@@ -89,7 +89,7 @@ struct TOP_MESSAGE
 };
 
 static TOP_MESSAGE gTopMessage;
-BOOLEAN gfTopMessageDirty = FALSE;
+BOOLEAN gfTopMessageDirty = false;
 
 
 static MOUSE_REGION gMenuOverlayRegion;
@@ -101,9 +101,9 @@ static UINT16        gusUIMessageHeight;
 UINT32 guiUIMessageTime = 0;
 static MercPopUpBox* g_ui_message_box;
 UINT32 guiUIMessageTimeDelay = 0;
-static BOOLEAN       gfUseSkullIconMessage = FALSE;
+static BOOLEAN       gfUseSkullIconMessage = false;
 
-static BOOLEAN gfPanelAllocated = FALSE;
+static BOOLEAN gfPanelAllocated = false;
 
 
 enum
@@ -265,7 +265,7 @@ void InitializeCurrentPanel()
 	}
 
 	//RefreshMouseRegions( );
-	gfPanelAllocated = TRUE;
+	gfPanelAllocated = true;
 }
 
 
@@ -287,7 +287,7 @@ void ShutdownCurrentPanel( )
 				break;
 		}
 
-		gfPanelAllocated = FALSE;
+		gfPanelAllocated = false;
 
 	}
 }
@@ -382,11 +382,11 @@ BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s)
 	switch (gsCurInterfacePanel)
 	{
 		case TEAM_PANEL:
-			return TRUE;
+			return true;
 		case SM_PANEL:
 			return gpSMCurrentMerc == s;
 		default:
-			return FALSE;
+			return false;
 	}
 }
 
@@ -418,7 +418,7 @@ static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, UINT32 iReason
 
 void PopupMovementMenu(UI_EVENT* const ev)
 {
-	EraseInterfaceMenus(TRUE);
+	EraseInterfaceMenus(true);
 
 	// Create mouse region over all area to facilitate clicking to end
 	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MovementMenuBackregionCallback);
@@ -528,8 +528,8 @@ void PopupMovementMenu(UI_EVENT* const ev)
 	MakeButtonMove(CRAWL_ICON, CRAWL_IMAGES, x + 40, y + 40, ev, pTacticalPopupButtonStrings[CRAWL_ICON],
 			!IsValidStance(s, ANIM_PRONE));
 
-	gfInMovementMenu  = TRUE;
-	gfIgnoreScrolling = TRUE;
+	gfInMovementMenu  = true;
+	gfIgnoreScrolling = true;
 }
 
 
@@ -548,7 +548,7 @@ void PopDownMovementMenu( )
 		RemoveButton( iActionIcons[ CANCEL_ICON  ] );
 
 		// Turn off Ignore scrolling
-		gfIgnoreScrolling = FALSE;
+		gfIgnoreScrolling = false;
 
 		// Rerender world
 		SetRenderFlags( RENDER_FLAG_FULL );
@@ -558,7 +558,7 @@ void PopDownMovementMenu( )
 		MSYS_RemoveRegion( &gMenuOverlayRegion );
 	}
 
-	gfInMovementMenu = FALSE;
+	gfInMovementMenu = false;
 
 }
 
@@ -637,7 +637,7 @@ static void BtnMovementCallback(GUI_BUTTON* btn, UINT32 reason)
 		{
 			// Signal end of event
 			EndMenuEvent( U_MOVEMENT_MENU );
-			pUIEvent->uiParams[1] = FALSE;
+			pUIEvent->uiParams[1] = false;
 			return;
 		}
 		else
@@ -647,7 +647,7 @@ static void BtnMovementCallback(GUI_BUTTON* btn, UINT32 reason)
 
 		// Signal end of event
 		EndMenuEvent( U_MOVEMENT_MENU );
-		pUIEvent->uiParams[1] = TRUE;
+		pUIEvent->uiParams[1] = true;
 
 	}
 
@@ -664,7 +664,7 @@ static void HandleUpDownArrowBackgrounds(void)
 	// Check for change in mode
 	if ( guiShowUPDownArrows != uiOldShowUpDownArrows || gfUIRefreshArrows )
 	{
-		gfUIRefreshArrows = FALSE;
+		gfUIRefreshArrows = false;
 
 		// Hide position of new ones
 		GetArrowsBackground( );
@@ -822,7 +822,7 @@ static void GetArrowsBackground(void)
 	if (sel == NULL) return;
 
 	// Get screen position of our guy
-	GetSoldierTRUEScreenPos(sel, &sMercScreenX, &sMercScreenY);
+	GetSoldiertrueScreenPos(sel, &sMercScreenX, &sMercScreenY);
 
 	if (guiShowUPDownArrows & ARROWS_SHOW_UP_BESIDE)
 	{
@@ -953,7 +953,7 @@ void GetSoldierAboveGuyPositions(SOLDIERTYPE const* const s, INT16* const psX, I
 
 	INT16 sMercScreenX;
 	INT16 sMercScreenY;
-	GetSoldierTRUEScreenPos(s, &sMercScreenX, &sMercScreenY);
+	GetSoldiertrueScreenPos(s, &sMercScreenX, &sMercScreenY);
 
 	*psX = sMercScreenX - 80 / 2;
 	*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
@@ -991,13 +991,13 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 	{
 		if (s.bVisible == -1)
 		{
-			s.fFlashLocator = FALSE;
+			s.fFlashLocator = false;
 		}
 		else
 		{
 			if (TIMECOUNTERDONE(s.BlinkSelCounter, 80ms))
 			{
-				s.fShowLocator = TRUE;
+				s.fShowLocator = true;
 				if (++s.sLocatorFrame == 5)
 				{
 					// Update time we do this
@@ -1008,14 +1008,14 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 
 			if (s.fFlashLocator == s.ubNumLocateCycles)
 			{
-				s.fFlashLocator = FALSE;
-				s.fShowLocator  = FALSE;
+				s.fFlashLocator = false;
+				s.fShowLocator  = false;
 			}
 
 			// Render the beastie
 			INT16 sXPos;
 			INT16 sYPos;
-			GetSoldierAboveGuyPositions(&s, &sXPos, &sYPos, TRUE);
+			GetSoldierAboveGuyPositions(&s, &sXPos, &sYPos, true);
 
 			// Adjust for bars
 			sXPos += 25;
@@ -1055,7 +1055,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 
 	INT16 sXPos;
 	INT16 sYPos;
-	GetSoldierAboveGuyPositions(&s, &sXPos, &sYPos, FALSE);
+	GetSoldierAboveGuyPositions(&s, &sXPos, &sYPos, false);
 
 	// Display name
 	SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
@@ -1166,7 +1166,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 
 static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight)
 {
-	FLOAT  dWidth, dPercentage;
+	float  dWidth, dPercentage;
 	//UINT16 usLineColor;
 	UINT16 usLineColor;
 	INT8   bBandage;
@@ -1186,41 +1186,41 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	// NOW DO BLEEDING
 	if ( pSoldier->bBleeding )
 	{
-		dPercentage = (FLOAT)( pSoldier->bBleeding +  pSoldier->bLife + bBandage )/ (FLOAT)100;
+		dPercentage = (float)( pSoldier->bBleeding +  pSoldier->bLife + bBandage )/ (float)100;
 		dWidth = dPercentage * sWidth;
 		usLineColor = Get16BPPColor(FROMRGB(240, 240, 20));
-		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
+		RectangleDraw(true, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
 
 	if( bBandage )
 	{
-		dPercentage = (FLOAT)( pSoldier->bLife + bBandage ) / (FLOAT)100;
+		dPercentage = (float)( pSoldier->bLife + bBandage ) / (float)100;
 		dWidth = dPercentage * sWidth;
 		usLineColor = Get16BPPColor( FROMRGB( 222, 132, 132 ) );
-		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
+		RectangleDraw(true, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
 
-	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
+	dPercentage = (float)pSoldier->bLife / (float)100;
 	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(200, 0, 0));
-	RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
+	RectangleDraw(true, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 
-	dPercentage = (FLOAT)( pSoldier->bBreathMax ) / (FLOAT)100;
+	dPercentage = (float)( pSoldier->bBreathMax ) / (float)100;
 	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(20, 20, 150));
-	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
+	RectangleDraw(true, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
-	dPercentage = (FLOAT)( pSoldier->bBreath ) / (FLOAT)100;
+	dPercentage = (float)( pSoldier->bBreath ) / (float)100;
 	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(100, 100, 220));
-	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
+	RectangleDraw(true, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
 	/*
 	// morale
-	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
+	dPercentage = (float)pSoldier->bMorale / (float)100;
 	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(0, 250, 0));
-	RectangleDraw(TRUE, sXPos + 1, sYPos + 7, (INT32)(sXPos + dWidth + 1), sYPos + 7, usLineColor, pDestBuf);*/
+	RectangleDraw(true, sXPos + 1, sYPos + 7, (INT32)(sXPos + dWidth + 1), sYPos + 7, usLineColor, pDestBuf);*/
 }
 
 void ClearInterface( )
@@ -1263,7 +1263,7 @@ void ClearInterface( )
 	// Remove any paths, cursors
 	ErasePath();
 
-	//gfPlotNewMovement = TRUE;
+	//gfPlotNewMovement = true;
 
 	// Erase Interface cursors
 	HideUICursor( );
@@ -1285,10 +1285,10 @@ void ClearInterface( )
 void RestoreInterface( )
 {
 	// Once we are done, plot path again!
-	gfPlotNewMovement = TRUE;
+	gfPlotNewMovement = true;
 
 	// OK, reset arrows too...
-	gfUIRefreshArrows = TRUE;
+	gfUIRefreshArrows = true;
 
 	// SHow lock UI cursors...
 	gDisableRegion.ChangeCursor(CURSOR_WAIT);
@@ -1319,7 +1319,7 @@ struct OPENDOOR_MENU
 };
 
 static OPENDOOR_MENU gOpenDoorMenu;
-BOOLEAN gfInOpenDoorMenu = FALSE;
+BOOLEAN gfInOpenDoorMenu = false;
 
 
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor);
@@ -1330,13 +1330,13 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 	INT16 sScreenX, sScreenY;
 
 	// Erase other menus....
-	EraseInterfaceMenus( TRUE );
+	EraseInterfaceMenus( true );
 
 	InterruptTime();
 	PauseGame();
 	LockPauseState(LOCK_PAUSE_DOOR_OPEN);
 	// Pause timers as well....
-	PauseTime( TRUE );
+	PauseTime( true );
 
 
 	gOpenDoorMenu.pSoldier     = pSoldier;
@@ -1345,7 +1345,7 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 	// OK, Determine position...
 	// Center on guy
 	// Locate to guy first.....
-	LocateSoldier(pSoldier, FALSE);
+	LocateSoldier(pSoldier, false);
 	GetSoldierScreenPos( pSoldier, &sScreenX, &sScreenY );
 	gOpenDoorMenu.sX = sScreenX - (BUTTON_PANEL_WIDTH  - pSoldier->sBoundingBoxWidth)  / 2;
 	gOpenDoorMenu.sY = sScreenY - (BUTTON_PANEL_HEIGHT - pSoldier->sBoundingBoxHeight) / 2;
@@ -1373,7 +1373,7 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 	}
 
 
-	gOpenDoorMenu.fMenuHandled = FALSE;
+	gOpenDoorMenu.fMenuHandled = false;
 
 	guiPendingOverrideEvent    = OP_OPENDOORMENU;
 	HandleTacticalUI( );
@@ -1398,7 +1398,7 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 		ST::string zDisp = ST::format("{} ( {} )", help, ap);
 		btn->SetFastHelpText(zDisp);
 	}
-	if (disable || (ap != 0 && !EnoughPoints(gOpenDoorMenu.pSoldier, ap, bp, FALSE)))
+	if (disable || (ap != 0 && !EnoughPoints(gOpenDoorMenu.pSoldier, ap, bp, false)))
 	{
 		DisableButton(btn);
 	}
@@ -1439,7 +1439,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 			d, pTacticalPopupButtonStrings[EXPLOSIVE_DOOR_ICON]);
 
 	ST::string help = pTacticalPopupButtonStrings[fClosingDoor ? CANCEL_ICON + 1 : OPEN_DOOR_ICON];
-	MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE, help);
+	MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, AP_OPEN_DOOR, BP_OPEN_DOOR, false, help);
 
 	MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx, dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0,
 			pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON]);
@@ -1447,13 +1447,13 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 			pTacticalPopupButtonStrings[BOOT_DOOR_ICON]);
 	MakeButtonDoor(UNTRAP_DOOR_ICON, UNTRAP_DOOR_ICON, dx + 20, dy + 40, AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, d0,
 			pTacticalPopupButtonStrings[UNTRAP_DOOR_ICON]);
-	MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE,
+	MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, false,
 			pTacticalPopupButtonStrings[CANCEL_ICON]);
 
-	gfInOpenDoorMenu = TRUE;
+	gfInOpenDoorMenu = true;
 
 	// Ignore scrolling
-	gfIgnoreScrolling = TRUE;
+	gfIgnoreScrolling = true;
 }
 
 
@@ -1464,7 +1464,7 @@ void PopDownOpenDoorMenu( )
 		UnLockPauseState();
 		UnPauseGame();
 		// UnPause timers as well....
-		PauseTime( FALSE );
+		PauseTime( false );
 
 		RemoveButton( iActionIcons[ USE_KEYRING_ICON  ] );
 		RemoveButton( iActionIcons[ USE_CROWBAR_ICON  ] );
@@ -1477,7 +1477,7 @@ void PopDownOpenDoorMenu( )
 		RemoveButton( iActionIcons[ CANCEL_ICON  ] );
 
 		// Turn off Ignore scrolling
-		gfIgnoreScrolling = FALSE;
+		gfIgnoreScrolling = false;
 
 		// Rerender world
 		SetRenderFlags( RENDER_FLAG_FULL );
@@ -1487,7 +1487,7 @@ void PopDownOpenDoorMenu( )
 		MSYS_RemoveRegion( &gMenuOverlayRegion);
 	}
 
-	gfInOpenDoorMenu = FALSE;
+	gfInOpenDoorMenu = false;
 
 }
 
@@ -1528,7 +1528,7 @@ void CancelOpenDoorMenu( )
 static void DoorAction(INT16 const ap, INT16 const bp, HandleDoor const action)
 {
 	SOLDIERTYPE* const s = gOpenDoorMenu.pSoldier;
-	if (EnoughPoints(s, ap, bp, FALSE))
+	if (EnoughPoints(s, ap, bp, false))
 	{
 		SetUIBusy(s);
 		InteractWithClosedDoor(s, action);
@@ -1548,7 +1548,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
 		// Popdown menu
-		gOpenDoorMenu.fMenuHandled = TRUE;
+		gOpenDoorMenu.fMenuHandled = true;
 
 		if (btn == iActionIcons[CANCEL_ICON])
 		{
@@ -1559,14 +1559,14 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 		{
 			// Open door normally...
 			// Check APs
-			if (EnoughPoints(gOpenDoorMenu.pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE))
+			if (EnoughPoints(gOpenDoorMenu.pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, false))
 			{
 				// Set UI
 				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				if (gOpenDoorMenu.fClosingDoor)
 				{
-					ChangeSoldierState(gOpenDoorMenu.pSoldier, GetAnimStateForInteraction(*gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR), 0, FALSE);
+					ChangeSoldierState(gOpenDoorMenu.pSoldier, GetAnimStateForInteraction(*gOpenDoorMenu.pSoldier, true, CLOSE_DOOR), 0, false);
 				}
 				else
 				{
@@ -1621,7 +1621,7 @@ BOOLEAN HandleOpenDoorMenu( )
 		return( gOpenDoorMenu.fMenuHandled );
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1726,10 +1726,10 @@ static void CreateTopMessage(void);
 
 void AddTopMessage(const MESSAGE_TYPES ubType)
 {
-	gTopMessage.fCreated = TRUE;
+	gTopMessage.fCreated = true;
 
 	gTacticalStatus.ubTopMessageType = ubType;
-	gTacticalStatus.fInTopMessage    = TRUE;
+	gTacticalStatus.fInTopMessage    = true;
 
 	CreateTopMessage();
 }
@@ -1744,7 +1744,7 @@ static void CreateTopMessage(void)
 
 	const char* bar_file;
 	UINT16      bar_gfx     = 0;
-	BOOLEAN     fDoLimitBar = FALSE;
+	BOOLEAN     fDoLimitBar = false;
 	UINT8       foreground;
 	UINT8       shadow;
 	switch (ts->ubTopMessageType)
@@ -1756,14 +1756,14 @@ static void CreateTopMessage(void)
 			bar_file    = INTERFACEDIR "/rect.sti";
 			foreground  = FONT_MCOLOR_WHITE;
 			shadow      = DEFAULT_SHADOW;
-			fDoLimitBar = TRUE;
+			fDoLimitBar = true;
 			break;
 
 		case PLAYER_INTERRUPT_MESSAGE:
 			bar_file   = INTERFACEDIR "/timebaryellow.sti";
 			foreground = FONT_MCOLOR_BLACK;
 			shadow     = NO_SHADOW;
-			if (gGameOptions.fTurnTimeLimit) fDoLimitBar = TRUE;
+			if (gGameOptions.fTurnTimeLimit) fDoLimitBar = true;
 			break;
 
 		case PLAYER_TURN_MESSAGE:
@@ -1772,7 +1772,7 @@ static void CreateTopMessage(void)
 			shadow     = NO_SHADOW;
 			if (gGameOptions.fTurnTimeLimit)
 			{
-				fDoLimitBar = TRUE;
+				fDoLimitBar = true;
 			}
 			else
 			{
@@ -1847,7 +1847,7 @@ static void CreateTopMessage(void)
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
 
-	gfTopMessageDirty = TRUE;
+	gfTopMessageDirty = true;
 }
 
 
@@ -1865,7 +1865,7 @@ void HandleTopMessages(void)
 	// yet.  This is mostly for loading saved games.
 	if (!gTopMessage.fCreated)
 	{
-		gfTopMessageDirty = TRUE;
+		gfTopMessageDirty = true;
 		AddTopMessage((MESSAGE_TYPES)ts->ubTopMessageType);
 	}
 
@@ -1918,7 +1918,7 @@ void HandleTopMessages(void)
 						// OK, have we gone past the time to
 						if (ts->usTactialTurnLimitMax - ts->usTactialTurnLimitCounter < PLAYER_TEAM_TIMER_TICKS_FROM_END_TO_START_BEEP)
 						{
-							ts->fTactialTurnLimitStartedBeep = TRUE;
+							ts->fTactialTurnLimitStartedBeep = true;
 							gTopMessage.uiTimeSinceLastBeep = GetJA2Clock();
 						}
 					}
@@ -1949,7 +1949,7 @@ void HandleTopMessages(void)
 		gTopMessage.sWorldRenderX != gsRenderCenterX ||
 		gTopMessage.sWorldRenderY != gsRenderCenterY)
 	{
-		gfTopMessageDirty         = FALSE;
+		gfTopMessageDirty         = false;
 		gTopMessage.sWorldRenderX = gsRenderCenterX;
 		gTopMessage.sWorldRenderY = gsRenderCenterY;
 
@@ -1966,7 +1966,7 @@ void EndTopMessage(void)
 	if (!gTacticalStatus.fInTopMessage) return;
 
 	gsVIEWPORT_WINDOW_START_Y     = 0;
-	gTacticalStatus.fInTopMessage = FALSE;
+	gTacticalStatus.fInTopMessage = false;
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
@@ -2006,7 +2006,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 
 	if ( !gGameOptions.fTurnTimeLimit )
 	{
-		AddTopMessage(fInterrupt == TRUE ? PLAYER_INTERRUPT_MESSAGE : PLAYER_TURN_MESSAGE);
+		AddTopMessage(fInterrupt == true ? PLAYER_INTERRUPT_MESSAGE : PLAYER_TURN_MESSAGE);
 		return;
 	}
 
@@ -2042,13 +2042,13 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 	}
 
 	gTacticalStatus.uiTactialTurnLimitClock = 0;
-	gTacticalStatus.fTactialTurnLimitStartedBeep = FALSE;
+	gTacticalStatus.fTactialTurnLimitStartedBeep = false;
 
 	// RESET COIUNTER...
 	RESETCOUNTER(TEAMTURNUPDATE);
 
 	// OK, set value
-	AddTopMessage(fInterrupt != TRUE ? PLAYER_TURN_MESSAGE : PLAYER_INTERRUPT_MESSAGE);
+	AddTopMessage(fInterrupt != true ? PLAYER_TURN_MESSAGE : PLAYER_INTERRUPT_MESSAGE);
 }
 
 
@@ -2082,14 +2082,14 @@ ST::string GetSoldierHealthString(const SOLDIERTYPE* const s)
 }
 
 
-static BOOLEAN gfDisplayPhysicsUI = FALSE;
+static BOOLEAN gfDisplayPhysicsUI = false;
 static INT16   gsPhysicsImpactPointGridNo;
 static INT8    gbPhysicsImpactPointLevel;
-static BOOLEAN gfBadPhysicsCTGT = FALSE;
+static BOOLEAN gfBadPhysicsCTGT = false;
 
 void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
 {
-	gfDisplayPhysicsUI = TRUE;
+	gfDisplayPhysicsUI = true;
 	gsPhysicsImpactPointGridNo = sGridNo;
 	gbPhysicsImpactPointLevel = bLevel;
 	gfBadPhysicsCTGT = fBadCTGT;
@@ -2097,7 +2097,7 @@ void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
 
 void EndPhysicsTrajectoryUI( )
 {
-	gfDisplayPhysicsUI = FALSE;
+	gfDisplayPhysicsUI = false;
 
 }
 
@@ -2135,7 +2135,7 @@ void ResetPhysicsTrajectoryUI( )
 
 void DirtyTopMessage( )
 {
-	gTopMessage.fCreated = FALSE;
+	gTopMessage.fCreated = false;
 }
 
 
@@ -2147,7 +2147,7 @@ static UINT32 CalcUIMessageDuration(const ST::string& str)
 }
 
 
-static BOOLEAN gfMultipurposeLocatorOn = FALSE;
+static BOOLEAN gfMultipurposeLocatorOn = false;
 static UINT32  guiMultiPurposeLocatorLastUpdate;
 static INT8    gbMultiPurposeLocatorFrame;
 static INT16   gsMultiPurposeLocatorGridNo;
@@ -2160,7 +2160,7 @@ void BeginMultiPurposeLocator(const INT16 sGridNo, const INT8 bLevel)
 	guiMultiPurposeLocatorLastUpdate = 0;
 	gbMultiPurposeLocatorCycles      = 0;
 	gbMultiPurposeLocatorFrame       = 0;
-	gfMultipurposeLocatorOn = TRUE;
+	gfMultipurposeLocatorOn = true;
 
 	gsMultiPurposeLocatorGridNo = sGridNo;
 	gbMultiPurposeLocatorLevel  = bLevel;
@@ -2195,7 +2195,7 @@ void HandleMultiPurposeLocator( )
 
 		if ( gbMultiPurposeLocatorCycles == 8 )
 		{
-			gfMultipurposeLocatorOn    = FALSE;
+			gfMultipurposeLocatorOn    = false;
 		}
 	}
 }
@@ -2204,8 +2204,8 @@ void HandleMultiPurposeLocator( )
 
 void RenderTopmostMultiPurposeLocator( )
 {
-	FLOAT dOffsetX, dOffsetY;
-	FLOAT dTempX_S, dTempY_S;
+	float dOffsetX, dOffsetY;
+	float dTempX_S, dTempY_S;
 	INT16 sX, sY, sXPos, sYPos;
 
 	if ( !gfMultipurposeLocatorOn )
@@ -2215,8 +2215,8 @@ void RenderTopmostMultiPurposeLocator( )
 
 	ConvertGridNoToCenterCellXY( gsMultiPurposeLocatorGridNo, &sX, &sY );
 
-	dOffsetX = (FLOAT)( sX - gsRenderCenterX );
-	dOffsetY = (FLOAT)( sY - gsRenderCenterY );
+	dOffsetX = (float)( sX - gsRenderCenterX );
+	dOffsetY = (float)( sY - gsRenderCenterY );
 
 	// Calculate guy's position
 	FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );

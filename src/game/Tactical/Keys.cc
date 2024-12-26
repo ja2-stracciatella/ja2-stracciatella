@@ -162,7 +162,7 @@ static void DoLockDoor(DOOR* pDoor, UINT8 ubKeyID)
 	// if the door is unlocked and this is the right key, lock the door
 	if (!(pDoor->fLocked) && ValidKey( pDoor, ubKeyID ))
 	{
-		pDoor->fLocked = TRUE;
+		pDoor->fLocked = true;
 	}
 }
 
@@ -175,7 +175,7 @@ static void DoUnlockDoor(DOOR* pDoor, UINT8 ubKeyID)
 		// Play lockpicking
 		PlayLocationJA2Sample(pDoor->sGridNo, UNLOCK_DOOR_1, MIDVOLUME, 1);
 
-		pDoor->fLocked = FALSE;
+		pDoor->fLocked = false;
 	}
 }
 
@@ -186,13 +186,13 @@ BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
 	if (SoldierHasKey(*pSoldier, ubKeyID))
 	{
 		DoUnlockDoor(pDoor, ubKeyID);
-		return TRUE;
+		return true;
 	}
 
 	// drat, couldn't find the key
 	PlayJA2Sample(KEY_FAILURE, MIDVOLUME, 1, MIDDLEPAN);
 
-	return FALSE;
+	return false;
 }
 
 
@@ -202,11 +202,11 @@ BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
 	if (SoldierHasKey(*pSoldier, ubKeyID))
 	{
 		DoLockDoor(pDoor, ubKeyID);
-		return TRUE;
+		return true;
 	}
 
 	// drat, couldn't find the key
-	return FALSE;
+	return false;
 }
 
 
@@ -218,7 +218,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	if ( bSlot == ITEM_NOT_FOUND )
 	{
 		// error!
-		return( FALSE );
+		return false;
 	}
 
 	// generate a noise for thumping on the door
@@ -235,13 +235,13 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// Play lock busted sound
 		PlayLocationJA2Sample(pSoldier->sGridNo, BREAK_LOCK, MIDVOLUME, 1);
 
-		return( TRUE );
+		return true;
 	}
 
 	if ( pDoor->ubLockID == LOCK_UNOPENABLE )
 	{
 		// auto failure!
-		return( FALSE );
+		return false;
 	}
 
 	// possibly damage crowbar
@@ -273,7 +273,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// Play lock busted sound
 		PlayLocationJA2Sample(pSoldier->sGridNo, BREAK_LOCK, MIDVOLUME, 1);
 
-		return( TRUE );
+		return true;
 	}
 	else
 	{
@@ -291,7 +291,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			StatChange(*pSoldier, STRAMT, 1, FROM_SUCCESS);
 		}
 
-		return( FALSE );
+		return false;
 	}
 
 }
@@ -316,13 +316,13 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// Play lock busted sound
 		PlayLocationJA2Sample(pSoldier->sGridNo, BREAK_LOCK, MIDVOLUME, 1);
 
-		return( TRUE );
+		return true;
 	}
 
 	if ( pDoor->ubLockID == LOCK_UNOPENABLE )
 	{
 		// auto failure!
-		return( FALSE );
+		return false;
 	}
 
 	pLock = &(LockTable[pDoor->ubLockID]);
@@ -350,7 +350,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// Play lock busted sound
 		PlayLocationJA2Sample(pSoldier->sGridNo, BREAK_LOCK, MIDVOLUME, 1);
 
-		return( TRUE );
+		return true;
 	}
 	else
 	{
@@ -367,7 +367,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			// give token point for effort :-)
 			StatChange(*pSoldier, STRAMT, 1, FROM_SUCCESS);
 		}
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -380,7 +380,7 @@ BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	if ( pDoor->ubLockID == LOCK_UNOPENABLE )
 	{
 		// auto failure!
-		return( FALSE );
+		return false;
 	}
 
 	pLock = &(LockTable[pDoor->ubLockID]);
@@ -420,15 +420,15 @@ BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		StatChange(*pSoldier, DEXTAMT, pLock->ubPickDifficulty / 10, FROM_SUCCESS);
 
 		// succeeded!
-		pDoor->fLocked = FALSE;
-		return( TRUE );
+		pDoor->fLocked = false;
+		return true;
 	}
 	else
 	{
 		// NOTE: failures are not rewarded, since you can keep trying indefinitely...
 
 		// check for traps
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -451,12 +451,12 @@ BOOLEAN AttemptToUntrapDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// succeeded!
 		pDoor->ubTrapLevel = 0;
 		pDoor->ubTrapID = NO_TRAP;
-		return( TRUE );
+		return true;
 	}
 	else
 	{
 		// trap should REALLY go off now!
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -474,11 +474,11 @@ BOOLEAN ExamineDoorForTraps( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	{
 		if (pDoor->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED)
 		{
-			return( TRUE );
+			return true;
 		}
 		else
 		{
-			bDetectLevel = CalcTrapDetectLevel( pSoldier, TRUE );
+			bDetectLevel = CalcTrapDetectLevel( pSoldier, true );
 			if (bDetectLevel < pDoor->ubTrapLevel)
 			{
 				pDoor->bPerceivedTrapped = DOOR_PERCEIVED_UNTRAPPED;
@@ -486,11 +486,11 @@ BOOLEAN ExamineDoorForTraps( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			else
 			{
 				pDoor->bPerceivedTrapped = DOOR_PERCEIVED_TRAPPED;
-				return( TRUE );
+				return true;
 			}
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN HasDoorTrapGoneOff( SOLDIERTYPE * pSoldier, DOOR * pDoor )
@@ -501,14 +501,14 @@ BOOLEAN HasDoorTrapGoneOff( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	if (pDoor->ubTrapID != NO_TRAP)
 	{
 		// one quick check to see if the guy sees the trap ahead of time!
-		bDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
+		bDetectLevel = CalcTrapDetectLevel( pSoldier, false );
 		if (bDetectLevel < pDoor->ubTrapLevel)
 		{
 			// trap goes off!
-			return( TRUE );
+			return true;
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -598,7 +598,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	bSlot = FindObj( pSoldier, SHAPED_CHARGE );
 	if (bSlot == NO_SLOT)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	iResult = SkillCheck( pSoldier, PLANTING_BOMB_CHECK, 0 );
@@ -648,7 +648,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		if (pDoor->damageLock(GCM->getExplosive(SHAPED_CHARGE)->getBlastEffect()->damage * 2))
 		{
 			// Lock destroyed, award experience points?
-			return( TRUE );
+			return true;
 		}
 	}
 	else
@@ -663,7 +663,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// OOPS! ... BOOM!
 		IgniteExplosionXY(NULL, pSoldier->sX, pSoldier->sY, gpWorldLevelData[pSoldier->sGridNo].sHeight, pSoldier->sGridNo, SHAPED_CHARGE, 0);
 	}
-	return( FALSE );
+	return false;
 }
 
 bool DOOR::damageLock(int const additionalDamage)
@@ -927,7 +927,7 @@ static bool IsCloseEnoughAndHasLOS(SOLDIERTYPE const& s, GridNo const gridno, IN
 		PythSpacesAway(s.sGridNo, gridno) <= dist_visible &&
 		// Can we trace a line of sight to his x,y coordinates? (taking into account
 		// we are definitely aware of this guy now)
-		SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, dist_visible, TRUE);
+		SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, dist_visible, true);
 }
 
 
@@ -1245,7 +1245,7 @@ void ExamineDoorsOnEnteringSector()
 		{
 			// If open, close
 			if (!(d.ubFlags & DOOR_OPEN)) continue;
-			HandleDoorChangeFromGridNo(0, d.sGridNo, TRUE);
+			HandleDoorChangeFromGridNo(0, d.sGridNo, true);
 		}
 		break;
 	}

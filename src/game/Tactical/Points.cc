@@ -276,7 +276,7 @@ INT16 ActionPointCost(const SOLDIERTYPE* const pSoldier, const INT16 sGridNo, co
 			case RUNNING:
 			case ADULTMONSTER_WALKING:
 			case BLOODCAT_RUN:
-				sPoints = (INT16)( ((DOUBLE)sTileCost) / RUNDIVISOR);
+				sPoints = (INT16)( ((double)sTileCost) / RUNDIVISOR);
 				break;
 
 			case CROW_FLY:
@@ -348,7 +348,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case RUNNING:
 			case ADULTMONSTER_WALKING:
 			case BLOODCAT_RUN:
-				sPoints = (INT16)(((DOUBLE)sTileCost) / RUNDIVISOR);
+				sPoints = (INT16)(((double)sTileCost) / RUNDIVISOR);
 				break;
 
 			case CROW_FLY:
@@ -446,19 +446,19 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 	// If this guy is on a special move... don't care about APS, OR BPSs!
 	if ( pSoldier->ubWaitActionToDo  )
 	{
-		return( TRUE );
+		return true;
 	}
 
 	// can't do anything while collapsed
 	if (pSoldier->bCollapsed)
 	{
-		return FALSE;
+		return false;
 	}
 
 	if ( pSoldier->ubQuoteActionID >=QUOTE_ACTION_ID_TRAVERSE_EAST && pSoldier->ubQuoteActionID <= QUOTE_ACTION_ID_TRAVERSE_NORTH )
 	{
 		// AI guy on special move off map
-		return( TRUE );
+		return true;
 	}
 
 	// IN realtime.. only care about BPs
@@ -470,7 +470,7 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 	// Get New points
 	sNewAP = pSoldier->bActionPoints - sAPCost;
 
-	// If we cannot deduct points, return FALSE
+	// If we cannot deduct points, return false
 	if ( sNewAP < 0 )
 	{
 		// Display message if it's our own guy
@@ -478,10 +478,10 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 		{
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NOT_ENOUGH_APS_STR ] );
 		}
-		return( FALSE );
+		return false;
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -509,7 +509,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 		fInterfacePanelDirty = DIRTYLEVEL1;
 	}
 
-	// If we cannot deduct points, return FALSE
+	// If we cannot deduct points, return false
 	if ( sNewAP < 0 )
 	{
 		sNewAP = 0;
@@ -548,7 +548,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 		}
 
 		// Get new breath
-		bNewBreath = (UINT8)( pSoldier->bBreathMax - ( (FLOAT)pSoldier->sBreathRed / (FLOAT)100 ) );
+		bNewBreath = (UINT8)( pSoldier->bBreathMax - ( (float)pSoldier->sBreathRed / (float)100 ) );
 
 		if ( bNewBreath > 100 )
 		{
@@ -764,7 +764,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 {
 	INT16 sBreathPerAP = 0;
-	BOOLEAN fAnimTypeFound = FALSE;
+	BOOLEAN fAnimTypeFound = false;
 
 	if ( gAnimControl[ usAnimState ].uiFlags & ANIM_VARIABLE_EFFORT )
 	{
@@ -803,31 +803,31 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 					break;
 			}
 		}
-		fAnimTypeFound = TRUE;
+		fAnimTypeFound = true;
 	}
 
 	if ( gAnimControl[ usAnimState ].uiFlags & ANIM_NO_EFFORT )
 	{
 		sBreathPerAP = BP_PER_AP_NO_EFFORT;
-		fAnimTypeFound = TRUE;
+		fAnimTypeFound = true;
 	}
 
 	if ( gAnimControl[ usAnimState ].uiFlags & ANIM_MIN_EFFORT )
 	{
 		sBreathPerAP = BP_PER_AP_MIN_EFFORT;
-		fAnimTypeFound = TRUE;
+		fAnimTypeFound = true;
 	}
 
 	if ( gAnimControl[ usAnimState ].uiFlags & ANIM_LIGHT_EFFORT )
 	{
 		sBreathPerAP = BP_PER_AP_LT_EFFORT;
-		fAnimTypeFound = TRUE;
+		fAnimTypeFound = true;
 	}
 
 	if ( gAnimControl[ usAnimState ].uiFlags & ANIM_MODERATE_EFFORT )
 	{
 		sBreathPerAP = BP_PER_AP_MOD_EFFORT;
-		fAnimTypeFound = TRUE;
+		fAnimTypeFound = true;
 	}
 
 	if ( !fAnimTypeFound )
@@ -913,7 +913,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool con
 					{
 						if (s->ubBodyType == BLOODCAT)
 						{
-							got_location = FindNextToAdjacentGridEx(s, grid_no, 0, &adjusted_grid_no, TRUE, FALSE);
+							got_location = FindNextToAdjacentGridEx(s, grid_no, 0, &adjusted_grid_no, true, false);
 							if (got_location == -1) got_location = NOWHERE;
 						}
 						else
@@ -925,7 +925,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool con
 					bool got_adjacent = false;
 					if (got_location == NOWHERE && s->ubBodyType != BLOODCAT)
 					{
-						got_location = FindAdjacentGridEx(s, grid_no, 0, &adjusted_grid_no, TRUE, FALSE);
+						got_location = FindAdjacentGridEx(s, grid_no, 0, &adjusted_grid_no, true, false);
 						if (got_location == -1) got_location = NOWHERE;
 						got_adjacent = true;
 					}
@@ -1031,7 +1031,7 @@ UINT8 BaseAPsToShootOrStab(INT8 const bAPs, INT8 const bAimSkill, OBJECTTYPE con
 
 void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo grid_no, UINT8 const ubAddTurningCost, BOOLEAN* const charge_turning, BOOLEAN* const charge_raise)
 {
-	bool adding_turning_cost = FALSE;
+	bool adding_turning_cost = false;
 	if (ubAddTurningCost)
 	{
 		if (grid_no != NOWHERE)
@@ -1082,15 +1082,15 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	if (gAnimControl[s.usAnimState].ubHeight == ANIM_STAND)
 	{
 		// Don't charge turning if gun-ready
-		if (adding_raise_gun_cost) adding_turning_cost = FALSE;
+		if (adding_raise_gun_cost) adding_turning_cost = false;
 	}
 	else
 	{
 		// Just charge turning costs
-		if (adding_turning_cost) adding_raise_gun_cost = FALSE;
+		if (adding_turning_cost) adding_raise_gun_cost = false;
 	}
 
-	if (AM_A_ROBOT(&s)) adding_raise_gun_cost = FALSE;
+	if (AM_A_ROBOT(&s)) adding_raise_gun_cost = false;
 
 	if (adding_turning_cost)
 	{
@@ -1107,7 +1107,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	if (adding_raise_gun_cost)
 	{
 		ap_cost += GetAPsToReadyWeapon(&s, s.usAnimState);
-		s.fDontChargeReadyAPs = FALSE;
+		s.fDontChargeReadyAPs = false;
 	}
 
 	if (gridno != NOWHERE)
@@ -1306,30 +1306,30 @@ BOOLEAN EnoughAmmo(SOLDIERTYPE* const s, BOOLEAN const fDisplay, INT8 const inv_
 {
 	OBJECTTYPE const& o        = s->inv[inv_pos];
 	UINT16     const  item_idx = o.usItem;
-	if (item_idx == NOTHING) return FALSE;
+	if (item_idx == NOTHING) return false;
 
-	if (s->bWeaponMode == WM_ATTACHED) return TRUE;
+	if (s->bWeaponMode == WM_ATTACHED) return true;
 
 	// hack... they turn empty afterwards anyways
-	if (item_idx == ROCKET_LAUNCHER) return TRUE;
+	if (item_idx == ROCKET_LAUNCHER) return true;
 
 	const ItemModel * item = GCM->getItem(item_idx);
 	if (item->getItemClass() == IC_LAUNCHER || item_idx == TANK_CANNON)
 	{
-		if (FindAttachmentByClass(&o, IC_GRENADE) != ITEM_NOT_FOUND) return TRUE;
-		if (FindAttachmentByClass(&o, IC_BOMB)    != ITEM_NOT_FOUND) return TRUE;
+		if (FindAttachmentByClass(&o, IC_GRENADE) != ITEM_NOT_FOUND) return true;
+		if (FindAttachmentByClass(&o, IC_BOMB)    != ITEM_NOT_FOUND) return true;
 	}
 	else if (item->getItemClass() == IC_GUN)
 	{
-		if (o.ubGunShotsLeft != 0) return TRUE;
+		if (o.ubGunShotsLeft != 0) return true;
 	}
 	else
 	{
-		return TRUE;
+		return true;
 	}
 
 	if (fDisplay) TacticalCharacterDialogue(s, QUOTE_OUT_OF_AMMO);
-	return FALSE;
+	return false;
 }
 
 
@@ -1484,7 +1484,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 			{
 				// we would reload using this ammo!
 				bAPCost2 = GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot2] ) );
-				if ( EnoughPoints( pSoldier, (INT16) (bAPCost + bAPCost2), 0, FALSE ) )
+				if ( EnoughPoints( pSoldier, (INT16) (bAPCost + bAPCost2), 0, false ) )
 				{
 					// we can afford to reload both guns; otherwise display just for 1 gun
 					bAPCost += bAPCost2;
@@ -1501,7 +1501,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 
 UINT16 GetAPsToReloadRobot(SOLDIERTYPE* const s, SOLDIERTYPE const* const robot)
 {
-	GridNo const sActionGridNo = FindAdjacentGridEx(s, robot->sGridNo, NULL, NULL, TRUE, FALSE);
+	GridNo const sActionGridNo = FindAdjacentGridEx(s, robot->sGridNo, NULL, NULL, true, false);
 	return GetMovePlusActionAPCosts(s, sActionGridNo, 4);
 }
 
@@ -1562,7 +1562,7 @@ UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier)
 
 		// no other values should be possible
 		default:
-			Assert( FALSE );
+			Assert( false );
 			return(0);
 	}
 }
@@ -1570,25 +1570,25 @@ UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier)
 
 BOOLEAN CheckForMercContMove(SOLDIERTYPE* const s)
 {
-	if (!(gTacticalStatus.uiFlags & INCOMBAT)) return FALSE;
+	if (!(gTacticalStatus.uiFlags & INCOMBAT)) return false;
 
-	if (gpItemPointer != NULL) return FALSE;
+	if (gpItemPointer != NULL) return false;
 
-	if (s->bLife < OKLIFE) return FALSE;
+	if (s->bLife < OKLIFE) return false;
 
-	if (s->sGridNo == s->sFinalDestination && !s->bGoodContPath) return FALSE;
+	if (s->sGridNo == s->sFinalDestination && !s->bGoodContPath) return false;
 
-	if (s != GetSelectedMan()) return FALSE;
+	if (s != GetSelectedMan()) return false;
 
-	if (!SoldierOnScreen(s)) return FALSE;
+	if (!SoldierOnScreen(s)) return false;
 
 	const INT16 sGridNo = (s->bGoodContPath ? s->sContPathLocation : s->sFinalDestination);
-	if (!FindBestPath(s, sGridNo, s->bLevel, s->usUIMovementMode, NO_COPYROUTE, 0)) return FALSE;
+	if (!FindBestPath(s, sGridNo, s->bLevel, s->usUIMovementMode, NO_COPYROUTE, 0)) return false;
 
 	const INT16 sAPCost = PtsToMoveDirection(s, guiPathingData[0]);
-	if (!EnoughPoints(s, sAPCost, 0, FALSE)) return FALSE;
+	if (!EnoughPoints(s, sAPCost, 0, false)) return false;
 
-	return TRUE;
+	return true;
 }
 
 

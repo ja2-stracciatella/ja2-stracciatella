@@ -114,11 +114,11 @@ static UINT32 guiAIAwaySlotToHandle = RESET_HANDLE_OF_OFF_MAP_MERCS;
 
 #define PAUSE_ALL_AI_DELAY		1500
 
-static BOOLEAN gfPauseAllAI      = FALSE;
+static BOOLEAN gfPauseAllAI      = false;
 static UINT32  guiPauseAllAITimer = 0;
 
 
-BOOLEAN gfSurrendered = FALSE;
+BOOLEAN gfSurrendered = false;
 
 
 #define NEW_FADE_DELAY			60
@@ -227,7 +227,7 @@ static TeamInfo const g_default_team_info[] =
 UINT8         gubWaitingForAllMercsToExitCode  = 0;
 static INT8   gbNumMercsUntilWaitingOver       = 0;
 static UINT32 guiWaitingForAllMercsToExitTimer = 0;
-BOOLEAN       gfKillingGuysForLosingBattle     = FALSE;
+BOOLEAN       gfKillingGuysForLosingBattle     = false;
 
 
 static INT32 GetFreeMercSlot(void)
@@ -276,12 +276,12 @@ BOOLEAN RemoveMercSlot(SOLDIERTYPE* pSoldier)
 		{
 			MercSlots[i] = NULL;
 			RecountMercSlots();
-			return TRUE;
+			return true;
 		}
 	}
 
 	// TOLD TO DELETE NON-EXISTANT SOLDIER
-	return FALSE;
+	return false;
 }
 
 
@@ -331,12 +331,12 @@ BOOLEAN RemoveAwaySlot(SOLDIERTYPE* pSoldier)
 		{
 			AwaySlots[i] = NULL;
 			RecountAwaySlots();
-			return TRUE;
+			return true;
 		}
 	}
 
 	// TOLD TO DELETE NON-EXISTANT SOLDIER
-	return FALSE;
+	return false;
 }
 
 
@@ -350,7 +350,7 @@ INT32 MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier)
 		RemoveManFromTeam(pSoldier->bTeam);
 	}
 
-	pSoldier->bInSector      = FALSE;
+	pSoldier->bInSector      = false;
 	pSoldier->uiStatusFlags |= SOLDIER_OFF_MAP;
 	return AddAwaySlot(pSoldier);
 }
@@ -362,7 +362,7 @@ void MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* const pSoldier)
 
 	AddManToTeam(pSoldier->bTeam);
 
-	pSoldier->bInSector      = TRUE;
+	pSoldier->bInSector      = true;
 	pSoldier->uiStatusFlags &= ~SOLDIER_OFF_MAP;
 	AddMercSlot(pSoldier);
 }
@@ -418,7 +418,7 @@ void InitOverhead()
 	t.uiTimeSinceDemoOn       = GetJA2Clock();
 	t.bRealtimeSpeed          = MAX_REALTIME_SPEED_VAL / 2;
 	FOR_EACH(INT16, i, t.sPanicTriggerGridNo) *i = NOWHERE;
-	t.fDidGameJustStart       = TRUE;
+	t.fDidGameJustStart       = true;
 	t.ubLastRequesterTargetID = NO_PROFILE;
 
 	// Set team values
@@ -433,7 +433,7 @@ void InitOverhead()
 		team.bLastID            = team_start - 1;
 		team.RadarColor         = info.colour;
 		team.bSide              = info.side;
-		team.bAwareOfOpposition = FALSE;
+		team.bAwareOfOpposition = false;
 		team.bHuman             = info.human;
 		team.last_merc_to_radio = 0;
 	}
@@ -479,7 +479,7 @@ static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 		{
 			// aha! found an AI guy!
 			guiAISlotToHandle = cnt;
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -508,7 +508,7 @@ static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 			{
 				// aha! found an AI guy!
 				guiAIAwaySlotToHandle = cnt;
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -516,20 +516,20 @@ static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 		guiAIAwaySlotToHandle = RESET_HANDLE_OF_OFF_MAP_MERCS;
 	}
 
-	return FALSE;
+	return false;
 }
 
 
 void PauseAITemporarily(void)
 {
-	gfPauseAllAI      = TRUE;
+	gfPauseAllAI      = true;
 	guiPauseAllAITimer = GetJA2Clock();
 }
 
 
 void PauseAIUntilManuallyUnpaused(void)
 {
-	gfPauseAllAI      = TRUE;
+	gfPauseAllAI      = true;
 	guiPauseAllAITimer = 0;
 }
 
@@ -537,7 +537,7 @@ void PauseAIUntilManuallyUnpaused(void)
 void UnPauseAI(void)
 {
 	// overrides any timer too
-	gfPauseAllAI      = FALSE;
+	gfPauseAllAI      = false;
 	guiPauseAllAITimer = 0;
 }
 
@@ -569,10 +569,10 @@ void ExecuteOverhead(void)
 		if (gfPauseAllAI && guiPauseAllAITimer && uiTimerVal - guiPauseAllAITimer > PAUSE_ALL_AI_DELAY)
 		{
 			// ok, stop pausing the AI!
-			gfPauseAllAI = FALSE;
+			gfPauseAllAI = false;
 		}
 
-		BOOLEAN fHandleAI = FALSE;
+		BOOLEAN fHandleAI = false;
 		if (!gfPauseAllAI)
 		{
 			// AI limiting crap
@@ -610,7 +610,7 @@ void ExecuteOverhead(void)
 					{
 						pSoldier->bDisplayDamageCount = 0;
 						pSoldier->sDamage             = 0;
-						pSoldier->fDisplayDamage      = FALSE;
+						pSoldier->fDisplayDamage      = false;
 					}
 				}
 
@@ -626,7 +626,7 @@ void ExecuteOverhead(void)
 
 						if (bShadeLevel >= SHADE_MIN - 3)
 						{
-							pSoldier->fBeginFade = FALSE;
+							pSoldier->fBeginFade = false;
 							pSoldier->bVisible = -1;
 
 							// Set levelnode shade level....
@@ -652,7 +652,7 @@ void ExecuteOverhead(void)
 						{
 							bShadeLevel = gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel;
 
-							pSoldier->fBeginFade = FALSE;
+							pSoldier->fBeginFade = false;
 							//pSoldier->bVisible = -1;
 							//pSoldier->ubFadeLevel = gpWorldLevelData[ pSoldier->sGridNo ].pLandHead->ubShadeLevel;
 
@@ -683,7 +683,7 @@ void ExecuteOverhead(void)
 						{
 							pSoldier->ubFadeLevel = gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel;
 						}
-						pSoldier->fBeginFade           = TRUE;
+						pSoldier->fBeginFade           = true;
 						pSoldier->sLocationOfFadeStart = pSoldier->sGridNo;
 
 						// OK, re-evaluate guy's roof marker
@@ -714,7 +714,7 @@ void ExecuteOverhead(void)
 					// Were we once moving...?
 					if (pSoldier->fSoldierWasMoving && pSoldier->bVisible > -1)
 					{
-						pSoldier->fSoldierWasMoving = FALSE;
+						pSoldier->fSoldierWasMoving = false;
 
 						HandlePlacingRoofMarker(*pSoldier, true, false);
 
@@ -731,7 +731,7 @@ void ExecuteOverhead(void)
 					// Were we once stationary?
 					if (!pSoldier->fSoldierWasMoving)
 					{
-						pSoldier->fSoldierWasMoving = TRUE;
+						pSoldier->fSoldierWasMoving = true;
 						HandlePlacingRoofMarker(*pSoldier, false, false);
 					}
 				}
@@ -746,11 +746,11 @@ void ExecuteOverhead(void)
 					// Check if we need to look for items
 					if (pSoldier->uiStatusFlags & SOLDIER_LOOKFOR_ITEMS)
 					{
-						RevealRoofsAndItems(pSoldier, FALSE);
+						RevealRoofsAndItems(pSoldier, false);
 						pSoldier->uiStatusFlags &= ~SOLDIER_LOOKFOR_ITEMS;
 					}
 
-					BOOLEAN fNoAPsForPendingAction = FALSE;
+					BOOLEAN fNoAPsForPendingAction = false;
 
 					// Check if we are moving and we deduct points and we have no points
 					if ((!(gAnimControl[pSoldier->usAnimState].uiFlags & (ANIM_MOVING | ANIM_SPECIALMOVE))
@@ -782,14 +782,14 @@ void ExecuteOverhead(void)
 						// Determine gameworld cells corrds of guy
 						else if (gAnimControl[pSoldier->usAnimState].uiFlags & (ANIM_MOVING | ANIM_SPECIALMOVE) && !(pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE))
 						{
-							fKeepMoving = TRUE;
+							fKeepMoving = true;
 
-							pSoldier->fPausedMove = FALSE;
+							pSoldier->fPausedMove = false;
 
 							// CHECK TO SEE IF WE'RE ON A MIDDLE TILE
 							if (pSoldier->fPastXDest && pSoldier->fPastYDest)
 							{
-								pSoldier->fPastXDest = pSoldier->fPastYDest = FALSE;
+								pSoldier->fPastXDest = pSoldier->fPastYDest = false;
 								// assign X/Y values back to make sure we are at the center of the tile
 								// (to prevent mercs from going through corners of tiles and producing
 								// structure data complaints)
@@ -821,10 +821,10 @@ void ExecuteOverhead(void)
 									pSoldier->ubPathIndex = pSoldier->ubPathDataSize = 0;
 
 									// Cancel reverse
-									pSoldier->bReverse = FALSE;
+									pSoldier->bReverse = false;
 
 									// OK, if we are the selected soldier, refresh some UI stuff
-									if (pSoldier == GetSelectedMan()) gfUIRefreshArrows = TRUE;
+									if (pSoldier == GetSelectedMan()) gfUIRefreshArrows = true;
 
 									// ATE: Play landing sound.....
 									if (pSoldier->usAnimState == JUMP_OVER_BLOCKING_PERSON)
@@ -835,7 +835,7 @@ void ExecuteOverhead(void)
 									// If we are a robot, play stop sound...
 									if (pSoldier->uiStatusFlags & SOLDIER_ROBOT)
 									{
-										PlaySoldierJA2Sample(pSoldier, ROBOT_STOP, HIGHVOLUME, 1, TRUE);
+										PlaySoldierJA2Sample(pSoldier, ROBOT_STOP, HIGHVOLUME, 1, true);
 									}
 
 									// Update to middle if we're on destination
@@ -846,7 +846,7 @@ void ExecuteOverhead(void)
 									// CHECK IF WE HAVE A PENDING ANIMATION
 									if (pSoldier->usPendingAnimation != NO_PENDING_ANIMATION)
 									{
-										ChangeSoldierState(pSoldier, pSoldier->usPendingAnimation, 0, FALSE);
+										ChangeSoldierState(pSoldier, pSoldier->usPendingAnimation, 0, false);
 										pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
 										if (pSoldier->ubPendingDirection != NO_PENDING_DIRECTION)
@@ -903,11 +903,11 @@ void ExecuteOverhead(void)
 											if (pStructure == NULL)
 											{
 												SLOGW("Told to open struct at {} and none was found", sGridNo);
-												fKeepMoving = FALSE;
+												fKeepMoving = false;
 											}
 											else
 											{
-												if (EnoughPoints(pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, TRUE))
+												if (EnoughPoints(pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, true))
 												{
 													// avoid several problems due to a lack of global action queueing
 													if (DialogueQueueIsEmptyAndNobodyIsTalking() && gCurrentUIMode != LOCKUI_MODE && !Soldier::anyoneHasPendingAction(MERC_GIVEITEM) && !gTacticalStatus.fAutoBandageMode && !gTacticalStatus.fAutoBandagePending)
@@ -917,13 +917,13 @@ void ExecuteOverhead(void)
 													else
 													{
 														SLOGD("Aborting pending action due to other ongoing activities!");
-														fKeepMoving = FALSE;
+														fKeepMoving = false;
 														Soldier{pSoldier}.removePendingAnimation();
 													}
 												}
 												else
 												{
-													fNoAPsForPendingAction = TRUE;
+													fNoAPsForPendingAction = true;
 												}
 											}
 										}
@@ -937,7 +937,7 @@ void ExecuteOverhead(void)
 										{
 											// Change status of guy to waiting
 											HaltMoveForSoldierOutOfPoints(*pSoldier);
-											fKeepMoving = FALSE;
+											fKeepMoving = false;
 											pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 											pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 										}
@@ -967,7 +967,7 @@ void ExecuteOverhead(void)
 									// RESET MOVE FAST FLAG
 									if (pSoldier->ubProfile == NO_PROFILE)
 									{
-										pSoldier->fUIMovementFast = FALSE;
+										pSoldier->fUIMovementFast = false;
 									}
 
 									// if AI moving and waiting to process something at end of
@@ -977,7 +977,7 @@ void ExecuteOverhead(void)
 										pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
 									}
 
-									fKeepMoving = FALSE;
+									fKeepMoving = false;
 								}
 								else if (!pSoldier->fNoAPToFinishMove)
 								{
@@ -1000,7 +1000,7 @@ void ExecuteOverhead(void)
 
 										// In case this is an AI person with the path-stored flag set,
 										// turn it OFF since we have exhausted our stored path
-										pSoldier->bPathStored = FALSE;
+										pSoldier->bPathStored = false;
 										if (pSoldier->sAbsoluteFinalDestination != NOWHERE)
 										{
 											// We have not made it to our dest... but it's better to let the AI handle this itself,
@@ -1018,7 +1018,7 @@ void ExecuteOverhead(void)
 											}
 
 											// We have not made it to our dest... set flag that we are waiting....
-											if (!EVENT_InternalGetNewSoldierPath(pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode, 2, FALSE))
+											if (!EVENT_InternalGetNewSoldierPath(pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode, 2, false))
 											{
 												// ATE: To do here.... we could not get path, so we have to stop
 												SoldierGotoStationaryStance(pSoldier);
@@ -1032,7 +1032,7 @@ void ExecuteOverhead(void)
 										if (!(gAnimControl[pSoldier->usAnimState].uiFlags & ANIM_SPECIALMOVE))
 										{
 											// OK, now we want to see if we can continue to another tile...
-											if (!HandleGotoNewGridNo(pSoldier, &fKeepMoving, FALSE, pSoldier->usAnimState))
+											if (!HandleGotoNewGridNo(pSoldier, &fKeepMoving, false, pSoldier->usAnimState))
 											{
 												continue;
 											}
@@ -1041,7 +1041,7 @@ void ExecuteOverhead(void)
 										{
 											// Change desired direction
 											// Just change direction
-											EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->ubPathingData[pSoldier->ubPathIndex], FALSE, pSoldier->usAnimState);
+											EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->ubPathingData[pSoldier->ubPathIndex], false, pSoldier->usAnimState);
 										}
 
 										if (gTacticalStatus.bBoxingState != NOT_BOXING &&
@@ -1057,7 +1057,7 @@ void ExecuteOverhead(void)
 
 							if (pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE)
 							{
-								fKeepMoving = FALSE;
+								fKeepMoving = false;
 							}
 
 							// DO WALKING
@@ -1068,7 +1068,7 @@ void ExecuteOverhead(void)
 								//dDeltaY = pSoldier->sDestYPos - pSoldier->dYPos;
 
 								// Determine angle
-								//dAngle = (FLOAT)atan2( dDeltaX, dDeltaY );
+								//dAngle = (float)atan2( dDeltaX, dDeltaY );
 
 								static const float gdRadiansForAngle[] =
 								{
@@ -1087,11 +1087,11 @@ void ExecuteOverhead(void)
 								// For walking, base it on body type!
 								if (pSoldier->usAnimState == WALKING)
 								{
-									MoveMerc(pSoldier, gubAnimWalkSpeeds[pSoldier->ubBodyType].dMovementChange, dAngle, TRUE);
+									MoveMerc(pSoldier, gubAnimWalkSpeeds[pSoldier->ubBodyType].dMovementChange, dAngle, true);
 								}
 								else
 								{
-									MoveMerc(pSoldier, gAnimControl[pSoldier->usAnimState].dMovementChange, dAngle, TRUE);
+									MoveMerc(pSoldier, gAnimControl[pSoldier->usAnimState].dMovementChange, dAngle, true);
 								}
 							}
 						}
@@ -1116,7 +1116,7 @@ void ExecuteOverhead(void)
 						if (GetJA2Clock() - uiTimerVal > RT_AI_TIMESLICE)
 						{
 							// don't do any more AI this time!
-							fHandleAI = FALSE;
+							fHandleAI = false;
 						}
 						else
 						{
@@ -1144,7 +1144,7 @@ void ExecuteOverhead(void)
 		}
 
 		// Turn off auto bandage if we need to...
-		if (gTacticalStatus.fAutoBandageMode && !CanAutoBandage(TRUE))
+		if (gTacticalStatus.fAutoBandageMode && !CanAutoBandage(true))
 		{
 			SetAutoBandageComplete();
 		}
@@ -1241,7 +1241,7 @@ static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 		// IF tracking on, center on guy....
 		if (gGameSettings.fOptions[TOPTION_TRACKING_MODE])
 		{
-			LocateSoldier(pSoldier, FALSE);
+			LocateSoldier(pSoldier, false);
 		}
 	}
 	else
@@ -1258,7 +1258,7 @@ static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 					SetRenderFlags(RENDER_FLAG_FULL);
 				}
 			}
-			LocateSoldier(pSoldier, FALSE);
+			LocateSoldier(pSoldier, false);
 		}
 	}
 }
@@ -1289,7 +1289,7 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gri
 			}
 		}
 
-		*keep_moving = FALSE;
+		*keep_moving = false;
 
 		if (mine_gridno == NOWHERE) return;
 
@@ -1305,7 +1305,7 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gri
 		if (mine_gridno == NOWHERE) return;
 
 		EVENT_StopMerc(s);
-		*keep_moving = FALSE;
+		*keep_moving = false;
 
 		gpWorldLevelData[mine_gridno].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
 
@@ -1323,8 +1323,8 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		HandleLocateToGuyAsHeWalks(pSoldier);
 	}
 
-	// Default to TRUE
-	*pfKeepMoving = TRUE;
+	// Default to true
+	*pfKeepMoving = true;
 
 	// Check for good breath....
 	// if ( pSoldier->bBreath < OKBREATH && !fInitialMove )
@@ -1336,13 +1336,13 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		if (pSoldier->bBreath == 0)
 		{
 			// Collapse!
-			pSoldier->bBreathCollapsed = TRUE;
-			pSoldier->bEndDoorOpenCode = FALSE;
+			pSoldier->bBreathCollapsed = true;
+			pSoldier->bEndDoorOpenCode = false;
 
 			if (fInitialMove) UnSetUIBusy(pSoldier);
 
 			SLOGD("HandleGotoNewGridNo() Failed: Out of Breath");
-			return FALSE;
+			return false;
 		}
 
 		// OK, if we are collapsed now, check for OK breath instead...
@@ -1350,9 +1350,9 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		{
 			// Collapse!
 			SLOGD("HandleGotoNewGridNo() Failed: Has Collapsed");
-			pSoldier->bBreathCollapsed = TRUE;
-			pSoldier->bEndDoorOpenCode = FALSE;
-			return FALSE;
+			pSoldier->bBreathCollapsed = true;
+			pSoldier->bEndDoorOpenCode = false;
+			return false;
 		}
 
 	}
@@ -1368,7 +1368,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		const INT16 sAPCost = AP_JUMPFENCE;
 		const INT16 sBPCost = BP_JUMPFENCE;
 
-		if (EnoughPoints(pSoldier, sAPCost, sBPCost, FALSE))
+		if (EnoughPoints(pSoldier, sAPCost, sBPCost, false))
 		{
 			// ATE: Check for tile being clear....
 			const UINT16 sOverFenceGridNo = NewGridNo(usNewGridNo, DirectionInc(pSoldier->ubPathingData[pSoldier->ubPathIndex + 1]));
@@ -1394,12 +1394,12 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		else
 		{
 			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
-			*pfKeepMoving = FALSE;
+			*pfKeepMoving = false;
 		}
 
-		return FALSE;
+		return false;
 	}
-	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][pSoldier->ubPathingData[pSoldier->ubPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, TRUE) == TRAVELCOST_DOOR)
+	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][pSoldier->ubPathingData[pSoldier->ubPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, true) == TRAVELCOST_DOOR)
 	{
 		// OK, if we are here, we have been told to get a pth through a door.
 
@@ -1425,9 +1425,9 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			SLOGD("HandleGotoNewGridNo() Failed: Open door - invalid approach direction");
 
 			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
-			pSoldier->bEndDoorOpenCode = FALSE;
-			(*pfKeepMoving ) = FALSE;
-			return( FALSE );
+			pSoldier->bEndDoorOpenCode = false;
+			(*pfKeepMoving ) = false;
+			return false;
 		}
 
 		// Get door
@@ -1436,9 +1436,9 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		{
 			SLOGD("HandleGotoNewGridNo() Failed: Door does not exist");
 			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
-			pSoldier->bEndDoorOpenCode = FALSE;
-			*pfKeepMoving = FALSE;
-			return FALSE;
+			pSoldier->bEndDoorOpenCode = false;
+			*pfKeepMoving = false;
+			return false;
 		}
 
 		// OK, open!
@@ -1451,8 +1451,8 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			pSoldier->bEndDoorOpenCode     = 1;
 			pSoldier->sEndDoorOpenCodeData = sDoorGridNo;
 		}
-		*pfKeepMoving = FALSE;
-		return FALSE;
+		*pfKeepMoving = false;
+		return false;
 	}
 
 	// Find out how much it takes to move here!
@@ -1470,37 +1470,37 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name) );
 		//}
 
-		pSoldier->bEndDoorOpenCode = FALSE;
+		pSoldier->bEndDoorOpenCode = false;
 		// GO on to next guy!
-		return FALSE;
+		return false;
 	}
 
 	// just check the tile we're going to walk into
-	CheckIfNearbyGroundSeemsWrong(pSoldier, usNewGridNo, FALSE, pfKeepMoving);
+	CheckIfNearbyGroundSeemsWrong(pSoldier, usNewGridNo, false, pfKeepMoving);
 
 	// ATE: Check if we have sighted anyone, if so, don't do anything else...
 	// IN other words, we have stopped from sighting...
 	if (pSoldier->fNoAPToFinishMove && !fInitialMove)
 	{
 		SLOGD("HandleGotoNewGridNo() Failed: No APs to finish move set");
-		pSoldier->bEndDoorOpenCode = FALSE;
-		*pfKeepMoving = FALSE;
+		pSoldier->bEndDoorOpenCode = false;
+		*pfKeepMoving = false;
 	}
 	else if (pSoldier->ubPathIndex == pSoldier->ubPathDataSize && pSoldier->ubPathDataSize == 0)
 	{
 		SLOGD("HandleGotoNewGridNo() Failed: No Path");
-		pSoldier->bEndDoorOpenCode = FALSE;
-		*pfKeepMoving = FALSE;
+		pSoldier->bEndDoorOpenCode = false;
+		*pfKeepMoving = false;
 	}
 	//else if ( gTacticalStatus.fEnemySightingOnTheirTurn )
 	//{
 	//	// Hault guy!
-	//	AdjustNoAPToFinishMove( pSoldier, TRUE );
-	//	(*pfKeepMoving ) = FALSE;
+	//	AdjustNoAPToFinishMove( pSoldier, true );
+	//	(*pfKeepMoving ) = false;
 	//}
-	else if (EnoughPoints(pSoldier, sAPCost, 0, FALSE))
+	else if (EnoughPoints(pSoldier, sAPCost, 0, false))
 	{
-		BOOLEAN fDontContinue = FALSE;
+		BOOLEAN fDontContinue = false;
 
 		if (pSoldier->ubPathIndex > 0)
 		{
@@ -1538,8 +1538,8 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				if (smokeEffect && smokeEffect->dealsAnyDamage() && !IsSoldierAlreadyAffectedBySmokeEffect(pSoldier, smokeEffect))
 				{
 					EVENT_StopMerc(pSoldier);
-					fDontContinue = TRUE;
-					DishOutGasDamage(pSoldier, smokeEffect, TRUE, FALSE, NULL);
+					fDontContinue = true;
+					DishOutGasDamage(pSoldier, smokeEffect, true, false, NULL);
 				}
 			}
 
@@ -1564,7 +1564,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						{
 							pSoldier->bActionPoints -= (INT8)(Random(pSoldier->bActionPoints) + 1);
 						}
-						return FALSE;
+						return false;
 					}
 				}
 
@@ -1581,7 +1581,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 					{
 						pSoldier->bActionPoints -= (INT8)(Random(pSoldier->bActionPoints) + 1);
 					}
-					return FALSE;
+					return false;
 				}
 				else if (GetDrunkLevel(pSoldier) == DRUNK &&
 					(Random(5) == 0) &&
@@ -1595,7 +1595,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 					{
 						pSoldier->bActionPoints -= (INT8)(Random(pSoldier->bActionPoints) + 1);
 					}
-					return FALSE;
+					return false;
 				}
 				else if (pSoldier->bTeam == OUR_TEAM &&
 					pSoldier->ubProfile != NO_PROFILE &&
@@ -1619,7 +1619,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 							pSoldier->bActionPoints -= (INT8)(Random(pSoldier->bActionPoints) + 1);
 						}
 
-						fDontContinue = TRUE;
+						fDontContinue = true;
 						UnSetUIBusy(pSoldier);
 					}
 				}
@@ -1645,21 +1645,21 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					if (!pSoldier->bReverse)
 					{
-						pSoldier->bReverse = TRUE;
+						pSoldier->bReverse = true;
 
 						if (pSoldier->ubBodyType == INFANT_MONSTER)
 						{
-							ChangeSoldierState(pSoldier, WALK_BACKWARDS, 1, TRUE);
+							ChangeSoldierState(pSoldier, WALK_BACKWARDS, 1, true);
 						}
 						else
 						{
-							ChangeSoldierState(pSoldier, MONSTER_WALK_BACKWARDS, 1, TRUE);
+							ChangeSoldierState(pSoldier, MONSTER_WALK_BACKWARDS, 1, true);
 						}
 					}
 				}
 				else
 				{
-					pSoldier->bReverse = FALSE;
+					pSoldier->bReverse = false;
 				}
 			}
 
@@ -1670,13 +1670,13 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					if (!pSoldier->bReverse)
 					{
-						pSoldier->bReverse = TRUE;
-						ChangeSoldierState(pSoldier, BLOODCAT_WALK_BACKWARDS, 1, TRUE);
+						pSoldier->bReverse = true;
+						ChangeSoldierState(pSoldier, BLOODCAT_WALK_BACKWARDS, 1, true);
 					}
 				}
 				else
 				{
-					pSoldier->bReverse = FALSE;
+					pSoldier->bReverse = false;
 				}
 			}
 
@@ -1685,7 +1685,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 			// CONTINUE
 			// IT'S SAVE TO GO AGAIN, REFRESH flag
-			AdjustNoAPToFinishMove(pSoldier, FALSE);
+			AdjustNoAPToFinishMove(pSoldier, false);
 		}
 	}
 	else
@@ -1693,11 +1693,11 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		// HALT GUY HERE
 		SLOGD("HandleGotoNewGridNo() Failed: No APs {} {}", sAPCost, pSoldier->bActionPoints);
 		HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
-		pSoldier->bEndDoorOpenCode = FALSE;
-		*pfKeepMoving = FALSE;
+		pSoldier->bEndDoorOpenCode = false;
+		*pfKeepMoving = false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -1788,7 +1788,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		if (pSoldier->sLocationOfFadeStart != pSoldier->sGridNo)
 		{
 			// Turn off
-			pSoldier->fBeginFade = FALSE;
+			pSoldier->fBeginFade = false;
 
 			if (pSoldier->bLevel > 0 && gpWorldLevelData[pSoldier->sGridNo].pRoofHead != NULL)
 			{
@@ -1810,8 +1810,8 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 
 	if (gTacticalStatus.uiFlags & INCOMBAT) HandleLocateToGuyAsHeWalks(pSoldier);
 
-	// Default to TRUE
-	*pfKeepMoving = TRUE;
+	// Default to true
+	*pfKeepMoving = true;
 
 	pSoldier->bTilesMoved++;
 	if (pSoldier->usAnimState == RUNNING)
@@ -1833,7 +1833,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	if (gGameSettings.fOptions[TOPTION_ALWAYS_SHOW_MOVEMENT_PATH] &&
 		!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		gfPlotNewMovement = TRUE;
+		gfPlotNewMovement = true;
 	}
 
 	// ATE: Put some stuff in here to not handle certain things if we are
@@ -1841,28 +1841,28 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	if (gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALKOFF_SCREEN ||
 		gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO)
 	{
-		return TRUE;
+		return true;
 	}
 
 	// Check if they are out of breath
 	if (CheckForBreathCollapse(*pSoldier))
 	{
-		*pfKeepMoving = TRUE;
-		return FALSE;
+		*pfKeepMoving = true;
+		return false;
 	}
 
 	// see if a mine gets set off...
-	if (SetOffBombsInGridNo(pSoldier, pSoldier->sGridNo, FALSE, pSoldier->bLevel))
+	if (SetOffBombsInGridNo(pSoldier, pSoldier->sGridNo, false, pSoldier->bLevel))
 	{
-		*pfKeepMoving = FALSE;
+		*pfKeepMoving = false;
 		EVENT_StopMerc(pSoldier);
-		return FALSE;
+		return false;
 	}
 
 
 	// Set "interrupt occurred" flag to false so that we will know whether *this
 	// particular call* to HandleSight caused an interrupt
-	gTacticalStatus.fInterruptOccurred = FALSE;
+	gTacticalStatus.fInterruptOccurred = false;
 
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
@@ -1889,9 +1889,9 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	if (gTacticalStatus.fInterruptOccurred)
 	{
 		// Unset no APs value
-		AdjustNoAPToFinishMove(pSoldier, TRUE);
+		AdjustNoAPToFinishMove(pSoldier, true);
 
-		*pfKeepMoving = FALSE;
+		*pfKeepMoving = false;
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 		pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 
@@ -1902,35 +1902,35 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		}
 
 		// this flag is set only to halt the currently moving guy; reset it now
-		gTacticalStatus.fInterruptOccurred = FALSE;
+		gTacticalStatus.fInterruptOccurred = false;
 
 		// ATE: Remove this if we were stopped....
 		if (gTacticalStatus.fEnemySightingOnTheirTurn)
 		{
 			if (gTacticalStatus.enemy_sighting_on_their_turn_enemy == pSoldier)
 			{
-				pSoldier->fPauseAllAnimation = FALSE;
-				gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;
+				pSoldier->fPauseAllAnimation = false;
+				gTacticalStatus.fEnemySightingOnTheirTurn = false;
 			}
 		}
 	}
 	else if (pSoldier->fNoAPToFinishMove)
 	{
-		*pfKeepMoving = FALSE;
+		*pfKeepMoving = false;
 	}
 	else if (pSoldier->ubPathIndex == pSoldier->ubPathDataSize && pSoldier->ubPathDataSize == 0)
 	{
-		*pfKeepMoving = FALSE;
+		*pfKeepMoving = false;
 	}
 	else if (gTacticalStatus.fEnemySightingOnTheirTurn)
 	{
 		// Hault guy!
-		AdjustNoAPToFinishMove(pSoldier, TRUE);
-		*pfKeepMoving = FALSE;
+		AdjustNoAPToFinishMove(pSoldier, true);
+		*pfKeepMoving = false;
 	}
 
 	// OK, check for other stuff like mines...
-	CheckIfNearbyGroundSeemsWrong(pSoldier, pSoldier->sGridNo, TRUE, pfKeepMoving);
+	CheckIfNearbyGroundSeemsWrong(pSoldier, pSoldier->sGridNo, true, pfKeepMoving);
 
 	HandleSystemNewAISituation(pSoldier);
 
@@ -1964,7 +1964,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 			}
 			else if (pSoldier->ubProfile == MARIA &&
 				pSoldier->sSector == sanMona &&
-				CheckFact(FACT_MARIA_ESCORTED_AT_LEATHER_SHOP, MARIA) == TRUE)
+				CheckFact(FACT_MARIA_ESCORTED_AT_LEATHER_SHOP, MARIA) == true)
 			{
 				// check that Angel is there!
 				if (NPCInRoom(ANGEL, 2)) // room 2 is leather shop
@@ -2030,7 +2030,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 				break;
 		}
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -2085,8 +2085,8 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 	// Unselect old selected guy
 	if (old_sel != NULL)
 	{
-		old_sel->fShowLocator  = FALSE;
-		old_sel->fFlashLocator = FALSE;
+		old_sel->fShowLocator  = false;
+		old_sel->fFlashLocator = false;
 
 		// DB This used to say "s"... I fixed it
 		if (old_sel->bLevel == 0)
@@ -2095,13 +2095,13 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 		}
 		//DeleteSoldierLight(old_sel);
 
-		UpdateForContOverPortrait(old_sel, FALSE);
+		UpdateForContOverPortrait(old_sel, false);
 	}
 
 	SetSelectedMan(s);
 
 	// find which squad this guy is, then set selected squad to this guy
-	SetCurrentSquad(s->bAssignment, FALSE);
+	SetCurrentSquad(s->bAssignment, false);
 
 	if (s->bLevel == 0)
 	{
@@ -2149,7 +2149,7 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 		}
 	}
 
-	UpdateForContOverPortrait(s, TRUE);
+	UpdateForContOverPortrait(s, true);
 
 	// Remove any interactive tiles we could be over!
 	BeginCurInteractiveTileCheck();
@@ -2170,7 +2170,7 @@ void LocateSoldier(SOLDIERTYPE* s, BOOLEAN fSetLocator)
 		SetRenderCenter(sNewCenterWorldX, sNewCenterWorldY);
 
 		// Plot new path!
-		gfPlotNewMovement = TRUE;
+		gfPlotNewMovement = true;
 	}
 
 	// do we flash the name & health bars/health string above?
@@ -2199,7 +2199,7 @@ void InternalLocateGridNo(UINT16 sGridNo, BOOLEAN fForce)
 
 void LocateGridNo(UINT16 sGridNo)
 {
-	InternalLocateGridNo(sGridNo, FALSE);
+	InternalLocateGridNo(sGridNo, false);
 }
 
 
@@ -2212,7 +2212,7 @@ void SlideTo(SOLDIERTYPE* const tgt, const BOOLEAN fSetLocator)
 			if (s->bInSector)
 			{
 				// Remove all existing locators...
-				s->fFlashLocator = FALSE;
+				s->fFlashLocator = false;
 			}
 		}
 	}
@@ -2227,7 +2227,7 @@ void SlideTo(SOLDIERTYPE* const tgt, const BOOLEAN fSetLocator)
 	gTacticalStatus.sSlideTarget = tgt->sGridNo;
 
 	// Plot new path!
-	gfPlotNewMovement = TRUE;
+	gfPlotNewMovement = true;
 }
 
 
@@ -2242,7 +2242,7 @@ void SlideToLocation(const INT16 sDestGridNo)
 	gTacticalStatus.sSlideTarget = sDestGridNo;
 
 	// Plot new path!
-	gfPlotNewMovement = TRUE;
+	gfPlotNewMovement = true;
 }
 
 
@@ -2323,7 +2323,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	//Make a call to handle the strategic things, such as Life Insurance, record it in history file etc.
 	StrategicHandlePlayerTeamMercDeath(*pSoldier);
 
-	CheckForEndOfBattle(FALSE);
+	CheckForEndOfBattle(false);
 
 
 	if (GetSelectedMan() == pSoldier)
@@ -2440,7 +2440,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 				// check to see if Martha can see this
 				const SOLDIERTYPE* const pOther = FindSoldierByProfileID(MARTHA);
 				if (pOther && (PythSpacesAway(pOther->sGridNo, pSoldierOld->sGridNo ) < 10 ||
-					SoldierToSoldierLineOfSightTest(pOther, pSoldierOld, MaxDistanceVisible(), TRUE) != 0))
+					SoldierToSoldierLineOfSightTest(pOther, pSoldierOld, MaxDistanceVisible(), true) != 0))
 				{
 					// Martha has a heart attack and croaks
 					TriggerNPCRecord(MARTHA, 17);
@@ -2597,7 +2597,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 	ProcessQueenCmdImplicationsOfDeath(pSoldierOld);
 
 	// OK, check for existence of any more badguys!
-	CheckForEndOfBattle(FALSE);
+	CheckForEndOfBattle(false);
 }
 
 
@@ -2633,10 +2633,10 @@ void CheckForPotentialAddToBattleIncrement(SOLDIERTYPE* pSoldier)
 }
 
 
-// internal function for turning neutral to FALSE
+// internal function for turning neutral to false
 void SetSoldierNonNeutral(SOLDIERTYPE* pSoldier)
 {
-	pSoldier->bNeutral = FALSE;
+	pSoldier->bNeutral = false;
 	if (gTacticalStatus.bBoxingState == NOT_BOXING)
 	{
 		// Special code for strategic implications
@@ -2645,10 +2645,10 @@ void SetSoldierNonNeutral(SOLDIERTYPE* pSoldier)
 }
 
 
-// internal function for turning neutral to TRUE
+// internal function for turning neutral to true
 void SetSoldierNeutral(SOLDIERTYPE* pSoldier)
 {
-	pSoldier->bNeutral = TRUE;
+	pSoldier->bNeutral = true;
 	if (gTacticalStatus.bBoxingState == NOT_BOXING)
 	{
 		// Special code for strategic implications
@@ -2890,7 +2890,7 @@ static void HickCowAttacked(SOLDIERTYPE* pNastyGuy, SOLDIERTYPE* pTarget)
 	{
 		if (pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral && pSoldier->ubCivilianGroup == HICKS_CIV_GROUP)
 		{
-			if ( SoldierToSoldierLineOfSightTest( pSoldier, pNastyGuy, (UINT8) MaxDistanceVisible(), TRUE ) )
+			if ( SoldierToSoldierLineOfSightTest( pSoldier, pNastyGuy, (UINT8) MaxDistanceVisible(), true ) )
 			{
 
 				CivilianGroupMemberChangesSides( pSoldier );
@@ -3026,7 +3026,7 @@ static bool IsDestinationBlocked(GridNo const grid_no, INT8 const level, SOLDIER
 INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel)
 {
 	if (!GridNoOnVisibleWorldTile(sGridNo)) // grid is outside visible world.. it's NOT OK
-		return FALSE;
+		return false;
 
 	if (fPeopleToo)
 	{
@@ -3041,7 +3041,7 @@ INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN f
 					person->bVisible >= 0 ||
 					gTacticalStatus.uiFlags & SHOW_ALL_MERCS)
 				{
-					return FALSE; // if someone there it's NOT OK
+					return false; // if someone there it's NOT OK
 				}
 			}
 		}
@@ -3068,17 +3068,17 @@ INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN f
 
 				if (InternalOkayToAddStructureToWorld(sGridNo, bLevel, &pStructureFileRef->pDBStructureRef[i], usStructureID, !fPeopleToo))
 				{
-					return TRUE;
+					return true;
 				}
 			}
 		}
-		return FALSE;
+		return false;
 	}
 
 	if (IsDestinationBlocked(sGridNo, bLevel, *pCurrSoldier))
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 
@@ -3098,7 +3098,7 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 						person->bVisible >= 0 ||
 						gTacticalStatus.uiFlags & SHOW_ALL_MERCS)
 				{
-					return FALSE; // if someone there it's NOT OK
+					return false; // if someone there it's NOT OK
 				}
 			}
 		}
@@ -3122,15 +3122,15 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 
 			if (InternalOkayToAddStructureToWorld(sGridNo, pCurrSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bLoop)], usStructureID, !fPeopleToo))
 			{
-				return TRUE;
+				return true;
 			}
 		}
-		return FALSE;
+		return false;
 	}
 
-	if (IsDestinationBlocked(sGridNo, bLevel, *pCurrSoldier)) return FALSE;
+	if (IsDestinationBlocked(sGridNo, bLevel, *pCurrSoldier)) return false;
 
-	return TRUE;
+	return true;
 }
 
 
@@ -3153,11 +3153,11 @@ BOOLEAN FlatRoofAboveGridNo(INT32 iMapIndex)
 BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 {
 	INT16 sDesiredLevel;
-	if (WhoIsThere2(iMapIndex, 0) != NULL) return FALSE;
+	if (WhoIsThere2(iMapIndex, 0) != NULL) return false;
 	//Locations on roofs without a roof is not possible, so
 	//we convert the onroof intention to ground.
 	if( fOnRoof && !FlatRoofAboveGridNo( iMapIndex ) )
-		fOnRoof = FALSE;
+		fOnRoof = false;
 	// Check structure database
 	if( gpWorldLevelData[ iMapIndex ].pStructureHead )
 	{
@@ -3166,10 +3166,10 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 		FOR_EACH_STRUCTURE(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
-				return FALSE;
+				return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -3180,7 +3180,7 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 	//Locations on roofs without a roof is not possible, so
 	//we convert the onroof intention to ground.
 	if( fOnRoof && !FlatRoofAboveGridNo( iMapIndex ) )
-		fOnRoof = FALSE;
+		fOnRoof = false;
 	// Check structure database
 	if( gpWorldLevelData[ iMapIndex ].pStructureHead )
 	{
@@ -3189,10 +3189,10 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 		FOR_EACH_STRUCTURE(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
-				return FALSE;
+				return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -3205,10 +3205,10 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 			!(s->uiStatusFlags & SOLDIER_GASSED) &&
 			PythSpacesAway(s->sGridNo,sGridNo) <= iRange)
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -3230,7 +3230,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 	STRUCTURE *pDoor;
 	//STRUCTURE *pWall;
 	UINT8    ubWallOrientation;
-	BOOLEAN  fCheckGivenGridNo = TRUE;
+	BOOLEAN  fCheckGivenGridNo = true;
 	UINT8    ubTestDirection;
 	EXITGRID ExitGrid;
 
@@ -3324,7 +3324,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 	}
 
 
-	if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) > 0) // no problem going there! nobody on it!
+	if (NewOKDestination(pSoldier, sGridNo, true, pSoldier->bLevel) > 0) // no problem going there! nobody on it!
 	{
 		// OK, if we are looking to goto a switch, ignore this....
 		if (pDoor)
@@ -3332,7 +3332,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 			if (pDoor->fFlags & STRUCTURE_SWITCH)
 			{
 				// Don't continuel
-				fCheckGivenGridNo = FALSE;
+				fCheckGivenGridNo = false;
 			}
 		}
 
@@ -3340,7 +3340,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 		if (GetExitGrid(sGridNo, &ExitGrid))
 		{
 			// Don't continuel
-			fCheckGivenGridNo = FALSE;
+			fCheckGivenGridNo = false;
 		}
 
 
@@ -3380,7 +3380,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 		else
 		{
 			// this function returns original MP cost if not a door cost
-			if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
+			if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ], false, NULL ) >= TRAVELCOST_BLOCKED )
 			{
 			// obstacle or wall there!
 			continue;
@@ -3429,7 +3429,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 		// don't store path, just measure it
 		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );
 
-		if (NewOKDestinationAndDirection(pSoldier, sSpot, ubDir, TRUE, pSoldier->bLevel) > 0 &&
+		if (NewOKDestinationAndDirection(pSoldier, sSpot, ubDir, true, pSoldier->bLevel) > 0 &&
 				(sDistance = PlotPath(pSoldier, sSpot, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints)) > 0)
 		{
 			if (sDistance < sClosest)
@@ -3499,7 +3499,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	UINT8     ubDir;
 	STRUCTURE *pDoor;
 	UINT8     ubWallOrientation;
-	BOOLEAN   fCheckGivenGridNo = TRUE;
+	BOOLEAN   fCheckGivenGridNo = true;
 	UINT8     ubTestDirection;
 
 	// CHECK IF WE WANT TO FORCE GRIDNO TO PERSON
@@ -3533,7 +3533,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	}
 
 
-	if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) > 0) // no problem going there! nobody on it!
+	if (NewOKDestination(pSoldier, sGridNo, true, pSoldier->bLevel) > 0) // no problem going there! nobody on it!
 	{
 		// OK, if we are looking to goto a switch, ignore this....
 		if (pDoor)
@@ -3541,7 +3541,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 			if (pDoor->fFlags & STRUCTURE_SWITCH)
 			{
 				// Don't continuel
-				fCheckGivenGridNo = FALSE;
+				fCheckGivenGridNo = false;
 			}
 		}
 
@@ -3635,7 +3635,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 		ubDir = GetDirectionToGridNoFromGridNo(sSpot, sGridNo);
 
 		// don't store path, just measure it
-		if (NewOKDestinationAndDirection(pSoldier, sSpot, ubDir, TRUE, pSoldier->bLevel) > 0 &&
+		if (NewOKDestinationAndDirection(pSoldier, sSpot, ubDir, true, pSoldier->bLevel) > 0 &&
 			(sDistance = PlotPath(pSoldier, sSpot, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints)) > 0)
 		{
 			if (sDistance < sClosest)
@@ -3728,7 +3728,7 @@ INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTY
 	{
 		const INT16 sSpot = NewGridNo(pSoldier->sGridNo, DirectionInc(i));
 
-		if (DoorTravelCost(pSoldier, sSpot, gubWorldMovementCosts[sSpot][i][pSoldier->bLevel], FALSE, NULL) >= TRAVELCOST_BLOCKED)
+		if (DoorTravelCost(pSoldier, sSpot, gubWorldMovementCosts[sSpot][i][pSoldier->bLevel], false, NULL) >= TRAVELCOST_BLOCKED)
 		{
 			// blocked!
 			continue;
@@ -3750,9 +3750,9 @@ INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTY
 
 BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos)
 {
-	if ( !NewOKDestination( pSoldier, usMapPos, FALSE, (INT8) gsInterfaceLevel ) )
+	if ( !NewOKDestination( pSoldier, usMapPos, false, (INT8) gsInterfaceLevel ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// ATE: If we are a robot, see if we are being validly controlled...
@@ -3768,11 +3768,11 @@ BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos)
 	// ATE: Experiment.. take out
 	//else if ( IsRoofVisible( usMapPos ) && gsInterfaceLevel == 0 )
 	//{
-	//	return( FALSE );
+	//	return false;
 	//}
 
 
-	return( TRUE);
+	return( true);
 }
 
 
@@ -3800,13 +3800,13 @@ void HandlePlayerServices(SOLDIERTYPE& s)
 	UINT32 const points_used = SoldierDressWound(&s, tgt, kit_pts, kit_pts);
 
 	// Determine if they are all banagded
-	bool done = FALSE;
+	bool done = false;
 	if (tgt->bBleeding == 0 && tgt->bLife >= OKLIFE)
 	{
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_IS_ALL_BANDAGED_STR], tgt->name));
 		// Cancel all services for this guy!
 		ReceivingSoldierCancelServices(tgt);
-		done = TRUE;
+		done = true;
 	}
 
 	UseKitPoints(in_hand, points_used, s);
@@ -3855,8 +3855,8 @@ void CommonEnterCombatModeCode( )
 	// Reset num enemies fought flag...
 	std::fill_n(gTacticalStatus.bNumFoughtInBattle, MAXTEAMS, 0);
 	gTacticalStatus.ubLastBattleSector = gWorldSector;
-	gTacticalStatus.fLastBattleWon      = FALSE;
-	gTacticalStatus.fItemsSeenOnAttack  = FALSE;
+	gTacticalStatus.fLastBattleWon      = false;
+	gTacticalStatus.fItemsSeenOnAttack  = false;
 
 
 	// ATE: If we have an item pointer end it!
@@ -3890,7 +3890,7 @@ void CommonEnterCombatModeCode( )
 			// If guy is sleeping, wake him up!
 			if (pSoldier->fMercAsleep)
 			{
-				ChangeSoldierState( pSoldier, WKAEUP_FROM_SLEEP, 1, TRUE );
+				ChangeSoldierState( pSoldier, WKAEUP_FROM_SLEEP, 1, true );
 			}
 
 			// ATE: Refresh APs
@@ -3925,7 +3925,7 @@ void CommonEnterCombatModeCode( )
 		}
 	}
 
-	gTacticalStatus.fHasEnteredCombatModeSinceEntering = TRUE;
+	gTacticalStatus.fHasEnteredCombatModeSinceEntering = true;
 
 	SyncStrategicTurnTimes( );
 
@@ -3983,7 +3983,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 			}
 		}
 
-		StartPlayerTeamTurn( FALSE, TRUE );
+		StartPlayerTeamTurn( false, true );
 	}
 	else
 	{
@@ -4009,7 +4009,7 @@ void ExitCombatMode( )
 	// Reset some flags for no aps to move, etc
 
 	// Set virgin sector to true....
-	gTacticalStatus.fVirginSector = TRUE;
+	gTacticalStatus.fVirginSector = true;
 
 	FOR_EACH_SOLDIER(pSoldier)
 	{
@@ -4018,14 +4018,14 @@ void ExitCombatMode( )
 			// Reset some flags
 			if ( pSoldier->fNoAPToFinishMove && pSoldier->bLife >= OKLIFE )
 			{
-				AdjustNoAPToFinishMove( pSoldier, FALSE );
+				AdjustNoAPToFinishMove( pSoldier, false );
 				SoldierGotoStationaryStance( pSoldier );
 			}
 
 			Soldier{pSoldier}.removePendingAnimation();
 
 			// Reset moved flag
-			pSoldier->bMoved = FALSE;
+			pSoldier->bMoved = false;
 
 			// Set final destination
 			pSoldier->sFinalDestination = pSoldier->sGridNo;
@@ -4086,7 +4086,7 @@ void SetEnemyPresence( )
 		// Say quote...
 		//SayQuoteFromAnyBodyInSector( QUOTE_ENEMY_PRESENCE );
 
-		gTacticalStatus.fEnemyInSector = TRUE;
+		gTacticalStatus.fEnemyInSector = true;
 	}
 }
 
@@ -4123,9 +4123,9 @@ static BOOLEAN WeSeeNoOne(void)
 	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam == OUR_TEAM && s->bOppCnt > 0) return FALSE;
+		if (s->bTeam == OUR_TEAM && s->bOppCnt > 0) return false;
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -4139,10 +4139,10 @@ static BOOLEAN NobodyAlerted(void)
 			s->bLife >= OKLIFE &&
 			s->bAlertStatus >= STATUS_RED)
 		{
-			return FALSE;
+			return false;
 		}
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -4155,10 +4155,10 @@ static BOOLEAN WeSawSomeoneThisTurn(void)
 
 		for (UINT32 uiLoop2 = gTacticalStatus.Team[ENEMY_TEAM].bFirstID; uiLoop2 < MAX_NUM_SOLDIERS; ++uiLoop2)
 		{
-			if (s->bOppList[uiLoop2] == SEEN_THIS_TURN) return TRUE;
+			if (s->bOppList[uiLoop2] == SEEN_THIS_TURN) return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -4196,27 +4196,27 @@ static UINT8 NumEnemyInSectorNotDeadOrDying();
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 {
 	BOOLEAN	fWeSeeNoOne, fNobodyAlerted;
-	BOOLEAN	fSayQuote = FALSE;
-	BOOLEAN fWeSawSomeoneRecently = FALSE, fSomeoneSawSomeoneRecently = FALSE;
+	BOOLEAN	fSayQuote = false;
+	BOOLEAN fWeSawSomeoneRecently = false, fSomeoneSawSomeoneRecently = false;
 
 	// We can only check for end of combat if in combat mode
 	if ( ! ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if we're boxing NEVER end combat mode
 	if ( gTacticalStatus.bBoxingState == BOXING )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// First check for end of battle....
 	// If there are no enemies at all in the sector
 	// Battle end should take presedence!
-	if ( CheckForEndOfBattle( FALSE ) )
+	if ( CheckForEndOfBattle( false ) )
 	{
-		return( TRUE );
+		return true;
 	}
 
 	fWeSeeNoOne = WeSeeNoOne();
@@ -4237,11 +4237,11 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 				SoldierHasSeenEnemiesLastFewTurns(s))
 			{
 				gTacticalStatus.bConsNumTurnsNotSeen = 0;
-				fSomeoneSawSomeoneRecently = TRUE;
+				fSomeoneSawSomeoneRecently = true;
 				if (s.bTeam == OUR_TEAM ||
 					(s.bTeam == MILITIA_TEAM && s.bSide == 0)) // or friendly militia
 				{
-					fWeSawSomeoneRecently = TRUE;
+					fWeSawSomeoneRecently = true;
 					break;
 				}
 			}
@@ -4258,7 +4258,7 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 				// start tracking this
 				gTacticalStatus.bConsNumTurnsWeHaventSeenButEnemyDoes++;
 			}
-			return( FALSE );
+			return false;
 		}
 
 		// IF here, we don;t see anybody.... increment count for end check
@@ -4289,12 +4289,12 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 			}
 			else
 			{
-				fSayQuote = TRUE;
+				fSayQuote = true;
 			}
 		}
 		else
 		{
-			fSayQuote = TRUE;
+			fSayQuote = true;
 		}
 
 		// ATE: Are there creatures here? If so, say another quote...
@@ -4327,10 +4327,10 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 		// Begin tense music....
 		SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -4347,17 +4347,17 @@ static UINT8 NumEnemyInSectorExceptCreatures();
 
 //!!!!
 //IMPORTANT NEW NOTE:
-//Whenever returning TRUE, make sure you clear gfBlitBattleSectorLocator;
+//Whenever returning true, make sure you clear gfBlitBattleSectorLocator;
 BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 {
-	BOOLEAN fBattleWon = TRUE;
-	BOOLEAN fBattleLost = FALSE;
+	BOOLEAN fBattleWon = true;
+	BOOLEAN fBattleLost = false;
 	UINT16  usAnimState;
 
 	if ( gTacticalStatus.bBoxingState == BOXING )
 	{
 		// no way are we going to exit boxing prematurely, thank you! :-)
-		return( FALSE );
+		return false;
 	}
 
 	// We can only check for end of battle if in combat mode or there are enemies
@@ -4366,32 +4366,32 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 	{
 		if ( ! (gTacticalStatus.fEnemyInSector) )
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 
 	// ATE: If attack busy count.. get out...
 	if ( (gTacticalStatus.ubAttackBusyCount > 0 ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 
 	// OK, this is to releave infinate looping...becasue we can kill guys in this function
 	if ( gfKillingGuysForLosingBattle )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// Check if the battle is won!
 	if ( NumCapableEnemyInSector( ) > 0 )
 	{
-		fBattleWon = FALSE;
+		fBattleWon = false;
 	}
 
 	if (CheckForLosingEndOfBattle())
 	{
-		fBattleLost = TRUE;
+		fBattleLost = true;
 	}
 
 	//NEW (Nov 24, 98)  by Kris
@@ -4403,7 +4403,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		//is naturally handled.
 		if( gfPendingEnemies )
 		{
-			fBattleWon = FALSE;
+			fBattleWon = false;
 		}
 	}
 
@@ -4417,7 +4417,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 		// Set enemy presence to false
 		// This is safe 'cause we're about to unload the friggen sector anyway....
-		gTacticalStatus.fEnemyInSector = FALSE;
+		gTacticalStatus.fEnemyInSector = false;
 
 		// If here, the battle has been lost!
 		UnSetUIBusy(GetSelectedMan());
@@ -4441,7 +4441,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			SetFactTrue( FACT_FIRST_BATTLE_FOUGHT );
 			SetFactFalse( FACT_FIRST_BATTLE_BEING_FOUGHT );
 			SetTheFirstBattleSector(gWorldSector.AsStrategicIndex());
-			HandleFirstBattleEndingWhileInTown(gWorldSector, FALSE);
+			HandleFirstBattleEndingWhileInTown(gWorldSector, false);
 		}
 
 		if( NumEnemyInSectorExceptCreatures() )
@@ -4452,10 +4452,10 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// ATE: Important! THis is delayed until music ends so we can have proper effect!
 		// CheckAndHandleUnloadingOfCurrentWorld();
 
-		//Whenever returning TRUE, make sure you clear gfBlitBattleSectorLocator;
+		//Whenever returning true, make sure you clear gfBlitBattleSectorLocator;
 		LogBattleResults( LOG_DEFEAT );
-		gfBlitBattleSectorLocator = FALSE;
-		return( TRUE );
+		gfBlitBattleSectorLocator = false;
+		return true;
 	}
 
 
@@ -4465,12 +4465,12 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 		if ( gTacticalStatus.bBoxingState == NOT_BOXING ) // if boxing don't do any of this stuff
 		{
-			gTacticalStatus.fLastBattleWon = TRUE;
+			gTacticalStatus.fLastBattleWon = true;
 
 			// OK, KILL any enemies that are incompacitated
 			if ( KillIncompacitatedEnemyInSector( ) )
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 
@@ -4478,7 +4478,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// hurray! a glorious victory!
 
 		// Set enemy presence to false
-		gTacticalStatus.fEnemyInSector = FALSE;
+		gTacticalStatus.fEnemyInSector = false;
 
 		// CJC: End AI's turn here.... first... so that UnSetUIBusy will succeed if militia win
 		// battle for us
@@ -4525,8 +4525,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 							pTeamSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED;
 
 							// toggle stealth mode....
-							gfUIStanceDifferent = TRUE;
-							pTeamSoldier->bStealthMode = FALSE;
+							gfUIStanceDifferent = true;
+							pTeamSoldier->bStealthMode = false;
 							fInterfacePanelDirty = DIRTYLEVEL2;
 
 							if (gAnimControl[pTeamSoldier->usAnimState].ubHeight != ANIM_STAND)
@@ -4536,11 +4536,11 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 							else
 							{
 								// If they are aiming, end aim!
-								usAnimState = PickSoldierReadyAnimation(pTeamSoldier, TRUE);
+								usAnimState = PickSoldierReadyAnimation(pTeamSoldier, true);
 
 								if (usAnimState != INVALID_ANIMATION)
 								{
-									EVENT_InitNewSoldierAnim(pTeamSoldier, usAnimState, 0, FALSE);
+									EVENT_InitNewSoldierAnim(pTeamSoldier, usAnimState, 0, false);
 								}
 							}
 						}
@@ -4601,7 +4601,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 					CheckForChangingOrders( pTeamSoldier );
 					pTeamSoldier->sNoiseGridno = NOWHERE;
 					pTeamSoldier->ubNoiseVolume = 0;
-					pTeamSoldier->bNewSituation = FALSE;
+					pTeamSoldier->bNewSituation = false;
 					pTeamSoldier->bOrders = STATIONARY;
 					if ( pTeamSoldier->bLife >= OKLIFE )
 					{
@@ -4609,7 +4609,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 					}
 				}
 			}
-			gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition = FALSE;
+			gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition = false;
 
 			// Loop through all civs and restore them to peaceful status
 			FOR_EACH_IN_TEAM(pTeamSoldier, CIV_TEAM)
@@ -4619,11 +4619,11 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 					pTeamSoldier->bAlertStatus = STATUS_GREEN;
 					pTeamSoldier->sNoiseGridno = NOWHERE;
 					pTeamSoldier->ubNoiseVolume = 0;
-					pTeamSoldier->bNewSituation = FALSE;
+					pTeamSoldier->bNewSituation = false;
 					CheckForChangingOrders( pTeamSoldier );
 				}
 			}
-			gTacticalStatus.Team[ CIV_TEAM ].bAwareOfOpposition = FALSE;
+			gTacticalStatus.Team[ CIV_TEAM ].bAwareOfOpposition = false;
 
 		}
 
@@ -4633,7 +4633,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		{
 			LogBattleResults( LOG_VICTORY );
 
-			SetThisSectorAsPlayerControlled(gWorldSector, TRUE);
+			SetThisSectorAsPlayerControlled(gWorldSector, true);
 			HandleVictoryInNPCSector(gWorldSector);
 			if ( CheckFact( FACT_FIRST_BATTLE_BEING_FOUGHT, 0 ) )
 			{
@@ -4645,32 +4645,32 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				SetFactTrue( FACT_FIRST_BATTLE_WON );
 				SetFactFalse( FACT_FIRST_BATTLE_BEING_FOUGHT );
 				SetTheFirstBattleSector(gWorldSector.AsStrategicIndex());
-				HandleFirstBattleEndingWhileInTown(gWorldSector, FALSE);
+				HandleFirstBattleEndingWhileInTown(gWorldSector, false);
 			}
 		}
 
 		SetCustomizableTimerCallbackAndDelay(3s, HandleThePlayerBeNotifiedOfSomeoneElseInSector, false);
 
-		//Whenever returning TRUE, make sure you clear gfBlitBattleSectorLocator;
-		gfBlitBattleSectorLocator = FALSE;
-		return( TRUE );
+		//Whenever returning true, make sure you clear gfBlitBattleSectorLocator;
+		gfBlitBattleSectorLocator = false;
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
 void CycleThroughKnownEnemies( )
 {
 	// static to indicate last position we were at:
-	static BOOLEAN fFirstTime = TRUE;
+	static BOOLEAN fFirstTime = true;
 	static UINT16  usStartToLook;
-	BOOLEAN        fEnemyBehindStartLook = FALSE;
-	BOOLEAN        fEnemiesFound = FALSE;
+	BOOLEAN        fEnemyBehindStartLook = false;
+	BOOLEAN        fEnemiesFound = false;
 
 	if ( fFirstTime )
 	{
-		fFirstTime = FALSE;
+		fFirstTime = false;
 
 		usStartToLook = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 	}
@@ -4684,7 +4684,7 @@ void CycleThroughKnownEnemies( )
 			s->bLife > 0 &&
 			s->bVisible != -1)
 		{
-			fEnemiesFound = TRUE;
+			fEnemiesFound = true;
 
 			// If we are > ok start, this is the one!
 			if (s->ubID > usStartToLook)
@@ -4695,7 +4695,7 @@ void CycleThroughKnownEnemies( )
 			}
 			else
 			{
-				fEnemyBehindStartLook = TRUE;
+				fEnemyBehindStartLook = true;
 			}
 		}
 	}
@@ -4773,10 +4773,10 @@ BOOLEAN PlayerTeamFull( )
 	// last ID for the player team is 19, so long as we have at most 17 non-vehicles...
 	if (NumberOfMercsOnPlayerTeam() <= gTacticalStatus.Team[OUR_TEAM].bLastID - 2u)
 	{
-		return( FALSE );
+		return false;
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -4893,9 +4893,9 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 {
 	INT8    bNumDead = 0, bNumNotOK = 0, bNumInBattle = 0, bNumNotOKRealMercs = 0;
 	BOOLEAN fMadeCorpse;
-	BOOLEAN fDoCapture = FALSE;
-	BOOLEAN fOnlyEPCsLeft = TRUE;
-	BOOLEAN fMilitiaInSector = FALSE;
+	BOOLEAN fDoCapture = false;
+	BOOLEAN fOnlyEPCsLeft = true;
+	BOOLEAN fMilitiaInSector = false;
 
 	// ATE: Check for MILITIA - we won't lose if we have some.....
 	CFOR_EACH_IN_TEAM(s, MILITIA_TEAM)
@@ -4904,7 +4904,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 		{
 			// We have at least one poor guy who will still fight....
 			// we have not lost ( yet )!
-			fMilitiaInSector = TRUE;
+			fMilitiaInSector = true;
 		}
 	}
 
@@ -4932,7 +4932,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 			{
 				if ( !AM_A_ROBOT( pTeamSoldier ) || !AM_AN_EPC( pTeamSoldier ) )
 				{
-					fOnlyEPCsLeft = FALSE;
+					fOnlyEPCsLeft = false;
 				}
 			}
 		}
@@ -4952,12 +4952,12 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 				if ( HandlePotentialBringUpAutoresolveToFinishBattle( ) )
 				{
 					// return false here as we are autoresolving...
-					return( FALSE );
+					return false;
 				}
 			}
 			else
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 
@@ -4978,7 +4978,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 					{
 						if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED || ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTDONE && gubQuest[ QUEST_INTERROGATION ] == QUESTNOTSTARTED ) )
 						{
-							fDoCapture = TRUE;
+							fDoCapture = true;
 							// CJC Dec 1 2002: fix capture sequences
 							BeginCaptureSquence();
 						}
@@ -4986,7 +4986,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 				}
 			}
 
-			gfKillingGuysForLosingBattle = TRUE;
+			gfKillingGuysForLosingBattle = true;
 
 			// Kill them now...
 			FOR_EACH_IN_TEAM(i, OUR_TEAM)
@@ -5016,7 +5016,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 				}
 			}
 
-			gfKillingGuysForLosingBattle = FALSE;
+			gfKillingGuysForLosingBattle = false;
 
 			if ( fDoCapture )
 			{
@@ -5029,10 +5029,10 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 			}
 
 		}
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -5271,8 +5271,8 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 					// make sure supressor ID is the same!
 					pSoldier->suppressor = caused_attacker;
 				}
-				pSoldier->fChangingStanceDueToSuppression = TRUE;
-				pSoldier->fDontChargeAPsForStanceChange = TRUE;
+				pSoldier->fChangingStanceDueToSuppression = true;
+				pSoldier->fDontChargeAPsForStanceChange = true;
 
 				// AI people will have to have their actions cancelled
 				if (!(pSoldier->uiStatusFlags & SOLDIER_PC))
@@ -5280,15 +5280,15 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 					CancelAIAction(pSoldier);
 					pSoldier->bAction = AI_ACTION_CHANGE_STANCE;
 					pSoldier->usActionData = ubNewStance;
-					pSoldier->bActionInProgress = TRUE;
+					pSoldier->bActionInProgress = true;
 				}
 
 				// go for it!
 				// ATE: Cancel any PENDING ANIMATIONS...
 				pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 				// ATE: Turn off non-interrupt flag ( this NEEDS to be done! )
-				pSoldier->fInNonintAnim = FALSE;
-				pSoldier->fRTInNonintAnim = FALSE;
+				pSoldier->fInNonintAnim = false;
+				pSoldier->fRTInNonintAnim = false;
 
 				ChangeSoldierStance( pSoldier, ubNewStance );
 			}
@@ -5300,7 +5300,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 
 BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const pTarget, const INT8 bReason)
 {
-	BOOLEAN	fEnterCombat = TRUE;
+	BOOLEAN	fEnterCombat = true;
 
 	if ( pTarget->fAIFlags & AI_ASLEEP )
 	{
@@ -5404,7 +5404,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 
 			CivilianGroupMemberChangesSides( pTarget );
 
-			if (pTarget->ubProfile != NO_PROFILE && pTarget->bLife >= OKLIFE && pTarget->bVisible == TRUE)
+			if (pTarget->ubProfile != NO_PROFILE && pTarget->bLife >= OKLIFE && pTarget->bVisible == true)
 			{
 				// trigger quote!
 				PauseAITemporarily();
@@ -5426,8 +5426,8 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 				// OK, sturn towards the prick
 				// Change to fire ready animation
 
-				pTarget->fDontChargeReadyAPs = TRUE;
-				SoldierReadyWeapon(pTarget, pSoldier->sGridNo, FALSE);
+				pTarget->fDontChargeReadyAPs = true;
+				SoldierReadyWeapon(pTarget, pSoldier->sGridNo, false);
 
 				// ATE: Depending on personality, fire back.....
 
@@ -5444,14 +5444,14 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 					}
 
 					// Fire back!
-					HandleItem( pTarget, pSoldier->sGridNo, pSoldier->bLevel, pTarget->inv[ HANDPOS ].usItem, FALSE );
+					HandleItem( pTarget, pSoldier->sGridNo, pSoldier->bLevel, pTarget->inv[ HANDPOS ].usItem, false );
 
 				}
 
 			}
 
 			// don't enter combat on attack on one of our own mercs
-			fEnterCombat = FALSE;
+			fEnterCombat = false;
 		}
 
 		// if we've attacked a miner
@@ -5470,7 +5470,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	BOOLEAN fEnterCombat = FALSE;
+	BOOLEAN fEnterCombat = false;
 
 	if (pSoldier == NULL)
 	{
@@ -5594,7 +5594,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 				}
 
 				// Don't enter combat...
-				fEnterCombat = FALSE;
+				fEnterCombat = false;
 			}
 
 			if ( gTacticalStatus.bBoxingState == BOXING )
@@ -5634,12 +5634,12 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		else
 		{
 			// no target, don't enter combat
-			fEnterCombat = FALSE;
+			fEnterCombat = false;
 		}
 
 		if ( pSoldier->fSayAmmoQuotePending )
 		{
-			pSoldier->fSayAmmoQuotePending = FALSE;
+			pSoldier->fSayAmmoQuotePending = false;
 			TacticalCharacterDialogue( pSoldier, QUOTE_OUT_OF_AMMO );
 		}
 
@@ -5677,7 +5677,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 	{
 		// Check for death quote...
 		HandleKilledQuote(ts->enemy_killed_on_attack, ts->enemy_killed_on_attack_killer, ts->ubEnemyKilledOnAttackLocation, ts->bEnemyKilledOnAttackLevel);
-		ts->fKilledEnemyOnAttack = FALSE;
+		ts->fKilledEnemyOnAttack = false;
 	}
 
 	// ATE: Check for stat changes....
@@ -5686,7 +5686,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 	if ( gTacticalStatus.fItemsSeenOnAttack  && gTacticalStatus.ubCurrentTeam == OUR_TEAM )
 	{
-		gTacticalStatus.fItemsSeenOnAttack = FALSE;
+		gTacticalStatus.fItemsSeenOnAttack = false;
 
 		// Display quote!
 		SOLDIERTYPE* const s = gTacticalStatus.items_seen_on_attack_soldier;
@@ -5697,7 +5697,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		else
 		{
 			// Turn off item lock for locators...
-			gTacticalStatus.fLockItemLocators = FALSE;
+			gTacticalStatus.fLockItemLocators = false;
 			// Slide to location!
 			SlideToLocation(gTacticalStatus.usItemsSeenOnAttackGridNo);
 		}
@@ -5705,14 +5705,14 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 	if ( gTacticalStatus.uiFlags & CHECK_SIGHT_AT_END_OF_ATTACK )
 	{
-		AllTeamsLookForAll( FALSE );
+		AllTeamsLookForAll( false );
 
 		// call fov code
 		FOR_EACH_IN_TEAM(pSightSoldier, OUR_TEAM)
 		{
 			if (pSightSoldier->bInSector)
 			{
-				RevealRoofsAndItems(pSightSoldier, FALSE);
+				RevealRoofsAndItems(pSightSoldier, false);
 			}
 		}
 		gTacticalStatus.uiFlags &= ~CHECK_SIGHT_AT_END_OF_ATTACK;
@@ -5720,7 +5720,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 	DequeueAllDemandGameEvents();
 
-	CheckForEndOfBattle( FALSE );
+	CheckForEndOfBattle( false );
 
 	// if we're in realtime, turn off the attacker's muzzle flash at this point
 	if ( !(gTacticalStatus.uiFlags & INCOMBAT) && pSoldier )
@@ -5758,7 +5758,7 @@ SOLDIERTYPE* FreeUpAttacker(SOLDIERTYPE* const attacker)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return ReduceAttackBusyCount(attacker, TRUE);
+	return ReduceAttackBusyCount(attacker, true);
 }
 
 
@@ -5767,7 +5767,7 @@ SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(target->attacker, TRUE, target);
+	return InternalReduceAttackBusyCount(target->attacker, true, target);
 }
 
 
@@ -5776,7 +5776,7 @@ SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(target->attacker, FALSE, target);
+	return InternalReduceAttackBusyCount(target->attacker, false, target);
 }
 
 
@@ -5870,14 +5870,14 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE& s)
 
 	RemoveMercSlot(&s);
 
-	s.bInSector = FALSE;
+	s.bInSector = false;
 
 	// Select next avialiable guy....
 	if (guiCurrentScreen == GAME_SCREEN)
 	{
 		if (GetSelectedMan() == &s)
 		{
-			SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(&s, FALSE, FALSE);
+			SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(&s, false, false);
 			if (next != &s)
 			{
 				SelectSoldier(next, SELSOLDIER_NONE);
@@ -5922,14 +5922,14 @@ void InitializeTacticalStatusAtBattleStart(void)
 	for (INT8 i = 0; i < NUM_PANIC_TRIGGERS; ++i)
 	{
 		gTacticalStatus.sPanicTriggerGridNo[i]  = NOWHERE;
-		gTacticalStatus.bPanicTriggerIsAlarm[i] = FALSE;
+		gTacticalStatus.bPanicTriggerIsAlarm[i] = false;
 		gTacticalStatus.ubPanicTolerance[i]     = 0;
 	}
 
 	for (INT32 i = 0; i < MAXTEAMS; ++i)
 	{
 		gTacticalStatus.Team[i].last_merc_to_radio = NULL;
-		gTacticalStatus.Team[i].bAwareOfOpposition = FALSE;
+		gTacticalStatus.Team[i].bAwareOfOpposition = false;
 	}
 
 	gTacticalStatus.the_chosen_one = NULL;
@@ -5978,7 +5978,7 @@ void CaptureTimerCallback(void)
 		text = LargeTacticalStr[LARGESTR_HAVE_BEEN_CAPTURED];
 	}
 	DoMessageBox(MSG_BOX_BASIC_STYLE, text, GAME_SCREEN, MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL);
-	gfSurrendered = FALSE;
+	gfSurrendered = false;
 }
 
 
@@ -6001,7 +6001,7 @@ void DoPOWPathChecks(void)
 		}
 		// free! free!
 		// put them on any available squad
-		s->bNeutral = FALSE;
+		s->bNeutral = false;
 		AddCharacterToAnySquad(s);
 		DoMercBattleSound(s, BATTLE_SOUND_COOL1);
 	}
@@ -6010,23 +6010,23 @@ void DoPOWPathChecks(void)
 
 BOOLEAN HostileCiviliansPresent( void )
 {
-	if (!IsTeamActive(CIV_TEAM)) return FALSE;
+	if (!IsTeamActive(CIV_TEAM)) return false;
 
 	CFOR_EACH_IN_TEAM(s, CIV_TEAM)
 	{
 		if (s->bInSector && s->bLife > 0 && !s->bNeutral)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
 BOOLEAN HostileBloodcatsPresent(void)
 {
-	if (!IsTeamActive(CREATURE_TEAM)) return FALSE;
+	if (!IsTeamActive(CREATURE_TEAM)) return false;
 
 	CFOR_EACH_IN_TEAM(s, CREATURE_TEAM)
 	{
@@ -6036,11 +6036,11 @@ BOOLEAN HostileBloodcatsPresent(void)
 		// BAD BAD BAD!
 		if (s->bInSector && s->bLife > 0 && s->ubBodyType == BLOODCAT)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -6133,12 +6133,12 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo con
 				if (!MayExecute()) return true;
 
 				// Turn off item lock for locators
-				gTacticalStatus.fLockItemLocators = FALSE;
+				gTacticalStatus.fLockItemLocators = false;
 
 				SlideToLocation(location_);
 
 				SOLDIERTYPE& s = soldier_;
-				ExecuteCharacterDialogue(s.ubProfile, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), s.face, DIALOGUE_TACTICAL_UI, TRUE, false);
+				ExecuteCharacterDialogue(s.ubProfile, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), s.face, DIALOGUE_TACTICAL_UI, true, false);
 
 				return false;
 			}

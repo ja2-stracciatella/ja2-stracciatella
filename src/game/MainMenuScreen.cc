@@ -55,10 +55,10 @@ static SGPVObject* guiMainMenuBackGroundImage;
 static SGPVObject* guiJa2LogoImage;
 
 static INT8    gbHandledMainMenu = 0;
-static BOOLEAN fInitialRender    = FALSE;
+static BOOLEAN fInitialRender    = false;
 
-static BOOLEAN gfMainMenuScreenEntry = FALSE;
-static BOOLEAN gfMainMenuScreenExit = FALSE;
+static BOOLEAN gfMainMenuScreenEntry = false;
+static BOOLEAN gfMainMenuScreenExit = false;
 
 static ScreenID guiMainMenuExitScreen = MAINMENU_SCREEN;
 
@@ -108,8 +108,8 @@ ScreenID MainMenuScreenHandle(void)
 	if (gfMainMenuScreenEntry)
 	{
 		InitMainMenu();
-		gfMainMenuScreenEntry = FALSE;
-		gfMainMenuScreenExit  = FALSE;
+		gfMainMenuScreenEntry = false;
+		gfMainMenuScreenExit  = false;
 		guiMainMenuExitScreen = MAINMENU_SCREEN;
 		SetMusicMode(MUSIC_MAIN_MENU);
 	}
@@ -122,7 +122,7 @@ ScreenID MainMenuScreenHandle(void)
 		RenderGameVersion();
 		RenderCopyright();
 
-		fInitialRender = FALSE;
+		fInitialRender = false;
 	}
 
 	RenderButtons();
@@ -133,11 +133,11 @@ ScreenID MainMenuScreenHandle(void)
 	if (gfMainMenuScreenExit)
 	{
 		ExitMainMenu();
-		gfMainMenuScreenExit  = FALSE;
-		gfMainMenuScreenEntry = TRUE;
+		gfMainMenuScreenExit  = false;
+		gfMainMenuScreenEntry = true;
 	}
 
-	if (guiMainMenuExitScreen != MAINMENU_SCREEN) gfMainMenuScreenEntry = TRUE;
+	if (guiMainMenuExitScreen != MAINMENU_SCREEN) gfMainMenuScreenEntry = true;
 
 	return guiMainMenuExitScreen;
 }
@@ -154,7 +154,7 @@ static void HandleMainMenuScreen(void)
 	switch (gbHandledMainMenu)
 	{
 		case QUIT:
-			gfMainMenuScreenExit = TRUE;
+			gfMainMenuScreenExit = true;
 			requestGameExit();
 			break;
 
@@ -162,7 +162,7 @@ static void HandleMainMenuScreen(void)
 			// Select the game which is to be restored
 			guiPreviousOptionScreen = guiCurrentScreen;
 			gbHandledMainMenu       = 0;
-			gfSaveGame              = FALSE;
+			gfSaveGame              = false;
 			SetMainMenuExitScreen(SAVE_LOAD_SCREEN);
 			break;
 
@@ -185,7 +185,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate);
 
 void InitMainMenu(void)
 {
-	CreateDestroyMainMenuButtons(TRUE);
+	CreateDestroyMainMenuButtons(true);
 
 	guiMainMenuBackGroundImage = AddVideoObjectFromFile(LOADSCREENSDIR "/mainmenubackground.sti");
 	guiJa2LogoImage            = AddVideoObjectFromFile(LOADSCREENSDIR "/ja2logo.sti");
@@ -194,7 +194,7 @@ void InitMainMenu(void)
 	if (!AreThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
 
 	gbHandledMainMenu = 0;
-	fInitialRender    = TRUE;
+	fInitialRender    = true;
 
 	SetPendingNewScreen(MAINMENU_SCREEN);
 	guiMainMenuExitScreen = MAINMENU_SCREEN;
@@ -207,7 +207,7 @@ void InitMainMenu(void)
 
 static void ExitMainMenu(void)
 {
-	CreateDestroyMainMenuButtons(FALSE);
+	CreateDestroyMainMenuButtons(false);
 	DeleteVideoObject(guiMainMenuBackGroundImage);
 	DeleteVideoObject(guiJa2LogoImage);
 	gMsgBox.uiExitScreen = MAINMENU_SCREEN;
@@ -226,7 +226,7 @@ static void MenuButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		switch (gbHandledMainMenu)
 		{
 			case NEW_GAME:  SetMainMenuExitScreen(GAME_INIT_OPTIONS_SCREEN); break;
-			case LOAD_GAME: if (_KeyDown(ALT)) gfLoadGameUponEntry = TRUE;   break;
+			case LOAD_GAME: if (_KeyDown(ALT)) gfLoadGameUponEntry = true;   break;
 		}
 	}
 }
@@ -245,7 +245,7 @@ static void HandleMainMenuInput(void)
 				case SDLK_ESCAPE: gbHandledMainMenu = QUIT; break;
 
 				case 'c':
-					if (_KeyDown(ALT)) gfLoadGameUponEntry = TRUE;
+					if (_KeyDown(ALT)) gfLoadGameUponEntry = true;
 					gbHandledMainMenu = LOAD_GAME;
 					break;
 
@@ -272,20 +272,20 @@ void ClearMainMenu(void)
 static void SetMainMenuExitScreen(ScreenID const uiNewScreen)
 {
 	guiMainMenuExitScreen = uiNewScreen;
-	gfMainMenuScreenExit  = TRUE;
+	gfMainMenuScreenExit  = true;
 }
 
 
 static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 {
-	static BOOLEAN fButtonsCreated = FALSE;
+	static BOOLEAN fButtonsCreated = false;
 
 	if (fCreate)
 	{
 		if (fButtonsCreated) return;
 
 		// Reset the variable that allows the user to ALT click on the continue save btn to load the save instantly
-		gfLoadGameUponEntry = FALSE;
+		gfLoadGameUponEntry = false;
 
 		// Load button images
 		const char* const filename = GetMLGFilename(MLG_TITLETEXT);
@@ -309,7 +309,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 			b->SetUserData(cnt);
 		}
 
-		fButtonsCreated = TRUE;
+		fButtonsCreated = true;
 	}
 	else
 	{
@@ -321,7 +321,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 			RemoveButton(iMenuButtons[cnt]);
 			UnloadButtonImage(iMenuImages[cnt]);
 		}
-		fButtonsCreated = FALSE;
+		fButtonsCreated = false;
 	}
 }
 

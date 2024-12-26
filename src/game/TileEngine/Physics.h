@@ -42,8 +42,8 @@ struct REAL_OBJECT
 	INT16        sConsecutiveZeroVelocityCollisions;
 	INT32        iOldCollisionCode;
 
-	FLOAT        dLifeLength;
-	FLOAT        dLifeSpan;
+	float        dLifeLength;
+	float        dLifeSpan;
 	OBJECTTYPE   Obj;
 	SOLDIERTYPE* owner;
 	INT16        sFirstGridNo;

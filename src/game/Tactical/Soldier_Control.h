@@ -380,8 +380,8 @@ struct SOLDIERTYPE
 	UINT8 ubMovementNoiseHeard;// 8 flags by direction
 
 	// WORLD POSITION STUFF
-	FLOAT dXPos;
-	FLOAT dYPos;
+	float dXPos;
+	float dYPos;
 	INT16 sInitialGridNo;
 	INT16 sGridNo;
 	UINT8 bDirection;
@@ -449,7 +449,7 @@ struct SOLDIERTYPE
 	INT16 sLastTarget;
 	INT8 bTilesMoved;
 	INT8 bLeadership;
-	FLOAT dNextBleed;
+	float dNextBleed;
 	BOOLEAN fWarnedAboutBleeding;
 	BOOLEAN fDyingComment;
 
@@ -553,7 +553,7 @@ struct SOLDIERTYPE
 	UINT8 ubNoiseVolume;
 	INT8 bLastAttackHit;
 	SOLDIERTYPE* xrayed_by;
-	FLOAT dHeightAdjustment;
+	float dHeightAdjustment;
 	INT8 bMorale;
 	INT8 bTeamMoraleMod;
 	INT8 bTacticalMoraleMod;
@@ -894,7 +894,7 @@ ENUM_BITSET(SetSoldierPosFlags)
 
 void EVENT_SetSoldierPosition(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags flags);
 void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags flags);
-void EVENT_SetSoldierPositionXY(SOLDIERTYPE* s, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags);
+void EVENT_SetSoldierPositionXY(SOLDIERTYPE* s, float dNewXPos, float dNewYPos, SetSoldierPosFlags flags);
 
 void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
 BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
@@ -915,7 +915,7 @@ void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 
 
 BOOLEAN SoldierReadyWeapon(SOLDIERTYPE* pSoldier, GridNo tgt_pos, BOOLEAN fEndReady);
-void SetSoldierHeight(SOLDIERTYPE*, FLOAT new_height);
+void SetSoldierHeight(SOLDIERTYPE*, float new_height);
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbDownRoof(SOLDIERTYPE*);
 void BeginSoldierClimbFence(SOLDIERTYPE*);
@@ -943,8 +943,8 @@ void  LoadPaletteData(void);
 void  DeletePaletteData(void);
 
 // UTILITY FUNCTUIONS
-void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange );
-void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMovementDist );
+void MoveMerc( SOLDIERTYPE *pSoldier, float dMovementChange, float dAngle, BOOLEAN fCheckRange );
+void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, float dMovementDist );
 INT16 GetDirectionFromGridNo(INT16 sGridNo, const SOLDIERTYPE* pSoldier);
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
 INT8 CalcActionPoints(const SOLDIERTYPE*);

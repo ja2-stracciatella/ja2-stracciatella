@@ -72,7 +72,7 @@ static SGPVObject* guiAccountNumberGrid;
 
 INT32		giMercTotalContractCharge;
 
-BOOLEAN	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
+BOOLEAN	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = false;
 
 // The Authorize button
 static BUTTON_PICS* guiMercAuthorizeButtonImage;
@@ -114,7 +114,7 @@ void EnterMercsAccount()
 	//RenderMercsAccount();
 
 	//if true, will display a msgbox telling user that they dont have enough funds
-	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
+	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = false;
 }
 
 
@@ -135,7 +135,7 @@ void HandleMercsAccount()
 	//if true, will display a msgbox telling user that they dont have enough funds
 	if( gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning )
 	{
-		gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
+		gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = false;
 
 		DoLapTopMessageBox( MSG_BOX_BLUE_ON_GREY, "Transfer failed.  No funds available.", LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 	}
@@ -297,7 +297,7 @@ static void SettleMercAccounts(void)
 	if( iPartialPayment == 0 )
 	{
 		//if true, will display a msgbox telling user that they dont have enough funds
-		gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = TRUE;
+		gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = true;
 		return;
 	}
 

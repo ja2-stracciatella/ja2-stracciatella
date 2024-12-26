@@ -40,7 +40,7 @@
 	INT16 gsBestCover;
 	#ifndef PATHAI_VISIBLE_DEBUG
 	// NB Change this to true to get visible cover debug -- CJC
-	BOOLEAN gfDisplayCoverValues = FALSE;
+	BOOLEAN gfDisplayCoverValues = false;
 	#endif
 #endif
 
@@ -73,15 +73,15 @@ static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale
 }
 
 
-static void AICenterXY(INT16 sGridNo, FLOAT* pdX, FLOAT* pdY)
+static void AICenterXY(INT16 sGridNo, float* pdX, float* pdY)
 {
 	INT16 sXPos, sYPos;
 
 	sXPos = sGridNo % WORLD_COLS;
 	sYPos = sGridNo / WORLD_COLS;
 
-	*pdX = (FLOAT) (sXPos * CELL_X_SIZE + CELL_X_SIZE / 2);
-	*pdY = (FLOAT) (sYPos * CELL_Y_SIZE + CELL_Y_SIZE / 2);
+	*pdX = (float) (sXPos * CELL_X_SIZE + CELL_X_SIZE / 2);
+	*pdY = (float) (sYPos * CELL_Y_SIZE + CELL_Y_SIZE / 2);
 }
 
 
@@ -213,7 +213,7 @@ static INT8 CalcBestCTGT(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const o
 
 				// ATE: OLD STUFF
 				// if the adjacent gridno is reachable from the starting spot
-				if ( NewOKDestination( pSoldier, sCheckSpot, FALSE, bLevel ) )
+				if ( NewOKDestination( pSoldier, sCheckSpot, false, bLevel ) )
 				{
 					// the dude could move to this adjacent gridno, so put him there
 					// "virtually" so we can calculate what our cover is from there
@@ -246,7 +246,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 	INT32 iReductionFactor, iThisScale;
 	INT16 sHisGridNo, sMyRealGridNo = NOWHERE, sHisRealGridNo = NOWHERE;
 	INT16 sTempX, sTempY;
-	FLOAT dMyX, dMyY, dHisX, dHisY;
+	float dMyX, dMyY, dHisX, dHisY;
 	INT8  bHisBestCTGT, bHisActualCTGT, bHisCTGT, bMyCTGT;
 	INT32 iRangeChange, iRangeFactor, iRangeFactorMultiplier;
 	SOLDIERTYPE *pHim;
@@ -268,8 +268,8 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 
 		pMe->sGridNo = sMyGridNo;              // but pretend I'm standing at sMyGridNo
 		ConvertGridNoToCenterCellXY( sMyGridNo, &sTempX, &sTempY );
-		pMe->dXPos = (FLOAT) sTempX;
-		pMe->dYPos = (FLOAT) sTempY;
+		pMe->dXPos = (float) sTempX;
+		pMe->dYPos = (float) sTempY;
 	}
 
 	// if this is theoretical, and he's not actually at hisGrid right now
@@ -281,8 +281,8 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 
 		pHim->sGridNo = sHisGridNo;            // but pretend he's standing at sHisGridNo
 		ConvertGridNoToCenterCellXY( sHisGridNo, &sTempX, &sTempY );
-		pHim->dXPos = (FLOAT) sTempX;
-		pHim->dYPos = (FLOAT) sTempY;
+		pHim->dXPos = (float) sTempX;
+		pHim->dYPos = (float) sTempY;
 	}
 
 
@@ -337,8 +337,8 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 		{
 			pHim->sGridNo = sHisGridNo;
 			ConvertGridNoToCenterCellXY( sHisGridNo, &sTempX, &sTempY );
-			pHim->dXPos = (FLOAT) sTempX;
-			pHim->dYPos = (FLOAT) sTempY;
+			pHim->dXPos = (float) sTempX;
+			pHim->dYPos = (float) sTempY;
 		}
 		// bMyCTGT = ChanceToGetThrough(pMe,sHisGridNo,FAKE,ACTUAL,TESTWALLS,9999,M9PISTOL,NOT_FOR_LOS); // assume a gunshot
 		// bMyCTGT = SoldierToLocationChanceToGetThrough( pMe, sHisGridNo, pMe->bTargetLevel, pMe->bTargetCubeLevel );
@@ -528,7 +528,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 	if (gWorldSector.z > 0)
 	{
-		fNight = FALSE;
+		fNight = false;
 	}
 	else
 	{
@@ -536,11 +536,11 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 		if ( ubBackgroundLightLevel < NORMAL_LIGHTLEVEL_DAY + 2 )
 		{
-			fNight = FALSE;
+			fNight = false;
 		}
 		else
 		{
-			fNight = TRUE;
+			fNight = true;
 			ubBackgroundLightPercent = gbLightSighting[ 0 ][ ubBackgroundLightLevel ];
 		}
 	}
@@ -617,7 +617,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	iMaxThreatRange = MAX_THREAT_RANGE + (CELL_X_SIZE * iSearchRange);
 
 	// calculate OUR OWN general threat value (not from any specific location)
-	iMyThreatValue = CalcManThreatValue(pSoldier,NOWHERE,FALSE,pSoldier);
+	iMyThreatValue = CalcManThreatValue(pSoldier,NOWHERE,false,pSoldier);
 
 	// look through all opponents for those we know of
 	FOR_EACH_MERC(i)
@@ -675,7 +675,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		}
 
 		// remember this opponent as a current threat, but DON'T REDUCE FOR COVER!
-		Threat[uiThreatCnt].iValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier);
+		Threat[uiThreatCnt].iValue = CalcManThreatValue(pOpponent,pSoldier->sGridNo,false,pSoldier);
 
 		// if the opponent is no threat at all for some reason
 		if (Threat[uiThreatCnt].iValue == -999)
@@ -792,7 +792,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	// so we don't consider it
 	gpWorldLevelData[pSoldier->sGridNo].uiFlags &= ~(MAPELEMENT_REACHABLE);
 
-	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
+	// SET UP double-LOOP TO STEP THROUGH POTENTIAL GRID #s
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
 		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
@@ -1028,7 +1028,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 		}
 
 		// if the opponent is no threat at all for some reason
-		if (CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier) == -999)
+		if (CalcManThreatValue(pOpponent,pSoldier->sGridNo,false,pSoldier) == -999)
 		{
 			continue;          // check next opponent
 		}
@@ -1297,7 +1297,7 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 		// so we don't consider it
 		gpWorldLevelData[pSoldier->sGridNo].uiFlags &= ~(MAPELEMENT_REACHABLE);
 
-		// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
+		// SET UP double-LOOP TO STEP THROUGH POTENTIAL GRID #s
 		for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 		{
 			for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
@@ -1400,7 +1400,7 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 		// so we don't consider it
 		gpWorldLevelData[pSoldier->sGridNo].uiFlags &= ~(MAPELEMENT_REACHABLE);
 
-		// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
+		// SET UP double-LOOP TO STEP THROUGH POTENTIAL GRID #s
 		for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 		{
 			for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
@@ -1705,7 +1705,7 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 	// determine maximum vertical limits
 	sMaxUp   = std::min(iSearchRange, (pSoldier->sGridNo / MAXROW));
 	sMaxDown = std::min(iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
+	// SET UP double-LOOP TO STEP THROUGH POTENTIAL GRID #s
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
 		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
@@ -1844,7 +1844,7 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 	// so we don't consider it
 	gpWorldLevelData[pSoldier->sGridNo].uiFlags &= ~(MAPELEMENT_REACHABLE);
 
-	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
+	// SET UP double-LOOP TO STEP THROUGH POTENTIAL GRID #s
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
 		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)

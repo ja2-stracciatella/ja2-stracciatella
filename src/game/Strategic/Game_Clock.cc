@@ -36,9 +36,9 @@ extern	BOOLEAN			gfFadeOut;
 
 
 // is the clock pause region created currently?
-static BOOLEAN fClockMouseRegionCreated = FALSE;
+static BOOLEAN fClockMouseRegionCreated = false;
 
-static BOOLEAN fTimeCompressHasOccured = FALSE;
+static BOOLEAN fTimeCompressHasOccured = false;
 
 //This value represents the time that the sector was loaded.  If you are in sector A9, and leave
 //the game clock at that moment will get saved into the temp file associated with it.  The next time you
@@ -63,10 +63,10 @@ static MOUSE_REGION gClockScreenMaskMouseRegion;
 //All of these get saved and loaded.
 INT32          giTimeCompressMode = TIME_COMPRESS_X0;
 static UINT8   gubClockResolution = 1;
-BOOLEAN        gfGamePaused	= TRUE;
-BOOLEAN        gfTimeInterrupt	= FALSE;
-static BOOLEAN gfTimeInterruptPause = FALSE;
-static BOOLEAN fSuperCompression = FALSE;
+BOOLEAN        gfGamePaused	= true;
+BOOLEAN        gfTimeInterrupt	= false;
+static BOOLEAN gfTimeInterruptPause = false;
+static BOOLEAN fSuperCompression = false;
 UINT32         guiGameClock = STARTING_TIME;
 static UINT32  guiPreviousGameClock = 0; // used only for error-checking purposes
 static UINT32  guiGameSecondsPerRealSecond;
@@ -80,10 +80,10 @@ INT32          giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ] = { 0, 1, 5 * 60
 static UINT16  usPausedActualWidth;
 static UINT16  usPausedActualHeight;
 UINT32         guiTimeOfLastEventQuery = 0;
-BOOLEAN        gfLockPauseState = FALSE;
-BOOLEAN        gfPauseDueToPlayerGamePause = FALSE;
-BOOLEAN        gfResetAllPlayerKnowsEnemiesFlags = FALSE;
-static BOOLEAN gfTimeCompressionOn = FALSE;
+BOOLEAN        gfLockPauseState = false;
+BOOLEAN        gfPauseDueToPlayerGamePause = false;
+BOOLEAN        gfResetAllPlayerKnowsEnemiesFlags = false;
+static BOOLEAN gfTimeCompressionOn = false;
 UINT32         guiLockPauseStateLastReasonId = 0;
 //***When adding new saved time variables, make sure you remove the appropriate amount from the paddingbytes and
 //   more IMPORTANTLY, add appropriate code in Save/LoadGameClock()!
@@ -197,7 +197,7 @@ static void AdvanceClock(UINT8 ubWarpCode)
 
 	if ( guiGameClock < guiPreviousGameClock )
 	{
-		AssertMsg(FALSE, ST::format("AdvanceClock: TIME FLOWING BACKWARDS!!! guiPreviousGameClock {}, now {}", guiPreviousGameClock, guiGameClock));
+		AssertMsg(false, ST::format("AdvanceClock: TIME FLOWING BACKWARDS!!! guiPreviousGameClock {}, now {}", guiPreviousGameClock, guiGameClock));
 
 		// fix it if assertions are disabled
 		guiGameClock = guiPreviousGameClock;
@@ -212,7 +212,7 @@ static void AdvanceClock(UINT8 ubWarpCode)
 	{
 		ClearAnySectorsFlashingNumberOfEnemies();
 
-		gfResetAllPlayerKnowsEnemiesFlags = FALSE;
+		gfResetAllPlayerKnowsEnemiesFlags = false;
 	}
 
 	ForecastDayEvents( );
@@ -222,13 +222,13 @@ static void AdvanceClock(UINT8 ubWarpCode)
 // set the flag that time compress has occured
 void SetFactTimeCompressHasOccured( void )
 {
-	fTimeCompressHasOccured = TRUE;
+	fTimeCompressHasOccured = true;
 }
 
 //reset fact the time compress has occured
 void ResetTimeCompressHasOccured( void )
 {
-	fTimeCompressHasOccured = FALSE;
+	fTimeCompressHasOccured = false;
 }
 
 // has time compress occured?
@@ -320,17 +320,17 @@ void StartTimeCompression( void )
 }
 
 
-// returns FALSE if time isn't currently being compressed for ANY reason (various pauses, etc.)
+// returns false if time isn't currently being compressed for ANY reason (various pauses, etc.)
 BOOLEAN IsTimeBeingCompressed( void )
 {
 	if( !gfTimeCompressionOn || ( giTimeCompressMode == TIME_COMPRESS_X0 ) || gfGamePaused )
-		return( FALSE );
+		return false;
 	else
-		return ( TRUE );
+		return ( true );
 }
 
 
-// returns TRUE if the player currently doesn't want time to be compressing
+// returns true if the player currently doesn't want time to be compressing
 BOOLEAN IsTimeCompressionOn( void )
 {
 	return( gfTimeCompressionOn );
@@ -448,17 +448,17 @@ static void SetClockResolutionToCompressMode(INT32 iCompressMode)
 	// if the compress mode is X0 or X1
 	if ( iCompressMode <= TIME_COMPRESS_X1 )
 	{
-		gfTimeCompressionOn = FALSE;
+		gfTimeCompressionOn = false;
 	}
 	else
 	{
-		gfTimeCompressionOn = TRUE;
+		gfTimeCompressionOn = true;
 
 		// handle the player just starting a game
 		HandleTimeCompressWithTeamJackedInAndGearedToGo( );
 	}
 
-	fMapScreenBottomDirty = TRUE;
+	fMapScreenBottomDirty = true;
 }
 
 
@@ -489,7 +489,7 @@ void SetGameMinutesPerSecond( UINT32 uiGameMinutesPerSecond )
 
 void LockPauseState(LockPauseReason const uiUniqueReasonId)
 {
-	gfLockPauseState = TRUE;
+	gfLockPauseState = true;
 
 	// if adding a new call, please choose a new uiUniqueReasonId, this helps track down the cause when it's left locked
 	// Highest # used was 21 on Feb 15 '99.
@@ -499,7 +499,7 @@ void LockPauseState(LockPauseReason const uiUniqueReasonId)
 // call this to allow player to change the time compression state via the interface once again
 void UnLockPauseState()
 {
-	gfLockPauseState = FALSE;
+	gfLockPauseState = false;
 }
 
 // tells you whether the player is currently locked out from messing with the time compression state
@@ -514,8 +514,8 @@ void PauseGame(void)
 	// always allow pausing, even if "locked".  Locking applies only to trying to compress time, not to pausing it
 	if( !gfGamePaused )
 	{
-		gfGamePaused = TRUE;
-		fMapScreenBottomDirty = TRUE;
+		gfGamePaused = true;
+		fMapScreenBottomDirty = true;
 	}
 }
 
@@ -532,8 +532,8 @@ void UnPauseGame(void)
 			return;
 		}
 
-		gfGamePaused = FALSE;
-		fMapScreenBottomDirty = TRUE;
+		gfGamePaused = false;
+		fMapScreenBottomDirty = true;
 	}
 }
 
@@ -547,12 +547,12 @@ BOOLEAN GamePaused()
 //ONLY APPLICABLE INSIDE EVENT CALLBACKS!
 void InterruptTime()
 {
-	gfTimeInterrupt = TRUE;
+	gfTimeInterrupt = true;
 }
 
 void PauseTimeForInterupt()
 {
-	gfTimeInterruptPause = TRUE;
+	gfTimeInterruptPause = true;
 }
 
 
@@ -602,14 +602,14 @@ void UpdateClock()
 	if( guiCurrentScreen != GAME_SCREEN && guiCurrentScreen != MAP_SCREEN && guiCurrentScreen != GAME_SCREEN )
 	{
 		uiLastSecondTime = GetJA2Clock( );
-		gfTimeInterruptPause = FALSE;
+		gfTimeInterruptPause = false;
 		return;
 	}
 
 	if( gfGamePaused || gfTimeInterruptPause || ( gubClockResolution == 0 ) || !guiGameSecondsPerRealSecond || ARE_IN_FADE_IN( ) || gfFadeOut )
 	{
 		uiLastSecondTime = GetJA2Clock( );
-		gfTimeInterruptPause = FALSE;
+		gfTimeInterruptPause = false;
 		return;
 	}
 
@@ -743,7 +743,7 @@ void LoadGameClock(HWFILE const hFile)
 	UpdateGameClockGlobals(pDayStrings);
 
 	if( !gfBasement && !gfCaves )
-		gfDoLighting = TRUE;
+		gfDoLighting = true;
 }
 
 
@@ -761,7 +761,7 @@ void CreateMouseRegionForPauseOfClock(void)
 			MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PauseOfClockBtnCallback
 		);
 
-		fClockMouseRegionCreated = TRUE;
+		fClockMouseRegionCreated = true;
 
 		ST::string const& help = pPausedGameText[gfGamePaused ? 1 : 2];
 		gClockMouseRegion.SetFastHelpText(help);
@@ -775,7 +775,7 @@ void RemoveMouseRegionForPauseOfClock( void )
 	if (fClockMouseRegionCreated)
 	{
 		MSYS_RemoveRegion( &gClockMouseRegion );
-		fClockMouseRegionCreated = FALSE;
+		fClockMouseRegionCreated = false;
 
 	}
 }
@@ -813,17 +813,17 @@ void HandlePlayerPauseUnPauseOfGame( void )
 		}
 
 		UnPauseGame( );
-		PauseTime( FALSE );
-		gfIgnoreScrolling = FALSE;
-		gfPauseDueToPlayerGamePause = FALSE;
+		PauseTime( false );
+		gfIgnoreScrolling = false;
+		gfPauseDueToPlayerGamePause = false;
 	}
 	else
 	{
 		// pause game
 		PauseGame( );
-		PauseTime( TRUE );
-		gfIgnoreScrolling = TRUE;
-		gfPauseDueToPlayerGamePause = TRUE;
+		PauseTime( true );
+		gfIgnoreScrolling = true;
+		gfPauseDueToPlayerGamePause = true;
 	}
 }
 
@@ -833,18 +833,18 @@ static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, UINT32 iRea
 
 static void CreateDestroyScreenMaskForPauseGame(void)
 {
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	if ((!fClockMouseRegionCreated || !gfGamePaused || !gfPauseDueToPlayerGamePause) && fCreated)
 	{
-		fCreated = FALSE;
+		fCreated = false;
 		MSYS_RemoveRegion( &gClockScreenMaskMouseRegion );
 		RemoveMercPopupBox(g_paused_popup_box);
 		g_paused_popup_box = 0;
 		SetRenderFlags( RENDER_FLAG_FULL );
-		fTeamPanelDirty = TRUE;
-		fMapPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
+		fTeamPanelDirty = true;
+		fMapPanelDirty = true;
+		fMapScreenBottomDirty = true;
 		MarkButtonsDirty();
 		SetRenderFlags( RENDER_FLAG_FULL );
 	}
@@ -852,7 +852,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 	{
 		// create a mouse region for pausing of game clock
 		MSYS_DefineRegion(&gClockScreenMaskMouseRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, 0, MSYS_NO_CALLBACK, ScreenMaskForGamePauseBtnCallBack);
-		fCreated = TRUE;
+		fCreated = true;
 
 		//re create region on top of this
 		RemoveMouseRegionForPauseOfClock( );
@@ -860,7 +860,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 
 		gClockMouseRegion.SetFastHelpText(pPausedGameText[1]);
 
-		fMapScreenBottomDirty = TRUE;
+		fMapScreenBottomDirty = true;
 
 		//UnMarkButtonsDirty( );
 

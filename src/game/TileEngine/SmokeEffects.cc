@@ -164,7 +164,7 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 	pSmoke->ubDuration	= smokeEffect->duration;
 	pSmoke->ubRadius    = smokeEffect->initialRadius;
 	pSmoke->bAge		= 0;
-	pSmoke->fAllocated  = TRUE;
+	pSmoke->fAllocated  = true;
 	pSmoke->bType		= static_cast<int8_t>(smokeEffect->smokeEffect->getID());
 	pSmoke->owner       = owner;
 
@@ -179,8 +179,8 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 		pSmoke->bFlags |= SMOKE_EFFECT_ON_ROOF;
 	}
 
-	// ATE: FALSE into subsequent-- it's the first one!
-	SpreadEffectSmoke(pSmoke, FALSE, bLevel);
+	// ATE: false into subsequent-- it's the first one!
+	SpreadEffectSmoke(pSmoke, false, bLevel);
 }
 
 
@@ -188,10 +188,10 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 // ( Replacement algorithm uses distance away )
 void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, const SmokeEffectModel* smokeEffect, INT16 const sGridNo, INT8 const bLevel)
 {
-	BOOLEAN dissipating = FALSE;
+	BOOLEAN dissipating = false;
 	if (smoke->ubDuration - smoke->bAge < 2)
 	{
-		dissipating = TRUE;
+		dissipating = true;
 		// Remove old one...
 		RemoveSmokeEffectFromTile(sGridNo, bLevel);
 	}
@@ -276,7 +276,7 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 
 void DecaySmokeEffects(const UINT32 uiTime, const bool updateSightings)
 {
-	BOOLEAN fUpdate = FALSE;
+	BOOLEAN fUpdate = false;
 	BOOLEAN fSpreadEffect;
 	INT8    bLevel;
 	UINT16  usNumUpdates = 1;
@@ -290,7 +290,7 @@ void DecaySmokeEffects(const UINT32 uiTime, const bool updateSightings)
 	// age all active tear gas clouds, deactivate those that are just dispersing
 	FOR_EACH_SMOKE_EFFECT(pSmoke)
 	{
-		fSpreadEffect = TRUE;
+		fSpreadEffect = true;
 
 		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
 		{
@@ -306,14 +306,14 @@ void DecaySmokeEffects(const UINT32 uiTime, const bool updateSightings)
 		// always try to update during combat
 		if (gTacticalStatus.uiFlags & INCOMBAT )
 		{
-			fUpdate = TRUE;
+			fUpdate = true;
 		}
 		else
 		{
 			// ATE: Do this every so ofte, to acheive the effect we want...
 			if ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) > 10 )
 			{
-				fUpdate = TRUE;
+				fUpdate = true;
 
 				usNumUpdates = ( UINT16 ) ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) / 10 );
 			}
@@ -331,11 +331,11 @@ void DecaySmokeEffects(const UINT32 uiTime, const bool updateSightings)
 				{
 					// ATE: At least mark for update!
 					pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
-					fSpreadEffect = FALSE;
+					fSpreadEffect = false;
 				}
 				else
 				{
-					fSpreadEffect = TRUE;
+					fSpreadEffect = true;
 				}
 
 				if ( fSpreadEffect )
@@ -361,7 +361,7 @@ void DecaySmokeEffects(const UINT32 uiTime, const bool updateSightings)
 					{
 						// deactivate tear gas cloud (use last known radius)
 						SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel);
-						pSmoke->fAllocated = FALSE;
+						pSmoke->fAllocated = false;
 						break;
 					}
 				}
@@ -388,12 +388,12 @@ void DecaySmokeEffects(const UINT32 uiTime, const bool updateSightings)
 		// if this cloud remains effective (duration not reached)
 		if ( pSmoke->bFlags & SMOKE_EFFECT_MARK_FOR_UPDATE )
 		{
-			SpreadEffectSmoke(pSmoke, TRUE, bLevel);
+			SpreadEffectSmoke(pSmoke, true, bLevel);
 			pSmoke->bFlags &= (~SMOKE_EFFECT_MARK_FOR_UPDATE);
 		}
 	}
 
-	if (updateSightings) AllTeamsLookForAll(TRUE);
+	if (updateSightings) AllTeamsLookForAll(true);
 }
 
 
@@ -427,7 +427,7 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile, UINT32 const savegame_
 	FOR_EACH_SMOKE_EFFECT(s)
 	{
 		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
-		SpreadEffectSmoke(s, TRUE, bLevel);
+		SpreadEffectSmoke(s, true, bLevel);
 	}
 }
 
@@ -492,7 +492,7 @@ void LoadSmokeEffectsFromMapTempFile(const SGPSector& sMap)
 	FOR_EACH_SMOKE_EFFECT(s)
 	{
 		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
-		SpreadEffectSmoke(s, TRUE, bLevel);
+		SpreadEffectSmoke(s, true, bLevel);
 	}
 }
 
@@ -511,6 +511,6 @@ void UpdateSmokeEffectGraphics( )
 	{
 		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
 		SpreadEffectSmoke(s, ERASE_SPREAD_EFFECT, bLevel);
-		SpreadEffectSmoke(s, TRUE,                bLevel);
+		SpreadEffectSmoke(s, true,                bLevel);
 	}
 }

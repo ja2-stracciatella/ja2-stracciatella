@@ -119,7 +119,7 @@ struct DEALER_SPECIAL_ITEM
 
 	UINT32  uiRepairDoneTime; // If the item is in for repairs, this holds the time when it will be repaired (in min)
 
-	BOOLEAN fActive; // TRUE means an item is stored here (empty elements may not always be freed immediately)
+	BOOLEAN fActive; // true means an item is stored here (empty elements may not always be freed immediately)
 
 	UINT8   ubOwnerProfileId; // stores which merc previously owned an item being repaired
 

@@ -69,16 +69,16 @@ static INT32 iCurrentStatAtZero = 0;
 static INT32 iCurrentBonusPoints = 40;
 
 // diplsay the 0 skill point warning..if skill set to 0, warn character
-static BOOLEAN fSkillAtZeroWarning = FALSE;
+static BOOLEAN fSkillAtZeroWarning = false;
 
 // is the sliding of the sliding bar active right now?
-static BOOLEAN fSlideIsActive = TRUE;
+static BOOLEAN fSlideIsActive = true;
 
 // first time in game
-BOOLEAN fFirstIMPAttribTime = TRUE;
+BOOLEAN fFirstIMPAttribTime = true;
 
 // review mode
-BOOLEAN fReviewStats = FALSE;
+BOOLEAN fReviewStats = false;
 
 // buttons
 static GUIButtonRef giIMPAttributeSelectionButton[1];
@@ -97,12 +97,12 @@ static MOUSE_REGION* gpCurrentScrollBox      = NULL;
 static INT32         giCurrentlySelectedStat = -1;
 
 // has any of the sliding bars moved?...for re-rendering puposes
-static BOOLEAN fHasAnySlidingBarMoved = FALSE;
+static BOOLEAN fHasAnySlidingBarMoved = false;
 
 static INT32 uiBarToReRender = -1;
 
 // are we actually coming back to edit, or are we restarting?
-BOOLEAN fReturnStatus = FALSE;
+BOOLEAN fReturnStatus = false;
 
 void SetAttributes(void);
 void DrawBonusPointsRemaining(void);
@@ -130,8 +130,8 @@ void EnterIMPAttributeSelection(void)
 		if (DoesCharacterHaveAnAttitude())   iCurrentBonusPoints += 10;
 		if (DoesCharacterHaveAPersoanlity()) iCurrentBonusPoints += 10;*/
 	}
-	fReturnStatus = TRUE;
-	fFirstIMPAttribTime = FALSE;
+	fReturnStatus = true;
+	fFirstIMPAttribTime = false;
 
 	CreateIMPAttributeSelectionButtons();
 	CreateAttributeSliderButtons();
@@ -150,7 +150,7 @@ void RenderIMPAttributeSelection(void)
 	if (!fReviewStats) RenderAttrib2IndentFrame(350, 42);
 
 	// reset rerender flag
-	fHasAnySlidingBarMoved = FALSE;
+	fHasAnySlidingBarMoved = false;
 
 	PrintImpText();
 	DrawBonusPointsRemaining();
@@ -168,7 +168,7 @@ void ExitIMPAttributeSelection(void)
 	DestroySlideRegionMouseRegions();
 	DestroyIMPAttributeSelectionButtons();
 
-	fReturnStatus = FALSE;
+	fReturnStatus = false;
 }
 
 
@@ -216,7 +216,7 @@ void HandleIMPAttributeSelection(void)
 			if (iCurrentAttributeValue != iNewValue)
 			{
 				// update screen
-				fHasAnySlidingBarMoved = TRUE;
+				fHasAnySlidingBarMoved = true;
 			}
 
 			// change is enough
@@ -279,12 +279,12 @@ void HandleIMPAttributeSelection(void)
 			MarkButtonsDirty();
 		}
 
-		fHasAnySlidingBarMoved = FALSE;
+		fHasAnySlidingBarMoved = false;
 	}
 	if (fSkillAtZeroWarning)
 	{
 		DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pSkillAtZeroWarning, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, StatAtZeroBoxCallBack);
-		fSkillAtZeroWarning = FALSE;
+		fSkillAtZeroWarning = false;
 	}
 }
 
@@ -334,7 +334,7 @@ static void IncrementStat(INT32 iStatToIncrement)
 		{
 			*val = MIN_ATTRIBUTE_POINTS;
 			iCurrentBonusPoints -= ZERO_ATTRIBUTE_POINTS_VALUE;
-			fSkillAtZeroWarning  = FALSE;
+			fSkillAtZeroWarning  = false;
 		}
 	}
 	else if (*val < MAX_ATTRIBUTE_POINTS)
@@ -353,7 +353,7 @@ static void DecrementStat(INT32 iStatToDecrement)
 	// review mode, do not allow changes
 	if (fReviewStats) return;
 
-	BOOLEAN may_be_zero = FALSE;
+	BOOLEAN may_be_zero = false;
 	INT32*  val         = NULL;
 	switch (iStatToDecrement)
 	{
@@ -363,10 +363,10 @@ static void DecrementStat(INT32 iStatToDecrement)
 		case WISDOM_ATTRIBUTE:     val = &iCurrentWisdom;                          break;
 		case LEADERSHIP_ATTRIBUTE: val = &iCurrentLeaderShip;                      break;
 		case HEALTH_ATTRIBUTE:     val = &iCurrentHealth;                          break;
-		case MARKSMANSHIP_SKILL:   val = &iCurrentMarkmanship; may_be_zero = TRUE; break;
-		case MEDICAL_SKILL:        val = &iCurrentMedical;     may_be_zero = TRUE; break;
-		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  may_be_zero = TRUE; break;
-		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  may_be_zero = TRUE; break;
+		case MARKSMANSHIP_SKILL:   val = &iCurrentMarkmanship; may_be_zero = true; break;
+		case MEDICAL_SKILL:        val = &iCurrentMedical;     may_be_zero = true; break;
+		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  may_be_zero = true; break;
+		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  may_be_zero = true; break;
 		default:                   SLOGA("unexpected stat {}", iStatToDecrement); return;
 	}
 
@@ -380,7 +380,7 @@ static void DecrementStat(INT32 iStatToDecrement)
 		*val = 0;
 		iCurrentBonusPoints += ZERO_ATTRIBUTE_POINTS_VALUE;
 		iCurrentStatAtZero   = iStatToDecrement;
-		fSkillAtZeroWarning  = TRUE;
+		fSkillAtZeroWarning  = true;
 	}
 }
 
@@ -425,7 +425,7 @@ static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, UINT32 reason)
 		{
 			iCurrentImpPage = IMP_ATTRIBUTE_FINISH;
 		}
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 
@@ -507,7 +507,7 @@ static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, UINT32 reason)
 	{
 		INT32 const iValue = btn->GetUserData();
 		DecrementStat(iValue);
-		fHasAnySlidingBarMoved = TRUE;
+		fHasAnySlidingBarMoved = true;
 		uiBarToReRender = iValue;
 	}
 }
@@ -520,7 +520,7 @@ static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, UINT32 reason)
 	{
 		INT32 const iValue = btn->GetUserData();
 		IncrementStat(iValue);
-		fHasAnySlidingBarMoved = TRUE;
+		fHasAnySlidingBarMoved = true;
 		uiBarToReRender = iValue;
 	}
 }
@@ -598,7 +598,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			if (iCurrentAttributeValue != iNewValue)
 			{
 				// update screen
-				fHasAnySlidingBarMoved = TRUE;
+				fHasAnySlidingBarMoved = true;
 			}
 
 			// change is enough
@@ -627,7 +627,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		if (fSlideIsActive)
 		{
 			// reset slide is active flag
-			fSlideIsActive = FALSE;
+			fSlideIsActive = false;
 			return;
 		}
 
@@ -671,7 +671,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		}
 
 		// update screen
-		fHasAnySlidingBarMoved = TRUE;
+		fHasAnySlidingBarMoved = true;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN)
 	{
@@ -694,12 +694,12 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		if (sX > sNewX && sX < sNewX + SLIDER_BAR_WIDTH)
 		{
 			// we are within the slide bar, set fact we want to drag and draw
-			fSlideIsActive = TRUE;
+			fSlideIsActive = true;
 		}
 		else
 		{
 			// otherwise want to jump to position
-			fSlideIsActive =FALSE;
+			fSlideIsActive =false;
 		}
 	}
 }
@@ -788,7 +788,7 @@ static void StatAtZeroBoxCallBack(MessageBoxReturnValue const bExitValue)
 
 		case MSG_BOX_RETURN_NO:
 			IncrementStat(iCurrentStatAtZero);
-			fHasAnySlidingBarMoved = TRUE;
+			fHasAnySlidingBarMoved = true;
 			MarkButtonsDirty();
 			break;
 		default:

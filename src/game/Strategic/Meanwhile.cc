@@ -77,8 +77,8 @@ struct NPC_SAVE_INFO
 // BEGIN SERALIZATION
 MEANWHILE_DEFINITION gCurrentMeanwhileDef;
 MEANWHILE_DEFINITION gMeanwhileDef[NUM_MEANWHILES];
-BOOLEAN              gfMeanwhileTryingToStart = FALSE;
-BOOLEAN              gfInMeanwhile = FALSE;
+BOOLEAN              gfMeanwhileTryingToStart = false;
+BOOLEAN              gfInMeanwhile = false;
 // END SERIALIZATION
 static SGPSector gsOldSector;
 static SGPSector gsOldSelectedSector;
@@ -86,8 +86,8 @@ static SGPSector gsOldSelectedSector;
 static UINT32        guiOldScreen;
 static NPC_SAVE_INFO gNPCSaveData[MAX_MEANWHILE_PROFILES];
 static UINT32        guiNumNPCSaves = 0;
-static BOOLEAN       gfReloadingScreenFromMeanwhile = FALSE;
-static BOOLEAN       gfWorldWasLoaded = FALSE;
+static BOOLEAN       gfReloadingScreenFromMeanwhile = false;
+static BOOLEAN       gfWorldWasLoaded = false;
 static UINT8         ubCurrentMeanWhileId = 0;
 static const SGPSector MedunaQueenSector(3, 16);
 
@@ -208,7 +208,7 @@ void BeginMeanwhile(UINT8 ubMeanwhileID)
 	// copy meanwhile data from array to structure for current
 	gCurrentMeanwhileDef = gMeanwhileDef[ubMeanwhileID];
 
-	gfMeanwhileTryingToStart = TRUE;
+	gfMeanwhileTryingToStart = true;
 	PauseGame();
 	// prevent anyone from messing with the pause!
 	LockPauseState(LOCK_PAUSE_MEANWHILE);
@@ -254,7 +254,7 @@ void CheckForMeanwhileOKStart( )
 			return;
 		}
 
-		gfMeanwhileTryingToStart = FALSE;
+		gfMeanwhileTryingToStart = false;
 
 		guiOldScreen = guiCurrentScreen;
 
@@ -301,7 +301,7 @@ static void StartMeanwhile(void)
 	}
 	gsOldSelectedSector = sSelMap;
 
-	gfInMeanwhile = TRUE;
+	gfInMeanwhile = true;
 
 	// ATE: Change music before load
 	SetMusicMode( MUSIC_MAIN_MENU );
@@ -364,7 +364,7 @@ static void DoneFadeOutMeanwhile(void)
 	SetCurrentWorldSector(gCurrentMeanwhileDef.sSector);
 
 	// go to the approp. gridno
-	InternalLocateGridNo(gusMeanWhileGridNo[ubCurrentMeanWhileId], TRUE);
+	InternalLocateGridNo(gusMeanWhileGridNo[ubCurrentMeanWhileId], true);
 
 	gFadeInDoneCallback = DoneFadeInMeanwhile;
 
@@ -406,7 +406,7 @@ static void BeginMeanwhileCallBack(MessageBoxReturnValue const bExitValue)
 	else
 	{
 		// skipped scene!
-		gfInMeanwhile = FALSE;
+		gfInMeanwhile = false;
 		ProcessImplicationsOfMeanwhile();
 		UnLockPauseState();
 		UnPauseGame();
@@ -534,7 +534,7 @@ void EndMeanwhile( )
 	ProcessImplicationsOfMeanwhile();
 	SetMeanwhileSceneSeen( gCurrentMeanwhileDef.ubMeanwhileID );
 
-	gfInMeanwhile = FALSE;
+	gfInMeanwhile = false;
 	giNPCReferenceCount = 0;
 
 	gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV );
@@ -572,7 +572,7 @@ static void DoneFadeInMeanwhileOnceDone(void);
 static void DoneFadeOutMeanwhileOnceDone(void)
 {
 	// OK, insertion data found, enter sector!
-	gfReloadingScreenFromMeanwhile = TRUE;
+	gfReloadingScreenFromMeanwhile = true;
 
 
 	if( gfWorldWasLoaded )
@@ -590,7 +590,7 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 
 	ChangeSelectedMapSector(gsOldSelectedSector);
 
-	gfReloadingScreenFromMeanwhile = FALSE;
+	gfReloadingScreenFromMeanwhile = false;
 
 	RestoreNPCMeanwhile();
 
@@ -601,7 +601,7 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 	{
 		case MAP_SCREEN:
 			InternalLeaveTacticalScreen( MAP_SCREEN );
-			//gfEnteringMapScreen = TRUE;
+			//gfEnteringMapScreen = true;
 			break;
 
 		case GAME_SCREEN:
@@ -625,7 +625,7 @@ void LocateToMeanwhileCharacter( )
 	if ( gfInMeanwhile )
 	{
 		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gCurrentMeanwhileDef.ubNPCNumber);
-		if (pSoldier != NULL) LocateSoldier(pSoldier, FALSE);
+		if (pSoldier != NULL) LocateSoldier(pSoldier, false);
 	}
 }
 
@@ -782,16 +782,16 @@ void HandleFirstBattleEndingWhileInTown(const SGPSector& sector, BOOLEAN fFromAu
 	{
 		// invalid town
 		HandleDelayedFirstBattleVictory( );
-		gfFirstBattleMeanwhileScenePending = FALSE;
+		gfFirstBattleMeanwhileScenePending = false;
 	}
 	else if ( gfFirstBattleMeanwhileScenePending || fFromAutoResolve )
 	{
 		HandleFirstBattleVictory( );
-		gfFirstBattleMeanwhileScenePending = FALSE;
+		gfFirstBattleMeanwhileScenePending = false;
 	}
 	else
 	{
-		gfFirstBattleMeanwhileScenePending = TRUE;
+		gfFirstBattleMeanwhileScenePending = true;
 	}
 }
 
@@ -803,7 +803,7 @@ void HandleFirstMeanWhileSetUpWithTrashWorld( void )
 	if( gfFirstBattleMeanwhileScenePending )
 	{
 		HandleFirstBattleVictory( );
-		gfFirstBattleMeanwhileScenePending = FALSE;
+		gfFirstBattleMeanwhileScenePending = false;
 	}
 
 }

@@ -115,7 +115,7 @@ static CursorData CursorDatabase[] =
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	0,  0, 0, 0									, 0, 0, TRUE },
+		1,	0,  0, 0, 0									, 0, 0, true },
 
 	{ SUBHIDE(C_TRINGS,     6), //SUBCENT(C_TRINGS, 6),
 		SUBCENT(C_ACTIONMODE, 0),
@@ -475,14 +475,14 @@ static CursorData CursorDatabase[] =
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	4,  0, 0, 0									, 0, 0, TRUE },
+		1,	4,  0, 0, 0									, 0, 0, true },
 
 	{ SUBNORM(C_LAPTOPSCREEN,        0),
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	0,  0, 0, 0									, 0, 0, TRUE },
+		1,	0,  0, 0, 0									, 0, 0, true },
 
 	{ SUBNORM(C_IBEAM,               0),
 		SUBNONE(),
@@ -1275,8 +1275,8 @@ void SetChanceToHitText(const ST::string& str)
 
 static void DrawMouseText(void)
 {
-	static BOOLEAN fShow = FALSE;
-	static BOOLEAN fHoldInvalid = TRUE;
+	static BOOLEAN fShow = false;
+	static BOOLEAN fHoldInvalid = true;
 
 	INT16 sX;
 	INT16 sY;
@@ -1368,8 +1368,8 @@ static void DrawMouseText(void)
 			}
 			else
 			{
-				fShow = TRUE;
-				fHoldInvalid = FALSE;
+				fShow = true;
+				fHoldInvalid = false;
 			}
 
 			// Set dest for gprintf to be different
@@ -1396,7 +1396,7 @@ static void DrawMouseText(void)
 			}
 			else
 			{
-				gfUIDisplayActionPointsBlack = TRUE;
+				gfUIDisplayActionPointsBlack = true;
 			}
 
 			if (gfUIDisplayActionPointsBlack)

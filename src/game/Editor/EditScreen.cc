@@ -79,38 +79,38 @@
 #include <string_theory/string>
 
 
-static BOOLEAN gfCorruptMap        = FALSE;
-static BOOLEAN gfCorruptSchedules  = FALSE;
-BOOLEAN        gfProfileDataLoaded = FALSE;
+static BOOLEAN gfCorruptMap        = false;
+static BOOLEAN gfCorruptSchedules  = false;
+BOOLEAN        gfProfileDataLoaded = false;
 
 
 // These are global variables used by the main game loop
 
 static UINT32 guiSaveTacticalStatusFlags; // saves the tactical status flags when entering the editor.
 
-BOOLEAN			gfAutoLoadA9 = FALSE;
+BOOLEAN			gfAutoLoadA9 = false;
 //new vars added by Kris
-BOOLEAN			gfRenderWorld = FALSE;
-BOOLEAN			gfRenderTaskbar = FALSE;
-BOOLEAN			gfRenderDrawingMode = FALSE;
-static BOOLEAN gfFirstPlacement          = TRUE;
-BOOLEAN			gfPendingBasement = FALSE;
-BOOLEAN			gfPendingCaves = FALSE;
-static BOOLEAN gfNeedToInitGame          = FALSE;
-static BOOLEAN gfScheduleReversalPending = FALSE;
-static BOOLEAN gfRemoveLightsPending     = FALSE;
-static BOOLEAN gfScheduleClearPending    = FALSE;
-BOOLEAN			gfConfirmExitFirst = TRUE;
-static BOOLEAN gfConfirmExitPending      = FALSE;
-BOOLEAN			gfIntendOnEnteringEditor = FALSE;
+BOOLEAN			gfRenderWorld = false;
+BOOLEAN			gfRenderTaskbar = false;
+BOOLEAN			gfRenderDrawingMode = false;
+static BOOLEAN gfFirstPlacement          = true;
+BOOLEAN			gfPendingBasement = false;
+BOOLEAN			gfPendingCaves = false;
+static BOOLEAN gfNeedToInitGame          = false;
+static BOOLEAN gfScheduleReversalPending = false;
+static BOOLEAN gfRemoveLightsPending     = false;
+static BOOLEAN gfScheduleClearPending    = false;
+BOOLEAN			gfConfirmExitFirst = true;
+static BOOLEAN gfConfirmExitPending      = false;
+BOOLEAN			gfIntendOnEnteringEditor = false;
 
 //original
-static FLOAT gShadePercent = 0.65f;
+static float gShadePercent = 0.65f;
 
 UINT16			gusLightLevel = 0;
 static UINT16 gusGameLightLevel  = 0;
 static UINT16 gusSavedLightLevel = 0;
-BOOLEAN			gfFakeLights = FALSE;
+BOOLEAN			gfFakeLights = false;
 
 INT16				gsLightRadius = 5;
 
@@ -124,9 +124,9 @@ TaskMode iTaskMode       = TASK_NONE;
 BOOLEAN gfMercResetUponEditorEntry;
 
 
-static BOOLEAN fHelpScreen = FALSE;
+static BOOLEAN fHelpScreen = false;
 
-BOOLEAN fDontUseRandom = FALSE;
+BOOLEAN fDontUseRandom = false;
 
 static LEVELNODE* gCursorNode = NULL;
 
@@ -142,13 +142,13 @@ ToolbarMode  iEditorToolbarState = TBAR_MODE_NONE;
 static UINT16 iCurBankMapIndex;
 
 static InputAtom EditorInputEvent;
-static BOOLEAN fBeenWarned              = FALSE;
-static BOOLEAN fEditModeFirstTime       = TRUE;
-static BOOLEAN fFirstTimeInEditModeInit = TRUE;
-static BOOLEAN fSelectionWindow         = FALSE;
-static BOOLEAN gfRealGunNut             = TRUE;
+static BOOLEAN fBeenWarned              = false;
+static BOOLEAN fEditModeFirstTime       = true;
+static BOOLEAN fFirstTimeInEditModeInit = true;
+static BOOLEAN fSelectionWindow         = false;
+static BOOLEAN gfRealGunNut             = true;
 
-static BOOLEAN fNewMap = FALSE;
+static BOOLEAN fNewMap = false;
 
 static INT32       iPrevDrawMode          = DRAW_MODE_NOTHING;
 static UINT16      PrevCurrentPaste       = FIRSTTEXTURE;
@@ -159,7 +159,7 @@ UINT16 gusEditorTaskbarColor;
 UINT16 gusEditorTaskbarHiColor;
 UINT16 gusEditorTaskbarLoColor;
 
-BOOLEAN gfGotoGridNoUI = FALSE;
+BOOLEAN gfGotoGridNoUI = false;
 static GUIButtonRef guiGotoGridNoUIButtonID;
 static MOUSE_REGION GotoGridNoUIRegion;
 
@@ -170,9 +170,9 @@ static MOUSE_REGION GotoGridNoUIRegion;
 //
 void EditScreenInit(void)
 {
-	gfFakeLights = FALSE;
+	gfFakeLights = false;
 
-	eInfo.fGameInit = TRUE;
+	eInfo.fGameInit = true;
 	GameInitEditorBuildingInfo();
 	GameInitEditorMercsInfo();
 
@@ -206,7 +206,7 @@ static void EditModeInit(void)
 	SLOGI("Entering editor mode...");
 
 	gfRealGunNut = gGameOptions.fGunNut;
-	gGameOptions.fGunNut = TRUE;
+	gGameOptions.fGunNut = true;
 
 
 	if( !gfProfileDataLoaded )
@@ -215,13 +215,13 @@ static void EditModeInit(void)
 	ClearTacticalMessageQueue( );
 
 	PauseGame();
-	fEditModeFirstTime = FALSE;
+	fEditModeFirstTime = false;
 
 	if( fFirstTimeInEditModeInit )
 	{
 		if( gfWorldLoaded )
 			InitJA2SelectionWindow();
-		fFirstTimeInEditModeInit = FALSE;
+		fFirstTimeInEditModeInit = false;
 	}
 
 	//Initialize editor specific stuff for each Taskbar.
@@ -259,18 +259,18 @@ static void EditModeInit(void)
 
 	DoTaskbar();
 
-	fDontUseRandom = FALSE;
-	fSelectionWindow = FALSE;
+	fDontUseRandom = false;
+	fSelectionWindow = false;
 
 	// Set renderer to ignore redundency
 	gTacticalStatus.uiFlags |= NOHIDE_REDUNDENCY;
 
-	fHelpScreen = FALSE;
+	fHelpScreen = false;
 
-	gfEditMode = TRUE;
-	fNewMap = FALSE;
+	gfEditMode = true;
+	fNewMap = false;
 
-	gfEditingDoor = FALSE;
+	gfEditingDoor = false;
 
 	gusGameLightLevel = LightGetAmbient();
 	if( !gfBasement && !gfCaves )
@@ -285,26 +285,26 @@ static void EditModeInit(void)
 		ClickEditorButton( MAPINFO_TOGGLE_FAKE_LIGHTS );
 	}
 
-	gfRenderWorld = TRUE;
-	gfRenderTaskbar = TRUE;
+	gfRenderWorld = true;
+	gfRenderTaskbar = true;
 
 	//Reset the corruption detection flags.
-	gfCorruptMap = FALSE;
-	gfCorruptSchedules = FALSE;
+	gfCorruptMap = false;
+	gfCorruptSchedules = false;
 
 	// save old scrolling mode, set renderer to not use video scroll
 	gfOldDoVideoScroll = gfDoVideoScroll;
 	gubOldCurScrollSpeedID = gubCurScrollSpeedID;
 	/// set new ones
 
-	gfRoofPlacement = FALSE;
+	gfRoofPlacement = false;
 
 	EnableUndo();
 
 	RemoveMercsInSector( );
 	if( gfWorldLoaded )
 	{
-		gfConfirmExitFirst = TRUE;
+		gfConfirmExitFirst = true;
 		ShowEntryPoints();
 		PrepareSchedulesForEditorEntry();
 		if( gfMercResetUponEditorEntry )
@@ -322,7 +322,7 @@ static void EditModeInit(void)
 		{
 			if (!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 			{
-				LightSpritePower(l, TRUE);
+				LightSpritePower(l, true);
 			}
 		}
 
@@ -339,7 +339,7 @@ static void EditModeInit(void)
 	{
 		SLOGD("Creating summary window...");
 		CreateSummaryWindow();
-		gfNeedToInitGame = TRUE;
+		gfNeedToInitGame = true;
 	}
 
 	SetMercTeamVisibility( ENEMY_TEAM, gfShowEnemies );
@@ -350,7 +350,7 @@ static void EditModeInit(void)
 	// remove mouse region for pause of game
 	RemoveMouseRegionForPauseOfClock( );
 
-	gfIntendOnEnteringEditor = FALSE;
+	gfIntendOnEnteringEditor = false;
 
 	SLOGD("Finished entering editor mode...");
 }
@@ -367,13 +367,13 @@ static BOOLEAN EditModeShutdown(void)
 {
 	if( gfConfirmExitFirst )
 	{
-		gfConfirmExitPending = TRUE;
+		gfConfirmExitPending = true;
 		CreateMessageBox( "Exit editor?" );
-		return FALSE;
+		return false;
 	}
 
-	gfEditMode = FALSE;
-	fEditModeFirstTime = TRUE;
+	gfEditMode = false;
+	fEditModeFirstTime = true;
 
 	UpdateLastActionBeforeLeaving();
 
@@ -390,7 +390,7 @@ static BOOLEAN EditModeShutdown(void)
 
 	RemoveCursors();
 
-	fHelpScreen = FALSE;
+	fHelpScreen = false;
 	// Set render back to normal mode
 	gTacticalStatus.uiFlags &= ~(NOHIDE_REDUNDENCY | SHOW_ALL_ITEMS);
 	UpdateRoofsView( );
@@ -452,7 +452,7 @@ static BOOLEAN EditModeShutdown(void)
 	{
 		InitStrategicLayer();
 		WarpGameTime( 1 , WARPTIME_PROCESS_EVENTS_NORMALLY ); //to avoid helicopter setup
-		gfNeedToInitGame = FALSE;
+		gfNeedToInitGame = false;
 	}
 	else
 	{
@@ -469,7 +469,7 @@ static BOOLEAN EditModeShutdown(void)
 
 	UnPauseGame();
 
-	return TRUE;
+	return true;
 }
 
 
@@ -531,9 +531,9 @@ static BOOLEAN DoWindowSelection(void)
 				break;
  		}
 		RemoveJA2SelectionWindow( );
-		return ( TRUE );
+		return ( true );
 	}
-	return ( FALSE );
+	return ( false );
 }
 
 
@@ -561,7 +561,7 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 		case DRAW_MODE_ROOM:
 			pSelList = SelRoom;
 			pNumSelList = &iNumRoomsSelected;
-			return FALSE;  //a special case where we just want to get the info and not display a cursor.
+			return false;  //a special case where we just want to get the info and not display a cursor.
 		case DRAW_MODE_NEWROOF:
 			pSelList = SelSingleNewRoof;
 			pNumSelList = &iNumNewRoofsSelected;
@@ -629,10 +629,10 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 	}
 
 	const GridNo pos = guiCurrentCursorGridNo;
-	if (pos == NOWHERE) return FALSE;
+	if (pos == NOWHERE) return false;
 
 	iCurBankMapIndex = pos;
-	if (iCurBankMapIndex >= GRIDSIZE) return FALSE;
+	if (iCurBankMapIndex >= GRIDSIZE) return false;
 
 	//Hook into the smart methods to override the selection window methods.
 	switch (iDrawMode)
@@ -640,32 +640,32 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 		case DRAW_MODE_SMART_WALLS:
 			if (!CalcWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
 			{
-				return FALSE;
+				return false;
 			}
 			break;
 
 		case DRAW_MODE_SMART_DOORS:
 			if (!CalcDoorInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
 			{
-				return FALSE;
+				return false;
 			}
 			break;
 
 		case DRAW_MODE_SMART_WINDOWS:
 			if (!CalcWindowInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
 			{
-				return FALSE;
+				return false;
 			}
 			break;
 
 		case DRAW_MODE_SMART_BROKEN_WALLS:
 			if (!CalcBrokenWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
 			{
-				return FALSE;
+				return false;
 			}
 			if (usUseObjIndex == 0xffff || usUseIndex == 0xffff)
 			{
-				return FALSE;
+				return false;
 			}
 			break;
 
@@ -677,7 +677,7 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 	gCursorNode = ForceStructToTail(iCurBankMapIndex, (UINT16)(gTileTypeStartIndex[usUseObjIndex] + usUseIndex));
 	// ATE: Set this levelnode as dynamic!
 	gCursorNode->uiFlags |= LEVELNODE_DYNAMIC;
-	return TRUE;
+	return true;
 }
 
 
@@ -915,7 +915,7 @@ void ShowCurrentDrawingMode( void )
 	UINT16 usFillColor = GetGenericButtonFillColor();
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		RectangleDraw(FALSE, x, y, x + w - 1, y + h, usFillColor, l.Buffer<UINT16>());
+		RectangleDraw(false, x, y, x + w - 1, y + h, usFillColor, l.Buffer<UINT16>());
 	}
 
 	InvalidateRegion(x, y, x + w, y + h);
@@ -929,7 +929,7 @@ static void HandleJA2ToolbarSelection(void)
 	BOOLEAN fPrevState;
 
 	fPrevState = gfRenderTaskbar;
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 
 	switch (iEditorToolbarState)
 	{
@@ -955,7 +955,7 @@ static void HandleJA2ToolbarSelection(void)
 			break;
 
 		case TBAR_MODE_FAKE_LIGHTING:
-			gfFakeLights ^= TRUE;
+			gfFakeLights ^= true;
 			if ( gfFakeLights )
 			{
 				gusSavedLightLevel = gusLightLevel;
@@ -1194,7 +1194,7 @@ static void RemoveGotoGridNoUI(void);
 // Select action to be taken based on the user's current key press (if any)
 static void HandleKeyboardShortcuts(void)
 {
-	static BOOLEAN fShowTrees = TRUE;
+	static BOOLEAN fShowTrees = true;
 	while( DequeueSpecificEvent(&EditorInputEvent, KEYBOARD_EVENTS) )
 	{
 		if( !HandleSummaryInput( &EditorInputEvent ) && !HandleTextInput( &EditorInputEvent ) && EditorInputEvent.usEvent == KEY_DOWN )
@@ -1223,7 +1223,7 @@ static void HandleKeyboardShortcuts(void)
 			else switch( EditorInputEvent.usParam )
 			{
 				case SDLK_HOME:
-					gfFakeLights ^= TRUE;
+					gfFakeLights ^= true;
 					if ( gfFakeLights )
 					{
 						gusSavedLightLevel = gusLightLevel;
@@ -1272,7 +1272,7 @@ static void HandleKeyboardShortcuts(void)
 						KillDoorEditing();
 					}
 					else if (iCurrentTaskbar == TASK_MERCS && g_selected_merc != NULL)
-						ExtractCurrentMercModeInfo( FALSE );
+						ExtractCurrentMercModeInfo( false );
 					else if( iCurrentTaskbar == TASK_MAPINFO )
 						ExtractAndUpdateMapInfo();
 					else if( iCurrentTaskbar == TASK_BUILDINGS )
@@ -1292,7 +1292,7 @@ static void HandleKeyboardShortcuts(void)
 						{
 							DeleteSelectedMercsItem();
 							gbCurrSelect = -1;
-							gfRenderTaskbar = TRUE;
+							gfRenderTaskbar = true;
 						}
 						else
 							DeleteSelectedMerc();
@@ -1312,7 +1312,7 @@ static void HandleKeyboardShortcuts(void)
 					}
 					else if( gfMercGetItem )
 					{ //cancel getting an item for the merc.
-						gfMercGetItem = FALSE;
+						gfMercGetItem = false;
 						gusMercsNewItemIndex = 0xffff;
 						SetMercEditingMode( MERC_INVENTORYMODE );
 						ClearEditorItemsInfo();
@@ -1339,10 +1339,10 @@ static void HandleKeyboardShortcuts(void)
 				case SDLK_PAGEUP:
 					if( iCurrentTaskbar == TASK_MERCS && !fBuildingShowRoofs )
 					{
-						gfRoofPlacement = TRUE;
-						fBuildingShowRoofs = TRUE;
+						gfRoofPlacement = true;
+						fBuildingShowRoofs = true;
 						UpdateRoofsView();
-						gfRenderWorld = TRUE;
+						gfRenderWorld = true;
 					}
 					else switch( iDrawMode )
 					{
@@ -1353,16 +1353,16 @@ static void HandleKeyboardShortcuts(void)
 						case DRAW_MODE_PLACE_ITEM:					SelectPrevItemInPool();									break;
 						default:														iCurrentAction = ACTION_SUB_INDEX_UP;		break;
 					}
-					gfRenderDrawingMode = TRUE;
+					gfRenderDrawingMode = true;
 					break;
 
 				case SDLK_PAGEDOWN:
 					if( iCurrentTaskbar == TASK_MERCS && fBuildingShowRoofs )
 					{
-						gfRoofPlacement = FALSE;
-						fBuildingShowRoofs = FALSE;
+						gfRoofPlacement = false;
+						fBuildingShowRoofs = false;
 						UpdateRoofsView();
-						gfRenderWorld = TRUE;
+						gfRenderWorld = true;
 					}
 					else switch( iDrawMode )
 					{
@@ -1373,12 +1373,12 @@ static void HandleKeyboardShortcuts(void)
 						case DRAW_MODE_PLACE_ITEM:					SelectNextItemInPool();									break;
 						default:														iCurrentAction = ACTION_SUB_INDEX_DWN;	break;
 					}
-					gfRenderDrawingMode = TRUE;
+					gfRenderDrawingMode = true;
 					break;
 
 				case SDLK_F1:
-					gfRenderWorld = TRUE;
-					gfRenderTaskbar = TRUE;
+					gfRenderWorld = true;
+					gfRenderTaskbar = true;
 					break;
 
 				case SDLK_F2:
@@ -1445,17 +1445,17 @@ static void HandleKeyboardShortcuts(void)
 
 				case SDLK_F10:
 					CreateMessageBox( "Are you sure you wish to remove all lights?" );
-					gfRemoveLightsPending = TRUE;
+					gfRemoveLightsPending = true;
 					break;
 
 				case SDLK_F11:
 					CreateMessageBox( "Are you sure you wish to reverse the schedules?" );
-					gfScheduleReversalPending = TRUE;
+					gfScheduleReversalPending = true;
 					break;
 
 				case SDLK_F12:
 					CreateMessageBox( "Are you sure you wish to clear all of the schedules?" );
-					gfScheduleClearPending = TRUE;
+					gfScheduleClearPending = true;
 					break;
 
 				case '[':
@@ -1739,14 +1739,14 @@ static void HandleKeyboardShortcuts(void)
 					gusPreserveSelectionWidth--;
 					if( !gusPreserveSelectionWidth )
 						gusPreserveSelectionWidth = 8;
-					gfRenderTaskbar = TRUE;
+					gfRenderTaskbar = true;
 					break;
 				case '.':
 					gusSelectionType = LINESELECTION;
 					gusPreserveSelectionWidth++;
 					if( gusPreserveSelectionWidth > 8 )
 						gusPreserveSelectionWidth = 1;
-					gfRenderTaskbar = TRUE;
+					gfRenderTaskbar = true;
 					break;
 				default:
 					iCurrentAction = ACTION_NULL;
@@ -1785,8 +1785,8 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_HELPSCREEN:
 			DisableEditorTaskbar( );
-			fHelpScreen = TRUE;
-			fAllDone = FALSE;
+			fHelpScreen = true;
+			fAllDone = false;
 			break;
 
 		case ACTION_QUICK_ERASE:
@@ -1806,7 +1806,7 @@ static ScreenID PerformSelectedAction(void)
 				iPrevDrawMode = iDrawMode;
 				PrevCurrentPaste = CurrentPaste;
 				gPrevCurrentBackground = gCurrentBackground;
-				fFirstTimeInGameScreen = TRUE;
+				fFirstTimeInGameScreen = true;
 				return GAME_SCREEN;
 			}
 			return EDIT_SCREEN;
@@ -1835,12 +1835,12 @@ static ScreenID PerformSelectedAction(void)
 				case ACTION_GET_TOILET:			CreateJA2SelectionWindow( SELWIN_SINGLETOILET );		break;
 				case ACTION_GET_ROOM:				CreateJA2SelectionWindow( SELWIN_ROOM );						break;
 			}
-			fSelectionWindow = TRUE;
-			fAllDone = FALSE;
+			fSelectionWindow = true;
+			fAllDone = false;
 			break;
 
 		case ACTION_NEW_MAP:
-			fNewMap = TRUE;
+			fNewMap = true;
 			if( gfPendingBasement )
 				CreateMessageBox( "Delete current map and start a new basement level?" );
 			else if( gfPendingCaves )
@@ -1856,7 +1856,7 @@ static ScreenID PerformSelectedAction(void)
 			{
 				gCurrentBackground = TerrainBackgroundTile;
 				SetBackgroundTexture( );
-				fBeenWarned = FALSE;
+				fBeenWarned = false;
 			}
 			break;
 
@@ -1913,25 +1913,25 @@ static ScreenID PerformSelectedAction(void)
 						iCurBank = (iCurBank + 1) % iNumNewRoofsSelected;
 					break;
 				case DRAW_MODE_OSTRUCTS:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumOStructsSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumOStructsSelected;
 					break;
 
 				case DRAW_MODE_OSTRUCTS1:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumOStructs1Selected > 0 )
 						iCurBank = (iCurBank + 1) % iNumOStructs1Selected;
 					break;
 
 				case DRAW_MODE_OSTRUCTS2:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumOStructs2Selected > 0 )
 						iCurBank = (iCurBank + 1) % iNumOStructs2Selected;
 					break;
 
 				case DRAW_MODE_DEBRIS:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumDebrisSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumDebrisSelected;
 					break;
@@ -1991,25 +1991,25 @@ static ScreenID PerformSelectedAction(void)
 						iCurBank = (iCurBank + (iNumNewRoofsSelected - 1)) % iNumNewRoofsSelected;
 					break;
 				case DRAW_MODE_OSTRUCTS:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumOStructsSelected > 0 )
 						iCurBank = (iCurBank + (iNumOStructsSelected - 1)) % iNumOStructsSelected;
 					break;
 
 				case DRAW_MODE_OSTRUCTS1:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumOStructs1Selected > 0 )
 						iCurBank = (iCurBank + (iNumOStructs1Selected - 1)) % iNumOStructs1Selected;
 					break;
 
 				case DRAW_MODE_OSTRUCTS2:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumOStructs2Selected > 0 )
 						iCurBank = (iCurBank + (iNumOStructs2Selected - 1)) % iNumOStructs2Selected;
 					break;
 
 				case DRAW_MODE_DEBRIS:
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 					if ( iNumDebrisSelected > 0 )
 						iCurBank = (iCurBank + (iNumDebrisSelected - 1)) % iNumDebrisSelected;
 					break;
@@ -2020,21 +2020,21 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_NEXT_DEBRIS:
 			CreateJA2SelectionWindow( SELWIN_DEBRIS );
-			fSelectionWindow = TRUE;
-			fAllDone = FALSE;
+			fSelectionWindow = true;
+			fAllDone = false;
 			break;
 
 		case ACTION_PREV_SELECTIONTYPE:
 			gusSelectionType--;
 			if( gusSelectionType > AREASELECTION )
 				gusSelectionType = AREASELECTION;
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			break;
 		case ACTION_NEXT_SELECTIONTYPE:
 			gusSelectionType++;
 			if( gusSelectionType > AREASELECTION )
 				gusSelectionType = SMALLSELECTION;
-			gfRenderTaskbar = TRUE;
+			gfRenderTaskbar = true;
 			break;
 
 		case ACTION_COPY_MERC_PLACEMENT:
@@ -2068,34 +2068,34 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_UNDO:
 			ExecuteUndoList( );
-			gfRenderWorld = TRUE;
+			gfRenderWorld = true;
 			break;
 
 		case ACTION_NEXT_BANK:
 			CreateJA2SelectionWindow( SELWIN_BANKS );
-			fSelectionWindow = TRUE;
-			fAllDone = FALSE;
+			fSelectionWindow = true;
+			fAllDone = false;
 			break;
 
 		case ACTION_NEXT_ROAD:
 			CreateJA2SelectionWindow( SELWIN_ROADS );
-			fSelectionWindow = TRUE;
-			fAllDone = FALSE;
+			fSelectionWindow = true;
+			fAllDone = false;
 			break;
 
 		case ACTION_SHADE_UP:
 			if ( EditorInputEvent.usKeyState & SHIFT_DOWN )
 			{
-				gShadePercent+= (FLOAT).05;
+				gShadePercent+= .05f;
 			}
 			else
 			{
-				gShadePercent+= (FLOAT).01;
+				gShadePercent+= .01f;
 			}
 
 			if ( gShadePercent > 1 )
 			{
-				gShadePercent = (FLOAT)0;
+				gShadePercent = 0.0f;
 			}
 			SetShadeTablePercent( gShadePercent );
 			break;
@@ -2103,16 +2103,16 @@ static ScreenID PerformSelectedAction(void)
 		case ACTION_SHADE_DWN:
 			if ( EditorInputEvent.usKeyState & SHIFT_DOWN )
 			{
-				gShadePercent-= (FLOAT).05;
+				gShadePercent-= .05f;
 			}
 			else
 			{
-				gShadePercent-= (FLOAT).01;
+				gShadePercent-= .01f;
 			}
 
 			if ( gShadePercent < 0 )
 			{
-				gShadePercent = (FLOAT)1;
+				gShadePercent = 1.0f;
 			}
 			SetShadeTablePercent( gShadePercent );
 			break;
@@ -2121,7 +2121,7 @@ static ScreenID PerformSelectedAction(void)
 		{
 			if (guiCurrentCursorGridNo != NOWHERE)
 			{
-				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL18, TRUE);
+				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL18, true);
 			}
 			break;
 		}
@@ -2130,27 +2130,27 @@ static ScreenID PerformSelectedAction(void)
 		{
 			if (guiCurrentCursorGridNo != NOWHERE)
 			{
-				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL19, TRUE);
+				AddWallToStructLayer(guiCurrentCursorGridNo, FIRSTWALL19, true);
 			}
 			break;
 		}
 
 		case ACTION_NEXT_STRUCT:
 			CreateJA2SelectionWindow( SELWIN_OSTRUCTS );
-			fSelectionWindow = TRUE;
-			fAllDone = FALSE;
+			fSelectionWindow = true;
+			fAllDone = false;
 			break;
 
 		case ACTION_NEXT_STRUCT1:
 			CreateJA2SelectionWindow( SELWIN_OSTRUCTS1 );
-			fSelectionWindow = TRUE;
-			fAllDone = FALSE;
+			fSelectionWindow = true;
+			fAllDone = false;
 			break;
 
 		case ACTION_NEXT_STRUCT2:
 			CreateJA2SelectionWindow( SELWIN_OSTRUCTS2 );
-			fSelectionWindow = TRUE;
-			fAllDone = FALSE;
+			fSelectionWindow = true;
+			fAllDone = false;
 			break;
 
 		default:
@@ -2195,7 +2195,7 @@ static void CreateNewMap(void)
 	}
 	else
 		SetEditorSmoothingMode( SMOOTHING_NORMAL );
-	fNewMap = FALSE;
+	fNewMap = false;
 	RemoveAllFromUndoList( );
 	UseEditorAlternateList();
 	KillSoldierInitList();
@@ -2212,13 +2212,13 @@ static void CreateNewMap(void)
 static ScreenID ProcessEditscreenMessageBoxResponse(void)
 {
 	RemoveMessageBox();
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 	if( gfConfirmExitPending )
 	{
-		gfConfirmExitPending = FALSE;
+		gfConfirmExitPending = false;
 		if( gfMessageBoxResult )
 		{
-			gfConfirmExitFirst = FALSE;
+			gfConfirmExitFirst = false;
 			iEditorToolbarState = TBAR_MODE_EXIT_EDIT;
 		}
 		return EDIT_SCREEN;
@@ -2235,19 +2235,19 @@ static ScreenID ProcessEditscreenMessageBoxResponse(void)
 		}
 		MarkWorldDirty();
 		LightSetBaseLevel( (UINT8)(15 - ubAmbientLightLevel) );
-		gfRemoveLightsPending = FALSE;
+		gfRemoveLightsPending = false;
 	}
 	if( gfScheduleReversalPending )
 	{
 		IndicateSelectedMerc( SELECT_NO_MERC );
 		ReverseSchedules();
-		gfScheduleReversalPending = FALSE;
+		gfScheduleReversalPending = false;
 	}
 	else if( gfScheduleClearPending )
 	{
 		IndicateSelectedMerc( SELECT_NO_MERC );
 		ClearAllSchedules();
-		gfScheduleClearPending = FALSE;
+		gfScheduleClearPending = false;
 	}
 	if( fNewMap )
 	{
@@ -2343,7 +2343,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 	GPrint( 205, 295, "Toggle roofs ON/OFF" );
 
 
-	fLeaveScreen = FALSE;
+	fLeaveScreen = false;
 
 	while (DequeueSpecificEvent(&DummyEvent, KEYBOARD_EVENTS))
 	{
@@ -2355,7 +2355,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 				case SDLK_ESCAPE:
 				case SDLK_RETURN:
 				case SDLK_F1:
-					fLeaveScreen = TRUE;
+					fLeaveScreen = true;
 					break;
 			}
 		}
@@ -2364,7 +2364,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 
 	if ( (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) || fLeaveScreen )
 	{
-		fHelpScreen = FALSE;
+		fHelpScreen = false;
 
 		while( DequeueEvent( &DummyEvent ) )
 			continue;
@@ -2397,7 +2397,7 @@ static ScreenID WaitForSelectionWindowResponse(void)
 					RestoreSelectionList();
 					// fallthrough
 				case SDLK_RETURN:
-					fAllDone = TRUE;
+					fAllDone = true;
 					break;
 			}
 		}
@@ -2405,7 +2405,7 @@ static ScreenID WaitForSelectionWindowResponse(void)
 
 	if ( DoWindowSelection( ) )
 	{
-		fSelectionWindow = FALSE;
+		fSelectionWindow = false;
 		ShutdownJA2SelectionWindow( );
 		// Quick hack to trash the mouse event queue.
 		while( DequeueEvent( &DummyEvent ) )
@@ -2450,11 +2450,11 @@ try
 		{
 			// Can't create sprite
 			SLOGW("PlaceLight: Can't create light sprite of radius {}", radius);
-			return FALSE;
+			return false;
 		}
 	}
 
-	LightSpritePower(l, TRUE);
+	LightSpritePower(l, true);
 	INT16 x;
 	INT16 y;
 	ConvertGridNoToXY(pos, &x, &y);
@@ -2474,9 +2474,9 @@ try
 
 	AddLightToUndoList(pos, 0);
 
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 //----------------------------------------------------------------------------------------------
@@ -2485,8 +2485,8 @@ catch (...) { return FALSE; }
 //	Removes (erases) all lights at a given map tile location. Lights that are attached to a merc
 //	are not deleted.
 //
-//	Returns TRUE if deleted the light, otherwise, returns FALSE.
-//	i.e. FALSE is not an error condition!
+//	Returns true if deleted the light, otherwise, returns false.
+//	i.e. false is not an error condition!
 //
 BOOLEAN RemoveLight(const GridNo pos)
 {
@@ -2500,14 +2500,14 @@ BOOLEAN RemoveLight(const GridNo pos)
 			{
 				// Ok, it's not a merc's light so kill it!
 				pLastLightName = LightSpriteGetTypeName(l);
-				LightSpritePower(l, FALSE);
+				LightSpritePower(l, false);
 				LightSpriteDestroy(l);
 				RemoveAllObjectsOfTypeRange(pos, GOODRING, GOODRING);
 			}
 		}
 	}
 
-	if (pLastLightName == NULL) return FALSE;
+	if (pLastLightName == NULL) return false;
 
 	/* Assuming that the light naming convention doesn't change, then this
 	 * following conversion should work.  Basically, the radius values aren't
@@ -2515,7 +2515,7 @@ BOOLEAN RemoveLight(const GridNo pos)
 	 * Ex:  L-RO5.LHT */
 	const UINT16 usRadius = pLastLightName[4] - 0x30;
 	AddLightToUndoList(pos, usRadius);
-	return TRUE;
+	return true;
 }
 
 
@@ -2559,7 +2559,7 @@ static void RemoveLightPositionHandles(void)
 //	CheckForSlantRoofs
 //
 //	Verifies whether there are any slant roofs selected in the "multiwall" or "room" selection list.
-//	if so, and no flat roofs were selected, then we return TRUE, otherwise we return FALSE.
+//	if so, and no flat roofs were selected, then we return true, otherwise we return false.
 //
 //	This function is used to determine if we should force the area selection of rooms to handle
 //	slant roofs (which require at least one side to be exactly 8 tiles wide)
@@ -2573,7 +2573,7 @@ static BOOLEAN CheckForSlantRoofs(void)
 
 	usCheck = GetRandomIndexByRange( FIRSTROOF, LASTROOF );
 	if ( usCheck != 0xffff )
-		return( FALSE );
+		return false;
 
 	usCheck = GetRandomIndexByRange( FIRSTSLANTROOF, LASTSLANTROOF );
 	return ( usCheck != 0xffff );
@@ -2616,11 +2616,11 @@ static void MapOptimize(void)
 
 			end = pMapTile->pLandTail;
 
-			fChangedHead = fChangedTail = fFound = FALSE;
+			fChangedHead = fChangedTail = fFound = false;
 			while ( !fFound && node != NULL )
 			{
 				if ( gTileDatabase[node->usIndex].ubFullTile == 1 )
-					fFound = TRUE;
+					fFound = true;
 				else
 					node = node->pNext;
 			}
@@ -2633,7 +2633,7 @@ static void MapOptimize(void)
 
 				while( head != start && head != NULL )
 				{
-					fChangedHead = TRUE;
+					fChangedHead = true;
 					temp = head->pNext;
 					delete head;
 					head = temp;
@@ -2645,7 +2645,7 @@ static void MapOptimize(void)
 				// Now delete from the end to "node"
 				while( end != node && end != NULL )
 				{
-					fChangedTail = TRUE;
+					fChangedTail = true;
 					temp = end->pPrev;
 					delete end;
 					end = temp;
@@ -2684,15 +2684,15 @@ static BOOLEAN CheckForFences(void)
 	pSelList = SelOStructs2;
 	pNumSelList = &iNumOStructs2Selected;
 
-	fFence = TRUE;
+	fFence = true;
 
 	for ( usCheck = 0; usCheck < iNumOStructs2Selected; usCheck++ )
 	{
 		const TILE_ELEMENT* const T = TileElemFromTileType(pSelList[usCheck].uiObject);
 		if ( T->pDBStructureRef == NULL )
-			fFence = FALSE;
+			fFence = false;
 		else if ( !(T->pDBStructureRef->pDBStructure->fFlags & STRUCTURE_ANYFENCE) )
-			fFence = FALSE;
+			fFence = false;
 	}
 
 	return( fFence );
@@ -2753,7 +2753,7 @@ static void HandleMouseClicksInGameScreen()
 
 	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
 	{
-		gfRenderWorld = TRUE;
+		gfRenderWorld = true;
 		// Are we trying to erase something?
 		if (iDrawMode >= DRAW_MODE_ERASE)
 		{
@@ -2782,10 +2782,10 @@ static void HandleMouseClicksInGameScreen()
 		switch (iDrawMode)
 		{
 			case DRAW_MODE_SCHEDULEACTION:
-				if (IsLocationSittableExcludingPeople(map_idx, FALSE))
+				if (IsLocationSittableExcludingPeople(map_idx, false))
 				{
 					iDrawMode = DRAW_MODE_SCHEDULECONFIRM;
-					gfFirstPlacement = FALSE;
+					gfFirstPlacement = false;
 				}
 				break;
 
@@ -2806,7 +2806,7 @@ static void HandleMouseClicksInGameScreen()
 				if (gfFirstPlacement)
 				{
 					AddMercToWorld(map_idx);
-					gfFirstPlacement = FALSE;
+					gfFirstPlacement = false;
 				}
 				break;
 
@@ -2815,14 +2815,14 @@ static void HandleMouseClicksInGameScreen()
 				if (gfFirstPlacement)
 				{
 					PlaceLight(gsLightRadius, map_idx);
-					gfFirstPlacement = FALSE;
+					gfFirstPlacement = false;
 				}
 				break;
 
 			case DRAW_MODE_SAW_ROOM:
 			case DRAW_MODE_ROOM:
 			case DRAW_MODE_CAVES:
-				if (gusSelectionType <= XLARGESELECTION) ProcessAreaSelection(TRUE);
+				if (gusSelectionType <= XLARGESELECTION) ProcessAreaSelection(true);
 				break;
 
 			case DRAW_MODE_NEWROOF:
@@ -2876,13 +2876,13 @@ static void HandleMouseClicksInGameScreen()
 				if (gfFirstPlacement)
 				{
 					CopyBuilding(map_idx);
-					gfFirstPlacement = FALSE;
+					gfFirstPlacement = false;
 				}
 				gfRenderWorld = prev_state;
 				break;
 
 			case DRAW_MODE_BANKS:
-				PasteBanks(map_idx, TRUE);
+				PasteBanks(map_idx, true);
 				break;
 
 			case DRAW_MODE_ROADS:
@@ -2897,7 +2897,7 @@ static void HandleMouseClicksInGameScreen()
 				if (gfFirstPlacement)
 				{
 					AddSelectedItemToWorld(map_idx);
-					gfFirstPlacement = FALSE;
+					gfFirstPlacement = false;
 				}
 				break;
 
@@ -2908,7 +2908,7 @@ static void HandleMouseClicksInGameScreen()
 	}
 	else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
 	{
-		gfRenderWorld = TRUE;
+		gfRenderWorld = true;
 		switch (iDrawMode)
 		{
 			// Handle right clicking on a merc (for editing/moving him)
@@ -2945,7 +2945,7 @@ static void HandleMouseClicksInGameScreen()
 			case DRAW_MODE_ROADS:        iEditorToolbarState = TBAR_MODE_GET_ROADS;       break;
 
 			case DRAW_MODE_CAVES:
-				if (gusSelectionType <= XLARGESELECTION) ProcessAreaSelection(FALSE);
+				if (gusSelectionType <= XLARGESELECTION) ProcessAreaSelection(false);
 				break;
 
 			case DRAW_MODE_SMART_WALLS:
@@ -2972,7 +2972,7 @@ static void HandleMouseClicksInGameScreen()
 		switch (iDrawMode)
 		{
 			case DRAW_MODE_SCHEDULECONFIRM:
-				if (IsLocationSittableExcludingPeople(map_idx, FALSE))
+				if (IsLocationSittableExcludingPeople(map_idx, false))
 				{
 					RegisterCurrentScheduleAction(map_idx);
 				}
@@ -2993,7 +2993,7 @@ static BOOLEAN DoIRenderASpecialMouseCursor(void)
 		{
 			case DRAW_MODE_OSTRUCTS2:
 				if(CheckForFences())
-					fDontUseRandom = TRUE;
+					fDontUseRandom = true;
 				// fallthrough
 			case DRAW_MODE_DEBRIS:							// These only show if you first hit PGUP/PGDOWN keys
 			case DRAW_MODE_OSTRUCTS:
@@ -3025,7 +3025,7 @@ static BOOLEAN DoIRenderASpecialMouseCursor(void)
 				break;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -3052,7 +3052,7 @@ static void HideEntryPoints()
 void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 {
 	BOOLEAN fPrevState = gfRenderWorld;
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 	switch( iDrawMode )
 	{
 		case DRAW_MODE_ROOM:
@@ -3110,14 +3110,14 @@ static void DrawObjectsBasedOnSelectionRegion(void)
 
 	//Certain drawing modes are placed with 100% density.  Those cases are checked here,
 	//so the density test can be skipped.
-	fSkipTest = FALSE;
+	fSkipTest = false;
 	if( gusSelectionType == SMALLSELECTION ||
 		iDrawMode == DRAW_MODE_GROUND ||
 		iDrawMode == DRAW_MODE_FLOORS ||
 		iDrawMode == DRAW_MODE_ROOMNUM ||
 		iDrawMode == DRAW_MODE_EXITGRID )
 	{
-		fSkipTest = TRUE;
+		fSkipTest = true;
 	}
 
 	//The reason why I process the region from top to bottom then to the right is
@@ -3165,7 +3165,7 @@ ScreenID EditScreenHandle(void)
 	if( gfWorldLoaded && gMapInformation.ubMapVersion <= 7 && !gfCorruptMap )
 	{
 		SLOGE("Map data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!");
-		gfCorruptMap = TRUE;
+		gfCorruptMap = true;
 	}
 	if( gfWorldLoaded && gubScheduleID > 40 && !gfCorruptSchedules )
 	{
@@ -3173,7 +3173,7 @@ ScreenID EditScreenHandle(void)
 		if( gubScheduleID > 32 )
 		{
 			SLOGE("Schedule data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!");
-			gfCorruptSchedules = TRUE;
+			gfCorruptSchedules = true;
 		}
 	}
 
@@ -3192,7 +3192,7 @@ ScreenID EditScreenHandle(void)
 
 	DetermineUndoState();
 
-	fBeenWarned = FALSE;
+	fBeenWarned = false;
 
 	// Handle the bottom task bar menu.
 	DoTaskbar();
@@ -3214,7 +3214,7 @@ ScreenID EditScreenHandle(void)
 		return( WaitForSelectionWindowResponse( ) );
 
 	if (gfSummaryWindowSaveRequested) {
-		gfSummaryWindowSaveRequested = FALSE;
+		gfSummaryWindowSaveRequested = false;
 		iCurrentAction = ACTION_SAVE_MAP;
 		return LOADSAVE_SCREEN;
 	}
@@ -3236,7 +3236,7 @@ ScreenID EditScreenHandle(void)
 	HandleMouseClicksInGameScreen();
 
 	if( !gfFirstPlacement && !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
-		gfFirstPlacement = TRUE;
+		gfFirstPlacement = true;
 
 	//If we are copying or moving a building, we process, then delete the building layout immediately
 	//after releasing the mouse button.  If released in the world, then the building would have been
@@ -3261,7 +3261,7 @@ ScreenID EditScreenHandle(void)
 		// This flag is the beast that makes the renderer do everything
 		MarkWorldDirty();
 
-		gfRenderWorld = FALSE;
+		gfRenderWorld = false;
 	}
 
 	// The default here for the renderer is to just do dynamic stuff...
@@ -3301,12 +3301,12 @@ ScreenID EditScreenHandle(void)
 
 static void CreateGotoGridNoUI(void)
 {
-	gfGotoGridNoUI = TRUE;
+	gfGotoGridNoUI = true;
 	//Disable the rest of the editor
 	DisableEditorTaskbar();
 	//Create the background panel.
 	guiGotoGridNoUIButtonID = CreateLabel("Enter gridno:", FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 290, 155, 60, 50, MSYS_PRIORITY_NORMAL);
-	guiGotoGridNoUIButtonID->SpecifyTextOffsets(5, 5, FALSE);
+	guiGotoGridNoUIButtonID->SpecifyTextOffsets(5, 5, false);
 	//Create a blanket region so nobody can use
 	MSYS_DefineRegion(&GotoGridNoUIRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL + 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	//Init a text input field.
@@ -3318,7 +3318,7 @@ static void CreateGotoGridNoUI(void)
 static void RemoveGotoGridNoUI(void)
 {
 	INT32 iMapIndex;
-	gfGotoGridNoUI = FALSE;
+	gfGotoGridNoUI = false;
 	//Enable the rest of the editor
 	EnableEditorTaskbar();
 	RemoveButton( guiGotoGridNoUIButtonID );

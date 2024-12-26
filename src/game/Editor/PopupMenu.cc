@@ -66,7 +66,7 @@ static CurrentPopupMenuInformation gPopup;
 static MOUSE_REGION popupRegion;
 
 static UINT16  gusEntryHeight;
-static BOOLEAN fWaitingForLButtonRelease = FALSE;
+static BOOLEAN fWaitingForLButtonRelease = false;
 
 //Finds the string for any popup menu in JA2 -- the strings are stored
 //in different ways in each instance.
@@ -175,9 +175,9 @@ void InitPopupMenu(GUIButtonRef const button, PopupMenuID const ubPopupMenuID, U
 	gPopup.ubPopupMenuID = ubPopupMenuID;
 	gPopup.ubSelectedIndex = 0;
 	gPopup.ubActiveType = POPUP_ACTIVETYPE_NOT_YET_DETERMINED;
-	gPopup.fActive = TRUE;
-	fWaitingForLButtonRelease = FALSE;
-	gPopup.fUseKeyboardInfoUntilMouseMoves = FALSE;
+	gPopup.fActive = true;
+	fWaitingForLButtonRelease = false;
+	gPopup.fUseKeyboardInfoUntilMouseMoves = false;
 	//Initialize the last mouse position to be out of bounds.
 	gPopup.usLastMouseX = 1000;
 	gPopup.usLastMouseY = 1000;
@@ -265,13 +265,13 @@ static void RenderPopupMenu(void)
 		UINT32  const pitch    = l.Pitch();
 		SetClippingRegionAndImageWidth(pitch, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		UINT16 const line_colour = Get16BPPColor(FROMRGB(64, 64, 64));
-		RectangleDraw(TRUE, p.usLeft, p.usTop, p.usRight - 1, p.usBottom - 1, line_colour, pDestBuf);
+		RectangleDraw(true, p.usLeft, p.usTop, p.usRight - 1, p.usBottom - 1, line_colour, pDestBuf);
 		// Draw a vertical line between each column
 		UINT16 x = p.usLeft;
 		for (UINT8 column = 1; column < p.ubColumns; ++column)
 		{
 			x += p.ubColumnWidth[column - 1];
-			LineDraw(TRUE, x, p.usTop, x, p.usBottom, line_colour, pDestBuf);
+			LineDraw(true, x, p.usTop, x, p.usBottom, line_colour, pDestBuf);
 		}
 	}
 
@@ -384,12 +384,12 @@ static void PopupMenuHandle(void)
 	{
 		//The keyboard determined the last entry, but the mouse has moved,
 		//so use the mouse to determine the new entry.
-		gPopup.fUseKeyboardInfoUntilMouseMoves = FALSE;
+		gPopup.fUseKeyboardInfoUntilMouseMoves = false;
 		gPopup.ubSelectedIndex = GetPopupIndexFromMousePosition();
 	}
 	//Check terminating conditions for persistant states.
 	if( IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gPopup.ubActiveType == POPUP_ACTIVETYPE_PERSISTANT )
-		fWaitingForLButtonRelease = TRUE;
+		fWaitingForLButtonRelease = true;
 	if( (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gPopup.ubActiveType == POPUP_ACTIVETYPE_PERSISTANT)
 		|| (!IsMouseButtonDown(MOUSE_BUTTON_LEFT) && gPopup.ubActiveType == POPUP_ACTIVETYPE_NONPERSISTANT) )
 	{
@@ -400,10 +400,10 @@ static void PopupMenuHandle(void)
 		{
 			ProcessPopupMenuSelection();
 		}
-		gPopup.fActive = FALSE;
+		gPopup.fActive = false;
 		MSYS_RemoveRegion( &popupRegion );
-		gfRenderWorld = TRUE;
-		gfRenderTaskbar = TRUE;
+		gfRenderWorld = true;
+		gfRenderTaskbar = true;
 		return;
 	}
 	//Use keyboard input as well.
@@ -415,7 +415,7 @@ static void PopupMenuHandle(void)
 				switch( InputEvent.usParam )
 				{
 					case SDLK_DOWN:
-						gPopup.fUseKeyboardInfoUntilMouseMoves = TRUE;
+						gPopup.fUseKeyboardInfoUntilMouseMoves = true;
 						gPopup.usLastMouseX = gusMouseXPos;
 						gPopup.usLastMouseY = gusMouseYPos;
 						gPopup.ubSelectedIndex++;
@@ -426,7 +426,7 @@ static void PopupMenuHandle(void)
 						break;
 
 					case SDLK_UP:
-						gPopup.fUseKeyboardInfoUntilMouseMoves = TRUE;
+						gPopup.fUseKeyboardInfoUntilMouseMoves = true;
 						gPopup.usLastMouseX = gusMouseXPos;
 						gPopup.usLastMouseY = gusMouseYPos;
 						if( gPopup.ubSelectedIndex < 2 )
@@ -440,18 +440,18 @@ static void PopupMenuHandle(void)
 						break;
 
 					case SDLK_ESCAPE:
-						gPopup.fActive = FALSE;
+						gPopup.fActive = false;
 						MSYS_RemoveRegion( &popupRegion );
-						gfRenderWorld = TRUE;
-						gfRenderTaskbar = TRUE;
+						gfRenderWorld = true;
+						gfRenderTaskbar = true;
 						break;
 
 					case SDLK_RETURN:
 						ProcessPopupMenuSelection();
-						gPopup.fActive = FALSE;
+						gPopup.fActive = false;
 						MSYS_RemoveRegion( &popupRegion );
-						gfRenderWorld = TRUE;
-						gfRenderTaskbar = TRUE;
+						gfRenderWorld = true;
+						gfRenderTaskbar = true;
 						break;
 				}
 				break;
@@ -487,18 +487,18 @@ static void ProcessPopupMenuSelection(void)
 BOOLEAN ProcessPopupMenuIfActive( )
 {
 	if( !gPopup.fActive && !fWaitingForLButtonRelease )
-		return FALSE;
+		return false;
 	if( fWaitingForLButtonRelease )
 	{
 		if( !IsMouseButtonDown(MOUSE_BUTTON_LEFT) )
 		{
-			fWaitingForLButtonRelease = FALSE;
-			return FALSE;
+			fWaitingForLButtonRelease = false;
+			return false;
 		}
-		return TRUE;
+		return true;
 	}
 	PopupMenuHandle();
 	RenderPopupMenu();
 	InvalidateRegion( gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom );
-	return TRUE;
+	return true;
 }

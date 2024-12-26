@@ -20,7 +20,7 @@
 #include <iterator>
 
 static UINT16  gusMapPathingData[256];
-static BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
+static BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = false;
 
 
 // Globals
@@ -192,8 +192,8 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 	UINT16	newLoc,curLoc;
 	TRAILCELLTYPE curCost,newTotCost,nextCost;
 	INT16 sOrigination;
-	BOOLEAN fPlotDirectPath = FALSE;
-	static BOOLEAN fPreviousPlotDirectPath = FALSE;		// don't save
+	BOOLEAN fPlotDirectPath = false;
+	static BOOLEAN fPreviousPlotDirectPath = false;		// don't save
 
 	// ******** Fudge by Bret (for now), curAPcost is never initialized in this function, but should be!
 	// so this is just to keep things happy!
@@ -204,14 +204,14 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 		// if player is holding down SHIFT key, find the shortest route instead of the quickest route!
 		if ( _KeyDown( SHIFT ) )
 		{
-			fPlotDirectPath = TRUE;
+			fPlotDirectPath = true;
 		}
 
 
 		if ( fPlotDirectPath != fPreviousPlotDirectPath )
 		{
 			// must redraw map to erase the previous path...
-			fMapPanelDirty = TRUE;
+			fMapPanelDirty = true;
 			fPreviousPlotDirectPath = fPlotDirectPath;
 		}
 	}
@@ -800,7 +800,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 {
 	INT32 iDelta = 0;
 	INT32 iOldDelta = 0;
-	BOOLEAN fFirstNode = TRUE;
+	BOOLEAN fFirstNode = true;
 	PathSt* pNode = pHeadOfPath;
 
 	//KRIS!  Added this because it was possible to plot a new course to the same destination, and the
@@ -812,14 +812,14 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	if (g.fPlayer)
 	{
 		// update the destination(s) in the team list
-		fTeamPanelDirty = TRUE;
+		fTeamPanelDirty = true;
 
 		// update the ETA in character info
-		fCharacterInfoPanelDirty = TRUE;
+		fCharacterInfoPanelDirty = true;
 
 		// allows assignments to flash right away if their subject moves away/returns (robot/vehicle being repaired), or
 		// patient/doctor/student/trainer being automatically put on a squad via the movement menu.
-		gfReEvaluateEveryonesNothingToDo = TRUE;
+		gfReEvaluateEveryonesNothingToDo = true;
 	}
 
 
@@ -831,7 +831,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 		if (g.fPlayer && g.fBetweenSectors)
 		{
 			// send the group right back to its current sector by reversing directions
-			GroupReversingDirectionsBetweenSectors(&g, g.ubSector, FALSE);
+			GroupReversingDirectionsBetweenSectors(&g, g.ubSector, false);
 		}
 
 		return;
@@ -864,7 +864,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 		iOldDelta = iDelta;
 
 		pNode = pNode->pNext;
-		fFirstNode = FALSE;
+		fFirstNode = false;
 	}
 
 
@@ -891,8 +891,8 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	// see if we've already reached the first sector in the path (we never actually left the sector and reversed back to it)
 	if (g.uiArrivalTime == GetWorldTotalMin())
 	{
-		// never really left.  Must set check for battle TRUE in order for HandleNonCombatGroupArrival() to run!
-		GroupArrivedAtSector(g, TRUE, TRUE);
+		// never really left.  Must set check for battle true in order for HandleNonCombatGroupArrival() to run!
+		GroupArrivedAtSector(g, true, true);
 	}
 }
 
@@ -916,11 +916,11 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 
 BOOLEAN MoveGroupFromSectorToSector(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
-	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, false);
 
 	if( pNode == NULL )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// start movement to next sector
@@ -929,17 +929,17 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP& g, const SGPSector& sStart, const SGP
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
 
-	return( TRUE );
+	return true;
 }
 
 
 static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
-	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, false);
 
 	if( pNode == NULL )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// remove tail from path
@@ -951,7 +951,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, const SGP
 	// now clear out the mess
 	ClearStrategicPathList( pNode, -1 );
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -964,12 +964,12 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, con
 	BuildSectorsWithSoldiersList( );
 
 	// turn on the avoid flag
-	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
+	gfPlotToAvoidPlayerInfuencedSectors = true;
 
-	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, false);
 
 	// turn off the avoid flag
-	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
+	gfPlotToAvoidPlayerInfuencedSectors = false;
 
 	if( pNode == NULL )
 	{
@@ -982,7 +982,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, con
 	// now clear out the mess
 	ClearStrategicPathList( pNode, -1 );
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -995,12 +995,12 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	BuildSectorsWithSoldiersList( );
 
 	// turn on the avoid flag
-	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
+	gfPlotToAvoidPlayerInfuencedSectors = true;
 
-	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, false);
 
 	// turn off the avoid flag
-	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
+	gfPlotToAvoidPlayerInfuencedSectors = false;
 
 	if( pNode == NULL )
 	{
@@ -1016,7 +1016,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	// now clear out the mess
 	ClearStrategicPathList( pNode, -1 );
 
-	return( TRUE );
+	return true;
 }
 
 

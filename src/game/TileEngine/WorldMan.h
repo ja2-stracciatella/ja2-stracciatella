@@ -79,7 +79,7 @@ BOOLEAN ReplaceStructIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewInd
 void    HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide);
 void    SetStructAframeFlags(UINT32 iMapIndex, LevelnodeFlags);
 void    RemoveStructFromLevelNode(UINT32 map_idx, LEVELNODE*);
-BOOLEAN IndexExistsInStructLayer(GridNo, UINT16 tile_index);
+bool    IndexExistsInStructLayer(GridNo, UINT16 tile_index);
 
 void ForceRemoveStructFromTail(UINT32 iMapIndex);
 
@@ -98,9 +98,9 @@ BOOLEAN RemoveShadowFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 LEVELNODE* AddMercToHead(UINT32 iMapIndex, SOLDIERTYPE&, BOOLEAN fAddStructInfo);
 void         RemoveMerc(UINT32 map_idx, SOLDIERTYPE&, bool placeholder);
 SOLDIERTYPE* WhoIsThere2(INT16 sGridNo, INT8 bLevel);
-BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState );
-BOOLEAN UpdateMercStructureInfo( SOLDIERTYPE *pSoldier );
-BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection );
+bool AddMercStructureInfoFromAnimSurface(GridNo sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState);
+bool UpdateMercStructureInfo(SOLDIERTYPE *pSoldier);
+bool OKToAddMercToWorld(SOLDIERTYPE const * pSoldier, INT8 bDirection);
 
 
 // TOPMOST manipulation functions

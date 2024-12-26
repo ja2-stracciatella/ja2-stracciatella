@@ -52,7 +52,7 @@ static BOOLEAN gfAnchoredState;
 
 static INT8 gbDisabledButtonStyle;
 
-BOOLEAN gfRenderHilights = TRUE;
+BOOLEAN gfRenderHilights = true;
 
 // Struct definition for the QuickButton pictures.
 struct BUTTON_PICS
@@ -88,8 +88,8 @@ static UINT16   GenericButtonFillColors;
 
 static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
-static BOOLEAN gfDelayButtonDeletion   = FALSE;
-static BOOLEAN gfPendingButtonDeletion = FALSE;
+static BOOLEAN gfDelayButtonDeletion   = false;
+static BOOLEAN gfPendingButtonDeletion = false;
 
 
 // Finds an available slot for loading button pictures
@@ -429,7 +429,7 @@ void RemoveButton(GUIButtonRef& btn)
 	if (gfDelayButtonDeletion)
 	{
 		b->uiFlags |= BUTTON_DELETION_PENDING;
-		gfPendingButtonDeletion = TRUE;
+		gfPendingButtonDeletion = true;
 		return;
 	}
 
@@ -475,14 +475,14 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	bTextYOffset(-1),
 	bTextXSubOffSet(-1),
 	bTextYSubOffSet(-1),
-	fShiftText(TRUE),
+	fShiftText(true),
 	sWrappedWidth(-1),
 	icon(0),
 	usIconIndex(-1),
 	bIconXOffset(-1),
 	bIconYOffset(-1),
-	fShiftImage(TRUE),
-	ubToggleButtonActivated(FALSE),
+	fShiftImage(true),
+	ubToggleButtonActivated(false),
 	ubSoundSchemeID(BUTTON_SOUND_SCHEME_NONE)
 {
 	AssertMsg(left >= 0 && top >= 0 && width >= 0 && height >= 0, ST::format("Attempting to create button with invalid coordinates {}{}+{}{}", left, top, width, height));
@@ -697,7 +697,7 @@ void GUI_BUTTON::SpecifyIcon(SGPVObject const* const icon_, UINT16 const usVideo
 
 	bIconXOffset = bXOffset;
 	bIconYOffset = bYOffset;
-	fShiftImage  = TRUE;
+	fShiftImage  = true;
 
 	uiFlags |= BUTTON_DIRTY;
 }
@@ -729,7 +729,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, UINT32 reason)
 			b->ubToggleButtonActivated)
 	{
 		b->uiFlags ^= BUTTON_CLICKED_ON;
-		b->ubToggleButtonActivated = FALSE;
+		b->ubToggleButtonActivated = false;
 	}
 
 	if (!b->Enabled()) return;
@@ -773,12 +773,12 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 			if (!b->ubToggleButtonActivated)
 			{
 				b->uiFlags ^= BUTTON_CLICKED_ON;
-				b->ubToggleButtonActivated = TRUE;
+				b->ubToggleButtonActivated = true;
 			}
 		}
 		else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP))
 		{
-			b->ubToggleButtonActivated = FALSE;
+			b->ubToggleButtonActivated = false;
 		}
 	}
 
@@ -848,14 +848,14 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, UINT32 reason)
 		 * leftbuttonup message when the button wasn't anchored, and should have
 		 * been.
 		 */
-		gfDelayButtonDeletion = TRUE;
+		gfDelayButtonDeletion = true;
 		if (!(reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)) ||
 				!isDefaultCallback ||
 				gpPrevAnchoredButton == b)
 		{
 			b->ClickCallback(b, reason);
 		}
-		gfDelayButtonDeletion = FALSE;
+		gfDelayButtonDeletion = false;
 	}
 	else if (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN))
 	{

@@ -346,11 +346,11 @@ static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 };
 
 
-static BOOLEAN      gfHandleHeli = FALSE;
+static BOOLEAN      gfHandleHeli = false;
 static SOLDIERTYPE* gHeliSeats[MAX_MERC_IN_HELI];
 static INT8         gbNumHeliSeatsOccupied = 0;
 
-static BOOLEAN gfFirstGuyDown = FALSE;
+static BOOLEAN gfFirstGuyDown = false;
 
 static UINT32 uiSoundSample;
 static UINT32 uiSoundVolume;
@@ -358,7 +358,7 @@ static UINT32 uiSoundVolume;
 static INT16  gsGridNoSweetSpot;
 static INT16  gsHeliXPos;
 static INT16  gsHeliYPos;
-static FLOAT  gdHeliZPos;
+static float  gdHeliZPos;
 static INT16  gsHeliScript;
 static UINT8  gubHeliState;
 static UINT32 guiHeliLastUpdate;
@@ -367,10 +367,10 @@ static INT8   gbExitCount;
 static INT8   gbHeliRound;
 static UINT8  gubMoveAwayRepeated = 0;
 
-static BOOLEAN fFadingHeliIn = FALSE;
-static BOOLEAN fFadingHeliOut = FALSE;
+static BOOLEAN fFadingHeliIn = false;
+static BOOLEAN fFadingHeliOut = false;
 
-BOOLEAN gfIngagedInDrop = FALSE;
+BOOLEAN gfIngagedInDrop = false;
 
 static ANITILE* gpHeli;
 BOOLEAN gfFirstHeliRun;
@@ -431,11 +431,11 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 	// Start sound
 	uiSoundVolume = 0;
 	uiSoundSample = PlayJA2Sample(HELI_1, uiSoundVolume, 10000, MIDDLEPAN);
-	fFadingHeliIn = TRUE;
+	fFadingHeliIn = true;
 
-	gfHandleHeli = TRUE;
+	gfHandleHeli = true;
 
-	gfFirstGuyDown = TRUE;
+	gfFirstGuyDown = true;
 
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
 }
@@ -486,8 +486,8 @@ void HandleHeliDrop( )
 				SoundStop( uiSoundSample );
 			}
 
-			gfHandleHeli = FALSE;
-			gfIgnoreScrolling = FALSE;
+			gfHandleHeli = false;
+			gfIgnoreScrolling = false;
 			gbNumHeliSeatsOccupied = 0;
 			UnLockPauseState();
 			UnPauseGame();
@@ -505,7 +505,7 @@ void HandleHeliDrop( )
 
 		}
 
-		gfIgnoreScrolling = TRUE;
+		gfIgnoreScrolling = true;
 
 		uiClock = GetJA2Clock( );
 
@@ -520,11 +520,11 @@ void HandleHeliDrop( )
 					uiSoundVolume = std::min(UINT32(HIGHVOLUME), uiSoundVolume + 5);
 					SoundSetVolume(uiSoundSample, CalculateSoundEffectsVolume(uiSoundVolume));
 					if(uiSoundVolume == HIGHVOLUME)
-							fFadingHeliIn=FALSE;
+							fFadingHeliIn=false;
 				}
 				else
 				{
-					fFadingHeliIn=FALSE;
+					fFadingHeliIn=false;
 				}
 			}
 			else if(fFadingHeliOut)
@@ -537,9 +537,9 @@ void HandleHeliDrop( )
 					{
 						// Stop sound
 						SoundStop( uiSoundSample );
-						fFadingHeliOut=FALSE;
-						gfHandleHeli = FALSE;
-						gfIgnoreScrolling = FALSE;
+						fFadingHeliOut=false;
+						gfHandleHeli = false;
+						gfIgnoreScrolling = false;
 						gbNumHeliSeatsOccupied = 0;
 						guiPendingOverrideEvent = LU_ENDUILOCK;
 						UnLockPauseState();
@@ -552,9 +552,9 @@ void HandleHeliDrop( )
 				}
 				else
 				{
-					fFadingHeliOut=FALSE;
-					gfHandleHeli = FALSE;
-					gfIgnoreScrolling = FALSE;
+					fFadingHeliOut=false;
+					gfHandleHeli = false;
+					gfIgnoreScrolling = false;
 					gbNumHeliSeatsOccupied = 0;
 					guiPendingOverrideEvent = LU_ENDUILOCK;
 					UnLockPauseState();
@@ -591,7 +591,7 @@ void HandleHeliDrop( )
 					if ( gbCurDrop < bEndVal )
 					{
 						SOLDIERTYPE& s = *gHeliSeats[gbCurDrop];
-						EVENT_InitNewSoldierAnim(&s, HELIDROP, 0 , FALSE);
+						EVENT_InitNewSoldierAnim(&s, HELIDROP, 0 , false);
 
 						// Change insertion code
 						s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
@@ -601,14 +601,14 @@ void HandleHeliDrop( )
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )
 						{
-							gfFirstGuyDown = FALSE;
-							SetCurrentSquad(s.bAssignment, TRUE );
+							gfFirstGuyDown = false;
+							SetCurrentSquad(s.bAssignment, true );
 						}
 						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_HAS_ARRIVED_STR], s.name));
 
 						gbCurDrop++;
 
-						gfIngagedInDrop = TRUE;
+						gfIngagedInDrop = true;
 					}
 					else
 					{
@@ -753,7 +753,7 @@ void HandleHeliDrop( )
 						// Delete helicopter image!
 						DeleteAniTile( gpHeli );
 						gpHeli = NULL;
-						gfIgnoreScrolling = FALSE;
+						gfIgnoreScrolling = false;
 
 						// Select our first guy
 						SelectSoldier(gHeliSeats[0], SELSOLDIER_FORCE_RESELECT);
@@ -763,7 +763,7 @@ void HandleHeliDrop( )
 				case HELI_DONE:
 
 					// End
-					fFadingHeliOut = TRUE;
+					fFadingHeliOut = true;
 					break;
 			}
 
@@ -793,7 +793,7 @@ static void HandleFirstHeliDropOfGame(void)
 		// Start music
 		SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
-		gfFirstHeliRun = FALSE;
+		gfFirstHeliRun = false;
 
 	}
 

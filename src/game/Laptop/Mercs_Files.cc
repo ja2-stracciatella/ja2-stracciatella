@@ -228,7 +228,7 @@ static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gubCurMercIndex > 0) gubCurMercIndex--;
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		EnableDisableMercFilesNextPreviousButton();
 	}
 }
@@ -239,7 +239,7 @@ static void BtnMercNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		if (gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex - 1) gubCurMercIndex++;
-		fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = true;
 		EnableDisableMercFilesNextPreviousButton( );
 	}
 }
@@ -265,7 +265,7 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 			guiCurrentLaptopMode = LAPTOP_MODE_MERC;
 			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 
-			gfJustHiredAMercMerc = TRUE;
+			gfJustHiredAMercMerc = true;
 			DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 		}
 	}
@@ -288,37 +288,37 @@ try
 	if (IsMercDead(p))
 	{
 		// The merc is dead, shade the face red and put text over top saying the merc is dead
-		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, true);
 		face->CurrentShade(0);
-		shaded = FALSE;
+		shaded = false;
 		text   = MercInfo[MERC_FILES_MERC_IS_DEAD];
 	}
 	else if (pid == FLO && gubFact[FACT_PC_MARRYING_DARYL_IS_FLO])
 	{
-		shaded = TRUE;
+		shaded = true;
 		text   = pPersonnelDepartedStateStrings[2];
 	}
 	else if (p.bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
 	{
 		// The merc is currently a POW or the merc was fired as a pow
-		shaded = TRUE;
+		shaded = true;
 		text   = pPOWStrings[0];
 	}
 	else if (p.bMercStatus == MERC_HIRED_BUT_NOT_ARRIVED_YET || p.bMercStatus > 0)
 	{
 		// The merc is hired already
-		shaded = TRUE;
+		shaded = true;
 		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
 	else if (!IsMercHireable(p))
 	{
 		// The merc is away on another assignemnt, say the merc is unavailable
-		shaded = TRUE;
+		shaded = true;
 		text   = MercInfo[MERC_FILES_MERC_UNAVAILABLE];
 	}
 	else
 	{
-		shaded = FALSE;
+		shaded = false;
 		text.clear();
 	}
 
@@ -425,7 +425,7 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 		}
 
-		return(FALSE);
+		return(false);
 	}
 
 	HireMercStruct.ubProfileID = ubMercID;
@@ -434,13 +434,13 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 
 	//HireMercStruct.fCopyProfileItemsOver = gfBuyEquipment;
 
-	HireMercStruct.fCopyProfileItemsOver = TRUE;
+	HireMercStruct.fCopyProfileItemsOver = true;
 
 	HireMercStruct.iTotalContractLength = 1;
 
 	//Specify where the merc is to appear
 	HireMercStruct.sSector                   = g_merc_arrive_sector;
-	HireMercStruct.fUseLandingZoneForArrival = TRUE;
+	HireMercStruct.fUseLandingZoneForArrival = true;
 
 	HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );// + ubMercID
 
@@ -455,17 +455,17 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 	if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
 	{
 		DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, MercInfo[ MERC_FILES_HIRE_TO_MANY_PEOPLE_WARNING ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-		return(FALSE);
+		return(false);
 	}
 	else if( bReturnCode == MERC_HIRE_FAILED )
 	{
 		//function failed
-		return(FALSE);
+		return(false);
 	}
 	else
 	{
 		//if we succesfully hired the merc
-		return(TRUE);
+		return(true);
 	}
 }
 

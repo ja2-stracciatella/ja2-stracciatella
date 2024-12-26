@@ -52,7 +52,7 @@ void CreateSpecialItem(SOLDIERTYPE* const s, UINT16 item)
 {
 	OBJECTTYPE o;
 	CreateItem(item, 100, &o);
-	BOOLEAN fReturn = AutoPlaceObject(s, &o, FALSE);
+	BOOLEAN fReturn = AutoPlaceObject(s, &o, false);
 	if (!fReturn) {
 		// no space, so overwrite an existing item (can happen when importing IMPs)
 		s->inv[SMALLPOCK8POS] = o;
@@ -213,7 +213,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 
 	OnMercHired(s);
 
-	gfAtLeastOneMercWasHired = TRUE;
+	gfAtLeastOneMercWasHired = true;
 	return MERC_HIRE_OK;
 }
 
@@ -263,7 +263,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 		if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER &&
 				s.sSector.AsByte() == gamepolicy(start_sector))
 		{
-			gfTacticalDoHeliRun = TRUE;
+			gfTacticalDoHeliRun = true;
 
 			// OK, If we are in mapscreen, get out...
 			if ( guiCurrentScreen == MAP_SCREEN )
@@ -293,7 +293,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 		// ATE: He's going to say something, now that they've arrived...
 		if (!gTacticalStatus.bMercArrivingQuoteBeingUsed && !gfFirstHeliRun)
 		{
-			gTacticalStatus.bMercArrivingQuoteBeingUsed = TRUE;
+			gTacticalStatus.bMercArrivingQuoteBeingUsed = true;
 
 			TacticalCharacterDialogue(&s, QUOTE_MERC_REACHED_DESTINATION);
 
@@ -302,7 +302,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 				public:
 					bool Execute()
 					{
-						gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
+						gTacticalStatus.bMercArrivingQuoteBeingUsed = false;
 						return false;
 					}
 			};
@@ -338,7 +338,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 
 	HandleMercArrivesQuotes(s);
 
-	fTeamPanelDirty = TRUE;
+	fTeamPanelDirty = true;
 
 	// if the currently selected sector has no one in it, select this one instead
 	if (!CanGoToTacticalInSector(sSelMap))
@@ -469,7 +469,7 @@ static void CheckForValidArrivalSector(void)
 	INT32   leftmost;
 	INT16   sSectorGridNo, sSectorGridNo2;
 	INT32   uiRange, uiLowestRange = 999999;
-	BOOLEAN fFound = FALSE;
+	BOOLEAN fFound = false;
 	ST::string sString;
 	ST::string zShortTownIDString1;
 
@@ -509,7 +509,7 @@ static void CheckForValidArrivalSector(void)
 						sGood.y = cnt1;
 						sGood.x = cnt2;
 						uiLowestRange = uiRange;
-						fFound = TRUE;
+						fFound = true;
 					}
 				}
 			}

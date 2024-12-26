@@ -171,7 +171,7 @@ static void InitEditorMercsToolbar(void)
 	INT16 const y = TASKBAR_Y;
 
 	iEditorButton[MERCS_1] = CreateLabel("DETAILED PLACEMENT", SMALLCOMPFONT, FONT_ORANGE, 60, 100, y + 2, 68, 20, MSYS_PRIORITY_NORMAL);
-	iEditorButton[MERCS_1]->SpecifyTextOffsets(20, 4, FALSE);
+	iEditorButton[MERCS_1]->SpecifyTextOffsets(20, 4, false);
 	iEditorButton[MERCS_1]->SpecifyTextWrappedWidth(46);
 	iEditorButton[MERCS_DETAILEDCHECKBOX] = CreateCheckBoxButton(103, y + 5, EDITORDIR "/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsDetailedPlacementCallback);
 

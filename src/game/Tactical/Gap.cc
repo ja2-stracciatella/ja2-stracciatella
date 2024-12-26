@@ -86,18 +86,18 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	// to be played and returns whether there is a gap currently.  This is done
 	// by going to the current AUDIO_GAP element in the AudioGapList, comparing
 	// to see if the current time is between the start and end. If so, return
-	// TRUE..if not and the start of the next element is not greater than
+	// true..if not and the start of the next element is not greater than
 	// current time, set current to next and repeat ...if next elements start
-	// is larger than current time, or no more elements..  return FALSE
+	// is larger than current time, or no more elements..  return false
 
 	if (!pGapList)
 	{
 		// no gap list, return
-		return FALSE;
+		return false;
 	}
 
 	const AUDIO_GAP* i = pGapList->gaps;
-	if (i == NULL) return FALSE;
+	if (i == NULL) return false;
 
 	const UINT32 time = SoundGetPosition(uiSampleNum);
 	SLOGD("Sound Sample Time is {}", time);
@@ -106,7 +106,7 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	const AUDIO_GAP* const end = pGapList->end;
 	while (time > i->end)
 	{
-		if (++i == end) return FALSE;
+		if (++i == end) return false;
 	}
 
 	// check to see if time is within the next AUDIO_GAPs start time
@@ -114,11 +114,11 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	{
 		// we are within the time frame
 		SLOGD("Gap Started at {}", time);
-		return TRUE;
+		return true;
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 

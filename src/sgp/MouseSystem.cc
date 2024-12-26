@@ -60,13 +60,13 @@
 #define MSYS_DO_BUTTONS					(MSYS_DO_LBUTTON_DWN | MSYS_DO_LBUTTON_UP | MSYS_DO_RBUTTON_DWN | MSYS_DO_RBUTTON_UP | MSYS_DO_RBUTTON_REPEAT | MSYS_DO_LBUTTON_REPEAT | MSYS_DO_WHEEL_UP | MSYS_DO_WHEEL_DOWN | MSYS_DO_MBUTTON_DWN | MSYS_DO_MBUTTON_UP | MSYS_DO_MBUTTON_REPEAT | MSYS_DO_X1BUTTON_DWN | MSYS_DO_X1BUTTON_UP | MSYS_DO_X1BUTTON_REPEAT | MSYS_DO_X2BUTTON_DWN | MSYS_DO_X2BUTTON_UP | MSYS_DO_X2BUTTON_REPEAT)
 
 //Max double click delay (in milliseconds) to be considered a double click
-#define MSYS_DOUBLECLICK_DELAY		400
+#define MSYS_doubleCLICK_DELAY		400
 //Max double tap delay (in milliseconds) to be considered a double tap. Double taps are slower than double clicks
-#define MSYS_DOUBLETAP_DELAY		600
+#define MSYS_doubleTAP_DELAY		600
 
 //Records and stores the last place the user clicked.  These values are compared to the current
 //click to determine if a double click or tap event has been detected.
-template <UINT32 DOWN_REASON, UINT32 UP_REASON, UINT32 DOUBLE_DELAY>
+template <UINT32 DOWN_REASON, UINT32 UP_REASON, UINT32 double_DELAY>
 struct DoubleDetectionState {
 	MOUSE_REGION* lastDownRegion;
 	MOUSE_REGION* lastUpRegion;
@@ -80,7 +80,7 @@ struct DoubleDetectionState {
 		{
 			if (lastDownRegion == cur &&
 					lastUpRegion   == cur &&
-					uiCurrTime <= lastDownTime + DOUBLE_DELAY)
+					uiCurrTime <= lastDownTime + double_DELAY)
 			{
 				/* Sequential left tap on same button within the maximum time
 					* allowed for a double click.  Double click check succeeded,
@@ -88,7 +88,7 @@ struct DoubleDetectionState {
 				lastDownRegion = NULL;
 				lastUpRegion   = NULL;
 				lastDownTime = 0;
-				return TRUE;
+				return true;
 			}
 			else
 			{
@@ -102,7 +102,7 @@ struct DoubleDetectionState {
 		{
 			UINT32 uiCurrTime = GetClock();
 			if (lastDownRegion == cur &&
-					uiCurrTime <= lastDownTime + DOUBLE_DELAY)
+					uiCurrTime <= lastDownTime + double_DELAY)
 			{
 				/* Double tap is down, then up, then down.  We
 					* have just detected the up here (step 2). */
@@ -118,19 +118,19 @@ struct DoubleDetectionState {
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 };
 
-static DoubleDetectionState<MSYS_CALLBACK_REASON_LBUTTON_DWN, MSYS_CALLBACK_REASON_LBUTTON_UP, MSYS_DOUBLECLICK_DELAY> gLeftButtonDoubleClickState = {};
-static DoubleDetectionState<MSYS_CALLBACK_REASON_TFINGER_DWN, MSYS_CALLBACK_REASON_TFINGER_UP, MSYS_DOUBLETAP_DELAY> gFingerDoubleTapState = {};
+static DoubleDetectionState<MSYS_CALLBACK_REASON_LBUTTON_DWN, MSYS_CALLBACK_REASON_LBUTTON_UP, MSYS_doubleCLICK_DELAY> gLeftButtonDoubleClickState = {};
+static DoubleDetectionState<MSYS_CALLBACK_REASON_TFINGER_DWN, MSYS_CALLBACK_REASON_TFINGER_UP, MSYS_doubleTAP_DELAY> gFingerDoubleTapState = {};
 
 INT16 MSYS_CurrentMX=0;
 INT16 MSYS_CurrentMY=0;
 static INT16 MSYS_CurrentButtons = 0;
 static UINT32 MSYS_Action         = 0;
 
-static BOOLEAN MSYS_SystemInitialized   = FALSE;
+static BOOLEAN MSYS_SystemInitialized   = false;
 
 static MOUSE_REGION* g_clicked_region;
 
@@ -144,7 +144,7 @@ static const INT16 gsFastHelpDelay = 600; // In timer ticks
 INT16 lastFingerDownX;
 INT16 lastFingerDownY;
 
-static BOOLEAN gfRefreshUpdate = FALSE;
+static BOOLEAN gfRefreshUpdate = false;
 
 static void MSYS_TrashRegList(void);
 
@@ -164,7 +164,7 @@ void MSYS_Init(void)
 	MSYS_Action=MSYS_NO_ACTION;
 
 	MSYS_PrevRegion = NULL;
-	MSYS_SystemInitialized = TRUE;
+	MSYS_SystemInitialized = true;
 }
 
 
@@ -175,7 +175,7 @@ void MSYS_Init(void)
 //
 void MSYS_Shutdown(void)
 {
-	MSYS_SystemInitialized = FALSE;
+	MSYS_SystemInitialized = false;
 	MSYS_TrashRegList();
 }
 
@@ -296,7 +296,7 @@ void MouseSystemHook(UINT16 type, UINT32 button, UINT16 x, UINT16 y)
 			action |= MSYS_DO_MOVE;
 			if (gfRefreshUpdate)
 			{
-				gfRefreshUpdate = FALSE;
+				gfRefreshUpdate = false;
 			}
 			break;
 
@@ -632,10 +632,10 @@ static void MSYS_UpdateMouseRegion(void)
 
 						// This is where we detect double click & tap gestures
 						if (gLeftButtonDoubleClickState.isDouble(cur, ButtonReason)) {
-								ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK;
+								ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_doubleCLICK;
 						}
 						if (gFingerDoubleTapState.isDouble(cur, ButtonReason)) {
-							ButtonReason |= MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP;
+							ButtonReason |= MSYS_CALLBACK_REASON_TFINGER_doubleTAP;
 						}
 
 						cur->ButtonCallback(cur, ButtonReason);
@@ -704,7 +704,7 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 	r->prev               = 0;
 
 	MSYS_AddRegionToList(r);
-	gfRefreshUpdate = TRUE;
+	gfRefreshUpdate = true;
 }
 
 
@@ -739,7 +739,7 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 	if (MSYS_CurrRegion  == r) MSYS_CurrRegion  = 0;
 	if (g_clicked_region == r) g_clicked_region = 0;
 
-	gfRefreshUpdate = TRUE;
+	gfRefreshUpdate = true;
 	*r = MOUSE_REGION{};
 }
 
@@ -825,8 +825,8 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			UINT16* const buf = l.Buffer<UINT16>();
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, x + 1, y + 1, x + w - 1, y + h - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), buf);
-			RectangleDraw(TRUE, x,     y,     x + w - 2, y + h - 2, Get16BPPColor(FROMRGB(227, 198, 88)), buf);
+			RectangleDraw(true, x + 1, y + 1, x + w - 1, y + h - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), buf);
+			RectangleDraw(true, x,     y,     x + w - 2, y + h - 2, Get16BPPColor(FROMRGB(227, 198, 88)), buf);
 		}
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);

@@ -119,11 +119,11 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 	// determine what sort of AI to use
 	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		gfTurnBasedAI = TRUE;
+		gfTurnBasedAI = true;
 	}
 	else
 	{
-		gfTurnBasedAI = FALSE;
+		gfTurnBasedAI = false;
 	}
 
 	// If TURN BASED and NOT NPC's turn, or realtime and not our chance to think, bail...
@@ -295,7 +295,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		// to be reduced to 0 first -- CJC December 13th
 		if ( gTacticalStatus.ubAttackBusyCount > 0 )
 		{
-			fProcessNewSituation = FALSE;
+			fProcessNewSituation = false;
 			// HACK!!
 			if ( pSoldier->bAction == AI_ACTION_FIRE_GUN )
 			{
@@ -304,7 +304,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 					// abort attack!
 					SLOGD("Attack busy count lobotomized due to new situation for {}", pSoldier->ubID);
 					//gTacticalStatus.ubAttackBusyCount = 0;
-					fProcessNewSituation = TRUE;
+					fProcessNewSituation = true;
 				}
 			}
 			else if ( pSoldier->bAction == AI_ACTION_TOSS_PROJECTILE )
@@ -314,13 +314,13 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 					// abort attack!
 					SLOGD("Attack busy count lobotomized due to new situation for {}", pSoldier->ubID);
 					gTacticalStatus.ubAttackBusyCount = 0;
-					fProcessNewSituation = TRUE;
+					fProcessNewSituation = true;
 				}
 			}
 		}
 		else
 		{
-			fProcessNewSituation = TRUE;
+			fProcessNewSituation = true;
 		}
 
 		if ( fProcessNewSituation )
@@ -396,7 +396,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			if (pSoldier->fNoAPToFinishMove)
 			{
 				// well that move must have been cancelled because we're thinking now!
-				//pSoldier->fNoAPToFinishMove = FALSE;
+				//pSoldier->fNoAPToFinishMove = false;
 			}
 			TurnBasedHandleNPCAI( pSoldier );
 		}
@@ -435,7 +435,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 						if ( !ACTING_ON_SCHEDULE( pSoldier ) && pSoldier->ubQuoteRecord && pSoldier->ubQuoteActionID == QUOTE_ACTION_ID_CHECKFORDEST )
 						{
-							NPCReachedDestination( pSoldier, FALSE );
+							NPCReachedDestination( pSoldier, false );
 							// wait just a little bit so the queue can be processed
 							pSoldier->bNextAction = AI_ACTION_WAIT;
 							pSoldier->usNextActionData = 500;
@@ -529,7 +529,7 @@ void EndAIGuysTurn(SOLDIERTYPE& s)
 	TacticalStatusType& ts = gTacticalStatus;
 	if (ts.fSomeoneHit)
 	{
-		ts.fSomeoneHit = FALSE;
+		ts.fSomeoneHit = false;
 	}
 	else
 	{
@@ -557,9 +557,9 @@ void EndAIGuysTurn(SOLDIERTYPE& s)
 	// End this NPC's control, move to next dude
 	EndRadioLocator(&s);
 	s.uiStatusFlags   &= ~SOLDIER_UNDERAICONTROL;
-	s.fTurnInProgress  = FALSE;
-	s.bMoved           = TRUE;
-	s.bBypassToGreen   = FALSE;
+	s.fTurnInProgress  = false;
+	s.bMoved           = true;
+	s.bBypassToGreen   = false;
 
 	SLOGD("Ending control for {}", s.ubID);
 
@@ -600,7 +600,7 @@ void EndAIDeadlock()
 		return;
 	}
 
-	StartPlayerTeamTurn(TRUE, FALSE);
+	StartPlayerTeamTurn(true, false);
 }
 
 
@@ -608,7 +608,7 @@ void StartNPCAI(SOLDIERTYPE& s)
 {
 	SetSoldierAsUnderAiControl(&s);
 
-	s.fTurnInProgress      = TRUE;
+	s.fTurnInProgress      = true;
 	s.sLastTwoLocations[0] = NOWHERE;
 	s.sLastTwoLocations[1] = NOWHERE;
 
@@ -618,7 +618,7 @@ void StartNPCAI(SOLDIERTYPE& s)
 	TacticalStatusType& ts = gTacticalStatus;
 	ts.uiTimeSinceMercAIStart = GetJA2Clock();
 
-	/* important: if "fPausedAnimation" is TRUE, then we have to turn it off else
+	/* important: if "fPausedAnimation" is true, then we have to turn it off else
 	 * HandleSoldierAI() will not be called! */
 
 	// Locate to soldier, if we are not in an interrupt situation.
@@ -705,10 +705,10 @@ void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 					{
 						// say close call quote!
 						TacticalCharacterDialogue( pTarget, QUOTE_CLOSE_CALL );
-						pTarget->fCloseCall = FALSE;
+						pTarget->fCloseCall = false;
 					}
 					ActionDone(pSoldier);
-					pSoldier->bDoBurst = FALSE;
+					pSoldier->bDoBurst = false;
 				}
 			}
 			else
@@ -718,7 +718,7 @@ void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 				{
 					// say close call quote!
 					TacticalCharacterDialogue( pTarget, QUOTE_CLOSE_CALL );
-					pTarget->fCloseCall = FALSE;
+					pTarget->fCloseCall = false;
 				}
 				ActionDone(pSoldier);
 			}
@@ -813,15 +813,15 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		if ( !pSoldier->fNoAPToFinishMove )
 		{
 			EVENT_StopMerc(pSoldier);
-			AdjustNoAPToFinishMove( pSoldier, FALSE );
+			AdjustNoAPToFinishMove( pSoldier, false );
 		}
 
 		// cancel current action
 		pSoldier->bLastAction       = pSoldier->bAction;
 		pSoldier->bAction           = AI_ACTION_NONE;
 		pSoldier->usActionData      = NOWHERE;
-		pSoldier->bActionInProgress = FALSE;
-		pSoldier->fDelayedMovement  = FALSE;
+		pSoldier->bActionInProgress = false;
+		pSoldier->fDelayedMovement  = false;
 
 		/*
 		if ( pSoldier->bLastAction == AI_ACTION_CHANGE_STANCE || pSoldier->bLastAction == AI_ACTION_COWER || pSoldier->bLastAction == AI_ACTION_STOP_COWERING )
@@ -831,11 +831,11 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		*/
 
 
-		// make sure pathStored is not left TRUE by accident.
+		// make sure pathStored is not left true by accident.
 		// This is possible if we decide on an action that we have no points for
 		// (but which set pathStored).  The action is retained until next turn,
 		// although NewDest isn't called.  A newSit. could cancel it before then!
-		pSoldier->bPathStored = FALSE;
+		pSoldier->bPathStored = false;
 	}
 }
 
@@ -865,7 +865,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 
 // GLOBALS:
 
-UINT8 SkipCoverCheck = FALSE;
+UINT8 SkipCoverCheck = false;
 THREATTYPE Threat[MAXMERCS];
 
 
@@ -906,7 +906,7 @@ void NPCDoesAct(SOLDIERTYPE *pSoldier)
 static void NPCDoesNothing(SOLDIERTYPE* pSoldier)
 {
 	// NPC, for whatever reason, did/could not start an action, so end his turn
-	//pSoldier->moved = TRUE;
+	//pSoldier->moved = true;
 
 	if (gfTurnBasedAI)
 	{
@@ -925,7 +925,7 @@ void CancelAIAction(SOLDIERTYPE* const pSoldier)
 		SLOGD("CancelAIAction: SkipCoverCheck turned OFF");
 
 	// re-enable cover checking, something is new or something strange happened
-	SkipCoverCheck = FALSE;
+	SkipCoverCheck = false;
 
 	// turn off new situation flag to stop this from repeating all the time!
 	if ( pSoldier->bNewSituation == IS_NEW_SITUATION )
@@ -934,7 +934,7 @@ void CancelAIAction(SOLDIERTYPE* const pSoldier)
 	}
 
 	// turn off RED/YELLOW status "bypass to Green", to re-check all actions
-	pSoldier->bBypassToGreen = FALSE;
+	pSoldier->bBypassToGreen = false;
 
 	ActionDone(pSoldier);
 }
@@ -945,7 +945,7 @@ bool ActionInProgress(SOLDIERTYPE * const pSoldier)
 	// if NPC has a desired destination, but isn't currently going there
 	if ((pSoldier->sFinalDestination != NOWHERE) && (pSoldier->sDestination != pSoldier->sFinalDestination))
 	{
-		// return success (TRUE) if we successfully resume the movement
+		// return success (true) if we successfully resume the movement
 		return(TryToResumeMovement(pSoldier,pSoldier->sFinalDestination));
 	}
 
@@ -1021,7 +1021,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 	*/
 
 	// yikes, this shouldn't occur! we should be trying to finish our move!
-	// pSoldier->fNoAPToFinishMove = FALSE;
+	// pSoldier->fNoAPToFinishMove = false;
 
 	/*
 	// move this clause outside of the function...
@@ -1076,7 +1076,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 	if (pSoldier->bAction == AI_ACTION_NONE)
 	{
 		// make sure this flag is turned off (it already should be!)
-		pSoldier->bActionInProgress = FALSE;
+		pSoldier->bActionInProgress = false;
 
 		// Since we're NEVER going to "continue" along an old path at this point,
 		// then it would be nice place to reinitialize "pathStored" flag for
@@ -1091,9 +1091,9 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 		// SetNewCourse() [which gets called after NewDest()].
 		//
 		// The only reason we would NEED to reinitialize it here is if I've
-		// incorrectly set pathStored to TRUE in a process that doesn't end up
+		// incorrectly set pathStored to true in a process that doesn't end up
 		// calling NewDest()
-		pSoldier->bPathStored = FALSE;
+		pSoldier->bPathStored = false;
 
 		// decide on the next action
 		if (pSoldier->bNextAction != AI_ACTION_NONE)
@@ -1182,7 +1182,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 		// if he chose to continue doing nothing
 		if (pSoldier->bAction == AI_ACTION_NONE)
 		{
-			NPCDoesNothing(pSoldier);  // sets pSoldier->moved to TRUE
+			NPCDoesNothing(pSoldier);  // sets pSoldier->moved to true
 			return;
 		}
 
@@ -1233,13 +1233,13 @@ void RefreshAI(SOLDIERTYPE *pSoldier)
 	// MarkDetectableMines(pSoldier);
 
 	// whether last attack hit or not doesn't matter once control has been lost
-	pSoldier->bLastAttackHit = FALSE;
+	pSoldier->bLastAttackHit = false;
 
 	// get an up-to-date alert status for this guy
 	DecideAlertStatus(pSoldier);
 
 	if (pSoldier->bAlertStatus == STATUS_YELLOW)
-		SkipCoverCheck = FALSE;
+		SkipCoverCheck = false;
 
 	// if he's in battle or knows opponents are here
 	if (gfTurnBasedAI)
@@ -1254,7 +1254,7 @@ void RefreshAI(SOLDIERTYPE *pSoldier)
 			// make sure any paths stored during out last AI decision but not reacted
 			// to (probably due to lack of APs) get re-tested by the ExecuteAction()
 			// function in AI, since the ->sDestination may no longer be legal now!
-			pSoldier->bPathStored = FALSE;
+			pSoldier->bPathStored = false;
 
 			// if not currently engaged, or even alerted
 			// take a quick look around to see if any friends seem to be in trouble
@@ -1288,12 +1288,12 @@ static void AIDecideRadioAnimation(SOLDIERTYPE* pSoldier)
 	{
 		case ANIM_STAND:
 
-			EVENT_InitNewSoldierAnim( pSoldier, AI_RADIO, 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pSoldier, AI_RADIO, 0 , false );
 			break;
 
 		case ANIM_CROUCH:
 
-			EVENT_InitNewSoldierAnim( pSoldier, AI_CR_RADIO, 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pSoldier, AI_CR_RADIO, 0 , false );
 			break;
 
 		case ANIM_PRONE:
@@ -1308,10 +1308,10 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 {
 	// in most cases, merc will change location, or may cause damage to opponents,
 	// so a new cover check will be necessary.  Exceptions handled individually.
-	SkipCoverCheck = FALSE;
+	SkipCoverCheck = false;
 
 	// reset this field, too
-	pSoldier->bLastAttackHit = FALSE;
+	pSoldier->bLastAttackHit = false;
 
 	if (gfTurnBasedAI || gTacticalStatus.fAutoBandageMode)
 	{
@@ -1345,7 +1345,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		case AI_ACTION_CHANGE_FACING:         // turn this way & that to look
 			// as long as we don't see anyone new, cover won't have changed
 			// if we see someone new, it will cause a new situation & remove this
-			SkipCoverCheck = TRUE;
+			SkipCoverCheck = true;
 
 			SLOGD("ExecuteAction: SkipCoverCheck ON");
 
@@ -1360,7 +1360,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				pSoldier->bActionPoints = 0;
 
 				CancelAIAction(pSoldier);
-				return(FALSE);         // nothing is in progress
+				return(false);         // nothing is in progress
 			}
 			*/
 			break;
@@ -1387,7 +1387,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				else
 				{
 					// no action started
-					return( FALSE );
+					return false;
 				}
 			}
 			// fall through
@@ -1442,7 +1442,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				{
 					if ( Random( 2 ) == 0 )
 					{
-						PlaySoldierJA2Sample(pSoldier, SoundRange<BLOODCAT_GROWL_1, BLOODCAT_GROWL_4>(), HIGHVOLUME, 1, TRUE);
+						PlaySoldierJA2Sample(pSoldier, SoundRange<BLOODCAT_GROWL_1, BLOODCAT_GROWL_4>(), HIGHVOLUME, 1, true);
 					}
 				}
 			}
@@ -1462,7 +1462,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					if (LegalNPCDestination(pSoldier,pSoldier->usActionData,ENSURE_PATH,WATEROK, PATH_THROUGH_PEOPLE ))
 					{
 						// optimization - Ian: prevent another path call in SetNewCourse()
-						pSoldier->bPathStored = TRUE;
+						pSoldier->bPathStored = true;
 					}
 				}
 				else
@@ -1470,7 +1470,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					if (LegalNPCDestination(pSoldier,pSoldier->usActionData,ENSURE_PATH,WATEROK, 0))
 					{
 						// optimization - Ian: prevent another path call in SetNewCourse()
-						pSoldier->bPathStored = TRUE;
+						pSoldier->bPathStored = true;
 					}
 				}
 
@@ -1495,7 +1495,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 							if (LegalNPCDestination(pSoldier,pSoldier->usActionData,ENSURE_PATH,WATEROK, PATH_THROUGH_PEOPLE))
 							{
 								// optimization - Ian: prevent another path call in SetNewCourse()
-								pSoldier->bPathStored = TRUE;
+								pSoldier->bPathStored = true;
 							}
 							else
 							{
@@ -1508,13 +1508,13 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 						if (!pSoldier->bPathStored)
 						{
 							CancelAIAction(pSoldier);
-							return(FALSE);         // nothing is in progress
+							return(false);         // nothing is in progress
 						}
 					}
 					else
 					{
 						CancelAIAction(pSoldier);
-						return(FALSE);         // nothing is in progress
+						return(false);         // nothing is in progress
 					}
 				}
 			}
@@ -1554,7 +1554,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 							pSoldier->ubID, pSoldier->sBlackList);
 
 				CancelAIAction(pSoldier);
-				return(FALSE);         // nothing is in progress
+				return(false);         // nothing is in progress
 			}
 
 			// cancel any old black-listed gridno, got a valid new ->sDestination
@@ -1568,7 +1568,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			if (!TryToResumeMovement(pSoldier,pSoldier->usActionData))
 			{
 				// don't black-list anything here, and action already got canceled
-				return(FALSE);         // nothing is in progress
+				return(false);         // nothing is in progress
 			}
 
 			// cancel any old black-listed gridno, got a valid new ->sDestination
@@ -1603,7 +1603,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				}
 			}
 
-			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, pSoldier->bTargetLevel, pSoldier->inv[HANDPOS].usItem, FALSE);
+			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, pSoldier->bTargetLevel, pSoldier->inv[HANDPOS].usItem, false);
 			if ( iRetCode != ITEM_HANDLE_OK)
 			{
 				if ( iRetCode != ITEM_HANDLE_BROKEN ) // if the item broke, this is 'legal' and doesn't need reporting
@@ -1633,7 +1633,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				SendSoldierSetDesiredDirectionEvent( pSoldier, WEST );
 			}
 
-			EVENT_InitNewSoldierAnim( pSoldier, AI_PULL_SWITCH, 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pSoldier, AI_PULL_SWITCH, 0 , false );
 
 			DeductPoints( pSoldier, AP_PULL_TRIGGER, 0 );
 
@@ -1654,7 +1654,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			pSoldier->usActionData = NOWHERE;
 			pSoldier->bLastAction = pSoldier->bAction;
 			pSoldier->bAction = AI_ACTION_NONE;
-			return(FALSE);           // no longer in progress
+			return(false);           // no longer in progress
 
 		case AI_ACTION_RED_ALERT:             // tell friends opponent(s) seen
 			// if a computer merc, and up to now they didn't know you're here
@@ -1679,13 +1679,13 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 			// ATE: Change to an animation!
 			AIDecideRadioAnimation( pSoldier );
-			//return(FALSE);           // no longer in progress
+			//return(false);           // no longer in progress
 			break;
 
 		case AI_ACTION_CREATURE_CALL:									// creature calling to others
 			DeductPoints(pSoldier,AP_RADIO,BP_RADIO);// pay for it!
 			CreatureCall( pSoldier );
-			//return( FALSE ); // no longer in progress
+			//return false; // no longer in progress
 			break;
 
 		case AI_ACTION_CHANGE_STANCE:                // crouch
@@ -1693,10 +1693,10 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			{
 				// abort!
 				ActionDone( pSoldier );
-				return( FALSE );
+				return false;
 			}
 
-			SkipCoverCheck = TRUE;
+			SkipCoverCheck = true;
 			SLOGD("ExecuteAction: SkipCoverCheck ON");
 			ChangeSoldierStance(pSoldier, pSoldier->usActionData);
 			break;
@@ -1707,12 +1707,12 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			{
 				// nothing to do!
 				ActionDone( pSoldier );
-				return( FALSE );
+				return false;
 			}
 			else
 			{
 				pSoldier->usActionData = ANIM_CROUCH;
-				SetSoldierCowerState( pSoldier, TRUE );
+				SetSoldierCowerState( pSoldier, true );
 			}
 			break;
 
@@ -1721,20 +1721,20 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			if ( pSoldier->uiStatusFlags & SOLDIER_COWERING )
 			{
 				pSoldier->usActionData = ANIM_STAND;
-				SetSoldierCowerState( pSoldier, FALSE );
+				SetSoldierCowerState( pSoldier, false );
 			}
 			else
 			{
 				// nothing to do!
 				ActionDone( pSoldier );
-				return( FALSE );
+				return false;
 			}
 			break;
 
 		case AI_ACTION_GIVE_AID:              // help injured/dying friend
 		{
 			//pSoldier->usUIMovementMode = RUNNING;
-			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, 0, pSoldier->inv[HANDPOS].usItem, FALSE);
+			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, 0, pSoldier->inv[HANDPOS].usItem, false);
 			if ( iRetCode != ITEM_HANDLE_OK)
 			{
 				SLOGW("AI {} got error code {} from HandleItem, doing action {}... aborting deadlock!",
@@ -1800,7 +1800,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			{
 				EndAIGuysTurn(*pSoldier);
 			}
-			return( FALSE );         // nothing is in progress
+			return false;         // nothing is in progress
 
 		case AI_ACTION_TRAVERSE_DOWN:
 			if (gfTurnBasedAI)
@@ -1810,12 +1810,12 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			if ( pSoldier->ubProfile != NO_PROFILE )
 			{
 				gMercProfiles[ pSoldier->ubProfile ].bSectorZ++;
-				gMercProfiles[ pSoldier->ubProfile ].fUseProfileInsertionInfo = FALSE;
+				gMercProfiles[ pSoldier->ubProfile ].fUseProfileInsertionInfo = false;
 			}
 			TacticalRemoveSoldier(*pSoldier);
-			CheckForEndOfBattle( TRUE );
+			CheckForEndOfBattle( true );
 
-			return( FALSE );         // nothing is in progress
+			return false;         // nothing is in progress
 
 		case AI_ACTION_OFFER_SURRENDER:
 			// start the offer of surrender!
@@ -1823,11 +1823,11 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			break;
 
 		default:
-			return(FALSE);
+			return(false);
 	}
 
 	// return status indicating execution of action was properly started
-	return(TRUE);
+	return(true);
 }
 
 void CheckForChangingOrders(SOLDIERTYPE *pSoldier)
@@ -1889,7 +1889,7 @@ void CheckForChangingOrders(SOLDIERTYPE *pSoldier)
 void InitAttackType(ATTACKTYPE *pAttack)
 {
 	// initialize the given bestAttack structure fields to their default values
-	pAttack->ubPossible          = FALSE;
+	pAttack->ubPossible          = false;
 	pAttack->opponent            = NULL;
 	pAttack->ubAimTime           = 0;
 	pAttack->ubChanceToReallyHit = 0;
@@ -1932,7 +1932,7 @@ void HandleInitialRedAlert(INT8 bTeam)
 	}
 
 	// remember enemies are alerted, prevent another red alert from happening
-	gTacticalStatus.Team[ bTeam ].bAwareOfOpposition = TRUE;
+	gTacticalStatus.Team[ bTeam ].bAwareOfOpposition = true;
 }
 
 
@@ -1959,8 +1959,8 @@ static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 		if (PythSpacesAway(pSoldier->sGridNo,pFriend->sGridNo) <= sDistVisible)
 		{
 			// and can trace a line of sight to his x,y coordinates
-			//if (1) //*** SoldierToSoldierLineOfSightTest(pSoldier,pFriend,STRAIGHT,TRUE))
-			if (SoldierToSoldierLineOfSightTest(pSoldier, pFriend, (UINT8)sDistVisible, TRUE))
+			//if (1) //*** SoldierToSoldierLineOfSightTest(pSoldier,pFriend,STRAIGHT,true))
+			if (SoldierToSoldierLineOfSightTest(pSoldier, pFriend, (UINT8)sDistVisible, true))
 			{
 				// if my friend is in battle or something is clearly happening there
 				if ((pFriend->bAlertStatus >= STATUS_RED) || pFriend->bUnderFire || (pFriend->bLife < OKLIFE))
@@ -2037,12 +2037,12 @@ static void HandleAITacticalTraversal(SOLDIERTYPE& s)
 	if (s.bTeam == CIV_TEAM && s.fAIFlags & AI_CHECK_SCHEDULE)
 	{
 		MoveSoldierFromMercToAwaySlot(&s);
-		s.bInSector = FALSE;
+		s.bInSector = false;
 	}
 	else
 	{
 		ProcessQueenCmdImplicationsOfDeath(&s);
 		TacticalRemoveSoldier(s);
 	}
-	CheckForEndOfBattle(TRUE);
+	CheckForEndOfBattle(true);
 }

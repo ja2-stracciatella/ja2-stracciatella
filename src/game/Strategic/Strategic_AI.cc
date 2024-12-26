@@ -90,7 +90,7 @@ The weight generated will range between -100 and +100.  The calculated weight is
 of the group.  If the priority of the group is high, they
 */
 
-BOOLEAN gfAutoAIAware = FALSE;
+BOOLEAN gfAutoAIAware = false;
 
 //Saved vars
 BOOLEAN      gfExtraElites = 0;			//Set when queen compositions are augmented with bonus elites.
@@ -100,7 +100,7 @@ INT32        giArmyAlertnessDecay = 0;		//How much the spotting chance decreases
 UINT8        gubNumAwareBattles = 0;		//When non-zero, this means the queen is very aware and searching for players.  Every time
 						//there is an enemy initiated battle, this counter decrements until zero.  Until that point,
 						//all adjacent sector checks automatically succeed.
-BOOLEAN gfQueenAIAwake = FALSE;			//This flag turns on/off the strategic decisions.  If it's off, no reinforcements
+BOOLEAN gfQueenAIAwake = false;			//This flag turns on/off the strategic decisions.  If it's off, no reinforcements
 						//or assaults will happen.
 						//@@@Alex, this flag is ONLY set by the first meanwhile scene which calls an action.  If this
 						//action isn't called, the AI will never turn on.  It is completely dependant on this action.  It can
@@ -113,15 +113,15 @@ UINT8        gubQueenPriorityPhase = 0;		//Defines how far into defence the quee
 																			//10 is the most defensive
 //Used for authorizing the use of the first battle meanwhile scene AFTER the battle is complete.  This is the case used when
 //the player attacks a town, and is set once militia are sent to investigate.
-BOOLEAN gfFirstBattleMeanwhileScenePending = FALSE;
+BOOLEAN gfFirstBattleMeanwhileScenePending = false;
 
 //After the first battle meanwhile scene is finished, this flag is set, and the queen orders patrol groups to immediately fortify all towns.
-BOOLEAN gfMassFortificationOrdered = FALSE;
+BOOLEAN gfMassFortificationOrdered = false;
 
 UINT8   gubMinEnemyGroupSize     = 0;
 UINT8   gubHoursGracePeriod      = 0;
 UINT16  gusPlayerBattleVictories = 0;
-BOOLEAN gfUseAlternateQueenPosition = FALSE;
+BOOLEAN gfUseAlternateQueenPosition = false;
 
 //padding for generic globals
 #define SAI_PADDING_BYTES		97
@@ -141,7 +141,7 @@ extern UINT8 gubNumGroupsArrivedSimultaneously;
 std::unique_ptr<UINT8 []> gubGarrisonReinforcementsDenied;
 
 //Unsaved vars
-BOOLEAN gfDisplayStrategicAILogs = FALSE;
+BOOLEAN gfDisplayStrategicAILogs = false;
 
 extern INT16 sWorldSectorLocationOfFirstBattle;
 static const SGPSector meduna(3, 16);
@@ -217,9 +217,9 @@ static BOOLEAN PlayerForceTooStrong(UINT8 ubSectorID, UINT16 usOffensePoints, UI
 											PlayerMercsInSector(sSector) * 5;
 	if( *pusDefencePoints > usOffensePoints )
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -315,17 +315,17 @@ static void ValidateLargeGroup(GROUP* pGroup)
 
 void InitStrategicAI()
 {
-	gfExtraElites                      = FALSE;
+	gfExtraElites                      = false;
 	gubNumAwareBattles                 = 0;
-	gfQueenAIAwake                     = FALSE;
+	gfQueenAIAwake                     = false;
 	giReinforcementPoints              = 0;
 	giRequestPoints                    = 0;
 	gubSAIVersion                      = SAI_VERSION;
 	gubQueenPriorityPhase              = 0;
-	gfFirstBattleMeanwhileScenePending = FALSE;
-	gfMassFortificationOrdered         = FALSE;
+	gfFirstBattleMeanwhileScenePending = false;
+	gfMassFortificationOrdered         = false;
 	gusPlayerBattleVictories           = 0;
-	gfUseAlternateQueenPosition        = FALSE;
+	gfUseAlternateQueenPosition        = false;
 
 	// 475 is 7:55am in minutes since midnight, the time the game starts on day 1
 	UINT32      evaluate_time = 475;
@@ -575,16 +575,16 @@ BOOLEAN OkayForEnemyToMoveThroughSector( UINT8 ubSectorID )
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->uiTimeLastPlayerLiberated && pSector->uiTimeLastPlayerLiberated + (gubHoursGracePeriod * 3600) > GetWorldTotalSeconds() )
 	{
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 
 static BOOLEAN EnemyPermittedToAttackSector(GROUP** pGroup, UINT8 ubSectorID)
 {
 	SECTORINFO *pSector;
-	BOOLEAN fPermittedToAttack = TRUE;
+	BOOLEAN fPermittedToAttack = true;
 
 	pSector = &SectorInfo[ ubSectorID ];
 	fPermittedToAttack = OkayForEnemyToMoveThroughSector( ubSectorID );
@@ -600,7 +600,7 @@ static BOOLEAN EnemyPermittedToAttackSector(GROUP** pGroup, UINT8 ubSectorID)
 				{
 					if( GroupAtFinalDestination( *pGroup ) )
 					{ //High priority reinforcements have arrived.  This overrides most other situations.
-						return TRUE;
+						return true;
 					}
 				}
 				else
@@ -612,28 +612,28 @@ static BOOLEAN EnemyPermittedToAttackSector(GROUP** pGroup, UINT8 ubSectorID)
 	}
 	if( !fPermittedToAttack )
 	{
-		return FALSE;
+		return false;
 	}
 	//If Hill-billies are alive, then enemy won't attack the sector.
 	switch( ubSectorID )
 	{
 		case SEC_F10:
 			//Hill-billy farm -- not until hill billies are dead.
-			if (CheckFact(FACT_HILLBILLIES_KILLED, FALSE))
-				return FALSE;
+			if (CheckFact(FACT_HILLBILLIES_KILLED, false))
+				return false;
 			break;
 		case SEC_A9:
 		case SEC_A10:
 			//Omerta -- not until Day 2 at 7:45AM.
 			if( GetWorldTotalMin() < 3345 )
-				return FALSE;
+				return false;
 			break;
 		case SEC_B13:
 		case SEC_C13:
 		case SEC_D13:
 			//Drassen -- not until Day 3 at 6:30AM.
 			if( GetWorldTotalMin() < 4710 )
-				return FALSE;
+				return false;
 			break;
 		case SEC_C5:
 		case SEC_C6:
@@ -644,17 +644,17 @@ static BOOLEAN EnemyPermittedToAttackSector(GROUP** pGroup, UINT8 ubSectorID)
 		case SEC_G1:
 			if( PlayerSectorDefended( SEC_G2 ) && (PlayerSectorDefended( SEC_H1 ) || PlayerSectorDefended( SEC_H2 )) )
 			{
-				return FALSE;
+				return false;
 			}
 			break;
 		case SEC_H2:
 			if( PlayerSectorDefended( SEC_H2 ) && (PlayerSectorDefended( SEC_G1 ) || PlayerSectorDefended( SEC_G2 )) )
 			{
-				return FALSE;
+				return false;
 			}
 			break;
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -685,7 +685,7 @@ static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerG
 	   || SectorInfo[playerSector].ubGarrisonID != NO_GARRISON)
 	{
 		RequestAttackOnSector(ubSectorID, usDefencePoints);
-		return FALSE;
+		return false;
 	}
 	//For now, automatically attack.
 	if (pPlayerGroup->ubNext.x)
@@ -705,7 +705,7 @@ static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerG
 					pPlayerGroup->ubSector,
 					pPlayerGroup->ubSector);
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -778,12 +778,12 @@ static BOOLEAN HandleMilitiaNoticedByPatrolGroup(UINT8 ubSectorID, GROUP* pEnemy
 	if( PlayerForceTooStrong( ubSectorID, usOffensePoints, &usDefencePoints ) )
 	{
 		RequestAttackOnSector( ubSectorID, usDefencePoints );
-		return FALSE;
+		return false;
 	}
 
 	MoveSAIGroupToSector(&pEnemyGroup, sSector.AsByte(), DIRECT, REINFORCEMENTS);
 	SLOGD("Enemy group at {} detected militia at {} and is moving to attack them.", pEnemyGroup->ubSector, sSector);
-	return FALSE;
+	return false;
 }
 
 
@@ -791,7 +791,7 @@ static BOOLEAN AttemptToNoticeEmptySectorSucceeds(void)
 {
 	if( gubNumAwareBattles || gfAutoAIAware )
 	{ //The queen is in high-alert and is searching for players.  All adjacent checks will automatically succeed.
-		return TRUE;
+		return true;
 	}
 	if( DayTime() )
 	{ //Day time chances are normal
@@ -800,10 +800,10 @@ static BOOLEAN AttemptToNoticeEmptySectorSucceeds(void)
 			giArmyAlertness -= giArmyAlertnessDecay;
 			//Minimum alertness should always be at least 0.
 			giArmyAlertness = std::max(0, giArmyAlertness);
-			return TRUE;
+			return true;
 		}
 		giArmyAlertness++;
-		return FALSE;
+		return false;
 	}
 	//Night time chances are one third of normal.
 	if( Chance( giArmyAlertness/3 ) )
@@ -811,13 +811,13 @@ static BOOLEAN AttemptToNoticeEmptySectorSucceeds(void)
 		giArmyAlertness -= giArmyAlertnessDecay;
 		//Minimum alertness should always be at least 0.
 		giArmyAlertness = std::max(0, giArmyAlertness);
-		return TRUE;
+		return true;
 	}
 	if( Chance( 33 ) )
 	{
 		giArmyAlertness++;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -829,7 +829,7 @@ static BOOLEAN AttemptToNoticeAdjacentGroupSucceeds(void)
 {
 	if( gubNumAwareBattles || gfAutoAIAware )
 	{ //The queen is in high-alert and is searching for players.  All adjacent checks will automatically succeed.
-		return TRUE;
+		return true;
 	}
 	if( DayTime() )
 	{ //Day time chances are normal
@@ -838,10 +838,10 @@ static BOOLEAN AttemptToNoticeAdjacentGroupSucceeds(void)
 			giArmyAlertness -= giArmyAlertnessDecay;
 			//Minimum alertness should always be at least 0.
 			giArmyAlertness = std::max(0, giArmyAlertness);
-			return TRUE;
+			return true;
 		}
 		giArmyAlertness++;
-		return FALSE;
+		return false;
 	}
 	//Night time chances are one third of normal.
 	if( Chance( giArmyAlertness/3 ) )
@@ -849,13 +849,13 @@ static BOOLEAN AttemptToNoticeAdjacentGroupSucceeds(void)
 		giArmyAlertness -= giArmyAlertnessDecay;
 		//Minimum alertness should always be at least 0.
 		giArmyAlertness = std::max(0, giArmyAlertness);
-		return TRUE;
+		return true;
 	}
 	if( Chance( 33 ) )
 	{
 		giArmyAlertness++;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -867,12 +867,12 @@ static BOOLEAN HandleEmptySectorNoticedByPatrolGroup(GROUP* pGroup, UINT8 ubEmpt
 	{
 		if( gGarrisonGroup[ ubGarrisonID ].ubPendingGroupID )
 		{
-			return FALSE;
+			return false;
 		}
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 
 	//Clear the patrol group's previous orders.
@@ -882,7 +882,7 @@ static BOOLEAN HandleEmptySectorNoticedByPatrolGroup(GROUP* pGroup, UINT8 ubEmpt
 	MoveSAIGroupToSector(&pGroup, sSector.AsByte(), DIRECT, REINFORCEMENTS);
 	SLOGD("Enemy group at {} detected undefended sector at {} and is moving to retake it.",
 			pGroup->ubSector, sSector);
-	return TRUE;
+	return true;
 }
 
 
@@ -943,7 +943,7 @@ static BOOLEAN ReinforcementsApproved(INT32 iGarrisonID, UINT16* pusDefencePoint
 
 	if( usOffensePoints > *pusDefencePoints )
 	{
-		return TRUE;
+		return true;
 	}
 	//Before returning false, determine if reinforcements have been denied repeatedly.  If so, then
 	//we might send an augmented force to take it back.
@@ -951,13 +951,13 @@ static BOOLEAN ReinforcementsApproved(INT32 iGarrisonID, UINT16* pusDefencePoint
 	{
 		SLOGD("Sector {} will now recieve an {} extra troops due to multiple denials for reinforcements in the past for strong player presence.",
 				sSector, gubGarrisonReinforcementsDenied[iGarrisonID] / 3);
-		return TRUE;
+		return true;
 	}
 	//Reinforcements will have to wait.  For now, increase the reinforcements denied.  The amount increase is 20 percent
 	//of the garrison's priority.
 	gubGarrisonReinforcementsDenied[ iGarrisonID ] += (UINT8)(gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bPriority / 2);
 
-	return FALSE;
+	return false;
 }
 
 
@@ -968,7 +968,7 @@ static void RecalculatePatrolWeight(PATROL_GROUP&);
 
 //if the group has arrived in a sector, and doesn't have any particular orders, then
 //send him back where they came from.
-//RETURNS TRUE if the group is deleted or told to move somewhere else.
+//RETURNS true if the group is deleted or told to move somewhere else.
 //This is important as the calling function will need
 //to abort processing of the group for obvious reasons.
 static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
@@ -979,13 +979,13 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 
 	if( !gfQueenAIAwake )
 	{
-		return FALSE;
+		return false;
 	}
 	Assert( !pGroup->fPlayer );
 	if( pGroup->pEnemyGroup->ubIntention == PURSUIT )
 	{ //Lost the player group that he was going to attack.  Return to original position.
 		ReassignAIGroup( &pGroup );
-		return TRUE;
+		return true;
 	}
 	else if( pGroup->pEnemyGroup->ubIntention == REINFORCEMENTS )
 	{ //The group has arrived at the location where he is supposed to reinforce.
@@ -1047,7 +1047,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 				RemoveGroup(*pGroup);
 				RecalculateGarrisonWeight( i );
 
-				return TRUE;
+				return true;
 			}
 		}
 		//Step 2 -- Check for Patrol groups matching waypoint index.
@@ -1123,7 +1123,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, sec);
 					RecalculatePatrolWeight(gPatrolGroup[i]);
 				}
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -1132,10 +1132,10 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 		if( pGroup->pEnemyGroup->ubIntention != STAGING && pGroup->pEnemyGroup->ubIntention != REINFORCEMENTS )
 		{
 			ReassignAIGroup( &pGroup );
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1164,7 +1164,7 @@ static bool EnemyNoticesPlayerArrival(GROUP const& pg, UINT8 const x, UINT8 cons
 static void SendGroupToPool(GROUP** pGroup);
 
 
-//returns TRUE if the group was deleted.
+//returns true if the group was deleted.
 BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 {
 	UINT8 ubSectorID;
@@ -1187,7 +1187,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 					SendGroupToPool( &pGroup );
 					if( !pGroup )
 					{ //Group was transferred to the pool
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -1195,7 +1195,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 
 		if( !gfQueenAIAwake )
 		{
-			return FALSE;
+			return false;
 		}
 	}
 	if( !pGroup->fPlayer )
@@ -1282,7 +1282,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( !pEnemyGroup )
 		{ //group deleted.
-			return TRUE;
+			return true;
 		}
 	}
 	else
@@ -1294,16 +1294,16 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		 * NOTE: Always returns false because it is the player group that we are
 		 *       handling.  We don't mess with the player group here! */
 		GROUP const& pg = *pGroup;
-		if (pg.ubSector.z != 0) return FALSE;
+		if (pg.ubSector.z != 0) return false;
 		UINT8 const x = pg.ubSector.x;
 		UINT8 const y = pg.ubSector.y;
-		if (!EnemyPermittedToAttackSector(0, pg.ubSector.AsByte())) return FALSE;
-		if (y >  1 && EnemyNoticesPlayerArrival(pg, x,     y - 1)) return FALSE;
-		if (x < 16 && EnemyNoticesPlayerArrival(pg, x + 1, y))     return FALSE;
-		if (y < 16 && EnemyNoticesPlayerArrival(pg, x,     y + 1)) return FALSE;
-		if (x >  1 && EnemyNoticesPlayerArrival(pg, x - 1, y))     return FALSE;
+		if (!EnemyPermittedToAttackSector(0, pg.ubSector.AsByte())) return false;
+		if (y >  1 && EnemyNoticesPlayerArrival(pg, x,     y - 1)) return false;
+		if (x < 16 && EnemyNoticesPlayerArrival(pg, x + 1, y))     return false;
+		if (y < 16 && EnemyNoticesPlayerArrival(pg, x,     y + 1)) return false;
+		if (x >  1 && EnemyNoticesPlayerArrival(pg, x - 1, y))     return false;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1651,7 +1651,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 	GROUP *pGroup;
 	UINT8 ubNumExtraReinforcements;
 	UINT8 ubGroupSize;
-	BOOLEAN fLimitMaxTroopsAllowable = FALSE;
+	BOOLEAN fLimitMaxTroopsAllowable = false;
 
 	//Determine how many units the garrison needs.
 	iReinforcementsRequested = GarrisonReinforcementsRequested( iDstGarrisonID, &ubNumExtraReinforcements );
@@ -1665,7 +1665,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 	if( iReinforcementsRequested + ubNumExtraReinforcements > iMaxReinforcementsAllowed )
 	{ //adjust the extra reinforcements so that it doesn't exceed the maximum allowed.
-		fLimitMaxTroopsAllowable = TRUE;
+		fLimitMaxTroopsAllowable = true;
 		ubNumExtraReinforcements = (UINT8)(iMaxReinforcementsAllowed - iReinforcementsRequested);
 	}
 
@@ -1870,7 +1870,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 		iReinforcementsApproved = std::min(iReinforcementsRequested, giReinforcementPool);
 		if( !iReinforcementsApproved )
 		{
-			AssertMsg(FALSE, "Trying to create empty reinforcements group!");
+			AssertMsg(false, "Trying to create empty reinforcements group!");
 			return;
 		}
 		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT8)iReinforcementsApproved, 0 );
@@ -1962,7 +1962,7 @@ void EvaluateQueenSituation()
 	}
 
 	// Adjust queen's disposition based on player's progress
-	EvolveQueenPriorityPhase( FALSE );
+	EvolveQueenPriorityPhase( false );
 
 	// Gradually promote any remaining admins into troops
 	UpgradeAdminsToTroops();
@@ -2164,7 +2164,7 @@ void LoadStrategicAI(HWFILE const hFile)
 
 		//Recreate the compositions
 		gArmyComp = GCM->getArmyCompositions();
-		EvolveQueenPriorityPhase( TRUE );
+		EvolveQueenPriorityPhase( true );
 
 		//Recreate the patrol desired sizes
 		auto && origPatrolGroup{ GCM->getPatrolGroups() };
@@ -2340,7 +2340,7 @@ void LoadStrategicAI(HWFILE const hFile)
 				{
 		if (gWorldSector.z != 1 || gWorldSector.x != 16 || gWorldSector.y != 3)
 		{ //We aren't in the basement sector
-			gMercProfiles[ QUEEN ].fUseProfileInsertionInfo = FALSE;
+			gMercProfiles[ QUEEN ].fUseProfileInsertionInfo = false;
 		}
 		else
 		{ //We are in the basement sector, relocate queen to proper position.
@@ -2360,7 +2360,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	{
 		if( gubFact[ FACT_SKYRIDER_CLOSE_TO_CHOPPER ] )
 		{
-			gMercProfiles[ SKYRIDER ].fUseProfileInsertionInfo = FALSE;
+			gMercProfiles[ SKYRIDER ].fUseProfileInsertionInfo = false;
 		}
 	}
 
@@ -2465,7 +2465,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	//     will patch saves.
 	UpdateAirspaceControl( );
 
-	EvolveQueenPriorityPhase( TRUE );
+	EvolveQueenPriorityPhase( true );
 
 	//Count and correct the floating groups
 	FOR_EACH_GROUP_SAFE(pGroup)
@@ -2606,7 +2606,7 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 	if( gfExtraElites )
 	{
 		//Turn off the flag so that this doesn't happen everytime this function is called!
-		gfExtraElites = FALSE;
+		gfExtraElites = false;
 
 		for( UINT32 i = 0; i < gGarrisonGroup.size(); i++ )
 		{
@@ -2690,7 +2690,7 @@ void ExecuteStrategicAIAction(UINT16 usActionCode, const SGPSector* sMap)
 			break;
 
 		case STRATEGIC_AI_ACTION_QUEEN_DEAD:
-			gfQueenAIAwake = FALSE;
+			gfQueenAIAwake = false;
 			break;
 
 		case STRATEGIC_AI_ACTION_KINGPIN_DEAD:
@@ -2825,8 +2825,8 @@ void ExecuteStrategicAIAction(UINT16 usActionCode, const SGPSector* sMap)
 
 			break;
 		case NPC_ACTION_ADD_MORE_ELITES:
-			gfExtraElites = TRUE;
-			EvolveQueenPriorityPhase( TRUE );
+			gfExtraElites = true;
+			EvolveQueenPriorityPhase( true );
 			break;
 		case NPC_ACTION_GIVE_KNOWLEDGE_OF_ALL_MERCS:
 			//temporarily make the queen's forces more aware (high alert)
@@ -3025,10 +3025,10 @@ static void MassFortifyTowns(void);
 
 void WakeUpQueen()
 {
-	gfQueenAIAwake = TRUE;
+	gfQueenAIAwake = true;
 	if( !gfMassFortificationOrdered )
 	{
-		gfMassFortificationOrdered = TRUE;
+		gfMassFortificationOrdered = true;
 		MassFortifyTowns();
 	}
 }
@@ -3119,11 +3119,11 @@ static BOOLEAN GarrisonCanProvideMinimumReinforcements(INT32 iGarrisonID)
 		SGPSector ubSector(gGarrisonGroup[iGarrisonID].ubSectorID);
 		if (PlayerMercsInSector(ubSector) || CountAllMilitiaInSector(ubSector))
 		{
-			return FALSE;
+			return false;
 		}
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -3135,7 +3135,7 @@ static BOOLEAN GarrisonRequestingMinimumReinforcements(INT32 iGarrisonID)
 
 	if( gGarrisonGroup[ iGarrisonID ].ubPendingGroupID )
 	{
-		return FALSE;
+		return false;
 	}
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
@@ -3144,9 +3144,9 @@ static BOOLEAN GarrisonRequestingMinimumReinforcements(INT32 iGarrisonID)
 
 	if( iDesired - iAvailable >= gubMinEnemyGroupSize )
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -3159,25 +3159,25 @@ static BOOLEAN PatrolRequestingMinimumReinforcements(INT32 iPatrolID)
 
 	if( gPatrolGroup[ iPatrolID ].ubPendingGroupID )
 	{
-		return FALSE;
+		return false;
 	}
 	if( !PermittedToFillPatrolGroup( iPatrolID ) )
 	{ //if the group was defeated, it won't be considered for reinforcements again for several days
-		return FALSE;
+		return false;
 	}
 	pGroup = GetGroup( gPatrolGroup[ iPatrolID ].ubGroupID );
 	if( pGroup )
 	{
 		if( gPatrolGroup[ iPatrolID ].bSize - pGroup->ubGroupSize >= gubMinEnemyGroupSize )
 		{
-			return TRUE;
+			return true;
 		}
 	}
 	else if (saipolicy(refill_defeated_patrol_groups))
 	{ // we want to refill totally defeated patrols too
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -3756,7 +3756,7 @@ static void ReinitializeUnvisitedGarrisons(void)
 
 	//Recreate the compositions
 	gArmyComp = GCM->getArmyCompositions();
-	EvolveQueenPriorityPhase( TRUE );
+	EvolveQueenPriorityPhase( true );
 
 	//Go through each unvisited sector and recreate the garrison forces based on
 	//the desired population.

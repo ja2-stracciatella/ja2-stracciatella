@@ -124,10 +124,10 @@ enum
 };
 
 
-static BOOLEAN gfGIOScreenEntry      = TRUE;
-static BOOLEAN gfGIOScreenExit       = FALSE;
-static BOOLEAN gfReRenderGIOScreen   = TRUE;
-static BOOLEAN gfGIOButtonsAllocated = FALSE;
+static BOOLEAN gfGIOScreenEntry      = true;
+static BOOLEAN gfGIOScreenExit       = false;
+static BOOLEAN gfReRenderGIOScreen   = true;
+static BOOLEAN gfGIOButtonsAllocated = false;
 
 static UINT8 gubGameOptionScreenHandler = GIO_NOTHING;
 
@@ -191,8 +191,8 @@ template<> ScreenID HandleScreen<GAME_INIT_OPTIONS_SCREEN>()
 	if (gfGIOScreenEntry)
 	{
 		EnterGIOScreen();
-		gfGIOScreenEntry = FALSE;
-		gfGIOScreenExit = FALSE;
+		gfGIOScreenEntry = false;
+		gfGIOScreenExit = false;
 		InvalidateScreen();
 	}
 
@@ -319,14 +319,14 @@ static void EnterGIOScreen()
 
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, STD_SCREEN_X, STD_SCREEN_Y, 640, 439);
 
-	gfGIOButtonsAllocated = TRUE;
+	gfGIOButtonsAllocated = true;
 }
 
 
 static void ExitGIOScreen()
 {
 	if (!gfGIOButtonsAllocated) return;
-	gfGIOButtonsAllocated = FALSE;
+	gfGIOButtonsAllocated = false;
 
 	// Delete the main options screen background.
 	DeleteVideoObject(guiGIOMainBackGroundImage);
@@ -357,8 +357,8 @@ static void ExitGIOScreen()
 	// If we are starting the game stop playing the music.
 	if (gubGameOptionScreenHandler == GIO_EXIT) SetMusicMode(MUSIC_NONE);
 
-	gfGIOScreenExit  = FALSE;
-	gfGIOScreenEntry = TRUE;
+	gfGIOScreenExit  = false;
+	gfGIOScreenEntry = true;
 }
 
 static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const ST::string& zString, MSGBOX_CALLBACK ReturnCallback)
@@ -375,7 +375,7 @@ static void HandleGIOScreen(void)
 		{
 			case GIO_CANCEL:
 				gubGIOExitScreen = MAINMENU_SCREEN;
-				gfGIOScreenExit	= TRUE;
+				gfGIOScreenExit	= true;
 				break;
 
 			case GIO_EXIT:
@@ -405,7 +405,7 @@ static void HandleGIOScreen(void)
 	if (gfReRenderGIOScreen)
 	{
 		RenderGIOScreen();
-		gfReRenderGIOScreen = FALSE;
+		gfReRenderGIOScreen = false;
 	}
 
 	RestoreGIOButtonBackGrounds();
@@ -773,14 +773,14 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 	if (ubIronManMode == GIO_IRON_MAN)
 	{
 		DoGioMessageBox(str_iron_man_mode_warning, ConfirmGioIronManMessageBoxCallBack);
-		return  TRUE;
+		return  true;
 	}
 	else if (ubIronManMode == GIO_DEAD_IS_DEAD)
 	{
 		DoGioMessageBox(str_dead_is_dead_mode_warning, ConfirmGioDeadIsDeadMessageBoxCallBack);
-		return  TRUE;
+		return  true;
 	}
-	return FALSE;
+	return false;
 }
 
 

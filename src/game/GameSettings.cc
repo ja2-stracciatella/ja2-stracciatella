@@ -76,8 +76,8 @@ void LoadGameSettings(void)
 		// Make sure that at least subtitles or speech is enabled
 		if (!g.fOptions[TOPTION_SUBTITLES] && !g.fOptions[TOPTION_SPEECH])
 		{
-			g.fOptions[TOPTION_SUBTITLES] = TRUE;
-			g.fOptions[TOPTION_SPEECH   ] = TRUE;
+			g.fOptions[TOPTION_SUBTITLES] = true;
+			g.fOptions[TOPTION_SPEECH   ] = true;
 		}
 
 		SetSoundEffectsVolume(sound_volume  <= HIGHVOLUME ? sound_volume  : MIDVOLUME);
@@ -142,31 +142,31 @@ static void InitGameSettings(void)
 
 	GAME_SETTINGS& g = gGameSettings;
 	g.bLastSavedGameSlot                          = -1;
-	g.fOptions[TOPTION_SPEECH]                    = TRUE;
-	g.fOptions[TOPTION_MUTE_CONFIRMATIONS]        = FALSE;
-	g.fOptions[TOPTION_SUBTITLES]                 = TRUE;
-	g.fOptions[TOPTION_KEY_ADVANCE_SPEECH]        = FALSE;
-	g.fOptions[TOPTION_ANIMATE_SMOKE]             = TRUE;
-	g.fOptions[TOPTION_BLOOD_N_GORE]              = TRUE;
-	g.fOptions[TOPTION_DONT_MOVE_MOUSE]           = FALSE;
-	g.fOptions[TOPTION_OLD_SELECTION_METHOD]      = FALSE;
-	g.fOptions[TOPTION_ALWAYS_SHOW_MOVEMENT_PATH] = FALSE;
-	g.fOptions[TOPTION_SHOW_MISSES]               = FALSE;
-	g.fOptions[TOPTION_RTCONFIRM]                 = FALSE;
-	g.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]    = TRUE;
-	g.fOptions[TOPTION_USE_METRIC_SYSTEM]         = FALSE;
-	g.fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP]      = FALSE;
-	g.fOptions[TOPTION_SMART_CURSOR]              = FALSE;
-	g.fOptions[TOPTION_SNAP_CURSOR_TO_DOOR]       = TRUE;
-	g.fOptions[TOPTION_GLOW_ITEMS]                = TRUE;
-	g.fOptions[TOPTION_TOGGLE_TREE_TOPS]          = TRUE;
-	g.fOptions[TOPTION_TOGGLE_WIREFRAME]          = TRUE;
-	g.fOptions[TOPTION_3D_CURSOR]                 = FALSE;
-	g.fOptions[TOPTION_MERC_CASTS_LIGHT]          = TRUE;
-	g.fOptions[TOPTION_HIDE_BULLETS]              = FALSE;
-	g.fOptions[TOPTION_TRACKING_MODE]             = TRUE;
+	g.fOptions[TOPTION_SPEECH]                    = true;
+	g.fOptions[TOPTION_MUTE_CONFIRMATIONS]        = false;
+	g.fOptions[TOPTION_SUBTITLES]                 = true;
+	g.fOptions[TOPTION_KEY_ADVANCE_SPEECH]        = false;
+	g.fOptions[TOPTION_ANIMATE_SMOKE]             = true;
+	g.fOptions[TOPTION_BLOOD_N_GORE]              = true;
+	g.fOptions[TOPTION_DONT_MOVE_MOUSE]           = false;
+	g.fOptions[TOPTION_OLD_SELECTION_METHOD]      = false;
+	g.fOptions[TOPTION_ALWAYS_SHOW_MOVEMENT_PATH] = false;
+	g.fOptions[TOPTION_SHOW_MISSES]               = false;
+	g.fOptions[TOPTION_RTCONFIRM]                 = false;
+	g.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]    = true;
+	g.fOptions[TOPTION_USE_METRIC_SYSTEM]         = false;
+	g.fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP]      = false;
+	g.fOptions[TOPTION_SMART_CURSOR]              = false;
+	g.fOptions[TOPTION_SNAP_CURSOR_TO_DOOR]       = true;
+	g.fOptions[TOPTION_GLOW_ITEMS]                = true;
+	g.fOptions[TOPTION_TOGGLE_TREE_TOPS]          = true;
+	g.fOptions[TOPTION_TOGGLE_WIREFRAME]          = true;
+	g.fOptions[TOPTION_3D_CURSOR]                 = false;
+	g.fOptions[TOPTION_MERC_CASTS_LIGHT]          = true;
+	g.fOptions[TOPTION_HIDE_BULLETS]              = false;
+	g.fOptions[TOPTION_TRACKING_MODE]             = true;
 	g.uiMeanwhileScenesSeenFlags                  = 0;
-	g.fHideHelpInAllScreens                       = FALSE;
+	g.fHideHelpInAllScreens                       = false;
 	g.ubSizeOfDisplayCover                        = 4;
 	g.ubSizeOfLOS                                 = 4;
 
@@ -180,10 +180,10 @@ void InitGameOptions()
 	gGameOptions = GAME_OPTIONS{};
 
 	//Init the game options
-	gGameOptions.fGunNut           = FALSE;
-	gGameOptions.fSciFi            = TRUE;
+	gGameOptions.fGunNut           = false;
+	gGameOptions.fSciFi            = true;
 	gGameOptions.ubDifficultyLevel = DIF_LEVEL_EASY;
-	//gGameOptions.fTurnTimeLimit  = FALSE;
+	//gGameOptions.fTurnTimeLimit  = false;
 	gGameOptions.ubGameSaveMode    = DIF_CAN_SAVE;
 
 }
@@ -240,22 +240,22 @@ BOOLEAN	CanGameBeSaved()
 		if(gTacticalStatus.uiFlags & INCOMBAT)
 		{
 			//no save for you
-			return( FALSE );
+			return false;
 		}
 
 		//if there are enemies in the current sector
 		if (gWorldSector.IsValid() && NumEnemiesInAnySector(gWorldSector) > 0)
 		{
 			//no save for you
-			return( FALSE );
+			return false;
 		}
 
 		//All checks failed, so we can save
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( TRUE );
+		return true;
 	}
 }
 

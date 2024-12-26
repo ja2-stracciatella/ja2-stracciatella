@@ -94,7 +94,7 @@ void CallEldinTo( INT16 sGridNo )
 		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ELDIN);
 		if (pSoldier && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && (pSoldier->bAlertStatus == STATUS_GREEN || pSoldier->ubNoiseVolume < MAX_MISC_NOISE_DURATION / 2))
 		{
-			if ( SoldierToLocationLineOfSightTest( pSoldier, sGridNo, (UINT8) MaxDistanceVisible(), TRUE ) )
+			if ( SoldierToLocationLineOfSightTest( pSoldier, sGridNo, (UINT8) MaxDistanceVisible(), true ) )
 			{
 				// sees the player now!
 				TriggerNPCWithIHateYouQuote( ELDIN );
@@ -134,7 +134,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	INT16 sBestGridNo = NOWHERE;
 	INT8	bBestLevel = 0;
 	INT16 sClimbingGridNo;
-	BOOLEAN fClimbingNecessary = FALSE;
+	BOOLEAN fClimbingNecessary = false;
 
 	pubNoiseVolume = &gubPublicNoiseVolume[pSoldier->bTeam];
 	psNoiseGridNo = &gsPublicNoiseGridno[pSoldier->bTeam];
@@ -198,7 +198,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	// if any "misc. noise" was also heard recently
 	if (pSoldier->sNoiseGridno != NOWHERE)
 	{
-		if ( pSoldier->bNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->sNoiseGridno ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->sNoiseGridno, pSoldier->bNoiseLevel, 0, (UINT8) MaxDistanceVisible(), FALSE ) == 0 )
+		if ( pSoldier->bNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->sNoiseGridno ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->sNoiseGridno, pSoldier->bNoiseLevel, 0, (UINT8) MaxDistanceVisible(), false ) == 0 )
 		{
 			// calculate how far this noise was, and its relative "importance"
 			iDistAway = SpacesAway(pSoldier->sGridNo,pSoldier->sNoiseGridno);
@@ -227,7 +227,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		if (*psNoiseGridNo != NOWHERE)
 		{
 			// if we are NOT there (at the noise gridno)
-			if ( *pbNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, *psNoiseGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, *psNoiseGridNo, *pbNoiseLevel, 0, (UINT8) MaxDistanceVisible(), FALSE ) == 0 )
+			if ( *pbNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, *psNoiseGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, *psNoiseGridNo, *pbNoiseLevel, 0, (UINT8) MaxDistanceVisible(), false ) == 0 )
 			{
 				// calculate how far this noise was, and its relative "importance"
 				iDistAway = SpacesAway(pSoldier->sGridNo,*psNoiseGridNo);
@@ -246,7 +246,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 
 	if (sBestGridNo != NOWHERE && pfReachable )
 	{
-		*pfReachable = TRUE;
+		*pfReachable = true;
 
 		// make civs not walk to noises outside their room if on close patrol/onguard
 		if ( pSoldier->bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
@@ -257,7 +257,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 				UINT8 const new_room = GetRoom(pSoldier->usPatrolGrid[0]);
 				if (new_room == NO_ROOM || new_room != room)
 				{
-					*pfReachable = FALSE;
+					*pfReachable = false;
 				}
 			}
 		}
@@ -272,17 +272,17 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 				if ( sClimbingGridNo == NOWHERE )
 				{
 					// can't investigate!
-					*pfReachable = FALSE;
+					*pfReachable = false;
 				}
 				else
 				{
 					sBestGridNo = sClimbingGridNo;
-					fClimbingNecessary = TRUE;
+					fClimbingNecessary = true;
 				}
 			}
 			else
 			{
-				fClimbingNecessary = FALSE;
+				fClimbingNecessary = false;
 			}
 		}
 	}

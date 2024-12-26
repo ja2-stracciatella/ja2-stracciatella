@@ -23,11 +23,11 @@ UINT8 bPersonalityEndState = 0;
 
 
 // flag set when player hits  YES/NO button
-static BOOLEAN fConfirmHasBeenSelectedFlag = FALSE;
-static BOOLEAN fConfirmIsYesFlag           = FALSE;
-static BOOLEAN fCreatedOkIMPButton         = FALSE;
-static BOOLEAN fExitIMPPerFinAtOk          = FALSE;
-static BOOLEAN fCreateFinishOkButton       = FALSE;
+static BOOLEAN fConfirmHasBeenSelectedFlag = false;
+static BOOLEAN fConfirmIsYesFlag           = false;
+static BOOLEAN fCreatedOkIMPButton         = false;
+static BOOLEAN fExitIMPPerFinAtOk          = false;
+static BOOLEAN fCreateFinishOkButton       = false;
 
 
 // buttons
@@ -47,9 +47,9 @@ void EnterIMPPersonalityFinish( void )
 {
 
 	// reset states
-	fCreateFinishOkButton = FALSE;
+	fCreateFinishOkButton = false;
 	bPersonalityEndState = 0;
-	fConfirmIsYesFlag = FALSE;
+	fConfirmIsYesFlag = false;
 
 	// create the buttons
 	CreateIMPPersonalityFinishButtons( );
@@ -103,8 +103,8 @@ void ExitIMPPersonalityFinish( void )
 	}
 
 
-	fCreatedOkIMPButton = FALSE;
-	fConfirmHasBeenSelectedFlag = FALSE;
+	fCreatedOkIMPButton = false;
+	fConfirmHasBeenSelectedFlag = false;
 }
 
 
@@ -131,17 +131,17 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 
 	if (fCreateFinishOkButton)
 	{
-		fCreateFinishOkButton = FALSE;
+		fCreateFinishOkButton = false;
 		CreatePersonalityFinishOkButton( );
-		fCreatedOkIMPButton = TRUE;
+		fCreatedOkIMPButton = true;
 	}
 
 	// create ok button
 	if (!fCreatedOkIMPButton)
 	{
 		DestroyIMPersonalityFinishButtons( );
-		fCreateFinishOkButton = TRUE;
-		fExitIMPPerFinAtOk = TRUE;
+		fCreateFinishOkButton = true;
+		fExitIMPPerFinAtOk = true;
 	}
 }
 
@@ -197,14 +197,14 @@ static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// set fact yes was selected
-		fConfirmIsYesFlag = TRUE;
+		fConfirmIsYesFlag = true;
 
 		// set fact that confirmation has been done
-		fConfirmHasBeenSelectedFlag = TRUE;
+		fConfirmHasBeenSelectedFlag = true;
 
 		// now make skill, personality and attitude
 		CreatePlayersPersonalitySkillsAndAttitude();
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		bPersonalityEndState = 1;
 	}
 }
@@ -227,14 +227,14 @@ static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		// set fact yes was selected
-		fConfirmIsYesFlag = FALSE;
+		fConfirmIsYesFlag = false;
 
 		// set fact that confirmation has been done
-		fConfirmHasBeenSelectedFlag = TRUE;
+		fConfirmHasBeenSelectedFlag = true;
 		CreatePlayersPersonalitySkillsAndAttitude();
 
 		bPersonalityEndState = 2;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 
@@ -266,7 +266,7 @@ static void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn, UINT32 reason)
 		}
 
 		// button pending, wait a frame
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		iCurrentImpPage = IMP_MAIN_PAGE;
 	}
 }

@@ -249,7 +249,7 @@ BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 		}
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 BOOLEAN WeaponInHand(const SOLDIERTYPE* const pSoldier)
@@ -263,24 +263,24 @@ BOOLEAN WeaponInHand(const SOLDIERTYPE* const pSoldier)
 			{
 				if (pSoldier->inv[HANDPOS].ubImprintID != pSoldier->ubProfile)
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 			else
 			{
 				if (pSoldier->inv[HANDPOS].ubImprintID != (NO_PROFILE + 1) )
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 		}
 		if (pSoldier->inv[HANDPOS].bGunStatus >= USABLE)
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 	// return -1 or some "broken" value if weapon is broken?
-	return( FALSE );
+	return false;
 }
 
 UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot )
@@ -501,7 +501,7 @@ INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper
 INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
-	BOOLEAN fCheckForFlares = FALSE;
+	BOOLEAN fCheckForFlares = false;
 
 	// JA2Gold: give some priority to looking for flares when at night
 	// this is AI only so we can put in some customization for night
@@ -509,7 +509,7 @@ INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 	{
 		if (pSoldier->bLife > (pSoldier->bLifeMax / 2))
 		{
-			fCheckForFlares = TRUE;
+			fCheckForFlares = true;
 		}
 	}
 	if (fCheckForFlares)
@@ -618,10 +618,10 @@ static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 
 		if (ai.usItem == usAttachment && ai.uiItemClass == GCM->getItem(usItem)->getItemClass())
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -660,7 +660,7 @@ bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 
 BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachment, const BOOLEAN fAttemptingAttachment)
 {
-	BOOLEAN fSameItem = FALSE, fSimilarItems = FALSE;
+	BOOLEAN fSameItem = false, fSimilarItems = false;
 	UINT16  usSimilarItem = NOTHING;
 
 	if ( !ValidAttachment( usAttachment, pObj->usItem ) )
@@ -668,7 +668,7 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 		// check for an underslung grenade launcher attached to the gun
 		if ( (FindAttachment( pObj, UNDER_GLAUNCHER ) != ITEM_NOT_FOUND) && ValidLaunchable( usAttachment, UNDER_GLAUNCHER ) )
 		{
-			return ( TRUE );
+			return ( true );
 		}
 		else
 		{
@@ -678,14 +678,14 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_ATTACH], GCM->getItem(usAttachment)->getName(), GCM->getItem(pObj->usItem)->getName()));
 			}
 
-			return( FALSE );
+			return false;
 		}
 	}
 	// special conditions go here
 	// can't have two of the same attachment on an item
 	if (FindAttachment( pObj, usAttachment ) != ITEM_NOT_FOUND)
 	{
-		fSameItem = TRUE;
+		fSameItem = true;
 	}
 
 	// special code for items which won't attach if X is present
@@ -694,27 +694,27 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 		case BIPOD:
 			if ( FindAttachment( pObj, UNDER_GLAUNCHER) != ITEM_NOT_FOUND )
 			{
-				fSimilarItems = TRUE;
+				fSimilarItems = true;
 				usSimilarItem = UNDER_GLAUNCHER;
 			}
 			break;
 		case UNDER_GLAUNCHER:
 			if ( FindAttachment( pObj, BIPOD ) != ITEM_NOT_FOUND )
 			{
-				fSimilarItems = TRUE;
+				fSimilarItems = true;
 				usSimilarItem = BIPOD;
 			}
 			break;
 		case DETONATOR:
 			if( FindAttachment( pObj, REMDETONATOR ) != ITEM_NOT_FOUND )
 			{
-				fSameItem = TRUE;
+				fSameItem = true;
 			}
 			break;
 		case REMDETONATOR:
 			if( FindAttachment( pObj, DETONATOR ) != ITEM_NOT_FOUND )
 			{
-				fSameItem = TRUE;
+				fSameItem = true;
 			}
 			break;
 	}
@@ -724,16 +724,16 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 		if (fSameItem)
 		{
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[ STR_ATTACHMENT_ALREADY ] );
-			return( FALSE );
+			return false;
 		}
 		else if (fSimilarItems)
 		{
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[ STR_CANT_USE_TWO_ITEMS ], GCM->getItem(usSimilarItem)->getName(), GCM->getItem(usAttachment)->getName()) );
-			return( FALSE );
+			return false;
 		}
 	}
 
-	return( TRUE );
+	return true;
 }
 
 //Determines if it is possible to equip this weapon with this ammo.
@@ -749,13 +749,13 @@ bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
 
 BOOLEAN CompatibleFaceItem(UINT16 const item1, UINT16 const item2)
 {
-	if (item2 == NOTHING) return TRUE;
+	if (item2 == NOTHING) return true;
 	for (auto const& i : CompatibleFaceItems)
 	{
-		if (i[0] == item1 && i[1] == item2) return TRUE;
-		if (i[0] == item2 && i[1] == item1) return TRUE;
+		if (i[0] == item1 && i[1] == item2) return true;
+		if (i[0] == item2 && i[1] == item1) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -812,7 +812,7 @@ static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UIN
 	{
 		*pusResult = usItem;
 		*pubType   = COMBINE_POINTS;
-		return TRUE;
+		return true;
 	}
 
 	for (auto const& m : Merge)
@@ -822,10 +822,10 @@ static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UIN
 
 		*pusResult = m.result;
 		*pubType   = m.action;
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
@@ -1075,7 +1075,7 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 
 	if (pSourceObj->usItem != pTargetObj->usItem)
 	{
-		return( TRUE );
+		return true;
 	}
 	if (ubIndex < pTargetObj->ubNumberOfObjects)
 	{
@@ -1083,13 +1083,13 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 		bTemp = pSourceObj->bStatus[0];
 		pSourceObj->bStatus[0] = pTargetObj->bStatus[ubIndex];
 		pTargetObj->bStatus[ubIndex] = bTemp;
-		return( TRUE );
+		return true;
 	}
 	else
 	{
 		// add to end
 		StackObjs( pSourceObj, pTargetObj, 1 );
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -1110,15 +1110,15 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	INT8    bReloadType;
 	UINT16  usNewAmmoItem;
 
-	if (pGun->usItem == ROCKET_LAUNCHER) return( FALSE ); // IC_GUN but uses no ammo (LAW)
+	if (pGun->usItem == ROCKET_LAUNCHER) return false; // IC_GUN but uses no ammo (LAW)
 
 	INT8 bAPs = 0; // XXX HACK000E
 	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );
-		if ( !EnoughPoints( pSoldier, bAPs, 0,TRUE ) )
+		if ( !EnoughPoints( pSoldier, bAPs, 0,true ) )
 		{
-			return( FALSE );
+			return false;
 		}
 
 	}
@@ -1128,7 +1128,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		if (!AttachObject(pSoldier, pGun, pAmmo))
 		{
 			// abort
-			return( FALSE );
+			return false;
 		}
 	}
 	else
@@ -1252,10 +1252,10 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					// Copying the old ammo to the cursor in turnbased could screw up for the player
 					// (suppose his inventory is full!)
 
-					if ((gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE))
+					if ((gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, false))
 					{
 						// try autoplace
-						if ( !AutoPlaceObject( pSoldier, &OldAmmo, FALSE ) )
+						if ( !AutoPlaceObject( pSoldier, &OldAmmo, false ) )
 						{
 							// put it on the ground
 							AddItemToPool(pSoldier->sGridNo, &OldAmmo, VISIBLE, pSoldier->bLevel, 0 , -1);
@@ -1271,10 +1271,10 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 				}
 				break;
 			case RELOAD_AUTOPLACE_OLD:
-				if ( !AutoPlaceObject( pSoldier, &OldAmmo, TRUE ) )
+				if ( !AutoPlaceObject( pSoldier, &OldAmmo, true ) )
 				{
 					// error msg!
-					return( FALSE );
+					return false;
 				}
 				// place first ammo in gun
 				pGun->ubGunShotsLeft = ubBulletsToMove;
@@ -1329,7 +1329,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		pGun->bGunAmmoStatus = 100;
 	}
 
-	return( TRUE );
+	return true;
 }
 
 BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
@@ -1356,11 +1356,11 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 			PlayJA2Sample(usReloadSound, HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -1461,7 +1461,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 				{
 					// ce would reload using this ammo!
 					bAPCost = GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot] ) );
-					if ( EnoughPoints( pSoldier, (INT16) bAPCost, 0, FALSE ) )
+					if ( EnoughPoints( pSoldier, (INT16) bAPCost, 0, false ) )
 					{
 						// reload the 2nd gun too
 						fRet = ReloadGun( pSoldier, pObj, &(pSoldier->inv[bSlot]) );
@@ -1479,7 +1479,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 	}
 
 	// couldn't reload
-	return( FALSE );
+	return false;
 }
 
 
@@ -1538,7 +1538,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 	OBJECTTYPE& attachment = *pAttachment;
 	bool const validLaunchable = ValidLaunchable(attachment.usItem, target.usItem);
 	bool validUGGrenade = ValidLaunchable(attachment.usItem, UNDER_GLAUNCHER);
-	if (validLaunchable || ValidItemAttachment(&target, attachment.usItem, TRUE))
+	if (validLaunchable || ValidItemAttachment(&target, attachment.usItem, true))
 	{
 		// find an attachment position...
 		// second half of this 'if' is for attaching GL grenades to a gun
@@ -1585,7 +1585,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 				}
 			}
 
-			if (ValidItemAttachment(&target, attachment.usItem, TRUE)) // not launchable
+			if (ValidItemAttachment(&target, attachment.usItem, true)) // not launchable
 			{
 				// Attachment sounds
 				const ItemModel * tgt_item = GCM->getItem(target.usItem);
@@ -1654,7 +1654,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 
 	if (merge_kind != COMBINE_POINTS)
 	{
-		if (!EnoughPoints(s, AP_MERGE, 0, TRUE)) return false;
+		if (!EnoughPoints(s, AP_MERGE, 0, true)) return false;
 		DeductPoints(s, AP_MERGE, 0);
 	}
 
@@ -1757,7 +1757,7 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 		case SECONDHANDPOS:
 			if (GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isTwoHanded())
 			{
-				return( FALSE );
+				return false;
 			}
 			break;
 		case HANDPOS:
@@ -1777,7 +1777,7 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 					if (bNewPos == NO_SLOT)
 					{
 						// nowhere to put second item
-						return( FALSE );
+						return false;
 					}
 
 					if ( fDoingPlacement )
@@ -1794,26 +1794,26 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 		case LEGPOS:
 			if (GCM->getItem(pObj->usItem)->getItemClass() != IC_ARMOUR)
 			{
-				return( FALSE );
+				return false;
 			}
 			switch (bPos)
 			{
 				case VESTPOS:
 					if (Armour[GCM->getItem(pObj->usItem)->getClassIndex()].ubArmourClass != ARMOURCLASS_VEST)
 					{
-						return( FALSE );
+						return false;
 					}
 					break;
 				case HELMETPOS:
 					if (Armour[GCM->getItem(pObj->usItem)->getClassIndex()].ubArmourClass != ARMOURCLASS_HELMET)
 					{
-						return( FALSE );
+						return false;
 					}
 					break;
 				case LEGPOS:
 					if (Armour[GCM->getItem(pObj->usItem)->getClassIndex()].ubArmourClass != ARMOURCLASS_LEGGINGS)
 					{
-						return( FALSE );
+						return false;
 					}
 					break;
 				default:
@@ -1824,7 +1824,7 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 		case HEAD2POS:
 			if (GCM->getItem(pObj->usItem)->getItemClass() != IC_FACE)
 			{
-				return( FALSE );
+				return false;
 			}
 		default:
 			break;
@@ -1834,10 +1834,10 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 	if (ubSlotLimit == 0 && bPos >= SMALLPOCK1POS )
 	{
 		// doesn't fit!
-		return( FALSE );
+		return false;
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -1846,14 +1846,14 @@ static BOOLEAN DropObjIfThereIsRoom(SOLDIERTYPE* pSoldier, INT8 bPos, OBJECTTYPE
 	// try autoplacing item in bSlot elsewhere, then do a placement
 	BOOLEAN fAutoPlacedOld;
 
-	fAutoPlacedOld = AutoPlaceObject( pSoldier, &(pSoldier->inv[bPos]), FALSE );
+	fAutoPlacedOld = AutoPlaceObject( pSoldier, &(pSoldier->inv[bPos]), false );
 	if ( fAutoPlacedOld )
 	{
 		return( PlaceObject( pSoldier, bPos, pObj ) );
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -1875,16 +1875,16 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 	UINT8 ubNumberToDrop, ubLoop;
 	OBJECTTYPE *pInSlot;
-	BOOLEAN fObjectWasRobotRemote = FALSE;
+	BOOLEAN fObjectWasRobotRemote = false;
 
 	if ( pObj->usItem == ROBOT_REMOTE_CONTROL )
 	{
-		fObjectWasRobotRemote = TRUE;
+		fObjectWasRobotRemote = true;
 	}
 
-	if ( !CanItemFitInPosition( pSoldier, pObj, bPos, TRUE ) )
+	if ( !CanItemFitInPosition( pSoldier, pObj, bPos, true ) )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// If the position is either head slot, then the item must be IC_FACE (checked in
@@ -1895,7 +1895,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
 					GCM->getItem(pObj->usItem)->getName(), GCM->getItem(pSoldier->inv[HEAD2POS].usItem)->getName()));
-			return( FALSE );
+			return false;
 		}
 	}
 	else if ( bPos == HEAD2POS )
@@ -1904,7 +1904,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
 					GCM->getItem(pObj->usItem)->getName(), GCM->getItem(pSoldier->inv[HEAD1POS].usItem)->getName()));
-			return( FALSE );
+			return false;
 		}
 	}
 
@@ -2047,7 +2047,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				if (pSoldier->inv[SECONDHANDPOS].usItem != 0)
 				{
 					// both pockets have something in them, so we can't swap
-					return( FALSE );
+					return false;
 				}
 				else
 				{
@@ -2074,7 +2074,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	}
 
 	EnsureConsistentWeaponMode(pSoldier);
-	return( TRUE );
+	return true;
 }
 
 
@@ -2106,7 +2106,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 					SetNewItem( pSoldier, HANDPOS, fNewItem );
 					if ( pObj->ubNumberOfObjects == 0 )
 					{
-						return( TRUE );
+						return true;
 					}
 				}
 				else if ( !(GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isTwoHanded()) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
@@ -2116,7 +2116,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 					SetNewItem( pSoldier, SECONDHANDPOS, fNewItem );
 					if ( pObj->ubNumberOfObjects == 0 )
 					{
-						return( TRUE );
+						return true;
 					}
 				}
 			}
@@ -2135,7 +2135,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 						SetNewItem( pSoldier, VESTPOS, fNewItem );
 						if ( pObj->ubNumberOfObjects == 0 )
 						{
-							return( TRUE );
+							return true;
 						}
 					}
 					break;
@@ -2147,7 +2147,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 						SetNewItem( pSoldier, LEGPOS, fNewItem );
 						if ( pObj->ubNumberOfObjects == 0 )
 						{
-							return( TRUE );
+							return true;
 						}
 					}
 					break;
@@ -2159,7 +2159,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 						SetNewItem( pSoldier, HELMETPOS, fNewItem );
 						if ( pObj->ubNumberOfObjects == 0 )
 						{
-							return( TRUE );
+							return true;
 						}
 					}
 					break;
@@ -2175,7 +2175,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 				SetNewItem( pSoldier, HEAD1POS, fNewItem );
 				if ( pObj->ubNumberOfObjects == 0 )
 				{
-					return( TRUE );
+					return true;
 				}
 			}
 			else if ( (pSoldier->inv[HEAD2POS].usItem == NOTHING) && CompatibleFaceItem( pObj->usItem, pSoldier->inv[HEAD1POS].usItem ) )
@@ -2184,7 +2184,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 				SetNewItem( pSoldier, HEAD2POS, fNewItem );
 				if ( pObj->ubNumberOfObjects == 0 )
 				{
-					return( TRUE );
+					return true;
 				}
 			}
 			break;
@@ -2202,7 +2202,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 			bSlot = FindEmptySlotWithin( pSoldier, bSlot, BIGPOCK4POS );
 			if (bSlot == ITEM_NOT_FOUND)
 			{
-				return( FALSE );
+				return false;
 			}
 			if (bSlot == SECONDHANDPOS)
 			{
@@ -2218,7 +2218,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 			SetNewItem( pSoldier, bSlot, fNewItem );
 			if (pObj->ubNumberOfObjects == 0)
 			{
-				return( TRUE );
+				return true;
 			}
 			bSlot++;
 		}
@@ -2250,7 +2250,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 							SetNewItem( pSoldier, bSlot, fNewItem );
 							if (pObj->ubNumberOfObjects == 0)
 							{
-								return( TRUE );
+								return true;
 							}
 						}
 					}
@@ -2271,7 +2271,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 			SetNewItem( pSoldier, bSlot, fNewItem );
 			if (pObj->ubNumberOfObjects == 0)
 			{
-				return( TRUE );
+				return true;
 			}
 			bSlot++;
 		}
@@ -2288,12 +2288,12 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 			SetNewItem( pSoldier, bSlot, fNewItem );
 			if (pObj->ubNumberOfObjects == 0)
 			{
-				return( TRUE );
+				return true;
 			}
 			bSlot++;
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem )
@@ -2306,13 +2306,13 @@ BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pO
 	CHECKF( pObj );
 	if (pSoldier->inv[bPos].ubNumberOfObjects == 0)
 	{
-		return( FALSE );
+		return false;
 	}
 	else
 	{
 		*pObj = pSoldier->inv[bPos];
 		DeleteObj( &(pSoldier->inv[bPos]) );
-		return( TRUE );
+		return true;
 	}
 }
 
@@ -2340,9 +2340,9 @@ BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8
 		}
 
 		CreateKeyObject(pObj, ubNumberOfKeys, ubItems);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2395,12 +2395,12 @@ void AllocateObject(OBJECTTYPE** const pObj)
 
 BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj )
 {
-	if (pObj == NULL) return FALSE;
+	if (pObj == NULL) return false;
 
 	// free up space
 	delete pObj;
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -2679,10 +2679,10 @@ void CreateMoney(UINT32 const uiMoney, OBJECTTYPE* const pObj)
 
 BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 {
-	BOOLEAN fRemote = FALSE;
-	BOOLEAN fPressure = FALSE;
-	BOOLEAN fTimed = FALSE;
-	[[maybe_unused]] BOOLEAN fSwitch = FALSE; // only used as a code hint to improve readability
+	BOOLEAN fRemote = false;
+	BOOLEAN fPressure = false;
+	BOOLEAN fTimed = false;
+	[[maybe_unused]] BOOLEAN fSwitch = false; // only used as a code hint to improve readability
 
 	// Get explosive if applicable
 	auto item = GCM->getItem(pObj->usItem, ItemSystem::nothrow);
@@ -2697,25 +2697,25 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 		{
 			case ACTION_ITEM_SMALL_PIT:
 			case ACTION_ITEM_LARGE_PIT:
-				fPressure = TRUE;
+				fPressure = true;
 				break;
 			default:
-				fRemote = TRUE;
+				fRemote = true;
 				break;
 
 		}
 	}
 	else if ( FindAttachment( pObj, DETONATOR ) != ITEM_NOT_FOUND )
 	{
-		fTimed = TRUE;
+		fTimed = true;
 	}
 	else if ( (FindAttachment( pObj, REMDETONATOR ) != ITEM_NOT_FOUND) || (pObj->usItem == ACTION_ITEM) )
 	{
-		fRemote = TRUE;
+		fRemote = true;
 	}
 	else if ( (explosive && explosive->isPressureTriggered()) || pObj->usItem == ACTION_ITEM )
 	{
-		fPressure = TRUE;
+		fPressure = true;
 	}
 	else if ( pObj->usItem == SWITCH )
 	{
@@ -2724,17 +2724,17 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 		{
 			// panic trigger is only activated by expending APs, not by
 			// stepping on it... so don't define a detonator type
-			fSwitch = TRUE;
+			fSwitch = true;
 		}
 		else
 		{
-			fPressure = TRUE;
+			fPressure = true;
 		}
 	}
 	else
 	{
 		// no sorta bomb at all!
-		return( FALSE );
+		return false;
 	}
 
 	if (fRemote)
@@ -2759,7 +2759,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 		}
 
 	}
-	else // this must be a switch, fSwitch == TRUE
+	else // this must be a switch, fSwitch == true
 	{
 		pObj->bDetonatorType = BOMB_SWITCH;
 		pObj->bFrequency = bSetting;
@@ -2767,7 +2767,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 
 	pObj->fFlags |= OBJECT_ARMED_BOMB;
 	pObj->usBombItem = pObj->usItem;
-	return( TRUE );
+	return true;
 }
 
 
@@ -2777,7 +2777,7 @@ static void RenumberAttachments(OBJECTTYPE* pObj)
 	// attachment slots before filled ones
 	INT8 bAttachPos;
 	INT8 bFirstSpace;
-	BOOLEAN fDone = FALSE;
+	BOOLEAN fDone = false;
 
 	while (!fDone)
 	{
@@ -2809,7 +2809,7 @@ static void RenumberAttachments(OBJECTTYPE* pObj)
 		if (bAttachPos == MAX_ATTACHMENTS)
 		{
 			// done!!
-			fDone = TRUE;
+			fDone = true;
 		}
 	}
 
@@ -2823,16 +2823,16 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewO
 
 	if (bAttachPos < 0 || bAttachPos >= MAX_ATTACHMENTS)
 	{
-		return( FALSE );
+		return false;
 	}
 	if (pObj->usAttachItem[bAttachPos] == NOTHING )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if ( GCM->getItem(pObj->usAttachItem[bAttachPos])->getFlags() & ITEM_INSEPARABLE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// if pNewObj is passed in NULL, then we just delete the attachment
@@ -2860,7 +2860,7 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewO
 
 	RenumberAttachments( pObj );
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -2870,7 +2870,7 @@ void SetNewItem(SOLDIERTYPE* pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem)
 	{
 		pSoldier->bNewItemCount[ ubInvPos ] = -1;
 		pSoldier->bNewItemCycleCount[ ubInvPos ] = NEW_ITEM_CYCLE_COUNT;
-		pSoldier->fCheckForNewlyAddedItems = TRUE;
+		pSoldier->fCheckForNewlyAddedItems = true;
 	}
 }
 
@@ -2880,7 +2880,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	INT8    bLoop, bLoop2;
 	UINT16  usItem;
 	INT8    bStatus;
-	BOOLEAN fReturnVal = FALSE;
+	BOOLEAN fReturnVal = false;
 
 	usItem	= pObject->usItem;
 	bStatus = pObject->bStatus[0];
@@ -2890,7 +2890,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	{
 		gMercProfiles[ ubProfile ].uiMoney += pObject->uiMoneyAmount;
 		SetMoneyInSoldierProfile( ubProfile, gMercProfiles[ ubProfile ].uiMoney );
-		return( TRUE );
+		return true;
 	}
 
 	for (bLoop = BIGPOCK1POS; bLoop < SMALLPOCK8POS; bLoop++)
@@ -2912,7 +2912,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 				gMercProfiles[ ubProfile ].bInvNumber[ bLoop ] = pObject->ubNumberOfObjects;
 			}
 
-			fReturnVal = TRUE;
+			fReturnVal = true;
 			break;
 		}
 	}
@@ -2961,11 +2961,11 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem);
 BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 {
 	INT8 bLoop;
-	BOOLEAN	fReturnVal = FALSE;
+	BOOLEAN	fReturnVal = false;
 
 	if ( usItem == NOTHING )
 	{
-		return( TRUE );
+		return true;
 	}
 
 	for (bLoop = 0; bLoop < 19; bLoop++)
@@ -2976,7 +2976,7 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 			gMercProfiles[ ubProfile ].bInvStatus[ bLoop ] = 0;
 			gMercProfiles[ ubProfile ].bInvNumber[ bLoop ] = 0;
 
-			fReturnVal = TRUE;
+			fReturnVal = true;
 			break;
 		}
 	}
@@ -3104,10 +3104,10 @@ static BOOLEAN CheckForChainReaction(UINT16 usItem, INT8 bStatus, INT8 bDamage, 
 		iChance = iChance * ( 100 + ( (100 - bStatus) + bDamage ) / 2 ) / 100;
 		if ((INT32) PreRandom( 100 ) < iChance)
 		{
-			return( TRUE );
+			return true;
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -3163,7 +3163,7 @@ static BOOLEAN DamageItem(OBJECTTYPE* pObject, INT32 iDamage, BOOLEAN fOnGround)
 				{
 					if (CheckForChainReaction( pObject->usItem, pObject->bStatus[bLoop], bDamage, fOnGround ))
 					{
-						return( TRUE );
+						return true;
 					}
 				}
 
@@ -3194,7 +3194,7 @@ static BOOLEAN DamageItem(OBJECTTYPE* pObject, INT32 iDamage, BOOLEAN fOnGround)
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
@@ -3210,7 +3210,7 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 	FOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
 		ubNumberOfObjects = i->ubNumberOfObjects;
-		fBlowsUp = DamageItem(i, iDamage, FALSE);
+		fBlowsUp = DamageItem(i, iDamage, false);
 		if (fBlowsUp)
 		{
 			// blow it up!
@@ -3233,7 +3233,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 {
 	// glass jars etc can be damaged by falling over
 	UINT8   ubNumberOfObjects;
-	BOOLEAN fPlayedGlassBreak = FALSE;
+	BOOLEAN fPlayedGlassBreak = false;
 
 	FOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
@@ -3244,11 +3244,11 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 			case JAR_HUMAN_BLOOD:
 			case JAR_ELIXIR:
 				ubNumberOfObjects = i->ubNumberOfObjects;
-				DamageItem(i, iDamage, FALSE);
+				DamageItem(i, iDamage, false);
 				if (!fPlayedGlassBreak && ubNumberOfObjects != i->ubNumberOfObjects)
 				{
 					PlayLocationJA2Sample(pSoldier->sGridNo, GLASS_CRACK, MIDVOLUME, 1);
-					fPlayedGlassBreak = TRUE;
+					fPlayedGlassBreak = true;
 					// only dirty once
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 				}
@@ -3264,22 +3264,22 @@ BOOLEAN DamageItemOnGround(OBJECTTYPE* const pObject, const INT16 sGridNo, const
 {
 	BOOLEAN fBlowsUp;
 
-	fBlowsUp = DamageItem( pObject, iDamage, TRUE );
+	fBlowsUp = DamageItem( pObject, iDamage, true );
 	if ( fBlowsUp )
 	{
 		// OK, Ignite this explosion!
 		IgniteExplosion(owner, 0, sGridNo, pObject->usItem, bLevel);
 
 		// Remove item!
-		return( TRUE );
+		return true;
 	}
 	else if ( (pObject->ubNumberOfObjects < 2) && (pObject->bStatus[0] < USABLE) )
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -3306,7 +3306,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 		if ( GCM->getItem( pSoldier->inv[SECONDHANDPOS].usItem )->isTwoHanded() )
 		{
 			// must move the item in the main hand elsewhere in the inventory
-			fOk = InternalAutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE, HANDPOS );
+			fOk = InternalAutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), false, HANDPOS );
 			if (!fOk)
 			{
 				return;
@@ -3386,30 +3386,30 @@ void WaterDamage(SOLDIERTYPE& s)
 
 BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* const pfGoodAPs)
 {
-	(*pfGoodAPs) = TRUE;
+	(*pfGoodAPs) = true;
 
 	if (pObj->usItem != CAMOUFLAGEKIT)
 	{
-		return( FALSE );
+		return false;
 	}
 
-	if (!EnoughPoints( pSoldier, AP_CAMOFLAGE, 0, TRUE ) )
+	if (!EnoughPoints( pSoldier, AP_CAMOFLAGE, 0, true ) )
 	{
-		(*pfGoodAPs) = FALSE;
-		return( TRUE );
+		(*pfGoodAPs) = false;
+		return true;
 	}
 
 	int usTotalKitPoints = TotalPoints(pObj);
 	if (usTotalKitPoints == 0)
 	{
 		// HUH???
-		return( FALSE );
+		return false;
 	}
 
 	if (pSoldier->bCamo == 100)
 	{
 		// nothing more to add
-		return( FALSE );
+		return false;
 	}
 
 	// points are used up at a rate of 50% kit = 100% camo on guy
@@ -3428,29 +3428,29 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 		CreateSoldierPalettes(*pSoldier);
 	}
 
-	return( TRUE );
+	return true;
 }
 
 BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
 {
-	(*pfGoodAPs) = TRUE;
+	(*pfGoodAPs) = true;
 
 	if (pObj->usItem != CANTEEN)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	int usTotalKitPoints = TotalPoints(pObj);
 	if (usTotalKitPoints == 0)
 	{
 		// HUH???
-		return( FALSE );
+		return false;
 	}
 
-	if (!EnoughPoints( pSoldier, AP_DRINK, 0, TRUE ) )
+	if (!EnoughPoints( pSoldier, AP_DRINK, 0, true ) )
 	{
-		(*pfGoodAPs) = FALSE;
-		return( TRUE );
+		(*pfGoodAPs) = false;
+		return true;
 	}
 
 	if ( pSoldier->bTeam == OUR_TEAM )
@@ -3472,31 +3472,31 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 
 	UseKitPoints(*pObj, sPointsToUse, *pSoldier);
 
-	return( TRUE );
+	return true;
 }
 
 #define MAX_HUMAN_CREATURE_SMELL (NORMAL_HUMAN_SMELL_STRENGTH - 1)
 
 BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
 {
-	(*pfGoodAPs) = TRUE;
+	(*pfGoodAPs) = true;
 
 	if (pObj->usItem != JAR_ELIXIR )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	int usTotalKitPoints = TotalPoints(pObj);
 	if (usTotalKitPoints == 0)
 	{
 		// HUH???
-		return( FALSE );
+		return false;
 	}
 
-	if (!EnoughPoints( pSoldier, AP_CAMOFLAGE, 0, TRUE ) )
+	if (!EnoughPoints( pSoldier, AP_CAMOFLAGE, 0, true ) )
 	{
-		(*pfGoodAPs) = FALSE;
-		return( TRUE );
+		(*pfGoodAPs) = false;
+		return true;
 	}
 
 	DeductPoints( pSoldier, AP_CAMOFLAGE, 0 );
@@ -3508,7 +3508,7 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 
 	pSoldier->bMonsterSmell += sPointsToUse / 2;
 
-	return( TRUE );
+	return true;
 }
 
 

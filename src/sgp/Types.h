@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <SDL_video.h>
 
-#include "Platform.h"
 #include "SGPStrings.h"
 #include "Logger.h"
 
@@ -36,23 +35,12 @@ typedef uint8_t         UINT8;
 typedef int8_t          INT8;
 typedef uint16_t        UINT16;
 typedef int16_t         INT16;
-// floats
-typedef float           FLOAT;
-typedef double          DOUBLE;
 // strings
 typedef char            CHAR8;
 
 // other
 typedef unsigned char		BOOLEAN;
 typedef UINT8						BYTE;
-
-#ifndef TRUE
-#define TRUE 1
-#endif
-
-#ifndef FALSE
-#define FALSE 0
-#endif
 
 #define PI 3.1415926
 
@@ -108,8 +96,7 @@ public:
 	INT8 z = 0;
 
 	constexpr SGPSector() noexcept = default;
-	// Could add 'constexpr ~SGPSector() = default;' in C++20.
-	constexpr SGPSector(INT16 a, INT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
+	constexpr SGPSector(INT16 a, INT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {}
 	constexpr SGPSector(const SGPSector&) noexcept = default;
 	constexpr SGPSector& operator=(const SGPSector&) noexcept = default;
 	SGPSector(UINT32 s) noexcept; // normal FromSectorID
@@ -183,7 +170,7 @@ namespace _Types
 	template<typename T>
 	struct BoxedValue
 	{
-		constexpr BoxedValue(T v) noexcept : val(v) {};
+		constexpr BoxedValue(T v) noexcept : val(v) {}
 
 		constexpr operator T() const noexcept { return val; }
 

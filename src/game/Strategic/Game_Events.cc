@@ -8,10 +8,10 @@
 
 STRATEGICEVENT									*gpEventList = NULL;
 
-BOOLEAN gfPreventDeletionOfAnyEvent = FALSE;
-static BOOLEAN gfEventDeletionPending = FALSE;
+BOOLEAN gfPreventDeletionOfAnyEvent = false;
+static BOOLEAN gfEventDeletionPending = false;
 
-static BOOLEAN gfProcessingGameEvents = FALSE;
+static BOOLEAN gfProcessingGameEvents = false;
 UINT32	guiTimeStampOfCurrentlyExecutingEvent = 0;
 
 
@@ -25,7 +25,7 @@ bool GameEventsPending(UINT32 const adjustment)
 static void DeleteEventsWithDeletionPending()
 {
 	if (!gfEventDeletionPending) return;
-	gfEventDeletionPending = FALSE;
+	gfEventDeletionPending = false;
 
 	for (STRATEGICEVENT** anchor = &gpEventList; *anchor;)
 	{
@@ -59,17 +59,17 @@ static void AdjustClockToEventStamp(STRATEGICEVENT* pEvent, UINT32* puiAdjustmen
 void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 {
 	STRATEGICEVENT *curr, *pEvent, *prev, *temp;
-	BOOLEAN fDeleteEvent = FALSE;
+	BOOLEAN fDeleteEvent = false;
 
-	gfTimeInterrupt = FALSE;
-	gfProcessingGameEvents = TRUE;
+	gfTimeInterrupt = false;
+	gfProcessingGameEvents = true;
 
 	//While we have events inside the time range to be updated, process them...
 	curr = gpEventList;
 	prev = NULL; //prev only used when warping time to target time.
 	while( !gfTimeInterrupt && curr && curr->uiTimeStamp <= guiGameClock + uiAdjustment )
 	{
-		fDeleteEvent = FALSE;
+		fDeleteEvent = false;
 		//Update the time by the difference, but ONLY if the event comes after the current time.
 		//In the beginning of the game, series of events are created that are placed in the list
 		//BEFORE the start time.  Those events will be processed without influencing the actual time.
@@ -147,7 +147,7 @@ void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 		}
 	}
 
-	gfProcessingGameEvents = FALSE;
+	gfProcessingGameEvents = false;
 
 	DeleteEventsWithDeletionPending();
 
@@ -200,15 +200,15 @@ STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const event_ty
 BOOLEAN AddStrategicEvent(StrategicEventKind const ubCallbackID, UINT32 const uiMinStamp, UINT32 const uiParam)
 {
 	if( AddAdvancedStrategicEvent( ONETIME_EVENT, ubCallbackID, uiMinStamp*60, uiParam ) )
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 BOOLEAN AddStrategicEventUsingSeconds(StrategicEventKind const ubCallbackID, UINT32 const uiSecondStamp, UINT32 const uiParam)
 {
 	if( AddAdvancedStrategicEvent( ONETIME_EVENT, ubCallbackID, uiSecondStamp, uiParam ) )
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 
@@ -219,9 +219,9 @@ static BOOLEAN AddRangedStrategicEvent(StrategicEventKind const ubCallbackID, UI
 	if( pEvent )
 	{
 		pEvent->uiTimeOffset = uiLengthMin * 60;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -233,8 +233,8 @@ BOOLEAN AddSameDayRangedStrategicEvent(StrategicEventKind const ubCallbackID, UI
 BOOLEAN AddEveryDayStrategicEvent(StrategicEventKind const ubCallbackID, UINT32 const uiStartMin, UINT32 const uiParam)
 {
 	if( AddAdvancedStrategicEvent( EVERYDAY_EVENT, ubCallbackID, GetWorldDayInSeconds() + uiStartMin * 60, uiParam ) )
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 //NEW:  Period Events
@@ -246,9 +246,9 @@ BOOLEAN AddPeriodStrategicEvent(StrategicEventKind const ubCallbackID, UINT32 co
 	if( pEvent )
 	{
 		pEvent->uiTimeOffset = uiOnceEveryXMinutes * 60;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 BOOLEAN AddPeriodStrategicEventWithOffset(StrategicEventKind const ubCallbackID, UINT32 const uiOnceEveryXMinutes, UINT32 const uiOffsetFromCurrent, UINT32 const uiParam)
@@ -258,9 +258,9 @@ BOOLEAN AddPeriodStrategicEventWithOffset(StrategicEventKind const ubCallbackID,
 	if( pEvent )
 	{
 		pEvent->uiTimeOffset = uiOnceEveryXMinutes * 60;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void DeleteAllStrategicEventsOfType(StrategicEventKind const callback_id)
@@ -278,7 +278,7 @@ void DeleteAllStrategicEventsOfType(StrategicEventKind const callback_id)
 			}
 
 			e->ubFlags |= SEF_DELETION_PENDING;
-			gfEventDeletionPending = TRUE;
+			gfEventDeletionPending = true;
 		}
 		anchor = &e->next;
 	}
@@ -309,7 +309,7 @@ void DeleteStrategicEvent(StrategicEventKind const callback_id, UINT32 const par
 		if (gfPreventDeletionOfAnyEvent)
 		{
 			e->ubFlags |= SEF_DELETION_PENDING;
-			gfEventDeletionPending = TRUE;
+			gfEventDeletionPending = true;
 		}
 		else
 		{

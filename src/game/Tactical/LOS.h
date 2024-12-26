@@ -46,9 +46,9 @@ enum CollisionEnums
 };
 
 
-INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, UINT16* pusStructureID, FLOAT* pdNormalX, FLOAT* pdNormalY, FLOAT* pdNormalZ);
+INT32 CheckForCollision(float dX, float dY, float dZ, float dDeltaX, float dDeltaY, float dDeltaZ, UINT16* pusStructureID, float* pdNormalX, float* pdNormalY, float* pdNormalZ);
 
-INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, UINT16 usHandItem, INT16 sHitBy, BOOLEAN fBuckshot, BOOLEAN fFake );
+INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, float dEndX, float dEndY, float dEndZ, UINT16 usHandItem, INT16 sHitBy, BOOLEAN fBuckshot, BOOLEAN fFake );
 
 INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, const SOLDIERTYPE* pEndSoldier, UINT8 ubTileSightLimit, INT8 bAware);
 INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubSightLimit, INT8 bAware );
@@ -62,7 +62,7 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* pStartSoldier, INT16 sGri
 INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGridNo);
 INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, INT16 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware );
 
-BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT* pdZPos);
+BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, float* pdZPos);
 
 
 #define HEIGHT_UNITS				256

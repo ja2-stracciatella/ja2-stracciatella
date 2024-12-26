@@ -274,6 +274,6 @@ static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		gSelectedRipSignRegion.Disable();
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 	}
 }

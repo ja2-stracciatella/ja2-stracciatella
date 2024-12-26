@@ -175,8 +175,8 @@ try
 	INT16						sNextX;
 	INT16						sNextY;
 	UINT8 *					pOutputNext;
-	BOOLEAN					fContinue = TRUE;
-	BOOLEAN					fOk = TRUE;
+	BOOLEAN					fContinue = true;
+	BOOLEAN					fOk = true;
 	BOOLEAN					fStore;
 	BOOLEAN					fNextExists;
 	UINT32					uiSubImageCompressedSize;
@@ -204,21 +204,21 @@ try
 		pCurrSubImage->usHeight = usHeight;
 		if (!(fFlags & CONVERT_ETRLE_NO_SUBIMAGE_SHRINKING))
 		{
-			if (!DetermineSubImageUsedSize(p8BPPBuffer, usWidth, usHeight, pCurrSubImage)) return FALSE;
+			if (!DetermineSubImageUsedSize(p8BPPBuffer, usWidth, usHeight, pCurrSubImage)) return false;
 		}
 		uiSubImageCompressedSize = ETRLECompressSubImage( pOutputNext, uiSpaceLeft, p8BPPBuffer, usWidth, usHeight, pCurrSubImage );
-		if (uiSubImageCompressedSize == 0) return FALSE;
+		if (uiSubImageCompressedSize == 0) return false;
 
 		pCurrSubImage->uiDataOffset = 0;
 		pCurrSubImage->uiDataLength = uiSubImageCompressedSize;
 		*puiDestLen = uiSubImageCompressedSize;
 		*ppDest     = dest.Release();
-		return TRUE;
+		return true;
 	}
 	else
 	{
 		// skip any initial wall bytes to find the first subimage
-		if (!GoPastWall(&sCurrX, &sCurrY, usWidth, usHeight, p8BPPBuffer, 0, 0)) return FALSE;
+		if (!GoPastWall(&sCurrX, &sCurrY, usWidth, usHeight, p8BPPBuffer, 0, 0)) return false;
 		subImages.clear();
 
 		while (fContinue)
@@ -231,7 +231,7 @@ try
 			// determine the subimage's full size
 			if (!DetermineSubImageSize( p8BPPBuffer, usWidth, usHeight, &subImage ))
 			{
-				fOk = FALSE;
+				fOk = false;
 				break;
 			}
 			if (subImages.size() == 0 && subImage.usWidth == usWidth && subImage.usHeight == usHeight)
@@ -243,7 +243,7 @@ try
 			if (DetermineSubImageUsedSize( p8BPPBuffer, usWidth, usHeight, &tempSubImage))
 			{
 				// image has nontransparent data; we definitely want to store it
-				fStore = TRUE;
+				fStore = true;
 				if (!(fFlags & CONVERT_ETRLE_NO_SUBIMAGE_SHRINKING))
 				{
 					subImage = tempSubImage;
@@ -257,18 +257,18 @@ try
 				fNextExists = GoToNextSubImage( &sNextX, &sNextY, p8BPPBuffer, usWidth, usHeight, sCurrX, sCurrY );
 				if (fNextExists && sNextY == sCurrY )
 				{
-					fStore = TRUE;
+					fStore = true;
 				}
 				else
 				{
 					// junk transparent section at the end of the line!
-					fStore = FALSE;
+					fStore = false;
 				}
 			}
 			else
 			{
 				// transparent data; discarding
-				fStore = FALSE;
+				fStore = false;
 			}
 
 			if (fStore)
@@ -277,7 +277,7 @@ try
 				uiSubImageCompressedSize = ETRLECompressSubImage( pOutputNext, uiSpaceLeft, p8BPPBuffer, usWidth, usHeight, &subImage );
 				if (uiSubImageCompressedSize == 0)
 				{
-					fOk = FALSE;
+					fOk = false;
 					break;
 				}
 				subImage.uiDataOffset = (*puiDestLen - uiSpaceLeft);
@@ -297,20 +297,20 @@ try
 		}
 		catch (...)
 		{
-			fOk = FALSE;
+			fOk = false;
 			break;
 		}
 	}
 	if (!fOk)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	*puiDestLen -= uiSpaceLeft;
 	*ppDest      = dest.Release();
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 static BOOLEAN DetermineOffset(UINT32* puiOffset, UINT16 usWidth, UINT16 usHeight, INT16 sX, INT16 sY);
@@ -424,14 +424,14 @@ static BOOLEAN DetermineOffset(UINT32* puiOffset, UINT16 usWidth, UINT16 usHeigh
 {
 	if (sX < 0 || sY < 0)
 	{
-		return( FALSE );
+		return false;
 	}
 	*puiOffset = (UINT32) sY * (UINT32) usWidth + (UINT32) sX;
 	if (*puiOffset >= (UINT32) usWidth * (UINT32) usHeight)
 	{
-		return( FALSE );
+		return false;
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -450,14 +450,14 @@ static BOOLEAN GoPastWall(INT16* psNewX, INT16* psNewY, UINT16 usWidth, UINT16 u
 			if( sCurrY == usHeight)
 			{
 				// no more images!
-				return( FALSE );
+				return false;
 			}
 		}
 	}
 
 	*psNewX = sCurrX;
 	*psNewY = sCurrY;
-	return( TRUE );
+	return true;
 }
 
 
@@ -468,7 +468,7 @@ static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer
 	INT16				sCurrY = sOrigY;
 	UINT32			uiOffset;
 	UINT8 *			pCurrent;
-	BOOLEAN			fFound = TRUE;
+	BOOLEAN			fFound = true;
 
 	CHECKF(DetermineOffset(&uiOffset, usWidth, usHeight, sCurrX, sCurrY));
 	pCurrent = p8BPPBuffer + uiOffset;
@@ -493,7 +493,7 @@ static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer
 			pCurrent++;
 			if (sCurrX == usWidth)
 			{ // there are no more images to the right!
-				fFound = FALSE;
+				fFound = false;
 				break;
 			}
 		}
@@ -506,7 +506,7 @@ static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer
 				pCurrent++;
 				if (sCurrX == usWidth)
 				{ // there are no more images to the right!
-					fFound = FALSE;
+					fFound = false;
 					break;
 				}
 			}
@@ -515,7 +515,7 @@ static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer
 		{
 			*psNewX = sCurrX;
 			*psNewY = sCurrY;
-			return( TRUE );
+			return true;
 		}
 		else
 		{
@@ -530,7 +530,7 @@ static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer
 				pCurrent += usWidth;
 				if (sCurrY == usHeight)
 				{ // there are no more images!
-					return( FALSE );
+					return false;
 				}
 			}
 			// We are now at the horizontal wall at the bottom of the current image
@@ -549,7 +549,7 @@ static BOOLEAN DetermineSubImageSize(UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 
 
 	if (!DetermineOffset( &uiOffset, usWidth, usHeight, sCurrX, sCurrY ))
 	{
-			return( FALSE );
+			return false;
 	}
 
 	// determine width
@@ -570,7 +570,7 @@ static BOOLEAN DetermineSubImageSize(UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 
 	} while( *pCurrent != WI && sCurrY < usHeight );
 	pSubImage->usHeight = sCurrY - pSubImage->sOffsetY;
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -595,7 +595,7 @@ static BOOLEAN DetermineSubImageUsedSize(UINT8* p8BPPBuffer, UINT16 usWidth, UIN
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 	// shrink from the bottom
 	if (CheckForDataInRows( &sNewValue, -1, p8BPPBuffer, usWidth, usHeight, pSubImage ))
@@ -604,7 +604,7 @@ static BOOLEAN DetermineSubImageUsedSize(UINT8* p8BPPBuffer, UINT16 usWidth, UIN
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 	// shrink from the left
 	if (CheckForDataInCols( &sNewValue, 1, p8BPPBuffer, usWidth, usHeight, pSubImage ))
@@ -613,7 +613,7 @@ static BOOLEAN DetermineSubImageUsedSize(UINT8* p8BPPBuffer, UINT16 usWidth, UIN
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 	// shrink from the right
 	if (CheckForDataInCols( &sNewValue, -1, p8BPPBuffer, usWidth, usHeight, pSubImage ))
@@ -622,13 +622,13 @@ static BOOLEAN DetermineSubImageUsedSize(UINT8* p8BPPBuffer, UINT16 usWidth, UIN
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 	pSubImage->sOffsetX = usNewX;
 	pSubImage->sOffsetY = usNewY;
 	pSubImage->usHeight = usNewHeight;
 	pSubImage->usWidth = usNewWidth;
-	return( TRUE );
+	return true;
 }
 
 
@@ -653,13 +653,13 @@ static BOOLEAN CheckForDataInRows(INT16* psYValue, INT16 sYIncrement, UINT8* p8B
 	else
 	{
 		// invalid value!
-		return( FALSE );
+		return false;
 	}
 	for (usLoop = 0; usLoop < pSubImage->usHeight; usLoop++)
 	{
 		if (!DetermineOffset( &uiOffset, usWidth, usHeight, pSubImage->sOffsetX, (INT16) sCurrY))
 		{
-			return( FALSE );
+			return false;
 		}
 		pCurrent = p8BPPBuffer + uiOffset;
 		pCurrent = CheckForDataInRowOrColumn( pCurrent, 1, pSubImage->usWidth );
@@ -667,11 +667,11 @@ static BOOLEAN CheckForDataInRows(INT16* psYValue, INT16 sYIncrement, UINT8* p8B
 		{
 			// non-null data found!
 			*psYValue = sCurrY;
-			return( TRUE );
+			return true;
 		}
 		sCurrY += sYIncrement;
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -693,13 +693,13 @@ static BOOLEAN CheckForDataInCols(INT16* psXValue, INT16 sXIncrement, UINT8* p8B
 	else
 	{
 		// invalid value!
-		return( FALSE );
+		return false;
 	}
 	for (usLoop = 0; usLoop < pSubImage->usWidth; usLoop++)
 	{
 		if (!DetermineOffset( &uiOffset, usWidth, usHeight, (UINT16) sCurrX, pSubImage->sOffsetY))
 		{
-			return( FALSE );
+			return false;
 		}
 		pCurrent = p8BPPBuffer + uiOffset;
 		pCurrent = CheckForDataInRowOrColumn( pCurrent, usWidth, pSubImage->usHeight );
@@ -707,11 +707,11 @@ static BOOLEAN CheckForDataInCols(INT16* psXValue, INT16 sXIncrement, UINT8* p8B
 		{
 			// non-null data found!
 			*psXValue = sCurrX;
-			return( TRUE );
+			return true;
 		}
 		sCurrX += sXIncrement;
 	}
-	return( FALSE );
+	return false;
 }
 
 

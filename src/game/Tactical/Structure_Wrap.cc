@@ -48,7 +48,7 @@ BOOLEAN	IsJumpableWindowPresentAtGridNo( INT32 sGridNo, INT8 bStartingDir)
 		if ( fIntactWindowsAlso || ( pStructure->fFlags & STRUCTURE_OPEN ) ) return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
@@ -61,16 +61,16 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
 	{
 		if ( pStructure->fFlags & STRUCTURE_FENCE && !(pStructure->fFlags & STRUCTURE_SPECIAL) )
 		{
-			return( TRUE );
+			return true;
 		}
 		if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_SANDBAG &&
 			StructureHeight( pStructure ) < 2 )
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, INT8 const orientation)
@@ -113,7 +113,7 @@ BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo )
 
 					if ( IsRoofVisible2( sNewGridNo ) )
 					{
-						return( FALSE );
+						return false;
 					}
 				}
 				break;
@@ -131,7 +131,7 @@ BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo )
 
 					if ( IsRoofVisible2( sNewGridNo ) )
 					{
-						return( FALSE );
+						return false;
 					}
 				}
 				break;
@@ -141,7 +141,7 @@ BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo )
 	}
 
 	// Return true here, even if she does not exist
-	return( TRUE );
+	return true;
 }
 
 
@@ -154,11 +154,11 @@ BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo )
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
 			pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT )
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo )
@@ -170,11 +170,11 @@ BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo )
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
 			pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT )
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
@@ -189,12 +189,12 @@ BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
 			if (pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
 				pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT)
 			{
-				return( TRUE );
+				return true;
 			}
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
@@ -208,12 +208,12 @@ BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
 			if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
 				pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
 			{
-				return( TRUE );
+				return true;
 			}
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
@@ -228,12 +228,12 @@ BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
 			if ((pStructure->fFlags & STRUCTURE_DOOR) ||
 				(pStructure->fFlags & STRUCTURE_DDOOR_RIGHT))
 			{
-				return( TRUE );
+				return true;
 			}
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo )
@@ -248,12 +248,12 @@ BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo )
 			if ((pStructure->fFlags & STRUCTURE_DOOR) ||
 				(pStructure->fFlags & STRUCTURE_DDOOR_LEFT))
 			{
-				return( TRUE );
+				return true;
 			}
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -282,10 +282,10 @@ BOOLEAN CutWireFence( INT16 sGridNo )
 		{
 			RecompileLocalMovementCosts( sGridNo );
 			SetRenderFlags( RENDER_FLAG_FULL );
-			return( TRUE );
+			return true;
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 BOOLEAN IsCuttableWireFenceAtGridNo( INT16 sGridNo )
@@ -303,7 +303,7 @@ UINT8 IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
 	if (s != NULL && s->uiStatusFlags & SOLDIER_VEHICLE) return 2;
 	// Then for over a robot....
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -353,11 +353,11 @@ BOOLEAN IsCorpseAtGridNo( INT16 sGridNo, UINT8 ubLevel )
 {
 	if ( GetCorpseAtGridNo( sGridNo , ubLevel ) != NULL )
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -370,7 +370,7 @@ BOOLEAN SetOpenableStructureToClosed( INT16 sGridNo, UINT8 ubLevel )
 	pStructure = FindStructure( sGridNo, STRUCTURE_OPENABLE );
 	if ( !pStructure )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	if ( pStructure->fFlags & STRUCTURE_OPEN )
@@ -383,5 +383,5 @@ BOOLEAN SetOpenableStructureToClosed( INT16 sGridNo, UINT8 ubLevel )
 		}
 	}
 	// else leave it as is!
-	return( TRUE );
+	return true;
 }

@@ -51,13 +51,13 @@ void SetFactTrue(Fact const usFact)
 		GuaranteeAtLeastXItemsOfIndex( ARMS_DEALER_JAKE, GAS_CAN, ( UINT8 ) ( 4 + Random( 3 ) ) );
 	}
 
-	gubFact[usFact] = TRUE;
+	gubFact[usFact] = true;
 }
 
 
 void SetFactFalse(Fact const usFact)
 {
-	gubFact[usFact] = FALSE;
+	gubFact[usFact] = false;
 }
 
 
@@ -90,11 +90,11 @@ static BOOLEAN CheckNPCInOkayHealth(UINT8 ubProfileID)
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if (pSoldier && pSoldier->bLife > (pSoldier->bLifeMax / 2) && pSoldier->bLife > 30)
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -105,11 +105,11 @@ static BOOLEAN CheckNPCBleeding(UINT8 ubProfileID)
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if (pSoldier && pSoldier->bLife > 0 && pSoldier->bBleeding > 0)
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 
 }
@@ -121,7 +121,7 @@ static BOOLEAN CheckNPCWithin(UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDi
 	const SOLDIERTYPE* const pSecondNPC = FindSoldierByProfileID(ubSecondNPC);
 	if (!pFirstNPC || !pSecondNPC)
 	{
-		return( FALSE );
+		return false;
 	}
 	return( PythSpacesAway( pFirstNPC->sGridNo, pSecondNPC->sGridNo ) <= ubMaxDistance );
 }
@@ -134,15 +134,15 @@ static BOOLEAN CheckGuyVisible(UINT8 ubNPC, UINT8 ubGuy)
 	const SOLDIERTYPE* const pGuy = FindSoldierByProfileID(ubGuy);
 	if (!pNPC || !pGuy)
 	{
-		return( FALSE );
+		return false;
 	}
 	if (pNPC->bOppList[ pGuy->ubID ] == SEEN_CURRENTLY )
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -152,7 +152,7 @@ static BOOLEAN CheckNPCAt(UINT8 ubNPC, INT16 sGridNo)
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 	if (!pNPC)
 	{
-		return( FALSE );
+		return false;
 	}
 	return( pNPC->sGridNo == sGridNo );
 }
@@ -163,7 +163,7 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if (!pNPC)
 	{
-		return( FALSE );
+		return false;
 	}
 	if (pNPC->bSide == OUR_TEAM || pNPC->bNeutral)
 	{
@@ -174,12 +174,12 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 		}
 		else
 		{
-			return( FALSE );
+			return false;
 		}
 	}
 	else
 	{
-		return( TRUE );
+		return true;
 	}
 }
 
@@ -227,13 +227,13 @@ static BOOLEAN CheckNPCIsEPC(UINT8 ubProfileID)
 {
 	if ( gMercProfiles[ ubProfileID ].bMercStatus == MERC_IS_DEAD )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileIDOnPlayerTeam(ubProfileID);
 	if (!pNPC)
 	{
-		return( FALSE );
+		return false;
 	}
 	return( (pNPC->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) );
 }
@@ -244,9 +244,9 @@ BOOLEAN NPCInRoom(UINT8 ubProfileID, UINT8 ubRoomID)
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC || (gubWorldRoomInfo[ pNPC->sGridNo ] != ubRoomID) )
 	{
-		return( FALSE );
+		return false;
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -255,9 +255,9 @@ static BOOLEAN NPCInRoomRange(UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC || (gubWorldRoomInfo[ pNPC->sGridNo ] < ubRoomID1) || (gubWorldRoomInfo[ pNPC->sGridNo ] > ubRoomID2) )
 	{
-		return( FALSE );
+		return false;
 	}
-	return( TRUE );
+	return true;
 }
 
 
@@ -268,7 +268,7 @@ static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
-		return( FALSE );
+		return false;
 	}
 	ubRoom = gubWorldRoomInfo[ pNPC->sGridNo ];
 
@@ -276,11 +276,11 @@ static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 	{
 		if (s->bInSector && gubWorldRoomInfo[s->sGridNo] == ubRoom)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -294,7 +294,7 @@ static BOOLEAN CheckTalkerStrong(void)
 	{
 		return( gpDestSoldier->bStrength >= 84 );
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -308,7 +308,7 @@ static BOOLEAN CheckTalkerFemale(void)
 	{
 		return( gMercProfiles[ gpDestSoldier->ubProfile ].bSex == FEMALE );
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -328,7 +328,7 @@ static BOOLEAN CheckTalkerUnpropositionedFemale(void)
 			return( gMercProfiles[ gpDestSoldier->ubProfile ].bSex == FEMALE );
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -379,10 +379,10 @@ static BOOLEAN CheckPlayerHasHead(void)
 	{
 		if (s->bLife > 0 && FindObjInObjRange(s, HEAD_2, HEAD_7) != NO_SLOT)
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -393,15 +393,15 @@ static BOOLEAN CheckNPCSector(UINT8 ubProfileID, const SGPSector& sector)
 	{
 		if (pSoldier->sSector == sector)
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 	else if (gMercProfiles[ubProfileID].sSector == sector)
 	{
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 
 }
 
@@ -426,7 +426,7 @@ static BOOLEAN CheckNPCCowering(UINT8 ubProfileID)
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
-		return( FALSE );
+		return false;
 	}
 	return( ( (pNPC->uiStatusFlags & SOLDIER_COWERING) != 0) );
 }
@@ -453,7 +453,7 @@ static BOOLEAN CheckNPCIsUnderFire(UINT8 ubProfileID)
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
-		return( FALSE );
+		return false;
 	}
 	return( pNPC->bUnderFire != 0 );
 }
@@ -464,7 +464,7 @@ static BOOLEAN NPCHeardShot(UINT8 ubProfileID)
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
-		return( FALSE );
+		return false;
 	}
 	return( pNPC->ubMiscSoldierFlags & SOLDIER_MISC_HEARD_GUNSHOT );
 }
@@ -497,44 +497,44 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 		case FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT:
 		case FACT_NEW_BOBBYRAY_SHIPMENT_WAITING:
-			if (gubFact[FACT_PABLO_PUNISHED_BY_PLAYER] == TRUE &&
+			if (gubFact[FACT_PABLO_PUNISHED_BY_PLAYER] == true &&
 					!gubFact[FACT_PABLO_RETURNED_GOODS] &&
 					gMercProfiles[PABLO].bMercStatus != MERC_IS_DEAD)
 			{
-				gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = FALSE;
-				gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = FALSE;
+				gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = false;
+				gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = false;
 			}
 			else
 			{
 				if (CheckForNewShipment()) // if new stuff waiting unseen in Drassen
 				{
-					gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = FALSE;
-					gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = TRUE;
+					gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = false;
+					gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = true;
 				}
 				else if ( CountNumberOfBobbyPurchasesThatAreInTransit() > 0) // if stuff in transit
 				{
-					if ( gubFact[ FACT_PACKAGE_DAMAGED ] == TRUE )
+					if ( gubFact[ FACT_PACKAGE_DAMAGED ] == true )
 					{
-						gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = FALSE;
+						gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = false;
 					}
 					else
 					{
-						gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = TRUE;
+						gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = true;
 					}
-					gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = FALSE;
+					gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = false;
 				}
 				else
 				{
-					gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = FALSE;
-					gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = FALSE;
+					gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = false;
+					gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = false;
 				}
 			}
 			break;
 		case FACT_NPC_WOUNDED:
-			gubFact[FACT_NPC_WOUNDED] = CheckNPCWounded( ubProfileID, FALSE );
+			gubFact[FACT_NPC_WOUNDED] = CheckNPCWounded( ubProfileID, false );
 			break;
 		case FACT_NPC_WOUNDED_BY_PLAYER:
-			gubFact[FACT_NPC_WOUNDED_BY_PLAYER] = CheckNPCWounded( ubProfileID, TRUE );
+			gubFact[FACT_NPC_WOUNDED_BY_PLAYER] = CheckNPCWounded( ubProfileID, true );
 			break;
 		case FACT_IRA_NOT_PRESENT:
 			gubFact[FACT_IRA_NOT_PRESENT] = !CheckNPCWithin( ubProfileID, IRA, 10 );
@@ -546,11 +546,11 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			sector = SGPSector(10, 1, 1);
 			if (gMercProfiles[IRA].bMercStatus != MERC_IS_DEAD && CheckNPCSector(IRA, sector) && !(gMercProfiles[IRA].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) )
 			{
-				gubFact[FACT_IRA_UNHIRED_AND_ALIVE] = TRUE;
+				gubFact[FACT_IRA_UNHIRED_AND_ALIVE] = true;
 			}
 			else
 			{
-				gubFact[FACT_IRA_UNHIRED_AND_ALIVE] = FALSE;
+				gubFact[FACT_IRA_UNHIRED_AND_ALIVE] = false;
 			}
 			break;
 		case FACT_NPC_BLEEDING:
@@ -559,11 +559,11 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 		case FACT_NPC_BLEEDING_BUT_OKAY:
 			if ( CheckNPCBleeding( ubProfileID ) && CheckNPCInOkayHealth( ubProfileID ) )
 			{
-				gubFact[FACT_NPC_BLEEDING_BUT_OKAY] = TRUE;
+				gubFact[FACT_NPC_BLEEDING_BUT_OKAY] = true;
 			}
 			else
 			{
-				gubFact[FACT_NPC_BLEEDING_BUT_OKAY] = FALSE;
+				gubFact[FACT_NPC_BLEEDING_BUT_OKAY] = false;
 			}
 			break;
 
@@ -598,12 +598,12 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			// ensure alive
 			if (GetProfile(BRENDA).bMercStatus == MERC_IS_DEAD)
 			{
-				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = FALSE;
+				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = false;
 			}
 			// ensure in a building and nearby
 			else if (!(NPCInRoom(BRENDA, 47)))
 			{
-				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = FALSE;
+				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = false;
 			}
 			else
 			{
@@ -792,7 +792,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			}
 			else
 			{
-				gubFact[usFact] = FALSE;
+				gubFact[usFact] = false;
 			}
 			break;
 
@@ -804,7 +804,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 				if ( ( ubProfileID == SKYRIDER ) &&
 					( ( guiHelicopterSkyriderTalkState == 0 ) || ( ( GetWorldTotalMin() - guiTimeOfLastSkyriderMonologue ) < ( 24 * 60 ) ) ) )
 				{
-					gubFact[usFact] = FALSE;
+					gubFact[usFact] = false;
 				}
 				else
 				{
@@ -813,7 +813,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			}
 			else
 			{
-				gubFact[usFact] = FALSE;
+				gubFact[usFact] = false;
 			}
 			break;
 
@@ -825,7 +825,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			}
 			else
 			{
-				gubFact[usFact] = FALSE;
+				gubFact[usFact] = false;
 			}
 			break;
 
@@ -1035,7 +1035,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			gubFact[usFact] = CheckTalkerUnpropositionedFemale();
 			break;
 
-		case FACT_84_AND_85_TRUE:
+		case FACT_84_AND_85_true:
 			gubFact[usFact] = CheckFact(FACT_84, ubProfileID) && CheckFact(FACT_HANS_AT_SPOT, ubProfileID);
 			break;
 
@@ -1098,7 +1098,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 
 void StartQuest(UINT8 ubQuest, const SGPSector& sector)
 {
-	InternalStartQuest(ubQuest, sector, TRUE);
+	InternalStartQuest(ubQuest, sector, true);
 }
 
 
@@ -1123,7 +1123,7 @@ Observable<UINT8, INT16, INT16, BOOLEAN> OnQuestEnded;
 
 void EndQuest(UINT8 ubQuest, const SGPSector& sector)
 {
-	InternalEndQuest(ubQuest, sector, TRUE);
+	InternalEndQuest(ubQuest, sector, true);
 }
 
 void InternalEndQuest(UINT8 ubQuest, const SGPSector& sector, BOOLEAN fUpdateHistory)
@@ -1174,7 +1174,7 @@ void InitQuestEngine()
 
 	gubBoxingMatchesWon = 0;
 	gubBoxersRests = 0;
-	gfBoxersResting = FALSE;
+	gfBoxersResting = false;
 }
 
 Observable<UINT32, BOOLEAN_S*> OnCheckQuests;

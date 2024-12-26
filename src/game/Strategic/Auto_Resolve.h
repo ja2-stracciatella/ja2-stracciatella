@@ -20,13 +20,13 @@ UINT8 GetAutoResolveSectorID(void);
 
 extern BOOLEAN gfTransferTacticalOppositionToAutoResolve;
 
-//Returns TRUE if autoresolve is active or a sector is loaded.
+//Returns true if autoresolve is active or a sector is loaded.
 BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector);
 
 UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJECTTYPE* pKit, INT16 sKitPts, INT16 sStatus);
 
-//Returns TRUE if a battle is happening ONLY
-BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSector);
+//Returns true if a battle is happening ONLY
+BOOLEAN GetCurrentBattleSectorXYZAndReturntrueIfThereIsABattle(SGPSector& psSector);
 
 ScreenID AutoResolveScreenHandle(void);
 

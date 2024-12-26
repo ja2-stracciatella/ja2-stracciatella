@@ -614,7 +614,7 @@ struct POSITIONSND
 // GLOBAL FOR SMOKE LISTING
 static POSITIONSND gPositionSndData[NUM_POSITION_SOUND_EFFECT_SLOTS];
 static UINT32      guiNumPositionSnds     = 0;
-static BOOLEAN     gfPositionSoundsActive = FALSE;
+static BOOLEAN     gfPositionSoundsActive = false;
 
 
 static INT32 GetFreePositionSnd(void)
@@ -656,7 +656,7 @@ INT32 NewPositionSnd(INT16 const sGridNo, SOLDIERTYPE const* const SoundSource, 
 	p.fInActive      = !gfPositionSoundsActive;
 	p.sGridNo        = sGridNo;
 	p.SoundSource    = SoundSource;
-	p.fAllocated     = TRUE;
+	p.fAllocated     = true;
 	p.iSoundToPlay   = iSoundToPlay;
 	p.uiSoundSampleID = NO_SAMPLE;
 
@@ -672,7 +672,7 @@ void DeletePositionSnd( INT32 iPositionSndIndex )
 	if ( pPositionSnd->fAllocated )
 	{
 		// Turn inactive first...
-		pPositionSnd->fInActive = TRUE;
+		pPositionSnd->fInActive = true;
 
 		// End sound...
 		if ( pPositionSnd->uiSoundSampleID != NO_SAMPLE )
@@ -680,7 +680,7 @@ void DeletePositionSnd( INT32 iPositionSndIndex )
 			SoundStop( pPositionSnd->uiSoundSampleID );
 		}
 
-		pPositionSnd->fAllocated = FALSE;
+		pPositionSnd->fAllocated = false;
 
 		RecountPositionSnds( );
 	}
@@ -703,14 +703,14 @@ void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
 
 void SetPositionSndsActive(void)
 {
-	gfPositionSoundsActive = TRUE;
+	gfPositionSoundsActive = true;
 	for (UINT32 i = 0; i != guiNumPositionSnds; ++i)
 	{
 		POSITIONSND& p = gPositionSndData[i];
 		if (!p.fAllocated) continue;
 		if (!p.fInActive)  continue;
 
-		p.fInActive      = FALSE;
+		p.fInActive      = false;
 		// Begin sound effect, Volume 0
 		p.uiSoundSampleID = PlayJA2Sample(p.iSoundToPlay, 0, 0, MIDDLEPAN);
 	}
@@ -719,13 +719,13 @@ void SetPositionSndsActive(void)
 
 void SetPositionSndsInActive(void)
 {
-	gfPositionSoundsActive = FALSE;
+	gfPositionSoundsActive = false;
 	for (UINT32 i = 0; i != guiNumPositionSnds; ++i)
 	{
 		POSITIONSND& p = gPositionSndData[i];
 		if (!p.fAllocated) continue;
 
-		p.fInActive = TRUE;
+		p.fInActive = true;
 
 		if (p.uiSoundSampleID == NO_SAMPLE) continue;
 

@@ -50,16 +50,16 @@
 
 #define ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
-BOOLEAN gfTacticalDoHeliRun = FALSE;
-BOOLEAN	gfGameScreenLocateToSoldier = FALSE;
-BOOLEAN	gfEnteringMapScreen					= FALSE;
+BOOLEAN gfTacticalDoHeliRun = false;
+BOOLEAN	gfGameScreenLocateToSoldier = false;
+BOOLEAN	gfEnteringMapScreen					= false;
 SOLDIERTYPE* gPreferredInitialSelectedGuy = NULL;
 
-static BOOLEAN      gfTacticalIsModal             = FALSE;
+static BOOLEAN      gfTacticalIsModal             = false;
 static MOUSE_REGION gTacticalDisableRegion;
-static BOOLEAN      gfTacticalDisableRegionActive = FALSE;
+static BOOLEAN      gfTacticalDisableRegionActive = false;
 MODAL_HOOK          gModalDoneCallback;
-BOOLEAN             gfBeginEndTurn = FALSE;
+BOOLEAN             gfBeginEndTurn = false;
 extern BOOLEAN      gfFirstHeliRun;
 extern BOOLEAN      gfRenderFullThisFrame;
 
@@ -70,7 +70,7 @@ static RENDER_HOOK gRenderOverride = 0;
 
 
 static ScreenID guiTacticalLeaveScreenID = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
-static BOOLEAN  guiTacticalLeaveScreen   = FALSE;
+static BOOLEAN  guiTacticalLeaveScreen   = false;
 
 
 void MainGameScreenInit(void)
@@ -98,7 +98,7 @@ void MainGameScreenShutdown(void)
 
 void FadeInGameScreen( )
 {
-	fFirstTimeInGameScreen = TRUE;
+	fFirstTimeInGameScreen = true;
 
 	FadeInNextFrame( );
 }
@@ -111,7 +111,7 @@ void FadeOutGameScreen( )
 
 void EnterTacticalScreen(void)
 {
-	guiTacticalLeaveScreen = FALSE;
+	guiTacticalLeaveScreen = false;
 
 	SetPositionSndsActive( );
 
@@ -146,7 +146,7 @@ void EnterTacticalScreen(void)
 
 	// set default squad on sector entry
 	// ATE: moved these 2 call after initalizing the interface!
-	//SetDefaultSquadOnSectorEntry( FALSE );
+	//SetDefaultSquadOnSectorEntry( false );
 	//ExamineCurrentSquadLights( );
 
 	// Init interface ( ALWAYS TO TEAM PANEL.  DEF changed it to go back to the previous panel )
@@ -160,12 +160,12 @@ void EnterTacticalScreen(void)
 	}
 
 	// set default squad on sector entry
-	SetDefaultSquadOnSectorEntry( FALSE );
+	SetDefaultSquadOnSectorEntry( false );
 	ExamineCurrentSquadLights( );
 
 
 
-	fFirstTimeInGameScreen = FALSE;
+	fFirstTimeInGameScreen = false;
 
 	// Make sure it gets re-created....
 	DirtyTopMessage( );
@@ -174,7 +174,7 @@ void EnterTacticalScreen(void)
 	//SetGameTimeCompressionLevel( TIME_COMPRESS_X1 );
 
 	// Select current guy...
-	//gfGameScreenLocateToSoldier = TRUE;
+	//gfGameScreenLocateToSoldier = true;
 
 	// Locate if in meanwhile...
 	if ( AreInMeanwhile( ) )
@@ -184,7 +184,7 @@ void EnterTacticalScreen(void)
 
 	if ( gTacticalStatus.uiFlags & IN_DEIDRANNA_ENDGAME )
 	{
-		InternalLocateGridNo( 4561, TRUE );
+		InternalLocateGridNo( 4561, true );
 	}
 
 	// Clear tactical message q
@@ -198,7 +198,7 @@ void EnterTacticalScreen(void)
 void LeaveTacticalScreen(ScreenID const uiNewScreen)
 {
 	guiTacticalLeaveScreenID = uiNewScreen;
-	guiTacticalLeaveScreen = TRUE;
+	guiTacticalLeaveScreen = true;
 }
 
 
@@ -214,7 +214,7 @@ void InternalLeaveTacticalScreen(ScreenID const uiNewScreen)
 
 	SetPositionSndsInActive( );
 
-	fFirstTimeInGameScreen = TRUE;
+	fFirstTimeInGameScreen = true;
 
 	SetPendingNewScreen( uiNewScreen );
 
@@ -235,7 +235,7 @@ void InternalLeaveTacticalScreen(ScreenID const uiNewScreen)
 	//gViewportRegion.Disable();
 
 	// We are leaving... turn off pedning autobadage...
-	SetAutoBandagePending( FALSE );
+	SetAutoBandagePending( false );
 
 	// ATE: Disable messages....
 	DisableScrollMessages( );
@@ -270,8 +270,8 @@ ScreenID MainGameScreenHandle(void)
 {
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
-//	if( ( !gfTacticalDoHeliRun && !gfFirstHeliRun ) && ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, FALSE ) )
-	if( !gfPreBattleInterfaceActive && ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, FALSE ) )
+//	if( ( !gfTacticalDoHeliRun && !gfFirstHeliRun ) && ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, false ) )
+	if( !gfPreBattleInterfaceActive && ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, false ) )
 	{
 		// handle the help screen
 		HelpScreenHandler();
@@ -289,7 +289,7 @@ ScreenID MainGameScreenHandle(void)
 	if ( gfBeginEndTurn )
 	{
 		UIHandleEndTurn( NULL );
-		gfBeginEndTurn = FALSE;
+		gfBeginEndTurn = false;
 	}
 
 	if ( gfTacticalIsModal )
@@ -316,11 +316,11 @@ ScreenID MainGameScreenHandle(void)
 				SOLDIERTYPE* const s = gTacticalStatus.enemy_sighting_on_their_turn_enemy;
 				if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 				{
-					AdjustNoAPToFinishMove(s, FALSE);
+					AdjustNoAPToFinishMove(s, false);
 				}
-				s->fPauseAllAnimation = FALSE;
+				s->fPauseAllAnimation = false;
 
-				gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;
+				gTacticalStatus.fEnemySightingOnTheirTurn = false;
 			}
 		}
 	}
@@ -329,7 +329,7 @@ ScreenID MainGameScreenHandle(void)
 	InitHelicopterEntranceByMercs( );
 
 	// Handle Environment controller here
-	EnvironmentController( TRUE );
+	EnvironmentController( true );
 
 	if ( !ARE_IN_FADE_IN( ) )
 	{
@@ -347,8 +347,8 @@ ScreenID MainGameScreenHandle(void)
 
 	if ( gfTacticalDoHeliRun )
 	{
-		gfGameScreenLocateToSoldier = FALSE;
-		InternalLocateGridNo( gMapInformation.sNorthGridNo, TRUE );
+		gfGameScreenLocateToSoldier = false;
+		InternalLocateGridNo( gMapInformation.sNorthGridNo, true );
 
 		// Start heli Run...
 		StartHelicopterRun( gMapInformation.sNorthGridNo );
@@ -357,7 +357,7 @@ ScreenID MainGameScreenHandle(void)
 		SetGameTimeCompressionLevel( TIME_COMPRESS_X1 );
 		//UpdateClock( 1 );
 
-		gfTacticalDoHeliRun = FALSE;
+		gfTacticalDoHeliRun = false;
 		//SetMusicMode( MUSIC_TACTICAL_NOTHING );
 	}
 
@@ -371,7 +371,7 @@ ScreenID MainGameScreenHandle(void)
 	if ( gfGameScreenLocateToSoldier )
 	{
 		TacticalScreenLocateToSoldier( );
-		gfGameScreenLocateToSoldier = FALSE;
+		gfGameScreenLocateToSoldier = false;
 	}
 
 	if ( fFirstTimeInGameScreen )
@@ -446,7 +446,7 @@ ScreenID MainGameScreenHandle(void)
 	}
 	else if (!gfEnteringMapScreen)
 	{
-		gfEnteringMapScreen = TRUE;
+		gfEnteringMapScreen = true;
 	}
 
 	// Deque all game events
@@ -543,7 +543,7 @@ ScreenID MainGameScreenHandle(void)
 
 	if ( guiTacticalLeaveScreen )
 	{
-		guiTacticalLeaveScreen		= FALSE;
+		guiTacticalLeaveScreen		= false;
 
 		InternalLeaveTacticalScreen( guiTacticalLeaveScreenID );
 	}
@@ -551,7 +551,7 @@ ScreenID MainGameScreenHandle(void)
 	// Check if we are to enter map screen
 	if ( gfEnteringMapScreen == 2 )
 	{
-		gfEnteringMapScreen = FALSE;
+		gfEnteringMapScreen = false;
 		LeaveTacticalScreen(MAP_SCREEN);
 	}
 
@@ -615,13 +615,13 @@ void UpdateTeamPanelAssignments( )
 
 void EnterModalTactical( INT8 bMode )
 {
-	gfTacticalIsModal = TRUE;
+	gfTacticalIsModal = true;
 
 	if (bMode == TACTICAL_MODAL_NOMOUSE)
 	{
 		if ( !gfTacticalDisableRegionActive )
 		{
-			gfTacticalDisableRegionActive = TRUE;
+			gfTacticalDisableRegionActive = true;
 
 			MSYS_DefineRegion(&gTacticalDisableRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		}
@@ -637,7 +637,7 @@ void EndModalTactical( )
 	{
 		MSYS_RemoveRegion( &gTacticalDisableRegion );
 
-		gfTacticalDisableRegionActive = FALSE;
+		gfTacticalDisableRegionActive = false;
 	}
 
 
@@ -648,7 +648,7 @@ void EndModalTactical( )
 		gModalDoneCallback = NULL;
 	}
 
-	gfTacticalIsModal = FALSE;
+	gfTacticalIsModal = false;
 
 	SetRenderFlags( RENDER_FLAG_FULL );
 }
@@ -689,9 +689,9 @@ void InitHelicopterEntranceByMercs( void )
 		// Update clock ahead from STARTING_TIME to make mercs arrive!
 		WarpGameTime( FIRST_ARRIVAL_DELAY, WARPTIME_PROCESS_EVENTS_NORMALLY );
 
-		gfTacticalDoHeliRun = TRUE;
-		gfFirstHeliRun			= TRUE;
+		gfTacticalDoHeliRun = true;
+		gfFirstHeliRun			= true;
 
-		gTacticalStatus.fDidGameJustStart = FALSE;
+		gTacticalStatus.fDidGameJustStart = false;
 	}
 }

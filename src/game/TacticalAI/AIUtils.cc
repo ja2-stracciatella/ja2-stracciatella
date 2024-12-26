@@ -113,7 +113,7 @@ INT8 OKToAttack(const SOLDIERTYPE * pSoldier, int target)
 		}
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -125,18 +125,18 @@ static BOOLEAN ConsiderProne(SOLDIERTYPE* pSoldier)
 
 	if (pSoldier->bAIMorale >= MORALE_NORMAL)
 	{
-		return( FALSE );
+		return false;
 	}
 	// We don't want to go prone if there is a nearby enemy
 	ClosestKnownOpponent( pSoldier, &sOpponentGridNo, &bOpponentLevel );
 	iRange = GetRangeFromGridNoDiff( pSoldier->sGridNo, sOpponentGridNo );
 	if (iRange > 10)
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -357,7 +357,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 {
 	// ATE: Setting sDestination? Tis does not make sense...
 	//pSoldier->sDestination = usGridNo;
-	BOOLEAN fSet = FALSE;
+	BOOLEAN fSet = false;
 
 	if ( IS_MERC_BODY_TYPE( pSoldier ) && pSoldier->bAction == AI_ACTION_TAKE_COVER && (pSoldier->bAttitude == DEFENSIVE || pSoldier->bAttitude == CUNNINGSOLO || pSoldier->bAttitude == CUNNINGAID ) && (SoldierDifficultyLevel( pSoldier ) >= 2) )
 	{
@@ -368,7 +368,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 		if ( usMovementMode != SWATTING )
 		{
 			// really want to look at path, see how far we could get on path while swatting
-			if ( EnoughPoints( pSoldier, RecalculatePathCost( pSoldier, SWATTING ), 0, FALSE ) || (pSoldier->bLastAction == AI_ACTION_TAKE_COVER && pSoldier->usUIMovementMode == SWATTING ) )
+			if ( EnoughPoints( pSoldier, RecalculatePathCost( pSoldier, SWATTING ), 0, false ) || (pSoldier->bLastAction == AI_ACTION_TAKE_COVER && pSoldier->usUIMovementMode == SWATTING ) )
 			{
 				pSoldier->usUIMovementMode = SWATTING;
 			}
@@ -381,7 +381,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 		{
 			pSoldier->usUIMovementMode = usMovementMode;
 		}
-		fSet = TRUE;
+		fSet = true;
 	}
 	else
 	{
@@ -393,7 +393,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 				case AI_ACTION_MOVE_TO_CLIMB:
 				case AI_ACTION_RUN_AWAY:
 					pSoldier->usUIMovementMode = DetermineMovementMode( pSoldier, pSoldier->bAction );
-					fSet = TRUE;
+					fSet = true;
 					break;*/
 				// default:
 					if ( PreRandom( 5 - SoldierDifficultyLevel( pSoldier ) ) == 0 )
@@ -402,13 +402,13 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 						if ( sClosestNoise != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestNoise ) < MaxDistanceVisible() + 10 )
 						{
 							pSoldier->usUIMovementMode = SWATTING;
-							fSet = TRUE;
+							fSet = true;
 						}
 					}
 					if ( !fSet )
 					{
 						pSoldier->usUIMovementMode = DetermineMovementMode( pSoldier, pSoldier->bAction );
-						fSet = TRUE;
+						fSet = true;
 					}
 					// break;
 			}
@@ -417,7 +417,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 		else
 		{
 			pSoldier->usUIMovementMode = DetermineMovementMode( pSoldier, pSoldier->bAction );
-			fSet = TRUE;
+			fSet = true;
 		}
 
 		if ( pSoldier->usUIMovementMode == SWATTING && !IS_MERC_BODY_TYPE( pSoldier ) )
@@ -430,7 +430,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 	// ATE: Using this more versitile version
 	// Last paramater says whether to re-start the soldier's animation
 	// This should be done if buddy was paused for fNoApstofinishMove...
-	EVENT_InternalGetNewSoldierPath( pSoldier, usGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->fNoAPToFinishMove );
+	EVENT_InternalGetNewSoldierPath( pSoldier, usGridNo, pSoldier->usUIMovementMode , false, pSoldier->fNoAPToFinishMove );
 
 }
 
@@ -540,11 +540,11 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 	// check whether or not we can afford to do this action
 	if (bMinPointsNeeded > pSoldier->bActionPoints)
 	{
-		return(FALSE);
+		return(false);
 	}
 	else
 	{
-		return(TRUE);
+		return(true);
 	}
 }
 
@@ -558,7 +558,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 	// make sure origin is a legal gridno!
 	if (usOrigin >= GRIDSIZE)
 	{
-		return FALSE;
+		return false;
 	}
 
 	// build a list of the guynums of all active, eligible friendly mercs
@@ -597,7 +597,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 			// clear dirChecked flag for all 8 directions
 			for (UINT16 usDirection = 0; usDirection < 8; ++usDirection)
 			{
-				fDirChecked[usDirection] = FALSE;
+				fDirChecked[usDirection] = false;
 			}
 
 			// examine all 8 spots around friend
@@ -612,7 +612,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 				}
 				while (fDirChecked[usDirection]);
 
-				fDirChecked[usDirection] = TRUE;
+				fDirChecked[usDirection] = true;
 
 				// determine the gridno 1 tile away from current friend in this direction
 				const UINT16 usDest = NewGridNo(chosen->sGridNo, DirectionInc( usDirection + 1 ));
@@ -625,8 +625,8 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 						LegalNPCDestination(s, usDest, ENSURE_PATH, NOWATER, 0))
 				{
 					s->usActionData = usDest; // store this ->sDestination
-					s->bPathStored  = TRUE;   // optimization - Ian
-					return TRUE;
+					s->bPathStored  = true;   // optimization - Ian
+					return true;
 				}
 			}
 		}
@@ -634,7 +634,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 		friends[chosen_idx] = friends[--ubFriendCount];
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -642,7 +642,7 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 {
 	INT16 sRandDest = NOWHERE;
 	UINT8	ubTriesLeft;
-	BOOLEAN fLimited = FALSE, fFound = FALSE;
+	BOOLEAN fLimited = false, fFound = false;
 	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXRange, sYRange, sXOffset, sYOffset;
 	INT16 sOrigX, sOrigY;
 	INT16 sX, sY;
@@ -675,7 +675,7 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 	// if the maxDist is truly a restriction
 	if (usMaxDist < (MAXCOL - 1))
 	{
-		fLimited = TRUE;
+		fLimited = true;
 
 		// determine maximum horizontal limits
 		sOrigX = usOrigin % MAXCOL;
@@ -726,8 +726,8 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 			}
 
 			// passed all the tests, ->sDestination is acceptable
-			fFound = TRUE;
-			pSoldier->bPathStored = TRUE;	// optimization - Ian
+			fFound = true;
+			pSoldier->bPathStored = true;	// optimization - Ian
 		}
 	}
 	else
@@ -765,8 +765,8 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 			}
 
 			// passed all the tests, ->sDestination is acceptable
-			fFound = TRUE;
-			pSoldier->bPathStored = TRUE;	// optimization - Ian
+			fFound = true;
+			pSoldier->bPathStored = true;	// optimization - Ian
 		}
 	}
 
@@ -779,7 +779,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	INT8    *pbLastLevel;
 	INT16   sGridNo=-1;
 	INT8    bLevel;
-	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = FALSE;
+	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = false;
 	INT32   iPathCost;
 	INT16   sClosestDisturbance = NOWHERE;
 	INT8    *pbNoiseLevel;
@@ -790,7 +790,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	// for starters, try the closest one as the crow flies
 	INT16   sClosestEnemy = NOWHERE, sDistToClosestEnemy = 1000, sDistToEnemy;
 
-	*pfChangeLevel = FALSE;
+	*pfChangeLevel = false;
 
 	pusNoiseGridNo = &gsPublicNoiseGridno[pSoldier->bTeam];
 	pbNoiseLevel = &gbPublicNoiseLevel[pSoldier->bTeam];
@@ -871,7 +871,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 
 	if (sClosestEnemy != NOWHERE)
 	{
-		iPathCost = EstimatePathCostToLocation( pSoldier, sClosestEnemy, bClosestLevel, FALSE, &fClimbingNecessary, &sClimbGridNo );
+		iPathCost = EstimatePathCostToLocation( pSoldier, sClosestEnemy, bClosestLevel, false, &fClimbingNecessary, &sClimbGridNo );
 		// if we can get there
 		if (iPathCost != 0)
 		{
@@ -903,7 +903,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 		else
 		{
 			// get the AP cost to get to the location of the noise
-			iPathCost = EstimatePathCostToLocation( pSoldier, sGridNo, bLevel, FALSE, &fClimbingNecessary, &sClimbGridNo );
+			iPathCost = EstimatePathCostToLocation( pSoldier, sGridNo, bLevel, false, &fClimbingNecessary, &sClimbGridNo );
 			// if we can get there
 			if (iPathCost != 0)
 			{
@@ -929,12 +929,12 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 		bLevel = *pbNoiseLevel;
 
 		// if we are not NEAR the noise gridno...
-		if ( pSoldier->bLevel != bLevel || PythSpacesAway( pSoldier->sGridNo, sGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, (UINT8) MaxDistanceVisible(), FALSE ) == 0 )
+		if ( pSoldier->bLevel != bLevel || PythSpacesAway( pSoldier->sGridNo, sGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, (UINT8) MaxDistanceVisible(), false ) == 0 )
 		// if we are NOT there (at the noise gridno)
 		//	if (sGridNo != pSoldier->sGridNo)
 		{
 			// get the AP cost to get to the location of the noise
-			iPathCost = EstimatePathCostToLocation( pSoldier, sGridNo, bLevel, FALSE, &fClimbingNecessary, &sClimbGridNo );
+			iPathCost = EstimatePathCostToLocation( pSoldier, sGridNo, bLevel, false, &fClimbingNecessary, &sClimbGridNo );
 			// if we can get there
 			if (iPathCost != 0)
 			{
@@ -1238,16 +1238,16 @@ BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDest
 	{
 		if ( (pSoldier->bLevel == 0) || ( gubBuildingInfo[ pSoldier->sGridNo ] == gubBuildingInfo[ sDestGridNo ] ) )
 		{
-			return( FALSE );
+			return false;
 		}
 		else // different buildings!
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 	else
 	{
-		return( TRUE );
+		return true;
 	}
 }
 
@@ -1258,30 +1258,30 @@ INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo,
 		if ( (pSoldier->bLevel == 0) || ( gubBuildingInfo[ pSoldier->sGridNo ] == gubBuildingInfo[ sDestGridNo ] ) )
 		{
 			// on ground or same building... normal!
-			*pfClimbingNecessary = FALSE;
+			*pfClimbingNecessary = false;
 			return( NOWHERE );
 		}
 		else
 		{
 			// different buildings!
 			// yes, pass in same gridno twice... want closest climb-down spot for building we are on!
-			*pfClimbingNecessary = TRUE;
-			return( FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, FALSE ) );
+			*pfClimbingNecessary = true;
+			return( FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, false ) );
 		}
 	}
 	else
 	{
-		*pfClimbingNecessary = TRUE;
+		*pfClimbingNecessary = true;
 		// different levels
 		if (pSoldier->bLevel == 0)
 		{
 			// got to go UP onto building
-			return( FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, sDestGridNo, TRUE ) );
+			return( FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, sDestGridNo, true ) );
 		}
 		else
 		{
 			// got to go DOWN off building
-			return( FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, FALSE ) );
+			return( FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, false ) );
 		}
 	}
 }
@@ -1296,22 +1296,22 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 		if ( (pSoldier->bLevel == 0) || ( gubBuildingInfo[ pSoldier->sGridNo ] == gubBuildingInfo[ sDestGridNo ] ) )
 		{
 			// on ground or same building... normal!
-			sPathCost = EstimatePlotPath(pSoldier, sDestGridNo, FALSE, FALSE, WALKING, 0);
-			*pfClimbingNecessary = FALSE;
+			sPathCost = EstimatePlotPath(pSoldier, sDestGridNo, false, false, WALKING, 0);
+			*pfClimbingNecessary = false;
 			*psClimbGridNo = NOWHERE;
 		}
 		else
 		{
 			// different buildings!
 			// yes, pass in same gridno twice... want closest climb-down spot for building we are on!
-			sClimbGridNo = FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, FALSE );
+			sClimbGridNo = FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, false );
 			if (sClimbGridNo == NOWHERE)
 			{
 				sPathCost = 0;
 			}
 			else
 			{
-				sPathCost = PlotPath(pSoldier, sClimbGridNo, FALSE, FALSE, WALKING, 0);
+				sPathCost = PlotPath(pSoldier, sClimbGridNo, false, false, WALKING, 0);
 				if (sPathCost != 0)
 				{
 					// add in cost of climbing down
@@ -1328,7 +1328,7 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 						// add in an estimate of getting there after climbing down, *but not on top of roof*
 						sPathCost += (AP_MOVEMENT_FLAT + WALKCOST) * PythSpacesAway( sClimbGridNo, sDestGridNo ) / 2;
 					}
-					*pfClimbingNecessary = TRUE;
+					*pfClimbingNecessary = true;
 					*psClimbGridNo = sClimbGridNo;
 				}
 			}
@@ -1340,12 +1340,12 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 		if (pSoldier->bLevel == 0)
 		{
 			//got to go UP onto building
-			sClimbGridNo = FindClosestClimbPointAvailableToAI( pSoldier,  pSoldier->sGridNo, sDestGridNo, TRUE );
+			sClimbGridNo = FindClosestClimbPointAvailableToAI( pSoldier,  pSoldier->sGridNo, sDestGridNo, true );
 		}
 		else
 		{
 			// got to go DOWN off building
-			sClimbGridNo = FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, FALSE );
+			sClimbGridNo = FindClosestClimbPointAvailableToAI( pSoldier, pSoldier->sGridNo, pSoldier->sGridNo, false );
 		}
 
 		if (sClimbGridNo == NOWHERE)
@@ -1354,7 +1354,7 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 		}
 		else
 		{
-			sPathCost = PlotPath(pSoldier, sClimbGridNo, FALSE, FALSE, WALKING, 0);
+			sPathCost = PlotPath(pSoldier, sClimbGridNo, false, false, WALKING, 0);
 			if (sPathCost != 0)
 			{
 				// add in the cost of climbing up or down
@@ -1377,7 +1377,7 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 					// estimate walk cost
 					sPathCost += (AP_MOVEMENT_FLAT + WALKCOST) * PythSpacesAway( sClimbGridNo, sDestGridNo );
 				}
-				*pfClimbingNecessary = TRUE;
+				*pfClimbingNecessary = true;
 				*psClimbGridNo = sClimbGridNo;
 			}
 		}
@@ -1402,19 +1402,19 @@ static BOOLEAN GuySawEnemyThisTurnOrBefore(SOLDIERTYPE* pSoldier)
 				// if this guy SAW an enemy recently...
 				if ( pSoldier->bOppList[ ubIDLoop ] >= SEEN_CURRENTLY )
 				{
-					return( TRUE );
+					return true;
 				}
 			}
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbingNecessary)
 {
 	INT16 sPathCost, sClosestFriend = NOWHERE, sShortestPath = 1000, sClimbGridNo;
-	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = FALSE;
+	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = false;
 
 	// civilians don't really have any "friends", so they don't bother with this
 	if (IsOnCivTeam(pSoldier)) return sClosestFriend;
@@ -1449,7 +1449,7 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 		}
 
 		// get the AP cost to go to this friend's gridno
-		sPathCost = EstimatePathCostToLocation( pSoldier, pFriend->sGridNo, pFriend->bLevel, TRUE, &fClimbingNecessary, &sClimbGridNo );
+		sPathCost = EstimatePathCostToLocation( pSoldier, pFriend->sGridNo, pFriend->bLevel, true, &fClimbingNecessary, &sClimbGridNo );
 
 		// if we can get there
 		if (sPathCost != 0)
@@ -1568,7 +1568,7 @@ bool WearGasMaskIfAvailable(SOLDIERTYPE* const s)
 		s->inv[HEAD2POS].usItem == NOTHING ? HEAD2POS :
 		HEAD1POS; // Screw it, going in position 1 anyhow
 
-	RearrangePocket(s, slot, new_slot, TRUE);
+	RearrangePocket(s, slot, new_slot, true);
 	return true;
 }
 
@@ -1580,7 +1580,7 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 	// do not consider us to be "in light" if we're in an underground sector
 	if (gWorldSector.z > 0)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	ubBackgroundLightLevel = GetTimeOfDayAmbientLightLevel();
@@ -1588,11 +1588,11 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 	if ( ubBackgroundLightLevel < NORMAL_LIGHTLEVEL_DAY + 2 )
 	{
 		// don't consider it nighttime, too close to daylight levels
-		return( FALSE );
+		return false;
 	}
 
 	// could've been placed here, ignore the light
-	if (GetRoom(sGridNo) != NO_ROOM) return FALSE;
+	if (GetRoom(sGridNo) != NO_ROOM) return false;
 
 	// NB light levels are backwards, so a lower light level means the
 	// spot in question is BRIGHTER
@@ -1664,7 +1664,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 
 		iPercent = ThreatPercent[bMostRecentOpplistValue - OLDEST_HEARD_VALUE];
 
-		sOppThreatValue = (iPercent * CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier)) / 100;
+		sOppThreatValue = (iPercent * CalcManThreatValue(pOpponent,pSoldier->sGridNo,false,pSoldier)) / 100;
 
 		// ADD this to their running total threatValue (decreases my MORALE)
 		iTheirTotalThreat += sOppThreatValue;
@@ -1714,7 +1714,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 				}
 			}
 
-			sFrndThreatValue = (iPercent * CalcManThreatValue(pFriend,pOpponent->sGridNo,FALSE,pSoldier)) / 100;
+			sFrndThreatValue = (iPercent * CalcManThreatValue(pFriend,pOpponent->sGridNo,false,pSoldier)) / 100;
 
 			// ADD this to our running total threatValue (increases my MORALE)
 			// We multiply by sOppThreatValue to PRO-RATE this based on opponent's
@@ -2126,7 +2126,7 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 
 	for( bLoop = 0; bLoop < 2; bLoop++ )
 	{
-		fFound = TRUE;
+		fFound = true;
 
 		bTempDir = pCreature->bDirection;
 
@@ -2144,7 +2144,7 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 			}
 			if (!InternalIsValidStance( pCreature, bTempDir, ANIM_STAND ))
 			{
-				fFound = FALSE;
+				fFound = false;
 				break;
 			}
 
@@ -2157,7 +2157,7 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 		else if ( bLoop > 0 )
 		{
 			// can't find a dir!
-			return( FALSE );
+			return false;
 		}
 		else
 		{
@@ -2166,7 +2166,7 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 		}
 	}
 
-	return( TRUE );
+	return true;
 }
 
 INT32 RangeChangeDesire( const SOLDIERTYPE * pSoldier )
@@ -2197,9 +2197,9 @@ BOOLEAN ArmySeesOpponents( void )
 	{
 		if (s->bInSector && s->bLife >= OKLIFE && s->bOppCnt > 0)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }

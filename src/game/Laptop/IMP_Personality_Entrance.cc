@@ -95,6 +95,6 @@ static void BtnIMPPersonalityEntranceDoneCallback(GUI_BUTTON *btn, UINT32 reason
 	{
 		// done with begin screen, next screen
 		iCurrentImpPage = gamepolicy(imp_pick_skills_directly) ? IMP_SKILLTRAITS : IMP_PERSONALITY_QUIZ;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }

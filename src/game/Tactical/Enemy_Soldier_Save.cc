@@ -15,8 +15,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
-BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;
+BOOLEAN gfRestoringEnemySoldiersFromTempFile = false;
+BOOLEAN gfRestoringCiviliansFromTempFile = false;
 
 static void RemoveTempFile(SectorFlags const file_flag, const SGPSector& sector)
 {
@@ -38,7 +38,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	UINT8 ubStrategicAdmins;
 	UINT8 ubStrategicCreatures;
 
-	gfRestoringEnemySoldiersFromTempFile = TRUE;
+	gfRestoringEnemySoldiersFromTempFile = true;
 	auto mapFileName = GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector);
 
 	// Count the number of enemies (elites, regulars, admins and creatures) that
@@ -129,7 +129,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 		// The file has aged.  Use the regular method for adding soldiers.
 		f.Deallocate(); // Close the file before deleting it
 		RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector);
-		gfRestoringEnemySoldiersFromTempFile = FALSE;
+		gfRestoringEnemySoldiersFromTempFile = false;
 		return;
 	}
 
@@ -137,7 +137,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	{
 		// no need to restore the enemy's to the map.  This means we are restoring
 		// a saved game.
-		gfRestoringEnemySoldiersFromTempFile = FALSE;
+		gfRestoringEnemySoldiersFromTempFile = false;
 		return;
 	}
 
@@ -157,7 +157,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			continue;
 		if (bp->bTeam != ENEMY_TEAM && bp->bTeam != CREATURE_TEAM)
 			continue;
-		bp->fPriorityExistance = FALSE;
+		bp->fPriorityExistance = false;
 	}
 
 	// Get the number of enemies in this sector.
@@ -188,7 +188,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			if (bp->bTeam != tempDetailedPlacement.bTeam)
 				continue;
 
-			bp->fPriorityExistance = TRUE;
+			bp->fPriorityExistance = true;
 			SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
 			if (!dp)
 			{
@@ -200,7 +200,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			// version.
 			*dp = tempDetailedPlacement;
 
-			bp->fPriorityExistance  =  TRUE;
+			bp->fPriorityExistance  =  true;
 			bp->bDirection          = dp->bDirection;
 			bp->bOrders             = dp->bOrders;
 			bp->bAttitude           = dp->bAttitude;
@@ -273,7 +273,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 void NewWayOfLoadingCiviliansFromTempFile()
 {
-	gfRestoringCiviliansFromTempFile = TRUE;
+	gfRestoringCiviliansFromTempFile = true;
 
 	// STEP ONE: Set up the temp file to read from.
 	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, gWorldSector)));
@@ -318,7 +318,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	{
 		// No need to restore the civilians to the map.  This means we are
 		// restoring a saved game.
-		gfRestoringCiviliansFromTempFile = FALSE;
+		gfRestoringCiviliansFromTempFile = false;
 		return;
 	}
 
@@ -335,7 +335,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
 		if (!bp->fPriorityExistance) continue;
 		if (bp->bTeam != CIV_TEAM)   continue;
-		bp->fPriorityExistance = FALSE;
+		bp->fPriorityExistance = false;
 	}
 
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
@@ -355,7 +355,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 			if (dp && dp->ubProfile != NO_PROFILE)
 				continue;
 
-			bp->fPriorityExistance = TRUE;
+			bp->fPriorityExistance = true;
 
 			if (!dp)
 			{
@@ -367,7 +367,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 			// version.
 			*dp = tempDetailedPlacement;
 
-			bp->fPriorityExistance = TRUE;
+			bp->fPriorityExistance = true;
 			bp->bDirection         = dp->bDirection;
 			bp->bOrders            = dp->bOrders;
 			bp->bAttitude          = dp->bAttitude;
@@ -482,7 +482,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(const SGPSector& sSector, BOOLEAN 
 			//need to upgrade the placement to detailed placement
 			dp                                        = new SOLDIERCREATE_STRUCT{};
 			curr->pDetailedPlacement                  = dp;
-			curr->pBasicPlacement->fDetailedPlacement = TRUE;
+			curr->pBasicPlacement->fDetailedPlacement = true;
 		}
 
 		//Copy over the data of the soldier.

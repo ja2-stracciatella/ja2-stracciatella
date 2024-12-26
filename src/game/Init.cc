@@ -40,7 +40,7 @@
 ScreenID InitializeJA2(void)
 try
 {
-	gfWorldLoaded = FALSE;
+	gfWorldLoaded = false;
 
 	gsRenderCenterX = 805;
 	gsRenderCenterY = 805;
@@ -93,17 +93,17 @@ try
 	{
 		case GAME_MODE_EDITOR:
 			SLOGI("Beginning JA2 using -editor commandline argument...");
-			gfAutoLoadA9 = FALSE;
+			gfAutoLoadA9 = false;
 			goto editor;
 
 		case GAME_MODE_EDITOR_AUTO:
 			SLOGI("Beginning JA2 using -editorauto commandline argument...");
-			gfAutoLoadA9 = TRUE;
+			gfAutoLoadA9 = true;
 editor:
 			//also set the sector
 			SetWorldSectorInvalid();
-			gfIntendOnEnteringEditor = TRUE;
-			gGameOptions.fGunNut     = TRUE;
+			gfIntendOnEnteringEditor = true;
+			gGameOptions.fGunNut     = true;
 			return GAME_SCREEN;
 
 		default: return INIT_SCREEN;

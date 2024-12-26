@@ -36,7 +36,7 @@ void HandleStrategicDeath(SOLDIERTYPE& s)
 		HandleSoldierDeadComments(&s);
 		AddDeadSoldierToUnLoadedSector(s.sSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 
-		fReDrawFace = TRUE;
+		fReDrawFace = true;
 
 		StopTimeCompression();
 	}

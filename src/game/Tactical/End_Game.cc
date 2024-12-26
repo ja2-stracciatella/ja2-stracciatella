@@ -59,13 +59,13 @@ static BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 			{
 				if ( sStatueGridNos[ cnt ] == sGridNo )
 				{
-					return( TRUE );
+					return true;
 				}
 			}
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 // This function changes the graphic of the statue and adds the exit grid...
@@ -122,7 +122,7 @@ void HandleStatueDamaged(INT16 sectorX, INT16 sectorY, INT8 sectorZ, INT16 sGrid
 	 * efficient check */
 	if (DoesO3SectorStatueExistHere(sGridNo) && uiDist <= 1)
 	{
-		ChangeO3SectorStatue(TRUE);
+		ChangeO3SectorStatue(true);
 		*skipDamage = true;
 	}
 }
@@ -180,7 +180,7 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 		{
 			// Can we see location?
 			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
-			if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, bLevel, 3, sDistVisible, TRUE))
+			if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, bLevel, 3, sDistVisible, true))
 			{
 				TacticalCharacterDialogue(s, QUOTE_KILLING_DEIDRANNA);
 			}
@@ -234,7 +234,7 @@ static void DoneFadeOutKilledQueen()
 		if (!s.bInSector)                    continue;
 		if (s.bAssignment != CurrentSquad()) continue;
 
-		gfTacticalTraversal = TRUE;
+		gfTacticalTraversal = true;
 		SetGroupSectorValue(upstairs, *GetGroup(s.ubGroupID));
 
 		// XXX redundant, SetGroupSectorValue() handles this
@@ -260,9 +260,9 @@ static void DoneFadeOutKilledQueen()
 
 	// 'End' battle
 	ExitCombatMode();
-	gTacticalStatus.fLastBattleWon = TRUE;
+	gTacticalStatus.fLastBattleWon = true;
 	// Set enemy presence to false
-	gTacticalStatus.fEnemyInSector = FALSE;
+	gTacticalStatus.fEnemyInSector = false;
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
@@ -271,7 +271,7 @@ static void DoneFadeOutKilledQueen()
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	SetThisSectorAsPlayerControlled(gWorldSector, TRUE);
+	SetThisSectorAsPlayerControlled(gWorldSector, true);
 
 	// ATE: Force change of level set z to 1
 	gWorldSector.z = 1;
@@ -293,7 +293,7 @@ static void DoneFadeOutKilledQueen()
 
 	SetCurrentWorldSector(upstairs);
 
-	gfTacticalTraversal              = FALSE;
+	gfTacticalTraversal              = false;
 	gpTacticalTraversalGroup         = 0;
 	gpTacticalTraversalChosenSoldier = 0;
 
@@ -435,7 +435,7 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16
 		{
 			// Can we see location?
 			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
-			if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, bLevel, 3, sDistVisible, TRUE))
+			if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, bLevel, 3, sDistVisible, true))
 			{
 				TacticalCharacterDialogue(s, QUOTE_KILLING_QUEEN);
 			}

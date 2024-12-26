@@ -52,7 +52,7 @@ void DeleteStuffFromMapTile( UINT32 iMapIndex )
 
 	//const UINT32 uiCheckType = GetTileType(gpWorldLevelData[iMapIndex].pLandHead->usIndex);
 	//RemoveLand( iMapIndex, gpWorldLevelData[ iMapIndex ].pLandHead->usIndex );
-	//SmoothTerrainRadius( iMapIndex, uiCheckType, 1, TRUE );
+	//SmoothTerrainRadius( iMapIndex, uiCheckType, 1, true );
 
 	RemoveExitGridFromWorld( iMapIndex );
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTTEXTURE, WIREFRAMES );
@@ -107,7 +107,7 @@ void EraseMapTile( UINT32 iMapIndex )
 			AddToUndoList( iMapIndex );
 			const UINT32 uiCheckType = GetTileType(gpWorldLevelData[iMapIndex].pLandHead->usIndex);
 			RemoveLand( iMapIndex, gpWorldLevelData[ iMapIndex ].pLandHead->usIndex );
-			SmoothTerrainRadius( iMapIndex, uiCheckType, 1, TRUE );
+			SmoothTerrainRadius( iMapIndex, uiCheckType, 1, true );
 			break;
 		}
 
@@ -349,13 +349,13 @@ try
 		}
 		else
 		{ // Slap down wall/window/door/decoration (no smoothing)
-			AddWallToStructLayer(map_idx, idx, TRUE);
+			AddWallToStructLayer(map_idx, idx, true);
 		}
 	}
 	else if ((FIRSTDOOR <= use_obj_idx && use_obj_idx <= LASTDOOR) ||
 			(FIRSTDECORATIONS <= use_obj_idx && use_obj_idx <= LASTDECORATIONS))
 	{ // Slap down wall/window/door/decoration (no smoothing)
-		AddWallToStructLayer(map_idx, idx, TRUE);
+		AddWallToStructLayer(map_idx, idx, true);
 	}
 	else if ((FIRSTROOF <= use_obj_idx && use_obj_idx <= LASTROOF) ||
 			(FIRSTSLANTROOF <= use_obj_idx && use_obj_idx <= LASTSLANTROOF))
@@ -490,7 +490,7 @@ static void PasteStructureCommon(const UINT32 iMapIndex)
 //
 void PasteBanks(UINT32 const iMapIndex, BOOLEAN const fReplace)
 {
-	BOOLEAN				fDoPaste = FALSE;
+	BOOLEAN				fDoPaste = false;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
 
@@ -502,20 +502,20 @@ void PasteBanks(UINT32 const iMapIndex, BOOLEAN const fReplace)
 
 	if ( iMapIndex < GRIDSIZE )
 	{
-		fDoPaste = TRUE;
+		fDoPaste = true;
 
 		if (  gpWorldLevelData[ iMapIndex ].pStructHead != NULL )
 		{
 				// CHECK IF THE SAME TILE IS HERE
 				if ( gpWorldLevelData[ iMapIndex ].pStructHead->usIndex == (UINT16)( gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex ) )
 				{
-					fDoPaste = FALSE;
+					fDoPaste = false;
 				}
 		}
 		else
 		{
 			// Nothing is here, paste
-			fDoPaste = TRUE;
+			fDoPaste = true;
 		}
 
 		if ( fDoPaste )
@@ -607,7 +607,7 @@ void PasteTextureCommon(UINT32 const map_idx)
 	else
 	{
 		PasteTextureEx(map_idx, paste);
-		SmoothTerrainRadius(map_idx, paste, 1, TRUE);
+		SmoothTerrainRadius(map_idx, paste, 1, true);
 	}
 }
 
@@ -642,12 +642,12 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 		RemoveHigherLandLevels(iMapIndex, fNewType, deletedTypes);
 
 		// Set with a radius of 1 and smooth according to height difference
-		SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );
+		SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , true );
 
 		// Smooth all deleted levels
 		for (UINT32 deletedType : deletedTypes)
 		{
-			SmoothTerrainRadius( iMapIndex, deletedType, 1, TRUE );
+			SmoothTerrainRadius( iMapIndex, deletedType, 1, true );
 		}
 	}
 	else if ( iMapIndex < GRIDSIZE )
@@ -658,7 +658,7 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 		SetLandIndex(iMapIndex, NewTile, fNewType);
 
 		// Smooth item then adding here
-		SmoothTerrain( iMapIndex, fNewType, &NewTile, FALSE );
+		SmoothTerrain( iMapIndex, fNewType, &NewTile, false );
 
 		if ( NewTile != NO_TILE )
 		{
@@ -680,10 +680,10 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	// - re-adjust the world to reflect missing top-most peice
 
 	if ( iMapIndex >= GRIDSIZE )
-		return ( FALSE );
+		return ( false );
 
 	//if (TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
-	//	return( FALSE );
+	//	return false;
 
 	// Get top tile index
 	// Remove all land peices except
@@ -703,9 +703,9 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	SetLandIndex(iMapIndex, usIndex, uiNewType);
 
 	// ATE: Set this land peice to require smoothing again!
-	SmoothAllTerrainTypeRadius( iMapIndex, 2, TRUE );
+	SmoothAllTerrainTypeRadius( iMapIndex, 2, true );
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -716,7 +716,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 	INT16   sLeft, sRight;
 	INT16   cnt1, cnt2;
 	INT32   iNewIndex;
-	BOOLEAN fDoPaste = FALSE;
+	BOOLEAN fDoPaste = false;
 	INT32   leftmost;
 	UINT8   ubLastHighLevel;
 	std::vector<UINT32> smoothTiles;
@@ -729,7 +729,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 	sRight  = ubRadius;
 
 	if ( iMapIndex >= GRIDSIZE )
-		return ( FALSE );
+		return ( false );
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -746,13 +746,13 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 
 				if ( fReplace )
 				{
-					fDoPaste = TRUE;
+					fDoPaste = true;
 				}
 				else
 				{
 					if (FindTypeInLandLayer(iNewIndex, uiNewType))
 					{
-						fDoPaste = TRUE;
+						fDoPaste = true;
 					}
 				}
 
@@ -796,10 +796,10 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 	// Once here, smooth any tiles that need it
 	for (UINT32 smoothTile : smoothTiles)
 	{
-		SmoothTerrainRadius(smoothTile, uiNewType, 10, FALSE);
+		SmoothTerrainRadius(smoothTile, uiNewType, 10, false);
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -841,13 +841,13 @@ void RaiseWorldLand( )
 	LEVELNODE			*pStruct;
 	TILE_ELEMENT	*pTileElement;
 	BOOLEAN fRaiseSet;
-	BOOLEAN fSomethingRaised = FALSE;
+	BOOLEAN fSomethingRaised = false;
 	UINT8 ubLoop;
 	INT32 iStartNumberOfRaises = 0;
 	INT32 iNumberOfRaises = 0;
-	BOOLEAN fAboutToRaise = FALSE;
+	BOOLEAN fAboutToRaise = false;
 
-	fRaiseSet=FALSE;
+	fRaiseSet=false;
 
 	FOR_EACH_WORLD_TILE(i)
 	{
@@ -868,7 +868,7 @@ void RaiseWorldLand( )
 			pTileElement = &(gTileDatabase[ pStruct->usIndex ]);
 			if (pTileElement->fType==FIRSTCLIFF)
 			{
-				fSomethingRaised = TRUE;
+				fSomethingRaised = true;
 				SLOGD("Cliff found at count={}", cnt);
 				if( pTileElement->ubNumberOfTiles > 1 )
 				{
@@ -948,11 +948,11 @@ void RaiseWorldLand( )
 		if(cnt%WORLD_ROWS==WORLD_ROWS-1)
 		{
 		// start of new row
-		fRaiseSet=FALSE;
+		fRaiseSet=false;
 		}
 		if (gpWorldLevelData[cnt].uiFlags&MAPELEMENT_RAISE_LAND_START)
 		{
-			fRaiseSet=TRUE;
+			fRaiseSet=true;
 		}
 		else if((gpWorldLevelData[cnt].uiFlags&MAPELEMENT_RAISE_LAND_END)&&(!fRaiseSet))
 		{
@@ -965,10 +965,10 @@ void RaiseWorldLand( )
 				gpWorldLevelData[cnt+((WORLD_ROWS-1)-(cnt%WORLD_ROWS))-WORLD_ROWS].uiFlags &= (~MAPELEMENT_RAISE_LAND_END );
 				gpWorldLevelData[cnt+((WORLD_ROWS-1)-(cnt%WORLD_ROWS))-WORLD_ROWS].uiFlags|=MAPELEMENT_RAISE_LAND_START;
 			}
-			fRaiseSet=TRUE;
+			fRaiseSet=true;
 		}
 	}
-	fRaiseSet=FALSE;
+	fRaiseSet=false;
 	// Look for a cliff face that is along either the lower edge or the right edge of the map, this is used for a special case fill
 	// start at y=159, x= 80 and go to x=159, y=80
 
@@ -977,18 +977,18 @@ void RaiseWorldLand( )
 	{
 		if (fAboutToRaise)
 		{
-			fRaiseSet=TRUE;
-			fAboutToRaise = FALSE;
+			fRaiseSet=true;
+			fAboutToRaise = false;
 		}
 
 		if ((gpWorldLevelData[cnt].uiFlags&MAPELEMENT_RAISE_LAND_START)||(gpWorldLevelData[cnt-1].uiFlags&MAPELEMENT_RAISE_LAND_START)||(gpWorldLevelData[ cnt + 1 ].uiFlags&MAPELEMENT_RAISE_LAND_START))
 		{
-			fAboutToRaise = TRUE;
-			fRaiseSet = FALSE;
+			fAboutToRaise = true;
+			fRaiseSet = false;
 		}
 		else if((gpWorldLevelData[cnt].uiFlags&MAPELEMENT_RAISE_LAND_END)||(gpWorldLevelData[cnt-1].uiFlags&MAPELEMENT_RAISE_LAND_END) || ( gpWorldLevelData[cnt+1].uiFlags&MAPELEMENT_RAISE_LAND_END) )
 		{
-			fRaiseSet=FALSE;
+			fRaiseSet=false;
 		}
 		if (fRaiseSet)
 		{
@@ -999,7 +999,7 @@ void RaiseWorldLand( )
 		}
 	}
 
-	//fRaiseSet = FALSE;
+	//fRaiseSet = false;
 
 	// Now go through the world, starting at x=max(x) and y=max(y) and work backwards
 	// if a cliff is found turn raise flag on, if the end of a screen is found, turn off
@@ -1008,7 +1008,7 @@ void RaiseWorldLand( )
 
 	for (cnt=WORLD_MAX-1; cnt >= 0;  cnt--)
 	{
-		//  reset the RAISE to FALSE
+		//  reset the RAISE to false
 		// End of the row
 		if ( !(cnt % WORLD_ROWS) )
 		{

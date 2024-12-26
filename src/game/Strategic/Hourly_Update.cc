@@ -117,7 +117,7 @@ static void HourlyQuestUpdate(void)
 		// reset boxes fought
 		for ( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 		{
-			gfBoxerFought[ ubLoop ] = FALSE;
+			gfBoxerFought[ ubLoop ] = false;
 		}
 
 		// if # of boxing matches the player has won is a multiple of
@@ -125,13 +125,13 @@ static void HourlyQuestUpdate(void)
 		if ( gfBoxersResting )
 		{
 			// done resting now!
-			gfBoxersResting = FALSE;
+			gfBoxersResting = false;
 			gubBoxersRests++;
 		}
 		else if ( gubBoxingMatchesWon / 3 > gubBoxersRests )
 		{
 			// time for the boxers to rest!
-			gfBoxersResting = TRUE;
+			gfBoxersResting = true;
 		}
 	}
 	else if ( uiHour == 2 )
@@ -173,7 +173,7 @@ static void HourlyLarryUpdate(void)
 	INT8							bLarryItemLoop;
 	UINT16						usTemptation = 0;
 	UINT16						usCashAmount;
-	BOOLEAN						fBar = FALSE;
+	BOOLEAN						fBar = false;
 
 	SOLDIERTYPE* pSoldier = FindSoldierByProfileIDOnPlayerTeam(LARRY_NORMAL);
 	if ( !pSoldier )
@@ -223,7 +223,7 @@ static void HourlyLarryUpdate(void)
 				if (pSoldier->sSector == bar)
 				{
 					// in a bar!
-					fBar = TRUE;
+					fBar = true;
 					usTemptation = BAR_TEMPTATION;
 					break;
 				}

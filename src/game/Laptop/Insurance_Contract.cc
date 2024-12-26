@@ -112,7 +112,7 @@ static SGPVObject* guiInsOrderBulletImage;
 
 static UINT8 gubNumberofDisplayedInsuranceGrids;
 
-static BOOLEAN gfChangeInsuranceFormButtons = FALSE;
+static BOOLEAN gfChangeInsuranceFormButtons = false;
 
 static SOLDIERTYPE* g_insurance_merc_array[20];
 static UINT         g_n_insurable_mercs;
@@ -157,7 +157,7 @@ static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT1
 	const INT16 shadow_col = INS_FONT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	btn->SetCursor(CURSOR_WWW);
-	btn->SpecifyTextOffsets(offset_x, 16, FALSE);
+	btn->SpecifyTextOffsets(offset_x, 16, false);
 	return btn;
 }
 
@@ -209,7 +209,7 @@ void EnterInsuranceContract()
 	guiInsContractNextBackButton  = MakeButtonBig(guiInsContractNextButtonImage, InsContractText[INS_CONTRACT_NEXT], INS_INFO_RIGHT_ARROW_BUTTON_X, BtnInsContractNextButtonCallBack, 18);
 
 	//create the new set of buttons
-	CreateDestroyInsuranceContractFormButtons( TRUE );
+	CreateDestroyInsuranceContractFormButtons( true );
 
 	//RenderInsuranceContract();
 }
@@ -235,7 +235,7 @@ void ExitInsuranceContract()
 	UnloadButtonImage( guiInsContractNextButtonImage );
 	RemoveButton( guiInsContractNextBackButton );
 
-	CreateDestroyInsuranceContractFormButtons( FALSE );
+	CreateDestroyInsuranceContractFormButtons( false );
 }
 
 
@@ -247,19 +247,19 @@ void HandleInsuranceContract()
 	if( gfChangeInsuranceFormButtons )
 	{
 		//remove the old buttons from the page
-		CreateDestroyInsuranceContractFormButtons( FALSE );
+		CreateDestroyInsuranceContractFormButtons( false );
 
 		//Get the new number of displayed insurance grids
 		SetNumberOfDisplayedInsuranceMercs();
 
 		//create the new set of buttons
-		CreateDestroyInsuranceContractFormButtons( TRUE );
+		CreateDestroyInsuranceContractFormButtons( true );
 
 		//reset the flag
-		gfChangeInsuranceFormButtons = FALSE;
+		gfChangeInsuranceFormButtons = false;
 
 		//force a redraw of the screen to erase the old buttons
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 		RenderInsuranceContract();
 
 		MarkButtonsDirty();
@@ -363,7 +363,7 @@ static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		if (gusCurrentInsuranceMercIndex > 2) gusCurrentInsuranceMercIndex -= 3;
 		// signal that we want to change the number of forms on the page
-		gfChangeInsuranceFormButtons = TRUE;
+		gfChangeInsuranceFormButtons = true;
 	}
 }
 
@@ -374,7 +374,7 @@ static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, UINT32 reason)
 	{
 		gusCurrentInsuranceMercIndex += 3;
 		// signal that we want to change the number of forms on the page
-		gfChangeInsuranceFormButtons = TRUE;
+		gfChangeInsuranceFormButtons = true;
 	}
 }
 
@@ -390,7 +390,7 @@ try
 {
 	INT32   iCostOfContract=0;
 	ST::string sText;
-	BOOLEAN fDisplayMercContractStateTextColorInRed = FALSE;
+	BOOLEAN fDisplayMercContractStateTextColorInRed = false;
 
 	Assert(ubGridNumber < 3);
 
@@ -412,7 +412,7 @@ try
 		{
 			//if the merc is dead
 			//shade the face red, (to signify that he is dead)
-			uiInsMercFaceImage->pShades[0] = Create16BPPPaletteShaded(uiInsMercFaceImage->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+			uiInsMercFaceImage->pShades[0] = Create16BPPPaletteShaded(uiInsMercFaceImage->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, true);
 
 			//set the red pallete to the face
 			uiInsMercFaceImage->CurrentShade(0);
@@ -451,20 +451,20 @@ try
 			{
 				//Display the contract text
 				sText = GetInsuranceText(INS_SNGL_PARTIALLY_INSURED);
-				fDisplayMercContractStateTextColorInRed = TRUE;
+				fDisplayMercContractStateTextColorInRed = true;
 			}
 			else
 			{
 				//Display the contract text
 				sText = GetInsuranceText(INS_SNGL_CONTRACT);
-				fDisplayMercContractStateTextColorInRed = FALSE;
+				fDisplayMercContractStateTextColorInRed = false;
 			}
 		}
 		else
 		{
 			//Display the contract text
 			sText = GetInsuranceText(INS_SNGL_NOCONTRACT);
-			fDisplayMercContractStateTextColorInRed = TRUE;
+			fDisplayMercContractStateTextColorInRed = true;
 		}
 		const UINT8 colour = (fDisplayMercContractStateTextColorInRed ? INS_FONT_COLOR_RED : INS_FONT_COLOR);
 		DisplayWrappedString(dx + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, dy + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, colour, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -575,9 +575,9 @@ try
 	//Display the length of time the player can get for the insurance contract
 	DrawTextToScreen(sText, dx + INS_CTRCT_OG_BOX_OFFSET_X, dy + INS_CTRCT_LENGTH_OFFSET_Y + 52 + 2, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
-	return( TRUE );
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 static void HandleAcceptButton(SOLDIERTYPE* s);
@@ -593,7 +593,7 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, UINT32 re
 		HandleAcceptButton(s);
 
 		//redraw the screen
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 	}
 }
 
@@ -623,7 +623,7 @@ static void DisableInsuranceContractNextPreviousbuttons(void)
 
 static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 {
-	static BOOLEAN	fButtonsCreated = FALSE;
+	static BOOLEAN	fButtonsCreated = false;
 
 	if( fCreate && !fButtonsCreated )
 	{
@@ -645,7 +645,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 			btn->SetUserData(i);
 		}
 
-		fButtonsCreated = TRUE;
+		fButtonsCreated = true;
 	}
 
 	if( fButtonsCreated && ! fCreate )
@@ -658,7 +658,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 			RemoveButton(insurance_info[i].button);
 		}
 
-		fButtonsCreated = FALSE;
+		fButtonsCreated = false;
 	}
 }
 
@@ -703,14 +703,14 @@ void DailyUpdateOfInsuredMercs()
 #define MAX_INSURANCE_RATIO	10.0f
 
 
-static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue);
+static float DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue);
 
 
 INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 {
 	INT16  sTotalSkill=0;
-	FLOAT  flSkillFactor, flFitnessFactor, flExpFactor, flSurvivalFactor;
-	FLOAT  flRiskFactor;
+	float  flSkillFactor, flFitnessFactor, flExpFactor, flSurvivalFactor;
+	float  flRiskFactor;
 	UINT32 uiDailyInsurancePremium;
 	UINT32 uiTotalInsurancePremium;
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
@@ -775,13 +775,13 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 
 
 // values passed in must be such that exceeding the normal value REDUCES insurance premiums
-static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue)
+static float DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue)
 {
-	FLOAT flRatio;
+	float flRatio;
 
 	if (sThisValue > 0)
 	{
-		flRatio = (FLOAT) sNormalValue / sThisValue;
+		flRatio = (float) sNormalValue / sThisValue;
 
 		// restrict each ratio to within a reasonable range
 		if (flRatio < MIN_INSURANCE_RATIO)
@@ -861,7 +861,7 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 	LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
 	lip->ubSoldierID = pSoldier->ubID;
 	lip->ubMercID    = pSoldier->ubProfile;
-	lip->fActive     = TRUE;
+	lip->fActive     = true;
 
 	// This uses the merc's latest salaries, ignoring that they may be higher than the salaries paid under the current
 	// contract if the guy has recently gained a level.  We could store his daily salary when he was last contracted,
@@ -992,7 +992,7 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 	}
 
 	LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed--;
-	lip->fActive = FALSE;
+	lip->fActive = false;
 }
 
 
@@ -1018,12 +1018,12 @@ static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier)
 			// POWs are also uninsurable - if already insured, that insurance IS valid but no new contracts or extension allowed
 			if (pSoldier->bAssignment != ASSIGNMENT_POW)
 			{
-				return(TRUE);
+				return(true);
 			}
 		}
 	}
 
-	return(FALSE);
+	return(false);
 }
 
 
@@ -1151,9 +1151,9 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 static BOOLEAN CanSoldierExtendInsuranceContract(const SOLDIERTYPE* pSoldier)
 {
 	if( CalculateSoldiersInsuranceContractLength( pSoldier ) != 0 )
-		return( TRUE );
+		return true;
 	else
-		return( FALSE );
+		return false;
 }
 
 
@@ -1223,7 +1223,7 @@ static BOOLEAN AreAnyAimMercsOnTeam(void)
 {
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
-		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC) return TRUE;
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC) return true;
 	}
-	return FALSE;
+	return false;
 }

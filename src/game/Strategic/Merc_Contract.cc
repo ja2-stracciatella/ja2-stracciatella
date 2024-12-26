@@ -45,7 +45,7 @@ struct CONTRACT_NEWAL_LIST_NODE
 
 static SOLDIERTYPE* pLeaveSoldier = NULL;
 
-BOOLEAN	fEnterMapDueToContract = FALSE;
+BOOLEAN	fEnterMapDueToContract = false;
 
 
 SOLDIERTYPE *pContractReHireSoldier = NULL;
@@ -58,9 +58,9 @@ static CONTRACT_NEWAL_LIST_NODE ContractRenewalList[20];
 static UINT8                    ubNumContractRenewals              = 0;
 // end
 static UINT8                    ubCurrentContractRenewal           = 0;
-static UINT8                    ubCurrentContractRenewalInProgress = FALSE;
-BOOLEAN										gfContractRenewalSquenceOn = FALSE;
-BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
+static UINT8                    ubCurrentContractRenewalInProgress = false;
+BOOLEAN										gfContractRenewalSquenceOn = false;
+BOOLEAN										gfInContractMenuFromRenewSequence = false;
 
 
 // the airport sector
@@ -98,7 +98,7 @@ void BeginContractRenewalSequence()
 		if (!ContractIsExpiring(s)) continue;
 		// The user hasn't renewed yet, and is still leaving today
 
-		gfContractRenewalSquenceOn         = TRUE;
+		gfContractRenewalSquenceOn         = true;
 		ubCurrentContractRenewal           = 0;
 		ubCurrentContractRenewalInProgress = 0;
 		PauseGame();
@@ -122,7 +122,7 @@ void HandleContractRenewalSequence( )
 		{
 			// Stop and clear any on list...
 			ubNumContractRenewals = 0;
-			gfContractRenewalSquenceOn = FALSE;
+			gfContractRenewalSquenceOn = false;
 			UnLockPauseState();
 		}
 
@@ -148,7 +148,7 @@ void HandleContractRenewalSequence( )
 				// Handle start here...
 
 				// Determine what quote to use....
-				bool const wants_to_renew = WillMercRenew(pSoldier, FALSE);
+				bool const wants_to_renew = WillMercRenew(pSoldier, false);
 				if (!wants_to_renew)
 				{
 					// OK, he does not want to renew.......
@@ -181,8 +181,8 @@ void HandleContractRenewalSequence( )
 						{
 							LockMapScreenInterface(true);
 							SOLDIERTYPE& s = soldier_;
-							if (wants_to_renew_) CheckIfSalaryIncreasedAndSayQuote(&s, FALSE);
-							gfInContractMenuFromRenewSequence = TRUE;
+							if (wants_to_renew_) CheckIfSalaryIncreasedAndSayQuote(&s, false);
+							gfInContractMenuFromRenewSequence = true;
 							MakeDialogueEventShowContractMenu(s);
 							LockMapScreenInterface(false);
 							return false;
@@ -210,8 +210,8 @@ static void EndCurrentContractRenewal(void)
 	if ( gfContractRenewalSquenceOn )
 	{
 		// OK stop this one and increment current one
-		ubCurrentContractRenewalInProgress = FALSE;
-		gfInContractMenuFromRenewSequence  = FALSE;
+		ubCurrentContractRenewalInProgress = false;
+		gfInContractMenuFromRenewSequence  = false;
 
 		ubCurrentContractRenewal++;
 
@@ -228,7 +228,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 {
 	/* Determine what kind of merc the contract is being extended for (only AIM
 	 * mercs can extend contract) */
-	if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return FALSE;
+	if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return false;
 
 	// Set the contract length and the charge
 	INT32 contract_charge;
@@ -260,20 +260,20 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 			break;
 
 		default:
-			return FALSE;
+			return false;
 	}
 
 	// Check if the merc has enough money
-	if (LaptopSaveInfo.iCurrentBalance < contract_charge) return FALSE;
+	if (LaptopSaveInfo.iCurrentBalance < contract_charge) return false;
 
-	if (!WillMercRenew(s, TRUE))
+	if (!WillMercRenew(s, true))
 	{
 		// Remove soldier (if this is setup because normal contract ending sequence)
 		if (ContractIsExpiring(s))
 		{
 			MakeCharacterDialogueEventContractEnding(*s, true);
 		}
-		return FALSE;
+		return false;
 	}
 
 	LockMapScreenInterface(true);
@@ -335,7 +335,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 	AddTransactionToPlayersBook(finances_contract_type, s->ubProfile, now, -contract_charge);
 	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, s->sSector);
 
-	return TRUE;
+	return true;
 }
 
 
@@ -394,7 +394,7 @@ static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
 
 BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 {
-	if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return FALSE;
+	if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return false;
 
 	// does the merc have another contract already lined up?
 	if (s->fSignedAnotherContract)
@@ -404,12 +404,12 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 		{
 			HandleImportantMercQuoteLocked(s, QUOTE_WONT_RENEW_CONTRACT_LAME_REFUSAL);
 		}
-		return FALSE;
+		return false;
 	}
 
 	UINT16 const reason_quote = FindRefusalReason(s);
 	// happy? no problem
-	if (reason_quote == QUOTE_NONE) return TRUE;
+	if (reason_quote == QUOTE_NONE) return true;
 	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 
 	// find out if the merc has a buddy working for the player
@@ -481,7 +481,7 @@ BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier )
 
 	// does the soldier want to delay renew of contract, possibly due to poor performance by player
 	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-		return( FALSE );
+		return false;
 
 	// type of contract the merc had
 	bTypeOfCurrentContract = pSoldier -> bTypeOfLastContract;
@@ -506,11 +506,11 @@ BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier )
 
 	if( iLeftTimeOnContract > iToleranceLevelForContract )
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 
 }
@@ -536,7 +536,7 @@ void CheckIfMercGetsAnotherContract(SOLDIERTYPE& s)
 	if (full_days_remaining >= 3) return;
 
 	UINT32 const chance = (3 - full_days_remaining) * s.bExpLevel;
-	if (Chance(chance)) s.fSignedAnotherContract = TRUE;
+	if (Chance(chance)) s.fSignedAnotherContract = true;
 }
 
 
@@ -696,9 +696,9 @@ void StrategicRemoveMerc(SOLDIERTYPE& s)
 		ReBuildCharactersList();
 	}
 
-	fMapPanelDirty           = TRUE;
-	fTeamPanelDirty          = TRUE;
-	fCharacterInfoPanelDirty = TRUE;
+	fMapPanelDirty           = true;
+	fTeamPanelDirty          = true;
+	fCharacterInfoPanelDirty = true;
 
 	// stop time compression so player can react to the departure
 	StopTimeCompression();
@@ -835,9 +835,9 @@ static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 {
 	if (!fInMapMode)
 	{
-		gfEnteringMapScreen = TRUE;
+		gfEnteringMapScreen = true;
 
-		fEnterMapDueToContract = TRUE;
+		fEnterMapDueToContract = true;
 		pContractReHireSoldier = pSoldier;
 		LeaveTacticalScreen( MAP_SCREEN );
 	}
@@ -847,11 +847,11 @@ static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 		pContractReHireSoldier = pSoldier;
 	}
 
-	fTeamPanelDirty = TRUE;
-	fCharacterInfoPanelDirty = TRUE;
+	fTeamPanelDirty = true;
+	fCharacterInfoPanelDirty = true;
 
 	LockMapScreenInterface(true);
-	CheckIfSalaryIncreasedAndSayQuote( pSoldier, TRUE );
+	CheckIfSalaryIncreasedAndSayQuote( pSoldier, true );
 	LockMapScreenInterface(false);
 }
 
@@ -885,7 +885,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew(void)
 		// Add this guy to the renewal list
 		ContractRenewalList[ubNumContractRenewals++].ubProfileID = s->ubProfile;
 
-		if (WillMercRenew(s, FALSE))
+		if (WillMercRenew(s, false))
 		{
 			potential_mercs[n_mercs++] = s;
 		}
@@ -972,7 +972,7 @@ static void HandleUniqueEventWhenPlayerLeavesTeam(SOLDIERTYPE* pSoldier)
 			if( gMercProfiles[ pSoldier->ubProfile ].iBalance < 0 )
 			{
 				//iggy is now available to be handled by the enemy
-				gubFact[ FACT_IGGY_AVAILABLE_TO_ARMY ] = TRUE;
+				gubFact[ FACT_IGGY_AVAILABLE_TO_ARMY ] = true;
 			}
 		break;
 	}
@@ -1003,11 +1003,11 @@ static BOOLEAN ContractIsExpiring(SOLDIERTYPE* pSoldier)
 		if ( GetWorldHour( ) == uiCheckHour )
 		{
 			// All's good for go!
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1025,11 +1025,11 @@ static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier)
 		if ( GetWorldHour( ) >= ( uiCheckHour - 2 ) )
 		{
 			// All's good for go!
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 
 }
 

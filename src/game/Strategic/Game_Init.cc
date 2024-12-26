@@ -93,7 +93,7 @@ static void InitNPCs()
 		}
 	}
 
-	gfPlayerTeamSawJoey = FALSE;
+	gfPlayerTeamSawJoey = false;
 
 	if (!gGameOptions.fSciFi)
 	{ //not scifi, so use alternate map in Tixa's b1 level that doesn't have the stairs going down to the caves.
@@ -182,8 +182,8 @@ void InitStrategicLayer( void )
 	ChangeSelectedMapSector(startSector);
 
 	// Reset these flags or mapscreen could be disabled and cause major headache.
-	fDisableDueToBattleRoster = FALSE;
-	fDisableMapInterfaceDueToBattle = FALSE;
+	fDisableDueToBattleRoster = false;
+	fDisableMapInterfaceDueToBattle = false;
 }
 
 void ShutdownStrategicLayer()
@@ -263,7 +263,7 @@ void InitNewGame()
 		gubScreenCount = 1;
 
 		// Set the fact the game is in progress
-		gTacticalStatus.fHasAGameBeenStarted = TRUE;
+		gTacticalStatus.fHasAGameBeenStarted = true;
 	}
 	else if (gubScreenCount == 1)
 	{
@@ -276,9 +276,9 @@ BOOLEAN AnyMercsHired( )
 {
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -286,7 +286,7 @@ BOOLEAN AnyMercsHired( )
 void ReStartingGame()
 {
 	//Pause the game
-	gfGamePaused = TRUE;
+	gfGamePaused = true;
 
 	//Reset the sectors
 	SetWorldSectorInvalid();
@@ -340,7 +340,7 @@ void ReStartingGame()
 	DeleteCreatureDirectives();
 
 	//This function gets called when ur in a game a click the quit to main menu button, therefore no game is in progress
-	gTacticalStatus.fHasAGameBeenStarted = FALSE;
+	gTacticalStatus.fHasAGameBeenStarted = false;
 
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;

@@ -60,11 +60,11 @@ void FingerDown(const SDL_TouchFingerEvent*);
 void FingerUp(const SDL_TouchFingerEvent*);
 
 SGPPoint GetMousePos();
-// TRUE = specified mouse button is down, FALSE = specified mouse button is up
+// true = specified mouse button is down, false = specified mouse button is up
 bool IsMouseButtonDown(UINT32 mouseButton);
-// TRUE = Main finger is down. Multitouch gesture is not detected, FALSE = Main finger is up or multitouch gesture is in progress
+// true = Main finger is down. Multitouch gesture is not detected, false = Main finger is up or multitouch gesture is in progress
 bool IsMainFingerDown();
-// TRUE = Last pointer device that was used was a touch device, FALSE = Last pointer device that was used was a mouse
+// true = Last pointer device that was used was a touch device, false = Last pointer device that was used was a mouse
 bool IsUsingTouch();
 
 void DequeueAllInputEvents(void);

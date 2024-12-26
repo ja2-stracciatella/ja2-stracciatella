@@ -222,7 +222,7 @@ void DeleteAniTile(ANITILE* const a)
 			}
 
 			// Freeup attacker from explosion
-			ReduceAttackBusyCount(owner, FALSE);
+			ReduceAttackBusyCount(owner, false);
 		}
 
 
@@ -333,7 +333,7 @@ void UpdateAniTiles( )
 									if (stunEffect && radius < stunEffect->radius) {
 										radius = stunEffect->radius;
 									}
-									SpreadEffect(pNode->sGridNo, radius, item, e->owner, FALSE, e->bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, radius, item, e->owner, false, e->bLevel, NULL);
 								}
 								// Forfait any other animations this frame....
 								return;

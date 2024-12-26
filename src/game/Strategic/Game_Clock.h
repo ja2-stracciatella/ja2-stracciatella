@@ -66,8 +66,8 @@ void RenderPausedGameBox( void );
 
 void StopTimeCompression( void );
 void StartTimeCompression( void );
-BOOLEAN IsTimeBeingCompressed( void );	// returns FALSE if time isn't currently being compressed for ANY reason (various pauses, etc.)
-BOOLEAN IsTimeCompressionOn( void );		// returns TRUE if the player currently wants time to be compressing
+BOOLEAN IsTimeBeingCompressed( void );	// returns false if time isn't currently being compressed for ANY reason (various pauses, etc.)
+BOOLEAN IsTimeCompressionOn( void );		// returns true if the player currently wants time to be compressing
 
 //USING TIME COMPRESSION
 //Allows the setting/changing/access of time rate via predefined compression values.

@@ -318,11 +318,11 @@ AIMVideoMode        gubVideoConferencingMode         = AIM_VIDEO_NOT_DISPLAYED_M
 static AIMVideoMode gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 static BOOLEAN      gfJustSwitchedVideoConferenceMode;
 
-static BOOLEAN gfMercIsTalking=FALSE;
-static BOOLEAN gfVideoFaceActive=FALSE;
+static BOOLEAN gfMercIsTalking=false;
+static BOOLEAN gfVideoFaceActive=false;
 
 static PopUpAction gubPopUpBoxAction = AIM_POPUP_NOTHING;
-static BOOLEAN     gfRedrawScreen    = FALSE;
+static BOOLEAN     gfRedrawScreen    = false;
 static UINT8       gubContractLength;
 static BOOLEAN     gfBuyEquipment;
 static INT32       giContractAmount  = 0;
@@ -343,16 +343,16 @@ static BOOLEAN gfStopMercFromTalking;
 
 static UINT16 usAimMercSpeechDuration=0;
 
-static BOOLEAN gfIsNewMailFlagSet = FALSE;
+static BOOLEAN gfIsNewMailFlagSet = false;
 
 extern		BOOLEAN fExitDueToMessageBox;
 
-static BOOLEAN gfWaitingForMercToStopTalkingOrUserToClick=FALSE;
+static BOOLEAN gfWaitingForMercToStopTalkingOrUserToClick=false;
 
-static BOOLEAN gfAimMemberDisplayFaceHelpText = FALSE;
+static BOOLEAN gfAimMemberDisplayFaceHelpText = false;
 
 
-static BOOLEAN gfAimMemberCanMercSayOpeningQuote = TRUE;
+static BOOLEAN gfAimMemberCanMercSayOpeningQuote = true;
 
 
 static BUTTON_PICS* guiPreviousContactNextButtonImage;
@@ -399,18 +399,18 @@ void EnterInitAimMembers()
 {
 	gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
-	gfVideoFaceActive = FALSE;
-	//fShouldMercTalk = FALSE;
+	gfVideoFaceActive = false;
+	//fShouldMercTalk = false;
 	gubPopUpBoxAction = AIM_POPUP_NOTHING;
-	gfRedrawScreen = FALSE;
+	gfRedrawScreen = false;
 	giContractAmount = 0;
 	giMercFaceIndex = NULL;
 	guiLastHandleMercTime = GetJA2Clock();
 	gubCurrentCount = 0;
-	gfFirstTimeInContactScreen = TRUE;
+	gfFirstTimeInContactScreen = true;
 
 	//reset the variable so a pop up can be displyed this time in laptop
-	LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop = FALSE;
+	LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop = false;
 
 	//reset the id of the last merc
 	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
@@ -506,7 +506,7 @@ void EnterAIMMembers()
 
 	gbCurrentSoldier = AimMercArray[gbCurrentIndex];
 
-	gfStopMercFromTalking = FALSE;
+	gfStopMercFromTalking = false;
 	gubVideoConferencingMode = static_cast<AIMVideoMode>(giCurrentSubPage);
 	gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 
@@ -529,8 +529,8 @@ void EnterAIMMembers()
 	//LoadTextMercPopupImages( BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER);
 
 	RenderAIMMembers();
-	gfIsNewMailFlagSet = FALSE;
-	gfAimMemberCanMercSayOpeningQuote = TRUE;
+	gfIsNewMailFlagSet = false;
+	gfAimMemberCanMercSayOpeningQuote = true;
 }
 
 
@@ -588,7 +588,7 @@ static void StopMercTalking(void);
 void HandleAIMMembers()
 {
 	//determine if the merc has a quote that is waiting to be said
-	DelayMercSpeech( 0, 0, 0, FALSE, FALSE );
+	DelayMercSpeech( 0, 0, 0, false, false );
 
 	if( gfHangUpMerc && !gfMercIsTalking)
 	{
@@ -597,19 +597,19 @@ void HandleAIMMembers()
 		{
 			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
 		}
-		gfHangUpMerc = FALSE;
+		gfHangUpMerc = false;
 	}
 
 	if( gfStopMercFromTalking )
 	{
 		StopMercTalking();
-		gfStopMercFromTalking = FALSE;
+		gfStopMercFromTalking = false;
 		/*
 		//if we were waiting for the merc to stop talking
 		if( gfWaitingForMercToStopTalkingOrUserToClick )
 		{
 			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
-			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
+			gfWaitingForMercToStopTalkingOrUserToClick = false;
 		}*/
 	}
 
@@ -620,7 +620,7 @@ void HandleAIMMembers()
 
 		//if we are exiting to display a popup box, dont rerender the display
 		if( !fExitDueToMessageBox )
-			gfRedrawScreen = TRUE;
+			gfRedrawScreen = true;
 	}
 
 
@@ -631,7 +631,7 @@ void HandleAIMMembers()
 
 		//if we are exiting to display a popup box, dont rerender the display
 		if( !fExitDueToMessageBox )
-			gfRedrawScreen = TRUE;
+			gfRedrawScreen = true;
 	}
 
 	// Handle the current video conference screen
@@ -654,16 +654,16 @@ void HandleAIMMembers()
 	//if we have to rerender the popup, set the flag to render the PostButtonRender function in laptop.c
 	if( gubPopUpBoxAction == AIM_POPUP_DISPLAY )
 	{
-		fReDrawPostButtonRender = TRUE;
+		fReDrawPostButtonRender = true;
 	}
 
 	// Gets set in the InitDeleteVideoConferencePopUp() function
-	gfJustSwitchedVideoConferenceMode = FALSE;
+	gfJustSwitchedVideoConferenceMode = false;
 
 	if( gfRedrawScreen )
 	{
 		RenderAIMMembers();
-		gfRedrawScreen = FALSE;
+		gfRedrawScreen = false;
 	}
 	MarkButtonsDirty( );
 }
@@ -739,7 +739,7 @@ void RenderAIMMembers()
 	else
 	{
 		gubMercAttitudeLevel=0;
-		gfIsAnsweringMachineActive = FALSE;
+		gfIsAnsweringMachineActive = false;
 	}
 
 	//DisplayAimPopUpBox();
@@ -757,8 +757,8 @@ void RenderAIMMembers()
 
 
 	RenderWWWProgramTitleBar( );
-	DisplayProgramBoundingBox( TRUE );
-	fReDrawScreenFlag = TRUE;
+	DisplayProgramBoundingBox( true );
+	fReDrawScreenFlag = true;
 }
 
 
@@ -780,7 +780,7 @@ static void SelectFaceRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReaso
 	if (!IsMercDead(GetProfile(gbCurrentSoldier)))
 	{
 		gubVideoConferencingMode = AIM_VIDEO_POPUP_MODE;
-		gfFirstTimeInContactScreen = TRUE;
+		gfFirstTimeInContactScreen = true;
 	}
 }
 
@@ -794,13 +794,13 @@ static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReas
 {
 	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		gfAimMemberDisplayFaceHelpText = FALSE;
-		gfRedrawScreen = TRUE;
+		gfAimMemberDisplayFaceHelpText = false;
+		gfRedrawScreen = true;
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		gfAimMemberDisplayFaceHelpText = TRUE;
-		gfRedrawScreen = TRUE;
+		gfAimMemberDisplayFaceHelpText = true;
+		gfRedrawScreen = true;
 	}
 }
 
@@ -917,7 +917,7 @@ static void BtnPreviousButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		gbCurrentIndex =
 			(gbCurrentIndex > 0 ? gbCurrentIndex - 1 : MAX_NUMBER_MERCS - 1);
 
-		gfRedrawScreen = TRUE;
+		gfRedrawScreen = true;
 		gbCurrentSoldier = AimMercArray[gbCurrentIndex];
 		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	}
@@ -933,7 +933,7 @@ static void BtnContactButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		{
 			gubVideoConferencingMode = AIM_VIDEO_POPUP_MODE;
 			//gubVideoConferencingMode = AIM_VIDEO_INIT_MODE;
-			gfFirstTimeInContactScreen = TRUE;
+			gfFirstTimeInContactScreen = true;
 		}
 
 		DeleteAimPopUpBox();
@@ -951,7 +951,7 @@ static void BtnNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 			(gbCurrentIndex < MAX_NUMBER_MERCS - 1 ? gbCurrentIndex + 1 : 0);
 
 		gbCurrentSoldier = AimMercArray[gbCurrentIndex];
-		gfRedrawScreen = TRUE;
+		gfRedrawScreen = true;
 		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	}
 }
@@ -976,32 +976,32 @@ try
 	if (IsMercDead(p))
 	{
 		// the merc is dead, so shade the face red
-		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, true);
 		face->CurrentShade(0);
-		shaded = FALSE;
+		shaded = false;
 		text   = AimPopUpText[AIM_MEMBER_DEAD];
 	}
 	else if (p.bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
 	{
 		// the merc is currently a POW or, the merc was fired as a pow
-		shaded = TRUE;
+		shaded = true;
 		text   = pPOWStrings[0];
 	}
 	else if (s != NULL)
 	{
 		// the merc has already been hired
-		shaded = TRUE;
+		shaded = true;
 		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
 	else if (!IsMercHireable(p))
 	{
 		// the merc has a text file and the merc is not away
-		shaded = TRUE;
+		shaded = true;
 		text   = AimPopUpText[AIM_MEMBER_ON_ASSIGNMENT];
 	}
 	else
 	{
-		shaded = FALSE;
+		shaded = false;
 		text.clear();
 	}
 
@@ -1126,7 +1126,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		UINT8	ubRetValue = btn->GetUserData();
 
-		gfStopMercFromTalking = TRUE;
+		gfStopMercFromTalking = true;
 		gubMercAttitudeLevel = QUOTE_DELAY_NO_ACTION;
 
 		//If we try to hire the merc
@@ -1142,10 +1142,10 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 				{
 					// if merc was hired
 					CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], {}, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
-					DelayMercSpeech( gbCurrentSoldier, QUOTE_CONTRACT_ACCEPTANCE, 750, TRUE, FALSE );
+					DelayMercSpeech( gbCurrentSoldier, QUOTE_CONTRACT_ACCEPTANCE, 750, true, false );
 
 					//Disable the buttons behind the message box
-					EnableDisableCurrentVideoConferenceButtons( TRUE );
+					EnableDisableCurrentVideoConferenceButtons( true );
 
 					giBuyEquipmentButton[0]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 					giBuyEquipmentButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
@@ -1157,7 +1157,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 				//else the merc doesnt like a player on the team, hang up when the merc is done complaining
 
 				//reset ( in case merc was going to say something
-				DelayMercSpeech( 0, 0, 0, FALSE, TRUE );
+				DelayMercSpeech( 0, 0, 0, false, true );
 
 				gubVideoConferencingMode = AIM_VIDEO_HIRE_MERC_MODE;
 			}
@@ -1180,12 +1180,12 @@ static INT8 AimMemberHireMerc(void)
 		CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_FAILED], AimPopUpText[AIM_MEMBER_NOT_ENOUGH_FUNDS], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_FAILURE);
 
 		// Disable the buttons behind the message box
-		EnableDisableCurrentVideoConferenceButtons(TRUE);
+		EnableDisableCurrentVideoConferenceButtons(true);
 		giBuyEquipmentButton[0]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 		giBuyEquipmentButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 
-		DelayMercSpeech(gbCurrentSoldier, QUOTE_REFUSAL_TO_JOIN_LACK_OF_FUNDS, 750, TRUE, FALSE);
-		return FALSE;
+		DelayMercSpeech(gbCurrentSoldier, QUOTE_REFUSAL_TO_JOIN_LACK_OF_FUNDS, 750, true, false);
+		return false;
 	}
 
 	ProfileID const pid = AimMercArray[gbCurrentIndex];
@@ -1194,7 +1194,7 @@ static INT8 AimMemberHireMerc(void)
 	h = MERC_HIRE_STRUCT{};
 	h.ubProfileID               = pid;
 	h.sSector                   = g_merc_arrive_sector;
-	h.fUseLandingZoneForArrival = TRUE;
+	h.fUseLandingZoneForArrival = true;
 	h.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
 	h.fCopyProfileItemsOver     = gfBuyEquipment;
 	h.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
@@ -1228,7 +1228,7 @@ static INT8 AimMemberHireMerc(void)
 	{
 		// Set the type of contract the merc is on
 		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(pid);
-		if (!s) return FALSE;
+		if (!s) return false;
 		s->bTypeOfLastContract = contract_type;
 
 		MERCPROFILESTRUCT& p = GetProfile(pid);
@@ -1244,14 +1244,14 @@ static INT8 AimMemberHireMerc(void)
 
 		// Add an entry in the history page for the hiring of the merc
 		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), SGPSector(-1, -1));
-		return TRUE;
+		return true;
 	}
 	else if (ret == MERC_HIRE_OVER_20_MERCS_HIRED)
 	{
 		// Display a warning saying you can't hire more then 20 mercs
 		DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[AIM_MEMBER_ALREADY_HAVE_20_MERCS], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1418,7 +1418,7 @@ static UINT16  usPopUpBoxPosX;
 static UINT16  usPopUpBoxPosY;
 static ST::string sPopUpString1;
 static ST::string sPopUpString2;
-static BOOLEAN fPopUpBoxActive = FALSE;
+static BOOLEAN fPopUpBoxActive = false;
 
 
 static void BtnPopUpOkButtonCallback(GUI_BUTTON* btn, UINT32 reason);
@@ -1452,23 +1452,23 @@ static void CreateAimPopUpBox(const ST::string& sString1, const ST::string& sStr
 	guiPopUpOkButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 	guiPopUpOkButton->SetUserData(ubData);
 
-	fPopUpBoxActive   = TRUE;
+	fPopUpBoxActive   = true;
 	gubPopUpBoxAction = AIM_POPUP_DISPLAY;
 
 	if (gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE)
 	{
 		// Enable the current video conference buttons
-		EnableDisableCurrentVideoConferenceButtons(FALSE);
+		EnableDisableCurrentVideoConferenceButtons(false);
 	}
 
 	// Create a new flag for the PostButtonRendering function
-	fReDrawPostButtonRender = TRUE;
+	fReDrawPostButtonRender = true;
 }
 
 
 static BOOLEAN DisplayAimPopUpBox()
 {
-	if (gubPopUpBoxAction != AIM_POPUP_DISPLAY) return FALSE;
+	if (gubPopUpBoxAction != AIM_POPUP_DISPLAY) return false;
 
 	UINT16 y = usPopUpBoxPosY;
 	BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPopUpBoxPosX, y);
@@ -1481,13 +1481,13 @@ static BOOLEAN DisplayAimPopUpBox()
 
 	SetFontShadow(DEFAULT_SHADOW);
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-	return TRUE;
+	return true;
 }
 
 
 static BOOLEAN DeleteAimPopUpBox()
 {
-	if (!fPopUpBoxActive) return FALSE;
+	if (!fPopUpBoxActive) return false;
 
 	//Disable the 'X' to close the pop up video
 	EnableButton(giXToCloseVideoConfButton);
@@ -1496,18 +1496,18 @@ static BOOLEAN DeleteAimPopUpBox()
 	RemoveButton(guiPopUpOkButton);
 	DeleteVideoObject(guiPopUpBox);
 
-	fPopUpBoxActive   = FALSE;
+	fPopUpBoxActive   = false;
 	gubPopUpBoxAction = AIM_POPUP_NOTHING;
 
 	switch (gubVideoConferencingPreviousMode)
 	{
-		case AIM_VIDEO_HIRE_MERC_MODE:              EnableDisableCurrentVideoConferenceButtons(FALSE); break;
+		case AIM_VIDEO_HIRE_MERC_MODE:              EnableDisableCurrentVideoConferenceButtons(false); break;
 		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE: EnableButton(giAnsweringMachineButton[1]);         break;
 		default:
 			break;
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -1516,7 +1516,7 @@ static void WaitForMercToFinishTalkingOrUserToClick(void);
 
 static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 {
-	static BOOLEAN fInCallback = TRUE;
+	static BOOLEAN fInCallback = true;
 
 	if (fInCallback)
 	{
@@ -1524,9 +1524,9 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		{
 			UINT8 const ubCurPageNum = btn->GetUserData();
 
-			fInCallback = FALSE;
+			fInCallback = false;
 
-			//gfStopMercFromTalking = TRUE;
+			//gfStopMercFromTalking = true;
 
 			gubPopUpBoxAction = AIM_POPUP_DELETE;
 
@@ -1542,7 +1542,7 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 					gubVideoConferencingMode = AIM_VIDEO_HIRE_MERC_MODE;
 			}
 
-			fInCallback = TRUE;
+			fInCallback = true;
 		}
 	}
 }
@@ -1555,10 +1555,10 @@ static void BtnFirstContactButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		UINT8	const ubRetValue = btn->GetUserData();
 
-		//gfStopMercFromTalking = TRUE;
+		//gfStopMercFromTalking = true;
 		StopMercTalking();
 
-		gfAimMemberCanMercSayOpeningQuote = FALSE;
+		gfAimMemberCanMercSayOpeningQuote = false;
 
 		if (ubRetValue == 0)
 		{
@@ -1628,7 +1628,7 @@ static void InitVideoFace(UINT8 ubMercID)
 
 	gubCurrentStaticMode = VC_NO_STATIC;
 
-	gfVideoFaceActive = TRUE;
+	gfVideoFaceActive = true;
 
 	guiMercAttitudeTime = GetJA2Clock();
 }
@@ -1638,25 +1638,25 @@ static void InitVideoFace(UINT8 ubMercID)
 static BOOLEAN InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum)
 {
 	//Starts the merc talking
-	CharacterDialogue(ubMercID, usQuoteNum, giMercFaceIndex, DIALOGUE_CONTACTPAGE_UI, FALSE);
+	CharacterDialogue(ubMercID, usQuoteNum, giMercFaceIndex, DIALOGUE_CONTACTPAGE_UI, false);
 
 	//Enables it so if a player clicks, he will shutup the merc
 	gSelectedShutUpMercRegion.Enable();
 
-	gfIsShutUpMouseRegionActive = TRUE;
-	gfMercIsTalking = TRUE;
+	gfIsShutUpMouseRegionActive = true;
+	gfMercIsTalking = true;
 	guiTimeThatMercStartedTalking	= GetJA2Clock();
-	return(TRUE);
+	return(true);
 }
 
 
 static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 {
-	static BOOLEAN fWasTheMercTalking=FALSE;
+	static BOOLEAN fWasTheMercTalking=false;
 	BOOLEAN		fIsTheMercTalking;
 
 	//If the answering machine graphics is up, dont handle the faces
-	if (gfIsAnsweringMachineActive) giMercFaceIndex->fInvalidAnim = TRUE;
+	if (gfIsAnsweringMachineActive) giMercFaceIndex->fInvalidAnim = true;
 
 	HandleDialogue();
 	HandleAutoFaces( );
@@ -1710,9 +1710,9 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 		//if the merc just stopped talking
 		if(fWasTheMercTalking && !fIsTheMercTalking )
 		{
-			fWasTheMercTalking = FALSE;
+			fWasTheMercTalking = false;
 
-			gfRedrawScreen = TRUE;
+			gfRedrawScreen = true;
 			guiMercAttitudeTime = GetJA2Clock();
 
 			StopMercTalking();
@@ -1738,7 +1738,7 @@ void DisplayTextForMercFaceVideoPopUp(const ST::string& str)
 		usAimMercSpeechDuration = MINIMUM_TALKING_TIME_FOR_MERC;
 
 
-	gfRedrawScreen = TRUE;
+	gfRedrawScreen = true;
 }
 
 
@@ -1746,7 +1746,7 @@ static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason
 {
 	if (iReason & (MSYS_CALLBACK_REASON_ANY_BUTTON_UP))
 	{
-		gfStopMercFromTalking = TRUE;
+		gfStopMercFromTalking = true;
 	}
 }
 
@@ -1779,7 +1779,7 @@ static BOOLEAN CanMercBeHired(void)
 		// then he refuses with a lame excuse.  Buddy or no buddy.
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_LAME_REFUSAL);
-		return FALSE;
+		return false;
 	}
 
 	BuddySlot const buddy = GetFirstBuddyOnTeam(p);
@@ -1804,7 +1804,7 @@ static BOOLEAN CanMercBeHired(void)
 			case LEARNED_TO_LIKE_SLOT: quote = QUOTE_JOINING_CAUSE_LEARNED_TO_LIKE_BUDDY_ON_TEAM; goto join_buddy;
 join_buddy:
 				InitVideoFaceTalking(pid, quote);
-				return TRUE;
+				return true;
 			case BUDDY_NOT_FOUND: break;
 			default: /* std::unreachable(); */ break;
 		}
@@ -1837,17 +1837,17 @@ join_buddy:
 		}
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, quote);
-		return FALSE;
+		return false;
 	}
 
-	if (buddy != BUDDY_NOT_FOUND) return TRUE;
+	if (buddy != BUDDY_NOT_FOUND) return true;
 
 	// Check the players Death rate
 	if (MercThinksDeathRateTooHigh(p))
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_DEATH_RATE_REFUSAL);
-		return FALSE;
+		return false;
 	}
 
 	// Check the players Reputation
@@ -1855,11 +1855,11 @@ join_buddy:
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_REPUTATION_REFUSAL);
-		return FALSE;
+		return false;
 	}
 
 	if (join_quote != QUOTE_NONE) InitVideoFaceTalking(pid, join_quote);
-	return TRUE;
+	return true;
 }
 
 
@@ -1880,14 +1880,14 @@ static BOOLEAN DisplaySnowBackground(void)
 	}
 	else
 	{
-		gfFirstTimeInContactScreen = FALSE;
+		gfFirstTimeInContactScreen = false;
 		gubCurrentCount = 0;
 		ubCount = 0;
 
 		if( gubVideoConferencingMode == AIM_VIDEO_FIRST_CONTACT_MERC_MODE && gfAimMemberCanMercSayOpeningQuote )
 			InitVideoFaceTalking(gbCurrentSoldier, QUOTE_GREETING);
 
-		return(TRUE);
+		return(true);
 	}
 
 	// if it is time to update the snow image
@@ -1900,7 +1900,7 @@ static BOOLEAN DisplaySnowBackground(void)
 
 	InvalidateRegion(AIM_MEMBER_VIDEO_FACE_X,AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT);
 
-	return(FALSE);
+	return(false);
 }
 
 
@@ -1913,7 +1913,7 @@ static BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops)
 	if (gubCurrentCount >= ubMaxNumOfLoops)
 	{
 		gubCurrentCount = 0;
-		return(TRUE);
+		return(true);
 	}
 
 	// if it is time to update the snow image
@@ -1926,7 +1926,7 @@ static BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, AIM_MEMBER_VIDEO_FACE_X, AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,	AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 	InvalidateRegion(AIM_MEMBER_VIDEO_FACE_X,AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT);
 
-	return(FALSE);
+	return(false);
 }
 
 
@@ -2036,7 +2036,7 @@ static void HandleVideoDistortion(void)
 				break;
 
 			case VC_TRANS_SNOW_OUT:
-				gubCurrentStaticMode = DisplayTransparentSnow(VC_TRANS_SNOW_OUT, guiTransSnow, 7, FALSE);
+				gubCurrentStaticMode = DisplayTransparentSnow(VC_TRANS_SNOW_OUT, guiTransSnow, 7, false);
 
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
@@ -2046,7 +2046,7 @@ static void HandleVideoDistortion(void)
 				break;
 
 			case VC_TRANS_SNOW_IN:
-				gubCurrentStaticMode = DisplayTransparentSnow(VC_TRANS_SNOW_IN, guiTransSnow, 7, TRUE);
+				gubCurrentStaticMode = DisplayTransparentSnow(VC_TRANS_SNOW_IN, guiTransSnow, 7, true);
 
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
@@ -2214,11 +2214,11 @@ static void HandleMercAttitude(void)
 			InitVideoFaceTalking(gbCurrentSoldier, QUOTE_COMMENT_BEFORE_HANG_UP);
 
 			//if the merc is going to hang up disable the buttons, so user cant press any buttons
-			//EnableDisableCurrentVideoConferenceButtons( FALSE);
+			//EnableDisableCurrentVideoConferenceButtons( false);
 			if( gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE )
 			{
 				// Enable the current video conference buttons
-				EnableDisableCurrentVideoConferenceButtons(FALSE);
+				EnableDisableCurrentVideoConferenceButtons(false);
 			}
 
 
@@ -2233,13 +2233,13 @@ static void HandleMercAttitude(void)
 			uiResetTime += GetWorldTotalMin() + MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES;
 			AddStrategicEvent( EVENT_AIM_RESET_MERC_ANNOYANCE, uiResetTime, gbCurrentSoldier );
 
-			gfHangUpMerc = TRUE;
+			gfHangUpMerc = true;
 		}
 
 		if( gubMercAttitudeLevel == QUOTE_MERC_BUSY )
 		{
 			InitVideoFaceTalking(gbCurrentSoldier, QUOTE_LAME_REFUSAL);
-			gfHangUpMerc = TRUE;
+			gfHangUpMerc = true;
 		}
 		else if( gubMercAttitudeLevel != QUOTE_DELAY_NO_ACTION )
 			gubMercAttitudeLevel++;
@@ -2256,10 +2256,10 @@ static void StopMercTalking(void)
 		gSelectedShutUpMercRegion.Disable();
 
 		ShutupaYoFace( giMercFaceIndex );
-		gfMercIsTalking = FALSE;
+		gfMercIsTalking = false;
 		guiMercAttitudeTime = GetJA2Clock();
-		gfIsShutUpMouseRegionActive = FALSE;
-		gfRedrawScreen = TRUE;
+		gfIsShutUpMouseRegionActive = false;
+		gfRedrawScreen = true;
 	}
 }
 
@@ -2290,16 +2290,16 @@ static void DeleteVideoConfPopUp(void);
 static void InitDeleteVideoConferencePopUp(void)
 {
 	//remove the face help text
-	gfAimMemberDisplayFaceHelpText = FALSE;
+	gfAimMemberDisplayFaceHelpText = false;
 
-	//Gets reset to FALSE in the HandleCurrentVideoConfMode() function
-	gfJustSwitchedVideoConferenceMode = TRUE;
+	//Gets reset to false in the HandleCurrentVideoConfMode() function
+	gfJustSwitchedVideoConferenceMode = true;
 
 	//remove old mode
 	DeleteVideoConfPopUp();
 
 	// reset (in case merc was going to say something)
-	DelayMercSpeech(0, 0, 0, FALSE, TRUE);
+	DelayMercSpeech(0, 0, 0, false, true);
 
 	// if the video conferencing is currently displayed, put the 'x' to close it
 	// in the top right corner and disable the ability to click on the BIG face to
@@ -2320,7 +2320,7 @@ static void InitDeleteVideoConferencePopUp(void)
 		{
 			// The video conference is not displayed
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-			gfRedrawScreen = TRUE;
+			gfRedrawScreen = true;
 
 			if (gfVideoFaceActive)
 			{
@@ -2330,9 +2330,9 @@ static void InitDeleteVideoConferencePopUp(void)
 			}
 
 			//if the ansering machine is currently on, turn it off
-			gfIsAnsweringMachineActive = FALSE;
+			gfIsAnsweringMachineActive = false;
 
-			gfVideoFaceActive = FALSE;
+			gfVideoFaceActive = false;
 
 			if (giXToCloseVideoConfButton)
 			{
@@ -2347,11 +2347,11 @@ static void InitDeleteVideoConferencePopUp(void)
 			if (gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE)
 			{
 				// Enable the current video conference buttons
-				EnableDisableCurrentVideoConferenceButtons(FALSE);
+				EnableDisableCurrentVideoConferenceButtons(false);
 			}
 
 			fNewMailFlag       = gfIsNewMailFlagSet;
-			gfIsNewMailFlagSet = FALSE;
+			gfIsNewMailFlagSet = false;
 			break;
 		}
 
@@ -2367,7 +2367,7 @@ static void InitDeleteVideoConferencePopUp(void)
 				guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 				BltVideoObjectOnce(guiVideoTitleBar, LAPTOPDIR "/videotitlebar.sti", 0, 0, 0);
 
-				gfAimMemberCanMercSayOpeningQuote = TRUE;
+				gfAimMemberCanMercSayOpeningQuote = true;
 			}
 			break;
 		}
@@ -2379,10 +2379,10 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubMercAttitudeLevel  = 0;
 			gubContractLength     = AIM_CONTRACT_LENGTH_ONE_WEEK;
 			gfBuyEquipment        = GetProfile(gbCurrentSoldier).usOptionalGearCost != 0;
-			gfMercIsTalking       = FALSE;
-			gfVideoFaceActive     = FALSE;
+			gfMercIsTalking       = false;
+			gfVideoFaceActive     = false;
 			guiLastHandleMercTime = 0;
-			gfHangUpMerc          = FALSE;
+			gfHangUpMerc          = false;
 			break;
 		}
 
@@ -2415,7 +2415,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			if (gfWaitingForMercToStopTalkingOrUserToClick)
 			{
 				DisableButton(giAuthorizeButton[0]);
-				gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
+				gfWaitingForMercToStopTalkingOrUserToClick = false;
 			}
 			break;
 		}
@@ -2471,7 +2471,7 @@ static void InitDeleteVideoConferencePopUp(void)
 				usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 			}
 
-			DelayMercSpeech(gbCurrentSoldier, QUOTE_LENGTH_OF_CONTRACT, 750, TRUE, FALSE);
+			DelayMercSpeech(gbCurrentSoldier, QUOTE_LENGTH_OF_CONTRACT, 750, true, false);
 			break;
 		}
 
@@ -2480,7 +2480,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			// The merc is not home and the player gets the answering machine
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
-			gfIsAnsweringMachineActive = TRUE;
+			gfIsAnsweringMachineActive = true;
 
 			// Leave msg button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
@@ -2535,7 +2535,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
-			gfIsAnsweringMachineActive = FALSE;
+			gfIsAnsweringMachineActive = false;
 
 			// load the Video conference background graphic and add it
 
@@ -2554,7 +2554,7 @@ static void InitDeleteVideoConferencePopUp(void)
 static void DeleteVideoConfPopUp(void)
 {
 	// reset (in case merc was going to say something)
-	DelayMercSpeech(0, 0, 0, FALSE, TRUE);
+	DelayMercSpeech(0, 0, 0, false, true);
 
 	switch (gubVideoConferencingPreviousMode)
 	{
@@ -2600,7 +2600,7 @@ static void DeleteVideoConfPopUp(void)
 
 		case AIM_VIDEO_POPDOWN_MODE:
 			if (gubPopUpBoxAction == AIM_POPUP_DISPLAY) return;
-			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
+			gfWaitingForMercToStopTalkingOrUserToClick = false;
 			DeleteVideoSurface(guiVideoTitleBar);
 			break;
 	}
@@ -2616,11 +2616,11 @@ static void HandleCurrentVideoConfMode(void)
 	{
 		// The video conference is not displayed
 		case AIM_VIDEO_NOT_DISPLAYED_MODE:
-			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
+			gfWaitingForMercToStopTalkingOrUserToClick = false;
 			break;
 
 		case AIM_VIDEO_POPUP_MODE:
-			if (DisplayMovingTitleBar(TRUE))
+			if (DisplayMovingTitleBar(true))
 			{
 				gubVideoConferencingMode = AIM_VIDEO_INIT_MODE;
 			}
@@ -2673,7 +2673,7 @@ static void HandleCurrentVideoConfMode(void)
 			break;
 
 		case AIM_VIDEO_POPDOWN_MODE:
-			if (DisplayMovingTitleBar(FALSE))
+			if (DisplayMovingTitleBar(false))
 			{
 				gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 
@@ -2683,7 +2683,7 @@ static void HandleCurrentVideoConfMode(void)
 				//render the screen immediately to get rid of the pop down stuff
 				InitDeleteVideoConferencePopUp();
 				RenderAIMMembers();
-				gfVideoFaceActive = FALSE;
+				gfVideoFaceActive = false;
 			}
 			break;
 	}
@@ -2692,7 +2692,7 @@ static void HandleCurrentVideoConfMode(void)
 
 static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN const fEnable)
 {
-	static BOOLEAN fCreated = FALSE;
+	static BOOLEAN fCreated = false;
 
 	if (fCreated == fEnable) return;
 	fCreated = fEnable;
@@ -2728,9 +2728,9 @@ void DisableNewMailMessage(void)
 {
 	if (fNewMailFlag && gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
 	{
-		gfIsNewMailFlagSet = TRUE;
-		fNewMailFlag = FALSE;
-		gfRedrawScreen = TRUE;
+		gfIsNewMailFlagSet = true;
+		fNewMailFlag = false;
+		gfRedrawScreen = true;
 	}
 }
 
@@ -2811,14 +2811,14 @@ static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, B
 	UINT32         uiCurTime;
 	static UINT16  usCurQuoteNum;
 	static UINT16  usCurDelay;
-	static BOOLEAN fQuoteWaiting = FALSE; //a quote is waiting to be said
+	static BOOLEAN fQuoteWaiting = false; //a quote is waiting to be said
 	static UINT8   ubCurMercID;
-	static BOOLEAN fHangUpAfter=FALSE;
+	static BOOLEAN fHangUpAfter=false;
 
 	uiCurTime = GetJA2Clock();
 
 	if( fReset )
-		fQuoteWaiting = FALSE;
+		fQuoteWaiting = false;
 
 	if( fNewQuote )
 	{
@@ -2831,12 +2831,12 @@ static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, B
 
 		if( gfHangUpMerc )
 		{
-			gfHangUpMerc = FALSE;
-			fHangUpAfter = TRUE;
+			gfHangUpMerc = false;
+			fHangUpAfter = true;
 		}
 
 
-		fQuoteWaiting = TRUE;
+		fQuoteWaiting = true;
 	}
 
 
@@ -2845,12 +2845,12 @@ static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, B
 		if( ( uiCurTime - uiLastTime ) > usCurDelay )
 		{
 			InitVideoFaceTalking( ubCurMercID, usCurQuoteNum );
-			fQuoteWaiting = FALSE;
+			fQuoteWaiting = false;
 
 			if( fHangUpAfter )
 			{
-				gfHangUpMerc = TRUE;
-				fHangUpAfter = FALSE;
+				gfHangUpMerc = true;
+				fHangUpAfter = false;
 			}
 		}
 	}
@@ -2863,7 +2863,7 @@ static void WaitForMercToFinishTalkingOrUserToClick(void)
 	{
 		//Enables it so if a player clicks, he will shutup the merc
 		gSelectedShutUpMercRegion.Enable();
-		gfIsShutUpMouseRegionActive = TRUE;
+		gfIsShutUpMouseRegionActive = true;
 	}
 
 	if( gfIsAnsweringMachineActive )
@@ -2871,9 +2871,9 @@ static void WaitForMercToFinishTalkingOrUserToClick(void)
 	else
 		gubVideoConferencingMode = AIM_VIDEO_FIRST_CONTACT_MERC_MODE;
 
-	gfWaitingForMercToStopTalkingOrUserToClick = TRUE;
-	gfHangUpMerc = TRUE;
-	gfStopMercFromTalking = FALSE;
+	gfWaitingForMercToStopTalkingOrUserToClick = true;
+	gfHangUpMerc = true;
+	gfStopMercFromTalking = false;
 }
 
 static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(MessageBoxReturnValue);
@@ -2894,7 +2894,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	UINT32 const hour = h.uiArrivalTime % 1440 / 60;
 	time_string = ST::format("{02d}:00", hour);
 
-	ST::string sector_string = GetSectorIDString(g_merc_arrive_sector, FALSE);
+	ST::string sector_string = GetSectorIDString(g_merc_arrive_sector, false);
 
 	ST::string msg;
 	ST::string nickname = GetProfile(h.iIdOfMerc).zNickname;
@@ -2915,19 +2915,19 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	// Reset the id of the last merc
 	h.iIdOfMerc = -1;
 	// Set the fact that the pop up has been displayed this time in laptop
-	h.fHaveDisplayedPopUpInLaptop = TRUE;
+	h.fHaveDisplayedPopUpInLaptop = true;
 }
 
 
 static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(MessageBoxReturnValue const bExitValue)
 {
 	//unset the flag so the msgbox WONT dislay its save buffer
-	gfDontOverRideSaveBuffer = FALSE;
+	gfDontOverRideSaveBuffer = false;
 
 	if( guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS )
 	{
 		//render the screen
-		gfRedrawScreen = TRUE;
+		gfRedrawScreen = true;
 		RenderAIMMembers();
 	}
 }

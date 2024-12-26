@@ -418,12 +418,12 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 { // Verifies whether a structure is blocked from being added to the map at a particular point
 	DB_STRUCTURE_TILE const* const* const ppTile = pDBStructureRef->ppTile;
 	INT16 const sGridNo = sBaseGridNo + ppTile[ubTileIndex]->sPosRelToBase;
-	if (sGridNo < 0 || WORLD_MAX <= sGridNo) return FALSE;
+	if (sGridNo < 0 || WORLD_MAX <= sGridNo) return false;
 
 	if (gpWorldLevelData[sBaseGridNo].sHeight != gpWorldLevelData[sGridNo].sHeight)
 	{
 		// uneven terrain, one portion on top of cliff and another not! can't add!
-		return FALSE;
+		return false;
 	}
 
 	DB_STRUCTURE const* const pDBStructure = pDBStructureRef->pDBStructure;
@@ -467,7 +467,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 				}
 				else
 				{
-					return FALSE;
+					return false;
 				}
 			}
 			else if (pDBStructure->ubNumberOfTiles > 1 && pExistingStructure->fFlags & STRUCTURE_WALLSTUFF)
@@ -503,7 +503,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 							if (sBaseGridNo + ppTile[bLoop2]->sPosRelToBase != sOtherGridNo) continue;
 
 							// obstacle will straddle wall!
-							return FALSE;
+							return false;
 						}
 					}
 				}
@@ -515,7 +515,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 			if (pExistingStructure->fFlags & STRUCTURE_WALLSTUFF &&
 					pExistingStructure->ubWallOrientation == pDBStructure->ubWallOrientation)
 			{
-				return FALSE;
+				return false;
 			}
 			else if (!(pExistingStructure->fFlags & (STRUCTURE_CORPSE | STRUCTURE_PERSON)))
 			{
@@ -543,7 +543,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 					for (ubTileIndex = 0; ubTileIndex < pDBStructure->ubNumberOfTiles; ++ubTileIndex)
 					{
 						STRUCTURE const* const pOtherExistingStructure = FindStructureByID(sOtherGridNo, pExistingStructure->usStructureID);
-						if (pOtherExistingStructure) return FALSE;
+						if (pOtherExistingStructure) return false;
 					}
 				}
 			}
@@ -570,7 +570,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 					!(ppTile[ubTileIndex]->fFlags & TILE_PASSABLE))
 			{
 				// don't allow 2 people in the same tile
-				return FALSE;
+				return false;
 			}
 
 			// ATE: Another rule: allow PASSABLE *IF* the PASSABLE is *NOT* MOBILE!
@@ -585,7 +585,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 			if (pExistingStructure->fFlags & STRUCTURE_OBSTACLE &&
 					!(ppTile[ubTileIndex]->fFlags & TILE_PASSABLE))
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -594,11 +594,11 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 		{
 			/* Don't allow two openable structures in the same tile or things will
 			 * screw up on an interface level */
-			return FALSE;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -624,15 +624,15 @@ BOOLEAN InternalOkayToAddStructureToWorld(INT16 const sBaseGridNo, INT8 const bL
 		}
 		else
 		{
-			return FALSE;
+			return false;
 		}
 
 		if (!OkayToAddStructureToTile(sBaseGridNo, cube_offset, pDBStructureRef, i, sExclusionID, fIgnorePeople))
 		{
-			return FALSE;
+			return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -854,7 +854,7 @@ BOOLEAN DeleteStructureFromWorld(STRUCTURE* const structure)
 			AddTileToRecompileArea(check_grid_no);
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -1176,11 +1176,11 @@ BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pub
 	*pubLevel1 *= 4;
 	*pubLevel2 *= 4;
 	*pubLevel3 *= 4;
-	return( TRUE );
+	return true;
 }
 
 StructureDamageResult DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason const reason, GridNo const grid_no, INT16 const x, INT16 const y, SOLDIERTYPE* const owner)
-{	// Do damage to a structure; returns TRUE if the structure should be removed
+{	// Do damage to a structure; returns true if the structure should be removed
 	Assert(s);
 
 	if (s->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE))
@@ -1476,7 +1476,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 {
 	if (pStructureFileRef->usNumberOfStructuresStored == 0) return;
 
-	BOOLEAN             fFound       = FALSE;
+	BOOLEAN             fFound       = false;
 	const DB_STRUCTURE* pDBStructure = NULL;
 	for (UINT32 uiLoop = 0; uiLoop < pStructureFileRef->usNumberOfStructures; ++uiLoop)
 	{
@@ -1490,7 +1490,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 				if (pDBStructureRef->ppTile[ubLoop2]->sPosRelToBase != 0)
 				{
 					// spans multiple tiles! (could be two levels high in one tile)
-					fFound = TRUE;
+					fFound = true;
 					break;
 				}
 			}
@@ -1500,7 +1500,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 	// ATE: Make all corpses use z-strip info..
 	if (pDBStructure != NULL && pDBStructure->fFlags & STRUCTURE_CORPSE)
 	{
-		fFound = TRUE;
+		fFound = true;
 	}
 
 	// if no multi-tile images in this vobject, that's okay... return!
@@ -1534,11 +1534,11 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 	INT16   sRightHalfWidth;
 	INT16   sStructIndex    = 0;
 	INT16   sNext           = sSTIStartIndex + sSTIStep;
-	BOOLEAN fFirstTime      = TRUE;
+	BOOLEAN fFirstTime      = true;
 	for (UINT32 uiLoop = sSTIStartIndex; uiLoop < zcount; ++uiLoop)
 	{
 		// Defualt to true
-		BOOLEAN fCopyIntoVo = TRUE;
+		BOOLEAN fCopyIntoVo = true;
 
 		// Increment struct index....
 		if (uiLoop == (UINT32)sNext)
@@ -1550,11 +1550,11 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 		{
 			if (fFirstTime)
 			{
-				fFirstTime = FALSE;
+				fFirstTime = false;
 			}
 			else
 			{
-				fCopyIntoVo = FALSE;
+				fCopyIntoVo = false;
 			}
 		}
 
@@ -1719,8 +1719,8 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 	STRUCTURE* pStructure = NULL; // XXX HACK000E
 	STRUCTURE* pCurrent;
 	INT16      sDesiredLevel;
-	BOOLEAN    fOKStructOnLevel = FALSE;
-	BOOLEAN    fMinimumBlockingFound = FALSE;
+	BOOLEAN    fOKStructOnLevel = false;
+	BOOLEAN    fMinimumBlockingFound = false;
 
 	if ( bLevel == 0)
 	{
@@ -1746,25 +1746,25 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 		// Check level!
 		if (pCurrent->sCubeOffset == sDesiredLevel )
 		{
-			fOKStructOnLevel = TRUE;
+			fOKStructOnLevel = true;
 			pStructure       = pCurrent;
 
 			// Turn off if we are on upper level!
 			if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
 			{
-				fOKStructOnLevel = FALSE;
+				fOKStructOnLevel = false;
 			}
 
 			// Don't stop FOV for people
 			if ( pCurrent->fFlags & ( STRUCTURE_CORPSE | STRUCTURE_PERSON ) )
 			{
-				fOKStructOnLevel = FALSE;
+				fOKStructOnLevel = false;
 			}
 
 
 			if ( pCurrent->fFlags & ( STRUCTURE_TREE | STRUCTURE_ANYFENCE ) )
 			{
-				fMinimumBlockingFound = TRUE;
+				fMinimumBlockingFound = true;
 			}
 
 			// Default, if we are a wall, set full blocking
@@ -1772,7 +1772,7 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 			{
 				// Return full blocking!
 				// OK! This will be handled by movement costs......!
-				fOKStructOnLevel = FALSE;
+				fOKStructOnLevel = false;
 			}
 
 			// CHECK FOR WINDOW

@@ -112,7 +112,7 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 		if (pSoldier->bNextAction == AI_ACTION_NONE)
 		{
 			// make sure this flag is turned off (it already should be!)
-			pSoldier->bActionInProgress = FALSE;
+			pSoldier->bActionInProgress = false;
 
 			// truly nothing to do!
 			RefreshAI( pSoldier );
@@ -131,9 +131,9 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 		// SetNewCourse() [which gets called after NewDest()].
 		//
 		// The only reason we would NEED to reinitialize it here is if I've
-		// incorrectly set pathStored to TRUE in a process that doesn't end up
+		// incorrectly set pathStored to true in a process that doesn't end up
 		// calling NewDest()
-		pSoldier->bPathStored = FALSE;
+		pSoldier->bPathStored = false;
 
 		// decide on the next action
 #ifdef AI_PROFILING

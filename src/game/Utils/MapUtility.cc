@@ -62,7 +62,7 @@ template<> ScreenID HandleScreen<MAPUTILITY_SCREEN>()
 	INT16 sX1, sX2, sY1, sY2, sTop, sBottom, sLeft, sRight;
 
 
-	FLOAT dX, dY, dStartX, dStartY;
+	float dX, dY, dStartX, dStartY;
 	INT32 iX, iY, iSubX1, iSubY1, iSubX2, iSubY2, iWindowX, iWindowY, iCount;
 	SGPPaletteEntry pPalette[ 256 ];
 
@@ -86,9 +86,9 @@ template<> ScreenID HandleScreen<MAPUTILITY_SCREEN>()
 	// Render small map
 	InitNewOverheadDB(giCurrentTilesetID);
 
-	gfOverheadMapDirty = TRUE;
+	gfOverheadMapDirty = true;
 
-	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, TRUE);
+	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, true);
 
 	TrashOverheadMap( );
 
@@ -220,9 +220,9 @@ template<> ScreenID HandleScreen<MAPUTILITY_SCREEN>()
 				for ( cnt = 0; cnt < 256; cnt++ )
 				{
 					usLineColor = Get16BPPColor(FROMRGB(pPalette[cnt].r, pPalette[cnt].g, pPalette[cnt].b));
-					LineDraw(FALSE, sX, sY, sX, sY + 10, usLineColor, pDestBuf);
+					LineDraw(false, sX, sY, sX, sY + 10, usLineColor, pDestBuf);
 					sX++;
-					LineDraw(FALSE, sX, sY, sX, sY + 10, usLineColor, pDestBuf);
+					LineDraw(false, sX, sY, sX, sY + 10, usLineColor, pDestBuf);
 					sX++;
 				}
 			}

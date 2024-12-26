@@ -193,15 +193,15 @@ protected:
 #define INJ_U16(D, S)    (D).writeU16((S));
 #define INJ_I32(D, S)    (D).write<INT32>((S));
 #define INJ_U32(D, S)    (D).writeU32((S));
-#define INJ_FLOAT(D, S)  (D).write<FLOAT>((S));
-#define INJ_DOUBLE(D, S) (D).write<DOUBLE>((S));
+#define INJ_float(D, S)  (D).write<float>((S));
+#define INJ_double(D, S) (D).write<double>((S));
 #define INJ_PTR(D, S) INJ_SKIP(D, 4)
 #define INJ_SKIP(D, Size) (D).skip((Size));
 #define INJ_SKIP_I16(D)   (D).skip(2);
 #define INJ_SKIP_I32(D)   (D).skip(4);
 #define INJ_SKIP_U8(D)    (D).skip(1);
 #define INJ_SOLDIER(D, S) (D).write<SoldierID>(Soldier2ID((S)));
-#define INJ_VEC3(D, S) INJ_FLOAT(D, (S).x); INJ_FLOAT(D, (S).y); INJ_FLOAT(D, (S).z);
+#define INJ_VEC3(D, S) INJ_float(D, (S).x); INJ_float(D, (S).y); INJ_float(D, (S).z);
 // Could use auto as the type of S in C++20
 template<typename T>
 static inline void INJ_AUTO(DataWriter & D, T S) { D.write(S); }
@@ -221,15 +221,15 @@ static inline void INJ_AUTO(DataWriter & D, T S) { D.write(S); }
 #define EXTR_U16(S, D)    (D) = (S).readU16();
 #define EXTR_I32(S, D)    (D) = (S).read<INT32>();
 #define EXTR_U32(S, D)    (D) = (S).readU32();
-#define EXTR_FLOAT(S, D)  (D) = (S).read<FLOAT>();
-#define EXTR_DOUBLE(S, D) (D) = (S).read<DOUBLE>();
+#define EXTR_float(S, D)  (D) = (S).read<float>();
+#define EXTR_double(S, D) (D) = (S).read<double>();
 #define EXTR_PTR(S, D) (D) = NULL; (S).skip(4);
 #define EXTR_SKIP(S, Size) (S).skip((Size));
 #define EXTR_SKIP_I16(S)   (S).skip(2);
 #define EXTR_SKIP_I32(S)   (S).skip(4);
 #define EXTR_SKIP_U8(S)    (S).skip(1);
 #define EXTR_SOLDIER(S, D) (D) = ID2Soldier((S).read<SoldierID>());
-#define EXTR_VEC3(S, D) EXTR_FLOAT(S, (D).x); EXTR_FLOAT(S, (D).y); EXTR_FLOAT(S, (D).z);
+#define EXTR_VEC3(S, D) EXTR_float(S, (D).x); EXTR_float(S, (D).y); EXTR_float(S, (D).z);
 template<typename T>
 static inline void EXTR_AUTO(DataReader & S, T & D) { D = S.read<std::remove_reference_t<decltype(D)>>(); }
 

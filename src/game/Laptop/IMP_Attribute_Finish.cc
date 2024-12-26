@@ -117,7 +117,7 @@ static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, UINT32 reason)
 
 		// SET ATTRIBUTES NOW
 		SetGeneratedCharacterAttributes();
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }
 
@@ -128,7 +128,7 @@ static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		// if no, return to attribute
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
-		fReturnStatus = TRUE;
-		fButtonPendingFlag = TRUE;
+		fReturnStatus = true;
+		fButtonPendingFlag = true;
 	}
 }

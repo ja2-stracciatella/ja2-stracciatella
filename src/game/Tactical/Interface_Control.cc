@@ -48,11 +48,11 @@ static UINT16 gusUICurIntTileEffectIndex;
 static INT16  gsUICurIntTileEffectGridNo;
 static UINT8  gsUICurIntTileOldShade;
 
-BOOLEAN gfRerenderInterfaceFromHelpText = FALSE;
+BOOLEAN gfRerenderInterfaceFromHelpText = false;
 
 
 DirtyLevel gfPausedTacticalRenderInterfaceFlags = DIRTYLEVEL0;
-BOOLEAN    gfPausedTacticalRenderFlags          = FALSE;
+BOOLEAN    gfPausedTacticalRenderFlags          = false;
 
 
 static bool         g_switch_panel      = false;
@@ -141,7 +141,7 @@ static void HandlePausedTacticalRender(void)
 	if( gfPausedTacticalRenderFlags )
 	{
 		SetRenderFlags(RENDER_FLAG_FULL);
-		gfPausedTacticalRenderFlags = FALSE;
+		gfPausedTacticalRenderFlags = false;
 	}
 
 	if (gfPausedTacticalRenderInterfaceFlags != DIRTYLEVEL0)
@@ -336,18 +336,18 @@ static void RenderRubberBanding(void)
 	if (l != r)
 	{
 		if (l > r) std::swap(l, r);
-		LineDraw(TRUE, l, t, r, t, colour, pDestBuf);
+		LineDraw(true, l, t, r, t, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, r - l + 1, 1);
-		LineDraw(TRUE, l, b, r, b, colour, pDestBuf);
+		LineDraw(true, l, b, r, b, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, b, r - l + 1, 1);
 	}
 
 	if (t != b)
 	{
 		if (t > b) std::swap(t, b);
-		LineDraw(TRUE, l, t, l, b, colour, pDestBuf);
+		LineDraw(true, l, t, l, b, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, 1, b - t + 1);
-		LineDraw(TRUE, r, t, r, b, colour, pDestBuf);
+		LineDraw(true, r, t, r, b, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(r, t, 1, b - t + 1);
 	}
 }
@@ -363,7 +363,7 @@ void RenderTopmostTacticalInterface()
 	{
 		fInterfacePanelDirty = DIRTYLEVEL2;
 		RenderPanel();
-		gfRerenderInterfaceFromHelpText = FALSE;
+		gfRerenderInterfaceFromHelpText = false;
 	}
 
 	if (fInMapMode) // XXX necessary?
@@ -407,7 +407,7 @@ void RenderTopmostTacticalInterface()
 
 		INT16 sMercScreenX;
 		INT16 sMercScreenY;
-		GetSoldierTRUEScreenPos(&s, &sMercScreenX, &sMercScreenY);
+		GetSoldiertrueScreenPos(&s, &sMercScreenX, &sMercScreenY);
 
 		INT16 x = sMercScreenX + s.sDamageX;
 		INT16 y = sMercScreenY + s.sDamageY;
@@ -465,7 +465,7 @@ void RenderTopmostTacticalInterface()
 			STRUCTURE* pStructure;
 			INT16      sIntTileGridNo;
 			INT16 const sActionGridNo =
-				ConditionalGetCurInteractiveTileGridNoAndStructure(&sIntTileGridNo, &pStructure, FALSE) ?
+				ConditionalGetCurInteractiveTileGridNoAndStructure(&sIntTileGridNo, &pStructure, false) ?
 					sIntTileGridNo : usMapPos;
 
 			INT8 const bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, level, pStructure);
@@ -590,7 +590,7 @@ bool AreWeInAUIMenu()
 void ResetInterfaceAndUI( )
 {
 	// Erase menus
-	EraseInterfaceMenus( FALSE );
+	EraseInterfaceMenus( false );
 
 	EraseRenderArrows( );
 

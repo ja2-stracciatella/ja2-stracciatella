@@ -24,7 +24,7 @@ UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
 void InitRoomDatabase()
 {
 	std::fill(std::begin(gubWorldRoomInfo), std::end(gubWorldRoomInfo), NO_ROOM);
-	std::fill(std::begin(gubWorldRoomHidden), std::end(gubWorldRoomHidden), TRUE);
+	std::fill(std::begin(gubWorldRoomHidden), std::end(gubWorldRoomHidden), true);
 }
 
 
@@ -41,11 +41,11 @@ BOOLEAN InAHiddenRoom( UINT16 sGridNo, UINT8 *pubRoomNo )
 		if ( (gubWorldRoomHidden[ gubWorldRoomInfo[ sGridNo ] ] ) )
 		{
 			*pubRoomNo = gubWorldRoomInfo[ sGridNo ];
-			return( TRUE );
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -122,7 +122,7 @@ void SetGridNoRevealedFlag(UINT16 const grid_no)
 		}
 	}
 
-	gubWorldRoomHidden[gubWorldRoomInfo[grid_no]] = FALSE;
+	gubWorldRoomHidden[gubWorldRoomInfo[grid_no]] = false;
 }
 
 
@@ -175,7 +175,7 @@ void ExamineGridNoForSlantRoofExtraGraphic(GridNo const check_grid_no)
 void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
 	UINT32 cnt;
-	BOOLEAN						fSaidItemSeenQuote = FALSE;
+	BOOLEAN						fSaidItemSeenQuote = false;
 
 //	STRUCTURE					*pStructure;//, *pBase;
 
@@ -190,11 +190,11 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL  );
 
 			// Reveal any items if here!
-			if (SetItemsVisibilityOn(cnt, 0, INVISIBLE, TRUE))
+			if (SetItemsVisibilityOn(cnt, 0, INVISIBLE, true))
 			{
 				if ( !fSaidItemSeenQuote )
 				{
-					fSaidItemSeenQuote = TRUE;
+					fSaidItemSeenQuote = true;
 
 					if ( pSoldier != NULL )
 					{
@@ -220,5 +220,5 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 	InvalidateWorldRedundency();
 	SetRenderFlags(RENDER_FLAG_FULL );
 
-	CalculateWorldWireFrameTiles( FALSE );
+	CalculateWorldWireFrameTiles( false );
 }

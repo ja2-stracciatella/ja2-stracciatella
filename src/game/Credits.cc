@@ -231,7 +231,7 @@ try
 	}
 
 	giCurrentlySelectedFace = -1;
-	gfPauseCreditScreen     = FALSE;
+	gfPauseCreditScreen     = false;
 
 	InitCreditEyeBlinking();
 
@@ -239,10 +239,10 @@ try
 	// blit everything to the save buffer (cause the save buffer can bleed through)
 	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 
-	g_credits_active = TRUE;
-	return TRUE;
+	g_credits_active = true;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 static void DeleteFirstNode(void);
@@ -279,7 +279,7 @@ static void HandleCreditScreen(void)
 		//if there are no more credits in the file
 		if (!GetNextCreditFromTextFile() && g_credits_tail == NULL)
 		{
-			g_credits_active = FALSE;
+			g_credits_active = false;
 		}
 	}
 
@@ -308,7 +308,7 @@ static void GetCreditScreenUserInput(void)
 	{
 		if (Event.usEvent == KEY_UP && Event.usParam == SDLK_ESCAPE)
 		{
-			g_credits_active = FALSE;
+			g_credits_active = false;
 			// don't break here, dequeue all keyboard events.
 		}
 	}
@@ -451,7 +451,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 	}
 	catch (...) // XXX fishy, should check file size beforehand
 	{
-		return FALSE;
+		return false;
 	}
 
 	UINT32         flags = 0;
@@ -503,7 +503,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 handle_text:
 	if (*s != '\0') AddCreditNode(flags, s);
 	HandleCreditFlags(flags);
-	return TRUE;
+	return true;
 }
 
 

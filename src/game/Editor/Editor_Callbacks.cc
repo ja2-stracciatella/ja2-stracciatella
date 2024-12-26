@@ -478,7 +478,7 @@ void BuildingToggleInfoViewCallback(GUI_BUTTON *btn,UINT32 reason)
 		{
 			UnclickEditorButton( BUILDING_TOGGLE_INFO_VIEW );
 		}
-		gfRenderWorld = TRUE;
+		gfRenderWorld = true;
 	}
 }
 
@@ -585,8 +585,8 @@ void BtnNewMapCallback(GUI_BUTTON *btn,UINT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iEditorToolbarState = TBAR_MODE_NEW_MAP;
-		gfPendingBasement = FALSE;
-		gfPendingCaves = FALSE;
+		gfPendingBasement = false;
+		gfPendingCaves = false;
 	}
 }
 
@@ -595,8 +595,8 @@ void BtnNewBasementCallback(GUI_BUTTON *btn,UINT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iEditorToolbarState = TBAR_MODE_NEW_MAP;
-		gfPendingBasement = TRUE;
-		gfPendingCaves = FALSE;
+		gfPendingBasement = true;
+		gfPendingCaves = false;
 	}
 }
 
@@ -605,8 +605,8 @@ void BtnNewCavesCallback(GUI_BUTTON *btn,UINT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iEditorToolbarState = TBAR_MODE_NEW_MAP;
-		gfPendingBasement = FALSE;
-		gfPendingCaves = TRUE;
+		gfPendingBasement = false;
+		gfPendingCaves = true;
 	}
 }
 
@@ -630,7 +630,7 @@ void MouseMovedInItemsRegion( MOUSE_REGION *reg, UINT32 reason )
 static void ItemsScrollLeft()
 {
 	if (eInfo.sScrollIndex == 0) return;
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 	if (--eInfo.sScrollIndex == 0) DisableButton(iEditorButton[ITEMS_LEFTSCROLL]);
 	EnableButton(iEditorButton[ITEMS_RIGHTSCROLL]);
 }
@@ -640,7 +640,7 @@ static void ItemsScrollRight()
 {
 	INT16 const max_col = std::max(((eInfo.sNumItems + 1) / 2) - 6, 0);
 	if (eInfo.sScrollIndex >= max_col) return;
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 	EnableButton(iEditorButton[ITEMS_LEFTSCROLL]);
 	if (++eInfo.sScrollIndex == max_col) DisableButton(iEditorButton[ITEMS_RIGHTSCROLL]);
 }
@@ -988,7 +988,7 @@ void MercsScheduleData1ACallback( GUI_BUTTON *btn, UINT32 reason )
 	{
 		gubCurrentScheduleActionIndex = 0;
 		StartScheduleAction();
-		gfSingleAction = TRUE;
+		gfSingleAction = true;
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 	{
@@ -1001,7 +1001,7 @@ void MercsScheduleData1BCallback( GUI_BUTTON *btn, UINT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gubCurrentScheduleActionIndex = 0;
-		gfUseScheduleData2 = FALSE;
+		gfUseScheduleData2 = false;
 		RegisterCurrentScheduleAction( gCurrSchedule.usData1[0] );
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
@@ -1016,7 +1016,7 @@ void MercsScheduleData2ACallback( GUI_BUTTON *btn, UINT32 reason )
 	{
 		gubCurrentScheduleActionIndex = 1;
 		StartScheduleAction();
-		gfSingleAction = TRUE;
+		gfSingleAction = true;
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 	{
@@ -1029,7 +1029,7 @@ void MercsScheduleData2BCallback( GUI_BUTTON *btn, UINT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gubCurrentScheduleActionIndex = 1;
-		gfUseScheduleData2 = FALSE;
+		gfUseScheduleData2 = false;
 		RegisterCurrentScheduleAction( gCurrSchedule.usData1[1] );
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
@@ -1044,7 +1044,7 @@ void MercsScheduleData3ACallback( GUI_BUTTON *btn, UINT32 reason )
 	{
 		gubCurrentScheduleActionIndex = 2;
 		StartScheduleAction();
-		gfSingleAction = TRUE;
+		gfSingleAction = true;
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 	{
@@ -1057,7 +1057,7 @@ void MercsScheduleData3BCallback( GUI_BUTTON *btn, UINT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gubCurrentScheduleActionIndex = 2;
-		gfUseScheduleData2 = FALSE;
+		gfUseScheduleData2 = false;
 		RegisterCurrentScheduleAction( gCurrSchedule.usData1[2] );
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
@@ -1072,7 +1072,7 @@ void MercsScheduleData4ACallback( GUI_BUTTON *btn, UINT32 reason )
 	{
 		gubCurrentScheduleActionIndex = 3;
 		StartScheduleAction();
-		gfSingleAction = TRUE;
+		gfSingleAction = true;
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 	{
@@ -1085,7 +1085,7 @@ void MercsScheduleData4BCallback( GUI_BUTTON *btn, UINT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
 		gubCurrentScheduleActionIndex = 3;
-		gfUseScheduleData2 = FALSE;
+		gfUseScheduleData2 = false;
 		RegisterCurrentScheduleAction( gCurrSchedule.usData1[3] );
 	}
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
@@ -1129,11 +1129,11 @@ void MercsPriorityExistanceCallback( GUI_BUTTON *btn, UINT32 reason )
 		{
 			if (btn->Clicked())
 			{
-				gpSelected->pBasicPlacement->fPriorityExistance = TRUE;
+				gpSelected->pBasicPlacement->fPriorityExistance = true;
 			}
 			else //button is unchecked.
 			{
-				gpSelected->pBasicPlacement->fPriorityExistance = FALSE;
+				gpSelected->pBasicPlacement->fPriorityExistance = false;
 			}
 		}
 	}
@@ -1147,11 +1147,11 @@ void MercsHasKeysCallback( GUI_BUTTON *btn, UINT32 reason )
 		{
 			if (btn->Clicked())
 			{
-				gpSelected->pBasicPlacement->fHasKeys = TRUE;
+				gpSelected->pBasicPlacement->fHasKeys = true;
 			}
 			else //button is unchecked.
 			{
-				gpSelected->pBasicPlacement->fHasKeys = FALSE;
+				gpSelected->pBasicPlacement->fHasKeys = false;
 			}
 			if( gpSelected->pDetailedPlacement )
 			{

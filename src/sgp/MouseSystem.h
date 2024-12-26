@@ -111,7 +111,7 @@ struct MOUSE_REGION
 #define MSYS_CALLBACK_REASON_LBUTTON_DWN			(1 << 1)
 #define MSYS_CALLBACK_REASON_LBUTTON_UP				(1 << 2)
 #define MSYS_CALLBACK_REASON_LBUTTON_REPEAT			(1 << 3)
-#define MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK	(1 << 4)
+#define MSYS_CALLBACK_REASON_LBUTTON_doubleCLICK	(1 << 4)
 #define MSYS_CALLBACK_REASON_RBUTTON_DWN			(1 << 5)
 #define MSYS_CALLBACK_REASON_RBUTTON_UP				(1 << 6)
 #define MSYS_CALLBACK_REASON_RBUTTON_REPEAT			(1 << 7)
@@ -131,14 +131,14 @@ struct MOUSE_REGION
 #define MSYS_CALLBACK_REASON_TFINGER_DWN	   		(1 << 21)
 #define MSYS_CALLBACK_REASON_TFINGER_UP     		(1 << 22)
 #define MSYS_CALLBACK_REASON_TFINGER_REPEAT 		(1 << 23)
-#define MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP 		(1 << 24)
+#define MSYS_CALLBACK_REASON_TFINGER_doubleTAP 		(1 << 24)
 
 // Composites
 
 #define MSYS_CALLBACK_REASON_POINTER_DWN (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN)
 #define MSYS_CALLBACK_REASON_POINTER_UP (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)
 #define MSYS_CALLBACK_REASON_POINTER_REPEAT (MSYS_CALLBACK_REASON_LBUTTON_REPEAT | MSYS_CALLBACK_REASON_TFINGER_REPEAT)
-#define MSYS_CALLBACK_REASON_POINTER_DOUBLECLICK (MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK | MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP)
+#define MSYS_CALLBACK_REASON_POINTER_doubleCLICK (MSYS_CALLBACK_REASON_LBUTTON_doubleCLICK | MSYS_CALLBACK_REASON_TFINGER_doubleTAP)
 #define MSYS_CALLBACK_REASON_ANY_BUTTON_DWN (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN | MSYS_CALLBACK_REASON_MBUTTON_DWN | MSYS_CALLBACK_REASON_X1BUTTON_DWN | MSYS_CALLBACK_REASON_X2BUTTON_DWN | MSYS_CALLBACK_REASON_TFINGER_DWN)
 #define MSYS_CALLBACK_REASON_ANY_BUTTON_UP (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_RBUTTON_UP | MSYS_CALLBACK_REASON_MBUTTON_UP | MSYS_CALLBACK_REASON_X1BUTTON_UP | MSYS_CALLBACK_REASON_X2BUTTON_UP | MSYS_CALLBACK_REASON_TFINGER_UP)
 
@@ -171,21 +171,21 @@ std::function<void(T*, UINT32)> CallbackPrimarySecondary(
 	bool triggerPrimaryOnMouseDown = false
 )
 {
-	BOOLEAN fTouchRepeatHandled = FALSE;
-	BOOLEAN fPointerDown = FALSE;
-	BOOLEAN fRightMouseButtonDown = FALSE;
+	BOOLEAN fTouchRepeatHandled = false;
+	BOOLEAN fPointerDown = false;
+	BOOLEAN fRightMouseButtonDown = false;
 	UINT32 mouseReason = triggerPrimaryOnMouseDown ? MSYS_CALLBACK_REASON_LBUTTON_DWN : MSYS_CALLBACK_REASON_LBUTTON_UP;
 
 	return [fTouchRepeatHandled, fPointerDown, fRightMouseButtonDown, mouseReason, primaryAction, secondaryAction, allEvents](T* r, UINT32 reason) mutable {
 		if (reason & MSYS_CALLBACK_REASON_POINTER_DWN) {
-			fTouchRepeatHandled = FALSE;
-			fPointerDown = TRUE;
-			fRightMouseButtonDown = FALSE;
+			fTouchRepeatHandled = false;
+			fPointerDown = true;
+			fRightMouseButtonDown = false;
 		}
 		if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN) {
-			fTouchRepeatHandled = FALSE;
-			fPointerDown = FALSE;
-			fRightMouseButtonDown = TRUE;
+			fTouchRepeatHandled = false;
+			fPointerDown = false;
+			fRightMouseButtonDown = true;
 		}
 
 		// First gather all the callbacks that should be invoked (0-2), and only then execute them at the end of the function.
@@ -201,10 +201,10 @@ std::function<void(T*, UINT32)> CallbackPrimarySecondary(
 		if (((reason & MSYS_CALLBACK_REASON_RBUTTON_UP) && fRightMouseButtonDown) || ((reason & MSYS_CALLBACK_REASON_TFINGER_REPEAT) && fPointerDown && !fTouchRepeatHandled))
 		{
 			if (reason & MSYS_CALLBACK_REASON_TFINGER_REPEAT) {
-				fTouchRepeatHandled = TRUE;
+				fTouchRepeatHandled = true;
 			}
 			if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP) {
-				fRightMouseButtonDown = FALSE;
+				fRightMouseButtonDown = false;
 			}
 			if (secondaryAction) {
 				triggeredEventFns.push_back(secondaryAction);

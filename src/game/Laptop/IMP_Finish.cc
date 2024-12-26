@@ -30,7 +30,7 @@ static BUTTON_PICS* giIMPFinishButtonImage[6];
 GUIButtonRef giIMPFinishButton[6];
 
 // we are in fact done
-BOOLEAN fFinishedCharGeneration = FALSE;
+BOOLEAN fFinishedCharGeneration = false;
 
 // image handle
 SGPVObject* guiCHARACTERPORTRAIT;
@@ -54,11 +54,11 @@ void EnterIMPFinish( void )
 	CreateIMPFinishButtons( );
 
 	// set review mode
-	fReviewStats = TRUE;
+	fReviewStats = true;
 	iCurrentProfileMode = 5;
 
 	// note that we are in fact done char generation
-	fFinishedCharGeneration = TRUE;
+	fFinishedCharGeneration = true;
 }
 
 
@@ -130,20 +130,20 @@ static void CreateIMPFinishButtons(void)
 	// the personality button
 	ST::string btnText = gamepolicy(imp_pick_skills_directly) ? pImpButtonText[26] : pImpButtonText[2];
 	MakeButton(2, LAPTOPDIR "/button_8.sti", btnText, dx +  13, dy + 245, BtnIMPFinishPersonalityCallback);
-	giIMPFinishButton[2]->SpecifyIcon(guiANALYSE, 0, 33, 23, FALSE);
+	giIMPFinishButton[2]->SpecifyIcon(guiANALYSE, 0, 33, 23, false);
 
 	// the attribs button
 	MakeButton(3, LAPTOPDIR "/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPFinishAttributesCallback);
-	giIMPFinishButton[3]->SpecifyIcon(guiATTRIBUTEGRAPH, 0, 25, 25, FALSE);
+	giIMPFinishButton[3]->SpecifyIcon(guiATTRIBUTEGRAPH, 0, 25, 25, false);
 
 	// the portrait button
 	MakeButton(4, LAPTOPDIR "/button_8.sti", pImpButtonText[4], dx + 253, dy + 245, BtnIMPMainPagePortraitCallback);
-	giIMPFinishButton[4]->SpecifyIcon(guiCHARACTERPORTRAIT, 0, 33, 23, FALSE);
+	giIMPFinishButton[4]->SpecifyIcon(guiCHARACTERPORTRAIT, 0, 33, 23, false);
 
 	// the voice button
 	ST::string sString = st_format_printf(pImpButtonText[5], iCurrentVoices + 1);
 	MakeButton(5, LAPTOPDIR "/button_8.sti", sString, dx + 373, dy + 245, BtnIMPMainPageVoiceCallback);
-	giIMPFinishButton[5]->SpecifyIcon(guiSMALLSILHOUETTE, 0, 33, 23, FALSE);
+	giIMPFinishButton[5]->SpecifyIcon(guiSMALLSILHOUETTE, 0, 33, 23, false);
 }
 
 
@@ -196,9 +196,9 @@ static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		iCurrentImpPage = IMP_CONFIRM;
 		CreateACharacterFromPlayerEnteredStats();
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		iCurrentProfileMode = 0;
-		fFinishedCharGeneration = FALSE;
+		fFinishedCharGeneration = false;
 		//ResetCharacterStats();
 	}
 }
@@ -207,7 +207,7 @@ static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
-	static BOOLEAN fAnimateFlag = FALSE;
+	static BOOLEAN fAnimateFlag = false;
 	static UINT32 uiBaseTime = 0;
 	static BOOLEAN fState = 0;
 
@@ -217,13 +217,13 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		uiBaseTime = GetJA2Clock();
 		btn->SpecifyText(pImpButtonText[23]);
-		fAnimateFlag = TRUE;
+		fAnimateFlag = true;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		uiBaseTime = 0;
-		fAnimateFlag = FALSE;
+		fAnimateFlag = false;
 
 		if (gamepolicy(imp_pick_skills_directly))
 		{
@@ -245,7 +245,7 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, UINT32 reason)
 		{
 			uiBaseTime = GetJA2Clock();
 			fState = !fState;
-			btn->SpecifyIcon(guiANALYSE, fState ? 0 : 1, 33, 23, FALSE);
+			btn->SpecifyIcon(guiANALYSE, fState ? 0 : 1, 33, 23, false);
 		}
 	}
 }
@@ -265,7 +265,7 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 
 		auto btnText = gamepolicy(imp_pick_skills_directly) ? pImpButtonText[26] : pImpButtonText[2];
 		giIMPFinishButton[2]->SpecifyText(btnText);
@@ -304,9 +304,9 @@ static void FinishMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		iCurrentImpPage = IMP_HOME_PAGE;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 		iCurrentProfileMode = 0;
-		fFinishedCharGeneration = FALSE;
+		fFinishedCharGeneration = false;
 		ResetCharacterStats( );
 	}
 

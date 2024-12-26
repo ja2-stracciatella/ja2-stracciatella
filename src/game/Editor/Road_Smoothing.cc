@@ -418,12 +418,12 @@ void ReplaceObsoleteRoads()
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
 		pObject = gpWorldLevelData[ i ].pObjectHead;
-		fRoadExistsAtGridNo = FALSE;
+		fRoadExistsAtGridNo = false;
 		while( pObject )
 		{
 			if( pObject->usIndex >= FIRSTROAD1 && pObject->usIndex <= FIRSTROAD32 )
 			{
-				fRoadExistsAtGridNo = TRUE;
+				fRoadExistsAtGridNo = true;
 				iMacro = pObject->usIndex - FIRSTROAD1;
 				PlaceRoadMacroAtGridNo( i, iMacro );
 			}

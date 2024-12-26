@@ -76,16 +76,16 @@ Create16BPPPaletteShaded
 				Color mode: Percentages (255=100%) of color to translate into destination palette.
 				Mono mode:  Color for monochrome palette.
 		mono:
-				TRUE or FALSE to create a monochrome palette. In mono mode, Luminance values for
+				true or false to create a monochrome palette. In mono mode, Luminance values for
 				colors are calculated, and the RGB color is shaded according to each pixel's brightness.
 
 	This can be used in several ways:
 
 	1) To "brighten" a palette, pass down RGB values that are higher than 100% ( > 255) for all
-			three. mono=FALSE.
-	2) To "darken" a palette, do the same with less than 100% ( < 255) values. mono=FALSE.
+			three. mono=false.
+	2) To "darken" a palette, do the same with less than 100% ( < 255) values. mono=false.
 
-	3) To create a "glow" palette, select mono=TRUE, and pass the color in the RGB parameters.
+	3) To create a "glow" palette, select mono=true, and pass the color in the RGB parameters.
 
 	4) For gamma correction, pass in weighted values for each color.
 

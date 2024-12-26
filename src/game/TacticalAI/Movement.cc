@@ -27,13 +27,13 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 	if ((sGridno < 0) || (sGridno >= GRIDSIZE))
 	{
-		return(FALSE);
+		return(false);
 	}
 
 	// return false if gridno on different level from merc
 	if ( GridNoOnVisibleWorldTile( pSoldier->sGridNo ) && gpWorldLevelData[ pSoldier->sGridNo ].sHeight != gpWorldLevelData[ sGridno ].sHeight )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// skip mercs if turnbased and adjacent AND not doing an IGNORE_PATH check (which is used almost exclusively by GoAsFarAsPossibleTowards)
@@ -51,7 +51,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 		( sGridno != pSoldier->sGridNo ) &&
 		( sGridno != pSoldier->sBlackList ) )
 	/*
-	if ( ( NewOKDestination(pSoldier, sGridno, FALSE, pSoldier->bLevel ) ) &&
+	if ( ( NewOKDestination(pSoldier, sGridno, false, pSoldier->bLevel ) ) &&
 		( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || IsWearingHeadGear(*pSoldier, GASMASK)) &&
 		( sGridno != pSoldier->sGridNo ) &&
 		( sGridno != pSoldier->sBlackList ) )*/
@@ -64,33 +64,33 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 		// if water's a problem, and gridno is in a water tile (bridges are OK)
 		if (!ubWaterOK && Water(sGridno))
-			return(FALSE);
+			return(false);
 
 		// passed all checks, now try to make sure we can get there!
 		switch (ubPathMode)
 		{
 			// if finding a path wasn't asked for (could have already been done,
 			// for example), don't bother
-			case IGNORE_PATH     :	return(TRUE);
+			case IGNORE_PATH     :	return(true);
 
 			case ENSURE_PATH     :	if ( FindBestPath( pSoldier, sGridno, pSoldier->bLevel, WALKING, COPYROUTE, fFlags ) )
 				{
-					return(TRUE);        // legal destination
+					return(true);        // legal destination
 				}
 				else // got this far, but found no clear path,
 				{
 					// so test fails
-					return(FALSE);
+					return(false);
 				}
 				// *** NOTE: movement mode hardcoded to WALKING !!!!!
-			case ENSURE_PATH_COST:	return PlotPath(pSoldier, sGridno, FALSE, FALSE, WALKING, 0);
+			case ENSURE_PATH_COST:	return PlotPath(pSoldier, sGridno, false, false, WALKING, 0);
 
 			default:
-				return(FALSE);
+				return(false);
 		}
 	}
 	else  // something failed - didn't even have to test path
-		return(FALSE);       	// illegal destination
+		return(false);       	// illegal destination
 }
 
 
@@ -105,7 +105,7 @@ bool TryToResumeMovement(SOLDIERTYPE * const pSoldier, GridNo const sGridno)
 		SLOGD("{} continues movement to gridno {}...",
 			pSoldier->ubID, sGridno);
 
-		pSoldier->bPathStored = TRUE;	// optimization - Ian
+		pSoldier->bPathStored = true;	// optimization - Ian
 
 		// make him go to it (needed to continue movement across multiple turns)
 		NewDest(pSoldier,sGridno);
@@ -178,7 +178,7 @@ bool PointPatrolAI(SOLDIERTYPE * const pSoldier)
 	// the way there, at least do our best to get close
 	if (LegalNPCDestination(pSoldier,sPatrolPoint,ENSURE_PATH,WATEROK,0))
 	{
-		pSoldier->bPathStored = TRUE; // optimization - Ian
+		pSoldier->bPathStored = true; // optimization - Ian
 		pSoldier->usActionData = sPatrolPoint;
 	}
 	else
@@ -251,7 +251,7 @@ bool RandomPointPatrolAI(SOLDIERTYPE * const pSoldier)
 	// the way there, at least do our best to get close
 	if (LegalNPCDestination(pSoldier,sPatrolPoint,ENSURE_PATH,WATEROK,0))
 	{
-		pSoldier->bPathStored = TRUE; // optimization - Ian
+		pSoldier->bPathStored = true; // optimization - Ian
 		pSoldier->usActionData = sPatrolPoint;
 	}
 	else
@@ -449,7 +449,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		// CAN'T CALL PathCost() HERE! IT CALLS findBestPath() and overwrites
 		//       pathRouteToGo !!!  Gotta calculate the cost ourselves - Ian
 		//
-		//ubAPsLeft = pSoldier->bActionPoints - PathCost(pSoldier,sTempDest,FALSE,FALSE,FALSE,FALSE,FALSE);
+		//ubAPsLeft = pSoldier->bActionPoints - PathCost(pSoldier,sTempDest,false,false,false,false,false);
 
 		if (gfTurnBasedAI)
 		{
@@ -521,13 +521,13 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		// possible optimization - stored path IS good if we're going all the way
 		if (sGoToGrid == sDesGrid)
 		{
-			pSoldier->bPathStored = TRUE;
+			pSoldier->bPathStored = true;
 			pSoldier->sFinalDestination = sGoToGrid;
 		}
 		else if ( pSoldier->ubPathIndex == 0 )
 		{
 			// we can hack this surely! -- CJC
-			pSoldier->bPathStored = TRUE;
+			pSoldier->bPathStored = true;
 			pSoldier->sFinalDestination = sGoToGrid;
 			pSoldier->ubPathDataSize = sLoop + 1;
 		}
@@ -550,7 +550,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 
 	// turn off the flag now that we're going to do something about it...
 	// ATE: USed to be redundent, now if called befroe NewDest can cause some side efects...
-	// AdjustNoAPToFinishMove( pSoldier, FALSE );
+	// AdjustNoAPToFinishMove( pSoldier, false );
 
 	if (pSoldier->bNewSituation == IS_NEW_SITUATION)
 	{
@@ -564,7 +564,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		return;
 	}
 
-	if (!NewOKDestination( pSoldier,pSoldier->usActionData, TRUE, pSoldier->bLevel ))
+	if (!NewOKDestination( pSoldier,pSoldier->usActionData, true, pSoldier->bLevel ))
 	{
 		CancelAIAction(pSoldier);
 		return;
@@ -602,7 +602,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		// seems to have enough points...
 		NewDest(pSoldier,usNewGridNo);
 		// maybe we didn't actually start the action last turn...
-		pSoldier->bActionInProgress = TRUE;
+		pSoldier->bActionInProgress = true;
 		SLOGD("Soldier ({}) continues along path", pSoldier->ubID);
 	}
 	else
@@ -619,7 +619,7 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE& s)
 	if (gAnimControl[s.usAnimState].uiFlags & ANIM_SPECIALMOVE) return;
 
 	// Record that this merc can no longer animate and why
-	AdjustNoAPToFinishMove(&s, TRUE);
+	AdjustNoAPToFinishMove(&s, true);
 
 	// We'll keep his action intact though
 	SLOGD("NO AP TO FINISH MOVE for {} ({} APs left)", s.ubID, s.bActionPoints);

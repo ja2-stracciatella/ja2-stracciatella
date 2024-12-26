@@ -55,7 +55,7 @@ struct SUMMARYFILE
 	UINT8 ubAdminExistance;
 	UINT8 ubTroopExistance;
 	//start version 7
-	FLOAT dMajorMapVersion;
+	float dMajorMapVersion;
 	//start version 8
 	UINT8 ubCivSchedules;
 	//start version 9

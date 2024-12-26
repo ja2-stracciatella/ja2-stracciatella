@@ -48,14 +48,14 @@
 
 ST::string gFileForIO;
 
-static BOOLEAN gfErrorCatch            = FALSE;
+static BOOLEAN gfErrorCatch            = false;
 static ST::string gzErrorCatchString;
 
 
 void SetErrorCatchString(const ST::string& str)
 {
 	gzErrorCatchString = str;
-	gfErrorCatch = TRUE;
+	gfErrorCatch = true;
 }
 
 
@@ -95,7 +95,7 @@ static BOOLEAN gfFileExists;
 static BOOLEAN gfIllegalName;
 static BOOLEAN gfDeleteFile;
 
-static BOOLEAN fEnteringLoadSaveScreen = TRUE;
+static BOOLEAN fEnteringLoadSaveScreen = true;
 
 static MOUSE_REGION BlanketRegion;
 
@@ -119,11 +119,11 @@ static void CreateFileDialog(const ST::string& zTitle);
 static void ChangeDirectory(const ST::string directory, bool resetState) {
 	gCurrentDirectory = directory;
 
-	gfReadOnly = FALSE;
-	gfFileExists = FALSE;
-	gfLoadError = FALSE;
-	gfIllegalName = FALSE;
-	gfDeleteFile = FALSE;
+	gfReadOnly = false;
+	gfFileExists = false;
+	gfLoadError = false;
+	gfIllegalName = false;
+	gfDeleteFile = false;
 
 	gFileList.clear();
 
@@ -159,7 +159,7 @@ static void ChangeDirectory(const ST::string directory, bool resetState) {
 
 static void LoadSaveScreenEntry(void)
 {
-	fEnteringLoadSaveScreen = FALSE;
+	fEnteringLoadSaveScreen = false;
 	gbCurrentFileIOStatus	= IOSTATUS_NONE;
 
 	CreateFileDialog(iCurrentAction == ACTION_SAVE_MAP ? "Save Map (*.dat)" : "Load Map (*.dat)");
@@ -188,11 +188,11 @@ static BOOLEAN ValidMapName(const ST::string &path);
 
 static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 {
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 	RemoveMessageBox();
 	if( gfIllegalName )
 	{
-		fEnteringLoadSaveScreen = TRUE;
+		fEnteringLoadSaveScreen = true;
 		RemoveFileDialog();
 		MarkWorldDirty();
 		return gfMessageBoxResult ? LOADSAVE_SCREEN : EDIT_SCREEN;
@@ -230,18 +230,18 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 		}
 		MarkWorldDirty();
 		RenderWorld();
-		gfDeleteFile = FALSE;
+		gfDeleteFile = false;
 		iFDlgState = DIALOG_NONE;
 		return LOADSAVE_SCREEN;
 	}
 	if( gfLoadError )
 	{
-		fEnteringLoadSaveScreen = TRUE;
+		fEnteringLoadSaveScreen = true;
 		return gfMessageBoxResult ? LOADSAVE_SCREEN : EDIT_SCREEN;
 	}
 	if( gfReadOnly )
 	{ //file is readonly.  Result will determine if the file dialog stays up.
-		fEnteringLoadSaveScreen = TRUE;
+		fEnteringLoadSaveScreen = true;
 		RemoveFileDialog();
 		return gfMessageBoxResult ? LOADSAVE_SCREEN : EDIT_SCREEN;
 	}
@@ -253,7 +253,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 			gbCurrentFileIOStatus = INITIATE_MAP_SAVE;
 			return LOADSAVE_SCREEN;
 		}
-		fEnteringLoadSaveScreen = TRUE;
+		fEnteringLoadSaveScreen = true;
 		RemoveFileDialog();
 		return EDIT_SCREEN ;
 	}
@@ -354,7 +354,7 @@ ScreenID LoadSaveScreenHandle(void)
 	{
 		case DIALOG_CANCEL:
 			RemoveFileDialog();
-			fEnteringLoadSaveScreen = TRUE;
+			fEnteringLoadSaveScreen = true;
 			return EDIT_SCREEN;
 
 		case DIALOG_DELETE:
@@ -374,7 +374,7 @@ ScreenID LoadSaveScreenHandle(void)
 			}
 			else
 				str = ST::format(" Delete file {}? ", filename);
-			gfDeleteFile = TRUE;
+			gfDeleteFile = true;
 			gFileForIO = absolutePath;
 			CreateMessageBox( str );
 			return LOADSAVE_SCREEN;
@@ -396,14 +396,14 @@ ScreenID LoadSaveScreenHandle(void)
 			if( !ValidMapName(absolutePath) )
 			{
 				CreateMessageBox( " Illegal filename.  Try another filename? " );
-				gfIllegalName = TRUE;
+				gfIllegalName = true;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
 			gFileForIO = absolutePath;
 			if ( FileMan::exists(absolutePath) )
 			{
-				gfFileExists = TRUE;
+				gfFileExists = true;
 				gfReadOnly = false;
 				try {
 					gfReadOnly = FileMan::isReadOnly(absolutePath);
@@ -435,7 +435,7 @@ ScreenID LoadSaveScreenHandle(void)
 			if( !ValidMapName(absolutePath) )
 			{
 				CreateMessageBox( " Illegal filename.  Try another filename? " );
-				gfIllegalName = TRUE;
+				gfIllegalName = true;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
@@ -826,7 +826,7 @@ invalid:
 static void InitErrorCatchDialog(void)
 {
 	DoMessageBox(MSG_BOX_BASIC_STYLE, gzErrorCatchString, EDIT_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-	gfErrorCatch = FALSE;
+	gfErrorCatch = false;
 }
 
 
@@ -876,9 +876,9 @@ static ScreenID ProcessFileIO(void)
 
 			iCurrentAction = ACTION_NULL;
 			gbCurrentFileIOStatus = IOSTATUS_NONE;
-			gfRenderWorld = TRUE;
-			gfRenderTaskbar = TRUE;
-			fEnteringLoadSaveScreen = TRUE;
+			gfRenderWorld = true;
+			gfRenderTaskbar = true;
+			fEnteringLoadSaveScreen = true;
 			RestoreFontSettings();
 			if( gfErrorCatch )
 			{
@@ -913,8 +913,8 @@ static ScreenID ProcessFileIO(void)
 				EnableUndo();
 				SetPendingNewScreen( LOADSAVE_SCREEN );
 				gbCurrentFileIOStatus = IOSTATUS_NONE;
-				gfGlobalError = FALSE;
-				gfLoadError = TRUE;
+				gfGlobalError = false;
+				gfLoadError = true;
 				//RemoveButton( iTempButton );
 				CreateMessageBox( " Error loading file.  Try another filename?" );
 				return LOADSAVE_SCREEN;
@@ -943,9 +943,9 @@ static ScreenID ProcessFileIO(void)
 			else
 				gusLightLevel = (UINT16)(EDITOR_LIGHT_MAX - ubAmbientLightLevel );
 			gEditorLightColor = g_light_color;
-			gfRenderWorld = TRUE;
-			gfRenderTaskbar = TRUE;
-			fEnteringLoadSaveScreen = TRUE;
+			gfRenderWorld = true;
+			gfRenderTaskbar = true;
+			fEnteringLoadSaveScreen = true;
 			InitJA2SelectionWindow();
 			ShowEntryPoints();
 			EnableUndo();
@@ -1052,14 +1052,14 @@ static BOOLEAN ValidMapName(const ST::string &path)
 BOOLEAN ExternalLoadMap(const ST::string& szFilename)
 {
 	if (szFilename.empty())
-		return FALSE;
+		return false;
 	if( !ValidMapName(szFilename) )
-		return FALSE;
+		return false;
 	gFileForIO = szFilename;
 	gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 	ProcessFileIO(); //always returns loadsave_screen and changes iostatus to loading_map.
 	RefreshScreen();
 	if( ProcessFileIO() == EDIT_SCREEN )
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }

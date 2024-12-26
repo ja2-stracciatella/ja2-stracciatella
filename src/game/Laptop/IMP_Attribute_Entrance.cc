@@ -85,6 +85,6 @@ static void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }

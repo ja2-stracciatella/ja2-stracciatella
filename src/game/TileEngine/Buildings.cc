@@ -131,14 +131,14 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 
 			// we KNOW that the spot in the original direction is blocked, so only loop 3 times
 			bTempDirection = TwoCDirection(bDirection);
-			fFoundDir = FALSE;
+			fFoundDir = false;
 			for ( uiLoop = 0; uiLoop < 3; uiLoop++ )
 			{
 				sTempGridNo = NewGridNo( sCurrGridNo, DirectionInc( bTempDirection ) );
 				if ( !(gpWorldLevelData[ sTempGridNo ].uiFlags & MAPELEMENT_REACHABLE) && !(gpWorldLevelData[ sTempGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_ROOFCODE_VISITED) )
 				{
 					// this is the way to go!
-					fFoundDir = TRUE;
+					fFoundDir = true;
 					break;
 				}
 				bTempDirection = TwoCDirection(bTempDirection);
@@ -147,14 +147,14 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 			{
 				// now search for a spot that is just not part of the building
 				bTempDirection = TwoCDirection(bDirection);
-				fFoundDir = FALSE;
+				fFoundDir = false;
 				for ( uiLoop = 0; uiLoop < 3; uiLoop++ )
 				{
 					sTempGridNo = NewGridNo( sCurrGridNo, DirectionInc( bTempDirection ) );
 					if ( !(gpWorldLevelData[ sTempGridNo ].uiFlags & MAPELEMENT_REACHABLE) )
 					{
 						// this is the way to go!
-						fFoundDir = TRUE;
+						fFoundDir = true;
 						break;
 					}
 					bTempDirection = TwoCDirection(bTempDirection);
@@ -210,7 +210,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 
 			// if the direction is east or north, the wall would be in our gridno;
 			// if south or west, the wall would be in the gridno two clockwise
-			fFoundWall = FALSE;
+			fFoundWall = false;
 
 			switch( bDirection )
 			{
@@ -239,14 +239,14 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 			{
 				if (WallExistsOfTopLeftOrientation( sWallGridNo ))
 				{
-					fFoundWall = TRUE;
+					fFoundWall = true;
 				}
 			}
 			else
 			{
 				if (WallExistsOfTopRightOrientation( sWallGridNo ))
 				{
-					fFoundWall = TRUE;
+					fFoundWall = true;
 				}
 			}
 
@@ -259,7 +259,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 				else if ( Random( uiChanceIn ) == 0 )
 				{
 					// don't consider people as obstacles
-					if ( NewOKDestination( &FakeSoldier, sCurrGridNo, FALSE, 0 ) )
+					if ( NewOKDestination( &FakeSoldier, sCurrGridNo, false, 0 ) )
 					{
 						pBuilding->sUpClimbSpots[ pBuilding->ubNumClimbSpots ] = sCurrGridNo;
 						pBuilding->sDownClimbSpots[ pBuilding->ubNumClimbSpots ] = sRightGridNo;
@@ -455,11 +455,11 @@ BOOLEAN SameBuilding( INT16 sGridNo1, INT16 sGridNo2 )
 {
 	if ( gubBuildingInfo[ sGridNo1 ] == NO_BUILDING )
 	{
-		return( FALSE );
+		return false;
 	}
 	if ( gubBuildingInfo[ sGridNo2 ] == NO_BUILDING )
 	{
-		return( FALSE );
+		return false;
 	}
 	return gubBuildingInfo[sGridNo1] == gubBuildingInfo[sGridNo2];
 }

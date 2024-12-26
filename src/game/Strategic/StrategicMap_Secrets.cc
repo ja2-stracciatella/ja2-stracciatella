@@ -17,7 +17,7 @@ void InitMapSecrets()
 	isSecretFound.clear();
 	for (auto s : GCM->getMapSecrets())
 	{
-		isSecretFound[s->sectorID] = FALSE;
+		isSecretFound[s->sectorID] = false;
 	}
 }
 
@@ -28,13 +28,13 @@ BOOLEAN IsTownFound(INT8 const bTownID)
 	if (!town)
 	{
 		SLOGW("Town #{} not found", bTownID);
-		return FALSE;
+		return false;
 	}
 
 	if (isSecretFound.find(town->getBaseSector().AsByte()) == isSecretFound.end())
 	{
 		// town is always known to the player
-		return TRUE;
+		return true;
 	}
 
 	return IsSecretFoundAt(town->getBaseSector().AsByte());
@@ -51,16 +51,16 @@ BOOLEAN IsSecretFoundAt(UINT8 const sectorID)
 		// We'll assume the players know the secret if they managed to save
 		// in that sector. Without this extra check the console can get
 		// filled with bogus warning messages.
-		return TRUE;
+		return true;
 	}
 
 	if (isSecretFound.find(sectorID) == isSecretFound.end())
 	{
 		// The game always try to find secrets at J9 and K4, but they
 		// may not be present in a modded set up. So we will just
-		// return TRUE and continue.
+		// return true and continue.
 		SLOGW("No secret defined at sector {}", sectorID);
-		return TRUE;
+		return true;
 	}
 	return isSecretFound[sectorID];
 }
@@ -156,7 +156,7 @@ BOOLEAN GetMapSecretStateForSave(unsigned int const index)
 		}
 	}
 	SLOGW("There is no secret at slot #{}", index);
-	return FALSE;  // write something to maintain save compatibility
+	return false;  // write something to maintain save compatibility
 }
 
 void ExtractMapSecretStateFromSave(DataReader & d, unsigned int const index)

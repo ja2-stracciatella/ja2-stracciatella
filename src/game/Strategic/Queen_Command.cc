@@ -43,7 +43,7 @@
 SECTORINFO SectorInfo[256];
 UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead = NULL;
 extern UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail;
-BOOLEAN gfPendingEnemies = FALSE;
+BOOLEAN gfPendingEnemies = false;
 
 extern std::vector<GARRISON_GROUP> gGarrisonGroup;
 
@@ -270,7 +270,7 @@ void EndTacticalBattleForEnemy()
 
 	/* Clear this value so that profiled enemies can be added into battles in the
 	 * future */
-	gfProfiledEnemyAdded = FALSE;
+	gfProfiledEnemyAdded = false;
 
 	// Clear enemies in battle for all mobile groups in the sector
 	CFOR_EACH_ENEMY_GROUP(i)
@@ -313,7 +313,7 @@ static void PrepareEnemyForUndergroundBattle();
 
 void PrepareEnemyForSectorBattle()
 {
-	gfPendingEnemies = FALSE;
+	gfPendingEnemies = false;
 
 	if (gWorldSector.z > 0)
 	{
@@ -344,7 +344,7 @@ void PrepareEnemyForSectorBattle()
 
 	if (gWorldSector.z == 0 && NumEnemiesInSector(gWorldSector) > 32)
 	{
-		gfPendingEnemies = TRUE;
+		gfPendingEnemies = true;
 	}
 
 	int total_admins;
@@ -432,7 +432,7 @@ void PrepareEnemyForSectorBattle()
 				{ // Adjust the value to zero
 					n_admins        += n_slots;
 					n_slots          = 0;
-					gfPendingEnemies = TRUE;
+					gfPendingEnemies = true;
 				}
 				eg.ubAdminsInBattle += n_admins;
 				total_admins        += n_admins;
@@ -445,7 +445,7 @@ void PrepareEnemyForSectorBattle()
 				{ // Adjust the value to zero
 					n_troops        += n_slots;
 					n_slots          = 0;
-					gfPendingEnemies = TRUE;
+					gfPendingEnemies = true;
 				}
 				eg.ubTroopsInBattle += n_troops;
 				total_troops        += n_troops;
@@ -458,7 +458,7 @@ void PrepareEnemyForSectorBattle()
 				{ // Adjust the value to zero
 					n_elites        += n_slots;
 					n_slots          = 0;
-					gfPendingEnemies = TRUE;
+					gfPendingEnemies = true;
 				}
 				eg.ubElitesInBattle += n_elites;
 				total_elites        += n_elites;
@@ -1000,7 +1000,7 @@ void AddPossiblePendingEnemiesToBattle()
 	{ /* After going through the process, we have finished with some free slots
 		 * and no more enemies to add. So, we can turn off the flag, as this check
 		 * is no longer needed. */
-		gfPendingEnemies = FALSE;
+		gfPendingEnemies = false;
 	}
 }
 
@@ -1216,8 +1216,8 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	// IF there are no enemies, and we need to do alma, skip!
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED && iNumEnemiesInSector == 0 )
 	{
-		InternalStartQuest(QUEST_HELD_IN_ALMA, gWorldSector, FALSE);
-		InternalEndQuest(QUEST_HELD_IN_ALMA, gWorldSector, FALSE);
+		InternalStartQuest(QUEST_HELD_IN_ALMA, gWorldSector, false);
+		InternalEndQuest(QUEST_HELD_IN_ALMA, gWorldSector, false);
 	}
 
 	HandleMoraleEvent(pSoldier, MORALE_MERC_CAPTURED, pSoldier->sSector);
@@ -1233,7 +1233,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	// ATE: Make them neutral!
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED )
 	{
-		pSoldier->bNeutral = TRUE;
+		pSoldier->bNeutral = true;
 	}
 
 	RemoveCharacterFromSquads( pSoldier );
@@ -1261,7 +1261,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	if ( pSoldier->fMercAsleep )
 	{
 		PutMercInAwakeState( pSoldier );
-		pSoldier->fForcedToStayAwake = FALSE;
+		pSoldier->fForcedToStayAwake = false;
 	}
 
 	//Set his life to 50% + or - 10 HP.
@@ -1278,7 +1278,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	// make him quite exhausted when found
 	pSoldier->bBreath = pSoldier->bBreathMax = 50;
 	pSoldier->sBreathRed = 0;
-	pSoldier->fMercCollapsedFlag = FALSE;
+	pSoldier->fMercCollapsedFlag = false;
 }
 
 
@@ -1290,7 +1290,7 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 		pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] +
 		pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ] )
 	{ //militia in sector
-		return TRUE;
+		return true;
 	}
 	// Player in sector?
 	return FindPlayerMovementGroupInSector(SGPSector(ubSectorID)) != nullptr;
@@ -1303,10 +1303,10 @@ static BOOLEAN AnyNonNeutralOfTeamInSector(INT8 team)
 	{
 		if (s->bInSector && s->bLife != 0 && !s->bNeutral)
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1314,11 +1314,11 @@ static BOOLEAN AnyNonNeutralOfTeamInSector(INT8 team)
 BOOLEAN OnlyHostileCivsInSector()
 {
 	//Look for any hostile civs.
-	if (!AnyNonNeutralOfTeamInSector(CIV_TEAM)) return FALSE;
-	//Look for anybody else hostile.  If found, return FALSE immediately.
-	if (AnyNonNeutralOfTeamInSector(ENEMY_TEAM))    return FALSE;
-	if (AnyNonNeutralOfTeamInSector(CREATURE_TEAM)) return FALSE;
-	if (AnyNonNeutralOfTeamInSector(MILITIA_TEAM))  return FALSE;
+	if (!AnyNonNeutralOfTeamInSector(CIV_TEAM)) return false;
+	//Look for anybody else hostile.  If found, return false immediately.
+	if (AnyNonNeutralOfTeamInSector(ENEMY_TEAM))    return false;
+	if (AnyNonNeutralOfTeamInSector(CREATURE_TEAM)) return false;
+	if (AnyNonNeutralOfTeamInSector(MILITIA_TEAM))  return false;
 	//We only have hostile civilians, don't allow time compression.
-	return TRUE;
+	return true;
 }

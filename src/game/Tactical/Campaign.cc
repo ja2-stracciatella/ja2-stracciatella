@@ -107,7 +107,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	UINT16 usSubpointsPerPoint;
 	UINT16 usSubpointsPerLevel;
 	INT8 bCurrentRating;
-	BOOLEAN fAffectedByWisdom = TRUE;
+	BOOLEAN fAffectedByWisdom = true;
 
 	if (p.bEvolution == NO_EVOLUTION)
 		return; // No change possible, quit right away
@@ -130,19 +130,19 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 			bCurrentRating = p.bLifeMax;
 			psStatGainPtr  = &p.sLifeGain;
 			// NB physical stat checks not affected by wisdom, unless training is going on
-			fAffectedByWisdom = FALSE;
+			fAffectedByWisdom = false;
 			break;
 
 		case AGILAMT:
 			bCurrentRating = p.bAgility;
 			psStatGainPtr  = &p.sAgilityGain;
-			fAffectedByWisdom = FALSE;
+			fAffectedByWisdom = false;
 			break;
 
 		case DEXTAMT:
 			bCurrentRating = p.bDexterity;
 			psStatGainPtr  = &p.sDexterityGain;
-			fAffectedByWisdom = FALSE;
+			fAffectedByWisdom = false;
 			break;
 
 		case WISDOMAMT:
@@ -178,7 +178,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 		case STRAMT:
 			bCurrentRating = p.bStrength;
 			psStatGainPtr  = &p.sStrengthGain;
-			fAffectedByWisdom = FALSE;
+			fAffectedByWisdom = false;
 			break;
 
 		case LDRAMT:
@@ -195,7 +195,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	if (ubReason == FROM_TRAINING)
 	{
 		// training always affected by wisdom
-		fAffectedByWisdom = TRUE;
+		fAffectedByWisdom = true;
 	}
 
 
@@ -549,11 +549,11 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 		// if a stat improved
 		if ( sPtsChanged > 0 )
 		{
-			fChangeTypeIncrease = TRUE;
+			fChangeTypeIncrease = true;
 		}
 		else
 		{
-			fChangeTypeIncrease = FALSE;
+			fChangeTypeIncrease = false;
 		}
 
 		// update merc profile stat
@@ -621,7 +621,7 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 			}
 
 			// update mapscreen soldier info panel
-			fCharacterInfoPanelDirty = TRUE;
+			fCharacterInfoPanelDirty = true;
 
 			// remember what time it changed at, it's displayed in a different color for a while afterwards
 			*puiStatTimerPtr = GetJA2Clock();
@@ -676,8 +676,8 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 				{
 					case MERC_TYPE__AIM_MERC:
 						// A.I.M.
-						pSoldier->fContractPriceHasIncreased = TRUE;
-						fChangeSalary = TRUE;
+						pSoldier->fContractPriceHasIncreased = true;
+						fChangeSalary = true;
 						break;
 
 					case MERC_TYPE__MERC:
@@ -702,19 +702,19 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 						//AddEmail( ubEmailOffset, MERC_UP_LEVEL_LENGTH_BIFF, SPECK_FROM_MERC, GetWorldTotalMin() );
 						AddStrategicEvent( EVENT_MERC_MERC_WENT_UP_LEVEL_EMAIL_DELAY, GetWorldTotalMin( ) + 60 + Random( 60 ), ubMercMercIdValue );
 
-						fChangeSalary = TRUE;
+						fChangeSalary = true;
 						break;
 
 					default:
 						// others don't increase salary
-						fChangeSalary = FALSE;
+						fChangeSalary = false;
 						break;
 				}
 			}
 			else // not employed by player
 			{
 				// only AIM and M.E.R.C.s update stats when not on player's team, and both of them DO change salary
-				fChangeSalary = TRUE;
+				fChangeSalary = true;
 			}
 
 			if (fChangeSalary)
@@ -1122,7 +1122,7 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 			ubMaxDeaths = gamepolicy(unhired_merc_deaths_hard);
 			break;
 		default:
-			Assert(FALSE);
+			Assert(false);
 			ubMaxDeaths = 0;
 			break;
 	}
@@ -1235,7 +1235,7 @@ UINT8 CurrentPlayerProgressPercentage(void)
 			ubKillsPerPoint = gamepolicy(kills_per_point_hard);
 			break;
 		default:
-			Assert(FALSE);
+			Assert(false);
 			ubKillsPerPoint = 10;
 			break;
 	}

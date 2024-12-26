@@ -224,7 +224,7 @@ void EnterBobbyR()
 
 
 	SetBookMark(BOBBYR_BOOKMARK);
-	HandleBobbyRUnderConstructionAni( TRUE );
+	HandleBobbyRUnderConstructionAni( true );
 
 	RenderBobbyR();
 }
@@ -255,7 +255,7 @@ void ExitBobbyR()
 
 void HandleBobbyR()
 {
-	HandleBobbyRUnderConstructionAni( FALSE );
+	HandleBobbyRUnderConstructionAni( false );
 }
 
 void RenderBobbyR()
@@ -391,7 +391,7 @@ static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset)
 
 	if( fShowBookmarkInfo )
 	{
-		fReDrawBookMarkInfo = TRUE;
+		fReDrawBookMarkInfo = true;
 	}
 
 	if( ( ( uiCurTime - uiLastTime ) > BOBBYR_UNDERCONSTRUCTION_ANI_DELAY )||( fReDrawScreenFlag ) )
@@ -425,13 +425,13 @@ void InitBobbyRayInventory()
 	InitBobbyRayNewInventory();
 
 	//Initializes the starting values for Bobby Rays NEW Inventory
-	SetupStoreInventory( LaptopSaveInfo.BobbyRayInventory, FALSE );
+	SetupStoreInventory( LaptopSaveInfo.BobbyRayInventory, false );
 
 	//Initializes which USED items can be bought at Bobby Rays
 	InitBobbyRayUsedInventory();
 
 	//Initializes the starting values for Bobby Rays USED Inventory
-	SetupStoreInventory( LaptopSaveInfo.BobbyRayUsedInventory, TRUE);
+	SetupStoreInventory( LaptopSaveInfo.BobbyRayUsedInventory, true);
 }
 
 
@@ -687,7 +687,7 @@ void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 	sInventorySlot = GetInventorySlotForItem(pInventoryArray, usItemIndex, fUsed);
 	if (sInventorySlot == -1)
 	{
-		AssertMsg(FALSE, ST::format("AddFreshBobbyRayInventory(), Item {} not found. AM-0.", usItemIndex));
+		AssertMsg(false, ST::format("AddFreshBobbyRayInventory(), Item {} not found. AM-0.", usItemIndex));
 		return;
 	}
 

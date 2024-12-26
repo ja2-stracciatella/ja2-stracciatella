@@ -78,7 +78,7 @@ void PostNextSchedule( SOLDIERTYPE *pSoldier );
 //we then need to post the events and process schedules for the time that we have been gone.
 void PostSchedules(void);
 
-//Sorts the schedule in chronological order.  Returns TRUE if any sorting took place.
+//Sorts the schedule in chronological order.  Returns true if any sorting took place.
 BOOLEAN SortSchedule( SCHEDULENODE *pSchedule );
 //Adds a schedule to the list.  COPIES THE DATA OVER (ALLOCATES NEW NODE!)
 void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode );

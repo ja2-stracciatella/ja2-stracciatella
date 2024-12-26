@@ -187,11 +187,11 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 
 	//Okay, now we have good pointers to the soldier and the schedule.
 	//Now, determine which time in this schedule that we are processing.
-	fAutoProcess = FALSE;
+	fAutoProcess = false;
 	if( guiCurrentScreen != GAME_SCREEN )
 	{
 		SLOGD("Schedule callback occurred outside of tactical -- Auto processing!" );
-		fAutoProcess = TRUE;
+		fAutoProcess = true;
 	}
 	else
 	{
@@ -205,7 +205,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 		}
 		if( iScheduleIndex == MAX_SCHEDULE_ACTIONS )
 		{
-			fAutoProcess = TRUE;
+			fAutoProcess = true;
 			SLOGD("Possible timewarp causing schedule callback to occur late -- Auto processing!" );
 		}
 	}
@@ -499,7 +499,7 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 	UINT16 usData1;
 	UINT16 usData2;
 	UINT8 ubAction;
-	BOOLEAN fSorted = FALSE;
+	BOOLEAN fSorted = false;
 
 	//Use a bubblesort method (max:  3 switches).
 	index = 0;
@@ -517,7 +517,7 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 		}
 		if( iBestIndex != index )
 		{ //we will swap the best index with the current index.
-			fSorted = TRUE;
+			fSorted = true;
 			usTime		= pSchedule->usTime[ index ];
 			usData1		= pSchedule->usData1[ index ];
 			usData2		= pSchedule->usData2[ index ];
@@ -544,11 +544,11 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 
 	if ( !GridNoOnVisibleWorldTile( sGridNo ) )
 	{
-		return( TRUE );
+		return true;
 	}
 
 	SOLDIERTYPE* const pSoldier = WhoIsThere2(sGridNo, 0);
-	if (pSoldier == NULL) return TRUE;
+	if (pSoldier == NULL) return true;
 
 	// what if the existing merc is prone?
 	const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, STANDING, 5, 1, pSoldier);
@@ -556,12 +556,12 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 
 	if ( sNewGridNo == NOWHERE )
 	{
-		return( FALSE );
+		return false;
 	}
 
 	EVENT_SetSoldierPositionNoCenter(pSoldier, sNewGridNo, SSP_FORCE_DELETE);
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -615,7 +615,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 				// civ should go off map; this tells us where the civ will return
 				pSoldier->sOffWorldGridNo = pSchedule->usData2[ index ];
 				MoveSoldierFromMercToAwaySlot( pSoldier );
-				pSoldier->bInSector = FALSE;
+				pSoldier->bInSector = false;
 			}
 			else
 			{
@@ -638,7 +638,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			EVENT_SetSoldierPositionNoCenter(pSoldier, pSchedule->usData1[index], SSP_FORCE_DELETE);
 			MoveSoldierFromAwayToMercSlot( pSoldier );
-			pSoldier->bInSector = TRUE;
+			pSoldier->bInSector = true;
 			// let this person patrol from here from now on
 			pSoldier->usPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
@@ -672,7 +672,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 			// ok, that tells us where the civ will return
 			pSoldier->sOffWorldGridNo = sGridNo;
 			MoveSoldierFromMercToAwaySlot( pSoldier );
-			pSoldier->bInSector = FALSE;
+			pSoldier->bInSector = false;
 			break;
 		}
 	}
@@ -798,7 +798,7 @@ static void PostSchedule(SOLDIERTYPE* pSoldier)
 static void PrepareScheduleForAutoProcessing(SCHEDULENODE* pSchedule, UINT32 uiStartTime, UINT32 uiEndTime)
 {
 	INT32 i;
-	BOOLEAN	fPostedNextEvent = FALSE;
+	BOOLEAN	fPostedNextEvent = false;
 
 	if ( uiStartTime > uiEndTime )
 	{ //The start time is later in the day than the end time, which means we'll be wrapping
@@ -824,7 +824,7 @@ static void PrepareScheduleForAutoProcessing(SCHEDULENODE* pSchedule, UINT32 uiS
 			{
 				// CJC: Note that end time is always passed in here as the current time so GetWorldDayInMinutes will be for the correct day
 				AddStrategicEvent( EVENT_PROCESS_TACTICAL_SCHEDULE, GetWorldDayInMinutes() + pSchedule->usTime[i], pSchedule->ubScheduleID );
-				fPostedNextEvent = TRUE;
+				fPostedNextEvent = true;
 				break;
 			}
 		}
@@ -842,7 +842,7 @@ static void PrepareScheduleForAutoProcessing(SCHEDULENODE* pSchedule, UINT32 uiS
 			}
 			else if ( pSchedule->usTime[i] >= uiEndTime )
 			{
-				fPostedNextEvent = TRUE;
+				fPostedNextEvent = true;
 				AddStrategicEvent( EVENT_PROCESS_TACTICAL_SCHEDULE, GetWorldDayInMinutes() + pSchedule->usTime[i], pSchedule->ubScheduleID );
 				break;
 			}
@@ -916,7 +916,7 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 
 void PostSchedules()
 {
-	BOOLEAN fDefaultSchedulesPossible = FALSE;
+	BOOLEAN fDefaultSchedulesPossible = false;
 
 	#if defined( DISABLESCHEDULES ) //definition found at top of this .c file.
 
@@ -927,7 +927,7 @@ void PostSchedules()
 	if( gMapInformation.sNorthGridNo != -1 || gMapInformation.sEastGridNo != -1 ||
 		gMapInformation.sSouthGridNo != -1 || gMapInformation.sWestGridNo != -1 )
 	{
-		fDefaultSchedulesPossible = TRUE;
+		fDefaultSchedulesPossible = true;
 	}
 	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
@@ -969,23 +969,23 @@ static void PerformActionOnDoorAdjacentToGridNo(UINT8 ubScheduleAction, UINT16 u
 				pDoor = FindDoorInfoAtGridNo( sDoorGridNo );
 				if (pDoor)
 				{
-					pDoor->fLocked = TRUE;
+					pDoor->fLocked = true;
 				}
 				// make sure it's closed as well
-				ModifyDoorStatus( sDoorGridNo, FALSE, DONTSETDOORSTATUS );
+				ModifyDoorStatus( sDoorGridNo, false, DONTSETDOORSTATUS );
 				break;
 			case SCHEDULE_ACTION_UNLOCKDOOR:
 				pDoor = FindDoorInfoAtGridNo( sDoorGridNo );
 				if (pDoor)
 				{
-					pDoor->fLocked = FALSE;
+					pDoor->fLocked = false;
 				}
 				break;
 			case SCHEDULE_ACTION_OPENDOOR:
-				ModifyDoorStatus( sDoorGridNo, TRUE, DONTSETDOORSTATUS );
+				ModifyDoorStatus( sDoorGridNo, true, DONTSETDOORSTATUS );
 				break;
 			case SCHEDULE_ACTION_CLOSEDOOR:
-				ModifyDoorStatus( sDoorGridNo, FALSE, DONTSETDOORSTATUS );
+				ModifyDoorStatus( sDoorGridNo, false, DONTSETDOORSTATUS );
 				break;
 		}
 	}
@@ -1036,7 +1036,7 @@ void PostNextSchedule( SOLDIERTYPE *pSoldier )
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime )
 {
 	INT32			iLoop;
-	BOOLEAN		fFoundOpeningTime = FALSE, fFoundClosingTime = FALSE;
+	BOOLEAN		fFoundOpeningTime = false, fFoundClosingTime = false;
 	SCHEDULENODE *pSchedule;
 
 	*puiOpeningTime = 0;
@@ -1048,30 +1048,30 @@ BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * p
 		// If person had default schedule then would have been assigned and this would
 		// have succeeded.
 		// Hence this is an error.
-		return( FALSE );
+		return false;
 	}
 
 	for ( iLoop = 0; iLoop < MAX_SCHEDULE_ACTIONS; iLoop++ )
 	{
 		if ( pSchedule->ubAction[ iLoop ] == SCHEDULE_ACTION_UNLOCKDOOR )
 		{
-			fFoundOpeningTime = TRUE;
+			fFoundOpeningTime = true;
 			*puiOpeningTime = pSchedule->usTime[ iLoop ];
 		}
 		else if ( pSchedule->ubAction[ iLoop ] == SCHEDULE_ACTION_LOCKDOOR )
 		{
-			fFoundClosingTime = TRUE;
+			fFoundClosingTime = true;
 			*puiClosingTime = pSchedule->usTime[ iLoop ];
 		}
 	}
 
 	if ( fFoundOpeningTime && fFoundClosingTime )
 	{
-		return( TRUE );
+		return true;
 	}
 	else
 	{
-		return( FALSE );
+		return false;
 	}
 }
 
@@ -1086,11 +1086,11 @@ static BOOLEAN ScheduleHasMorningNonSleepEntries(SCHEDULENODE* pSchedule)
 		{
 			if ( pSchedule->usTime[ bLoop ] < (12*60) )
 			{
-				return( TRUE );
+				return true;
 			}
 		}
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -1156,7 +1156,7 @@ static void SecureSleepSpot(SOLDIERTYPE* const pSoldier, UINT16 const usSleepSpo
 
 		// conflict!
 		//UINT8 ubDirection;
-		//const UINT16 usNewSleepSpot = FindGridNoFromSweetSpotWithStructData(&s2, s2.usAnimState, usSleepSpot2, 3, &ubDirection, FALSE);
+		//const UINT16 usNewSleepSpot = FindGridNoFromSweetSpotWithStructData(&s2, s2.usAnimState, usSleepSpot2, 3, &ubDirection, false);
 		UINT16 const usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot(&s2, usSleepSpot2, 3);
 		if (usNewSleepSpot == NOWHERE) continue;
 

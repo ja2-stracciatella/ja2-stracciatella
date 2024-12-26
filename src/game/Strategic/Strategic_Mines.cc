@@ -74,7 +74,7 @@ void InitializeMines( void )
 
 		pMineStatus.ubMineType = mine->mineType;
 		pMineStatus.uiMaxRemovalRate = mine->minimumMineProduction;
-		pMineStatus.fEmpty = (pMineStatus.uiMaxRemovalRate == 0) ? TRUE : FALSE;
+		pMineStatus.fEmpty = (pMineStatus.uiMaxRemovalRate == 0) ? true : false;
 		gMineStatus.push_back(pMineStatus);
 	}
 
@@ -211,7 +211,7 @@ void HourlyMinesUpdate(void)
 					else
 					{
 						ubQuoteType = HEAD_MINER_STRATEGIC_QUOTE_CREATURES_ATTACK;
-						pMineStatus->fPrevInvadedByMonsters = TRUE;
+						pMineStatus->fPrevInvadedByMonsters = true;
 
 						if ( gubQuest[ QUEST_CREATURES ] == QUESTNOTSTARTED )
 						{
@@ -313,8 +313,8 @@ static UINT32 ExtractOreFromMine(UINT8 ubMineIndex, UINT32 uiAmount)
 		uiAmountExtracted = gMineStatus[ ubMineIndex ].uiRemainingOreSupply;
 		gMineStatus[ ubMineIndex ].uiRemainingOreSupply = 0;
 		gMineStatus[ ubMineIndex ].uiMaxRemovalRate = 0;
-		gMineStatus[ ubMineIndex ].fEmpty = TRUE;
-		gMineStatus[ ubMineIndex ].fRunningOut = FALSE;
+		gMineStatus[ ubMineIndex ].fEmpty = true;
+		gMineStatus[ ubMineIndex ].fRunningOut = false;
 
 		// tell the strategic AI about this, that mine's and town's value is greatly reduced
 		StrategicHandleMineThatRanOut(GetMineSector(ubMineIndex));
@@ -330,10 +330,10 @@ static UINT32 ExtractOreFromMine(UINT8 ubMineIndex, UINT32 uiAmount)
 		// one of the mines (randomly chosen) will start running out eventually, check if we're there yet
 		if (gMineStatus[ ubMineIndex ].uiRemainingOreSupply < gMineStatus[ ubMineIndex ].uiOreRunningOutPoint)
 		{
-			gMineStatus[ ubMineIndex ].fRunningOut = TRUE;
+			gMineStatus[ ubMineIndex ].fRunningOut = true;
 
 			// round all fractions UP to the next REMOVAL_RATE_INCREMENT
-			gMineStatus[ ubMineIndex ].uiMaxRemovalRate = (UINT32) (((FLOAT) gMineStatus[ ubMineIndex ].uiRemainingOreSupply / 10) / REMOVAL_RATE_INCREMENT + 0.9999) * REMOVAL_RATE_INCREMENT;
+			gMineStatus[ ubMineIndex ].uiMaxRemovalRate = (UINT32) (((float) gMineStatus[ ubMineIndex ].uiRemainingOreSupply / 10) / REMOVAL_RATE_INCREMENT + 0.9999) * REMOVAL_RATE_INCREMENT;
 
 
 			// if we control it
@@ -344,7 +344,7 @@ static UINT32 ExtractOreFromMine(UINT8 ubMineIndex, UINT32 uiAmount)
 				{
 					// that mine's head miner tells player that the mine is running out
 					IssueHeadMinerQuote( ubMineIndex, HEAD_MINER_STRATEGIC_QUOTE_RUNNING_OUT );
-					gMineStatus[ ubMineIndex ].fWarnedOfRunningOut = TRUE;
+					gMineStatus[ ubMineIndex ].fWarnedOfRunningOut = true;
 					AddMineHistoryEvent(HISTORY_MINE_RUNNING_OUT, ubMineIndex);
 				}
 			}
@@ -491,7 +491,7 @@ static INT32 MineAMine(UINT8 ubMineIndex)
 			if ( !gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer )
 			{
 				// remember that we've earned income from this mine during the game
-				gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer = TRUE;
+				gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer = true;
 				// and when we started to do so...
 				gMineStatus[ ubMineIndex ].uiTimePlayerProductionStarted = GetWorldTotalMin();
 			}
@@ -688,7 +688,7 @@ void ShutOffMineProduction( UINT8 ubMineIndex )
 
 	if ( !gMineStatus[ ubMineIndex ].fShutDown )
 	{
-		gMineStatus[ ubMineIndex ].fShutDown = TRUE;
+		gMineStatus[ ubMineIndex ].fShutDown = true;
 		AddMineHistoryEvent(HISTORY_MINE_SHUTDOWN, ubMineIndex);
 	}
 }
@@ -702,7 +702,7 @@ void RestartMineProduction( UINT8 ubMineIndex )
 	{
 		if ( gMineStatus[ ubMineIndex ].fShutDown )
 		{
-			gMineStatus[ ubMineIndex ].fShutDown = FALSE;
+			gMineStatus[ ubMineIndex ].fShutDown = false;
 			AddMineHistoryEvent(HISTORY_MINE_REOPENED, ubMineIndex);
 		}
 	}
@@ -713,7 +713,7 @@ static void MineShutdownIsPermanent(UINT8 ubMineIndex)
 {
 	Assert(ubMineIndex < gMineStatus.size());
 
-	gMineStatus[ ubMineIndex ].fShutDownIsPermanent = TRUE;
+	gMineStatus[ ubMineIndex ].fShutDownIsPermanent = true;
 }
 
 
@@ -745,7 +745,7 @@ static UINT8 GetHeadMinerIndexForMine(UINT8 ubMineIndex)
 	}
 
 	// not found - yack!
-	Assert( FALSE );
+	Assert( false );
 	return( 0 );
 }
 
@@ -823,7 +823,7 @@ void PlayerSpokeToHeadMiner( UINT8 ubMinerProfileId )
 	if (!gMineStatus[ubMineIndex].fSpokeToHeadMiner)
 	{
 		AddMineHistoryEvent(HISTORY_TALKED_TO_MINER, ubMineIndex);
-		gMineStatus[ ubMineIndex ].fSpokeToHeadMiner = TRUE;
+		gMineStatus[ ubMineIndex ].fSpokeToHeadMiner = true;
 	}
 }
 
@@ -852,12 +852,12 @@ BOOLEAN IsHisMineDisloyal( UINT8 ubMinerProfileId )
 	if (gTownLoyalty[ubAssociatedTown].ubRating < LOW_MINE_LOYALTY_THRESHOLD)
 	{
 		// pretty disloyal
-		return(TRUE);
+		return(true);
 	}
 	else
 	{
 		// pretty loyal
-		return(FALSE);
+		return(false);
 	}
 }
 
@@ -877,11 +877,11 @@ BOOLEAN IsHisMineLostAndRegained( UINT8 ubMinerProfileId )
 
 	if (PlayerControlsMine(ubMineIndex) && gMineStatus[ ubMineIndex ].fQueenRetookProducingMine)
 	{
-		return(TRUE);
+		return(true);
 	}
 	else
 	{
-		return(FALSE);
+		return(false);
 	}
 }
 
@@ -891,7 +891,7 @@ void ResetQueenRetookMine( UINT8 ubMinerProfileId )
 
 	ubMineIndex = GetHeadMinersMineIndex( ubMinerProfileId );
 
-	gMineStatus[ ubMineIndex ].fQueenRetookProducingMine = FALSE;
+	gMineStatus[ ubMineIndex ].fQueenRetookProducingMine = false;
 }
 
 BOOLEAN IsHisMineAtMaxProduction( UINT8 ubMinerProfileId )
@@ -903,12 +903,12 @@ BOOLEAN IsHisMineAtMaxProduction( UINT8 ubMinerProfileId )
 	if (GetAvailableWorkForceForMineForPlayer( ubMineIndex ) == 100)
 	{
 		// loyalty is 100% and control is 100%
-		return(TRUE);
+		return(true);
 	}
 	else
 	{
 		// something not quite perfect yet
-		return(FALSE);
+		return(false);
 	}
 }
 
@@ -919,7 +919,7 @@ void QueenHasRegainedMineSector(UINT8 ubMineIndex)
 
 	if (gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer)
 	{
-		gMineStatus[ ubMineIndex ].fQueenRetookProducingMine = TRUE;
+		gMineStatus[ ubMineIndex ].fQueenRetookProducingMine = true;
 	}
 }
 
@@ -933,11 +933,11 @@ BOOLEAN HasAnyMineBeenAttackedByMonsters(void)
 	{
 		if (!MineClearOfMonsters( ubMineIndex ) || gMineStatus[ ubMineIndex ].fPrevInvadedByMonsters)
 		{
-			return(TRUE);
+			return(true);
 		}
 	}
 
-	return(FALSE);
+	return(false);
 }
 
 
@@ -962,7 +962,7 @@ void PlayerAttackedHeadMiner( UINT8 ubMinerProfileId )
 		DecrementTownLoyalty( bTownId, LOYALTY_PENALTY_HEAD_MINER_ATTACKED );
 
 		// don't allow this more than once
-		gMineStatus[ ubMineIndex ].fAttackedHeadMiner = TRUE;
+		gMineStatus[ ubMineIndex ].fAttackedHeadMiner = true;
 	}
 }
 
@@ -976,10 +976,10 @@ BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId )
 	if ( gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer &&
 			( ( GetWorldTotalMin() - gMineStatus[ ubMineIndex ].uiTimePlayerProductionStarted ) >= ( 24 * 60 ) ) )
 	{
-		return ( TRUE );
+		return ( true );
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -1010,10 +1010,10 @@ BOOLEAN AreThereMinersInsideThisMine( UINT8 ubMineIndex )
 	// the "shutdown permanently" flag is only used for the player never receiving the income - miners will keep mining
 	if ( ( !pMineStatus->fEmpty ) && MineClearOfMonsters( ubMineIndex ) )
 	{
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 // returns whether or not we've spoken to the head miner of a particular mine

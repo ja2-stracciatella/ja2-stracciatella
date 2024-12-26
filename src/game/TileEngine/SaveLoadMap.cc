@@ -193,14 +193,14 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 			case SLM_EXIT_GRIDS:
 				{
 					EXITGRID ExitGrid;
-					gfLoadingExitGrids = TRUE;
+					gfLoadingExitGrids = true;
 					ExitGrid.usGridNo = pMap->usSubImageIndex;
 					ExitGrid.ubGotoSector.x = (UINT8) pMap->usImageType;
 					ExitGrid.ubGotoSector.y = (UINT8) ( pMap->usImageType >> 8 ) ;
 					ExitGrid.ubGotoSector.z = pMap->ubExtra;
 
 					AddExitGridToWorld( pMap->usGridNo, &ExitGrid );
-					gfLoadingExitGrids = FALSE;
+					gfLoadingExitGrids = false;
 
 					// Save this struct back to the temp file
 					SaveModifiedMapStructToMapTempFile(pMap, *tempMapFile);
@@ -610,7 +610,7 @@ BOOLEAN RemoveGraphicFromTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSe
 try
 {
 	MODIFY_MAP *pMap;
-	BOOLEAN	fRetVal=FALSE;
+	BOOLEAN	fRetVal=false;
 	UINT32	cnt;
 
 	ST::string const zMapName = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSector);
@@ -643,7 +643,7 @@ try
 		if( pMap->usGridNo == uiMapIndex && pMap->usImageType == uiType && pMap->usSubImageIndex == usSubIndex )
 		{
 			//Do nothin
-			fRetVal = TRUE;
+			fRetVal = true;
 		}
 		else
 		{
@@ -654,7 +654,7 @@ try
 
 	return( fRetVal );
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 // Appends the status of openable struct status to the map modification temp file (m_*)
 static void AddOpenableStructStatusToMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened, AutoSGPFile& hFile)
@@ -732,7 +732,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 		if (fOpened)
 		{
 			// We are open, make un-hidden if so....
-			SetItemsVisibilityOn(sBaseGridNo, 0, ANY_VISIBILITY_VALUE, FALSE);
+			SetItemsVisibilityOn(sBaseGridNo, 0, ANY_VISIBILITY_VALUE, false);
 		}
 		else
 		{

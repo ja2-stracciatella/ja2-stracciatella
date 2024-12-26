@@ -215,7 +215,7 @@ static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, UINT32 reaso
 	usPosX = ubMercNum % AIM_FI_NUM_MUHSHOTS_X;
 	usPosX = AIM_FI_FIRST_MUGSHOT_X + (AIM_FI_PORTRAIT_WIDTH + AIM_FI_MUGSHOT_GAP_X) * usPosX;
 
-	//fReDrawNewMailFlag = TRUE;
+	//fReDrawNewMailFlag = true;
 
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -249,33 +249,33 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 		if (face->pShades[0] == nullptr)
 		{
 			face->pShades[0] = Create16BPPPaletteShaded(face->Palette(),
-				DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+				DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, true);
 		}
 		face->CurrentShade(0);
-		shaded = FALSE;
+		shaded = false;
 		text   = AimFiText[AIM_FI_DEAD];
 	}
 	else if (p.bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
 	{
 		// the merc is currently a POW or, the merc was fired as a pow
-		shaded = TRUE;
+		shaded = true;
 		text   = pPOWStrings[0];
 	}
 	else if (s != NULL)
 	{
 		// the merc is on our team
-		shaded = TRUE;
+		shaded = true;
 		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
 	else if (!IsMercHireable(p))
 	{
 		// the merc is away, shadow his/her face and blit 'away' over top
-		shaded = TRUE;
+		shaded = true;
 		text   = AimFiText[AIM_FI_DEAD + 1];
 	}
 	else
 	{
-		shaded = FALSE;
+		shaded = false;
 		text.clear();
 	}
 

@@ -65,9 +65,9 @@
 #define MAX_BOMB_QUEUE 40
 static ExplosionQueueElement gExplosionQueue[MAX_BOMB_QUEUE];
 UINT8                        gubElementsOnExplosionQueue = 0;
-BOOLEAN                      gfExplosionQueueActive      = FALSE;
+BOOLEAN                      gfExplosionQueueActive      = false;
 
-static BOOLEAN      gfExplosionQueueMayHaveChangedSight = FALSE;
+static BOOLEAN      gfExplosionQueueMayHaveChangedSight = false;
 static SOLDIERTYPE* gPersonToSetOffExplosions           = 0;
 
 #define NUM_EXPLOSION_SLOTS 100
@@ -135,7 +135,7 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 	e->sZ            = sZ;
 	e->sGridNo       = sGridNo;
 	e->bLevel        = bLevel;
-	e->fAllocated    = TRUE;
+	e->fAllocated    = true;
 	e->sCurrentFrame = 0;
 	GenerateExplosionFromExplosionPointer(e);
 
@@ -148,13 +148,13 @@ void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 z, const INT16 sGridN
 	INT16 x;
 	INT16 y;
 	ConvertGridNoToCenterCellXY(sGridNo, &x, &y);
-	InternalIgniteExplosion(owner, x, y, z, sGridNo, item, TRUE, level);
+	InternalIgniteExplosion(owner, x, y, z, sGridNo, item, true, level);
 }
 
 
 void IgniteExplosionXY(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel)
 {
-	InternalIgniteExplosion(owner, sX, sY, sZ, sGridNo, usItem, TRUE, bLevel);
+	InternalIgniteExplosion(owner, sX, sY, sZ, sGridNo, usItem, true, bLevel);
 }
 
 
@@ -232,7 +232,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 			pExplosion->light = l;
 			if (l != NULL)
 			{
-				LightSpritePower(l, TRUE);
+				LightSpritePower(l, true);
 				LightSpritePosition(l, sX / CELL_X_SIZE, sY / CELL_Y_SIZE);
 			}
 		}
@@ -259,7 +259,7 @@ void RemoveExplosionData(EXPLOSIONTYPE* const e)
 	Assert(gExplosionData <= e && e < endof(gExplosionData));
 	Assert(e->fAllocated);
 
-	e->fAllocated = FALSE;
+	e->fAllocated = false;
 	if (e->light != NULL) LightSpriteDestroy(e->light);
 }
 
@@ -309,7 +309,7 @@ static void ReplaceWall(GridNo const grid_no, UINT8 const orientation, INT16 con
 	UINT16     const new_idx = GetTileIndexFromTypeSubIndex(gTileDatabase[node->usIndex].fType, sub_idx);
 	ApplyMapChangesToMapTempFile app;
 	RemoveStructFromLevelNode(grid_no, node);
-	AddWallToStructLayer(grid_no, new_idx, TRUE);
+	AddWallToStructLayer(grid_no, new_idx, true);
 }
 
 
@@ -396,10 +396,10 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		}
 
 		INT8    destruction_partner = -1;
-		BOOLEAN fContinue           = FALSE;
+		BOOLEAN fContinue           = false;
 		if (bDamageReturnVal == STRUCTURE_DESTROYED)
 		{
-			fContinue = TRUE;
+			fContinue = true;
 		}
 		// Check for a damaged looking graphic
 		else if (bDamageReturnVal == STRUCTURE_DAMAGED)
@@ -589,12 +589,12 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		InvalidateWorldRedundency();
 		SetRenderFlags(RENDER_FLAG_FULL);
 		// Movement costs!
-		*pfRecompileMovementCosts = TRUE;
+		*pfRecompileMovementCosts = true;
 
 		// Make secondary explosion if eplosive....
 		if (is_explosive)
 		{
-			InternalIgniteExplosion(owner, CenterX(base_grid_no), CenterY(base_grid_no), 0, base_grid_no, STRUCTURE_EXPLOSION, FALSE, level);
+			InternalIgniteExplosion(owner, CenterX(base_grid_no), CenterY(base_grid_no), 0, base_grid_no, STRUCTURE_EXPLOSION, false, level);
 		}
 
 		if (fContinue == 2) return false;
@@ -611,10 +611,10 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 	INT16     sDesiredLevel;
 	UINT8     ubLoop, ubLoop2;
 	INT16     sNewGridNo, sNewGridNo2;
-	BOOLEAN   fToBreak = FALSE;
-	BOOLEAN   fMultiStructure = FALSE;
-	BOOLEAN   fMultiStructSpecialFlag = FALSE;
-	BOOLEAN   fExplodeDamageReturn = FALSE;
+	BOOLEAN   fToBreak = false;
+	BOOLEAN   fMultiStructure = false;
+	BOOLEAN   fMultiStructSpecialFlag = false;
+	BOOLEAN   fExplodeDamageReturn = false;
 
 	std::vector<DB_STRUCTURE_TILE*> ppTile;
 	GridNo              sBaseGridNo     = NOWHERE; // XXX HACK000E
@@ -653,7 +653,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 		}
 		else
 		{
-			fMultiStructure = FALSE;
+			fMultiStructure = false;
 		}
 
 		pNextCurrent = pCurrent->pNext;
@@ -665,7 +665,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 
 			if ( !fExplodeDamageReturn )
 			{
-				fToBreak = TRUE;
+				fToBreak = true;
 			}
 		}
 
@@ -701,9 +701,9 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 									// If we just damaged it, use same damage value....
 									ExplosiveDamageGridNo(sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, owner, bLevel);
 
-									InternalIgniteExplosion(owner, CenterX(sNewGridNo2), CenterY(sNewGridNo2), 0, sNewGridNo2, RDX, FALSE, bLevel);
+									InternalIgniteExplosion(owner, CenterX(sNewGridNo2), CenterY(sNewGridNo2), 0, sNewGridNo2, RDX, false, bLevel);
 
-									fToBreak = TRUE;
+									fToBreak = true;
 								}
 							}
 						}
@@ -732,12 +732,12 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 	UINT8		ubDirection;
 
 	if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->bLife )
-		return( FALSE );
+		return false;
 
 	if ( pSoldier->ubMiscSoldierFlags & SOLDIER_MISC_HURT_BY_EXPLOSION )
 	{
 		// don't want to damage the guy twice
-		return( FALSE );
+		return false;
 	}
 
 	// Direction to center of explosion
@@ -761,7 +761,7 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		ProcessImplicationsOfPCAttack(owner, pSoldier, REASON_EXPLOSION);
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -909,7 +909,7 @@ INT16 ReduceDamageAmount(INT16 damage, UINT8 radius, UINT32 distance) {
 static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, SOLDIERTYPE* const owner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0;
-	BOOLEAN fRecompileMovementCosts = FALSE;
+	BOOLEAN fRecompileMovementCosts = false;
 	const ExplosiveModel* pExplosive = nullptr;
 	const ExplosiveBlastEffect* blastEffect = nullptr;
 	const ExplosiveStunEffect* stunEffect = nullptr;
@@ -959,14 +959,14 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 					sStructDmgAmt = sStructDmgAmt / static_cast<INT16>(blastEffect->structuralDamageDisivor);
 				}
 
-				ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, FALSE, -1, owner, bLevel);
+				ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, false, -1, owner, bLevel);
 
 				// ATE: Look for damage to walls ONLY for next two gridnos
 				sNewGridNo = NewGridNo( sGridNo, DirectionInc( NORTH ) );
 
 				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
 				{
-					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, true, -1, owner, bLevel);
 				}
 
 				// ATE: Look for damage to walls ONLY for next two gridnos
@@ -974,7 +974,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
 				{
-					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, true, -1, owner, bLevel);
 				}
 			}
 
@@ -1058,7 +1058,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			fRecompileMovementCosts = DishOutGasDamage(pSoldier, smokeEffect->smokeEffect, sSubsequent, fRecompileMovementCosts, owner);
 		}
 
-		(*pfMercHit) = TRUE;
+		(*pfMercHit) = true;
 	}
 
 	return( fRecompileMovementCosts );
@@ -1070,22 +1070,22 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 	INT8      bStructHeight;
 	UINT8     ubMovementCost;
 	INT8      Blocking, BlockingTemp;
-	BOOLEAN   fTravelCostObs = FALSE;
+	BOOLEAN   fTravelCostObs = false;
 	UINT32    uiRangeReduce;
 	INT16     sNewGridNo;
 	STRUCTURE *pBlockingStructure;
-	BOOLEAN   fBlowWindowSouth = FALSE;
-	BOOLEAN   fReduceRay = TRUE;
+	BOOLEAN   fBlowWindowSouth = false;
+	BOOLEAN   fReduceRay = true;
 
 	ubMovementCost = gubWorldMovementCosts[ uiNewSpot ][ ubDir ][ bLevel ];
 
 	if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 	{
-		ubMovementCost = DoorTravelCost( NULL, uiNewSpot, ubMovementCost, FALSE, NULL );
+		ubMovementCost = DoorTravelCost( NULL, uiNewSpot, ubMovementCost, false, NULL );
 		// If we have hit a wall, STOP HERE
 		if (ubMovementCost >= TRAVELCOST_BLOCKED)
 		{
-			fTravelCostObs  = TRUE;
+			fTravelCostObs  = true;
 		}
 	}
 	else
@@ -1094,25 +1094,25 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 		if ( ubMovementCost == TRAVELCOST_WALL )
 		{
 			// We have an obstacle here..
-			fTravelCostObs = TRUE;
+			fTravelCostObs = true;
 		}
 	}
 
 
-	Blocking = GetBlockingStructureInfo( (INT16)uiNewSpot, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+	Blocking = GetBlockingStructureInfo( (INT16)uiNewSpot, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, true );
 
 	if ( pBlockingStructure )
 	{
 		if ( pBlockingStructure->fFlags & STRUCTURE_CAVEWALL )
 		{
 			// block completely!
-			fTravelCostObs = TRUE;
+			fTravelCostObs = true;
 		}
 		else if ( pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 		{
 		// not stopped
-		fTravelCostObs = FALSE;
-		fReduceRay = FALSE;
+		fTravelCostObs = false;
+		fReduceRay = false;
 		}
 	}
 
@@ -1124,7 +1124,7 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 			if ( Blocking == BLOCKING_TOPRIGHT_OPEN_WINDOW || Blocking == BLOCKING_TOPLEFT_OPEN_WINDOW )
 			{
 				// If open, fTravelCostObs set to false and reduce range....
-				fTravelCostObs = FALSE;
+				fTravelCostObs = false;
 				// Range will be reduced below...
 			}
 
@@ -1134,17 +1134,17 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 				// will override there...
 				sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( WEST ) );
 
-				BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+				BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, true );
 				if ( BlockingTemp == BLOCKING_TOPRIGHT_OPEN_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_OPEN_WINDOW )
 				{
 					// If open, fTravelCostObs set to false and reduce range....
-					fTravelCostObs = FALSE;
+					fTravelCostObs = false;
 					// Range will be reduced below...
 				}
 				if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 				{
-					fTravelCostObs = FALSE;
-					fReduceRay = FALSE;
+					fTravelCostObs = false;
+					fReduceRay = false;
 				}
 			}
 
@@ -1152,17 +1152,17 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 			{
 				sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
 
-				BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+				BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, true );
 				if ( BlockingTemp == BLOCKING_TOPRIGHT_OPEN_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_OPEN_WINDOW )
 				{
 					// If open, fTravelCostObs set to false and reduce range....
-					fTravelCostObs = FALSE;
+					fTravelCostObs = false;
 					// Range will be reduced below...
 				}
 				if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 				{
-					fTravelCostObs = FALSE;
-					fReduceRay = FALSE;
+					fTravelCostObs = false;
+					fReduceRay = false;
 				}
 			}
 
@@ -1177,12 +1177,12 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 				// Explode!
 				if ( ubDir == SOUTH || ubDir == SOUTHEAST || ubDir == SOUTHWEST )
 				{
-					fBlowWindowSouth = TRUE;
+					fBlowWindowSouth = true;
 				}
 
 				if ( pBlockingStructure != NULL )
 				{
-					WindowHit( (INT16)uiNewSpot, pBlockingStructure->usStructureID, fBlowWindowSouth, TRUE );
+					WindowHit( (INT16)uiNewSpot, pBlockingStructure->usStructureID, fBlowWindowSouth, true );
 				}
 			}
 
@@ -1190,33 +1190,33 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 			// will override there...
 			sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( WEST ) );
 
-			BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure , TRUE );
+			BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure , true );
 			if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 			{
-				fTravelCostObs = FALSE;
-				fReduceRay = FALSE;
+				fTravelCostObs = false;
+				fReduceRay = false;
 			}
 			if ( BlockingTemp == BLOCKING_TOPRIGHT_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_WINDOW )
 			{
 				if ( pBlockingStructure != NULL )
 				{
-					WindowHit( sNewGridNo, pBlockingStructure->usStructureID, FALSE, TRUE );
+					WindowHit( sNewGridNo, pBlockingStructure->usStructureID, false, true );
 				}
 			}
 
 			sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
-			BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+			BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, true );
 
 			if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 			{
-				fTravelCostObs = FALSE;
-				fReduceRay = FALSE;
+				fTravelCostObs = false;
+				fReduceRay = false;
 			}
 			if ( BlockingTemp == BLOCKING_TOPRIGHT_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_WINDOW )
 			{
 				if ( pBlockingStructure != NULL )
 				{
-					WindowHit( sNewGridNo, pBlockingStructure->usStructureID, FALSE, TRUE );
+					WindowHit( sNewGridNo, pBlockingStructure->usStructureID, false, true );
 				}
 			}
 		}
@@ -1228,7 +1228,7 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 		// ATE: Tall things should blaock all; Default wall/door height is 4
 		if ( bStructHeight > 4 )
 		{
-			(*pubKeepGoing) = FALSE;
+			(*pubKeepGoing) = false;
 		}
 		else
 		{
@@ -1260,11 +1260,11 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 
 			if ( uiCurRange <= (*piMaxRange) )
 			{
-				(*pubKeepGoing) = TRUE;
+				(*pubKeepGoing) = true;
 			}
 			else
 			{
-				(*pubKeepGoing) = FALSE;
+				(*pubKeepGoing) = false;
 			}
 		}
 	}
@@ -1272,11 +1272,11 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 	{
 		if ( fTravelCostObs )
 		{
-			(*pubKeepGoing) = FALSE;
+			(*pubKeepGoing) = false;
 		}
 		else
 		{
-			(*pubKeepGoing) = TRUE;
+			(*pubKeepGoing) = true;
 		}
 	}
 
@@ -1287,7 +1287,7 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 		if (pStructure == NULL)
 		{
 			// no structure found therefore we can't spread
-			(*pubKeepGoing) = FALSE;
+			(*pubKeepGoing) = false;
 		}
 	}
 }
@@ -1299,9 +1299,9 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	INT32   uiTempRange, ubBranchRange;
 	UINT8   ubDir,ubBranchDir, ubKeepGoing;
 	INT16   sRange;
-	BOOLEAN fRecompileMovement = FALSE;
-	BOOLEAN fAnyMercHit = FALSE;
-	BOOLEAN fSmokeEffect = FALSE;
+	BOOLEAN fRecompileMovement = false;
+	BOOLEAN fAnyMercHit = false;
+	BOOLEAN fSmokeEffect = false;
 
 	if (usItem != NOTHING) {
 		auto explosive = GCM->getExplosive(usItem);
@@ -1320,7 +1320,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	// first, affect main spot
 	if (ExpAffect(sGridNo, sGridNo, 0, usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 	{
-		fRecompileMovement = TRUE;
+		fRecompileMovement = true;
 	}
 
 	for (ubDir = NORTH; ubDir <= NORTHWEST; ubDir++ )
@@ -1347,7 +1347,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 			// this spot
 			if (uiNewSpot == uiTempSpot)
 			{
-				ubKeepGoing = FALSE;
+				ubKeepGoing = false;
 			}
 			else
 			{
@@ -1363,7 +1363,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 				// ok, do what we do here...
 				if (ExpAffect(sGridNo, uiNewSpot, cnt / 2, usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 				{
-					fRecompileMovement = TRUE;
+					fRecompileMovement = true;
 				}
 
 				// how far should we branch out here?
@@ -1388,7 +1388,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 					while( branchCnt <= ubBranchRange) // end of range loop
 					{
-						ubKeepGoing = TRUE;
+						ubKeepGoing = true;
 						uiNewSpot = NewGridNo( (INT16)uiBranchSpot, DirectionInc(ubBranchDir));
 
 						if (uiNewSpot != uiBranchSpot)
@@ -1402,7 +1402,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 								SLOGD("Explosion affects {}", uiNewSpot);
 								if (ExpAffect(sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 								{
-									fRecompileMovement = TRUE;
+									fRecompileMovement = true;
 								}
 								uiBranchSpot = uiNewSpot;
 							}
@@ -1453,7 +1453,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	{
 		// DO wireframes as well
 		SetRecalculateWireFrameFlagRadius(sGridNo, ubRadius);
-		CalculateWorldWireFrameTiles( FALSE );
+		CalculateWorldWireFrameTiles( false );
 
 		RecompileLocalMovementCostsInAreaWithFlags();
 		RecompileLocalMovementCostsFromRadius( sGridNo, MAX_DISTANCE_EXPLOSIVE_CAN_DESTROY_STRUCTURES );
@@ -1472,7 +1472,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	{
 		if ( gubElementsOnExplosionQueue )
 		{
-			gfExplosionQueueMayHaveChangedSight	= TRUE;
+			gfExplosionQueueMayHaveChangedSight	= true;
 		}
 	}
 
@@ -1561,9 +1561,9 @@ static BOOLEAN HookerInRoom(UINT8 ubRoom)
 		if (!s->bNeutral)                  continue;
 		if (s->ubBodyType != MINICIV)      continue;
 		if (GetRoom(s->sGridNo) != ubRoom) continue;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
@@ -1585,13 +1585,13 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				{
 					if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 					{
-						HandleDoorChangeFromGridNo( NULL, sGridNo, FALSE );
+						HandleDoorChangeFromGridNo( NULL, sGridNo, false );
 					}
 					else
 					{
-						HandleDoorChangeFromGridNo( NULL, pStructure->sBaseGridNo, FALSE );
+						HandleDoorChangeFromGridNo( NULL, pStructure->sBaseGridNo, false );
 					}
-					gfExplosionQueueMayHaveChangedSight = TRUE;
+					gfExplosionQueueMayHaveChangedSight = true;
 				}
 			}
 			else
@@ -1608,13 +1608,13 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				{
 					if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 					{
-						HandleDoorChangeFromGridNo( NULL, sGridNo , FALSE );
+						HandleDoorChangeFromGridNo( NULL, sGridNo , false );
 					}
 					else
 					{
-						HandleDoorChangeFromGridNo( NULL, pStructure->sBaseGridNo, FALSE );
+						HandleDoorChangeFromGridNo( NULL, pStructure->sBaseGridNo, false );
 					}
-					gfExplosionQueueMayHaveChangedSight = TRUE;
+					gfExplosionQueueMayHaveChangedSight = true;
 				}
 				else
 				{
@@ -1634,13 +1634,13 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			{
 				if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 				{
-					HandleDoorChangeFromGridNo( NULL, sGridNo, FALSE );
+					HandleDoorChangeFromGridNo( NULL, sGridNo, false );
 				}
 				else
 				{
-					HandleDoorChangeFromGridNo( NULL, pStructure->sBaseGridNo , FALSE );
+					HandleDoorChangeFromGridNo( NULL, pStructure->sBaseGridNo , false );
 				}
-				gfExplosionQueueMayHaveChangedSight = TRUE;
+				gfExplosionQueueMayHaveChangedSight = true;
 			}
 			else
 			{
@@ -1655,7 +1655,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				pDoor = FindDoorInfoAtGridNo( sGridNo );
 				if ( pDoor )
 				{
-					pDoor->fLocked = FALSE;
+					pDoor->fLocked = false;
 				}
 			}
 			break;
@@ -1668,11 +1668,11 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				{
 					if ( pDoor->fLocked )
 					{
-						pDoor->fLocked = FALSE;
+						pDoor->fLocked = false;
 					}
 					else
 					{
-						pDoor->fLocked = TRUE;
+						pDoor->fLocked = true;
 					}
 				}
 			}
@@ -1746,7 +1746,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 						{
 							// full # of mercs who paid have entered brothel
 							// have Billy block the way again
-							SetCustomizableTimerCallbackAndDelay( 2000, BillyBlocksDoorCallback, FALSE );
+							SetCustomizableTimerCallbackAndDelay( 2000, BillyBlocksDoorCallback, false );
 							//TriggerNPCRecord( BILLY, 6 );
 						}
 						else if ( gMercProfiles[ MADAME ].bNPCData2 > gMercProfiles[ MADAME ].bNPCData )
@@ -1761,7 +1761,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 							}
 							else
 							{
-								SetCustomizableTimerCallbackAndDelay( 2000, BillyBlocksDoorCallback, FALSE );
+								SetCustomizableTimerCallbackAndDelay( 2000, BillyBlocksDoorCallback, false );
 								SetFactTrue( FACT_PLAYER_FORCED_WAY_INTO_BROTHEL );
 								TriggerNPCRecord( MADAME, 34 );
 							}
@@ -1801,7 +1801,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 					}
 					// Billy should move back to block the door again
 					gsTempActionGridNo = sGridNo;
-					SetCustomizableTimerCallbackAndDelay( 1000, DelayedBillyTriggerToBlockOnExit, TRUE );
+					SetCustomizableTimerCallbackAndDelay( 1000, DelayedBillyTriggerToBlockOnExit, true );
 				}
 			}
 			*/
@@ -1892,8 +1892,8 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 									HandleNPCDoAction( 0, NPC_ACTION_SEX, 0 );
 
 									// move the merc outside of the room again
-									sTeleportSpot = FindGridNoFromSweetSpotWithStructData(tgt, STANDING, sTeleportSpot, 2, &ubDirection, FALSE);
-									ChangeSoldierState(tgt, STANDING, 0, TRUE);
+									sTeleportSpot = FindGridNoFromSweetSpotWithStructData(tgt, STANDING, sTeleportSpot, 2, &ubDirection, false);
+									ChangeSoldierState(tgt, STANDING, 0, true);
 									TeleportSoldier(*tgt, sTeleportSpot, false);
 
 									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSector);
@@ -1950,11 +1950,11 @@ static void AddBombToQueue(UINT32 const world_bomb_idx, UINT32 const timestamp)
 	ExplosionQueueElement& e = gExplosionQueue[gubElementsOnExplosionQueue++];
 	e.uiWorldBombIndex = world_bomb_idx;
 	e.uiTimeStamp      = timestamp;
-	e.fExists          = TRUE;
+	e.fExists          = true;
 
 	if (!gfExplosionQueueActive)
 	{
-		gfExplosionQueueActive   = TRUE;
+		gfExplosionQueueActive   = true;
 		guiPendingOverrideEvent  = LU_BEGINUILOCK; // Lock UI
 		gTacticalStatus.uiFlags |= DISALLOW_SIGHT; // Disable sight
 	}
@@ -2003,7 +2003,7 @@ void HandleExplosionQueue()
 					RemoveItemFromPool(wi);
 				}
 			} else {
-				gfExplosionQueueMayHaveChangedSight = TRUE;
+				gfExplosionQueueMayHaveChangedSight = true;
 
 				/* Remove the item first to prevent the explosion from detonating it a
 				* second time. */
@@ -2023,7 +2023,7 @@ void HandleExplosionQueue()
 			}
 		}
 
-		e.fExists = FALSE;
+		e.fExists = false;
 	}
 
 	/* See if we can reduce the # of elements on the queue that we have recorded.
@@ -2049,15 +2049,15 @@ void HandleExplosionQueue()
 		{
 			// Set variable so we may at least have someone to resolve interrupts against
 			gInterruptProvoker = s;
-			AllTeamsLookForAll(TRUE);
+			AllTeamsLookForAll(true);
 
 			// call fov code
 			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
-				if (s->bInSector) RevealRoofsAndItems(s, FALSE);
+				if (s->bInSector) RevealRoofsAndItems(s, false);
 			}
 
-			gfExplosionQueueMayHaveChangedSight = FALSE;
+			gfExplosionQueueMayHaveChangedSight = false;
 			gPersonToSetOffExplosions           = 0;
 		}
 
@@ -2066,7 +2066,7 @@ void HandleExplosionQueue()
 			guiPendingOverrideEvent = LU_ENDUILOCK;
 		}
 
-		gfExplosionQueueActive = FALSE;
+		gfExplosionQueueActive = false;
 	}
 }
 
@@ -2186,7 +2186,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 {
 	UINT32  uiWorldBombIndex;
 	UINT32  uiTimeStamp;
-	BOOLEAN fFoundMine = FALSE;
+	BOOLEAN fFoundMine = false;
 
 	uiTimeStamp = GetJA2Clock();
 
@@ -2244,7 +2244,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 
 					if (o.usBombItem != NOTHING && GCM->getItem(o.usBombItem)->isExplosive())
 					{
-						fFoundMine = TRUE;
+						fFoundMine = true;
 					}
 
 				}

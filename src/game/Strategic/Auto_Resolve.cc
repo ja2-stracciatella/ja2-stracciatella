@@ -61,7 +61,7 @@
 #include <string_theory/string>
 
 
-BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
+BOOLEAN gfTransferTacticalOppositionToAutoResolve = false;
 
 //button images
 enum
@@ -296,7 +296,7 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 	UINT8 ubRankIndex;
 
 	//Clear any possible battle locator
-	gfBlitBattleSectorLocator = FALSE;
+	gfBlitBattleSectorLocator = false;
 
 	pSector = &SectorInfo[ubSector.AsByte()];
 
@@ -340,11 +340,11 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 			CalculateNextMoveIntention( gpBattleGroup );
 		}
 		// set this sector as taken over
-		SetThisSectorAsPlayerControlled(ubSector, TRUE);
+		SetThisSectorAsPlayerControlled(ubSector, true);
 		RecalculateSectorWeight(ubSector.AsByte());
 
 		// dirty map panel
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 	}
 
 	if( gpAR )
@@ -366,9 +366,9 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	UINT32 uiStartTime = GetClock();
 	UINT32 uiEndTime = uiStartTime + 1000;
 
-	PauseTime( FALSE );
+	PauseTime( false );
 
-	gpAR->fShowInterface = TRUE;
+	gpAR->fShowInterface = true;
 
 	UINT16 const x = gpAR->rect.x;
 	UINT16 const y = gpAR->rect.y;
@@ -429,13 +429,13 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 	gpEnemies = gpAR->enemies.data();
 
 	//Set up autoresolve
-	gpAR->fEnteringAutoResolve = TRUE;
+	gpAR->fEnteringAutoResolve = true;
 	gpAR->ubSector = ubSector;
 	gpAR->ubBattleStatus = BATTLE_IN_PROGRESS;
 	gpAR->uiTimeSlice = 1000;
 	gpAR->uiTotalElapsedBattleTimeInMilliseconds = 0;
-	gpAR->fSound = TRUE;
-	gpAR->fMoraleEventsHandled = FALSE;
+	gpAR->fSound = true;
+	gpAR->fMoraleEventsHandled = false;
 	gpAR->uiPreRandomIndex = guiPreRandomIndex;
 
 	//Determine who gets the defensive advantage
@@ -474,12 +474,12 @@ ScreenID AutoResolveScreenHandle()
 
 	if( !gpAR )
 	{
-		gfEnteringMapScreen = TRUE;
+		gfEnteringMapScreen = true;
 		return MAP_SCREEN;
 	}
 	if( gpAR->fEnteringAutoResolve )
 	{
-		gpAR->fEnteringAutoResolve = FALSE;
+		gpAR->fEnteringAutoResolve = false;
 		//Take the framebuffer, shade it, and save it to the SAVEBUFFER.
 		FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
@@ -487,15 +487,15 @@ ScreenID AutoResolveScreenHandle()
 		CalculateAutoResolveInfo();
 		CalculateSoldierCells();
 		CreateAutoResolveInterface();
-		DetermineTeamLeader( TRUE ); //friendly team
-		DetermineTeamLeader( FALSE ); //enemy team
+		DetermineTeamLeader( true ); //friendly team
+		DetermineTeamLeader( false ); //enemy team
 		CalculateAttackValues();
 		DoTransitionFromPreBattleInterfaceToAutoResolve();
-		gpAR->fRenderAutoResolve = TRUE;
+		gpAR->fRenderAutoResolve = true;
 	}
 	if( gpAR->fExitAutoResolve )
 	{
-		gfEnteringMapScreen = TRUE;
+		gfEnteringMapScreen = true;
 		RemoveAutoResolveInterface();
 		return MAP_SCREEN;
 	}
@@ -1011,12 +1011,12 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 		// if this healing brought the patient out of the worst of it, cancel dying
 		if (pVictim->bLife >= OKLIFE )
 		{ // turn off merc QUOTE flags
-			pVictim->fDyingComment = FALSE;
+			pVictim->fDyingComment = false;
 		}
 
 		if ( pVictim->bBleeding <= MIN_BLEEDING_THRESHOLD )
 		{
-			pVictim->fWarnedAboutBleeding = FALSE;
+			pVictim->fWarnedAboutBleeding = false;
 		}
 	}
 
@@ -1165,7 +1165,7 @@ static void RenderAutoResolve(void)
 			HideButton( gpAR->iButton[ BANDAGE_BUTTON ] );
 			HideButton( gpAR->iButton[ YES_BUTTON ] );
 			HideButton( gpAR->iButton[ NO_BUTTON ] );
-			gpAR->fShowInterface = FALSE;
+			gpAR->fShowInterface = false;
 		}
 		else if( gpAR->ubBattleStatus == BATTLE_VICTORY )
 		{
@@ -1197,7 +1197,7 @@ static void RenderAutoResolve(void)
 		}
 		return;
 	}
-	gpAR->fRenderAutoResolve = FALSE;
+	gpAR->fRenderAutoResolve = false;
 
 	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, gpAR->rect.x, gpAR->rect.y, 0);
 
@@ -1235,7 +1235,7 @@ static void RenderAutoResolve(void)
 
 	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
 
-	str = GetSectorIDString(arSector, TRUE);
+	str = GetSectorIDString(arSector, true);
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
 	yp += 11;
 	MPrint(xp, yp, str);
@@ -1274,7 +1274,7 @@ static void RenderAutoResolve(void)
 		if( !gpAR->fMoraleEventsHandled )
 		{
 			gpAR->uiTotalElapsedBattleTimeInMilliseconds *= 3;
-			gpAR->fMoraleEventsHandled = TRUE;
+			gpAR->fMoraleEventsHandled = true;
 			if (!CheckFact(FACT_FIRST_BATTLE_FOUGHT, 0))
 			{
 				// this was the first battle against the army
@@ -1284,7 +1284,7 @@ static void RenderAutoResolve(void)
 					SetFactTrue( FACT_FIRST_BATTLE_WON );
 				}
 				SetTheFirstBattleSector(arSector.AsStrategicIndex());
-				HandleFirstBattleEndingWhileInTown(arSector, TRUE);
+				HandleFirstBattleEndingWhileInTown(arSector, true);
 			}
 
 			switch( gpAR->ubBattleStatus )
@@ -1293,7 +1293,7 @@ static void RenderAutoResolve(void)
 					HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, arSector);
 					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, arSector);
 
-					SetThisSectorAsPlayerControlled(arSector, TRUE);
+					SetThisSectorAsPlayerControlled(arSector, true);
 
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					LogBattleResults( LOG_VICTORY );
@@ -1464,8 +1464,8 @@ static void CreateAutoResolveInterface(void)
 
 	// Setup new autoresolve blanket interface.
 	MSYS_DefineRegion(&ar->AutoResolveRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	ar->fRenderAutoResolve = TRUE;
-	ar->fExitAutoResolve   = FALSE;
+	ar->fRenderAutoResolve = true;
+	ar->fExitAutoResolve   = false;
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
 	ar->iPanelImages = AddVideoObjectFromFile(INTERFACEDIR "/autoresolve.sti");
@@ -1488,8 +1488,8 @@ static void CreateAutoResolveInterface(void)
 	SGPVObject* const faces = AddVideoObjectFromFile(INTERFACEDIR "/smfaces.sti");
 	ar->iFaces = faces;
 	SGPPaletteEntry const* const pal = faces->Palette();
-	faces->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-	faces->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
+	faces->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, false);
+	faces->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, true);
 
 	// Add the battle over panels
 	ar->iIndent = AddVideoObjectFromFile(INTERFACEDIR "/indent.sti");
@@ -1501,8 +1501,8 @@ static void CreateAutoResolveInterface(void)
 		SGPVObject* const face = Load65Portrait(GetProfile(cell->pSoldier->ubProfile));
 		cell->uiVObjectID = face;
 		SGPPaletteEntry const* const pal = face->Palette();
-		face->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
+		face->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, false);
+		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, true);
 	}
 
 	UINT8 n_militia_elite = MilitiaInSectorOfRank(ar->ubSector, ELITE_MILITIA);
@@ -1578,7 +1578,7 @@ static void CreateAutoResolveInterface(void)
 	}
 	else
 	{
-		gfBlitBattleSectorLocator = FALSE;
+		gfBlitBattleSectorLocator = false;
 	}
 
 	/* Build the interface buffer, and blit the "shaded" background.  This info
@@ -1594,18 +1594,18 @@ static void CreateAutoResolveInterface(void)
 	const INT16 dy = ar->bVerticalOffset + SCREEN_HEIGHT / 2;
 
 	// Create the buttons -- subject to relocation
-	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, {});
-	MakeButton(FAST_BUTTON,     dx + 51, dy,      FastButtonCallback,      FALSE, {});
-	MakeButton(FINISH_BUTTON,   dx + 91, dy,      FinishButtonCallback,    FALSE, {});
-	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 34, PauseButtonCallback,     FALSE, {});
-	MakeButton(RETREAT_BUTTON,  dx + 51, dy + 34, RetreatButtonCallback,   FALSE, gpStrategicString[STR_AR_RETREAT_BUTTON]);
+	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      false, {});
+	MakeButton(FAST_BUTTON,     dx + 51, dy,      FastButtonCallback,      false, {});
+	MakeButton(FINISH_BUTTON,   dx + 91, dy,      FinishButtonCallback,    false, {});
+	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 34, PauseButtonCallback,     false, {});
+	MakeButton(RETREAT_BUTTON,  dx + 51, dy + 34, RetreatButtonCallback,   false, gpStrategicString[STR_AR_RETREAT_BUTTON]);
 	if (!ar->ubMercs) DisableButton(ar->iButton[RETREAT_BUTTON]);
 
-	MakeButton(BANDAGE_BUTTON,  dx + 11, dy +  5, BandageButtonCallback,   TRUE,  {});
-	MakeButton(DONEWIN_BUTTON,  dx + 51, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
-	MakeButton(DONELOSE_BUTTON, dx + 25, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
-	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, TRUE,  {});
-	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, TRUE,  {});
+	MakeButton(BANDAGE_BUTTON,  dx + 11, dy +  5, BandageButtonCallback,   true,  {});
+	MakeButton(DONEWIN_BUTTON,  dx + 51, dy +  5, DoneButtonCallback,      true,  gpStrategicString[STR_AR_DONE_BUTTON]);
+	MakeButton(DONELOSE_BUTTON, dx + 25, dy +  5, DoneButtonCallback,      true,  gpStrategicString[STR_AR_DONE_BUTTON]);
+	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, true,  {});
+	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, true,  {});
 	ar->iButton[PLAY_BUTTON]->uiFlags |= BUTTON_CLICKED_ON;
 }
 
@@ -1651,7 +1651,7 @@ static void RemoveAutoResolveInterface()
 
 	/* ARM: Update assignment flashing: Doctors may now have new patients or
 		* lost them all, etc. */
-	gfReEvaluateEveryonesNothingToDo = TRUE;
+	gfReEvaluateEveryonesNothingToDo = true;
 
 	if (ar.pRobotCell) UpdateRobotControllerGivenRobot(ar.pRobotCell->pSoldier);
 
@@ -1878,7 +1878,7 @@ static void FinishButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 	{
 		DepressAutoButton(FINISH_BUTTON);
 		gpAR->uiTimeSlice = 0xffffffff;
-		gpAR->fSound = FALSE;
+		gpAR->fSound = false;
 		PlayJA2Sample(AUTORESOLVE_FINISHFX, HIGHVOLUME, 1, MIDDLEPAN);
 	}
 }
@@ -1975,7 +1975,7 @@ static void DoneButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
-		gpAR->fExitAutoResolve = TRUE;
+		gpAR->fExitAutoResolve = true;
 	}
 }
 
@@ -2084,7 +2084,7 @@ static void CalculateAutoResolveInfo(void)
 		}
 		gpAR->ubEnemies = (UINT8)std::min(gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32);
 	}
-	gfTransferTacticalOppositionToAutoResolve = FALSE;
+	gfTransferTacticalOppositionToAutoResolve = false;
 	gpAR->ubCivs = CountAllMilitiaInSector(gpAR->ubSector);
 	gpAR->ubMercs = 0;
 	CFOR_EACH_GROUP(i)
@@ -2106,7 +2106,7 @@ static void CalculateAutoResolveInfo(void)
 				gpAR->ubMercs++;
 				if (AM_AN_EPC(&s))
 				{
-					gpAR->fCaptureNotPermittedDueToEPCs = TRUE;
+					gpAR->fCaptureNotPermittedDueToEPCs = true;
 				}
 				if (AM_A_ROBOT(&s))
 				{
@@ -2766,7 +2766,7 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 	{
 		PlayAutoResolveSample(ACR_SPIT, 50, 1, MIDDLEPAN);
 		pAttacker->bWeaponSlot = SECONDHANDPOS;
-		return TRUE;
+		return true;
 	}
 	for( i = 0; i < NUM_INV_SLOTS; i++ )
 	{
@@ -2793,12 +2793,12 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 					StatChange(*pAttacker->pSoldier, MARKAMT, 3, FROM_SUCCESS);
 				}
 				pItem->ubGunShotsLeft--;
-				return TRUE;
+				return true;
 			}
 		}
 	}
 	pAttacker->bWeaponSlot = -1;
-	return FALSE;
+	return false;
 }
 
 
@@ -2818,11 +2818,11 @@ static BOOLEAN TargetHasLoadedGun(SOLDIERTYPE* pSoldier)
 		{
 			if( pItem->ubGunShotsLeft )
 			{
-				return TRUE;
+				return true;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2836,9 +2836,9 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 	INT32 iRandom;
 	INT32 iImpact;
 	INT32 iNewLife;
-	BOOLEAN fMelee = FALSE;
-	BOOLEAN fKnife = FALSE;
-	BOOLEAN fClaw = FALSE;
+	BOOLEAN fMelee = false;
+	BOOLEAN fKnife = false;
+	BOOLEAN fClaw = false;
 	INT8	bAttackIndex = -1;
 
 	pAttacker->uiFlags |= CELL_FIREDATTARGET | CELL_DIRTY;
@@ -2858,12 +2858,12 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 	if( pAttacker->uiFlags & CELL_FEMALECREATURE )
 	{
 		pAttacker->bWeaponSlot = HANDPOS;
-		fMelee = TRUE;
-		fClaw = TRUE;
+		fMelee = true;
+		fClaw = true;
 	}
 	else if( !FireAShot( pAttacker ) )
 	{ //Maybe look for a weapon, such as a knife or grenade?
-		fMelee = TRUE;
+		fMelee = true;
 		fKnife = AttackerHasKnife( pAttacker );
 		if( TargetHasLoadedGun( pTarget->pSoldier ) )
 		{ //Penalty to attack with melee weapons against target with loaded gun.
@@ -3029,7 +3029,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 		}
 		if( !pTarget->pSoldier->bLife )
 		{
-			gpAR->fRenderAutoResolve = TRUE;
+			gpAR->fRenderAutoResolve = true;
 
 			if( pTarget->uiFlags & CELL_MERC )
 			{
@@ -3213,7 +3213,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 		pTarget->pSoldier->bBleeding = (INT8)(pTarget->pSoldier->bLifeMax - pTarget->pSoldier->bLife);
 	if( !pTarget->pSoldier->bLife )
 	{
-		gpAR->fRenderAutoResolve = TRUE;
+		gpAR->fRenderAutoResolve = true;
 		if( pTarget->uiFlags & CELL_MERC )
 		{
 			gpAR->usPlayerAttack -= pTarget->usAttack;
@@ -3247,9 +3247,9 @@ static BOOLEAN IsBattleOver(void)
 {
 	INT32 iNumInvolvedMercs = 0;
 	INT32 iNumMercsRetreated = 0;
-	BOOLEAN fOnlyEPCsLeft = TRUE;
+	BOOLEAN fOnlyEPCsLeft = true;
 	if( gpAR->ubBattleStatus != BATTLE_IN_PROGRESS )
-		return TRUE;
+		return true;
 	FOR_EACH_AR_MERC(i)
 	{
 		if (i->uiFlags & CELL_RETREATED)
@@ -3258,7 +3258,7 @@ static BOOLEAN IsBattleOver(void)
 		}
 		else if (i->pSoldier->bLife != 0 && !(i->uiFlags & CELL_EPC))
 		{
-			fOnlyEPCsLeft = FALSE;
+			fOnlyEPCsLeft = false;
 			iNumInvolvedMercs++;
 		}
 	}
@@ -3276,7 +3276,7 @@ static BOOLEAN IsBattleOver(void)
 				pRobot->bLife = 0;
 				gpAR->ubAliveMercs--;
 				iNumInvolvedMercs = 0;
-				fOnlyEPCsLeft = TRUE;
+				fOnlyEPCsLeft = true;
 			}
 		}
 	}
@@ -3322,10 +3322,10 @@ static BOOLEAN IsBattleOver(void)
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 	SetupDoneInterface();
-	return TRUE;
+	return true;
 }
 
 
@@ -3345,29 +3345,29 @@ static BOOLEAN AttemptPlayerCapture(void)
 	//Only attempt capture if day is less than four.
 	if( GetWorldDay() < STARTDAY_ALLOW_PLAYER_CAPTURE_FOR_RESCUE && !gpAR->fAllowCapture )
 	{
-		return FALSE;
+		return false;
 	}
 	if( gpAR->fPlayerRejectedSurrenderOffer )
 	{
-		return FALSE;
+		return false;
 	}
 	if( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE )
 	{
-		return FALSE;
+		return false;
 	}
 	if( gpAR->fCaptureNotPermittedDueToEPCs )
 	{ //EPCs make things much more difficult when considering capture.  Simply don't allow it.
-		return FALSE;
+		return false;
 	}
 	//Only attempt capture of mercs if there are 2 or 3 of them alive
 	if( gpAR->ubAliveCivs || gpAR->ubAliveMercs < 2 || gpAR->ubAliveMercs > 3 )
 	{
-		return FALSE;
+		return false;
 	}
 	//if the number of alive enemies doesn't double the number of alive mercs, don't offer surrender.
 	if( gpAR->ubAliveEnemies < gpAR->ubAliveMercs*2 )
 	{
-		return FALSE;
+		return false;
 	}
 	//make sure that these enemies are actually concious!
 	iConciousEnemies = 0;
@@ -3378,20 +3378,20 @@ static BOOLEAN AttemptPlayerCapture(void)
 	}
 	if( iConciousEnemies < gpAR->ubAliveMercs * 2 )
 	{
-		return FALSE;
+		return false;
 	}
 
 	//So far, the conditions are right.  Now, we will determine if the the remaining players are
 	//wounded and/or unconcious.  If any are concious, we will prompt for a surrender, otherwise,
 	//it is automatic.
-	fConcious = FALSE;
+	fConcious = false;
 	FOR_EACH_AR_MERC(i)
 	{
 		//if any of the 2 or 3 mercs has more than 60% life, then return.
-		if (i->uiFlags & CELL_ROBOT) return FALSE;
+		if (i->uiFlags & CELL_ROBOT) return false;
 		SOLDIERTYPE const& s = *i->pSoldier;
-		if (s.bLife * 100 > s.bLifeMax * 60) return FALSE;
-		if (s.bLife >= OKLIFE) fConcious = TRUE;
+		if (s.bLife * 100 > s.bLifeMax * 60) return false;
+		if (s.bLife >= OKLIFE) fConcious = true;
 	}
 	if( fConcious )
 	{
@@ -3406,16 +3406,16 @@ static BOOLEAN AttemptPlayerCapture(void)
 		BeginCaptureSquence( );
 
 		gpAR->ubBattleStatus = BATTLE_CAPTURED;
-		gpAR->fRenderAutoResolve = TRUE;
+		gpAR->fRenderAutoResolve = true;
 		SetupDoneInterface();
 	}
-	return TRUE;
+	return true;
 }
 
 
 static void SetupDoneInterface(void)
 {
-	gpAR->fRenderAutoResolve = TRUE;
+	gpAR->fRenderAutoResolve = true;
 
 	HideButton( gpAR->iButton[ PAUSE_BUTTON ] );
 	HideButton( gpAR->iButton[ PLAY_BUTTON ] );
@@ -3453,8 +3453,8 @@ static void SetupSurrenderInterface(void)
 	HideButton( gpAR->iButton[ DONELOSE_BUTTON ] );
 	ShowButton( gpAR->iButton[ YES_BUTTON ] );
 	ShowButton( gpAR->iButton[ NO_BUTTON ] );
-	gpAR->fRenderAutoResolve = TRUE;
-	gpAR->fPendingSurrender = TRUE;
+	gpAR->fRenderAutoResolve = true;
+	gpAR->fPendingSurrender = true;
 }
 
 
@@ -3470,8 +3470,8 @@ static void HideSurrenderInterface(void)
 	HideButton( gpAR->iButton[ DONELOSE_BUTTON ] );
 	HideButton( gpAR->iButton[ YES_BUTTON ] );
 	HideButton( gpAR->iButton[ NO_BUTTON ] );
-	gpAR->fPendingSurrender = FALSE;
-	gpAR->fRenderAutoResolve = TRUE;
+	gpAR->fPendingSurrender = false;
+	gpAR->fRenderAutoResolve = true;
 }
 
 
@@ -3482,7 +3482,7 @@ static void AcceptSurrenderCallback(GUI_BUTTON* btn, UINT32 reason)
 		BeginCaptureSquence( );
 
 		gpAR->ubBattleStatus = BATTLE_SURRENDERED;
-		gpAR->fPendingSurrender = FALSE;
+		gpAR->fPendingSurrender = false;
 		SetupDoneInterface();
 	}
 }
@@ -3492,7 +3492,7 @@ static void RejectSurrenderCallback(GUI_BUTTON* btn, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
-		gpAR->fPlayerRejectedSurrenderOffer = TRUE;
+		gpAR->fPlayerRejectedSurrenderOffer = true;
 		HideSurrenderInterface();
 	}
 }
@@ -3504,7 +3504,7 @@ static void ProcessBattleFrame(void)
 	SOLDIERCELL *pAttacker, *pTarget;
 	UINT32 uiDiff;
 	static INT32 iTimeSlice = 0;
-	static BOOLEAN fContinue = FALSE;
+	static BOOLEAN fContinue = false;
 	static UINT32 uiSlice = 0;
 	static INT32 iTotal = 0;
 	static INT32 iMercs = 0;
@@ -3513,7 +3513,7 @@ static void ProcessBattleFrame(void)
 	static INT32 iMercsLeft = 0;
 	static INT32 iCivsLeft = 0;
 	static INT32 iEnemiesLeft = 0;
-	BOOLEAN found = FALSE;
+	BOOLEAN found = false;
 	INT32 iTime, iAttacksThisFrame;
 
 	pAttacker = NULL;
@@ -3522,7 +3522,7 @@ static void ProcessBattleFrame(void)
 	if( fContinue )
 	{
 		gpAR->uiCurrTime = GetJA2Clock();
-		fContinue = FALSE;
+		fContinue = false;
 		goto CONTINUE_BATTLE;
 	}
 	//determine how much real-time has passed since the last frame
@@ -3576,7 +3576,7 @@ static void ProcessBattleFrame(void)
 				//and all of the necessary locals are saved via static variables.  It'll check
 				//the fContinue flag, and goto the CONTINUE_BATTLE label the next time this function
 				//is called.
-				fContinue = TRUE;
+				fContinue = true;
 				return;
 			}
 			CONTINUE_BATTLE:
@@ -3584,7 +3584,7 @@ static void ProcessBattleFrame(void)
 				return;
 
 			iRandom = PreRandom( iTotal );
-			found = FALSE;
+			found = false;
 			if( iMercs && iRandom < iMercsLeft )
 			{
 				iMercsLeft--;
@@ -3595,7 +3595,7 @@ static void ProcessBattleFrame(void)
 					if( !(pAttacker->uiFlags & CELL_PROCESSED ) )
 					{
 						pAttacker->uiFlags |= CELL_PROCESSED;
-						found = TRUE;
+						found = true;
 					}
 				}
 			}
@@ -3609,7 +3609,7 @@ static void ProcessBattleFrame(void)
 					if( !(pAttacker->uiFlags & CELL_PROCESSED ) )
 					{
 						pAttacker->uiFlags |= CELL_PROCESSED;
-						found = TRUE;
+						found = true;
 					}
 				}
 			}
@@ -3623,7 +3623,7 @@ static void ProcessBattleFrame(void)
 					if( !(pAttacker->uiFlags & CELL_PROCESSED ) )
 					{
 						pAttacker->uiFlags |= CELL_PROCESSED;
-						found = TRUE;
+						found = true;
 					}
 				}
 			}
@@ -3707,9 +3707,9 @@ BOOLEAN IsAutoResolveActive()
 	//is the autoresolve up or not?
 	if( gpAR )
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 UINT8 GetAutoResolveSectorID()
@@ -3721,44 +3721,44 @@ UINT8 GetAutoResolveSectorID()
 	return 0xff;
 }
 
-//Returns TRUE if a battle is happening or sector is loaded
+//Returns true if a battle is happening or sector is loaded
 BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 {
 	if( gpAR )
 	{
 		psSector = gpAR->ubSector;
-		return TRUE;
+		return true;
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
 		psSector = gubPBSector;
-		return TRUE;
+		return true;
 	}
 	else if( gfWorldLoaded )
 	{
 		psSector = gWorldSector;
-		return TRUE;
+		return true;
 	}
 	else
 	{
 		psSector = SGPSector(0, 0, -1);
-		return FALSE;
+		return false;
 	}
 }
 
 
-BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSector)
+BOOLEAN GetCurrentBattleSectorXYZAndReturntrueIfThereIsABattle(SGPSector& psSector)
 {
 	if( gpAR )
 	{
 		psSector = gpAR->ubSector;
 		psSector.z = 0;
-		return TRUE;
+		return true;
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
 		psSector = gubPBSector;
-		return TRUE;
+		return true;
 	}
 	else if( gfWorldLoaded )
 	{
@@ -3768,7 +3768,7 @@ BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSect
 	else
 	{
 		psSector = SGPSector(0, 0, -1);
-		return FALSE;
+		return false;
 	}
 }
 

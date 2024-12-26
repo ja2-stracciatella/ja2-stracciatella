@@ -79,7 +79,7 @@ enum AnimationHeight : UINT8
 struct ANIMCONTROLTYPE
 {
 	const char* zAnimStr;
-	FLOAT       dMovementChange;
+	float       dMovementChange;
 	UINT32      uiFlags;
 	INT16       sSpeed;
 	UINT8       ubHeight;
@@ -90,7 +90,7 @@ struct ANIMCONTROLTYPE
 struct ANI_SPEED_DEF
 {
 	INT16 sSpeed;
-	FLOAT dMovementChange;
+	float dMovementChange;
 };
 
 
@@ -540,7 +540,7 @@ bool IsAnimationValidForBodyType(SOLDIERTYPE const&, UINT16 new_state);
 UINT16 SubstituteBodyTypeAnimation(const SOLDIERTYPE* s, UINT16 anim_state);
 char const* GetBodyTypePaletteSubstitution(SOLDIERTYPE const*, UINT8 ubBodyType);
 
-BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
+bool SetSoldierAnimationSurface(SOLDIERTYPE *pSoldier, UINT16 usAnimState);
 UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState);
 UINT16 LoadSoldierAnimationSurface(SOLDIERTYPE&, UINT16 anim_state);
 

@@ -90,7 +90,7 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 
 		default: abort(); // HACK000E
 	}
-	SDL_SetColorKey(surface_.get(), SDL_TRUE, colour_key);
+	SDL_SetColorKey(surface_.get(), true, colour_key);
 }
 
 

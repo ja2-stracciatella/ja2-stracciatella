@@ -138,7 +138,7 @@ extern GROUP *gpGroupList;
 
 #define FOR_EACH_GROUP_SAFE(iter)                                                    \
 	for (GROUP* iter = gpGroupList, * iter##__next; iter != NULL; iter = iter##__next) \
-		if (iter##__next = iter->next, FALSE) {} else                                    \
+		if (iter##__next = iter->next, false) {} else                                    \
 
 
 #define CFOR_EACH_PLAYER_IN_GROUP(iter, group) \
@@ -252,7 +252,7 @@ void ResetMovementForEnemyGroupsInLocation();
 
 //Determines if any particular group WILL be moving through a given sector given it's current
 //position in the route and TREATS the pGroup->ubMoveType as ONE_WAY EVEN IF IT ISN'T.  If the
-//group is currently IN the sector, or just left the sector, it will return FALSE.
+//group is currently IN the sector, or just left the sector, it will return false.
 BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector);
 
 void RandomizePatrolGroupLocation( GROUP *pGroup );

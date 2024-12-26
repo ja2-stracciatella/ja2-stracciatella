@@ -144,7 +144,7 @@ try
 	zQuote = GCM->loadEncryptedString(zFileName, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
 	return !zQuote.empty();
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 static void SurrenderMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
@@ -166,7 +166,7 @@ static void SurrenderMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 
 		EndCaptureSequence( );
 
-		gfSurrendered = TRUE;
+		gfSurrendered = true;
 		SetCustomizableTimerCallbackAndDelay(3s, CaptureTimerCallback, false);
 
 		ActionDone( gCivQuoteData.pCiv );
@@ -195,7 +195,7 @@ static void ShutDownQuoteBox(BOOLEAN fForce)
 
 		RemoveMercPopupBox(gCivQuoteData.dialogue_box);
 		gCivQuoteData.dialogue_box = 0;
-		gCivQuoteData.bActive      = FALSE;
+		gCivQuoteData.bActive      = false;
 
 		// do we need to do anything at the end of the civ quote?
 		if ( gCivQuoteData.pCiv && gCivQuoteData.pCiv->bAction == AI_ACTION_OFFER_SURRENDER )
@@ -209,12 +209,12 @@ BOOLEAN ShutDownQuoteBoxIfActive( )
 {
 	if ( gCivQuoteData.bActive )
 	{
-		ShutDownQuoteBox( TRUE );
+		ShutDownQuoteBox( true );
 
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -293,21 +293,21 @@ static void RenderCivQuoteBoxOverlay(VIDEO_OVERLAY* pBlitter)
 
 static void QuoteOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
+	static BOOLEAN fLButtonDown = false;
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
-		fLButtonDown = TRUE;
+		fLButtonDown = true;
 	}
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP && fLButtonDown )
 	{
 		// Shutdown quote box....
-		ShutDownQuoteBox( FALSE );
+		ShutDownQuoteBox( false );
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		fLButtonDown = FALSE;
+		fLButtonDown = false;
 	}
 }
 
@@ -318,7 +318,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	if ( gCivQuoteData.bActive )
 	{
 		// Delete?
-		ShutDownQuoteBox( TRUE );
+		ShutDownQuoteBox( true );
 	}
 
 	// get text
@@ -374,7 +374,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	//Define main region
 	MSYS_DefineRegion(&gCivQuoteData.MouseRegion, sX, sY, sX + w, sY + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, QuoteOverlayClickCallback);
 
-	gCivQuoteData.bActive = TRUE;
+	gCivQuoteData.bActive = true;
 
 	gCivQuoteData.uiTimeOfCreation = GetJA2Clock( );
 
@@ -388,10 +388,10 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, BOOLEAN fCanUseHints)
 {
 	UINT8   ubCivType;
-	BOOLEAN bCivLowLoyalty = FALSE;
-	BOOLEAN bCivHighLoyalty = FALSE;
+	BOOLEAN bCivLowLoyalty = false;
+	BOOLEAN bCivHighLoyalty = false;
 	INT8    bCivHint;
-	BOOLEAN bMiners = FALSE;
+	BOOLEAN bMiners = false;
 
 	(*pubCivHintToUse) = 0;
 
@@ -562,13 +562,13 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 		// EXTREMELY LOW TOWN LOYALTY...
 		if ( gTownLoyalty[ bTownId ].ubRating < EXTREAMLY_LOW_TOWN_LOYALTY )
 		{
-			bCivLowLoyalty = TRUE;
+			bCivLowLoyalty = true;
 		}
 
 		// HIGH TOWN LOYALTY...
 		if ( gTownLoyalty[ bTownId ].ubRating >= HIGH_TOWN_LOYALTY )
 		{
-			bCivHighLoyalty = TRUE;
+			bCivHighLoyalty = true;
 		}
 	}
 
@@ -576,7 +576,7 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 	// ATE: OK, check if we should look for a civ hint....
 	if ( fCanUseHints )
 	{
-		bCivHint = ConsiderCivilianQuotes(gWorldSector,  FALSE);
+		bCivHint = ConsiderCivilianQuotes(gWorldSector,  false);
 	}
 	else
 	{
@@ -586,7 +586,7 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 	// ATE: check miners......
 	if ( pCiv->ubSoldierClass == SOLDIER_CLASS_MINER )
 	{
-		bMiners = TRUE;
+		bMiners = true;
 
 		// If not a civ hint available...
 		if ( bCivHint == -1 )
@@ -631,7 +631,7 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 			(*pubCivHintToUse) = bCivHint;
 
 			// Set quote as used...
-			ConsiderCivilianQuotes(gWorldSector, TRUE);
+			ConsiderCivilianQuotes(gWorldSector, true);
 
 			// retrun value....
 			return( CIV_QUOTE_HINT );
@@ -684,7 +684,7 @@ void HandleCivQuote( )
 		if ( ( GetJA2Clock( ) - gCivQuoteData.uiTimeOfCreation ) > gCivQuoteData.uiDelayTime )
 		{
 			// Stop!
-			ShutDownQuoteBox( TRUE );
+			ShutDownQuoteBox( true );
 		}
 	}
 }
@@ -705,12 +705,12 @@ void StartCivQuote( SOLDIERTYPE *pCiv )
 		// CAN'T USE HINTS, since we just did one...
 		pCiv->bCurrentCivQuote = -1;
 		pCiv->bCurrentCivQuoteDelta = 0;
-		ubCivQuoteID = DetermineCivQuoteEntry( pCiv, &ubCivHintToUse, FALSE );
+		ubCivQuoteID = DetermineCivQuoteEntry( pCiv, &ubCivHintToUse, false );
 	}
 	else
 	{
 		// Determine which quote to say.....
-		ubCivQuoteID = DetermineCivQuoteEntry( pCiv, &ubCivHintToUse, TRUE );
+		ubCivQuoteID = DetermineCivQuoteEntry( pCiv, &ubCivHintToUse, true );
 	}
 
 	// Determine entry id
@@ -761,7 +761,7 @@ void StartCivQuote( SOLDIERTYPE *pCiv )
 void InitCivQuoteSystem( )
 {
 	gCivQuoteData = QUOTE_SYSTEM_STRUCT{};
-	gCivQuoteData.bActive = FALSE;
+	gCivQuoteData.bActive = false;
 	gCivQuoteData.video_overlay = NULL;
 	gCivQuoteData.dialogue_box  = 0;
 }

@@ -144,12 +144,12 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 					pStructure = FindStructure( usGridNo1, STRUCTURE_ANYDOOR );
 					if (pStructure == NULL)
 					{
-						fDoUseDoor = FALSE;
+						fDoUseDoor = false;
 					}
 					else
 					{
 						// action-specific tests to not handle the door
-						fDoUseDoor = TRUE;
+						fDoUseDoor = true;
 
 						if (pStructure->fFlags & STRUCTURE_OPEN)
 						{
@@ -167,17 +167,17 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 								if (pDoor->fLocked)
 								{
 									// door already locked!
-									fDoUseDoor = FALSE;
+									fDoUseDoor = false;
 								}
 								else
 								{
-									pDoor->fLocked = TRUE;
+									pDoor->fLocked = true;
 								}
 							}
 							else
 							{
 								SLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
-								fDoUseDoor = FALSE;
+								fDoUseDoor = false;
 							}
 						}
 					}
@@ -260,11 +260,11 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 					pStructure = FindStructure( usGridNo1, STRUCTURE_ANYDOOR );
 					if (pStructure == NULL)
 					{
-						fDoUseDoor = FALSE;
+						fDoUseDoor = false;
 					}
 					else
 					{
-						fDoUseDoor = TRUE;
+						fDoUseDoor = true;
 
 						// action-specific tests to not handle the door
 						switch( ubScheduleAction )
@@ -273,7 +273,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 								if (pStructure->fFlags & STRUCTURE_OPEN)
 								{
 									// door is already open!
-									fDoUseDoor = FALSE;
+									fDoUseDoor = false;
 								}
 								else
 								{
@@ -285,19 +285,19 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 									{
 										if (pDoor->fLocked)
 										{
-											pDoor->fLocked = FALSE;
+											pDoor->fLocked = false;
 										}
 										else
 										{
 											// door already unlocked!
-											fDoUseDoor = FALSE;
+											fDoUseDoor = false;
 										}
 									}
 									else
 									{
 										// WTF?  Warning time!
 										SLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
-										fDoUseDoor = FALSE;
+										fDoUseDoor = false;
 									}
 								}
 								break;
@@ -305,14 +305,14 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 								if (pStructure->fFlags & STRUCTURE_OPEN)
 								{
 									// door is already open!
-									fDoUseDoor = FALSE;
+									fDoUseDoor = false;
 								}
 								break;
 							case SCHEDULE_ACTION_CLOSEDOOR:
 								if ( !(pStructure->fFlags & STRUCTURE_OPEN) )
 								{
 									// door is already closed!
-									fDoUseDoor = FALSE;
+									fDoUseDoor = false;
 								}
 								break;
 							default:
@@ -448,7 +448,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 			{
 				case 0:
 					EVENT_SetSoldierPosition(pSoldier, pSoldier->sOffWorldGridNo, SSP_NONE);
-					pSoldier->bInSector = TRUE;
+					pSoldier->bInSector = true;
 					MoveSoldierFromAwayToMercSlot( pSoldier );
 					pSoldier->usActionData = usGridNo1;
 					pSoldier->bAIScheduleProgress++;
@@ -542,7 +542,7 @@ static INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE* pSoldier)
 	else if (room != NO_ROOM)
 	{
 		// move to starting spot
-		pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, TRUE );
+		pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, true );
 		return( AI_ACTION_GET_CLOSER );
 	}
 
@@ -679,7 +679,7 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 							return( AI_ACTION_GET_CLOSER );
 						}
 					}
-					pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, FALSE );
+					pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, false );
 					return( AI_ACTION_GET_CLOSER );
 				}
 				else if (room != NO_ROOM)
@@ -1169,7 +1169,7 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 		(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) )
 	{
 		// base chance depends on how much new info we have to radio to the others
-		iChance = 5 * WhatIKnowThatPublicDont(pSoldier,FALSE);   // use 5 * for YELLOW alert
+		iChance = 5 * WhatIKnowThatPublicDont(pSoldier,false);   // use 5 * for YELLOW alert
 
 		// if I actually know something they don't and I ain't swimming (deep water)
 		if (iChance && !DeepWater( pSoldier->sGridNo ))
@@ -1232,10 +1232,10 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
 		if ( fReachable && !fClimb && !gfTurnBasedAI && (pSoldier->bTeam == MILITIA_TEAM || pSoldier->bTeam == CIV_TEAM )&& PythSpacesAway( pSoldier->sGridNo, sNoiseGridNo ) < 5 )
 		{
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sNoiseGridNo, pSoldier->bLevel, 0, 6, TRUE )	)
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sNoiseGridNo, pSoldier->bLevel, 0, 6, true )	)
 			{
 				// set reachable to false so we don't investigate
-				fReachable = FALSE;
+				fReachable = false;
 				// forget about noise
 				pSoldier->sNoiseGridno = NOWHERE;
 				pSoldier->ubNoiseVolume = 0;
@@ -1474,7 +1474,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		return(AI_ACTION_NONE);
 	}
 
-	// can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
+	// can this guy move to any of the neighbouring squares ? (sets true/false)
 	const UINT8 ubCanMove = (pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
 	// if we're an alerted enemy, and there are panic bombs or a trigger around
@@ -1701,9 +1701,9 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	////////////////////////////////////////////////////////////////////////
 
 	// can't do this in realtime, because the player could be shooting a gun or whatever at the same time!
-	if (gfTurnBasedAI && !fCivilian && !bInWater && !bInGas && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) && (CanNPCAttack(pSoldier) == TRUE))
+	if (gfTurnBasedAI && !fCivilian && !bInWater && !bInGas && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) && (CanNPCAttack(pSoldier) == true))
 	{
-		BestThrow.ubPossible = FALSE;    // by default, assume Throwing isn't possible
+		BestThrow.ubPossible = false;    // by default, assume Throwing isn't possible
 
 
 		CheckIfTossPossible(pSoldier,&BestThrow);
@@ -1721,7 +1721,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 				{
 					// can't fire!
-					BestThrow.ubPossible = FALSE;
+					BestThrow.ubPossible = false;
 
 					// try behind us, see if there's room to move back
 					sCheckGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(ubOpponentDir)));
@@ -1752,7 +1752,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			// spotters haven't already been called for, then DO SO!
 
 			if ( BestThrow.bWeaponIn != NO_SLOT &&
-				( CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxDistanceVisible() ) &&
+				( CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, true ) > MaxDistanceVisible() ) &&
 				(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
 			{
@@ -1824,7 +1824,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			iChance = gbDiff[DIFF_RADIO_RED_ALERT][ SoldierDifficultyLevel( pSoldier ) ];
 		else // subsequent radioing (only to update enemy positions, request help)
 			// base chance depends on how much new info we have to radio to the others
-			iChance = 10 * WhatIKnowThatPublicDont(pSoldier,FALSE);  // use 10 * for RED alert
+			iChance = 10 * WhatIKnowThatPublicDont(pSoldier,false);  // use 10 * for RED alert
 
 		// if I actually know something they don't and I ain't swimming (deep water)
 		if (iChance && !bInDeepWater)
@@ -2009,7 +2009,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 								case DEFENSIVE:
 								case CUNNINGSOLO:
 								case CUNNINGAID:
-									if ( PythSpacesAway( pSoldier->usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, sClosestDisturbance, pSoldier->bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
+									if ( PythSpacesAway( pSoldier->usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, sClosestDisturbance, pSoldier->bLevel, (UINT8) MaxDistanceVisible(), true ) )
 									{
 										// reserve APs for a possible crouch plus a shot
 										pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, sClosestDisturbance, (INT8) (MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
@@ -2360,7 +2360,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	////////////////////////////////////////////////////////////////////////////
 
 	// if not in combat or under fire, and we COULD have moved, just chose not to
-	if ( (pSoldier->bAlertStatus != STATUS_BLACK) && !pSoldier->bUnderFire && ubCanMove && (!gfTurnBasedAI || pSoldier->bActionPoints >= pSoldier->bInitialActionPoints) && ( ClosestReachableDisturbance(pSoldier, TRUE, &fClimb) == NOWHERE) )
+	if ( (pSoldier->bAlertStatus != STATUS_BLACK) && !pSoldier->bUnderFire && ubCanMove && (!gfTurnBasedAI || pSoldier->bActionPoints >= pSoldier->bInitialActionPoints) && ( ClosestReachableDisturbance(pSoldier, true, &fClimb) == NOWHERE) )
 	{
 		// addition:  if soldier is bleeding then reduce bleeding and do nothing
 		if ( pSoldier->bBleeding > MIN_BLEEDING_THRESHOLD )
@@ -2442,7 +2442,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 	UINT8	ubBestAttackAction = AI_ACTION_NONE;
 	INT8		bCanAttack,bActionReturned;
 	INT8		bWeaponIn;
-	BOOLEAN	fTryPunching = FALSE;
+	BOOLEAN	fTryPunching = false;
 
 	ATTACKTYPE BestShot,BestThrow,BestStab,BestAttack;
 	const BOOLEAN fCivilian =
@@ -2458,7 +2458,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 	UINT8	ubOpponentDir;
 	INT16	sCheckGridNo;
 
-	BOOLEAN fAllowCoverCheck = FALSE;
+	BOOLEAN fAllowCoverCheck = false;
 
 	UINT8 ubBestStance = (UINT8)-1; // XXX HACK000E
 
@@ -2469,7 +2469,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		return(AI_ACTION_NONE);
 	}
 
-	// can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
+	// can this guy move to any of the neighbouring squares ? (sets true/false)
 	ubCanMove = (pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
 	if ((pSoldier->bTeam == ENEMY_TEAM || pSoldier->ubProfile == WARDEN) &&
@@ -2521,8 +2521,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		}
 		else if ( gTacticalStatus.bBoxingState == BOXING )
 		{
-			bInDeepWater = FALSE;
-			bInGas = FALSE;
+			bInDeepWater = false;
+			bInGas = false;
 
 			// calculate our morale
 			pSoldier->bAIMorale = CalcMorale(pSoldier);
@@ -2554,7 +2554,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			// only chance if we happen to be caught with our gas mask off
 			if ( PreRandom( 10 ) == 0 && WearGasMaskIfAvailable( pSoldier ) )
 			{
-				bInGas = FALSE;
+				bInGas = false;
 			}
 		}
 
@@ -2616,7 +2616,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 	// offer surrender?
 
-	if ( pSoldier->bTeam == ENEMY_TEAM && pSoldier->bVisible == TRUE && !( gTacticalStatus.fEnemyFlags & ENEMY_OFFERED_SURRENDER ) && pSoldier->bLife >= pSoldier->bLifeMax / 2 )
+	if ( pSoldier->bTeam == ENEMY_TEAM && pSoldier->bVisible == true && !( gTacticalStatus.fEnemyFlags & ENEMY_OFFERED_SURRENDER ) && pSoldier->bLife >= pSoldier->bLifeMax / 2 )
 	{
 		if (!IsTeamActive(MILITIA_TEAM) && NumPCsInSector() < 4 && gTacticalStatus.Team[ENEMY_TEAM].bMenInSector >= NumPCsInSector() * 3)
 		{
@@ -2639,12 +2639,12 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 	// NPCs in water/tear gas without masks are not permitted to shoot/stab/throw
 	if (pSoldier->bActionPoints < 2 || bInDeepWater || bInGas)
 	{
-		bCanAttack = FALSE;
+		bCanAttack = false;
 	}
 	else if (pSoldier->uiStatusFlags & SOLDIER_BOXER)
 	{
-		bCanAttack = TRUE;
-		fTryPunching = TRUE;
+		bCanAttack = true;
+		fTryPunching = true;
 	}
 	else
 	{
@@ -2652,7 +2652,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		{
 
 			bCanAttack = CanNPCAttack(pSoldier);
-			if (bCanAttack != TRUE)
+			if (bCanAttack != true)
 			{
 				if (fCivilian)
 				{
@@ -2703,7 +2703,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 						// is our gun)
 						pSoldier->inv[HANDPOS].fFlags |= OBJECT_AI_UNUSABLE;
 						// move the gun into another pocket...
-						AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE );
+						AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), false );
 					}
 					else
 					{
@@ -2712,13 +2712,13 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 				}
 				else
 				{
-					bCanAttack = FALSE;
+					bCanAttack = false;
 				}
 			}
-		} while (bCanAttack != TRUE && bCanAttack != FALSE);
+		} while (bCanAttack != true && bCanAttack != false);
 
 		#ifdef RETREAT_TESTING
-		bCanAttack = FALSE;
+		bCanAttack = false;
 		#endif
 
 		if (!bCanAttack)
@@ -2731,8 +2731,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			if (!fCivilian)
 			{
 				// can always attack with HTH as a last resort
-				bCanAttack = TRUE;
-				fTryPunching = TRUE;
+				bCanAttack = true;
+				fTryPunching = true;
 			}
 		}
 	}
@@ -2749,9 +2749,9 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 	}
 
 
-	BestShot.ubPossible  = FALSE;	// by default, assume Shooting isn't possible
-	BestThrow.ubPossible = FALSE;	// by default, assume Throwing isn't possible
-	BestStab.ubPossible  = FALSE;	// by default, assume Stabbing isn't possible
+	BestShot.ubPossible  = false;	// by default, assume Shooting isn't possible
+	BestThrow.ubPossible = false;	// by default, assume Throwing isn't possible
+	BestStab.ubPossible  = false;	// by default, assume Stabbing isn't possible
 
 	BestAttack.ubChanceToReallyHit = 0;
 
@@ -2791,7 +2791,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 					if (pSoldier->bTeam == OUR_TEAM && BestShot.ubChanceToReallyHit < 30)
 					{
 						// skip firing, our chance isn't good enough
-						BestShot.ubPossible = FALSE;
+						BestShot.ubPossible = false;
 					}
 
 					if (BestShot.ubPossible)
@@ -2806,7 +2806,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 							if ( pSoldier->bAttitude != AGGRESSIVE || BestShot.ubChanceToReallyHit < 60 )
 							{
 								// get the location of the closest CONSCIOUS reachable opponent
-								sClosestDisturbance = ClosestReachableDisturbance(pSoldier,FALSE, &fClimb);
+								sClosestDisturbance = ClosestReachableDisturbance(pSoldier,false, &fClimb);
 
 								// if we found one
 								if (sClosestDisturbance != NOWHERE)
@@ -2814,7 +2814,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 									// don't bother checking GRENADES/KNIVES, he can't have conscious targets
 									// then make decision as if at alert status RED, but make sure
 									// we don't try to SEEK OPPONENT the unconscious guy!
-									return(DecideActionRed(pSoldier,FALSE));
+									return(DecideActionRed(pSoldier,false));
 								}
 								// else kill the guy, he could be the last opponent alive in this sector
 							}
@@ -2858,7 +2858,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 					if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 					{
 						// can't fire!
-						BestThrow.ubPossible = FALSE;
+						BestThrow.ubPossible = false;
 
 						// try behind us, see if there's room to move back
 						sCheckGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(ubOpponentDir)));
@@ -2919,7 +2919,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 						if (opp->bLife < OKLIFE)
 						{
 							// don't throw a knife at him.
-							BestStab.ubPossible = FALSE;
+							BestStab.ubPossible = false;
 						}
 
 						// now we KNOW FOR SURE that we will do something (shoot, at least)
@@ -2929,7 +2929,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 				else
 				{
 					// then look around for a worthy target (which sets BestStab.ubPossible)
-					CalcBestStab(pSoldier,&BestStab, TRUE);
+					CalcBestStab(pSoldier,&BestStab, true);
 
 					if (BestStab.ubPossible)
 					{
@@ -2997,7 +2997,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 				if (pSoldier->bActionPoints >= ubMinAPCost)
 					{
 					// then look around for a worthy target (which sets BestStab.ubPossible)
-					CalcBestStab(pSoldier,&BestStab, FALSE);
+					CalcBestStab(pSoldier,&BestStab, false);
 
 					if (BestStab.ubPossible)
 					{
@@ -3044,7 +3044,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			{
 				SLOGD("AI {} allowing cover check, chance to hit is only {}, at range {}", pSoldier->ubID, BestAttack.ubChanceToReallyHit, PythSpacesAway(pSoldier->sGridNo, BestAttack.sTarget));
 				// maybe taking cover would be better!
-				fAllowCoverCheck = TRUE;
+				fAllowCoverCheck = true;
 				if ( PreRandom( 10 ) > BestAttack.ubChanceToReallyHit )
 				{
 					// screw the attack!
@@ -3148,7 +3148,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		// if we wanted to be REALLY mean, we could look at chance to hit and decide whether
 		// to shoot at the head...
 
-		fChangeStanceFirst = FALSE;
+		fChangeStanceFirst = false;
 
 		// default settings
 		pSoldier->bAimTime = BestAttack.ubAimTime;
@@ -3201,7 +3201,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 						// attack after we change stance
 						// we don't just return here because we want to check whether to
 						// burst first
-						fChangeStanceFirst = TRUE;
+						fChangeStanceFirst = true;
 
 						// account for increased AP cost
 						ubStanceCost = (UINT8) GetAPsToChangeStance( pSoldier, ubBestStance );
@@ -3421,7 +3421,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) && !bInDeepWater)
 	{
 		// base chance depends on how much new info we have to radio to the others
-		iChance = 25 * WhatIKnowThatPublicDont(pSoldier,TRUE);	// just count them
+		iChance = 25 * WhatIKnowThatPublicDont(pSoldier,true);	// just count them
 
 		// if I actually know something they don't
 		if (iChance)
@@ -3539,7 +3539,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			iChance = gbDiff[DIFF_RADIO_RED_ALERT][ SoldierDifficultyLevel( pSoldier ) ];
 		else // subsequent radioing (only to update enemy positions, request help)
 			// base chance depends on how much new info we have to radio to the others
-			iChance = 10 * WhatIKnowThatPublicDont(pSoldier,FALSE);  // use 10 * for RED alert
+			iChance = 10 * WhatIKnowThatPublicDont(pSoldier,false);  // use 10 * for RED alert
 
 		// if I actually know something they don't and I ain't swimming (deep water)
 		if (iChance && !bInDeepWater)
@@ -3663,7 +3663,7 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 #ifdef AI_TIMING_TESTS
 				uiStartTime = GetJA2Clock();
 #endif
-				bAction = DecideActionRed(pSoldier,TRUE);
+				bAction = DecideActionRed(pSoldier,true);
 #ifdef AI_TIMING_TESTS
 				uiEndTime = GetJA2Clock();
 				guiRedTimeTotal += (uiEndTime - uiStartTime);

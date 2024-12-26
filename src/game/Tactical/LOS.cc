@@ -52,7 +52,7 @@ static const FIXEDPT gqStandardWindowBottomHeight = INT32_TO_FIXEDPT(WINDOW_BOTT
 static const FIXEDPT gqStandardWindowTopHeight    = INT32_TO_FIXEDPT(WINDOW_TOP_HEIGHT_UNITS);
 
 
-static const DOUBLE ddShotgunSpread[3][BUCKSHOT_SHOTS][2] =
+static const double ddShotgunSpread[3][BUCKSHOT_SHOTS][2] =
 {
 	{
 		// spread of about 2 degrees in all directions
@@ -179,7 +179,7 @@ LOSResults gLOSTestResults = {0};
 #endif
 
 
-static FIXEDPT FloatToFixed(FLOAT dN)
+static FIXEDPT FloatToFixed(float dN)
 {
 	FIXEDPT qN;
 	// verify that dN is within the range storable by FIXEDPT?
@@ -195,9 +195,9 @@ static FIXEDPT FloatToFixed(FLOAT dN)
 }
 
 
-static FLOAT FixedToFloat(FIXEDPT qN)
+static float FixedToFloat(FIXEDPT qN)
 {
-	return( ((FLOAT) qN)	/ FIXEDPT_FRACTIONAL_RESOLUTION );
+	return( ((float) qN)	/ FIXEDPT_FRACTIONAL_RESOLUTION );
 }
 
 //
@@ -205,15 +205,15 @@ static FLOAT FixedToFloat(FIXEDPT qN)
 //
 
 
-static FLOAT Distance3D(FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ)
+static float Distance3D(float dDeltaX, float dDeltaY, float dDeltaZ)
 {
-	return (FLOAT) std::hypot(dDeltaX, dDeltaY, dDeltaZ);
+	return (float) std::hypot(dDeltaX, dDeltaY, dDeltaZ);
 }
 
 
-static FLOAT Distance2D(FLOAT dDeltaX, FLOAT dDeltaY)
+static float Distance2D(float dDeltaX, float dDeltaY)
 {
-	return (FLOAT) std::hypot(dDeltaX, dDeltaY);
+	return (float) std::hypot(dDeltaX, dDeltaY);
 }
 
 enum LocationCode
@@ -227,7 +227,7 @@ enum LocationCode
 };
 
 
-static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSIndexX, INT8 bLOSIndexY, DOUBLE ddHorizAngle)
+static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSIndexX, INT8 bLOSIndexY, double ddHorizAngle)
 {
 	BOOLEAN fNorthSouth, fEastWest;
 	BOOLEAN fTopLeft, fTopRight;
@@ -270,7 +270,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 	if ( bLocation == LOC_OTHER )
 	{
 		// these spots always block
-		return( TRUE );
+		return true;
 	}
 
 	// use cartesian angles for god's sakes -CJC
@@ -300,7 +300,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 					!WallOrClosedDoorExistsOfTopLeftOrientation((INT16) (iGridNo)) &&
 					!OpenRightOrientedDoorWithDoorOnRightOfEdgeExists((INT16) (iGridNo + DirectionInc(SOUTH))))
 				{
-					return( FALSE );
+					return false;
 				}
 
 			}
@@ -314,7 +314,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 					!WallOrClosedDoorExistsOfTopRightOrientation((INT16) (iGridNo + DirectionInc( SOUTHWEST))) &&
 					!OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists((INT16) (iGridNo + DirectionInc( WEST))))
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 
@@ -329,7 +329,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 					!WallOrClosedDoorExistsOfTopRightOrientation((INT16) (iGridNo)) &&
 					!OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists((INT16) (iGridNo + DirectionInc(EAST))))
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 		}
@@ -341,7 +341,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 				if (pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT ||
 					pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 			else if ( fTopRight )
@@ -350,7 +350,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 					!WallOrClosedDoorExistsOfTopRightOrientation((INT16) (iGridNo + DirectionInc( NORTH))) &&
 					!OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists((INT16) (iGridNo + DirectionInc( NORTHEAST))))
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 		}
@@ -364,7 +364,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 			if ( pStructure->ubWallOrientation == NO_ORIENTATION)
 			{
 				// very top north corner of building, and going (screenwise) west or east
-				return( FALSE );
+				return false;
 			}
 		}
 		else if ( bLocation == LOC_4_0 )
@@ -377,7 +377,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 				if (!WallOrClosedDoorExistsOfTopRightOrientation((INT16) (iGridNo + DirectionInc(NORTH))) &&
 					!WallOrClosedDoorExistsOfTopLeftOrientation((INT16) (iGridNo + DirectionInc( NORTH))))
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 		}
@@ -389,7 +389,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 				if (pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
 					pStructure->ubWallOrientation == INSIDE_TOP_RIGHT)
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 
@@ -400,7 +400,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 				if (!WallOrClosedDoorExistsOfTopLeftOrientation((INT16) (iGridNo + DirectionInc(WEST))) &&
 					!WallOrClosedDoorExistsOfTopRightOrientation((INT16) (iGridNo + DirectionInc( WEST))))
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 
@@ -417,7 +417,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 					!OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists((INT16) (iGridNo + DirectionInc( EAST))) &&
 					!OpenRightOrientedDoorWithDoorOnRightOfEdgeExists((INT16) (iGridNo + DirectionInc(SOUTH))))
 				{
-					return( FALSE );
+					return false;
 				}
 			}
 		}
@@ -452,7 +452,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 				{
 					if ( pStructure->ubWallOrientation == INSIDE_TOP_LEFT || pStructure->ubWallOrientation == INSIDE_TOP_RIGHT )
 					{
-						fResolveHit = FALSE;
+						fResolveHit = false;
 					}
 				}
 
@@ -463,7 +463,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 					if (!WallOrClosedDoorExistsOfTopLeftOrientation( (INT16) (iGridNo + DirectionInc( WEST )) ) &&
 							!WallOrClosedDoorExistsOfTopRightOrientation( (INT16) (iGridNo + DirectionInc( WEST )) ) )
 					{
-						fResolveHit = FALSE;
+						fResolveHit = false;
 					}
 				}
 			}
@@ -479,7 +479,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 						!WallOrClosedDoorExistsOfTopRightOrientation( (INT16) (iGridNo + DirectionInc( SOUTHWEST ) ) ) &&
 						!OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( (INT16) (iGridNo + DirectionInc( WEST )) ) )
 					{
-						fResolveHit = FALSE;
+						fResolveHit = false;
 					}
 				}
 
@@ -501,7 +501,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 					if (!WallOrClosedDoorExistsOfTopRightOrientation( (INT16) (iGridNo + DirectionInc( NORTH )) ) &&
 							!WallOrClosedDoorExistsOfTopLeftOrientation( (INT16) (iGridNo + DirectionInc( NORTH )) ) )
 					{
-						fResolveHit = FALSE;
+						fResolveHit = false;
 					}
 				}
 			}
@@ -512,7 +512,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 				{
 					if ( pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT || pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT )
 					{
-						fResolveHit = FALSE;
+						fResolveHit = false;
 					}
 				}
 			}
@@ -531,7 +531,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 						!WallOrClosedDoorExistsOfTopRightOrientation( (INT16) (iGridNo) ) &&
 						!OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( (INT16) (iGridNo + DirectionInc( EAST )) ) )
 					{
-						fResolveHit = FALSE;
+						fResolveHit = false;
 					}
 				}
 				else if ( pStructure->ubWallOrientation == INSIDE_TOP_RIGHT || pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT )
@@ -540,7 +540,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 							!WallOrClosedDoorExistsOfTopLeftOrientation( (INT16) (iGridNo) ) &&
 							!OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( (INT16) (iGridNo + DirectionInc( SOUTH )) ) )
 					{
-						fResolveHit = FALSE;
+						fResolveHit = false;
 					}
 
 				}
@@ -551,13 +551,13 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 				if ( pStructure->ubWallOrientation == NO_ORIENTATION)
 				{
 					// very top north corner of building, and going (screenwise) west or east
-					fResolveHit = FALSE;
+					fResolveHit = false;
 				}
 			}
 		}
 	}*/
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -576,7 +576,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 // - starts at height relative to stance
 // - ignores windows
 // - stops at other obstacles
-static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FLOAT dEndZ, UINT8 ubTileSightLimit, UINT8 ubTreeSightReduction, INT8 bAware, INT8 bCamouflage, BOOLEAN fSmell, INT16* psWindowGridNo)
+static INT32 LineOfSightTest(GridNo start_pos, float dStartZ, GridNo end_pos, float dEndZ, UINT8 ubTileSightLimit, UINT8 ubTreeSightReduction, INT8 bAware, INT8 bCamouflage, BOOLEAN fSmell, INT16* psWindowGridNo)
 {
 	// Parameters...
 	// the X,Y,Z triplets should be obvious
@@ -618,15 +618,15 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 	INT32 iOldTileX;
 	INT32 iOldTileY;
 
-	FLOAT dDeltaX;
-	FLOAT dDeltaY;
-	FLOAT dDeltaZ;
+	float dDeltaX;
+	float dDeltaY;
+	float dDeltaZ;
 
 	FIXEDPT qIncrX;
 	FIXEDPT qIncrY;
 	FIXEDPT qIncrZ;
 
-	FLOAT dDistance;
+	float dDistance;
 
 	INT32 iDistance;
 	INT32 iSightLimit = ubTileSightLimit * CELL_X_SIZE;
@@ -647,7 +647,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 	INT32 iStepsToTravelY;
 	INT32 iStepsToTravel;
 	BOOLEAN fResolveHit;
-	DOUBLE ddHorizAngle;
+	double ddHorizAngle;
 	INT32 iStructureHeight;
 
 	FIXEDPT qWallHeight;
@@ -697,10 +697,10 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 
 	if ( iDistance == 0 )
 	{
-		return( FALSE );
+		return false;
 	}
 
-	if ( dDistance != (FLOAT) iDistance )
+	if ( dDistance != (float) iDistance )
 	{
 		// add 1 step to account for fraction
 		iDistance += 1;
@@ -716,7 +716,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 
 	#ifdef LOS_DEBUG
 	gLOSTestResults = LOSResults{};
-	gLOSTestResults.fLOSTestPerformed = TRUE;
+	gLOSTestResults.fLOSTestPerformed = true;
 	gLOSTestResults.iStartX = (INT32) dStartX;
 	gLOSTestResults.iStartY = (INT32) dStartY;
 	gLOSTestResults.iStartZ = (INT32) dStartZ;
@@ -727,11 +727,11 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 	gLOSTestResults.iDistance = (INT32) dDistance;
 	#endif
 
-	qIncrX = FloatToFixed( dDeltaX / (FLOAT)iDistance );
-	qIncrY = FloatToFixed( dDeltaY / (FLOAT)iDistance );
-	qIncrZ = FloatToFixed( dDeltaZ / (FLOAT)iDistance );
+	qIncrX = FloatToFixed( dDeltaX / (float)iDistance );
+	qIncrY = FloatToFixed( dDeltaY / (float)iDistance );
+	qIncrZ = FloatToFixed( dDeltaZ / (float)iDistance );
 
-	fCheckForRoof = FALSE;
+	fCheckForRoof = false;
 
 	// figure out starting and ending cubes
 	iGridNo = GETWORLDINDEXFROMWORLDCOORDS( (INT32)dStartX, (INT32)dStartY );
@@ -755,7 +755,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 
 		if ( qCurrZ > qWallHeight )
 		{
-			fCheckForRoof = TRUE;
+			fCheckForRoof = true;
 		}
 
 	}
@@ -766,7 +766,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 
 		if (qCurrZ < qWallHeight)
 		{
-			fCheckForRoof = TRUE;
+			fCheckForRoof = true;
 		}
 	}
 
@@ -791,7 +791,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 
 		if ( qCurrZ > qWallHeight )
 		{
-			fCheckForRoof = TRUE;
+			fCheckForRoof = true;
 		}
 
 	}
@@ -802,7 +802,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 
 		if (qCurrZ < qWallHeight)
 		{
-			fCheckForRoof = TRUE;
+			fCheckForRoof = true;
 		}
 	}
 
@@ -1025,14 +1025,14 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 										// looking up, so reduce for the target stance-height according to iEndCubesZ
 										if ( iDistance >= (3 - iEndCubesAboveLevelZ) * CELL_X_SIZE )
 										{
-											fOpaque = FALSE;
+											fOpaque = false;
 										}
 									}
 									else
 									{
 										if ( iDistance >= (3 - iStartCubesAboveLevelZ) * CELL_X_SIZE )
 										{
-											fOpaque = FALSE;
+											fOpaque = false;
 										}
 									}
 
@@ -1041,7 +1041,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 								{
 									if ( iDistance >= 12 * CELL_X_SIZE )
 									{
-										fOpaque = FALSE;
+										fOpaque = false;
 									}
 								}
 							}
@@ -1072,7 +1072,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 											}
 											else
 											{
-												fResolveHit = TRUE;
+												fResolveHit = true;
 											}
 											if (fResolveHit)
 											{
@@ -1083,7 +1083,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 												{
 													// out of visual range
 													#ifdef LOS_DEBUG
-													gLOSTestResults.fOutOfRange = TRUE;
+													gLOSTestResults.fOutOfRange = true;
 													gLOSTestResults.iCurrCubesZ = iCurrCubesZ;
 													#endif
 													return( 0 );
@@ -1126,7 +1126,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 												{
 													// out of visual range
 													#ifdef LOS_DEBUG
-													gLOSTestResults.fOutOfRange = TRUE;
+													gLOSTestResults.fOutOfRange = true;
 													gLOSTestResults.iCurrCubesZ = iCurrCubesZ;
 													#endif
 													return( 0 );
@@ -1183,12 +1183,12 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 													}
 													else
 													{
-														fResolveHit = TRUE;
+														fResolveHit = true;
 													}
 												}
 												else
 												{
-													fResolveHit = TRUE;
+													fResolveHit = true;
 												}
 											}
 											if (fResolveHit)
@@ -1291,7 +1291,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 	// fractional amount of distance remaining which is unchecked
 	// but we shouldn't(?) need to check it because the target is there!
 	#ifdef LOS_DEBUG
-	gLOSTestResults.fLOSClear = TRUE;
+	gLOSTestResults.fLOSClear = true;
 	#endif
 	// this somewhat complicated formula does the following:
 	// it starts with the distance to the target
@@ -1302,7 +1302,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 }
 
 
-BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT* pdZPos)
+BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, float* pdZPos)
 {
 	UINT8 ubHeight;
 
@@ -1357,7 +1357,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 					*pdZPos = PRONE_LOS_POS;
 					break;
 				default:
-					return( FALSE );
+					return false;
 			}
 			break;
 		case FIRING_POS:
@@ -1373,7 +1373,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 					*pdZPos = PRONE_FIRING_POS;
 					break;
 				default:
-					return( FALSE );
+					return false;
 			}
 			break;
 		case TARGET_POS:
@@ -1389,7 +1389,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 					*pdZPos = PRONE_TARGET_POS;
 					break;
 				default:
-					return( FALSE );
+					return false;
 			}
 			break;
 		case HEAD_TARGET_POS:
@@ -1405,7 +1405,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 					*pdZPos = PRONE_HEAD_TARGET_POS;
 					break;
 				default:
-					return( FALSE );
+					return false;
 			}
 			break;
 		case TORSO_TARGET_POS:
@@ -1421,7 +1421,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 					*pdZPos = PRONE_TORSO_TARGET_POS;
 					break;
 				default:
-					return( FALSE );
+					return false;
 			}
 			break;
 		case LEGS_TARGET_POS:
@@ -1437,7 +1437,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 					*pdZPos = PRONE_LEGS_TARGET_POS;
 					break;
 				default:
-					return( FALSE );
+					return false;
 			}
 			break;
 		case HEIGHT:
@@ -1453,7 +1453,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 					*pdZPos = PRONE_HEIGHT;
 					break;
 				default:
-					return( FALSE );
+					return false;
 			}
 			break;
 	}
@@ -1486,13 +1486,13 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 	}
 
 	*pdZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[pSoldier->sGridNo].sHeight );
-	return( TRUE );
+	return true;
 }
 
 
 INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier, UINT8 ubTileSightLimit, const INT8 bAware)
 {
-	FLOAT dStartZPos, dEndZPos;
+	float dStartZPos, dEndZPos;
 	BOOLEAN fOk;
 	BOOLEAN fSmell;
 	int bEffectiveCamo;
@@ -1529,13 +1529,13 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 			dEndZPos += WALL_HEIGHT_UNITS;
 		}
 		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[pEndSoldier->sGridNo].sHeight );
-		fSmell = TRUE;
+		fSmell = true;
 	}
 	else
 	{
 		fOk = CalculateSoldierZPos( pEndSoldier, LOS_POS, &dEndZPos );
 		CHECKF( fOk );
-		fSmell = FALSE;
+		fSmell = false;
 	}
 
 	if ( TANK( pStartSoldier ) )
@@ -1549,11 +1549,11 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 			// blind spot?
 			if ( dEndZPos <= PRONE_LOS_POS )
 			{
-				return( FALSE );
+				return false;
 			}
 			else if ( sDistance <= 4 && dEndZPos <= CROUCHED_LOS_POS )
 			{
-				return( FALSE );
+				return false;
 			}
 		}
 	}
@@ -1611,7 +1611,7 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGridNo)
 {
 	// figure out if there is a SINGLE window between the looker and target
-	FLOAT dStartZPos, dEndZPos;
+	float dStartZPos, dEndZPos;
 
 	CHECKF( pStartSoldier );
 	dStartZPos = FixedToFloat( ((gqStandardWindowTopHeight + gqStandardWindowBottomHeight) / 2) );
@@ -1626,7 +1626,7 @@ INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGr
 	// We don't want to consider distance limits here so pass in tile sight limit of 255
 	// and consider trees as little as possible
 	INT16 sWindowGridNo = NOWHERE;
-	LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sEndGridNo, dEndZPos, 255, 0, TRUE, 0, FALSE, &sWindowGridNo);
+	LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sEndGridNo, dEndZPos, 255, 0, true, 0, false, &sWindowGridNo);
 	if (sWindowGridNo == pStartSoldier->sGridNo) sWindowGridNo = NOWHERE; // XXX TODO0012
 	return( sWindowGridNo );
 }
@@ -1634,7 +1634,7 @@ INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGr
 
 INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTileSightLimit, INT8 bAware)
 {
-	FLOAT dStartZPos, dEndZPos;
+	float dStartZPos, dEndZPos;
 	BOOLEAN fOk;
 
 	CHECKF( pStartSoldier );
@@ -1644,7 +1644,7 @@ INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16
 
 	if (bCubeLevel > 0)
 	{
-		dEndZPos = ((FLOAT) (bCubeLevel + bLevel * PROFILE_Z_SIZE ) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
+		dEndZPos = ((float) (bCubeLevel + bLevel * PROFILE_Z_SIZE ) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
 		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ sGridNo ].sHeight );
 	}
 	else
@@ -1661,12 +1661,12 @@ INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16
 		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ sGridNo ].sHeight );
 	}
 
-	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
+	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, false, NULL);
 }
 
 INT32 SoldierToBodyPartLineOfSightTest( const SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware )
 {
-	FLOAT dStartZPos, dEndZPos;
+	float dStartZPos, dEndZPos;
 	BOOLEAN fOk;
 	UINT8 ubPosType;
 
@@ -1698,16 +1698,16 @@ INT32 SoldierToBodyPartLineOfSightTest( const SOLDIERTYPE * pStartSoldier, INT16
 	fOk = CalculateSoldierZPos( pEndSoldier, ubPosType, &dEndZPos );
 	if (!fOk)
 	{
-		return( FALSE );
+		return false;
 	}
 
-	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
+	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, false, NULL);
 }
 
 
 INT32 SoldierToVirtualSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bStance, UINT8 ubTileSightLimit, INT8 bAware)
 {
-	FLOAT dStartZPos, dEndZPos;
+	float dStartZPos, dEndZPos;
 	BOOLEAN fOk;
 
 	CHECKF( pStartSoldier );
@@ -1728,7 +1728,7 @@ INT32 SoldierToVirtualSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, I
 			dEndZPos = PRONE_LOS_POS;
 			break;
 		default:
-			return( FALSE );
+			return false;
 	}
 	dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[sGridNo].sHeight );
 	if (bLevel > 0)
@@ -1737,7 +1737,7 @@ INT32 SoldierToVirtualSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, I
 		dEndZPos += WALL_HEIGHT_UNITS;
 	}
 
-	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
+	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, false, NULL);
 }
 
 INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubTileSightLimit, INT8 bAware )
@@ -1747,7 +1747,7 @@ INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGrid
 
 INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, INT16 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware )
 {
-	FLOAT dStartZPos, dEndZPos;
+	float dStartZPos, dEndZPos;
 
 	const SOLDIERTYPE* const start_soldier = WhoIsThere2(sStartGridNo, bStartLevel);
 	if (start_soldier != NULL)
@@ -1764,7 +1764,7 @@ INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, I
 	// add in ground height
 	dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ sEndGridNo ].sHeight );
 
-	return LineOfSightTest(sStartGridNo, dStartZPos, sEndGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
+	return LineOfSightTest(sStartGridNo, dStartZPos, sEndGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, false, NULL);
 }
 
 /*
@@ -1783,19 +1783,19 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 {
 	SOLDIERTYPE* const pFirer = pBullet->pFirer;
 	INT32 iImpact, iDamage;
-	FLOAT dZPosRelToMerc;
+	float dZPosRelToMerc;
 	UINT8 ubHitLocation = AIM_SHOT_RANDOM;
 	UINT8 ubAttackDirection;
 	UINT8 ubAmmoType;
 	UINT32 uiChanceThrough;
 	UINT8 ubSpecial = FIRE_WEAPON_NO_SPECIAL;
 	INT16 sHitBy;
-	BOOLEAN fStopped = TRUE;
+	BOOLEAN fStopped = true;
 	INT8 bSlot;
 	INT8 bHeadSlot = NO_SLOT;
 	OBJECTTYPE Object;
 	INT16 sNewGridNo;
-	BOOLEAN fCanSpewBlood = FALSE;
+	BOOLEAN fCanSpewBlood = false;
 	INT8 bSpewBloodLevel;
 
 	// structure IDs for mercs match their merc IDs
@@ -2004,7 +2004,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		}
 
 		// intentionally shot
-		tgt.fIntendedTarget = TRUE;
+		tgt.fIntendedTarget = true;
 
 		if (pBullet->usFlags & BULLET_FLAG_BUCKSHOT && &tgt == pFirer->target)
 		{
@@ -2026,7 +2026,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		iDamage = BulletImpact(pFirer, &tgt, ubHitLocation, iImpact, sHitBy, &ubSpecial);
 
 		// accidentally shot
-		tgt.fIntendedTarget = FALSE;
+		tgt.fIntendedTarget = false;
 	}
 
 	if ( ubAmmoType == AMMO_MONSTER )
@@ -2124,7 +2124,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			{
 				pBullet->iImpact = (INT8) iImpact;
 				// bullet was NOT stopped
-				fStopped = FALSE;
+				fStopped = false;
 			}
 		}
 	}
@@ -2144,14 +2144,14 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		sNewGridNo = NewGridNo(pBullet->sGridNo, DirectionInc(OppositeDirection(hit_direction)));
 
 		bSpewBloodLevel = tgt.bLevel;
-		fCanSpewBlood   = TRUE;
+		fCanSpewBlood   = true;
 
 		// If on anything other than bLevel of 0, we can pretty much freely spew blood
 		if ( bSpewBloodLevel == 0 )
 		{
 			if (gubWorldMovementCosts[sNewGridNo][OppositeDirection(hit_direction)][0] >= TRAVELCOST_BLOCKED)
 			{
-				fCanSpewBlood = FALSE;
+				fCanSpewBlood = false;
 			}
 		}
 		else
@@ -2173,7 +2173,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	if (gTacticalStatus.ubCurrentTeam != OUR_TEAM && tgt.bTeam == OUR_TEAM)
 	{
 		// someone has been hit so no close-call quotes
-		gTacticalStatus.fSomeoneHit = TRUE;
+		gTacticalStatus.fSomeoneHit = true;
 	}
 
 	// handle hit!
@@ -2184,7 +2184,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 
 static void BulletHitWindow(BULLET* pBullet, INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth)
 {
-	WindowHit( sGridNo, usStructureID, fBlowWindowSouth, FALSE );
+	WindowHit( sGridNo, usStructureID, fBlowWindowSouth, false );
 }
 
 
@@ -2246,12 +2246,12 @@ static INT32 HandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pStruc
 	INT32 iCurrImpact;
 	INT32 iImpactReduction;
 
-	*pfHit = FALSE;
+	*pfHit = false;
 
 	if (pBullet->usFlags & BULLET_FLAG_KNIFE || pBullet->usFlags & BULLET_FLAG_MISSILE || pBullet->usFlags & BULLET_FLAG_TANK_CANNON || pBullet->usFlags & BULLET_FLAG_FLAME )
 	{
 		// stops!
-		*pfHit = TRUE;
+		*pfHit = true;
 		return( 0 );
 	}
 	else if ( pBullet->usFlags & BULLET_FLAG_SMALL_MISSILE )
@@ -2259,7 +2259,7 @@ static INT32 HandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pStruc
 		// stops if using HE ammo
 		if (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType == AMMO_HE)
 		{
-			*pfHit = TRUE;
+			*pfHit = true;
 			return( 0 );
 		}
 	}
@@ -2335,17 +2335,17 @@ static INT32 HandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pStruc
 		if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_VEGETATION )
 		{
 			// just return a +ve value to indicate the bullet wasn't stopped
-			*pfHit = FALSE;
+			*pfHit = false;
 			return( 1 );
 		}
 
-		*pfHit = TRUE;
+		*pfHit = true;
 		return( iCurrImpact - pBullet->iImpactReduction );
 	}
 	else
 	{
 		// just return a +ve value to indicate the bullet wasn't stopped
-		*pfHit = FALSE;
+		*pfHit = false;
 		return( 1 );
 	}
 }
@@ -2468,13 +2468,13 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 
 		if (iGridNo == (INT32) pBullet->sTargetGridNo)
 		{
-			fIntended = TRUE;
+			fIntended = true;
 			// if in the same tile as our destination, we WANT to hit the structure!
 			uiChanceOfHit = 100;
 		}
 		else
 		{
-			fIntended = FALSE;
+			fIntended = false;
 		}
 
 		iCurrAboveLevelZ = FIXEDPT_TO_INT32( pBullet->qCurrZ - qLandHeight );
@@ -2556,7 +2556,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 
 					// ignore intervening target if not visible; PCs are always visible so AI will never skip them on that
 					// basis
-					if (!fIntended && person.bVisible == TRUE)
+					if (!fIntended && person.bVisible == true)
 					{
 						// in actually moving the bullet, we consider only count friends as targets if the bullet is unaimed
 						// (buckshot), if they are the intended target, or beyond the range of automatic friendly fire hits
@@ -2758,7 +2758,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 									}
 									else
 									{
-										fResolveHit = TRUE;
+										fResolveHit = true;
 									}
 									if (fResolveHit)
 									{
@@ -2866,12 +2866,12 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 }
 
 
-static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, GridNo end_pos, FLOAT dEndZ);
+static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, GridNo end_pos, float dEndZ);
 
 
 static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier)
 {
-	FLOAT dEndZPos;
+	float dEndZPos;
 	BOOLEAN fOk;
 
 	if (pStartSoldier == pEndSoldier)
@@ -2883,7 +2883,7 @@ static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier
 	fOk = CalculateSoldierZPos( pEndSoldier, TARGET_POS, &dEndZPos );
 	if (!fOk)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// set startsoldier's target ID ... need an ID stored in case this
@@ -2896,7 +2896,7 @@ static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier
 UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier, const UINT8 ubAimLocation)
 {
 	// does like StS-CTGT but with a particular body part in mind
-	FLOAT dEndZPos;
+	float dEndZPos;
 	BOOLEAN fOk;
 	UINT8 ubPosType;
 
@@ -2925,7 +2925,7 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldie
 	fOk = CalculateSoldierZPos( pEndSoldier, ubPosType, &dEndZPos );
 	if (!fOk)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// set startsoldier's target ID ... need an ID stored in case this
@@ -2937,7 +2937,7 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldie
 
 UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const INT16 sGridNo, const INT8 bLevel, const INT8 bCubeLevel, const SOLDIERTYPE* const target)
 {
-	FLOAT dEndZPos;
+	float dEndZPos;
 
 	if (pStartSoldier->sGridNo == sGridNo)
 	{
@@ -2955,7 +2955,7 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, cons
 		if (bCubeLevel)
 		{
 			// fire at the centre of the cube specified
-			dEndZPos = ( ( (FLOAT) (bCubeLevel + bLevel * PROFILE_Z_SIZE) ) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
+			dEndZPos = ( ( (float) (bCubeLevel + bLevel * PROFILE_Z_SIZE) ) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
 		}
 		else
 		{
@@ -2963,12 +2963,12 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, cons
 			if (bStructHeight > 0)
 			{
 				// fire at the centre of the cube of the tallest structure
-				dEndZPos = ((FLOAT) (bStructHeight + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
+				dEndZPos = ((float) (bStructHeight + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
 			}
 			else
 			{
 				// fire at 1 unit above the level of the ground
-				dEndZPos = (FLOAT) ((bLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1);
+				dEndZPos = (float) ((bLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1);
 			}
 		}
 
@@ -2985,7 +2985,7 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, cons
 UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier)
 {
 	// Like a standard CTGT algorithm BUT fakes the start soldier at standing height
-	FLOAT dEndZPos;
+	float dEndZPos;
 	BOOLEAN fOk;
 	UINT8 ubChance;
 	UINT16 usTrueState;
@@ -2999,7 +2999,7 @@ UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, con
 	fOk = CalculateSoldierZPos( pEndSoldier, TARGET_POS, &dEndZPos );
 	if (!fOk)
 	{
-		return( FALSE );
+		return false;
 	}
 	usTrueState = pStartSoldier->usAnimState;
 	pStartSoldier->usAnimState = STANDING;
@@ -3015,7 +3015,7 @@ UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, con
 
 UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel )
 {
-	FLOAT dEndZPos;
+	float dEndZPos;
 
 	UINT16 usTrueState;
 	UINT8 ubChance;
@@ -3036,7 +3036,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 		if (bCubeLevel)
 		{
 			// fire at the centre of the cube specified
-			dEndZPos = ( (FLOAT) (bCubeLevel + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
+			dEndZPos = ( (float) (bCubeLevel + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
 		}
 		else
 		{
@@ -3044,12 +3044,12 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 			if (bStructHeight > 0)
 			{
 				// fire at the centre of the cube of the tallest structure
-				dEndZPos = ((FLOAT) (bStructHeight + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
+				dEndZPos = ((float) (bStructHeight + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
 			}
 			else
 			{
 				// fire at 1 unit above the level of the ground
-				dEndZPos = (FLOAT) ((bLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1);
+				dEndZPos = (float) ((bLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1);
 			}
 		}
 
@@ -3071,16 +3071,16 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 }
 
 
-static void CalculateFiringIncrements(DOUBLE ddHorizAngle, DOUBLE ddVerticAngle, DOUBLE dd2DDistance, BULLET* pBullet, DOUBLE* pddNewHorizAngle, DOUBLE* pddNewVerticAngle)
+static void CalculateFiringIncrements(double ddHorizAngle, double ddVerticAngle, double dd2DDistance, BULLET* pBullet, double* pddNewHorizAngle, double* pddNewVerticAngle)
 {
 	INT32 iMissedBy = - pBullet->sHitBy;
-	DOUBLE ddVerticPercentOfMiss;
-	DOUBLE ddAbsVerticAngle;
-	DOUBLE ddScrewupAdjustmentLimit;
+	double ddVerticPercentOfMiss;
+	double ddAbsVerticAngle;
+	double ddScrewupAdjustmentLimit;
 	UINT32 uiChanceOfMissAbove;
-	DOUBLE ddMinimumMiss;
-	DOUBLE ddMaximumMiss;
-	DOUBLE ddAmountOfMiss;
+	double ddMinimumMiss;
+	double ddMaximumMiss;
+	double ddAmountOfMiss;
 
 	if (iMissedBy > 0)
 	{
@@ -3126,7 +3126,7 @@ static void CalculateFiringIncrements(DOUBLE ddHorizAngle, DOUBLE ddVerticAngle,
 			ddMinimumMiss = ddMaximumMiss;
 		}
 
-		ddAmountOfMiss = ( (ddMaximumMiss - ddMinimumMiss) * ((DOUBLE) iMissedBy)) / 100.0 + ddMinimumMiss;
+		ddAmountOfMiss = ( (ddMaximumMiss - ddMinimumMiss) * ((double) iMissedBy)) / 100.0 + ddMinimumMiss;
 
 		// miss to the left or right
 		if (PreRandom( 2 ) )
@@ -3152,13 +3152,13 @@ static void CalculateFiringIncrements(DOUBLE ddHorizAngle, DOUBLE ddVerticAngle,
 	*pddNewHorizAngle = ddHorizAngle;
 	*pddNewVerticAngle = ddVerticAngle;
 
-	pBullet->qIncrX = FloatToFixed( (FLOAT) cos( ddHorizAngle ) );
-	pBullet->qIncrY = FloatToFixed( (FLOAT) sin( ddHorizAngle ) );
+	pBullet->qIncrX = FloatToFixed( (float) cos( ddHorizAngle ) );
+	pBullet->qIncrY = FloatToFixed( (float) sin( ddHorizAngle ) );
 
 	// this is the same as multiplying the X and Y increments by the projection of the line in
 	// 3-space onto the horizontal plane, without reducing the X/Y increments and thus slowing
 	// the LOS code
-	pBullet->qIncrZ = FloatToFixed( (FLOAT) ( sin( ddVerticAngle ) / sin( (PI/2) - ddVerticAngle ) * 2.56 ) );
+	pBullet->qIncrZ = FloatToFixed( (float) ( sin( ddVerticAngle ) / sin( (PI/2) - ddVerticAngle ) * 2.56 ) );
 }
 
 
@@ -3215,32 +3215,32 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 
 		MoveBullet(pBullet);
 
-		return( TRUE );
+		return true;
 	}
 }
 
 
-INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const FLOAT dEndY, const FLOAT dEndZ, const UINT16 usHandItem, INT16 sHitBy, const BOOLEAN fBuckshot, const BOOLEAN fFake)
+INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const float dEndX, const float dEndY, const float dEndZ, const UINT16 usHandItem, INT16 sHitBy, const BOOLEAN fBuckshot, const BOOLEAN fFake)
 {
 	// fFake indicates that we should set things up for a call to ChanceToGetThrough
-	FLOAT dStartZ;
+	float dStartZ;
 
-	FLOAT d2DDistance;
-	FLOAT dDeltaX;
-	FLOAT dDeltaY;
-	FLOAT dDeltaZ;
+	float d2DDistance;
+	float dDeltaX;
+	float dDeltaY;
+	float dDeltaZ;
 
-	FLOAT dStartX;
-	FLOAT dStartY;
+	float dStartX;
+	float dStartY;
 
-	DOUBLE ddOrigHorizAngle;
-	DOUBLE ddOrigVerticAngle;
-	DOUBLE ddHorizAngle;
-	DOUBLE ddVerticAngle;
-	DOUBLE ddAdjustedHorizAngle;
-	DOUBLE ddAdjustedVerticAngle;
-	DOUBLE ddDummyHorizAngle;
-	DOUBLE ddDummyVerticAngle;
+	double ddOrigHorizAngle;
+	double ddOrigVerticAngle;
+	double ddHorizAngle;
+	double ddVerticAngle;
+	double ddAdjustedHorizAngle;
+	double ddAdjustedVerticAngle;
+	double ddDummyHorizAngle;
+	double ddDummyVerticAngle;
 
 	INT32 iDistance;
 
@@ -3253,8 +3253,8 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 
 	CalculateSoldierZPos( pFirer, FIRING_POS, &dStartZ );
 
-	dStartX = (FLOAT) CenterX( pFirer->sGridNo );
-	dStartY = (FLOAT) CenterY( pFirer->sGridNo );
+	dStartX = (float) CenterX( pFirer->sGridNo );
+	dStartY = (float) CenterY( pFirer->sGridNo );
 
 	dDeltaX = dEndX - dStartX;
 	dDeltaY = dEndY - dStartY;
@@ -3266,7 +3266,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 	if ( d2DDistance != iDistance )
 	{
 		iDistance += 1;
-		d2DDistance = (FLOAT) ( iDistance);
+		d2DDistance = (float) ( iDistance);
 	}
 
 	ddOrigHorizAngle = atan2( dDeltaY, dDeltaX );
@@ -3335,7 +3335,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		if (pBullet == NULL)
 		{
 			SLOGW("Failed to create bullet");
-			return FALSE;
+			return false;
 		}
 		pBullet->sHitBy	= sHitBy;
 
@@ -3343,22 +3343,22 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		{
 			if (dEndZ > WALL_HEIGHT_UNITS)
 			{
-				pBullet->fCheckForRoof = TRUE;
+				pBullet->fCheckForRoof = true;
 			}
 			else
 			{
-				pBullet->fCheckForRoof = FALSE;
+				pBullet->fCheckForRoof = false;
 			}
 		}
 		else // dStartZ >= WALL_HEIGHT_UNITS; presumably >
 		{
 			if (dEndZ < WALL_HEIGHT_UNITS)
 			{
-				pBullet->fCheckForRoof = TRUE;
+				pBullet->fCheckForRoof = true;
 			}
 			else
 			{
-				pBullet->fCheckForRoof = FALSE;
+				pBullet->fCheckForRoof = false;
 			}
 		}
 
@@ -3371,9 +3371,9 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 			if (sHitBy > 0)
 			{
 				// calculate by hand (well, without angles) to match LOS
-				pBullet->qIncrX = FloatToFixed( dDeltaX / (FLOAT)iDistance );
-				pBullet->qIncrY = FloatToFixed( dDeltaY / (FLOAT)iDistance );
-				pBullet->qIncrZ = FloatToFixed( dDeltaZ / (FLOAT)iDistance );
+				pBullet->qIncrX = FloatToFixed( dDeltaX / (float)iDistance );
+				pBullet->qIncrY = FloatToFixed( dDeltaY / (float)iDistance );
+				pBullet->qIncrZ = FloatToFixed( dDeltaZ / (float)iDistance );
 				ddAdjustedHorizAngle = ddHorizAngle;
 				ddAdjustedVerticAngle = ddVerticAngle;
 			}
@@ -3399,12 +3399,12 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 
 		if (ubLoop == 0 && pFirer->bDoBurst < 2)
 		{
-			pBullet->fAimed = TRUE;
+			pBullet->fAimed = true;
 		}
 		else
 		{
 			// buckshot pellets after the first can hit friendlies even at close range
-			pBullet->fAimed = FALSE;
+			pBullet->fAimed = false;
 		}
 
 		if ( pBullet->usFlags & BULLET_FLAG_KNIFE )
@@ -3440,21 +3440,21 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		pBullet->iDistanceLimit = iDistance;
 		if (fFake)
 		{
-			bCTGT = FireBullet(pBullet, TRUE);
+			bCTGT = FireBullet(pBullet, true);
 			RemoveBullet(pBullet);
 			return( bCTGT );
 		}
 		else
 		{
-			FireBullet(pBullet, FALSE);
+			FireBullet(pBullet, false);
 		}
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
-static INT8 ChanceToGetThrough(SOLDIERTYPE* const pFirer, const GridNo end_pos, const FLOAT dEndZ)
+static INT8 ChanceToGetThrough(SOLDIERTYPE* const pFirer, const GridNo end_pos, const float dEndZ)
 {
 	UINT16  weapon = pFirer->usAttackingWeapon;
 	BOOLEAN buck_shot;
@@ -3469,13 +3469,13 @@ static INT8 ChanceToGetThrough(SOLDIERTYPE* const pFirer, const GridNo end_pos, 
 	{
 		// fake it
 		weapon    = GLOCK_17;
-		buck_shot = FALSE;
+		buck_shot = false;
 	}
 
 	INT16 end_x;
 	INT16 end_y;
 	ConvertGridNoToCenterCellXY(end_pos, &end_x, &end_y);
-	return FireBulletGivenTarget(pFirer, end_x, end_y, dEndZ, weapon, 0, buck_shot, TRUE);
+	return FireBulletGivenTarget(pFirer, end_x, end_y, dEndZ, weapon, 0, buck_shot, true);
 }
 
 
@@ -3522,7 +3522,7 @@ void MoveBullet(BULLET* const pBullet)
 	BOOLEAN fResolveHit;
 
 	INT32 i;
-	BOOLEAN fGoingOver = FALSE;
+	BOOLEAN fGoingOver = false;
 	BOOLEAN fHitStructure;
 
 	FIXEDPT qWallHeight;
@@ -3583,7 +3583,7 @@ void MoveBullet(BULLET* const pBullet)
 		uiChanceOfHit = ChanceOfBulletHittingStructure( pBullet->iLoop, pBullet->iDistanceLimit, pBullet->sHitBy );
 		if (iGridNo == (INT32) pBullet->sTargetGridNo)
 		{
-			fIntended = TRUE;
+			fIntended = true;
 			// if in the same tile as our destination, we WANT to hit the structure!
 			if ( fIntended )
 			{
@@ -3592,7 +3592,7 @@ void MoveBullet(BULLET* const pBullet)
 		}
 		else
 		{
-			fIntended = FALSE;
+			fIntended = false;
 		}
 
 		while( pStructure )
@@ -3676,7 +3676,7 @@ void MoveBullet(BULLET* const pBullet)
 					{
 						// hit a roof
 						StopBullet(pBullet);
-						StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, TRUE);
+						StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, true);
 						return;
 					}
 
@@ -3709,7 +3709,7 @@ void MoveBullet(BULLET* const pBullet)
 							iNumLocalStructures++;
 						}
 					}
-					else if (tgt.bVisible == TRUE &&
+					else if (tgt.bVisible == true &&
 						gAnimControl[tgt.usAnimState].ubEndHeight == ANIM_STAND &&
 						((pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS) ||
 						(!pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS_UNAIMED) ||
@@ -3723,7 +3723,7 @@ void MoveBullet(BULLET* const pBullet)
 					// this might be a close call
 					if (tgt.bTeam == OUR_TEAM && pBullet->pFirer->bTeam != OUR_TEAM && sDesiredLevel == tgt.bLevel)
 					{
-						tgt.fCloseCall = TRUE;
+						tgt.fCloseCall = true;
 					}
 
 					if (IS_MERC_BODY_TYPE(&tgt))
@@ -3857,7 +3857,7 @@ void MoveBullet(BULLET* const pBullet)
 								// this could be a close call
 								if ( pTarget->bTeam == OUR_TEAM && pBullet->pFirer->bTeam != OUR_TEAM )
 								{
-									pTarget->fCloseCall = TRUE;
+									pTarget->fCloseCall = true;
 								}*/
 
 							}
@@ -3881,7 +3881,7 @@ void MoveBullet(BULLET* const pBullet)
 			{
 				// ground is in the way!
 				StopBullet(pBullet);
-				StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, TRUE);
+				StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, true);
 				return;
 			}
 			// check for the existence of structures
@@ -3940,7 +3940,7 @@ void MoveBullet(BULLET* const pBullet)
 					pBullet->qCurrZ += pBullet->qIncrZ * iStepsToTravel;
 
 					StopBullet(pBullet);
-					StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, TRUE);
+					StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, true);
 					return;
 				}
 
@@ -3962,7 +3962,7 @@ void MoveBullet(BULLET* const pBullet)
 					{
 						if ( ( ( pBullet->iLoop + i ) % bStepsPerMove ) == 0 )
 						{
-							fGoingOver = TRUE;
+							fGoingOver = true;
 							break;
 						}
 					}
@@ -4099,7 +4099,7 @@ void MoveBullet(BULLET* const pBullet)
 
 												// bullet must end here!
 												StopBullet(pBullet);
-												StructureHit(pBullet, pStructure->usStructureID, 1, TRUE);
+												StructureHit(pBullet, pStructure->usStructureID, 1, true);
 												return;
 											}
 										}
@@ -4133,7 +4133,7 @@ void MoveBullet(BULLET* const pBullet)
 									}
 									else
 									{
-										fResolveHit = TRUE;
+										fResolveHit = true;
 									}
 
 									if (fResolveHit)
@@ -4158,13 +4158,13 @@ void MoveBullet(BULLET* const pBullet)
 											else if ( iRemainingImpact <= 0 )
 											{
 												StopBullet(pBullet);
-												StructureHit(pBullet, pStructure->usStructureID, 1, TRUE);
+												StructureHit(pBullet, pStructure->usStructureID, 1, true);
 												return;
 											}
 											else if (fHitStructure && (gubLocalStructureNumTimesHit[iStructureLoop] == 0) )
 											{
 												// play animation to indicate structure being hit
-												StructureHit(pBullet, pStructure->usStructureID, 1, FALSE);
+												StructureHit(pBullet, pStructure->usStructureID, 1, false);
 												gubLocalStructureNumTimesHit[iStructureLoop] = 1;
 											}
 										}
@@ -4195,7 +4195,7 @@ void MoveBullet(BULLET* const pBullet)
 							if ( 1 /*HandleBulletStructureInteraction( pBullet, pRoofStructure, &fHitStructure ) <= 0 */)
 							{
 								StopBullet(pBullet);
-								StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, TRUE);
+								StructureHit(pBullet, INVALID_STRUCTURE_ID, 0, true);
 								return;
 							}
 							/*
@@ -4282,7 +4282,7 @@ void MoveBullet(BULLET* const pBullet)
 }
 
 
-INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, UINT16* pusStructureID, FLOAT* pdNormalX, FLOAT* pdNormalY, FLOAT* pdNormalZ)
+INT32 CheckForCollision(float dX, float dY, float dZ, float dDeltaX, float dDeltaY, float dDeltaZ, UINT16* pusStructureID, float* pdNormalX, float* pdNormalY, float* pdNormalZ)
 {
 	INT32 iLandHeight;
 	INT32 iCurrAboveLevelZ;
@@ -4293,11 +4293,11 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	STRUCTURE * pStructure, *pTempStructure;
 
 	SOLDIERTYPE * pTarget;
-	FLOAT dTargetZMax;
+	float dTargetZMax;
 
 	INT16 sX, sY;
 
-	FLOAT dOldZUnits, dZUnits;
+	float dOldZUnits, dZUnits;
 
 	INT8 bLOSIndexX, bLOSIndexY;
 
@@ -4320,16 +4320,16 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	dOldZUnits = (dZ - dDeltaZ );
 	dZUnits = dZ;
 
-	//BOOLEAN fRoofPresent = FALSE;
+	//BOOLEAN fRoofPresent = false;
 	//if (pBullet->fCheckForRoof)
 	//{
 	//	if (pMapElement->pRoofHead != NULL)
 	//	{
-	//		fRoofPresent = TRUE;
+	//		fRoofPresent = true;
 	//	}
 	//	else
 	//	{
-	//		fRoofPresent = FALSE;
+	//		fRoofPresent = false;
 	//	}
 	//}
 

@@ -71,7 +71,7 @@ constexpr bool operator==(Selections const& selection, DisplayList const& dlist)
 extern BOOLEAN fDontUseRandom;
 
 
-static BOOLEAN gfRenderSquareArea = FALSE;
+static BOOLEAN gfRenderSquareArea = false;
 static INT16 iStartClickX;
 static INT16 iStartClickY;
 static INT16 iEndClickX;
@@ -90,8 +90,8 @@ static GUIButtonRef iScrollUp;
 static GUIButtonRef iScrollDown;
 static GUIButtonRef iOkWin;
 
-BOOLEAN fAllDone=FALSE;
-static BOOLEAN fButtonsPresent = FALSE;
+BOOLEAN fAllDone=false;
+static BOOLEAN fButtonsPresent = false;
 
 static SGPPoint SelWinSpacing;
 static SGPBox   g_sel_win_box;
@@ -243,7 +243,7 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 	DisplaySpec *pDSpec; // XXX HACK000E
 	UINT16 usNSpecs;
 
-	fAllDone = FALSE;
+	fAllDone = false;
 
 	DisableEditorTaskbar( );
 
@@ -256,7 +256,7 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 	iScrollUp   = MakeButton(UP_ICON,     EDITORDIR "/lguparrow.sti",   y += 40,  h, UpClkCallback,   "Scroll window up");
 	iScrollDown = MakeButton(DOWN_ICON,   EDITORDIR "/lgdownarrow.sti", y += h,   h, DwnClkCallback,  "Scroll window down");
 
-	fButtonsPresent = TRUE;
+	fButtonsPresent = true;
 
 	SelWinSpacing.iX = 2;
 	SelWinSpacing.iY = 2;
@@ -611,7 +611,7 @@ void ShutdownJA2SelectionWindow( void )
 	{
 		pDispList = TrashList(pDispList);
 	}
-	gfRenderWorld = TRUE;
+	gfRenderWorld = true;
 }
 
 
@@ -628,15 +628,15 @@ void RemoveJA2SelectionWindow( void )
 	RemoveButton(iScrollDown);
 	RemoveButton(iOkWin);
 
-	gfRenderSquareArea = FALSE;
+	gfRenderSquareArea = false;
 
 	if (pDispList != NULL)
 	{
 		pDispList = TrashList(pDispList);
 	}
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar = true;
 
-	gfOverheadMapDirty = TRUE;
+	gfOverheadMapDirty = true;
 	EnableEditorTaskbar( );
 }
 
@@ -747,7 +747,7 @@ static void SelWinClkCallback(GUI_BUTTON* button, UINT32 reason)
 		button->uiFlags |= BUTTON_CLICKED_ON;
 		iStartClickX = iClickX;
 		iStartClickY = iClickY;
-		gfRenderSquareArea = TRUE;
+		gfRenderSquareArea = true;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
@@ -755,22 +755,22 @@ static void SelWinClkCallback(GUI_BUTTON* button, UINT32 reason)
 
 		if ( gfRenderSquareArea )
 		{
-			gfRenderSquareArea = FALSE;
+			gfRenderSquareArea = false;
 			return;
 		}
 
 		// Code to figure out what image user wants goes here
 		pNode = pDispList;
 
-		fDone = FALSE;
+		fDone = false;
 		while( (pNode != NULL) && !fDone )
 		{
 			if ( (iClickX >= pNode->iX) && (iClickX < (pNode->iX + pNode->iWidth)) &&
 					(iClickY >= pNode->iY) && (iClickY < (pNode->iY + pNode->iHeight)) )
 			{
-				fDone = TRUE;
+				fDone = true;
 				if ( RemoveFromSelectionList(pNode) )
-					pNode->fChosen = FALSE;
+					pNode->fChosen = false;
 			}
 			else
 				pNode = pNode->pNext;
@@ -790,7 +790,7 @@ static void SelWinClkCallback(GUI_BUTTON* button, UINT32 reason)
 		iEndClickX = iClickX;
 		iEndClickY = iClickY;
 
-		gfRenderSquareArea = FALSE;
+		gfRenderSquareArea = false;
 
 		if (iEndClickX < iStartClickX) std::swap(iEndClickX, iStartClickX);
 		if (iEndClickY < iStartClickY) std::swap(iEndClickY, iStartClickY);
@@ -805,15 +805,15 @@ static void SelWinClkCallback(GUI_BUTTON* button, UINT32 reason)
 				// Code to figure out what image user wants goes here
 				pNode = pDispList;
 
-				fDone = FALSE;
+				fDone = false;
 				while( (pNode != NULL) && !fDone )
 				{
 					if ( (iClickX >= pNode->iX) && (iClickX < (pNode->iX + pNode->iWidth)) &&
 							(iClickY >= pNode->iY) && (iClickY < (pNode->iY + pNode->iHeight)) )
 					{
-						fDone = TRUE;
+						fDone = true;
 						AddToSelectionList(pNode);
-						pNode->fChosen = TRUE;
+						pNode->fChosen = true;
 						iXInc = (pNode->iX + pNode->iWidth) - iClickX;
 						if ( iYInc < ((pNode->iY + pNode->iHeight) - iClickY) )
 							iYInc = (pNode->iY + pNode->iHeight) - iClickY;
@@ -912,12 +912,12 @@ BOOLEAN ClearSelectionList( void )
 
 
 	if (pNumSelList == NULL )
-		return( FALSE );
+		return false;
 
 	pNode = pDispList;
 	while ( pNode != NULL )
 	{
-		pNode->fChosen = FALSE;
+		pNode->fChosen = false;
 		pNode = pNode->pNext;
 	}
 
@@ -925,7 +925,7 @@ BOOLEAN ClearSelectionList( void )
 		pSelList[ iIndex ].sCount = 0;
 
 	(*pNumSelList) = 0;
-	return( TRUE );
+	return true;
 }
 
 
@@ -935,7 +935,7 @@ static BOOLEAN RemoveFromSelectionList(DisplayList* pNode)
 {
 	// Abort if no entries in list (pretend we removed a node)
 	if ( (*pNumSelList) <= 0 )
-		return( TRUE );
+		return true;
 
 	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
@@ -948,13 +948,13 @@ static BOOLEAN RemoveFromSelectionList(DisplayList* pNode)
 					pSelList[ iIndex ] = pSelList[ iIndex + 1 ];
 
 				(*pNumSelList)--;
-				return TRUE;
+				return true;
 			}
 			break;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -971,7 +971,7 @@ INT32 GetRandomSelection( void )
 
 	if ( fDontUseRandom )
 	{
-		fDontUseRandom = FALSE;
+		fDontUseRandom = false;
 		return( iCurBank );
 	}
 
@@ -1001,11 +1001,11 @@ static BOOLEAN IsInSelectionList(const DisplayList* pNode)
 	{
 		if (pSelList[iIndex] == *pNode)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -1059,7 +1059,7 @@ static void OkClkCallback(GUI_BUTTON* button, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fAllDone = TRUE;
+		fAllDone = true;
 	}
 }
 
@@ -1073,7 +1073,7 @@ static void CnclClkCallback(GUI_BUTTON* button, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		fAllDone = TRUE;
+		fAllDone = true;
 		RestoreSelectionList();
 	}
 }
@@ -1161,7 +1161,7 @@ try
 		if (ds->ubType != DISPLAY_GRAPHIC) continue;
 
 		SGPVObject* const vo = ds->hVObject;
-		if (!vo) return FALSE;
+		if (!vo) return false;
 
 		UINT16 usETRLEStart = ds->usStart;
 		UINT16 usETRLEEnd   = ds->usEnd;
@@ -1171,8 +1171,8 @@ try
 			usETRLEEnd   = vo->SubregionCount() - 1;
 		}
 
-		if (usETRLEStart         >  usETRLEEnd) return FALSE;
-		if (vo->SubregionCount() <= usETRLEEnd) return FALSE;
+		if (usETRLEStart         >  usETRLEEnd) return false;
+		if (vo->SubregionCount() <= usETRLEEnd) return false;
 
 		for (UINT16 usETRLELoop = usETRLEStart; usETRLELoop <= usETRLEEnd; ++usETRLELoop)
 		{
@@ -1204,9 +1204,9 @@ try
 		}
 	}
 
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 /* Blit the actual object images in the display list on the selection window.

@@ -32,15 +32,15 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
-static BOOLEAN gfStartLookingForRubberBanding = FALSE;
+static BOOLEAN gfStartLookingForRubberBanding = false;
 static UINT16  gusRubberBandX                 = 0;
 static UINT16  gusRubberBandY                 = 0;
 
 
-BOOLEAN	gfBeginBurstSpreadTracking = FALSE;
+BOOLEAN	gfBeginBurstSpreadTracking = false;
 
-BOOLEAN	gfRTClickLeftHoldIntercepted = FALSE;
-static BOOLEAN gfRTHaveClickedRightWhileLeftDown = FALSE;
+BOOLEAN	gfRTClickLeftHoldIntercepted = false;
+static BOOLEAN gfRTHaveClickedRightWhileLeftDown = false;
 
 
 static void QueryRTLeftButton(UIEventKind* puiNewEvent);
@@ -58,11 +58,11 @@ void GetRTMouseButtonInput(UIEventKind* puiNewEvent)
 
 static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 {
-	//static BOOLEAN fClickHoldIntercepted = FALSE;
-	//static BOOLEAN fClickIntercepted = FALSE;
+	//static BOOLEAN fClickHoldIntercepted = false;
+	//static BOOLEAN fClickIntercepted = false;
 	static UINT32  uiSingleClickTime;
-	static BOOLEAN fDoubleClickIntercepted = FALSE;
-	static BOOLEAN fValidDoubleClickPossible = FALSE;
+	static BOOLEAN fDoubleClickIntercepted = false;
+	static BOOLEAN fValidDoubleClickPossible = false;
 
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
@@ -74,7 +74,7 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 		{
 			if ( !fMiddleButtonDown )
 			{
-				fMiddleButtonDown = TRUE;
+				fMiddleButtonDown = true;
 				RESETCOUNTER( MMOUSECLICK_DELAY_COUNTER );
 			}
 		}
@@ -82,13 +82,13 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 		{
 			if ( fMiddleButtonDown && !_KeyDown(SHIFT) )
 			{
-				// OK , FOR DOUBLE CLICKS - TAKE TIME STAMP & RECORD EVENT
+				// OK , FOR double CLICKS - TAKE TIME STAMP & RECORD EVENT
 				if ( ( GetJA2Clock() - uiSingleClickTime ) < 300 )
 				{
-					// CHECK HERE FOR DOUBLE CLICK EVENTS
+					// CHECK HERE FOR double CLICK EVENTS
 					if ( fValidDoubleClickPossible )
 					{
-						fDoubleClickIntercepted = TRUE;
+						fDoubleClickIntercepted = true;
 
 						// Do stuff....
 					}
@@ -97,7 +97,7 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 				// Capture time!
 				uiSingleClickTime = GetJA2Clock();
 
-				fValidDoubleClickPossible = TRUE;
+				fValidDoubleClickPossible = true;
 
 				if ( !fDoubleClickIntercepted )
 				{
@@ -107,10 +107,10 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 				}
 
 				// Reset flag
-				fMiddleButtonDown = FALSE;
-				//fClickHoldIntercepted = FALSE;
-				//fClickIntercepted = FALSE;
-				fDoubleClickIntercepted = FALSE;
+				fMiddleButtonDown = false;
+				//fClickHoldIntercepted = false;
+				//fClickIntercepted = false;
+				fDoubleClickIntercepted = false;
 
 
 				// Reset counter
@@ -123,9 +123,9 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 {
 	static UINT32 uiSingleClickTime;
-	static BOOLEAN fDoubleClickIntercepted = FALSE;
-	static BOOLEAN fValidDoubleClickPossible = FALSE;
-	static BOOLEAN fCanCheckForSpeechAdvance = FALSE;
+	static BOOLEAN fDoubleClickIntercepted = false;
+	static BOOLEAN fValidDoubleClickPossible = false;
+	static BOOLEAN fCanCheckForSpeechAdvance = false;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
 
@@ -141,8 +141,8 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 		{
 			if ( !fLeftButtonDown )
 			{
-				fLeftButtonDown = TRUE;
-				gfRTHaveClickedRightWhileLeftDown = FALSE;
+				fLeftButtonDown = true;
+				gfRTHaveClickedRightWhileLeftDown = false;
 				RESETCOUNTER( LMOUSECLICK_DELAY_COUNTER );
 
 				if (g_ui_message_overlay == NULL)
@@ -157,8 +157,8 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 									// OK, check for needing ammo
 									if (HandleUIReloading(sel))
 									{
-										gfRTClickLeftHoldIntercepted = TRUE;
-										//fLeftButtonDown              = FALSE;
+										gfRTClickLeftHoldIntercepted = true;
+										//fLeftButtonDown              = false;
 									}
 									else
 									{
@@ -170,7 +170,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 										}
 										else
 										{
-											gfRTClickLeftHoldIntercepted = TRUE;
+											gfRTClickLeftHoldIntercepted = true;
 
 											if (UIMouseOnValidAttackLocation(sel))
 											{
@@ -187,9 +187,9 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 
 							case MOVE_MODE:
 
-								gfUICanBeginAllMoveCycle = TRUE;
+								gfUICanBeginAllMoveCycle = true;
 
-								if ( !HandleCheckForExitArrowsInput( FALSE ) &&
+								if ( !HandleCheckForExitArrowsInput( false ) &&
 									gpItemPointer == NULL )
 								{
 									if (gUIFullTarget != NULL && guiUIFullTargetFlags & OWNED_MERC)
@@ -205,20 +205,20 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 										INT8 const bReturnCode = HandleMoveModeInteractiveClick(usMapPos);
 										if ( bReturnCode == -1 )
 										{
-											//gfRTClickLeftHoldIntercepted = TRUE;
+											//gfRTClickLeftHoldIntercepted = true;
 										}
 										else if ( bReturnCode == -2 )
 										{
 											//if ( gGameSettings.fOptions[ TOPTION_RTCONFIRM ] )
 											//{
 											//	*puiNewEvent = C_WAIT_FOR_CONFIRM;
-											//	gfPlotNewMovement = TRUE;
+											//	gfPlotNewMovement = true;
 											//}/
 											//else
 										}
 										else if ( bReturnCode == -3 )
 										{
-											gfRTClickLeftHoldIntercepted = TRUE;
+											gfRTClickLeftHoldIntercepted = true;
 										}
 										else if ( bReturnCode == 0 )
 										{
@@ -233,19 +233,19 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 														if ( !gGameSettings.fOptions[ TOPTION_RTCONFIRM ]  )
 														{
 															*puiNewEvent = C_WAIT_FOR_CONFIRM;
-															gfPlotNewMovement = TRUE;
+															gfPlotNewMovement = true;
 														}
 													}
 												}
 											}
 										}
 									}
-									//gfRTClickLeftHoldIntercepted = TRUE;
+									//gfRTClickLeftHoldIntercepted = true;
 								}
 								else
 								{
-									gfRTClickLeftHoldIntercepted = TRUE;
-									fIgnoreLeftUp = TRUE;
+									gfRTClickLeftHoldIntercepted = true;
+									fIgnoreLeftUp = true;
 								}
 
 								break;
@@ -256,7 +256,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 				}
 				if ( gfUIWaitingForUserSpeechAdvance )
 				{
-					fCanCheckForSpeechAdvance = TRUE;
+					fCanCheckForSpeechAdvance = true;
 				}
 
 			}
@@ -287,7 +287,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 								// Have we started this yet?
 								if ( !gfStartLookingForRubberBanding && !gRubberBandActive )
 								{
-									gfStartLookingForRubberBanding = TRUE;
+									gfStartLookingForRubberBanding = true;
 									gusRubberBandX = gusMouseXPos;
 									gusRubberBandY = gusMouseYPos;
 								}
@@ -296,10 +296,10 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 									// Have we moved....?
 									if (std::abs(gusMouseXPos - gusRubberBandX) > 10 || std::abs(gusMouseYPos - gusRubberBandY) > 10)
 									{
-										gfStartLookingForRubberBanding = FALSE;
+										gfStartLookingForRubberBanding = false;
 
 										// Stop scrolling:
-										gfIgnoreScrolling = TRUE;
+										gfIgnoreScrolling = true;
 
 										// Anchor cursor....
 										RestrictMouseToXYXY( 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y );
@@ -308,7 +308,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 										gRubberBandRect.iLeft = gusRubberBandX;
 										gRubberBandRect.iTop = gusRubberBandY;
 
-										gRubberBandActive = TRUE;
+										gRubberBandActive = true;
 
 										// ATE: If we have stopped scrolling.....
 										if (g_scroll_inertia)
@@ -343,15 +343,15 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 				if ( !fIgnoreLeftUp )
 				{
 					// set flag for handling single clicks
-					// OK , FOR DOUBLE CLICKS - TAKE TIME STAMP & RECORD EVENT
+					// OK , FOR double CLICKS - TAKE TIME STAMP & RECORD EVENT
 					if ( ( GetJA2Clock() - uiSingleClickTime ) < 300 )
 					{
-						// CHECK HERE FOR DOUBLE CLICK EVENTS
+						// CHECK HERE FOR double CLICK EVENTS
 						if ( fValidDoubleClickPossible )
 						{
 							if ( gpItemPointer == NULL )
 							{
-									fDoubleClickIntercepted = TRUE;
+									fDoubleClickIntercepted = true;
 
 									// First check if we clicked on a guy, if so, make selected if it's ours
 									if (sel != NULL)
@@ -361,7 +361,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 										//if (gAnimControl[s->usAnimState].uiFlags & ANIM_STATIONARY)
 										//if (sel->usAnimState == WALKING)
 										{
-											sel->fUIMovementFast = TRUE;
+											sel->fUIMovementFast = true;
 											*puiNewEvent = C_MOVE_MERC;
 										}
 									}
@@ -373,7 +373,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 					// Capture time!
 					uiSingleClickTime = GetJA2Clock();
 
-					fValidDoubleClickPossible = FALSE;
+					fValidDoubleClickPossible = false;
 
 					if ( !fDoubleClickIntercepted )
 					{
@@ -402,19 +402,19 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 									{
 										sel->sEndGridNo = usMapPos;
 
-										gfBeginBurstSpreadTracking = FALSE;
+										gfBeginBurstSpreadTracking = false;
 
 										if (sel->sEndGridNo != sel->sStartGridNo )
 										{
-											sel->fDoSpread = TRUE;
+											sel->fDoSpread = true;
 											PickBurstLocations(sel);
 											*puiNewEvent = CA_MERC_SHOOT;
 										}
 										else
 										{
-											sel->fDoSpread = FALSE;
+											sel->fDoSpread = false;
 										}
-										gfRTClickLeftHoldIntercepted = TRUE;
+										gfRTClickLeftHoldIntercepted = true;
 									}
 									break;
 								default:
@@ -433,7 +433,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 								}
 								else
 								{
-									if ( !HandleCheckForExitArrowsInput( TRUE ) )
+									if ( !HandleCheckForExitArrowsInput( true ) )
 									{
 										if ( gpItemPointer != NULL )
 										{
@@ -499,7 +499,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 
 															//if ( gGameSettings.fOptions[ TOPTION_RTCONFIRM ] )
 															{
-																fValidDoubleClickPossible = TRUE;
+																fValidDoubleClickPossible = true;
 															}
 															break;
 
@@ -509,7 +509,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 
 														case MOVE_MODE:
 
-															if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
+															if ( !HandleCheckForExitArrowsInput( false ) && gpItemPointer == NULL )
 															{
 																// First check if we clicked on a guy, if so, make selected if it's ours
 																if (gUIFullTarget != NULL && guiUIFullTargetFlags & OWNED_MERC)
@@ -551,10 +551,10 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																						}
 																					}
 
-																					gfIgnoreOnSelectedGuy = TRUE;
+																					gfIgnoreOnSelectedGuy = true;
 
 
-																					EndMultiSoldierSelection( FALSE );
+																					EndMultiSoldierSelection( false );
 																				}
 																			}
 																		}
@@ -585,33 +585,33 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																					sel->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 																				}
 
-																				gfIgnoreOnSelectedGuy = TRUE;
+																				gfIgnoreOnSelectedGuy = true;
 
-																				EndMultiSoldierSelection( FALSE );
+																				EndMultiSoldierSelection( false );
 																			}
 																		}
 																	}
-																	gfRTClickLeftHoldIntercepted = TRUE;
+																	gfRTClickLeftHoldIntercepted = true;
 																}
 																else
 																{
 																	INT8 const bReturnCode = HandleMoveModeInteractiveClick(usMapPos);
 																	if ( bReturnCode == -1 )
 																	{
-																		gfRTClickLeftHoldIntercepted = TRUE;
+																		gfRTClickLeftHoldIntercepted = true;
 																	}
 																	else if ( bReturnCode == -2 )
 																	{
 																		//if ( gGameSettings.fOptions[ TOPTION_RTCONFIRM ] )
 																		//{
 																		//	*puiNewEvent = C_WAIT_FOR_CONFIRM;
-																		//	gfPlotNewMovement = TRUE;
+																		//	gfPlotNewMovement = true;
 																		//}/
 																		//else
 																		//{
 																			if (sel != NULL)
 																			{
-																				BeginDisplayTimedCursor( GetInteractiveTileCursor( guiCurrentUICursor, TRUE ), 300 );
+																				BeginDisplayTimedCursor( GetInteractiveTileCursor( guiCurrentUICursor, true ), 300 );
 
 																				if (sel->usAnimState != RUNNING)
 																				{
@@ -619,10 +619,10 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																				}
 																				else if (GetCurInteractiveTile() != NULL)
 																				{
-																					sel->fUIMovementFast = TRUE;
+																					sel->fUIMovementFast = true;
 																					*puiNewEvent = C_MOVE_MERC;
 																				}
-																				fValidDoubleClickPossible = TRUE;
+																				fValidDoubleClickPossible = true;
 																			}
 																		//}
 																	}
@@ -636,14 +636,14 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																			{
 																				// Select guy
 																				*puiNewEvent = I_SELECT_MERC;
-																				gfRTClickLeftHoldIntercepted = TRUE;
+																				gfRTClickLeftHoldIntercepted = true;
 																			}
 																			else
 																			{
 																				if ( gsCurrentActionPoints == 0 && !gfUIAllMoveOn && !gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 																				{
 																					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-																					gfRTClickLeftHoldIntercepted = TRUE;
+																					gfRTClickLeftHoldIntercepted = true;
 																				}
 																				else
 																				{
@@ -655,7 +655,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																							// ATE: Select everybody in squad and make move!
 																							// Make move!
 																							*puiNewEvent = C_MOVE_MERC;
-																							fValidDoubleClickPossible = TRUE;
+																							fValidDoubleClickPossible = true;
 																						}
 																						else
 																						{
@@ -664,12 +664,12 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																							if (gGameSettings.fOptions[TOPTION_RTCONFIRM])
 																							{
 																								*puiNewEvent = C_WAIT_FOR_CONFIRM;
-																								gfPlotNewMovement = TRUE;
+																								gfPlotNewMovement = true;
 																							}
 																							else
 																							{
 																								*puiNewEvent = C_MOVE_MERC;
-																								fValidDoubleClickPossible = TRUE;
+																								fValidDoubleClickPossible = true;
 																							}
 																						}
 																					}
@@ -679,18 +679,18 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																						{
 																							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NOBODY_USING_REMOTE_STR]);
 																						}
-																						gfRTClickLeftHoldIntercepted = TRUE;
+																						gfRTClickLeftHoldIntercepted = true;
 																					}
 																				}
 																			}
 																		}
 																	}
 																}
-																//gfRTClickLeftHoldIntercepted = TRUE;
+																//gfRTClickLeftHoldIntercepted = true;
 															}
 															else
 															{
-																gfRTClickLeftHoldIntercepted = TRUE;
+																gfRTClickLeftHoldIntercepted = true;
 															}
 															break;
 
@@ -719,12 +719,12 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 
 														case TALKINGMENU_MODE:
 
-															//HandleTalkingMenuEscape( TRUE );
+															//HandleTalkingMenuEscape( true );
 															break;
 
 														case EXITSECTORMENU_MODE:
 
-															RemoveSectorExitMenu( FALSE );
+															RemoveSectorExitMenu( false );
 															break;
 
 														case OPENDOOR_MENU_MODE:
@@ -754,12 +754,12 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 				}
 
 				// Reset flag
-				fLeftButtonDown = FALSE;
-				fIgnoreLeftUp   = FALSE;
-				gfRTClickLeftHoldIntercepted = FALSE;
-				fDoubleClickIntercepted = FALSE;
-				fCanCheckForSpeechAdvance = FALSE;
-				gfStartLookingForRubberBanding = FALSE;
+				fLeftButtonDown = false;
+				fIgnoreLeftUp   = false;
+				gfRTClickLeftHoldIntercepted = false;
+				fDoubleClickIntercepted = false;
+				fCanCheckForSpeechAdvance = false;
+				gfStartLookingForRubberBanding = false;
 
 				// Reset counter
 				RESETCOUNTER( LMOUSECLICK_DELAY_COUNTER );
@@ -772,16 +772,16 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 	else
 	{
 		// Set mouse down to false
-		//fLeftButtonDown = FALSE;
+		//fLeftButtonDown = false;
 
-		//fCanCheckForSpeechAdvance = FALSE;
+		//fCanCheckForSpeechAdvance = false;
 
 		// OK, handle special cases like if we are dragging and holding for a burst spread and
 		// release mouse over another mouse region
 		if ( gfBeginBurstSpreadTracking )
 		{
-			if (sel != NULL) sel->fDoSpread = FALSE;
-			gfBeginBurstSpreadTracking = FALSE;
+			if (sel != NULL) sel->fDoSpread = false;
+			gfBeginBurstSpreadTracking = false;
 		}
 	}
 }
@@ -789,11 +789,11 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 
 static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 {
-	static BOOLEAN fClickHoldIntercepted = FALSE;
-	static BOOLEAN fClickIntercepted = FALSE;
+	static BOOLEAN fClickHoldIntercepted = false;
+	static BOOLEAN fClickIntercepted = false;
 	static UINT32  uiSingleClickTime;
-	static BOOLEAN fDoubleClickIntercepted = FALSE;
-	static BOOLEAN fValidDoubleClickPossible = FALSE;
+	static BOOLEAN fDoubleClickIntercepted = false;
+	static BOOLEAN fValidDoubleClickPossible = false;
 
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
@@ -805,15 +805,15 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 		{
 			if ( !fRightButtonDown )
 			{
-				fRightButtonDown = TRUE;
+				fRightButtonDown = true;
 				RESETCOUNTER( RMOUSECLICK_DELAY_COUNTER );
 			}
 
 			// CHECK COMBINATIONS
 			if ( fLeftButtonDown )
 			{
-				//fIgnoreLeftUp = TRUE;
-				gfRTHaveClickedRightWhileLeftDown = TRUE;
+				//fIgnoreLeftUp = true;
+				gfRTHaveClickedRightWhileLeftDown = true;
 
 				if ( gpItemPointer == NULL )
 				{
@@ -828,7 +828,7 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 
 								if ( !gfUIAllMoveOn )
 								{
-									fValidDoubleClickPossible = TRUE;
+									fValidDoubleClickPossible = true;
 
 									// OK, our first right-click is an all-cycle
 									if ( gfUICanBeginAllMoveCycle )
@@ -837,19 +837,19 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 										if (!UIOKMoveDestination(sel, usMapPos))
 										{
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANT_MOVE_THERE_STR ] );
-											gfRTClickLeftHoldIntercepted = TRUE;
+											gfRTClickLeftHoldIntercepted = true;
 										}
 										//else if ( gsCurrentActionPoints == 0 )
 										//{
 										//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-										//	gfRTClickLeftHoldIntercepted = TRUE;
+										//	gfRTClickLeftHoldIntercepted = true;
 										//}
 										else
 										{
 											*puiNewEvent = M_CYCLE_MOVE_ALL;
 										}
 									}
-									fClickHoldIntercepted = TRUE;
+									fClickHoldIntercepted = true;
 								}
 							default:
 								break;
@@ -858,10 +858,10 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 						// ATE: Added cancel of burst mode....
 						if ( gfBeginBurstSpreadTracking )
 						{
-							gfBeginBurstSpreadTracking = FALSE;
-							gfRTClickLeftHoldIntercepted = TRUE;
-							sel->fDoSpread = FALSE;
-							fClickHoldIntercepted = TRUE;
+							gfBeginBurstSpreadTracking = false;
+							gfRTClickLeftHoldIntercepted = true;
+							sel->fDoSpread = false;
+							fClickHoldIntercepted = true;
 							*puiNewEvent = A_END_ACTION;
 							gCurrentUIMode = MOVE_MODE;
 						}
@@ -894,11 +894,11 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 									!(guiUIFullTargetFlags & DEAD_MERC))
 								{
 									PopupAssignmentMenuInTactical();
-									fClickHoldIntercepted = TRUE;
+									fClickHoldIntercepted = true;
 								}
 								else if (GetSelectedMan() != NULL)
 								{
-									fShowAssignmentMenu = FALSE;
+									fShowAssignmentMenu = false;
 									CreateDestroyAssignmentPopUpBoxes();
 									DetermineWhichAssignmentMenusCanBeShown();
 
@@ -906,7 +906,7 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 									if ( !fClickHoldIntercepted )
 									{
 										*puiNewEvent = U_MOVEMENT_MENU;
-										fClickHoldIntercepted = TRUE;
+										fClickHoldIntercepted = true;
 									}
 								}
 								break;
@@ -924,13 +924,13 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 		{
 			if ( fRightButtonDown )
 			{
-				// OK , FOR DOUBLE CLICKS - TAKE TIME STAMP & RECORD EVENT
+				// OK , FOR double CLICKS - TAKE TIME STAMP & RECORD EVENT
 				if ( ( GetJA2Clock() - uiSingleClickTime ) < 300 )
 				{
-					// CHECK HERE FOR DOUBLE CLICK EVENTS
+					// CHECK HERE FOR double CLICK EVENTS
 					if ( fValidDoubleClickPossible )
 					{
-						fDoubleClickIntercepted = TRUE;
+						fDoubleClickIntercepted = true;
 
 						// Do stuff....
 						// OK, check if left button down...
@@ -943,7 +943,7 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 									// ATE:
 									if (GetSelectedMan() != NULL)
 									{
-										//fIgnoreLeftUp = TRUE;
+										//fIgnoreLeftUp = true;
 										switch( gCurrentUIMode )
 										{
 											case CONFIRM_MOVE_MODE:
@@ -967,7 +967,7 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 				// Capture time!
 				uiSingleClickTime = GetJA2Clock();
 
-				fValidDoubleClickPossible = TRUE;
+				fValidDoubleClickPossible = true;
 
 				if ( !fDoubleClickIntercepted )
 				{
@@ -981,7 +981,7 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 								// ATE:
 								if (GetSelectedMan() != NULL)
 								{
-									//fIgnoreLeftUp = TRUE;
+									//fIgnoreLeftUp = true;
 									switch( gCurrentUIMode )
 									{
 										case CONFIRM_MOVE_MODE:
@@ -989,8 +989,8 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 
 											if ( gfUIAllMoveOn )
 											{
-												gfUIAllMoveOn = FALSE;
-												gfUICanBeginAllMoveCycle = TRUE;
+												gfUIAllMoveOn = false;
+												gfUICanBeginAllMoveCycle = true;
 											}
 										default:
 											break;
@@ -1022,24 +1022,24 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 										case TALKCURSOR_MODE:
 											// We have here a change to action mode
 											*puiNewEvent = M_CHANGE_TO_ACTION;
-											fClickIntercepted = TRUE;
+											fClickIntercepted = true;
 											break;
 
 										case ACTION_MODE:
 											// We have here a change to move mode
 											*puiNewEvent = A_END_ACTION;
-											fClickIntercepted = TRUE;
+											fClickIntercepted = true;
 											break;
 
 										case CONFIRM_ACTION_MODE:
 											HandleRightClickAdjustCursor(sel, usMapPos);
-											fClickIntercepted = TRUE;
+											fClickIntercepted = true;
 											break;
 
 										case MENU_MODE:
 											// If we get a hit here and we're in menu mode, quit the menu mode
 											EndMenuEvent( guiCurrentEvent );
-											fClickIntercepted = TRUE;
+											fClickIntercepted = true;
 											break;
 
 										case HANDCURSOR_MODE:
@@ -1070,10 +1070,10 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 				}
 
 				// Reset flag
-				fRightButtonDown = FALSE;
-				fClickHoldIntercepted = FALSE;
-				fClickIntercepted = FALSE;
-				fDoubleClickIntercepted = FALSE;
+				fRightButtonDown = false;
+				fClickHoldIntercepted = false;
+				fClickIntercepted = false;
+				fDoubleClickIntercepted = false;
 
 
 				// Reset counter
@@ -1190,7 +1190,7 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 			if ( usMapPos != usOldMapPos )
 			{
 				// Set off ALL move....
-				gfUIAllMoveOn = FALSE;
+				gfUIAllMoveOn = false;
 			}
 
 			MoveTargetSoldier = NULL;
@@ -1202,7 +1202,7 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 				// get cursor for item
 				ItemCursor const ubItemCursor = GetActionModeCursor(sel);
 
-				if (IsValidJumpLocation(sel, usMapPos, TRUE))
+				if (IsValidJumpLocation(sel, usMapPos, true))
 				{
 					*puiNewEvent = JP_ON_TERRAIN;
 					gsJumpOverGridNo = usMapPos;
@@ -1213,7 +1213,7 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 					const SOLDIERTYPE* const tgt = gUIFullTarget;
 					if (tgt != NULL)
 					{
-						if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) &&
+						if (IsValidTalkableNPC(tgt, false, false, false) && !_KeyDown(SHIFT) &&
 							!AM_AN_EPC(sel) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
 						{
 							MoveTargetSoldier = gUIFullTarget;
@@ -1276,7 +1276,7 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 			{
 				// Switch event out of confirm mode
 				// Set off ALL move....
-				gfUIAllMoveOn = FALSE;
+				gfUIAllMoveOn = false;
 
 				*puiNewEvent = A_CHANGE_TO_MOVE;
 			}
@@ -1292,8 +1292,8 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 
 				if (sel->sEndGridNo != sel->sStartGridNo && fLeftButtonDown)
 				{
-					sel->fDoSpread             = TRUE;
-					gfBeginBurstSpreadTracking = TRUE;
+					sel->fDoSpread             = true;
+					gfBeginBurstSpreadTracking = true;
 				}
 
 				if (sel->fDoSpread)
@@ -1344,7 +1344,7 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 	static GridNo gLastUpGridNo = NOWHERE;
 	static SOLDIERTYPE* gLastDownUIFullTarget = NULL;
 
-	if (reason & MSYS_CALLBACK_REASON_TFINGER_DOUBLETAP) {
+	if (reason & MSYS_CALLBACK_REASON_TFINGER_doubleTAP) {
 		if (gLastUpGridNo != NOWHERE && gLastUpGridNo == guiCurrentCursorGridNo) {
 			switch( gCurrentUIMode )
 			{
@@ -1364,11 +1364,11 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 			switch( gCurrentUIMode )
 			{
 				case CONFIRM_MOVE_MODE:
-					gfPlotNewMovement = TRUE;
+					gfPlotNewMovement = true;
 					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 					break;
 				case CONFIRM_ACTION_MODE:
-					gfPlotNewMovement = TRUE;
+					gfPlotNewMovement = true;
 					guiPendingOverrideEvent = M_CHANGE_TO_ACTION;
 				default:
 					break;
@@ -1412,7 +1412,7 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 
 		if ( gpItemPointer != NULL ) {
 			// If we went up with item in hand change to confirm mode
-			gfPlotNewMovement = TRUE;
+			gfPlotNewMovement = true;
 			guiPendingOverrideEvent = C_WAIT_FOR_CONFIRM;
 		} else {
 			switch( gCurrentUIMode )
@@ -1429,10 +1429,10 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 						// If we went down and up on the same merc select it
 						guiPendingOverrideEvent = I_SELECT_MERC;
 					} else if (gCurrentUIMode == MOVE_MODE) {
-						if ( !HandleCheckForExitArrowsInput(TRUE) )
+						if ( !HandleCheckForExitArrowsInput(true) )
 						{
 							// If we went up in movement mode, change to confirm movement mode
-							gfPlotNewMovement = TRUE;
+							gfPlotNewMovement = true;
 							guiPendingOverrideEvent = C_WAIT_FOR_CONFIRM;
 						}
 					}
@@ -1440,7 +1440,7 @@ void TacticalViewPortTouchCallbackRT(MOUSE_REGION* region, UINT32 reason) {
 				case ACTION_MODE:
 				case CONFIRM_ACTION_MODE:
 					// If we went up in action mode, change to confirm action mode
-					gfPlotNewMovement = TRUE;
+					gfPlotNewMovement = true;
 					guiPendingOverrideEvent = CA_ON_TERRAIN;
 					break;
 				case ADJUST_STANCE_MODE:

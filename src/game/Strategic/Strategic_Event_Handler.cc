@@ -38,12 +38,12 @@ static BOOLEAN CloseCrate(const SGPSector& sector, const GridNo grid_no)
 	if (gWorldSector == sector)
 	{
 		SetOpenableStructureToClosed(grid_no, 0);
-		return TRUE;
+		return true;
 	}
 	else
 	{
-		ChangeStatusOfOpenableStructInUnloadedSector(sector, grid_no, FALSE);
-		return FALSE;
+		ChangeStatusOfOpenableStructInUnloadedSector(sector, grid_no, false);
+		return false;
 	}
 }
 
@@ -73,7 +73,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		if (Random(100) < 50)
 		{
 			// lose the whole shipment!
-			shipment->fActive = FALSE;
+			shipment->fActive = false;
 			SetFactTrue(FACT_LAST_SHIPMENT_CRASHED);
 			return;
 		}
@@ -89,13 +89,13 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	else if (gTownLoyalty[destSector.bNameId].ubRating < 20 || destSector.fEnemyControlled)
 	{
 		// loss of the whole shipment
-		shipment->fActive = FALSE;
+		shipment->fActive = false;
 		SetFactTrue(FACT_AGENTS_PREVENTED_SHIPMENT);
 		return;
 	}
 
 	//Must get the total number of items ( all item types plus how many of each item type ordered )
-	BOOLEAN fThisShipmentIsFromJohnKulba = FALSE; //if it is, dont add an email
+	BOOLEAN fThisShipmentIsFromJohnKulba = false; //if it is, dont add an email
 	UINT16  usNumberOfItems              = 0;
 	for (UINT8 i = 0; i < shipment->ubNumberPurchases; ++i)
 	{
@@ -108,7 +108,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		if (purchase->usItemIndex == AUTOMAG_III)
 		{
 			//This shipment is from John Kulba, dont add an email from bobby ray
-			fThisShipmentIsFromJohnKulba = TRUE;
+			fThisShipmentIsFromJohnKulba = true;
 		}
 	}
 
@@ -145,8 +145,8 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 
 	UINT32  uiCount               = 0;
 	UINT32  uiStolenCount         = 0;
-	BOOLEAN fPablosStoleSomething = FALSE;
-	BOOLEAN fPablosStoleLastItem  = FALSE;
+	BOOLEAN fPablosStoleSomething = false;
+	BOOLEAN fPablosStoleLastItem  = false;
 	for (UINT8 i = 0; i < shipment->ubNumberPurchases; ++i)
 	{
 		const BobbyRayPurchaseStruct* const purchase = &shipment->BobbyRayPurchase[i];
@@ -179,12 +179,12 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 				if (!fPablosStoleLastItem && uiChanceOfTheft > 0 && Random(100) < uiChanceOfTheft + ubItemsPurchased)
 				{
 					++uiStolenCount;
-					fPablosStoleSomething = TRUE;
-					fPablosStoleLastItem  = TRUE;
+					fPablosStoleSomething = true;
+					fPablosStoleLastItem  = true;
 				}
 				else
 				{
-					fPablosStoleLastItem = FALSE;
+					fPablosStoleLastItem = false;
 
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
@@ -206,12 +206,12 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 				{
 					pStolenObject[uiStolenCount] = Object;
 					++uiStolenCount;
-					fPablosStoleSomething = TRUE;
-					fPablosStoleLastItem  = TRUE;
+					fPablosStoleSomething = true;
+					fPablosStoleLastItem  = true;
 				}
 				else
 				{
-					fPablosStoleLastItem = FALSE;
+					fPablosStoleLastItem = false;
 
 					/* else we are not currently in the sector, so we build an array of
 					 * items to add in one lump add the item to the item array */
@@ -323,7 +323,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	}
 
 	//We have received the shipment so fActice becomes fALSE
-	shipment->fActive = FALSE;
+	shipment->fActive = false;
 
 	//Stop time compression the game
 	StopTimeCompression();
@@ -476,7 +476,7 @@ static void HandlePossiblyDamagedPackage(void)
 void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 {
 	UINT32				uiTotalCash = 0;
-	BOOLEAN				fKingpinWillDiscover = FALSE, fKingpinDiscovers = FALSE;
+	BOOLEAN				fKingpinWillDiscover = false, fKingpinDiscovers = false;
 
 	// money in D5b1 must be less than 30k
 	CFOR_EACH_WORLD_ITEM(wi)
@@ -488,7 +488,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 	// This function should be called every time sector D5/B1 is unloaded!
 	if ( fFirstCheck )
 	{
-		if ( CheckFact( FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE, 0 ) == TRUE )
+		if ( CheckFact( FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE, 0 ) == true )
 		{
 			// unnecessary
 			return;
@@ -503,7 +503,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		}
 	}
 
-	if ( CheckFact( FACT_KINGPIN_DEAD, 0 ) == TRUE )
+	if ( CheckFact( FACT_KINGPIN_DEAD, 0 ) == true )
 	{
 		return;
 	}
@@ -513,11 +513,11 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		if ( fFirstCheck )
 		{
 			// add event to make Kingpin aware, two days from now
-			fKingpinWillDiscover = TRUE;
+			fKingpinWillDiscover = true;
 		}
 		else
 		{
-			fKingpinDiscovers = TRUE;
+			fKingpinDiscovers = true;
 		}
 	}
 
@@ -531,7 +531,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// remove all money from map
 		FOR_EACH_WORLD_ITEM(wi)
 		{
-			if (wi.o.usItem == MONEY) wi.fExists = FALSE; // remove!
+			if (wi.o.usItem == MONEY) wi.fExists = false; // remove!
 		}
 	}
 	else if ( fKingpinDiscovers )
@@ -578,7 +578,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 				if (!CheckFact(FACT_KINGPIN_KNOWS_MONEY_GONE, 0))
 				{
 					// check for real whether to start quest
-					CheckForKingpinsMoneyMissing( FALSE );
+					CheckForKingpinsMoneyMissing( false );
 				}
 				else if (!CheckFact(FACT_KINGPIN_DEAD, 0))
 				{
@@ -701,9 +701,9 @@ void HandleEarlyMorningEvents( void )
 		if (!profile->isNPCorRPC()) continue;
 
 		MERCPROFILESTRUCT& p = profile->getStruct();
-		p.bFriendlyOrDirectDefaultResponseUsedRecently = FALSE;
-		p.bRecruitDefaultResponseUsedRecently = FALSE;
-		p.bThreatenDefaultResponseUsedRecently = FALSE;
+		p.bFriendlyOrDirectDefaultResponseUsedRecently = false;
+		p.bRecruitDefaultResponseUsedRecently = false;
+		p.bThreatenDefaultResponseUsedRecently = false;
 		p.ubMiscFlags2 &= (~PROFILE_MISC_FLAG2_BANDAGED_TODAY);
 	}
 	// reset Father Walker's drunkenness level!
@@ -906,7 +906,7 @@ void CheckForMissingHospitalSupplies( void )
 		}
 	}
 
-	if ( CheckFact( FACT_PLAYER_STOLE_MEDICAL_SUPPLIES_AGAIN, 0 ) == TRUE )
+	if ( CheckFact( FACT_PLAYER_STOLE_MEDICAL_SUPPLIES_AGAIN, 0 ) == true )
 	{
 		// player returning stuff!  if back to full then can operate
 		if ( ubMedicalObjects >= gubCambriaMedicalObjects )
@@ -949,7 +949,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	if (StrategicMap[SGPSector(shippingDest->getDeliverySector()).AsStrategicIndex()].fEnemyControlled)
 	{
 		//the items disappear
-		gpNewBobbyrShipments[ ubOrderNum ].fActive = FALSE;
+		gpNewBobbyrShipments[ ubOrderNum ].fActive = false;
 		return;
 	}
 
@@ -1012,7 +1012,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	}
 
 	//mark that the shipment has arrived
-	gpNewBobbyrShipments[ ubOrderNum ].fActive = FALSE;
+	gpNewBobbyrShipments[ ubOrderNum ].fActive = false;
 
 	if (shippingDest->emailOffset) {
 		//Add an email telling the user the shipment is there

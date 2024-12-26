@@ -113,7 +113,7 @@ bool Soldier::handlePendingAction(bool inCombat)
 				// now go into it
 				if (sGridNo != (INT16)mSoldier->uiPendingActionData4)
 				{
-					if (NewOKDestination(mSoldier, (INT16)mSoldier->uiPendingActionData4, TRUE, mSoldier->bLevel))
+					if (NewOKDestination(mSoldier, (INT16)mSoldier->uiPendingActionData4, true, mSoldier->bLevel))
 					{
 						// GOTO NEW TILE!
 						SoldierPickupItem(mSoldier, mSoldier->uiPendingActionData1, (INT16)mSoldier->uiPendingActionData4, mSoldier->bPendingActionData3);
@@ -139,7 +139,7 @@ bool Soldier::handlePendingAction(bool inCombat)
 	}
 	else if (mSoldier->ubPendingAction == MERC_TALK)
 	{
-		PlayerSoldierStartTalking(mSoldier, (UINT8)mSoldier->uiPendingActionData1, TRUE);
+		PlayerSoldierStartTalking(mSoldier, (UINT8)mSoldier->uiPendingActionData1, true);
 		removePendingAction();
 	}
 	else if (mSoldier->ubPendingAction == MERC_DROPBOMB)
@@ -152,7 +152,7 @@ bool Soldier::handlePendingAction(bool inCombat)
 		//mSoldier->bDesiredDirection = mSoldier->bPendingActionData3;
 		EVENT_SetSoldierDesiredDirection(mSoldier, mSoldier->bPendingActionData3);
 
-		EVENT_InitNewSoldierAnim(mSoldier, STEAL_ITEM, 0, FALSE);
+		EVENT_InitNewSoldierAnim(mSoldier, STEAL_ITEM, 0, false);
 		removePendingAction();
 	}
 	else if (mSoldier->ubPendingAction == MERC_KNIFEATTACK)

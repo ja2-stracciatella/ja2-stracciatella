@@ -138,7 +138,7 @@ void DecSmartBrokenWallUIValue()
 
 BOOLEAN CalcWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
 {
-	return FALSE;
+	return false;
 }
 
 BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UINT16 *pusIndex )
@@ -150,7 +150,7 @@ BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UIN
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartDoorIndex( usWallOrientation ) - 1;
 		*pusDoorType = CalcSmartDoorType();
-		return TRUE;
+		return true;
 	}
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
@@ -158,9 +158,9 @@ BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UIN
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartDoorIndex( usWallOrientation ) - 1;
 		*pusDoorType = CalcSmartDoorType();
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
@@ -173,7 +173,7 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 		*pusWallType = GetWallType(pWall, iMapIndex);
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartWindowIndex( usWallOrientation ) - 1;
-		return TRUE;
+		return true;
 	}
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
@@ -181,9 +181,9 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 		*pusWallType = GetWallType(pWall, iMapIndex);
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartWindowIndex( usWallOrientation ) - 1;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
@@ -194,7 +194,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 	{
 		*pusWallType = 0xffff;
 		*pusIndex = 0xffff;	//but it won't draw it.
-		return TRUE;
+		return true;
 	}
 
 	pWall = GetVerticalWall( iMapIndex );
@@ -203,7 +203,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 		*pusWallType = GetWallType(pWall, iMapIndex);
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartBrokenWallIndex( usWallOrientation ) - 1;
-		return TRUE;
+		return true;
 	}
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
@@ -211,9 +211,9 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 		*pusWallType = GetWallType(pWall, iMapIndex);
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartBrokenWallIndex( usWallOrientation ) - 1;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 

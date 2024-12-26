@@ -105,10 +105,10 @@ static SGPVObject* guiDoneButton;
 
 static UINT8   gubPageNum;
 static UINT8   gubDrawOldMerc;
-static UINT8   gfDrawPopUpBox = FALSE;
+static UINT8   gfDrawPopUpBox = false;
 static BOOLEAN gfDestroyPopUpBox;
 static BOOLEAN gfFaceMouseRegionsActive;
-static BOOLEAN gfReDrawScreen = FALSE;
+static BOOLEAN gfReDrawScreen = false;
 
 static BOOLEAN AimArchivesSubPagesVisitedFlag[3] = {0, 0, 0};
 
@@ -125,11 +125,11 @@ static GUIButtonRef guiAlumniPageButton[3];
 
 void EnterInitAimArchives()
 {
-	gfDrawPopUpBox=FALSE;
-	gfDestroyPopUpBox = FALSE;
+	gfDrawPopUpBox=false;
+	gfDestroyPopUpBox = false;
 
 	std::fill_n(AimArchivesSubPagesVisitedFlag, 3, 0);
-	AimArchivesSubPagesVisitedFlag[0] = TRUE;
+	AimArchivesSubPagesVisitedFlag[0] = true;
 }
 
 
@@ -140,8 +140,8 @@ static void InitAlumniFaceRegions(void);
 
 void EnterAimArchives()
 {
-	gfDrawPopUpBox    = FALSE;
-	gfDestroyPopUpBox = FALSE;
+	gfDrawPopUpBox    = false;
+	gfDestroyPopUpBox = false;
 
 	InitAimDefaults();
 	InitAimMenuBar();
@@ -201,8 +201,8 @@ void ExitAimArchives()
 	giCurrentSubPage = gubPageNum;
 
 	CreateDestroyDoneMouseRegion(0);
-	gfDestroyPopUpBox = FALSE;
-	gfDrawPopUpBox    = FALSE;
+	gfDestroyPopUpBox = false;
+	gfDrawPopUpBox    = false;
 }
 
 
@@ -211,17 +211,17 @@ void HandleAimArchives()
 	if( gfReDrawScreen )
 	{
 		//RenderAimArchives();
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 
-		gfReDrawScreen = FALSE;
+		gfReDrawScreen = false;
 	}
 	if( gfDestroyPopUpBox )
 	{
-		gfDestroyPopUpBox = FALSE;
+		gfDestroyPopUpBox = false;
 
 		CreateDestroyDoneMouseRegion(0);
 		InitAlumniFaceRegions();
-		gfDestroyPopUpBox = FALSE;
+		gfDestroyPopUpBox = false;
 	}
 }
 
@@ -270,8 +270,8 @@ static void SelectAlumniFaceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason
 {
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		gfDrawPopUpBox = TRUE;
-		gfReDrawScreen = TRUE;
+		gfDrawPopUpBox = true;
+		gfReDrawScreen = true;
 
 		gubDrawOldMerc = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 	}
@@ -291,11 +291,11 @@ static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		RemoveAimAlumniFaceRegion();
 		ChangingAimArchiveSubPage(ubRetValue);
 		gubPageNum = ubRetValue;
-		gfReDrawScreen = TRUE;
-		gfDestroyPopUpBox = TRUE;
+		gfReDrawScreen = true;
+		gfDestroyPopUpBox = true;
 		ResetAimArchiveButtons();
 		DisableAimArchiveButton();
-		gfDrawPopUpBox = FALSE;
+		gfDrawPopUpBox = false;
 	}
 }
 
@@ -378,7 +378,7 @@ static void DisplayAlumniOldMercPopUp(void)
 static void InitAlumniFaceRegions(void)
 {
 	if (gfFaceMouseRegionsActive) return;
-	gfFaceMouseRegionsActive = TRUE;
+	gfFaceMouseRegionsActive = true;
 
 	INT32 const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
 	INT32 const n_faces  = std::min(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
@@ -399,7 +399,7 @@ static void InitAlumniFaceRegions(void)
 static void RemoveAimAlumniFaceRegion(void)
 {
 	if (!gfFaceMouseRegionsActive) return;
-	gfFaceMouseRegionsActive = FALSE;
+	gfFaceMouseRegionsActive = false;
 
 	size_t const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
 	size_t const n_faces  = std::min(OLD_MERCS_COUNT - start, size_t(MAX_NUMBER_OLD_MERCS_ON_PAGE));
@@ -415,7 +415,7 @@ static void SelectAlumniDoneRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason
 
 static void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 {
-	static BOOLEAN DoneRegionCreated=FALSE;
+	static BOOLEAN DoneRegionCreated=false;
 
 	if( ( !DoneRegionCreated ) && ( usPosY != 0) )
 	{
@@ -424,13 +424,13 @@ static void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 					(AIM_ALUMNI_DONE_X-2 + AIM_ALUMNI_DONE_WIDTH),
 					(INT16)(usPosY + AIM_ALUMNI_DONE_HEIGHT), MSYS_PRIORITY_HIGH,
 					CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniDoneRegionCallBack);
-		DoneRegionCreated = TRUE;
+		DoneRegionCreated = true;
 	}
 
 	if( DoneRegionCreated && usPosY == 0)
 	{
 		MSYS_RemoveRegion( &gDoneRegion );
-		DoneRegionCreated = FALSE;
+		DoneRegionCreated = false;
 	}
 }
 
@@ -439,27 +439,27 @@ static void SelectAlumniDoneRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason
 {
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		gfDestroyPopUpBox = TRUE;
-		gfDrawPopUpBox = FALSE;
-		gfReDrawScreen = TRUE;
+		gfDestroyPopUpBox = true;
+		gfDrawPopUpBox = false;
+		gfReDrawScreen = true;
 	}
 }
 
 
 static void ChangingAimArchiveSubPage(UINT8 ubSubPageNumber)
 {
-	fLoadPendingFlag = TRUE;
+	fLoadPendingFlag = true;
 
 	if (!AimArchivesSubPagesVisitedFlag[ubSubPageNumber])
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = FALSE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = false;
 
-		AimArchivesSubPagesVisitedFlag[ ubSubPageNumber ] = TRUE;
+		AimArchivesSubPagesVisitedFlag[ ubSubPageNumber ] = true;
 	}
 	else
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = TRUE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = true;
 	}
 }

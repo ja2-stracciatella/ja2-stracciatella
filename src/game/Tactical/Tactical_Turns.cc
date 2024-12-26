@@ -46,7 +46,7 @@ void HandleRPCDescription()
 	}
 
 	if (--ts.bGuideDescriptionCountDown != 0) return;
-	ts.fCountingDownForGuideDescription = FALSE;
+	ts.fCountingDownForGuideDescription = false;
 
 	// Count how many RPC guys we have
 	UINT8        n_mercs = 0;
@@ -107,7 +107,7 @@ void HandleTacticalEndTurn()
 	// First exit if we are not in realtime combat or realtime noncombat
 	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		BeginLoggingForBleedMeToos(TRUE);
+		BeginLoggingForBleedMeToos(true);
 
 		// First pass:
 		// Loop through our own mercs:
@@ -138,7 +138,7 @@ void HandleTacticalEndTurn()
 			}
 		}
 
-		BeginLoggingForBleedMeToos(FALSE);
+		BeginLoggingForBleedMeToos(false);
 
 		// We're looping through only mercs in tactical engine, ignoring our mercs
 		// because they were done earlier

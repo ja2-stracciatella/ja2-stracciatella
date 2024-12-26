@@ -342,7 +342,7 @@ PathSt* pTempHelicopterPath = NULL;
 PathSt* pTempCharacterPath = NULL;
 
 // draw temp path?
-BOOLEAN fDrawTempHeliPath = FALSE;
+BOOLEAN fDrawTempHeliPath = false;
 
 // the map arrows graphics
 static SGPVObject* guiMAPCURSORS;
@@ -358,7 +358,7 @@ INT8 bSelectedContractChar = -1;
 
 
 // has the temp path for character or helicopter been already drawn?
-BOOLEAN   fTempPathAlreadyDrawn = FALSE;
+BOOLEAN   fTempPathAlreadyDrawn = false;
 
 // the regions for the mapscreen militia box
 static MOUSE_REGION gMapScreenMilitiaBoxRegions[9];
@@ -379,11 +379,11 @@ static INT16 sSectorMilitiaMapSectorOutline = -1;
 
 
 // have any nodes in the current path list been deleted?
-BOOLEAN fDeletedNode = FALSE;
+BOOLEAN fDeletedNode = false;
 
 static UINT16 gusUndergroundNearBlack;
 
-BOOLEAN gfMilitiaPopupCreated = FALSE;
+BOOLEAN gfMilitiaPopupCreated = false;
 
 UINT32 guiAnimateRouteBaseTime = 0;
 UINT32 guiPotHeliPathBaseTime = 0;
@@ -828,10 +828,10 @@ static void InitializePalettesForMap(SGPPaletteEntry const * const pal)
 {
 	if (pMapDKGreenPalette) return;
 
-	pMapLTRedPalette   = Create16BPPPaletteShaded(pal, 400,   0, 0, TRUE);
-	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
-	pMapLTGreenPalette = Create16BPPPaletteShaded(pal,   0, 400, 0, TRUE);
-	pMapDKGreenPalette = Create16BPPPaletteShaded(pal,   0, 200, 0, TRUE);
+	pMapLTRedPalette   = Create16BPPPaletteShaded(pal, 400,   0, 0, true);
+	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, true);
+	pMapLTGreenPalette = Create16BPPPaletteShaded(pal,   0, 400, 0, true);
+	pMapDKGreenPalette = Create16BPPPaletteShaded(pal,   0, 200, 0, true);
 }
 
 
@@ -901,7 +901,7 @@ void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const S
 		return;
 	}
 
-	pTempCharacterPath = BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sector.AsStrategicIndex(), *GetSoldierGroup(*pCharacter), FALSE);
+	pTempCharacterPath = BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sector.AsStrategicIndex(), *GetSoldierGroup(*pCharacter), false);
 }
 
 
@@ -984,13 +984,13 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 	// This causes the group to effectively reverse directions (even if they've never actually left), so handle that.
 	// They are going to return to their current X,Y sector.
 	RebuildWayPointsForGroupPath(pCharacter->pMercPath, *GetGroup(pCharacter->ubGroupID));
-//	GroupReversingDirectionsBetweenSectors(GetGroup(pCharacter->ubGroupID), pCharacter->sSector, FALSE);
+//	GroupReversingDirectionsBetweenSectors(GetGroup(pCharacter->ubGroupID), pCharacter->sSector, false);
 
 
 	// if he's in a vehicle, clear out the vehicle, too
 	if( pCharacter->bAssignment == VEHICLE )
 	{
-		CancelPathForVehicle(pVehicleList[pCharacter->iVehicleId], TRUE);
+		CancelPathForVehicle(pVehicleList[pCharacter->iVehicleId], true);
 	}
 	else
 	{
@@ -1001,9 +1001,9 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 
 	CopyPathToCharactersSquadIfInOne( pCharacter );
 
-	fMapPanelDirty = TRUE;
-	fTeamPanelDirty = TRUE;
-	fCharacterInfoPanelDirty = TRUE;		// to update ETA
+	fMapPanelDirty = true;
+	fTeamPanelDirty = true;
+	fCharacterInfoPanelDirty = true;		// to update ETA
 }
 
 
@@ -1014,7 +1014,7 @@ void CancelPathForVehicle(VEHICLETYPE& v, BOOLEAN const fAlreadyReversed)
 	v.pMercPath = ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
 	// NOTE: This automatically calls RemoveGroupWaypoints() internally for valid movement groups
 
-	// if we already reversed one of the passengers, flag will be TRUE,
+	// if we already reversed one of the passengers, flag will be true,
 	// don't do it again or we're headed back where we came from!
 	if ( !fAlreadyReversed )
 	{
@@ -1027,11 +1027,11 @@ void CancelPathForVehicle(VEHICLETYPE& v, BOOLEAN const fAlreadyReversed)
 	BeginMapUIMessage(0, pMapPlotStrings[3]);
 
 	// turn the helicopter flag off here, this prevents the "route aborted" msg from coming up
-	fPlotForHelicopter = FALSE;
+	fPlotForHelicopter = false;
 
-	fTeamPanelDirty = TRUE;
-	fMapPanelDirty = TRUE;
-	fCharacterInfoPanelDirty = TRUE;		// to update ETA
+	fTeamPanelDirty = true;
+	fMapPanelDirty = true;
+	fCharacterInfoPanelDirty = true;		// to update ETA
 }
 
 
@@ -1106,9 +1106,9 @@ void PlotPathForHelicopter(const SGPSector& sector)
 	VEHICLETYPE& v = GetHelicopter();
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	v.pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sector.AsStrategicIndex(), *GetGroup(v.ubMovementGroup), FALSE), v.pMercPath);
+	v.pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sector.AsStrategicIndex(), *GetGroup(v.ubMovementGroup), false), v.pMercPath);
 
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -1124,7 +1124,7 @@ void PlotATemporaryPathForHelicopter(const SGPSector& sector)
 	}
 
 	// build path
-	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sector.AsStrategicIndex(), *GetGroup(GetHelicopter().ubMovementGroup), FALSE);
+	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sector.AsStrategicIndex(), *GetGroup(GetHelicopter().ubMovementGroup), false);
 }
 
 
@@ -1156,7 +1156,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter(const SGPSector& sMap)
 		// if we're in confirm map move mode, cancel that (before new UI messages are issued)
 		EndConfirmMapMoveMode( );
 
-		CancelPathForVehicle(v, FALSE);
+		CancelPathForVehicle(v, false);
 		return( PATH_CLEARED );
 	}
 	else	// click not in the current sector
@@ -1211,7 +1211,7 @@ static void TracePathRoute(PathSt* const pPath)
 	{
 		next = node->pNext;
 
-		BOOLEAN fUTurnFlag = FALSE;
+		BOOLEAN fUTurnFlag = false;
 
 		SGPSector iSector;
 		iSector = SGPSector::FromStrategicIndex(node->uiSectorId);
@@ -1351,7 +1351,7 @@ static void TracePathRoute(PathSt* const pPath)
 			// display enter and exit 'X's
 			if (prev)
 			{
-				fUTurnFlag = TRUE;
+				fUTurnFlag = true;
 				const INT32 iDeltaA = (INT16)node->uiSectorId - (INT16)prev->uiSectorId;
 				if (iDeltaA == -1)
 				{
@@ -1372,7 +1372,7 @@ static void TracePathRoute(PathSt* const pPath)
 			}
 			if (next)
 			{
-				fUTurnFlag = FALSE;
+				fUTurnFlag = false;
 				const INT32 iDeltaB = (INT16)node->uiSectorId - (INT16)next->uiSectorId;
 				if (iDeltaB == -1)
 				{
@@ -1429,11 +1429,11 @@ static void AnimateRoute(PathSt* pPath)
 	SetFontDestBuffer(FRAME_BUFFER);
 
 	// the animated path
-	if (TraceCharAnimatedRoute(pPath, FALSE))
+	if (TraceCharAnimatedRoute(pPath, false))
 	{
 		// ARM? Huh?  Why the same thing twice more?
-		TraceCharAnimatedRoute(pPath, TRUE);
-		TraceCharAnimatedRoute(pPath, TRUE);
+		TraceCharAnimatedRoute(pPath, true);
+		TraceCharAnimatedRoute(pPath, true);
 	}
 }
 
@@ -1441,8 +1441,8 @@ static void AnimateRoute(PathSt* pPath)
 static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceUpDate)
 {
 	static PathSt* pCurrentNode = NULL;
-	static BOOLEAN fUpDateFlag=FALSE;
-	static BOOLEAN fPauseFlag=TRUE;
+	static BOOLEAN fUpDateFlag=false;
+	static BOOLEAN fPauseFlag=true;
 	static UINT8 ubCounter=1;
 
 	INT32 iArrow=-1;
@@ -1450,8 +1450,8 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	SGPSector iArrowSector;
 	INT32 iDeltaA, iDeltaB, iDeltaB1;
 	INT32 iDirection = -1;
-	BOOLEAN fUTurnFlag=FALSE;
-	BOOLEAN fNextNode=FALSE;
+	BOOLEAN fUTurnFlag=false;
+	BOOLEAN fNextNode=false;
 	PathSt* pTempNode = NULL;
 	PathSt* pNode     = NULL;
 	PathSt* pPastNode = NULL;
@@ -1461,13 +1461,13 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	// must be plotting movement
 	if (bSelectedDestChar == -1 && !fPlotForHelicopter)
 	{
-		return FALSE;
+		return false;
 	}
 
 	// if any nodes have been deleted, reset current node to beginning of the list
 	if( fDeletedNode )
 	{
-		fDeletedNode = FALSE;
+		fDeletedNode = false;
 		pCurrentNode = NULL;
 	}
 
@@ -1475,7 +1475,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	// Valid path?
 	if ( pPath == NULL )
 	{
-		return FALSE;
+		return false;
 	}
 	else
 	{
@@ -1489,7 +1489,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	if (guiAnimateRouteBaseTime==0)
 	{
 		guiAnimateRouteBaseTime=GetJA2Clock();
-		return FALSE;
+		return false;
 	}
 
 	// check difference in time
@@ -1500,23 +1500,23 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	{
 		if (uiDifference < PAUSE_DELAY)
 		{
-			return FALSE;
+			return false;
 		}
 		else
 		{
-			fPauseFlag=FALSE;
+			fPauseFlag=false;
 		guiAnimateRouteBaseTime=GetJA2Clock();
 		}
 	}
 
 
-	// if is checkflag and change in status, return TRUE;
+	// if is checkflag and change in status, return true;
 	if(!fForceUpDate)
 	{
 		if (uiDifference < ARROW_DELAY)
 		{
 			if (!fUpDateFlag)
-				return FALSE;
+				return false;
 		}
 		else
 		{
@@ -1524,7 +1524,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 			guiAnimateRouteBaseTime=GetJA2Clock();
 			fUpDateFlag=!fUpDateFlag;
 
-			fNextNode=TRUE;
+			fNextNode=true;
 		}
 	}
 
@@ -1554,7 +1554,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	if((!pNode->pPrev)&&(ubCounter==1)&&(fForceUpDate))
 	{
 		ubCounter=0;
-		return FALSE;
+		return false;
 	}
 	else if((ubCounter==1)&&(fForceUpDate))
 	{
@@ -1575,54 +1575,54 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	iSector.x = iSector.x * MAP_GRID_X + MAP_VIEW_START_X;
 	iSector.y = iSector.y * MAP_GRID_Y + MAP_VIEW_START_Y;
 	iArrowSector = iSector;
-	fUTurnFlag=FALSE;
+	fUTurnFlag=false;
 	if ((pPastNode)&&(pNextNode))
 	{
 		iDeltaA=(INT16)pNode->uiSectorId-(INT16)pPastNode->uiSectorId;
 		iDeltaB=(INT16)pNode->uiSectorId-(INT16)pNextNode->uiSectorId;
 		if (iDeltaA ==0)
-			return FALSE;
+			return false;
 
 		if ((pPastNode->pPrev)&&(pNextNode->pNext))
 		{
-			fUTurnFlag=FALSE;
+			fUTurnFlag=false;
 			// check to see if out-of sector U-turn
 			// for placement of arrows
 			iDeltaB1=pNextNode->uiSectorId-pNextNode->pNext->uiSectorId;
 			if ((iDeltaB1==-WORLD_MAP_X)&&(iDeltaA==-WORLD_MAP_X)&&(iDeltaB==-1))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else if((iDeltaB1==-WORLD_MAP_X)&&(iDeltaA==-WORLD_MAP_X)&&(iDeltaB==1))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else if((iDeltaB1==WORLD_MAP_X)&&(iDeltaA==WORLD_MAP_X)&&(iDeltaB==-1))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else if((iDeltaB1==WORLD_MAP_X)&&(iDeltaA==WORLD_MAP_X)&&(iDeltaB==1))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else if((iDeltaB1==-1)&&(iDeltaA==-1)&&(iDeltaB==-WORLD_MAP_X))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else if((iDeltaB1==-1)&&(iDeltaA==-1)&&(iDeltaB==WORLD_MAP_X))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else if((iDeltaB1==1)&&(iDeltaA==1)&&(iDeltaB==-WORLD_MAP_X))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else if((iDeltaB1==1)&&(iDeltaA==1)&&(iDeltaB==WORLD_MAP_X))
 			{
-				fUTurnFlag=TRUE;
+				fUTurnFlag=true;
 			}
 			else
-				fUTurnFlag=FALSE;
+				fUTurnFlag=false;
 		}
 
 
@@ -1787,7 +1787,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		if (pPastNode)
 		{
 			// red 'X'
-			fUTurnFlag=TRUE;
+			fUTurnFlag=true;
 			iDeltaA=(INT16)pNode->uiSectorId-(INT16)pPastNode->uiSectorId;
 			if (iDeltaA==-1)
 			{
@@ -1812,7 +1812,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		}
 		if (pNextNode)
 		{
-			fUTurnFlag=FALSE;
+			fUTurnFlag=false;
 			iDeltaB=(INT16)pNode->uiSectorId-(INT16)pNextNode->uiSectorId;
 			if (iDeltaB==-1)
 			{
@@ -1864,7 +1864,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		{
 			pCurrentNode=pCurrentNode->pNext;
 			if(!pCurrentNode)
-				fPauseFlag=TRUE;
+				fPauseFlag=true;
 		}
 	}
 	if ((iDirection !=-1)&&(iArrow!=-1))
@@ -1884,7 +1884,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				ubCounter=0;
 			else
 				ubCounter=1;
-			return TRUE;
+			return true;
 		}
 		if(ubCounter==1)
 			ubCounter=0;
@@ -1897,7 +1897,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 
 
 	//ARM who knows what it should return here?
-	return FALSE;
+	return false;
 }
 
 
@@ -1905,7 +1905,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 {
 	// simply check if we want to refresh the screen to display path
-	static BOOLEAN fOldShowAirCraft = FALSE;
+	static BOOLEAN fOldShowAirCraft = false;
 	static SGPSector sOldMap;
 
 	if( fOldShowAirCraft != fShowAircraftFlag )
@@ -1914,8 +1914,8 @@ void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 		guiPotHeliPathBaseTime = GetJA2Clock( );
 
 		sOldMap = sMap;
-		fTempPathAlreadyDrawn = FALSE;
-		fDrawTempHeliPath = FALSE;
+		fTempPathAlreadyDrawn = false;
+		fDrawTempHeliPath = false;
 
 	}
 
@@ -1927,11 +1927,11 @@ void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 		// path was plotted and we moved, re draw map..to clean up mess
 		if( fTempPathAlreadyDrawn )
 		{
-			fMapPanelDirty = TRUE;
+			fMapPanelDirty = true;
 		}
 
-		fTempPathAlreadyDrawn = FALSE;
-		fDrawTempHeliPath = FALSE;
+		fTempPathAlreadyDrawn = false;
+		fDrawTempHeliPath = false;
 	}
 
 	UINT32 uiDifference = GetJA2Clock() - guiPotHeliPathBaseTime;
@@ -1943,9 +1943,9 @@ void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 
 	if (uiDifference > MIN_WAIT_TIME_FOR_TEMP_PATH)
 	{
-		fDrawTempHeliPath = TRUE;
+		fDrawTempHeliPath = true;
 		guiPotHeliPathBaseTime = GetJA2Clock( );
-		fTempPathAlreadyDrawn = TRUE;
+		fTempPathAlreadyDrawn = true;
 	}
 }
 
@@ -2258,7 +2258,7 @@ void DisplayPositionOfHelicopter( void )
 {
 	static INT16 sOldMapX = 0, sOldMapY = 0;
 	//INT16 sX =0, sY = 0;
-	FLOAT flRatio = 0.0;
+	float flRatio = 0.0;
 	UINT32 x,y;
 	UINT16 minX, minY, maxX, maxY;
 
@@ -2391,11 +2391,11 @@ static void DisplayDestinationOfHelicopter(void)
 
 BOOLEAN CheckForClickOverHelicopterIcon(const SGPSector& sClicked)
 {
-	BOOLEAN fHelicopterOverNextSector = FALSE;
-	FLOAT flRatio = 0.0;
+	BOOLEAN fHelicopterOverNextSector = false;
+	float flRatio = 0.0;
 
-	if (!fShowAircraftFlag)         return FALSE;
-	if (iHelicopterVehicleId == -1) return FALSE;
+	if (!fShowAircraftFlag)         return false;
+	if (iHelicopterVehicleId == -1) return false;
 
 	VEHICLETYPE const& v = GetHelicopter();
 
@@ -2414,7 +2414,7 @@ BOOLEAN CheckForClickOverHelicopterIcon(const SGPSector& sClicked)
 		// if more than halfway there, the chopper appears more over the next sector, not over its current one(!)
 		if ( flRatio > 0.5 )
 		{
-			fHelicopterOverNextSector = TRUE;
+			fHelicopterOverNextSector = true;
 		}
 	}
 
@@ -2569,22 +2569,22 @@ static void BlitTownGridMarkers(void)
 		INT32 const loc = sMap.AsStrategicIndex();
 		if (StrategicMap[loc - MAP_WORLD_X].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE, x - 1, y - 1, x + w - 1, y - 1, color, buf);
+			LineDraw(true, x - 1, y - 1, x + w - 1, y - 1, color, buf);
 		}
 
 		if (StrategicMap[loc + MAP_WORLD_X].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE, x - 1, y + h - 1, x + w - 1, y + h - 1, color, buf);
+			LineDraw(true, x - 1, y + h - 1, x + w - 1, y + h - 1, color, buf);
 		}
 
 		if (StrategicMap[loc - 1].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE, x - 2, y - 1, x - 2, y + h - 1, color, buf);
+			LineDraw(true, x - 2, y - 1, x - 2, y + h - 1, color, buf);
 		}
 
 		if (StrategicMap[loc + 1].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE, x + w - 1, y - 1, x + w - 1, y + h - 1, color, buf);
+			LineDraw(true, x + w - 1, y - 1, x + w - 1, y + h - 1, color, buf);
 		}
 	}
 
@@ -2613,7 +2613,7 @@ static void BlitMineGridMarkers(void)
 		w = MAP_GRID_X;
 		h = MAP_GRID_Y;
 
-		RectangleDraw(TRUE, x, y - 1, x + w, y + h - 1, color, l.Buffer<UINT16>());
+		RectangleDraw(true, x, y - 1, x + w, y + h - 1, color, l.Buffer<UINT16>());
 	}
 
 	RestoreClipRegionToFullScreenForRectangle(pitch);
@@ -2665,8 +2665,8 @@ static void PickUpATownPersonFromSector(UINT8 const type, UINT8 const sector)
 
 	--n_type;                   // Reduce number in this sector
 	++GetPickedUpMilitia(type); // Pick this guy up
-	fMapPanelDirty = TRUE;
-	if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
+	fMapPanelDirty = true;
+	if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = true;
 }
 
 
@@ -2686,8 +2686,8 @@ static void DropAPersonInASector(UINT8 const type, UINT8 const sector)
 
 	--n_type;
 	++n_milita[type]; // Up the number in this sector of this type of militia
-	fMapPanelDirty = TRUE;
-	if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
+	fMapPanelDirty = true;
+	if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = true;
 }
 
 
@@ -2843,7 +2843,7 @@ void CreateDestroyMilitiaPopUPRegions(void)
 		}
 
 		CreateMilitiaPanelBottomButton();
-		gfMilitiaPopupCreated = TRUE;
+		gfMilitiaPopupCreated = true;
 	}
 	else if (gfMilitiaPopupCreated  && (!fShowMilitia || !sSelectedMilitiaTown))
 	{
@@ -2856,7 +2856,7 @@ void CreateDestroyMilitiaPopUPRegions(void)
 		HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(sOldTown);
 
 		DeleteMilitiaPanelBottomButton();
-		gfMilitiaPopupCreated = FALSE;
+		gfMilitiaPopupCreated = false;
 	}
 }
 
@@ -3018,8 +3018,8 @@ void CreateDestroyMilitiaSectorButtons()
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
 			b->SpecifyGeneralTextAttributes({}, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
-			b->SpecifyTextSubOffsets(0, 0, TRUE);
-			b->fShiftText = FALSE;
+			b->SpecifyTextSubOffsets(0, 0, true);
+			b->fShiftText = false;
 			b->SetFastHelpText(pMilitiaButtonsHelpText[i]);
 		}
 
@@ -3214,7 +3214,7 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 			}
 		}
 
-		if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
+		if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = true;
 	}
 
 	Assert(sGreensOnCursor   == 0);
@@ -3302,7 +3302,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 			--n_left_over_elite;
 		}
 
-		if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
+		if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = true;
 	}
 
 	// Zero out numbers on the cursor
@@ -3356,7 +3356,7 @@ static void DeleteMilitiaPanelBottomButton(void)
 	}
 
 	// redraw the map
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 
 }
 
@@ -3367,7 +3367,7 @@ static void MilitiaAutoButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		// distribute troops over all the sectors under control
 		HandleEveningOutOfTroopsAmongstSectors();
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 	}
 }
 
@@ -3378,7 +3378,7 @@ static void MilitiaDoneButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		// reset fact we are in the box
 		sSelectedMilitiaTown = 0;
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 	}
 }
 
@@ -3541,7 +3541,7 @@ void ClearAnySectorsFlashingNumberOfEnemies()
 	}
 
 	// redraw map
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty = true;
 }
 
 
@@ -3634,12 +3634,12 @@ static BOOLEAN CanMercsScoutThisSector(const SGPSector& sSector)
 		// is he here?
 		if (pSoldier->sSector == sSector)
 		{
-			return( TRUE );
+			return true;
 		}
 	}
 
 	// none here who can scout
-	return( FALSE );
+	return false;
 }
 
 
@@ -3744,7 +3744,7 @@ static void BlitSAMGridMarkers()
 		w = MAP_GRID_X;
 		h = MAP_GRID_Y;
 
-		RectangleDraw(TRUE, x, y - 1, x + w, y + h - 1, colour, l.Buffer<UINT16>());
+		RectangleDraw(true, x, y - 1, x + w, y + h - 1, colour, l.Buffer<UINT16>());
 	}
 
 	RestoreClipRegionToFullScreenForRectangle(uiDestPitchBYTES);
@@ -3861,21 +3861,21 @@ BOOLEAN CanRedistributeMilitiaInSector(INT8 bClickedTownId)
 	if( !gfWorldLoaded )
 	{
 		// ok to redistribute
-		return( TRUE );
+		return true;
 	}
 
 	// if tactically not in combat, hostile sector, or air-raid
 	if (!(gTacticalStatus.uiFlags & INCOMBAT) && !(gTacticalStatus.fEnemyInSector))
 	{
 		// ok to redistribute
-		return( TRUE );
+		return true;
 	}
 
 	// if the fight is underground
 	if (gWorldSector.z != 0)
 	{
 		// ok to redistribute
-		return( TRUE );
+		return true;
 	}
 
 
@@ -3901,11 +3901,11 @@ BOOLEAN CanRedistributeMilitiaInSector(INT8 bClickedTownId)
 		if (sSector == gWorldSector)
 		{
 			// the fight is within this town!  Can't redistribute.
-			return( FALSE );
+			return false;
 		}
 	}
 
 
 	// the fight is elsewhere - ok to redistribute
-	return( TRUE );
+	return true;
 }

@@ -30,7 +30,7 @@ struct BULLET
 	FIXEDPT qIncrX;
 	FIXEDPT qIncrY;
 	FIXEDPT qIncrZ;
-	DOUBLE  ddHorizAngle;
+	double  ddHorizAngle;
 	INT32   iCurrTileX;
 	INT32   iCurrTileY;
 	INT8    bLOSIndexX;

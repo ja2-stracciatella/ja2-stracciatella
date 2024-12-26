@@ -18,7 +18,7 @@
 
 
 //used by editor
-BOOLEAN gfShowPits = FALSE;
+BOOLEAN gfShowPits = false;
 
 
 void Add3X3Pit( INT32 iMapIndex )
@@ -212,7 +212,7 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 				// Set data to look for exit grid....
 				pSoldier->uiPendingActionData4 = sNewGridNo;
 
-				EVENT_InitNewSoldierAnim( pSoldier, FALL_INTO_PIT, 0 , FALSE );
+				EVENT_InitNewSoldierAnim( pSoldier, FALL_INTO_PIT, 0 , false );
 			}
 		}
 	}

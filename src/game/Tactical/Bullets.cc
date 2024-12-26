@@ -56,8 +56,8 @@ BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16
 	if (b == NULL) return NULL;
 
 	*b = BULLET{};
-	b->fAllocated = TRUE;
-	b->fLocated = FALSE;
+	b->fAllocated = true;
+	b->fLocated = false;
 	b->pFirer = firer;
 	b->usFlags = usFlags;
 	b->usLastStructureHit = 0;
@@ -70,7 +70,7 @@ BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16
 void HandleBulletSpecialFlags(BULLET* pBullet)
 {
 	ANITILE_PARAMS AniParams;
-	FLOAT          dX, dY;
+	float          dX, dY;
 	UINT8          ubDirection;
 
 	AniParams = ANITILE_PARAMS{};
@@ -100,8 +100,8 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 			}
 
 			// Get direction to use for this guy....
-			dX = ( (FLOAT)( pBullet->qIncrX ) / FIXEDPT_FRACTIONAL_RESOLUTION );
-			dY = ( (FLOAT)( pBullet->qIncrY ) / FIXEDPT_FRACTIONAL_RESOLUTION );
+			dX = ( (float)( pBullet->qIncrX ) / FIXEDPT_FRACTIONAL_RESOLUTION );
+			dY = ( (float)( pBullet->qIncrY ) / FIXEDPT_FRACTIONAL_RESOLUTION );
 
 			ubDirection = atan8( 0, 0, (INT16)( dX * 100 ), (INT16)( dY * 100 ) );
 
@@ -129,7 +129,7 @@ void RemoveBullet(BULLET* b)
 	if (b->fReal)
 	{
 		// set to be deleted at next update
-		b->fToDelete = TRUE;
+		b->fToDelete = true;
 
 		// decrement reference to bullet in the firer
 		b->pFirer->bBulletsLeft--;
@@ -158,7 +158,7 @@ void RemoveBullet(BULLET* b)
 	else
 	{
 		// delete this fake bullet right away!
-		b->fAllocated = FALSE;
+		b->fAllocated = false;
 		RecountBullets();
 	}
 }
@@ -172,7 +172,7 @@ void LocateBullet(BULLET* b)
 	if (b->pFirer->bSide != OUR_TEAM) return;
 	if (b->fLocated) return;
 
-	b->fLocated = TRUE;
+	b->fLocated = true;
 
 	//Only if we are in turnbased (we always are) and noncombat
 	if (!(gTacticalStatus.uiFlags & INCOMBAT)) return;
@@ -185,7 +185,7 @@ void UpdateBullets(void)
 {
 	UINT32    uiCount;
 	LEVELNODE *pNode;
-	BOOLEAN   fDeletedSome = FALSE;
+	BOOLEAN   fDeletedSome = false;
 
 	for ( uiCount = 0; uiCount < guiNumBullets; uiCount++ )
 	{
@@ -199,8 +199,8 @@ void UpdateBullets(void)
 				if (b->fToDelete)
 				{
 					// Remove from old position
-					b->fAllocated = FALSE;
-					fDeletedSome = TRUE;
+					b->fAllocated = false;
+					fDeletedSome = true;
 					continue;
 				}
 
@@ -222,8 +222,8 @@ void UpdateBullets(void)
 				if (b->fToDelete)
 				{
 					// Remove from old position
-					b->fAllocated = FALSE;
-					fDeletedSome = TRUE;
+					b->fAllocated = false;
+					fDeletedSome = true;
 					continue;
 				}
 
@@ -289,8 +289,8 @@ void UpdateBullets(void)
 			{
 				if (b->fToDelete)
 				{
-					b->fAllocated = FALSE;
-					fDeletedSome = TRUE;
+					b->fAllocated = false;
+					fDeletedSome = true;
 				}
 			}
 		}
@@ -435,7 +435,7 @@ void DeleteAllBullets(void)
 		{
 			// Remove from old position
 			RemoveBullet(b);
-			b->fAllocated = FALSE;
+			b->fAllocated = false;
 		}
 	}
 

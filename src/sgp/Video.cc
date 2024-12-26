@@ -219,7 +219,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 		0, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
 		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
-	SDL_SetColorKey(MouseCursor, SDL_TRUE, 0);
+	SDL_SetColorKey(MouseCursor, true, 0);
 
 	if (MouseCursor == NULL)
 	{
@@ -229,7 +229,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	SDL_ShowCursor(SDL_DISABLE);
 
 	// Initialize state variables
-	gfForceFullScreenRefresh = TRUE;
+	gfForceFullScreenRefresh = true;
 
 	// This function must be called to setup RGB information
 	GetRGBDistribution();
@@ -349,7 +349,7 @@ void InvalidateScreen(void)
 {
 	guiDirtyRegionCount = 0;
 	guiDirtyRegionExCount = 0;
-	gfForceFullScreenRefresh = TRUE;
+	gfForceFullScreenRefresh = true;
 }
 
 
@@ -441,7 +441,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 			std::fill_n(gpZBuffer + j * SCREEN_WIDTH + x, w, 0);
 		}
 
-		RenderStaticWorldRect(x, y, x + w, y + h, TRUE);
+		RenderStaticWorldRect(x, y, x + w, y + h, true);
 		SDL_BlitSurface(FrameBuffer, &StripRegions[i], Dest, &StripRegions[i]);
 	}
 
@@ -516,7 +516,7 @@ void RefreshScreen(void)
 				gsVIEWPORT_END_X - gsVIEWPORT_START_X,
 				gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y };
 		}
-		gfIgnoreScrollDueToCenterAdjust = FALSE;
+		gfIgnoreScrollDueToCenterAdjust = false;
 	}
 
 	auto const cursorPos{ GetCursorPos() };
@@ -551,7 +551,7 @@ void RefreshScreen(void)
 
 	FPS::RenderPresentPtr(GameRenderer);
 
-	gfForceFullScreenRefresh = FALSE;
+	gfForceFullScreenRefresh = false;
 	guiDirtyRegionCount = 0;
 	guiDirtyRegionExCount = 0;
 }

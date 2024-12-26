@@ -157,14 +157,14 @@ BOOLEAN RemoveObject(UINT32 iMapIndex, UINT16 usIndex)
 			//Add the index to the maps temp file so we can remove it after reloading the map
 			AddRemoveObjectToMapTempFile(iMapIndex, usIndex);
 
-			return TRUE;
+			return true;
 		}
 
 		pOldObject = pObject;
 	}
 
 	// Could not find it
-	return FALSE;
+	return false;
 }
 
 
@@ -236,7 +236,7 @@ LEVELNODE* FindTypeInObjectLayer(UINT32 const map_idx, UINT32 const type)
 
 BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	// Look through all objects and Search for type
 	for (LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead; pObject != NULL;)
@@ -249,7 +249,7 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				RemoveObject(iMapIndex, pObject->usIndex);
-				fRetVal = TRUE;
+				fRetVal = true;
 			}
 		}
 
@@ -356,7 +356,7 @@ static BOOLEAN AdjustForFullTile(UINT32 iMapIndex)
 			if (gTileDatabase[pLand->usIndex].ubFullTile)
 			{
 				gpWorldLevelData[iMapIndex].pLandStart = pLand;
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -373,7 +373,7 @@ static BOOLEAN AdjustForFullTile(UINT32 iMapIndex)
 	LEVELNODE* pNewNode = AddLandToTail(iMapIndex, NewIndex);
 	gpWorldLevelData[iMapIndex].pLandStart = pNewNode;
 
-	return FALSE;
+	return false;
 }
 
 
@@ -412,7 +412,7 @@ LEVELNODE * TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	const LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	// Look through all objects and Search for type
 	while (pLand != NULL)
@@ -424,7 +424,7 @@ BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 		{
 			// Remove Item
 			RemoveLand(iMapIndex, pLand->usIndex);
-			fRetVal = TRUE;
+			fRetVal = true;
 		}
 
 		pLand = Next;
@@ -763,7 +763,7 @@ void RemoveStructFromLevelNode(UINT32 const map_idx, LEVELNODE* const n)
 
 BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	// Look through all structs and Search for type
 	for (const LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead; pStruct;)
@@ -785,7 +785,7 @@ BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 			if (usIndex < NUMBEROFTILES)
 			{
 				RemoveStruct(iMapIndex, usIndex);
-				fRetVal = TRUE;
+				fRetVal = true;
 				RemoveShadowBuddy(iMapIndex, usIndex);
 			}
 		}
@@ -800,8 +800,8 @@ BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 BOOLEAN ReplaceStructIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex)
 {
 	RemoveStruct(iMapIndex, usOldIndex);
-	AddWallToStructLayer(iMapIndex, usNewIndex, FALSE);
-	return TRUE;
+	AddWallToStructLayer(iMapIndex, usNewIndex, false);
+	return true;
 //	LEVELNODE	*pStruct				= NULL;
 //	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 // Look through all Structs and remove index if found
@@ -812,13 +812,13 @@ BOOLEAN ReplaceStructIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewInde
 //			// OK, set new index value
 //			pStruct->usIndex = usNewIndex;
 //			AdjustForFullTile( iMapIndex );
-//			return( TRUE );
+//			return true;
 //		}
 //		// Advance
 //		pStruct = pStruct->pNext;
 //	}
-//	// Could not find it, return FALSE
-//	return( FALSE );
+//	// Could not find it, return false
+//	return false;
 }
 
 
@@ -901,7 +901,7 @@ static bool IndexExistsInLayer(LEVELNODE const* n, UINT16 const tile_index)
 }
 
 
-BOOLEAN IndexExistsInStructLayer(GridNo const grid_no, UINT16 const tile_index)
+bool IndexExistsInStructLayer(GridNo const grid_no, UINT16 const tile_index)
 {
 	return IndexExistsInLayer(gpWorldLevelData[grid_no].pStructHead, tile_index);
 }
@@ -986,7 +986,7 @@ BOOLEAN RemoveShadowFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 
 BOOLEAN RemoveAllShadowsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	// Look through all shadows and Search for type
 	for (const LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow;)
@@ -999,7 +999,7 @@ BOOLEAN RemoveAllShadowsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
 			RemoveShadow(iMapIndex, pShadow->usIndex);
-			fRetVal = TRUE;
+			fRetVal = true;
 		}
 		pShadow = next;
 	}
@@ -1009,7 +1009,7 @@ BOOLEAN RemoveAllShadowsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 
 BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 {
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	for (LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead; pShadow != NULL;)
 	{
@@ -1017,7 +1017,7 @@ BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 		if (pShadow->usIndex != NO_TILE)
 		{
 			RemoveShadow(iMapIndex, pShadow->usIndex);
-			fRetVal = TRUE;
+			fRetVal = true;
 		}
 		pShadow = next;
 	}
@@ -1063,19 +1063,19 @@ static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* const s, const UINT16 usAnimSurface, const UINT16 usAnimState)
+bool AddMercStructureInfoFromAnimSurface(const GridNo sGridNo, SOLDIERTYPE* const s, const UINT16 usAnimSurface, const UINT16 usAnimState)
 {
 	s->uiStatusFlags &= ~SOLDIER_MULTITILE;
 
 	LEVELNODE* const n = s->pLevelNode;
-	if (n == NULL || usAnimSurface == INVALID_ANIMATION_SURFACE) return FALSE;
+	if (n == NULL || usAnimSurface == INVALID_ANIMATION_SURFACE) return false;
 
 	// Remove existing structs
 	DeleteStructureFromWorld(n->pStructureData);
 	n->pStructureData = NULL;
 
 	const STRUCTURE_FILE_REF* const sfr = GetAnimationStructureRef(s, usAnimSurface, usAnimState);
-	if (sfr == NULL) return TRUE; // XXX why TRUE?
+	if (sfr == NULL) return true; // XXX why true?
 
 	const DB_STRUCTURE_REF* const sr =
 		s->ubBodyType == QUEENMONSTER ? // Queen uses only one direction
@@ -1096,7 +1096,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* co
 }
 
 
-BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
+bool OKToAddMercToWorld(SOLDIERTYPE const * pSoldier, INT8 bDirection)
 {
 	//if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
 	{
@@ -1104,7 +1104,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 		UINT16 const usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 		if (usAnimSurface == INVALID_ANIMATION_SURFACE)
 		{
-			return FALSE;
+			return false;
 		}
 
 		// Now check if we have multi-tile info!
@@ -1116,24 +1116,24 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 
 			if (!OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructFileRef->pDBStructureRef[OneCDirection(bDirection)], usOKToAddStructID))
 			{
-				return FALSE;
+				return false;
 			}
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 
-BOOLEAN UpdateMercStructureInfo(SOLDIERTYPE *pSoldier)
+bool UpdateMercStructureInfo(SOLDIERTYPE * const pSoldier)
 {
 	if (pSoldier->pLevelNode == NULL)
 	{
-		return FALSE;
+		return false;
 	}
 
 	AddMercStructureInfo(pSoldier->sGridNo, pSoldier);
-	return TRUE;
+	return true;
 }
 
 
@@ -1228,7 +1228,7 @@ BOOLEAN IndexExistsInRoofLayer(INT16 const sGridNo, UINT16 const usIndex)
 
 BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	// Look through all Roofs and Search for type
 	for (const LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof;)
@@ -1241,7 +1241,7 @@ BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fE
 		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
 			RemoveRoof(iMapIndex, pRoof->usIndex);
-			fRetVal = TRUE;
+			fRetVal = true;
 		}
 		pRoof = next;
 	}
@@ -1331,7 +1331,7 @@ BOOLEAN RemoveOnRoofFromLevelNode(UINT32 iMapIndex, LEVELNODE *pNode)
 
 BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	// Look through all OnRoofs and Search for type
 	for (const LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof;)
@@ -1350,7 +1350,7 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 		if (fTileType >= fStartType && fTileType <= fEndType)
 		{
 			RemoveOnRoof(iMapIndex, pOnRoof->usIndex);
-			fRetVal = TRUE;
+			fRetVal = true;
 		}
 		pOnRoof = next;
 	}
@@ -1421,7 +1421,7 @@ BOOLEAN RemoveTopmostFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 
 BOOLEAN RemoveAllTopmostsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	BOOLEAN fRetVal = FALSE;
+	BOOLEAN fRetVal = false;
 
 	// Look through all topmosts and Search for type
 	for (const LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead; pTopmost != NULL;)
@@ -1436,7 +1436,7 @@ BOOLEAN RemoveAllTopmostsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32
 			{
 				// Remove Item
 				RemoveTopmost(iMapIndex, pOldTopmost->usIndex);
-				fRetVal = TRUE;
+				fRetVal = true;
 			}
 		}
 	}
@@ -1459,7 +1459,7 @@ BOOLEAN IsHeigherLevel(INT16 sGridNo)
 
 BOOLEAN IsRoofVisible(INT16 sMapPos)
 {
-	if (gfBasement) return TRUE;
+	if (gfBasement) return true;
 
 	const STRUCTURE* pStructure = FindStructure(sMapPos, STRUCTURE_ROOF);
 	return
@@ -1473,7 +1473,7 @@ BOOLEAN IsRoofVisible2(INT16 sMapPos)
 	if (!gfBasement)
 	{
 		const STRUCTURE* pStructure = FindStructure(sMapPos, STRUCTURE_ROOF);
-		if (pStructure == NULL) return FALSE;
+		if (pStructure == NULL) return false;
 	}
 
 	return !(gpWorldLevelData[sMapPos].uiFlags & MAPELEMENT_REVEALED);

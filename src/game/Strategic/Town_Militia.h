@@ -40,7 +40,7 @@ ST::string BuildMilitiaPromotionsString();
 UINT8 CountAllMilitiaInSector(const SGPSector& sMap);
 UINT8 MilitiaInSectorOfRank(const SGPSector& sMap, UINT8 ubRank);
 
-// Returns TRUE if sector is under player control, has no enemies in it, and isn't currently in combat mode
+// Returns true if sector is under player control, has no enemies in it, and isn't currently in combat mode
 BOOLEAN SectorOursAndPeaceful(const SGPSector& sector);
 
 // tell player how much it will cost

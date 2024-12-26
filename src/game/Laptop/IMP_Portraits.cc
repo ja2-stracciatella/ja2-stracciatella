@@ -25,7 +25,7 @@ GUIButtonRef giIMPPortraitButton[3];
 static BUTTON_PICS* giIMPPortraitButtonImage[3];
 
 // redraw protrait screen
-BOOLEAN fReDrawPortraitScreenFlag = FALSE;
+BOOLEAN fReDrawPortraitScreenFlag = false;
 
 // face index
 INT32 iPortraitNumber = 0;
@@ -83,7 +83,7 @@ void HandleIMPPortraits( void )
 		RenderIMPPortraits( );
 
 		// reset redraw flag
-		fReDrawPortraitScreenFlag = FALSE;
+		fReDrawPortraitScreenFlag = false;
 	}
 }
 
@@ -174,7 +174,7 @@ static void BtnIMPPortraitNextCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		IncrementPictureIndex();
-		fReDrawPortraitScreenFlag = TRUE;
+		fReDrawPortraitScreenFlag = true;
 	}
 }
 
@@ -184,7 +184,7 @@ static void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		DecrementPicture();
-		fReDrawPortraitScreenFlag = TRUE;
+		fReDrawPortraitScreenFlag = true;
 	}
 }
 
@@ -204,6 +204,6 @@ static void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 		// grab picture number
 		iPortraitNumber = iCurrentPortrait + (fCharacterIsMale ? 0 : 8);
 
-		fButtonPendingFlag = TRUE;
+		fButtonPendingFlag = true;
 	}
 }

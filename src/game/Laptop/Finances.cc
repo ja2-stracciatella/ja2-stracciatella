@@ -127,7 +127,7 @@ static SGPVObject* guiLONGLINE;
 static SGPVObject* guiLISTCOLUMNS;
 
 // are in the financial system right now?
-static BOOLEAN fInFinancialMode = FALSE;
+static BOOLEAN fInFinancialMode = false;
 
 
 // the last page altogether
@@ -208,10 +208,10 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 		SetFinanceButtonStates( );
 
 		// force update
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 	}
 
-	fMapScreenBottomDirty = TRUE;
+	fMapScreenBottomDirty = true;
 }
 
 
@@ -256,7 +256,7 @@ void EnterFinances()
 	//entry into finanacial system, load graphics, set variables..draw screen once
 	// set the fact we are in the financial display system
 
-	fInFinancialMode=TRUE;
+	fInFinancialMode=true;
 
 	// get the balance
 	GetBalanceFromDisk( );
@@ -282,7 +282,7 @@ void ExitFinances( void )
 
 
 	// not in finance system anymore
-	fInFinancialMode=FALSE;
+	fInFinancialMode=false;
 
 	// destroy buttons
 	DestroyFinanceButtons( );
@@ -820,7 +820,7 @@ static ST::string ProcessTransactionString(const FinanceUnit* f)
 
 		case TRAIN_TOWN_MILITIA:
 		{
-			return st_format_printf(pTransactionText[TRAIN_TOWN_MILITIA], GetSectorIDString(f->ubSecondCode, TRUE));
+			return st_format_printf(pTransactionText[TRAIN_TOWN_MILITIA], GetSectorIDString(f->ubSecondCode, true));
 		}
 
 		default:
@@ -915,7 +915,7 @@ static void LoadNextPage(void)
 static void LoadInRecords(UINT32 const page)
 {
 	iCurrentPage      = page;
-	fReDrawScreenFlag = TRUE;
+	fReDrawScreenFlag = true;
 	SetFinanceButtonStates();
 	ClearFinanceList();
 	if (page == 0) return; // check if bad page
@@ -1083,7 +1083,7 @@ static INT32 GetPreviousDaysIncome(void)
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is = date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	BOOLEAN fOkToIncrement = FALSE;
+	BOOLEAN fOkToIncrement = false;
 	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
@@ -1103,7 +1103,7 @@ static INT32 GetPreviousDaysIncome(void)
 		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
-		if (date / (24 * 60) == date_in_days - 1) fOkToIncrement = TRUE;
+		if (date / (24 * 60) == date_in_days - 1) fOkToIncrement = true;
 
 		if (fOkToIncrement && (code == DEPOSIT_FROM_GOLD_MINE || code == DEPOSIT_FROM_SILVER_MINE))
 		{
@@ -1128,7 +1128,7 @@ static INT32 GetTodaysDaysIncome(void)
 
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	BOOLEAN fOkToIncrement = FALSE;
+	BOOLEAN fOkToIncrement = false;
 	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
@@ -1148,13 +1148,13 @@ static INT32 GetTodaysDaysIncome(void)
 		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
-		if (date / (24 * 60) > date_in_days - 1) fOkToIncrement = TRUE;
+		if (date / (24 * 60) > date_in_days - 1) fOkToIncrement = true;
 
 		if (fOkToIncrement && (code == DEPOSIT_FROM_GOLD_MINE || code == DEPOSIT_FROM_SILVER_MINE))
 		{
 			// increment total
 			iTotalIncome += amount;
-			fOkToIncrement = FALSE;
+			fOkToIncrement = false;
 		}
 
 		// check to see if we are far enough
@@ -1189,7 +1189,7 @@ static INT32 GetTodaysOtherDeposits(void)
 
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	BOOLEAN fOkToIncrement = FALSE;
+	BOOLEAN fOkToIncrement = false;
 	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
@@ -1209,7 +1209,7 @@ static INT32 GetTodaysOtherDeposits(void)
 		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
-		if (date / (24 * 60) > date_in_days - 1) fOkToIncrement = TRUE;
+		if (date / (24 * 60) > date_in_days - 1) fOkToIncrement = true;
 
 		if (fOkToIncrement &&
 				(code != DEPOSIT_FROM_GOLD_MINE && code != DEPOSIT_FROM_SILVER_MINE) &&
@@ -1217,7 +1217,7 @@ static INT32 GetTodaysOtherDeposits(void)
 		{
 			// increment total
 			iTotalIncome += amount;
-			fOkToIncrement = FALSE;
+			fOkToIncrement = false;
 		}
 
 		// check to see if we are far enough
@@ -1238,7 +1238,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is =  date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	BOOLEAN fOkToIncrement = FALSE;
+	BOOLEAN fOkToIncrement = false;
 	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
@@ -1258,7 +1258,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
 		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
-		if (date / (24 * 60) == date_in_days - 1) fOkToIncrement = TRUE;
+		if (date / (24 * 60) == date_in_days - 1) fOkToIncrement = true;
 
 		if (fOkToIncrement &&
 				(code != DEPOSIT_FROM_GOLD_MINE && code != DEPOSIT_FROM_SILVER_MINE) &&

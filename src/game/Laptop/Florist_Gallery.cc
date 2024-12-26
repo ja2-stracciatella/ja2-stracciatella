@@ -67,7 +67,7 @@ UINT32  guiCurrentlySelectedFlower=0;
 UINT8   gubCurFlowerIndex=0;
 UINT8   gubCurNumberOfFlowers=0;
 UINT8   gubPrevNumberOfFlowers=0;
-BOOLEAN gfRedrawFloristGallery=FALSE;
+BOOLEAN gfRedrawFloristGallery=false;
 
 BOOLEAN FloristGallerySubPagesVisitedFlag[ 4 ];
 
@@ -113,7 +113,7 @@ BOOLEAN EnterFloristGallery()
 
 	InitFlowerButtons();
 
-	return(TRUE);
+	return(true);
 }
 
 
@@ -139,13 +139,13 @@ void HandleFloristGallery()
 {
 	if( gfRedrawFloristGallery )
 	{
-		gfRedrawFloristGallery=FALSE;
+		gfRedrawFloristGallery=false;
 
 		//
 		DeleteFlowerButtons();
 		InitFlowerButtons();
 
-		fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = true;
 	}
 
 }
@@ -180,7 +180,7 @@ static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 			gubCurFlowerIndex += 3;
 
 		ChangingFloristGallerySubPage(gubCurFlowerIndex);
-		gfRedrawFloristGallery = TRUE;
+		gfRedrawFloristGallery = true;
 	}
 }
 
@@ -201,7 +201,7 @@ static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 		{
 			guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
 		}
-		gfRedrawFloristGallery = TRUE;
+		gfRedrawFloristGallery = true;
 	}
 }
 
@@ -212,7 +212,7 @@ static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 	{
 		guiCurrentlySelectedFlower = btn->GetUserData();
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
-		gfShowBookmarks = FALSE;
+		gfShowBookmarks = false;
 	}
 }
 
@@ -249,7 +249,7 @@ static void InitFlowerButtons(void)
 		guiGalleryButton[j] = QuickCreateButton(guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY, MSYS_PRIORITY_HIGH, BtnGalleryFlowerButtonCallback);
 		guiGalleryButton[j]->SetCursor(CURSOR_WWW);
 		guiGalleryButton[j]->SetUserData(count);
-		guiGalleryButton[j]->SpecifyIcon(guiFlowerImages[j], 0, 5, 5, FALSE);
+		guiGalleryButton[j]->SpecifyIcon(guiFlowerImages[j], 0, 5, 5, false);
 
 		usPosY += FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y;
 		count ++;
@@ -325,27 +325,27 @@ static BOOLEAN DisplayFloralDescriptions(void)
 		usPosY += FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y;
 	}
 
-	return(TRUE);
+	return(true);
 }
 
 
 static void ChangingFloristGallerySubPage(UINT8 ubSubPageNumber)
 {
-	fLoadPendingFlag = TRUE;
+	fLoadPendingFlag = true;
 
 	//there are 3 flowers per page, 4 pages in total
 	UINT8 ubPageNumber = std::min(ubSubPageNumber / 3, 3);
 
 	if (!FloristGallerySubPagesVisitedFlag[ubPageNumber])
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = FALSE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = false;
 
-		FloristGallerySubPagesVisitedFlag[ubPageNumber] = TRUE;
+		FloristGallerySubPagesVisitedFlag[ubPageNumber] = true;
 	}
 	else
 	{
-		fConnectingToSubPage = TRUE;
-		fFastLoadFlag = TRUE;
+		fConnectingToSubPage = true;
+		fFastLoadFlag = true;
 	}
 }

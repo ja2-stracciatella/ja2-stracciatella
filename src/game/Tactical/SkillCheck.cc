@@ -179,14 +179,14 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 	INT32   iChance;
 	INT32   iRoll, iMadeItBy;
 	INT8    bSlot;
-	BOOLEAN fForceDamnSound = FALSE;
+	BOOLEAN fForceDamnSound = false;
 
 	switch (bReason)
 	{
 		case LOCKPICKING_CHECK:
 		case ELECTRONIC_LOCKPICKING_CHECK:
 
-			fForceDamnSound = TRUE;
+			fForceDamnSound = true;
 
 			iSkill = EffectiveMechanical( pSoldier );
 			if (iSkill == 0)
@@ -253,7 +253,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 
 		case DISARM_TRAP_CHECK:
 
-			fForceDamnSound = TRUE;
+			fForceDamnSound = true;
 
 			iSkill = EffectiveExplosive( pSoldier ) * 7;
 			if ( iSkill == 0 )
@@ -269,7 +269,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 
 		case DISARM_ELECTRONIC_TRAP_CHECK:
 
-			fForceDamnSound = TRUE;
+			fForceDamnSound = true;
 
 			iSkill = std::max( EffectiveMechanical( pSoldier ) , EffectiveExplosive( pSoldier ) ) * 7;
 			if ( iSkill == 0 )
@@ -291,7 +291,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 		case OPEN_WITH_CROWBAR:
 			// Add for crowbar...
 			iSkill = EffectiveStrength( pSoldier ) + 20;
-			fForceDamnSound = TRUE;
+			fForceDamnSound = true;
 			break;
 
 		case SMASH_DOOR_CHECK:

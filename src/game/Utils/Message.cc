@@ -58,14 +58,14 @@ static UINT8 gubEndOfMapScreenMessageList = 0;
 UINT8 gubCurrentMapMessageString = 0;
 
 // are allowed to beep on message scroll?
-BOOLEAN fOkToBeepNewMessage = TRUE;
+BOOLEAN fOkToBeepNewMessage = true;
 
 
 static ScrollStringSt* gpDisplayList[MAX_LINE_COUNT];
 static ScrollStringSt* gMapScreenMessageList[256];
 static ScrollStringSt* pStringS = NULL;
 
-static BOOLEAN fScrollMessagesHidden = FALSE;
+static BOOLEAN fScrollMessagesHidden = false;
 static UINT32  uiStartOfPauseTime = 0;
 
 
@@ -248,20 +248,20 @@ void DisableScrollMessages(void)
 {
 	// will stop the scroll of messages in tactical and hide them during an NPC's dialogue
 	// disble video overlay for tatcitcal scroll messages
-	EnableDisableScrollStringVideoOverlay(FALSE);
+	EnableDisableScrollStringVideoOverlay(false);
 }
 
 
 void EnableScrollMessages(void)
 {
-	EnableDisableScrollStringVideoOverlay(TRUE);
+	EnableDisableScrollStringVideoOverlay(true);
 }
 
 
 void HideMessagesDuringNPCDialogue(void)
 {
 	// will stop the scroll of messages in tactical and hide them during an NPC's dialogue
-	fScrollMessagesHidden = TRUE;
+	fScrollMessagesHidden = true;
 	uiStartOfPauseTime = GetJA2Clock();
 
 	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
@@ -270,7 +270,7 @@ void HideMessagesDuringNPCDialogue(void)
 		if (s != NULL)
 		{
 			RestoreExternBackgroundRectGivenID(s->video_overlay->background);
-			EnableVideoOverlay(FALSE, s->video_overlay);
+			EnableVideoOverlay(false, s->video_overlay);
 		}
 	}
 }
@@ -278,7 +278,7 @@ void HideMessagesDuringNPCDialogue(void)
 
 void UnHideMessagesDuringNPCDialogue(void)
 {
-	fScrollMessagesHidden = FALSE;
+	fScrollMessagesHidden = false;
 
 	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
 	{
@@ -286,7 +286,7 @@ void UnHideMessagesDuringNPCDialogue(void)
 		if (s != NULL)
 		{
 			s->uiTimeOfLastUpdate += GetJA2Clock() - uiStartOfPauseTime;
-			EnableVideoOverlay(TRUE, s->video_overlay);
+			EnableVideoOverlay(true, s->video_overlay);
 		}
 	}
 }
@@ -308,7 +308,7 @@ void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 	}
 	else
 	{
-		fOkToBeepNewMessage = TRUE;
+		fOkToBeepNewMessage = true;
 	}
 }
 
@@ -327,13 +327,13 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::str
 	ScrollStringSt** anchor = &pStringS;
 	while (*anchor) anchor = &(*anchor)->pNext;
 
-	BOOLEAN new_string = TRUE;
+	BOOLEAN new_string = true;
 	for (auto const& codepoints : LineWrap(TINYFONT1, LINE_WIDTH, str))
 	{
 		auto * const tmp{ AddString(codepoints, colour, new_string) };
 		*anchor    = tmp;
 		anchor     = &tmp->pNext;
-		new_string = FALSE;
+		new_string = false;
 	}
 }
 
@@ -354,11 +354,11 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 	{
 		case MSG_UI_FEEDBACK:
 			// An imeediate feedback message. Do something else!
-			BeginUIMessage(FALSE, DestString);
+			BeginUIMessage(false, DestString);
 			return;
 
 		case MSG_SKULL_UI_FEEDBACK:
-			BeginUIMessage(TRUE, DestString);
+			BeginUIMessage(true, DestString);
 			return;
 
 		case MSG_DEBUG:
@@ -375,11 +375,11 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 
 	if (DestString.empty()) return;
 
-	BOOLEAN fNewString = TRUE;
+	BOOLEAN fNewString = true;
 	for (auto const& codepoints : LineWrap(MAP_SCREEN_MESSAGE_FONT, MAP_LINE_WIDTH, DestString))
 	{
 		AddStringToMapScreenMessageList(codepoints, usColor, fNewString);
-		fNewString = FALSE;
+		fNewString = false;
 	}
 
 	MoveToEndOfMapScreenMessageList();

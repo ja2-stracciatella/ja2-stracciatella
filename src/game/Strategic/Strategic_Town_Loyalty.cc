@@ -113,19 +113,19 @@ UINT8 gubTownRebelSentiment[ NUM_TOWNS ] =
 
 BOOLEAN gfTownUsesLoyalty[ NUM_TOWNS ] =
 {
-	FALSE, // not a town - blank sector index
-	TRUE, // OMERTA
-	TRUE, // DRASSEN
-	TRUE, // ALMA
-	TRUE, // GRUMM
-	FALSE, // TIXA
-	TRUE, // CAMBRIA
-	FALSE, // SAN_MONA
-	FALSE, // ESTONI
-	FALSE, // ORTA
-	TRUE, // BALIME
-	TRUE, // MEDUNA
-	TRUE, // CHITZENA
+	false, // not a town - blank sector index
+	true, // OMERTA
+	true, // DRASSEN
+	true, // ALMA
+	true, // GRUMM
+	false, // TIXA
+	true, // CAMBRIA
+	false, // SAN_MONA
+	false, // ESTONI
+	false, // ORTA
+	true, // BALIME
+	true, // MEDUNA
+	true, // CHITZENA
 };
 
 // location of first enocunter with enemy
@@ -141,8 +141,8 @@ void InitTownLoyalty( void )
 	{
 		gTownLoyalty[ ubTown ].ubRating = 0;
 		gTownLoyalty[ ubTown ].sChange = 0;
-		gTownLoyalty[ ubTown ].fStarted = FALSE;
-		gTownLoyalty[ ubTown ].fLiberatedAlready = FALSE;
+		gTownLoyalty[ ubTown ].fStarted = false;
+		gTownLoyalty[ ubTown ].fLiberatedAlready = false;
 	}
 }
 
@@ -176,7 +176,7 @@ void StartTownLoyaltyIfFirstTime( INT8 bTownId )
 		gTownLoyalty[ bTownId ].sChange = 0;
 
 		// remember we've started
-		gTownLoyalty[ bTownId ].fStarted = TRUE;
+		gTownLoyalty[ bTownId ].fStarted = true;
 	}
 }
 
@@ -193,7 +193,7 @@ void SetTownLoyalty( INT8 bTownId, UINT8 ubNewLoyaltyRating )
 		gTownLoyalty[ bTownId ].sChange = 0;
 
 		// this is just like starting the loyalty if it happens first
-		gTownLoyalty[ bTownId ].fStarted = TRUE;
+		gTownLoyalty[ bTownId ].fStarted = true;
 	}
 }
 
@@ -341,7 +341,7 @@ static void UpdateTownLoyaltyRating(INT8 bTownId)
 	// check old aginst new, if diff, dirty map panel
 	if( ubOldLoyaltyRating != gTownLoyalty[ bTownId ].ubRating )
 	{
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty = true;
 	}
 }
 
@@ -356,7 +356,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	INT8 bSeenState = 0;
 	UINT32 uiChanceFalseAccusal = 0;
 	INT8 bKillerTeam = 0;
-	BOOLEAN fIncrement = FALSE;
+	BOOLEAN fIncrement = false;
 
 	// attacker CAN be NOBODY...  Don't treat is as murder if NOBODY killed us...
 	SOLDIERTYPE* const killer = pSoldier->attacker;
@@ -445,13 +445,13 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 		}
 
 		// killer seen by civ?
-		if (SoldierToSoldierLineOfSightTest(pCivSoldier, killer, STRAIGHT_RANGE, TRUE) != 0)
+		if (SoldierToSoldierLineOfSightTest(pCivSoldier, killer, STRAIGHT_RANGE, true) != 0)
 		{
 			bSeenState |= 1;
 		}
 
 		// victim seen by civ?
-		if( SoldierToSoldierLineOfSightTest( pCivSoldier, pSoldier, STRAIGHT_RANGE, TRUE ) != 0 )
+		if( SoldierToSoldierLineOfSightTest( pCivSoldier, pSoldier, STRAIGHT_RANGE, true ) != 0 )
 		{
 			bSeenState |= 2;
 		}
@@ -480,7 +480,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				uiChanceFalseAccusal = 0;
 				break;
 			default:
-				Assert(FALSE);
+				Assert(false);
 				return;
 		}
 
@@ -505,7 +505,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	{
 		case OUR_TEAM:
 			// town thinks player committed the murder, bad bad bad
-			fIncrement = FALSE;
+			fIncrement = false;
 
 			// debug message
 			SLOGD("Civilian killed by friendly forces.");
@@ -516,7 +516,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 			if (StrategicMap[pSoldier->sSector.AsStrategicIndex()].fEnemyControlled)
 			{
 				// enemy soldiers... in enemy controlled sector.  Gain loyalty
-				fIncrement = TRUE;
+				fIncrement = true;
 
 				// debug message
 				SLOGD("Enemy soldiers murdered a civilian. Town loyalty increases");
@@ -528,7 +528,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				iLoyaltyChange /= 100;
 
 				// lose loyalty
-				fIncrement = FALSE;
+				fIncrement = false;
 
 				// debug message
 				SLOGD("Town holds you responsible for murder by enemy.");
@@ -544,7 +544,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				iLoyaltyChange /= 100;
 
 				// lose loyalty
-				fIncrement = FALSE;
+				fIncrement = false;
 
 				// debug message
 				SLOGD("Town holds you responsible for murder by rebels.");
@@ -562,18 +562,18 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				if (StrategicMap[pSoldier->sSector.AsStrategicIndex()].fEnemyControlled)
 				{
 					// enemy controlled sector - gain loyalty
-					fIncrement = TRUE;
+					fIncrement = true;
 				}
 				else
 				{
 					// our sector - lose loyalty
-					fIncrement = FALSE;
+					fIncrement = false;
 				}
 			}
 			break;
 
 		default:
-			Assert(FALSE);
+			Assert(false);
 			return;
 	}
 
@@ -620,7 +620,7 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 	 * unvisited sectors, but let's check anyway */
 	Assert(GetSectorFlagStatus(sSector, SF_ALREADY_VISITED));
 
-	ST::string wSectorName = GetSectorIDString(sSector, TRUE);
+	ST::string wSectorName = GetSectorIDString(sSector, true);
 
 	// go through list of items in sector and randomly remove them
 
@@ -645,7 +645,7 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 
 			// remove
 			somethingWasStolen = true;
-			wi.fExists = FALSE;
+			wi.fExists = false;
 
 			SLOGD("{} stolen in {}!", GCM->getItem(wi.o.usItem)->getName(), wSectorName);
 		}
@@ -821,7 +821,7 @@ void AdjustLoyaltyForCivsEatenByMonsters(const SGPSector& sSector, UINT8 ubHowMa
 	}
 
 	//Report this to player
-	pSectorString = GetSectorIDString(sSector, TRUE);
+	pSectorString = GetSectorIDString(sSector, true);
 	str = st_format_printf(gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString);
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 
@@ -920,7 +920,7 @@ void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
 			break;
 
 		default:
-			Assert(FALSE);
+			Assert(false);
 			return;
 	}
 
@@ -958,7 +958,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, const SGPS
 		if (iShortestDistance[ bTownId ] > 0 )
 		{
 			// calculate across how many sectors the fastest travel path from event to this town sector
-			iThisDistance = FindStratPath(sEventSector, SGPSector(i->sector).AsStrategicIndex(), g, FALSE);
+			iThisDistance = FindStratPath(sEventSector, SGPSector(i->sector).AsStrategicIndex(), g, false);
 
 			if (iThisDistance < iShortestDistance[ bTownId ])
 			{
@@ -1062,7 +1062,7 @@ void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector)
 		}
 
 		// set flag even for towns where you can't train militia, useful for knowing Orta/Tixa were previously controlled
-		gTownLoyalty[ bTownId ].fLiberatedAlready = TRUE;
+		gTownLoyalty[ bTownId ].fLiberatedAlready = true;
 	}
 }
 

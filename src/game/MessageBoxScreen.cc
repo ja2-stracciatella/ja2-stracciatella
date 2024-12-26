@@ -43,18 +43,18 @@ static SGPPoint pOldMousePosition;
 static SGPRect  MessageBoxRestrictedCursorRegion;
 
 // if the cursor was locked to a region
-static BOOLEAN fCursorLockedToArea = FALSE;
+static BOOLEAN fCursorLockedToArea = false;
 
 
 static SGPRect gOldCursorLimitRectangle;
 
 
 MESSAGE_BOX_STRUCT gMsgBox;
-static BOOLEAN     gfNewMessageBox = FALSE;
-static BOOLEAN     gfStartedFromGameScreen = FALSE;
-BOOLEAN            gfStartedFromMapScreen = FALSE;
-BOOLEAN            fRestoreBackgroundForMessageBox = FALSE;
-BOOLEAN            gfDontOverRideSaveBuffer = TRUE;	//this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
+static BOOLEAN     gfNewMessageBox = false;
+static BOOLEAN     gfStartedFromGameScreen = false;
+BOOLEAN            gfStartedFromMapScreen = false;
+BOOLEAN            fRestoreBackgroundForMessageBox = false;
+BOOLEAN            gfDontOverRideSaveBuffer = true;	//this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
 
 ST::string gzUserDefinedButton1;
 ST::string gzUserDefinedButton2;
@@ -90,7 +90,7 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiE
 	pOldMousePosition = GetMousePos();
 
 	//this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
-	gfDontOverRideSaveBuffer = TRUE;
+	gfDontOverRideSaveBuffer = true;
 
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
@@ -103,7 +103,7 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiE
 	gMsgBox.usFlags      = usFlags;
 	gMsgBox.uiExitScreen = uiExitScreen;
 	gMsgBox.ExitCallback = ReturnCallback;
-	gMsgBox.fRenderBox   = TRUE;
+	gMsgBox.fRenderBox   = true;
 	gMsgBox.bHandled     = MSG_BOX_RETURN_NONE;
 
 	// Init message box
@@ -129,12 +129,12 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiE
 
 	if (guiCurrentScreen == GAME_SCREEN)
 	{
-		gfStartedFromGameScreen = TRUE;
+		gfStartedFromGameScreen = true;
 	}
 
 	if (fInMapMode)
 	{
-		fMapPanelDirty         = TRUE;
+		fMapPanelDirty         = true;
 	}
 
 
@@ -167,7 +167,7 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiE
 	// findout if cursor locked, if so, store old params and store, restore when done
 	if (IsCursorRestricted())
 	{
-		fCursorLockedToArea = TRUE;
+		fCursorLockedToArea = true;
 		GetRestrictedClipCursor(&MessageBoxRestrictedCursorRegion);
 		FreeMouseCursor();
 	}
@@ -271,14 +271,14 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiE
 	PauseGame();
 	LockPauseState(LOCK_PAUSE_MSGBOX);
 	// Pause timers as well....
-	PauseTime(TRUE);
+	PauseTime(true);
 
 	// Save mouse restriction region...
 	GetRestrictedClipCursor(&gOldCursorLimitRectangle);
 	FreeMouseCursor();
 
-	gfNewMessageBox = TRUE;
-	gfInMsgBox     = TRUE;
+	gfNewMessageBox = true;
+	gfInMsgBox     = true;
 }
 
 
@@ -326,12 +326,12 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 	UnLockPauseState();
 	UnPauseGame();
 	// UnPause timers as well....
-	PauseTime(FALSE);
+	PauseTime(false);
 
 	// Restore mouse restriction region...
 	RestrictMouseCursor(&gOldCursorLimitRectangle);
 
-	gfInMsgBox = FALSE;
+	gfInMsgBox = false;
 
 	// Call done callback!
 	if (gMsgBox.ExitCallback != NULL) gMsgBox.ExitCallback(ubExitCode);
@@ -344,8 +344,8 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 		InvalidateRegion(gMsgBox.uX, gMsgBox.uY, gMsgBox.uX + gMsgBox.usWidth, gMsgBox.uY + gMsgBox.usHeight);
 	}
 
-	fRestoreBackgroundForMessageBox = FALSE;
-	gfDontOverRideSaveBuffer        = TRUE;
+	fRestoreBackgroundForMessageBox = false;
+	gfDontOverRideSaveBuffer        = true;
 
 	if (fCursorLockedToArea)
 	{
@@ -357,7 +357,7 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 			SimulateMouseMovement(pOldMousePosition.iX, pOldMousePosition.iY);
 		}
 
-		fCursorLockedToArea = FALSE;
+		fCursorLockedToArea = false;
 		RestrictMouseCursor(&MessageBoxRestrictedCursorRegion);
 	}
 
@@ -369,7 +369,7 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 		case GAME_SCREEN:
 			if (InOverheadMap())
 			{
-				gfOverheadMapDirty = TRUE;
+				gfOverheadMapDirty = true;
 			}
 			else
 			{
@@ -378,7 +378,7 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 			break;
 
 		case MAP_SCREEN:
-			fMapPanelDirty = TRUE;
+			fMapPanelDirty = true;
 			break;
 		default:
 			break;
@@ -402,10 +402,10 @@ ScreenID MessageBoxScreenHandle()
 		if (gfStartedFromGameScreen)
 		{
 			HandleTacticalUILoseCursorFromOtherScreen();
-			gfStartedFromGameScreen = FALSE;
+			gfStartedFromGameScreen = false;
 		}
 
-		gfNewMessageBox = FALSE;
+		gfNewMessageBox = false;
 		return MSG_BOX_SCREEN;
 	}
 
@@ -445,7 +445,7 @@ ScreenID MessageBoxScreenHandle()
 		}
 
 		RenderMercPopUpBox(gMsgBox.box, gMsgBox.uX, gMsgBox.uY, FRAME_BUFFER);
-		//gMsgBox.fRenderBox = FALSE;
+		//gMsgBox.fRenderBox = false;
 		// ATE: Render each frame...
 	}
 

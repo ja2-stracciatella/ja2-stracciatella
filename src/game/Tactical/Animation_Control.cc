@@ -2534,8 +2534,7 @@ char const* GetBodyTypePaletteSubstitution(SOLDIERTYPE const* const s, UINT8 con
 }
 
 
-
-BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
+bool SetSoldierAnimationSurface(SOLDIERTYPE *pSoldier, UINT16 usAnimState)
 {
 	// Delete any structure info!
 	if ( pSoldier->pLevelNode != NULL )
@@ -2556,12 +2555,7 @@ BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	// Set
 	pSoldier->usAnimSurface = usAnimSurface;
 
-	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return usAnimSurface != INVALID_ANIMATION_SURFACE;
 }
 
 
@@ -2601,7 +2595,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 	UINT16 usAltAnimSurface;
 	UINT16 usItem;
 	UINT8 ubWaterHandIndex = 1;
-	BOOLEAN fAdjustedForItem = FALSE;
+	bool fAdjustedForItem = false;
 
 	usAnimState = SubstituteBodyTypeAnimation(pSoldier, usAnimState);
 
@@ -2731,7 +2725,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 			if ( usAnimState == STANDING )
 			{
 				usAnimSurface = gusNothingBreath[pSoldier->ubBodyType];
-				fAdjustedForItem = TRUE;
+				fAdjustedForItem = true;
 			}
 			else
 			{
@@ -2740,7 +2734,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 				if ( usAltAnimSurface != INVALID_ANIMATION )
 				{
 					usAnimSurface = usAltAnimSurface;
-					fAdjustedForItem = TRUE;
+					fAdjustedForItem = true;
 				}
 			}
 		}
@@ -2757,7 +2751,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 					if ( usAltAnimSurface != INVALID_ANIMATION )
 					{
 						usAnimSurface = usAltAnimSurface;
-						fAdjustedForItem = TRUE;
+						fAdjustedForItem = true;
 					}
 
 					// Look for good two pistols sub anim.....
@@ -2769,7 +2763,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 							if( !GCM->getItem(pSoldier->inv[SECONDHANDPOS].usItem)->isTwoHanded() )
 							{
 								usAnimSurface = gDoubleHandledSub.usAnimationSurfaces[pSoldier->ubBodyType];
-								fAdjustedForItem = TRUE;
+								fAdjustedForItem = true;
 							}
 						}
 					}
@@ -2783,7 +2777,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 				if ( usAltAnimSurface != INVALID_ANIMATION )
 				{
 					usAnimSurface = usAltAnimSurface;
-					fAdjustedForItem = TRUE;
+					fAdjustedForItem = true;
 				}
 			}
 		}

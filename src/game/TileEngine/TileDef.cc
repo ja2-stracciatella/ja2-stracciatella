@@ -301,7 +301,7 @@ bool AnyHeigherLand(UINT32 const map_idx, UINT32 const src_type, UINT8* const ou
 		if (GetTileTypeLogicalHeight(tile_type) > src_log_height)
 		{
 			*out_last_level = level;
-			found = TRUE;
+			found = true;
 		}
 	}
 	return found;

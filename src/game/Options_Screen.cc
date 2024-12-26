@@ -114,15 +114,15 @@ static SLIDER* guiSoundEffectsSlider;
 static SLIDER* guiSpeechSlider;
 static SLIDER* guiMusicSlider;
 
-static BOOLEAN gfOptionsScreenEntry  = TRUE;
-static BOOLEAN gfOptionsScreenExit   = FALSE;
-static BOOLEAN gfRedrawOptionsScreen = TRUE;
+static BOOLEAN gfOptionsScreenEntry  = true;
+static BOOLEAN gfOptionsScreenExit   = false;
+static BOOLEAN gfRedrawOptionsScreen = true;
 
 static ScreenID guiOptionsScreen        = OPTIONS_SCREEN;
 ScreenID        guiPreviousOptionScreen = OPTIONS_SCREEN;
 
-static BOOLEAN gfExitOptionsDueToMessageBox = FALSE;
-static BOOLEAN gfExitOptionsAfterMessageBox = FALSE;
+static BOOLEAN gfExitOptionsDueToMessageBox = false;
+static BOOLEAN gfExitOptionsAfterMessageBox = false;
 
 
 static UINT32 guiSoundFxSliderMoving = 0xFFFFFFFF;
@@ -168,9 +168,9 @@ ScreenID OptionsScreenHandle()
 	{
 		PauseGame();
 		EnterOptionsScreen();
-		gfOptionsScreenEntry = FALSE;
-		gfOptionsScreenExit = FALSE;
-		gfRedrawOptionsScreen = TRUE;
+		gfOptionsScreenEntry = false;
+		gfOptionsScreenExit = false;
+		gfRedrawOptionsScreen = true;
 		RenderOptionsScreen();
 
 		//Blit the background to the save buffer
@@ -189,7 +189,7 @@ ScreenID OptionsScreenHandle()
 		RenderOptionsScreen();
 		RenderButtons();
 
-		gfRedrawOptionsScreen = FALSE;
+		gfRedrawOptionsScreen = false;
 	}
 
 	//Render the active slider bars
@@ -207,8 +207,8 @@ ScreenID OptionsScreenHandle()
 	if( gfOptionsScreenExit )
 	{
 		ExitOptionsScreen();
-		gfOptionsScreenExit = FALSE;
-		gfOptionsScreenEntry = TRUE;
+		gfOptionsScreenExit = false;
+		gfOptionsScreenEntry = true;
 
 		UnPauseGame();
 	}
@@ -248,12 +248,12 @@ static void EnterOptionsScreen(void)
 
 	if( gfExitOptionsDueToMessageBox )
 	{
-		gfRedrawOptionsScreen = TRUE;
-		gfExitOptionsDueToMessageBox = FALSE;
+		gfRedrawOptionsScreen = true;
+		gfExitOptionsDueToMessageBox = false;
 		return;
 	}
 
-	gfExitOptionsDueToMessageBox = FALSE;
+	gfExitOptionsDueToMessageBox = false;
 
 	// load the options screen background graphic and add it
 	guiOptionBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/optionscreenbase.sti");
@@ -340,7 +340,7 @@ static void EnterOptionsScreen(void)
 	RemoveMouseRegionForPauseOfClock(  );
 
 	//Draw the screen
-	gfRedrawOptionsScreen = TRUE;
+	gfRedrawOptionsScreen = true;
 
 	//Set the option screen toggle boxes
 	SetOptionsScreenToggleBoxes();
@@ -369,12 +369,12 @@ static void ExitOptionsScreen(void)
 
 	if( gfExitOptionsDueToMessageBox )
 	{
-		gfOptionsScreenExit = FALSE;
+		gfOptionsScreenExit = false;
 
 		if( !gfExitOptionsAfterMessageBox )
 			return;
-		gfExitOptionsAfterMessageBox = FALSE;
-		gfExitOptionsDueToMessageBox = FALSE;
+		gfExitOptionsAfterMessageBox = false;
+		gfExitOptionsDueToMessageBox = false;
 	}
 
 	//Get the current status of the toggle boxes
@@ -444,7 +444,7 @@ static void HandleOptionsScreen(void)
 {
 	HandleSliderBarMovementSounds();
 
-	HandleHighLightedText( TRUE );
+	HandleHighLightedText( true );
 }
 
 
@@ -519,14 +519,14 @@ static void GetOptionsScreenUserInput(void)
 					if (guiOptGotoSaveGameBtn->Enabled())
 					{
 						SetOptionsExitScreen( SAVE_LOAD_SCREEN );
-						gfSaveGame = TRUE;
+						gfSaveGame = true;
 					}
 					break;
 
 				//Enter the Load game screen
 				case SDLK_l:
 					SetOptionsExitScreen( SAVE_LOAD_SCREEN );
-					gfSaveGame = FALSE;
+					gfSaveGame = false;
 					break;
 			}
 		}
@@ -537,7 +537,7 @@ static void GetOptionsScreenUserInput(void)
 static void SetOptionsExitScreen(ScreenID const uiExitScreen)
 {
 	guiOptionsScreen = uiExitScreen;
-	gfOptionsScreenExit	= TRUE;
+	gfOptionsScreenExit	= true;
 }
 
 
@@ -546,7 +546,7 @@ static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SetOptionsExitScreen( SAVE_LOAD_SCREEN );
-		gfSaveGame = TRUE;
+		gfSaveGame = true;
 	}
 }
 
@@ -556,7 +556,7 @@ static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		SetOptionsExitScreen( SAVE_LOAD_SCREEN );
-		gfSaveGame = FALSE;
+		gfSaveGame = false;
 	}
 }
 
@@ -626,10 +626,10 @@ static void HandleOptionToggle(UINT8 const button_id, bool const state, bool con
 			(button_id == TOPTION_SUBTITLES && !guiOptionsToggles[TOPTION_SPEECH]->Clicked())
 		))
 	{
-		gGameSettings.fOptions[button_id] = TRUE;
+		gGameSettings.fOptions[button_id] = true;
 		b.uiFlags |= BUTTON_CLICKED_ON;
 		DoOptionsMessageBox(zOptionsText[OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON], OPTIONS_SCREEN, MSG_BOX_FLAG_OK, 0);
-		gfExitOptionsDueToMessageBox = FALSE;
+		gfExitOptionsDueToMessageBox = false;
 	}
 
 	if (play_sound)
@@ -665,7 +665,7 @@ static void MusicSliderChangeCallBack(INT32 iNewValue)
 void DoOptionsMessageBoxWithRect(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect)
 {
 	// reset exit mode
-	gfExitOptionsDueToMessageBox = TRUE;
+	gfExitOptionsDueToMessageBox = true;
 
 	// do message box and return
 	DoMessageBox(MSG_BOX_BASIC_STYLE, str, uiExitScreen, usFlags, ReturnCallback, centering_rect);
@@ -684,7 +684,7 @@ static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue const 
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		DoDeadIsDeadSaveIfNecessary();
-		gfExitOptionsAfterMessageBox = TRUE;
+		gfExitOptionsAfterMessageBox = true;
 		SetOptionsExitScreen( MAINMENU_SCREEN );
 
 		//We want to reinitialize the game
@@ -692,8 +692,8 @@ static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue const 
 	}
 	else
 	{
-		gfExitOptionsAfterMessageBox = FALSE;
-		gfExitOptionsDueToMessageBox = FALSE;
+		gfExitOptionsAfterMessageBox = false;
+		gfExitOptionsDueToMessageBox = false;
 	}
 }
 
@@ -763,12 +763,12 @@ static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReas
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		HandleOptionToggle(ubButton, !gGameSettings.fOptions[ubButton], FALSE, true);
+		HandleOptionToggle(ubButton, !gGameSettings.fOptions[ubButton], false, true);
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_POINTER_DWN )
 	{
-		HandleOptionToggle(ubButton, gGameSettings.fOptions[ubButton], TRUE, true);
+		HandleOptionToggle(ubButton, gGameSettings.fOptions[ubButton], true, true);
 	}
 }
 
@@ -780,7 +780,7 @@ static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, UINT
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 
-		HandleHighLightedText( FALSE );
+		HandleHighLightedText( false );
 
 		gbHighLightedOptionText = -1;
 
@@ -806,7 +806,7 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 	static	INT8	bLastRegion = -1;
 
 	if( gbHighLightedOptionText == -1 )
-		fHighLight = FALSE;
+		fHighLight = false;
 
 	//if the user has the mouse in one of the checkboxes
 	for( ubCnt=0; ubCnt<NUM_GAME_OPTIONS;ubCnt++)
@@ -814,7 +814,7 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 		if (guiOptionsToggles[ubCnt]->Area.uiFlags & MSYS_MOUSE_IN_AREA)
 		{
 			gbHighLightedOptionText = ubCnt;
-			fHighLight = TRUE;
+			fHighLight = true;
 		}
 	}
 
@@ -829,7 +829,7 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 
 	if( bLastRegion != -1 && gbHighLightedOptionText == -1 )
 	{
-		fHighLight = FALSE;
+		fHighLight = false;
 		bHighLight = bLastRegion;
 		bLastRegion = -1;
 	}

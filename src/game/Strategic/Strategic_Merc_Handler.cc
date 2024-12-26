@@ -83,7 +83,7 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 	s.uiStatusFlags |= SOLDIER_DEAD;
 	s.bBreathMax     = 0;
 	s.bBreath        = 0;
-	s.fMercAsleep    = FALSE; // Not asleep, dead
+	s.fMercAsleep    = false; // Not asleep, dead
 
 	if (s.ubProfile != NO_PROFILE)
 	{
@@ -379,7 +379,7 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 
 	if( fShowContractMenu )
 	{
-		fShowContractMenu = FALSE;
+		fShowContractMenu = false;
 	}
 
 	// go to mapscreen
@@ -479,10 +479,10 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 		(bBestArmour != -1 && bBestArmour < ( gMercProfiles[ pSoldier->ubProfile ].bArmourAttractiveness / 2 )) )
 	{
 		// Pipe up!
-		return( TRUE );
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 

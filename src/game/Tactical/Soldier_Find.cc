@@ -45,7 +45,7 @@ struct SOLDIER_STACK_TYPE
 };
 
 static SOLDIER_STACK_TYPE gSoldierStack;
-static BOOLEAN            gfHandleStack = FALSE;
+static BOOLEAN            gfHandleStack = false;
 
 bool IsOwnedMerc(SOLDIERTYPE const& s)
 {
@@ -109,7 +109,7 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 	if (flags & FIND_SOLDIER_BEGINSTACK)
 	{
 		gSoldierStack.bNum       = 0;
-		gSoldierStack.fUseGridNo = FALSE;
+		gSoldierStack.fUseGridNo = false;
 	}
 
 	INT16        heighest_merc_screen_y = -32000;
@@ -179,7 +179,7 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 			// Only break here if we're not creating a stack of these fellas
 			if (flags & FIND_SOLDIER_BEGINSTACK)
 			{
-				gfHandleStack = TRUE;
+				gfHandleStack = true;
 
 				// Add this one!
 				gSoldierStack.mercs[gSoldierStack.bNum++] = &s;
@@ -219,7 +219,7 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 		{
 			// Otherwise, look for a bad guy by way of gridno
 			// Selective means don't give out enemy mercs if they are not visible
-			if (s.sGridNo == gridno && !NewOKDestination(&s, gridno, TRUE, gsInterfaceLevel))
+			if (s.sGridNo == gridno && !NewOKDestination(&s, gridno, true, gsInterfaceLevel))
 			{
 				return &s;
 			}
@@ -233,7 +233,7 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 		!(flags & FIND_SOLDIER_BEGINSTACK) &&
 		(!gSoldierStack.fUseGridNo || gSoldierStack.sUseGridNoGridNo != gridno))
 	{
-		gfHandleStack = FALSE;
+		gfHandleStack = false;
 	}
 	return 0;
 }
@@ -245,7 +245,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 	if (!gfHandleStack &&
 		FindSoldier(usMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel) | FIND_SOLDIER_BEGINSTACK) != NULL)
 	{
-		gfHandleStack = TRUE;
+		gfHandleStack = true;
 	}
 
 	if ( gfHandleStack )
@@ -256,20 +256,20 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 			gSoldierStack.bCur++;
 		}
 
-		gfUIForceReExamineCursorData = TRUE;
+		gfUIForceReExamineCursorData = true;
 
 		if ( gSoldierStack.bCur == gSoldierStack.bNum )
 		{
 			if ( !gSoldierStack.fUseGridNo )
 			{
-				gSoldierStack.fUseGridNo = TRUE;
-				gUIActionModeChangeDueToMouseOver = FALSE;
+				gSoldierStack.fUseGridNo = true;
+				gUIActionModeChangeDueToMouseOver = false;
 				gSoldierStack.sUseGridNoGridNo = usMapPos;
 			}
 			else
 			{
 				gSoldierStack.bCur = 0;
-				gSoldierStack.fUseGridNo = FALSE;
+				gSoldierStack.fUseGridNo = false;
 			}
 		}
 
@@ -295,20 +295,20 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 BOOLEAN IsValidTargetMerc(const SOLDIERTYPE* const s)
 {
 	// CHECK IF ACTIVE!
-	if (!s->bActive) return FALSE;
+	if (!s->bActive) return false;
 
 	// CHECK IF DEAD
-	//if (s->bLife == 0) return FALSE;
+	//if (s->bLife == 0) return false;
 
 	// IF BAD GUY - CHECK VISIVILITY
 	if (s->bTeam != OUR_TEAM &&
 		s->bVisible == -1 &&
 		!(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 	{
-		return( FALSE  );
+		return( false  );
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -327,14 +327,14 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* con
 
 void GetSoldierScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX, INT16* const psScreenY)
 {
-	GetSoldierTRUEScreenPos(s, psScreenX, psScreenY);
+	GetSoldiertrueScreenPos(s, psScreenX, psScreenY);
 	*psScreenX += s->sBoundingBoxOffsetX;
 	*psScreenY += s->sBoundingBoxOffsetY;
 }
 
 
-// THE TRUE SCREN RECT DOES NOT TAKE THE OFFSETS OF BUDDY INTO ACCOUNT!
-void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX, INT16* const psScreenY)
+// THE true SCREN RECT DOES NOT TAKE THE OFFSETS OF BUDDY INTO ACCOUNT!
+void GetSoldiertrueScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX, INT16* const psScreenY)
 {
 	UINT16 const usAnimSurface = GetSoldierAnimationSurface(s);
 	if (usAnimSurface == INVALID_ANIMATION_SURFACE)
@@ -344,12 +344,12 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX,
 		return;
 	}
 
-	// Get 'TRUE' merc position
-	FLOAT const dOffsetX = s->dXPos - gsRenderCenterX;
-	FLOAT const dOffsetY = s->dYPos - gsRenderCenterY;
+	// Get 'true' merc position
+	float const dOffsetX = s->dXPos - gsRenderCenterX;
+	float const dOffsetY = s->dYPos - gsRenderCenterY;
 
-	FLOAT dTempX_S;
-	FLOAT dTempY_S;
+	float dTempX_S;
+	float dTempY_S;
 	FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
 	INT16 sMercScreenX = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
@@ -447,7 +447,7 @@ BOOLEAN SoldierLocationRelativeToScreen(const INT16 sGridNo, INT8* const pbDirec
 		if ( fCountdown > gScrollSlideInertiaDirection[ *pbDirection ] )
 		{
 			fCountdown = 0;
-			return( FALSE );
+			return false;
 		}
 		else
 		{
@@ -455,7 +455,7 @@ BOOLEAN SoldierLocationRelativeToScreen(const INT16 sGridNo, INT8* const pbDirec
 		}
 	}
 
-	return( TRUE );
+	return true;
 }
 
 BOOLEAN IsPointInSoldierBoundingBox( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
@@ -473,7 +473,7 @@ UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* const pSoldier, const INT1
 {
 	SGPRect aRect;
 	INT16   sRelX, sRelY;
-	FLOAT   dRelPer;
+	float   dRelPer;
 
 
 	// Get Rect contained in the soldier
@@ -481,7 +481,7 @@ UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* const pSoldier, const INT1
 
 	if ( IsPointInScreenRectWithRelative( sX, sY, &aRect, &sRelX, &sRelY ) )
 	{
-		dRelPer = (FLOAT)sRelY / ( aRect.iBottom - aRect.iTop );
+		dRelPer = (float)sRelY / ( aRect.iBottom - aRect.iTop );
 
 		// Determine relative positions
 		switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )
@@ -505,12 +505,12 @@ UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* const pSoldier, const INT1
 void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *psScreenY )
 {
 	INT16 sScreenX, sScreenY;
-	FLOAT dOffsetX, dOffsetY;
-	FLOAT dTempX_S, dTempY_S;
+	float dOffsetX, dOffsetY;
+	float dTempX_S, dTempY_S;
 
-	// Get 'TRUE' merc position
-	dOffsetX = (FLOAT)( CenterX( sGridNo ) - gsRenderCenterX );
-	dOffsetY = (FLOAT)( CenterY( sGridNo ) - gsRenderCenterY );
+	// Get 'true' merc position
+	dOffsetX = (float)( CenterX( sGridNo ) - gsRenderCenterX );
+	dOffsetY = (float)( CenterY( sGridNo ) - gsRenderCenterY );
 
 	// OK, DONT'T ASK... CONVERSION TO PROPER Y NEEDS THIS...
 	dOffsetX -= CELL_Y_SIZE;

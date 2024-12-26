@@ -499,7 +499,7 @@ try
 	// Get palette and create palettes and do substitutions
 	CreateCorpsePalette(c);
 
-	c->fActivated = TRUE;
+	c->fActivated = true;
 	ani->v.user.uiData = c->ID();
 	c->def.ubAIWarningValue = CORPSE_WARNING_MAX;
 
@@ -520,12 +520,12 @@ try
 	ST::string zFilename(FileMan::getFileNameWithoutExt(AniParams.zCachedFile));
 
 	// Add structure data.....
-	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, ani->sCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
+	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, ani->sCachedTileID, GetCorpseStructIndex(pCorpseDef, true));
 
 	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename);
 	if (pStructureFileRef != NULL)
 	{
-		const UINT16                  usStructIndex   = GetCorpseStructIndex(pCorpseDef, TRUE);
+		const UINT16                  usStructIndex   = GetCorpseStructIndex(pCorpseDef, true);
 		const DB_STRUCTURE_REF* const pDBStructureRef = &pStructureFileRef->pDBStructureRef[usStructIndex];
 		for (UINT8 ubLoop = 0; ubLoop < pDBStructureRef->pDBStructure->ubNumberOfTiles; ++ubLoop)
 		{
@@ -570,7 +570,7 @@ static void RemoveCorpse(ROTTING_CORPSE* const c)
 	Assert(gRottingCorpse <= c && c < endof(gRottingCorpse));
 	Assert(c->fActivated);
 
-	c->fActivated = FALSE;
+	c->fActivated = false;
 	DeleteAniTile(c->pAniTile);
 	FreeCorpsePalettes(c);
 }
@@ -613,7 +613,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 {
 	if (s.sGridNo == NOWHERE)
 	{
-		return( FALSE );
+		return false;
 	}
 
 	// ATE: Change to fix crash when item in hand
@@ -686,7 +686,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	}
 	else if ( ubType == QUEEN_MONSTER_DEAD )
 	{
-		gTacticalStatus.fLockItemLocators = FALSE;
+		gTacticalStatus.fLockItemLocators = false;
 
 		UINT8 const ubNumGoo = 6 - ( gGameOptions.ubDifficultyLevel - DIF_LEVEL_EASY );
 
@@ -744,7 +744,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 
 	if (ubType == NO_CORPSE)
 	{
-		return( TRUE );
+		return true;
 	}
 
 	// Set type
@@ -754,10 +754,10 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	if (added_corpse)
 	{
 		added_corpse->def.bVisible = 1;
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -899,7 +899,7 @@ void HandleRottingCorpses( )
 	// Once population gets down to 0, we can add more again....
 	if ( bNumCrows == 0 )
 	{
-		gTacticalStatus.fDontAddNewCrows = FALSE;
+		gTacticalStatus.fDontAddNewCrows = false;
 	}
 
 	if ( gTacticalStatus.fDontAddNewCrows )
@@ -909,7 +909,7 @@ void HandleRottingCorpses( )
 
 	if ( bNumCrows >= gTacticalStatus.ubNumCrowsPossible )
 	{
-		gTacticalStatus.fDontAddNewCrows = TRUE;
+		gTacticalStatus.fDontAddNewCrows = true;
 		return;
 	}
 
@@ -1068,10 +1068,10 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	INT32 uiRange, uiLowestRange = 999999;
 	INT16 sLowestGridNo=0;
 	INT32 leftmost;
-	BOOLEAN fFound = FALSE;
+	BOOLEAN fFound = false;
 	SOLDIERTYPE soldier{};
 	UINT8 ubBestDirection=0;
-	BOOLEAN fSetDirection = FALSE;
+	BOOLEAN fSetDirection = false;
 
 	cnt3 = 0;
 
@@ -1130,15 +1130,15 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 				gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE && !Water(sGridNo))
 			{
 				// Go on sweet stop
-				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.bLevel ) )
+				if ( NewOKDestination( &soldier, sGridNo, true, soldier.bLevel ) )
 				{
-					BOOLEAN fDirectionFound = FALSE;
-					BOOLEAN	fCanSetDirection   = FALSE;
+					BOOLEAN fDirectionFound = false;
+					BOOLEAN	fCanSetDirection   = false;
 
 					// Check each struct in each direction
 					if ( pStructureFileRef == NULL )
 					{
-						fDirectionFound = TRUE;
+						fDirectionFound = true;
 					}
 					else
 					{
@@ -1146,8 +1146,8 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 						{
 							if (OkayToAddStructureToWorld(sGridNo, pDef->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(cnt3)], INVALID_STRUCTURE_ID))
 							{
-								fDirectionFound = TRUE;
-								fCanSetDirection = TRUE;
+								fDirectionFound = true;
+								fCanSetDirection = true;
 								break;
 							}
 						}
@@ -1162,11 +1162,11 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 							if ( fCanSetDirection )
 							{
 								ubBestDirection = (UINT8)cnt3;
-								fSetDirection   = TRUE;
+								fSetDirection   = true;
 							}
 							sLowestGridNo = sGridNo;
 							uiLowestRange = uiRange;
-							fFound = TRUE;
+							fFound = true;
 						}
 					}
 
@@ -1190,7 +1190,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 
 BOOLEAN IsValidDecapitationCorpse(const ROTTING_CORPSE* const c)
 {
-	if (c->def.fHeadTaken) return FALSE;
+	if (c->def.fHeadTaken) return false;
 	return gbCorpseValidForDecapitation[c->def.ubType];
 }
 
@@ -1237,7 +1237,7 @@ void DecapitateCorpse(const INT16 sGridNo, const INT8 bLevel)
 		// Add new one...
 		CorpseDef.ubType = gDecapitatedCorpse[ CorpseDef.ubType ];
 
-		pCorpse->def.fHeadTaken = TRUE;
+		pCorpse->def.fHeadTaken = true;
 
 		if ( CorpseDef.ubType != 0 )
 		{

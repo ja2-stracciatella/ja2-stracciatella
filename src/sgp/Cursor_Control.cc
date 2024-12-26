@@ -21,7 +21,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-static BOOLEAN gfCursorDatabaseInit = FALSE;
+static BOOLEAN gfCursorDatabaseInit = false;
 
 static CursorFileData* gpCursorFileDatabase;
 static CursorData*     gpCursorDatabase;
@@ -80,7 +80,7 @@ void InitCursorDatabase(CursorFileData* pCursorFileData, CursorData* pCursorData
 	gpCursorFileDatabase = pCursorFileData;
 	gpCursorDatabase     = pCursorData;
 	gusNumDataFiles      = suNumDataFiles;
-	gfCursorDatabaseInit = TRUE;
+	gfCursorDatabaseInit = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,7 +245,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 				uiCursorIndex = VIDEO_NO_CURSOR;
 				guiOldSetCursor = VIDEO_NO_CURSOR;
 				SetMouseCursorProperties(0, 0, 0, 0);
-				return TRUE;
+				return true;
 			}
 
 			// First check if we are a differnet curosr...
@@ -266,7 +266,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 				if (GetClock() - guiDelayTimer < 1000)
 				{
 					SetMouseCursorProperties(0, 0, 0, 0);
-					return TRUE;
+					return true;
 				}
 			}
 
@@ -346,7 +346,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 

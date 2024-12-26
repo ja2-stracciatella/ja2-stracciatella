@@ -16,7 +16,7 @@
 #include <utility>
 
 
-BOOLEAN gfNoScroll = FALSE;
+BOOLEAN gfNoScroll = false;
 
 struct TextInputColors
 {
@@ -122,7 +122,7 @@ static void PopTextInputLevel(void)
 
 //flags for determining various editing modes.
 static bool gfEditingText = false;
-static BOOLEAN gfTextInputMode = FALSE;
+static BOOLEAN gfTextInputMode = false;
 
 void SetEditingStatus(bool bIsEditing)
 {
@@ -163,10 +163,10 @@ void InitTextInputMode()
 	}
 	ZapTextInputPointers();
 	pColors = new TextInputColors{};
-	gfTextInputMode = TRUE;
-	SetEditingStatus(FALSE);
-	pColors->fBevelling = FALSE;
-	pColors->fUseDisabledAutoShade = TRUE;
+	gfTextInputMode = true;
+	SetEditingStatus(false);
+	pColors->fBevelling = false;
+	pColors->fUseDisabledAutoShade = true;
 	pColors->usCursorColor = 0;
 }
 
@@ -210,8 +210,8 @@ void KillTextInputMode()
 	}
 	else
 	{
-		gfTextInputMode = FALSE;
-		SetEditingStatus(FALSE);
+		gfTextInputMode = false;
+		SetEditingStatus(false);
 		ZapTextInputPointers();
 	}
 }
@@ -231,7 +231,7 @@ void KillAllTextInputModes()
 static TEXTINPUTNODE* AllocateTextInputNode(BOOLEAN const start_editing)
 {
 	TEXTINPUTNODE* const n = new TEXTINPUTNODE{};
-	n->fEnabled = TRUE;
+	n->fEnabled = true;
 	if (!gpTextInputHead)
 	{ // First entry, so we start with text input.
 		SetEditingStatus(start_editing);
@@ -261,7 +261,7 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, UINT32 reason);
  * processes them for you, as well as deleting them when you are done. */
 void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const ST::string& str, size_t maxCodepoints, InputType usInputType)
 {
-	TEXTINPUTNODE* const n = AllocateTextInputNode(TRUE);
+	TEXTINPUTNODE* const n = AllocateTextInputNode(true);
 	//Setup the information for the node
 	n->usInputType = usInputType;	//setup the filter type
 	// All 24hourclock inputtypes have 5 codepoints.  01:23
@@ -296,8 +296,8 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
  * All of that stuff would be handled externally, except for the TAB keys. */
 void AddUserInputField(INPUT_CALLBACK const userFunction)
 {
-	TEXTINPUTNODE* const n = AllocateTextInputNode(FALSE);
-	n->fUserField    = TRUE;
+	TEXTINPUTNODE* const n = AllocateTextInputNode(false);
+	n->fUserField    = true;
 	n->InputCallback = userFunction;
 }
 
@@ -402,7 +402,7 @@ void SetActiveField(UINT8 const id)
 	if (!n->fEnabled)  return;
 
 	if (gpActive && gpActive->InputCallback) {
-		gpActive->InputCallback(gpActive->ubID, FALSE);
+		gpActive->InputCallback(gpActive->ubID, false);
 	}
 
 	gpActive = n;
@@ -410,12 +410,12 @@ void SetActiveField(UINT8 const id)
 	{
 		gubStartHilite = 0;
 		gubCursorPos   = n->numCodepoints;
-		SetEditingStatus(TRUE);
+		SetEditingStatus(true);
 	}
 	else
 	{
-		SetEditingStatus(FALSE);
-		if (n->InputCallback) n->InputCallback(n->ubID, TRUE);
+		SetEditingStatus(false);
+		if (n->InputCallback) n->InputCallback(n->ubID, true);
 	}
 }
 
@@ -425,7 +425,7 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE const*);
 
 void SelectNextField()
 {
-	BOOLEAN fDone = FALSE;
+	BOOLEAN fDone = false;
 	TEXTINPUTNODE *pStart;
 
 	if( !gpActive )
@@ -433,7 +433,7 @@ void SelectNextField()
 	if (gpActive->maxCodepoints > 0)
 		RenderInactiveTextFieldNode( gpActive );
 	else if( gpActive->InputCallback )
-		(gpActive->InputCallback)(gpActive->ubID, FALSE );
+		(gpActive->InputCallback)(gpActive->ubID, false );
 	pStart = gpActive;
 	while( !fDone )
 	{
@@ -442,23 +442,23 @@ void SelectNextField()
 			gpActive = gpTextInputHead;
 		if( gpActive->fEnabled )
 		{
-			fDone = TRUE;
+			fDone = true;
 			if (gpActive->maxCodepoints > 0)
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->numCodepoints;
-				SetEditingStatus(TRUE);
+				SetEditingStatus(true);
 			}
 			else
 			{
-				SetEditingStatus(FALSE);
+				SetEditingStatus(false);
 				if( gpActive->InputCallback )
-					(gpActive->InputCallback)(gpActive->ubID, TRUE);
+					(gpActive->InputCallback)(gpActive->ubID, true);
 			}
 		}
 		if( gpActive == pStart )
 		{
-			SetEditingStatus(FALSE);
+			SetEditingStatus(false);
 			return;
 		}
 	}
@@ -467,7 +467,7 @@ void SelectNextField()
 
 static void SelectPrevField(void)
 {
-	BOOLEAN fDone = FALSE;
+	BOOLEAN fDone = false;
 	TEXTINPUTNODE *pStart;
 
 	if( !gpActive )
@@ -475,7 +475,7 @@ static void SelectPrevField(void)
 	if (gpActive->maxCodepoints > 0)
 		RenderInactiveTextFieldNode( gpActive );
 	else if( gpActive->InputCallback )
-		(gpActive->InputCallback)(gpActive->ubID, FALSE );
+		(gpActive->InputCallback)(gpActive->ubID, false );
 	pStart = gpActive;
 	while( !fDone )
 	{
@@ -484,23 +484,23 @@ static void SelectPrevField(void)
 			gpActive = gpTextInputTail;
 		if( gpActive->fEnabled )
 		{
-			fDone = TRUE;
+			fDone = true;
 			if (gpActive->maxCodepoints > 0)
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->numCodepoints;
-				SetEditingStatus(TRUE);
+				SetEditingStatus(true);
 			}
 			else
 			{
-				SetEditingStatus(FALSE);
+				SetEditingStatus(false);
 				if( gpActive->InputCallback )
-					(gpActive->InputCallback)(gpActive->ubID, TRUE);
+					(gpActive->InputCallback)(gpActive->ubID, true);
 			}
 		}
 		if( gpActive == pStart )
 		{
-			SetEditingStatus(FALSE);
+			SetEditingStatus(false);
 			return;
 		}
 	}
@@ -536,7 +536,7 @@ void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ub
 
 void SetBevelColors( UINT16 usBrighterColor, UINT16 usDarkerColor )
 {
-	pColors->fBevelling = TRUE;
+	pColors->fBevelling = true;
 	pColors->usBrighterColor = usBrighterColor;
 	pColors->usDarkerColor = usDarkerColor;
 }
@@ -555,13 +555,13 @@ static void RemoveChars(size_t pos, size_t n);
 
 BOOLEAN HandleTextInput(InputAtom const* const a)
 {
-	gfNoScroll = FALSE;
+	gfNoScroll = false;
 	// Not in text input mode
-	if (!gfTextInputMode) return FALSE;
+	if (!gfTextInputMode) return false;
 	// Unless we are psycho typers, we only want to process these key events.
-	if (a->usEvent != TEXT_INPUT && a->usEvent != KEY_DOWN && a->usEvent != KEY_REPEAT) return FALSE;
+	if (a->usEvent != TEXT_INPUT && a->usEvent != KEY_DOWN && a->usEvent != KEY_REPEAT) return false;
 	// Currently in a user field, so return unless TAB is pressed.
-	if (!gfEditingText && a->usParam != SDLK_TAB) return FALSE;
+	if (!gfEditingText && a->usParam != SDLK_TAB) return false;
 
 	if (a->usEvent == TEXT_INPUT) {
 		/* If the key has no character associated, bail out */
@@ -571,7 +571,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 		{
 			HandleRegularInput(c);
 		}
-		return TRUE;
+		return true;
 	}
 
 	switch (a->usKeyState)
@@ -581,39 +581,39 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 			{
 				/* ESC and ENTER must be handled externally, due to the infinite uses
 				 * for them. */
-				case SDLK_ESCAPE: return FALSE; // ESC is equivalent to cancel
+				case SDLK_ESCAPE: return false; // ESC is equivalent to cancel
 
 				case SDLK_RETURN: // ENTER is to confirm.
 					PlayJA2Sample(REMOVING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-					return FALSE;
+					return false;
 
 				case SDLK_TAB:
 					/* Always select the next field, even when a user defined field is
 					 * currently selected. The order in which you add your text and user
 					 * fields dictates the cycling order when TAB is pressed. */
 					SelectNextField();
-					return TRUE;
+					return true;
 
 				case SDLK_LEFT:
-					gfNoScroll = TRUE;
+					gfNoScroll = true;
 					if (gubCursorPos != 0) --gubCursorPos;
 					gubStartHilite = gubCursorPos;
-					return TRUE;
+					return true;
 
 				case SDLK_RIGHT:
 					if (gubCursorPos < gpActive->numCodepoints) ++gubCursorPos;
 					gubStartHilite = gubCursorPos;
-					return TRUE;
+					return true;
 
 				case SDLK_END:
 					gubCursorPos   = gpActive->numCodepoints;
 					gubStartHilite = gubCursorPos;
-					return TRUE;
+					return true;
 
 				case SDLK_HOME:
 					gubCursorPos   = 0;
 					gubStartHilite = gubCursorPos;
-					return TRUE;
+					return true;
 
 				case SDLK_DELETE:
 					/* DEL either deletes the selected text, or the character to the right
@@ -628,7 +628,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					}
 					else
 					{
-						return TRUE;
+						return true;
 					}
 					break;
 
@@ -646,12 +646,12 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					}
 					else
 					{
-						return TRUE;
+						return true;
 					}
 					break;
 
 				default:
-					return TRUE;
+					return true;
 			}
 			break;
 
@@ -660,27 +660,27 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 			{
 				case SDLK_TAB: // See comment for non-shifted TAB above
 					SelectPrevField();
-					return TRUE;
+					return true;
 
 				case SDLK_LEFT:
-					gfNoScroll = TRUE;
+					gfNoScroll = true;
 					if (gubCursorPos != 0) --gubCursorPos;
-					return TRUE;
+					return true;
 
 				case SDLK_RIGHT:
 					if (gubCursorPos < gpActive->numCodepoints) ++gubCursorPos;
-					return TRUE;
+					return true;
 
 				case SDLK_END:
 					gubCursorPos = gpActive->numCodepoints;
-					return TRUE;
+					return true;
 
 				case SDLK_HOME:
 					gubCursorPos = 0;
-					return TRUE;
+					return true;
 
 				default:
-					return TRUE;
+					return true;
 
 			}
 
@@ -688,9 +688,9 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 			switch (a->usParam)
 			{
 #if 0
-				case SDLK_c: ExecuteCopyCommand();  return TRUE;
-				case SDLK_x: ExecuteCutCommand();   return TRUE;
-				case SDLK_v: ExecutePasteCommand(); return TRUE;
+				case SDLK_c: ExecuteCopyCommand();  return true;
+				case SDLK_x: ExecuteCutCommand();   return true;
+				case SDLK_v: ExecutePasteCommand(); return true;
 #endif
 
 				case SDLK_DELETE:
@@ -700,15 +700,15 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					DeleteHilitedText();
 					break;
 
-				default: return FALSE;
+				default: return false;
 			}
 			break;
 
-		default: return FALSE;
+		default: return false;
 	}
 
 	PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-	return TRUE;
+	return true;
 }
 
 
@@ -872,7 +872,7 @@ static void SetActiveFieldMouse(MOUSE_REGION const* const r)
 	if (n == gpActive) return;
 	// Deselect the current text edit region if applicable, then set the new one.
 	if (gpActive && gpActive->InputCallback) {
-		gpActive->InputCallback(gpActive->ubID, FALSE);
+		gpActive->InputCallback(gpActive->ubID, false);
 	}
 
 	RenderInactiveTextFieldNode(gpActive);
@@ -931,7 +931,7 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* const reg, UINT32 con
 	{
 		SetActiveFieldMouse(reg);
 		//Signifies that we are typing text now.
-		SetEditingStatus(TRUE);
+		SetEditingStatus(true);
 		UINT8 const pos = static_cast<UINT8>(CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX));
 		gubCursorPos   = pos;
 		gubStartHilite = pos;
@@ -1094,7 +1094,7 @@ void DisableTextField(UINT8 const id)
 	if (gpActive == n) SelectNextField();
 	if (!n->fEnabled)  return;
 	n->region.Disable();
-	n->fEnabled = FALSE;
+	n->fEnabled = false;
 }
 
 
@@ -1105,7 +1105,7 @@ void EnableTextFields(UINT8 const first_id, UINT8 const last_id)
 		if (i->ubID < first_id || last_id < i->ubID) continue;
 		if (i->fEnabled) continue;
 		i->region.Enable();
-		i->fEnabled = TRUE;
+		i->fEnabled = true;
 	}
 }
 
@@ -1118,7 +1118,7 @@ void DisableTextFields(UINT8 const first_id, UINT8 const last_id)
 		if (!i->fEnabled) continue;
 		if (gpActive == i) SelectNextField();
 		i->region.Disable();
-		i->fEnabled = FALSE;
+		i->fEnabled = false;
 	}
 }
 
@@ -1129,7 +1129,7 @@ void EnableAllTextFields()
 	{
 		if (i->fEnabled) continue;
 		i->region.Enable();
-		i->fEnabled = TRUE;
+		i->fEnabled = true;
 	}
 	if (!gpActive) gpActive = gpTextInputHead;
 	SetEditingStatus(gpActive != nullptr);
@@ -1143,7 +1143,7 @@ void DisableAllTextFields()
 	{
 		if (!i->fEnabled) continue;
 		i->region.Disable();
-		i->fEnabled = FALSE;
+		i->fEnabled = false;
 	}
 	SetEditingStatus(false);
 }

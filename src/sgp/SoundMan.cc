@@ -150,8 +150,8 @@ struct SOUNDTAG
 	BOOLEAN DoneServicing;
 };
 
-static BOOLEAN fSoundSystemInit = FALSE; // Startup called
-static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
+static BOOLEAN fSoundSystemInit = false; // Startup called
+static BOOLEAN gfEnableStartup  = true;  // Allow hardware to start up
 static std::vector<INT32> gMixBuffer;
 
 SDL_AudioSpec gTargetAudioSpec;
@@ -165,8 +165,8 @@ ma_decoder_config gTargetDecoderConfig;
 SDL_Thread *bufferServiceThread = NULL;
 std::mutex mutexBuffersNeedService;
 std::condition_variable conditionBuffersNeedService;
-BOOLEAN fBuffersNeedService = FALSE;
-BOOLEAN fShutdownBufferServiceThread = FALSE;
+BOOLEAN fBuffersNeedService = false;
+BOOLEAN fShutdownBufferServiceThread = false;
 
 // Sample cache list for files loaded
 static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
@@ -195,7 +195,7 @@ void InitializeSoundManager(void)
 
 	std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
 
-	if (gfEnableStartup && SoundInitHardware()) fSoundSystemInit = TRUE;
+	if (gfEnableStartup && SoundInitHardware()) fSoundSystemInit = true;
 
 	SoundInitCache();
 }
@@ -210,7 +210,7 @@ void ShutdownSoundManager(void)
 	SoundStopAll();
 	SoundEmptyCache();
 	SoundShutdownHardware();
-	fSoundSystemInit = FALSE;
+	fSoundSystemInit = false;
 	gMixBuffer.clear();
 }
 
@@ -308,7 +308,7 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID);
 
 BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 {
-	if (!fSoundSystemInit) return FALSE;
+	if (!fSoundSystemInit) return false;
 
 	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
 	return channel != NULL &&  channel->State != CHANNEL_FREE;
@@ -320,14 +320,14 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel);
 
 BOOLEAN SoundStop(UINT32 uiSoundID)
 {
-	if (!fSoundSystemInit) return FALSE;
-	if (!SoundIsPlaying(uiSoundID)) return FALSE;
+	if (!fSoundSystemInit) return false;
+	if (!SoundIsPlaying(uiSoundID)) return false;
 
 	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return FALSE;
+	if (channel == NULL) return false;
 
 	SoundStopChannel(channel);
-	return TRUE;
+	return true;
 }
 
 
@@ -353,25 +353,25 @@ void SoundStopAll(void)
 
 BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 {
-	if (!fSoundSystemInit) return FALSE;
+	if (!fSoundSystemInit) return false;
 
 	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return FALSE;
+	if (channel == NULL) return false;
 
 	channel->uiFadeVolume = std::min(uiVolume, UINT32(MAXVOLUME));
-	return TRUE;
+	return true;
 }
 
 
 BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 {
-	if (!fSoundSystemInit) return FALSE;
+	if (!fSoundSystemInit) return false;
 
 	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return FALSE;
+	if (channel == NULL) return false;
 
 	channel->Pan = std::min(uiPan, 127U);
-	return TRUE;
+	return true;
 }
 
 
@@ -401,7 +401,7 @@ void SoundServiceRandom(void)
 
 /* Determines whether a random sound is ready for playing or not.
  *
- * Returns: TRUE if a the sample should be played. */
+ * Returns: true if a the sample should be played. */
 static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s)
 {
 	return
@@ -413,7 +413,7 @@ static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s)
 
 /* Starts an instance of a random sample.
  *
- * Returns: TRUE if a new random sound was created, FALSE if nothing was done. */
+ * Returns: true if a new random sound was created, false if nothing was done. */
 static UINT32 SoundStartRandom(SAMPLETAG* s)
 {
 	SOUNDTAG* const channel = SoundGetFreeChannel();
@@ -457,7 +457,7 @@ void SoundStopAllRandom(void)
 
 static BOOLEAN DoesChannelRingBufferNeedService(SOUNDTAG* channel) {
 	if (channel->DoneServicing) {
-		return FALSE;
+		return false;
 	}
 	auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
 	// If the ring buffer is still filled more than half the way, we dont need to service the stream
@@ -524,7 +524,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 				channel->Loops -= 1;
 				channel->Pos = 0;
 			} else {
-				channel->DoneServicing = TRUE;
+				channel->DoneServicing = true;
 			}
 		}
 	} catch (const std::runtime_error& err) {
@@ -553,7 +553,7 @@ static int SoundServiceBuffers(void *_ptr)
 					FillRingBuffer(Sound);
 				}
 			}
-			fBuffersNeedService = FALSE;
+			fBuffersNeedService = false;
 		}
 	}
 }
@@ -732,7 +732,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 	try
 	{
-		auto isStreamed = TRUE;
+		auto isStreamed = true;
 		SAMPLETAG* s = SoundGetEmptySample();
 
 		// if we don't have a sample slot
@@ -753,7 +753,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 			SDL_RWclose(rwOps);
 			rwOps = SDL_RWFromConstMem(inMemoryBuffer, hFileLen);
 			hFile = NULL;
-			isStreamed = FALSE;
+			isStreamed = false;
 		}
 
 		// Initialize decoder to convert WAV/MP3/OGG data to raw sample data
@@ -796,7 +796,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 }
 
 
-// Returns TRUE/FALSE that a sample is currently in use for playing a sound.
+// Returns true/false that a sample is currently in use for playing a sound.
 static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
 {
 	return s->uiInstances > 0;
@@ -805,7 +805,7 @@ static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
 
 /* Removes the least-used sound from the cache to make room.
  *
- * Returns: TRUE if a sample was freed, FALSE if none */
+ * Returns: true if a sample was freed, false if none */
 static BOOLEAN SoundCleanCache(void)
 {
 	SAMPLETAG* candidate = NULL;
@@ -824,10 +824,10 @@ static BOOLEAN SoundCleanCache(void)
 	{
 		SLOGD("freeing sample {} \"{}\" with {} hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
 		SoundFreeSample(candidate);
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -910,7 +910,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 	gMixBuffer.assign(want_values, 0);
 
-	auto ringBuffersNeedService = FALSE;
+	auto ringBuffersNeedService = false;
 
 	// Mix sounds
 	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
@@ -1027,12 +1027,12 @@ static BOOLEAN SoundInitHardware(void)
 		}
 
 		SDL_PauseAudio(0);
-		return TRUE;
+		return true;
 
 	} catch (const std::runtime_error& err) {
 		SLOGE("SoundInitHardware: {}", err.what());
 		SoundShutdownHardware();
-		return FALSE;
+		return false;
 	}
 }
 
@@ -1105,7 +1105,7 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	channel->pSample      = sample;
 	channel->uiTimeStamp  = GetClock();
 	channel->Pos          = 0;
-	channel->DoneServicing = FALSE;
+	channel->DoneServicing = false;
 
 	// Reset ring buffer
 	ma_pcm_rb_reset(channel->pRingBuffer);
@@ -1136,16 +1136,16 @@ static UINT32 SoundGetUniqueID(void)
  * their counters maintained, and using this as the central function ensures
  * that they stay in sync.
  *
- * Returns: TRUE if the sample was stopped, FALSE if it could not be found. */
+ * Returns: true if the sample was stopped, false if it could not be found. */
 static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 {
-	if (!fSoundSystemInit) return FALSE;
+	if (!fSoundSystemInit) return false;
 
-	if (channel->pSample == NULL) return FALSE;
+	if (channel->pSample == NULL) return false;
 
 	SLOGD("stopping channel channel {}", (channel - pSoundList));
 	channel->State = CHANNEL_STOP;
-	return TRUE;
+	return true;
 }
 
 

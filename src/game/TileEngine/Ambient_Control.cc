@@ -28,9 +28,9 @@ try
 	// Read all ambient data
 	hFile->read(gAmbData, sizeof(AMBIENTDATA_STRUCT) * gsNumAmbData);
 
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 void StopAmbients( )
