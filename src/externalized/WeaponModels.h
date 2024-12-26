@@ -35,7 +35,7 @@ struct WeaponModel : ItemModel
 	static WeaponModel* deserialize(const JsonValue &json,
 	const std::map<ST::string, const CalibreModel*> &calibreMap,
 	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
-	const VanillaItemStrings& vanillaItemStrings);
+	const BinaryData& vanillaItemStrings);
 
 	virtual const WeaponModel* asWeapon() const   { return this; }
 

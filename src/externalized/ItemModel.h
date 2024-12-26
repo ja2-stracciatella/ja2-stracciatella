@@ -97,11 +97,11 @@ struct ItemModel
 	struct InitData
 	{
 		JsonObject const& json;
-		VanillaItemStrings const& strings;
+		BinaryData const& strings;
 	};
 
 	virtual JsonValue serialize() const;
-	static const ItemModel* deserialize(const JsonValue &json, const VanillaItemStrings& vanillaItemStrings);
+	static const ItemModel* deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings);
 
 protected:
 	static ST::string deserializeShortName(InitData const&);

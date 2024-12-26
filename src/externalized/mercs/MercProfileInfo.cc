@@ -18,14 +18,13 @@ MercProfileInfo::MercProfileInfo()
 {
 }
 
-MercProfileInfo *MercProfileInfo::deserialize(const JsonValue& json)
+MercProfileInfo *MercProfileInfo::deserialize(const JsonObject& json)
 {
-	auto r = json.toObject();
 	return new MercProfileInfo(
-		r.GetUInt("profileID"),
-		r.GetString("internalName"),
-		Internals::getMercTypeEnumFromString(r.GetString("type")),
-		std::clamp(r.getOptionalInt("weaponSaleModifier", 100), 10, 180)
+		json.GetUInt("profileID"),
+		json.GetString("internalName"),
+		Internals::getMercTypeEnumFromString(json.GetString("type")),
+		std::clamp(json.getOptionalInt("weaponSaleModifier", 100), 10, 180)
 		);
 }
 

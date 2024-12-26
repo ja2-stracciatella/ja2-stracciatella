@@ -24,5 +24,5 @@ DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 
 bool DefaultContentManagerUT::loadGameData()
 {
-	return DefaultContentManager::loadGameData(VanillaItemStrings{});
+	return DefaultContentManager::loadGameData(BinaryData{});
 }
