@@ -29,6 +29,7 @@
 #include "MapScreen.h"
 #include "MercPortrait.h"
 #include "Message.h"
+#include "Object_Cache.h"
 #include "Overhead.h"
 #include "PopUpBox.h"
 #include "PreBattle_Interface.h"
@@ -136,7 +137,12 @@ static INT32 giSizeOfInterfaceFastHelpTextList = 0;
 //Animated sector locator icon variables.
 SGPSector gsSectorLocator;
 UINT8 gubBlitSectorLocatorCode; //color
-static SGPVObject* guiSectorLocatorGraphicID;
+
+namespace {
+cache_key_t const guiSectorLocatorGraphicID{ INTERFACEDIR "/hilite.sti" };
+cache_key_t const guiSelectedCharArrow{ INTERFACEDIR "/selectedchararrow.sti" };
+}
+
 // the animate time per frame in milliseconds
 #define ANIMATED_BATTLEICON_FRAME_TIME 80
 #define MAX_FRAME_COUNT_FOR_ANIMATED_BATTLE_ICON 12
@@ -211,9 +217,6 @@ INT32 giSleepHighLine = -1;
 // pop up box textures
 SGPVSurface* guiPOPUPTEX;
 SGPVObject* guiPOPUPBORDERS;
-
-// the currently selected character arrow
-static SGPVObject* guiSelectedCharArrow;
 
 static GUIButtonRef guiUpdatePanelButtons[2];
 
@@ -4335,15 +4338,8 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 }
 
 
-void LoadMapScreenInterfaceGraphics()
-{
-	guiSectorLocatorGraphicID = AddVideoObjectFromFile(INTERFACEDIR "/hilite.sti");
-	guiSelectedCharArrow      = AddVideoObjectFromFile(INTERFACEDIR "/selectedchararrow.sti");
-}
-
-
 void DeleteMapScreenInterfaceGraphics()
 {
-	DeleteVideoObject(guiSectorLocatorGraphicID);
-	DeleteVideoObject(guiSelectedCharArrow);
+	RemoveVObject(guiSectorLocatorGraphicID);
+	RemoveVObject(guiSelectedCharArrow);
 }

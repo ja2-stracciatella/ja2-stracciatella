@@ -3,24 +3,18 @@
 #include "BobbyRUsed.h"
 #include "BobbyR.h"
 #include "BobbyRGuns.h"
-#include "VObject.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "Video.h"
 #include "VSurface.h"
 
-
-static SGPVObject* guiUsedBackground;
-static SGPVObject* guiUsedGrid;
-
+namespace {
+cache_key_t const guiUsedBackground{ LAPTOPDIR "/usedbackground.sti" };
+cache_key_t const guiUsedGrid{ LAPTOPDIR "/usedgrid.sti" };
+}
 
 void EnterBobbyRUsed()
 {
-	// load the background graphic and add it
-	guiUsedBackground = AddVideoObjectFromFile(LAPTOPDIR "/usedbackground.sti");
-
-	// load the gunsgrid graphic and add it
-	guiUsedGrid = AddVideoObjectFromFile(LAPTOPDIR "/usedgrid.sti");
-
 	InitBobbyBrTitle();
 
 	SetFirstLastPagesForUsed();
@@ -34,8 +28,8 @@ void EnterBobbyRUsed()
 
 void ExitBobbyRUsed()
 {
-	DeleteVideoObject(guiUsedBackground);
-	DeleteVideoObject(guiUsedGrid);
+	RemoveVObject(guiUsedBackground);
+	RemoveVObject(guiUsedGrid);
 	DeleteBobbyMenuBar();
 	DeleteBobbyBrTitle();
 	DeleteMouseRegionForBigImage();
@@ -47,7 +41,9 @@ void ExitBobbyRUsed()
 
 void RenderBobbyRUsed()
 {
-	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiUsedBackground);
+	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES,
+		BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT,
+		GetVObject(guiUsedBackground));
 
 	//Display title at top of page
 	DisplayBobbyRBrTitle();

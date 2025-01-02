@@ -9,6 +9,7 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "MessageBoxScreen.h"
+#include "Object_Cache.h"
 #include "Timer_Control.h"
 #include "VObject.h"
 #include "SysUtil.h"
@@ -80,7 +81,7 @@ BOOLEAN fFlashHighLightInventoryItemOnradarMap = FALSE;
 BOOLEAN fShowMapInventoryPool = FALSE;
 
 // the v-object index value for the background
-static SGPVObject* guiMapInventoryPoolBackground;
+static cache_key_t const guiMapInventoryPoolBackground{ INTERFACEDIR "/sector_inventory.sti" };
 
 // inventory pool list
 std::vector<WORLDITEM> pInventoryPoolList;
@@ -108,23 +109,10 @@ static GUIButtonRef guiMapInvenButton[3];
 static BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 
 
-// load the background panel graphics for inventory
-void LoadInventoryPoolGraphic(void)
-{
-	// add to V-object index
-	guiMapInventoryPoolBackground = AddVideoObjectFromFile(INTERFACEDIR "/sector_inventory.sti");
-}
-
-
 // remove background panel graphics for inventory
 void RemoveInventoryPoolGraphic( void )
 {
-	// remove from v-object index
-	if( guiMapInventoryPoolBackground )
-	{
-		DeleteVideoObject(guiMapInventoryPoolBackground);
-		guiMapInventoryPoolBackground = 0;
-	}
+	RemoveVObject(guiMapInventoryPoolBackground);
 }
 
 

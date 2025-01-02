@@ -59,8 +59,6 @@ SGPVObject* guiMercInventoryPanel;
 SGPVObject* guiOmertaMap;
 SGPVSurface* guiMercInvPanelBuffers[9];
 SGPVSurface* guiMercTempBuffer;
-SGPVObject* guiExclamation;
-SGPVObject* guiKeyImage;
 
 //editor Mouseregion storage vars
 static MOUSE_REGION TerrainTileButtonRegion[NUM_TERRAIN_TILE_REGIONS];
@@ -162,9 +160,6 @@ static void LoadEditorImages(void)
 	//Set up the merc directional buttons.
 	giEditMercDirectionIcons[0] = LoadGenericButtonIcon(EDITORDIR "/arrowsoff.sti");
 	giEditMercDirectionIcons[1] = LoadGenericButtonIcon(EDITORDIR "/arrowson.sti");
-
-	guiExclamation = AddVideoObjectFromFile(EDITORDIR "/exclamation.sti");
-	guiKeyImage    = AddVideoObjectFromFile(EDITORDIR "/keyimage.sti");
 }
 
 

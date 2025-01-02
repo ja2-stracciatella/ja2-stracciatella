@@ -42,9 +42,6 @@ void RenderMapScreenInterfaceBottom( void );
 // delete map bottom graphics
 void DeleteMapBottomGraphics( void );
 
-// load bottom graphics
-void HandleLoadOfMapBottomGraphics( void );
-
 // allowed to time compress?
 BOOLEAN AllowedToTimeCompress( void );
 

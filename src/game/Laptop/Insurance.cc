@@ -79,7 +79,6 @@
 
 static SGPVObject* guiInsuranceBackGround;
 static SGPVObject* guiInsuranceTitleImage;
-static SGPVObject* guiInsuranceSmallTitleImage;
 static SGPVObject* guiInsuranceRedBarImage;
 static SGPVObject* guiInsuranceBigRedLineImage;
 static SGPVObject* guiInsuranceBulletImage;
@@ -223,9 +222,6 @@ void InitInsuranceDefaults()
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
-		// load the small title for the every page other then the first page
-		guiInsuranceSmallTitleImage = AddVideoObjectFromFile(MLG_SMALLTITLE);
-
 		//create the link to the home page on the small titles
 		MSYS_DefineRegion(&gSelectedInsuranceTitleLinkRegion, INSURANCE_SMALL_TITLE_X+85,
 					INSURANCE_SMALL_TITLE_Y,
@@ -273,7 +269,7 @@ void DisplayInsuranceDefaults()
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
-		BltVideoObject(FRAME_BUFFER, guiInsuranceSmallTitleImage, 0, INSURANCE_SMALL_TITLE_X, INSURANCE_SMALL_TITLE_Y);
+		BltVideoObject(FRAME_BUFFER, MLG_SMALLTITLE, 0, INSURANCE_SMALL_TITLE_X, INSURANCE_SMALL_TITLE_Y);
 	}
 }
 
@@ -286,7 +282,7 @@ void RemoveInsuranceDefaults()
 	//if it is not the first page, display the small title
 	if( guiPreviousLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
-		DeleteVideoObject(guiInsuranceSmallTitleImage);
+		RemoveVObject(MLG_SMALLTITLE);
 		MSYS_RemoveRegion( &gSelectedInsuranceTitleLinkRegion );
 	}
 }

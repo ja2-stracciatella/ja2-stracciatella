@@ -3,7 +3,7 @@
 #include "Laptop.h"
 #include "Insurance_Info.h"
 #include "Insurance.h"
-#include "VObject.h"
+#include "Object_Cache.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Insurance_Text.h"
@@ -50,7 +50,7 @@
 #define INS_INFO_LINK_TO_CONTRACT_TEXT_Y	355 + LAPTOP_SCREEN_WEB_UL_Y
 
 
-static SGPVObject* guiBulletImage;
+static cache_key_t const guiBulletImage{ LAPTOPDIR "/bullet.sti" };
 
 
 //The list of Info sub pages
@@ -110,9 +110,6 @@ void EnterInsuranceInfo()
 
 	InitInsuranceDefaults();
 
-	// load the Insurance bullet graphic and add it
-	guiBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
-
 	//left arrow
 	guiInsPrevButtonImage	= LoadButtonImage(LAPTOPDIR "/insleftbutton.sti", 2, 0, -1, 1, -1);
 	guiInsPrevBackButton  = MakeButtonBig(guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_INFO_LEFT_ARROW_BUTTON_X, BtnInsPrevButtonCallback, 17);
@@ -154,7 +151,7 @@ void ExitInsuranceInfo()
 	MSYS_RemoveRegion( &gSelectedInsuranceInfoLinkRegion);
 	MSYS_RemoveRegion( &gSelectedInsuranceInfoHomeLinkRegion);
 
-	DeleteVideoObject(guiBulletImage);
+	RemoveVObject(guiBulletImage);
 }
 
 

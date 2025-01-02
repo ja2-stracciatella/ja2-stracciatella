@@ -62,32 +62,6 @@ void InitializeFonts(void)
 }
 
 
-void ShutdownFonts(void)
-{
-	UnloadFont(gp10PointArial);
-	UnloadFont(gp10PointArialBold);
-	UnloadFont(gp12PointArial);
-	UnloadFont(gp12PointArialFixedFont);
-	UnloadFont(gp12PointFont1);
-	UnloadFont(gp14PointArial);
-	UnloadFont(gp14PointHumanist);
-	UnloadFont(gp16PointArial);
-	UnloadFont(gpBlockFontNarrow);
-	UnloadFont(gpBlockyFont);
-	UnloadFont(gpBlockyFont2);
-	UnloadFont(gpCompFont);
-	UnloadFont(gpLargeFontType1);
-	UnloadFont(gpSmallCompFont);
-	UnloadFont(gpSmallFontType1);
-	UnloadFont(gpTinyFontType1);
-
-	if(GameMode::getInstance()->isEditorMode() && isEnglishVersion())
-	{
-		UnloadFont(gpHugeFont);
-	}
-}
-
-
 // Set shades for fonts
 void SetFontShade(SGPFont const font, FontShade const shade)
 {

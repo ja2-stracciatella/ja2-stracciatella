@@ -150,11 +150,13 @@ void HandleIMPPersonalityQuiz( void )
 }
 
 
-static GUIButtonRef MakeButton(BUTTON_PICS* const img, const ST::string& text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* const img, const ST::string& text, const INT16 x, const INT16 y, GUI_CALLBACK click)
 {
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL,
+		text_col, shadow_col, text_col, shadow_col, x, y,
+		MSYS_PRIORITY_HIGH, std::move(click));
 	btn->SetCursor(CURSOR_WWW);
 	return btn;
 }
@@ -351,7 +353,7 @@ static void CheckAndUpdateNextPreviousIMPQuestionButtonStates(void);
 static void CompileQuestionsInStatsAndWhatNot(void);
 
 
-static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 reason)
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -381,7 +383,7 @@ static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, UINT32 r
 }
 
 
-static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, UINT32 reason)
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{

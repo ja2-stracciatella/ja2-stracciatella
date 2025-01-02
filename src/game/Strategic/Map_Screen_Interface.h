@@ -474,7 +474,6 @@ void RandomMercInGroupSaysQuote(GROUP const&, UINT16 quote_num);
 
 void MakeDialogueEventShowContractMenu(SOLDIERTYPE&);
 
-void LoadMapScreenInterfaceGraphics();
 void DeleteMapScreenInterfaceGraphics();
 
 #endif

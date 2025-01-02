@@ -34,6 +34,7 @@
 #include "Message.h"
 #include "MouseSystem.h"
 #include "NPC.h"
+#include "Object_Cache.h"
 #include "OppList.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"
@@ -139,8 +140,8 @@ static BOOLEAN fTextBoxMouseRegionCreated  = FALSE;
 static BOOLEAN fExternFaceBoxRegionCreated = FALSE;
 
 
-static SGPVObject* guiCOMPANEL;
-static SGPVObject* guiCOMPANELB;
+static cache_key_t const guiCOMPANEL{ INTERFACEDIR "/communicationpopup.sti" };
+static cache_key_t const guiCOMPANELB{ INTERFACEDIR "/communicationpopup_2.sti" };
 
 
 BOOLEAN DialogueActive( )
@@ -1261,8 +1262,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 	SGPVSurface*       const dst = blt->uiDestBuff;
 
 	// a living soldier?..or external NPC?..choose panel based on this
-	SGPVObject const* const vo = s ? guiCOMPANEL : guiCOMPANELB;
-	BltVideoObject(dst, vo, 0, x, y);
+	auto * const panel{ s ? guiCOMPANEL : guiCOMPANELB };
+	BltVideoObject(dst, panel, 0, x, y);
 
 	// Display name, location ( if not current )
 	SetFontAttributes(BLOCKFONT2, FONT_MCOLOR_LTGRAY);
@@ -1654,17 +1655,10 @@ void SetExternMapscreenSpeechPanelXY( INT16 sXPos, INT16 sYPos )
 }
 
 
-void LoadDialogueControlGraphics()
-{
-	guiCOMPANEL  = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup.sti");
-	guiCOMPANELB = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup_2.sti");
-}
-
-
 void DeleteDialogueControlGraphics()
 {
-	DeleteVideoObject(guiCOMPANEL);
-	DeleteVideoObject(guiCOMPANELB);
+	RemoveVObject(guiCOMPANEL);
+	RemoveVObject(guiCOMPANELB);
 }
 
 

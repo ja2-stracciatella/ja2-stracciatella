@@ -1,4 +1,5 @@
 #include "Directories.h"
+#include "Object_Cache.h"
 #include "Real_Time_Input.h"
 #include "Spread_Burst.h"
 #include "VObject.h"
@@ -28,7 +29,7 @@ struct BURST_LOCATIONS
 static BURST_LOCATIONS gsBurstLocations[MAX_BURST_LOCATIONS];
 static INT8            gbNumBurstLocations = 0;
 
-static SGPVObject* guiBURSTACCUM;
+static cache_key_t const guiBURSTACCUM{ INTERFACEDIR "/burst1.sti" };
 
 
 void ResetBurstLocations( )
@@ -189,13 +190,7 @@ void RenderAccumulatedBurstLocations( )
 }
 
 
-void LoadSpreadBurstGraphics()
-{
-	guiBURSTACCUM = AddVideoObjectFromFile(INTERFACEDIR "/burst1.sti");
-}
-
-
 void DeleteSpreadBurstGraphics()
 {
-	DeleteVideoObject(guiBURSTACCUM);
+	RemoveVObject(guiBURSTACCUM);
 }

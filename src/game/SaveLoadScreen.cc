@@ -155,7 +155,6 @@ BOOLEAN		gfSaveGame=TRUE;
 static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
 static SGPVObject* guiSlgBackGroundImage;
-static SGPVObject* guiBackGroundAddOns;
 static SGPVObject* guiSlgAddonsStracciatella;
 static SGPVObject* guiSlgScrollbarStracciatella;
 
@@ -398,7 +397,6 @@ static void EnterSaveLoadScreen()
 
 	// Load main background and add ons graphic
 	guiSlgBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/loadscreen.sti");
-	guiBackGroundAddOns = AddVideoObjectFromFile(MLG_LOADSAVEHEADER);
 	guiSlgAddonsStracciatella = AddVideoObjectFromFile("sti/interface/save-load-addons.sti");
 	guiSlgScrollbarStracciatella = AddVideoObjectFromFile("sti/interface/scroll-bar.sti");
 
@@ -518,7 +516,7 @@ static void ExitSaveLoadScreen(void)
 	}
 
 	DeleteVideoObject(guiSlgBackGroundImage);
-	DeleteVideoObject(guiBackGroundAddOns);
+	RemoveVObject(MLG_LOADSAVEHEADER);
 	DeleteVideoObject(guiSlgAddonsStracciatella);
 	DeleteVideoObject(guiSlgScrollbarStracciatella);
 
@@ -560,7 +558,7 @@ static void RenderSaveLoadScreen(void)
 
 	// Display the Title
 	UINT16 const gfx = gfSaveGame ? 1 : 0;
-	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gfx, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
+	BltVideoObject(FRAME_BUFFER, MLG_LOADSAVEHEADER, gfx, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 
 	RenderScrollBar();
 	DisplaySaveGameList();

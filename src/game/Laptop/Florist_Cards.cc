@@ -2,13 +2,13 @@
 #include "Laptop.h"
 #include "Florist.h"
 #include "Florist_Cards.h"
-#include "VObject.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Text.h"
 #include "Button_System.h"
-#include "Video.h"
+#include "Object_Cache.h"
 #include "VSurface.h"
+#include "Video.h"
 #include "Font_Control.h"
 
 #include "ContentManager.h"
@@ -42,7 +42,7 @@
 #define FLORIST_CARD_
 #define FLORIST_CARD_
 
-static SGPVObject* guiCardBackground;
+static cache_key_t const guiCardBackground{ LAPTOPDIR "/cardblank.sti" };
 
 INT8 gbCurrentlySelectedCard;
 
@@ -64,9 +64,6 @@ void EnterFloristCards()
 	UINT8 ubCount;
 
 	InitFloristDefaults();
-
-	// load the Flower Account Box graphic and add it
-	guiCardBackground = AddVideoObjectFromFile(LAPTOPDIR "/cardblank.sti");
 
 	ubCount = 0;
 	usPosY = FLORIST_CARD_FIRST_POS_Y;
@@ -111,7 +108,7 @@ void ExitFloristCards()
 	UINT8 i;
 
 	RemoveFloristDefaults();
-	DeleteVideoObject(guiCardBackground);
+	RemoveVObject(guiCardBackground);
 
 	//card gallery
 	for(i=0; i<9; i++)

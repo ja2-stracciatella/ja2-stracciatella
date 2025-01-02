@@ -4,6 +4,7 @@
 #include "Laptop.h"
 #include "MercPortrait.h"
 #include "Personnel.h"
+#include "Object_Cache.h"
 #include "VObject.h"
 #include "Debug.h"
 #include "WordWrap.h"
@@ -237,12 +238,13 @@ static const INT16 pers_stat_y[] =
 	405
 };
 
-
-static SGPVObject* guiSCREEN;
-static SGPVObject* guiTITLE;
-static SGPVObject* guiDEPARTEDTEAM;
-static SGPVObject* guiCURRENTTEAM;
-static SGPVObject* guiPersonnelInventory;
+namespace {
+cache_key_t const guiTITLE{ LAPTOPDIR "/programtitlebar.sti" };
+cache_key_t const guiSCREEN { LAPTOPDIR "/personnelwindow.sti" };
+cache_key_t const guiDEPARTEDTEAM{ LAPTOPDIR "/departed.sti" };
+cache_key_t const guiCURRENTTEAM{ LAPTOPDIR "/currentteam.sti" };
+cache_key_t const guiPersonnelInventory{ LAPTOPDIR "/personnel_inventory.sti" };
+}
 
 static struct
 {
@@ -289,8 +291,6 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create);
 static void CreateDestroyStartATMButton(BOOLEAN create);
 static void CreatePersonnelButtons(void);
 static void SelectFirstDisplayedMerc(void);
-static void LoadPersonnelGraphics(void);
-static void LoadPersonnelScreenBackgroundGraphics(void);
 static void SetPersonnelButtonStates(void);
 
 
@@ -301,14 +301,8 @@ void EnterPersonnel(void)
 	uiCurrentInventoryIndex = 0;
 	guiSliderPosition = 0;
 
-	// load graphics for screen
-	LoadPersonnelGraphics();
-
 	// show atm panel
 	CreateDestroyStartATMButton(TRUE);
-
-	// load personnel
-	LoadPersonnelScreenBackgroundGraphics();
 
 	SelectFirstDisplayedMerc();
 
@@ -380,26 +374,12 @@ void HandlePersonnel(void)
 }
 
 
-static void LoadPersonnelGraphics(void)
-{
-	// load graphics needed for personnel screen
-
-	// title bar
-	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
-
-	// the background grpahics
-	guiSCREEN = AddVideoObjectFromFile(LAPTOPDIR "/personnelwindow.sti");
-
-	guiPersonnelInventory = AddVideoObjectFromFile(LAPTOPDIR "/personnel_inventory.sti");
-}
-
-
 static void RemovePersonnelGraphics(void)
 {
 	// delete graphics needed for personnel screen
-	DeleteVideoObject(guiSCREEN);
-	DeleteVideoObject(guiTITLE);
-	DeleteVideoObject(guiPersonnelInventory);
+	RemoveVObject(guiSCREEN);
+	RemoveVObject(guiTITLE);
+	RemoveVObject(guiPersonnelInventory);
 }
 
 
@@ -868,23 +848,11 @@ static void RenderPersonnelScreenBackground(void)
 }
 
 
-static void LoadPersonnelScreenBackgroundGraphics(void)
-{
-	// will load the graphics for the personeel screen background
-
-	// departed bar
-	guiDEPARTEDTEAM = AddVideoObjectFromFile(LAPTOPDIR "/departed.sti");
-
-	// current bar
-	guiCURRENTTEAM = AddVideoObjectFromFile(LAPTOPDIR "/currentteam.sti");
-}
-
-
 static void DeletePersonnelScreenBackgroundGraphics(void)
 {
 	// delete background V/O's
-	DeleteVideoObject(guiCURRENTTEAM);
-	DeleteVideoObject(guiDEPARTEDTEAM);
+	RemoveVObject(guiCURRENTTEAM);
+	RemoveVObject(guiDEPARTEDTEAM);
 }
 
 

@@ -5,6 +5,7 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_Border.h"
 #include "MessageBoxScreen.h"
+#include "Object_Cache.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "VObject.h"
@@ -119,8 +120,10 @@ static UINT8 gubFirstMapscreenMessageIndex = 0;
 UINT32 guiCompressionStringBaseTime = 0;
 
 // graphics
-static SGPVObject* guiMAPBOTTOMPANEL;
-static SGPVObject* guiSliderBar;
+namespace {
+cache_key_t const guiMAPBOTTOMPANEL{ INTERFACEDIR "/map_screen_bottom.sti" };
+cache_key_t const guiSliderBar{ INTERFACEDIR "/map_screen_bottom_arrows.sti" };
+}
 
 // buttons
 GUIButtonRef        guiMapBottomExitButtons[3];
@@ -144,21 +147,6 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, UINT32 reason)
 static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, UINT32 reason);
 static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, UINT32 reason);
 
-
-static void LoadMessageSliderBar(void);
-
-
-void HandleLoadOfMapBottomGraphics( void )
-{
-	// will load the graphics needed for the mapscreen interface bottom
-	// will create buttons for interface bottom
-	guiMAPBOTTOMPANEL = AddVideoObjectFromFile(INTERFACEDIR "/map_screen_bottom.sti");
-
-	// load slider bar icon
-	LoadMessageSliderBar( );
-}
-
-
 static void CreateButtonsForMapScreenInterfaceBottom(void);
 static void CreateCompressModePause(void);
 static void CreateMapScreenBottomMessageScrollBarRegion(void);
@@ -174,14 +162,10 @@ void LoadMapScreenInterfaceBottom(void)
 }
 
 
-static void DeleteMessageSliderBar(void);
-
-
 void DeleteMapBottomGraphics( void )
 {
-	DeleteVideoObject(guiMAPBOTTOMPANEL);
-	// delete slider bar icon
-	DeleteMessageSliderBar( );
+	RemoveVObject(guiMAPBOTTOMPANEL);
+	RemoveVObject(guiSliderBar);
 }
 
 
@@ -568,20 +552,6 @@ static void CreateCompressModePause(void)
 static void RemoveCompressModePause(void)
 {
 	MSYS_RemoveRegion( &gMapPauseRegion );
-}
-
-
-static void LoadMessageSliderBar(void)
-{
-	// this function will load the message slider bar
-	guiSliderBar = AddVideoObjectFromFile(INTERFACEDIR "/map_screen_bottom_arrows.sti");
-}
-
-
-static void DeleteMessageSliderBar(void)
-{
-	// this function will delete message slider bar
-	DeleteVideoObject(guiSliderBar);
 }
 
 

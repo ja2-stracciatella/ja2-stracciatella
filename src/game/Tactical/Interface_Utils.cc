@@ -7,6 +7,7 @@
 #include "JAScreens.h"
 #include "Line.h"
 #include "MagazineModel.h"
+#include "Object_Cache.h"
 #include "Overhead.h"
 #include "Render_Dirty.h"
 #include "Soldier_Macros.h"
@@ -39,52 +40,27 @@
 #define FACE_WIDTH			48
 #define FACE_HEIGHT			43
 
-
-// car portraits
-enum
+namespace {
+// the ids for the car portraits
+cache_key_t const giCarPortraits[]
 {
-	ELDORADO_PORTRAIT = 0,
-	HUMMER_PORTRAIT,
-	ICE_CREAM_TRUCK_PORTRAIT,
-	JEEP_PORTRAIT,
-	NUMBER_CAR_PORTRAITS
+	INTERFACEDIR "/eldorado.sti",
+	INTERFACEDIR "/hummer.sti",
+	INTERFACEDIR "/ice cream truck.sti",
+	INTERFACEDIR "/jeep.sti"
 };
 
-// the ids for the car portraits
-static SGPVObject* giCarPortraits[NUMBER_CAR_PORTRAITS];
-
-static SGPVObject* guiBrownBackgroundForTeamPanel; // backgrounds for breath max background
-
-
-// Load in the portraits for the car faces that will be use in mapscreen
-void LoadCarPortraitValues(void)
-{
-	// the car portrait file names
-	static char const* const pbCarPortraitFileNames[] =
-	{
-		INTERFACEDIR "/eldorado.sti",
-		INTERFACEDIR "/hummer.sti",
-		INTERFACEDIR "/ice cream truck.sti",
-		INTERFACEDIR "/jeep.sti"
-	};
-
-	if (giCarPortraits[0]) return;
-	for (INT32 i = 0; i != NUMBER_CAR_PORTRAITS; ++i)
-	{
-		giCarPortraits[i] = AddVideoObjectFromFile(pbCarPortraitFileNames[i]);
-	}
+// backgrounds for breath max background
+cache_key_t const guiBrownBackgroundForTeamPanel{ INTERFACEDIR "/bars.sti" };
 }
 
 
 // get rid of the images we loaded for the mapscreen car portraits
 void UnLoadCarPortraits(void)
 {
-	// car protraits loaded?
-	if (!giCarPortraits[0]) return;
-	for (INT32 i = 0; i != NUMBER_CAR_PORTRAITS; ++i)
+	for (auto * const portraitName : giCarPortraits)
 	{
-		DeleteVideoObject(giCarPortraits[i]);
-		giCarPortraits[i] = 0;
+		RemoveVObject(portraitName);
 	}
 }
 
@@ -273,13 +249,7 @@ void RenderSoldierFace(SOLDIERTYPE const& s, INT16 const sFaceX, INT16 const sFa
 }
 
 
-void LoadInterfaceUtilsGraphics()
-{
-	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile(INTERFACEDIR "/bars.sti");
-}
-
-
 void DeleteInterfaceUtilsGraphics()
 {
-	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
+	RemoveVObject(guiBrownBackgroundForTeamPanel);
 }

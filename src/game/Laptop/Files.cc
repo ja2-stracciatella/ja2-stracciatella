@@ -5,6 +5,7 @@
 #include "Files.h"
 #include "LoadSaveData.h"
 #include "MercPortrait.h"
+#include "Object_Cache.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
 #include "VObject.h"
@@ -110,10 +111,11 @@ static BOOLEAN fWaitAFrame = FALSE;
 // are there any new files
 BOOLEAN fNewFilesInFileViewer = FALSE;
 
+namespace {
 // graphics handles
-static SGPVObject* guiTITLE;
-static SGPVObject* guiTOP;
-
+cache_key_t const guiTITLE{ LAPTOPDIR "/programtitlebar.sti" };
+cache_key_t const guiTOP{ LAPTOPDIR "/fileviewer.sti" };
+}
 
 // currewnt page of multipage files we are on
 static INT32 giFilesPage = 0;
@@ -194,15 +196,11 @@ void GameInitFiles(void)
 static void CreateButtonsForFilesPage(void);
 static void HandleFileViewerButtonStates(void);
 static void InitializeFilesMouseRegions(void);
-static void LoadFiles(void);
 static void OpenFirstUnreadFile(void);
 
 
 void EnterFiles(void)
 {
-	// load grpahics for files system
-	LoadFiles( );
-
 	// in files mode now, set the fact
 	fInFilesMode=TRUE;
 
@@ -303,23 +301,11 @@ static void DrawFilesTitleText(void)
 }
 
 
-static void LoadFiles(void)
-{
-	// load files video objects into memory
-
-	// title bar
-	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
-
-	// top portion of the screen background
-	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/fileviewer.sti");
-}
-
-
 static void RemoveFiles(void)
 {
 	// delete files video objects from memory
-	DeleteVideoObject(guiTOP);
-	DeleteVideoObject(guiTITLE);
+	RemoveVObject(guiTOP);
+	RemoveVObject(guiTITLE);
 }
 
 

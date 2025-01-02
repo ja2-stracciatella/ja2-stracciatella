@@ -205,7 +205,6 @@ static SGPVObject* guiBobbyRayTitle;
 static SGPVObject* guiBobbyROrderGrid;
 static SGPVObject* guiBobbyRLocationGraphic;
 static SGPVObject* guiDeliverySpeedGraphic;
-static SGPVObject* guiConfirmGraphic;
 static SGPVObject* guiTotalSaveArea;		//used as a savebuffer for the subtotal, s&h, and grand total values
 static SGPVObject* guiDropDownBorder;
 static SGPVObject* guiGoldArrowImages;
@@ -333,9 +332,6 @@ void EnterBobbyRMailOrder()
 	guiDeliverySpeedGraphic = AddVideoObjectFromFile(LAPTOPDIR "/bobbydeliveryspeed.sti");
 
 	// load the delivery speed graphic and add it
-	guiConfirmGraphic = AddVideoObjectFromFile(MLG_CONFIRMORDER);
-
-	// load the delivery speed graphic and add it
 	guiTotalSaveArea = AddVideoObjectFromFile(LAPTOPDIR "/totalsavearea.sti");
 
 	// border
@@ -444,7 +440,7 @@ void ExitBobbyRMailOrder()
 	DeleteVideoObject(guiBobbyROrderGrid);
 	DeleteVideoObject(guiBobbyRLocationGraphic);
 	DeleteVideoObject(guiDeliverySpeedGraphic);
-	DeleteVideoObject(guiConfirmGraphic);
+	RemoveVObject(MLG_CONFIRMORDER);
 	DeleteVideoObject(guiTotalSaveArea);
 	DeleteVideoObject(guiDropDownBorder);
 	DeleteVideoObject(guiGoldArrowImages);
@@ -494,8 +490,9 @@ void HandleBobbyRMailOrder()
 	if(gfDrawConfirmOrderGrpahic)
 	{
 		// Bobbyray title
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X + 3, BOBBYR_CONFIRM_ORDER_Y + 3);
-		BltVideoObject(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X,     BOBBYR_CONFIRM_ORDER_Y);
+		SGPVObject const * const vo{ GetVObject(MLG_CONFIRMORDER) };
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, vo, 0, BOBBYR_CONFIRM_ORDER_X + 3, BOBBYR_CONFIRM_ORDER_Y + 3);
+		BltVideoObject(FRAME_BUFFER, vo, 0, BOBBYR_CONFIRM_ORDER_X,     BOBBYR_CONFIRM_ORDER_Y);
 		InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 
 		gfDrawConfirmOrderGrpahic = FALSE;

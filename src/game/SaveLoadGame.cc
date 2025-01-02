@@ -1088,7 +1088,6 @@ void LoadSavedGame(const ST::string &saveName)
 	BAR(1, "Final Checks...");
 
 	PreloadExternalNPCFaces();
-	LoadCarPortraitValues();
 
 	// OK, turn OFF show all enemies....
 	gTacticalStatus.uiFlags &= ~(SHOW_ALL_MERCS | SHOW_ALL_ITEMS);

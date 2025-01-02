@@ -10,6 +10,7 @@
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "MapScreen.h"
 #include "MouseSystem.h"
+#include "Object_Cache.h"
 #include "SysUtil.h"
 #include "Text.h"
 #include "UILayout.h"
@@ -45,11 +46,13 @@ struct BUTTON_PICS;
 static MOUSE_REGION LevelMouseRegions[4];
 
 // graphics
-static SGPVObject* guiLEVELMARKER; // the white rectangle highlighting the current level on the map border
-static SGPVObject* guiMapBorder;
-static SGPVObject* guiMapBorderEtaPopUp; // the map border eta pop up
-//static SGPVObject* guiMapBorderCorner;
-
+namespace {
+// the white rectangle highlighting the current level on the map border
+cache_key_t const guiLEVELMARKER{ INTERFACEDIR "/greenarr.sti" };
+cache_key_t const guiMapBorder{ MAP_BORDER_FILE };
+ // the map border eta pop up
+cache_key_t const guiMapBorderEtaPopUp{ INTERFACEDIR "/eta_pop_up.sti" };
+}
 
 // scroll direction
 INT32 giScrollButtonState = -1;
@@ -70,21 +73,12 @@ static BUTTON_PICS* giMapBorderButtonsImage[6];
 extern void CancelMapUIMessage( void );
 
 
-void LoadMapBorderGraphics(void)
-{
-	// this procedure will load the graphics needed for the map border
-	guiLEVELMARKER       = AddVideoObjectFromFile(INTERFACEDIR "/greenarr.sti");
-	guiMapBorder         = AddVideoObjectFromFile(MAP_BORDER_FILE);
-	guiMapBorderEtaPopUp = AddVideoObjectFromFile(INTERFACEDIR "/eta_pop_up.sti");
-}
-
-
 void DeleteMapBorderGraphics( void )
 {
 	// procedure will delete graphics loaded for map border
-	DeleteVideoObject(guiLEVELMARKER);
-	DeleteVideoObject(guiMapBorder);
-	DeleteVideoObject(guiMapBorderEtaPopUp);
+	RemoveVObject(guiLEVELMARKER);
+	RemoveVObject(guiMapBorder);
+	RemoveVObject(guiMapBorderEtaPopUp);
 }
 
 

@@ -14,6 +14,7 @@
 #include "AIMSort.h"
 #include "Assignments.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
@@ -24,7 +25,7 @@
 extern UINT8			gbCurrentIndex;
 
 
-static SGPVObject* guiMugShotBorder;
+static cache_key_t const guiMugShotBorder{ LAPTOPDIR "/mugshotborder3.sti" };
 static SGPVObject* guiAimFiFace[MAX_NUMBER_MERCS];
 
 
@@ -75,9 +76,6 @@ void EnterAimFacialIndex()
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
 
-	// load the Portait graphic and add it
-	guiMugShotBorder = AddVideoObjectFromFile(LAPTOPDIR "/mugshotborder3.sti");
-
 	usPosX = AIM_FI_FIRST_MUGSHOT_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y;
 	i=0;
@@ -118,7 +116,7 @@ void ExitAimFacialIndex()
 {
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiMugShotBorder);
+	RemoveVObject(guiMugShotBorder);
 
 	FOR_EACH(SGPVObject*,  i, guiAimFiFace)          DeleteVideoObject(*i);
 	FOR_EACH(MOUSE_REGION, i, gMercFaceMouseRegions) MSYS_RemoveRegion(&*i);

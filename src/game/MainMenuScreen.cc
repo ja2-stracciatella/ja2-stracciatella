@@ -16,6 +16,7 @@
 #include "MessageBoxScreen.h"
 #include "Music_Control.h"
 #include "ContentMusic.h"
+#include "Object_Cache.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
 #include "SGP.h"
@@ -51,8 +52,10 @@ enum
 static BUTTON_PICS* iMenuImages[NUM_MENU_ITEMS];
 static GUIButtonRef iMenuButtons[NUM_MENU_ITEMS];
 
-static SGPVObject* guiMainMenuBackGroundImage;
-static SGPVObject* guiJa2LogoImage;
+namespace {
+cache_key_t const guiMainMenuBackGroundImage{ LOADSCREENSDIR "/mainmenubackground.sti" };
+cache_key_t const guiJa2LogoImage{ LOADSCREENSDIR "/ja2logo.sti" };
+}
 
 static INT8    gbHandledMainMenu = 0;
 static BOOLEAN fInitialRender    = FALSE;
@@ -187,9 +190,6 @@ void InitMainMenu(void)
 {
 	CreateDestroyMainMenuButtons(TRUE);
 
-	guiMainMenuBackGroundImage = AddVideoObjectFromFile(LOADSCREENSDIR "/mainmenubackground.sti");
-	guiJa2LogoImage            = AddVideoObjectFromFile(LOADSCREENSDIR "/ja2logo.sti");
-
 	// If there are no saved games, disable the button
 	if (!AreThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
 
@@ -208,8 +208,8 @@ void InitMainMenu(void)
 static void ExitMainMenu(void)
 {
 	CreateDestroyMainMenuButtons(FALSE);
-	DeleteVideoObject(guiMainMenuBackGroundImage);
-	DeleteVideoObject(guiJa2LogoImage);
+	RemoveVObject(guiMainMenuBackGroundImage);
+	RemoveVObject(guiJa2LogoImage);
 	gMsgBox.uiExitScreen = MAINMENU_SCREEN;
 }
 

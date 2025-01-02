@@ -209,6 +209,9 @@ void InitializeVideoObjectManager(void)
 
 void ShutdownVideoObjectManager(void)
 {
+	extern void ClearObjectCache();
+	ClearObjectCache();
+
 	while (gpVObjectHead)
 	{
 		delete gpVObjectHead;

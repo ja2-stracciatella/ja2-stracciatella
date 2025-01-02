@@ -12,9 +12,6 @@
 // whether we are showing the inventory pool graphic
 extern BOOLEAN fShowMapInventoryPool;
 
-// load inventory pool graphic
-void LoadInventoryPoolGraphic(void);
-
 // remove inventory pool graphic
 void RemoveInventoryPoolGraphic( void );
 

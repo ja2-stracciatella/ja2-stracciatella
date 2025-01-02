@@ -5,41 +5,43 @@
 #include "GameRes.h"
 #include "IMP_Attribute_Selection.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "UILayout.h"
 
-
 // video object handles
-static SGPVObject* guiBACKGROUND;
-static SGPVObject* guiIMPSYMBOL;
-static SGPVObject* guiBEGININDENT;
-static SGPVObject* guiACTIVATIONINDENT;
-static SGPVObject* guiFRONTPAGEINDENT;
-static SGPVObject* guiNAMEINDENT;
-static SGPVObject* guiNICKNAMEINDENT;
-static SGPVObject* guiGENDERINDENT;
 SGPVObject* guiANALYSE;
 SGPVObject* guiATTRIBUTEGRAPH;
 SGPVObject* guiSMALLSILHOUETTE;
-static SGPVObject* guiLARGESILHOUETTE;
-static SGPVObject* guiPORTRAITFRAME;
-static SGPVObject* guiSLIDERBAR;
-static SGPVObject* guiATTRIBUTEFRAME;
-static SGPVObject* guiBUTTON2IMAGE;
-static SGPVObject* guiBUTTON4IMAGE;
-static SGPVObject* guiMAININDENT;
-static SGPVObject* guiLONGINDENT;
-static SGPVObject* guiSHORTINDENT;
-static SGPVObject* guiSHORTHINDENT;
-static SGPVObject* guiSHORT2INDENT;
-static SGPVObject* guiLONGHINDENT;
-static SGPVObject* guiQINDENT;
-static SGPVObject* guiA1INDENT;
-static SGPVObject* guiA2INDENT;
-static SGPVObject* guiAVGMERCINDENT;
-static SGPVObject* guiABOUTUSINDENT;
-static SGPVObject* guiSHORT2HINDENT;
+
+namespace {
+cache_key_t const guiBACKGROUND{ LAPTOPDIR "/metalbackground.sti" };
+cache_key_t const guiBEGININDENT{ LAPTOPDIR "/beginscreenindent.sti" };
+cache_key_t const guiACTIVATIONINDENT{ LAPTOPDIR "/activationindent.sti" };
+cache_key_t const guiFRONTPAGEINDENT{ LAPTOPDIR "/frontpageindent.sti" };
+cache_key_t const guiNAMEINDENT{ LAPTOPDIR "/nameindent.sti" };
+cache_key_t const guiNICKNAMEINDENT{ LAPTOPDIR "/nickname.sti" };
+cache_key_t const guiGENDERINDENT{ LAPTOPDIR "/genderindent.sti" };
+cache_key_t const guiLARGESILHOUETTE{ LAPTOPDIR "/largesilhouette.sti" };
+cache_key_t const guiPORTRAITFRAME{ LAPTOPDIR "/voice_portraitframe.sti" };
+cache_key_t const guiSLIDERBAR{ LAPTOPDIR "/attributeslider.sti" };
+cache_key_t const guiATTRIBUTEFRAME{ LAPTOPDIR "/attributeframe.sti" };
+cache_key_t const guiBUTTON2IMAGE{ LAPTOPDIR "/button_2.sti" };
+cache_key_t const guiBUTTON4IMAGE{ LAPTOPDIR "/button_4.sti" };
+cache_key_t const guiMAININDENT{ LAPTOPDIR "/mainprofilepageindent.sti" };
+cache_key_t const guiLONGINDENT{ LAPTOPDIR "/longindent.sti" };
+cache_key_t const guiLONGHINDENT{ LAPTOPDIR "/longindenthigh.sti" };
+cache_key_t const guiSHORTINDENT{ LAPTOPDIR "/shortindent.sti" };
+cache_key_t const guiSHORTHINDENT{ LAPTOPDIR "/shortindenthigh.sti" };
+cache_key_t const guiSHORT2INDENT{ LAPTOPDIR "/shortindent2.sti"};
+cache_key_t const guiSHORT2HINDENT{ LAPTOPDIR "/shortindent2high.sti" };
+cache_key_t const guiQINDENT{ LAPTOPDIR "/questionindent.sti" };
+cache_key_t const guiA1INDENT{ LAPTOPDIR "/attributescreenindent_1.sti" };
+cache_key_t const guiA2INDENT{ LAPTOPDIR "/attributescreenindent_2.sti" };
+cache_key_t const guiAVGMERCINDENT{ LAPTOPDIR "/anaveragemercindent.sti" };
+cache_key_t const guiABOUTUSINDENT{ LAPTOPDIR "/aboutusindent.sti" };
+}
 
 
 // position defines
@@ -49,17 +51,10 @@ static SGPVObject* guiSHORT2HINDENT;
 extern void DrawBonusPointsRemaining( void );
 
 
-void LoadProfileBackGround(void)
-{
-	// this procedure will load in the graphics for the generic background
-	guiBACKGROUND = AddVideoObjectFromFile(LAPTOPDIR "/metalbackground.sti");
-}
-
-
 void RemoveProfileBackGround( void )
 {
 	// remove background
-	DeleteVideoObject(guiBACKGROUND);
+	RemoveVObject(guiBACKGROUND);
 }
 
 
@@ -70,7 +65,7 @@ void RenderProfileBackGround( void )
 	// this procedure will render the generic backgound to the screen
 
 	// render each row 5 times wide, 5 tiles high
-	const SGPVObject* hHandle = guiBACKGROUND;
+	auto * const hHandle = guiBACKGROUND;
 	for(iCounter = 0; iCounter < 4; iCounter++)
 	{
 		// blt background to screen from left to right
@@ -90,37 +85,23 @@ void RenderProfileBackGround( void )
 }
 
 
-void LoadIMPSymbol(void)
-{
-	// this procedure will load the IMP main symbol into memory
-	guiIMPSYMBOL = AddVideoObjectFromFile(MLG_IMPSYMBOL);
-}
-
-
 void DeleteIMPSymbol( void )
 {
 	// remove IMP symbol
-	DeleteVideoObject(guiIMPSYMBOL);
+	RemoveVObject(MLG_IMPSYMBOL);
 }
 
 
 void RenderIMPSymbol(INT16 sX, INT16 sY)
 {
-	BltVideoObject(FRAME_BUFFER, guiIMPSYMBOL, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-}
-
-
-void LoadBeginIndent(void)
-{
-	// this procedure will load the indent main symbol into memory
-	guiBEGININDENT = AddVideoObjectFromFile(LAPTOPDIR "/beginscreenindent.sti");
+	BltVideoObject(FRAME_BUFFER, MLG_IMPSYMBOL, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
 void DeleteBeginIndent( void )
 {
 	// remove indent symbol
-	DeleteVideoObject(guiBEGININDENT);
+	RemoveVObject(guiBEGININDENT);
 }
 
 
@@ -130,17 +111,10 @@ void RenderBeginIndent(INT16 sX, INT16 sY)
 }
 
 
-void LoadActivationIndent(void)
-{
-	// this procedure will load the activation indent into memory
-	guiACTIVATIONINDENT = AddVideoObjectFromFile(LAPTOPDIR "/activationindent.sti");
-}
-
-
 void DeleteActivationIndent( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiACTIVATIONINDENT);
+	RemoveVObject(guiACTIVATIONINDENT);
 }
 
 
@@ -150,17 +124,10 @@ void RenderActivationIndent(INT16 sX, INT16 sY)
 }
 
 
-void LoadFrontPageIndent(void)
-{
-	// this procedure will load the activation indent into memory
-	guiFRONTPAGEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/frontpageindent.sti");
-}
-
-
 void DeleteFrontPageIndent( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiFRONTPAGEINDENT);
+	RemoveVObject(guiFRONTPAGEINDENT);
 }
 
 
@@ -198,17 +165,10 @@ void DeleteAttributeGraph( void )
 }
 
 
-void LoadNickNameIndent(void)
-{
-	// this procedure will load the activation indent into memory
-	guiNICKNAMEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/nickname.sti");
-}
-
-
 void DeleteNickNameIndent( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiNICKNAMEINDENT);
+	RemoveVObject(guiNICKNAMEINDENT);
 }
 
 
@@ -218,17 +178,10 @@ void RenderNickNameIndent(INT16 sX, INT16 sY)
 }
 
 
-void LoadNameIndent(void)
-{
-	// this procedure will load the activation indent into memory
-	guiNAMEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/nameindent.sti");
-}
-
-
 void DeleteNameIndent( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiNAMEINDENT);
+	RemoveVObject(guiNAMEINDENT);
 }
 
 
@@ -238,17 +191,10 @@ void RenderNameIndent(INT16 sX, INT16 sY)
 }
 
 
-void LoadGenderIndent(void)
-{
-	// this procedure will load the activation indent into memory
-	guiGENDERINDENT = AddVideoObjectFromFile(LAPTOPDIR "/genderindent.sti");
-}
-
-
 void DeleteGenderIndent( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiGENDERINDENT);
+	RemoveVObject(guiGENDERINDENT);
 }
 
 
@@ -272,17 +218,10 @@ void DeleteSmallSilhouette( void )
 }
 
 
-void LoadLargeSilhouette(void)
-{
-	// this procedure will load the activation indent into memory
-	guiLARGESILHOUETTE = AddVideoObjectFromFile(LAPTOPDIR "/largesilhouette.sti");
-}
-
-
 void DeleteLargeSilhouette( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiLARGESILHOUETTE);
+	RemoveVObject(guiLARGESILHOUETTE);
 }
 
 
@@ -292,17 +231,10 @@ void RenderLargeSilhouette(INT16 sX, INT16 sY)
 }
 
 
-void LoadAttributeFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiATTRIBUTEFRAME = AddVideoObjectFromFile(LAPTOPDIR "/attributeframe.sti");
-}
-
-
 void DeleteAttributeFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiATTRIBUTEFRAME);
+	RemoveVObject(guiATTRIBUTEFRAME);
 }
 
 
@@ -311,7 +243,7 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 	INT32 iCounter = 0;
 	INT16 sCurrentY = 0;
 
-	const SGPVObject* const hHandle = guiATTRIBUTEFRAME;
+	auto * const hHandle = guiATTRIBUTEFRAME;
 
 	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
@@ -356,17 +288,10 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 }
 
 
-void LoadSliderBar(void)
-{
-	// this procedure will load the activation indent into memory
-	guiSLIDERBAR = AddVideoObjectFromFile(LAPTOPDIR "/attributeslider.sti");
-}
-
-
 void DeleteSliderBar( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiSLIDERBAR);
+	RemoveVObject(guiSLIDERBAR);
 }
 
 
@@ -376,17 +301,10 @@ void RenderSliderBar(INT16 sX, INT16 sY)
 }
 
 
-void LoadButton2Image(void)
-{
-	// this procedure will load the activation indent into memory
-	guiBUTTON2IMAGE = AddVideoObjectFromFile(LAPTOPDIR "/button_2.sti");
-}
-
-
 void DeleteButton2Image( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiBUTTON2IMAGE);
+	RemoveVObject(guiBUTTON2IMAGE);
 }
 
 
@@ -396,17 +314,10 @@ void RenderButton2Image(INT16 sX, INT16 sY)
 }
 
 
-void LoadButton4Image(void)
-{
-	// this procedure will load the activation indent into memory
-	guiBUTTON4IMAGE = AddVideoObjectFromFile(LAPTOPDIR "/button_4.sti");
-}
-
-
 void DeleteButton4Image( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiBUTTON4IMAGE);
+	RemoveVObject(guiBUTTON4IMAGE);
 }
 
 
@@ -416,17 +327,10 @@ void RenderButton4Image(INT16 sX, INT16 sY)
 }
 
 
-void LoadPortraitFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiPORTRAITFRAME = AddVideoObjectFromFile(LAPTOPDIR "/voice_portraitframe.sti");
-}
-
-
 void DeletePortraitFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiPORTRAITFRAME);
+	RemoveVObject(guiPORTRAITFRAME);
 }
 
 
@@ -436,18 +340,10 @@ void RenderPortraitFrame(INT16 sX, INT16 sY)
 }
 
 
-
-void LoadMainIndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiMAININDENT = AddVideoObjectFromFile(LAPTOPDIR "/mainprofilepageindent.sti");
-}
-
-
 void DeleteMainIndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiMAININDENT);
+	RemoveVObject(guiMAININDENT);
 }
 
 
@@ -457,17 +353,10 @@ void RenderMainIndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadQtnLongIndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiLONGINDENT = AddVideoObjectFromFile(LAPTOPDIR "/longindent.sti");
-}
-
-
 void DeleteQtnLongIndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiLONGINDENT);
+	RemoveVObject(guiLONGINDENT);
 }
 
 
@@ -477,17 +366,10 @@ void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadQtnShortIndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiSHORTINDENT = AddVideoObjectFromFile(LAPTOPDIR "/shortindent.sti");
-}
-
-
 void DeleteQtnShortIndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiSHORTINDENT);
+	RemoveVObject(guiSHORTINDENT);
 }
 
 
@@ -497,17 +379,10 @@ void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadQtnLongIndentHighFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiLONGHINDENT = AddVideoObjectFromFile(LAPTOPDIR "/longindenthigh.sti");
-}
-
-
 void DeleteQtnLongIndentHighFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiLONGHINDENT);
+	RemoveVObject(guiLONGHINDENT);
 }
 
 
@@ -517,17 +392,10 @@ void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadQtnShortIndentHighFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiSHORTHINDENT = AddVideoObjectFromFile(LAPTOPDIR "/shortindenthigh.sti");
-}
-
-
 void DeleteQtnShortIndentHighFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiSHORTHINDENT);
+	RemoveVObject(guiSHORTHINDENT);
 }
 
 
@@ -537,17 +405,10 @@ void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadQtnIndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiQINDENT = AddVideoObjectFromFile(LAPTOPDIR "/questionindent.sti");
-}
-
-
 void DeleteQtnIndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiQINDENT);
+	RemoveVObject(guiQINDENT);
 }
 
 
@@ -557,17 +418,10 @@ void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadAttrib1IndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiA1INDENT = AddVideoObjectFromFile(LAPTOPDIR "/attributescreenindent_1.sti");
-}
-
-
 void DeleteAttrib1IndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiA1INDENT);
+	RemoveVObject(guiA1INDENT);
 }
 
 
@@ -577,17 +431,10 @@ void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadAttrib2IndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiA2INDENT = AddVideoObjectFromFile(LAPTOPDIR "/attributescreenindent_2.sti");
-}
-
-
 void DeleteAttrib2IndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiA2INDENT);
+	RemoveVObject(guiA2INDENT);
 }
 
 
@@ -597,17 +444,10 @@ void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadAvgMercIndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiAVGMERCINDENT = AddVideoObjectFromFile(LAPTOPDIR "/anaveragemercindent.sti");
-}
-
-
 void DeleteAvgMercIndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiAVGMERCINDENT);
+	RemoveVObject(guiAVGMERCINDENT);
 }
 
 
@@ -617,17 +457,10 @@ void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadAboutUsIndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiABOUTUSINDENT = AddVideoObjectFromFile(LAPTOPDIR "/aboutusindent.sti");
-}
-
-
 void DeleteAboutUsIndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiABOUTUSINDENT);
+	RemoveVObject(guiABOUTUSINDENT);
 }
 
 
@@ -637,17 +470,10 @@ void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadQtnShort2IndentFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiSHORT2INDENT = AddVideoObjectFromFile(LAPTOPDIR "/shortindent2.sti");
-}
-
-
 void DeleteQtnShort2IndentFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiSHORT2INDENT);
+	RemoveVObject(guiSHORT2INDENT);
 }
 
 
@@ -657,17 +483,10 @@ void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 }
 
 
-void LoadQtnShort2IndentHighFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiSHORT2HINDENT = AddVideoObjectFromFile(LAPTOPDIR "/shortindent2high.sti");
-}
-
-
 void DeleteQtnShort2IndentHighFrame( void )
 {
 	// remove activation indent symbol
-	DeleteVideoObject(guiSHORT2HINDENT);
+	RemoveVObject(guiSHORT2HINDENT);
 }
 
 

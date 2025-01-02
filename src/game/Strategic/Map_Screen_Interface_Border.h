@@ -53,12 +53,8 @@ extern BOOLEAN fShowItemsFlag;
 // scroll animation
 extern INT32 giScrollButtonState;
 
-void LoadMapBorderGraphics(void);
 void DeleteMapBorderGraphics( void );
 void RenderMapBorder( void );
-//void RenderMapBorderCorner( void );
-//void ResetAircraftButton( void );
-//void HandleMapScrollButtonStates( void );
 
 void ToggleShowTownsMode( void );
 void ToggleShowMinesMode( void );

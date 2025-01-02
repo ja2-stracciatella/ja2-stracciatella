@@ -3,7 +3,7 @@
 #include "Laptop.h"
 #include "Mercs_No_Account.h"
 #include "Mercs.h"
-#include "VObject.h"
+#include "Object_Cache.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "LaptopSave.h"
@@ -34,7 +34,7 @@
 #define MERC_NA_SENTENCE_WIDTH	460 - 20
 
 
-static SGPVObject* guiNoAccountImage;
+static cache_key_t const guiNoAccountImage{ LAPTOPDIR "/noaccountbox.sti" };
 
 
 // The Open Account Box button
@@ -60,9 +60,6 @@ void EnterMercsNoAccount()
 {
 	InitMercBackGround();
 
-	// load the Account box graphic and add it
-	guiNoAccountImage = AddVideoObjectFromFile(LAPTOPDIR "/noaccountbox.sti");
-
 	// Open Accouint button
 	guiOpenAccountBoxButtonImage = LoadButtonImage(LAPTOPDIR "/bigbuttons.sti", 0, 1);
 	guiOpenAccountBoxButton = MakeButton(MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT], MERC_OPEN_BUTTON_X,   BtnOpenAccountBoxButtonCallback);
@@ -74,7 +71,7 @@ void EnterMercsNoAccount()
 
 void ExitMercsNoAccount()
 {
-	DeleteVideoObject(guiNoAccountImage);
+	RemoveVObject(guiNoAccountImage);
 
 	UnloadButtonImage( guiOpenAccountBoxButtonImage );
 	RemoveButton( guiOpenAccountBoxButton );

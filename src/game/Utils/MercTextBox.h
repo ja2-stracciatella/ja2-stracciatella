@@ -15,8 +15,6 @@ enum MercPopupBoxFlags
 	MERC_POPUP_PREPARE_FLAGS_SKULLICON  = 1U << 2
 };
 
-void InitMercPopupBox(void);
-
 
 enum MercPopUpBackground
 {

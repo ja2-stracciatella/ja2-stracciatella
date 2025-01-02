@@ -21,6 +21,7 @@
 #include "MercProfile.h"
 #include "Message.h"
 #include "MessageBoxScreen.h"
+#include "Object_Cache.h"
 #include "OppList.h"
 #include "Overhead.h"
 #include "Quests.h"
@@ -377,7 +378,7 @@ enum
 };
 
 //image identifiers
-static SGPVObject* guiQdScrollArrowImage;
+static cache_key_t const guiQdScrollArrowImage{ INTERFACEDIR "/qd_scrollarrows.sti" };
 
 
 static BOOLEAN gfQuestDebugEntry = TRUE;
@@ -793,9 +794,6 @@ static void EnterQuestDebugSystem(void)
 		usPosY += usFontHeight;
 	}
 
-	// load Scroll Horizontal Arrow graphic and add it
-	guiQdScrollArrowImage = AddVideoObjectFromFile(INTERFACEDIR "/qd_scrollarrows.sti");
-
 	gfRedrawQuestDebugSystem = TRUE;
 
 
@@ -875,7 +873,7 @@ static void ExitQuestDebugSystem(void)
 	RemoveButton( guiQDPgUpButtonButton );
 	RemoveButton( guiQDPgDownButtonButton );
 
-	DeleteVideoObject(guiQdScrollArrowImage);
+	RemoveVObject(guiQdScrollArrowImage);
 
 	gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
 	CreateDestroyDisplaySelectNpcDropDownBox();

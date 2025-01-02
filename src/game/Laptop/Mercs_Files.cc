@@ -23,6 +23,7 @@
 #include "Merc_Hiring.h"
 #include "MercPortrait.h"
 #include "Mercs.h"
+#include "Object_Cache.h"
 #include "Quests.h"
 #include "ScreenIDs.h"
 #include "Soldier_Control.h"
@@ -100,9 +101,11 @@
 #define MERC_PORTRAIT_TEXT_OFFSET_Y	110
 
 
-static SGPVObject* guiPortraitBox;
-static SGPVObject* guiStatsBox;
-static SGPVObject* guiBioBox;
+namespace {
+constexpr MultiLanguageGraphic guiStatsBox{ MLG_STATSBOX };
+cache_key_t const guiBioBox{ LAPTOPDIR "/biobox.sti" };
+cache_key_t const guiPortraitBox{ LAPTOPDIR "/portraitbox.sti" };
+}
 
 //
 // Buttons
@@ -140,15 +143,6 @@ void EnterMercsFiles()
 {
 	InitMercBackGround();
 
-	// load the stats box graphic and add it
-	guiStatsBox = AddVideoObjectFromFile(MLG_STATSBOX);
-
-	// load the Portrait box graphic and add it
-	guiPortraitBox = AddVideoObjectFromFile(LAPTOPDIR "/portraitbox.sti");
-
-	// load the bio box graphic and add it
-	guiBioBox = AddVideoObjectFromFile(LAPTOPDIR "/biobox.sti");
-
 	guiButtonImage    = LoadButtonImage(LAPTOPDIR "/bigbuttons.sti", 0, 1);
 	guiPrevButton     = MakeButton(MercInfo[MERC_FILES_PREVIOUS], MERC_FILES_PREV_BUTTON_X, BtnMercPrevButtonCallback);
 	guiNextButton     = MakeButton(MercInfo[MERC_FILES_NEXT],     MERC_FILES_NEXT_BUTTON_X, BtnMercNextButtonCallback);
@@ -161,9 +155,9 @@ void EnterMercsFiles()
 
 void ExitMercsFiles()
 {
-	DeleteVideoObject(guiPortraitBox);
-	DeleteVideoObject(guiStatsBox);
-	DeleteVideoObject(guiBioBox);
+	RemoveVObject(guiPortraitBox);
+	RemoveVObject(guiStatsBox);
+	RemoveVObject(guiBioBox);
 
 	UnloadButtonImage( guiButtonImage );
 	RemoveButton( guiPrevButton );
@@ -275,7 +269,7 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 static void DisplayMercFace(const ProfileID pid)
 try
 {
-	BltVideoObject(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, GetVObject(guiPortraitBox), 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
 
 	MERCPROFILESTRUCT const&       p = GetProfile(pid);
 	SOLDIERTYPE       const* const s = FindSoldierByProfileIDOnPlayerTeam(pid);
