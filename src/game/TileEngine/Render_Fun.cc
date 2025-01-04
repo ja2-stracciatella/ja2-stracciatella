@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <optional>
 
 
 // Room Information
@@ -49,7 +50,6 @@ BOOLEAN InAHiddenRoom( UINT16 sGridNo, UINT8 *pubRoomNo )
 }
 
 
-// @@ATECLIP TO WORLD!
 void SetRecalculateWireFrameFlagRadius(const GridNo pos, const INT16 sRadius)
 {
 	INT16 pos_x_;
@@ -61,8 +61,10 @@ void SetRecalculateWireFrameFlagRadius(const GridNo pos, const INT16 sRadius)
 	{
 		for (INT16 x = pos_x - sRadius; x < pos_x + sRadius + 2; ++x)
 		{
-			const UINT32 uiTile = MAPROWCOLTOPOS(y, x);
-			gpWorldLevelData[uiTile].uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
+			if (auto gridno{ GridNoFromRowColumn(y, x) }; gridno)
+			{
+				gpWorldLevelData[*gridno].uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
+			}
 		}
 	}
 }
@@ -221,4 +223,16 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 	SetRenderFlags(RENDER_FLAG_FULL );
 
 	CalculateWorldWireFrameTiles( FALSE );
+}
+
+
+std::optional<GridNo> GridNoFromRowColumn(int row, int column)
+{
+	if (row >= 0 && row < WORLD_ROWS &&
+	    column >= 0 && column < WORLD_COLS)
+	{
+		return row * WORLD_COLS + column;
+	}
+
+	return std::nullopt;
 }
