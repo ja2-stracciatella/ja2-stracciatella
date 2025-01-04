@@ -3,6 +3,7 @@
 
 #include "JA2Types.h"
 #include "WorldDef.h"
+#include <optional>
 
 #define NO_ROOM		0
 #define MAX_ROOMS	250
@@ -11,6 +12,7 @@
 extern UINT8 gubWorldRoomHidden[MAX_ROOMS];
 extern UINT8 gubWorldRoomInfo[WORLD_MAX];
 
+std::optional<GridNo> GridNoFromRowColumn(int row, int column);
 
 void InitRoomDatabase(void);
 
