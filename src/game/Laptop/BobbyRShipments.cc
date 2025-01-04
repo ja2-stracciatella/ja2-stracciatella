@@ -3,13 +3,13 @@
 #include "Laptop.h"
 #include "BobbyRShipments.h"
 #include "BobbyR.h"
-#include "VObject.h"
 #include "Text.h"
 #include "BobbyRGuns.h"
 #include "Cursors.h"
 #include "BobbyRMailOrder.h"
 #include "WordWrap.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
@@ -63,7 +63,7 @@
 #define BOBBYR_SHIPMENT_NUM_ITEMS_WIDTH	116
 
 
-static SGPVObject* guiBobbyRShipmentGrid;
+static cache_key_t const guiBobbyRShipmentGrid{ LAPTOPDIR "/bobbyray_onorder.sti" };
 
 static BOOLEAN gfBobbyRShipmentsDirty = FALSE;
 
@@ -98,9 +98,6 @@ static void CreatePreviousShipmentsMouseRegions(void);
 void EnterBobbyRShipments()
 {
 	InitBobbyRWoodBackground();
-
-	// load the Order Grid graphic and add it
-	guiBobbyRShipmentGrid = AddVideoObjectFromFile(LAPTOPDIR "/bobbyray_onorder.sti");
 
 	guiBobbyRShipmentBackImage = LoadButtonImage(LAPTOPDIR "/cataloguebutton.sti", 0, 1);
 	guiBobbyRShipmetBack = MakeButton(guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_SHIPMENT_BACK_BUTTON_X, BtnBobbyRShipmentBackCallback);
@@ -138,7 +135,7 @@ void ExitBobbyRShipments()
 	DeleteBobbyRWoodBackground();
 	DestroyBobbyROrderTitle();
 
-	DeleteVideoObject(guiBobbyRShipmentGrid);
+	RemoveVObject(guiBobbyRShipmentGrid);
 
 	UnloadButtonImage( guiBobbyRShipmentBackImage );
 	UnloadButtonImage( giBobbyRShipmentHomeImage );

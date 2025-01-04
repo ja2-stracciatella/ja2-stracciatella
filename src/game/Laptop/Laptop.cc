@@ -6,6 +6,7 @@
 #include "LoadSaveData.h"
 #include "Local.h"
 #include "Map_Screen_Interface.h"
+#include "Object_Cache.h"
 #include "Timer.h"
 #include "Timer_Control.h"
 #include "VObject.h"
@@ -221,9 +222,6 @@ BOOLEAN fShowBookmarkInfo = FALSE;
 //GLOBAL FOR WHICH SCREEN TO EXIT TO FOR LAPTOP
 static ScreenID guiExitScreen = MAP_SCREEN;
 
-// Laptop screen graphic handle
-static SGPVObject* guiLAPTOP;
-
 static BOOLEAN fNewWWW = TRUE;
 
 //Used to store the site to go to after the 'rain delay' message
@@ -232,18 +230,22 @@ extern UINT32 guiRainLoop;
 
 static INT32 giRainDelayInternetSite = -1;
 
+namespace {
+// Laptop screen graphic handle
+cache_key_t const guiLAPTOP{ LAPTOPDIR "/laptop3.sti" };
 
 // the laptop icons
-static SGPVObject* guiBOOKHIGH;
-static SGPVObject* guiBOOKMARK;
-static SGPVObject* guiGRAPHWINDOW;
-static SGPVObject* guiGRAPHBAR;
+cache_key_t const guiDOWNLOADTOP{ LAPTOPDIR "/downloadtop.sti" };
+cache_key_t const guiDOWNLOADMID{ LAPTOPDIR "/downloadmid.sti" };
+cache_key_t const guiDOWNLOADBOT{ LAPTOPDIR "/downloadbot.sti" };
+cache_key_t const guiBOOKMARK{ LAPTOPDIR "/webpages.sti" };
+cache_key_t const guiBOOKHIGH{ LAPTOPDIR "/hilite.sti" };
+cache_key_t const guiGRAPHWINDOW{ LAPTOPDIR "/graphwindow.sti" };
+cache_key_t const guiGRAPHBAR{ LAPTOPDIR "/graphsegment.sti" };
+cache_key_t const guiLIGHTS{ LAPTOPDIR "/lights.sti" };
+}
 SGPVObject* guiLaptopBACKGROUND;
-static SGPVObject* guiDOWNLOADTOP;
-static SGPVObject* guiDOWNLOADMID;
-static SGPVObject* guiDOWNLOADBOT;
 static SGPVObject* guiTITLEBARLAPTOP;
-static SGPVObject* guiLIGHTS;
 SGPVObject* guiTITLEBARICONS;
 static SGPVSurface* guiDESKTOP;
 
@@ -415,9 +417,7 @@ static void EnterLaptopInitLaptopPages(void);
 static void InitLaptopOpenQueue(void);
 static void InitalizeSubSitesList(void);
 static BOOLEAN IsItRaining(void);
-static void LoadBookmark(void);
 static void LoadDesktopBackground(void);
-static void LoadLoadPending(void);
 static void RenderLapTopImage(void);
 
 
@@ -471,17 +471,11 @@ static void EnterLaptop(void)
 	// sub page
 	giCurrentSubPage = 0;
 
-	// load the laptop graphic and add it
-	guiLAPTOP = AddVideoObjectFromFile(LAPTOPDIR "/laptop3.sti");
-
 	// background for panel
 	guiLaptopBACKGROUND = AddVideoObjectFromFile(LAPTOPDIR "/taskbar.sti");
 
 	// background for panel
 	guiTITLEBARLAPTOP = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
-
-	// lights for power and HD
-	guiLIGHTS = AddVideoObjectFromFile(LAPTOPDIR "/lights.sti");
 
 	// icons for title bars
 	guiTITLEBARICONS = AddVideoObjectFromFile(LAPTOPDIR "/icons.sti");
@@ -525,9 +519,7 @@ static void EnterLaptop(void)
 
 
 	gfShowBookmarks = FALSE;
-	LoadBookmark();
 	SetBookMark(AIM_BOOKMARK);
-	LoadLoadPending();
 
 	DrawDeskTopBackground();
 
@@ -596,10 +588,10 @@ void ExitLaptop(void)
 	fLoadPendingFlag = FALSE;
 
 
-	DeleteVideoObject(guiLAPTOP);
+	RemoveVObject(guiLAPTOP);
 	DeleteVideoObject(guiLaptopBACKGROUND);
 	DeleteVideoObject(guiTITLEBARLAPTOP);
-	DeleteVideoObject(guiLIGHTS);
+	RemoveVObject(guiLIGHTS);
 	DeleteVideoObject(guiTITLEBARICONS);
 	DeleteVideoObject(guiEmailWarning);
 
@@ -1631,17 +1623,6 @@ void SetBookMark(INT32 iBookId)
 }
 
 
-static void LoadBookmark(void)
-{
-	// grab download bars too
-	guiDOWNLOADTOP = AddVideoObjectFromFile(LAPTOPDIR "/downloadtop.sti");
-	guiDOWNLOADMID = AddVideoObjectFromFile(LAPTOPDIR "/downloadmid.sti");
-	guiDOWNLOADBOT = AddVideoObjectFromFile(LAPTOPDIR "/downloadbot.sti");
-	guiBOOKMARK    = AddVideoObjectFromFile(LAPTOPDIR "/webpages.sti");
-	guiBOOKHIGH    = AddVideoObjectFromFile(LAPTOPDIR "/hilite.sti");
-}
-
-
 static void DisplayBookMarks(void)
 {
 	// check if we are maximizing or minimizing.. if so, do not display
@@ -1661,7 +1642,7 @@ static void DisplayBookMarks(void)
 	for (INT32 i = 0;; ++i)
 	{
 		bool              const highlighted = iHighLightBookLine == i;
-		SGPVObject const* const vo          = highlighted ? guiBOOKHIGH : guiBOOKMARK;
+		auto * const vo{ highlighted ? guiBOOKHIGH : guiBOOKMARK };
 		BltVideoObject(FRAME_BUFFER, vo, 0, BOOK_X, y);
 
 		SetFontForeground(highlighted ? FONT_WHITE : FONT_BLACK);
@@ -1681,11 +1662,11 @@ static void DisplayBookMarks(void)
 
 static void DeleteBookmark(void)
 {
-	DeleteVideoObject(guiBOOKHIGH);
-	DeleteVideoObject(guiBOOKMARK);
-	DeleteVideoObject(guiDOWNLOADTOP);
-	DeleteVideoObject(guiDOWNLOADMID);
-	DeleteVideoObject(guiDOWNLOADBOT);
+	RemoveVObject(guiBOOKHIGH);
+	RemoveVObject(guiBOOKMARK);
+	RemoveVObject(guiDOWNLOADTOP);
+	RemoveVObject(guiDOWNLOADMID);
+	RemoveVObject(guiDOWNLOADBOT);
 }
 
 
@@ -1857,15 +1838,6 @@ static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 }
 
 
-static void LoadLoadPending(void)
-{
-	// function will load the load pending graphics
-	// reuse bookmark
-	// load graph window and bar
-	guiGRAPHWINDOW = AddVideoObjectFromFile(LAPTOPDIR "/graphwindow.sti");
-	guiGRAPHBAR    = AddVideoObjectFromFile(LAPTOPDIR "/graphsegment.sti");
-}
-
 static void DisplayLoadPending(void)
 {
 	// this function will display the load pending and return if the load is done
@@ -1983,8 +1955,8 @@ static void DeleteLoadPending(void)
 {
 	// this funtion will delete the load pending graphics
 	// reuse bookmark
-	DeleteVideoObject(guiGRAPHBAR);
-	DeleteVideoObject(guiGRAPHWINDOW);
+	RemoveVObject(guiGRAPHBAR);
+	RemoveVObject(guiGRAPHWINDOW);
 }
 
 

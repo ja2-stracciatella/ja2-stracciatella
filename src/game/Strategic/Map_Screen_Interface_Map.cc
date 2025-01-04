@@ -24,6 +24,7 @@
 #include "Militia_Control.h"
 #include "MineModel.h"
 #include "MouseSystem.h"
+#include "Object_Cache.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"
 #include "PreBattle_Interface.h"
@@ -239,12 +240,6 @@ enum{
 // the big map .pcx
 static SGPVSurface* guiBIGMAP;
 
-// boxes for characters on the map
-static SGPVObject* guiCHARICONS;
-
-// the merc arrival sector landing zone icon
-static SGPVObject* guiBULLSEYE;
-
 
 // the max allowable towns militia in a sector
 #define MAP_MILITIA_MAP_X 4
@@ -299,15 +294,43 @@ INT16 sElitesOnCursor = 0;
 // the current militia town id
 INT16 sSelectedMilitiaTown = 0;
 
+namespace {
+// boxes for characters on the map
+cache_key_t const guiCHARICONS{ INTERFACEDIR "/boxes.sti" };
+
+// the merc arrival sector landing zone icon
+cache_key_t const guiBULLSEYE{ INTERFACEDIR "/bullseye.sti" };
 
 // sublevel graphics
-static SGPVObject* guiSubLevel1;
-static SGPVObject* guiSubLevel2;
-static SGPVObject* guiSubLevel3;
+cache_key_t const guiSubLevel1{ INTERFACEDIR "/mine_1.sti" };
+cache_key_t const guiSubLevel2{ INTERFACEDIR "/mine_2.sti" };
+cache_key_t const guiSubLevel3{ INTERFACEDIR "/mine_3.sti" };
+
+// militia graphics
+cache_key_t const guiMilitia{ INTERFACEDIR "/militia.sti" };
+cache_key_t const guiMilitiaMaps{ INTERFACEDIR "/militiamaps.sti" };
+cache_key_t const guiMilitiaSectorHighLight{ INTERFACEDIR "/militiamapsectoroutline2.sti" };
+cache_key_t const guiMilitiaSectorOutline{ INTERFACEDIR "/militiamapsectoroutline.sti" };
+
+// heli pop up
+cache_key_t const guiMapBorderHeliSectors{ INTERFACEDIR "/pos2.sti" };
+
+// sam and mine icons
+cache_key_t const guiSAMICON{ INTERFACEDIR "/sam.sti" };
+
+// the mine icon
+cache_key_t const guiMINEICON{ INTERFACEDIR "/mine.sti" };
+
+// helicopter icon
+cache_key_t const guiHelicopterIcon{ INTERFACEDIR "/helicop.sti" };
 
 // the between sector icons
-static SGPVObject* guiCHARBETWEENSECTORICONS;
-static SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
+cache_key_t const guiCHARBETWEENSECTORICONS{ INTERFACEDIR "/merc_between_sector_icons.sti" };
+cache_key_t const guiCHARBETWEENSECTORICONSCLOSE{ INTERFACEDIR "/merc_mvt_green_arrows.sti" };
+
+// the map arrows graphics
+cache_key_t const guiMAPCURSORS{ INTERFACEDIR "/mapcursr.sti" };
+}
 
 // highlighted sector
 SGPSector gsHighlightSector(-1, -1);
@@ -318,9 +341,6 @@ static UINT16* pMapDKRedPalette;
 static UINT16* pMapLTGreenPalette;
 static UINT16* pMapDKGreenPalette;
 
-
-// heli pop up
-static SGPVObject* guiMapBorderHeliSectors;
 
 // base sectors (sector value for the upper left corner) of towns. List start at zero, indexed by (townId - 1)
 static std::vector<SGPSector> sBaseSectorList;
@@ -344,9 +364,6 @@ PathSt* pTempCharacterPath = NULL;
 // draw temp path?
 BOOLEAN fDrawTempHeliPath = FALSE;
 
-// the map arrows graphics
-static SGPVObject* guiMAPCURSORS;
-
 // destination plotting character
 INT8 bSelectedDestChar = -1;
 
@@ -363,15 +380,6 @@ BOOLEAN   fTempPathAlreadyDrawn = FALSE;
 // the regions for the mapscreen militia box
 static MOUSE_REGION gMapScreenMilitiaBoxRegions[9];
 
-// the mine icon
-static SGPVObject* guiMINEICON;
-
-// militia graphics
-static SGPVObject* guiMilitia;
-static SGPVObject* guiMilitiaMaps;
-static SGPVObject* guiMilitiaSectorHighLight;
-static SGPVObject* guiMilitiaSectorOutline;
-
 // the sector that is highlighted on the militia map
 static INT16 sSectorMilitiaMapSector        = -1;
 static bool  fMilitiaMapButtonsCreated      = false;
@@ -387,12 +395,6 @@ BOOLEAN gfMilitiaPopupCreated = FALSE;
 
 UINT32 guiAnimateRouteBaseTime = 0;
 UINT32 guiPotHeliPathBaseTime = 0;
-
-// sam and mine icons
-static SGPVObject* guiSAMICON;
-
-// helicopter icon
-static SGPVObject* guiHelicopterIcon;
 
 // map secret icons
 static std::map<ST::string, SGPVObject*> gSecretSiteIcons;
@@ -669,7 +671,7 @@ static void ShowTownText(void)
 }
 
 
-static void DrawMapBoxIcon(HVOBJECT, UINT16 icon, const SGPSector& sMap, UINT8 icon_pos);
+static void DrawMapBoxIcon(cache_key_t, UINT16 icon, const SGPSector& sMap, UINT8 icon_pos);
 
 
 // "on duty" includes mercs inside vehicles
@@ -2120,7 +2122,7 @@ static void ShowPeopleInMotion(const SGPSector& sSector)
 		}
 
 		// if about to enter, draw yellow arrows, blue otherwise
-		SGPVObject const* const hIconHandle = fAboutToEnter ? guiCHARBETWEENSECTORICONSCLOSE : guiCHARBETWEENSECTORICONS;
+		auto * const hIconHandle = fAboutToEnter ? guiCHARBETWEENSECTORICONSCLOSE : guiCHARBETWEENSECTORICONS;
 
 		INT16 iX = MAP_VIEW_START_X                     + sSector.x * MAP_GRID_X + sOffsetX;
 		INT16 iY = MAP_Y_ICON_OFFSET + MAP_VIEW_START_Y + sSector.y * MAP_GRID_Y + sOffsetY;
@@ -2464,7 +2466,7 @@ static void DrawSite(const SGPSector& sMap, const SGPVObject* const icon)
 
 static void BlitMineIcon(const SGPSector& sMap)
 {
-	DrawSite(sMap, guiMINEICON);
+	DrawSite(sMap, GetVObject(guiMINEICON));
 }
 
 
@@ -2694,22 +2696,6 @@ static void DropAPersonInASector(UINT8 const type, UINT8 const sector)
 void LoadMapScreenInterfaceMapGraphics()
 {
 	guiBIGMAP                      = AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx");
-	guiBULLSEYE                    = AddVideoObjectFromFile(INTERFACEDIR "/bullseye.sti");
-	guiSAMICON                     = AddVideoObjectFromFile(INTERFACEDIR "/sam.sti");
-	guiCHARBETWEENSECTORICONS      = AddVideoObjectFromFile(INTERFACEDIR "/merc_between_sector_icons.sti");
-	guiCHARBETWEENSECTORICONSCLOSE = AddVideoObjectFromFile(INTERFACEDIR "/merc_mvt_green_arrows.sti");
-	guiCHARICONS                   = AddVideoObjectFromFile(INTERFACEDIR "/boxes.sti");
-	guiHelicopterIcon              = AddVideoObjectFromFile(INTERFACEDIR "/helicop.sti");
-	guiMAPCURSORS                  = AddVideoObjectFromFile(INTERFACEDIR "/mapcursr.sti");
-	guiMINEICON                    = AddVideoObjectFromFile(INTERFACEDIR "/mine.sti");
-	guiMapBorderHeliSectors        = AddVideoObjectFromFile(INTERFACEDIR "/pos2.sti");
-	guiMilitia                     = AddVideoObjectFromFile(INTERFACEDIR "/militia.sti");
-	guiMilitiaMaps                 = AddVideoObjectFromFile(INTERFACEDIR "/militiamaps.sti");
-	guiMilitiaSectorHighLight      = AddVideoObjectFromFile(INTERFACEDIR "/militiamapsectoroutline2.sti");
-	guiMilitiaSectorOutline        = AddVideoObjectFromFile(INTERFACEDIR "/militiamapsectoroutline.sti");
-	guiSubLevel1                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_1.sti");
-	guiSubLevel2                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_2.sti");
-	guiSubLevel3                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_3.sti");
 
 	for (auto s : GCM->getMapSecrets())
 	{
@@ -2727,22 +2713,22 @@ void LoadMapScreenInterfaceMapGraphics()
 void DeleteMapScreenInterfaceMapGraphics()
 {
 	DeleteVideoSurface(guiBIGMAP);
-	DeleteVideoObject(guiBULLSEYE);
-	DeleteVideoObject(guiSAMICON);
-	DeleteVideoObject(guiCHARBETWEENSECTORICONS);
-	DeleteVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
-	DeleteVideoObject(guiCHARICONS);
-	DeleteVideoObject(guiHelicopterIcon);
-	DeleteVideoObject(guiMAPCURSORS);
-	DeleteVideoObject(guiMINEICON);
-	DeleteVideoObject(guiMapBorderHeliSectors);
-	DeleteVideoObject(guiMilitia);
-	DeleteVideoObject(guiMilitiaMaps);
-	DeleteVideoObject(guiMilitiaSectorHighLight);
-	DeleteVideoObject(guiMilitiaSectorOutline);
-	DeleteVideoObject(guiSubLevel1);
-	DeleteVideoObject(guiSubLevel2);
-	DeleteVideoObject(guiSubLevel3);
+	RemoveVObject(guiBULLSEYE);
+	RemoveVObject(guiSAMICON);
+	RemoveVObject(guiCHARBETWEENSECTORICONS);
+	RemoveVObject(guiCHARBETWEENSECTORICONSCLOSE);
+	RemoveVObject(guiCHARICONS);
+	RemoveVObject(guiHelicopterIcon);
+	RemoveVObject(guiMAPCURSORS);
+	RemoveVObject(guiMINEICON);
+	RemoveVObject(guiMapBorderHeliSectors);
+	RemoveVObject(guiMilitia);
+	RemoveVObject(guiMilitiaMaps);
+	RemoveVObject(guiMilitiaSectorHighLight);
+	RemoveVObject(guiMilitiaSectorOutline);
+	RemoveVObject(guiSubLevel1);
+	RemoveVObject(guiSubLevel2);
+	RemoveVObject(guiSubLevel3);
 
 	for (auto& pair : gSecretSiteIcons)
 	{
@@ -2802,7 +2788,7 @@ void DrawMilitiaPopUpBox()
 	// draw the highlight last
 	ShowHighLightedSectorOnMilitiaMap( );
 
-	ETRLEObject const& pTrav = guiMilitia->SubregionProperties(0);
+	ETRLEObject const& pTrav = GetVObject(guiMilitia)->SubregionProperties(0);
 	InvalidateRegion(MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y, MAP_MILITIA_BOX_POS_X + pTrav.usWidth, MAP_MILITIA_BOX_POS_Y + pTrav.usHeight);
 
 	// set the text for the militia map sector info buttons
@@ -3494,7 +3480,7 @@ static void ShadeSubLevelsNotVisited(void)
 static void HandleLowerLevelMapBlit(void)
 {
 	// blits the sub level maps
-	const SGPVObject* vo; // XXX HACK000E
+	const char * vo{};
 	switch( iCurrentMapSectorZ )
 	{
 		case 1: vo = guiSubLevel1; break;
@@ -3687,7 +3673,7 @@ static void ShowSAMSitesOnStrategicMap()
 		auto secret = GetMapSecretBySectorID(s->sectorId);
 		if (secret && !IsSecretFoundAt(s->sectorId)) continue;
 
-		DrawSite(sMap, guiSAMICON);
+		DrawSite(sMap, GetVObject(guiSAMICON));
 
 		if (fShowAircraftFlag)
 		{ // write "SAM Site" centered underneath
@@ -3804,7 +3790,7 @@ static void ShowItemsOnMap(void)
 }
 
 
-static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, const SGPSector& sMap, UINT8 const icon_pos)
+static void DrawMapBoxIcon(cache_key_t const vo, UINT16 const icon, const SGPSector& sMap, UINT8 const icon_pos)
 {
 	/* Don't show any more icons than will fit into one sector, to keep them from
 		* spilling into sector(s) beneath */

@@ -4,10 +4,10 @@
 #include "Laptop.h"
 #include "AIMHistory.h"
 #include "AIM.h"
-#include "VObject.h"
 #include "WordWrap.h"
 #include "Text.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
@@ -56,7 +56,7 @@
 
 #define AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS	8
 
-static SGPVObject* guiContentButton;
+static cache_key_t const guiContentButton{ LAPTOPDIR "/contentbutton.sti" };
 
 static UINT8   gubCurPageNum;
 static BOOLEAN gfInToc =  FALSE;
@@ -114,9 +114,6 @@ void EnterAimHistory()
 	InitAimDefaults();
 	InitAimHistoryMenuBar();
 
-	// load the Content Buttons graphic and add it
-	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/contentbutton.sti");
-
 	gubCurPageNum = (UINT8) giCurrentSubPage;
 	RenderAimHistory();
 
@@ -135,7 +132,7 @@ void ExitAimHistory()
 	RemoveAimDefaults();
 	ExitAimHistoryMenuBar();
 
-	DeleteVideoObject(guiContentButton);
+	RemoveVObject(guiContentButton);
 	giCurrentSubPage = gubCurPageNum;
 
 	ExitTocMenu();

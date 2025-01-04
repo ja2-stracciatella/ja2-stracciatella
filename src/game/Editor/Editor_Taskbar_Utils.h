@@ -63,8 +63,6 @@ void DrawEditorInfoBox(const ST::string& str, SGPFont, UINT16 x, UINT16 y, UINT1
 extern INT32	giEditMercDirectionIcons[2];
 extern SGPVObject* guiMercInventoryPanel;
 extern SGPVObject* guiOmertaMap;
-extern SGPVObject* guiExclamation;
-extern SGPVObject* guiKeyImage;
 extern SGPVSurface* guiMercInvPanelBuffers[9];
 extern SGPVSurface* guiMercTempBuffer;
 

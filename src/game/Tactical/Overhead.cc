@@ -375,10 +375,7 @@ void InitTacticalEngine()
 	InitializeTacticalInterface();
 	InitializeGameVideoObjects();
 	LoadPaletteData();
-	LoadDialogueControlGraphics();
 	LoadFacesGraphics();
-	LoadInterfacePanelGraphics();
-	LoadSpreadBurstGraphics();
 
 	LoadLockTable();
 	InitPathAI();
@@ -393,7 +390,6 @@ void InitTacticalEngine()
 void ShutdownTacticalEngine(void)
 {
 	DeleteSpreadBurstGraphics();
-	DeleteInterfacePanelGraphics();
 	DeleteFacesGraphics();
 	DeleteDialogueControlGraphics();
 	DeletePaletteData();

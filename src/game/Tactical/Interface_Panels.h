@@ -126,9 +126,6 @@ extern UINT16       gusNewItemIndex;
 extern BOOLEAN      gfDeductPoints;
 extern BOOLEAN      gfSMDisableForItems;
 
-void LoadInterfacePanelGraphics();
-void DeleteInterfacePanelGraphics();
-
 void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 rgb, const UINT8 scale_rgb);
 
 #endif

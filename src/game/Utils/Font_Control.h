@@ -93,7 +93,6 @@ extern SGPFont gpHugeFont;
 #define FONT_DKKHAKI		201
 
 void InitializeFonts(void);
-void ShutdownFonts(void);
 
 enum FontShade
 {

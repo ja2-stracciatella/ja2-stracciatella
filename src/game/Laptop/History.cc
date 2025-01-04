@@ -6,7 +6,6 @@
 #include "History.h"
 #include "Quests.h"
 #include "Soldier_Control.h"
-#include "VObject.h"
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Cursors.h"
@@ -16,6 +15,7 @@
 #include "Message.h"
 #include "LaptopSave.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "VSurface.h"
 
 #include "ContentManager.h"
@@ -67,15 +67,24 @@ struct HistoryUnit
 #define BTN_Y				(STD_SCREEN_Y + 53 )
 
 // graphics handles
-static SGPVObject* guiTITLE;
-static SGPVObject* guiTOP;
-static SGPVObject* guiLONGLINE;
-static SGPVObject* guiSHADELINE;
+namespace {
+cache_key_t const guiTITLE{ LAPTOPDIR "/programtitlebar.sti" };
+
+// top portion of the screen background
+cache_key_t const guiTOP{ LAPTOPDIR "/historywindow.sti" };
+
+// shaded line
+cache_key_t const guiSHADELINE{ LAPTOPDIR "/historylines.sti" };
+
+// black divider line - long ( 480 length)
+cache_key_t const guiLONGLINE{ LAPTOPDIR "/divisionline480.sti" };
+
 
 enum{
 	PREV_PAGE_BUTTON=0,
 	NEXT_PAGE_BUTTON,
 };
+}
 
 // the page flipping buttons
 static GUIButtonRef giHistoryButton[2];
@@ -121,15 +130,11 @@ void GameInitHistory()
 
 
 static void CreateHistoryButtons(void);
-static void LoadHistory(void);
 static void SetHistoryButtonStates(void);
 
 
 void EnterHistory()
 {
-	// load the graphics
-	LoadHistory( );
-
 	// create History buttons
 	CreateHistoryButtons( );
 
@@ -195,31 +200,13 @@ void RenderHistory( void )
 }
 
 
-static void LoadHistory(void)
-{
-	// load History video objects into memory
-
-	// title bar
-	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
-
-	// top portion of the screen background
-	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/historywindow.sti");
-
-	// shaded line
-	guiSHADELINE = AddVideoObjectFromFile(LAPTOPDIR "/historylines.sti");
-
-	// black divider line - long ( 480 length)
-	guiLONGLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline480.sti");
-}
-
-
 static void RemoveHistory(void)
 {
 	// delete history video objects from memory
-	DeleteVideoObject(guiLONGLINE);
-	DeleteVideoObject(guiTOP);
-	DeleteVideoObject(guiTITLE);
-	DeleteVideoObject(guiSHADELINE);
+	RemoveVObject(guiLONGLINE);
+	RemoveVObject(guiTOP);
+	RemoveVObject(guiTITLE);
+	RemoveVObject(guiSHADELINE);
 }
 
 

@@ -4,10 +4,10 @@
 #include "Laptop.h"
 #include "AIMPolicies.h"
 #include "AIM.h"
-#include "VObject.h"
 #include "WordWrap.h"
 #include "Text.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
@@ -155,7 +155,7 @@ static UINT8       gubCurPageNum;
 static BOOLEAN     gfInPolicyToc            = FALSE;
 static BOOLEAN     gfInAgreementPage        = FALSE;
 static BOOLEAN     gfAimPolicyMenuBarLoaded = FALSE;
-static SGPVObject* guiContentButton;
+static cache_key_t const guiContentButton{ LAPTOPDIR "/contentbutton.sti" };
 static BOOLEAN     gfExitingAimPolicy;
 static BOOLEAN     AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
 
@@ -183,9 +183,6 @@ void EnterAimPolicies()
 
 	gfInPolicyToc = FALSE;
 
-	// load the Content Buttons graphic and add it
-	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/contentbutton.sti");
-
 	RenderAimPolicies();
 }
 
@@ -199,7 +196,7 @@ void ExitAimPolicies()
 {
 	gfExitingAimPolicy = TRUE;
 
-	DeleteVideoObject(guiContentButton);
+	RemoveVObject(guiContentButton);
 
 	if( gfAimPolicyMenuBarLoaded )
 		ExitAimPolicyMenuBar();

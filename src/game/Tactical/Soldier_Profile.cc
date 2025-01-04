@@ -208,8 +208,6 @@ void LoadMercProfiles()
 
 	// no better place..heh?.. will load faces for profiles that are 'extern'.....won't have soldiertype instances
 	PreloadExternalNPCFaces();
-
-	LoadCarPortraitValues();
 }
 
 

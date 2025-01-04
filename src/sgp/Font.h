@@ -110,7 +110,6 @@ void SetFontAttributes(SGPFont, UINT8 foreground, UINT8 shadow = DEFAULT_SHADOW,
 SGPFont LoadFontFile(const char* filename);
 UINT16  GetFontHeight(SGPFont);
 void    InitializeFontManager(void);
-void    UnloadFont(SGPFont);
 
 UINT32 GetCharWidth(SGPFont SGPFont, char32_t c);
 

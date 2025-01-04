@@ -3,6 +3,7 @@
 #include "HImage.h"
 #include "Local.h"
 #include "MercTextBox.h"
+#include "Object_Cache.h"
 #include "PODObj.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -67,15 +68,9 @@ struct MercPopUpBox
 };
 
 
-// the flags
-static SGPVObject* guiBoxIcons;
-static SGPVObject* guiSkullIcons;
-
-
-void InitMercPopupBox()
-{
-	guiBoxIcons   = AddVideoObjectFromFile(INTERFACEDIR "/msgboxicons.sti");     // stop icon
-	guiSkullIcons = AddVideoObjectFromFile(INTERFACEDIR "/msgboxiconskull.sti"); // skull icon
+namespace {
+cache_key_t const guiBoxIcons{ INTERFACEDIR "/msgboxicons.sti" };       // stop icon
+cache_key_t const guiSkullIcons{ INTERFACEDIR "/msgboxiconskull.sti" }; // skull icon
 }
 
 

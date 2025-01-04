@@ -286,7 +286,6 @@ class CharacterDialogueEvent : public DialogueEvent
 
 void MakeCharacterDialogueEventSleep(SOLDIERTYPE&, bool sleep);
 
-void LoadDialogueControlGraphics();
 void DeleteDialogueControlGraphics();
 
 #endif

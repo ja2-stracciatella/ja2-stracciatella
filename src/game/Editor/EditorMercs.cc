@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Editor_Callback_Prototypes.h"
 #include "Font.h"
 #include "HImage.h"
@@ -18,6 +19,7 @@
 #include "Interface_Items.h"
 #include "WorldMan.h"
 #include "WorldDef.h"
+#include "Object_Cache.h"
 #include "Overhead.h"
 #include "RenderWorld.h"
 #include "Animation_Data.h"
@@ -201,6 +203,8 @@ BOOLEAN gfShowCreatures = TRUE;
 BOOLEAN gfShowRebels = TRUE;
 BOOLEAN gfShowCivilians = TRUE;
 
+static cache_key_t const guiKeyImage{ EDITORDIR "/keyimage.sti" };
+static cache_key_t const guiExclamation{ EDITORDIR "/exclamation.sti" };
 
 //information for bodytypes.
 static SoldierBodyType const bEnemyArray[]    = { BODY_RANDOM, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE, TANK_NW, TANK_NE };

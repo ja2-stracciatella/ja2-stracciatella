@@ -4,24 +4,19 @@
 #include "BobbyRMisc.h"
 #include "BobbyR.h"
 #include "BobbyRGuns.h"
-#include "VObject.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "Video.h"
 #include "VSurface.h"
 
 
-static SGPVObject* guiMiscBackground;
-static SGPVObject* guiMiscGrid;
-
+namespace {
+cache_key_t const guiMiscBackground{ LAPTOPDIR "/miscbackground.sti" };
+cache_key_t const guiMiscGrid{ LAPTOPDIR "/miscgrid.sti" };
+}
 
 void EnterBobbyRMisc()
 {
-	// load the background graphic and add it
-	guiMiscBackground = AddVideoObjectFromFile(LAPTOPDIR "/miscbackground.sti");
-
-	// load the gunsgrid graphic and add it
-	guiMiscGrid = AddVideoObjectFromFile(LAPTOPDIR "/miscgrid.sti");
-
 	InitBobbyBrTitle();
 	//Draw menu bar
 	InitBobbyMenuBar( );
@@ -34,8 +29,8 @@ void EnterBobbyRMisc()
 
 void ExitBobbyRMisc()
 {
-	DeleteVideoObject(guiMiscBackground);
-	DeleteVideoObject(guiMiscGrid);
+	RemoveVObject(guiMiscBackground);
+	RemoveVObject(guiMiscGrid);
 	DeleteBobbyBrTitle();
 	DeleteMouseRegionForBigImage();
 	DeleteBobbyMenuBar();
@@ -46,7 +41,9 @@ void ExitBobbyRMisc()
 
 void RenderBobbyRMisc()
 {
-	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiMiscBackground);
+	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES,
+		BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT,
+		GetVObject(guiMiscBackground));
 
 	//Display title at top of page
 	DisplayBobbyRBrTitle();

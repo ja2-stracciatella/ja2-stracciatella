@@ -4,10 +4,10 @@
 #include "Laptop.h"
 #include "AIMArchives.h"
 #include "AIM.h"
-#include "VObject.h"
 #include "WordWrap.h"
 #include "Text.h"
 #include "Button_System.h"
+#include "Object_Cache.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "Font_Control.h"
@@ -97,11 +97,13 @@
 #define AIM_ALUMNI_FILE_RECORD_SIZE	80 * 8
 #define AIM_ALUMNI_FULL_NAME_SIZE	80
 
-static SGPVObject* guiAlumniFrame;
-static SGPVObject* guiOldAim;
-static SGPVObject* guiAlumniPopUp;
-static SGPVObject* guiPopUpPic;
-static SGPVObject* guiDoneButton;
+namespace {
+cache_key_t const guiAlumniFrame{ LAPTOPDIR "/alumniframe.sti" };
+cache_key_t const guiOldAim{ LAPTOPDIR "/old_aim.sti" };
+cache_key_t const guiPopUpPic{ LAPTOPDIR "/popuppicframe.sti" };
+cache_key_t const guiAlumniPopUp{ LAPTOPDIR "/alumnipopup.sti" };
+cache_key_t const guiDoneButton{ LAPTOPDIR "/donebutton.sti" };
+}
 
 static UINT8   gubPageNum;
 static UINT8   gubDrawOldMerc;
@@ -148,12 +150,6 @@ void EnterAimArchives()
 
 	gubPageNum = (UINT8)giCurrentSubPage;
 
-	guiAlumniFrame = AddVideoObjectFromFile(LAPTOPDIR "/alumniframe.sti");
-	guiOldAim      = AddVideoObjectFromFile(LAPTOPDIR "/old_aim.sti"); // 1st set of faces
-	guiPopUpPic    = AddVideoObjectFromFile(LAPTOPDIR "/popuppicframe.sti");
-	guiAlumniPopUp = AddVideoObjectFromFile(LAPTOPDIR "/alumnipopup.sti");
-	guiDoneButton  = AddVideoObjectFromFile(LAPTOPDIR "/donebutton.sti");
-
 	InitAlumniFaceRegions();
 
 	guiAlumniPageButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
@@ -185,11 +181,11 @@ static void RemoveAimAlumniFaceRegion(void);
 
 void ExitAimArchives()
 {
-	DeleteVideoObject(guiAlumniFrame);
-	DeleteVideoObject(guiOldAim);
-	DeleteVideoObject(guiAlumniPopUp);
-	DeleteVideoObject(guiPopUpPic);
-	DeleteVideoObject(guiDoneButton);
+	RemoveVObject(guiAlumniFrame);
+	RemoveVObject(guiOldAim);
+	RemoveVObject(guiAlumniPopUp);
+	RemoveVObject(guiPopUpPic);
+	RemoveVObject(guiDoneButton);
 
 	RemoveAimAlumniFaceRegion();
 

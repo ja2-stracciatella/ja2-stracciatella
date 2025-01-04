@@ -3,6 +3,7 @@
 #include "Types.h"
 #include "Font.h"
 #include "Debug.h"
+#include "Object_Cache.h"
 #include "VSurface.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
@@ -86,15 +87,6 @@ SGPFont LoadFontFile(const char *filename)
 	SGPFont const font = AddVideoObjectFromFile(filename);
 	if (!FontDefault) FontDefault = font;
 	return font;
-}
-
-
-/* Deletes the video object of a particular font. Frees up the memory and
- * resources allocated for it. */
-void UnloadFont(SGPFont const font)
-{
-	Assert(font);
-	DeleteVideoObject(font);
 }
 
 

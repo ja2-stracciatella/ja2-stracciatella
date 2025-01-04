@@ -8,14 +8,12 @@
 #include "WorldDef.h"
 #include "Animation_Data.h"
 #include "Overhead.h"
-#include "Font_Control.h"
 #include "Sound_Control.h"
 #include "Lighting.h"
 #include "Cursor_Control.h"
 #include "Video.h"
 #include "Dialogue_Control.h"
 #include "Laptop.h"
-#include "MercTextBox.h"
 #include "Tile_Cache.h"
 #include "StrategicMap.h"
 #include "Map_Information.h"
@@ -76,8 +74,6 @@ try
 	InitializeWorld();
 
 	InitTileCache( );
-
-	InitMercPopupBox( );
 
 	if(GameMode::getInstance()->isEditorMode())
 	{
@@ -157,8 +153,6 @@ void ShutdownJA2(void)
 	DeinitializeWorld( );
 
 	DeleteTileCache( );
-
-	ShutdownFonts();
 
 	ShutdownJA2Sound( );
 

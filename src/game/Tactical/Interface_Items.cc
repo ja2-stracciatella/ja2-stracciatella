@@ -8,6 +8,7 @@
 #include "LoadSaveObjectType.h"
 #include "HImage.h"
 #include "Map_Screen_Interface_Bottom.h"
+#include "Object_Cache.h"
 #include "Soldier_Macros.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
@@ -202,13 +203,17 @@ static BOOLEAN gfBadThrowItemCTGH;
 BOOLEAN gfDontChargeAPsToPickup = FALSE;
 static BOOLEAN gbItemPointerLocateGood = FALSE;
 
+namespace {
 // ITEM DESCRIPTION BOX STUFF
-static SGPVObject *guiItemDescBox;
-static SGPVObject *guiMapItemDescBox;
+cache_key_t const guiItemDescBox{ INTERFACEDIR "/infobox.sti" };
+cache_key_t const guiMapItemDescBox{ INTERFACEDIR "/iteminfoc.sti" };
+
+cache_key_t const guiBullet{ INTERFACEDIR "/bullet.sti" };
+cache_key_t const guiMoneyGraphicsForDescBox{ INTERFACEDIR "/info_bil.sti" };
+cache_key_t const guiGoldKeyVO{ INTERFACEDIR "/gold_key_button.sti" };
+}
 static SGPVObject *guiItemGraphic;
 static UINT8 guiItemGraphicIndex;
-static SGPVObject *guiMoneyGraphicsForDescBox;
-static SGPVObject *guiBullet;
 BOOLEAN gfInItemDescBox = FALSE;
 static UINT32 guiCurrentItemDescriptionScreen=0;
 OBJECTTYPE *gpItemDescObject = NULL;
@@ -411,7 +416,7 @@ static INT8 gbCompatibleAmmo[NUM_INV_SLOTS];
 INT8 gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 static UINT16 us16BPPItemCyclePlacedItemColors[20];
 static SGPVObject* guiBodyInvVO[4][2];
-static SGPVObject* guiGoldKeyVO;
+
 INT8 gbCompatibleApplyItem = FALSE;
 
 
@@ -665,9 +670,6 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc,
 	guiBodyInvVO[3][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female.sti");
 	guiBodyInvVO[3][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female_h.sti");
 
-	// Add gold key graphic
-	guiGoldKeyVO = AddVideoObjectFromFile(INTERFACEDIR "/gold_key_button.sti");
-
 	// Add camo region
 	UINT16 const x = pCamoRegion->uX;
 	UINT16 const y = pCamoRegion->uY;
@@ -771,7 +773,7 @@ void ShutdownInvSlotInterface()
 		FOR_EACH(SGPVObject*, k, *i) DeleteVideoObject(*k);
 	}
 
-	DeleteVideoObject(guiGoldKeyVO);
+	RemoveVObject(guiGoldKeyVO);
 
 	FOR_EACH(MOUSE_REGION, i, gSMInvRegion)
 	{
@@ -1874,11 +1876,6 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		}
 	}
 
-	// Load graphic
-	guiItemDescBox    = AddVideoObjectFromFile(INTERFACEDIR "/infobox.sti");
-	guiMapItemDescBox = AddVideoObjectFromFile(INTERFACEDIR "/iteminfoc.sti");
-	guiBullet         = AddVideoObjectFromFile(INTERFACEDIR "/bullet.sti");
-
 	if (o->usItem != MONEY)
 	{
 		const AttachmentGfxInfo* const agi = (in_map ? &g_map_attachment_info : &g_attachment_info);
@@ -1903,8 +1900,6 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		gRemoveMoney.uiTotalAmount    = o->uiMoneyAmount;
 		gRemoveMoney.uiMoneyRemaining = o->uiMoneyAmount;
 		gRemoveMoney.uiMoneyRemoving  = 0;
-
-		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile(INTERFACEDIR "/info_bil.sti");
 
 		// Create buttons for the money
 		guiMoneyButtonImage = LoadButtonImage(INTERFACEDIR "/info_bil.sti", 1, 2);
@@ -2227,7 +2222,7 @@ void RenderItemDescriptionBox(void)
 	INT16      const  dx     = gsInvDescX;
 	INT16      const  dy     = gsInvDescY;
 
-	SGPVObject const* const box_gfx = in_map ? guiMapItemDescBox : guiItemDescBox;
+	auto * const box_gfx = in_map ? guiMapItemDescBox : guiItemDescBox;
 	BltVideoObject(guiSAVEBUFFER, box_gfx, 0, dx, dy);
 
 	// Display the money 'separating' border
@@ -2717,9 +2712,9 @@ void DeleteItemDescriptionBox( )
 		}
 	}
 
-	DeleteVideoObject(guiItemDescBox);
-	DeleteVideoObject(guiMapItemDescBox);
-	DeleteVideoObject(guiBullet);
+	RemoveVObject(guiItemDescBox);
+	RemoveVObject(guiMapItemDescBox);
+	RemoveVObject(guiBullet);
 	DeleteVideoObject(guiItemGraphic);
 
 	gfInItemDescBox = FALSE;

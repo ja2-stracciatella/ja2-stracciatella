@@ -39,6 +39,7 @@
 #include "Message.h"
 #include "MessageBoxScreen.h"
 #include "MouseSystem.h"
+#include "Object_Cache.h"
 #include "OppList.h"
 #include "Options_Screen.h"
 #include "Overhead.h"
@@ -311,7 +312,7 @@ static SGPVSurface* guiTEAMPanel;
 static SGPVObject* guiTEAMObjects;
 static SGPVObject* guiVEHINV;
 
-static SGPVObject* guiCLOSE;
+static cache_key_t const guiCLOSE{ INTERFACEDIR "/p_close.sti" };
 
 // Globals for various mouse regions
 static MOUSE_REGION gSM_SELMERCPanelRegion;
@@ -3761,17 +3762,6 @@ void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvP
 	}
 }
 
-
-void LoadInterfacePanelGraphics()
-{
-	guiCLOSE = AddVideoObjectFromFile(INTERFACEDIR "/p_close.sti");
-}
-
-
-void DeleteInterfacePanelGraphics()
-{
-	DeleteVideoObject(guiCLOSE);
-}
 
 static std::unique_ptr<SGPVSurface> CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex)
 {

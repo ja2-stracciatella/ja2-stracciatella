@@ -6,6 +6,7 @@
 #include "Isometric_Utils.h"
 #include "JAScreens.h"
 #include "Local.h"
+#include "Object_Cache.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "MercPortrait.h"
@@ -56,7 +57,6 @@
 #include "Debug.h"
 #include "Items.h"
 #include "UILayout.h"
-#include "CalibreModel.h"
 #include "ContentManager.h"
 #include "DealerModel.h"
 #include "GameInstance.h"
@@ -221,7 +221,7 @@
 #define REPAIR_DELAY_IN_HOURS				6
 
 
-static SGPVObject* guiMainTradeScreenImage;
+static cache_key_t const guiMainTradeScreenImage{ INTERFACEDIR "/tradescreen.sti" };
 static SGPVSurface* guiCornerWhereTacticalIsStillSeenImage; // This image is for where the corner of tactical is still seen through the shop keeper interface
 
 static BOOLEAN gfSKIScreenEntry = TRUE;
@@ -356,7 +356,7 @@ static void BtnSKI_DoneButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 static BUTTON_PICS* guiSKI_DoneButtonImage;
 static GUIButtonRef guiSKI_DoneButton;
 
-static SGPVObject* guiItemCrossOut;
+static cache_key_t const guiItemCrossOut{ INTERFACEDIR "/itemcrossout.sti" };
 
 static BOOLEAN gfDisplayNoRoomMsg = FALSE;
 
@@ -564,12 +564,6 @@ static void EnterShopKeeperInterface(void)
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	SetCurrentTacticalPanelCurrentMerc(sel);
 	SetSMPanelCurrentMerc(sel);
-
-	// load the Main trade screen backgroiund image
-	guiMainTradeScreenImage = AddVideoObjectFromFile(INTERFACEDIR "/tradescreen.sti");
-
-	// load the Main trade screen background image
-	guiItemCrossOut = AddVideoObjectFromFile(INTERFACEDIR "/itemcrossout.sti");
 
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
 	// This is to support showing of repair item owner's faces even when they're not in the sector, as long as they still work for player
@@ -788,8 +782,8 @@ static void ExitShopKeeperInterface(void)
 	FreeMouseCursor();
 
 	//Delete the main shopkeep background
-	DeleteVideoObject(guiMainTradeScreenImage);
-	DeleteVideoObject(guiItemCrossOut);
+	RemoveVObject(guiMainTradeScreenImage);
+	RemoveVObject(guiItemCrossOut);
 	DeleteVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
 
 	ShutUpShopKeeper();

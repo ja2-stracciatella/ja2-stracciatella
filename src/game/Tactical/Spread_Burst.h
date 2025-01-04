@@ -11,7 +11,6 @@ void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pT
 
 void RenderAccumulatedBurstLocations(void);
 
-void LoadSpreadBurstGraphics();
 void DeleteSpreadBurstGraphics();
 
 #endif

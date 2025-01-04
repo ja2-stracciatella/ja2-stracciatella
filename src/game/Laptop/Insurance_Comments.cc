@@ -4,13 +4,13 @@
 #include "Insurance_Text.h"
 #include "Insurance.h"
 #include "Insurance_Comments.h"
-#include "VObject.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Text.h"
 #include "Button_System.h"
-#include "Video.h"
+#include "Object_Cache.h"
 #include "VSurface.h"
+#include "Video.h"
 #include "Font_Control.h"
 
 #include <string_theory/string>
@@ -35,7 +35,7 @@
 #define INS_CMNT_LINK_OFFSET_X		166
 
 
-static SGPVObject* guiInsCmntBulletImage;
+static cache_key_t const guiInsCmntBulletImage{ LAPTOPDIR "/bullet.sti" };
 
 
 //link to the varios pages
@@ -51,9 +51,6 @@ void EnterInsuranceComments()
 	UINT16 usPosX;
 
 	InitInsuranceDefaults();
-
-	// load the Insurance bullet graphic and add it
-	guiInsCmntBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
 
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 	for( i=0; i<3; i++)
@@ -74,7 +71,7 @@ void EnterInsuranceComments()
 void ExitInsuranceComments()
 {
 	RemoveInsuranceDefaults();
-	DeleteVideoObject(guiInsCmntBulletImage);
+	RemoveVObject(guiInsCmntBulletImage);
 
 	FOR_EACH(MOUSE_REGION, i, gSelectedInsuranceCommentLinkRegion) MSYS_RemoveRegion(&*i);
 }
