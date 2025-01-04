@@ -9,9 +9,8 @@
 #include "ContentManager.h"
 #include "ContentMusic.h"
 #include "IEDT.h"
-#include "IGameDataLoader.h"
 #include "ItemStrings.h"
-#include "RustInterface.h"
+#include "Json.h"
 #include "StringEncodingTypes.h"
 
 #include <string_theory/string>
@@ -21,7 +20,7 @@
 #include <string_view>
 #include <vector>
 
-class DefaultContentManager : public ContentManager, public IGameDataLoader
+class DefaultContentManager : public ContentManager
 {
 public:
 	DefaultContentManager(RustPointer<EngineOptions> engineOptions);
