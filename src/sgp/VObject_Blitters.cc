@@ -779,14 +779,14 @@ void Blt8BPPDataTo16BPPBufferTransShadow(UINT16* pBuffer, UINT32 uiDestPitchBYTE
 				do
 				{
 					UINT8 px = *SrcPtr++;
-
+					auto DestPtr16{ reinterpret_cast<UINT16 *>(DestPtr) };
 					if (px == 254)
 					{
-						*(UINT16*)DestPtr = ShadeTable[2 * (*(UINT16*)DestPtr)];
+						*DestPtr16 = ShadeTable[*DestPtr16];
 					}
 					else
 					{
-						*(UINT16*)DestPtr = p16BPPPalette[2 * px];
+						*DestPtr16 = p16BPPPalette[px];
 					}
 					DestPtr += 2;
 				}
@@ -854,19 +854,19 @@ void Blt8BPPDataTo16BPPBufferTransShadowZ(UINT16* pBuffer, UINT32 uiDestPitchBYT
 				do
 				{
 					UINT8 px = *SrcPtr++;
-
+					auto DestPtr16{ reinterpret_cast<UINT16 *>(DestPtr) };
 					if (px == 254)
 					{
 						if (*(UINT16*)ZPtr < usZValue)
 						{
-							*(UINT16*)DestPtr = ShadeTable[2 * (*(UINT16*)DestPtr)];
+							*DestPtr16 = ShadeTable[*DestPtr16];
 						}
 					}
 					else
 					{
 						if (*(UINT16*)ZPtr <= usZValue)
 						{
-							*(UINT16*)DestPtr = p16BPPPalette[2 * px];
+							*DestPtr16 = p16BPPPalette[px];
 						}
 					}
 					DestPtr += 2;
