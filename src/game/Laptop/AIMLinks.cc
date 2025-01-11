@@ -2,7 +2,6 @@
 #include "Laptop.h"
 #include "AIMLinks.h"
 #include "AIM.h"
-#include "VObject.h"
 #include "WordWrap.h"
 #include "Text.h"
 #include "GameRes.h"
@@ -37,9 +36,6 @@
 #define AIM_LINK_TITLE_WIDTH		AIM_SYMBOL_WIDTH
 
 
-static SGPVObject* guiBobbyLink;
-static SGPVObject* guiFuneralLink;
-static SGPVObject* guiInsuranceLink;
 static UINT8 const gubLinkPages[] = { BOBBYR_BOOKMARK, FUNERAL_BOOKMARK, INSURANCE_BOOKMARK };
 
 //Clicking on guys Face
@@ -53,13 +49,6 @@ void EnterAimLinks()
 {
 	InitAimDefaults();
 	InitAimMenuBar();
-
-	// Load the Bobby link graphic.
-	guiBobbyLink = AddVideoObjectFromFile(MLG_BOBBYRAYLINK);
-	// Load the Funeral graphic.
-	guiFuneralLink = AddVideoObjectFromFile(MLG_MORTUARYLINK);
-	// Load the Insurance graphic.
-	guiInsuranceLink = AddVideoObjectFromFile(MLG_INSURANCELINK);
 
 	UINT16 const  x    = STD_SCREEN_X + AIM_LINK_LINK_OFFSET_X;
 	UINT16        y    = AIM_LINK_BOBBY_LINK_Y;
@@ -79,9 +68,9 @@ void ExitAimLinks()
 {
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiBobbyLink);
-	DeleteVideoObject(guiFuneralLink);
-	DeleteVideoObject(guiInsuranceLink);
+	RemoveVObject(MLG_BOBBYRAYLINK);
+	RemoveVObject(MLG_MORTUARYLINK);
+	RemoveVObject(MLG_INSURANCELINK);
 
 	FOR_EACH(MOUSE_REGION, i, gSelectedLinkRegion) MSYS_RemoveRegion(&*i);
 
@@ -94,9 +83,9 @@ void RenderAimLinks()
 	DrawAimDefaults();
 	DisableAimButton();
 
-	BltVideoObject(FRAME_BUFFER, guiBobbyLink,     0, AIM_LINK_BOBBY_LINK_X,     AIM_LINK_BOBBY_LINK_Y);
-	BltVideoObject(FRAME_BUFFER, guiFuneralLink,   0, AIM_LINK_FUNERAL_LINK_X,   AIM_LINK_FUNERAL_LINK_Y);
-	BltVideoObject(FRAME_BUFFER, guiInsuranceLink, 0, AIM_LINK_INSURANCE_LINK_X, AIM_LINK_INSURANCE_LINK_Y);
+	BltVideoObject(FRAME_BUFFER, MLG_BOBBYRAYLINK,  0, AIM_LINK_BOBBY_LINK_X,     AIM_LINK_BOBBY_LINK_Y);
+	BltVideoObject(FRAME_BUFFER, MLG_MORTUARYLINK,  0, AIM_LINK_FUNERAL_LINK_X,   AIM_LINK_FUNERAL_LINK_Y);
+	BltVideoObject(FRAME_BUFFER, MLG_INSURANCELINK, 0, AIM_LINK_INSURANCE_LINK_X, AIM_LINK_INSURANCE_LINK_Y);
 
 	//Draw Link Title
 	DrawTextToScreen(AimLinkText, AIM_LINK_TITLE_X, AIM_LINK_TITLE_Y, AIM_LINK_TITLE_WIDTH, AIM_LINK_TITLE_FONT, AIM_LINK_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -111,10 +100,6 @@ static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		UINT32	gNextLaptopPage;
-
-		gNextLaptopPage = MSYS_GetRegionUserData( pRegion, 0 );
-
-		GoToWebPage( gNextLaptopPage );
+		GoToWebPage(MSYS_GetRegionUserData(pRegion, 0));
 	}
 }
