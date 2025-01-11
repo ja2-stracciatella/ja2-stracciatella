@@ -113,7 +113,6 @@ BOOLEAN fNewFilesInFileViewer = FALSE;
 
 namespace {
 // graphics handles
-cache_key_t const guiTITLE{ LAPTOPDIR "/programtitlebar.sti" };
 cache_key_t const guiTOP{ LAPTOPDIR "/fileviewer.sti" };
 }
 
@@ -288,7 +287,7 @@ void RenderFiles(void)
 static void RenderFilesBackGround(void)
 {
 	// render generic background for file system
-	BltVideoObject(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARLAPTOP, 0, TOP_X, TOP_Y - 2);
 	BltVideoObject(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 }
 
@@ -305,7 +304,6 @@ static void RemoveFiles(void)
 {
 	// delete files video objects from memory
 	RemoveVObject(guiTOP);
-	RemoveVObject(guiTITLE);
 }
 
 

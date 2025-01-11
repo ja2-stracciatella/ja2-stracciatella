@@ -219,7 +219,6 @@ static MOUSE_REGION g_mail_scroll_region;
 static Record* pMessageRecordList = NULL;
 
 // video handles
-static SGPVObject* guiEmailTitle;
 static SGPVObject* guiEmailBackground;
 static SGPVObject* guiEmailIndicator;
 static SGPVObject* guiEmailMessage;
@@ -300,9 +299,6 @@ void EnterEmail()
 
 	iCurrentPage = LaptopSaveInfo.iCurrentEmailPage;
 
-	// title bar
-	guiEmailTitle = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
-
 	// the list background
 	guiEmailBackground = AddVideoObjectFromFile(LAPTOPDIR "/mailwindow.sti");
 
@@ -368,7 +364,6 @@ void ExitEmail()
 	DeleteEmailMouseRegions();
 
 	// remove video objects being used by email screen
-	DeleteVideoObject(guiEmailTitle);
 	DeleteVideoObject(guiEmailBackground);
 	DeleteVideoObject(guiMAILDIVIDER);
 	DeleteVideoObject(guiEmailIndicator);
@@ -471,7 +466,7 @@ static void ReDisplayBoxes(void);
 void RenderEmail( void )
 {
 	BltVideoObject(FRAME_BUFFER, guiEmailBackground, 0, LAPTOP_SCREEN_UL_X, EMAIL_LIST_WINDOW_Y + LAPTOP_SCREEN_UL_Y);
-	BltVideoObject(FRAME_BUFFER, guiEmailTitle,      0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARLAPTOP,  0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// show text on titlebar
 	DisplayTextOnTitleBar( );
