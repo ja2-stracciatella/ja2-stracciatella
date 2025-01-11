@@ -239,7 +239,6 @@ static const INT16 pers_stat_y[] =
 };
 
 namespace {
-cache_key_t const guiTITLE{ LAPTOPDIR "/programtitlebar.sti" };
 cache_key_t const guiSCREEN { LAPTOPDIR "/personnelwindow.sti" };
 cache_key_t const guiDEPARTEDTEAM{ LAPTOPDIR "/departed.sti" };
 cache_key_t const guiCURRENTTEAM{ LAPTOPDIR "/currentteam.sti" };
@@ -378,7 +377,6 @@ static void RemovePersonnelGraphics(void)
 {
 	// delete graphics needed for personnel screen
 	RemoveVObject(guiSCREEN);
-	RemoveVObject(guiTITLE);
 	RemoveVObject(guiPersonnelInventory);
 }
 
@@ -399,7 +397,7 @@ void RenderPersonnel(void)
 	// re-renders personnel screen
 	// render main background
 
-	BltVideoObject(FRAME_BUFFER, guiTITLE,  0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARLAPTOP, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 	BltVideoObject(FRAME_BUFFER, guiSCREEN, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22);
 
 	// render personnel screen background

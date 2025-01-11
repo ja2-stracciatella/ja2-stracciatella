@@ -245,7 +245,6 @@ cache_key_t const guiGRAPHBAR{ LAPTOPDIR "/graphsegment.sti" };
 cache_key_t const guiLIGHTS{ LAPTOPDIR "/lights.sti" };
 }
 SGPVObject* guiLaptopBACKGROUND;
-static SGPVObject* guiTITLEBARLAPTOP;
 SGPVObject* guiTITLEBARICONS;
 static SGPVSurface* guiDESKTOP;
 
@@ -474,9 +473,6 @@ static void EnterLaptop(void)
 	// background for panel
 	guiLaptopBACKGROUND = AddVideoObjectFromFile(LAPTOPDIR "/taskbar.sti");
 
-	// background for panel
-	guiTITLEBARLAPTOP = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
-
 	// icons for title bars
 	guiTITLEBARICONS = AddVideoObjectFromFile(LAPTOPDIR "/icons.sti");
 
@@ -590,7 +586,7 @@ void ExitLaptop(void)
 
 	RemoveVObject(guiLAPTOP);
 	DeleteVideoObject(guiLaptopBACKGROUND);
-	DeleteVideoObject(guiTITLEBARLAPTOP);
+	RemoveVObject(guiTITLEBARLAPTOP);
 	RemoveVObject(guiLIGHTS);
 	DeleteVideoObject(guiTITLEBARICONS);
 	DeleteVideoObject(guiEmailWarning);
@@ -731,7 +727,7 @@ static void RenderLaptop(void)
 }
 
 
-static void InitTitleBarMaximizeGraphics(const SGPVObject* uiBackgroundGraphic, const ST::string& str, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex);
+static void InitTitleBarMaximizeGraphics(cache_key_t const uiBackgroundGraphic, const ST::string& str, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex);
 static void SetSubSiteAsVisted(void);
 
 
@@ -2165,10 +2161,8 @@ void WebPageTileBackground(const UINT8 ubNumX, const UINT8 ubNumY, const UINT16 
 }
 
 
-static void InitTitleBarMaximizeGraphics(const SGPVObject* uiBackgroundGraphic, const ST::string& str, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex)
+static void InitTitleBarMaximizeGraphics(cache_key_t const uiBackgroundGraphic, const ST::string& str, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex)
 {
-	Assert(uiBackgroundGraphic);
-
 	// Create a background video surface to blt the title bar onto
 	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH + LAPTOP_TITLE_BAR_ICON_OFFSET_X,
 						LAPTOP_TITLE_BAR_HEIGHT + LAPTOP_TITLE_BAR_ICON_OFFSET_Y, PIXEL_DEPTH);
@@ -2818,7 +2812,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 void RenderWWWProgramTitleBar(void)
 {
 	// will render the title bar for the www program
-	BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARLAPTOP, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now slapdown text
 	SetFontAttributes(FONT14ARIAL, FONT_WHITE);

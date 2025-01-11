@@ -68,8 +68,6 @@ struct HistoryUnit
 
 // graphics handles
 namespace {
-cache_key_t const guiTITLE{ LAPTOPDIR "/programtitlebar.sti" };
-
 // top portion of the screen background
 cache_key_t const guiTOP{ LAPTOPDIR "/historywindow.sti" };
 
@@ -205,7 +203,6 @@ static void RemoveHistory(void)
 	// delete history video objects from memory
 	RemoveVObject(guiLONGLINE);
 	RemoveVObject(guiTOP);
-	RemoveVObject(guiTITLE);
 	RemoveVObject(guiSHADELINE);
 }
 
@@ -213,7 +210,7 @@ static void RemoveHistory(void)
 static void RenderHistoryBackGround(void)
 {
 	// render generic background for history system
-	BltVideoObject(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARLAPTOP, 0, TOP_X, TOP_Y - 2);
 	BltVideoObject(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 }
 

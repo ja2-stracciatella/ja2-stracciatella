@@ -1,8 +1,10 @@
 #ifndef LAPTOP_H
 #define LAPTOP_H
 
+#include "Directories.h"
 #include "MessageBoxScreen.h"
 #include "MouseSystem.h"
+#include "Object_Cache.h"
 #include "ScreenIDs.h"
 #include "Types.h"
 #include "UILayout.h"
@@ -146,5 +148,7 @@ void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID ubStyle, const ST::strin
 void     LaptopScreenInit(void);
 ScreenID LaptopScreenHandle(void);
 void     LaptopScreenShutdown(void);
+
+inline cache_key_t const guiTITLEBARLAPTOP{ LAPTOPDIR "/programtitlebar.sti" };
 
 #endif

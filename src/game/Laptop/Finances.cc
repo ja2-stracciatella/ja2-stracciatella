@@ -120,7 +120,6 @@ static FinanceUnit* pFinanceListHead = NULL;
 static INT32 iCurrentPage = 0;
 
 // video object id's
-static SGPVObject* guiTITLE;
 static SGPVObject* guiTOP;
 static SGPVObject* guiLINE;
 static SGPVObject* guiLONGLINE;
@@ -327,9 +326,6 @@ static void LoadFinances(void)
 {
 	// load Finance video objects into memory
 
-	// title bar
-	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
-
 	// top portion of the screen background
 	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/financeswindow.sti");
 
@@ -351,14 +347,13 @@ static void RemoveFinances(void)
 	DeleteVideoObject(guiLINE);
 	DeleteVideoObject(guiLISTCOLUMNS);
 	DeleteVideoObject(guiTOP);
-	DeleteVideoObject(guiTITLE);
 }
 
 
 static void RenderBackGround(void)
 {
 	// render generic background for Finance system
-	BltVideoObject(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARLAPTOP, 0, TOP_X, TOP_Y - 2);
 	BltVideoObject(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 }
 
