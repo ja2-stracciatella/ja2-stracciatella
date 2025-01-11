@@ -298,9 +298,6 @@ static SGPVObject* guiStats;
 static SGPVObject* guiPrice;
 static SGPVObject* guiPortrait;
 static SGPVObject* guiWeaponBox;
-//UINT32  guiVideoFace;
-//UINT32 guiContactButton;
-static SGPVObject* guiVideoConfPopup;
 static SGPVObject* guiVideoConfTerminal;
 static SGPVObject* guiPopUpBox;
 static SGPVSurface* guiVideoFaceBackground;
@@ -459,9 +456,6 @@ void EnterAIMMembers()
 	// load the WeaponBox graphic and add it
 	guiWeaponBox = AddVideoObjectFromFile(LAPTOPDIR "/weaponbox.sti");
 
-	// load the videoconf Popup graphic and add it
-	guiVideoConfPopup = AddVideoObjectFromFile(LAPTOPDIR "/videoconfpopup.sti");
-
 	// load the video conf terminal graphic and add it
 	guiVideoConfTerminal = AddVideoObjectFromFile(LAPTOPDIR "/videoconfterminal.sti");
 
@@ -554,7 +548,6 @@ void ExitAIMMembers()
 	DeleteVideoObject(guiPrice);
 	DeleteVideoObject(guiPortrait);
 	DeleteVideoObject(guiWeaponBox);
-	DeleteVideoObject(guiVideoConfPopup);
 	DeleteVideoObject(guiVideoConfTerminal);
 	DeleteVideoObject(guiBWSnow);
 	DeleteVideoObject(guiFuzzLine);
