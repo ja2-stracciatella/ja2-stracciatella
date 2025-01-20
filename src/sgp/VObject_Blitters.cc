@@ -1122,13 +1122,11 @@ void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitc
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
-	UINT8 PxCount, px = 0;
 	UINT32 Unblitted, LSCount;
-
 
 	while (TopSkip)
 	{
-		px = *SrcPtr++;
+		UINT8 const px = *SrcPtr++;
 		if (px & 0x80)  continue;
 		if (px)
 		{
@@ -1141,6 +1139,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitc
 	do
 	{
 		Unblitted = 0;
+		UINT8 PxCount{};
 		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
 		{
 			PxCount = *SrcPtr++;
@@ -1157,7 +1156,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitc
 			}
 			else
 			{
-				if (px > LSCount)
+				if (PxCount > LSCount)
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -1199,21 +1198,19 @@ BlitNonTransLoop: // blit non-transparent pixels
 				do
 				{
 					auto zptr16{ reinterpret_cast<UINT16 *>(ZPtr) };
-					if (*zptr16 < usZValue )
+					UINT8 const px{ *SrcPtr++ };
+					if (*zptr16 < usZValue)
 					{
 						// This will either become *zptr16 = usZValue or a NOP.
 						UpdateZOrDont{}(zptr16, usZValue);
-						px = *SrcPtr++;
-						if (px != 254)
-							*(UINT16*)DestPtr = p16BPPPalette[px];
-						else
-							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						auto dstPtr16{ reinterpret_cast<UINT16 *>(DestPtr) };
+						*dstPtr16 = (px != 254)	? p16BPPPalette[px] : ShadeTable[*dstPtr16];
 					}
 
 					DestPtr += 2;
 					ZPtr += 2;
 				}
-				while ( --px > 0 );
+				while (--PxCount > 0);
 				SrcPtr += Unblitted;
 			}
 		}
