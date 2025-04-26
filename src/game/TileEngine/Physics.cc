@@ -2010,17 +2010,13 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 	// ATE: Make sure number of objects is 1...
 	pObj->ubNumberOfObjects = 1;
 
-	if ( GCM->getItem(pObj->usItem)->isGrenade()  )
+	auto item = GCM->getItem(pObj->usItem);
+	if (item->isGrenade()  || pObj->usItem == MORTAR_SHELL)
 	{
 		fCheckForDuds = TRUE;
 	}
 
-	if ( pObj->usItem == MORTAR_SHELL )
-	{
-		fCheckForDuds = TRUE;
-	}
-
-	if ( GCM->getItem(pObj->usItem)->isThrown()  )
+	if ( item->isThrown()  )
 	{
 		AddItemToPool( pObject->sGridNo, pObj, INVISIBLE, bLevel, usFlags, 0 );
 	}
@@ -2079,10 +2075,9 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 		fDoImpact = TRUE;
 	}
 
-	if ( fDoImpact )
+	auto explosive = item->asExplosive();
+	if ( explosive && fDoImpact )
 	{
-		auto item = GCM->getItem(pObject->Obj.usItem);
-		auto explosive = item->asExplosive();
 		auto lightEffect = explosive->getLightEffect();
 		auto causesExplosion = explosive->getBlastEffect() || explosive->getStunEffect() || explosive->getSmokeEffect();
 
