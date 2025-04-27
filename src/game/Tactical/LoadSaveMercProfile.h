@@ -8,7 +8,7 @@
 
 /**
 * Extract merc profile from the binary data. */
-void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum);
+void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum, bool const isCorrectlyEncoded);
 
 /** Calculates soldier profile checksum. */
 UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p);
@@ -19,11 +19,5 @@ void ExtractImpProfileFromFile(SGPFile *file, INT32 *iProfileId, INT32 *iPortrai
 
 void InjectMercProfile(BYTE* Dst, MERCPROFILESTRUCT const&);
 void InjectMercProfileIntoFile(HWFILE, MERCPROFILESTRUCT const&);
-
-/** Load raw merc profiles.
-* @param f Open file with profile data.
-* @param numProfiles Number of profiles to load
-* @param profiles Array for storing profile data */
-void LoadRawMercProfiles(HWFILE const f, int numProfiles, MERCPROFILESTRUCT *profiles);
 
 #endif

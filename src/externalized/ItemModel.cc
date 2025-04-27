@@ -6,7 +6,7 @@
 namespace {
 auto deserializeHelper(ItemModel::InitData const& initData,
 	char const * propertyName,
-	decltype(&VanillaItemStrings::getName) getterMethod)
+	decltype(&BinaryData::getItemName) getterMethod)
 {
 	auto result{ initData.json.getOptionalString(propertyName) };
 	if (result.empty()) {
@@ -190,20 +190,20 @@ JsonValue ItemModel::serialize() const
 
 ST::string ItemModel::deserializeShortName(InitData const& initData)
 {
-	return deserializeHelper(initData, "shortName", &VanillaItemStrings::getShortName);
+	return deserializeHelper(initData, "shortName", &BinaryData::getItemShortName);
 }
 
 ST::string ItemModel::deserializeName(InitData const& initData)
 {
-	return deserializeHelper(initData, "name", &VanillaItemStrings::getName);
+	return deserializeHelper(initData, "name", &BinaryData::getItemName);
 }
 
 ST::string ItemModel::deserializeDescription(InitData const& initData)
 {
-	return deserializeHelper(initData, "description", &VanillaItemStrings::getDescription);
+	return deserializeHelper(initData, "description", &BinaryData::getItemDescription);
 }
 
-const ItemModel* ItemModel::deserialize(const JsonValue &json, const VanillaItemStrings& vanillaItemStrings)
+const ItemModel* ItemModel::deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings)
 {
 	auto obj = json.toObject();
 	InitData const initData{ obj, vanillaItemStrings };
