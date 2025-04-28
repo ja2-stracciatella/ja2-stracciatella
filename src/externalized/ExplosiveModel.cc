@@ -136,7 +136,7 @@ ExplosiveModel* ExplosiveModel::deserialize(
 	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 	const std::vector<const SmokeEffectModel*> &smokeEffects,
 	const std::vector<const ExplosionAnimationModel*> &animations,
-	const VanillaItemStrings& vanillaItemStrings
+	const BinaryData& vanillaItemStrings
 ) {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, vanillaItemStrings };

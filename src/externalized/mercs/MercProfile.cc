@@ -94,81 +94,110 @@ MercProfile::operator MERCPROFILESTRUCT&() const
 	return *m_profile;
 }
 
-void MercProfile::deserializeStructRelations(MERCPROFILESTRUCT* prof, const JsonObject& json, const ContentManager* contentManager)
+void MercProfile::deserializeStructRelations(const MERCPROFILESTRUCT* binaryProf, MERCPROFILESTRUCT* prof, const JsonObject& json, const ContentManager* contentManager)
 {
-	for (auto& element : json["relations"].toVec()) {
-		JsonObject r = element.toObject();
-		uint8_t idx = contentManager->getMercProfileInfoByName(r.GetString("target"))->profileID;
-		if (idx >= NUM_RECRUITABLE) {
-			throw DataError(ST::format("{}'s profile id must be less than {}", r.GetString("target"), NUM_RECRUITABLE));
+	JsonObject jOpinions[NUM_RECRUITABLE];
+	if (json.has("relations")) {
+		for (auto& element : json["relations"].toVec()) {
+			JsonObject r = element.toObject();
+			ProfileID idx = contentManager->getMercProfileInfoByName(r.GetString("target"))->profileID;
+			if (idx >= NUM_RECRUITABLE) {
+				throw DataError(ST::format("{}'s profile id must be less than {}", r.GetString("target"), NUM_RECRUITABLE));
+			}
+			jOpinions[idx] = std::move(r);
 		}
-		prof->bMercOpinion[idx] = r.GetInt("opinion");
-		if (r.getOptionalBool("friend1")) {
+	}
+	for (ProfileID idx = 0; idx < NUM_RECRUITABLE; idx++) {
+		prof->bMercOpinion[idx] = jOpinions[idx].getOptionalInt("opinion", binaryProf->bMercOpinion[idx]);
+		if (jOpinions[idx].getOptionalBool("friend1", binaryProf->bBuddy[BUDDY_SLOT1] == idx)) {
 			prof->bBuddy[BUDDY_SLOT1] = idx;
 		}
-		else if (r.getOptionalBool("friend2")) {
+		else if (jOpinions[idx].getOptionalBool("friend2", binaryProf->bBuddy[BUDDY_SLOT2] == idx)) {
 			prof->bBuddy[BUDDY_SLOT2] = idx;
 		}
-		else if (r.getOptionalBool("eventualFriend")) {
+		else if (jOpinions[idx].getOptionalBool("eventualFriend", binaryProf->bLearnToLike == idx)) {
 			prof->bLearnToLike = idx;
-			prof->bLearnToLikeTime = r.getOptionalUInt("resistanceToBefriending");
+			prof->bLearnToLikeTime = jOpinions[idx].getOptionalUInt("resistanceToBefriending", binaryProf->bLearnToLikeTime);
 		}
-		else if (r.getOptionalBool("enemy1")) {
+		else if (jOpinions[idx].getOptionalBool("enemy1", binaryProf->bHated[HATED_SLOT1] == idx)) {
 			prof->bHated[HATED_SLOT1] = idx;
-			prof->bHatedTime[HATED_SLOT1] = r.getOptionalUInt("tolerance");
+			prof->bHatedTime[HATED_SLOT1] = jOpinions[idx].getOptionalUInt("tolerance", binaryProf->bHatedTime[HATED_SLOT1]);
 		}
-		else if (r.getOptionalBool("enemy2")) {
+		else if (jOpinions[idx].getOptionalBool("enemy2", binaryProf->bHated[HATED_SLOT2] == idx)) {
 			prof->bHated[HATED_SLOT2] = idx;
-			prof->bHatedTime[HATED_SLOT2] = r.getOptionalUInt("tolerance");
+			prof->bHatedTime[HATED_SLOT2] = jOpinions[idx].getOptionalUInt("tolerance", binaryProf->bHatedTime[HATED_SLOT2]);
 		}
-		else if (r.getOptionalBool("eventualEnemy")) {
+		else if (jOpinions[idx].getOptionalBool("eventualEnemy", binaryProf->bLearnToHate == idx)) {
 			prof->bLearnToHate = idx;
-			prof->bLearnToHateTime = r.getOptionalUInt("resistanceToMakingEnemy");
+			prof->bLearnToHateTime = jOpinions[idx].getOptionalUInt("resistanceToMakingEnemy", binaryProf->bLearnToHateTime);
 		}
 	}
 }
 
-std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValue& json, const ContentManager* contentManager)
+std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROFILESTRUCT* binaryProf, const JsonObject& r, const ContentManager* contentManager)
 {
-	JsonObject r = json.toObject();
 	std::unique_ptr<MERCPROFILESTRUCT> prof = std::make_unique<MERCPROFILESTRUCT>();
 
-	prof->zName = r.getOptionalString("fullName");
-	prof->zNickname = r.getOptionalString("nickname");
-	if (r.getOptionalString("sex") == "F") {
-		prof->bSex = Sexes::FEMALE;
+	prof->zName = r.getOptionalString("fullName", binaryProf->zName);
+	prof->zNickname = r.getOptionalString("nickname", binaryProf->zNickname);
+
+	if (r.has("sex")) {
+		prof->bSex = r.GetString("sex") == "F" ? Sexes::FEMALE : Sexes::MALE;
 	}
-	prof->ubCivilianGroup = Internals::getCivilianGroupEnumFromString(r.getOptionalString("civilianGroup"));
-	if (r.getOptionalBool("isGoodGuy")) {
+	else {
+		prof->bSex = binaryProf->bSex;
+	}
+
+	auto stringForEnum{ r.getOptionalString("civilianGroup") };
+	prof->ubCivilianGroup = stringForEnum.empty() ? binaryProf->ubCivilianGroup : Internals::getCivilianGroupEnumFromString(stringForEnum);
+
+	if (r.getOptionalBool("isGoodGuy", binaryProf->ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY)) {
 		prof->ubMiscFlags3 |= PROFILE_MISC_FLAG3_GOODGUY;
 	}
 
-	prof->ubBodyType = Internals::getBodyTypeEnumFromString(r.getOptionalString("bodyType"));
+	stringForEnum = r.getOptionalString("bodyType");
+	prof->ubBodyType = stringForEnum.empty() ? binaryProf->ubBodyType : Internals::getBodyTypeEnumFromString(stringForEnum);
+
 	ST::string jAnimFlag = r.getOptionalString("bodyTypeSubstitution");
-	if (jAnimFlag == "SUB_ANIM_BIGGUYSHOOT2") {
+	if (jAnimFlag.empty()) {
+		prof->uiBodyTypeSubFlags = binaryProf->uiBodyTypeSubFlags;
+	}
+	else if (jAnimFlag == "SUB_ANIM_BIGGUYSHOOT2") {
 		prof->uiBodyTypeSubFlags |= SUB_ANIM_BIGGUYSHOOT2;
 	}
 	else if (jAnimFlag == "SUB_ANIM_BIGGUYTHREATENSTANCE") {
 		prof->uiBodyTypeSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;
 	}
+
+	JsonObject portrait;
 	if (r.has("face")) {
-		JsonObject portrait = r["face"].toObject();
+		portrait = r["face"].toObject();
 		std::vector<JsonValue> eyesXY = portrait["eyesXY"].toVec();
 		std::vector<JsonValue> mouthXY = portrait["mouthXY"].toVec();
 		prof->usEyesX = eyesXY[0].toInt();
 		prof->usEyesY = eyesXY[1].toInt();
 		prof->usMouthX = mouthXY[0].toInt();
 		prof->usMouthY = mouthXY[1].toInt();
-		prof->uiBlinkFrequency = portrait.getOptionalUInt("blinkFrequency", 3000);
-		prof->uiExpressionFrequency = portrait.getOptionalUInt("expressionFrequency", 2000);
 	}
-	prof->SKIN = r.getOptionalString("skinColor");
-	prof->HAIR = r.getOptionalString("hairColor");
-	prof->VEST = r.getOptionalString("vestColor");
-	prof->PANTS = r.getOptionalString("pantsColor");
+	else {
+		prof->usEyesX = binaryProf->usEyesX;
+		prof->usEyesY = binaryProf->usEyesY;
+		prof->usMouthX = binaryProf->usMouthX;
+		prof->usMouthY = binaryProf->usMouthY;
+	}
+	prof->uiBlinkFrequency = portrait.getOptionalUInt("blinkFrequency", binaryProf->uiBlinkFrequency);
+	prof->uiExpressionFrequency = portrait.getOptionalUInt("expressionFrequency", binaryProf->uiExpressionFrequency);
+
+	prof->SKIN = r.getOptionalString("skinColor", binaryProf->SKIN);
+	prof->HAIR = r.getOptionalString("hairColor", binaryProf->HAIR);
+	prof->VEST = r.getOptionalString("vestColor", binaryProf->VEST);
+	prof->PANTS = r.getOptionalString("pantsColor", binaryProf->PANTS);
 
 	ST::string jSexismMode = r.getOptionalString("sexismMode");
-	if (jSexismMode == "GENTLEMAN") {
+	if (jSexismMode.empty()) {
+		prof->bSexist = binaryProf->bSexist;
+	}
+	else if (jSexismMode == "GENTLEMAN") {
 		prof->bSexist = SexistLevels::GENTLEMAN;
 	}
 	else if (jSexismMode == "SOMEWHAT_SEXIST") {
@@ -178,36 +207,48 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValu
 		prof->bSexist = SexistLevels::VERY_SEXIST;
 	}
 
+	JsonObject stats;
 	if (r.has("stats")) {
-		JsonObject stats = r["stats"].toObject();
-		ST::string jEvolution = stats.getOptionalString("evolution");
-		if (jEvolution == "NONE") {
-			prof->bEvolution = CharacterEvolution::NO_EVOLUTION;
-		}
-		else if (jEvolution == "REVERSED") {
-			prof->bEvolution = CharacterEvolution::DEVOLVE;
-		}
-		prof->bLifeMax = stats.getOptionalUInt("health", 15);
-		prof->bLife = stats.getOptionalUInt("health", 15);
-		prof->bAgility = stats.getOptionalUInt("agility", 1);
-		prof->bDexterity = stats.getOptionalUInt("dexterity", 1);
-		prof->bStrength = stats.getOptionalUInt("strength", 1);
-		prof->bLeadership = stats.getOptionalUInt("leadership", 1);
-		prof->bWisdom = stats.getOptionalUInt("wisdom", 1);
-		prof->bExpLevel = stats.getOptionalUInt("experience", 1);
-		prof->bMarksmanship = stats.getOptionalUInt("marksmanship");
-		prof->bMedical = stats.getOptionalUInt("medical");
-		prof->bExplosive = stats.getOptionalUInt("explosive");
-		prof->bMechanical = stats.getOptionalUInt("mechanical");
-		prof->ubNeedForSleep = stats.getOptionalUInt("sleepiness", 7);
+		stats = r["stats"].toObject();
 	}
-	prof->bPersonalityTrait = Internals::getPersonalityTraitEnumFromString(r.getOptionalString("personalityTrait"));
-	prof->bSkillTrait = Internals::getSkillTraitEnumFromString(r.getOptionalString("skillTrait"));
-	prof->bSkillTrait2 = Internals::getSkillTraitEnumFromString(r.getOptionalString("skillTrait2"));
-	prof->bAttitude = Internals::getAttitudeEnumFromString(r.getOptionalString("attitude"));
+	ST::string jEvolution = stats.getOptionalString("evolution");
+	if (jEvolution == "NONE") {
+		prof->bEvolution = CharacterEvolution::NO_EVOLUTION;
+	}
+	else if (jEvolution == "REVERSED") {
+		prof->bEvolution = CharacterEvolution::DEVOLVE;
+	}
+	prof->bLifeMax = stats.getOptionalUInt("health", binaryProf->bLifeMax);
+	prof->bLife = stats.getOptionalUInt("health", binaryProf->bLife);
+	prof->bAgility = stats.getOptionalUInt("agility", binaryProf->bAgility);
+	prof->bDexterity = stats.getOptionalUInt("dexterity", binaryProf->bDexterity);
+	prof->bStrength = stats.getOptionalUInt("strength", binaryProf->bStrength);
+	prof->bLeadership = stats.getOptionalUInt("leadership", binaryProf->bLeadership);
+	prof->bWisdom = stats.getOptionalUInt("wisdom", binaryProf->bWisdom);
+	prof->bExpLevel = stats.getOptionalUInt("experience", binaryProf->bExpLevel);
+	prof->bMarksmanship = stats.getOptionalUInt("marksmanship", binaryProf->bMarksmanship);
+	prof->bMedical = stats.getOptionalUInt("medical", binaryProf->bMedical);
+	prof->bExplosive = stats.getOptionalUInt("explosive", binaryProf->bExplosive);
+	prof->bMechanical = stats.getOptionalUInt("mechanical", binaryProf->bMechanical);
+	prof->ubNeedForSleep = stats.getOptionalUInt("sleepiness", binaryProf->ubNeedForSleep);
+
+	stringForEnum = r.getOptionalString("personalityTrait");
+	prof->bPersonalityTrait = stringForEnum.empty() ? binaryProf->bPersonalityTrait : Internals::getPersonalityTraitEnumFromString(stringForEnum);
+
+	stringForEnum = r.getOptionalString("skillTrait");
+	prof->bSkillTrait = stringForEnum.empty() ? binaryProf->bSkillTrait : Internals::getSkillTraitEnumFromString(stringForEnum);
+
+	stringForEnum = r.getOptionalString("skillTrait2");
+	prof->bSkillTrait2 = stringForEnum.empty() ? binaryProf->bSkillTrait2 : Internals::getSkillTraitEnumFromString(stringForEnum);
+
+	stringForEnum = r.getOptionalString("attitude");
+	prof->bAttitude = stringForEnum.empty() ? binaryProf->bAttitude : Internals::getAttitudeEnumFromString(stringForEnum);
 
 	ST::string jSector = r.getOptionalString("sector");
-	if (!jSector.empty()) {
+	if (jSector.empty()) {
+		prof->sSector = binaryProf->sSector;
+	}
+	else {
 		std::vector<ST::string> jLong = jSector.split("-");
 		ST::string jShort = jLong[0];
 		prof->sSector = SGPSector::FromShortString(jShort);
@@ -217,13 +258,19 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValu
 	}
 
 	ST::string jTown = r.getOptionalString("town");
-	if (!jTown.empty()) {
+	if (jTown.empty()) {
+		prof->bTown = binaryProf->bTown;
+	}
+	else {
 		prof->bTown = contentManager->getTownByName(jTown)->townId;
 	}
-	prof->bTownAttachment = r.getOptionalUInt("townAttachment");
-	if (r.getOptionalBool("isTownIndifferentIfDead")) {
+
+	prof->bTownAttachment = r.getOptionalUInt("townAttachment", binaryProf->bTownAttachment);
+
+	if (r.getOptionalBool("isTownIndifferentIfDead", binaryProf->ubMiscFlags3 & PROFILE_MISC_FLAG3_TOWN_DOESNT_CARE_ABOUT_DEATH)) {
 		prof->ubMiscFlags3 |= PROFILE_MISC_FLAG3_TOWN_DOESNT_CARE_ABOUT_DEATH;
 	}
+
 	if (r.has("ownedRooms")) {
 		JsonObject rooms = r["ownedRooms"].toObject();
 		if (rooms.has("range1")) {
@@ -231,49 +278,73 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const JsonValu
 			prof->ubRoomRangeStart[0] = range1[0].toInt();
 			prof->ubRoomRangeEnd[0] = range1[1].toInt();
 		}
+		else {
+			prof->ubRoomRangeStart[0] = binaryProf->ubRoomRangeStart[0];
+			prof->ubRoomRangeEnd[0] = binaryProf->ubRoomRangeEnd[0];
+		}
 		if (rooms.has("range2")) {
 			std::vector<JsonValue> range2 = rooms["range2"].toVec();
 			prof->ubRoomRangeStart[1] = range2[0].toInt();
 			prof->ubRoomRangeEnd[1] = range2[1].toInt();
 		}
+		else {
+			prof->ubRoomRangeStart[1] = binaryProf->ubRoomRangeStart[1];
+			prof->ubRoomRangeEnd[1] = binaryProf->ubRoomRangeEnd[1];
+		}
+	}
+	else {
+		prof->ubRoomRangeStart[0] = binaryProf->ubRoomRangeStart[0];
+		prof->ubRoomRangeEnd[0] = binaryProf->ubRoomRangeEnd[0];
+		prof->ubRoomRangeStart[1] = binaryProf->ubRoomRangeStart[1];
+		prof->ubRoomRangeEnd[1] = binaryProf->ubRoomRangeEnd[1];
 	}
 
-	prof->bReputationTolerance = r.getOptionalUInt("toleranceForPlayersReputation", 101);
-	prof->bDeathRate = r.getOptionalUInt("toleranceForPlayersDeathRate", 101);
+	prof->bReputationTolerance = r.getOptionalUInt("toleranceForPlayersReputation", binaryProf->bReputationTolerance);
+	prof->bDeathRate = r.getOptionalUInt("toleranceForPlayersDeathRate", binaryProf->bDeathRate);
+
+	JsonObject c;
 	if (r.has("contract")) {
-		JsonObject c = r["contract"].toObject();
-		prof->sSalary = c.getOptionalUInt("dailySalary");
-		prof->uiWeeklySalary = c.getOptionalUInt("weeklySalary");
-		prof->uiBiWeeklySalary = c.getOptionalUInt("biWeeklySalary");
-		prof->bMedicalDeposit = c.getOptionalBool("isMedicalDepositRequired");
+		c = r["contract"].toObject();
 	}
+	prof->sSalary = c.getOptionalUInt("dailySalary", binaryProf->sSalary);
+	prof->uiWeeklySalary = c.getOptionalUInt("weeklySalary", binaryProf->uiWeeklySalary);
+	prof->uiBiWeeklySalary = c.getOptionalUInt("biWeeklySalary", binaryProf->uiBiWeeklySalary);
+	prof->bMedicalDeposit = c.getOptionalBool("isMedicalDepositRequired", binaryProf->bMedicalDeposit);
 
+	JsonObject jInvSlots[lengthof(prof->inv)];
 	if (r.has("inventory")) {
 		for (auto& element : r.GetValue("inventory").toVec()) {
-			JsonObject s = element.toObject();
-			InvSlotPos slotIdx = Internals::getInventorySlotEnumFromString(s.GetString("slot"));
-			prof->inv[slotIdx] = contentManager->getItemByName(s.GetString("item"))->getItemIndex();
-			prof->bInvNumber[slotIdx] = s.getOptionalUInt("quantity", 1);
-			prof->bInvStatus[slotIdx] = s.getOptionalUInt("status", 100);
-			if (s.getOptionalBool("isUndroppable")) {
-				prof->ubInvUndroppable |= gubItemDroppableFlag[slotIdx];
-			}
+			JsonObject jSlot = element.toObject();
+			InvSlotPos slotIdx = Internals::getInventorySlotEnumFromString(jSlot.GetString("slot"));
+			jInvSlots[slotIdx] = std::move(jSlot);
 		}
 	}
-	prof->uiMoney = r.getOptionalUInt("money");
+	for (size_t slotIdx = 0; slotIdx < lengthof(prof->inv); slotIdx++) {
+		ST::string itemName = jInvSlots[slotIdx].getOptionalString("item");
+		prof->inv[slotIdx] = itemName.empty() ? binaryProf->inv[slotIdx] : contentManager->getItemByName(itemName)->getItemIndex();
+		prof->bInvNumber[slotIdx] = jInvSlots[slotIdx].getOptionalUInt("quantity", binaryProf->bInvNumber[slotIdx]);
+		prof->bInvStatus[slotIdx] = jInvSlots[slotIdx].getOptionalUInt("status", binaryProf->bInvStatus[slotIdx]);
+		if (jInvSlots[slotIdx].getOptionalBool("isUndroppable", binaryProf->ubInvUndroppable & gubItemDroppableFlag[slotIdx])) {
+			prof->ubInvUndroppable |= gubItemDroppableFlag[slotIdx];
+		}
+	}
 
+	prof->uiMoney = r.getOptionalUInt("money", binaryProf->uiMoney);
+
+	JsonObject jApproaches[APPROACH_RECRUIT];
 	if (r.has("dialogue")) {
 		for (auto& element : r.GetValue("dialogue").toVec()) {
-			JsonObject a = element.toObject();
-			Approach jApproach = Internals::getApproachEnumFromString(a.GetString("approach"));
-			if (jApproach > 0 && jApproach < 5) {
-				prof->usApproachFactor[jApproach - 1] = a.getOptionalUInt("effectiveness");
-				prof->ubApproachVal[jApproach - 1] = a.getOptionalUInt("desireToTalk");
-				prof->ubApproachMod[APPROACH_FRIENDLY - 1][jApproach - 1] = a.getOptionalUInt("friendlyMod");
-				prof->ubApproachMod[APPROACH_DIRECT - 1][jApproach - 1] = a.getOptionalUInt("directMod");
-				prof->ubApproachMod[APPROACH_THREATEN - 1][jApproach - 1] = a.getOptionalUInt("threatenMod");
-			}
+			JsonObject jAppr = element.toObject();
+			Approach apprIdx = Internals::getApproachEnumFromString(jAppr.GetString("approach"));
+			jApproaches[apprIdx - 1] = std::move(jAppr);
 		}
+	}
+	for (size_t apprIdx = 0; apprIdx < lengthof(jApproaches); apprIdx++) {
+		prof->usApproachFactor[apprIdx] = jApproaches[apprIdx].getOptionalUInt("effectiveness", binaryProf->usApproachFactor[apprIdx]);
+		prof->ubApproachVal[apprIdx] = jApproaches[apprIdx].getOptionalUInt("desireToTalk", binaryProf->ubApproachVal[apprIdx]);
+		prof->ubApproachMod[APPROACH_FRIENDLY - 1][apprIdx] = jApproaches[apprIdx].getOptionalUInt("friendlyMod", binaryProf->ubApproachMod[APPROACH_FRIENDLY - 1][apprIdx]);
+		prof->ubApproachMod[APPROACH_DIRECT - 1][apprIdx] = jApproaches[apprIdx].getOptionalUInt("directMod", binaryProf->ubApproachMod[APPROACH_DIRECT - 1][apprIdx]);
+		prof->ubApproachMod[APPROACH_THREATEN - 1][apprIdx] = jApproaches[apprIdx].getOptionalUInt("threatenMod", binaryProf->ubApproachMod[APPROACH_THREATEN - 1][apprIdx]);
 	}
 
 	return prof;

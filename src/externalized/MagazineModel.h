@@ -34,7 +34,7 @@ struct MagazineModel : ItemModel
 	static MagazineModel* deserialize(const JsonValue &json,
 						const std::map<ST::string, const CalibreModel*> &calibreMap,
 						const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
-						const VanillaItemStrings& vanillaItemStrings);
+						const BinaryData& vanillaItemStrings);
 
 
 	/** Get standard replacement ammo name. */

@@ -69,7 +69,7 @@ struct ExplosiveModel : ItemModel
 						const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 						const std::vector<const SmokeEffectModel*> &smokeEffects,
 						const std::vector<const ExplosionAnimationModel*> &animations,
-						const VanillaItemStrings& vanillaItemStrings);
+						const BinaryData& vanillaItemStrings);
 
 	const ExplosiveBlastEffect* getBlastEffect() const;
 	const ExplosiveStunEffect* getStunEffect() const;
