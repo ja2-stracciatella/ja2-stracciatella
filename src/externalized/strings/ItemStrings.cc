@@ -42,8 +42,8 @@ const MERCPROFILESTRUCT* BinaryData::getProfile(ProfileID profileIndex) const
 {
 	// This is to avoid failures due to prof.dat unavailability during unit-testing
 	if (profiles.empty()) {
-		static const MERCPROFILESTRUCT* DEFAULT_PROFILE = new MERCPROFILESTRUCT();
-		return DEFAULT_PROFILE;
+		static const MERCPROFILESTRUCT DEFAULT_PROFILE{};
+		return &DEFAULT_PROFILE;
 	}
 
 	return profiles[profileIndex].get();
