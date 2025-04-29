@@ -1180,7 +1180,7 @@ bool DefaultContentManager::loadMercsData(const BinaryData& binaryProfiles)
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
 
 	std::vector<std::unique_ptr<MERCPROFILESTRUCT>> temp_mercStructs(NUM_PROFILES);
-	auto json = readJsonDataFileWithSchema("mercs-profiles.json");
+	auto json = readJsonDataFileWithSchema("mercs-profile-info.json");
 	for (auto& element : json.toVec()) {
 		auto charProperties = element.toObject();
 		auto profileInfo = MercProfileInfo::deserialize(charProperties);
