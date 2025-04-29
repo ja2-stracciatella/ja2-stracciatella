@@ -52,10 +52,13 @@ MineModel* MineModel::deserialize(uint8_t index, const JsonValue& json, const Co
 	auto entrance = JsonUtility::parseSectorID(obj["entranceSector"]);
 	auto mineSectors = readMineSectors(obj["mineSectors"]);
 
+	uint8_t townId = obj.getOptionalUInt("associatedTownId");
+	if (townId) SLOGW("Property `associatedTownId` in strategic-mines.json has been deprecated. Use `associatedTown` instead.");
+
 	return new MineModel(
 		index,
 		entrance,
-		contentManager->getTownByName(obj.GetString("associatedTown"))->townId,
+		townId ? townId : contentManager->getTownByName(obj.GetString("associatedTown"))->townId,
 		mineTypeFromString(obj.GetString("mineType")),
 		obj.GetUInt("minimumMineProduction"),
 		obj.getOptionalBool("headMinerAssigned"),

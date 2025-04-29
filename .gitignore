@@ -6,8 +6,8 @@ TAGS
 .cproject
 .project
 .idea
+.vs
 .vscode
-rust/.vscode
 .clangd
 .clang-tidy
 /compile_commands.json

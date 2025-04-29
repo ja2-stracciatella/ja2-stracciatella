@@ -14,6 +14,10 @@ items:
       title: Entrance Sector
       description: Sector of the mine entrance on the surface level.
       $ref: types/sector-id.schema.yaml
+    associatedTownId:
+      title: Associated Town ID
+      description: Deprecated.
+      $ref: types/uint8.schema.yaml
     associatedTown:
       title: Associated Town Name
       description: Name of the associated town, refer to strategic-map-towns.json.

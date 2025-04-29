@@ -24,7 +24,7 @@ MercProfileInfo *MercProfileInfo::deserialize(const JsonObject& json)
 		json.GetUInt("profileID"),
 		json.GetString("internalName"),
 		Internals::getMercTypeEnumFromString(json.GetString("type")),
-		std::clamp(json.getOptionalInt("weaponSaleModifier", 100), 10, 180)
+		json.getOptionalInt("weaponSaleModifier", 100)
 		);
 }
 
