@@ -324,7 +324,6 @@ SGPFile* DefaultContentManager::openGameResForReading(ST::string filename) const
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
-	SLOGD("Opened resource file from VFS: '{}'", filename);
 	return new SGPFile(vfile.release(), std::move(filename));
 }
 
@@ -347,7 +346,6 @@ std::vector<std::unique_ptr<SGPFile>> DefaultContentManager::openGameResForReadi
 			RustPointer<char> err{getRustError()};
 			throw std::runtime_error(ST::format("openGameResForReadingOnAllLayers: {}", err.get()).to_std_string());
 		}
-		SLOGD("Opened resource file from VFS layer {}: '{}'", layerIndex, filename);
 		result.push_back(std::make_unique<SGPFile>(vfile.release(), filename));
 	}
 	return result;
