@@ -292,21 +292,32 @@ SGPFile* DefaultContentManager::openMapForReading(const ST::string& mapName) con
 	return openGameResForReading(getMapPath(mapName));
 }
 
-/** Get all available tilecache. */
-std::vector<ST::string> DefaultContentManager::getAllTilecache() const
+/** Get all files in a specified virtual directory. */
+std::vector<ST::string> DefaultContentManager::getAllFiles(const ST::string& directory, const ST::string& extension) const
 {
-	RustPointer<VecCString> vec(Vfs_readDir(m_vfs.get(), TILECACHEDIR, "jsd"));
+	RustPointer<VecCString> vec(Vfs_readDir(m_vfs.get(), directory.c_str(), extension.c_str()));
 	if (vec.get() == NULL) {
-		throw std::runtime_error(ST::format("DefaultContentManager::getAllTilecache: {}", getRustError()).c_str());
+		throw std::runtime_error(ST::format("DefaultContentManager::getAllFiles in {}: {}", directory.c_str(), getRustError()).c_str());
 	}
 	auto len = VecCString_len(vec.get());
 	std::vector<ST::string> paths;
-	for (size_t i = 0; i < len; i++)
-	{
-		RustPointer<char> path{VecCString_get(vec.get(), i)};
-		paths.emplace_back(FileMan::joinPaths(TILECACHEDIR, path.get()));
+	for (size_t i = 0; i < len; i++) {
+		RustPointer<char> path{ VecCString_get(vec.get(), i) };
+		paths.emplace_back(FileMan::joinPaths(directory, path.get()));
 	}
 	return paths;
+}
+
+/** Get all available tilecache. */
+std::vector<ST::string> DefaultContentManager::getAllTilecache() const
+{
+	return getAllFiles(TILECACHEDIR, "jsd");
+}
+
+/** Get all available script records. */
+std::vector<ST::string> DefaultContentManager::getAllScriptRecords() const
+{
+	return getAllFiles(NPCDATADIR, "npc");
 }
 
 /* Open a game resource file for reading.

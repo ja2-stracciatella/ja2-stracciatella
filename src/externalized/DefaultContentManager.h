@@ -47,8 +47,14 @@ public:
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const override;
 
+	/** Get all files in a specified directory. */
+	virtual std::vector<ST::string> getAllFiles(const ST::string& directory, const ST::string& extension) const override;
+
 	/** Get all available tilecache. */
 	virtual std::vector<ST::string> getAllTilecache() const override;
+
+	/** Get all available script records. */
+	virtual std::vector<ST::string> getAllScriptRecords() const override;
 
 	/** User private file (e.g. settings) */
 	virtual DirFs* userPrivateFiles() const override;
