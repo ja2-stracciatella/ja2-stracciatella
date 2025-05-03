@@ -1,3 +1,4 @@
+#include "ArmourModel.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Items.h"
@@ -1752,6 +1753,7 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 	UINT8 ubSlotLimit;
 	INT8  bNewPos;
 
+	auto item = GCM->getItem(pObj->usItem);
 	switch( bPos )
 	{
 		case SECONDHANDPOS:
@@ -1761,7 +1763,7 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 			}
 			break;
 		case HANDPOS:
-			if (GCM->getItem(pObj->usItem)->isTwoHanded())
+			if (item->isTwoHanded())
 			{
 				if (pSoldier->inv[HANDPOS].usItem != NOTHING && pSoldier->inv[SECONDHANDPOS].usItem != NOTHING)
 				{
@@ -1792,26 +1794,26 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 		case VESTPOS:
 		case HELMETPOS:
 		case LEGPOS:
-			if (GCM->getItem(pObj->usItem)->getItemClass() != IC_ARMOUR)
+			if (item->getItemClass() != IC_ARMOUR)
 			{
 				return( FALSE );
 			}
 			switch (bPos)
 			{
 				case VESTPOS:
-					if (Armour[GCM->getItem(pObj->usItem)->getClassIndex()].ubArmourClass != ARMOURCLASS_VEST)
+					if (item->asArmour()->getArmourClass() != ARMOURCLASS_VEST)
 					{
 						return( FALSE );
 					}
 					break;
 				case HELMETPOS:
-					if (Armour[GCM->getItem(pObj->usItem)->getClassIndex()].ubArmourClass != ARMOURCLASS_HELMET)
+					if (item->asArmour()->getArmourClass() != ARMOURCLASS_HELMET)
 					{
 						return( FALSE );
 					}
 					break;
 				case LEGPOS:
-					if (Armour[GCM->getItem(pObj->usItem)->getClassIndex()].ubArmourClass != ARMOURCLASS_LEGGINGS)
+					if (item->asArmour()->getArmourClass() != ARMOURCLASS_LEGGINGS)
 					{
 						return( FALSE );
 					}
@@ -1822,7 +1824,7 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 			break;
 		case HEAD1POS:
 		case HEAD2POS:
-			if (GCM->getItem(pObj->usItem)->getItemClass() != IC_FACE)
+			if (item->getItemClass() != IC_FACE)
 			{
 				return( FALSE );
 			}
@@ -2125,7 +2127,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 			break;
 
 		case IC_ARMOUR:
-			switch (Armour[GCM->getItem(pObj->usItem)->getClassIndex()].ubArmourClass)
+			switch (pItem->asArmour()->getItemClass())
 			{
 				case ARMOURCLASS_VEST:
 					if (pSoldier->inv[VESTPOS].usItem == NONE)
@@ -3060,14 +3062,15 @@ static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 		iMaxDamage = 2;
 	}
 
+	auto item = GCM->getItem(usItem);
 	// if the item is protective armour, reduce the amount of damage
 	// by its armour value
-	if (GCM->getItem(usItem)->getItemClass() == IC_ARMOUR)
+	if (item->asArmour())
 	{
-		iMaxDamage -= (iMaxDamage * Armour[GCM->getItem(usItem)->getClassIndex()].ubProtection) / 100;
+		iMaxDamage -= (iMaxDamage * item->asArmour()->getProtection()) / 100;
 	}
 	// metal items are tough and will be damaged less
-	if (GCM->getItem(usItem)->getFlags() & ITEM_METAL)
+	if (item->getFlags() & ITEM_METAL)
 	{
 		iMaxDamage /= 2;
 	}
@@ -3520,9 +3523,9 @@ bool ItemIsCool(OBJECTTYPE const& o)
 	{
 		if (GCM->getWeapon(o.usItem)->ubDeadliness >= 30) return true;
 	}
-	else if (item->isArmour())
+	else if (item->asArmour())
 	{
-		if (Armour[item->getClassIndex()].ubProtection >= 20) return true;
+		if (item->asArmour()->getProtection() >= 20) return true;
 	}
 
 	return false;

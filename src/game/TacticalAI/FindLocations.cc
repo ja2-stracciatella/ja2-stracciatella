@@ -1,5 +1,6 @@
 #include "Animation_Control.h"
 #include "Animation_Data.h"
+#include "ArmourModel.h"
 #include "FindLocations.h"
 #include "Handle_Items.h"
 #include "Isometric_Utils.h"
@@ -1592,10 +1593,10 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 						break;
 
 					default:
-						if (item->getItemClass() == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
+						if (item->isArmour() && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
 							InvSlotPos pos;
-							switch (Armour[item->getClassIndex()].ubArmourClass)
+							switch (item->asArmour()->getArmourClass())
 							{
 								case ARMOURCLASS_HELMET:   pos = HELMETPOS; break;
 								case ARMOURCLASS_VEST:     pos = VESTPOS;   break;

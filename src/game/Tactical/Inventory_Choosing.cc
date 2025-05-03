@@ -1,4 +1,5 @@
 #include "Inventory_Choosing.h"
+#include "ArmourModel.h"
 #include "Animation_Data.h"
 #include "Items.h"
 #include "Random.h"
@@ -960,9 +961,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 			//don't find one, we keep lowering the class until we do.
 			for (auto pItem : GCM->getItems()) {
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
-				if( pItem->getItemClass() == IC_ARMOUR && pItem->getCoolness() == bHelmetClass )
+				if( pItem->isArmour() && pItem->getCoolness() == bHelmetClass )
 				{
-					if( Armour[ pItem->getClassIndex() ].ubArmourClass == ARMOURCLASS_HELMET )
+					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_HELMET )
 						usNumMatches++;
 				}
 			}
@@ -973,9 +974,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 		{ //There is a helmet that we can choose.
 			usRandom = (UINT16)Random( usNumMatches );
 			for (auto pItem : GCM->getItems()) {
-				if( pItem->getItemClass() == IC_ARMOUR && pItem->getCoolness() == bHelmetClass )
+				if( pItem->isArmour() && pItem->getCoolness() == bHelmetClass )
 				{
-					if( Armour[ pItem->getClassIndex() ].ubArmourClass == ARMOURCLASS_HELMET )
+					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_HELMET )
 					{
 						if( usRandom )
 							usRandom--;
@@ -1009,9 +1010,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 					continue;
 
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
-				if( pItem->getItemClass() == IC_ARMOUR && pItem->getCoolness() == bVestClass )
+				if( pItem->isArmour() && pItem->getCoolness() == bVestClass )
 				{
-					if( Armour[ pItem->getClassIndex() ].ubArmourClass == ARMOURCLASS_VEST )
+					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_VEST )
 						usNumMatches++;
 				}
 			}
@@ -1029,9 +1030,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 				if ( ( itemIndex == TSHIRT ) || ( itemIndex == LEATHER_JACKET ) || ( itemIndex == TSHIRT_DEIDRANNA ) )
 					continue;
 
-				if( pItem->getItemClass() == IC_ARMOUR && pItem->getCoolness() == bVestClass )
+				if( pItem->isArmour() && pItem->getCoolness() == bVestClass )
 				{
-					if( Armour[ pItem->getClassIndex() ].ubArmourClass == ARMOURCLASS_VEST )
+					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_VEST )
 					{
 						if( usRandom )
 							usRandom--;
@@ -1070,9 +1071,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 			//don't find one, we keep lowering the class until we do.
 			for (auto pItem : GCM->getItems()) {
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
-				if( pItem->getItemClass() == IC_ARMOUR && pItem->getCoolness() == bLeggingsClass )
+				if( pItem->isArmour() && pItem->getCoolness() == bLeggingsClass )
 				{
-					if( Armour[ pItem->getClassIndex() ].ubArmourClass == ARMOURCLASS_LEGGINGS )
+					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_LEGGINGS )
 						usNumMatches++;
 				}
 			}
@@ -1084,9 +1085,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 			//There is a legging that we can choose.
 			usRandom = (UINT16)Random( usNumMatches );
 			for (auto pItem : GCM->getItems()) {
-				if( pItem->getItemClass() == IC_ARMOUR && pItem->getCoolness() == bLeggingsClass )
+				if( pItem->isArmour() && pItem->getCoolness() == bLeggingsClass )
 				{
-					if( Armour[ pItem->getClassIndex() ].ubArmourClass == ARMOURCLASS_LEGGINGS )
+					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_LEGGINGS )
 					{
 						if( usRandom )
 							usRandom--;

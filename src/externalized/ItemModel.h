@@ -10,6 +10,7 @@
 
 class JsonObject;
 class JsonObject;
+struct ArmourModel;
 struct ExplosiveModel;
 struct MagazineModel;
 struct WeaponModel;
@@ -89,6 +90,7 @@ struct ItemModel
 
 	virtual const WeaponModel* asWeapon() const   { return NULL; }
 	virtual const MagazineModel* asAmmo() const   { return NULL; }
+	virtual const ArmourModel* asArmour() const   { return NULL; }
 	virtual const ExplosiveModel* asExplosive() const   { return NULL; }
 
 	/** Check if the given attachment can be attached to the item. */

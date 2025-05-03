@@ -62,8 +62,7 @@ enum
 	ARMOURCLASS_VEST,
 	ARMOURCLASS_LEGGINGS,
 	ARMOURCLASS_PLATE,
-	ARMOURCLASS_MONST,
-	ARMOURCLASS_VEHICLE
+	ARMOURCLASS_MONST
 };
 
 enum
@@ -143,8 +142,6 @@ enum class FireWeaponResult
 };
 
 //GLOBALS
-
-extern ARMOURTYPE    const Armour[];
 
 INT8 EffectiveArmour(const OBJECTTYPE* pObj);
 extern INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier );
