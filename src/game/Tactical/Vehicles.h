@@ -151,7 +151,7 @@ void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE*);
 
 void HandleVehicleMovementSound(const SOLDIERTYPE*, BOOLEAN fOn);
 
-UINT8 GetVehicleArmourType(UINT8 vehicle_id);
+UINT16 GetVehicleArmour(UINT8 vehicle_id);
 
 UINT8 GetVehicleSeats(VEHICLETYPE const&);
 

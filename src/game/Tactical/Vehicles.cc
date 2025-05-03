@@ -1020,10 +1020,9 @@ void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
 }
 
 
-UINT8 GetVehicleArmourType(const UINT8 vehicle_id)
+UINT16 GetVehicleArmour(const UINT8 vehicle_id)
 {
-	auto armourItemIndex = GCM->getVehicle(pVehicleList[vehicle_id].ubVehicleType)->armour_type;
-	return GCM->getItem(armourItemIndex)->getClassIndex();
+	return GCM->getVehicle(pVehicleList[vehicle_id].ubVehicleType)->armour_type;
 }
 
 
