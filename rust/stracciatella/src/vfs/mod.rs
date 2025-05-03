@@ -325,7 +325,7 @@ impl Vfs {
         let patch_path =
             Nfc::caseless_path(&format!("{}.patch.json", &path.as_str()[..path.len() - 5]));
         let file_layers = self.read_layers(path)?;
-        let highest_prio_file_layer = if let Some(p) = file_layers.last() {
+        let highest_prio_file_layer = if let Some(p) = file_layers.first() {
             Ok(p)
         } else {
             Err(io::Error::new(io::ErrorKind::NotFound, "entity not found"))

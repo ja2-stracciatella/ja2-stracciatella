@@ -73,6 +73,16 @@ mod vfs {
         // Invalid json
         create_file(&dir.join("layer1/invalid.json"));
 
+        // Without patches should still work
+        create_json_file(
+            &dir.join("layer1/without-patches.json"),
+            &json!({ "layer1": true }),
+        );
+        create_json_file(
+            &dir.join("layer3/without-patches.json"),
+            &json!({ "layer3": true }),
+        );
+
         // All of the patches should apply
         create_json_file(&dir.join("layer1/basic.json"), &json!({}));
         create_json_file(
@@ -106,7 +116,7 @@ mod vfs {
         // Only the higher level patches than the last full file should apply
         create_json_file(&dir.join("layer1/higher-level.json"), &json!({}));
         create_json_file(
-            &dir.join("layer2/higher-level.patch.json"),
+            &dir.join("layer1/higher-level.patch.json"),
             &json!([ { "op": "add", "path": "/layer1", "value": true } ]),
         );
         create_json_file(&dir.join("layer2/higher-level.json"), &json!({}));
@@ -125,6 +135,11 @@ mod vfs {
         vfs.add_dir(&dir.join("layer1")).expect("layer1");
 
         // The sucess cases that were described above
+        assert_eq!(
+            vfs.read_patched_json(&Nfc::caseless_path("without-patches.json"))
+                .expect("read patched json"),
+            json!({ "layer3": true })
+        );
         assert_eq!(
             vfs.read_patched_json(&Nfc::caseless_path("basic.json"))
                 .expect("read patched json"),
@@ -419,7 +434,7 @@ mod vfs {
     // end of vfs tests
     //------------------
 
-    use std::collections::HashSet;
+    use std::collections::BTreeSet;
     use std::io::{Read, Seek, SeekFrom, Write};
     use std::iter::FromIterator;
     use std::path::{Path, PathBuf};
@@ -458,7 +473,7 @@ mod vfs {
 
     fn assert_vfs_read_dir(vfs: &Vfs, path: &str, expected: &[&str]) {
         let result = vfs.read_dir(&Nfc::caseless_path(path)).expect("read_dir");
-        let expected = HashSet::from_iter(expected.iter().map(|s| Nfc::caseless_path(s)));
+        let expected = BTreeSet::from_iter(expected.iter().map(|s| Nfc::caseless_path(s)));
         assert_eq!(result, expected);
     }
 
