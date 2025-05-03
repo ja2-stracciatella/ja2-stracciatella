@@ -9,7 +9,7 @@ pub mod android;
 pub mod dir;
 pub mod slf;
 
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::fmt;
 use std::io;
 use std::io::ErrorKind;
@@ -47,7 +47,7 @@ pub trait VfsLayer: fmt::Debug + fmt::Display + Send + Sync {
     /// Checks if a file exists in the VFS Layer
     fn exists(&self, file_path: &Nfc) -> io::Result<bool>;
     // Lists a directory in the VFS Layer
-    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>>;
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<BTreeSet<Nfc>>;
     /// Lists files with a specific extension in a directory in the VFS Layer
     ///
     /// The extension has to be specified without a dot (e.g. "slf")
@@ -55,7 +55,7 @@ pub trait VfsLayer: fmt::Debug + fmt::Display + Send + Sync {
         &self,
         file_path: &Nfc,
         extension: &Nfc,
-    ) -> io::Result<HashSet<Nfc>> {
+    ) -> io::Result<BTreeSet<Nfc>> {
         let extension = Nfc::caseless(&format!(".{}", extension));
         Ok(self
             .read_dir(file_path)?
@@ -68,7 +68,7 @@ pub trait VfsLayer: fmt::Debug + fmt::Display + Send + Sync {
 /// A virtual filesystem that mounts other filesystems.
 #[derive(Debug, Default)]
 pub struct Vfs {
-    /// List of entries.
+    /// List of VFS layers ordered from highest to lowest priority.
     pub entries: Vec<Arc<dyn VfsLayer + Send + Sync>>,
 }
 
@@ -91,7 +91,8 @@ impl Vfs {
         Vfs::default()
     }
 
-    /// Adds an overlay filesystem backed by a filesystem directory.
+    /// Adds a filesystem layer backed by a filesystem directory.
+    /// The added layer will have lowest priority.
     pub fn add_dir(&mut self, path: &Path) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
         let dir_fs = DirFs::new(path).map_err(|error| VfsInitError {
             path: path.to_owned(),
@@ -101,7 +102,8 @@ impl Vfs {
         Ok(dir_fs)
     }
 
-    /// Adds an overlay filesystem backed by a SLF file.
+    /// Adds a filesystem layer backed by a SLF file.
+    /// The added layer will have lowest priority.
     pub fn add_slf(&mut self, file: Box<dyn VfsFile>) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
         let path = PathBuf::from(format!("{}", file));
         let slf_fs = SlfFs::new(file).map_err(|error| VfsInitError { path, error })?;
@@ -109,7 +111,8 @@ impl Vfs {
         Ok(slf_fs)
     }
 
-    /// Adds an overlay filesystem backed by android assets
+    /// Adds a filesystem layer backed by android assets.
+    /// The added layer will have lowest priority.
     #[cfg(target_os = "android")]
     pub fn add_android_assets(&mut self, path: &Path) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
         let asset_manager_fs =
@@ -121,7 +124,8 @@ impl Vfs {
         Ok(asset_manager_fs)
     }
 
-    /// Adds an overlay for all SLF files in dir
+    /// Adds layers for all SLF files in the passed in layer.
+    /// The added layer will have lowest priority.
     pub fn add_slf_files_from(
         &mut self,
         layer: Arc<dyn VfsLayer>,
@@ -191,14 +195,20 @@ impl Vfs {
             log::error!("The game directory seems to be modified by a 1.13 installation, the game might crash at any point in time.")
         }
 
+        // First is home data dir (does not need to exist)
         let home_data_dir = fs::resolve_existing_components(
             &PathBuf::from(DATA_DIR),
             Some(&engine_options.stracciatella_home),
             true,
         );
+        if home_data_dir.exists() {
+            let layer = self.add_dir(&home_data_dir)?;
+            // home data dir can include slf files
+            self.add_slf_files_from(layer, false)?;
+        }
 
         // Add mod directories
-        for mod_id in engine_options.mods.iter() {
+        for mod_id in engine_options.mods.iter().rev() {
             let mod_path = mod_manager
                 .get_mod_by_id(mod_id)
                 .map(|m| m.path())
@@ -226,13 +236,6 @@ impl Vfs {
             }
         }
 
-        // Next is home data dir (does not need to exist)
-        if home_data_dir.exists() {
-            let layer = self.add_dir(&home_data_dir)?;
-            // home data dir can include slf files
-            self.add_slf_files_from(layer, false)?;
-        }
-
         // Next is externalized data dir (required)
         #[cfg(not(target_os = "android"))]
         let externalized_layer = {
@@ -258,13 +261,9 @@ impl Vfs {
             self.add_editor_slf_layer(externalized_layer)?;
         }
 
-        // Print VFS order to console
-        for (index, v) in self.entries.iter().enumerate() {
-            info!(
-                "VFS item with priority {}: {}",
-                self.entries.len() - index,
-                v
-            );
+        // Print VFS layer to console
+        for (index, v) in self.entries.iter().rev().enumerate() {
+            info!("VFS layer {}: {}", index + 1, v);
         }
 
         Ok(())
@@ -277,7 +276,15 @@ impl Vfs {
         file_path: &Nfc,
     ) -> io::Result<Box<dyn VfsFile>> {
         if let Some(layer) = self.entries.get(layer_index) {
-            layer.open(file_path)
+            let res = layer.open(file_path);
+            if res.is_ok() {
+                log::debug!(
+                    "opened file {} in layer {}",
+                    file_path,
+                    self.entries.len() - layer_index
+                )
+            }
+            res
         } else {
             Err(io::Error::new(
                 io::ErrorKind::InvalidInput,
@@ -317,7 +324,7 @@ impl Vfs {
         let patch_path =
             Nfc::caseless_path(&format!("{}.patch.json", &path.as_str()[..path.len() - 5]));
         let file_layers = self.read_layers(path)?;
-        let highest_prio_file_layer = if let Some(p) = file_layers.last() {
+        let highest_prio_file_layer = if let Some(p) = file_layers.first() {
             Ok(p)
         } else {
             Err(io::Error::new(io::ErrorKind::NotFound, "entity not found"))
@@ -368,12 +375,18 @@ impl Vfs {
 
 impl VfsLayer for Vfs {
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
-        for entry in &self.entries {
+        for (layer_index, entry) in self.entries.iter().enumerate() {
             let file_result = entry.open(file_path);
             if let Err(err) = &file_result {
                 if err.kind() == io::ErrorKind::NotFound {
                     continue;
                 }
+            } else {
+                log::debug!(
+                    "opened file {} in layer {}",
+                    file_path,
+                    self.entries.len() - layer_index
+                )
             }
             return file_result;
         }
@@ -389,8 +402,8 @@ impl VfsLayer for Vfs {
         Ok(false)
     }
 
-    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
-        let mut entries = HashSet::new();
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<BTreeSet<Nfc>> {
+        let mut entries = BTreeSet::new();
         for entry in self.entries.iter() {
             let layer_result = entry.read_dir(file_path);
             if let Err(err) = &layer_result {

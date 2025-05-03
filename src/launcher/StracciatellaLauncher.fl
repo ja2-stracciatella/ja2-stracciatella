@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0305
+version 1.0309
 header_name {.h}
 code_name {.cc}
 class StracciatellaLauncher {open
@@ -72,39 +72,43 @@ class StracciatellaLauncher {open
           }
         }
         Fl_Group {} {
-          label {@-> Mods }
+          label {@-> Mods } open
           xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {
-            xywh {10 60 500 165}
+            xywh {10 80 500 165}
           } {
             Fl_Browser enabledModsBrowser {
               label {Enabled Mods:}
-              xywh {20 75 215 150} type Multi align 5
+              xywh {20 95 215 150} type Multi align 5
             }
             Fl_Button enableModsButton {
               label {@<}
-              tooltip {Enable one or multiple mods.} xywh {245 75 30 30} deactivate
+              tooltip {Enable one or multiple mods.} xywh {245 95 30 30} deactivate
             }
             Fl_Button disableModsButton {
               label {@>}
-              tooltip {Disable one or multiple mods.} xywh {245 115 30 30} deactivate
+              tooltip {Disable one or multiple mods.} xywh {245 135 30 30} deactivate
             }
             Fl_Button moveUpModsButton {
               label {@2<}
-              tooltip {Increase mod priority. If a resource file is present in multiple mods, the file from the mod with the highest priority is used.} xywh {245 155 30 30} deactivate
+              tooltip {Move mod up in the list and decrease mod priority.} xywh {245 175 30 30} deactivate
             }
             Fl_Button moveDownModsButton {
               label {@8<}
-              tooltip {Decrease mod priority. If a resource file is present in multiple mods, the file from the mod with the highest priority is used.} xywh {245 195 30 30} deactivate
+              tooltip {Move mod down in the list and increase mod priority.} xywh {245 215 30 30} deactivate
             }
             Fl_Browser availableModsBrowser {
               label {Disabled Mods:}
-              xywh {285 75 215 150} type Multi align 5
+              xywh {285 95 215 150} type Multi align 5
             }
           }
           Fl_Text_Display modDetails {
-            xywh {20 235 480 100} color 55 hide
+            xywh {20 255 480 80} color 55 hide
+          }
+          Fl_Box {} {
+            label {Mods listed later in the "Enabled Mods" list have higher priority.}
+            tooltip {Higher priority mods can overwrite changes from lower-priority ones or build on their features.} xywh {17 55 480 20} align 149
           }
         }
         Fl_Group {} {

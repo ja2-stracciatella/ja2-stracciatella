@@ -1,8 +1,8 @@
 //! This module contains a virtual filesystem backed by a SLF file.
 #![allow(dead_code)]
 
+use std::collections::BTreeSet;
 use std::collections::HashMap;
-use std::collections::HashSet;
 use std::convert::TryFrom;
 use std::fmt;
 use std::io;
@@ -118,10 +118,10 @@ impl VfsLayer for SlfFs {
             > 0)
     }
 
-    fn read_dir(&self, path: &Nfc) -> io::Result<HashSet<Nfc>> {
+    fn read_dir(&self, path: &Nfc) -> io::Result<BTreeSet<Nfc>> {
         // Remove trailing slashes from directories
         let path = path.trim_end_matches('/');
-        let entries: HashSet<Nfc> = self
+        let entries: BTreeSet<Nfc> = self
             .entries
             .keys()
             .flat_map(|x| {

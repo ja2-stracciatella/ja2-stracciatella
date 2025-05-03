@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 
 use lru::LruCache;
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::ffi::OsString;
 use std::fmt;
 use std::io;
@@ -147,10 +147,10 @@ impl VfsLayer for DirFs {
         Ok(!candidates.is_empty())
     }
 
-    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<BTreeSet<Nfc>> {
         let file_path = file_path.trim_end_matches('/');
         let candidates = self.canonicalize(file_path)?;
-        let mut result = HashSet::new();
+        let mut result = BTreeSet::new();
 
         for candidate in candidates {
             let dir_contents = fs::read_dir(&candidate)?;
