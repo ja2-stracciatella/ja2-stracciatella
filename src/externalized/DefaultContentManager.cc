@@ -10,6 +10,7 @@
 #include "FileMan.h"
 
 #include "AmmoTypeModel.h"
+#include "ArmourModel.h"
 #include "CacheSectorsModel.h"
 #include "CalibreModel.h"
 #include "ContentMusic.h"
@@ -444,6 +445,15 @@ const WeaponModel* DefaultContentManager::getWeapon(uint16_t itemIndex)
 	return getItem(itemIndex)->asWeapon();
 }
 
+/** Get the armour with the given index.
+ * Returns nullptr if the item is not an armour
+ * Throws if the armour does not exist
+*/
+const ArmourModel* DefaultContentManager::getArmour(uint16_t itemIndex)
+{
+	return getItem(itemIndex)->asArmour();
+}
+
 /** Get the weapon with the given name.
  * Throws if the weapon does not exist
  */
@@ -456,6 +466,20 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &inte
 		throw std::runtime_error(ST::format("weapon '{}' was not found", internalName).to_std_string());
 	}
 	return it->second;//m_weaponMap[internalName];
+}
+
+/** Get the armour with the given name.
+ * Throws if the armour does not exist
+ */
+const ArmourModel* DefaultContentManager::getArmourByName(const ST::string &internalName)
+{
+	std::map<ST::string, const ArmourModel*>::const_iterator it = m_armourMap.find(internalName);
+	if(it == m_armourMap.end())
+	{
+		SLOGE("armour '{}' was not found", internalName);
+		throw std::runtime_error(ST::format("armour '{}' was not found", internalName).to_std_string());
+	}
+	return it->second;
 }
 
 const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &internalName)
@@ -534,6 +558,26 @@ bool DefaultContentManager::loadWeapons(const BinaryData& vanillaItemStrings)
 
 		m_items[w->getItemIndex()] = w;
 		m_weaponMap.try_emplace(w->getInternalName(), w);
+	}
+
+	return true;
+}
+
+bool DefaultContentManager::loadArmours(const BinaryData& vanillaItemStrings)
+{
+	auto json = readJsonDataFileWithSchema("armours.json");
+	for (auto& element : json.toVec()) {
+		ArmourModel *a = ArmourModel::deserialize(element, vanillaItemStrings);
+		SLOGD("Loaded armour {} {}", a->getItemIndex(), a->getInternalName());
+
+		if (a->getItemIndex() >= m_items.size())
+		{
+			SLOGE("Armour index must be in the interval 0 - {}", m_items.size() - 1);
+			return false;
+		}
+
+		m_items[a->getItemIndex()] = a;
+		m_armourMap.try_emplace(a->getInternalName(), a);
 	}
 
 	return true;
@@ -838,6 +882,7 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 		&& loadSmokeEffects()
 		&& loadExplosionAnimations()
 		&& loadExplosives(binaryData, m_explosionAnimations)
+		&& loadArmours(binaryData)
 		&& loadArmyData()
 		&& loadMusic();
 

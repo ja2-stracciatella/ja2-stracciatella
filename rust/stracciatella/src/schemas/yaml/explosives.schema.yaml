@@ -7,9 +7,9 @@ items:
   allOf:
     - title: Base Item
       $ref: types/base-item.schema.yaml
-    - title: Item
+    - title: Explosive
       description: |
-        An explosive item defines that can be used in game.
+        An explosive item that can be used in game.
       type: object
       properties:
         animation:

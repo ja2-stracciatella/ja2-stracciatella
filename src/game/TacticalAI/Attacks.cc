@@ -1,3 +1,4 @@
+#include "ArmourModel.h"
 #include "JA2Types.h"
 #include "AI.h"
 #include "Animation_Control.h"
@@ -1306,8 +1307,10 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	// if opponent is wearing a helmet
 	if (pOpponent->inv[HELMETPOS].usItem)
 	{
-		iHeadProt += (INT32) Armour[GCM->getItem(pOpponent->inv[HELMETPOS].usItem)->getClassIndex()].ubProtection *
-				(INT32) pOpponent->inv[HELMETPOS].bStatus[0] / 100;
+		auto helmet = GCM->getArmour(pOpponent->inv[HELMETPOS].usItem);
+		if (helmet) {
+			iHeadProt += (INT32) helmet->getProtection() * (INT32) pOpponent->inv[HELMETPOS].bStatus[0] / 100;
+		}
 	}
 
 	// if opponent is wearing a protective vest
@@ -1316,8 +1319,10 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 		// monster spit and knives ignore kevlar vests
 		if (pOpponent->inv[VESTPOS].usItem)
 		{
-			iTorsoProt += (INT32) Armour[GCM->getItem(pOpponent->inv[VESTPOS].usItem)->getClassIndex()].ubProtection *
-					(INT32) pOpponent->inv[VESTPOS].bStatus[0] / 100;
+			auto vest = GCM->getArmour(pOpponent->inv[VESTPOS].usItem);
+			if (vest) {
+				iTorsoProt += (INT32) vest->getProtection() * (INT32) pOpponent->inv[VESTPOS].bStatus[0] / 100;
+			}
 		}
 	}
 
@@ -1325,8 +1330,10 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	bPlatePos = FindAttachment( &(pOpponent->inv[VESTPOS]), CERAMIC_PLATES );
 	if (bPlatePos != -1)
 	{
-		iTorsoProt += (INT32) Armour[GCM->getItem(pOpponent->inv[VESTPOS].usAttachItem[bPlatePos])->getClassIndex()].ubProtection *
-				(INT32) pOpponent->inv[VESTPOS].bAttachStatus[bPlatePos] / 100;
+		auto plates = GCM->getArmour(pOpponent->inv[VESTPOS].usAttachItem[bPlatePos]);
+		if (plates) {
+			iTorsoProt += (INT32) plates->getProtection() * (INT32) pOpponent->inv[VESTPOS].bAttachStatus[bPlatePos] / 100;
+		}
 	}
 
 
@@ -1335,8 +1342,10 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	{	// monster spit and knives ignore kevlar leggings
 		if (pOpponent->inv[LEGPOS].usItem)
 		{
-			iLegProt += (INT32) Armour[GCM->getItem(pOpponent->inv[LEGPOS].usItem)->getClassIndex()].ubProtection *
-					(INT32) pOpponent->inv[LEGPOS].bStatus[0] / 100;
+			auto leggings = GCM->getArmour(pOpponent->inv[LEGPOS].usItem);
+			if (leggings) {
+				iLegProt += (INT32) leggings->getProtection() * (INT32) pOpponent->inv[LEGPOS].bStatus[0] / 100;
+			}
 		}
 	}
 
