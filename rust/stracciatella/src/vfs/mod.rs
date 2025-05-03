@@ -195,11 +195,17 @@ impl Vfs {
             log::error!("The game directory seems to be modified by a 1.13 installation, the game might crash at any point in time.")
         }
 
+        // First is home data dir (does not need to exist)
         let home_data_dir = fs::resolve_existing_components(
             &PathBuf::from(DATA_DIR),
             Some(&engine_options.stracciatella_home),
             true,
         );
+        if home_data_dir.exists() {
+            let layer = self.add_dir(&home_data_dir)?;
+            // home data dir can include slf files
+            self.add_slf_files_from(layer, false)?;
+        }
 
         // Add mod directories
         for mod_id in engine_options.mods.iter().rev() {
@@ -228,13 +234,6 @@ impl Vfs {
                     self.add_slf_files_from(layer, false)?;
                 }
             }
-        }
-
-        // Next is home data dir (does not need to exist)
-        if home_data_dir.exists() {
-            let layer = self.add_dir(&home_data_dir)?;
-            // home data dir can include slf files
-            self.add_slf_files_from(layer, false)?;
         }
 
         // Next is externalized data dir (required)
