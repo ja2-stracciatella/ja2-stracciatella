@@ -62,4 +62,5 @@ struct NPCQuoteInfo
 	INT16   sActionData;        // special action value
 
 	static std::unique_ptr<NPCQuoteInfo const []> deserialize(const JsonValue& json, const ContentManager * contentManager);
+	JsonValue serialize(const ContentManager* contentManager) const;
 };
