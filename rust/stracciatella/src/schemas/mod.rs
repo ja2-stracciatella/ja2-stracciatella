@@ -68,7 +68,9 @@ impl SchemaManager {
         if path.starts_with("army-gun-choice-") {
             return self.schemas.get("army-gun-choice");
         }
-        if path.starts_with("script-records-") {
+        if path.starts_with("script-records-control") {
+            return self.schemas.get("script-records-control");
+        } else if path.starts_with("script-records-") {
             return self.schemas.get("script-records");
         }
         if path.starts_with("translation_tables/") {

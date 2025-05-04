@@ -2,10 +2,10 @@
 #define NPC_H
 
 #include "Facts.h"
+#include "NPCQuoteInfo.h"
 #include "Types.h"
 struct OBJECTTYPE;
 struct SOLDIERTYPE;
-
 
 #define NPC_TALK_RADIUS 4
 
@@ -73,6 +73,7 @@ extern void TriggerNPCRecordImmediately( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCR
 BOOLEAN TriggerNPCWithGivenApproach(UINT8 ubTriggerNPC, Approach);
 
 
+std::unique_ptr<NPCQuoteInfo []> ExtractNPCQuoteInfoArrayFromFile(HWFILE const f);
 bool ReloadQuoteFile(UINT8 ubNPC);
 void ReloadAllQuoteFiles(void);
 
