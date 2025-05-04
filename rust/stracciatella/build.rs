@@ -1,5 +1,6 @@
 use serde_json::Value;
 use std::collections::HashMap;
+use std::env;
 use std::fs;
 
 const SCHEMA_DIR: &str = "src/schemas/yaml";
@@ -35,7 +36,18 @@ fn main() {
     }
 
     let schemas_json = serde_json::to_string(&schemas).expect("schemas serialization");
-    println!("cargo:rustc-env=STRACCIATELLA_SCHEMAS={}", schemas_json)
+
+    let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR environment variable not set");
+    let out_file = format!(
+        "{}/schemas.json",
+        out_dir
+            .to_str()
+            .expect("OUT_DIR variable could not be converted into str")
+    );
+
+    fs::write(&out_file, schemas_json).expect("failed to write schemas json");
+
+    println!("cargo:rustc-env=STRACCIATELLA_SCHEMAS={}", out_file)
 }
 
 fn resolve_refs(value: &mut Value) {
