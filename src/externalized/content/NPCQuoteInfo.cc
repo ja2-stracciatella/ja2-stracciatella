@@ -227,8 +227,8 @@ JsonValue NPCQuoteInfo::serialize(const ContentManager* contentManager) const
 
 	if (this->sActionData != NPC_ACTION_NONE) {
 		JsonObject actionData;
-		if (abs(this->sActionData) > 500 && abs(this->sActionData) < 650) {
-			actionData.set("037turnToFace", (contentManager->getMercProfileInfo(abs(this->sActionData) - 500))->internalName);
+		if (abs(this->sActionData) > NPC_ACTION_TURN_TO_FACE_NEAREST_MERC && abs(this->sActionData) < NPC_ACTION_LAST_TURN_TO_FACE_PROFILE) {
+			actionData.set("037turnToFace", (contentManager->getMercProfileInfo(abs(this->sActionData) - NPC_ACTION_TURN_TO_FACE_NEAREST_MERC))->internalName);
 		}
 		else actionData.set("038index", abs(this->sActionData));
 		if (this->sActionData < 0) {
