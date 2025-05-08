@@ -78,8 +78,14 @@ public:
 	/** Get tileset db resource name. */
 	virtual ST::string getTilesetDBResName() const = 0;
 
+	/** Get all files in a specified directory. */
+	virtual std::vector<ST::string> getAllFiles(const ST::string& directory, const ST::string& extension) const = 0;
+
 	/** Get all available tilecache. */
 	virtual std::vector<ST::string> getAllTilecache() const = 0;
+
+	/** Get all available script records. */
+	virtual std::vector<ST::string> getAllScriptRecords() const = 0;
 
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const = 0;

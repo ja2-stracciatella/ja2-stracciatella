@@ -37,7 +37,6 @@
 #include "Timer_Control.h"
 #include "WeaponModels.h"
 #include "Weapons.h"
-#include "content/NPCQuoteInfo.h"
 #include <memory>
 #include <string_theory/format>
 #include <string_theory/string>
@@ -110,7 +109,7 @@ static BOOLEAN gfTriedToLoadQuoteInfoArray[NUM_PROFILES];
 
 INT8 const gbFirstApproachFlags[] = { 0x01, 0x02, 0x04, 0x08 };
 
-static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
+std::unique_ptr<NPCQuoteInfo []> ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 {
 	auto buf = std::make_unique<NPCQuoteInfo[]>(NUM_NPC_QUOTE_RECORDS);
 	for (NPCQuoteInfo* i = &buf[0]; i != &buf[NUM_NPC_QUOTE_RECORDS]; ++i)
@@ -155,7 +154,7 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		}
 		Assert(d.getConsumed() == lengthof(data));
 	}
-	return buf.release();
+	return buf;
 }
 
 
@@ -165,7 +164,7 @@ static void ConditionalExtractNPCQuoteInfoArrayFromFile(HWFILE const f, NPCQuote
 	f->read(&present, sizeof(present));
 	FreeNullArray(q);
 	if (!present) return;
-	q = ExtractNPCQuoteInfoArrayFromFile(f);
+	q = ExtractNPCQuoteInfoArrayFromFile(f).release();
 }
 
 
@@ -379,7 +378,7 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 		filename = ST::format(NPCDATADIR "/{}.npc", gsCivQuoteSector[idx].AsShortString());
 	}
 	AutoSGPFile f(GCM->openGameResForReading(filename));
-	return ExtractNPCQuoteInfoArrayFromFile(f);
+	return ExtractNPCQuoteInfoArrayFromFile(f).release();
 }
 
 

@@ -1,0 +1,125 @@
+{
+    "fileNameForScriptControlledPCs": "000.npc",
+    "meanwhiles": [
+        {
+            "id": 0, "internalName": "END_OF_PLAYERS_FIRST_BATTLE",
+            "chars": [
+                { "name": "QUEEN", "fileName": "160.npc" },
+                { "name": "ELLIOT", "fileName": "180.npc"}
+            ]
+        },
+        {
+            "id": 1, "internalName": "DRASSEN_LIBERATED",
+            "chars": [
+                { "name": "QUEEN", "fileName": "161.npc" },
+                { "name": "ELLIOT", "fileName": "181.npc" }
+            ]
+        },
+        {
+            "id": 2, "internalName": "CAMBRIA_LIBERATED",
+            "chars": [
+                { "name": "QUEEN", "fileName": "162.npc" },
+                { "name": "ELLIOT", "fileName": "182.npc" }
+            ]
+        },
+        {
+            "id": 3, "internalName": "ALMA_LIBERATED",
+            "chars": [
+                { "name": "QUEEN", "fileName": "163.npc" },
+                { "name": "ELLIOT", "fileName": "183.npc" }
+            ]
+        },
+        {
+            "id": 4, "internalName": "GRUMM_LIBERATED",
+            "chars": [
+                { "name": "QUEEN", "fileName": "164.npc" },
+                { "name": "ELLIOT", "fileName": "184.npc" }
+            ]
+        },
+        {
+            "id": 5, "internalName": "CHITZENA_LIBERATED",
+            "chars": [
+                { "name": "QUEEN", "fileName": "165.npc" },
+                { "name": "ELLIOT", "fileName": "185.npc" }
+            ]
+        },
+        {
+            "id": 6, "internalName": "NW_SAM",
+            "chars": [
+                { "name": "QUEEN", "fileName": "166.npc" },
+                { "name": "ELLIOT", "fileName": "186.npc" }
+            ]
+        },
+        {
+            "id": 7, "internalName": "NE_SAM",
+            "chars": [
+                { "name": "QUEEN", "fileName": "167.npc" },
+                { "name": "ELLIOT", "fileName": "187.npc" }
+            ]
+        },
+        {
+            "id": 8, "internalName": "CENTRAL_SAM",
+            "chars": [
+                { "name": "QUEEN", "fileName": "168.npc" },
+                { "name": "ELLIOT", "fileName": "188.npc" }
+            ]
+        },
+        {
+            "id": 9, "internalName": "FLOWERS",
+            "chars": [
+                { "name": "QUEEN", "fileName": "169.npc" },
+                { "name": "ELLIOT", "fileName": "189.npc" }
+            ]
+        },
+        {
+            "id": 10, "internalName": "LOST_TOWN",
+            "chars": [
+                { "name": "QUEEN", "fileName": "170.npc" },
+                { "name": "ELLIOT", "fileName": "190.npc" }
+            ]
+        },
+        {
+            "id": 11, "internalName": "INTERROGATION",
+            "chars": [
+                { "name": "QUEEN", "fileName": "171.npc" },
+                { "name": "ELLIOT", "fileName": "191.npc" }
+            ]
+        },
+        {
+            "id": 12, "internalName": "CREATURES",
+            "chars": [
+                { "name": "QUEEN", "fileName": "172.npc" },
+                { "name": "ELLIOT", "fileName": "192.npc" }
+            ]
+        },
+        {
+            "id": 13, "internalName": "KILL_CHOPPER",
+            "chars": [
+                { "name": "QUEEN", "fileName": "173.npc" },
+                { "name": "ELLIOT", "fileName": "193.npc" }
+            ]
+        },
+        {
+            "id": 14, "internalName": "AWOL_SCIENTIST",
+            "chars": [
+                { "name": "QUEEN", "fileName": "174.npc" },
+                { "name": "ELLIOT", "fileName": "194.npc" }
+            ]
+        },
+        {
+            "id": 15, "internalName": "OUTSKIRTS_MEDUNA",
+            "chars": [
+                { "name": "QUEEN", "fileName": "175.npc" },
+                { "name": "ELLIOT", "fileName": "195.npc" }
+            ]
+        },
+        {
+            "id": 16, "internalName": "BALIME_LIBERATED",
+            "chars": [
+                { "name": "QUEEN", "fileName": "176.npc" },
+                { "name": "ELLIOT", "fileName": "196.npc" }
+            ]
+        }
+    ]
+}
+

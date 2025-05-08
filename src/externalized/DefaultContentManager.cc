@@ -22,6 +22,7 @@
 #include "ExplosiveCalibreModel.h"
 #include "LoadingScreenModel.h"
 #include "MagazineModel.h"
+#include "NPC.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Profile_Type.h"
@@ -292,21 +293,32 @@ SGPFile* DefaultContentManager::openMapForReading(const ST::string& mapName) con
 	return openGameResForReading(getMapPath(mapName));
 }
 
-/** Get all available tilecache. */
-std::vector<ST::string> DefaultContentManager::getAllTilecache() const
+/** Get all files in a specified virtual directory. */
+std::vector<ST::string> DefaultContentManager::getAllFiles(const ST::string& directory, const ST::string& extension) const
 {
-	RustPointer<VecCString> vec(Vfs_readDir(m_vfs.get(), TILECACHEDIR, "jsd"));
+	RustPointer<VecCString> vec(Vfs_readDir(m_vfs.get(), directory.c_str(), extension.c_str()));
 	if (vec.get() == NULL) {
-		throw std::runtime_error(ST::format("DefaultContentManager::getAllTilecache: {}", getRustError()).c_str());
+		throw std::runtime_error(ST::format("DefaultContentManager::getAllFiles in {}: {}", directory.c_str(), getRustError()).c_str());
 	}
 	auto len = VecCString_len(vec.get());
 	std::vector<ST::string> paths;
-	for (size_t i = 0; i < len; i++)
-	{
-		RustPointer<char> path{VecCString_get(vec.get(), i)};
-		paths.emplace_back(FileMan::joinPaths(TILECACHEDIR, path.get()));
+	for (size_t i = 0; i < len; i++) {
+		RustPointer<char> path{ VecCString_get(vec.get(), i) };
+		paths.emplace_back(FileMan::joinPaths(directory, path.get()));
 	}
 	return paths;
+}
+
+/** Get all available tilecache. */
+std::vector<ST::string> DefaultContentManager::getAllTilecache() const
+{
+	return getAllFiles(TILECACHEDIR, "jsd");
+}
+
+/** Get all available script records. */
+std::vector<ST::string> DefaultContentManager::getAllScriptRecords() const
+{
+	return getAllFiles(NPCDATADIR, "npc");
 }
 
 /* Open a game resource file for reading.
@@ -1279,27 +1291,48 @@ void DefaultContentManager::loadTranslationTable()
 
 void DefaultContentManager::loadAllScriptRecords()
 {
+	// hack for failures during unit-testing
+	if (!doesGameResExists(BINARYDATADIR "/prof.dat")) return;
+
+	auto ctrl = readJsonDataFileWithSchema("script-records-control.json").toObject();
+	auto meanwhiles = ctrl.GetValue("meanwhiles").toVec();
+
+	for (auto& element : meanwhiles) {
+		auto meanwhile = element.toObject();
+		auto jsonMeanwhileId = meanwhile.GetUInt("id");
+		for (auto& subElement : meanwhile.GetValue("chars").toVec()) {
+			auto charToFileInfo = subElement.toObject();
+			auto jsonProfileId = (this->getMercProfileInfoByName(charToFileInfo.GetString("name")))->profileID;
+			auto fullPath = NPCDATADIR "/" + charToFileInfo.GetString("fileName");
+			m_scriptRecordsMeanwhiles.insert_or_assign(
+				{ jsonMeanwhileId, jsonProfileId },
+				ExtractNPCQuoteInfoArrayFromFile(openGameResForReading(fullPath)) );
+		}
+	}
+
+	auto scriptsControllingPCsFileName = ctrl.GetString("fileNameForScriptControlledPCs");
+	m_scriptRecordsRecruited = ExtractNPCQuoteInfoArrayFromFile(openGameResForReading(NPCDATADIR "/" + scriptsControllingPCsFileName));
+
 	auto json = readJsonDataFileWithSchema("script-records-NPCs.json");
-	for (auto& element : json.toVec())
-	{
+	for (auto& element : json.toVec()) {
 		auto reader = element.toObject();
 		ST::string jsonProfileName = reader.GetString("profile");
 		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
 		m_scriptRecords[jsonProfileId] = NPCQuoteInfo::deserialize(element, this);
 	}
 
-	auto json2 = readJsonDataFileWithSchema("script-records-meanwhiles.json");
-	for (auto& element : json2.toVec())
-	{
-		auto reader = element.toObject();
-		ST::string jsonProfileName = reader.GetString("profile");
-		uint8_t jsonProfileId = (this->getMercProfileInfoByName(jsonProfileName))->profileID;
-		uint8_t jsonMeanwhileId = reader.GetUInt("meanwhileIndex");
-		m_scriptRecordsMeanwhiles.insert_or_assign({ jsonMeanwhileId, jsonProfileId }, NPCQuoteInfo::deserialize(element, this));
+	auto npcFiles = getAllScriptRecords();
+	for (auto& path : npcFiles) {
+		auto splitPath = path.split('\\');
+		ST::string fileName = splitPath[1];
+		if (fileName == scriptsControllingPCsFileName) continue;
+		if (std::isdigit(fileName[0])) {
+			auto binProfileId = fileName.left(3).trim_left("0").to_int();
+			if (binProfileId < NUM_PROFILES && m_scriptRecords[binProfileId] == nullptr) {
+				m_scriptRecords[binProfileId] = ExtractNPCQuoteInfoArrayFromFile(openGameResForReading(path));
+			}
+		}
 	}
-
-	auto json3 = readJsonDataFileWithSchema("script-records-recruited.json");
-	m_scriptRecordsRecruited = NPCQuoteInfo::deserialize(json3.toVec()[0], this);
 }
 
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
