@@ -538,14 +538,12 @@ INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 	return( NO_SLOT );
 }
 
-
-INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
+template <typename Filter>
+INT8 FindAttachmentByFunction(const OBJECTTYPE* const pObj, const Filter&& func)
 {
-	INT8 bLoop;
-
-	for (bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
+	for (INT8 bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
 	{
-		if (pObj->usAttachItem[bLoop] == usItem)
+		if (func(pObj->usAttachItem[bLoop]))
 		{
 			return( bLoop );
 		}
@@ -553,19 +551,24 @@ INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
 	return( ITEM_NOT_FOUND );
 }
 
+INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
+{
+	return FindAttachmentByFunction(pObj, [usItem](UINT16 item) { return item == usItem; });
+}
+
 
 INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClass)
 {
-	INT8 bLoop;
+	return FindAttachmentByFunction(pObj, [uiItemClass](UINT16 item) {
+		return GCM->getItem(item)->getItemClass() == uiItemClass;
+	});
+}
 
-	for (bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
-	{
-		if (GCM->getItem(pObj->usAttachItem[bLoop])->getItemClass() == uiItemClass)
-		{
-			return( bLoop );
-		}
-	}
-	return( ITEM_NOT_FOUND );
+INT8 FindPlatesAttachment(OBJECTTYPE const* pObj)
+{
+	return FindAttachmentByFunction(pObj, [](UINT16 item) {
+		return GCM->getItem(item)->asArmour() && GCM->getItem(item)->asArmour()->getArmourClass() == ARMOURCLASS_PLATE;
+	});
 }
 
 INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon )

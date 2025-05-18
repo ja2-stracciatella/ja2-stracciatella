@@ -110,10 +110,10 @@ INT8 EffectiveArmour(OBJECTTYPE const* const o)
 	if (!item->asArmour()) return 0;
 
 	INT32 armour_val = item->asArmour()->getProtection() * o->bStatus[0] / 100;
-	INT8  const plate_pos  = FindAttachment(o, CERAMIC_PLATES);
+	INT8  const plate_pos  = FindPlatesAttachment(o);
 	if (plate_pos != ITEM_NOT_FOUND)
 	{
-		armour_val += GCM->getItem(CERAMIC_PLATES)->asArmour()->getProtection() * o->bAttachStatus[plate_pos] / 100;
+		armour_val += GCM->getItem(o->usAttachItem[plate_pos])->asArmour()->getProtection() * o->bAttachStatus[plate_pos] / 100;
 	}
 	return armour_val;
 }
@@ -171,12 +171,12 @@ static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 	iValue = GCM->getItem(pObj->usItem)->asArmour()->getExplosivesProtection();
 	iValue = iValue * pObj->bStatus[0] / 100;
 
-	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
+	bPlate = FindPlatesAttachment(pObj);
 	if ( bPlate != ITEM_NOT_FOUND )
 	{
 		INT32 iValue2;
 
-		iValue2 = GCM->getItem(CERAMIC_PLATES)->asArmour()->getProtection();
+		iValue2 = GCM->getItem(pObj->usAttachItem[bPlate])->asArmour()->getProtection();
 		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
 
 		iValue += iValue2;
@@ -2686,7 +2686,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 			// check plates first
 			if ( iSlot == VESTPOS )
 			{
-				bPlatePos = FindAttachment( pArmour, CERAMIC_PLATES );
+				bPlatePos = FindPlatesAttachment(pArmour);
 				if (bPlatePos != -1)
 				{
 					// bullet got through jacket; apply ceramic plate armour
