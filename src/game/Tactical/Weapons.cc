@@ -168,13 +168,8 @@ static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 	{
 		return( 0 );
 	}
-	iValue = GCM->getItem(pObj->usItem)->asArmour()->getProtection();
+	iValue = GCM->getItem(pObj->usItem)->asArmour()->getExplosivesProtection();
 	iValue = iValue * pObj->bStatus[0] / 100;
-	if ( pObj->usItem == FLAK_JACKET || pObj->usItem == FLAK_JACKET_18 || pObj->usItem == FLAK_JACKET_Y )
-	{
-		// increase value for flak jackets!
-		iValue *= 3;
-	}
 
 	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
 	if ( bPlate != ITEM_NOT_FOUND )

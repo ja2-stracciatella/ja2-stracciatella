@@ -22,6 +22,7 @@ struct ArmourModel : ItemModel
 		uint32_t flags,
 		uint8_t armourClass,
 		uint8_t protection,
+		uint8_t explosivesProtection,
 		uint8_t degradePercentage
 	);
 
@@ -31,9 +32,11 @@ struct ArmourModel : ItemModel
 
 	uint8_t getArmourClass() const;
 	uint8_t getProtection() const;
+	uint8_t getExplosivesProtection() const;
 	uint8_t getDegradePercentage() const;
 	protected:
 		uint8_t armourClass;
 		uint8_t protection;
+		uint8_t explosivesProtection;
 		uint8_t degradePercentage;
 };
