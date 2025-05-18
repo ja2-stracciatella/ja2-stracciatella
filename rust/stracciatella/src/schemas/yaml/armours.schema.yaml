@@ -26,6 +26,13 @@ items:
           title: Protection
           description: The protection level of the armour
           $ref: types/uint8.schema.yaml
+        explosivesProtection:
+          title: Explosives Protection
+          description: >
+            The protection level of the armour against explosive damage.
+
+            If not specified explicitly, the protection value is used.
+          $ref: types/uint8.schema.yaml
         degradePercentage:
           title: Degrade Percentage
           description: The percentage of degradation for the armour

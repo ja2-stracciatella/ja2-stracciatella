@@ -30,10 +30,12 @@ ArmourModel::ArmourModel(
 			uint32_t flags,
 			uint8_t armourClass,
 			uint8_t protection,
+			uint8_t explosivesProtection,
 			uint8_t degradePercentage
 	) : ItemModel(itemIndex, std::move(internalName), std::move(shortName), std::move(name), std::move(description), IC_ARMOUR, 0, INVALIDCURS, std::move(inventoryGraphics), std::move(tileGraphic), weight, perPocket, price, coolness, reliability, repairEase, flags) {
 	this->armourClass = armourClass;
 	this->protection = protection;
+	this->explosivesProtection = explosivesProtection;
 	this->degradePercentage = degradePercentage;
 }
 
@@ -51,6 +53,7 @@ ArmourModel* ArmourModel::deserialize(const JsonValue &json, const BinaryData& v
 	auto tileGraphic = TilesetTileIndexModel::deserialize(obj["tileGraphic"]);
 	auto armourClass = deserializeArmourClass(obj.GetString("armourClass"));
 	auto protection = obj.GetUInt("protection");
+	auto explosivesProtection = obj.getOptionalUInt("explosivesProtection", protection);
 	auto degradePercentage = obj.GetUInt("degradePercentage");
 
 	return new ArmourModel(
@@ -70,6 +73,7 @@ ArmourModel* ArmourModel::deserialize(const JsonValue &json, const BinaryData& v
 		flags,
 		armourClass,
 		protection,
+		explosivesProtection,
 		degradePercentage
 	);
 }
@@ -80,6 +84,10 @@ uint8_t ArmourModel::getArmourClass() const {
 
 uint8_t ArmourModel::getProtection() const {
 	return protection;
+}
+
+uint8_t ArmourModel::getExplosivesProtection() const {
+	return explosivesProtection;
 }
 
 uint8_t ArmourModel::getDegradePercentage() const {
