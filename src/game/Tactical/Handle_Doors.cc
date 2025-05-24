@@ -898,19 +898,13 @@ try
 			SoundID uiSoundID = SoundRange<DROPEN_1, DROPEN_3>();
 
 			// OK, check if this door is sliding and is multi-tiled...
-			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR )
+			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR && pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH)
 			{
-				// Get database value...
-				if ( pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1 )
-				{
-					// change sound ID
-					uiSoundID = GARAGE_DOOR_OPEN;
-				}
-				else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
-				{
-					// change sound ID
-					uiSoundID = CURTAINS_OPEN;
-				}
+				uiSoundID = CURTAINS_OPEN;
+			}
+			else if (pStructure->fFlags & STRUCTURE_GARAGEDOOR)
+			{
+				uiSoundID = GARAGE_DOOR_OPEN;
 			}
 			else if (pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
 					pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||
@@ -967,19 +961,13 @@ try
 			SoundID uiSoundID = SoundRange<DRCLOSE_1, DRCLOSE_2>();
 
 			// OK, check if this door is sliding and is multi-tiled...
-			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR )
+			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR && pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH)
 			{
-				// Get database value...
-				if ( pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1 )
-				{
-					// change sound ID
-					uiSoundID = GARAGE_DOOR_CLOSE;
-				}
-				else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
-				{
-					// change sound ID
-					uiSoundID = CURTAINS_CLOSE;
-				}
+				uiSoundID = CURTAINS_CLOSE;
+			}
+			else if (pStructure->fFlags & STRUCTURE_GARAGEDOOR)
+			{
+				uiSoundID = GARAGE_DOOR_CLOSE;
 			}
 			else if (pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
 				pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||

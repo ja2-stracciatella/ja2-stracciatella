@@ -798,7 +798,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								break;
 						}
 					}
-					else if (pStructure->fFlags & STRUCTURE_SLIDINGDOOR && pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1)
+					else if (pStructure->fFlags & STRUCTURE_GARAGEDOOR)
 					{
 						switch( pStructure->ubWallOrientation )
 						{

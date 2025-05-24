@@ -1074,7 +1074,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						else
 						{
 							fDoorIsOpen = doorState & STRUCTURE_OPEN;
-							if (doorState & STRUCTURE_SLIDINGDOOR && ubCnt & 1 && !fDoorIsOpen)
+							if (doorState & STRUCTURE_GARAGEDOOR && ubCnt & 1 && !fDoorIsOpen)
 							{  // cancel diagonal pathfinding through a closed sliding door
 								goto NEXTDIR;
 							}

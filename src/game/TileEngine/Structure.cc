@@ -1374,6 +1374,11 @@ void DebugStructurePage1()
 			ST::string state = s->fFlags & STRUCTURE_OPEN ? "Open" : "Closed";
 			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} sliding door with orientation {}", state, WallOrientationString[s->ubWallOrientation]));
 		}
+		else if (s->fFlags & STRUCTURE_GARAGEDOOR)
+		{
+			ST::string state = s->fFlags & STRUCTURE_OPEN ? "Open" : "Closed";
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} garage door with orientation {}", state, WallOrientationString[s->ubWallOrientation]));
+		}
 		else if (s->fFlags & STRUCTURE_DDOOR_LEFT)
 		{
 			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("DDoorLft with orientation {}", WallOrientationString[s->ubWallOrientation]));
@@ -1566,8 +1571,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 			if (pDBStructure != NULL && (pDBStructure->ubNumberOfTiles > 1 || pDBStructure->fFlags & STRUCTURE_CORPSE))
 			//if (pDBStructure != NULL && pDBStructure->ubNumberOfTiles > 1 )
 			{
-				// ATE: We allow SLIDING DOORS of 2 tile sizes...
-				if (!(pDBStructure->fFlags & STRUCTURE_ANYDOOR) || pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR)
+				if (!(pDBStructure->fFlags & STRUCTURE_ANYDOOR) || pDBStructure->fFlags & STRUCTURE_GARAGEDOOR)
 				{
 					Assert(uiDestVoIndex < zcount);
 					auto & pCurr = zinfo[uiDestVoIndex];
