@@ -1709,7 +1709,14 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 			// We should not have null here if we are given this flag...
 			if (pIntTile != NULL)
 			{
-				sActionGridNo = FindAdjacentGridEx(sel, sIntTileGridNo, &ubDirection, NULL, FALSE, TRUE);
+				if (pStructure->fFlags & (STRUCTURE_ANYDOOR | STRUCTURE_SWITCH))
+				{
+					sActionGridNo = FindAdjacentGridExAdvanced(sel, *pStructure, sIntTileGridNo, &ubDirection);
+				}
+				else
+				{
+					sActionGridNo = FindAdjacentGridEx(sel, sIntTileGridNo, &ubDirection, NULL, FALSE, TRUE);
+				}
 				if (sActionGridNo != -1)
 				{
 					SetUIBusy(sel);
@@ -3144,12 +3151,21 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 		// We should not have null here if we are given this flag...
 		if ( pIntTile != NULL )
 		{
-			sActionGridNo = FindAdjacentGridEx(pSoldier, sIntTileGridNo, NULL, NULL, FALSE, TRUE);
+			if (pStructure->fFlags & (STRUCTURE_ANYDOOR | STRUCTURE_SWITCH))
+			{
+				sActionGridNo = FindAdjacentGridExAdvanced(pSoldier, *pStructure, sIntTileGridNo, nullptr);
+				sAPCost = doorAPs[pSoldier->ubDoorHandleCode];
+			}
+			else
+			{
+				sActionGridNo = FindAdjacentGridEx(pSoldier, sIntTileGridNo, NULL, NULL, FALSE, TRUE);
+				sAPCost = doorAPs[HANDLE_DOOR_OPEN];
+			}
+
 			if ( sActionGridNo == -1 )
 			{
 				sActionGridNo = sIntTileGridNo;
 			}
-			sAPCost  = AP_OPEN_DOOR;
 			sAPCost += UIPlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, fPlot, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 			if ( sActionGridNo != pSoldier->sGridNo )

@@ -150,6 +150,10 @@
   //  vanilla setting: 1.0
   "website_loading_time_scale": 1.0,
 
+  //  Open or close doors diagonally. Makes interior cleanups much easier by reducing exposure when opening doors.
+  //  vanilla setting: false
+  "diagonally_interactable_doors": false,
+
   //  IMP creation tweaks
   "imp": {
     //  IMP attribute point defaults:

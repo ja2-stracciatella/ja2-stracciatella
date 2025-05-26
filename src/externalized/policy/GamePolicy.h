@@ -84,6 +84,8 @@ public:
 
 	float website_loading_time_scale;     // Scales the loading time of websites on the laptop. Lower value means faster loading. Setting this to 0.0 removes the loading entirely.
 
+	bool diagonally_interactable_doors;   // Open doors without exposing your mercs too much. Also affects switches.
+
 	/* IMP */
 	int8_t imp_attribute_max;             // IMP character attribute maximum 0 to 100, vanilla 85
 	int8_t imp_attribute_min;             // IMP character attribute minimum 0 to imp_attribute_max, vanilla 35

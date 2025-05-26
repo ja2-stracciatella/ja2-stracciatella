@@ -5,15 +5,18 @@
 
 enum HandleDoor
 {
-	HANDLE_DOOR_OPEN     = 1,
-	HANDLE_DOOR_EXAMINE  = 2,
-	HANDLE_DOOR_LOCKPICK = 3,
-	HANDLE_DOOR_FORCE    = 4,
-	HANDLE_DOOR_LOCK     = 5,
-	HANDLE_DOOR_UNLOCK   = 6,
-	HANDLE_DOOR_EXPLODE  = 7,
-	HANDLE_DOOR_UNTRAP   = 8,
-	HANDLE_DOOR_CROWBAR  = 9
+	HANDLE_DOOR_DENIED   = 0,
+	HANDLE_DOOR_OPEN            = 1, // standard mode for an open/close interaction, takes 3 APs in vanilla
+	HANDLE_DOOR_OPEN_DIAG_SHORT = 2, // interacting from a diagonally located tile, takes more APs
+	HANDLE_DOOR_OPEN_DIAG_LONG  = 3, // interacting from a diagonally located tile, takes even more APs
+	HANDLE_DOOR_EXAMINE  = 4,
+	HANDLE_DOOR_LOCKPICK = 5,
+	HANDLE_DOOR_FORCE    = 6,
+	HANDLE_DOOR_LOCK     = 7,
+	HANDLE_DOOR_UNLOCK   = 8,
+	HANDLE_DOOR_EXPLODE  = 9,
+	HANDLE_DOOR_UNTRAP   = 10,
+	HANDLE_DOOR_CROWBAR  = 11
 };
 
 

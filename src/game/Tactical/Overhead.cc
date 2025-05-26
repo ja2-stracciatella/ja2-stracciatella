@@ -1,102 +1,103 @@
-#include "Handle_Doors.h"
-#include "Handle_Items.h"
-#include "ItemModel.h"
-#include "MapScreen.h"
-#include "Soldier_Find.h"
-#include "Spread_Burst.h"
-#include "TileDef.h"
-#include "VObject.h"
-#include "WCheck.h"
-#include "Debug.h"
-#include "WorldDef.h"
-#include "WorldMan.h"
-#include "RenderWorld.h"
-#include "Assignments.h"
-#include "Soldier_Control.h"
+#include "AI.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"
-#include "Isometric_Utils.h"
-#include "Event_Pump.h"
-#include "Timer_Control.h"
-#include "Render_Fun.h"
-#include "Interface.h"
-#include "SysUtil.h"
-#include "Points.h"
-#include "Random.h"
-#include "AI.h"
-#include "Interactive_Tiles.h"
-#include "Soldier_Ani.h"
-#include "Overhead.h"
-#include "OppList.h"
-#include "Sound_Control.h"
-#include "Font_Control.h"
-#include "Lighting.h"
-#include "PathAI.h"
-#include "ScreenIDs.h"
-#include "Weapons.h"
-#include "Rotting_Corpses.h"
-#include "Structure.h"
-#include "Interface_Panels.h"
-#include "Message.h"
-#include "Items.h"
-#include "Soldier_Profile.h"
-#include "FOV.h"
-#include "Soldier_Macros.h"
-#include "Soldier_Tile.h"
-#include "Tile_Animation.h"
-#include "Strategic_Merc_Handler.h"
-#include "Strategic_Turns.h"
-#include "Squads.h"
-#include "Morale.h"
+#include "Arms_Dealer_Init.h"
+#include "Assignments.h"
+#include "Auto_Bandage.h"
+#include "Boxing.h"
 #include "Campaign.h"
-#include "Music_Control.h"
+#include "Civ_Quotes.h"
 #include "ContentMusic.h"
-#include "Faces.h"
+#include "Debug.h"
 #include "Dialogue_Control.h"
+#include "Drugs_And_Alcohol.h"
+#include "End_Game.h"
+#include "Event_Pump.h"
+#include "Exit_Grids.h"
+#include "Explosion_Control.h"
+#include "Faces.h"
+#include "Font_Control.h"
+#include "FOV.h"
+#include "Game_Clock.h"
+#include "Game_Event_Hook.h"
+#include "GameSettings.h"
+#include "Handle_Doors.h"
+#include "Handle_Items.h"
+#include "History.h"
+#include "Interactive_Tiles.h"
+#include "Interface.h"
+#include "Interface_Control.h"
+#include "Interface_Dialogue.h"
+#include "Interface_Items.h"
+#include "Interface_Panels.h"
+#include "Interface_Utils.h"
+#include "Isometric_Utils.h"
+#include "ItemModel.h"
+#include "Items.h"
+#include "JAScreens.h"
+#include "Keys.h"
+#include "Lighting.h"
+#include "LOS.h"
+#include "Map_Screen_Helicopter.h"
+#include "MapScreen.h"
+#include "Meanwhile.h"
+#include "Message.h"
+#include "MessageBoxScreen.h"
+#include "Morale.h"
+#include "Music_Control.h"
+#include "NPC.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "PathAI.h"
+#include "Player_Command.h"
+#include "Points.h"
+#include "PreBattle_Interface.h"
 #include "Queen_Command.h"
 #include "Quests.h"
-#include "NPC.h"
-#include "StrategicMap.h"
-#include "Soldier_Functions.h"
-#include "Auto_Bandage.h"
-#include "Game_Event_Hook.h"
-#include "Explosion_Control.h"
-#include "World_Items.h"
+#include "Random.h"
+#include "Render_Fun.h"
+#include "RenderWorld.h"
+#include "Rotting_Corpses.h"
+#include "ScreenIDs.h"
 #include "Smell.h"
-#include "Player_Command.h"
-#include "GameSettings.h"
-#include "MessageBoxScreen.h"
-#include "Game_Clock.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Strategic_Mines.h"
-#include "Interface_Items.h"
-#include "Text.h"
-#include "Keys.h"
-#include "Boxing.h"
-#include "Town_Militia.h"
-#include "Meanwhile.h"
-#include "Map_Screen_Helicopter.h"
-#include "Interface_Control.h"
-#include "Exit_Grids.h"
-#include "JAScreens.h"
-#include "Arms_Dealer_Init.h"
-#include "Interface_Utils.h"
-#include "Civ_Quotes.h"
-#include "Drugs_And_Alcohol.h"
-#include "History.h"
-#include "LOS.h"
-#include "Interface_Dialogue.h"
-#include "Strategic_AI.h"
-#include "End_Game.h"
-#include "Strategic_Status.h"
-#include "PreBattle_Interface.h"
 #include "SmokeEffects.h"
+#include "Soldier_Ani.h"
+#include "Soldier_Control.h"
+#include "Soldier_Find.h"
+#include "Soldier_Functions.h"
+#include "Soldier_Macros.h"
+#include "Soldier_Profile.h"
+#include "Soldier_Tile.h"
+#include "Sound_Control.h"
+#include "Spread_Burst.h"
+#include "Squads.h"
+#include "Strategic_AI.h"
+#include "Strategic_Merc_Handler.h"
+#include "Strategic_Mines.h"
+#include "Strategic_Status.h"
+#include "Strategic_Town_Loyalty.h"
+#include "Strategic_Turns.h"
+#include "StrategicMap.h"
+#include "Structure.h"
+#include "SysUtil.h"
+#include "Text.h"
+#include "Tile_Animation.h"
+#include "TileDef.h"
+#include "Timer_Control.h"
+#include "Town_Militia.h"
+#include "VObject.h"
+#include "WCheck.h"
+#include "Weapons.h"
+#include "World_Items.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
+#include "Logger.h"
 #include "NewStrings.h"
 #include "Soldier.h"
-#include "Logger.h"
 
 #include <string_theory/string>
 
@@ -903,7 +904,7 @@ void ExecuteOverhead(void)
 											}
 											else
 											{
-												if (EnoughPoints(pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, TRUE))
+												if (EnoughPoints(pSoldier, doorAPs[pSoldier->ubDoorHandleCode], BP_OPEN_DOOR, TRUE))
 												{
 													// avoid several problems due to a lack of global action queueing
 													if (DialogueQueueIsEmptyAndNobodyIsTalking() && gCurrentUIMode != LOCKUI_MODE && !Soldier::anyoneHasPendingAction(MERC_GIVEITEM) && !gTacticalStatus.fAutoBandageMode && !gTacticalStatus.fAutoBandagePending)
@@ -3207,6 +3208,117 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 	return FALSE;
 }
 
+struct IntStructAdjTileInfo {
+	StructureFlags doorType;
+	struct RelativeDefines
+	{
+		int16_t incRelToBase; // increment to the grid number of the base tile to get an adjacent tile the door is interactable from
+		uint8_t dirToTurnTo; // direction to turn to when interacting from this tile
+		uint8_t dirToTest; // direction tested (using movement costs) for an interaction-preventing obstacle
+	};
+	RelativeDefines relativeTo[4];
+	uint8_t open_AP;
+	uint8_t close_AP;
+	bool isDiagonal; // relative to the door frame (not the door panel)
+};
+const IntStructAdjTileInfo adjacentTiles[] = {
+	//                         INSIDE_TOP_LEFT                                 INSIDE_TOP_RIGHT                                OUTSIDE_TOP_LEFT                                 OUTSIDE_TOP_RIGHT                                 opening mode                 closing mode                 is interaction diagonal?
+	{ STRUCTURE_DOOR,        {{0,            SOUTH,    DIRECTION_IRRELEVANT}, {0,            EAST,     DIRECTION_IRRELEVANT}, {WORLD_COLS,    NORTH,    DIRECTION_IRRELEVANT}, {1,              WEST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false}, // exterior, directly in front of the threshold
+	{ STRUCTURE_DOOR,        {{WORLD_COLS,   NORTH,    DIRECTION_IRRELEVANT}, {1,            WEST,     DIRECTION_IRRELEVANT}, {0,             SOUTH,    DIRECTION_IRRELEVANT}, {0,              EAST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN_DIAG_LONG,  false}, // interior, directly in front of the threshold
+	{ STRUCTURE_DOOR,        {{1,            SOUTHWEST,EAST},                 {WORLD_COLS,   NORTHEAST,SOUTH},                {WORLD_COLS+1,  NORTHWEST,EAST},                 {WORLD_COLS+1,   NORTHWEST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_DENIED,          true}, // exterior, on the latch side
+	{ STRUCTURE_DOOR,        {{WORLD_COLS+1, NORTHWEST,EAST},                 {WORLD_COLS+1, NORTHWEST,SOUTH},                {1,             SOUTHWEST,EAST},                 {WORLD_COLS,     NORTHEAST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_DENIED,          true}, // interior, on the latch side
+	{ STRUCTURE_DOOR,        {{-1,           SOUTHEAST,WEST},                 {-WORLD_COLS,  SOUTHEAST,NORTH},                {WORLD_COLS-1,  NORTHEAST,WEST},                 {-WORLD_COLS+1,  SOUTHWEST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN,            true}, // exterior, on the hinge side
+	{ STRUCTURE_DOOR,        {{WORLD_COLS-1, NORTHEAST,WEST},                 {-WORLD_COLS+1,SOUTHWEST,NORTH},                {-1,            SOUTHEAST,WEST},                 {-WORLD_COLS,    SOUTHEAST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_DENIED,          true}, // interior, on the hinge side
+	{ STRUCTURE_DOOR,        {{-WORLD_COLS,  SOUTHWEST,NORTHEAST},            {-1,           NORTHEAST,SOUTHWEST},            {WORLD_COLS*2,  NORTHWEST,SOUTHEAST},            {2,              NORTHWEST,SOUTHEAST}           }, HANDLE_DOOR_DENIED,          HANDLE_DOOR_OPEN_DIAG_SHORT, true}, // exterior, pull-closing the lock side
+	{ STRUCTURE_DOOR,        {{-WORLD_COLS-1,SOUTHEAST,NORTHWEST},            {-WORLD_COLS-1,SOUTHEAST,NORTHWEST},            {WORLD_COLS*2-1,NORTHEAST,SOUTHWEST},            {-WORLD_COLS+2,  SOUTHWEST,NORTHEAST}           }, HANDLE_DOOR_DENIED,          HANDLE_DOOR_OPEN_DIAG_SHORT, true}, // exterior, push-closing the lock side
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {WORLD_COLS,    NORTH,    DIRECTION_IRRELEVANT}, {1,              WEST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false},
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {0,             SOUTH,    DIRECTION_IRRELEVANT}, {0,              EAST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false},
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {WORLD_COLS-1,  NORTH,    DIRECTION_IRRELEVANT}, {-WORLD_COLS+1,  WEST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false},
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {-1,            SOUTH,    DIRECTION_IRRELEVANT}, {-WORLD_COLS,    EAST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false},
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {-2,            SOUTHEAST,EAST},                 {-WORLD_COLS*2,  SOUTHEAST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {1,             SOUTHWEST,WEST},                 {-WORLD_COLS*2+1,SOUTHWEST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {WORLD_COLS-2,  NORTHEAST,WEST},                 {WORLD_COLS,     NORTHEAST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_GARAGEDOOR,  {{DIRECTION_IRRELEVANT},                         {DIRECTION_IRRELEVANT},                         {WORLD_COLS+1,  NORTHWEST,EAST},                 {WORLD_COLS+1,   NORTHWEST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_DDOOR_LEFT,  {{0,            SOUTH,    DIRECTION_IRRELEVANT}, {0,            EAST,     DIRECTION_IRRELEVANT}, {WORLD_COLS,    NORTH,    DIRECTION_IRRELEVANT}, {1,              DIRECTION_IRRELEVANT}          }, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false}, // exterior, directly in front of the threshold
+	{ STRUCTURE_DDOOR_LEFT,  {{WORLD_COLS,   NORTH,    DIRECTION_IRRELEVANT}, {1,            WEST,     DIRECTION_IRRELEVANT}, {0,             SOUTH,    DIRECTION_IRRELEVANT}, {0,              DIRECTION_IRRELEVANT}          }, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN_DIAG_LONG,  false}, // interior, directly in front of the threshold
+	{ STRUCTURE_DDOOR_LEFT,  {{1,            SOUTHWEST,EAST},                 {-WORLD_COLS,  SOUTHEAST,NORTH},                {WORLD_COLS+1,  NORTHWEST,EAST},                 {-WORLD_COLS+1,  SOUTHWEST}                     }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_DENIED,          true}, // exterior, on the latch side
+	{ STRUCTURE_DDOOR_LEFT,  {{WORLD_COLS+1, NORTHWEST,EAST},                 {-WORLD_COLS+1,SOUTHWEST,NORTH},                {1,             SOUTHWEST,EAST},                 {-WORLD_COLS,    SOUTHEAST}                     }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_DENIED,          true}, // interior, on the latch side
+	{ STRUCTURE_DDOOR_LEFT,  {{-1,           SOUTHEAST,WEST},                 {WORLD_COLS,   NORTHEAST,SOUTH},                {WORLD_COLS-1,  NORTHEAST,WEST},                 {WORLD_COLS+1,   NORTHWEST}                     }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN,            true}, // exterior, on the hinge side
+	{ STRUCTURE_DDOOR_LEFT,  {{WORLD_COLS-1, NORTHEAST,WEST},                 {WORLD_COLS+1, NORTHWEST,SOUTH},                {-1,            SOUTHEAST,WEST},                 {WORLD_COLS,     NORTHEAST}                     }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_DENIED,          true}, // interior, on the hinge side
+	{ STRUCTURE_DDOOR_LEFT,  {{-WORLD_COLS,  SOUTHWEST,NORTHEAST},            {-1,           SOUTHEAST,NORTHWEST},            {WORLD_COLS*2,  NORTHWEST,SOUTHEAST},            {2,              SOUTHWEST}                     }, HANDLE_DOOR_DENIED,          HANDLE_DOOR_OPEN_DIAG_SHORT, true}, // exterior, pull-closing the lock side
+	{ STRUCTURE_DDOOR_LEFT,  {{-WORLD_COLS-1,SOUTHEAST,NORTHWEST},            {WORLD_COLS-1, NORTHEAST,SOUTHWEST},            {WORLD_COLS*2-1,NORTHEAST,SOUTHWEST},            {WORLD_COLS+2,   NORTHWEST}                     }, HANDLE_DOOR_DENIED,          HANDLE_DOOR_OPEN_DIAG_SHORT, true}, // exterior, push-closing the lock side
+	{ STRUCTURE_DDOOR_RIGHT, {{0,            SOUTH,    DIRECTION_IRRELEVANT}, {0,            EAST,     DIRECTION_IRRELEVANT}, {WORLD_COLS,    NORTH,    DIRECTION_IRRELEVANT}, {1,              WEST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false}, // exterior, directly in front of the threshold
+	{ STRUCTURE_DDOOR_RIGHT, {{WORLD_COLS,   NORTH,    DIRECTION_IRRELEVANT}, {1,            WEST,     DIRECTION_IRRELEVANT}, {0,             SOUTH,    DIRECTION_IRRELEVANT}, {0,              EAST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN_DIAG_LONG,  false}, // interior, directly in front of the threshold
+	{ STRUCTURE_DDOOR_RIGHT, {{-1,           SOUTHEAST,WEST},                 {WORLD_COLS,   NORTHEAST,SOUTH},                {WORLD_COLS-1,  NORTHEAST,WEST},                 {WORLD_COLS+1,   NORTHWEST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_DENIED,          true}, // exterior, on the latch side
+	{ STRUCTURE_DDOOR_RIGHT, {{WORLD_COLS-1, NORTHEAST,WEST},                 {WORLD_COLS+1, NORTHWEST,SOUTH},                {-1,            SOUTHEAST,WEST},                 {WORLD_COLS,     NORTHEAST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_DENIED,          true}, // interior, on the latch side
+	{ STRUCTURE_DDOOR_RIGHT, {{1,            SOUTHWEST,EAST},                 {-WORLD_COLS,  SOUTHEAST,NORTH},                {WORLD_COLS+1,  NORTHWEST,EAST},                 {-WORLD_COLS+1,  SOUTHWEST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN,            true}, // exterior, on the hinge side
+	{ STRUCTURE_DDOOR_RIGHT, {{WORLD_COLS+1, NORTHWEST,EAST},                 {-WORLD_COLS+1,SOUTHWEST,NORTH},                {1,             SOUTHWEST,EAST},                 {-WORLD_COLS,    SOUTHEAST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_DENIED,          true}, // interior, on the hinge side
+	{ STRUCTURE_DDOOR_RIGHT, {{-WORLD_COLS,  SOUTHEAST,NORTHWEST},            {-1,           NORTHEAST,SOUTHWEST},            {WORLD_COLS*2,  NORTHEAST,SOUTHWEST},            {2,              NORTHWEST,SOUTHEAST}           }, HANDLE_DOOR_DENIED,          HANDLE_DOOR_OPEN_DIAG_SHORT, true}, // exterior, pull-closing the lock side
+	{ STRUCTURE_DDOOR_RIGHT, {{-WORLD_COLS+1,SOUTHWEST,NORTHEAST},            {-WORLD_COLS-1,SOUTHEAST,NORTHWEST},            {WORLD_COLS*2+1,NORTHWEST,SOUTHEAST},            {-WORLD_COLS+2,  SOUTHWEST,NORTHEAST}           }, HANDLE_DOOR_DENIED,          HANDLE_DOOR_OPEN_DIAG_SHORT, true}, // exterior, push-closing the lock side
+	{ STRUCTURE_SLIDINGDOOR, {{0,            SOUTH,    DIRECTION_IRRELEVANT}, {0,            EAST,     DIRECTION_IRRELEVANT}, {WORLD_COLS,    NORTH,    DIRECTION_IRRELEVANT}, {1,              WEST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false},
+	{ STRUCTURE_SLIDINGDOOR, {{WORLD_COLS,   NORTH,    DIRECTION_IRRELEVANT}, {1,            WEST,     DIRECTION_IRRELEVANT}, {0,             SOUTH,    DIRECTION_IRRELEVANT}, {0,              EAST,     DIRECTION_IRRELEVANT}}, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false},
+	{ STRUCTURE_SLIDINGDOOR, {{-1,           SOUTHEAST,WEST},                 {-WORLD_COLS,  SOUTHEAST,NORTH},                {-1,            SOUTHEAST,WEST},                 {-WORLD_COLS,    SOUTHEAST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_SLIDINGDOOR, {{WORLD_COLS-1, NORTHEAST,WEST},                 {-WORLD_COLS+1,SOUTHWEST,NORTH},                {WORLD_COLS-1,  NORTHEAST,WEST},                 {-WORLD_COLS+1,  SOUTHWEST,NORTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_SLIDINGDOOR, {{1,            SOUTHWEST,EAST},                 {WORLD_COLS,   NORTHEAST,SOUTH},                {1,             SOUTHWEST,EAST},                 {WORLD_COLS,     NORTHEAST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_SLIDINGDOOR, {{WORLD_COLS+1, NORTHWEST,EAST},                 {WORLD_COLS+1, NORTHWEST,SOUTH},                {WORLD_COLS+1,  NORTHWEST,EAST},                 {WORLD_COLS+1,   NORTHWEST,SOUTH}               }, HANDLE_DOOR_OPEN_DIAG_LONG,  HANDLE_DOOR_OPEN_DIAG_LONG,  true},
+	{ STRUCTURE_SWITCH,      {{WORLD_COLS,   NORTH,    DIRECTION_IRRELEVANT}, {1,            WEST,     DIRECTION_IRRELEVANT}, {DIRECTION_IRRELEVANT},                          {DIRECTION_IRRELEVANT},                         }, HANDLE_DOOR_OPEN,            HANDLE_DOOR_OPEN,            false},
+	{ STRUCTURE_SWITCH,      {{WORLD_COLS-1, NORTHEAST,WEST},                 {WORLD_COLS+1, NORTHWEST,SOUTH},                {DIRECTION_IRRELEVANT},                          {DIRECTION_IRRELEVANT},                         }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_OPEN_DIAG_SHORT, true},
+	{ STRUCTURE_SWITCH,      {{WORLD_COLS+1, NORTHWEST,EAST},                 {-WORLD_COLS+1,SOUTHWEST,NORTH},                {DIRECTION_IRRELEVANT},                          {DIRECTION_IRRELEVANT},                         }, HANDLE_DOOR_OPEN_DIAG_SHORT, HANDLE_DOOR_OPEN_DIAG_SHORT, true},
+};
+
+GridNo FindAdjacentGridExAdvanced(SOLDIERTYPE* soldier, STRUCTURE& intStruct, GridNo baseGridNo, uint8_t* dirToTurnTo)
+{
+	GridNo adjGridNo;
+	int16_t distance = 0;
+	int16_t closest = NOWHERE;
+	GridNo closeGridNo = NOWHERE;
+	IntStructAdjTileInfo::RelativeDefines wallRelDefs;
+
+	// Set default direction
+	if (dirToTurnTo) *dirToTurnTo = soldier->bDirection;
+
+	for (const IntStructAdjTileInfo& tile : adjacentTiles) {
+		if (!(intStruct.fFlags & tile.doorType)) continue;
+		if (!gamepolicy(diagonally_interactable_doors)) {
+			if (tile.isDiagonal) continue;
+			soldier->ubDoorHandleCode = HANDLE_DOOR_OPEN;
+		}
+		else {
+			if (intStruct.fFlags & STRUCTURE_OPEN) {
+				if (tile.close_AP == HANDLE_DOOR_DENIED) continue;
+				soldier->ubDoorHandleCode = tile.close_AP;
+			}
+			else {
+				if (tile.open_AP == HANDLE_DOOR_DENIED) continue;
+				soldier->ubDoorHandleCode = tile.open_AP;
+			}
+		}
+
+		wallRelDefs = tile.relativeTo[intStruct.ubWallOrientation - 1];
+		adjGridNo = baseGridNo + wallRelDefs.incRelToBase;
+		if (wallRelDefs.dirToTest != DIRECTION_IRRELEVANT
+			&& gubWorldMovementCosts[adjGridNo][wallRelDefs.dirToTest][soldier->bLevel] >= TRAVELCOST_BLOCKED) {
+			continue;
+		}
+		if (adjGridNo == soldier->sGridNo) {
+			if (dirToTurnTo) *dirToTurnTo = wallRelDefs.dirToTurnTo;
+			return adjGridNo;
+		}
+		if (tile.isDiagonal) continue;
+
+		if (NewOKDestination(soldier, adjGridNo, true, soldier->bLevel) > 0 &&
+			(distance = PlotPath(soldier, adjGridNo, NO_COPYROUTE, NO_PLOT, soldier->usUIMovementMode, soldier->bActionPoints)) > 0) {
+			if (distance <= closest) {
+				closest = distance;
+				closeGridNo = adjGridNo;
+				if (dirToTurnTo) *dirToTurnTo = wallRelDefs.dirToTurnTo;
+			}
+		}
+	}
+
+	if (closeGridNo == NOWHERE) return -1;
+	return closeGridNo;
+}
 
 INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirection, INT16* psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor)
 {
