@@ -121,6 +121,7 @@ jobs:
       run: ${{ github.workspace }}/.ci/ci-publish.sh 2>&1
       env:
         CI_REF: ${{ github.ref }}
+        CI_TARGET: ${{ matrix.cfg.target }}
         GCLOUD_CREDENTIALS_SALT: ${{ secrets.GCLOUD_CREDENTIALS_SALT }}
         GCLOUD_CREDENTIALS_KEY: ${{ secrets.GCLOUD_CREDENTIALS_KEY }}
         GCLOUD_CREDENTIALS_IV: ${{ secrets.GCLOUD_CREDENTIALS_IV }}

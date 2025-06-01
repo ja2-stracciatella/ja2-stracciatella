@@ -5,6 +5,7 @@
 #
 # Required env variables (nightly and releases):
 #   CI_REF - full reference of the current branch, tag, or pull request
+#   CI_TARGET - target platform we are building for
 #   GCLOUD_CREDENTIALS_KEY, GCLOUD_CREDENTIALS_IV, GCLOUD_CREDENTIALS_SALT - values to decrypt gcloud credentials
 
 set -e
@@ -24,11 +25,13 @@ if [[ "$PUBLISH_DIR" == "" ]]; then
   exit 1
 fi
 
+# Fix used python version for google cloud sdk
 if [[ "$CI_TARGET" == windows-msvc-* ]]; then
-  # Fix used python version for google cloud sdk
   export CLOUDSDK_PYTHON="C:\\Python39\\python.exe"
+elif [[ "$CI_TARGET" == "mac" ]]; then
+  # keep in sync with brew pkg dependency (pinned to 3.12 as of 2025)
+  export CLOUDSDK_PYTHON=python3.12
 fi
-
 
 # Bucket Name to upload to
 BUCKET_NAME=ja2-builds
