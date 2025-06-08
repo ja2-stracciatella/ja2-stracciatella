@@ -3,6 +3,7 @@
         "%s removes %s",
         "There is someone else in the sector...",
         "New recruits cannot arrive there.",
+        "\nCan't be done diagonally",
 
         "__last_one"
 ]

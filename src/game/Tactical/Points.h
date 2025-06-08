@@ -98,7 +98,13 @@
 #define AP_GET_UP			5 // getting up again
 #define AP_ROLL_OVER			2 // flipping from back to stomach
 
-#define AP_OPEN_DOOR			3 // whether successful, or not (locked)
+const int16_t doorAPs[] = {
+	0, // HANDLE_DOOR_DENIED
+	3, // HANDLE_DOOR_OPEN
+	4, // HANDLE_DOOR_OPEN_DIAG_SHORT
+	5  // HANDLE_DOOR_OPEN_DIAG_LONG
+};
+
 #define AP_PICKLOCK			10 // should really be several turns
 #define AP_EXAMINE_DOOR		5 // time to examine door
 #define AP_BOOT_DOOR			8 // time to boot door

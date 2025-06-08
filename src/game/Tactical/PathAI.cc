@@ -6,27 +6,28 @@
 // Author          :       Chris Camfield
 // Date            :       1997-NOV
 
+#include "AI.h"
+#include "Animation_Control.h"
+#include "Animation_Data.h"
+#include "Buildings.h"
+#include "English.h"
+#include "GameSettings.h"
+#include "Handle_Doors.h"
+#include "Input.h"
+#include "Interface.h"
 #include "Isometric_Utils.h"
+#include "Keys.h"
+#include "Logger.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"
+#include "PathAI.h"
+#include "Points.h"
+#include "Random.h"
 #include "Soldier_Control.h"
-#include "Animation_Data.h"
-#include "Animation_Control.h"
-#include "Interface.h"
-#include "Input.h"
-#include "English.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
-#include "PathAI.h"
-#include "Points.h"
-#include "AI.h"
-#include "Random.h"
-#include "Keys.h"
-#include "GameSettings.h"
-#include "Buildings.h"
-#include "Logger.h"
 
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
@@ -1074,7 +1075,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						else
 						{
 							fDoorIsOpen = doorState & STRUCTURE_OPEN;
-							if (doorState & STRUCTURE_SLIDINGDOOR && ubCnt & 1 && !fDoorIsOpen)
+							if (doorState & STRUCTURE_GARAGEDOOR && ubCnt & 1 && !fDoorIsOpen)
 							{  // cancel diagonal pathfinding through a closed sliding door
 								goto NEXTDIR;
 							}
@@ -1388,7 +1389,14 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				}
 				else if (fGoingThroughDoor)
 				{
-					ubAPCost += AP_OPEN_DOOR;
+					if (fPathingForPlayer)
+					{
+						ubAPCost += doorAPs[s->ubDoorHandleCode];
+					}
+					else
+					{
+						ubAPCost += doorAPs[HANDLE_DOOR_OPEN];
+					}
 					fGoingThroughDoor = FALSE;
 				}
 

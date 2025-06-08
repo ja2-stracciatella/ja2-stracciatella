@@ -55,6 +55,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "NewStrings.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1389,14 +1390,20 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnDoorMenuCallback);
 	iActionIcons[idx] = btn;
+	ST::string diagWarning = "";
+	if (gOpenDoorMenu.pSoldier->bDesiredDirection & 1 && idx != OPEN_DOOR_ICON && idx != CANCEL_ICON)
+	{
+		diagWarning = *(GCM->getNewString(NS_DIAGONALITY_WARNING));
+		DisableButton(btn);
+	}
 	if (ap == 0 || !(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		btn->SetFastHelpText(help);
+		btn->SetFastHelpText(help+diagWarning);
 	}
 	else
 	{
 		ST::string zDisp = ST::format("{} ( {} )", help, ap);
-		btn->SetFastHelpText(zDisp);
+		btn->SetFastHelpText(zDisp+diagWarning);
 	}
 	if (disable || (ap != 0 && !EnoughPoints(gOpenDoorMenu.pSoldier, ap, bp, FALSE)))
 	{
@@ -1419,8 +1426,8 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	// Create mouse region over all area to facilitate clicking to end
 	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, DoorMenuBackregionCallback);
 
-	const BOOLEAN d0 = fClosingDoor || AM_AN_EPC(gOpenDoorMenu.pSoldier);
-	BOOLEAN d;
+	const bool d0 = fClosingDoor || AM_AN_EPC(gOpenDoorMenu.pSoldier);
+	bool d;
 
 	d = d0 || !SoldierHasKey(*gOpenDoorMenu.pSoldier, ANYKEY);
 	MakeButtonDoor(USE_KEYRING_ICON, USE_KEYRING_IMAGES, dx + 20, dy, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, d,
@@ -1439,7 +1446,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 			d, pTacticalPopupButtonStrings[EXPLOSIVE_DOOR_ICON]);
 
 	ST::string help = pTacticalPopupButtonStrings[fClosingDoor ? CANCEL_ICON + 1 : OPEN_DOOR_ICON];
-	MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE, help);
+	MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, doorAPs[gOpenDoorMenu.pSoldier->ubDoorHandleCode], BP_OPEN_DOOR, FALSE, help);
 
 	MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx, dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0,
 			pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON]);
@@ -1559,7 +1566,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 		{
 			// Open door normally...
 			// Check APs
-			if (EnoughPoints(gOpenDoorMenu.pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE))
+			if (EnoughPoints(gOpenDoorMenu.pSoldier, doorAPs[gOpenDoorMenu.pSoldier->ubDoorHandleCode], BP_OPEN_DOOR, FALSE))
 			{
 				// Set UI
 				SetUIBusy(gOpenDoorMenu.pSoldier);

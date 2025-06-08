@@ -144,6 +144,8 @@ void InteractWithClosedDoor(SOLDIERTYPE* const pSoldier, HandleDoor const ubHand
 	switch( ubHandleCode )
 	{
 		case HANDLE_DOOR_OPEN:
+		case HANDLE_DOOR_OPEN_DIAG_SHORT:
+		case HANDLE_DOOR_OPEN_DIAG_LONG:
 		case HANDLE_DOOR_UNLOCK:
 		case HANDLE_DOOR_EXAMINE:
 		case HANDLE_DOOR_EXPLODE:
@@ -251,8 +253,10 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 				return;
 			}
 		}
-
-		s.ubDoorHandleCode = HANDLE_DOOR_OPEN;
+		else
+		{
+			s.ubDoorHandleCode = HANDLE_DOOR_OPEN;
+		}
 		ChangeSoldierState(&s, GetAnimStateForInteraction(s, is_door, OPEN_DOOR), 0, FALSE);
 	}
 }
@@ -323,8 +327,14 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 	// If we are already open....no need for lockpick checks, etc
 	if ( pStructure->fFlags & STRUCTURE_OPEN )
 	{
-		// Set costs for these
-		sAPCost = AP_OPEN_DOOR;
+		if (IsOnOurTeam(*pSoldier))
+		{
+			sAPCost = doorAPs[pSoldier->ubDoorHandleCode];
+		}
+		else
+		{
+			sAPCost = doorAPs[HANDLE_DOOR_OPEN];
+		}
 		sBPCost = BP_OPEN_DOOR;
 
 		fHandleDoor = TRUE;
@@ -348,7 +358,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 					{
 						// Set costs for these
 						// Set AP costs to that of opening a door
-						sAPCost = AP_OPEN_DOOR;
+						sAPCost = doorAPs[pSoldier->ubDoorHandleCode];
 						sBPCost = BP_OPEN_DOOR;
 
 						ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
@@ -417,12 +427,13 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 				switch (pSoldier->ubDoorHandleCode)
 				{
 					case HANDLE_DOOR_OPEN:
+					case HANDLE_DOOR_OPEN_DIAG_SHORT:
+					case HANDLE_DOOR_OPEN_DIAG_LONG:
 
 						// If we have no lock on door...
 						if ( pDoor == NULL )
 						{
-							// Set costs for these
-							sAPCost = AP_OPEN_DOOR;
+							sAPCost = doorAPs[pSoldier->ubDoorHandleCode];
 							sBPCost = BP_OPEN_DOOR;
 
 							// Open if it's not locked....
@@ -739,7 +750,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 		else
 		{
 			// Set costs for these
-			sAPCost = AP_OPEN_DOOR;
+			sAPCost = doorAPs[HANDLE_DOOR_OPEN];
 			sBPCost = BP_OPEN_DOOR;
 
 			// Open if it's not locked....
@@ -898,19 +909,13 @@ try
 			SoundID uiSoundID = SoundRange<DROPEN_1, DROPEN_3>();
 
 			// OK, check if this door is sliding and is multi-tiled...
-			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR )
+			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR && pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH)
 			{
-				// Get database value...
-				if ( pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1 )
-				{
-					// change sound ID
-					uiSoundID = GARAGE_DOOR_OPEN;
-				}
-				else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
-				{
-					// change sound ID
-					uiSoundID = CURTAINS_OPEN;
-				}
+				uiSoundID = CURTAINS_OPEN;
+			}
+			else if (pStructure->fFlags & STRUCTURE_GARAGEDOOR)
+			{
+				uiSoundID = GARAGE_DOOR_OPEN;
 			}
 			else if (pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
 					pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||
@@ -967,19 +972,13 @@ try
 			SoundID uiSoundID = SoundRange<DRCLOSE_1, DRCLOSE_2>();
 
 			// OK, check if this door is sliding and is multi-tiled...
-			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR )
+			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR && pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH)
 			{
-				// Get database value...
-				if ( pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1 )
-				{
-					// change sound ID
-					uiSoundID = GARAGE_DOOR_CLOSE;
-				}
-				else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
-				{
-					// change sound ID
-					uiSoundID = CURTAINS_CLOSE;
-				}
+				uiSoundID = CURTAINS_CLOSE;
+			}
+			else if (pStructure->fFlags & STRUCTURE_GARAGEDOOR)
+			{
+				uiSoundID = GARAGE_DOOR_CLOSE;
 			}
 			else if (pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
 				pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||

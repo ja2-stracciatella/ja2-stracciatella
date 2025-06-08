@@ -1,8 +1,9 @@
 [
         "%s надел %s",
         "%s снял %s",
-        "There is someone else in the sector...",
-        "New recruits cannot arrive there.",
+        "В секторе есть кто-то ещё...",
+        "Пополнение не может прибыть сюда.",
+        "\nНельзя совершить диагонально",
 
         "__last_one"
 ]
