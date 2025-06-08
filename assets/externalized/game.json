@@ -150,7 +150,7 @@
   //  vanilla setting: 1.0
   "website_loading_time_scale": 1.0,
 
-  //  Open or close doors diagonally. Makes interior cleanups much easier by reducing exposure when opening doors.
+  //  Open or close doors diagonally (unless AI-controlled). Makes room clearings much easier by reducing exposure when opening doors.
   //  vanilla setting: false
   "diagonally_interactable_doors": false,
 

@@ -3219,7 +3219,7 @@ struct IntStructAdjTileInfo {
 	RelativeDefines relativeTo[4];
 	uint8_t open_AP;
 	uint8_t close_AP;
-	bool isDiagonal; // relative to the door frame (not the door panel)
+	bool isDiagonal;
 };
 const IntStructAdjTileInfo adjacentTiles[] = {
 	//                         INSIDE_TOP_LEFT                                 INSIDE_TOP_RIGHT                                OUTSIDE_TOP_LEFT                                 OUTSIDE_TOP_RIGHT                                 opening mode                 closing mode                 is interaction diagonal?
