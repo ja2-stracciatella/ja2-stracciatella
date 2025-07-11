@@ -2171,7 +2171,7 @@
         "Czy na pewno chcesz usunąć zapisaną grę o nazwie \"%s\"?",
         "Uwaga:",
         "Próba wczytania zapisu ze starszej wersji. Kontynuacja spowoduje automatyczną aktualizację zapisu.",
-        "Masz włączone inne mody, niż zapis gry. Mody mogą nie działać poprawnie.",
+        "Masz włączone inne mody (lub ich kolejność), niż zapis gry. Mody mogą nie działać poprawnie.",
         "Kontynuować?",
         "Czy na pewno chcesz nadpisać zapisaną grę o nazwie \"%s\"?",
         "Zapisuję...",
