@@ -2171,7 +2171,7 @@
         "Spielstand mit Namen \"%s\" wirklich löschen?",
         "Achtung:",
         "Versuche, älteren Spielstand zu laden. Das Laden wird den Spielstand automatisch aktualisieren.",
-        "Der Spielstand wurde mit anderen Mods geschrieben as aktuell aktiviert sind.",
+        "Der Spielstand wurde mit anderen Mods (oder einer anderen Reihenfolge) geschrieben as aktuell aktiviert sind.",
         "Möchten Sie fortfahren?",
         "Spielstand mit Namen \"%s\" wirklich überschreiben?",
         "Speichere...",

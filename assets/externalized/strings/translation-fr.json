@@ -2171,7 +2171,7 @@
         "Êtes-vous sûr de vouloir supprimer la sauvegarde nommée \"%s\"?",
         "Attention:",
         "Tentative de chargement de la sauvegarde à partir d'une ancienne version. Continuer mettra automatiquement à jour la sauvegarde.",
-        "Vous avez activé différents mods avec lesquels la sauvegarde a été enregistrée. Les mods peuvent ne pas fonctionner correctement.",
+        "Vous avez activé différents mods (ou leur ordre de priorité) avec lesquels la sauvegarde a été enregistrée. Les mods peuvent ne pas fonctionner correctement.",
         "Voulez-vous continuer?",
         "Etes-vous sûr de vouloir écraser la sauvegarde nommée \"%s\"?",
         "Enregistrement...",

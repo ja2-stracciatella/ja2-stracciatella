@@ -2171,7 +2171,7 @@
         "Are you sure you want to delete the saved game named \"%s\"?",
         "Attention:",
         "Attempting to load save from an older version. Continuing will automatically update the save.",
-        "You have different mods enabled, than the savegame was saved with. The mods might not work correctly.",
+        "The savegame was saved with mods (or their load order) that are different from those currently enabled. The mods might not work correctly.",
         "Do you want to continue?",
         "Are you sure you want to overwrite the saved game named \"%s\"?",
         "Saving...",

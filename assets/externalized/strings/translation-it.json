@@ -2171,7 +2171,7 @@
         "Sei sicuro di voler eliminare la partita salvata denominata \"%s\"",
         "Attenzione:",
         "Tentativo di caricare la partita salvata da una versione precedente. Continuando aggiornerà automaticamente la partita salvata.",
-        "Hai diverse mod abilitate, rispetto a quelle con cui è stato salvata la partita. Le mod potrebbero non funzionare correttamente.",
+        "Hai diverse mod (o loro ordine di caricamento) abilitate, rispetto a quelle con cui è stato salvata la partita. Le mod potrebbero non funzionare correttamente.",
         "Vuoi continuare?",
         "Sei sicuro di voler sovrascrivere la partita salvata denominata \"%s\"?",
         "Salvataggio in corso...",
