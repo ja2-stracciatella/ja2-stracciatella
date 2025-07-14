@@ -1291,7 +1291,7 @@ void DefaultContentManager::loadTranslationTable()
 
 void DefaultContentManager::loadAllScriptRecords()
 {
-	// hack for failures during unit-testing
+	// hack for avoiding failures during unit-testing
 	if (!doesGameResExists(BINARYDATADIR "/prof.dat")) return;
 
 	auto ctrl = readJsonDataFileWithSchema("script-records-control.json").toObject();
@@ -1313,6 +1313,7 @@ void DefaultContentManager::loadAllScriptRecords()
 	auto scriptsControllingPCsFileName = ctrl.GetString("fileNameForScriptControlledPCs");
 	m_scriptRecordsRecruited = ExtractNPCQuoteInfoArrayFromFile(openGameResForReading(NPCDATADIR "/" + scriptsControllingPCsFileName));
 
+	bool jsonIsOnStraccLayer = (openGameResForReadingOnAllLayers("script-records-NPCs.json").size() == 1);
 	auto json = readJsonDataFileWithSchema("script-records-NPCs.json");
 	for (auto& element : json.toVec()) {
 		auto reader = element.toObject();
@@ -1328,8 +1329,12 @@ void DefaultContentManager::loadAllScriptRecords()
 		if (fileName == scriptsControllingPCsFileName) continue;
 		if (std::isdigit(fileName[0])) {
 			auto binProfileId = fileName.left(3).trim_left("0").to_int();
-			if (binProfileId < NUM_PROFILES && m_scriptRecords[binProfileId] == nullptr) {
-				m_scriptRecords[binProfileId] = ExtractNPCQuoteInfoArrayFromFile(openGameResForReading(path));
+			if (binProfileId < NUM_PROFILES) {
+				auto binVersions = openGameResForReadingOnAllLayers(path);
+				bool binIsOnModLayer = (binVersions.size() > 1);
+				if (m_scriptRecords[binProfileId] == nullptr || (binIsOnModLayer && jsonIsOnStraccLayer)) {
+					m_scriptRecords[binProfileId] = ExtractNPCQuoteInfoArrayFromFile(binVersions[0].get());
+				}
 			}
 		}
 	}
