@@ -1106,13 +1106,14 @@ bool DefaultContentManager::loadStrategicLayerData()
 		m_factParams[params->fact] = params;
 	}
 
+	bool jsonIsOnModLayer = (openGameResForReadingOnAllLayers("script-records-NPCs.json").size() > 1);
 	json = readJsonDataFileWithSchema("strategic-mines.json");
 
 	uint8_t i = 0;
 	for (auto& element : json.toVec())
 	{
 		m_mines.push_back(
-			MineModel::deserialize(i, element, this)
+			MineModel::deserialize(i, element, this, jsonIsOnModLayer)
 		);
 		i++;
 	}

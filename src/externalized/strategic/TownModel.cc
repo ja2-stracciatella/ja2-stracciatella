@@ -27,7 +27,7 @@ TownModel* TownModel::deserialize(const JsonValue& json)
 
 	return new TownModel(
 		obj.GetInt("townId"),
-		obj.GetString("internalName"),
+		obj.getOptionalString("internalName"),
 		std::move(sectorIDs),
 		townPoint,
 		obj.getOptionalBool("isMilitiaTrainingAllowed")

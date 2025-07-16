@@ -7,6 +7,7 @@
  *
  * Field definitions:
  *  - entranceSector:    Sector of the mine entrance on the surface level.
+ *  - associatedTownId:    DEPRECATED in favour of associatedTown. Present here only for backward compatibility with pre-22 version mods that don't have internalName property in strategic-map-towns.json.
  *  - associatedTown:    Name of the associated town, refer to strategic-map-towns.json.
  *  - mineType:    Either "GOLD_MINE" or "SILVER_MINE".
  *  - headMinerAssigned:    True if there is a specific head miner assigned (in merc profile) to the entrance sector. If not, a head miner will be randomly assigned. Either way, the mine entrance sector must have the head miner slot(s) placed, unless it is abandoned.
@@ -19,6 +20,7 @@
 [
     {
         "entranceSector": "D4",
+        "associatedTownId": 7, // deprecated
         "associatedTown": "SAN_MONA",
         "mineType": "GOLD_MINE",
         "minimumMineProduction": 0, // abandoned
@@ -28,6 +30,7 @@
     },
     {
         "entranceSector": "D13",
+        "associatedTownId": 2, // deprecated
         "associatedTown": "DRASSEN",
         "mineType": "SILVER_MINE",
         "delayDepletion": true,
@@ -39,6 +42,7 @@
     },
     {
         "entranceSector": "I14",
+        "associatedTownId": 3, // deprecated
         "associatedTown": "ALMA",
         "mineType": "SILVER_MINE",
         "headMinerAssigned": true, // Matt is always the head miner here
@@ -50,6 +54,7 @@
     },
     {
         "entranceSector": "H8",
+        "associatedTownId": 6, // deprecated
         "associatedTown": "CAMBRIA",
         "mineType": "SILVER_MINE",
         "minimumMineProduction": 1500,
@@ -59,6 +64,7 @@
     },
     {
         "entranceSector": "B2",
+        "associatedTownId": 12, // deprecated
         "associatedTown": "CHITZENA",
         "mineType": "SILVER_MINE",
         "minimumMineProduction": 500,
@@ -69,6 +75,7 @@
     },
     {
         "entranceSector": "H3",
+        "associatedTownId": 4, // deprecated
         "associatedTown": "GRUMM",
         "mineType": "GOLD_MINE",
         "minimumMineProduction": 2000,

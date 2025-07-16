@@ -85,7 +85,7 @@ class JsonObject
 		double getOptionalDouble(const char* name, double defaultValue = 0) const;
 		int getOptionalInt(const char* name, int defaultValue = 0) const;
 		unsigned int getOptionalUInt(const char* name, unsigned int defaultValue = 0) const;
-		const ST::string getOptionalString(const char* name, const ST::string defaultValue = {}) const;
+		ST::string getOptionalString(const char* name, const ST::string defaultValue = {}) const;
 		bool has(const char* name) const;
 		std::vector<ST::string> keys() const;
 		void set(const char* name, JsonValue value);
