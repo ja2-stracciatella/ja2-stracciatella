@@ -42,7 +42,7 @@ items:
       type: boolean
   required:
   - townId
-  - internalName
+  #- internalName #commented out for backward compatibility with pre-22 version mods
   - sectors
   - townPoint
   - isMilitiaTrainingAllowed
