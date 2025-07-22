@@ -46,14 +46,14 @@ std::vector<std::array<uint8_t, 2>> readMineSectors(const JsonValue& sectorsJson
 	return sectors;
 }
 
-MineModel* MineModel::deserialize(uint8_t index, const JsonValue& json, const ContentManager* contentManager)
+MineModel* MineModel::deserialize(uint8_t index, const JsonValue& json, const ContentManager* contentManager, const bool jsonIsOnModLayer)
 {
 	auto obj = json.toObject();
 	auto entrance = JsonUtility::parseSectorID(obj["entranceSector"]);
 	auto mineSectors = readMineSectors(obj["mineSectors"]);
 
 	uint8_t townId = obj.getOptionalUInt("associatedTownId");
-	if (townId) SLOGW("Property `associatedTownId` in strategic-mines.json has been deprecated. Use `associatedTown` instead.");
+	if (townId && jsonIsOnModLayer) SLOGW("Property `associatedTownId` in strategic-mines.json has been deprecated. Use `associatedTown` instead.");
 
 	return new MineModel(
 		index,

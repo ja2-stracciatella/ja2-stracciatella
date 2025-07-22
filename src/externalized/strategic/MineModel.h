@@ -29,6 +29,6 @@ public:
 
 	const int16_t faceDisplayYOffset;
 
-	static MineModel* deserialize(uint8_t index, const JsonValue& json, const ContentManager* contentManager);
+	static MineModel* deserialize(uint8_t index, const JsonValue& json, const ContentManager* contentManager, const bool jsonIsOnModLayer);
 	static void validateData(std::vector<const MineModel*>& models);
 };
