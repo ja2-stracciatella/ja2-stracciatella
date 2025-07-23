@@ -11,6 +11,9 @@ panic = "abort"
 
 [profile.release]
 rpath = true
-debug = true
 panic = "abort"
 
+[profile.release-with-debug]
+inherits = "release"
+debug = true
+strip = false
