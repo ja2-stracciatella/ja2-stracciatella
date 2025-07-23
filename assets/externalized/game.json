@@ -151,6 +151,7 @@
   "website_loading_time_scale": 1.0,
 
   //  Open or close doors diagonally (unless AI-controlled). Makes room clearings much easier by reducing exposure when opening doors.
+  //  Your character must already stand on the door-adjacent tile to effect diagonal interaction.
   //  vanilla setting: false
   "diagonally_interactable_doors": false,
 
