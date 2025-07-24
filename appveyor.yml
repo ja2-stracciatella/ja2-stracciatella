@@ -39,7 +39,7 @@ cache:
   - '%USERPROFILE%\.cargo\registry\index\ -> rust\Cargo.lock, rust\Cargo.toml'
   - '%USERPROFILE%\.cargo\registry\cache\ -> rust\Cargo.lock, rust\Cargo.toml'
   - '%USERPROFILE%\.cargo\git\db\ -> rust\Cargo.lock, rust\Cargo.toml'
-  - '%USERPROFILE%\.rustup\ -> rust-toolchain'
+  - '%USERPROFILE%\.rustup\ -> min-rust-version'
   # sccache's cache
   - '%LOCALAPPDATA%\Mozilla\sccache'
   # sccache binary
