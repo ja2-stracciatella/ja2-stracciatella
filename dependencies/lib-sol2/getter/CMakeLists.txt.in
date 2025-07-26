@@ -22,4 +22,6 @@ externalproject_add(get-sol2
         BUILD_COMMAND       ""
         INSTALL_COMMAND     ""
         TEST_COMMAND        ""
+    # called several times, so don't error out when a patched state is detected
+    PATCH_COMMAND grep -q std::in_place, single/include/sol/sol.hpp || { sed -i s,\\r,, single/include/sol/sol.hpp && patch -p3 < ${CMAKE_CURRENT_SOURCE_DIR}/gcc-15.patch; }
 )
