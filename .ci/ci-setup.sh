@@ -46,7 +46,10 @@ elif [[ "$CI_TARGET" == "mac" ]]; then
     macOS-install-via-brew sccache
 
     # fltk for the launcher
-    macOS-install-via-brew fltk
+    macOS-install-via-brew fltk@1.3
+    echo 'export PATH="/opt/homebrew/opt/fltk@1.3/bin:$PATH"' >> ~/.bash_profile
+    source ~/.bash_profile
+
     # gtest
     macOS-install-via-brew googletest
 
