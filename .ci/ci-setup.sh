@@ -45,6 +45,14 @@ elif [[ "$CI_TARGET" == "mac" ]]; then
     # sccache for compilation caching
     macOS-install-via-brew sccache
 
+    # fltk for the launcher
+    macOS-install-via-brew fltk@1.3
+    echo 'export PATH="/opt/homebrew/opt/fltk@1.3/bin:$PATH"' >> ~/.bash_profile
+    source ~/.bash_profile
+
+    # gtest
+    macOS-install-via-brew googletest
+
     # Google Cloud SDK for Artifact Upload
     macOS-install-via-brew-cask google-cloud-sdk
     source "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
