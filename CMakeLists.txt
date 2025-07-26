@@ -337,11 +337,7 @@ if (UNIX AND NOT MINGW AND NOT APPLE AND NOT ANDROID)
         FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.svg
         RENAME ja2-stracciatella.svg
         DESTINATION share/icons/hicolor/scalable/apps)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|DragonFly|OpenBSD")
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-linux/ja2_manpage DESTINATION man/man6 RENAME ja2.6)
-    else()
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-linux/ja2_manpage DESTINATION share/man/man6 RENAME ja2.6)
-    endif()
+    install(DIRECTORY "assets/distr-files-linux/man6" TYPE MAN)
 elseif(ANDROID)
     install(TARGETS ${JA2_BINARY} LIBRARY DESTINATION .)
 else()
