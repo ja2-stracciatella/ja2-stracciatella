@@ -1325,7 +1325,7 @@ void DefaultContentManager::loadAllScriptRecords()
 
 	auto npcFiles = getAllScriptRecords();
 	for (auto& path : npcFiles) {
-		auto splitPath = path.split('\\');
+		auto splitPath = path.split(PATH_SEPARATOR);
 		ST::string fileName = splitPath[1];
 		if (fileName == scriptsControllingPCsFileName) continue;
 		if (std::isdigit(fileName[0])) {
