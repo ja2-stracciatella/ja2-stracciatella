@@ -1,0 +1,40 @@
+--- ./lib-sol2/src/single/include/sol/sol.hpp.orig	2025-07-26 14:05:48.679789792 +0200
++++ ./lib-sol2/src/single/include/sol/sol.hpp	2025-07-26 14:45:46.719189562 +0200
+@@ -5150,7 +5150,7 @@
+ 			static_assert(std::is_constructible<T, Args&&...>::value, "T must be constructible with Args");
+ 
+ 			*this = nullopt;
+-			this->construct(std::forward<Args>(args)...);
++			new (static_cast<void*>(this)) optional(std::in_place, std::forward<Args>(args)...);
+ 			return value();
+ 		}
+ 
+@@ -6056,7 +6056,8 @@
+ 			static_assert(std::is_constructible<T, Args&&...>::value, "T must be constructible with Args");
+ 
+ 			*this = nullopt;
+-			this->construct(std::forward<Args>(args)...);
++			new (static_cast<void*>(this)) optional(std::in_place, std::forward<Args>(args)...);
++			return **this;
+ 		}
+ 
+ 		/// Swaps this optional with the other.
+@@ -14685,7 +14686,17 @@
+ 						lua_getglobal(L, &key[0]);
+ 					}
+ 					else {
+-						lua_getfield(L, tableindex, &key[0]);
++						if constexpr (std::is_same_v<std::decay_t<Key>, const char*>) {
++							// Handle const char* case
++							if (key != nullptr) {
++								lua_getfield(L, tableindex, key);
++							} else {
++								push(L, lua_nil);
++							}
++						} else {
++							// Handle std::string case
++							lua_getfield(L, tableindex, key.c_str());
++						}
+ 					}
+ 				}
+ #if SOL_LUA_VESION_I_ >= 503
