@@ -39,8 +39,20 @@ set_target_properties(${LAUNCHER_BINARY}
 
 add_dependencies(${LAUNCHER_BINARY} stracciatella)
 
+if (NOT LOCAL_FLTK_LIB AND APPLE)
+    find_package(PNG REQUIRED)
+    # force static linking
+    target_link_libraries(${LAUNCHER_BINARY} PRIVATE
+        /opt/homebrew/opt/fltk@1.3/lib/libfltk_forms.a /opt/homebrew/opt/fltk@1.3/lib/libfltk_images.a /opt/homebrew/opt/fltk@1.3/lib/libfltk.a ${PNG_LIBRARIES}
+    )
+else ()
+    target_link_libraries(${LAUNCHER_BINARY} PRIVATE
+        ${FLTK_LIBRARIES}
+    )
+endif ()
+
+
 target_link_libraries(${LAUNCHER_BINARY} PRIVATE
-    ${FLTK_LIBRARIES}
     ${STRACCIATELLA_LIBRARIES}
     ${SDL2_LIBRARY}
     string_theory-internal
