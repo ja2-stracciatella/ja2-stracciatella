@@ -543,7 +543,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 					for (ubTileIndex = 0; ubTileIndex < pDBStructure->ubNumberOfTiles; ++ubTileIndex)
 					{
 						STRUCTURE const* const pOtherExistingStructure = FindStructureByID(sOtherGridNo, pExistingStructure->usStructureID);
-						if (pOtherExistingStructure) return FALSE;
+						if (pOtherExistingStructure && !(pOtherExistingStructure->fFlags & STRUCTURE_WALL)) return FALSE;
 					}
 				}
 			}
