@@ -47,7 +47,7 @@ elif [[ "$CI_TARGET" == "mac" ]]; then
 
     # Google Cloud SDK for Artifact Upload
     macOS-install-via-brew-cask google-cloud-sdk
-    source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
+    source "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
 
     # Rust via Rustup
     unix-install-rustup
