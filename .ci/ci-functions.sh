@@ -1,7 +1,7 @@
 ## Setup related functions
 
 unix-install-rustup () {
-    curl --proto '=https' --tlsv1.2 -sSfL https://sh.rustup.rs | sh -s -- -y --default-toolchain=$(cat ./rust-toolchain)
+    curl --proto '=https' --tlsv1.2 -sSfL https://sh.rustup.rs | sh -s -- -y --default-toolchain=$(cat ./min-rust-version)
     # Additional toolchains can be passed which are then installed
     for var in "$@"
     do
@@ -81,7 +81,7 @@ windows-install-via-chocolatey () {
 windows-install-rustup () {
     # Difference to the Unix version: This only installs the one toolchain we pass in
     curl -sSf -o rustup-init.exe https://win.rustup.rs/
-    ./rustup-init.exe -y --default-toolchain "$(cat ./rust-toolchain)-$1" --default-host "$1"
+    ./rustup-init.exe -y --default-toolchain "$(cat ./min-rust-version)-$1" --default-host "$1"
     export PATH="$PATH;$USERPROFILE\.cargo\bin"
 }
 

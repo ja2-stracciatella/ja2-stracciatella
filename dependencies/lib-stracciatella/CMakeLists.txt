@@ -6,10 +6,11 @@ set(STRACCIATELLA_LIB "${STRACCIATELLA_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}st
 set(STRACCIATELLA_BIN_ja2-resource-pack "${STRACCIATELLA_DIR}/bin/ja2-resource-pack${CMAKE_EXECUTABLE_SUFFIX}")
 
 # find cargo and rustc
-file(READ "${CMAKE_SOURCE_DIR}/rust-toolchain" MIN_RUST_VERSION)
+file(READ "${CMAKE_SOURCE_DIR}/min-rust-version" MIN_RUST_VERSION)
 string(STRIP "${MIN_RUST_VERSION}" MIN_RUST_VERSION)
 find_package(Cargo ${MIN_RUST_VERSION} REQUIRED)
 find_package(Rustc ${MIN_RUST_VERSION} REQUIRED)
+
 if (MINGW)
     set(RUSTC_STATICLIB_PREFIX "lib")
     set(RUSTC_STATICLIB_SUFFIX ".a")
