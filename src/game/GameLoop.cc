@@ -224,27 +224,30 @@ try
 catch (std::exception const& e)
 {
 	guiPreviousOptionScreen = guiCurrentScreen;
-	char const* what;
+	char const* what = "file";
 	ST::string success = "failed";
 	char const* attach = "";
 
-	if (gfEditMode && GameMode::getInstance()->isEditorMode())
+	if (guiCurrentScreen != MAINMENU_SCREEN)
 	{
-		what = "map";
-		if (SaveWorldAbsolute("error.dat"))
+		if (gfEditMode && GameMode::getInstance()->isEditorMode())
 		{
-			success = "succeeded (error.dat)";
-			attach  = " Do not forget to attach the map.";
+			what = "map";
+			if (SaveWorldAbsolute("error.dat"))
+			{
+				success = "succeeded (error.dat)";
+				attach = " Do not forget to attach the map.";
+			}
 		}
-	}
-	else
-	{
-		what = "savegame";
-		auto saveName = GetErrorSaveName();
-		if (SaveGame(saveName, "error savegame"))
+		else
 		{
-			success = ST::format("succeeded ({}.sav)", saveName);
-			attach  = " Do not forget to attach the savegame.";
+			what = "savegame";
+			auto saveName = GetErrorSaveName();
+			if (SaveGame(saveName, "error savegame"))
+			{
+				success = ST::format("succeeded ({}.sav)", saveName);
+				attach = " Do not forget to attach the savegame.";
+			}
 		}
 	}
 	ST::string msg = ST::format(
