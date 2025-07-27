@@ -252,6 +252,7 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 				}
 				return;
 			}
+			if (!is_door) s.ubDoorHandleCode = HANDLE_DOOR_OPEN;
 		}
 		else
 		{
