@@ -28,6 +28,7 @@ externalproject_add(string_theory
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DST_ENABLE_STL_FILESYSTEM:BOOL=OFF
         -DST_BUILD_TESTS:BOOL=OFF
+        -DCMAKE_INSTALL_MESSAGE=LAZY
     BUILD_COMMAND "${CMAKE_COMMAND}" --build . --config RelWithDebInfo
     INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --config RelWithDebInfo --target install
     BUILD_ALWAYS 1
