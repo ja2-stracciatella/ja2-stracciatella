@@ -2413,8 +2413,10 @@ static int16_t PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, uint8_t ubTacticalDi
 	dirToggle = true;
 
 	do { // OK, here we go back one, check for OK destination...		
-		if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) && FindBestPath(pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE)) {
-			return(sGridNo);
+		if (sGridNo > 0 && sGridNo < MAPLENGTH) {
+			if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) && FindBestPath(pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE)) {
+				return(sGridNo);
+			}
 		}
 		// If here, try another place! ( alternate up/down or left/right ALONG the edge of the sector )
 		sGridNo = sStartGridNo;
@@ -2430,7 +2432,7 @@ static int16_t PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, uint8_t ubTacticalDi
 			}
 		}
 		dirToggle = !dirToggle;
-	} while (true);
+	} while (bAdjustedDist != std::numeric_limits<uint8_t>::max());
 
 	return(NOWHERE);
 }
