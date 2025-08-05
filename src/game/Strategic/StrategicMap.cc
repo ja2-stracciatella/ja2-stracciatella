@@ -1368,7 +1368,7 @@ static UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection(UINT8 ubTactical
 }
 
 
-static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirection);
+static int16_t PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, uint8_t ubTacticalDirection);
 
 
 void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 sAdditionalData )
@@ -2368,262 +2368,73 @@ void LoadStrategicInfoFromSavedFile(HWFILE const f)
 }
 
 
-static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirection)
+static int16_t PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, uint8_t ubTacticalDirection)
 {
-	INT16  sGridNo, sStartGridNo, sOldGridNo;
-	INT8   bOdd = 1, bOdd2 = 1;
-	UINT8  bAdjustedDist = 0;
-	UINT32 cnt;
+	int16_t sGridNo = pSoldier->sGridNo;
+	int16_t sStartGridNo = pSoldier->sGridNo;
+	int16_t sOldGridNo = pSoldier->sGridNo;
+	bool    dirToggle = true;
+	uint8_t  bAdjustedDist = 0;
+	uint32_t cnt;
+	// EAST
+	int16_t incrementToEdge = DirIncrementer[NORTH];
+	int16_t altIncrementToEdge = DirIncrementer[EAST];
+	int16_t incrementAlongEdge = DirIncrementer[NORTHWEST];
+	int16_t altIncrementAlongEdge = DirIncrementer[SOUTHEAST];
 
-	switch( ubTacticalDirection )
-	{
-
-		case EAST:
-
-			sGridNo      = pSoldier->sGridNo;
-			sStartGridNo = pSoldier->sGridNo;
-			sOldGridNo   = pSoldier->sGridNo;
-
-			// Move directly to the right!
-			while( GridNoOnVisibleWorldTile( sGridNo ) )
-			{
-				sOldGridNo = sGridNo;
-
-				if ( bOdd )
-				{
-					sGridNo -= WORLD_COLS;
-				}
-				else
-				{
-					sGridNo++;
-				}
-
-				bOdd = (INT8)!bOdd;
-			}
-
-			sGridNo      = sOldGridNo;
-			sStartGridNo = sOldGridNo;
-
-			do
-			{
-				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
-				{
-					return( sGridNo );
-				}
-
-				// If here, try another place!
-				// ( alternate up/down )
-				if ( bOdd2 )
-				{
-					bAdjustedDist++;
-
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
-					}
-				}
-				else
-				{
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
-					}
-				}
-
-				bOdd2 = (INT8)(!bOdd2);
-
-			} while( TRUE );
-
+	switch (ubTacticalDirection) {
 		case WEST:
-
-			sGridNo      = pSoldier->sGridNo;
-			sStartGridNo = pSoldier->sGridNo;
-			sOldGridNo   = pSoldier->sGridNo;
-
-			// Move directly to the left!
-			while( GridNoOnVisibleWorldTile( sGridNo ) )
-			{
-				sOldGridNo = sGridNo;
-
-				if ( bOdd )
-				{
-					sGridNo += WORLD_COLS;
-				}
-				else
-				{
-					sGridNo--;
-				}
-
-				bOdd = (INT8)!bOdd;
-			}
-
-			sGridNo      = sOldGridNo;
-			sStartGridNo = sOldGridNo;
-
-			do
-			{
-				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
-				{
-					return( sGridNo );
-				}
-
-				// If here, try another place!
-				// ( alternate up/down )
-				if ( bOdd2 )
-				{
-					bAdjustedDist++;
-
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
-					}
-				}
-				else
-				{
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
-					}
-				}
-
-				bOdd2 = (INT8)(!bOdd2);
-
-			} while( TRUE );
-
+			incrementToEdge = DirIncrementer[SOUTH];
+			altIncrementToEdge = DirIncrementer[WEST];
+			break;
 		case NORTH:
-
-			sGridNo      = pSoldier->sGridNo;
-			sStartGridNo = pSoldier->sGridNo;
-			sOldGridNo   = pSoldier->sGridNo;
-
-			// Move directly to the left!
-			while( GridNoOnVisibleWorldTile( sGridNo ) )
-			{
-				sOldGridNo = sGridNo;
-
-				if ( bOdd )
-				{
-					sGridNo -= WORLD_COLS;
-				}
-				else
-				{
-					sGridNo--;
-				}
-
-				bOdd = (INT8)(!bOdd);
-			}
-
-			sGridNo      = sOldGridNo;
-			sStartGridNo = sOldGridNo;
-
-			do
-			{
-				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
-				{
-					return( sGridNo );
-				}
-
-				// If here, try another place!
-				// ( alternate left/right )
-				if ( bOdd2 )
-				{
-					bAdjustedDist++;
-
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
-					}
-				}
-				else
-				{
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
-					}
-				}
-
-				bOdd2 = (INT8)(!bOdd2);
-
-			} while( TRUE );
-
+			altIncrementToEdge = DirIncrementer[WEST];
+			incrementAlongEdge = DirIncrementer[SOUTHWEST];
+			altIncrementAlongEdge = DirIncrementer[NORTHEAST];
+			break;
 		case SOUTH:
+			incrementToEdge = DirIncrementer[SOUTH];
+			incrementAlongEdge = DirIncrementer[SOUTHEAST];
+			altIncrementAlongEdge = DirIncrementer[NORTHEAST];
+			break;
+	}
+	// Move directly TO the edge of the sector in a zigzag pattern
+	while (GridNoOnVisibleWorldTile(sGridNo)) {
+		sOldGridNo = sGridNo;
 
-			sGridNo      = pSoldier->sGridNo;
-			sStartGridNo = pSoldier->sGridNo;
-			sOldGridNo   = pSoldier->sGridNo;
+		if (dirToggle) sGridNo += incrementToEdge;
+		else sGridNo += altIncrementToEdge;
 
-			// Move directly to the left!
-			while( GridNoOnVisibleWorldTile( sGridNo ) )
-			{
-				sOldGridNo = sGridNo;
-
-				if ( bOdd )
-				{
-					sGridNo += WORLD_COLS;
-				}
-				else
-				{
-					sGridNo++;
-				}
-
-				bOdd = (INT8)(!bOdd);
-			}
-
-			sGridNo      = sOldGridNo;
-			sStartGridNo = sOldGridNo;
-
-			do
-			{
-				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
-				{
-					return( sGridNo );
-				}
-
-				// If here, try another place!
-				// ( alternate left/right )
-				if ( bOdd2 )
-				{
-					bAdjustedDist++;
-
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
-					}
-				}
-				else
-				{
-					sGridNo = sStartGridNo;
-
-					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
-					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
-					}
-				}
-
-				bOdd2 = (INT8)(!bOdd2);
-
-			} while( TRUE );
+		dirToggle = !dirToggle;
 	}
 
-	return( NOWHERE );
+	sGridNo = sOldGridNo;
+	sStartGridNo = sOldGridNo;
+	dirToggle = true;
+
+	do { // OK, here we go back one, check for OK destination...		
+		if (sGridNo > 0 && sGridNo < MAPLENGTH) {
+			if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) && FindBestPath(pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE)) {
+				return(sGridNo);
+			}
+		}
+		// If here, try another place! ( alternate up/down or left/right ALONG the edge of the sector )
+		sGridNo = sStartGridNo;
+		if (dirToggle) {
+			bAdjustedDist++;
+			for (cnt = 0; cnt < bAdjustedDist; cnt++) {
+				sGridNo = sGridNo + incrementAlongEdge;
+			}
+		}
+		else {
+			for (cnt = 0; cnt < bAdjustedDist; cnt++) {
+				sGridNo = sGridNo + altIncrementAlongEdge;
+			}
+		}
+		dirToggle = !dirToggle;
+	} while (bAdjustedDist != std::numeric_limits<uint8_t>::max());
+
+	return(NOWHERE);
 }
 
 
