@@ -193,6 +193,7 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 {
 	STRUCTURE& base    = *FindBaseStructure(&structure);
 	bool const is_door = structure.fFlags & STRUCTURE_ANYDOOR;
+	bool const is_switch = structure.fFlags & STRUCTURE_SWITCH;
 
 	if (is_door)
 	{
@@ -252,7 +253,7 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 				}
 				return;
 			}
-			if (!is_door) s.ubDoorHandleCode = HANDLE_DOOR_OPEN;
+			if (!is_door && !is_switch) s.ubDoorHandleCode = HANDLE_DOOR_OPEN;
 		}
 		else
 		{
