@@ -3127,6 +3127,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 	LEVELNODE *pIntTile;
 	INT8 bReturnCode = 0;
 	BOOLEAN fPlot;
+	int8_t preservedDoorHandleCode;
 
 	if ((gTacticalStatus.uiFlags & INCOMBAT) || _KeyDown( SHIFT ))
 	{
@@ -3153,8 +3154,10 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 		{
 			if (pStructure->fFlags & (STRUCTURE_ANYDOOR | STRUCTURE_SWITCH))
 			{
+				preservedDoorHandleCode = pSoldier->ubDoorHandleCode;
 				sActionGridNo = FindAdjacentGridExAdvanced(pSoldier, *pStructure, sIntTileGridNo, nullptr);
 				sAPCost = doorAPs[pSoldier->ubDoorHandleCode];
+				pSoldier->ubDoorHandleCode = preservedDoorHandleCode;
 			}
 			else
 			{
