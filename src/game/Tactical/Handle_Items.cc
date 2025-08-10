@@ -2297,6 +2297,7 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 			pSoldier->pTempObject = NULL;
 
 		}
+		TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_GIVING_ITEM);
 	}
 
 	return NULL;
