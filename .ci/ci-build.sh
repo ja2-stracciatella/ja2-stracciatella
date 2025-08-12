@@ -41,7 +41,7 @@ if [[ "${BUILD_TYPE}" != "Debug" ]]; then
 fi
 
 export RUN_TESTS=true
-export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-toolchain) --profile=minimal"
+export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./min-rust-version) --profile=minimal"
 if [[ "$CI_TARGET" == "linux" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=AppDir/usr -DEXTRA_DATA_DIR=../share/ja2"
 

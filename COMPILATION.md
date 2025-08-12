@@ -37,7 +37,7 @@ might be too old to build ja2-stracciatella and its dependencies. When using rus
 be automatically selected.
 
 If you don't want to use rustup, you can always look up the currently required version in the
-[rust-toolchain file](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/rust-toolchain)
+[min-rust-version file](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/min-rust-version)
 
 ## Build on Linux or freeBSD
 
