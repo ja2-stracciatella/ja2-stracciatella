@@ -12,8 +12,8 @@ project(getter NONE)
 
 include(ExternalProject)
 externalproject_add(get-sol2
-    URL "https://github.com/ThePhD/sol2/archive/v3.2.2.zip"
-    URL_MD5 "02e483e11b34ea1f36ff69f06ab5ba8f"
+    URL "https://github.com/ThePhD/sol2/archive/v3.5.0.zip"
+    URL_MD5 "2a52be066fbb16a44ad9568a6ebecc84"
     CMAKE_ARGS
         "-G@CMAKE_GENERATOR@"
         SOURCE_DIR          "@SRC_DIR@"
@@ -22,6 +22,5 @@ externalproject_add(get-sol2
         BUILD_COMMAND       ""
         INSTALL_COMMAND     ""
         TEST_COMMAND        ""
-    # called several times, so don't error out when a patched state is detected
-    PATCH_COMMAND grep -q std::in_place, single/include/sol/sol.hpp || { sed -i s,\\r,, single/include/sol/sol.hpp && patch -p3 < ${CMAKE_CURRENT_SOURCE_DIR}/gcc-15.patch; }
+    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/gcc-15.patch
 )
