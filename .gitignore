@@ -10,5 +10,6 @@ TAGS
 .vscode
 .clangd
 .clang-tidy
+.zed
 /compile_commands.json
 /*/CMakeUserPresets.json
