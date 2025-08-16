@@ -1,3 +1,4 @@
+#include "ArmourModel.h"
 #include "Font_Control.h"
 #include "Types.h"
 #include "Soldier_Control.h"
@@ -443,21 +444,22 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 		// Look for best gun/armour
 		if ( usItem != NOTHING )
 		{
+			auto item = GCM->getItem(usItem);
 			// Check if it's a gun
-			if ( GCM->getItem(usItem)->isGun())
+			if ( item->isGun())
 			{
-				if ( GCM->getWeapon( usItem )->ubDeadliness > bBestGun )
+				if ( item->asWeapon()->ubDeadliness > bBestGun )
 				{
-					bBestGun = GCM->getWeapon( usItem )->ubDeadliness;
+					bBestGun = item->asWeapon()->ubDeadliness;
 				}
 			}
 
 			// If it's armour
-			if ( GCM->getItem(usItem)->isArmour() )
+			if ( item->asArmour() )
 			{
-				if ( Armour[ GCM->getItem(usItem)->getClassIndex() ].ubProtection > bBestArmour )
+				if ( item->asArmour()->getProtection() > bBestArmour )
 				{
-					bBestArmour = Armour[ GCM->getItem(usItem)->getClassIndex() ].ubProtection;
+					bBestArmour = item->asArmour()->getProtection();
 				}
 			}
 		}

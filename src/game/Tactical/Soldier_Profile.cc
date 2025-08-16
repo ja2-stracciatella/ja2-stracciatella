@@ -1,3 +1,4 @@
+#include "ArmourModel.h"
 #include "Campaign_Types.h"
 #include "Directories.h"
 #include "Interface_Control.h"
@@ -180,8 +181,12 @@ void LoadMercProfiles()
 				if (item_id == NOTHING) continue;
 				const ItemModel * item = GCM->getItem(item_id);
 
-				if (item->isGun())    p.bMainGunAttractiveness = GCM->getWeapon(item_id)->ubDeadliness;
-				if (item->isArmour()) p.bArmourAttractiveness  = Armour[item->getClassIndex()].ubProtection;
+				if (item->isGun()) {
+					p.bMainGunAttractiveness = item->asWeapon()->ubDeadliness;
+				}
+				if (item->asArmour()) {
+					p.bArmourAttractiveness = item->asArmour()->getProtection();
+				}
 
 				p.usOptionalGearCost += item->getPrice();
 			}
