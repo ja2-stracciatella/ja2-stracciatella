@@ -15,6 +15,7 @@
 #include "CacheSectorsModel.h"
 #include "CalibreModel.h"
 #include "ContentMusic.h"
+#include "Item_Types.h"
 #include "SmokeEffectModel.h"
 #include "ExplosionAnimationModel.h"
 #include "ExplosiveModel.h"
@@ -706,6 +707,10 @@ bool DefaultContentManager::loadItems(const BinaryData& vanillaItemStrings)
 		}
 		if (item->getItemClass() == IC_GRENADE || item->getItemClass() == IC_BOMB) {
 			SLOGW("Ignoring grenade or bomb '{}' in 'items.json', should be in 'explosives.json'", item->getInternalName());
+			continue;
+		}
+		if (item->getItemClass() == IC_ARMOUR) {
+			SLOGW("Ignoring armour '{}' in 'items.json', should be in 'armours.json'", item->getInternalName());
 			continue;
 		}
 
