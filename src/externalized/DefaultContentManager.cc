@@ -1,6 +1,7 @@
 #include "DefaultContentManager.h"
 
 #include "Exceptions.h"
+#include "ItemModel.h"
 #include "ItemStrings.h"
 #include "Directories.h"
 
@@ -27,8 +28,10 @@
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Profile_Type.h"
+#include "Types.h"
 #include "VehicleModel.h"
 #include "WeaponModels.h"
+#include "Weapons.h"
 #include "army/ArmyCompositionModel.h"
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
@@ -63,6 +66,7 @@
 #include "Strategic_AI.h"
 #include "Strategic_Status.h"
 
+#include <cstdint>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -575,9 +579,10 @@ bool DefaultContentManager::loadWeapons(const BinaryData& vanillaItemStrings)
 
 bool DefaultContentManager::loadArmours(const BinaryData& vanillaItemStrings)
 {
+	auto extraAttachmentsEnabled = m_gamePolicy.get()->extra_attachments;
 	auto json = readJsonDataFileWithSchema("armours.json");
 	for (auto& element : json.toVec()) {
-		ArmourModel *a = ArmourModel::deserialize(element, vanillaItemStrings);
+		ArmourModel *a = ArmourModel::deserialize(element, vanillaItemStrings, extraAttachmentsEnabled);
 		SLOGD("Loaded armour {} {}", a->getItemIndex(), a->getInternalName());
 
 		if (a->getItemIndex() >= m_items.size())
@@ -591,6 +596,48 @@ bool DefaultContentManager::loadArmours(const BinaryData& vanillaItemStrings)
 	}
 
 	return true;
+}
+
+void DefaultContentManager::loadMaxArmourPerClass() {
+	std::vector<const ArmourModel*> plates;
+	for (auto item : m_items) {
+		auto armour = item->asArmour();
+		if (armour && armour->getArmourClass() == ARMOURCLASS_PLATE) {
+			if (armour->isIgnoredForMaxProtection()) {
+				continue;
+			}
+			plates.push_back(armour);
+		}
+	}
+
+	for (auto item : m_items) {
+		auto armour = item->asArmour();
+		if (armour) {
+			if (armour->isIgnoredForMaxProtection()) {
+				continue;
+			}
+			auto armourClass = armour->getArmourClass();
+			INT32 max = 0;
+			if (m_maxArmourPerClass.find(armourClass) != m_maxArmourPerClass.end()) {
+				max = m_maxArmourPerClass[armourClass];
+			}
+			max = std::max(max, static_cast<INT32>(armour->getProtection()));
+			for (auto plate : plates) {
+				if (!armour->canBeAttached(m_gamePolicy.get(), plate)) {
+					continue;
+				}
+				max = std::max(max, static_cast<INT32>(armour->getProtection()) + static_cast<INT32>(plate->getProtection()));
+			}
+			m_maxArmourPerClass[armourClass] = max;
+		}
+	}
+}
+
+INT32 DefaultContentManager::getMaxArmourPerClass(uint16_t armourClass) const {
+	if (m_maxArmourPerClass.find(armourClass) == m_maxArmourPerClass.end()) {
+		return 0;
+	}
+	return m_maxArmourPerClass.at(armourClass);
 }
 
 bool DefaultContentManager::loadSmokeEffects()
@@ -882,6 +929,9 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 {
 	loadPrioritizedData();
 
+	auto game_json = readJsonDataFileWithSchema("game.json");
+	m_gamePolicy = std::make_unique<DefaultGamePolicy>(game_json);
+
 	m_items.resize(MAXITEMS);
 	bool result = loadItems(binaryData)
 		&& loadCalibres()
@@ -907,10 +957,6 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 
 	loadMercsData(binaryData);
 	loadAllDealersAndInventory();
-
-	auto game_json = readJsonDataFileWithSchema("game.json");
-
-	m_gamePolicy = std::make_unique<DefaultGamePolicy>(game_json);
 
 	auto imp_json = readJsonDataFileWithSchema("imp.json");
 	m_impPolicy = std::make_unique<DefaultIMPPolicy>(imp_json, this);
@@ -951,6 +997,8 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 	std::unique_ptr<SGPFile> const translation { openGameResForReading(ST::format(
 		"strings/translation{}.json", L10n::GetSuffix(m_gameVersion, false)))};
 	g_langRes = std::make_unique<L10n::L10n_t>(translation.get());
+
+	loadMaxArmourPerClass();
 
 	return result;
 }

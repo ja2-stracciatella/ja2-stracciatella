@@ -37,6 +37,11 @@ items:
           title: Degrade Percentage
           description: The percentage of degradation for the armour
           $ref: types/uint8.schema.yaml
+        ignoreForMaxProtection:
+          title: Ignore For Max Protection
+          description: Whether to ignore this armour when calculating max protection for protection percentage
+          type: boolean
+          default: false
       required:
         - armourClass
         - protection

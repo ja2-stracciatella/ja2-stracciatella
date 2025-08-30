@@ -91,8 +91,6 @@ static std::map<UINT16, std::set<UINT16> const> const g_attachments
 {
 	{DETONATOR, {TNT, HMX, C1, C4}},
 	{REMDETONATOR, {TNT, HMX, C1, C4}},
-	{CERAMIC_PLATES, {FLAK_JACKET, FLAK_JACKET_18, FLAK_JACKET_Y, KEVLAR_VEST, KEVLAR_VEST_18, KEVLAR_VEST_Y,
-	                  KEVLAR2_VEST, KEVLAR2_VEST_18, KEVLAR2_VEST_Y, SPECTRA_VEST, SPECTRA_VEST_18, SPECTRA_VEST_Y}},
 	{SPRING, {ALUMINUM_ROD}},
 	{QUICK_GLUE, {STEEL_ROD}},
 	{DUCT_TAPE, {STEEL_ROD}},
@@ -100,21 +98,6 @@ static std::map<UINT16, std::set<UINT16> const> const g_attachments
 	{CHEWING_GUM, {FUMBLE_PAK}},
 	{BATTERIES, {XRAY_DEVICE}},
 	{COPPER_WIRE, {LAME_BOY}}
-};
-
-// additional possible attachments if the extra_attachments game policy is set
-static std::set<UINT16> const g_helmets {STEEL_HELMET, KEVLAR_HELMET, KEVLAR_HELMET_18, KEVLAR_HELMET_Y, SPECTRA_HELMET, SPECTRA_HELMET_18, SPECTRA_HELMET_Y};
-static std::set<UINT16> const g_leggings {KEVLAR_LEGGINGS, KEVLAR_LEGGINGS_18, KEVLAR_LEGGINGS_Y, SPECTRA_LEGGINGS, SPECTRA_LEGGINGS_18, SPECTRA_LEGGINGS_Y};
-static std::map<UINT16, decltype(g_helmets) *> const g_attachments_mod
-{
-	{NIGHTGOGGLES, &g_helmets},
-	{UVGOGGLES, &g_helmets},
-	{SUNGOGGLES, &g_helmets},
-	{ROBOT_REMOTE_CONTROL, &g_helmets},
-
-	{BREAK_LIGHT, &g_leggings},
-	{REGEN_BOOSTER, &g_leggings},
-	{ADRENALINE_BOOSTER, &g_leggings}
 };
 
 static std::initializer_list<std::array<UINT16, 2> const> const CompatibleFaceItems
@@ -641,8 +624,9 @@ static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 
 bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 {
+	auto * attachmentModel{ GCM->getItem(attachment, ItemSystem::nothrow) };
 	auto * itemModel{ GCM->getItem(item, ItemSystem::nothrow) };
-	if (itemModel && itemModel->canBeAttached(attachment))
+	if (attachmentModel && itemModel && itemModel->canBeAttached(GCM->getGamePolicy(), attachmentModel))
 	{
 		return true;
 	}
@@ -650,12 +634,6 @@ bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 	{
 		auto const it = g_attachments.find(attachment);
 		if (it != g_attachments.end() && it->second.count(item) == 1) return true;
-	}
-
-	if (gamepolicy(extra_attachments))
-	{
-		auto const it = g_attachments_mod.find(attachment);
-		if (it != g_attachments_mod.end() && (*it->second).count(item) == 1) return true;
 	}
 
 	return false;

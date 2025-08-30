@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GamePolicy.h"
 #include "Item_Types.h"
 #include "ItemStrings.h"
 #include "InventoryGraphicsModel.h"
@@ -94,7 +95,7 @@ struct ItemModel
 	virtual const ExplosiveModel* asExplosive() const   { return NULL; }
 
 	/** Check if the given attachment can be attached to the item. */
-	virtual bool canBeAttached(uint16_t attachment) const;
+	virtual bool canBeAttached(const GamePolicy* policy, const ItemModel* attachment) const;
 
 	struct InitData
 	{

@@ -129,13 +129,6 @@ enum
 #define AIM_PENALTY_BLIND			80
 #define AIM_PENALTY_FIRING_UP			25
 
-struct ARMOURTYPE
-{
-	UINT8 ubArmourClass;
-	UINT8 ubProtection;
-	UINT8 ubDegradePercent;
-};
-
 enum class FireWeaponResult
 {
 	FAILED, FIRED, FIREABLE, JAMMED, UNJAMMED

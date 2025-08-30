@@ -23,20 +23,24 @@ struct ArmourModel : ItemModel
 		uint8_t armourClass,
 		uint8_t protection,
 		uint8_t explosivesProtection,
-		uint8_t degradePercentage
+		uint8_t degradePercentage,
+		bool ignoreForMaxProtection
 	);
 
-	virtual const ArmourModel* asArmour() const { return this; }
+	virtual const ArmourModel* asArmour() const override { return this; }
 
-	static ArmourModel* deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings);
+	static ArmourModel* deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings, bool extraAttachmentsEnabled);
 
+	bool isIgnoredForMaxProtection() const;
 	uint8_t getArmourClass() const;
 	uint8_t getProtection() const;
 	uint8_t getExplosivesProtection() const;
 	uint8_t getDegradePercentage() const;
+	bool canBeAttached(const GamePolicy* policy, const ItemModel* attachment) const override;
 	protected:
 		uint8_t armourClass;
 		uint8_t protection;
 		uint8_t explosivesProtection;
 		uint8_t degradePercentage;
+		bool ignoreForMaxProtection;
 };

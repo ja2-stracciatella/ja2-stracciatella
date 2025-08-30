@@ -121,40 +121,29 @@ INT8 EffectiveArmour(OBJECTTYPE const* const o)
 
 INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 {
-	INT32 iVest, iHelmet, iLeg;
+	INT32 iVest = 0, iHelmet = 0, iLeg = 0;
 
 	if (pSoldier->inv[VESTPOS].usItem)
 	{
 		iVest = EffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = 65 * iVest / ( GCM->getItem(SPECTRA_VEST_18)->asArmour()->getProtection() + GCM->getItem(CERAMIC_PLATES)->asArmour()->getProtection() );
-	}
-	else
-	{
-		iVest = 0;
+		iVest = 65 * iVest / GCM->getMaxArmourPerClass(ARMOURCLASS_VEST);
 	}
 
 	if (pSoldier->inv[HELMETPOS].usItem)
 	{
 		iHelmet = EffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = 15 * iHelmet / GCM->getItem(SPECTRA_HELMET_18)->asArmour()->getProtection();
-	}
-	else
-	{
-		iHelmet = 0;
+		iHelmet = 15 * iHelmet / GCM->getMaxArmourPerClass(ARMOURCLASS_HELMET);
 	}
 
 	if (pSoldier->inv[LEGPOS].usItem)
 	{
 		iLeg = EffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = 25 * iLeg / GCM->getItem(SPECTRA_LEGGINGS_18)->asArmour()->getProtection();
+		iLeg = 25 * iLeg / GCM->getMaxArmourPerClass(ARMOURCLASS_LEGGINGS);
 	}
-	else
-	{
-		iLeg = 0;
-	}
+
 	return( (INT8) (iHelmet + iVest + iLeg) );
 }
 
@@ -187,40 +176,29 @@ static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 {
 	// returns the % damage reduction from grenades
-	INT32 iVest, iHelmet, iLeg;
+	INT32 iVest = 0, iHelmet = 0, iLeg = 0;
 
 	if (pSoldier->inv[VESTPOS].usItem)
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = std::min(65, 65 * iVest / ( GCM->getItem(SPECTRA_VEST_18)->asArmour()->getProtection() + GCM->getItem(CERAMIC_PLATES)->asArmour()->getProtection()));
-	}
-	else
-	{
-		iVest = 0;
+		iVest = std::min(65, 65 * iVest / GCM->getMaxArmourPerClass(ARMOURCLASS_VEST));
 	}
 
 	if (pSoldier->inv[HELMETPOS].usItem)
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = std::min(15, 15 * iHelmet / GCM->getItem(SPECTRA_HELMET_18)->asArmour()->getProtection());
-	}
-	else
-	{
-		iHelmet = 0;
+		iHelmet = std::min(15, 15 * iHelmet / GCM->getMaxArmourPerClass(ARMOURCLASS_HELMET));
 	}
 
 	if (pSoldier->inv[LEGPOS].usItem)
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = std::min(25, 25 * iLeg / GCM->getItem(SPECTRA_LEGGINGS_18)->asArmour()->getProtection());
+		iLeg = std::min(25, 25 * iLeg / GCM->getMaxArmourPerClass(ARMOURCLASS_LEGGINGS));
 	}
-	else
-	{
-		iLeg = 0;
-	}
+
 	return( (INT8) (iHelmet + iVest + iLeg) );
 }
 

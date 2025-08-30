@@ -12,7 +12,9 @@
 #include "ItemStrings.h"
 #include "Json.h"
 #include "StringEncodingTypes.h"
+#include "Types.h"
 
+#include <cstdint>
 #include <string_theory/string>
 
 #include <map>
@@ -104,6 +106,7 @@ public:
 	virtual const ExplosiveModel* getExplosiveByName(const ST::string &name) override;
 	virtual const ArmourModel* getArmour(uint16_t index) override;
 	virtual const ArmourModel* getArmourByName(const ST::string &name) override;
+	virtual INT32 getMaxArmourPerClass(uint16_t armourClass) const override;
 
 	virtual ItemRange getItems() const override;
 	virtual const ItemModel* getItem(uint16_t index) const override;
@@ -228,6 +231,7 @@ protected:
 	std::map<ST::string, const WeaponModel*> m_weaponMap;
 	std::map<ST::string, const ExplosiveModel*> m_explosiveMap;
 	std::map<ST::string, const ArmourModel*> m_armourMap;
+	std::map<uint16_t, INT32> m_maxArmourPerClass;
 	std::map<ST::string, const ItemModel*> m_itemMap;
 	std::map<uint16_t, uint16_t> m_mapItemReplacements;
 	std::multimap<MusicMode, const ST::string> m_musicMap;
@@ -320,6 +324,7 @@ protected:
 	void loadVehicles();
 	void loadTranslationTable();
 	void loadAllScriptRecords();
+	void loadMaxArmourPerClass();
 
 	JsonValue readJsonDataFileWithSchema(const ST::string& jsonPath) const;
 

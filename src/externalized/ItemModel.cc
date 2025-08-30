@@ -161,7 +161,7 @@ uint16_t ItemModel::deserializeFlags(const JsonObject &obj)
 }
 
 /** Check if the given attachment can be attached to the item. */
-bool ItemModel::canBeAttached(uint16_t attachment) const
+bool ItemModel::canBeAttached(const GamePolicy* policy, const ItemModel* attachment) const
 {
 	return false;
 }

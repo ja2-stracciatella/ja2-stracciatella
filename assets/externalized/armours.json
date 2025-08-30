@@ -69,6 +69,7 @@
         "protection": 16,
         "explosivesProtection": 48,
         "degradePercentage": 15,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
@@ -161,6 +162,7 @@
         "armourClass": "VEST",
         "protection": 24,
         "degradePercentage": 10,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
@@ -253,6 +255,7 @@
         "armourClass": "VEST",
         "protection": 42,
         "degradePercentage": 5,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
@@ -345,6 +348,7 @@
         "armourClass": "LEGGINGS",
         "protection": 24,
         "degradePercentage": 10,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
@@ -437,6 +441,7 @@
         "armourClass": "LEGGINGS",
         "protection": 42,
         "degradePercentage": 5,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
@@ -560,6 +565,7 @@
         "armourClass": "HELMET",
         "protection": 24,
         "degradePercentage": 10,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
@@ -652,6 +658,7 @@
         "armourClass": "HELMET",
         "protection": 42,
         "degradePercentage": 5,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
@@ -937,6 +944,7 @@
         "armourClass": "VEST",
         "protection": 19,
         "degradePercentage": 20,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp1items.sti",
@@ -1153,6 +1161,7 @@
         "armourClass": "VEST",
         "protection": 32,
         "degradePercentage": 10,
+        "ignoreForMaxProtection": true,
         "inventoryGraphics": {
             "small": {
                 "path": "interface/mdp2items.sti",
