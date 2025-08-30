@@ -39,7 +39,10 @@ items:
           $ref: types/uint8.schema.yaml
         ignoreForMaxProtection:
           title: Ignore For Max Protection
-          description: Whether to ignore this armour when calculating max protection for protection percentage
+          description: >
+            Whether to ignore this armour when calculating max protection for protection percentage.
+
+            Ignoring bug treated armour for armour percentage calculations was a design choice in the vanilla game.
           type: boolean
           default: false
       required:
