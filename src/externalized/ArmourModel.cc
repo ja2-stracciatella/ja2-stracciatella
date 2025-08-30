@@ -73,7 +73,7 @@ ArmourModel::ArmourModel(
 	this->ignoreForMaxProtection = ignoreForMaxProtection;
 }
 
-ArmourModel* ArmourModel::deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings, bool extraAttachmentsEnabled) {
+ArmourModel* ArmourModel::deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings) {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, vanillaItemStrings };
 

@@ -580,10 +580,9 @@ bool DefaultContentManager::loadWeapons(const BinaryData& vanillaItemStrings)
 
 bool DefaultContentManager::loadArmours(const BinaryData& vanillaItemStrings)
 {
-	auto extraAttachmentsEnabled = m_gamePolicy.get()->extra_attachments;
 	auto json = readJsonDataFileWithSchema("armours.json");
 	for (auto& element : json.toVec()) {
-		ArmourModel *a = ArmourModel::deserialize(element, vanillaItemStrings, extraAttachmentsEnabled);
+		ArmourModel *a = ArmourModel::deserialize(element, vanillaItemStrings);
 		SLOGD("Loaded armour {} {}", a->getItemIndex(), a->getInternalName());
 
 		if (a->getItemIndex() >= m_items.size())

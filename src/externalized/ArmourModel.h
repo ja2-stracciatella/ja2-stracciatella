@@ -29,7 +29,7 @@ struct ArmourModel : ItemModel
 
 	virtual const ArmourModel* asArmour() const override { return this; }
 
-	static ArmourModel* deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings, bool extraAttachmentsEnabled);
+	static ArmourModel* deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings);
 
 	bool isIgnoredForMaxProtection() const;
 	uint8_t getArmourClass() const;
