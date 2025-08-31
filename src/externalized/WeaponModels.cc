@@ -674,16 +674,17 @@ bool WeaponModel::isSameMagCapacity(const MagazineModel *mag) const
 }
 
 /** Check if the given attachment can be attached to the item. */
-bool WeaponModel::canBeAttached(uint16_t attachment) const
+bool WeaponModel::canBeAttached(const GamePolicy* policy, const ItemModel* attachment) const
 {
-	return (attachSilencer && (attachment == SILENCER))
-		|| (attachSniperScope && (attachment == SNIPERSCOPE))
-		|| (attachLaserScope && (attachment == LASERSCOPE))
-		|| (attachBipod && (attachment == BIPOD))
-		|| (attachDuckbill && (attachment == DUCKBILL))
-		|| (attachUnderGLauncher && (attachment == UNDER_GLAUNCHER))
-		|| (attachSpringAndBoltUpgrade && (attachment == SPRING_AND_BOLT_UPGRADE))
-		|| (attachGunBarrelExtender && (attachment == GUN_BARREL_EXTENDER));
+	auto attachmentID = attachment->getItemIndex();
+	return (attachSilencer && (attachmentID == SILENCER))
+		|| (attachSniperScope && (attachmentID == SNIPERSCOPE))
+		|| (attachLaserScope && (attachmentID == LASERSCOPE))
+		|| (attachBipod && (attachmentID == BIPOD))
+		|| (attachDuckbill && (attachmentID == DUCKBILL))
+		|| (attachUnderGLauncher && (attachmentID == UNDER_GLAUNCHER))
+		|| (attachSpringAndBoltUpgrade && (attachmentID == SPRING_AND_BOLT_UPGRADE))
+		|| (attachGunBarrelExtender && (attachmentID == GUN_BARREL_EXTENDER));
 }
 
 /** Get standard replacement gun name. */

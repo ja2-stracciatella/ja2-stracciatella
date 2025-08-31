@@ -62,8 +62,7 @@ enum
 	ARMOURCLASS_VEST,
 	ARMOURCLASS_LEGGINGS,
 	ARMOURCLASS_PLATE,
-	ARMOURCLASS_MONST,
-	ARMOURCLASS_VEHICLE
+	ARMOURCLASS_MONST
 };
 
 enum
@@ -130,21 +129,12 @@ enum
 #define AIM_PENALTY_BLIND			80
 #define AIM_PENALTY_FIRING_UP			25
 
-struct ARMOURTYPE
-{
-	UINT8 ubArmourClass;
-	UINT8 ubProtection;
-	UINT8 ubDegradePercent;
-};
-
 enum class FireWeaponResult
 {
 	FAILED, FIRED, FIREABLE, JAMMED, UNJAMMED
 };
 
 //GLOBALS
-
-extern ARMOURTYPE    const Armour[];
 
 INT8 EffectiveArmour(const OBJECTTYPE* pObj);
 extern INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier );

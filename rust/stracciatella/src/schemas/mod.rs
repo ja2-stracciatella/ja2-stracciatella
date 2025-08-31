@@ -1,8 +1,8 @@
 //! Json schema handling for resource files
 //!
 //! Json schemas are written as YAML into the `yaml/` subfolder of this module.
-//! The build script will resolve references within the schema and put it into the
-//! `STRACCIATELLA_SCHEMAS` env variable as JSON.
+//! The build script will resolve references within the schema and put it into a file
+//! This file path is set as`STRACCIATELLA_SCHEMAS` env variable.
 //!
 //! `STRACCIATELLA_SCHEMAS` is read at build time and can be accessed using `SchemaManager`
 
@@ -12,7 +12,7 @@ use jsonschema::{Draft, JSONSchema};
 use serde_json::Value;
 
 // This is set by the build script and contains all schemas in resolved json form
-const SCHEMAS: &str = env!("STRACCIATELLA_SCHEMAS");
+const SCHEMAS: &str = include_str!(env!("STRACCIATELLA_SCHEMAS"));
 
 /// A representation of a json schema
 pub struct Schema {

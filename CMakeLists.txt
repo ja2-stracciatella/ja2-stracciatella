@@ -3,6 +3,9 @@
 cmake_minimum_required (VERSION 3.18.1)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+## Enable generation of compile_commands.json for better IDE integration
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 ## Some macros
 
 macro(add_custom_templated_target NAME)

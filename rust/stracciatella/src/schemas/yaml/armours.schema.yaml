@@ -1,0 +1,51 @@
+$schema: http://json-schema.org/schema#
+type: array
+title: Armours
+description: |
+  Defines armour items that can be used in game.
+items:
+  allOf:
+    - title: Base Item
+      $ref: types/base-item.schema.yaml
+    - title: Armour
+      description: |
+        An armour item that can be used in game.
+      type: object
+      properties:
+        armourClass:
+          title: Armour class
+          description: The type of armour
+          type: string
+          enum:
+            - VEST
+            - LEGGINGS
+            - HELMET
+            - PLATE
+            - CREATURE
+        protection:
+          title: Protection
+          description: The protection level of the armour
+          $ref: types/uint8.schema.yaml
+        explosivesProtection:
+          title: Explosives Protection
+          description: >
+            The protection level of the armour against explosive damage.
+
+            If not specified explicitly, the protection value is used.
+          $ref: types/uint8.schema.yaml
+        degradePercentage:
+          title: Degrade Percentage
+          description: The percentage of degradation for the armour
+          $ref: types/uint8.schema.yaml
+        ignoreForMaxProtection:
+          title: Ignore For Max Protection
+          description: >
+            Whether to ignore this armour when calculating max protection for protection percentage.
+
+            Ignoring bug treated armour for armour percentage calculations was a design choice in the vanilla game.
+          type: boolean
+          default: false
+      required:
+        - armourClass
+        - protection
+        - degradePercentage

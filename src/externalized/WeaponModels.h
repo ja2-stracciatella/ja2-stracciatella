@@ -46,7 +46,7 @@ struct WeaponModel : ItemModel
 	bool isSameMagCapacity(const MagazineModel *mag) const;
 
 	/** Check if the given attachment can be attached to the item. */
-	virtual bool canBeAttached(uint16_t attachment) const;
+	virtual bool canBeAttached(const GamePolicy* policy, const ItemModel* attachment) const;
 
 	/** Get standard replacement gun name. */
 	virtual const ST::string & getStandardReplacement() const;

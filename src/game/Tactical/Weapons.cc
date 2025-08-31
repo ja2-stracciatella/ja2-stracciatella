@@ -1,3 +1,4 @@
+#include "ArmourModel.h"
 #include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
@@ -76,54 +77,6 @@ BOOLEAN gfReportHitChances = FALSE;
 
 //GLOBALS
 
-// TODO: Move strings to extern file
-
-ARMOURTYPE const Armour[] =
-{
-	//Class,		Protection,	Degradation%	Description
-	//---------------	----------	------------	----------------
-	{ARMOURCLASS_VEST,	10,		25}, /* Flak jacket     */
-	{ARMOURCLASS_VEST,	13,		20}, /* Flak jacket w X */
-	{ARMOURCLASS_VEST,	16,		15}, /* Flak jacket w Y */
-	{ARMOURCLASS_VEST,	15,		20}, /* Kevlar jacket   */
-	{ARMOURCLASS_VEST,	19,		15}, /* Kevlar jack w X */
-	{ARMOURCLASS_VEST,	24,		10}, /* Kevlar jack w Y */
-	{ARMOURCLASS_VEST,	30,		15}, /* Spectra jacket  */
-	{ARMOURCLASS_VEST,	36,		10}, /* Spectra jack w X*/
-	{ARMOURCLASS_VEST,	42,		5}, /* Spectra jack w Y*/
-	{ARMOURCLASS_LEGGINGS,	15,		20}, /* Kevlar leggings */
-	{ARMOURCLASS_LEGGINGS,	19,		15}, /* Kevlar legs w X */
-
-	{ARMOURCLASS_LEGGINGS,	24,		10}, /* Kevlar legs w Y */
-	{ARMOURCLASS_LEGGINGS,	30,		15}, /* Spectra leggings*/
-	{ARMOURCLASS_LEGGINGS,	36,		10}, /* Spectra legs w X*/
-	{ARMOURCLASS_LEGGINGS,	42,		5}, /* Spectra legs w Y*/
-	{ARMOURCLASS_HELMET,	10,		5}, /* Steel helmet    */
-	{ARMOURCLASS_HELMET,	15,		20}, /* Kevlar helmet   */
-	{ARMOURCLASS_HELMET,	19,		15}, /* Kevlar helm w X */
-	{ARMOURCLASS_HELMET,	24,		10}, /* Kevlar helm w Y */
-	{ARMOURCLASS_HELMET,	30,		15}, /* Spectra helmet  */
-	{ARMOURCLASS_HELMET,	36,		10}, /* Spectra helm w X*/
-
-	{ARMOURCLASS_HELMET,	42,		5}, /* Spectra helm w Y*/
-	{ARMOURCLASS_PLATE,	15,		200}, /* Ceramic plates  */
-	{ARMOURCLASS_MONST,	3,		0}, /* Infant creature hide */
-	{ARMOURCLASS_MONST,	5,		0}, /* Young male creature hide  */
-	{ARMOURCLASS_MONST,	6,		0}, /* Male creature hide  */
-	{ARMOURCLASS_MONST,	20,		0}, /* Queen creature hide  */
-	{ARMOURCLASS_VEST,	2,		25}, /* Leather jacket    */
-	{ARMOURCLASS_VEST,	12,		30}, /* Leather jacket w kevlar */
-	{ARMOURCLASS_VEST,	16,		25}, /* Leather jacket w kevlar & compound 18 */
-	{ARMOURCLASS_VEST,	19,		20}, /* Leather jacket w kevlar & queen blood */
-
-	{ARMOURCLASS_MONST,	7,		0}, /* Young female creature hide */
-	{ARMOURCLASS_MONST,	8,		0}, /* Old female creature hide  */
-	{ARMOURCLASS_VEST,	1,		25}, /* T-shirt */
-	{ARMOURCLASS_VEST,	22,		20}, /* Kevlar 2 jacket   */
-	{ARMOURCLASS_VEST,	27,		15}, /* Kevlar 2 jack w X */
-	{ARMOURCLASS_VEST,	32,		10}, /* Kevlar 2 jack w Y */
-};
-
 // the amount of momentum reduction for the head, torso, and legs
 // used to determine whether the bullet will go through someone
 static const UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
@@ -154,13 +107,13 @@ INT8 EffectiveArmour(OBJECTTYPE const* const o)
 	if (!o) return 0;
 
 	const ItemModel * item = GCM->getItem(o->usItem);
-	if (item->getItemClass() != IC_ARMOUR) return 0;
+	if (!item->asArmour()) return 0;
 
-	INT32       armour_val = Armour[item->getClassIndex()].ubProtection * o->bStatus[0] / 100;
-	INT8  const plate_pos  = FindAttachment(o, CERAMIC_PLATES);
+	INT32 armour_val = item->asArmour()->getProtection() * o->bStatus[0] / 100;
+	INT8  const plate_pos  = FindPlatesAttachment(o);
 	if (plate_pos != ITEM_NOT_FOUND)
 	{
-		armour_val += Armour[GCM->getItem(CERAMIC_PLATES)->getClassIndex()].ubProtection * o->bAttachStatus[plate_pos] / 100;
+		armour_val += GCM->getItem(o->usAttachItem[plate_pos])->asArmour()->getProtection() * o->bAttachStatus[plate_pos] / 100;
 	}
 	return armour_val;
 }
@@ -168,40 +121,29 @@ INT8 EffectiveArmour(OBJECTTYPE const* const o)
 
 INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 {
-	INT32 iVest, iHelmet, iLeg;
+	INT32 iVest = 0, iHelmet = 0, iLeg = 0;
 
 	if (pSoldier->inv[VESTPOS].usItem)
 	{
 		iVest = EffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = 65 * iVest / ( Armour[ GCM->getItem(SPECTRA_VEST_18)->getClassIndex() ].ubProtection + Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection );
-	}
-	else
-	{
-		iVest = 0;
+		iVest = 65 * iVest / GCM->getMaxArmourPerClass(ARMOURCLASS_VEST);
 	}
 
 	if (pSoldier->inv[HELMETPOS].usItem)
 	{
 		iHelmet = EffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = 15 * iHelmet / Armour[ GCM->getItem(SPECTRA_HELMET_18)->getClassIndex() ].ubProtection;
-	}
-	else
-	{
-		iHelmet = 0;
+		iHelmet = 15 * iHelmet / GCM->getMaxArmourPerClass(ARMOURCLASS_HELMET);
 	}
 
 	if (pSoldier->inv[LEGPOS].usItem)
 	{
 		iLeg = EffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = 25 * iLeg / Armour[ GCM->getItem(SPECTRA_LEGGINGS_18)->getClassIndex() ].ubProtection;
+		iLeg = 25 * iLeg / GCM->getMaxArmourPerClass(ARMOURCLASS_LEGGINGS);
 	}
-	else
-	{
-		iLeg = 0;
-	}
+
 	return( (INT8) (iHelmet + iVest + iLeg) );
 }
 
@@ -211,24 +153,19 @@ static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 	INT32 iValue;
 	INT8  bPlate;
 
-	if (pObj == NULL || GCM->getItem(pObj->usItem)->getItemClass() != IC_ARMOUR)
+	if (pObj == NULL || !GCM->getItem(pObj->usItem)->asArmour())
 	{
 		return( 0 );
 	}
-	iValue = Armour[ GCM->getItem(pObj->usItem)->getClassIndex() ].ubProtection;
+	iValue = GCM->getItem(pObj->usItem)->asArmour()->getExplosivesProtection();
 	iValue = iValue * pObj->bStatus[0] / 100;
-	if ( pObj->usItem == FLAK_JACKET || pObj->usItem == FLAK_JACKET_18 || pObj->usItem == FLAK_JACKET_Y )
-	{
-		// increase value for flak jackets!
-		iValue *= 3;
-	}
 
-	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
+	bPlate = FindPlatesAttachment(pObj);
 	if ( bPlate != ITEM_NOT_FOUND )
 	{
 		INT32 iValue2;
 
-		iValue2 = Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection;
+		iValue2 = GCM->getItem(pObj->usAttachItem[bPlate])->asArmour()->getProtection();
 		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
 
 		iValue += iValue2;
@@ -239,40 +176,29 @@ static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 {
 	// returns the % damage reduction from grenades
-	INT32 iVest, iHelmet, iLeg;
+	INT32 iVest = 0, iHelmet = 0, iLeg = 0;
 
 	if (pSoldier->inv[VESTPOS].usItem)
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = std::min(65, 65 * iVest / ( Armour[ GCM->getItem(SPECTRA_VEST_18)->getClassIndex() ].ubProtection + Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection));
-	}
-	else
-	{
-		iVest = 0;
+		iVest = std::min(65, 65 * iVest / GCM->getMaxArmourPerClass(ARMOURCLASS_VEST));
 	}
 
 	if (pSoldier->inv[HELMETPOS].usItem)
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = std::min(15, 15 * iHelmet / Armour[ GCM->getItem(SPECTRA_HELMET_18)->getClassIndex() ].ubProtection);
-	}
-	else
-	{
-		iHelmet = 0;
+		iHelmet = std::min(15, 15 * iHelmet / GCM->getMaxArmourPerClass(ARMOURCLASS_HELMET));
 	}
 
 	if (pSoldier->inv[LEGPOS].usItem)
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = std::min(25, 25 * iLeg / Armour[ GCM->getItem(SPECTRA_LEGGINGS_18)->getClassIndex() ].ubProtection);
+		iLeg = std::min(25, 25 * iLeg / GCM->getMaxArmourPerClass(ARMOURCLASS_LEGGINGS));
 	}
-	else
-	{
-		iLeg = 0;
-	}
+
 	return( (INT8) (iHelmet + iVest + iLeg) );
 }
 
@@ -2618,11 +2544,15 @@ INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation )
 }
 
 
-static INT32 ArmourProtection(SOLDIERTYPE const& pTarget, UINT8 const ubArmourType, INT8* const pbStatus, INT32 const iImpact, UINT8 const ubAmmoType)
+static INT32 ArmourProtection(SOLDIERTYPE const& pTarget, UINT16 const usItemIndex, INT8* const pbStatus, INT32 const iImpact, UINT8 const ubAmmoType)
 {
 	INT32 iProtection, iAppliedProtection, iFailure;
 
-	iProtection = Armour[ ubArmourType ].ubProtection;
+	auto armour = GCM->getArmour(usItemIndex);
+	if (!armour) {
+		return 0;
+	}
+	iProtection = armour->getProtection();
 
 	if (!AM_A_ROBOT(&pTarget))
 	{
@@ -2664,7 +2594,7 @@ static INT32 ArmourProtection(SOLDIERTYPE const& pTarget, UINT8 const ubArmourTy
 	else
 	{
 		// applied protection is the full strength of the armour, before AP/HP changes
-		iAppliedProtection = Armour[ ubArmourType ].ubProtection;
+		iAppliedProtection = armour->getProtection();
 	}
 
 	// reduce armour condition
@@ -2672,8 +2602,8 @@ static INT32 ArmourProtection(SOLDIERTYPE const& pTarget, UINT8 const ubArmourTy
 	if (ubAmmoType == AMMO_KNIFE || ubAmmoType == AMMO_SLEEP_DART)
 	{
 		// knives and darts damage armour but are not stopped by kevlar
-		if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_VEST ||
-			Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_LEGGINGS)
+		if (armour->getArmourClass() == ARMOURCLASS_VEST ||
+			armour->getArmourClass() == ARMOURCLASS_LEGGINGS)
 		{
 			iProtection = 0;
 		}
@@ -2681,7 +2611,7 @@ static INT32 ArmourProtection(SOLDIERTYPE const& pTarget, UINT8 const ubArmourTy
 	else if (ubAmmoType == AMMO_MONSTER)
 	{
 		// creature spit damages armour a lot! an extra 3x for a total of 4x normal
-		*pbStatus -= 3 * (iAppliedProtection * Armour[ubArmourType].ubDegradePercent) / 100;
+		*pbStatus -= 3 * (iAppliedProtection * armour->getDegradePercentage()) / 100;
 
 		// reduce amount of protection from armour
 		iProtection /= 2;
@@ -2689,7 +2619,7 @@ static INT32 ArmourProtection(SOLDIERTYPE const& pTarget, UINT8 const ubArmourTy
 
 	if (!AM_A_ROBOT(&pTarget))
 	{
-		*pbStatus -= (iAppliedProtection * Armour[ubArmourType].ubDegradePercent) / 100;
+		*pbStatus -= (iAppliedProtection * armour->getDegradePercentage()) / 100;
 	}
 
 	// return armour protection
@@ -2706,7 +2636,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 	if (pTarget.uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		INT8 bDummyStatus = 100;
-		iTotalProtection += ArmourProtection(pTarget, GetVehicleArmourType(pTarget.bVehicleID), &bDummyStatus, iImpact, ubAmmoType);
+		iTotalProtection += ArmourProtection(pTarget, GetVehicleArmour(pTarget.bVehicleID), &bDummyStatus, iImpact, ubAmmoType);
 	}
 	else
 	{
@@ -2734,11 +2664,11 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 			// check plates first
 			if ( iSlot == VESTPOS )
 			{
-				bPlatePos = FindAttachment( pArmour, CERAMIC_PLATES );
+				bPlatePos = FindPlatesAttachment(pArmour);
 				if (bPlatePos != -1)
 				{
 					// bullet got through jacket; apply ceramic plate armour
-					iTotalProtection += ArmourProtection(pTarget, GCM->getItem(pArmour->usAttachItem[bPlatePos])->getClassIndex(), &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType);
+					iTotalProtection += ArmourProtection(pTarget, pArmour->usAttachItem[bPlatePos], &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType);
 					if ( pArmour->bAttachStatus[bPlatePos] < USABLE )
 					{
 						// destroy plates!
@@ -2757,7 +2687,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 			// if the plate didn't stop the bullet...
 			if ( iImpact > iTotalProtection )
 			{
-				iTotalProtection += ArmourProtection( pTarget, GCM->getItem(pArmour->usItem)->getClassIndex(), &(pArmour->bStatus[0]), iImpact, ubAmmoType );
+				iTotalProtection += ArmourProtection( pTarget, pArmour->usItem, &(pArmour->bStatus[0]), iImpact, ubAmmoType );
 				if ( pArmour->bStatus[ 0 ] < USABLE )
 				{
 					DeleteObj( pArmour );
