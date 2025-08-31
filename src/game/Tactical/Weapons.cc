@@ -148,7 +148,7 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 }
 
 
-static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
+INT8 ExplosiveEffectiveArmour(const OBJECTTYPE* pObj)
 {
 	INT32 iValue;
 	INT8  bPlate;

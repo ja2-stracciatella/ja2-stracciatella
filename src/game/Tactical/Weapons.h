@@ -137,6 +137,7 @@ enum class FireWeaponResult
 //GLOBALS
 
 INT8 EffectiveArmour(const OBJECTTYPE* pObj);
+INT8 ExplosiveEffectiveArmour(const OBJECTTYPE* pObj);
 extern INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier );
 FireWeaponResult FireWeapon(SOLDIERTYPE * pSoldier, GridNo sTargetGridNo);
 void WeaponHit(SOLDIERTYPE* target, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 usDirection, INT16 sXPos, INT16 sYPos, INT16 sZPos, INT16 sRange, SOLDIERTYPE* attacker, UINT8 ubSpecial, UINT8 ubHitLocation);
