@@ -9,6 +9,7 @@ Contributors (sorted alphabetically)
 Agatae (https://bitbucket.org/Agatae)
 akdjka
 Aleh Filipovich
+alesko
 Alex Ellwein
 Alexander 'z33ky' Hirsch
 Alexander Gordeev
@@ -46,6 +47,7 @@ Nils Reuße
 noword
 oldlaptop
 Oliver Jankowski
+Pavel Shishkin
 Pavel Timofeev
 Peinthor Rene
 Peter Piwowarski
