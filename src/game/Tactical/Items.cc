@@ -2108,7 +2108,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 			break;
 
 		case IC_ARMOUR:
-			switch (pItem->asArmour()->getItemClass())
+			switch (pItem->asArmour()->getArmourClass())
 			{
 				case ARMOURCLASS_VEST:
 					if (pSoldier->inv[VESTPOS].usItem == NONE)
