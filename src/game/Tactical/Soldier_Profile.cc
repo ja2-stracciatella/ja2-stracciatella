@@ -184,7 +184,7 @@ void LoadMercProfiles()
 				if (item->isGun()) {
 					p.bMainGunAttractiveness = item->asWeapon()->ubDeadliness;
 				}
-				if (item->asArmour()) {
+				if (item->isArmour()) {
 					p.bArmourAttractiveness = item->asArmour()->getProtection();
 				}
 

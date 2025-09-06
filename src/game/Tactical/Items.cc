@@ -550,7 +550,7 @@ INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClas
 INT8 FindPlatesAttachment(OBJECTTYPE const* pObj)
 {
 	return FindAttachmentByFunction(pObj, [](UINT16 item) {
-		return GCM->getItem(item)->asArmour() && GCM->getItem(item)->asArmour()->getArmourClass() == ARMOURCLASS_PLATE;
+		return GCM->getItem(item)->isArmour() && GCM->getItem(item)->asArmour()->getArmourClass() == ARMOURCLASS_PLATE;
 	});
 }
 
@@ -1775,7 +1775,7 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 		case VESTPOS:
 		case HELMETPOS:
 		case LEGPOS:
-			if (item->getItemClass() != IC_ARMOUR)
+			if (!item->isArmour())
 			{
 				return( FALSE );
 			}
@@ -3046,7 +3046,7 @@ static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 	auto item = GCM->getItem(usItem);
 	// if the item is protective armour, reduce the amount of damage
 	// by its armour value
-	if (item->asArmour())
+	if (item->isArmour())
 	{
 		iMaxDamage -= (iMaxDamage * item->asArmour()->getProtection()) / 100;
 	}
