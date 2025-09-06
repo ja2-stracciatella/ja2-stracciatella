@@ -455,7 +455,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 			}
 
 			// If it's armour
-			if ( item->asArmour() )
+			if ( item->isArmour() )
 			{
 				if ( item->asArmour()->getProtection() > bBestArmour )
 				{
