@@ -1986,7 +1986,8 @@ void HandleExplosionQueue()
 			auto item = GCM->getItem(o.usBombItem);
 			auto explosive = item->asExplosive();
 			if (!explosive) {
-				SLOGE("Non explosive item {} as bomb item in explosion queue", item->getInternalName());
+				// This can happen for duds, where an explosion is queued, but usBombItem is not set
+				RemoveItemFromPool(wi);
 				e.fExists = false;
 				continue;
 			}
