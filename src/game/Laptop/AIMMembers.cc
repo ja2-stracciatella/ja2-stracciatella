@@ -1045,7 +1045,7 @@ static void DisplayMercStats(MERCPROFILESTRUCT const& p)
 	DrawStat(x1, LEADERSHIP_Y, str_stat_leadership, p.bLeadership);
 	DrawStat(x1, WISDOM_Y,     str_stat_wisdom,     p.bWisdom    );
 
-	//Second column in stats box.  Exp.Level, Markmanship, mechanical, explosive, medical
+	//Second column in stats box.  Exp.Level, Marksmanship, mechanical, explosive, medical
 	const UINT16 x2 = STATS_SECOND_COL;
 	DrawStatColoured(x2, EXPLEVEL_Y,    str_stat_exp_level,    p.bExpLevel, FONT_MCOLOR_WHITE);
 	DrawStat(        x2, MARKSMAN_Y,    str_stat_marksmanship, p.bMarksmanship);
