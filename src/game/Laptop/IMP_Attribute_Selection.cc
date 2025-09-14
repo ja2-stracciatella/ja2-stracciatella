@@ -57,7 +57,7 @@ static INT32 iCurrentDexterity   = 55;
 static INT32 iCurrentHealth      = 55;
 static INT32 iCurrentLeaderShip  = 55;
 static INT32 iCurrentWisdom      = 55;
-static INT32 iCurrentMarkmanship = 55;
+static INT32 iCurrentMarksmanship = 55;
 static INT32 iCurrentMechanical  = 55;
 static INT32 iCurrentMedical     = 55;
 static INT32 iCurrentExplosives  = 55;
@@ -321,7 +321,7 @@ static void IncrementStat(INT32 iStatToIncrement)
 		case WISDOM_ATTRIBUTE:     val = &iCurrentWisdom;      break;
 		case LEADERSHIP_ATTRIBUTE: val = &iCurrentLeaderShip;  break;
 		case HEALTH_ATTRIBUTE:     val = &iCurrentHealth;      break;
-		case MARKSMANSHIP_SKILL:   val = &iCurrentMarkmanship; break;
+		case MARKSMANSHIP_SKILL:   val = &iCurrentMarksmanship; break;
 		case MEDICAL_SKILL:        val = &iCurrentMedical;     break;
 		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  break;
 		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  break;
@@ -363,7 +363,7 @@ static void DecrementStat(INT32 iStatToDecrement)
 		case WISDOM_ATTRIBUTE:     val = &iCurrentWisdom;                          break;
 		case LEADERSHIP_ATTRIBUTE: val = &iCurrentLeaderShip;                      break;
 		case HEALTH_ATTRIBUTE:     val = &iCurrentHealth;                          break;
-		case MARKSMANSHIP_SKILL:   val = &iCurrentMarkmanship; may_be_zero = TRUE; break;
+		case MARKSMANSHIP_SKILL:   val = &iCurrentMarksmanship; may_be_zero = TRUE; break;
 		case MEDICAL_SKILL:        val = &iCurrentMedical;     may_be_zero = TRUE; break;
 		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  may_be_zero = TRUE; break;
 		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  may_be_zero = TRUE; break;
@@ -717,7 +717,7 @@ static INT32 GetCurrentAttributeValue(INT32 attribute)
 		case STRENGTH_ATTRIBUTE:   val = iCurrentStrength;    break;
 		case WISDOM_ATTRIBUTE:     val = iCurrentWisdom;      break;
 		case LEADERSHIP_ATTRIBUTE: val = iCurrentLeaderShip;  break;
-		case MARKSMANSHIP_SKILL:   val = iCurrentMarkmanship; break;
+		case MARKSMANSHIP_SKILL:   val = iCurrentMarksmanship; break;
 		case EXPLOSIVE_SKILL:      val = iCurrentExplosives;  break;
 		case MEDICAL_SKILL:        val = iCurrentMedical;     break;
 		case MECHANICAL_SKILL:     val = iCurrentMechanical;  break;
@@ -734,7 +734,7 @@ void SetAttributes(void)
 	iCurrentLeaderShip  = 55;
 	iCurrentWisdom      = 55;
 	iCurrentAgility     = 55;
-	iCurrentMarkmanship = 55;
+	iCurrentMarksmanship = 55;
 	iCurrentMechanical  = 55;
 	iCurrentMedical     = 55;
 	iCurrentExplosives  = 55;
@@ -770,7 +770,7 @@ void SetGeneratedCharacterAttributes(void)
 	iLeadership   = iCurrentLeaderShip;
 	iWisdom       = iCurrentWisdom;
 	iAgility      = iCurrentAgility;
-	iMarksmanship = iCurrentMarkmanship;
+	iMarksmanship = iCurrentMarksmanship;
 	iMechanical   = iCurrentMechanical;
 	iMedical      = iCurrentMedical;
 	iExplosives   = iCurrentExplosives;
