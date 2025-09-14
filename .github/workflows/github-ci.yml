@@ -172,7 +172,7 @@ jobs:
     - name: Install rustup
       shell: bash
       run: |
-        curl --proto '=https' --tlsv1.2 -sSfL https://sh.rustup.rs | sh -s -- -y --default-toolchain=$(cat ./min-rust-version)
+        curl --proto '=https' --tlsv1.2 -sSfL https://sh.rustup.rs | sh -s -- -y --default-toolchain=$(cat ./rust-toolchain)
 
     - name: Run cargo fmt
       shell: bash
