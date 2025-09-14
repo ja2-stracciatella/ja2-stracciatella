@@ -107,7 +107,7 @@ INT8 EffectiveArmour(OBJECTTYPE const* const o)
 	if (!o) return 0;
 
 	const ItemModel * item = GCM->getItem(o->usItem);
-	if (!item->asArmour()) return 0;
+	if (!item->isArmour()) return 0;
 
 	INT32 armour_val = item->asArmour()->getProtection() * o->bStatus[0] / 100;
 	INT8  const plate_pos  = FindPlatesAttachment(o);
@@ -148,12 +148,12 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 }
 
 
-static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
+INT8 ExplosiveEffectiveArmour(const OBJECTTYPE* pObj)
 {
 	INT32 iValue;
 	INT8  bPlate;
 
-	if (pObj == NULL || !GCM->getItem(pObj->usItem)->asArmour())
+	if (pObj == NULL || !GCM->getItem(pObj->usItem)->isArmour())
 	{
 		return( 0 );
 	}
