@@ -102,7 +102,7 @@ set(WITH_CUSTOM_LOCALE "" CACHE STRING "Set a custom locale at the start, leave 
 
 if(MSVC)
     # set the source and execution charset
-    add_compile_options("/utf-8")
+    add_compile_options(/utf-8 /bigobj)
     # suppress the min and max macro definitions
     add_compile_definitions(NOMINMAX)
 
