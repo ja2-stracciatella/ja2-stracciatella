@@ -1,7 +1,7 @@
 # Copied from https://github.com/sbellus/json-cmake
 # Licence: MIT
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.18)
 
 if (DEFINED JSonParserGuard)
     return()
