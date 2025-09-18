@@ -644,7 +644,7 @@ const char* Internals::getPersonalityTraitName(enum PersonalityTrait trait)
 {
 	switch (trait)
 	{
-		case NO_PERSONALITYTRAIT:				return "NO_PERSONALITYTRAIT";
+		case NO_PERSONALITYTRAIT:				return "NONE";
 		case HEAT_INTOLERANT:					return "HEAT_INTOLERANT";
 		case NERVOUS:							return "NERVOUS";
 		case CLAUSTROPHOBIC:					return "CLAUSTROPHOBIC";
@@ -658,7 +658,7 @@ const char* Internals::getPersonalityTraitName(enum PersonalityTrait trait)
 
 PersonalityTrait Internals::getPersonalityTraitEnumFromString(const ST::string& s)
 {
-	if (s == "" || s == "NO_PERSONALITYTRAIT") return PersonalityTrait::NO_PERSONALITYTRAIT;
+	if (s == "" || s == "NONE") return PersonalityTrait::NO_PERSONALITYTRAIT;
 	else if (s == "HEAT_INTOLERANT") return PersonalityTrait::HEAT_INTOLERANT;
 	else if (s == "NERVOUS") return PersonalityTrait::NERVOUS;
 	else if (s == "CLAUSTROPHOBIC") return PersonalityTrait::CLAUSTROPHOBIC;
@@ -674,7 +674,7 @@ const char* Internals::getSkillTraitName(enum SkillTrait trait)
 {
 	switch (trait)
 	{
-		case NO_SKILLTRAIT:						return "NO_SKILLTRAIT";
+		case NO_SKILLTRAIT:						return "NONE";
 		case LOCKPICKING:						return "LOCKPICKING";
 		case HANDTOHAND:						return "HANDTOHAND";
 		case ELECTRONICS:						return "ELECTRONICS";
@@ -696,7 +696,7 @@ const char* Internals::getSkillTraitName(enum SkillTrait trait)
 
 SkillTrait Internals::getSkillTraitEnumFromString(const ST::string& s)
 {
-	if (s == "" || s == "NO_SKILLTRAIT") return SkillTrait::NO_SKILLTRAIT;
+	if (s == "" || s == "NONE") return SkillTrait::NO_SKILLTRAIT;
 	else if (s == "LOCKPICKING") return SkillTrait::LOCKPICKING;
 	else if (s == "HANDTOHAND") return SkillTrait::HANDTOHAND;
 	else if (s == "ELECTRONICS") return SkillTrait::ELECTRONICS;
