@@ -311,22 +311,27 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROF
 	prof->uiBiWeeklySalary = c.getOptionalUInt("biWeeklySalary", binaryProf->uiBiWeeklySalary);
 	prof->bMedicalDeposit = c.getOptionalBool("isMedicalDepositRequired", binaryProf->bMedicalDeposit);
 
-	JsonObject jInvSlots[lengthof(prof->inv)];
 	if (r.has("inventory")) {
+		int slotIdx = 0;
 		for (auto& element : r.GetValue("inventory").toVec()) {
 			JsonObject jSlot = element.toObject();
-			InvSlotPos slotIdx = Internals::getInventorySlotEnumFromString(jSlot.GetString("slot"));
-			jInvSlots[slotIdx] = std::move(jSlot);
+			if (jSlot.has("slot")) {
+				slotIdx = Internals::getInventorySlotEnumFromString(jSlot.GetString("slot"));
+			}
+			ST::string itemName = jSlot.GetString("item");
+			prof->inv[slotIdx] = contentManager->getItemByName(itemName)->getItemIndex();
+			prof->bInvNumber[slotIdx] = jSlot.getOptionalUInt("quantity", 1);
+			prof->bInvStatus[slotIdx] = jSlot.getOptionalUInt("status", 100);
+			if (jSlot.getOptionalBool("isUndroppable")) {
+				prof->ubInvUndroppable |= gubItemDroppableFlag[slotIdx];
+			}
+			slotIdx++;
 		}
-	}
-	for (size_t slotIdx = 0; slotIdx < lengthof(prof->inv); slotIdx++) {
-		ST::string itemName = jInvSlots[slotIdx].getOptionalString("item");
-		prof->inv[slotIdx] = itemName.empty() ? binaryProf->inv[slotIdx] : contentManager->getItemByName(itemName)->getItemIndex();
-		prof->bInvNumber[slotIdx] = jInvSlots[slotIdx].getOptionalUInt("quantity", binaryProf->bInvNumber[slotIdx]);
-		prof->bInvStatus[slotIdx] = jInvSlots[slotIdx].getOptionalUInt("status", binaryProf->bInvStatus[slotIdx]);
-		if (jInvSlots[slotIdx].getOptionalBool("isUndroppable", binaryProf->ubInvUndroppable & gubItemDroppableFlag[slotIdx])) {
-			prof->ubInvUndroppable |= gubItemDroppableFlag[slotIdx];
-		}
+	} else {
+		std::copy(std::begin(binaryProf->inv), std::end(binaryProf->inv), std::begin(prof->inv));
+		std::copy(std::begin(binaryProf->bInvNumber), std::end(binaryProf->bInvNumber), std::begin(prof->bInvNumber));
+		std::copy(std::begin(binaryProf->bInvStatus), std::end(binaryProf->bInvStatus), std::begin(prof->bInvStatus));
+		prof->ubInvUndroppable = binaryProf->ubInvUndroppable;
 	}
 
 	prof->uiMoney = r.getOptionalUInt("money", binaryProf->uiMoney);

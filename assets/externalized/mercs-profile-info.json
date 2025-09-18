@@ -1,9 +1,9 @@
 /**
- * Supplementary information to character profiles. this contains information of the character that is static and cannot be updated at run-time.
+ * Supplementary and profile (prof.dat) information to named characters.
  *
  * There should be an entry for every character in the game.
  *
- * Fields:
+ * Required fields:
  *   - profileID: the merc ID; the index in the gMercProfiles array. It must corresponds to the data file names
  *   - internalName: the internal name used for logging or mapping other data
  *   - type: what kind of profile it is (corresponds to the ubWhatkindOfMercAmI). It must be one of:
@@ -13,10 +13,46 @@
  *        - "RPC": Recruitable characters - NPCs that can be recruited
  *        - "NPC": Non-playing characters, that can never be controlled by the player
  *        - "NOT_USED": Reserved slots that are not used anywhere
- */
+ * The rest are optional. If omitted the corresponding value is taken from the prof.dat file.
+ * Array fields (e.g. inventory) fully overwrite the prof.dat values. The rest are merged.
+ * For instance, if only the health stat is defined here the other stats will be applied from prof.dat.
+ * While if there is an inventory field here all the prof.dat items will be discarded.
+*/
 [
     /* A.I.M. soldiers */
-    { "profileID": 0,  "internalName": "BARRY", "type": "AIM" },
+    { "profileID": 0,  "internalName": "BARRY", "type": "AIM"
+/*      ,"stats": {
+            "agility": 72,
+            "dexterity": 87,
+            "experience": 2,
+            "explosive": 92,
+            "leadership": 29,
+            "health": 82,
+            "marksmanship": 70,
+            "mechanical": 44,
+            "medical": 20,
+            "sleepiness": 8,
+            "strength": 80,
+            "wisdom": 91
+        },
+        "personalityTrait": "NONE", // HEAT_INTOLERANT, NERVOUS, CLAUSTROPHOBIC, NONSWIMMER, FEAR_OF_INSECTS, FORGETFUL, PSYCHO
+        "skillTrait": "NONE",       // LOCKPICKING, HANDTOHAND, ELECTRONICS, NIGHTOPS, THROWING, TEACHING, HEAVY_WEAPS...
+        "skillTrait2": "NONE",      // ...  AUTO_WEAPS, STEALTHY, AMBIDEXT, THIEF, MARTIALARTS, KNIFING, ONROOF, CAMOUFLAGED
+        "attitude": "NORMAL",       // FRIENDLY, LONER, OPTIMIST, PESSIMIST, AGGRESSIVE, ARROGANT, BIG_SHOT, ASSHOLE, COWARD
+        "inventory": [
+            { "item": "STEEL_HELMET", "status": 97 },
+            {
+                "item": "FLAK_JACKET", // Required. Must correspond to the internalName field in items.json, weapons.json, magazines.json, explosives.json or armours.json
+                "quantity": 1,         // If omitted defaults to: 1. Max: 8.
+                "status": 98           // Default: 100 (fully restored). How damaged or depleted (e.g. toolkit) the item is.
+            },
+            { "item": "SW38", "status": 91 },
+            { "item": "CLIP38_6", "quantity": 5 },
+            { "item": "TNT" },
+            { "item": "DETONATOR" },
+            { "item": "LOCKSMITHKIT" }
+        ] */
+    },
     { "profileID": 1,  "internalName": "BLOOD", "type": "AIM" },
     { "profileID": 2,  "internalName": "LYNX", "type": "AIM" },
     { "profileID": 3,  "internalName": "GRIZZLY", "type": "AIM" },

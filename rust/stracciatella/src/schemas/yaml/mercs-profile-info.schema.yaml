@@ -149,7 +149,6 @@ items:
           isUndroppable:
             type: boolean
         required:
-          - slot
           - item
     money:
       $ref: types/uint32.schema.yaml
