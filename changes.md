@@ -15,6 +15,7 @@
 - Enhancement: Extract smoke effects (#2063)
 - Enhancement: Lift the MAX_WEAPONS restriction; weapons no longer must have an index < 70 (#2051)
 - Enhancement: Fixing vanilla binaries without breaking mods (#2167)
+- Enhancement: Enhancement: Replace merging with overwriting for inventory (#2225)
 - Bugfix: Fix moddability of Walter's bribe amount (#2030)
 - Bugfix: Crash if Skyrider tries to swim (#2191)
 - Bugfix: Game crashes after the turn (#2124)
