@@ -1,6 +1,6 @@
 type: string
 enum:
-    - NO_SKILLTRAIT
+    - NONE
     - LOCKPICKING
     - HANDTOHAND
     - ELECTRONICS

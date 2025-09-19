@@ -1,6 +1,6 @@
 type: string
 enum:
-    - NO_PERSONALITYTRAIT
+    - NONE
     - HEAT_INTOLERANT
     - NERVOUS
     - CLAUSTROPHOBIC
