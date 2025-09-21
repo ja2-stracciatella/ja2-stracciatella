@@ -1036,7 +1036,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_84_AND_85_TRUE:
-			gubFact[usFact] = CheckFact(FACT_84, ubProfileID) && CheckFact(FACT_HANS_AT_SPOT, ubProfileID);
+			gubFact[usFact] = CheckFact(FACT_HANS_TRIGGER_CONDITION, ubProfileID) && CheckFact(FACT_HANS_AT_SPOT, ubProfileID);
 			break;
 
 		case FACT_SKYRIDER_IN_B15:
@@ -1082,7 +1082,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			gubFact[usFact] = !BoxerExists();
 			break;
 
-		case FACT_245: // Can dimitri be recruited? should be true if already true, OR if Miguel has been recruited already
+		case FACT_DIMITRI_CAN_BE_RECRUITED: // Can dimitri be recruited? should be true if already true, OR if Miguel has been recruited already
 			gubFact[usFact] = gubFact[usFact] || FindSoldierByProfileIDOnPlayerTeam(MIGUEL);
 /*
 		case FACT_:

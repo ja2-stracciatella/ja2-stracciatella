@@ -5466,7 +5466,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		pTarget->bNeutral &&
 		pTarget->ubProfile == SLAY &&
 		pTarget->bLife >= OKLIFE &&
-		!CheckFact(FACT_155, 0))
+		!CheckFact(FACT_SLAY_CAN_BE_ATTACKED, 0))
 	{
 		TriggerNPCRecord( SLAY, 1 );
 	}
@@ -5480,7 +5480,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 			// hicks could get mad!!!
 			HickCowAttacked( pSoldier, pTarget );
 		}
-		else if (pTarget->ubProfile == PABLO && pTarget->bLife >= OKLIFE && CheckFact(FACT_PABLO_PUNISHED_BY_PLAYER, 0) && !CheckFact(FACT_38, 0))
+		else if (pTarget->ubProfile == PABLO && pTarget->bLife >= OKLIFE && CheckFact(FACT_PABLO_PUNISHED_BY_PLAYER, 0) && !CheckFact(FACT_PABLO_ATTACKED_AFTER_PUNISHMENT, 0))
 		{
 			TriggerNPCRecord( PABLO, 3 );
 		}

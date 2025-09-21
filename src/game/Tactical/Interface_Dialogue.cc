@@ -2630,15 +2630,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_TRIGGER_FATHER_18_20_OR_15:
-				if (!CheckFact(FACT_132, FATHER))
+				if (!CheckFact(FACT_FATHER_DIALOGUE_STATE_1, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 18 );
 				}
-				else if (!CheckFact(FACT_133, FATHER))
+				else if (!CheckFact(FACT_FATHER_DIALOGUE_STATE_2, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 20 );
 				}
-				else if (!CheckFact(FACT_134, FATHER))
+				else if (!CheckFact(FACT_FATHER_DIALOGUE_STATE_3, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 15 );
 				}

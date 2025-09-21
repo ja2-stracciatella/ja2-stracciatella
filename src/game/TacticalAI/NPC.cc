@@ -1409,7 +1409,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			// CHEAP HACK
 			// Since we don't have CONDITIONAL once-per-convo refreshes, do this in code
 			// NB fact 281 is 'Darren has explained boxing rules'
-			if (ubNPC == DARREN && !CheckFact(FACT_281, DARREN))
+			if (ubNPC == DARREN && !CheckFact(FACT_DARREN_EXPLAINED_BOXING_RULES, DARREN))
 			{
 				pNPCQuoteInfoArray[11].fFlags &= ~QUOTE_FLAG_SAID;
 			}
