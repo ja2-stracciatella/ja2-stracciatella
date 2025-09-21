@@ -2,6 +2,7 @@
 
 #include "Animation_Data.h"
 #include "Facts.h"
+#include "Interface_Dialogue.h"
 #include "MercProfileInfo.h"
 #include "NPC.h"
 #include "Overhead_Types.h"
@@ -52,4 +53,8 @@ namespace Internals
 
 	const char* getFactName(Fact fact);
 	Fact getFactEnumFromString(const ST::string& s);
+
+	/** Get NPC action name. */
+	const char* getNPCActionName(NPCAction action);
+	NPCAction getNPCActionEnumFromString(const ST::string& s);
 }

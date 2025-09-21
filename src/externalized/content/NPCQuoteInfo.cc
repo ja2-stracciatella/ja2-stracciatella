@@ -97,7 +97,7 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 				uint8_t jsonProfileId = contentManager->getMercProfileInfoByName(jsonProfileName)->profileID;
 				result = NPC_ACTION_TURN_TO_FACE_NEAREST_MERC + jsonProfileId;
 			}
-			else if (a.has("code")) result = a.GetInt("code");
+			else if (a.has("code")) result = Internals::getNPCActionEnumFromString(a.GetString("code"));
 			if (a.getOptionalBool("doFirst")) result = -result;
 			rec->sActionData = result;
 		}
@@ -230,7 +230,7 @@ JsonValue NPCQuoteInfo::serialize(const ContentManager* contentManager) const
 		if (abs(this->sActionData) > NPC_ACTION_TURN_TO_FACE_NEAREST_MERC && abs(this->sActionData) < NPC_ACTION_LAST_TURN_TO_FACE_PROFILE) {
 			actionData.set("037turnToFace", (contentManager->getMercProfileInfo(abs(this->sActionData) - NPC_ACTION_TURN_TO_FACE_NEAREST_MERC))->internalName);
 		}
-		else actionData.set("038index", abs(this->sActionData));
+		else actionData.set("038action", Internals::getNPCActionName(static_cast<NPCAction>(abs(this->sActionData))));
 		if (this->sActionData < 0) {
 			actionData.set("039doFirst", true);
 		}

@@ -12,7 +12,7 @@
                 "quoteNum": 18, // "I cannot wait to see my brother."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -22,7 +22,7 @@
                 "quoteNum": 16, // "Why? Why?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -33,7 +33,7 @@
                 "quoteNum": 16, // "Why? Why?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -42,7 +42,7 @@
                 "quoteNum": 17, // "We have to be going. We have already spent far too much time in San Mona."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -59,7 +59,7 @@
                 "quoteNum": 10, // "No, Madame Layla is the only one permitted to handle money."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 1 // NPC_ACTION_DONT_ACCEPT_ITEM
+                    "code": "DONT_ACCEPT_ITEM"
                 }
             },
             {
@@ -75,7 +75,7 @@
                 "triggerNPC": "MARIA",
                 "triggerRecord": 18,
                 "actionData": {
-                    "code": 39 // NPC_ACTION_PLAYER_SAYS_NICE_LATER
+                    "code": "PLAYER_SAYS_NICE_LATER" // NPC_ACTION_PLAYER_SAYS_NICE_LATER
                 }
             },
             {
@@ -87,7 +87,7 @@
                 },
                 "requiredApproach": "TRIGGER_NPC",
                 "actionData": {
-                    "code": 145 // NPC_ACTION_TRIGGER_MARIA
+                    "code": "TRIGGER_MARIA" // NPC_ACTION_TRIGGER_MARIA
                 }
             },
             {
@@ -137,7 +137,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "MARIA_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
-                    "code": 168 // NPC_ACTION_SET_EPC_TO_NPC
+                    "code": "SET_EPC_TO_NPC"
                 }
             },
             {
@@ -145,7 +145,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "goToGridno": 8354,
                 "actionData": {
-                    "code": 264 // NPC_ACTION_REMOVE_NPC
+                    "code": "REMOVE_NPC" // NPC_ACTION_REMOVE_NPC
                 }
             },
             {
@@ -156,7 +156,7 @@
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -181,7 +181,7 @@
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -192,7 +192,7 @@
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -202,7 +202,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "ANGEL_TRIGGER_CONDITION", // unnamed fact
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -224,7 +224,7 @@
                 "quoteNum": 13, // "I hope my dad's not drunk when I get home. He's gonna kill me... Well maybe, if I'm lucky, he won't be there."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -234,7 +234,7 @@
                 "quoteNum": 19, // "You're crazy!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -245,7 +245,7 @@
                 "quoteNum": 19, // "You're crazy!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -273,7 +273,7 @@
                 "quoteNum": 9, // "Just leave me alone."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -284,7 +284,7 @@
                 "quoteNum": 20, // "No more foolin' around, okay? I'll do exactly what you tell me - I promise!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -294,7 +294,7 @@
                 "quoteNum": 11, // "Okay, I'll go with you. Just don't let anything happen to me. My mom will be really disappointed if she isn't the one that gets to kill me."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -303,7 +303,7 @@
                 "quoteNum": 17, // "I tell you what... Since I know you're gonna save my skin with my mom, I'll let you in on something... Somebody's stashing cash down here. There's tons of it!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -322,7 +322,7 @@
                 "triggerNPC": "MARTHA",
                 "triggerRecord": 7,
                 "actionData": {
-                    "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
+                    "code": "UN_RECRUIT_EPC" // NPC_ACTION_UN_RECRUIT_EPC
                 }
             },
             {
@@ -343,7 +343,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "JOEY_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
-                    "code": 168 // NPC_ACTION_SET_EPC_TO_NPC
+                    "code": "SET_EPC_TO_NPC"
                 }
             },
             {
@@ -367,7 +367,7 @@
                 "quoteNum": 21, // "Make the shooting stop!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -381,7 +381,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "JOEY_AGREED_TO_ESCORT_UNDER_THREAT", // unnamed fact
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -394,7 +394,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "JOEY_AGREED_TO_ESCORT_UNDER_THREAT", // unnamed fact
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -427,7 +427,7 @@
                 "quoteNum": 42, // "I can't wait 'til we get there. Haven't taken the bird out for a spin in a long while."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -438,7 +438,7 @@
                 "quoteNum": 43, // "You're one sick mother, Cap."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -448,7 +448,7 @@
                 "quoteNum": 38, // "I got no plans on havin' anything to do with you, Cap! You guys tried to kill me... Remember?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -459,7 +459,7 @@
                 "quoteNum": 8, // "I need help... First aid..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -477,7 +477,7 @@
                 "quoteNum": 50, // "Get things under control, then we'll yak all ya want."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -521,7 +521,7 @@
                 "quoteNum": 11, // "You're grounded, Cap, 'til I see my money."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 119 // NPC_ACTION_REPORT_BALANCE
+                    "code": "REPORT_BALANCE" // NPC_ACTION_REPORT_BALANCE
                 }
             },
             {
@@ -545,7 +545,7 @@
                 "numQuotes": 2,
                 "endQuest": "CHOPPER_PILOT",
                 "actionData": {
-                    "code": 51 // NPC_ACTION_GRANT_EXPERIENCE_2
+                    "code": "GRANT_EXPERIENCE_2" // NPC_ACTION_GRANT_EXPERIENCE_2
                 }
             },
             {
@@ -561,7 +561,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "SKYRIDER_ESCORT_QUEST_OFFERED", // unnamed fact
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -576,7 +576,7 @@
                 "triggerRecord": 20,
                 "setFactTrue": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
                 "actionData": {
-                    "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
+                    "code": "UN_RECRUIT_EPC" // NPC_ACTION_UN_RECRUIT_EPC
                 }
             },
             {
@@ -587,7 +587,7 @@
                 "quoteNum": 36, // "Okay. Just so we're straight on this, I'm a pilot, not a soldier. I'll do what I'm told 'til I get there, but ain't getting involved. I don't want no gun. I don't want to have to kill nobody."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -597,7 +597,7 @@
                 "quoteNum": 37, // "Just show me on the map where ya wanna go, and I'll get ya there."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -607,7 +607,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "SKYRIDER_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
-                    "code": 168 // NPC_ACTION_SET_EPC_TO_NPC
+                    "code": "SET_EPC_TO_NPC"
                 }
             },
             {
@@ -626,7 +626,7 @@
                 "giftItem": "65535",
                 "goToGridno": 110,
                 "actionData": {
-                    "code": 22 // NPC_ACTION_BECOME_ENEMY
+                    "code": "BECOME_ENEMY" // NPC_ACTION_BECOME_ENEMY
                 }
             },
             {
@@ -635,7 +635,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 52 // NPC_ACTION_GRANT_EXPERIENCE_3
+                    "code": "GRANT_EXPERIENCE_3" // NPC_ACTION_GRANT_EXPERIENCE_3
                 }
             },
             {
@@ -649,7 +649,7 @@
                 "requiredApproach": "RECRUIT",
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -664,7 +664,7 @@
                 "quoteNum": 51, // "Thought you forgot about me."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             }
         ]
@@ -679,7 +679,7 @@
                 "quoteNum": 28, // "Why? Why?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -690,7 +690,7 @@
                 "quoteNum": 28, // "Why? Why?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -711,7 +711,7 @@
                 "quoteNum": 8, // "Help! I need... a... doctor."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -721,7 +721,7 @@
                 "quoteNum": 31, // "Protect me. Please..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -810,7 +810,7 @@
                 "numQuotes": 6,
                 "startQuest": "RUNAWAY_JOEY",
                 "actionData": {
-                    "code": 136 // NPC_ACTION_ADD_JOEY_TO_WORLD
+                    "code": "ADD_JOEY_TO_WORLD" // NPC_ACTION_ADD_JOEY_TO_WORLD
                 }
             },
             {
@@ -867,7 +867,7 @@
                 "triggerNPC": "MARTHA",
                 "triggerRecord": 20,
                 "actionData": {
-                    "code": 140 // NPC_ACTION_MARTHA_DIES
+                    "code": "MARTHA_DIES" // NPC_ACTION_MARTHA_DIES
                 }
             },
             {
@@ -889,7 +889,7 @@
                 "triggerNPC": "MARTHA",
                 "triggerRecord": 21,
                 "actionData": {
-                    "code": 10 // NPC_ACTION_BOOST_TOWN_LOYALTY
+                    "code": "BOOST_TOWN_LOYALTY" // NPC_ACTION_BOOST_TOWN_LOYALTY
                 }
             },
             {
@@ -898,7 +898,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -909,7 +909,7 @@
                 "triggerNPC": "MARTHA",
                 "triggerRecord": 22,
                 "actionData": {
-                    "code": 52 // NPC_ACTION_GRANT_EXPERIENCE_3
+                    "code": "GRANT_EXPERIENCE_3" // NPC_ACTION_GRANT_EXPERIENCE_3
                 }
             },
             {
@@ -918,7 +918,7 @@
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 257 // NPC_ACTION_24_HOURS_SINCE_JOEY_RESCUED
+                    "code": "24_HOURS_SINCE_JOEY_RESCUED" // NPC_ACTION_24_HOURS_SINCE_JOEY_RESCUED
                 }
             }
         ]
@@ -933,7 +933,7 @@
                 "quoteNum": 18, // "You're worse than them!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -944,7 +944,7 @@
                 "quoteNum": 18, // "You're worse than them!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -954,7 +954,7 @@
                 "quoteNum": 8, // "Goddamn... goddamn..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -964,7 +964,7 @@
                 "quoteNum": 25, // "You must help my wife..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -981,7 +981,7 @@
                 "quoteNum": 28, // "We can't carry on a conversation now! It's too darn dangerous."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -998,7 +998,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "JOHN_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
-                    "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
+                    "code": "UN_RECRUIT_EPC" // NPC_ACTION_UN_RECRUIT_EPC
                 }
             },
             {
@@ -1013,7 +1013,7 @@
                 "setFactTrue": "TOURIST_ESCORT_QUEST_STARTED", // unnamed fact
                 "userInterface": "TURN_UI_OFF",
                 "actionData": {
-                    "code": 186 // NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_9
+                    "code": "TRIGGER_MARY_OR_JOHN_RECORD_9" // NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_9
                 }
             },
             {
@@ -1023,7 +1023,7 @@
                 "quoteNum": 13, // "Mary, please, I'm trying to talk. I know the ticket said Arulco, but how was I supposed to know that's not how the Arubans spell Aruba. I mean... these people speak Arubic."
                 "numQuotes": 2,
                 "actionData": {
-                    "code": 187 // NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_10
+                    "code": "TRIGGER_MARY_OR_JOHN_RECORD_10" // NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_10
                 }
             },
             {
@@ -1034,7 +1034,7 @@
                 "numQuotes": 2,
                 "userInterface": "TURN_UI_ON",
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -1055,7 +1055,7 @@
                 "numQuotes": 1,
                 "endQuest": "ESCORT_TOURISTS",
                 "actionData": {
-                    "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
+                    "code": "UN_RECRUIT_EPC" // NPC_ACTION_UN_RECRUIT_EPC
                 }
             },
             {
@@ -1071,7 +1071,7 @@
                 "triggerRecord": 12,
                 "userInterface": "TURN_UI_OFF",
                 "actionData": {
-                    "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
+                    "code": "UN_RECRUIT_EPC" // NPC_ACTION_UN_RECRUIT_EPC
                 }
             },
             {
@@ -1082,7 +1082,7 @@
                 "numQuotes": 2,
                 "userInterface": "TURN_UI_ON",
                 "actionData": {
-                    "code": 188 // NPC_ACTION_ADD_JOHNS_GUN_SHIPMENT
+                    "code": "ADD_JOHNS_GUN_SHIPMENT" // NPC_ACTION_ADD_JOHNS_GUN_SHIPMENT
                 }
             },
             {
@@ -1094,7 +1094,7 @@
                 "quoteNum": 24, // "I can't wait to be bowling with my buddies again. Be none too soon to get all this behind me as far as I'm concerned."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1104,7 +1104,7 @@
                 "quoteNum": 10, // "I can't take money from you."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 1 // NPC_ACTION_DONT_ACCEPT_ITEM
+                    "code": "DONT_ACCEPT_ITEM"
                 }
             },
             {
@@ -1115,7 +1115,7 @@
                 "quoteNum": 29, // "Ya had me a little worried there. Didn't know if I'd ever see Drassen."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -1163,7 +1163,7 @@
                 "quoteNum": 29, // "Ya had me a little worried there. Didn't know if I'd ever see Drassen."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -1178,7 +1178,7 @@
                 "quoteNum": 29, // "Ya had me a little worried there. Didn't know if I'd ever see Drassen."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             }
         ]
@@ -1197,7 +1197,7 @@
                 "quoteNum": 12, // "John was crazy for trusting you."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1212,7 +1212,7 @@
                 "quoteNum": 12, // "John was crazy for trusting you."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -1221,7 +1221,7 @@
                 "quoteNum": 8, // "Oh, my gosh... I'm bleeding John... John?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1239,7 +1239,7 @@
                 "quoteNum": 19, // "My husband is in pain."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1253,7 +1253,7 @@
                 "quoteNum": 21, // "Oh, no... Oh, no..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1263,7 +1263,7 @@
                 "quoteNum": 22, // "Oh my! How can you even think about talking right now?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1273,7 +1273,7 @@
                 "quoteNum": 10, // "Oh, no, you keep it. You can pick up all kinds of stuff at the Mary Lynn factory in Drassen. With the exchange rate, they're practically giving the stuff away."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 1 // NPC_ACTION_DONT_ACCEPT_ITEM
+                    "code": "DONT_ACCEPT_ITEM"
                 }
             },
             {
@@ -1283,7 +1283,7 @@
                 "numQuotes": 1,
                 "setFactTrue": "MARY_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
-                    "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
+                    "code": "UN_RECRUIT_EPC" // NPC_ACTION_UN_RECRUIT_EPC
                 }
             },
             {
@@ -1329,7 +1329,7 @@
                 "numQuotes": 1,
                 "endQuest": "ESCORT_TOURISTS",
                 "actionData": {
-                    "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
+                    "code": "UN_RECRUIT_EPC" // NPC_ACTION_UN_RECRUIT_EPC
                 }
             },
             {
@@ -1341,7 +1341,7 @@
                 "quoteNum": 18, // "I just want to be in Cleveland. My mind is already there."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1351,7 +1351,7 @@
                 "quoteNum": 20, // "Oh my God, John... John..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1362,7 +1362,7 @@
                 "quoteNum": 23, // "Finally. I thought you were going to leave me here forever."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
+                    "code": "ASK_ABOUT_ESCORTING_EPC"
                 }
             },
             {
@@ -1380,7 +1380,7 @@
                 "triggerNPC": "JOHN",
                 "triggerRecord": 14,
                 "actionData": {
-                    "code": 52 // NPC_ACTION_GRANT_EXPERIENCE_3
+                    "code": "GRANT_EXPERIENCE_3" // NPC_ACTION_GRANT_EXPERIENCE_3
                 }
             },
             {
@@ -1412,7 +1412,7 @@
                 "quoteNum": 21, // "Oh, no... Oh, no..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1427,7 +1427,7 @@
                 "quoteNum": 21, // "Oh, no... Oh, no..."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             }
         ]
@@ -1442,7 +1442,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1453,7 +1453,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -1463,7 +1463,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1480,7 +1480,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1489,7 +1489,7 @@
                 "quoteNum": 31, // "Is time for you to go now. We stay open late for you, then everybody want it, and I never sleep."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1501,7 +1501,7 @@
                 "triggerNPC": "HERVE",
                 "triggerRecord": 7,
                 "actionData": {
-                    "code": 197 // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
+                    "code": "MAKE_NPC_FIRST_BARTENDER" // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
                 }
             },
             {
@@ -1519,7 +1519,7 @@
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 198 // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
+                    "code": "MAKE_NPC_SECOND_BARTENDER" // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
                 }
             },
             {
@@ -1529,7 +1529,7 @@
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
-                    "code": 199 // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
+                    "code": "MAKE_NPC_THIRD_BARTENDER" // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
                 }
             },
             {
@@ -1539,7 +1539,7 @@
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 200 // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
+                    "code": "MAKE_NPC_FOURTH_BARTENDER" // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
                 }
             },
             {
@@ -1577,7 +1577,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1587,7 +1587,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1597,7 +1597,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1607,7 +1607,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             }
         ]
@@ -1622,7 +1622,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1633,7 +1633,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -1643,7 +1643,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1660,7 +1660,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1669,7 +1669,7 @@
                 "quoteNum": 31, // "Is time for you to go now. We stay open late for you, then everybody want it, and I never sleep."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1681,7 +1681,7 @@
                 "triggerNPC": "HERVE",
                 "triggerRecord": 7,
                 "actionData": {
-                    "code": 197 // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
+                    "code": "MAKE_NPC_FIRST_BARTENDER" // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
                 }
             },
             {
@@ -1699,7 +1699,7 @@
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 198 // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
+                    "code": "MAKE_NPC_SECOND_BARTENDER" // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
                 }
             },
             {
@@ -1709,7 +1709,7 @@
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
-                    "code": 199 // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
+                    "code": "MAKE_NPC_THIRD_BARTENDER" // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
                 }
             },
             {
@@ -1719,7 +1719,7 @@
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 200 // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
+                    "code": "MAKE_NPC_FOURTH_BARTENDER" // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
                 }
             },
             {
@@ -1757,7 +1757,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1767,7 +1767,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1777,7 +1777,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1787,7 +1787,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             }
         ]
@@ -1802,7 +1802,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1813,7 +1813,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -1823,7 +1823,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1840,7 +1840,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1849,7 +1849,7 @@
                 "quoteNum": 31, // "Is time for you to go now. We stay open late for you, then everybody want it, and I never sleep."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1861,7 +1861,7 @@
                 "triggerNPC": "HERVE",
                 "triggerRecord": 7,
                 "actionData": {
-                    "code": 197 // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
+                    "code": "MAKE_NPC_FIRST_BARTENDER" // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
                 }
             },
             {
@@ -1879,7 +1879,7 @@
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 198 // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
+                    "code": "MAKE_NPC_SECOND_BARTENDER" // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
                 }
             },
             {
@@ -1889,7 +1889,7 @@
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
-                    "code": 199 // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
+                    "code": "MAKE_NPC_THIRD_BARTENDER" // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
                 }
             },
             {
@@ -1899,7 +1899,7 @@
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 200 // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
+                    "code": "MAKE_NPC_FOURTH_BARTENDER" // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
                 }
             },
             {
@@ -1937,7 +1937,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1947,7 +1947,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1957,7 +1957,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1967,7 +1967,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             }
         ]
@@ -1982,7 +1982,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -1993,7 +1993,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 21 // NPC_ACTION_TRIGGER_FRIEND_WITH_HOSTILE_QUOTE
+                    "code": "TRIGGER_FRIEND_WITH_HOSTILE_QUOTE"
                 }
             },
             {
@@ -2003,7 +2003,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -2020,7 +2020,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -2029,7 +2029,7 @@
                 "quoteNum": 31, // "Is time for you to go now. We stay open late for you, then everybody want it, and I never sleep."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -2041,7 +2041,7 @@
                 "triggerNPC": "HERVE",
                 "triggerRecord": 7,
                 "actionData": {
-                    "code": 197 // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
+                    "code": "MAKE_NPC_FIRST_BARTENDER" // NPC_ACTION_MAKE_NPC_FIRST_BARTENDER
                 }
             },
             {
@@ -2059,7 +2059,7 @@
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 198 // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
+                    "code": "MAKE_NPC_SECOND_BARTENDER" // NPC_ACTION_MAKE_NPC_SECOND_BARTENDER
                 }
             },
             {
@@ -2069,7 +2069,7 @@
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
-                    "code": 199 // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
+                    "code": "MAKE_NPC_THIRD_BARTENDER" // NPC_ACTION_MAKE_NPC_THIRD_BARTENDER
                 }
             },
             {
@@ -2079,7 +2079,7 @@
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 200 // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
+                    "code": "MAKE_NPC_FOURTH_BARTENDER" // NPC_ACTION_MAKE_NPC_FOURTH_BARTENDER
                 }
             },
             {
@@ -2117,7 +2117,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -2127,7 +2127,7 @@
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -2137,7 +2137,7 @@
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             },
             {
@@ -2147,7 +2147,7 @@
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
                 "actionData": {
-                    "code": 24 // NPC_ACTION_CLOSE_DIALOGUE_PANEL
+                    "code": "CLOSE_DIALOGUE_PANEL"
                 }
             }
         ]

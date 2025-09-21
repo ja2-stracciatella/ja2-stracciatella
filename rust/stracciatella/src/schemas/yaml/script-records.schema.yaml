@@ -105,7 +105,7 @@ items:
                   Name of the NPC to turn to. Must correspond to the value of
                   the internalName property in mercs-profile-info.json
               code:
-                $ref: types/uint16.schema.yaml
+                $ref: types/npc-action.schema.yaml
               doFirst:
                 type: boolean
                 description: >-
