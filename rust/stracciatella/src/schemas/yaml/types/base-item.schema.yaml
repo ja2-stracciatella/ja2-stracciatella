@@ -101,6 +101,7 @@ properties:
 
       - Items with value `0` are big and only fit into big pockets
       - Items with value a value above `0` are small. The value determines how many stack into one small pocket
+    $ref: types/uint8.schema.yaml
   ubWeight:
     title: Weight
     $ref: types/uint8.schema.yaml
