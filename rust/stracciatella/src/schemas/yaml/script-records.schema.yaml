@@ -16,20 +16,34 @@ items:
       $ref: types/uint8.schema.yaml
     records:
       type: array
+      title: Script Records
+      description: Array of script record entries that define NPC behaviors and triggers
       items:
         type: object
         properties:
           index:
+            title: Index
+            description: Unique identifier for this script record
             $ref: types/record-id.schema.yaml
           alreadySaid:
+            title: Already Said
+            description: Whether this quote has already been said by the NPC
             type: boolean
           eraseOnceSaid:
+            title: Erase Once Said
+            description: Whether this record should be deleted after being triggered once
             type: boolean
           sayOncePerConvo:
+            title: Say Once Per Conversation
+            description: Whether this quote can only be said once per conversation
             type: boolean
           requiredAnyItem:
+            title: Required Any Item
+            description: Whether any item is required to trigger this record
             type: boolean
           requiredAnyRifle:
+            title: Required Any Rifle
+            description: Whether any rifle weapon is required to trigger this record
             type: boolean
           requiredItem:
             type: string
@@ -38,17 +52,27 @@ items:
               Must correspond to the value of the internalName property in
               items.json
           requiredGridNo:
+            title: Required Grid Number
+            description: Grid position where the player must be located to trigger this record
             $ref: types/uint16.schema.yaml
           factMustBeTrue:
+            title: Required True Fact
+            description: Game fact that must be true for this record to trigger
             $ref: types/fact-id.schema.yaml
           factMustBeFalse:
+            title: Required False Fact
+            description: Game fact that must be false for this record to trigger
             $ref: types/fact-id.schema.yaml
           quest:
             type: object
             properties:
               name:
+                title: Quest Name
+                description: Name of the quest this record relates to
                 $ref: types/quest-id.schema.yaml
               status:
+                title: Quest Status
+                description: Required status of the quest for this record to trigger
                 type: string
                 enum:
                   - NOTSTARTED
@@ -58,34 +82,57 @@ items:
               - name
               - status
           firstDay:
+            title: First Day
+            description: First game day when this record can be triggered
             $ref: types/uint8.schema.yaml
           lastDay:
+            title: Last Day
+            description: Last game day when this record can be triggered
             $ref: types/uint8.schema.yaml
           requiredApproach:
             type: string
             default: TRIGGER_NPC
           requiredOpinion:
+            title: Required Opinion Level
+            description: Minimum opinion level required for this record to trigger
             $ref: types/uint8.schema.yaml
           quoteNum:
+            title: Quote Number
+            description: Quote number to be spoken when this record triggers
             $ref: types/uint8.schema.yaml
           numQuotes:
+            title: Number of Quotes
+            description: Total number of quotes to be spoken
             $ref: types/uint8.schema.yaml
           startQuest:
+            title: Quest to Start
+            description: Quest that will be started when this record triggers
             $ref: types/quest-id.schema.yaml
           endQuest:
+            title: Quest to End
+            description: Quest that will be ended when this record triggers
             $ref: types/quest-id.schema.yaml
           triggerClosestMerc:
+            title: Trigger Closest Merc
+            description: Whether to trigger the closest merc who can see the NPC
             type: boolean
           triggerSelf:
+            title: Trigger Self
+            description: Whether the NPC should trigger their own record
             type: boolean
           triggerNPC:
             type: string
+            title: Trigger NPC
             description: >-
               Name of the NPC whose record will be triggered. Must correspond to
               the value of the internalName property in mercs-profile-info.json
           triggerRecord:
+            title: Trigger Record
+            description: Record ID to trigger on the specified NPC
             $ref: types/uint8.schema.yaml
           setFactTrue:
+            title: Fact to Set True
+            description: Game fact that will be set to true when this record triggers
             $ref: types/fact-id.schema.yaml
           giftItem:
             type: string
@@ -93,8 +140,17 @@ items:
               Item that the NPC gives away. Must correspond to the value of the
               internalName property in items.json
           userInterface:
+            title: User Interface Control
+            description: Special user interface action to perform
             type: string
+            enum:
+              - TURN_UI_ON
+              - TURN_UI_OFF
+              - SPECIAL_TURN_UI_ON
+              - SPECIAL_TURN_UI_OFF
           goToGridno:
+            title: Target Grid Number
+            description: Grid position the NPC should move to when this record triggers
             $ref: types/uint16.schema.yaml
           actionData:
             type: object
@@ -105,6 +161,8 @@ items:
                   Name of the NPC to turn to. Must correspond to the value of
                   the internalName property in mercs-profile-info.json
               code:
+                title: NPC Action Code
+                description: Action code that defines what action the NPC should perform
                 $ref: types/npc-action.schema.yaml
               doFirst:
                 type: boolean
