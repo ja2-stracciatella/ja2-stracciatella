@@ -170,9 +170,11 @@ items:
                   Defines if the action will be performed before or after saying
                   a quote or doing an action
             oneOf:
-              - required:
+              - type: object
+                required:
                   - turnToFace
-              - required:
+              - type: object
+                required:
                   - code
         additionalProperties: false
         required:
@@ -186,33 +188,43 @@ items:
             - triggerRecord
         not:
           anyOf:
-            - required:
+            - type: object
+              required:
                 - giftItem
                 - userInterface
-            - required:
+            - type: object
+              required:
                 - triggerNPC
                 - triggerSelf
-            - required:
+            - type: object
+              required:
                 - triggerNPC
                 - triggerClosestMerc
-            - required:
+            - type: object
+              required:
                 - triggerSelf
                 - triggerClosestMerc
-            - required:
+            - type: object
+              required:
                 - requiredItem
                 - requiredAnyItem
-            - required:
+            - type: object
+              required:
                 - requiredItem
                 - requiredAnyRifle
-            - required:
+            - type: object
+              required:
                 - requiredItem
                 - requiredGridNo
-            - required:
+            - type: object
+              required:
                 - requiredGridNo
                 - requiredAnyItem
-            - required:
+            - type: object
+              required:
                 - requiredGridNo
                 - requiredAnyRifle
-            - required:
+            - type: object
+              required:
                 - requiredAnyRifle
                 - requiredAnyItem
