@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Animation_Data.h"
+#include "Facts.h"
 #include "MercProfileInfo.h"
 #include "NPC.h"
 #include "Overhead_Types.h"
@@ -48,4 +49,7 @@ namespace Internals
 	MercType getMercTypeEnumFromString(const ST::string& s);
 
 	Quests getQuestEnumFromString(const ST::string& s);
+
+	/** Get fact enum from string. */
+	Fact getFactEnumFromString(const ST::string& s);
 }
