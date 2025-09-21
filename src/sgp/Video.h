@@ -1,10 +1,9 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#include <SDL_events.h>
-#include <SDL_video.h>
 #include "Types.h"
 #include "RustInterface.h"
+#include "SDL.h"
 
 
 #define VIDEO_DEFAULT_TO_NO_CURSOR 0xFFFE // VIDEO_DEFAULT_TO_NO_CURSOR is equal to VIDEO_NO_CURSOR unless always_show_cursor_in_tactical is true
@@ -27,8 +26,6 @@ void VideoSetBrightness(float brightness);
 /* Toggle between fullscreen and window mode after initialising the video
  * manager */
 void VideoToggleFullScreen(void);
-
-void HandleWindowEvent(SDL_Event const&);
 
 void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth);
 

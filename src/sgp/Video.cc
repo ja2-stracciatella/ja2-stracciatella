@@ -651,11 +651,3 @@ void ShutdownVideoSurfaceManager(void)
 		delete gpVSurfaceHead;
 	}
 }
-
-
-void HandleWindowEvent(SDL_Event const& evt)
-{
-	if (evt.window.event == SDL_WINDOWEVENT_RESIZED) {
-		SDL_RenderClear(GameRenderer);
-	}
-}
