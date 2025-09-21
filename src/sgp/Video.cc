@@ -99,7 +99,6 @@ void VideoToggleFullScreen(void)
 	{
 		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
-	SDL_RenderClear(GameRenderer);
 }
 
 void VideoSetBrightness(float brightness)
@@ -538,6 +537,8 @@ void RefreshScreen(void)
 	SDL_UpdateTexture(ScreenTexture, &ScreenTextureUpdateRect,
 	                  SrcPixels, ScreenBuffer->pitch);
 
+	SDL_RenderClear(GameRenderer);
+
 	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
 		SDL_SetRenderTarget(GameRenderer, ScaledScreenTexture);
 		SDL_RenderCopy(GameRenderer, ScreenTexture, nullptr, nullptr);
@@ -648,13 +649,5 @@ void ShutdownVideoSurfaceManager(void)
 	while (gpVSurfaceHead)
 	{
 		delete gpVSurfaceHead;
-	}
-}
-
-
-void HandleWindowEvent(SDL_Event const& evt)
-{
-	if (evt.window.event == SDL_WINDOWEVENT_RESIZED) {
-		SDL_RenderClear(GameRenderer);
 	}
 }
