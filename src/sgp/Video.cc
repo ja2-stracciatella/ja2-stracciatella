@@ -99,7 +99,6 @@ void VideoToggleFullScreen(void)
 	{
 		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
-	SDL_RenderClear(GameRenderer);
 }
 
 void VideoSetBrightness(float brightness)
@@ -537,6 +536,8 @@ void RefreshScreen(void)
 		+ ScreenTextureUpdateRect.x * ScreenBuffer->format->BytesPerPixel;
 	SDL_UpdateTexture(ScreenTexture, &ScreenTextureUpdateRect,
 	                  SrcPixels, ScreenBuffer->pitch);
+
+	SDL_RenderClear(GameRenderer);
 
 	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
 		SDL_SetRenderTarget(GameRenderer, ScaledScreenTexture);
