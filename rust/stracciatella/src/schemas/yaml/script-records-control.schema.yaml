@@ -7,6 +7,8 @@ properties:
     type: string
   meanwhiles:
     type: array
+    title: Meanwhile Events
+    description: Array of meanwhile event definitions containing character mappings and internal references
     items:
       type: object
       properties:
@@ -16,6 +18,8 @@ properties:
           type: string
         chars:
           type: array
+          title: Characters
+          description: Array of character definitions for this meanwhile event, mapping names to NPC data files
           items:
             type: object
             properties:
