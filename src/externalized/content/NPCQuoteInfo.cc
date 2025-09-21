@@ -33,8 +33,8 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 		}
 		else rec->sRequiredGridno = -jsonRec.getOptionalInt("requiredGridNo");
 
-		rec->usFactMustBeTrue = jsonRec.getOptionalUInt("factMustBeTrue", FACT_NONE);
-		rec->usFactMustBeFalse = jsonRec.getOptionalUInt("factMustBeFalse", FACT_NONE);
+		rec->usFactMustBeTrue = Internals::getFactEnumFromString(jsonRec.getOptionalString("factMustBeTrue"));
+		rec->usFactMustBeFalse = Internals::getFactEnumFromString(jsonRec.getOptionalString("factMustBeFalse"));
 
 		if (jsonRec.has("quest"))
 		{
@@ -66,7 +66,7 @@ std::unique_ptr<NPCQuoteInfo const []> NPCQuoteInfo::deserialize(const JsonValue
 		else rec->ubTriggerNPC = IRRELEVANT;
 
 		rec->ubTriggerNPCRec = jsonRec.getOptionalUInt("triggerRecord", IRRELEVANT);
-		rec->usSetFactTrue = jsonRec.getOptionalUInt("setFactTrue", FACT_NONE);
+		rec->usSetFactTrue = Internals::getFactEnumFromString(jsonRec.getOptionalString("setFactTrue"));
 
 		if (jsonRec.has("giftItem"))
 		{
@@ -131,10 +131,10 @@ JsonValue NPCQuoteInfo::serialize(const ContentManager* contentManager) const
 	}
 
 	if (this->usFactMustBeTrue != FACT_NONE) {
-		obj.set("009factMustBeTrue", this->usFactMustBeTrue);
+		obj.set("009factMustBeTrue", Internals::getFactName(static_cast<Fact>(this->usFactMustBeTrue)));
 	}
 	if (this->usFactMustBeFalse != FACT_NONE) {
-		obj.set("010factMustBeFalse", this->usFactMustBeFalse);
+		obj.set("010factMustBeFalse", Internals::getFactName(static_cast<Fact>(this->usFactMustBeFalse)));
 	}
 
 	if (this->ubQuest != IRRELEVANT) {
@@ -191,7 +191,7 @@ JsonValue NPCQuoteInfo::serialize(const ContentManager* contentManager) const
 		obj.set("029triggerRecord", this->ubTriggerNPCRec);
 	}
 	if (this->usSetFactTrue != FACT_NONE) {
-		obj.set("030setFactTrue", this->usSetFactTrue);
+		obj.set("030setFactTrue", Internals::getFactName(static_cast<Fact>(this->usSetFactTrue)));
 	}
 
 	if (this->usGiftItem != 0) {

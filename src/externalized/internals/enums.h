@@ -50,6 +50,6 @@ namespace Internals
 
 	Quests getQuestEnumFromString(const ST::string& s);
 
-	/** Get fact enum from string. */
+	const char* getFactName(Fact fact);
 	Fact getFactEnumFromString(const ST::string& s);
 }

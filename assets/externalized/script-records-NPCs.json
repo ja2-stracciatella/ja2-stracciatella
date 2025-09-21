@@ -17,7 +17,7 @@
             },
             {
                 "index": 1,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "EPC_WHO_IS_RECRUITED",
                 "quoteNum": 16, // "Why? Why?"
                 "numQuotes": 1,
@@ -28,7 +28,7 @@
             {
                 "index": 2,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "EPC_WHO_IS_RECRUITED",
                 "quoteNum": 16, // "Why? Why?"
                 "numQuotes": 1,
@@ -38,7 +38,7 @@
             },
             {
                 "index": 3,
-                "factMustBeTrue": 121, // unnamed fact
+                "factMustBeTrue": "MARIA_IMPATIENT_TO_LEAVE_SAN_MONA", // unnamed fact
                 "quoteNum": 17, // "We have to be going. We have already spent far too much time in San Mona."
                 "numQuotes": 1,
                 "actionData": {
@@ -47,7 +47,7 @@
             },
             {
                 "index": 4,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Help me. I need... to get to a hospital."
                 "numQuotes": 1
@@ -65,7 +65,7 @@
             {
                 "index": 6,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "RESCUE_MARIA",
                     "status": "INPROGRESS"
@@ -135,7 +135,7 @@
                 "requiredApproach": "EPC_IN_WRONG_SECTOR",
                 "quoteNum": 19, // "What are you doing? Where is Angel?"
                 "numQuotes": 1,
-                "setFactTrue": 158, // unnamed fact
+                "setFactTrue": "MARIA_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
                     "code": 168 // NPC_ACTION_SET_EPC_TO_NPC
                 }
@@ -151,8 +151,8 @@
             {
                 "index": 13,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "MARIA_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
                 "actionData": {
@@ -161,22 +161,22 @@
             },
             {
                 "index": 14,
-                "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "MARIA_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quoteNum": 19, // "What are you doing? Where is Angel?"
                 "numQuotes": 1
             },
             {
                 "index": 15,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 21, // "No, not now! The bullets... Do something about the shooting."
                 "numQuotes": 1
             },
             {
                 "index": 16,
-                "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "MARIA_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
@@ -187,8 +187,8 @@
             {
                 "index": 17,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 322, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "ANGEL_TRIGGER_CONDITION", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quoteNum": 22, // "I've never been so scared. Please take me to my brother now."
                 "numQuotes": 1,
                 "actionData": {
@@ -200,15 +200,15 @@
                 "eraseOnceSaid": true,
                 "requiredApproach": "TRIGGER_NPC",
                 "numQuotes": 1,
-                "setFactTrue": 322, // unnamed fact
+                "setFactTrue": "ANGEL_TRIGGER_CONDITION", // unnamed fact
                 "actionData": {
                     "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
                 }
             },
             {
                 "index": 19,
-                "factMustBeTrue": 158, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "MARIA_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 19, // "What are you doing? Where is Angel?"
                 "numQuotes": 1
@@ -229,7 +229,7 @@
             },
             {
                 "index": 1,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 19, // "You're crazy!"
                 "numQuotes": 1,
@@ -240,7 +240,7 @@
             {
                 "index": 2,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 19, // "You're crazy!"
                 "numQuotes": 1,
@@ -250,7 +250,7 @@
             },
             {
                 "index": 3,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Uggh... mommy... mommy!"
                 "numQuotes": 1
@@ -258,7 +258,7 @@
             {
                 "index": 4,
                 "requiredItem": "MONEY",
-                "factMustBeTrue": 109, // FACT_JOEY_IN_C5
+                "factMustBeTrue": "JOEY_IN_C5", // FACT_JOEY_IN_C5
                 "requiredApproach": "GIVINGITEM",
                 "quoteNum": 10, // "I bet ya won't even give me a chance to spend it before you force me to go home."
                 "numQuotes": 1
@@ -278,8 +278,8 @@
             },
             {
                 "index": 6,
-                "factMustBeTrue": 160, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "JOEY_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 20, // "No more foolin' around, okay? I'll do exactly what you tell me - I promise!"
                 "numQuotes": 1,
@@ -289,7 +289,7 @@
             },
             {
                 "index": 7,
-                "factMustBeTrue": 347, // unnamed fact
+                "factMustBeTrue": "JOEY_AGREED_TO_ESCORT_UNDER_THREAT", // unnamed fact
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 11, // "Okay, I'll go with you. Just don't let anything happen to me. My mom will be really disappointed if she isn't the one that gets to kill me."
                 "numQuotes": 1,
@@ -315,7 +315,7 @@
             {
                 "index": 10,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 110, // FACT_JOEY_NEAR_MARTHA
+                "factMustBeTrue": "JOEY_NEAR_MARTHA", // FACT_JOEY_NEAR_MARTHA
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 14, // "I got lost, Mom... I took a wrong turn, and then I was a little confused as to where I was... and then they found me... I was really lucky, Mom."
                 "numQuotes": 1,
@@ -341,28 +341,28 @@
                 "requiredApproach": "EPC_IN_WRONG_SECTOR",
                 "quoteNum": 12, // "What ya doing? You can't just leave me here! I'll be good... I swear."
                 "numQuotes": 1,
-                "setFactTrue": 160, // unnamed fact
+                "setFactTrue": "JOEY_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
                     "code": 168 // NPC_ACTION_SET_EPC_TO_NPC
                 }
             },
             {
                 "index": 13,
-                "factMustBeFalse": 109, // FACT_JOEY_IN_C5
+                "factMustBeFalse": "JOEY_IN_C5", // FACT_JOEY_IN_C5
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 16, // "I don't want to join you. I don't want to have anything to do with you. I just want to be left alone down here."
                 "numQuotes": 1
             },
             {
                 "index": 14,
-                "factMustBeTrue": 160, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "JOEY_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quoteNum": 12, // "What ya doing? You can't just leave me here! I'll be good... I swear."
                 "numQuotes": 1
             },
             {
                 "index": 15,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 21, // "Make the shooting stop!"
                 "numQuotes": 1,
@@ -373,13 +373,13 @@
             {
                 "index": 16,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 350, // FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE
-                "factMustBeFalse": 109, // FACT_JOEY_IN_C5
+                "factMustBeTrue": "KINGPIN_WILL_LEARN_OF_MONEY_GONE", // FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE
+                "factMustBeFalse": "JOEY_IN_C5", // FACT_JOEY_IN_C5
                 "requiredApproach": "THREATEN",
                 "requiredOpinion": 80,
                 "quoteNum": 11, // "Okay, I'll go with you. Just don't let anything happen to me. My mom will be really disappointed if she isn't the one that gets to kill me."
                 "numQuotes": 1,
-                "setFactTrue": 347, // unnamed fact
+                "setFactTrue": "JOEY_AGREED_TO_ESCORT_UNDER_THREAT", // unnamed fact
                 "actionData": {
                     "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
                 }
@@ -387,31 +387,31 @@
             {
                 "index": 17,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 109, // FACT_JOEY_IN_C5
+                "factMustBeTrue": "JOEY_IN_C5", // FACT_JOEY_IN_C5
                 "requiredApproach": "THREATEN",
                 "requiredOpinion": 80,
                 "quoteNum": 11, // "Okay, I'll go with you. Just don't let anything happen to me. My mom will be really disappointed if she isn't the one that gets to kill me."
                 "numQuotes": 1,
-                "setFactTrue": 347, // unnamed fact
+                "setFactTrue": "JOEY_AGREED_TO_ESCORT_UNDER_THREAT", // unnamed fact
                 "actionData": {
                     "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
                 }
             },
             {
                 "index": 18,
-                "factMustBeFalse": 109, // FACT_JOEY_IN_C5
+                "factMustBeFalse": "JOEY_IN_C5", // FACT_JOEY_IN_C5
                 "requiredApproach": "THREATEN",
                 "requiredOpinion": 80,
                 "quoteNum": 11, // "Okay, I'll go with you. Just don't let anything happen to me. My mom will be really disappointed if she isn't the one that gets to kill me."
                 "numQuotes": 1,
                 "triggerNPC": "JOEY",
                 "triggerRecord": 8,
-                "setFactTrue": 347 // unnamed fact
+                "setFactTrue": "JOEY_AGREED_TO_ESCORT_UNDER_THREAT" // unnamed fact
             },
             {
                 "index": 19,
-                "factMustBeTrue": 160, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "JOEY_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 12, // "What ya doing? You can't just leave me here! I'll be good... I swear."
                 "numQuotes": 1
@@ -433,7 +433,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 43, // "You're one sick mother, Cap."
                 "numQuotes": 1,
@@ -443,7 +443,7 @@
             },
             {
                 "index": 2,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 38, // "I got no plans on havin' anything to do with you, Cap! You guys tried to kill me... Remember?"
                 "numQuotes": 1,
@@ -453,8 +453,8 @@
             },
             {
                 "index": 3,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
-                "factMustBeFalse": 48, // FACT_NPC_WOUNDED_BY_PLAYER
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
+                "factMustBeFalse": "NPC_WOUNDED_BY_PLAYER", // FACT_NPC_WOUNDED_BY_PLAYER
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "I need help... First aid..."
                 "numQuotes": 1,
@@ -465,14 +465,14 @@
             {
                 "index": 4,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
-                "factMustBeFalse": 48, // FACT_NPC_WOUNDED_BY_PLAYER
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
+                "factMustBeFalse": "NPC_WOUNDED_BY_PLAYER", // FACT_NPC_WOUNDED_BY_PLAYER
                 "quoteNum": 44, // "Thanks for getting me back on my feet, Cap."
                 "numQuotes": 1
             },
             {
                 "index": 5,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 50, // "Get things under control, then we'll yak all ya want."
                 "numQuotes": 1,
@@ -482,8 +482,8 @@
             },
             {
                 "index": 6,
-                "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "SKYRIDER_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "INPROGRESS"
@@ -493,15 +493,15 @@
             },
             {
                 "index": 7,
-                "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "SKYRIDER_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 39, // "Better change your tone, Cap! Or you're gonna have to take chopper lessons."
                 "numQuotes": 1
             },
             {
                 "index": 8,
-                "factMustBeTrue": 44, // unnamed fact
+                "factMustBeTrue": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
                 "firstDay": 255,
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 40, // "I'm strictly freelance, Cap. You can book me by the ride, but you ain't never gonna own me."
@@ -509,7 +509,7 @@
             },
             {
                 "index": 9,
-                "factMustBeTrue": 44, // unnamed fact
+                "factMustBeTrue": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
                 "firstDay": 255,
                 "requiredApproach": "THREATEN",
                 "quoteNum": 39, // "Better change your tone, Cap! Or you're gonna have to take chopper lessons."
@@ -517,7 +517,7 @@
             },
             {
                 "index": 10,
-                "factMustBeTrue": 46, // FACT_NPC_OWED_MONEY
+                "factMustBeTrue": "NPC_OWED_MONEY", // FACT_NPC_OWED_MONEY
                 "quoteNum": 11, // "You're grounded, Cap, 'til I see my money."
                 "numQuotes": 1,
                 "actionData": {
@@ -533,7 +533,7 @@
             },
             {
                 "index": 12,
-                "factMustBeTrue": 136, // FACT_LOYALTY_LOW
+                "factMustBeTrue": "LOYALTY_LOW", // FACT_LOYALTY_LOW
                 "quoteNum": 49, // "Conditions ain't right for flying today, Cap. Sorry."
                 "numQuotes": 1
             },
@@ -550,7 +550,7 @@
             },
             {
                 "index": 14,
-                "factMustBeFalse": 44, // unnamed fact
+                "factMustBeFalse": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "NOTSTARTED"
@@ -559,7 +559,7 @@
                 "requiredOpinion": 30,
                 "quoteNum": 14, // "You get me to my eggbeater in Drassen, Cap, and we might be able to work out some business."
                 "numQuotes": 1,
-                "setFactTrue": 346, // unnamed fact
+                "setFactTrue": "SKYRIDER_ESCORT_QUEST_OFFERED", // unnamed fact
                 "actionData": {
                     "code": 110 // NPC_ACTION_ASK_ABOUT_ESCORTING_EPC
                 }
@@ -567,14 +567,14 @@
             {
                 "index": 15,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 43, // FACT_SKYRIDER_CLOSE_TO_CHOPPER
-                "factMustBeFalse": 44, // unnamed fact
+                "factMustBeTrue": "SKYRIDER_CLOSE_TO_CHOPPER", // FACT_SKYRIDER_CLOSE_TO_CHOPPER
+                "factMustBeFalse": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
                 "quoteNum": 15, // "There's my baby. She looks just fine, Cap. We're in business..."
                 "numQuotes": 5,
                 "endQuest": "ESCORT_SKYRIDER",
                 "triggerNPC": "SKYRIDER",
                 "triggerRecord": 20,
-                "setFactTrue": 44, // unnamed fact
+                "setFactTrue": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
                 "actionData": {
                     "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
                 }
@@ -582,8 +582,8 @@
             {
                 "index": 16,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 44, // unnamed fact
-                "factMustBeFalse": 45, // FACT_SKYRIDER_USED_IN_MAPSCREEN
+                "factMustBeTrue": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
+                "factMustBeFalse": "SKYRIDER_USED_IN_MAPSCREEN", // FACT_SKYRIDER_USED_IN_MAPSCREEN
                 "quoteNum": 36, // "Okay. Just so we're straight on this, I'm a pilot, not a soldier. I'll do what I'm told 'til I get there, but ain't getting involved. I don't want no gun. I don't want to have to kill nobody."
                 "numQuotes": 1,
                 "actionData": {
@@ -592,8 +592,8 @@
             },
             {
                 "index": 17,
-                "factMustBeTrue": 44, // unnamed fact
-                "factMustBeFalse": 45, // FACT_SKYRIDER_USED_IN_MAPSCREEN
+                "factMustBeTrue": "SKYRIDER_READY_FOR_TRANSPORT", // unnamed fact
+                "factMustBeFalse": "SKYRIDER_USED_IN_MAPSCREEN", // FACT_SKYRIDER_USED_IN_MAPSCREEN
                 "quoteNum": 37, // "Just show me on the map where ya wanna go, and I'll get ya there."
                 "numQuotes": 1,
                 "actionData": {
@@ -605,15 +605,15 @@
                 "requiredApproach": "EPC_IN_WRONG_SECTOR",
                 "quoteNum": 41, // "What's happenin', Cap? I thought you were gonna get me to my eggbeater..."
                 "numQuotes": 1,
-                "setFactTrue": 159, // unnamed fact
+                "setFactTrue": "SKYRIDER_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
                     "code": 168 // NPC_ACTION_SET_EPC_TO_NPC
                 }
             },
             {
                 "index": 19,
-                "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "SKYRIDER_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "INPROGRESS"
@@ -622,7 +622,7 @@
                 "requiredOpinion": 51,
                 "quoteNum": 1, // "What's up, Cap?"
                 "triggerRecord": 0,
-                "setFactTrue": 0, // FACT_OMERTA_LIBERATED
+                "setFactTrue": "OMERTA_LIBERATED", // FACT_OMERTA_LIBERATED
                 "giftItem": "65535",
                 "goToGridno": 110,
                 "actionData": {
@@ -640,8 +640,8 @@
             },
             {
                 "index": 21,
-                "factMustBeTrue": 346, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "SKYRIDER_ESCORT_QUEST_OFFERED", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "NOTSTARTED"
@@ -654,8 +654,8 @@
             },
             {
                 "index": 22,
-                "factMustBeTrue": 159, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "SKYRIDER_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_SKYRIDER",
                     "status": "INPROGRESS"
@@ -674,7 +674,7 @@
         "records": [
             {
                 "index": 0,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 28, // "Why? Why?"
                 "numQuotes": 1,
@@ -685,7 +685,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "Why? Why?"
                 "numQuotes": 1,
@@ -695,7 +695,7 @@
             },
             {
                 "index": 2,
-                "factMustBeFalse": 110, // FACT_JOEY_NEAR_MARTHA
+                "factMustBeFalse": "JOEY_NEAR_MARTHA", // FACT_JOEY_NEAR_MARTHA
                 "quest": {
                     "name": "RUNAWAY_JOEY",
                     "status": "INPROGRESS"
@@ -706,7 +706,7 @@
             },
             {
                 "index": 3,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Help! I need... a... doctor."
                 "numQuotes": 1,
@@ -716,7 +716,7 @@
             },
             {
                 "index": 4,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 31, // "Protect me. Please..."
                 "numQuotes": 1,
@@ -727,7 +727,7 @@
             {
                 "index": 5,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
                 "quoteNum": 30, // "Thank you for your concern."
                 "numQuotes": 1
             },
@@ -751,7 +751,7 @@
             {
                 "index": 8,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 112, // FACT_MERC_NEAR_NPC
+                "factMustBeTrue": "MERC_NEAR_NPC", // FACT_MERC_NEAR_NPC
                 "quest": {
                     "name": "RUNAWAY_JOEY",
                     "status": "DONE"
@@ -761,13 +761,13 @@
                 "numQuotes": 3,
                 "triggerNPC": "MARTHA",
                 "triggerRecord": 19,
-                "setFactTrue": 271 // FACT_WILLIS_HEARD_ABOUT_JOEY_RESCUE
+                "setFactTrue": "WILLIS_HEARD_ABOUT_JOEY_RESCUE" // FACT_WILLIS_HEARD_ABOUT_JOEY_RESCUE
             },
             {
                 "index": 9,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 340, // FACT_JOEY_ALIVE
-                "factMustBeFalse": 271, // FACT_WILLIS_HEARD_ABOUT_JOEY_RESCUE
+                "factMustBeTrue": "JOEY_ALIVE", // FACT_JOEY_ALIVE
+                "factMustBeFalse": "WILLIS_HEARD_ABOUT_JOEY_RESCUE", // FACT_WILLIS_HEARD_ABOUT_JOEY_RESCUE
                 "quest": {
                     "name": "RUNAWAY_JOEY",
                     "status": "DONE"
@@ -785,13 +785,13 @@
                 "numQuotes": 2,
                 "triggerNPC": "MARTHA",
                 "triggerRecord": 19,
-                "setFactTrue": 271 // FACT_WILLIS_HEARD_ABOUT_JOEY_RESCUE
+                "setFactTrue": "WILLIS_HEARD_ABOUT_JOEY_RESCUE" // FACT_WILLIS_HEARD_ABOUT_JOEY_RESCUE
             },
             {
                 "index": 11,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 305, // FACT_24_HOURS_SINCE_JOEY_RESCUED
-                "factMustBeFalse": 111, // FACT_JOEY_DEAD
+                "factMustBeTrue": "24_HOURS_SINCE_JOEY_RESCUED", // FACT_24_HOURS_SINCE_JOEY_RESCUED
+                "factMustBeFalse": "JOEY_DEAD", // FACT_JOEY_DEAD
                 "quest": {
                     "name": "RUNAWAY_JOEY",
                     "status": "DONE"
@@ -816,7 +816,7 @@
             {
                 "index": 13,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 111, // FACT_JOEY_DEAD
+                "factMustBeTrue": "JOEY_DEAD", // FACT_JOEY_DEAD
                 "quest": {
                     "name": "RUNAWAY_JOEY",
                     "status": "DONE"
@@ -873,7 +873,7 @@
             {
                 "index": 18,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 111, // FACT_JOEY_DEAD
+                "factMustBeFalse": "JOEY_DEAD", // FACT_JOEY_DEAD
                 "quest": {
                     "name": "RUNAWAY_JOEY",
                     "status": "DONE"
@@ -928,7 +928,7 @@
         "records": [
             {
                 "index": 0,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 18, // "You're worse than them!"
                 "numQuotes": 1,
@@ -939,7 +939,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 18, // "You're worse than them!"
                 "numQuotes": 1,
@@ -949,7 +949,7 @@
             },
             {
                 "index": 2,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Goddamn... goddamn..."
                 "numQuotes": 1,
@@ -959,7 +959,7 @@
             },
             {
                 "index": 3,
-                "factMustBeTrue": 189, // FACT_MARY_BLEEDING
+                "factMustBeTrue": "MARY_BLEEDING", // FACT_MARY_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 25, // "You must help my wife..."
                 "numQuotes": 1,
@@ -970,13 +970,13 @@
             {
                 "index": 4,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
                 "quoteNum": 26, // "Thank you... We appreciate what you've done."
                 "numQuotes": 1
             },
             {
                 "index": 5,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 28, // "We can't carry on a conversation now! It's too darn dangerous."
                 "numQuotes": 1,
@@ -986,7 +986,7 @@
             },
             {
                 "index": 6,
-                "factMustBeFalse": 187, // FACT_MARY_ALIVE
+                "factMustBeFalse": "MARY_ALIVE", // FACT_MARY_ALIVE
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 27, // "Is Mary all right... She is okay, right?"
                 "numQuotes": 1
@@ -996,7 +996,7 @@
                 "requiredApproach": "EPC_IN_WRONG_SECTOR",
                 "quoteNum": 11, // "Excuse me... but I don't remember Drassen looking like this."
                 "numQuotes": 1,
-                "setFactTrue": 161, // unnamed fact
+                "setFactTrue": "JOHN_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
                     "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
                 }
@@ -1010,7 +1010,7 @@
                 },
                 "quoteNum": 12, // "I'm afraid we really messed up good. Mary and I were supposed to be going to Aruba. My wife booked the tickets through one of her travel agent friends. Didn't know we were in the wrong country 'til we landed."
                 "numQuotes": 1,
-                "setFactTrue": 345, // unnamed fact
+                "setFactTrue": "TOURIST_ESCORT_QUEST_STARTED", // unnamed fact
                 "userInterface": "TURN_UI_OFF",
                 "actionData": {
                     "code": 186 // NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_9
@@ -1040,7 +1040,7 @@
             {
                 "index": 11,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 187, // FACT_MARY_ALIVE
+                "factMustBeTrue": "MARY_ALIVE", // FACT_MARY_ALIVE
                 "requiredApproach": "EPC_WHO_IS_RECRUITED",
                 "quoteNum": 17, // "I can't wait to get on the plane and into the sky."
                 "numQuotes": 1
@@ -1048,8 +1048,8 @@
             {
                 "index": 12,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 192, // FACT_MARY_OR_JOHN_ARRIVED
-                "factMustBeFalse": 187, // FACT_MARY_ALIVE
+                "factMustBeTrue": "MARY_OR_JOHN_ARRIVED", // FACT_MARY_OR_JOHN_ARRIVED
+                "factMustBeFalse": "MARY_ALIVE", // FACT_MARY_ALIVE
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 19, // "It's good to finally be here, but... losing Mary, it's hard to be grateful. I have no idea what to tell the children... and the grandchildren. It was a vacation I will never put behind me... Goodbye."
                 "numQuotes": 1,
@@ -1061,8 +1061,8 @@
             {
                 "index": 13,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 192, // FACT_MARY_OR_JOHN_ARRIVED
-                "factMustBeFalse": 193, // FACT_MARY_DEAD
+                "factMustBeTrue": "MARY_OR_JOHN_ARRIVED", // FACT_MARY_OR_JOHN_ARRIVED
+                "factMustBeFalse": "MARY_DEAD", // FACT_MARY_DEAD
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 20, // "Can't believe I'm finally seeing this place. A dead town in a dead-end country."
                 "numQuotes": 2,
@@ -1109,8 +1109,8 @@
             },
             {
                 "index": 17,
-                "factMustBeTrue": 161, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "JOHN_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 29, // "Ya had me a little worried there. Didn't know if I'd ever see Drassen."
                 "numQuotes": 1,
@@ -1120,15 +1120,15 @@
             },
             {
                 "index": 18,
-                "factMustBeTrue": 161, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "JOHN_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quoteNum": 11, // "Excuse me... but I don't remember Drassen looking like this."
                 "numQuotes": 1
             },
             {
                 "index": 19,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 187, // FACT_MARY_ALIVE
+                "factMustBeFalse": "MARY_ALIVE", // FACT_MARY_ALIVE
                 "requiredApproach": "EPC_WHO_IS_RECRUITED",
                 "quoteNum": 17, // "I can't wait to get on the plane and into the sky."
                 "numQuotes": 1
@@ -1145,16 +1145,16 @@
             },
             {
                 "index": 21,
-                "factMustBeTrue": 161, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "JOHN_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 6, // "Harassing an American abroad can get you in a lot of trouble. You don't want me reporting you to the embassy, do you?"
                 "numQuotes": 1
             },
             {
                 "index": 22,
-                "factMustBeTrue": 345, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "TOURIST_ESCORT_QUEST_STARTED", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "INPROGRESS"
@@ -1168,8 +1168,8 @@
             },
             {
                 "index": 23,
-                "factMustBeTrue": 345, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "TOURIST_ESCORT_QUEST_STARTED", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "NOTSTARTED"
@@ -1188,7 +1188,7 @@
         "records": [
             {
                 "index": 0,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "INPROGRESS"
@@ -1203,7 +1203,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "INPROGRESS"
@@ -1217,7 +1217,7 @@
             },
             {
                 "index": 2,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "quoteNum": 8, // "Oh, my gosh... I'm bleeding John... John?"
                 "numQuotes": 1,
                 "actionData": {
@@ -1227,14 +1227,14 @@
             {
                 "index": 3,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
                 "numQuotes": 1,
                 "triggerNPC": "JOHN",
                 "triggerRecord": 4
             },
             {
                 "index": 4,
-                "factMustBeTrue": 191, // FACT_JOHN_BLEEDING
+                "factMustBeTrue": "JOHN_BLEEDING", // FACT_JOHN_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 19, // "My husband is in pain."
                 "numQuotes": 1,
@@ -1244,7 +1244,7 @@
             },
             {
                 "index": 5,
-                "factMustBeFalse": 190, // FACT_JOHN_ALIVE
+                "factMustBeFalse": "JOHN_ALIVE", // FACT_JOHN_ALIVE
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "NOTSTARTED"
@@ -1258,7 +1258,7 @@
             },
             {
                 "index": 6,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 22, // "Oh my! How can you even think about talking right now?"
                 "numQuotes": 1,
@@ -1281,7 +1281,7 @@
                 "requiredApproach": "EPC_IN_WRONG_SECTOR",
                 "quoteNum": 13, // "I don't see the airport."
                 "numQuotes": 1,
-                "setFactTrue": 162, // unnamed fact
+                "setFactTrue": "MARY_ABANDONED_BY_PLAYER", // unnamed fact
                 "actionData": {
                     "code": 149 // NPC_ACTION_UN_RECRUIT_EPC
                 }
@@ -1306,7 +1306,7 @@
             },
             {
                 "index": 11,
-                "factMustBeTrue": 190, // FACT_JOHN_ALIVE
+                "factMustBeTrue": "JOHN_ALIVE", // FACT_JOHN_ALIVE
                 "requiredApproach": "EPC_WHO_IS_RECRUITED",
                 "quoteNum": 14, // "The sooner I see the airport the better."
                 "numQuotes": 1
@@ -1322,8 +1322,8 @@
             {
                 "index": 13,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 192, // FACT_MARY_OR_JOHN_ARRIVED
-                "factMustBeFalse": 190, // FACT_JOHN_ALIVE
+                "factMustBeTrue": "MARY_OR_JOHN_ARRIVED", // FACT_MARY_OR_JOHN_ARRIVED
+                "factMustBeFalse": "JOHN_ALIVE", // FACT_JOHN_ALIVE
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 16, // "I have very mixed feelings about it. At least I'll see my grandchildren again, but they'll miss John. So will I. Oh, thank you nonetheless."
                 "numQuotes": 1,
@@ -1346,7 +1346,7 @@
             },
             {
                 "index": 15,
-                "factMustBeFalse": 190, // FACT_JOHN_ALIVE
+                "factMustBeFalse": "JOHN_ALIVE", // FACT_JOHN_ALIVE
                 "requiredApproach": "EPC_WHO_IS_RECRUITED",
                 "quoteNum": 20, // "Oh my God, John... John..."
                 "numQuotes": 1,
@@ -1356,8 +1356,8 @@
             },
             {
                 "index": 16,
-                "factMustBeTrue": 162, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "MARY_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "RECRUIT",
                 "quoteNum": 23, // "Finally. I thought you were going to leave me here forever."
                 "numQuotes": 1,
@@ -1367,8 +1367,8 @@
             },
             {
                 "index": 17,
-                "factMustBeTrue": 162, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "MARY_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "quoteNum": 13, // "I don't see the airport."
                 "numQuotes": 1
             },
@@ -1395,15 +1395,15 @@
             },
             {
                 "index": 20,
-                "factMustBeTrue": 162, // unnamed fact
-                "factMustBeFalse": 108, // FACT_NPC_ESCORTED
+                "factMustBeTrue": "MARY_ABANDONED_BY_PLAYER", // unnamed fact
+                "factMustBeFalse": "NPC_ESCORTED", // FACT_NPC_ESCORTED
                 "requiredApproach": "THREATEN",
                 "quoteNum": 6, // "I'll do whatever you say."
                 "numQuotes": 1
             },
             {
                 "index": 21,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "NOTSTARTED"
@@ -1418,7 +1418,7 @@
             {
                 "index": 22,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "quest": {
                     "name": "ESCORT_TOURISTS",
                     "status": "NOTSTARTED"
@@ -1437,7 +1437,7 @@
         "records": [
             {
                 "index": 0,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1448,7 +1448,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1458,7 +1458,7 @@
             },
             {
                 "index": 2,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -1469,13 +1469,13 @@
             {
                 "index": 3,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
                 "quoteNum": 29, // "Oh, is so much better."
                 "numQuotes": 1
             },
             {
                 "index": 4,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -1495,7 +1495,7 @@
             {
                 "index": 6,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 216, // FACT_FIRST_BARTENDER
+                "factMustBeTrue": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 32, // "De Santos are also known for our amazing similarities. Dere are five of us, we are identical quintuplets. It is funny. We sound same, speak same things, and we are all bartenders in Arulco."
                 "numQuotes": 1,
                 "triggerNPC": "HERVE",
@@ -1507,7 +1507,7 @@
             {
                 "index": 7,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeFalse": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 33, // "Well, everyone except Manny. Poor Manny. He was born a day after de rest of us. He has spent his entire life trying to catch up. We hope one day he will be one of de Santos bartending brothers too."
                 "numQuotes": 2
@@ -1515,7 +1515,7 @@
             {
                 "index": 8,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 217, // FACT_SECOND_BARTENDER
+                "factMustBeTrue": "SECOND_BARTENDER", // FACT_SECOND_BARTENDER
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
@@ -1525,7 +1525,7 @@
             {
                 "index": 9,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
@@ -1535,7 +1535,7 @@
             {
                 "index": 10,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 219, // FACT_FOURTH_BARTENDER
+                "factMustBeTrue": "FOURTH_BARTENDER", // FACT_FOURTH_BARTENDER
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
@@ -1545,21 +1545,21 @@
             {
                 "index": 11,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeTrue": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "quoteNum": 40, // "It is a great time in de history of de Santos brothers. We are all bartenders now, even Manny, who many said would never be able to open a beer, has joined us. Our dead father sheds his tears in pride."
                 "numQuotes": 1
             },
             {
                 "index": 12,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 216, // FACT_FIRST_BARTENDER
+                "factMustBeFalse": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 41, // "Yes, you are not the first to notice dat we look very similar. I do not understand, since de differences are obvious to me."
                 "numQuotes": 1
             },
             {
                 "index": 13,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 42, // "Yes. Many have mentioned dat I am de most handsome of de brothers."
                 "numQuotes": 1
             },
@@ -1572,7 +1572,7 @@
             },
             {
                 "index": 15,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1582,7 +1582,7 @@
             },
             {
                 "index": 16,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -1592,7 +1592,7 @@
             },
             {
                 "index": 17,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -1602,7 +1602,7 @@
             },
             {
                 "index": 18,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1617,7 +1617,7 @@
         "records": [
             {
                 "index": 0,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1628,7 +1628,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1638,7 +1638,7 @@
             },
             {
                 "index": 2,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -1649,13 +1649,13 @@
             {
                 "index": 3,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
                 "quoteNum": 29, // "Oh, is so much better."
                 "numQuotes": 1
             },
             {
                 "index": 4,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -1675,7 +1675,7 @@
             {
                 "index": 6,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 216, // FACT_FIRST_BARTENDER
+                "factMustBeTrue": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 32, // "De Santos are also known for our amazing similarities. Dere are five of us, we are identical quintuplets. It is funny. We sound same, speak same things, and we are all bartenders in Arulco."
                 "numQuotes": 1,
                 "triggerNPC": "HERVE",
@@ -1687,7 +1687,7 @@
             {
                 "index": 7,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeFalse": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 33, // "Well, everyone except Manny. Poor Manny. He was born a day after de rest of us. He has spent his entire life trying to catch up. We hope one day he will be one of de Santos bartending brothers too."
                 "numQuotes": 2
@@ -1695,7 +1695,7 @@
             {
                 "index": 8,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 217, // FACT_SECOND_BARTENDER
+                "factMustBeTrue": "SECOND_BARTENDER", // FACT_SECOND_BARTENDER
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
@@ -1705,7 +1705,7 @@
             {
                 "index": 9,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
@@ -1715,7 +1715,7 @@
             {
                 "index": 10,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 219, // FACT_FOURTH_BARTENDER
+                "factMustBeTrue": "FOURTH_BARTENDER", // FACT_FOURTH_BARTENDER
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
@@ -1725,21 +1725,21 @@
             {
                 "index": 11,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeTrue": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "quoteNum": 40, // "It is a great time in de history of de Santos brothers. We are all bartenders now, even Manny, who many said would never be able to open a beer, has joined us. Our dead father sheds his tears in pride."
                 "numQuotes": 1
             },
             {
                 "index": 12,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 216, // FACT_FIRST_BARTENDER
+                "factMustBeFalse": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 41, // "Yes, you are not the first to notice dat we look very similar. I do not understand, since de differences are obvious to me."
                 "numQuotes": 1
             },
             {
                 "index": 13,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 42, // "Yes. Many have mentioned dat I am de most handsome of de brothers."
                 "numQuotes": 1
             },
@@ -1752,7 +1752,7 @@
             },
             {
                 "index": 15,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1762,7 +1762,7 @@
             },
             {
                 "index": 16,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -1772,7 +1772,7 @@
             },
             {
                 "index": 17,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -1782,7 +1782,7 @@
             },
             {
                 "index": 18,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1797,7 +1797,7 @@
         "records": [
             {
                 "index": 0,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1808,7 +1808,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1818,7 +1818,7 @@
             },
             {
                 "index": 2,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -1829,13 +1829,13 @@
             {
                 "index": 3,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
                 "quoteNum": 29, // "Oh, is so much better."
                 "numQuotes": 1
             },
             {
                 "index": 4,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -1855,7 +1855,7 @@
             {
                 "index": 6,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 216, // FACT_FIRST_BARTENDER
+                "factMustBeTrue": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 32, // "De Santos are also known for our amazing similarities. Dere are five of us, we are identical quintuplets. It is funny. We sound same, speak same things, and we are all bartenders in Arulco."
                 "numQuotes": 1,
                 "triggerNPC": "HERVE",
@@ -1867,7 +1867,7 @@
             {
                 "index": 7,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeFalse": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 33, // "Well, everyone except Manny. Poor Manny. He was born a day after de rest of us. He has spent his entire life trying to catch up. We hope one day he will be one of de Santos bartending brothers too."
                 "numQuotes": 2
@@ -1875,7 +1875,7 @@
             {
                 "index": 8,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 217, // FACT_SECOND_BARTENDER
+                "factMustBeTrue": "SECOND_BARTENDER", // FACT_SECOND_BARTENDER
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
@@ -1885,7 +1885,7 @@
             {
                 "index": 9,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
@@ -1895,7 +1895,7 @@
             {
                 "index": 10,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 219, // FACT_FOURTH_BARTENDER
+                "factMustBeTrue": "FOURTH_BARTENDER", // FACT_FOURTH_BARTENDER
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
@@ -1905,21 +1905,21 @@
             {
                 "index": 11,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeTrue": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "quoteNum": 40, // "It is a great time in de history of de Santos brothers. We are all bartenders now, even Manny, who many said would never be able to open a beer, has joined us. Our dead father sheds his tears in pride."
                 "numQuotes": 1
             },
             {
                 "index": 12,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 216, // FACT_FIRST_BARTENDER
+                "factMustBeFalse": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 41, // "Yes, you are not the first to notice dat we look very similar. I do not understand, since de differences are obvious to me."
                 "numQuotes": 1
             },
             {
                 "index": 13,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 42, // "Yes. Many have mentioned dat I am de most handsome of de brothers."
                 "numQuotes": 1
             },
@@ -1932,7 +1932,7 @@
             },
             {
                 "index": 15,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1942,7 +1942,7 @@
             },
             {
                 "index": 16,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -1952,7 +1952,7 @@
             },
             {
                 "index": 17,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -1962,7 +1962,7 @@
             },
             {
                 "index": 18,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1977,7 +1977,7 @@
         "records": [
             {
                 "index": 0,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "ENEMY_NPC_QUOTE",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1988,7 +1988,7 @@
             {
                 "index": 1,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 81, // FACT_NPC_IS_ENEMY
+                "factMustBeTrue": "NPC_IS_ENEMY", // FACT_NPC_IS_ENEMY
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -1998,7 +1998,7 @@
             },
             {
                 "index": 2,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "ONE_OF_FOUR_STANDARD",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -2009,13 +2009,13 @@
             {
                 "index": 3,
                 "sayOncePerConvo": true,
-                "factMustBeTrue": 122, // FACT_NPC_BANDAGED_TODAY
+                "factMustBeTrue": "NPC_BANDAGED_TODAY", // FACT_NPC_BANDAGED_TODAY
                 "quoteNum": 29, // "Oh, is so much better."
                 "numQuotes": 1
             },
             {
                 "index": 4,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "SECTOR_NOT_SAFE",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -2035,7 +2035,7 @@
             {
                 "index": 6,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 216, // FACT_FIRST_BARTENDER
+                "factMustBeTrue": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 32, // "De Santos are also known for our amazing similarities. Dere are five of us, we are identical quintuplets. It is funny. We sound same, speak same things, and we are all bartenders in Arulco."
                 "numQuotes": 1,
                 "triggerNPC": "HERVE",
@@ -2047,7 +2047,7 @@
             {
                 "index": 7,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeFalse": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "requiredApproach": "TRIGGER_NPC",
                 "quoteNum": 33, // "Well, everyone except Manny. Poor Manny. He was born a day after de rest of us. He has spent his entire life trying to catch up. We hope one day he will be one of de Santos bartending brothers too."
                 "numQuotes": 2
@@ -2055,7 +2055,7 @@
             {
                 "index": 8,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 217, // FACT_SECOND_BARTENDER
+                "factMustBeTrue": "SECOND_BARTENDER", // FACT_SECOND_BARTENDER
                 "quoteNum": 35, // "I believe you know of us. My brother has spoken of you, de soldiers who are going to save Arulco. I tell you, we wish you de best of luck cleaning out de mess dis country is in."
                 "numQuotes": 1,
                 "actionData": {
@@ -2065,7 +2065,7 @@
             {
                 "index": 9,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 36, // "My brothers tell me about you. We no meet yet. But, meet one, you meet them all, no? Heh. This what people say... Women, dey confuse us all de time. And me, I confuse de woman, let me tell you dis."
                 "numQuotes": 3,
                 "actionData": {
@@ -2075,7 +2075,7 @@
             {
                 "index": 10,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 219, // FACT_FOURTH_BARTENDER
+                "factMustBeTrue": "FOURTH_BARTENDER", // FACT_FOURTH_BARTENDER
                 "quoteNum": 39, // "I bet you think you have seen me before. I have heard very much about you from my brothers and de others. You are de one who will give birth to a new Arulco, an Arulco free and equal for everyone. De people are in awe of you."
                 "numQuotes": 1,
                 "actionData": {
@@ -2085,21 +2085,21 @@
             {
                 "index": 11,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 220, // FACT_MANNY_IS_BARTENDER
+                "factMustBeTrue": "MANNY_IS_BARTENDER", // FACT_MANNY_IS_BARTENDER
                 "quoteNum": 40, // "It is a great time in de history of de Santos brothers. We are all bartenders now, even Manny, who many said would never be able to open a beer, has joined us. Our dead father sheds his tears in pride."
                 "numQuotes": 1
             },
             {
                 "index": 12,
                 "eraseOnceSaid": true,
-                "factMustBeFalse": 216, // FACT_FIRST_BARTENDER
+                "factMustBeFalse": "FIRST_BARTENDER", // FACT_FIRST_BARTENDER
                 "quoteNum": 41, // "Yes, you are not the first to notice dat we look very similar. I do not understand, since de differences are obvious to me."
                 "numQuotes": 1
             },
             {
                 "index": 13,
                 "eraseOnceSaid": true,
-                "factMustBeTrue": 218, // FACT_THIRD_BARTENDER
+                "factMustBeTrue": "THIRD_BARTENDER", // FACT_THIRD_BARTENDER
                 "quoteNum": 42, // "Yes. Many have mentioned dat I am de most handsome of de brothers."
                 "numQuotes": 1
             },
@@ -2112,7 +2112,7 @@
             },
             {
                 "index": 15,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -2122,7 +2122,7 @@
             },
             {
                 "index": 16,
-                "factMustBeTrue": 68, // FACT_NPC_BLEEDING
+                "factMustBeTrue": "NPC_BLEEDING", // FACT_NPC_BLEEDING
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 8, // "Oh... is doctor here?"
                 "numQuotes": 1,
@@ -2132,7 +2132,7 @@
             },
             {
                 "index": 17,
-                "factMustBeFalse": 31, // FACT_CURRENT_SECTOR_IS_SAFE
+                "factMustBeFalse": "CURRENT_SECTOR_IS_SAFE", // FACT_CURRENT_SECTOR_IS_SAFE
                 "requiredApproach": "BUYSELL",
                 "quoteNum": 30, // "Is not safe to do business now. Can no enjoy drink! Stop fighting first!"
                 "numQuotes": 1,
@@ -2142,7 +2142,7 @@
             },
             {
                 "index": 18,
-                "factMustBeTrue": 289, // FACT_NPC_HOSTILE_OR_PISSED_OFF
+                "factMustBeTrue": "NPC_HOSTILE_OR_PISSED_OFF", // FACT_NPC_HOSTILE_OR_PISSED_OFF
                 "requiredApproach": "DECLARATION_OF_HOSTILITY",
                 "quoteNum": 28, // "You low life!"
                 "numQuotes": 1,
@@ -2153,4 +2153,3 @@
         ]
     }
 ]
-

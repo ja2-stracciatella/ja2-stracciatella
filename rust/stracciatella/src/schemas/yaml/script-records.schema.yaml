@@ -40,9 +40,9 @@ items:
           requiredGridNo:
             $ref: types/uint16.schema.yaml
           factMustBeTrue:
-            $ref: types/uint16.schema.yaml
+            $ref: types/fact-id.schema.yaml
           factMustBeFalse:
-            $ref: types/uint16.schema.yaml
+            $ref: types/fact-id.schema.yaml
           quest:
             type: object
             properties:
@@ -86,7 +86,7 @@ items:
           triggerRecord:
             $ref: types/uint8.schema.yaml
           setFactTrue:
-            $ref: types/uint16.schema.yaml
+            $ref: types/fact-id.schema.yaml
           giftItem:
             type: string
             description: >-
