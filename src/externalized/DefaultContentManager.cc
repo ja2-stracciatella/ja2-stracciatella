@@ -1401,15 +1401,16 @@ void DefaultContentManager::loadAllScriptRecords()
 		for (auto& subElement : meanwhile.GetValue("chars").toVec()) {
 			auto charToFileInfo = subElement.toObject();
 			auto jsonProfileId = (this->getMercProfileInfoByName(charToFileInfo.GetString("name")))->profileID;
-			auto fullPath = NPCDATADIR "/" + charToFileInfo.GetString("fileName");
+			std::unique_ptr<SGPFile> file{ openGameResForReading(NPCDATADIR "/" + charToFileInfo.GetString("fileName")) };
 			m_scriptRecordsMeanwhiles.insert_or_assign(
 				{ jsonMeanwhileId, jsonProfileId },
-				ExtractNPCQuoteInfoArrayFromFile(openGameResForReading(fullPath)) );
+				ExtractNPCQuoteInfoArrayFromFile(file.get()));
 		}
 	}
 
 	auto scriptsControllingPCsFileName = ctrl.GetString("fileNameForScriptControlledPCs");
-	m_scriptRecordsRecruited = ExtractNPCQuoteInfoArrayFromFile(openGameResForReading(NPCDATADIR "/" + scriptsControllingPCsFileName));
+	std::unique_ptr<SGPFile> file{ openGameResForReading(NPCDATADIR "/" + scriptsControllingPCsFileName) };
+	m_scriptRecordsRecruited = ExtractNPCQuoteInfoArrayFromFile(file.get());
 
 	bool jsonIsOnStraccLayer = (openGameResForReadingOnAllLayers("script-records-NPCs.json").size() == 1);
 	auto json = readJsonDataFileWithSchema("script-records-NPCs.json");
