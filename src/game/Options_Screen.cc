@@ -243,9 +243,6 @@ static void EnterOptionsScreen(void)
 
 	guiOptionsScreen = OPTIONS_SCREEN;
 
-	//Init the slider bar;
-	InitSlider();
-
 	if( gfExitOptionsDueToMessageBox )
 	{
 		gfRedrawOptionsScreen = TRUE;

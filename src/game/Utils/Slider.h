@@ -19,7 +19,6 @@ void RemoveSliderBar(SLIDER* s);
 
 void SetSliderValue(SLIDER* s, UINT32 uiNewValue);
 
-void InitSlider(void);
 void ShutDownSlider(void);
 
 void RenderAllSliderBars(void);
