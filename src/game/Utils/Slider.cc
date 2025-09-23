@@ -1,11 +1,11 @@
 #include <stdexcept>
 
-#include "Debug.h"
 #include "Directories.h"
 #include "HImage.h"
 #include "Input.h"
 #include "Line.h"
 #include "MouseSystem.h"
+#include "Object_Cache.h"
 #include "Render_Dirty.h"
 #include "Slider.h"
 #include "SysUtil.h"
@@ -57,34 +57,20 @@ struct SLIDER
 
 static SLIDER* pSliderHead     = NULL;
 static SLIDER* gpCurrentSlider = NULL;
-
-static SGPVObject* guiSliderBoxImage;
-
-
-void InitSlider(void)
-{
-	// load Slider Box Graphic graphic and add it
-	guiSliderBoxImage = AddVideoObjectFromFile(INTERFACEDIR "/sliderbox.sti");
-}
+static cache_key_t const guiSliderBoxImage = INTERFACEDIR "/sliderbox.sti";
 
 
 void ShutDownSlider(void)
 {
-	Assert(guiSliderBoxImage); // Trying to ShutDown the Slider System when it was never inited?
-
 	//Do a cehck to see if there are still active nodes
 	for (SLIDER* i = pSliderHead; i != NULL;)
 	{
 		SLIDER* const remove = i;
 		i = i->pNext;
 		RemoveSliderBar(remove);
-
-		//Report an error
 	}
 
-	//if so report an errror
-	DeleteVideoObject(guiSliderBoxImage);
-	guiSliderBoxImage = NULL;
+	RemoveVObject(guiSliderBoxImage);
 }
 
 
@@ -95,8 +81,6 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, UINT32 reason);
 
 SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback)
 {
-	if (!guiSliderBoxImage) InitSlider();
-
 	if (ubStyle >= NUM_SLIDER_STYLES) throw std::logic_error("Invalid slider style");
 
 	SLIDER* const s = new SLIDER{};
