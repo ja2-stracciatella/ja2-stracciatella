@@ -3,6 +3,10 @@
 #include <FL/Fl.H>
 #include <string_theory/string>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 int main(int argc, char* argv[])
 try
 {
