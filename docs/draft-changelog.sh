@@ -48,6 +48,8 @@ done | gawk '
   editor = 0
   if (/editor/ || title ~ /[eE]ditor/) editor = 1
   bug = index(labels, "bug")
+  maintenance = 0
+  if (labels ~ /(maintenance|dependencies|build-system|release)/) maintenance = 1
   unset = 0
   if (length(labels) == 4) unset = 1
 
@@ -59,7 +61,7 @@ done | gawk '
   } else {
    origin = ""
   }
-  type = "Maintenance"
+  type = "UNKNOWN"
   if (feature) {
     type = "Enhancement"
   } else if (launcher) {
@@ -68,6 +70,8 @@ done | gawk '
     type = "Editor"
   } else if (bug) {
     type = "Bugfix"
+  } else if (maintenance) {
+    type = "Maintenance"
   } else if (unset) {
     type = "UNKNOWN"
   }
