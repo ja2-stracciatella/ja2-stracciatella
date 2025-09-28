@@ -47,6 +47,7 @@ items:
         maxVisibilityWhenAffected:
           title: Max Visibility When Affected
           description: The maximum number of tiles the merc can see when they are affected by the smoke effect
+          $ref: types/uint8.schema.yaml
         ignoresGasMask:
           title: Ignores Gas Mask
           description: Does this smoke effect ignore the mercs gas mask and affect them anyways.
