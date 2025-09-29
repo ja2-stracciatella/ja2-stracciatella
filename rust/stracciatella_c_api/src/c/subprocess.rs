@@ -31,7 +31,7 @@ impl SubProcessState {
 
     /// Check if process has finished and update state
     pub fn process(&mut self) {
-        if let Self::Running(ref mut c) = self {
+        if let Self::Running(c) = self {
             let mut c = std::mem::take(c).expect("SubProcess::Running child should always be some");
             *self = match c.try_wait() {
                 Ok(Some(_)) => match c.wait_with_output() {
@@ -101,7 +101,7 @@ impl SubProcess {
 /// Starts a subprocess and collects stdin/stderr in the process
 ///
 /// Returns null on error
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Subprocess_new(program: *const c_char, args: *mut VecCString) -> *mut SubProcess {
     forget_rust_error();
 
@@ -125,14 +125,14 @@ pub extern "C" fn Subprocess_new(program: *const c_char, args: *mut VecCString) 
 /// Checks whether the subprocess is done running
 ///
 /// Also considers the subprocess as finished when a communication error occurs
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Subprocess_isDone(ptr: *mut SubProcess) -> bool {
     let ptr = unsafe_mut(ptr);
     ptr.is_done()
 }
 
 /// Maintains internal subprocess state. Will mark it as done when subprocess has finished
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Subprocess_process(ptr: *mut SubProcess) {
     let ptr = unsafe_mut(ptr);
     ptr.process()
@@ -145,8 +145,8 @@ pub extern "C" fn Subprocess_process(ptr: *mut SubProcess) {
 /// # Safety
 ///
 /// We use `libc::strsignal` to create a signal string for the error message. If the result is not valid utf8 the function will crash.
-#[no_mangle]
-pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 { unsafe {
     forget_rust_error();
 
     let ptr = unsafe_mut(ptr);
@@ -185,11 +185,11 @@ pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
             i32::MIN
         }
     }
-}
+}}
 
 /// Destroys the SubProcess instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn SubProcess_destroy(ptr: *mut SubProcess) {
     let _drop_me = from_ptr(ptr);
 }
