@@ -2,10 +2,8 @@
 //!
 //! [`stracciatella::fs`]: ../../stracciatella/fs/index.html
 
-use std::f64;
 use std::ptr;
 use std::time;
-use std::u64;
 
 use stracciatella::fs;
 

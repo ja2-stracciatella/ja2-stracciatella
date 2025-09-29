@@ -223,7 +223,7 @@ impl ModManager {
         let missing_mods: Vec<_> = engine_options
             .mods
             .iter()
-            .filter(|v| mod_manager.get_mod_by_id(*v).is_none())
+            .filter(|v| mod_manager.get_mod_by_id(v).is_none())
             .collect();
         if !missing_mods.is_empty() {
             Err(ModManagerInitError::MissingEnabledMods(
@@ -296,7 +296,7 @@ impl ModManager {
             }
         }
 
-        let mut available_mods: Vec<_> = available_mods.into_iter().map(|(_, v)| v).collect();
+        let mut available_mods: Vec<_> = available_mods.into_values().collect();
         available_mods.sort_by_key(|v1| v1.name().to_lowercase());
 
         ModManager { available_mods }

@@ -5,7 +5,6 @@
 use std::convert::TryFrom;
 use std::ffi::CString;
 use std::ptr;
-use std::usize;
 
 use crate::any_path::AnyPath;
 use crate::c::common::*;

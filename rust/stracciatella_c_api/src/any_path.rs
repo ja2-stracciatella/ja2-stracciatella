@@ -316,7 +316,7 @@ enum PercentSplit<'a> {
     Str(&'a str),
 }
 
-fn percent_split(mut s: &str) -> Result<Vec<PercentSplit>, String> {
+fn percent_split<'a>(mut s: &'a str) -> Result<Vec<PercentSplit<'a>>, String> {
     if s.bytes().any(|b| b == 0) {
         return Err("unexpected embedded nul".into());
     }

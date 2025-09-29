@@ -90,7 +90,7 @@ pub fn resolve_existing_components(path: &Path, base: Option<&Path>, caseless: b
     let mut copy = 0;
     if let Some(b) = base {
         joined_path = b.join(path);
-        if joined_path.starts_with(&b) {
+        if joined_path.starts_with(b) {
             // copy base components
             copy = b.components().count();
         }
@@ -107,10 +107,10 @@ pub fn resolve_existing_components(path: &Path, base: Option<&Path>, caseless: b
         .fold(PathBuf::new(), |mut current, component| {
             if copy > 0 {
                 copy -= 1;
-                current.push(&component);
+                current.push(component);
                 return current; // copied
             }
-            current.push(&component);
+            current.push(component);
             if current.exists() {
                 return current; // respect the filesystem, copied
             }
@@ -130,7 +130,7 @@ pub fn resolve_existing_components(path: &Path, base: Option<&Path>, caseless: b
                     return current; // replaced with variant
                 }
             }
-            current.push(&component);
+            current.push(component);
             current // give up, copied
         })
 }
@@ -142,7 +142,7 @@ pub fn find_all_files_in_dir(
     recursive: bool,
 ) -> io::Result<Vec<PathBuf>> {
     let mut vec = Vec::new();
-    for entry_result in read_dir(&dir)? {
+    for entry_result in read_dir(dir)? {
         let entry_result = entry_result?;
         if entry_result.path().is_file() {
             vec.push(entry_result.path().to_owned());
@@ -167,7 +167,7 @@ pub fn find_all_dirs_in_dir(
     recursive: bool,
 ) -> io::Result<Vec<PathBuf>> {
     let mut vec = Vec::new();
-    for entry_result in read_dir(&dir)? {
+    for entry_result in read_dir(dir)? {
         let entry_result = entry_result?;
         if entry_result.path().is_dir() {
             vec.push(entry_result.path().to_owned());
@@ -239,11 +239,11 @@ pub fn free_space(path: &Path) -> io::Result<u64> {
     {
         return Ok(1024 * 1024 * 1024);
     }
-    Err(io::Error::new(io::ErrorKind::Other, "not implemented"))
+    Err(io::Error::other("not implemented"))
 }
 
 /// Cleans a filename from special characters, so it can be used safely for the filesystem
 /// Note that the filename should not contain the extension
 pub fn clean_basename<T: AsRef<Path>>(basename: T) -> PathBuf {
-    PathBuf::from(slug::slugify(&basename.as_ref().to_string_lossy()))
+    PathBuf::from(slug::slugify(basename.as_ref().to_string_lossy()))
 }

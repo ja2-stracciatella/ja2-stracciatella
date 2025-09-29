@@ -61,7 +61,7 @@ pub(crate) mod common {
 
     thread_local!(
         /// A thread local error for C.
-        pub static RUST_ERROR: RefCell<Option<CString>> = RefCell::new(None)
+        pub static RUST_ERROR: RefCell<Option<CString>> = const { RefCell::new(None) }
     );
 
     /// Sets the thread local error string for C.
@@ -161,7 +161,7 @@ pub(crate) mod common {
     /// Converts a str to a CString. Discards characters starting with the first nul character.
     pub fn c_string_from_str(s: &str) -> CString {
         let bytes = match s.find('\0') {
-            Some(pos) => s[..pos].as_bytes(),
+            Some(pos) => &s.as_bytes()[..pos],
             None => s.as_bytes(),
         };
         unsafe { CString::from_vec_unchecked(bytes.to_vec()) }

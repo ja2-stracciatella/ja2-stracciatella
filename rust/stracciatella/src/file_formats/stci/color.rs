@@ -44,11 +44,11 @@ impl StciRgb888 {
 }
 
 const fn max_value_565_shift_right(mask: u32, shift: u32) -> u32 {
-    std::u32::MAX & mask >> shift
+    u32::MAX & mask >> shift
 }
 
 const fn max_value_565_shift_left(mask: u32, shift: u32) -> u32 {
-    std::u32::MAX & mask << shift
+    u32::MAX & mask << shift
 }
 
 impl From<StciRgb565> for StciRgb888 {

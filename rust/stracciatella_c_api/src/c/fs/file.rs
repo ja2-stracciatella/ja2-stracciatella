@@ -3,8 +3,6 @@
 use std::io;
 use std::io::{Read, Seek, Write};
 use std::ptr;
-use std::u64;
-use std::usize;
 
 use stracciatella::fs;
 use stracciatella::vfile::VFile;

@@ -32,7 +32,7 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
     if s.is_null() {
         return;
     }
-    unsafe { CString::from_raw(s) };
+    unsafe { drop(CString::from_raw(s)) };
 }
 
 /// Converts a UINT16 buffer from little endian to native endian
