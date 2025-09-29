@@ -62,7 +62,7 @@ use digest::Digest;
 use md5::Md5;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Map, Value};
+use serde_json::{Map, Value, json};
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 use crate::unicode::Nfc;

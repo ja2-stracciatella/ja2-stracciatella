@@ -5,8 +5,8 @@
 use std::ptr;
 
 use stracciatella::config::{
-    find_stracciatella_home, Cli, EngineOptions, EngineOptionsError, Ja2Json, Resolution,
-    ScalingQuality, VanillaVersion,
+    Cli, EngineOptions, EngineOptionsError, Ja2Json, Resolution, ScalingQuality, VanillaVersion,
+    find_stracciatella_home,
 };
 
 use crate::c::common::*;

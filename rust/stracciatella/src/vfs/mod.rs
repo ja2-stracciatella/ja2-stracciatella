@@ -20,6 +20,7 @@ use json_patch::Patch;
 use log::{info, warn};
 use serde_json::Value;
 
+use crate::EngineOptions;
 use crate::fs;
 use crate::json;
 use crate::mods::ModManager;
@@ -27,7 +28,6 @@ use crate::mods::ModPath;
 use crate::unicode::Nfc;
 use crate::vfs::dir::DirFs;
 use crate::vfs::slf::SlfFs;
-use crate::EngineOptions;
 
 pub trait VfsFile:
     io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display + Send + Sync
@@ -192,7 +192,9 @@ impl Vfs {
             true,
         );
         if one_dot_thirteen_marker.exists() {
-            log::error!("The game directory seems to be modified by a 1.13 installation, the game might crash at any point in time.")
+            log::error!(
+                "The game directory seems to be modified by a 1.13 installation, the game might crash at any point in time."
+            )
         }
 
         // First is home data dir (does not need to exist)
@@ -465,7 +467,7 @@ fn map_not_found_to_option<T>(result: io::Result<T>) -> io::Result<Option<T>> {
 
 #[cfg(test)]
 mod tests {
-    use tempfile::{tempdir, TempDir};
+    use tempfile::{TempDir, tempdir};
 
     use crate::{config::EngineOptions, mods::ModManager};
 

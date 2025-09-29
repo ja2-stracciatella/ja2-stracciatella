@@ -14,14 +14,14 @@ use crate::unicode::Nfc;
 // re-exports
 //------------
 
+pub use std::fs::File;
+pub use std::fs::OpenOptions;
 pub use std::fs::create_dir;
 pub use std::fs::create_dir_all;
 pub use std::fs::metadata;
 pub use std::fs::read_dir;
 pub use std::fs::set_permissions;
 pub use std::fs::write;
-pub use std::fs::File;
-pub use std::fs::OpenOptions;
 
 pub use tempfile::{Builder as TempBuilder, NamedTempFile, TempDir};
 

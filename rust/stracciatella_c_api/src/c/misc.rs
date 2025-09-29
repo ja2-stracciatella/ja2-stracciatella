@@ -65,7 +65,9 @@ pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8
 #[unsafe(no_mangle)]
 #[cfg(target_endian = "little")]
 pub extern "C" fn convertLittleEndianBufferToNativeEndianU16(_buf: *mut u8, _buf_len: u32) {
-    log::debug!("convertLittleEndianU16BufferToNativeEndian: Native format is little endian so this is a noop");
+    log::debug!(
+        "convertLittleEndianU16BufferToNativeEndian: Native format is little endian so this is a noop"
+    );
 }
 
 /// Guesses the resource version from the contents of the game directory.

@@ -1,6 +1,6 @@
 //! This module contains color related functionality for the STCI image format
 
-use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use byteorder::{LE, ReadBytesExt, WriteBytesExt};
 use std::io::{Read, Result, Write};
 
 /// Mask used to get red bits from Rgb565 color

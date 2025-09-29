@@ -313,11 +313,11 @@ impl ModManager {
 
 #[cfg(test)]
 mod tests {
-    use tempfile::{tempdir, TempDir};
+    use tempfile::{TempDir, tempdir};
 
     use crate::{
         config::EngineOptions,
-        mods::{mod_manifest::ModManifestJson, ModManagerInitError},
+        mods::{ModManagerInitError, mod_manifest::ModManifestJson},
     };
 
     use super::ModManager;

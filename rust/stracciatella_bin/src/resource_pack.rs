@@ -16,7 +16,7 @@ use std::fs;
 use std::path::Path;
 use std::process;
 
-use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand, crate_version};
 
 use stracciatella::fs::resolve_existing_components;
 use stracciatella::res::{ResourcePackBuilder, ResourcePropertiesExt};

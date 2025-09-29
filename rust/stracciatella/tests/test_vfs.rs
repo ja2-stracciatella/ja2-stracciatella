@@ -55,13 +55,17 @@ mod vfs {
             b"foobar.slf"
         );
         // File does not exist
-        assert!(read_file_data_in_layer(&vfs, 0, "foo/foo/baz.txt")
-            .expect("read in layer")
-            .is_none());
+        assert!(
+            read_file_data_in_layer(&vfs, 0, "foo/foo/baz.txt")
+                .expect("read in layer")
+                .is_none()
+        );
         // File is a directory
-        assert!(read_file_data_in_layer(&vfs, 0, "foo")
-            .expect("read in layer")
-            .is_none());
+        assert!(
+            read_file_data_in_layer(&vfs, 0, "foo")
+                .expect("read in layer")
+                .is_none()
+        );
 
         temp.close().expect("close temp dir");
     }
@@ -169,11 +173,12 @@ mod vfs {
                 .to_string(),
             "entity not found"
         );
-        assert!(vfs
-            .read_patched_json(&Nfc::caseless_path("invalid.json"))
-            .expect_err("error")
-            .to_string()
-            .contains("failed to deserialize json"));
+        assert!(
+            vfs.read_patched_json(&Nfc::caseless_path("invalid.json"))
+                .expect_err("error")
+                .to_string()
+                .contains("failed to deserialize json")
+        );
 
         temp.close().expect("close temp dir");
     }
@@ -189,27 +194,34 @@ mod vfs {
         vfs.add_dir(&dir).expect("dir");
         add_slf(&mut vfs, &dir_fs, "foo.slf");
 
-        assert!(vfs
-            .exists(&Nfc::caseless_path("foo/foo1.txt"))
-            .expect("exists should work"));
-        assert!(vfs
-            .exists(&Nfc::caseless_path("foo/foo2.txt"))
-            .expect("exists should work"));
-        assert!(vfs
-            .exists(&Nfc::caseless_path("foo"))
-            .expect("exists should work"));
-        assert!(vfs
-            .exists(&Nfc::caseless_path("Foo"))
-            .expect("exists should work"));
-        assert!(vfs
-            .exists(&Nfc::caseless_path("foo/"))
-            .expect("exists should work"));
-        assert!(vfs
-            .exists(&Nfc::caseless_path("Foo/"))
-            .expect("exists should work"));
-        assert!(!vfs
-            .exists(&Nfc::caseless_path("foo2.txt"))
-            .expect("exists should work"));
+        assert!(
+            vfs.exists(&Nfc::caseless_path("foo/foo1.txt"))
+                .expect("exists should work")
+        );
+        assert!(
+            vfs.exists(&Nfc::caseless_path("foo/foo2.txt"))
+                .expect("exists should work")
+        );
+        assert!(
+            vfs.exists(&Nfc::caseless_path("foo"))
+                .expect("exists should work")
+        );
+        assert!(
+            vfs.exists(&Nfc::caseless_path("Foo"))
+                .expect("exists should work")
+        );
+        assert!(
+            vfs.exists(&Nfc::caseless_path("foo/"))
+                .expect("exists should work")
+        );
+        assert!(
+            vfs.exists(&Nfc::caseless_path("Foo/"))
+                .expect("exists should work")
+        );
+        assert!(
+            !vfs.exists(&Nfc::caseless_path("foo2.txt"))
+                .expect("exists should work")
+        );
 
         temp.close().expect("close temp dir");
     }
@@ -284,14 +296,16 @@ mod vfs {
         );
 
         // Nonexistant stuff
-        assert!(vfs
-            .read_layers(&Nfc::caseless_path("nonexistant.txt"))
-            .expect("read layers")
-            .is_empty());
-        assert!(vfs
-            .read_layers(&Nfc::caseless_path("foo/nonexistant.txt"))
-            .expect("read layers")
-            .is_empty());
+        assert!(
+            vfs.read_layers(&Nfc::caseless_path("nonexistant.txt"))
+                .expect("read layers")
+                .is_empty()
+        );
+        assert!(
+            vfs.read_layers(&Nfc::caseless_path("foo/nonexistant.txt"))
+                .expect("read layers")
+                .is_empty()
+        );
 
         temp.close().expect("close temp dir");
     }
@@ -440,7 +454,7 @@ mod vfs {
     use std::path::{Path, PathBuf};
     use std::sync::Arc;
 
-    use serde_json::{json, Value};
+    use serde_json::{Value, json};
     use stracciatella::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
     use stracciatella::fs;
     use stracciatella::fs::{OpenOptions, TempDir};
