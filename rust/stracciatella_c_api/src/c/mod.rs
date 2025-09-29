@@ -22,7 +22,7 @@ pub mod error {
 
     /// Returns a copy of the thread local rust error or null.
     /// The caller is responsible for the memory.
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     pub extern "C" fn getRustError() -> *mut c_char {
         RUST_ERROR.with(|x| {
             if let Some(ref error) = *x.borrow() {
@@ -61,7 +61,7 @@ pub(crate) mod common {
 
     thread_local!(
         /// A thread local error for C.
-        pub static RUST_ERROR: RefCell<Option<CString>> = RefCell::new(None)
+        pub static RUST_ERROR: RefCell<Option<CString>> = const { RefCell::new(None) }
     );
 
     /// Sets the thread local error string for C.
@@ -161,7 +161,7 @@ pub(crate) mod common {
     /// Converts a str to a CString. Discards characters starting with the first nul character.
     pub fn c_string_from_str(s: &str) -> CString {
         let bytes = match s.find('\0') {
-            Some(pos) => s[..pos].as_bytes(),
+            Some(pos) => &s.as_bytes()[..pos],
             None => s.as_bytes(),
         };
         unsafe { CString::from_vec_unchecked(bytes.to_vec()) }
@@ -171,7 +171,7 @@ pub(crate) mod common {
 #[cfg(test)]
 mod tests {
     use std::cell::RefCell;
-    use std::ffi::{CStr, CString};
+    use std::ffi::CString;
     use std::path::Path;
 
     use crate::c::common::*;
@@ -185,7 +185,7 @@ mod tests {
         struct PointerTest<'a> {
             inner: &'a mut RefCell<u8>,
         }
-        impl<'a> Drop for PointerTest<'a> {
+        impl Drop for PointerTest<'_> {
             fn drop(&mut self) {
                 *self.inner.borrow_mut() = 99;
             }
@@ -226,7 +226,7 @@ mod tests {
 
     #[test]
     fn test_conversions() {
-        let c_str = CStr::from_bytes_with_nul(b"123\0").unwrap();
+        let c_str = c"123";
         assert_eq!(str_from_c_str_or_panic(c_str), "123");
         assert_eq!(path_buf_from_c_str_or_panic(c_str), Path::new("123"));
         assert_eq!(
@@ -242,7 +242,7 @@ mod tests {
         #[cfg(unix)]
         {
             // Path supports invalid utf8 on unix
-            let c_str = CStr::from_bytes_with_nul(b"123%E1\0").unwrap();
+            let c_str = c"123%E1";
             let path = path_buf_from_c_str_or_panic(c_str);
             assert_eq!(path.as_os_str().len(), 4);
             assert_eq!(c_string_from_path_or_panic(&path).as_ref(), c_str);
@@ -252,20 +252,16 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_str_from_c_str_panic() {
-        if let Ok(c_str) = CStr::from_bytes_with_nul(b"123\xe1\0") {
-            // panics, str only supports valid utf8
-            str_from_c_str_or_panic(c_str);
-        }
+        // panics, str only supports valid utf8
+        str_from_c_str_or_panic(c"123\xe1");
     }
 
     #[test]
     #[should_panic]
     #[cfg(not(unix))]
     fn test_path_from_c_str_panic_not_unix() {
-        if let Ok(c_str) = CStr::from_bytes_with_nul(b"123%E1\0") {
-            // panics, Path only supports invalid utf8 on unix
-            path_buf_from_c_str_or_panic(c_str);
-        }
+        // panics, Path only supports invalid utf8 on unix
+        path_buf_from_c_str_or_panic(c"123%E1");
     }
 
     #[test]

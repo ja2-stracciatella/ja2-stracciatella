@@ -5,14 +5,13 @@
 use std::convert::TryFrom;
 use std::ffi::CString;
 use std::ptr;
-use std::usize;
 
 use crate::any_path::AnyPath;
 use crate::c::common::*;
 
 /// Encodes a `[u8]` path.
 /// Returns the encoded path.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_encodeU8(path: *const u8, path_len: usize) -> *mut c_char {
     let path = unsafe_slice(path, path_len);
     CString::from(AnyPath::encode_slice_u8(path)).into_raw()
@@ -22,7 +21,7 @@ pub extern "C" fn Path_encodeU8(path: *const u8, path_len: usize) -> *mut c_char
 /// The decoded path is never bigger than the encoded path.
 /// Returns the amount of decoded bytes, or `usize::MAX` if there is an error.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_decodeU8(path: *const c_char, buf: *mut u8, buf_len: usize) -> usize {
     forget_rust_error();
     let path = unsafe_c_str(path);
@@ -46,7 +45,7 @@ pub extern "C" fn Path_decodeU8(path: *const c_char, buf: *mut u8, buf_len: usiz
 
 /// Gets the extension of the path.
 /// Returns null if there is no extension.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_extension(path: *const c_char) -> *mut c_char {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Some(extension) = path.extension() {
@@ -59,7 +58,7 @@ pub extern "C" fn Path_extension(path: *const c_char) -> *mut c_char {
 
 /// Gets the filename of the path.
 /// Returns null if there is no filename.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Some(filename) = path.file_name() {
@@ -72,7 +71,7 @@ pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
 
 /// Gets the filestem of the path.
 /// Returns null if there is no filestem.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_filestem(path: *const c_char) -> *mut c_char {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Some(filestem) = path.file_stem() {
@@ -85,7 +84,7 @@ pub extern "C" fn Path_filestem(path: *const c_char) -> *mut c_char {
 
 /// Extends the path.
 /// If `newpath` is absolute, it replaces the current path.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_push(path: *const c_char, newpath: *const c_char) -> *mut c_char {
     let mut path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     let newpath = path_buf_from_c_str_or_panic(unsafe_c_str(newpath));
@@ -94,7 +93,7 @@ pub extern "C" fn Path_push(path: *const c_char, newpath: *const c_char) -> *mut
 }
 
 /// Checks if the path is absolute.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_isAbsolute(path: *const c_char) -> bool {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     path.is_absolute()
@@ -102,7 +101,7 @@ pub extern "C" fn Path_isAbsolute(path: *const c_char) -> bool {
 
 /// Gets the parent path of the path.
 /// Returns null if there is no parent path.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_parent(path: *const c_char) -> *mut c_char {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Some(parent) = path.parent() {
@@ -115,7 +114,7 @@ pub extern "C" fn Path_parent(path: *const c_char) -> *mut c_char {
 
 /// Sets the extension of the path.
 /// @see https://doc.rust-lang.org/std/path/struct.PathBuf.html#method.set_extension
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_setExtension(path: *const c_char, extension: *const c_char) -> *mut c_char {
     let mut path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     let extension = path_buf_from_c_str_or_panic(unsafe_c_str(extension));
@@ -125,7 +124,7 @@ pub extern "C" fn Path_setExtension(path: *const c_char, extension: *const c_cha
 }
 
 /// Sets the filename of the path.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Path_setFilename(path: *const c_char, filename: *const c_char) -> *mut c_char {
     let mut path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     let filename = path_buf_from_c_str_or_panic(unsafe_c_str(filename));

@@ -60,7 +60,7 @@ use std::io::ErrorKind::InvalidInput;
 use std::io::{Cursor, Error, Read, Result, Seek, SeekFrom, Write};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use byteorder::{LE, ReadBytesExt, WriteBytesExt};
 
 use crate::file_formats::{StracciatellaReadExt, StracciatellaWriteExt};
 
@@ -399,7 +399,7 @@ mod tests {
     use std::io::Cursor;
 
     use crate::file_formats::slf::{
-        SlfEntry, SlfEntryState, SlfHeader, ENTRY_BYTES, HEADER_BYTES, UNIX_EPOCH_AS_FILETIME,
+        ENTRY_BYTES, HEADER_BYTES, SlfEntry, SlfEntryState, SlfHeader, UNIX_EPOCH_AS_FILETIME,
     };
 
     #[inline]

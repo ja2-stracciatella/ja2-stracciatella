@@ -61,7 +61,7 @@ use std::fmt;
 use std::ops;
 
 use caseless::Caseless;
-use unicode_normalization::{is_nfc, is_nfc_quick, IsNormalized, UnicodeNormalization};
+use unicode_normalization::{IsNormalized, UnicodeNormalization, is_nfc, is_nfc_quick};
 
 /// A unicode string normalized with NFC.
 ///

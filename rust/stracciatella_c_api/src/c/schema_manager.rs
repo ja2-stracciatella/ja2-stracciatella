@@ -12,20 +12,20 @@ use super::{
 };
 
 /// Creates a `SchemaManager` instance
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn SchemaManager_create() -> *mut SchemaManager {
     into_ptr(SchemaManager::default())
 }
 
 /// Destroys the `SchemaManager` instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn SchemaManager_destroy(mod_manager: *mut SchemaManager) {
     let _drop_me = from_ptr(mod_manager);
 }
 
 /// Gets a schema for a path in externalized dir
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn SchemaManager_validateValueForPath(
     ptr: *const SchemaManager,
     path: *const c_char,

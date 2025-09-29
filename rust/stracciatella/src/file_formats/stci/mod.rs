@@ -95,7 +95,7 @@
 
 use super::{StracciatellaReadExt, StracciatellaWriteExt};
 use bitflags::bitflags;
-use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use byteorder::{LE, ReadBytesExt, WriteBytesExt};
 use std::io::{
     Cursor, Error,
     ErrorKind::{InvalidData, InvalidInput, UnexpectedEof},

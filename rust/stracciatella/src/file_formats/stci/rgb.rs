@@ -7,7 +7,7 @@ use std::io::{
     Read, Result, Write,
 };
 
-use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use byteorder::{LE, ReadBytesExt, WriteBytesExt};
 
 /// Mask part of the rgb STCI header
 ///
