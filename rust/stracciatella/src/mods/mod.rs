@@ -448,7 +448,7 @@ mod tests {
         let assets_dir = temp_dir.path().join("assets");
 
         std::fs::create_dir(&home_dir).expect("home_dir");
-        std::fs::create_dir_all(&assets_dir.join("externalized")).expect("assets_dir");
+        std::fs::create_dir_all(assets_dir.join("externalized")).expect("assets_dir");
 
         engine_options.stracciatella_home = home_dir;
         engine_options.assets_dir = assets_dir;

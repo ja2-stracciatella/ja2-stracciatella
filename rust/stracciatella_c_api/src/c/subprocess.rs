@@ -147,44 +147,42 @@ pub extern "C" fn Subprocess_process(ptr: *mut SubProcess) {
 /// We use `libc::strsignal` to create a signal string for the error message. If the result is not valid utf8 the function will crash.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
-    unsafe {
-        forget_rust_error();
+    forget_rust_error();
 
-        let ptr = unsafe_mut(ptr);
-        match ptr.output() {
-            Ok(Some(output)) => {
-                let exit_code = output.status.code();
-                if let Some(exit_code) = exit_code {
-                    exit_code
-                } else {
-                    remember_rust_error("Subprocess terminated by a signal.");
-                    #[cfg(target_family = "unix")]
-                    {
-                        // Include signal details on unix systems
-                        use std::os::unix::process::ExitStatusExt;
+    let ptr = unsafe_mut(ptr);
+    match ptr.output() {
+        Ok(Some(output)) => {
+            let exit_code = output.status.code();
+            if let Some(exit_code) = exit_code {
+                exit_code
+            } else {
+                remember_rust_error("Subprocess terminated by a signal.");
+                #[cfg(target_family = "unix")]
+                {
+                    // Include signal details on unix systems
+                    use std::os::unix::process::ExitStatusExt;
 
-                        if let Some(signal) = output.status.signal() {
-                            let signal_ptr = libc::strsignal(signal);
-                            if !signal_ptr.is_null() {
-                                let signal_str = str_from_c_str_or_panic(unsafe_c_str(signal_ptr));
-                                remember_rust_error(format!(
-                                    "Subprocess terminated by signal: {}",
-                                    signal_str
-                                ));
-                            }
+                    if let Some(signal) = output.status.signal() {
+                        let signal_ptr = unsafe { libc::strsignal(signal) };
+                        if !signal_ptr.is_null() {
+                            let signal_str = str_from_c_str_or_panic(unsafe_c_str(signal_ptr));
+                            remember_rust_error(format!(
+                                "Subprocess terminated by signal: {}",
+                                signal_str
+                            ));
                         }
                     }
-                    i32::MIN
                 }
-            }
-            Ok(None) => {
-                remember_rust_error("Subprocess has not finished yet.");
                 i32::MIN
             }
-            Err(e) => {
-                remember_rust_error(format!("Error communicating with subprocess: {}", e));
-                i32::MIN
-            }
+        }
+        Ok(None) => {
+            remember_rust_error("Subprocess has not finished yet.");
+            i32::MIN
+        }
+        Err(e) => {
+            remember_rust_error(format!("Error communicating with subprocess: {}", e));
+            i32::MIN
         }
     }
 }

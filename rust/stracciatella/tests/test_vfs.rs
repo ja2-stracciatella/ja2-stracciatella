@@ -502,7 +502,7 @@ mod vfs {
             version: 0x200,
             contains_subdirectories: if library_path.is_empty() { 0 } else { 1 },
         };
-        let path = dir.join(&name);
+        let path = dir.join(name);
         let mut file = OpenOptions::new()
             .write(true)
             .create_new(true)
@@ -512,7 +512,7 @@ mod vfs {
         let mut entries = entry_paths
             .iter()
             .map(|&entry_path| {
-                let offset = file.seek(SeekFrom::Current(0)).expect("seek to entry data");
+                let offset = file.stream_position().expect("seek to entry data");
                 let data = name.as_bytes();
                 file.write_all(data).expect("write entry data");
                 SlfEntry {
@@ -552,7 +552,7 @@ mod vfs {
     fn create_file_with_content(path: &Path, content: &[u8]) {
         let dir = path.parent().expect("parent path");
         if !dir.exists() {
-            fs::create_dir_all(&dir).expect("create_dir_all");
+            fs::create_dir_all(dir).expect("create_dir_all");
         }
         fs::write(path, content).expect("write");
     }

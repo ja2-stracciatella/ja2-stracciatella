@@ -202,23 +202,6 @@ pub extern "C" fn Fs_getReadOnly(path: *const c_char, readonly: *mut bool) -> bo
     no_rust_error()
 }
 
-/// Sets the readonly permissions of a file or directory.
-/// Sets the rust error.
-#[unsafe(no_mangle)]
-pub extern "C" fn Fs_setReadOnly(path: *const c_char, readonly: bool) -> bool {
-    forget_rust_error();
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    let result = fs::metadata(&path).and_then(|x| {
-        let mut permissions = x.permissions();
-        permissions.set_readonly(readonly);
-        fs::set_permissions(&path, permissions)
-    });
-    if let Err(err) = result {
-        remember_rust_error(format!("Fs_setReadOnly {:?} {}: {}", path, readonly, err));
-    }
-    no_rust_error()
-}
-
 /// Cleans a filename from special characters, so it can be used safely for the filesystem
 /// Note that the filename should not contain the extension
 #[unsafe(no_mangle)]

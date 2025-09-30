@@ -501,7 +501,7 @@ mod tests {
 
         let data_path = engine_options.vanilla_game_dir.join("data");
         std::fs::create_dir(&data_path).expect("create `data` dir");
-        std::fs::write(&data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
+        std::fs::write(data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
 
         let mut vfs = Vfs::new();
         vfs.init(&engine_options, &mod_manager).unwrap();
@@ -511,7 +511,7 @@ mod tests {
 
         let data_path = engine_options.vanilla_game_dir.join("dAtA");
         std::fs::create_dir(&data_path).expect("create `dAtA` dir");
-        std::fs::write(&data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
+        std::fs::write(data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
 
         let mut vfs = Vfs::new();
         vfs.init(&engine_options, &mod_manager).unwrap();
@@ -525,7 +525,7 @@ mod tests {
 
         let data_path = engine_options.vanilla_game_dir.join("data");
         std::fs::create_dir(&data_path).expect("create `data` dir");
-        std::fs::write(&data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
+        std::fs::write(data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
 
         let mut vfs = Vfs::new();
         vfs.init(&engine_options, &mod_manager).unwrap_err();
@@ -536,20 +536,20 @@ mod tests {
         let (mut engine_options, _temp_dir) = create_test_engine_options();
         engine_options.mods = vec!["test-mod".to_owned()];
         // mod directory has to be created before mod_manager is initialized, so it will pick it up as a mod
-        std::fs::create_dir_all(&engine_options.stracciatella_home.join("mods/test-mod/data"))
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/test-mod/data"))
             .expect("create `test-mod/data` dir");
         let mod_manager = ModManager::new_unchecked(&engine_options);
 
         let data_path = engine_options.vanilla_game_dir.join("data");
         std::fs::create_dir(&data_path).expect("create `data` dir");
-        std::fs::write(&data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
+        std::fs::write(data_path.join("empty.slf"), EMPTY_SLF_BYTES).expect("write `empty.slf`");
 
         let mut vfs = Vfs::new();
         vfs.init(&engine_options, &mod_manager).unwrap();
 
-        std::fs::remove_dir_all(&engine_options.stracciatella_home.join("mods/test-mod/data"))
+        std::fs::remove_dir_all(engine_options.stracciatella_home.join("mods/test-mod/data"))
             .expect("remove `test-mod/data` dir");
-        std::fs::create_dir_all(&engine_options.stracciatella_home.join("mods/test-mod/dAtA"))
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/test-mod/dAtA"))
             .expect("create `test-mod/dAtA` dir");
 
         let mut vfs = Vfs::new();
@@ -567,7 +567,7 @@ mod tests {
         let vanilla_game_dir = temp_dir.path().join("game_dir");
 
         std::fs::create_dir(&home_dir).expect("home_dir");
-        std::fs::create_dir_all(&assets_dir.join("externalized")).expect("assets_dir");
+        std::fs::create_dir_all(assets_dir.join("externalized")).expect("assets_dir");
         std::fs::create_dir(&vanilla_game_dir).expect("vanilla_game_dir");
 
         engine_options.stracciatella_home = home_dir;

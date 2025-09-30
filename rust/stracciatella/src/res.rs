@@ -617,13 +617,13 @@ mod tests {
     #[test]
     fn property_value_compatibility_big_number() {
         let mut resource = Resource::default();
-        resource.set_property("p", u64::max_value());
+        resource.set_property("p", u64::MAX);
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
         assert!(resource.get_i64("p").is_none());
         assert!(resource.get_u64("p").is_some());
         assert!(resource.get_f64("p").is_some());
-        assert_eq!(resource.get_u64("p").unwrap(), u64::max_value());
+        assert_eq!(resource.get_u64("p").unwrap(), u64::MAX);
     }
 
     // Since #[bench] isn't stable, these simple timed tests are ignored and print the times by themselves.

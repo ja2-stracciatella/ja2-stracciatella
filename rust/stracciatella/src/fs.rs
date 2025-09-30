@@ -38,6 +38,7 @@ pub use dunce::canonicalize;
 /// An implementation of `std::fs::remove_file` that handles the readonly permission on windows.
 pub fn remove_file<P: AsRef<Path>>(path: P) -> Result<(), io::Error> {
     #[cfg(windows)]
+    #[allow(clippy::permissions_set_readonly_false)]
     {
         // On windows a readonly file cannot be deleted.
         // This simplistic solution removes the readonly permission.
@@ -219,7 +220,7 @@ pub fn free_space(path: &Path) -> io::Result<u64> {
         };
     }
     #[cfg(all(unix, not(target_os = "android")))]
-    #[allow(clippy::cast_lossless)]
+    #[allow(clippy::cast_lossless, clippy::useless_conversion)]
     {
         // use statvfs in unix family
         // TODO determine which of statvfs64/statfs64/statvfs/statfs are available
@@ -230,7 +231,7 @@ pub fn free_space(path: &Path) -> io::Result<u64> {
         let mut data: libc::statvfs = unsafe { std::mem::zeroed() };
         let result = unsafe { libc::statvfs(bytes.as_ptr() as *const libc::c_char, &mut data) };
         return match result {
-            0 => Ok(data.f_bfree as u64 * data.f_bsize as u64),
+            0 => Ok(u64::from(data.f_bfree) * data.f_bsize),
             _ => Err(io::Error::last_os_error()),
         };
     }
