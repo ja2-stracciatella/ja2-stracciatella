@@ -316,7 +316,7 @@ enum PercentSplit<'a> {
     Str(&'a str),
 }
 
-fn percent_split(mut s: &str) -> Result<Vec<PercentSplit>, String> {
+fn percent_split(mut s: &str) -> Result<Vec<PercentSplit<'_>>, String> {
     if s.bytes().any(|b| b == 0) {
         return Err("unexpected embedded nul".into());
     }
@@ -459,8 +459,8 @@ mod test {
                 assert_eq!(c_path.decode_path_buf(), Ok(path_buf)); // AnyPath to PathBuf
             }
             t(&[0x00], "%00"); // nul
-            t(&[b'%'], "%25"); // percent
-            t(&[b'x'], "x"); // 1-byte utf8
+            t(b"%", "%25"); // percent
+            t(b"x", "x"); // 1-byte utf8
             t(&[0xC2, 0xA2], "\u{00A2}"); // 2-byte utf8
             t(&[0xE2, 0x82, 0xAC], "\u{20AC}"); // 3-byte utf8
             t(&[0xF0, 0xA4, 0xAD, 0xA2], "\u{24B62}"); // 4-byte utf8

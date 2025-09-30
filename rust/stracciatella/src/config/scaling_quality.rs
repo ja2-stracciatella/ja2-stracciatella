@@ -9,12 +9,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]
 #[allow(non_camel_case_types)]
+#[derive(Default)]
 pub enum ScalingQuality {
     /// Use linear interpolation
     LINEAR,
     /// Use nearest neighbor interpolation
     NEAR_PERFECT,
     /// Scale up to the nearest multiple of 640x480 and use nearest neighbor interpolation
+    #[default]
     PERFECT,
 }
 
@@ -42,11 +44,5 @@ impl Display for ScalingQuality {
                 ScalingQuality::PERFECT => "Pixel perfect centered",
             }
         )
-    }
-}
-
-impl Default for ScalingQuality {
-    fn default() -> ScalingQuality {
-        ScalingQuality::PERFECT
     }
 }

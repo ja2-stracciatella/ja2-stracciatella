@@ -31,7 +31,7 @@ impl SubProcessState {
 
     /// Check if process has finished and update state
     pub fn process(&mut self) {
-        if let Self::Running(ref mut c) = self {
+        if let Self::Running(c) = self {
             let mut c = std::mem::take(c).expect("SubProcess::Running child should always be some");
             *self = match c.try_wait() {
                 Ok(Some(_)) => match c.wait_with_output() {
@@ -101,7 +101,7 @@ impl SubProcess {
 /// Starts a subprocess and collects stdin/stderr in the process
 ///
 /// Returns null on error
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Subprocess_new(program: *const c_char, args: *mut VecCString) -> *mut SubProcess {
     forget_rust_error();
 
@@ -125,14 +125,14 @@ pub extern "C" fn Subprocess_new(program: *const c_char, args: *mut VecCString) 
 /// Checks whether the subprocess is done running
 ///
 /// Also considers the subprocess as finished when a communication error occurs
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Subprocess_isDone(ptr: *mut SubProcess) -> bool {
     let ptr = unsafe_mut(ptr);
     ptr.is_done()
 }
 
 /// Maintains internal subprocess state. Will mark it as done when subprocess has finished
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Subprocess_process(ptr: *mut SubProcess) {
     let ptr = unsafe_mut(ptr);
     ptr.process()
@@ -145,7 +145,7 @@ pub extern "C" fn Subprocess_process(ptr: *mut SubProcess) {
 /// # Safety
 ///
 /// We use `libc::strsignal` to create a signal string for the error message. If the result is not valid utf8 the function will crash.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
     forget_rust_error();
 
@@ -163,7 +163,7 @@ pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
                     use std::os::unix::process::ExitStatusExt;
 
                     if let Some(signal) = output.status.signal() {
-                        let signal_ptr = libc::strsignal(signal);
+                        let signal_ptr = unsafe { libc::strsignal(signal) };
                         if !signal_ptr.is_null() {
                             let signal_str = str_from_c_str_or_panic(unsafe_c_str(signal_ptr));
                             remember_rust_error(format!(
@@ -189,7 +189,7 @@ pub unsafe extern "C" fn Subprocess_getExitCode(ptr: *mut SubProcess) -> i32 {
 
 /// Destroys the SubProcess instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn SubProcess_destroy(ptr: *mut SubProcess) {
     let _drop_me = from_ptr(ptr);
 }

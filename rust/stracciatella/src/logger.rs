@@ -10,8 +10,8 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use log::{
-    logger, set_boxed_logger, set_max_level, Level, LevelFilter, Log, Metadata, MetadataBuilder,
-    Record,
+    Level, LevelFilter, Log, Metadata, MetadataBuilder, Record, logger, set_boxed_logger,
+    set_max_level,
 };
 
 static GLOBAL_LOG_LEVEL: AtomicUsize = AtomicUsize::new(LogLevel::Info as usize);

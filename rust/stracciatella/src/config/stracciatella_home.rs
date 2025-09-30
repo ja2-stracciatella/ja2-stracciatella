@@ -52,7 +52,9 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
         log::warn!(
             "The old configuration directory `{}` is deprecated. Please move your data to the new one: `{}`.",
             old.to_string_lossy(),
-            new.as_ref().map(|(p, _)| p.to_string_lossy()).unwrap_or_else(|| Cow::Borrowed("<failed to find new directory>")),
+            new.as_ref()
+                .map(|(p, _)| p.to_string_lossy())
+                .unwrap_or_else(|| Cow::Borrowed("<failed to find new directory>")),
         );
         return Ok(old);
     }

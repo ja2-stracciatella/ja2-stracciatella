@@ -156,7 +156,7 @@ impl RJsonObject {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_deserialize(value: *const c_char) -> *mut RJsonValue {
     forget_rust_error();
     let value = str_from_c_str_or_panic(unsafe_c_str(value));
@@ -169,42 +169,42 @@ pub extern "C" fn RJsonValue_deserialize(value: *const c_char) -> *mut RJsonValu
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_fromString(value: *const c_char) -> *mut RJsonValue {
     let value = str_from_c_str_or_panic(unsafe_c_str(value)).to_string();
     into_ptr(value.into())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_fromInt(value: i32) -> *mut RJsonValue {
     into_ptr(value.into())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_fromUInt(value: u32) -> *mut RJsonValue {
     into_ptr(value.into())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_fromDouble(value: f64) -> *mut RJsonValue {
     into_ptr(value.into())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_fromBool(value: bool) -> *mut RJsonValue {
     into_ptr(value.into())
 }
 
 /// Destroys the JsonValue instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_destroy(value: *mut RJsonValue) {
     let _drop_me = from_ptr(value);
 }
 
 /// Converts the JsonValue if possible.
 /// Sets success to false if it cannot be converted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_toArray(value: *const RJsonValue) -> *mut RJsonArray {
     let value = unsafe_ref(value);
     match value.to_array() {
@@ -218,7 +218,7 @@ pub extern "C" fn RJsonValue_toArray(value: *const RJsonValue) -> *mut RJsonArra
 
 /// Converts the JsonValue if possible.
 /// Sets success to false if it cannot be converted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_toObject(value: *const RJsonValue) -> *mut RJsonObject {
     let value = unsafe_ref(value);
     match value.to_object() {
@@ -232,7 +232,7 @@ pub extern "C" fn RJsonValue_toObject(value: *const RJsonValue) -> *mut RJsonObj
 
 /// Converts the JsonValue if possible.
 /// Sets success to false if it cannot be converted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_toString(value: *const RJsonValue) -> *mut c_char {
     let value = unsafe_ref(value);
     match value.to_string() {
@@ -270,63 +270,63 @@ macro_rules! to_primitive {
 
 /// Converts the JsonValue if possible.
 /// Sets success to false if it cannot be converted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_toInt64(value: *const RJsonValue, success: *mut bool) -> i64 {
     to_primitive!(value, success, to_i64)
 }
 
 /// Converts the JsonValue if possible.
 /// Sets success to false if it cannot be converted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_toDouble(value: *const RJsonValue, success: *mut bool) -> f64 {
     to_primitive!(value, success, to_f64)
 }
 
 /// Converts the JsonValue if possible.
 /// Sets success to false if it cannot be converted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_toBool(value: *const RJsonValue, success: *mut bool) -> bool {
     to_primitive!(value, success, to_bool)
 }
 
 /// Checks if the value is an array
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_isArray(value: *const RJsonValue) -> bool {
     is_type!(value, is_array)
 }
 
 /// Checks if the value is an object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_isObject(value: *const RJsonValue) -> bool {
     is_type!(value, is_object)
 }
 
 /// Checks if the value is a string
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_isString(value: *const RJsonValue) -> bool {
     is_type!(value, is_string)
 }
 
 /// Checks if the value is an int
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_isInt(value: *const RJsonValue) -> bool {
     is_type!(value, is_i64)
 }
 
 /// Checks if the value is a double
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_isDouble(value: *const RJsonValue) -> bool {
     is_type!(value, is_f64)
 }
 
 /// Checks if the value is a bool
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_isBool(value: *const RJsonValue) -> bool {
     is_type!(value, is_bool)
 }
 
 /// Serializes the JSON value to a string.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonValue_serialize(value: *const RJsonValue, pretty: bool) -> *mut c_char {
     let value = unsafe_ref(value);
     let result = if pretty {
@@ -343,25 +343,25 @@ pub extern "C" fn RJsonValue_serialize(value: *const RJsonValue, pretty: bool) -
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonArray_new() -> *mut RJsonArray {
     into_ptr(RJsonArray(Default::default()))
 }
 
 /// Destroys the JsonArray instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonArray_destroy(array: *mut RJsonArray) {
     let _drop_me = from_ptr(array);
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonArray_length(array: *const RJsonArray) -> usize {
     let array = unsafe_ref(array);
     array.len()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonArray_get(array: *const RJsonArray, idx: usize) -> *mut RJsonValue {
     let array = unsafe_ref(array);
     match array
@@ -376,32 +376,32 @@ pub extern "C" fn RJsonArray_get(array: *const RJsonArray, idx: usize) -> *mut R
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonArray_push(array: *mut RJsonArray, value: *const RJsonValue) {
     let array = unsafe_mut(array);
     let value = unsafe_ref(value);
     array.push(value.clone())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonArray_toValue(array: *const RJsonArray) -> *mut RJsonValue {
     let arr = unsafe_ref(array);
     into_ptr(arr.to_value())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonObject_new() -> *mut RJsonObject {
     into_ptr(RJsonObject(Default::default()))
 }
 
 /// Destroys the JsonObject instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonObject_destroy(obj: *mut RJsonObject) {
     let _drop_me = from_ptr(obj);
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonObject_get(obj: *const RJsonObject, prop: *const c_char) -> *mut RJsonValue {
     let obj = unsafe_ref(obj);
     let prop = str_from_c_str_or_panic(unsafe_c_str(prop));
@@ -417,7 +417,7 @@ pub extern "C" fn RJsonObject_get(obj: *const RJsonObject, prop: *const c_char) 
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonObject_set(
     obj: *mut RJsonObject,
     prop: *const c_char,
@@ -430,20 +430,20 @@ pub extern "C" fn RJsonObject_set(
     obj.set(prop, value);
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonObject_has(obj: *const RJsonObject, prop: *const c_char) -> bool {
     let obj = unsafe_ref(obj);
     let prop = str_from_c_str_or_panic(unsafe_c_str(prop));
     obj.contains_key(prop)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonObject_keys(obj: *const RJsonObject) -> *mut VecCString {
     let obj = unsafe_ref(obj);
     into_ptr(obj.keys())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn RJsonObject_toValue(obj: *const RJsonObject) -> *mut RJsonValue {
     let obj = unsafe_ref(obj);
     into_ptr(obj.to_value())

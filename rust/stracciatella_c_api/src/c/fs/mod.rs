@@ -2,10 +2,8 @@
 //!
 //! [`stracciatella::fs`]: ../../stracciatella/fs/index.html
 
-use std::f64;
 use std::ptr;
 use std::time;
-use std::u64;
 
 use stracciatella::fs;
 
@@ -17,7 +15,7 @@ pub mod tempdir;
 
 /// Creates a directory.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_createDir(path: *const c_char) -> bool {
     forget_rust_error();
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
@@ -28,7 +26,7 @@ pub extern "C" fn Fs_createDir(path: *const c_char) -> bool {
 }
 
 /// Checks if the path exists.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     fs::metadata(&path).is_ok()
@@ -37,7 +35,7 @@ pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
 /// Gets the free space in the target path.
 /// On error the free space will be 0.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_freeSpace(path: *const c_char, bytes: *mut u64) -> bool {
     forget_rust_error();
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
@@ -54,21 +52,21 @@ pub extern "C" fn Fs_freeSpace(path: *const c_char, bytes: *mut u64) -> bool {
 }
 
 /// Checks if the path points to a directory.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_isDir(path: *const c_char) -> bool {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     fs::metadata(&path).map(|x| x.is_dir()).unwrap_or(false)
 }
 
 /// Checks if the path points to a file.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_isFile(path: *const c_char) -> bool {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     fs::metadata(&path).map(|x| x.is_file()).unwrap_or(false)
 }
 
 /// Finds all files in directory
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_findAllFilesInDir(
     dir: *const c_char,
     sort_results: bool,
@@ -90,7 +88,7 @@ pub extern "C" fn Fs_findAllFilesInDir(
 }
 
 /// Finds all directories
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_findAllDirsInDir(
     dir: *const c_char,
     sort_results: bool,
@@ -114,7 +112,7 @@ pub extern "C" fn Fs_findAllDirsInDir(
 /// Gets the modified time in seconds since the unix epoch.
 /// On error the modified time will be the minimum value.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_modifiedSecs(path: *const c_char, modified_secs: *mut f64) -> bool {
     forget_rust_error();
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
@@ -145,7 +143,7 @@ pub extern "C" fn Fs_modifiedSecs(path: *const c_char, modified_secs: *mut f64) 
 /// Removes a file.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/fs/fn.remove_file.html
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_removeFile(path: *const c_char) -> bool {
     forget_rust_error();
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
@@ -158,7 +156,7 @@ pub extern "C" fn Fs_removeFile(path: *const c_char) -> bool {
 /// Renames a file or directory.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/fs/fn.rename.html
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_rename(from: *const c_char, to: *const c_char) -> bool {
     forget_rust_error();
     let from = path_buf_from_c_str_or_panic(unsafe_c_str(from));
@@ -172,7 +170,7 @@ pub extern "C" fn Fs_rename(from: *const c_char, to: *const c_char) -> bool {
 /// Returns base (optional) joined with path.
 /// The path separators are normalized and path components are resolved only when needed.
 /// The returned path might or might not exist.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_resolveExistingComponents(
     path: *const c_char,
     base: *const c_char,
@@ -190,7 +188,7 @@ pub extern "C" fn Fs_resolveExistingComponents(
 
 /// Get the readonly permissions of a file or directory.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_getReadOnly(path: *const c_char, readonly: *mut bool) -> bool {
     forget_rust_error();
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
@@ -204,26 +202,9 @@ pub extern "C" fn Fs_getReadOnly(path: *const c_char, readonly: *mut bool) -> bo
     no_rust_error()
 }
 
-/// Sets the readonly permissions of a file or directory.
-/// Sets the rust error.
-#[no_mangle]
-pub extern "C" fn Fs_setReadOnly(path: *const c_char, readonly: bool) -> bool {
-    forget_rust_error();
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    let result = fs::metadata(&path).and_then(|x| {
-        let mut permissions = x.permissions();
-        permissions.set_readonly(readonly);
-        fs::set_permissions(&path, permissions)
-    });
-    if let Err(err) = result {
-        remember_rust_error(format!("Fs_setReadOnly {:?} {}: {}", path, readonly, err));
-    }
-    no_rust_error()
-}
-
 /// Cleans a filename from special characters, so it can be used safely for the filesystem
 /// Note that the filename should not contain the extension
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Fs_cleanBasename(basename: *const c_char) -> *mut c_char {
     let basename = path_buf_from_c_str_or_panic(unsafe_c_str(basename));
     c_string_from_path_or_panic(&fs::clean_basename(basename)).into_raw()

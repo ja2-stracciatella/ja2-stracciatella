@@ -32,6 +32,7 @@ pub fn guess_vanilla_version(gamedir: &str) -> Guess {
 }
 
 /// A difference that was detected in resource packs
+#[allow(dead_code)]
 #[derive(Debug)]
 enum Difference {
     OnlyExistsInDataDir(Option<Nfc>, Nfc),
@@ -157,11 +158,7 @@ impl Guess {
 
         info!(
             "Number of language specific files: {} Dutch, {} German, {} Italian, {} Polish, {} Russian",
-            num_dutch,
-            num_german,
-            num_italian,
-            num_polish,
-            num_russian
+            num_dutch, num_german, num_italian, num_polish, num_russian
         );
         let version = match (num_dutch, num_german, num_italian, num_polish, num_russian) {
             (n, 0, 0, 0, 0) if n > 0 => Some(VanillaVersion::DUTCH),
@@ -194,7 +191,7 @@ impl Guess {
             .collect::<Result<Vec<_>, _>>()?;
 
         let (best_version, best_difference) = results.iter().fold(
-            (None, std::f64::MAX),
+            (None, f64::MAX),
             |(best_version, best_difference), (version, match_resources)| {
                 info!("Match statistics with vanilla_version {:?}", version);
                 let percentages: Percentages = match_resources.into();
@@ -289,7 +286,7 @@ impl Guess {
 
     /// Read resource pack json
     fn get_pack(&self, path: &Path) -> GuessResult<ResourcePack> {
-        let f = File::open(&path)?;
+        let f = File::open(path)?;
         let pack: ResourcePack = serde_json::from_reader(f)?;
         Ok(pack)
     }

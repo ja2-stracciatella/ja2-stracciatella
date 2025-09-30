@@ -223,7 +223,7 @@ impl ModManager {
         let missing_mods: Vec<_> = engine_options
             .mods
             .iter()
-            .filter(|v| mod_manager.get_mod_by_id(*v).is_none())
+            .filter(|v| mod_manager.get_mod_by_id(v).is_none())
             .collect();
         if !missing_mods.is_empty() {
             Err(ModManagerInitError::MissingEnabledMods(
@@ -296,7 +296,7 @@ impl ModManager {
             }
         }
 
-        let mut available_mods: Vec<_> = available_mods.into_iter().map(|(_, v)| v).collect();
+        let mut available_mods: Vec<_> = available_mods.into_values().collect();
         available_mods.sort_by_key(|v1| v1.name().to_lowercase());
 
         ModManager { available_mods }
@@ -313,11 +313,11 @@ impl ModManager {
 
 #[cfg(test)]
 mod tests {
-    use tempfile::{tempdir, TempDir};
+    use tempfile::{TempDir, tempdir};
 
     use crate::{
         config::EngineOptions,
-        mods::{mod_manifest::ModManifestJson, ModManagerInitError},
+        mods::{ModManagerInitError, mod_manifest::ModManifestJson},
     };
 
     use super::ModManager;
@@ -448,7 +448,7 @@ mod tests {
         let assets_dir = temp_dir.path().join("assets");
 
         std::fs::create_dir(&home_dir).expect("home_dir");
-        std::fs::create_dir_all(&assets_dir.join("externalized")).expect("assets_dir");
+        std::fs::create_dir_all(assets_dir.join("externalized")).expect("assets_dir");
 
         engine_options.stracciatella_home = home_dir;
         engine_options.assets_dir = assets_dir;

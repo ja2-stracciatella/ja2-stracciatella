@@ -172,7 +172,7 @@ impl Cli {
                             return Err(CliError::InvalidValue(
                                 "brighness".to_owned(),
                                 "Should be a floating point value.".to_owned(),
-                            ))
+                            ));
                         }
                     }
                 }

@@ -2,9 +2,9 @@ use std::path::{Path, PathBuf};
 use std::sync::RwLock;
 
 use jni::{
+    JNIEnv,
     errors::{Error, Result},
     objects::{JObject, JString, JValue},
-    JNIEnv,
 };
 use lazy_static::lazy_static;
 use ndk::asset::AssetManager;

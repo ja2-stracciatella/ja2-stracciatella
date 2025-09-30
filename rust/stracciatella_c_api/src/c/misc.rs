@@ -14,7 +14,7 @@ use stracciatella::guess::guess_vanilla_version;
 use crate::c::common::*;
 
 /// Sets the global JNI env for Android
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[cfg(target_os = "android")]
 pub extern "C" fn setGlobalJniEnv(jni_env: *mut jni::sys::JNIEnv) -> bool {
     forget_rust_error();
@@ -26,13 +26,13 @@ pub extern "C" fn setGlobalJniEnv(jni_env: *mut jni::sys::JNIEnv) -> bool {
 
 /// Deletes a CString.
 /// The caller is no longer responsible for the memory.
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
 pub extern "C" fn CString_destroy(s: *mut c_char) {
     if s.is_null() {
         return;
     }
-    unsafe { CString::from_raw(s) };
+    unsafe { drop(CString::from_raw(s)) };
 }
 
 /// Converts a UINT16 buffer from little endian to native endian
@@ -42,7 +42,7 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
 ///
 /// The function is a noop when the passed in pointer is null
 /// It panics when the length does not match
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[cfg(not(target_endian = "little"))]
 pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8, buf_len: u32) {
     use byteorder::{ByteOrder, LittleEndian, NativeEndian};
@@ -62,15 +62,17 @@ pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8
 
 /// Converts a UINT16 buffer from little endian to native endian
 /// The conversion is done in place, so no new allocations are done
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[cfg(target_endian = "little")]
 pub extern "C" fn convertLittleEndianBufferToNativeEndianU16(_buf: *mut u8, _buf_len: u32) {
-    log::debug!("convertLittleEndianU16BufferToNativeEndian: Native format is little endian so this is a noop");
+    log::debug!(
+        "convertLittleEndianU16BufferToNativeEndian: Native format is little endian so this is a noop"
+    );
 }
 
 /// Guesses the resource version from the contents of the game directory.
 /// Returns a VanillaVersion value if it was sucessful, -1 otherwise.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
     let path = str_from_c_str_or_panic(unsafe_c_str(gamedir));
     let logged = guess_vanilla_version(path);
@@ -85,7 +87,7 @@ pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
 /// If path is null, it returns the assets directory.
 /// If test_exists is true and the path does not exist, it returns null.
 /// The caller is responsible for the returned memory.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn findPathFromAssetsDir(
     path: *const c_char,
     test_exists: bool,
@@ -110,7 +112,7 @@ pub extern "C" fn findPathFromAssetsDir(
 /// If path is null, it finds the stracciatella home directory.
 /// If test_exists is true, it makes sure the path exists.
 /// The caller is responsible for the returned memory.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn findPathFromStracciatellaHome(
     engine_options: *mut EngineOptions,
     path: *const c_char,
@@ -139,7 +141,7 @@ pub extern "C" fn findPathFromStracciatellaHome(
 
 /// Returns true if it was able to find path relative to base.
 /// Makes caseless searches one component at a time.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn checkIfRelativePathExists(
     base: *const c_char,
     path: *const c_char,
@@ -153,7 +155,7 @@ pub extern "C" fn checkIfRelativePathExists(
 
 /// Gets the path to the assets dir.
 /// Can be set via EXTRA_DATA_DIR env variable at compilation time
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Env_assetsDir() -> *mut c_char {
     c_string_from_path_or_panic(&get_assets_dir()).into_raw()
 }
@@ -161,7 +163,7 @@ pub extern "C" fn Env_assetsDir() -> *mut c_char {
 /// Gets the path to the current directory.
 /// On error it returns null.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Env_currentDir() -> *mut c_char {
     forget_rust_error();
     match env::current_dir() {
@@ -178,7 +180,7 @@ pub extern "C" fn Env_currentDir() -> *mut c_char {
 
 /// Gets the path to the current executable.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Env_currentExe() -> *mut c_char {
     forget_rust_error();
     match env::current_exe() {

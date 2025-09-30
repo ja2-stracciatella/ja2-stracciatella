@@ -3,8 +3,6 @@
 use std::io;
 use std::io::{Read, Seek, Write};
 use std::ptr;
-use std::u64;
-use std::usize;
 
 use stracciatella::fs;
 use stracciatella::vfile::VFile;
@@ -43,7 +41,7 @@ pub const FILE_OPEN_CREATE_NEW: u8 = 0x20;
 /// Opens a file according to the options.
 /// Sets the rust error.
 /// @see FILE_OPEN_*
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_open(path: *const c_char, options: u8) -> *mut VFile {
     forget_rust_error();
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
@@ -70,7 +68,7 @@ pub extern "C" fn File_open(path: *const c_char, options: u8) -> *mut VFile {
 }
 
 /// Closes the file.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_close(file: *mut VFile) {
     let _drop_me = from_ptr(file);
 }
@@ -78,7 +76,7 @@ pub extern "C" fn File_close(file: *mut VFile) {
 /// Returns the size of the file in bytes, or ´u64::MAX´ if there is an error.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/fs/struct.Metadata.html#method.len
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_len(file: *mut VFile) -> u64 {
     forget_rust_error();
     let file = unsafe_ref(file);
@@ -99,7 +97,7 @@ pub extern "C" fn File_len(file: *mut VFile) -> u64 {
 /// # Safety
 ///
 /// The function panics if the passed in pointers are not valid
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn File_read(file: *mut VFile, buf: *mut u8, buf_len: usize) -> usize {
     forget_rust_error();
     let file = unsafe_mut(file);
@@ -120,7 +118,7 @@ pub unsafe extern "C" fn File_read(file: *mut VFile, buf: *mut u8, buf_len: usiz
 /// # Safety
 ///
 /// The function panics if the passed in pointers are not valid
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn File_readToEnd(file: *mut VFile) -> *mut VecU8 {
     forget_rust_error();
     let file = unsafe_mut(file);
@@ -137,7 +135,7 @@ pub unsafe extern "C" fn File_readToEnd(file: *mut VFile) -> *mut VecU8 {
 /// Reads data from the file to the buffer until it is full.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Read.html#method.read_exact
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_readExact(file: *mut VFile, buf: *mut u8, buf_len: usize) -> bool {
     forget_rust_error();
     let file = unsafe_mut(file);
@@ -155,7 +153,7 @@ pub extern "C" fn File_readExact(file: *mut VFile, buf: *mut u8, buf_len: usize)
 /// Returns the number of bytes written or ´usize::MAX´ if there is an error.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Write.html#tymethod.write
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_write(file: *mut VFile, buf: *const u8, buf_len: usize) -> usize {
     forget_rust_error();
     let file = unsafe_mut(file);
@@ -176,7 +174,7 @@ pub extern "C" fn File_write(file: *mut VFile, buf: *const u8, buf_len: usize) -
 /// Writes all the data from the buffer to the file.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Write.html#method.write_all
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_writeAll(file: *mut VFile, buf: *const u8, buf_len: usize) -> bool {
     forget_rust_error();
     let file = unsafe_mut(file);
@@ -195,7 +193,7 @@ pub extern "C" fn File_writeAll(file: *mut VFile, buf: *const u8, buf_len: usize
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Seek.html#tymethod.seek
 /// @see https://doc.rust-lang.org/std/io/enum.SeekFrom.html#variant.Start
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_seekFromStart(file: *mut VFile, offset: u64) -> u64 {
     forget_rust_error();
     let file = unsafe_mut(file);
@@ -213,7 +211,7 @@ pub extern "C" fn File_seekFromStart(file: *mut VFile, offset: u64) -> u64 {
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Seek.html#tymethod.seek
 /// @see https://doc.rust-lang.org/std/io/enum.SeekFrom.html#variant.End
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_seekFromEnd(file: *mut VFile, offset: i64) -> u64 {
     forget_rust_error();
     let file = unsafe_mut(file);
@@ -231,7 +229,7 @@ pub extern "C" fn File_seekFromEnd(file: *mut VFile, offset: i64) -> u64 {
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Seek.html#tymethod.seek
 /// @see https://doc.rust-lang.org/std/io/enum.SeekFrom.html#variant.Current
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn File_seekFromCurrent(file: *mut VFile, offset: i64) -> u64 {
     forget_rust_error();
     let file = unsafe_mut(file);
