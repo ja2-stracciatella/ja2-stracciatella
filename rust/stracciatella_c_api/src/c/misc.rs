@@ -14,7 +14,7 @@ use stracciatella::guess::guess_vanilla_version;
 use crate::c::common::*;
 
 /// Sets the global JNI env for Android
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[cfg(target_os = "android")]
 pub extern "C" fn setGlobalJniEnv(jni_env: *mut jni::sys::JNIEnv) -> bool {
     forget_rust_error();
@@ -42,7 +42,7 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
 ///
 /// The function is a noop when the passed in pointer is null
 /// It panics when the length does not match
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[cfg(not(target_endian = "little"))]
 pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8, buf_len: u32) {
     use byteorder::{ByteOrder, LittleEndian, NativeEndian};
