@@ -192,7 +192,7 @@ ContentManager *GCM = NULL;
 
 /// Sets the C/C++ locale.
 /// @return true if successful, false otherwise
-static bool SetGlobalLocale(const char* name)
+[[maybe_unused]] static bool SetGlobalLocale(const char* name)
 {
 	try
 	{
