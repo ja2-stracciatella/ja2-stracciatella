@@ -439,11 +439,11 @@ BOOLEAN AttemptToUntrapDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	// See if we measure up to the task.
 	if ( pDoor->ubTrapID == EXPLOSION  )
 	{
-		iResult = SkillCheck( pSoldier, DISARM_TRAP_CHECK, (INT8) (pDoor->ubTrapLevel * 7) );
+		iResult = SkillCheck( pSoldier, DISARM_TRAP_CHECK, static_cast<int8_t>(-pDoor->ubTrapLevel * 7) );
 	}
 	else
 	{
-		iResult = SkillCheck( pSoldier, DISARM_ELECTRONIC_TRAP_CHECK, (INT8) (pDoor->ubTrapLevel * 7) );
+		iResult = SkillCheck( pSoldier, DISARM_ELECTRONIC_TRAP_CHECK, static_cast<int8_t>(-pDoor->ubTrapLevel * 7) );
 	}
 
 	if (iResult > 0)
