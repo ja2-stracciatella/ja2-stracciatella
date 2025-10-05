@@ -1,5 +1,9 @@
 # History of changes
 
+## 0.22.1
+
+- Buxfix: Fix mercs' opinions and relations not extracting from prof.dat (#2239)
+
 ## 0.22
 
 - Enhancement: Add internalName property to TownModel and other fixes (#2081)
