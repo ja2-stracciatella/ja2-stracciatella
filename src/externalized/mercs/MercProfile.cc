@@ -352,6 +352,14 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROF
 		prof->ubApproachMod[APPROACH_THREATEN - 1][apprIdx] = jApproaches[apprIdx].getOptionalUInt("threatenMod", binaryProf->ubApproachMod[APPROACH_THREATEN - 1][apprIdx]);
 	}
 
+	std::copy(std::begin(binaryProf->bMercOpinion), std::end(binaryProf->bMercOpinion), std::begin(prof->bMercOpinion));
+	std::copy(std::begin(binaryProf->bBuddy), std::end(binaryProf->bBuddy), std::begin(prof->bBuddy));
+	std::copy(std::begin(binaryProf->bHated), std::end(binaryProf->bHated), std::begin(prof->bHated));
+	prof->bLearnToLike = binaryProf->bLearnToLike;
+	prof->bLearnToLikeTime = binaryProf->bLearnToLikeTime;
+	prof->bLearnToHate = binaryProf->bLearnToHate;
+	prof->bLearnToHateTime = binaryProf->bLearnToHateTime;
+
 	return prof;
 }
 
