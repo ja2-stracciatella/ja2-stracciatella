@@ -9,7 +9,7 @@ use super::common::{
 };
 
 /// Creates a `ModManager` instance
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ModManager_create(engine_options: *const EngineOptions) -> *mut ModManager {
     forget_rust_error();
     let engine_options = unsafe_ref(engine_options);
@@ -25,7 +25,7 @@ pub extern "C" fn ModManager_create(engine_options: *const EngineOptions) -> *mu
 }
 
 /// Creates a `ModManager` instance, without checking wether enabled mods exist
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ModManager_createUnchecked(
     engine_options: *const EngineOptions,
 ) -> *mut ModManager {
@@ -37,20 +37,20 @@ pub extern "C" fn ModManager_createUnchecked(
 
 /// Destroys the ModManager instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ModManager_destroy(mod_manager: *mut ModManager) {
     let _drop_me = from_ptr(mod_manager);
 }
 
 /// Gets the number of available mods.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ModManager_getAvailableModsLength(ptr: *const ModManager) -> usize {
     let mod_manager = unsafe_ref(ptr);
     mod_manager.available_mods().len()
 }
 
 /// Gets a specific mod by index
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ModManager_getAvailableModByIndex(
     ptr: *const ModManager,
     index: usize,
@@ -64,7 +64,7 @@ pub extern "C" fn ModManager_getAvailableModByIndex(
 }
 
 /// Gets a specific mod by name
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ModManager_getAvailableModById(
     ptr: *const ModManager,
     id: *const c_char,
@@ -79,34 +79,34 @@ pub extern "C" fn ModManager_getAvailableModById(
 
 /// Destroys the Mod instance.
 /// coverity[+free : arg-0]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Mod_destroy(ptr: *mut Mod) {
     let _drop_me = from_ptr(ptr);
 }
 
 /// Gets a mods id
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Mod_getId(ptr: *const Mod) -> *mut c_char {
     let ptr = unsafe_ref(ptr);
     c_string_from_str(ptr.id()).into_raw()
 }
 
 /// Gets a mods name
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Mod_getName(ptr: *const Mod) -> *mut c_char {
     let ptr = unsafe_ref(ptr);
     c_string_from_str(ptr.name()).into_raw()
 }
 
 /// Gets a mods version string
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Mod_getVersionString(ptr: *const Mod) -> *mut c_char {
     let ptr = unsafe_ref(ptr);
     c_string_from_str(ptr.version()).into_raw()
 }
 
 /// Gets a mods description
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn Mod_getDescription(ptr: *const Mod) -> *mut c_char {
     let ptr = unsafe_ref(ptr);
     c_string_from_str(ptr.description()).into_raw()

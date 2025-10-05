@@ -101,7 +101,7 @@ impl VfsLayer for SlfFs {
     }
 
     fn exists(&self, file_path: &Nfc) -> io::Result<bool> {
-        if matches!(self.entries.get(file_path), Some(_)) {
+        if self.entries.contains_key(file_path) {
             // A file exists for this path in the SLF
             return Ok(true);
         }
@@ -129,7 +129,7 @@ impl VfsLayer for SlfFs {
                     // If the root path is requested, just return the first path segment
                     x.split('/').next().map(Nfc::from)
                 } else {
-                    if !x.starts_with(&path) {
+                    if !x.starts_with(path) {
                         // This is not part of the listed directory
                         return None;
                     }

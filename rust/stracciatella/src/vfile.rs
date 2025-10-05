@@ -4,8 +4,6 @@ use std::{
 };
 
 use crate::vfs::VfsFile;
-trait SeekRead: Seek + Read {}
-impl<T: Seek + Read> SeekRead for T {}
 
 pub enum VFile {
     VfsFile(BufReader<Box<dyn VfsFile>>),

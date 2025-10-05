@@ -2,7 +2,7 @@
 name = "stracciatella_bin"
 version = "0.1.0"
 authors = ["Stefan Lau <github@stefanlau.com>"]
-edition = "2021"
+edition = "2024"
 
 [[bin]]
 name = "ja2-resource-pack"

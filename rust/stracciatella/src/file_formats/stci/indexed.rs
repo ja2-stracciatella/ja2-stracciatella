@@ -2,7 +2,7 @@
 
 use super::super::{StracciatellaReadExt, StracciatellaWriteExt};
 use super::color::StciRgb888;
-use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use byteorder::{LE, ReadBytesExt, WriteBytesExt};
 use std::fmt;
 use std::io::{
     Error,

@@ -43,7 +43,7 @@ pub struct DirFsFile {
 impl DirFs {
     /// Creates a new virtual filesystem.
     pub fn new(path: &Path) -> io::Result<Arc<DirFs>> {
-        fs::read_dir(&path)?;
+        fs::read_dir(path)?;
         Ok(Arc::new(DirFs {
             dir_path: path.to_owned(),
             canonicalization_cache: Mutex::new(LruCache::new(
@@ -58,10 +58,10 @@ impl DirFs {
     fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.dir_path.to_owned()];
         let mut canonicalization_cache = self.canonicalization_cache.lock().map_err(|err| {
-            io::Error::new(
-                io::ErrorKind::Other,
-                format!("DirFs: Error locking canonicalization cache: `{}`", err),
-            )
+            io::Error::other(format!(
+                "DirFs: Error locking canonicalization cache: `{}`",
+                err
+            ))
         })?;
 
         if file_path.is_empty() {
@@ -113,7 +113,7 @@ impl DirFs {
 
                 for (nfc, os_string) in entries {
                     if want == nfc.as_str() {
-                        next.push(candidate.join(&os_string));
+                        next.push(candidate.join(os_string));
                     }
                 }
             }
@@ -135,7 +135,7 @@ impl VfsLayer for DirFs {
             Ok(Box::new(DirFsFile {
                 file_path: file_path.to_owned(),
                 dir_path: self.dir_path.to_owned(),
-                file: File::open(&path)?,
+                file: File::open(path)?,
             }))
         } else {
             Err(io::ErrorKind::NotFound.into())

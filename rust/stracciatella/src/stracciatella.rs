@@ -45,8 +45,7 @@ pub fn get_assets_dir() -> PathBuf {
         Err(e) => {
             warn!(
                 "Defaulting assets dir to {:?} because current exe dir could not determined. Reason: {:?}",
-                extra_data_dir_env,
-                e
+                extra_data_dir_env, e
             );
             extra_data_dir_env.into()
         }

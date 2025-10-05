@@ -16,7 +16,7 @@ pub struct TempDir {
 /// Returns null on error.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/env/fn.temp_dir.html
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn TempDir_create() -> *mut TempDir {
     forget_rust_error();
     let mut builder = fs::TempBuilder::new();
@@ -45,7 +45,7 @@ pub extern "C" fn TempDir_create() -> *mut TempDir {
 /// Destroys the temporary directory.
 /// This is a best effort approach, in case of error the directory might not be deleted.
 /// Sets the rust error.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn TempDir_destroy(tempdir: *mut TempDir) -> bool {
     forget_rust_error();
     let tempdir = from_ptr(tempdir);
@@ -56,7 +56,7 @@ pub extern "C" fn TempDir_destroy(tempdir: *mut TempDir) -> bool {
 }
 
 /// Gets the path of the temporary directory.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn TempDir_path(tempdir: *mut TempDir) -> *mut c_char {
     let tempdir = unsafe_ref(tempdir);
     let path = tempdir.inner.path();
