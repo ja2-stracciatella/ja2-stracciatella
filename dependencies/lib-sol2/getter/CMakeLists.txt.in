@@ -22,5 +22,5 @@ externalproject_add(get-sol2
         BUILD_COMMAND       ""
         INSTALL_COMMAND     ""
         TEST_COMMAND        ""
-    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/gcc-15.patch
+    PATCH_COMMAND git apply -p1 --ignore-space-change --ignore-whitespace < ${CMAKE_CURRENT_SOURCE_DIR}/gcc-15.patch
 )
