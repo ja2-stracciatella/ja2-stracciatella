@@ -89,7 +89,7 @@ static UINT16   GenericButtonFillColors;
 static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
 static BOOLEAN gfDelayButtonDeletion   = FALSE;
-static BOOLEAN gfPendingButtonDeletion = FALSE;
+static bool gfPendingButtonDeletion = false;
 
 
 // Finds an available slot for loading button pictures
@@ -408,6 +408,7 @@ static void RemoveButtonsMarkedForDeletion(void)
 	{
 		if ((*i)->uiFlags & BUTTON_DELETION_PENDING) delete *i;
 	}
+	gfPendingButtonDeletion = false;
 }
 
 
@@ -429,7 +430,7 @@ void RemoveButton(GUIButtonRef& btn)
 	if (gfDelayButtonDeletion)
 	{
 		b->uiFlags |= BUTTON_DELETION_PENDING;
-		gfPendingButtonDeletion = TRUE;
+		gfPendingButtonDeletion = true;
 		return;
 	}
 
