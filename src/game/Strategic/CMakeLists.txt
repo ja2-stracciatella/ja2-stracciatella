@@ -58,9 +58,3 @@ set_property(
     DIRECTORY ${CMAKE_SOURCE_DIR}
     PROPERTY UNITY_GROUP "LoadSaveDataTypes"
 )
-
-set(JA2_INCLUDES
-    ${JA2_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PARENT_SCOPE
-)
