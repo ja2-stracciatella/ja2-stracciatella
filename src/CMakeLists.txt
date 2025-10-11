@@ -28,13 +28,17 @@ target_include_directories(${JA2_BINARY} SYSTEM PRIVATE
 
 add_subdirectory(launcher)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR})
-set(JA2_INCLUDES "")
-set(JA2_SOURCES "")
-add_subdirectory(externalized)
-add_subdirectory(game)
-add_subdirectory(sgp)
 
-target_include_directories(${JA2_BINARY} PRIVATE ${JA2_INCLUDES})
+macro(add_and_include_subdirectory dir)
+    add_subdirectory(${dir})
+    target_include_directories(${JA2_BINARY} PRIVATE ${dir})
+endmacro()
+
+set(JA2_SOURCES "")
+add_and_include_subdirectory(externalized)
+add_and_include_subdirectory(game)
+add_and_include_subdirectory(sgp)
+
 target_sources(${JA2_BINARY} PRIVATE ${JA2_SOURCES})
 
 set_target_properties(${JA2_BINARY} PROPERTIES
