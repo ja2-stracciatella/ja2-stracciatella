@@ -1400,7 +1400,7 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 		// go through doctor's pockets and heal, starting at with his in-hand item
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			OBJECTTYPE o = pDoctor->inv[bPocket];
+			auto & o = pDoctor->inv[bPocket];
 			if (IsMedicalKitItem(&o))
 			{
 				// ok, we have med kit in this pocket, use it
