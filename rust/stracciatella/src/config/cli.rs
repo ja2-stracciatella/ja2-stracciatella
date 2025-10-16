@@ -198,6 +198,7 @@ impl Cli {
 
                 if m.opt_present("fullscreen") {
                     engine_options.start_in_fullscreen = true;
+                    engine_options.start_in_window = false;
                 }
 
                 if m.opt_present("nosound") {
@@ -205,6 +206,7 @@ impl Cli {
                 }
 
                 if m.opt_present("window") {
+                    engine_options.start_in_fullscreen = false;
                     engine_options.start_in_window = true;
                 }
 
