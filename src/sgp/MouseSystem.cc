@@ -862,6 +862,16 @@ static UINT32 GetWidthOfString(const ST::utf32_buffer& codepoints)
 				font = bold_font;
 				break;
 
+			case U'^':
+				c    = *++i;
+				font = normal_font;
+				break;
+
+			case U'~':
+				c    = *++i;
+				font = normal_font;
+				break;
+
 			default:
 				font = normal_font;
 				break;
@@ -896,6 +906,18 @@ static void DisplayHelpTokenizedString(const ST::utf32_buffer& codepoints, INT16
 				c = *++i;
 				font       = bold_font;
 				foreground = 146;
+				break;
+
+			case U'^':
+				c = *++i;
+				font       = normal_font;
+				foreground = FONT_LTGREEN;
+				break;
+
+			case U'~':
+				c = *++i;
+				font       = normal_font;
+				foreground = FONT_LTRED;
 				break;
 
 			default:
