@@ -1,0 +1,13 @@
+diff --git a/include/st_format_priv.h b/include/st_format_priv.h
+index e90d62d..676429c 100644
+--- a/include/st_format_priv.h
++++ b/include/st_format_priv.h
+@@ -65,7 +65,7 @@ namespace _ST_PRIVATE
+     {
+         if (ntype == numeric_negative)
+             output.append_char('-');
+-        else if (format.always_signed)
++        else if (format.always_signed && ntype != numeric_zero)
+             output.append_char('+');
+ 
+         if (ntype != numeric_zero && format.class_prefix) {

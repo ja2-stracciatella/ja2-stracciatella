@@ -30,6 +30,9 @@ externalproject_add(string_theory
         -DST_BUILD_TESTS:BOOL=OFF
         -DCMAKE_INSTALL_MESSAGE=LAZY
     BUILD_COMMAND "${CMAKE_COMMAND}" --build . --config RelWithDebInfo
+    # This patch removes the plus sign in front of zero values ...
+    # ... if the always_signed formatting option is used for positive integers
+    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/signless-zero.patch
     INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --config RelWithDebInfo --target install
     BUILD_ALWAYS 1
 )

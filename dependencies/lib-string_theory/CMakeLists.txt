@@ -34,6 +34,11 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/builder/CMakeLists.txt"
     @ONLY
 )
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/builder/signless-zero.patch"
+    "${CMAKE_CURRENT_BINARY_DIR}/builder/signless-zero.patch"
+    @ONLY
+)
 
 # execute builder
 execute_process(COMMAND ${CMAKE_COMMAND}
