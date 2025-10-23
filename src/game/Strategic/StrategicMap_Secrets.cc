@@ -5,6 +5,7 @@
 #include "JAScreens.h"
 #include "LoadSaveData.h"
 #include "SamSiteModel.h"
+#include "SaveLoadScreen.h"
 #include "ScreenIDs.h"
 #include "StrategicMapSecretModel.h"
 #include "TownModel.h"
@@ -42,7 +43,7 @@ BOOLEAN IsTownFound(INT8 const bTownID)
 
 BOOLEAN IsSecretFoundAt(UINT8 const sectorID)
 {
-	if (guiCurrentScreen == SAVE_LOAD_SCREEN)
+	if (guiCurrentScreen == SAVE_LOAD_SCREEN && !gfSaveGame)
 	{
 		// The load screen tries to determine the name of the sector that
 		// was current when the game was saved and the program flow comes
@@ -54,7 +55,8 @@ BOOLEAN IsSecretFoundAt(UINT8 const sectorID)
 		return TRUE;
 	}
 
-	if (isSecretFound.find(sectorID) == isSecretFound.end())
+	auto const mapPos{ isSecretFound.find(sectorID) };
+	if (mapPos == isSecretFound.end())
 	{
 		// The game always try to find secrets at J9 and K4, but they
 		// may not be present in a modded set up. So we will just
@@ -62,7 +64,7 @@ BOOLEAN IsSecretFoundAt(UINT8 const sectorID)
 		SLOGW("No secret defined at sector {}", sectorID);
 		return TRUE;
 	}
-	return isSecretFound[sectorID];
+	return mapPos->second;
 }
 
 void SetTownAsFound(INT8 const bTownID, BOOLEAN const fFound)
