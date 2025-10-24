@@ -108,6 +108,10 @@
   //  vanilla_setting: false
   "gui_extras": true,
 
+  //  Displays modifiers in hover popup boxes revealing hidden mechanics.
+  //  vanilla_setting: false
+  "informative_popups": false,
+
   //  Skips the "cannot sleep" popup when driving or when the merc is already rested.
   //  vanilla setting: false
   "skip_sleep_explanation": false,

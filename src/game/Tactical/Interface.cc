@@ -1828,7 +1828,7 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 	ST::string diagWarning{}, revealedMods{};
 	SOLDIERTYPE* const soldier = gOpenDoorMenu.pSoldier;
 
-	if (!gOpenDoorMenu.fClosingDoor) {
+	if (!gOpenDoorMenu.fClosingDoor && gamepolicy(informative_popups)) {
 		DOOR* const door = gOpenDoorMenu.pDoor;
 		switch (idx) {
 			case LOCKPICK_DOOR_ICON:
