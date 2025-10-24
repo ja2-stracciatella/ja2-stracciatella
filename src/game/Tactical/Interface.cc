@@ -1313,6 +1313,7 @@ void DirtyMercPanelInterface(SOLDIERTYPE const* const pSoldier, DirtyLevel const
 struct OPENDOOR_MENU
 {
 	SOLDIERTYPE *pSoldier;
+	DOOR        *pDoor;
 	INT16   sX;
 	INT16   sY;
 	BOOLEAN fMenuHandled;
@@ -1326,7 +1327,7 @@ BOOLEAN gfInOpenDoorMenu = FALSE;
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor);
 
 
-void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
+void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, DOOR* const d, BOOLEAN const fClosingDoor)
 {
 	INT16 sScreenX, sScreenY;
 
@@ -1341,6 +1342,7 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 
 
 	gOpenDoorMenu.pSoldier     = pSoldier;
+	gOpenDoorMenu.pDoor        = d;
 	gOpenDoorMenu.fClosingDoor = fClosingDoor;
 
 	// OK, Determine position...

@@ -2,6 +2,7 @@
 #define _INTERFACE_H
 
 #include "Handle_UI.h"
+#include "Keys.h"
 #include "MouseSystem.h"
 
 #include <string_theory/string>
@@ -115,7 +116,7 @@ void CancelMovementMenu(void);
 
 void PopDownOpenDoorMenu(void);
 void RenderOpenDoorMenu(void);
-void InitDoorOpenMenu(SOLDIERTYPE* pSoldier, BOOLEAN fClosingDoor);
+void InitDoorOpenMenu(SOLDIERTYPE* pSoldier, DOOR* d, BOOLEAN fClosingDoor);
 BOOLEAN HandleOpenDoorMenu(void);
 void CancelOpenDoorMenu(void);
 
