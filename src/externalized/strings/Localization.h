@@ -175,6 +175,21 @@ constexpr std::size_t str_aim_sort_list_SIZE = 8;
 constexpr std::size_t zNewTacticalMessages_SIZE = 7;
 constexpr std::size_t gs_dead_is_dead_mode_tab_name_SIZE = 2;
 
+constexpr std::size_t demarcationStrings_SIZE = 2;
+constexpr std::size_t booleanStrings_SIZE = 6;
+constexpr std::size_t effectiveStatStrings_SIZE = 11;
+constexpr std::size_t segmentHeaderStrings_SIZE = 5;
+constexpr std::size_t skillPossessionStrings_SIZE = 17;
+constexpr std::size_t toolModifierStrings_SIZE = 2;
+constexpr std::size_t statusStrings_SIZE = 6;
+constexpr std::size_t lockStrings_SIZE = 4;
+constexpr std::size_t vitalSignStrings_SIZE = 3;
+constexpr std::size_t rangeStrings_SIZE = 3;
+constexpr std::size_t trapStrings_SIZE = 8;
+constexpr std::size_t attemptStrings_SIZE = 2;
+constexpr std::size_t commentStrings_SIZE = 8;
+constexpr std::size_t possessiveStrings_SIZE = 3;
+
 #define STRARRAY(arrayName) std::array<ST::string , arrayName##_SIZE> arrayName
 
 struct L10n_t
@@ -403,11 +418,33 @@ struct L10n_t
 
 	STRARRAY(gzIMPSkillTraitsText);
 };
+
+struct L10n_popups
+{
+	L10n_popups(SGPFile * popupsFile);
+
+	STRARRAY(demarcationStrings);
+	STRARRAY(booleanStrings);
+	STRARRAY(segmentHeaderStrings);
+	STRARRAY(effectiveStatStrings);
+	STRARRAY(skillPossessionStrings);
+	STRARRAY(toolModifierStrings);
+	STRARRAY(statusStrings);
+	STRARRAY(lockStrings);
+	STRARRAY(vitalSignStrings);
+	STRARRAY(rangeStrings);
+	STRARRAY(trapStrings);
+	STRARRAY(attemptStrings);
+	STRARRAY(commentStrings);
+	STRARRAY(possessiveStrings);
+};
+
 #undef STRARRAY
 
 } // namespace
 
 /** Current language resources. */
 inline std::unique_ptr<L10n::L10n_t const> g_langRes;
+inline std::unique_ptr<L10n::L10n_popups const> g_popupsRes;
 
 #endif
