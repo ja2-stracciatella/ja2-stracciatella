@@ -254,7 +254,7 @@ static void DoneFadeOutKilledQueen()
 		// Check for any more badguys
 		// ON THE STRAGETY LAYER KILL BAD GUYS!
 		if (s.bNeutral)             continue;
-		if (s.bSide == OUR_TEAM) continue;
+		if (s.bSide == SIDE_FRIENDLY) continue;
 		ProcessQueenCmdImplicationsOfDeath(&s);
 	}
 
@@ -401,7 +401,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
 
 			// HELLO!  THESE ARE CREATURES!  THEY CAN'T BE NEUTRAL!
-			//if (!s->bNeutral && s->bSide != OUR_TEAM)
+			//if (!s->bNeutral && s->bSide != SIDE_FRIENDLY)
 			{
 				gTacticalStatus.ubAttackBusyCount++;
 				EVENT_SoldierGotHit(s, 0, 10000, 0, s->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);

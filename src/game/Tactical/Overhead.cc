@@ -2601,7 +2601,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 void CheckForPotentialAddToBattleIncrement(SOLDIERTYPE* pSoldier)
 {
 	// Check if we are a threat!
-	if (pSoldier->bNeutral || pSoldier->bSide == OUR_TEAM) return;
+	if (pSoldier->bNeutral || pSoldier->bSide == SIDE_FRIENDLY) return;
 
 	if (pSoldier->bTeam == CIV_TEAM)
 	{
@@ -2675,7 +2675,7 @@ void MakeCivHostile(SOLDIERTYPE* pSoldier, INT8 bNewSide)
 		case DYNAMO:
 		case SHANK:
 			// rebels and rebel sympathizers become hostile to player and enemy
-			bNewSide = 2;
+			bNewSide = SIDE_HOSTILE;
 			break;
 
 		case MARIA:
@@ -2683,14 +2683,14 @@ void MakeCivHostile(SOLDIERTYPE* pSoldier, INT8 bNewSide)
 			if (gubQuest[QUEST_RESCUE_MARIA] == QUESTINPROGRESS ||
 				gubQuest[QUEST_RESCUE_MARIA] == QUESTDONE)
 			{
-				bNewSide = 2;
+				bNewSide = SIDE_HOSTILE;
 			}
 			break;
 
 		default:
 			switch (pSoldier->ubCivilianGroup)
 			{
-				case REBEL_CIV_GROUP: bNewSide = 2; break;
+				case REBEL_CIV_GROUP: bNewSide = SIDE_HOSTILE; break;
 				default:              break;
 			}
 			break;
@@ -4354,7 +4354,7 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 				gTacticalStatus.bConsNumTurnsNotSeen = 0;
 				fSomeoneSawSomeoneRecently = TRUE;
 				if (s.bTeam == OUR_TEAM ||
-					(s.bTeam == MILITIA_TEAM && s.bSide == 0)) // or friendly militia
+					(s.bTeam == MILITIA_TEAM && s.bSide == SIDE_FRIENDLY)) // or friendly militia
 				{
 					fWeSawSomeoneRecently = TRUE;
 					break;
@@ -4795,7 +4795,7 @@ void CycleThroughKnownEnemies( )
 		// try to find first active, OK enemy
 		if (s->bInSector &&
 			!s->bNeutral &&
-			s->bSide != OUR_TEAM &&
+			s->bSide != SIDE_FRIENDLY &&
 			s->bLife > 0 &&
 			s->bVisible != -1)
 		{
@@ -4838,7 +4838,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 		// try to find first active, OK enemy
 		if (s->bInSector &&
 			!s->bNeutral &&
-			s->bSide != OUR_TEAM &&
+			s->bSide != SIDE_FRIENDLY &&
 			s->bLife > 0 &&
 			pSrcSoldier->bOppList[s->ubID] == SEEN_CURRENTLY &&
 			s->ubID > pSrcSoldier->ubLastEnemyCycledID)
@@ -4858,7 +4858,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 		// try to find first active, OK enemy
 		if (s->bInSector &&
 			!s->bNeutral &&
-			s->bSide != OUR_TEAM &&
+			s->bSide != SIDE_FRIENDLY &&
 			s->bLife > 0 &&
 			pSrcSoldier->bOppList[s->ubID] == SEEN_CURRENTLY &&
 			s->ubID > pSrcSoldier->ubLastEnemyCycledID)
@@ -4916,7 +4916,7 @@ UINT8 NumEnemyInSector()
 		if (!s.bInSector) continue;
 		if (s.bLife <= 0) continue;
 		if (s.bNeutral)   continue;
-		if (s.bSide == 0) continue;
+		if (s.bSide == SIDE_FRIENDLY) continue;
 		++n_enemies;
 	}
 	return n_enemies;
@@ -4932,7 +4932,7 @@ static UINT8 NumEnemyInSectorExceptCreatures()
 		if (!s.bInSector)             continue;
 		if (s.bLife <= 0)             continue;
 		if (s.bNeutral)               continue;
-		if (s.bSide == 0)             continue;
+		if (s.bSide == SIDE_FRIENDLY)             continue;
 		if (s.bTeam == CREATURE_TEAM) continue;
 		++n_enemies;
 	}
@@ -4953,7 +4953,7 @@ static UINT8 NumEnemyInSectorNotDeadOrDying()
 		// dying
 		if (s.bLife < OKLIFE) continue;
 		if (s.bNeutral)       continue;
-		if (s.bSide == 0)     continue;
+		if (s.bSide == SIDE_FRIENDLY)     continue;
 		++n_enemies;
 	}
 	return n_enemies;
@@ -4974,7 +4974,7 @@ static UINT8 NumBloodcatsInSectorNotDeadOrDying()
 		// dying
 		if (s.bLife < OKLIFE) continue;
 		if (s.bNeutral)       continue;
-		if (s.bSide == 0)     continue;
+		if (s.bSide == SIDE_FRIENDLY)     continue;
 		++n_enemies;
 	}
 	return n_enemies;
@@ -4994,7 +4994,7 @@ UINT8 NumCapableEnemyInSector()
 		// dying
 		if (s.bLife < OKLIFE && s.bLife != 0) continue;
 		if (s.bNeutral)   continue;
-		if (s.bSide == 0) continue;
+		if (s.bSide == SIDE_FRIENDLY) continue;
 		++n_enemies;
 	}
 	return n_enemies;
@@ -5015,7 +5015,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 	// ATE: Check for MILITIA - we won't lose if we have some.....
 	CFOR_EACH_IN_TEAM(s, MILITIA_TEAM)
 	{
-		if (s->bInSector && s->bSide == OUR_TEAM && s->bLife >= OKLIFE)
+		if (s->bInSector && s->bSide == SIDE_FRIENDLY && s->bLife >= OKLIFE)
 		{
 			// We have at least one poor guy who will still fight....
 			// we have not lost ( yet )!
@@ -5161,7 +5161,7 @@ static bool KillIncompacitatedEnemyInSector()
 		if (s.bLife >= OKLIFE)              continue;
 		if (s.uiStatusFlags & SOLDIER_DEAD) continue;
 		if (s.bNeutral)                     continue;
-		if (s.bSide == OUR_TEAM)         continue;
+		if (s.bSide == SIDE_FRIENDLY)         continue;
 		// Kill
 		SoldierTakeDamage(&s, s.bLife, 100, TAKE_DAMAGE_BLOODLOSS, 0);
 		ret = true;
@@ -5456,7 +5456,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		}
 	}
 
-	if ( (pTarget->bTeam == MILITIA_TEAM) && (pTarget->bSide == OUR_TEAM) )
+	if ( (pTarget->bTeam == MILITIA_TEAM) && (pTarget->bSide == SIDE_FRIENDLY) )
 	{
 		// rebel militia attacked by the player!
 		MilitiaChangesSides();

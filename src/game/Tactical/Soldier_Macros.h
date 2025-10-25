@@ -5,6 +5,7 @@
 #include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "Assignments.h"
+#include "Overhead_Types.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
 #include "TeamTurns.h"
@@ -34,7 +35,7 @@ static inline bool IsMechanical(SOLDIERTYPE const& s)
 
 constexpr bool IsHostileToOurTeam(SOLDIERTYPE const& s) noexcept
 {
-	return !s.bNeutral && s.bSide != OUR_TEAM;
+	return !s.bNeutral && s.bSide != SIDE_FRIENDLY;
 }
 
 static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)

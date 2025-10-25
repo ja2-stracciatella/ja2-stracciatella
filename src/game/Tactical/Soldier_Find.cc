@@ -72,7 +72,7 @@ SoldierFindFlags GetSoldierFindFlags(SOLDIERTYPE const& s)
 	else
 	{
 		// Check the side, etc
-		if (!s.bNeutral && s.bSide != OUR_TEAM)
+		if (!s.bNeutral && s.bSide != SIDE_FRIENDLY)
 		{
 			// It's an enemy merc
 			flags |= ENEMY_MERC;

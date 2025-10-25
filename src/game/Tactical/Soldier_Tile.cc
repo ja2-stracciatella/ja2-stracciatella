@@ -694,7 +694,7 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 				return false;
 			}
 
-			if ( pSoldier2->bSide == 0 )
+			if ( pSoldier2->bSide == SIDE_FRIENDLY )
 			{
 				return( TRUE );
 			}

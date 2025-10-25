@@ -3625,7 +3625,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 				{
 					case OUR_TEAM:
 						// if the listener is militia and still on our side, ignore noise from us
-						if ( pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == 0 )
+						if ( pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == SIDE_FRIENDLY )
 						{
 							continue;
 						}
@@ -3646,7 +3646,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 					case MILITIA_TEAM:
 						// if the noisemaker is militia and still on our side, ignore
 						// noise if we're listening
-						if (pSoldier->bTeam == OUR_TEAM && noise_maker->bSide == 0)
+						if (pSoldier->bTeam == OUR_TEAM && noise_maker->bSide == SIDE_FRIENDLY)
 						{
 							continue;
 						}
@@ -3671,7 +3671,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 			else
 			{
 				// screen out allied militia from hearing us
-				if (noise_maker == NULL && pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == 0)
+				if (noise_maker == NULL && pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == SIDE_FRIENDLY)
 				{
 					continue;
 				}
