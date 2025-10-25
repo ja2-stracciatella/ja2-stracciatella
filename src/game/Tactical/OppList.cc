@@ -573,7 +573,7 @@ void CheckHostileOrSayQuoteList( void )
 				SOLDIERTYPE* const pSoldier = gShouldBecomeHostileOrSayQuote[ubLoop];
 				if ( pSoldier->bNeutral )
 				{
-					MakeCivHostile( pSoldier, 2 );
+					MakeCivHostile( pSoldier );
 					// make civ group, if any, hostile
 					if ( pSoldier->bTeam == CIV_TEAM && pSoldier->ubCivilianGroup != NON_CIV_GROUP && gTacticalStatus.fCivGroupHostile[ pSoldier->ubCivilianGroup ] == CIV_GROUP_WILL_BECOME_HOSTILE )
 					{
@@ -1681,7 +1681,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 					// Check to see if we are looking at Maria or unauthorized personnel in the brothel
 					if (opponent.ubProfile == MARIA)
 					{
-						MakeCivHostile(&s, 2);
+						MakeCivHostile(&s);
 						if (!(gTacticalStatus.uiFlags & INCOMBAT))
 						{
 							EnterCombatMode(s.bTeam);
@@ -1695,7 +1695,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 						if (IN_BROTHEL_GUARD_ROOM(room))
 						{
 							// Unauthorized
-							MakeCivHostile(&s, 2);
+							MakeCivHostile(&s);
 							if (!(gTacticalStatus.uiFlags & INCOMBAT))
 							{
 								EnterCombatMode(s.bTeam);
@@ -1711,7 +1711,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 					if (uiTime < 365 || 1320 < uiTime)
 					{
 						// get off our farm!
-						MakeCivHostile(&s, 2);
+						MakeCivHostile(&s);
 						if (!(gTacticalStatus.uiFlags & INCOMBAT))
 						{
 							EnterCombatMode(s.bTeam);

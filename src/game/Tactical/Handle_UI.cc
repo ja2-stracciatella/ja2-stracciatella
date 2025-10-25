@@ -2129,7 +2129,7 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 			// go into turnbased for that person
 			CancelAIAction(pTargetSoldier);
 			AddToShouldBecomeHostileOrSayQuoteList(pTargetSoldier);
-			//MakeCivHostile( pTargetSoldier, 2 );
+			//MakeCivHostile( pTargetSoldier );
 			//TriggerNPCWithIHateYouQuote( pTargetSoldier->ubProfile );
 			return;
 		}

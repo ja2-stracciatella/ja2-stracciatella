@@ -2016,7 +2016,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 						CancelAIAction(pSoldier);
 						// aaaaaaaaaaaaaaaaaaaaatttaaaack!!!!
 						AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
-						//MakeCivHostile( pSoldier, 2 );
+						//MakeCivHostile( pSoldier );
 						//TriggerNPCWithIHateYouQuote( pSoldier->ubProfile );
 					}
 				}
@@ -2657,13 +2657,12 @@ void SetSoldierNeutral(SOLDIERTYPE* pSoldier)
 	}
 }
 
-
-void MakeCivHostile(SOLDIERTYPE* pSoldier, INT8 bNewSide)
+void MakeCivHostile(SOLDIERTYPE* pSoldier)
 {
 	if (pSoldier->ubBodyType == COW) return;
 
-	// override passed-in value; default is hostile to player, allied to army
-	bNewSide = 1;
+	// default is hostile to player, allied to army
+	INT8 bNewSide = SIDE_ENEMY;
 
 	switch (pSoldier->ubProfile)
 	{
@@ -2758,7 +2757,7 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity(SOLDIERTYPE* pAttacked)
 			(PythSpacesAway(s->sGridNo, pAttacked->sGridNo) < MaxDistanceVisible()) ||
 			(attacker != NULL && PythSpacesAway(s->sGridNo, attacker->sGridNo) < MaxDistanceVisible()))
 		{
-			MakeCivHostile(s, 2);
+			MakeCivHostile(s);
 			if (s->bOppCnt > 0)
 			{
 				AddToShouldBecomeHostileOrSayQuoteList(s);
@@ -2856,7 +2855,7 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 		{
 			if ( pSoldier->ubCivilianGroup == ubCivilianGroup && pSoldier->ubBodyType != COW )
 			{
-				MakeCivHostile( pSoldier, 2 );
+				MakeCivHostile( pSoldier );
 				if ( pSoldier->bOppCnt > 0 )
 				{
 					AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
@@ -2908,7 +2907,7 @@ static void MilitiaChangesSides(void)
 	{
 		if (s->bInSector && s->bLife != 0)
 		{
-			MakeCivHostile(s, 2);
+			MakeCivHostile(s);
 			RecalculateOppCntsDueToNoLongerNeutral(s);
 		}
 	}
@@ -5703,7 +5702,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 						s->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
 					{
 						//ZEROTIMECOUNTER(s->AICounter);
-						//MakeCivHostile(s, 2);
+						//MakeCivHostile(s);
 						HandleCrowFlyAway(s);
 					}
 				}

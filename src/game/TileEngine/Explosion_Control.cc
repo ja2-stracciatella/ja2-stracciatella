@@ -1821,7 +1821,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 						{
 							if (civ->bOppList[ubID2] == SEEN_CURRENTLY)
 							{
-								MakeCivHostile(civ, 2);
+								MakeCivHostile(civ);
 							}
 						}
 					}
