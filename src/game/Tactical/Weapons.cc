@@ -3731,15 +3731,34 @@ void ChangeWeaponMode(SOLDIERTYPE* const s)
 	if (gAnimControl[s->usAnimState].uiFlags & ANIM_FIRE) return;
 
 	WeaponModes& mode = s->bWeaponMode;
-	WeaponModes previousMode = mode;
-	mode = mode == WM_ATTACHED ? WM_NORMAL : static_cast<WeaponModes>(mode + 1);
+	switch (mode)
+	{
+		case WM_NORMAL:
+			if (IsGunBurstCapable(s, HANDPOS))
+			{
+				mode = WM_BURST;
+			}
+			else if (HasLauncher(s))
+			{
+				mode = WM_ATTACHED;
+			}
+			else
+			{
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_NOT_BURST_CAPABLE], s->name));
+			}
+			break;
+
+		case WM_BURST:
+			mode = (HasLauncher(s) ? WM_ATTACHED : WM_NORMAL);
+			break;
+
+		case WM_ATTACHED:
+		default:
+			mode = WM_NORMAL;
+			break;
+	}
 
 	EnsureConsistentWeaponMode(s);
-
-	if (previousMode == mode)
-	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_NOT_BURST_CAPABLE], s->name));
-	}
 
 	DirtyMercPanelInterface(s, DIRTYLEVEL2);
 	gfUIForceReExamineCursorData = TRUE;
