@@ -32,6 +32,10 @@ struct UpdateZ { void operator()(UINT16 * zdst, UINT16 zval) { *zdst = zval; } }
 // This version does not update the ZBuffer and needs the following line
 // as a somewhat elaborate way to say NOP. Is is used by 'NB' blitters.
 struct DontUpdateZ { void operator()(UINT16 *, UINT16) {} };
+
+// An unrestrained clipping rect. This can be used to implement blitters
+// that do not use a clipping rect with their clipped siblings.
+SGPRect const gUnrestrained{ 0, 0, UINT16_MAX, UINT16_MAX };
 }
 
 /* Blit an image into the destination buffer, using an ETRLE brush as a source,
@@ -812,71 +816,7 @@ Blt8BPPDataTo16BPPBufferTransShadowZ
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBufferTransShadowZ(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, const UINT16* p16BPPPalette)
 {
-	UINT8  *DestPtr, *ZPtr;
-	UINT32 LineSkip;
-
-	// Assertions
-	Assert( hSrcVObject != NULL );
-	Assert( pBuffer != NULL );
-
-	// Get Offsets from Index into structure
-	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(usIndex);
-	UINT32          usHeight = pTrav.usHeight;
-	UINT32    const usWidth  = pTrav.usWidth;
-
-	// Add to start position of dest buffer
-	INT32 const iTempX = iX + pTrav.sOffsetX;
-	INT32 const iTempY = iY + pTrav.sOffsetY;
-
-	// Validations
-	CHECKV(iTempX >= 0);
-	CHECKV(iTempY >= 0);
-
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	LineSkip=(uiDestPitchBYTES-(usWidth*2));
-
-	do
-	{
-		for (;;)
-		{
-			UINT8 data = *SrcPtr++;
-
-			if (data == 0) break;
-			if (data & 0x80)
-			{
-				data &= 0x7F;
-				DestPtr += 2 * data;
-			}
-			else
-			{
-				do
-				{
-					UINT8 px = *SrcPtr++;
-					auto DestPtr16{ reinterpret_cast<UINT16 *>(DestPtr) };
-					if (px == 254)
-					{
-						if (*(UINT16*)ZPtr < usZValue)
-						{
-							*DestPtr16 = ShadeTable[*DestPtr16];
-						}
-					}
-					else
-					{
-						if (*(UINT16*)ZPtr <= usZValue)
-						{
-							*DestPtr16 = p16BPPPalette[px];
-						}
-					}
-					DestPtr += 2;
-				}
-				while (--data > 0);
-			}
-		}
-		DestPtr += LineSkip;
-	}
-	while (--usHeight > 0);
+	Blt8BPPDataTo16BPPBufferTransShadowZClip(pBuffer, uiDestPitchBYTES, pZBuffer, usZValue, hSrcVObject, iX, iY, usIndex, &gUnrestrained, p16BPPPalette);
 }
 
 
@@ -893,74 +833,7 @@ Blt8BPPDataTo16BPPBufferTransShadowZNB
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBufferTransShadowZNB(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, const UINT16* p16BPPPalette)
 {
-	UINT8  *DestPtr, *ZPtr;
-	UINT32 LineSkip;
-
-	// Assertions
-	Assert( hSrcVObject != NULL );
-	Assert( pBuffer != NULL );
-
-	// Get Offsets from Index into structure
-	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(usIndex);
-	UINT32             usHeight = pTrav.usHeight;
-	UINT32      const  usWidth  = pTrav.usWidth;
-
-	// Add to start position of dest buffer
-	INT32 const iTempX = iX + pTrav.sOffsetX;
-	INT32 const iTempY = iY + pTrav.sOffsetY;
-
-	// Validations
-	CHECKV(iTempX >= 0);
-	CHECKV(iTempY >= 0);
-
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	LineSkip=(uiDestPitchBYTES-(usWidth*2));
-
-	do
-	{
-		for (;;)
-		{
-			UINT8 data = *SrcPtr++;
-
-			if (data == 0) break;
-			if (data & 0x80)
-			{
-				data &= 0x7F;
-				DestPtr += 2 * data;
-				ZPtr += 2 * data;
-			}
-			else
-			{
-				do
-				{
-					UINT8 px = *SrcPtr++;
-
-					if (px == 254)
-					{
-						if (*(UINT16*)ZPtr < usZValue)
-						{
-							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
-						}
-					}
-					else
-					{
-						if (*(UINT16*)ZPtr <= usZValue)
-						{
-							*(UINT16*)DestPtr = p16BPPPalette[px];
-						}
-					}
-					DestPtr += 2;
-					ZPtr += 2;
-				}
-				while (--data > 0);
-			}
-		}
-		DestPtr += LineSkip;
-		ZPtr += LineSkip;
-	}
-	while (--usHeight > 0);
+	Blt8BPPDataTo16BPPBufferTransShadowZNBClip(pBuffer, uiDestPitchBYTES, pZBuffer, usZValue, hSrcVObject, iX, iY, usIndex, &gUnrestrained, p16BPPPalette);
 }
 
 
@@ -1064,7 +937,7 @@ Blt8BPPDataTo16BPPBufferTransShadowZClip
 
 **********************************************************************************************/
 template<typename UpdateZOrDont>
-void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, const UINT16* p16BPPPalette)
+void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, SGPVObject const * hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, const UINT16* p16BPPPalette)
 {
 	UINT8  *DestPtr, *ZPtr;
 	UINT32 LineSkip;
@@ -1222,7 +1095,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 }
 
 
-void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, const UINT16* p16BPPPalette)
+void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, SGPVObject const * hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, const UINT16* p16BPPPalette)
 {
 	Blt8BPPDataTo16BPPBufferTransShadowZClip<UpdateZ>(pBuffer, uiDestPitchBYTES, pZBuffer, usZValue, hSrcVObject, iX, iY, usIndex, clipregion, p16BPPPalette);
 }
@@ -1239,7 +1112,7 @@ Blt8BPPDataTo16BPPBufferTransShadowZNBClip
 
 **********************************************************************************************/
 
-void Blt8BPPDataTo16BPPBufferTransShadowZNBClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, const UINT16* p16BPPPalette)
+void Blt8BPPDataTo16BPPBufferTransShadowZNBClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, SGPVObject const * hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, const UINT16* p16BPPPalette)
 {
 	Blt8BPPDataTo16BPPBufferTransShadowZClip<DontUpdateZ>(pBuffer, uiDestPitchBYTES, pZBuffer, usZValue, hSrcVObject, iX, iY, usIndex, clipregion, p16BPPPalette);
 }
