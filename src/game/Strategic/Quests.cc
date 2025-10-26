@@ -165,7 +165,7 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 	{
 		return( FALSE );
 	}
-	if (pNPC->bSide == SIDE_FRIENDLY || pNPC->bNeutral)
+	if (pNPC->bSide == Side::FRIENDLY || pNPC->bNeutral)
 	{
 		if (pNPC->ubCivilianGroup != NON_CIV_GROUP)
 		{

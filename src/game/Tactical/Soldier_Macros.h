@@ -35,7 +35,7 @@ static inline bool IsMechanical(SOLDIERTYPE const& s)
 
 constexpr bool IsHostileToOurTeam(SOLDIERTYPE const& s) noexcept
 {
-	return !s.bNeutral && s.bSide != SIDE_FRIENDLY;
+	return !s.bNeutral && s.bSide != Side::FRIENDLY;
 }
 
 static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)

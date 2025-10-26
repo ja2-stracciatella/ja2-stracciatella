@@ -2966,7 +2966,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 				SOLDIERTYPE const& milita = GetMan(i);
 				if (milita.bActive &&
 						milita.bLife != 0 &&
-						milita.bSide    == OUR_TEAM &&
+						milita.bSide    == Side::FRIENDLY &&
 						milita.sSector == gWorldSector)
 				{ //We have militia and enemies and no mercs!  Let's finish this battle in autoresolve.
 					gfEnteringMapScreen = TRUE;

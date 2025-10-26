@@ -1025,7 +1025,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 			// Add bars
 			RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
-			SGPVObject const* const gfx = s.bNeutral || s.bSide == SIDE_FRIENDLY ?
+			SGPVObject const* const gfx = s.bNeutral || s.bSide == Side::FRIENDLY ?
 							guiRADIO : guiRADIO2;
 			BltVideoObject(FRAME_BUFFER, gfx, s.sLocatorFrame, sXPos, sYPos);
 		}

@@ -71,4 +71,28 @@ void PrintEnumFlags(std::ostream& os, const ST::string& zTypeName = {})
 #endif
 }
 
+/**
+ * Prints a enum-class but using the underlying values.
+ */
+template<typename E, typename V>
+void PrintEnumClass(std::ostream& os, const ST::string& zTypeName = {})
+{
+#ifdef HAS_ENUMGEN_SUPPORT
+	os << (zTypeName.empty() ? magic_enum::enum_type_name<E>() : zTypeName.to_std_string())
+	   << " = {" << std::endl;
+
+	constexpr auto& entries = magic_enum::enum_entries<E>();
+	for (auto& pair : entries)
+	{
+		E value = pair.first;
+		std::string name(pair.second);
+		ST::string line = ST::format("\t{} = {},", name, (V)value);
+		os << line.to_std_string() << std::endl;
+	}
+	os << "}" << std::endl << std::endl;
+#else
+	throw std::runtime_error("For this to work, the build must have magic_enum with alias support");
+#endif
+}
+
 void PrintAllJA2Enums(std::ostream& os);

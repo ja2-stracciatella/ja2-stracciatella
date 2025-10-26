@@ -1103,7 +1103,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* const s, INT16 const sGridNo, 
 
 	// If he's an enemy... set presence
 	// ATE: Added if not bloodcats, only do this once they are seen
-	if (!s->bNeutral && s->bSide != SIDE_FRIENDLY && s->ubBodyType != BLOODCAT)
+	if (!s->bNeutral && s->bSide != Side::FRIENDLY && s->ubBodyType != BLOODCAT)
 	{
 		SetEnemyPresence();
 	}

@@ -169,7 +169,7 @@ void LocateBullet(BULLET* b)
 	if (!gGameSettings.fOptions[TOPTION_SHOW_MISSES]) return;
 	if (b->pFirer == NULL) return;
 	// Check if a bad guy fired!
-	if (b->pFirer->bSide != SIDE_FRIENDLY) return;
+	if (b->pFirer->bSide != Side::FRIENDLY) return;
 	if (b->fLocated) return;
 
 	b->fLocated = TRUE;

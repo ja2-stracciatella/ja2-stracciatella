@@ -1974,7 +1974,7 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 		if (pMerc == NULL) continue;
 
 		// only look for mercs on the side of the player
-		if (pMerc->bSide != SIDE_FRIENDLY) continue;
+		if (pMerc->bSide != Side::FRIENDLY) continue;
 
 		// only look for active mercs
 		if (pMerc->bAssignment >= ON_DUTY) continue;

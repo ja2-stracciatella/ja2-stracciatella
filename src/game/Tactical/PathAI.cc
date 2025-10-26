@@ -1008,7 +1008,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			}
 
 			// AI check for mines
-			if ( gpWorldLevelData[newLoc].uiFlags & MAPELEMENT_ENEMY_MINE_PRESENT && s->bSide != SIDE_FRIENDLY)
+			if ( gpWorldLevelData[newLoc].uiFlags & MAPELEMENT_ENEMY_MINE_PRESENT && s->bSide != Side::FRIENDLY)
 			{
 				goto NEXTDIR;
 			}
@@ -1016,7 +1016,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			/*
 			if ( gpWorldLevelData[newLoc].uiFlags & (MAPELEMENT_ENEMY_MINE_PRESENT | MAPELEMENT_PLAYER_MINE_PRESENT) )
 			{
-				if (s->bSide == SIDE_FRIENDLY)
+				if (s->bSide == Side::FRIENDLY)
 				{
 					// For our team, skip a location with a known mines unless it is the end of our
 					// path; for others on our side, skip such locations completely;

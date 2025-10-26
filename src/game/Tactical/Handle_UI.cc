@@ -2722,7 +2722,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 				{
 
 					// Check if this guy is on the enemy team....
-					if ( !pSoldier->bNeutral && (pSoldier->bSide != SIDE_FRIENDLY ) )
+					if ( !pSoldier->bNeutral && (pSoldier->bSide != Side::FRIENDLY ) )
 					{
 						gUIActionModeChangeDueToMouseOver = TRUE;
 
@@ -5228,7 +5228,7 @@ BOOLEAN ValidQuickExchangePosition(void)
 	{
 		//KM: Replaced this older if statement for the new one which allows exchanging with militia
 		if ((pOverSoldier->bTeam != OUR_TEAM && pOverSoldier->bNeutral) ||
-			(pOverSoldier->bTeam == MILITIA_TEAM && pOverSoldier->bSide == SIDE_FRIENDLY))
+			(pOverSoldier->bTeam == MILITIA_TEAM && pOverSoldier->bSide == Side::FRIENDLY))
 		{
 			// hehe - don't allow animals to exchange places
 			if ( !( pOverSoldier->uiStatusFlags & ( SOLDIER_ANIMAL ) ) )

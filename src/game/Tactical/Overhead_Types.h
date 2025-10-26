@@ -244,15 +244,18 @@ enum Team
 	LAST_TEAM = CIV_TEAM
 };
 
-enum Side {
+enum class Side : uint8_t {
 	// friendly to us
-	SIDE_FRIENDLY = 0,
+	FRIENDLY = 0,
 	
 	// hostile to player, allied to army
-	SIDE_ENEMY = 1,
+	ENEMY = 1,
 
 	// hostile to both player and army
-	SIDE_HOSTILE = 2
+	HOSTILE = 2,
+
+	// not belonging to any sides (i.e. creatures)
+	NONE = 3
 };
 
 //-----------------------------------------------

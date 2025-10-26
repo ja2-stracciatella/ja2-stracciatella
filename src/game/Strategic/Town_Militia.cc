@@ -601,11 +601,11 @@ static void MilitiaTrainingRejected(void)
 
 void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void )
 {
-	if ( gTacticalStatus.Team[ MILITIA_TEAM ].bSide != SIDE_FRIENDLY )
+	if ( gTacticalStatus.Team[ MILITIA_TEAM ].bSide != Side::FRIENDLY )
 	{
 		// handle militia defections and reset team to friendly
 		HandleMilitiaDefections(gWorldSector);
-		gTacticalStatus.Team[ MILITIA_TEAM ].bSide = SIDE_FRIENDLY;
+		gTacticalStatus.Team[ MILITIA_TEAM ].bSide = Side::FRIENDLY;
 	}
 	else if( !gfAutomaticallyStartAutoResolve )
 	{ //Don't promote militia if we are going directly to autoresolve to finish the current battle.
