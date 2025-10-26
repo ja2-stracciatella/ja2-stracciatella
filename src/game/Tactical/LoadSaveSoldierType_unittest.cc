@@ -12,6 +12,10 @@
 #include <cstring>
 #include <memory>
 
+#ifndef NO_MAGICENUM_LIB
+#include <magic_enum.hpp>
+#endif
+
 using LoadSaveSoldierTypeTest = DefaultContentManagerUT::BaseTest;
 
 class LoadSaveSoldierTypeTestImpl : public LoadSaveSoldierTypeTest
@@ -241,13 +245,11 @@ TEST_F(LoadSaveSoldierTypeTestImpl, RoundTripSerialization)
 	EXPECT_EQ(extractedSoldier.fBetweenSectors, testSoldier.fBetweenSectors);
 }
 
+#ifndef NO_MAGICENUM_LIB
 TEST_F(LoadSaveSoldierTypeTestImpl, DifferentSideValues)
 {
 	// Test all possible Side enum values
-	Side sides[] = {Side::FRIENDLY, Side::ENEMY, Side::HOSTILE, Side::NONE};
-	
-	for (Side side : sides)
-	{
+	magic_enum::enum_for_each<Side>([this](Side side) {
 		testSoldier.bSide = side;
 		
 		std::unique_ptr<BYTE[]> buffer(new BYTE[BUFFER_SIZE]);
@@ -259,8 +261,9 @@ TEST_F(LoadSaveSoldierTypeTestImpl, DifferentSideValues)
 		ExtractSoldierType(buffer.get(), &extractedSoldier, false, 0);
 		
 		EXPECT_EQ(extractedSoldier.bSide, side);
-	}
+	});
 }
+#endif
 
 TEST_F(LoadSaveSoldierTypeTestImpl, DifferentTeamValues)
 {
