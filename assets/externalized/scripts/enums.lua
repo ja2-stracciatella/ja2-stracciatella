@@ -292,9 +292,10 @@ Team = {
 }
 
 Side = {
-	SIDE_FRIENDLY = 0,
-	SIDE_ENEMY = 1,
-	SIDE_HOSTILE = 2,
+	FRIENDLY = 0,
+	ENEMY = 1,
+	HOSTILE = 2,
+	NONE = 3,
 }
 
 CivilianGroup = {
