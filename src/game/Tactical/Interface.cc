@@ -1383,10 +1383,14 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, DOOR* const d, BOOLEAN const 
 	PopupDoorOpenMenu( fClosingDoor );
 }
 
-static ST::string ColorCodeModifier(const ST::string fmt, const int8_t number, const bool isGreenIfZeroOrGreater = true)
+static ST::string ColorCodeModifier(const ST::string fmt, const int32_t number, const bool isGreenIfZeroOrGreater = true)
 {
 	ST::string plain = ST::format(fmt.c_str(), number);
 	ST::string colored;
+
+	if (number == 0) {
+		plain = plain.replace("+", "");
+	}
 
 	ST::string controlChar = isGreenIfZeroOrGreater ? "^" : "~";
 	if (number < 0 && isGreenIfZeroOrGreater) {
