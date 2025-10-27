@@ -956,6 +956,25 @@ static void HandleShopKeeperInterface(void)
 }
 
 
+// areas around the SKI that show the tactical view
+static auto &
+GetTacticalViewRects() {
+	static const SGPBox
+		redrawRects[] = {
+			{
+				SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y,
+				static_cast<UINT16>( SCREEN_WIDTH - SKI_TACTICAL_BACKGROUND_START_X ), SKI_TACTICAL_BACKGROUND_START_HEIGHT
+			},
+			{
+				0, SKI_TACTICAL_BACKGROUND_START_HEIGHT,
+				SCREEN_WIDTH, static_cast<UINT16>( INV_INTERFACE_START_Y - SKI_TACTICAL_BACKGROUND_START_HEIGHT )
+			}
+		};
+
+	return redrawRects;
+}
+
+
 static void CrossOutUnwantedItems(void);
 static void RestoreTacticalBackGround(void);
 
@@ -1040,19 +1059,7 @@ static void RestoreTacticalBackGround(void)
 
 	//BlitBufferToBuffer(guiCornerWhereTacticalIsStillSeenImage, FRAME_BUFFER, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
-	static const SGPBox
-		redrawRects[] = {
-			{
-				SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y,
-				static_cast<UINT16>( SCREEN_WIDTH - SKI_TACTICAL_BACKGROUND_START_X ), SKI_TACTICAL_BACKGROUND_START_HEIGHT
-			},
-			{
-				0, SKI_TACTICAL_BACKGROUND_START_HEIGHT,
-				SCREEN_WIDTH, static_cast<UINT16>( SCREEN_HEIGHT - SKI_TACTICAL_BACKGROUND_START_HEIGHT - 140 )
-			}
-		};
-
-	for( const SGPBox &curRect : redrawRects ) {
+	for( const SGPBox &curRect : GetTacticalViewRects()) {
 		BltVideoSurface( FRAME_BUFFER, guiEXTRABUFFER, curRect.x, curRect.y, &curRect );
 	}
 
