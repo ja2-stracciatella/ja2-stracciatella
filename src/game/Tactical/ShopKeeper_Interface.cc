@@ -1020,10 +1020,10 @@ static void RenderShopKeeperInterface(void)
 	if( gfRenderScreenOnNextLoop )
 	{
 	//	BlitBufferToBuffer(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
-		const SGPBox
-			SrcRect = {	0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
-		BltVideoSurface( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, &SrcRect );
+		for( const auto &curRect : GetTacticalViewRects()) {
+			BltVideoSurface( guiEXTRABUFFER, FRAME_BUFFER, curRect.x, curRect.y, &curRect );
+		}
 
 		gfRenderScreenOnNextLoop = FALSE;
 	}
