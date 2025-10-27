@@ -3577,7 +3577,8 @@ void ShopKeeperInterface_SetSMpanelButtonsState(bool const enabled)
 	//Make sure the options button is disabled
 	EnableButton( iSMPanelButtons[ OPTIONS_BUTTON ], enabled );
 
-	//Make sure the mapscreen button is disabled
+	//Make sure the done and mapscreen buttons are disabled
+	EnableButton( iSMPanelButtons[ SM_DONE_BUTTON ], enabled );
 	EnableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ], enabled );
 
 	EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ], enabled );
