@@ -222,7 +222,7 @@
 
 
 static cache_key_t const guiMainTradeScreenImage{ INTERFACEDIR "/tradescreen.sti" };
-static SGPVSurface* guiCornerWhereTacticalIsStillSeenImage; // This image is for where the corner of tactical is still seen through the shop keeper interface
+static SGPVSurface* guiTacticalImage; // snapshot of the tactical screen, used for redraws around the shop keeper interface
 
 static BOOLEAN gfSKIScreenEntry = TRUE;
 static BOOLEAN gfSKIScreenExit  = FALSE;
@@ -544,8 +544,8 @@ static void EnterShopKeeperInterface(void)
 	// make sure current merc is close enough and eligible to talk to the shopkeeper.
 	AssertMsg(CanMercInteractWithSelectedShopkeeper(GetSelectedMan()), "Selected merc can't interact with shopkeeper.  Send save AM-1");
 
-	// Create a video surface to blt corner of the tactical screen that still shines through
-	guiCornerWhereTacticalIsStillSeenImage = AddVideoSurface(SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT, PIXEL_DEPTH);
+	// Create a video surface to blt the visible parts of tactical screen
+	guiTacticalImage = AddVideoSurface( SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH );
 
 	//Clear out all the save background rects
 	EmptyBackgroundRects( );
@@ -784,7 +784,7 @@ static void ExitShopKeeperInterface(void)
 	//Delete the main shopkeep background
 	RemoveVObject(guiMainTradeScreenImage);
 	RemoveVObject(guiItemCrossOut);
-	DeleteVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
+	DeleteVideoSurface( guiTacticalImage );
 
 	ShutUpShopKeeper();
 
@@ -1006,14 +1006,10 @@ static void RenderShopKeeperInterface(void)
 	if( gfRenderScreenOnNextLoop )
 	{
 	//	BlitBufferToBuffer(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
-		SGPBox const SrcRect =
-		{
-			SKI_TACTICAL_BACKGROUND_START_X,
-			SKI_TACTICAL_BACKGROUND_START_Y,
-			SKI_TACTICAL_BACKGROUND_START_WIDTH,
-			SKI_TACTICAL_BACKGROUND_START_HEIGHT
-		};
-		BltVideoSurface(guiCornerWhereTacticalIsStillSeenImage, guiSAVEBUFFER, 0, 0, &SrcRect);
+		const SGPBox
+			SrcRect = {	0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
+		BltVideoSurface( guiTacticalImage, FRAME_BUFFER, 0, 0, &SrcRect );
 
 		gfRenderScreenOnNextLoop = FALSE;
 	}
@@ -1049,7 +1045,21 @@ static void RestoreTacticalBackGround(void)
 
 	//BlitBufferToBuffer(guiCornerWhereTacticalIsStillSeenImage, FRAME_BUFFER, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
-	BltVideoSurface(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, NULL);
+	const SGPBox
+		redrawRects[] = {
+			{
+				SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y,
+				SCREEN_WIDTH - SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_HEIGHT
+			},
+			{
+				0, SKI_TACTICAL_BACKGROUND_START_HEIGHT,
+				SCREEN_WIDTH, SCREEN_HEIGHT - SKI_TACTICAL_BACKGROUND_START_HEIGHT - 140
+			}
+		};
+
+	for( const SGPBox &curRect : redrawRects ) {
+		BltVideoSurface( FRAME_BUFFER, guiTacticalImage, curRect.x, curRect.y, &curRect );
+	}
 
 	InvalidateScreen();
 }
