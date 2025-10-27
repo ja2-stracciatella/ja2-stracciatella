@@ -1,0 +1,110 @@
+{
+    "demarcationStrings": [
+        "   ", // indentation
+        "----------------------------------------------" // segment divider
+    ],
+    "booleanStrings": [
+        "^N^o",
+        "~N~o",
+        "^Y^e^s",
+        "~Y~e~s",
+        "None of the following is true: %s",
+        "One of the following is true: %s"
+    ],
+    "segmentHeaderStrings": [
+        "Chance of success: %s",
+        "Modified by:",
+        "Bonuses:",
+        "Penalties:",
+        "Detection Level vs. Trap Level:"
+    ],
+    "effectiveStatStrings": [ // enumerated equally to str_stat_list
+        "",
+        "Effective Agility: %s",
+        "Effective Dexterity: %s",
+        "Effective Strength: %s",
+        "Effective Leadership: %s",
+        "Effective Wisdom: %s",
+        "Effective Exp. Level: %s",
+        "Effective Marksmanship: %s",
+        "Effective Mechanical: %s",
+        "Effective Explosives: %s",
+        "Effective Medical: %s"
+    ],
+    "skillPossessionStrings": [ // enumerated equally to gzMercSkillText
+        "",
+        "%s Lock Picking Skill: %s",
+        "%s Hand To Hand Skill: %s",
+        "%s Electronics Skill: %s",
+        "%s Night Ops Skill: %s",
+        "%s Throwing Skill: %s",
+        "%s Teaching Skill: %s",
+        "%s Heavy Weapons Skill: %s",
+        "%s Auto Weapons Skill: %s",
+        "%s Stealthy Skill: %s",
+        "%s Ambidexterity Skill: %s",
+        "%s Thief Skill: %s",
+        "%s Martial Arts Skill: %s",
+        "%s Knifing Skill: %s",
+        "%s On Roof Skill: %s",
+        "%s Camouflage Skill: %s",
+        ""
+    ],
+    "toolModifierStrings": [
+        "Locksmith Kit Status: %s",
+        "Crowbar: %s"
+    ],
+    "statusStrings": [
+        "|?|?|?",
+        "~N~/~A",
+        "~u~n~u~s~a~b~l~e",
+        "~i~m~p~o~s~s~i~b~l~e",
+        "^u^n^t^r^a^p^p^e^d",
+        "~t~r~a~p~p~e~d"
+    ],
+    "lockStrings": [
+        "Lock Difficulty: %s",
+        "Electronic Lock: %s",
+        "Lock Damage: %s",
+        "Smash Difficulty: %s"
+    ],
+    "vitalSignStrings": [
+        "Fatigue: %s",
+        "In Shock: %s",
+        "Severe bleeding: %s"
+    ],
+    "rangeStrings": [
+        "%s to %s",
+        " (effectively ^1 to %s)",
+        " (effectively ^1)"
+    ],
+    "trapStrings": [
+        "Perception: %s",
+        "Passive: %s vs. %s",
+        "|A|c|t|i|v|e: %s vs. %s",
+        "If Detecting |A|c|t|i|v|e|l|y: ^+^1 to %s",
+        "Explosive: ",
+        "Electronic: ",
+        "Electronic Trap: %s",
+        "Trap Level: %s"
+    ],
+    "attemptStrings": [
+        "Attempts Made: %s out of %s needed to reveal the odds.",
+        "Mandatory Attempts: ~+~2"
+    ],
+    "commentStrings": [
+        "Zero explosive skill.",
+        "Zero medical skill.",
+        "Zero mechanical skill.",
+        ". Effectively ~0~% (under the 30% minimum).",
+        ". Effectively ^9^9^%.",
+        ". Make more attempts to determine the odds.",
+        "No applicable tool.",
+        "The tool is unusable."
+    ],
+    "possessiveStrings": [
+        "Doesn't Have",
+        "Has",
+        "Has Expert"
+    ]
+}

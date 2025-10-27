@@ -47,6 +47,7 @@ public:
 	int8_t enemy_weapon_minimal_status;   /**< Minimal status of the enemy weapon (0 - 100). */
 
 	bool gui_extras;                      /* graphical user interface cosmetic mod */
+	bool informative_popups;              /* Reveal modifiers in hover popup boxes */
 	bool extra_attachments;               // allow more item attachments options
 	bool skip_sleep_explanation;          // skip annoying popups
 

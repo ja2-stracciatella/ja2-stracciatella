@@ -224,7 +224,7 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 			}
 			DOOR* const d = FindDoorInfoAtGridNo(base.sGridNo);
 			if (!d || !DoTrapCheckOnStartingMenu(s, *d))
-				InitDoorOpenMenu(&s, TRUE);
+				InitDoorOpenMenu(&s, d, true);
 		}
 		else
 		{ // Easily close door
@@ -245,7 +245,7 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 				}
 				if (!DoTrapCheckOnStartingMenu(s, *d))
 				{
-					InitDoorOpenMenu(&s, FALSE);
+					InitDoorOpenMenu(&s, d, false);
 				}
 				else
 				{
