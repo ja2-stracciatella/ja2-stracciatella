@@ -267,13 +267,13 @@ void RenderRadarScreen()
 
 				UINT32 const line_colour =
 					/* flash selected merc */
-					s == GetSelectedMan() && gfRadarCurrentGuyFlash                 ? 0                      :
+					s == GetSelectedMan() && gfRadarCurrentGuyFlash                   ? 0                      :
 					/* on roof */
-					s->bTeam == OUR_TEAM && s->bLevel > 0                        ? FROMRGB(150, 150,   0) :
+					s->bTeam == OUR_TEAM && s->bLevel > 0                             ? FROMRGB(150, 150,   0) :
 					/* unconscious enemy */
-					s->bTeam != OUR_TEAM && s->bLife < OKLIFE                    ? FROMRGB(128, 128, 128) :
+					s->bTeam != OUR_TEAM && s->bLife < OKLIFE                         ? FROMRGB(128, 128, 128) :
 					/* hostile civilian */
-					s->bTeam == CIV_TEAM && !s->bNeutral && s->bSide != OUR_TEAM ? FROMRGB(255,   0,   0) :
+					s->bTeam == CIV_TEAM && !s->bNeutral && s->bSide != Side::FRIENDLY ? FROMRGB(255,   0,   0) :
 					gTacticalStatus.Team[s->bTeam].RadarColor;
 
 				RectangleDraw(TRUE, x, y, x + 1, y + 1, Get16BPPColor(line_colour), pDestBuf);

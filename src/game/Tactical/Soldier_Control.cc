@@ -5599,7 +5599,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 
 	// ATE: Put some logic in here to allow enemies to die quicker.....
 	// Are we an enemy?
-	if ( pSoldier->bSide != OUR_TEAM && !pSoldier->bNeutral && pSoldier->ubProfile == NO_PROFILE )
+	if ( pSoldier->bSide != Side::FRIENDLY && !pSoldier->bNeutral && pSoldier->ubProfile == NO_PROFILE )
 	{
 		// ATE: Give them a chance to fall down...
 		if ( pSoldier->bLife > 0 && pSoldier->bLife < ( OKLIFE - 1 ) )

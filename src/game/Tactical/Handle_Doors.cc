@@ -283,7 +283,7 @@ static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 				pGoon->bLife >= OKLIFE &&
 				pGoon->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
 			{
-				MakeCivHostile( pGoon, 2 );
+				MakeCivHostile( pGoon );
 				if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 				{
 					EnterCombatMode( pGoon->bTeam );

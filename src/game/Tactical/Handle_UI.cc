@@ -2129,7 +2129,7 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 			// go into turnbased for that person
 			CancelAIAction(pTargetSoldier);
 			AddToShouldBecomeHostileOrSayQuoteList(pTargetSoldier);
-			//MakeCivHostile( pTargetSoldier, 2 );
+			//MakeCivHostile( pTargetSoldier );
 			//TriggerNPCWithIHateYouQuote( pTargetSoldier->ubProfile );
 			return;
 		}
@@ -2722,7 +2722,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 				{
 
 					// Check if this guy is on the enemy team....
-					if ( !pSoldier->bNeutral && (pSoldier->bSide != OUR_TEAM ) )
+					if ( !pSoldier->bNeutral && (pSoldier->bSide != Side::FRIENDLY ) )
 					{
 						gUIActionModeChangeDueToMouseOver = TRUE;
 
@@ -5227,9 +5227,8 @@ BOOLEAN ValidQuickExchangePosition(void)
 	if (pOverSoldier != NULL)
 	{
 		//KM: Replaced this older if statement for the new one which allows exchanging with militia
-		//if ((pOverSoldier->bSide != OUR_TEAM) && pOverSoldier->bNeutral)
 		if ((pOverSoldier->bTeam != OUR_TEAM && pOverSoldier->bNeutral) ||
-			(pOverSoldier->bTeam == MILITIA_TEAM && pOverSoldier->bSide == 0))
+			(pOverSoldier->bTeam == MILITIA_TEAM && pOverSoldier->bSide == Side::FRIENDLY))
 		{
 			// hehe - don't allow animals to exchange places
 			if ( !( pOverSoldier->uiStatusFlags & ( SOLDIER_ANIMAL ) ) )

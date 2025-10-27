@@ -3066,7 +3066,7 @@ BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const 
 		ubDetectLevel = CalcTrapDetectLevel(s, FALSE);
 	}
 
-	const UINT32 fCheckFlag = (s->bSide == 0 ? MAPELEMENT_PLAYER_MINE_PRESENT : MAPELEMENT_ENEMY_MINE_PRESENT);
+	const UINT32 fCheckFlag = (s->bSide == Side::FRIENDLY ? MAPELEMENT_PLAYER_MINE_PRESENT : MAPELEMENT_ENEMY_MINE_PRESENT);
 
 	// check every tile around gridno for the presence of "nasty stuff"
 	for (UINT8 ubDirection = 0; ubDirection < 8; ++ubDirection)

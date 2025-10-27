@@ -428,7 +428,7 @@ struct SOLDIERTYPE
 	AnimationSurfaceCacheType AnimCache;
 
 	INT8 bLife; // current life (hit points or health)
-	UINT8 bSide;
+	Side bSide;
 	INT8 bNewOppCnt;
 
 	UINT16 usAniCode;

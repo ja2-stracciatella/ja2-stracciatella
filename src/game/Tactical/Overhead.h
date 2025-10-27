@@ -24,7 +24,7 @@ struct TacticalTeamType
 	UINT8        bFirstID;
 	UINT8        bLastID;
 	COLORVAL     RadarColor;
-	INT8         bSide;
+	Side         bSide;
 	INT8         bMenInSector;
 	INT8         bAwareOfOpposition;
 	INT8         bHuman;
@@ -319,7 +319,7 @@ void RemoveManFromTeam( INT8 bTeam );
 
 void RemoveSoldierFromTacticalSector(SOLDIERTYPE&);
 
-void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide );
+void MakeCivHostile(SOLDIERTYPE *pSoldier);
 
 #define REASON_NORMAL_ATTACK		1
 #define REASON_EXPLOSION		2

@@ -45,6 +45,7 @@ void PrintAllJA2Enums(std::ostream& os)
 	PrintEnum<SectorIndex>(os);
 
 	PrintEnum<Team>(os);
+	PrintEnumClass<Side, uint8_t>(os);
 	PrintEnum<CivilianGroup>(os);
 	PrintEnum<SoldierClass>(os);
 	PrintEnum<MilitiaLevel>(os);

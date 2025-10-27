@@ -244,6 +244,20 @@ enum Team
 	LAST_TEAM = CIV_TEAM
 };
 
+enum class Side : uint8_t {
+	// friendly to us
+	FRIENDLY = 0,
+	
+	// hostile to player, allied to army
+	ENEMY = 1,
+
+	// hostile to both player and army
+	HOSTILE = 2,
+
+	// not belonging to any sides (i.e. creatures)
+	NONE = 3
+};
+
 //-----------------------------------------------
 //NOTE:  The editor uses these enumerations, so please update the text as well if you modify or
 //       add new groups.  Try to abbreviate the team name as much as possible.  The text is in

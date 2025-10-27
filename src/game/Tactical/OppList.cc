@@ -573,7 +573,7 @@ void CheckHostileOrSayQuoteList( void )
 				SOLDIERTYPE* const pSoldier = gShouldBecomeHostileOrSayQuote[ubLoop];
 				if ( pSoldier->bNeutral )
 				{
-					MakeCivHostile( pSoldier, 2 );
+					MakeCivHostile( pSoldier );
 					// make civ group, if any, hostile
 					if ( pSoldier->bTeam == CIV_TEAM && pSoldier->ubCivilianGroup != NON_CIV_GROUP && gTacticalStatus.fCivGroupHostile[ pSoldier->ubCivilianGroup ] == CIV_GROUP_WILL_BECOME_HOSTILE )
 					{
@@ -1227,7 +1227,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 {
 	SLOGD("MANLOOKSFOROTHERTEAMS ID {}({}) team {} side {}",
-		pSoldier->ubID, pSoldier->name, pSoldier->bTeam, pSoldier->bSide);
+		pSoldier->ubID, pSoldier->name, pSoldier->bTeam, static_cast<UINT8>(pSoldier->bSide));
 
 	// one soldier (pSoldier) looks for every soldier on another team (pOpponent)
 	FOR_EACH_MERC(i)
@@ -1681,7 +1681,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 					// Check to see if we are looking at Maria or unauthorized personnel in the brothel
 					if (opponent.ubProfile == MARIA)
 					{
-						MakeCivHostile(&s, 2);
+						MakeCivHostile(&s);
 						if (!(gTacticalStatus.uiFlags & INCOMBAT))
 						{
 							EnterCombatMode(s.bTeam);
@@ -1695,7 +1695,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 						if (IN_BROTHEL_GUARD_ROOM(room))
 						{
 							// Unauthorized
-							MakeCivHostile(&s, 2);
+							MakeCivHostile(&s);
 							if (!(gTacticalStatus.uiFlags & INCOMBAT))
 							{
 								EnterCombatMode(s.bTeam);
@@ -1711,7 +1711,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 					if (uiTime < 365 || 1320 < uiTime)
 					{
 						// get off our farm!
-						MakeCivHostile(&s, 2);
+						MakeCivHostile(&s);
 						if (!(gTacticalStatus.uiFlags & INCOMBAT))
 						{
 							EnterCombatMode(s.bTeam);
@@ -1954,7 +1954,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 		pOpponent->bVisible = 0;
 	}
 		SLOGD("OTHERTEAMSLOOKFORMAN ID {}({}) team {} side {}",
-			pOpponent->ubID, pOpponent->name, pOpponent->bTeam, pOpponent->bSide);
+			pOpponent->ubID, pOpponent->name, pOpponent->bTeam, static_cast<UINT8>(pOpponent->bSide));
 
 	// all soldiers not on oppPtr's team now look for him
 	FOR_EACH_MERC(i)
@@ -2520,7 +2520,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 		// NEW: Apr. 21 '96: must allow ALL non-humans to get radioed about
 		if ((pSoldier->bSide == pOpponent->bSide) && (pOpponent->uiStatusFlags & SOLDIER_PC))
 		{
-			SLOGD("RS: same side {}", pSoldier->bSide);
+			SLOGD("RS: same side {}", static_cast<UINT8>(pSoldier->bSide));
 			continue; // skip to the next merc
 		}
 
@@ -2702,7 +2702,7 @@ void DebugSoldierPage1()
 
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ID:",   s->ubID);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "TEAM:", s->bTeam);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "SIDE:", s->bSide);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "SIDE:", static_cast<UINT8>(s->bSide));
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y +=  h, "STATUS FLAGS:");
 		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{x}", s->uiStatusFlags));
@@ -3625,7 +3625,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 				{
 					case OUR_TEAM:
 						// if the listener is militia and still on our side, ignore noise from us
-						if ( pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == 0 )
+						if ( pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == Side::FRIENDLY )
 						{
 							continue;
 						}
@@ -3646,7 +3646,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 					case MILITIA_TEAM:
 						// if the noisemaker is militia and still on our side, ignore
 						// noise if we're listening
-						if (pSoldier->bTeam == OUR_TEAM && noise_maker->bSide == 0)
+						if (pSoldier->bTeam == OUR_TEAM && noise_maker->bSide == Side::FRIENDLY)
 						{
 							continue;
 						}
@@ -3671,7 +3671,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 			else
 			{
 				// screen out allied militia from hearing us
-				if (noise_maker == NULL && pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == 0)
+				if (noise_maker == NULL && pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == Side::FRIENDLY)
 				{
 					continue;
 				}
