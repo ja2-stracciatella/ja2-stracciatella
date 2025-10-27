@@ -222,7 +222,6 @@
 
 
 static cache_key_t const guiMainTradeScreenImage{ INTERFACEDIR "/tradescreen.sti" };
-static SGPVSurface* guiTacticalImage; // snapshot of the tactical screen, used for redraws around the shop keeper interface
 
 static BOOLEAN gfSKIScreenEntry = TRUE;
 static BOOLEAN gfSKIScreenExit  = FALSE;
@@ -544,9 +543,6 @@ static void EnterShopKeeperInterface(void)
 	// make sure current merc is close enough and eligible to talk to the shopkeeper.
 	AssertMsg(CanMercInteractWithSelectedShopkeeper(GetSelectedMan()), "Selected merc can't interact with shopkeeper.  Send save AM-1");
 
-	// Create a video surface to blt the visible parts of tactical screen
-	guiTacticalImage = AddVideoSurface( SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH );
-
 	//Clear out all the save background rects
 	EmptyBackgroundRects( );
 
@@ -784,7 +780,6 @@ static void ExitShopKeeperInterface(void)
 	//Delete the main shopkeep background
 	RemoveVObject(guiMainTradeScreenImage);
 	RemoveVObject(guiItemCrossOut);
-	DeleteVideoSurface( guiTacticalImage );
 
 	ShutUpShopKeeper();
 
@@ -1009,7 +1004,7 @@ static void RenderShopKeeperInterface(void)
 		const SGPBox
 			SrcRect = {	0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
-		BltVideoSurface( guiTacticalImage, FRAME_BUFFER, 0, 0, &SrcRect );
+		BltVideoSurface( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, &SrcRect );
 
 		gfRenderScreenOnNextLoop = FALSE;
 	}
@@ -1058,7 +1053,7 @@ static void RestoreTacticalBackGround(void)
 		};
 
 	for( const SGPBox &curRect : redrawRects ) {
-		BltVideoSurface( FRAME_BUFFER, guiTacticalImage, curRect.x, curRect.y, &curRect );
+		BltVideoSurface( FRAME_BUFFER, guiEXTRABUFFER, curRect.x, curRect.y, &curRect );
 	}
 
 	InvalidateScreen();
