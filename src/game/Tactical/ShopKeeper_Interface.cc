@@ -1021,7 +1021,7 @@ static void RenderShopKeeperInterface(void)
 	{
 	//	BlitBufferToBuffer(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
-		for( const auto &curRect : GetTacticalViewRects()) {
+		for( const SGPBox &curRect : GetTacticalViewRects()) {
 			BltVideoSurface( guiEXTRABUFFER, FRAME_BUFFER, curRect.x, curRect.y, &curRect );
 		}
 
