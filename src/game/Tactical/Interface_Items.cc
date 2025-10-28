@@ -1435,7 +1435,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 					}
 				}
 
-				gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
+				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 				return( TRUE );
 			}
 		}
@@ -1450,7 +1450,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 			{
 				pTestObject = &(pSoldier->inv[ bInvPos ]);
 				gpHighLightedItemObject = NULL;
-				gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
+				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 			}
 		}
 	}
