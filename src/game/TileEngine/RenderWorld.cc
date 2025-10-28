@@ -1906,6 +1906,8 @@ static void RenderDynamicWorld(void)
 
 	SaveBackgroundRects();
 
+	RenderTiles( TILES_OBSCURED, RENDER_STATIC_STRUCTS );
+
 	RenderTiles(TILES_NONE,
 		RENDER_DYNAMIC_OBJECTS,
 		RENDER_DYNAMIC_SHADOWS,
