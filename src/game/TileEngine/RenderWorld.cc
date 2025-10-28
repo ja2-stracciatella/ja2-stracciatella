@@ -1906,6 +1906,7 @@ static void RenderDynamicWorld(void)
 
 	SaveBackgroundRects();
 
+	// Fixes obscured item highlight issues. Omitting RENDER_STATIC_ONROOF for now as it seems redundant ?
 	RenderTiles( TILES_OBSCURED, RENDER_STATIC_STRUCTS );
 
 	RenderTiles(TILES_NONE,
