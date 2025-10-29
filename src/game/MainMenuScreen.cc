@@ -77,6 +77,27 @@ static void RenderGameVersion(void);
 static void RenderCopyright(void);
 
 
+static void CaptureButtonAreaBackground() {
+	SGPBox
+		buttonArea = {
+			std::numeric_limits<UINT16>().max(), std::numeric_limits<UINT16>().max(),
+			0, 0
+		};
+
+	for( const auto &curButton : iMenuButtons ) {
+		buttonArea.x = std::min( buttonArea.x, static_cast<UINT16>( curButton->Area.RegionTopLeftX ));
+		buttonArea.y = std::min( buttonArea.y, static_cast<UINT16>( curButton->Area.RegionTopLeftY ));
+		buttonArea.w = std::max( buttonArea.w, static_cast<UINT16>( curButton->Area.RegionBottomRightX ));
+		buttonArea.h = std::max( buttonArea.h, static_cast<UINT16>( curButton->Area.RegionBottomRightY ));
+	}
+
+	buttonArea.w -= buttonArea.x;
+	buttonArea.h -= buttonArea.y;
+
+	BltVideoSurface( guiEXTRABUFFER, FRAME_BUFFER, buttonArea.x, buttonArea.y, &buttonArea );
+}
+
+
 ScreenID MainMenuScreenHandle(void)
 {
 	if (guiSplashStartTime + INTRO_SPLASH_DURATION > GetJA2Clock())
@@ -124,8 +145,22 @@ ScreenID MainMenuScreenHandle(void)
 		RenderMainMenu();
 		RenderGameVersion();
 		RenderCopyright();
+		CaptureButtonAreaBackground();
 
 		fInitialRender = FALSE;
+	}
+
+	// check for button changes and redraw backgrounds as needed
+	for( const auto &curButton : iMenuButtons ) {
+		if(( curButton->uiFlags ^ curButton->uiOldFlags ) & ( BUTTON_CLICKED_ON | BUTTON_ENABLED )) {
+			const SGPBox
+				buttonRect = {
+					static_cast<UINT16>( curButton->X()), static_cast<UINT16>( curButton->Y()),
+					static_cast<UINT16>( curButton->W()), static_cast<UINT16>( curButton->H())
+				};
+
+			BltVideoSurface( FRAME_BUFFER, guiEXTRABUFFER, buttonRect.x, buttonRect.y, &buttonRect );
+		}
 	}
 
 	RenderButtons();
