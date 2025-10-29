@@ -98,6 +98,21 @@ static void CaptureButtonAreaBackground() {
 }
 
 
+static void RedrawActiveButtonBackgrounds() {
+	for( const auto &curButton : iMenuButtons ) {
+		if(( curButton->uiFlags ^ curButton->uiOldFlags ) & ( BUTTON_CLICKED_ON | BUTTON_ENABLED )) {
+			const SGPBox
+				buttonRect = {
+					static_cast<UINT16>( curButton->X()), static_cast<UINT16>( curButton->Y()),
+					static_cast<UINT16>( curButton->W()), static_cast<UINT16>( curButton->H())
+				};
+
+			BltVideoSurface( FRAME_BUFFER, guiEXTRABUFFER, buttonRect.x, buttonRect.y, &buttonRect );
+		}
+	}
+}
+
+
 ScreenID MainMenuScreenHandle(void)
 {
 	if (guiSplashStartTime + INTRO_SPLASH_DURATION > GetJA2Clock())
@@ -150,18 +165,7 @@ ScreenID MainMenuScreenHandle(void)
 		fInitialRender = FALSE;
 	}
 
-	// check for button changes and redraw backgrounds as needed
-	for( const auto &curButton : iMenuButtons ) {
-		if(( curButton->uiFlags ^ curButton->uiOldFlags ) & ( BUTTON_CLICKED_ON | BUTTON_ENABLED )) {
-			const SGPBox
-				buttonRect = {
-					static_cast<UINT16>( curButton->X()), static_cast<UINT16>( curButton->Y()),
-					static_cast<UINT16>( curButton->W()), static_cast<UINT16>( curButton->H())
-				};
-
-			BltVideoSurface( FRAME_BUFFER, guiEXTRABUFFER, buttonRect.x, buttonRect.y, &buttonRect );
-		}
-	}
+	RedrawActiveButtonBackgrounds();
 
 	RenderButtons();
 
