@@ -1282,59 +1282,36 @@ static void DrawMouseText(void)
 	INT16 sY;
 
 	gsMouseSizeYModifier = 0;
+	SetFontDestBuffer(MOUSE_BUFFER);
+	SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
+	HCenterVCenterAlign const alignment{ gsCurMouseWidth, gsCurMouseHeight };
 
 	if (!gzLocation.empty())
 	{
-		// Set dest for gprintf to be different
-		SetFontDestBuffer(MOUSE_BUFFER);
-
-		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzLocation, TINYFONT1, &sX, &sY);
-		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		MPrint(sX, sY + 12, gzLocation); // Below cursor
-		// reset
-		SetFontDestBuffer(FRAME_BUFFER);
+		MPrint(0, 12, gzLocation, alignment); // Below cursor
 	}
 
 	if (!gzIntTileLocation.empty())
 	{
-		// Set dest for gprintf to be different
-		SetFontDestBuffer(MOUSE_BUFFER);
-
-		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzIntTileLocation, TINYFONT1, &sX, &sY);
-		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		MPrint(sX, sY + 6, gzIntTileLocation);
-		// reset
-		SetFontDestBuffer(FRAME_BUFFER);
+		MPrint(0, 6, gzIntTileLocation, alignment);
 	}
 
 	if (!gzIntTileLocation2.empty())
 	{
-		// Set dest for gprintf to be different
-		SetFontDestBuffer(MOUSE_BUFFER);
-
-		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzIntTileLocation2, TINYFONT1, &sX, &sY);
-		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		MPrint(sX, sY - 2, gzIntTileLocation2);
-		// reset
-		SetFontDestBuffer(FRAME_BUFFER);
+		MPrint(0, -2, gzIntTileLocation2, alignment);
 	}
 
 	if (!gzHitChance.empty())
 	{
-		// Set dest for gprintf to be different
-		SetFontDestBuffer(MOUSE_BUFFER);
-		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzHitChance, TINYFONT1, &sX, &sY);
-		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		if(gzLocation.empty())
-			MPrint(sX, sY + 12, gzHitChance); // Below cursor
+		if (gzLocation.empty())
+		{
+			MPrint(0, 12, gzHitChance, alignment); // Below cursor
+		}
 		else
 		{
-			MPrint(sX, sY + 20, gzHitChance); // Below hit location text
+			MPrint(0, 20, gzHitChance, alignment); // Below hit location text
 			gsMouseSizeYModifier = 8 + GetFontHeight(TINYFONT1);
 		}
-
-		// reset
-		SetFontDestBuffer(FRAME_BUFFER);
 	}
 
 	//if (gTacticalStatus.uiFlags & INCOMBAT)
@@ -1372,9 +1349,6 @@ static void DrawMouseText(void)
 				fHoldInvalid = FALSE;
 			}
 
-			// Set dest for gprintf to be different
-			SetFontDestBuffer(MOUSE_BUFFER);
-
 			ST::string pStr = ST::format("{}", gsCurrentActionPoints);
 
 			if (gfUIDisplayActionPointsCenter)
@@ -1385,8 +1359,6 @@ static void DrawMouseText(void)
 			{
 				FindFontCenterCoordinates(gUIDisplayActionPointsOffX, gUIDisplayActionPointsOffY, 1, 1, pStr, TINYFONT1, &sX, &sY);
 			}
-
-			SetFont(TINYFONT1);
 
 			if (fShow)
 			{
@@ -1408,30 +1380,10 @@ static void DrawMouseText(void)
 			MPrint(sX, sY, pStr);
 
 			SetFontShadow(DEFAULT_SHADOW);
-
-			// reset
-			SetFontDestBuffer(FRAME_BUFFER);
 		}
 	}
 
-#if 0
-	if (gpItemPointer != NULL && gpItemPointer->ubNumberOfObjects > 1)
-	{
-		if (!(gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA))
-		{
-			SetFontDestBuffer(MOUSE_BUFFER);
-
-			ST::string pStr = ST::format("x{}", gpItemPointer->ubNumberOfObjects);
-
-			FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY);
-
-			SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-			MPrint(sX + 10, sY - 10, pStr);
-
-			SetFontDestBuffer(FRAME_BUFFER);
-		}
-	}
-#endif
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 
