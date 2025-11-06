@@ -1409,6 +1409,9 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 			case USE_CROWBAR_ICON:
 				revealedMods = GetModifiersForLockForceOpen(soldier, door, idx == USE_CROWBAR_ICON);
 				break;
+			case EXPLOSIVE_DOOR_ICON:
+				revealedMods = GetModifiersForLockBlowUp(soldier);
+				break;
 		}
 	}
 	

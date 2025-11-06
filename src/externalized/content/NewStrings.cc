@@ -577,3 +577,47 @@ const ST::string GetModifiersForLockPicking(SOLDIERTYPE* const s, DOOR* const d)
 	result += GetModifiersForSkillAttempts(skillCheckInf);
 	return result;
 }
+
+const ST::string GetModifiersForLockBlowUp(SOLDIERTYPE* const s)
+{
+	SKILLCHECKINFO skillCheckInf{};
+	TOOLINFO requiredTool{};
+
+	skillCheckInf.is30PctMinRequired = false;
+	skillCheckInf.isSufficientlyAttempted = true;
+	requiredTool.name = SHAPED_CHARGE;
+	GetToolModifier(requiredTool, s);
+
+	int32_t explMod = EffectiveExplosive(s) * 7;
+	int32_t wisdMod = EffectiveWisdom(s) * 2;
+	int32_t expLvlMod = EffectiveExpLevel(s) * 10;
+	int32_t chance = (explMod + wisdMod + expLvlMod) / 10;
+	int32_t skewedUpChance = (chance + 100 * (chance / 25)) / (chance / 25 + 1);
+	float const skewnessFactor = static_cast<float>(skewedUpChance) / static_cast<float>(chance);
+	explMod = explMod * skewnessFactor / 10;
+	wisdMod = wisdMod * skewnessFactor / 10;
+	expLvlMod = expLvlMod * skewnessFactor / 10;
+
+	int32_t const fatigueMod = -GetSkillCheckPenaltyForFatigue(s, skewedUpChance);
+	skewedUpChance += fatigueMod;
+	int32_t const moraleMod = GetMoraleModifier(s);
+	skewedUpChance += moraleMod;
+
+	ST::string result;
+	result = st_format_printf("\n" + segmentHeaderStrings[HEADER_CHANCE], GetChanceOfSuccessComment(skillCheckInf, requiredTool, skewedUpChance));
+	result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+	result += "\n" + tab + segmentHeaderStrings[HEADER_BONUSES];
+	result += st_format_printf("\n" + tab + tab + effectiveStatStrings[ATTR_EXPLOSIVES], ColorCodeModifier("{+d}%", explMod));
+	result += st_format_printf("\n" + tab + tab + effectiveStatStrings[ATTR_WISDOM], ColorCodeModifier("{+d}%", wisdMod));
+	result += st_format_printf("\n" + tab + tab + effectiveStatStrings[ATTR_EXPLEVEL], ColorCodeModifier("{+d}%", expLvlMod));
+	if (moraleMod >= 0) {
+		result += st_format_printf("\n" + tab + tab + vitalSignStrings[VITAL_MORALE], ColorCodeModifier("{+d}%", moraleMod));
+	}
+	result += "\n" + tab + segmentHeaderStrings[HEADER_PENALTIES];
+	if (moraleMod < 0) {
+		result += st_format_printf("\n" + tab + tab + vitalSignStrings[VITAL_MORALE], ColorCodeModifier("{d}%", moraleMod));
+	}
+	result += st_format_printf("\n" + tab + tab + vitalSignStrings[VITAL_FATIGUE], ColorCodeModifier("{d}%", fatigueMod));
+
+	return result;
+}
