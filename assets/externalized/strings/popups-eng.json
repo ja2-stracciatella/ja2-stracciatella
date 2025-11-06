@@ -71,7 +71,8 @@
     "vitalSignStrings": [
         "Fatigue: %s",
         "In Shock: %s",
-        "Severe bleeding: %s"
+        "Severe bleeding: %s",
+        "Morale: %s"
     ],
     "rangeStrings": [
         "%s to %s",
