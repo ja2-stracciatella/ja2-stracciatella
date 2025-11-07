@@ -1033,7 +1033,7 @@ void SetDoorString(INT16 const sGridNo)
 		if (d != NULL)
 		{
 			ST::string state;
-			if (d->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED)
+			if (d->bPerceivedTrapped == DOOR_PROVED_TRAPPED)
 			{
 				state = TacticalStr[DOOR_TRAPPED_MOUSE_DESCRIPTION];
 			}

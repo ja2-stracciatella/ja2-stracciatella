@@ -59,8 +59,7 @@
         "~N~/~A",
         "~u~n~u~s~a~b~l~e",
         "~i~m~p~o~s~s~i~b~l~e",
-        "^u^n^t^r^a^p^p^e^d",
-        "~t~r~a~p~p~e~d"
+        "untrapped"
     ],
     "lockStrings": [
         "Lock Difficulty: %s",
@@ -71,7 +70,7 @@
     "vitalSignStrings": [
         "Fatigue: %s",
         "In Shock: %s",
-        "Severe bleeding: %s",
+        "Severe Bleeding: %s",
         "Morale: %s"
     ],
     "rangeStrings": [

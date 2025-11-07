@@ -472,7 +472,7 @@ BOOLEAN ExamineDoorForTraps( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	}
 	else
 	{
-		if (pDoor->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED)
+		if (pDoor->bPerceivedTrapped == DOOR_PROVED_TRAPPED)
 		{
 			return( TRUE );
 		}
@@ -485,7 +485,7 @@ BOOLEAN ExamineDoorForTraps( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			}
 			else
 			{
-				pDoor->bPerceivedTrapped = DOOR_PERCEIVED_TRAPPED;
+				pDoor->bPerceivedTrapped = DOOR_PROVED_TRAPPED;
 				return( TRUE );
 			}
 		}
@@ -782,11 +782,11 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 
 	if (pDoor->ubTrapID != NO_TRAP)
 	{
-		pDoor->bPerceivedTrapped = DOOR_PERCEIVED_TRAPPED;
+		pDoor->bPerceivedTrapped = DOOR_PROVED_TRAPPED;
 	}
 	else
 	{
-		pDoor->bPerceivedTrapped = DOOR_PERCEIVED_UNTRAPPED;
+		pDoor->bPerceivedTrapped = DOOR_PROVED_UNTRAPPED;
 	}
 
 }

@@ -76,7 +76,6 @@ enum
 	STR_STATUS_UNUSABLE,
 	STR_STATUS_IMPOSSIBLE,
 	STR_STATUS_UNTRAPPED,
-	STR_STATUS_TRAPPED,
 };
 
 enum
@@ -146,7 +145,6 @@ struct SKILLCHECKINFO
 	ST::string attemptsNeeded{};
 	ST::string attemptsFromWisdom{};
 	bool isMechSkillRequiredAndZero{}, isExplSkillRequiredAndZero{}, isMedSkillRequiredAndZero{};
-	bool isChanceRevealed{};
 	bool is30PctMinRequired{ true }; // some skill checks have a 30 percent minimum for the success chance, some don't
 };
 
@@ -274,7 +272,6 @@ static const ST::string GetChanceOfSuccessComment(SKILLCHECKINFO& inf, TOOLINFO&
 
 	if (!isImpossible) {
 		if (inf.isSufficientlyAttempted) {
-			inf.isChanceRevealed = true;
 			if (inf.is30PctMinRequired && chance > 0 && chance < 30) {
 				chanceColored = ST::format("{d}%", chance);
 				comments += commentStrings[COMMENT_EFFECTIVELY_ZERO];
@@ -338,19 +335,13 @@ const ST::string GetModifiersForLockExam(SOLDIERTYPE* const s, DOOR* const d)
 	}
 
 	CompareSkillAttempts(skillCheckInf, s, d->ubTrapID == EXPLOSION ? DISARM_TRAP_CHECK : DISARM_ELECTRONIC_TRAP_CHECK);
-	ST::string trapPerception, trapLvlColored;
+	ST::string const trapLvlColored = skillCheckInf.isSufficientlyAttempted ? ColorCodeModifier("{d}", d->ubTrapLevel, false) : statusStrings[STR_STATUS_HIDDEN];
+	
+	ST::string result;
 	if (d->bPerceivedTrapped == DOOR_PERCEIVED_UNKNOWN) {
-		trapPerception = statusStrings[STR_STATUS_HIDDEN];
+		result = st_format_printf("\n" + trapStrings[TRAP_PERCEPTION], statusStrings[STR_STATUS_HIDDEN]);
 	} else if (d->bPerceivedTrapped == DOOR_PERCEIVED_UNTRAPPED) {
-		trapPerception = statusStrings[STR_STATUS_UNTRAPPED];
-	} else if (d->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED) {
-		trapPerception = statusStrings[STR_STATUS_TRAPPED];
-	}
-	trapLvlColored = skillCheckInf.isSufficientlyAttempted ? ColorCodeModifier("{d}", d->ubTrapLevel, false) : statusStrings[STR_STATUS_HIDDEN];
-
-	ST::string result = st_format_printf("\n" + trapStrings[TRAP_PERCEPTION], trapPerception);
-	if (d->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED) {
-		result += st_format_printf("\n" + TacticalStr[DOOR_LOCK_DESCRIPTION_STR], GetTrapName(*d)); // "The lock has a silent alarm."
+		result = st_format_printf("\n" + trapStrings[TRAP_PERCEPTION], statusStrings[STR_STATUS_UNTRAPPED]);
 	}
 
 	result += "\n" + demarcationStrings[DIVIDER];
@@ -413,7 +404,7 @@ const ST::string GetModifiersForLockUntrap(SOLDIERTYPE* const s, DOOR* const d)
 
 	int32_t chance = dextMod + expLvlMod - wisdMod;
 
-	bool const isPerceivedTrapped = d->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED;
+	bool const isPerceivedTrapped = d->bPerceivedTrapped == DOOR_PROVED_TRAPPED;
 	bool const isTrapExplosive = d->ubTrapID == EXPLOSION;
 	ST::string electrTypeAffirmation;
 	if (isTrapExplosive) {
@@ -496,7 +487,6 @@ const ST::string GetModifiersForLockForceOpen(SOLDIERTYPE* const s, DOOR* const 
 		GetToolModifier(requiredTool, s);
 		fatigueMod = GetSkillCheckPenaltyForFatigue(s, strnMod + requiredTool.modifier);
 	} else {
-		CompareSkillAttempts(skillCheckInf, s, SMASH_DOOR_CHECK);
 		fatigueMod = GetSkillCheckPenaltyForFatigue(s, strnMod);
 	}
 
@@ -565,7 +555,7 @@ const ST::string GetModifiersForLockPicking(SOLDIERTYPE* const s, DOOR* const d)
 	result += st_format_printf("\n" + tab + tab + effectiveStatStrings[ATTR_EXPLEVEL], ColorCodeModifier("{+d}%", expLvlMod - dextMod));
 	result += st_format_printf("\n" + tab + tab + skillPossessionStrings[LOCKPICKING], lockTraitInf.possession, lockTraitInf.coloredModifier);
 	result += "\n" + tab + segmentHeaderStrings[HEADER_PENALTIES];
-	ST::string const lockDifficulty = skillCheckInf.isChanceRevealed ? ColorCodeModifier("{d}%", lockDiffMod - fatigueMod) : statusStrings[STR_STATUS_HIDDEN];
+	ST::string const lockDifficulty = skillCheckInf.isSufficientlyAttempted ? ColorCodeModifier("{d}%", lockDiffMod - fatigueMod) : statusStrings[STR_STATUS_HIDDEN];
 	result += st_format_printf("\n" + tab + tab + lockStrings[LOCK_DIFFICULTY], lockDifficulty);
 	result += st_format_printf("\n" + tab + tab + effectiveStatStrings[ATTR_WISDOM], ColorCodeModifier("{d}%", wisdMod - mechMod));
 	result += st_format_printf("\n" + tab + tab + effectiveStatStrings[ATTR_DEXTERITY], ColorCodeModifier("{d}%", dextMod - wisdMod));

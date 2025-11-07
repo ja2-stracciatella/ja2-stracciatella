@@ -3,7 +3,7 @@
         "%s取下%s",
         "在此区域还有其他人...",
         "新兵不能到那儿。",
-        "\nCan't be done diagonally",
+        "Can't be done diagonally.",
 
         "__last_one"
 ]

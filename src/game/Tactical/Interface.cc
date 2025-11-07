@@ -1390,24 +1390,24 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnDoorMenuCallback);
 	iActionIcons[idx] = btn;
-	ST::string diagWarning{}, revealedMods{};
+	ST::string warnings{}, revealedMods{};
 	SOLDIERTYPE* const soldier = gOpenDoorMenu.pSoldier;
+	DOOR* const          pDoor = gOpenDoorMenu.pDoor;
 
 	if (!gOpenDoorMenu.fClosingDoor && gamepolicy(informative_popups)) {
-		DOOR* const door = gOpenDoorMenu.pDoor;
 		switch (idx) {
 			case LOCKPICK_DOOR_ICON:
-				revealedMods = GetModifiersForLockPicking(soldier, door);
+				revealedMods = GetModifiersForLockPicking(soldier, pDoor);
 				break;
 			case EXAMINE_DOOR_ICON:
-				revealedMods = GetModifiersForLockExam(soldier, door);
+				revealedMods = GetModifiersForLockExam(soldier, pDoor);
 				break;
 			case UNTRAP_DOOR_ICON:
-				revealedMods = GetModifiersForLockUntrap(soldier, door);
+				revealedMods = GetModifiersForLockUntrap(soldier, pDoor);
 				break;
 			case BOOT_DOOR_ICON:
 			case USE_CROWBAR_ICON:
-				revealedMods = GetModifiersForLockForceOpen(soldier, door, idx == USE_CROWBAR_ICON);
+				revealedMods = GetModifiersForLockForceOpen(soldier, pDoor, idx == USE_CROWBAR_ICON);
 				break;
 			case EXPLOSIVE_DOOR_ICON:
 				revealedMods = GetModifiersForLockBlowUp(soldier);
@@ -1415,15 +1415,27 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 		}
 	}
 	
+	if (idx == EXAMINE_DOOR_ICON) {
+		if (pDoor->bPerceivedTrapped == DOOR_PROVED_TRAPPED) {
+			warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_DESCRIPTION_STR], GetTrapName(*pDoor));
+			disable = true;
+		} else if (pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED) {
+			warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_UNTRAPPED_STR], GetTrapName(*pDoor));
+			disable = true;
+		}
+	}
+	if (idx == UNTRAP_DOOR_ICON) {
+		disable = pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED;
+	}
 	if (soldier->bDesiredDirection & 1 && idx != OPEN_DOOR_ICON && idx != CANCEL_ICON) {
-		diagWarning = *(GCM->getNewString(NS_DIAGONALITY_WARNING));
+		warnings += "\n" + *(GCM->getNewString(NS_DIAGONALITY_WARNING));
 		DisableButton(btn);
 	}
 	if (ap == 0 || !(gTacticalStatus.uiFlags & INCOMBAT)) {
-		btn->SetFastHelpText(help+diagWarning+revealedMods);
+		btn->SetFastHelpText(help+warnings+revealedMods);
 	} else {
 		ST::string zDisp = ST::format("{} ( {} )", help, ap);
-		btn->SetFastHelpText(zDisp+diagWarning+revealedMods);
+		btn->SetFastHelpText(zDisp+warnings+revealedMods);
 	}
 	if (disable || (ap != 0 && !EnoughPoints(soldier, ap, bp, false))) {
 		DisableButton(btn);
@@ -1469,10 +1481,13 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx, dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0,
 			pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON]);
+
 	MakeButtonDoor(BOOT_DOOR_ICON, BOOT_DOOR_IMAGES, dx, dy + 40, AP_BOOT_DOOR, BP_BOOT_DOOR, d0,
 			pTacticalPopupButtonStrings[BOOT_DOOR_ICON]);
+
 	MakeButtonDoor(UNTRAP_DOOR_ICON, UNTRAP_DOOR_ICON, dx + 20, dy + 40, AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, d0,
 			pTacticalPopupButtonStrings[UNTRAP_DOOR_ICON]);
+
 	MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE,
 			pTacticalPopupButtonStrings[CANCEL_ICON]);
 
