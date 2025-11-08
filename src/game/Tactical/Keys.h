@@ -180,7 +180,7 @@ void HandleDoorTrap(SOLDIERTYPE&, DOOR const&);
 
 
 // Updates the perceived value to the user of the state of the door
-void UpdateDoorPerceivedValue( DOOR *pDoor );
+void UpdateDoorPerceivedValue( DOOR *pDoor, int action );
 
 
 //Saves the Door Table array to the temp file

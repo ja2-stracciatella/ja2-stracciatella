@@ -769,26 +769,37 @@ void TrashDoorTable()
 	DoorTable.clear();
 }
 
-void UpdateDoorPerceivedValue( DOOR *pDoor )
+void UpdateDoorPerceivedValue( DOOR *pDoor, int action )
 {
-	if ( pDoor->fLocked )
-	{
+	if ( pDoor->fLocked ) {
 		pDoor->bPerceivedLocked = DOOR_PERCEIVED_LOCKED;
-	}
-	else if ( !pDoor->fLocked )
-	{
+	} else if ( !pDoor->fLocked ) {
 		pDoor->bPerceivedLocked = DOOR_PERCEIVED_UNLOCKED;
 	}
 
-	if (pDoor->ubTrapID != NO_TRAP)
-	{
+	if (action == HANDLE_DOOR_UNTRAP) {
+		if (pDoor->ubTrapID == NO_TRAP) {
+			pDoor->bPerceivedTrapped = DOOR_PROVED_UNTRAPPED;
+		} else {
+			if (pDoor->ubTrapID == SILENT_ALARM) {
+				if (pDoor->bPerceivedTrapped != DOOR_PROVED_TRAPPED) {
+					pDoor->bPerceivedTrapped = DOOR_PERCEIVED_UNTRAPPED;
+				}
+			} else {
+				pDoor->bPerceivedTrapped = DOOR_PROVED_TRAPPED;
+			}
+		}
+	} else if (action == HANDLE_DOOR_EXAMINE) {
 		pDoor->bPerceivedTrapped = DOOR_PROVED_TRAPPED;
+	} else {
+		if (pDoor->ubTrapID == SILENT_ALARM || pDoor->ubTrapID == NO_TRAP) {
+			if (pDoor->bPerceivedTrapped != DOOR_PROVED_TRAPPED) {
+				pDoor->bPerceivedTrapped = DOOR_PERCEIVED_UNTRAPPED;
+			}
+		} else {
+			pDoor->bPerceivedTrapped = DOOR_PROVED_TRAPPED;
+		}
 	}
-	else
-	{
-		pDoor->bPerceivedTrapped = DOOR_PROVED_UNTRAPPED;
-	}
-
 }
 
 
