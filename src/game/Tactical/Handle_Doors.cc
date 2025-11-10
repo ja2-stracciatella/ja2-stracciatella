@@ -182,9 +182,10 @@ static bool DoTrapCheckOnStartingMenu(SOLDIERTYPE& s, DOOR& d)
 	INT8 const detect_level = CalcTrapDetectLevel(&s, FALSE);
 	if (detect_level < d.ubTrapLevel) return false;
 
+	ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[DOOR_LOCK_DESCRIPTION_STR], GetTrapName(d)));
 	// say quote, update status
 	TacticalCharacterDialogue(&s, QUOTE_BOOBYTRAP_ITEM);
-	UpdateDoorPerceivedValue(&d);
+	UpdateDoorPerceivedValue(&d, HANDLE_DOOR_EXAMINE);
 	return true;
 }
 
@@ -382,7 +383,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								pDoor->ubTrapLevel = 0;
 								pDoor->ubTrapID = NO_TRAP;
 							}
-							UpdateDoorPerceivedValue( pDoor );
+							UpdateDoorPerceivedValue( pDoor, pSoldier->ubDoorHandleCode );
 						}
 						else
 						{
@@ -416,7 +417,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 									pDoor->ubTrapID = NO_TRAP;
 								}
 							}
-							UpdateDoorPerceivedValue( pDoor );
+							UpdateDoorPerceivedValue( pDoor, pSoldier->ubDoorHandleCode );
 
 						}
 					}
@@ -465,7 +466,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 								fHandleDoor = TRUE;
 							}
-							UpdateDoorPerceivedValue( pDoor );
+							UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_OPEN );
 						}
 						break;
 
@@ -493,7 +494,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							}
 							else
 							{
-								UpdateDoorPerceivedValue( pDoor );
+								UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_FORCE );
 							}
 							ProcessImplicationsOfPCMessingWithDoor( pSoldier );
 						}
@@ -524,7 +525,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							}
 							else
 							{
-								UpdateDoorPerceivedValue( pDoor );
+								UpdateDoorPerceivedValue( pDoor, pDoor->ubTrapID != SILENT_ALARM);
 							}
 
 							ProcessImplicationsOfPCMessingWithDoor( pSoldier );
@@ -551,7 +552,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							}
 							else
 							{
-								UpdateDoorPerceivedValue( pDoor );
+								UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_EXPLODE);
 							}
 							ProcessImplicationsOfPCMessingWithDoor( pSoldier );
 						}
@@ -603,7 +604,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								ST::string trap_name = GetTrapName(*pDoor);
 								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name));
 
-								UpdateDoorPerceivedValue( pDoor );
+								UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_EXAMINE );
 							}
 							else
 							{
@@ -637,7 +638,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								//DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
 
 								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
-								UpdateDoorPerceivedValue( pDoor );
+								UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_UNLOCK );
 
 								fHandleDoor = TRUE;
 							}
@@ -681,7 +682,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								{
 									DoMercBattleSound(pSoldier, BATTLE_SOUND_COOL1);
 									ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
-									UpdateDoorPerceivedValue( pDoor );
+									UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_UNTRAP );
 									//fHandleDoor = TRUE;
 								}
 								else
@@ -698,7 +699,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 									}
 
 									// Update perceived lock value
-									UpdateDoorPerceivedValue( pDoor );
+									UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_UNTRAP );
 								}
 							}
 							else
@@ -732,7 +733,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							{
 								ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_HAS_BEEN_LOCKED_STR ] );
 								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
-								UpdateDoorPerceivedValue( pDoor );
+								UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_LOCK );
 							}
 							else
 							{
@@ -742,7 +743,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ DOOR_NOT_PROPER_KEY_STR ], pSoldier->name) );
 
 								// Update perceived lock value
-								UpdateDoorPerceivedValue( pDoor );
+								UpdateDoorPerceivedValue( pDoor, HANDLE_DOOR_LOCK );
 							}
 						}
 						break;
@@ -1033,7 +1034,7 @@ void SetDoorString(INT16 const sGridNo)
 		if (d != NULL)
 		{
 			ST::string state;
-			if (d->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED)
+			if (d->bPerceivedTrapped == DOOR_PROVED_TRAPPED)
 			{
 				state = TacticalStr[DOOR_TRAPPED_MOUSE_DESCRIPTION];
 			}

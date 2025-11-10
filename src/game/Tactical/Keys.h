@@ -45,8 +45,9 @@ struct LOCK
 #define DOOR_PERCEIVED_UNLOCKED	2
 #define DOOR_PERCEIVED_BROKEN		3
 
-#define DOOR_PERCEIVED_TRAPPED		1
+#define DOOR_PROVED_TRAPPED		1
 #define DOOR_PERCEIVED_UNTRAPPED	2
+#define DOOR_PROVED_UNTRAPPED		3
 
 struct DOOR
 {
@@ -179,7 +180,7 @@ void HandleDoorTrap(SOLDIERTYPE&, DOOR const&);
 
 
 // Updates the perceived value to the user of the state of the door
-void UpdateDoorPerceivedValue( DOOR *pDoor );
+void UpdateDoorPerceivedValue( DOOR *pDoor, int action );
 
 
 //Saves the Door Table array to the temp file
