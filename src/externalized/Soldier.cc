@@ -277,9 +277,9 @@ void Soldier::putDayHeadGear()
 
 void Soldier::switchHeadGear(int switchDirection)
 {
-	if (IsWearingHeadGear(*mSoldier, GASMASK))
+	if (IsWearingHeadGear(*mSoldier, GASMASK) || IsWearingHeadGear(*mSoldier, ROBOT_REMOTE_CONTROL))
 	{
-		// Gas mask is not compatible with eye gears
+		// Equipped items incompatible with eye gears
 		return;
 	}
 
