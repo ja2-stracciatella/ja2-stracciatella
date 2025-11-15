@@ -2031,7 +2031,6 @@ static void HandleModAltCheats(UINT32 const key, UIEventKind * const new_event)
 			break;
 
 		case 'g': *new_event = I_NEW_MERC;                  break;
-		case 'h': gfReportHitChances = !gfReportHitChances; break;
 		case 'i': CreateRandomItem();                       break;
 		case 'j': gfNextFireJam = TRUE;                     break;
 		case 'k': GrenadeTest(MUSTARD_GRENADE, -20, 20);    break;
