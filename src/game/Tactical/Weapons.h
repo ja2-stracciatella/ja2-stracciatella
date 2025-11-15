@@ -3,7 +3,6 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
-#include "Sound_Control.h"
 
 struct CalibreModel;
 
@@ -178,6 +177,5 @@ UINT16 GunRange(OBJECTTYPE const&);
 
 extern BOOLEAN gfNextFireJam;
 extern BOOLEAN gfNextShotKills;
-extern BOOLEAN gfReportHitChances;
 
 #endif

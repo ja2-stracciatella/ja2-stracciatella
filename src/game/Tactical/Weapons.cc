@@ -41,7 +41,6 @@
 #include "Soldier_Macros.h"
 #include "SmokeEffects.h"
 #include "Auto_Resolve.h"
-#include "Debug.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -73,7 +72,6 @@
 
 BOOLEAN gfNextFireJam      = FALSE;
 BOOLEAN gfNextShotKills    = FALSE;
-BOOLEAN gfReportHitChances = FALSE;
 
 //GLOBALS
 
