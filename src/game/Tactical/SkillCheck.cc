@@ -35,13 +35,9 @@ INT8 EffectiveWisdom(const SOLDIERTYPE* s)
 
 INT8 EffectiveAgility(const SOLDIERTYPE* s)
 {
-	INT32 iEffAgility = EffectStatForBeingDrunk(s, s->bAgility);
-	if (s->sWeightCarriedAtTurnStart > 100)
-	{
-		iEffAgility = (iEffAgility * 100) / s->sWeightCarriedAtTurnStart;
-	}
+	int32_t iEffAgility = EffectStatForBeingDrunk(s, s->bAgility);
 
-	return( (INT8) iEffAgility );
+	return s->sWeightCarriedAtTurnStart > 100 ? (iEffAgility * 100) / s->sWeightCarriedAtTurnStart : iEffAgility;
 }
 
 
@@ -65,20 +61,7 @@ INT8 EffectiveMedical(const SOLDIERTYPE* s)
 
 INT8 EffectiveLeadership(const SOLDIERTYPE* s)
 {
-	INT32 iEffLeadership;
-	INT8  bDrunkLevel;
-
-	iEffLeadership = s->bLeadership;
-
-	// if we are drunk, effect leader ship in a +ve way...
-	bDrunkLevel = GetDrunkLevel(s);
-
-	if ( bDrunkLevel == FEELING_GOOD )
-	{
-		iEffLeadership = ( iEffLeadership * 120 / 100 );
-	}
-
-	return( (INT8) iEffLeadership );
+	return GetDrunkLevel(s) == FEELING_GOOD ? s->bLeadership * 120 / 100 : s->bLeadership;
 }
 
 
@@ -123,25 +106,13 @@ INT8 EffectiveExpLevel(const SOLDIERTYPE* s)
 
 INT8 EffectiveMarksmanship(const SOLDIERTYPE* s)
 {
-	INT32	iEffMarksmanship;
-
-	iEffMarksmanship = s->bMarksmanship;
-
-	iEffMarksmanship = EffectStatForBeingDrunk(s, iEffMarksmanship);
-
-	return( (INT8) iEffMarksmanship );
+	return EffectStatForBeingDrunk(s, s->bMarksmanship);
 }
 
 
 INT8 EffectiveDexterity(const SOLDIERTYPE* s)
 {
-	INT32 iEffDexterity;
-
-	iEffDexterity = s->bDexterity;
-
-	iEffDexterity = EffectStatForBeingDrunk(s, iEffDexterity);
-
-	return( (INT8) iEffDexterity );
+	return EffectStatForBeingDrunk(s, s->bDexterity);
 }
 
 
