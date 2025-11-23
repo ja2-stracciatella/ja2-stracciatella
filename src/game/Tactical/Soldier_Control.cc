@@ -6568,9 +6568,7 @@ void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier )
 	else
 	{
 		UnSetEngagedInConvFromPCAction( pSoldier );
-
-		delete pSoldier->pTempObject;
-		pSoldier->pTempObject = nullptr;
+		ClearTempObject(pSoldier);
 	}
 }
 
@@ -7297,8 +7295,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	{
 		// Place it back into inv....
 		AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
-		delete pSoldier->pTempObject;
-		pSoldier->pTempObject        = NULL;
+		ClearTempObject(pSoldier);
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 	}
 
@@ -7935,12 +7932,7 @@ static void SoldierBleed(SOLDIERTYPE* const s, const BOOLEAN fBandagedBleed)
 
 void SoldierCollapse( SOLDIERTYPE *pSoldier )
 {
-	BOOLEAN fMerc = FALSE;
-
-	if ( pSoldier->ubBodyType <= REGFEMALE )
-	{
-		fMerc = TRUE;
-	}
+	bool fMerc{ pSoldier->ubBodyType <= REGFEMALE };
 
 	// If we are an animal, etc, don't do anything....
 	switch( pSoldier->ubBodyType )
@@ -7964,6 +7956,14 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 
 	// CC has requested - handle sight here...
 	HandleSight(*pSoldier, SIGHT_LOOK);
+
+	// Handle edge case where we're collapsing while trying to
+	// give an item, issue #2265.
+	if (pSoldier->ubPendingAction == MERC_GIVEITEM)
+	{
+		ClearTempObject(pSoldier);
+		UnSetEngagedInConvFromPCAction(pSoldier);
+	}
 
 	// Check height
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
@@ -8804,8 +8804,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 				{
 					// Place it back into inv....
 					AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
-					delete pSoldier->pTempObject;
-					pSoldier->pTempObject        = NULL;
+					ClearTempObject(pSoldier);
 					pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
 					// Decrement attack counter...
@@ -8987,6 +8986,12 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE* const s)
 	n.ubSumLights         = 5;
 	n.ubMaxLights         = 5;
 	n.ubNaturalShadeLevel = 5;
+}
+
+
+void ClearTempObject(SOLDIERTYPE * const pSoldier)
+{
+	delete std::exchange(pSoldier->pTempObject, nullptr);
 }
 
 

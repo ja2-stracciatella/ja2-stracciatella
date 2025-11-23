@@ -21,4 +21,6 @@ void MercStealFromMerc(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pTarget);
 
 void HandleCrowShadowVisibility(SOLDIERTYPE&);
 
+void ClearTempObject(SOLDIERTYPE *);
+
 #endif
