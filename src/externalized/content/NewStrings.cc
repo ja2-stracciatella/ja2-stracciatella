@@ -1,3 +1,4 @@
+#include "Drugs_And_Alcohol.h"
 #include "Items.h"
 #include "Morale.h"
 #include "NewStrings.h"
@@ -11,6 +12,7 @@
 #define segmentHeaderStrings                                (g_popupsRes->segmentHeaderStrings)
 #define effectiveStatStrings                                (g_popupsRes->effectiveStatStrings)
 #define skillPossessionStrings                              (g_popupsRes->skillPossessionStrings)
+#define personalityTraitStrings                             (g_popupsRes->personalityTraitStrings)
 #define toolModifierStrings                                 (g_popupsRes->toolModifierStrings)
 #define statusStrings                                       (g_popupsRes->statusStrings)
 #define lockStrings                                         (g_popupsRes->lockStrings)
@@ -20,6 +22,9 @@
 #define attemptStrings                                      (g_popupsRes->attemptStrings)
 #define commentStrings                                      (g_popupsRes->commentStrings)
 #define possessiveStrings                                   (g_popupsRes->possessiveStrings)
+#define drugStrings                                         (g_popupsRes->drugStrings)
+#define inventoryStrings                                    (g_popupsRes->inventoryStrings)
+#define locationStrings                                     (g_popupsRes->locationStrings)
 
 #define tab demarcationStrings[SINGLE_TAB]
 
@@ -31,21 +36,6 @@ enum
 	STR_BOOL_RED_YES,
 	STR_BOOL_NONE_TRUE,
 	STR_BOOL_ONE_TRUE,
-};
-
-enum
-{
-	EFF_HEALTH,
-	ATTR_AGILITY,
-	ATTR_DEXTERITY,
-	ATTR_STRENGTH,
-	ATTR_LEADERSHIP,
-	ATTR_WISDOM,
-	ATTR_EXPLEVEL,
-	ATTR_MARKSMANSHIP,
-	ATTR_MECHANICAL,
-	ATTR_EXPLOSIVES,
-	ATTR_MEDICAL,
 };
 
 enum
@@ -88,10 +78,12 @@ enum
 
 enum
 {
+	VITAL_HEALTH,
 	VITAL_FATIGUE,
+	VITAL_MORALE,
 	VITAL_IN_SHOCK,
 	VITAL_SEVERE_BLEEDING,
-	VITAL_MORALE
+	VITAL_FIRST_AID,
 };
 
 enum
@@ -128,7 +120,9 @@ enum
 	COMMENT_EFFECTIVELY_99,
 	COMMENT_MORE_ATTEMPTS,
 	COMMENT_TOOL_NOT_FOUND,
-	COMMENT_TOOL_UNUSABEL,
+	COMMENT_TOOL_UNUSABLE,
+	COMMENT_LESS_THAN,
+	COMMENT_MORE_THAN,
 };
 
 enum
@@ -136,6 +130,16 @@ enum
 	POSSESSIVE_HAS_NO,
 	POSSESSIVE_HAS,
 	POSSESSIVE_HAS_EXPERT,
+};
+
+enum
+{
+	INV_OVERBURDENED,
+};
+
+enum
+{
+	LOC_UNDERGROUND,
 };
 
 struct SKILLCHECKINFO
@@ -230,7 +234,7 @@ static void GetToolModifier(TOOLINFO& reqTool, SOLDIERTYPE* const soldier)
 	} else if (reqTool.mustBeUsable) {
 		if (int8_t usableToolSlot = FindUsableObj(soldier, reqTool.name); usableToolSlot == NO_SLOT) {
 			reqTool.coloredModifier = statusStrings[STR_STATUS_UNUSABLE];
-			reqTool.chanceComment = commentStrings[COMMENT_TOOL_UNUSABEL];
+			reqTool.chanceComment = commentStrings[COMMENT_TOOL_UNUSABLE];
 			return;
 		} else {
 			toolSlot = usableToolSlot;
@@ -608,6 +612,110 @@ const ST::string GetModifiersForLockBlowUp(SOLDIERTYPE* const s)
 		result += st_format_printf("\n" + tab + tab + vitalSignStrings[VITAL_MORALE], ColorCodeModifier("{d}%", moraleMod));
 	}
 	result += st_format_printf("\n" + tab + tab + vitalSignStrings[VITAL_FATIGUE], ColorCodeModifier("{d}%", fatigueMod));
+
+	return result;
+}
+
+const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attributes const attrName)
+{
+	ST::string result{}, comment{}, possession, location;
+	int32_t effAttr;
+	int32_t alcoMod{}, weightMod{}, healthMod, firstAidMod, phobiaMod{};
+	int32_t firstAid, drunkLevel;
+	auto getAlcoMod = [&s, attrName, &effAttr, &alcoMod, &result](int32_t attrVal) {
+		effAttr = attrVal;
+		alcoMod = EffectStatForBeingDrunk(s, effAttr) - effAttr;
+		effAttr += alcoMod;
+		result += st_format_printf(effectiveStatStrings[attrName], ColorCodeModifier("{d}", effAttr, attrVal <= effAttr));
+		result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+		result += st_format_printf("\n" + tab + drugStrings[DRUG_TYPE_ALCOHOL], ColorCodeModifier("{+d}", alcoMod));
+	};
+	switch (attrName) {
+		case ATTR_AGILITY:
+			getAlcoMod(s->bAgility);
+			if (s->sWeightCarriedAtTurnStart > 100) {
+				weightMod = (effAttr * 100) / s->sWeightCarriedAtTurnStart - effAttr;
+				effAttr += weightMod;
+			}
+	
+			result += st_format_printf("\n" + tab + inventoryStrings[INV_OVERBURDENED], ColorCodeModifier("{+d}", weightMod));
+			break;
+		case ATTR_DEXTERITY:
+			getAlcoMod(s->bDexterity);
+			break;
+		case ATTR_STRENGTH:
+			effAttr = s->bStrength / 2;
+			healthMod = effAttr * s->bLife / s->bLifeMax;
+			firstAid = s->bLifeMax - s->bLife - s->bBleeding;
+			firstAidMod = effAttr * (s->bLife + firstAid / 2) / s->bLifeMax;
+			effAttr += firstAidMod;
+			if (effAttr < 2) {
+				effAttr = 2;
+				comment = st_format_printf(". " + commentStrings[COMMENT_LESS_THAN], 2);
+			}
+
+			result += st_format_printf(effectiveStatStrings[ATTR_STRENGTH] + comment, ColorCodeModifier("{d}", effAttr, s->bStrength <= effAttr));
+			result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+			result += st_format_printf("\n" + tab + vitalSignStrings[VITAL_HEALTH], ColorCodeModifier("{+d}", (s->bStrength / 2 + healthMod) - s->bStrength));
+			result += st_format_printf("\n" + tab + vitalSignStrings[VITAL_FIRST_AID], ColorCodeModifier("{+d}", firstAidMod - healthMod));
+			break;
+		case ATTR_LEADERSHIP:
+			effAttr = s->bLeadership;
+			if (GetDrunkLevel(s) == FEELING_GOOD) {
+				effAttr = effAttr * 120 / 100;
+				alcoMod = effAttr - s->bLeadership;
+			}
+
+			result += st_format_printf(effectiveStatStrings[ATTR_LEADERSHIP], ColorCodeModifier("{d}", effAttr, s->bLeadership <= effAttr));
+			result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+			result += st_format_printf("\n" + tab + drugStrings[DRUG_TYPE_ALCOHOL], ColorCodeModifier("{+d}", alcoMod));
+			break;
+		case ATTR_WISDOM:
+			getAlcoMod(s->bWisdom);
+			break;
+		case ATTR_EXPLEVEL:
+			drunkLevel = GetDrunkLevel(s);
+			if (drunkLevel == BORDERLINE)
+				alcoMod = -1;
+			else if (drunkLevel == DRUNK)
+				alcoMod = -2;
+
+			if (gMercProfiles[s->ubProfile].bPersonalityTrait == CLAUSTROPHOBIC) {
+				possession = possessiveStrings[POSSESSIVE_HAS];
+				if (s->bActive && s->bInSector && s->sSector.z > 0) {
+					phobiaMod = -1;
+				}
+			} else {
+				possession = possessiveStrings[POSSESSIVE_HAS_NO];
+			}
+
+			location = s->sSector.z > 0 ? booleanStrings[STR_BOOL_RED_YES] : booleanStrings[STR_BOOL_GREEN_NO];
+
+			effAttr = s->bExpLevel + alcoMod + phobiaMod;
+			if (effAttr < 1) {
+				effAttr = 1;
+				comment = st_format_printf(". " + commentStrings[COMMENT_LESS_THAN], 1);
+			}
+
+			result += st_format_printf(effectiveStatStrings[ATTR_EXPLEVEL] + comment, ColorCodeModifier("{d}", effAttr, s->bExpLevel <= effAttr));
+			result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+			result += st_format_printf("\n" + tab + drugStrings[DRUG_TYPE_ALCOHOL], ColorCodeModifier("{+d}", alcoMod));
+			result += st_format_printf("\n" + tab + personalityTraitStrings[CLAUSTROPHOBIC], possession, ColorCodeModifier("{+d}", phobiaMod));
+			result += st_format_printf("\n" + tab + tab + locationStrings[LOC_UNDERGROUND], location);
+			break;
+		case ATTR_MARKSMANSHIP:
+			getAlcoMod(s->bMarksmanship);
+			break;
+		case ATTR_EXPLOSIVES:
+			getAlcoMod(s->bExplosive);
+			break;
+		case ATTR_MECHANICAL:
+			getAlcoMod(s->bMechanical);
+			break;
+		case ATTR_MEDICAL:
+			getAlcoMod(s->bMedical);
+			break;
+	}
 
 	return result;
 }

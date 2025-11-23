@@ -18,8 +18,7 @@
         "Penalties:",
         "Detection Level vs. Trap Level:"
     ],
-    "effectiveStatStrings": [ // enumerated equally to str_stat_list
-        "",
+    "effectiveStatStrings": [
         "Effective Agility: %s",
         "Effective Dexterity: %s",
         "Effective Strength: %s",
@@ -27,8 +26,8 @@
         "Effective Wisdom: %s",
         "Effective Exp. Level: %s",
         "Effective Marksmanship: %s",
-        "Effective Mechanical: %s",
         "Effective Explosives: %s",
+        "Effective Mechanical: %s",
         "Effective Medical: %s"
     ],
     "skillPossessionStrings": [ // enumerated equally to gzMercSkillText
@@ -50,6 +49,16 @@
         "%s Camouflage Skill: %s",
         ""
     ],
+    "personalityTraitStrings": [
+        "Doesn't have any personality traits",
+        "%s Heat Intolerance: %s",
+        "%s Neurotic Personality: %s",
+        "%s Claustrophobia: %s",
+        "%s Swimming Ability: %s",
+        "%s Insectophobia: %s",
+        "%s Forgetfulness: %s",
+        "%s Psychotic Personality: %s"
+    ],
     "toolModifierStrings": [
         "Locksmith Kit Status: %s",
         "Crowbar: %s"
@@ -68,10 +77,12 @@
         "Smash Difficulty: %s"
     ],
     "vitalSignStrings": [
+        "Health: %s",
         "Fatigue: %s",
+        "Morale: %s",
         "In Shock: %s",
         "Severe Bleeding: %s",
-        "Morale: %s"
+        "First Aid: %s"
     ],
     "rangeStrings": [
         "%s to %s",
@@ -100,11 +111,25 @@
         ". Effectively ^9^9^%.",
         ". Make more attempts to determine the odds.",
         "No applicable tool.",
-        "The tool is unusable."
+        "The tool is unusable.",
+        "Can't be less than %s.",
+        "Can't be more than %s."
     ],
     "possessiveStrings": [
         "Doesn't Have",
         "Has",
         "Has Expert"
+    ],
+    "drugStrings": [
+        "Adrenaline booster: %s",
+        "Alcohol: %s",
+        "",
+        "Regeneration booster: %s"
+    ],
+    "inventoryStrings": [
+        "Overburdened: %s"
+    ],
+    "locationStrings": [
+        "Underground: %s"
     ]
 }

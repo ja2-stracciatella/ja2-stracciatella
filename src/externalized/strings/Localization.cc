@@ -287,6 +287,7 @@ L10n_popups::L10n_popups(SGPFile * const popupsFile)
 	GetArray(booleanStrings);
 	GetArray(segmentHeaderStrings);
 	GetArray(skillPossessionStrings);
+	GetArray(personalityTraitStrings);
 	GetArray(effectiveStatStrings);
 	GetArray(toolModifierStrings);
 	GetArray(statusStrings);
@@ -297,6 +298,9 @@ L10n_popups::L10n_popups(SGPFile * const popupsFile)
 	GetArray(attemptStrings);
 	GetArray(commentStrings);
 	GetArray(possessiveStrings);
+	GetArray(drugStrings);
+	GetArray(inventoryStrings);
+	GetArray(locationStrings);
 }
 
 #undef GetString

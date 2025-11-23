@@ -39,6 +39,7 @@
 #include "Message.h"
 #include "MessageBoxScreen.h"
 #include "MouseSystem.h"
+#include "NewStrings.h"
 #include "Object_Cache.h"
 #include "OppList.h"
 #include "Options_Screen.h"
@@ -319,6 +320,7 @@ static MOUSE_REGION gSM_SELMERCPanelRegion;
 static MOUSE_REGION gSM_SELMERCBarsRegion;
 MOUSE_REGION        gSM_SELMERCMoneyRegion;
 static MOUSE_REGION gSM_SELMERCEnemyIndicatorRegion;
+static MOUSE_REGION gSM_SELMERCStatsRegion[NUM_ATTRIBUTES];
 static MOUSE_REGION gTEAM_PanelRegion;
 
 static std::unique_ptr<SGPVSurface> CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex);
@@ -843,6 +845,7 @@ static void SMInvMoveCamoCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void SelectedMercButtonCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
 static void SelectedMercButtonCallbackSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
 static void SelectedMercButtonMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason);
+static void SelectedMercPopupMoveCallback(MOUSE_REGION* pRegion, uint32_t iReason);
 static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 
 
@@ -946,6 +949,31 @@ void InitializeSMPanel()
 	MOUSE_CALLBACK smInvClickCallback = MouseCallbackPrimarySecondary(SMInvClickCallbackPrimary, SMInvClickCallbackSecondary, MSYS_NO_CALLBACK, true);
 	InitInvSlotInterface(g_ui.m_invSlotPositionTac, &g_ui.m_invCamoRegion, SMInvMoveCallback, smInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
+
+	if (gamepolicy(informative_popups)) {
+		//Define regions for the informative popups displaying effective attribute values
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_AGILITY], dx + SM_AGI_X - 10, dy + SM_AGI_Y, dx + SM_AGI_X + SM_STATS_WIDTH, dy + SM_AGI_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_AGILITY], 0, ATTR_AGILITY);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_DEXTERITY], dx + SM_DEX_X - 10, dy + SM_DEX_Y, dx + SM_DEX_X + SM_STATS_WIDTH, dy + SM_DEX_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_DEXTERITY], 0, ATTR_DEXTERITY);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_STRENGTH], dx + SM_STR_X - 10, dy + SM_STR_Y, dx + SM_STR_X + SM_STATS_WIDTH, dy + SM_STR_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_STRENGTH], 0, ATTR_STRENGTH);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_LEADERSHIP], dx + SM_CHAR_X - 10, dy + SM_CHAR_Y, dx + SM_CHAR_X + SM_STATS_WIDTH, dy + SM_CHAR_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_LEADERSHIP], 0, ATTR_LEADERSHIP);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_WISDOM], dx + SM_WIS_X - 10, dy + SM_WIS_Y, dx + SM_WIS_X + SM_STATS_WIDTH, dy + SM_WIS_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_WISDOM], 0, ATTR_WISDOM);
+		//column 2
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_EXPLEVEL], dx + SM_EXPLVL_X - 10, dy + SM_EXPLVL_Y, dx + SM_EXPLVL_X + SM_STATS_WIDTH, dy + SM_EXPLVL_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_EXPLEVEL], 0, ATTR_EXPLEVEL);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_MARKSMANSHIP], dx + SM_MRKM_X - 10, dy + SM_MRKM_Y, dx + SM_MRKM_X + SM_STATS_WIDTH, dy + SM_MRKM_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_MARKSMANSHIP], 0, ATTR_MARKSMANSHIP);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_EXPLOSIVES], dx + SM_EXPL_X - 10, dy + SM_EXPL_Y, dx + SM_EXPL_X + SM_STATS_WIDTH, dy + SM_EXPL_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_EXPLOSIVES], 0, ATTR_EXPLOSIVES);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_MECHANICAL], dx + SM_MECH_X - 10, dy + SM_MECH_Y, dx + SM_MECH_X + SM_STATS_WIDTH, dy + SM_MECH_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_MECHANICAL], 0, ATTR_MECHANICAL);
+		MSYS_DefineRegion(&gSM_SELMERCStatsRegion[ATTR_MEDICAL], dx + SM_MED_X - 10, dy + SM_MED_Y, dx + SM_MED_X + SM_STATS_WIDTH, dy + SM_MED_Y + 10, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, SelectedMercPopupMoveCallback, MSYS_NO_CALLBACK);
+		MSYS_SetRegionUserData(&gSM_SELMERCStatsRegion[ATTR_MEDICAL], 0, ATTR_MEDICAL);
+	}
 
 	// this is important! It will disable buttons like SM_MAP_SCREEN_BUTTON when they're supposed to be
 	// disabled - the previous disabled state is lost everytime panel is reinitialized, because all the
@@ -1115,6 +1143,11 @@ void ShutdownSMPanel()
 	MSYS_RemoveRegion(&gSM_SELMERCBarsRegion);
 	MSYS_RemoveRegion(&gSM_SELMERCMoneyRegion);
 	MSYS_RemoveRegion(&gSM_SELMERCEnemyIndicatorRegion);
+	if (gamepolicy(informative_popups)) {
+		for (auto& i : gSM_SELMERCStatsRegion) {
+			MSYS_RemoveRegion(&i);
+		}
+	}
 
 	HandleMouseOverSoldierFaceForContMove(gpSMCurrentMerc, FALSE);
 
@@ -1920,6 +1953,16 @@ static void SelectedMercButtonMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason
 	}
 }
 
+static void SelectedMercPopupMoveCallback(MOUSE_REGION* pRegion, uint32_t iReason)
+{
+	if (gpSMCurrentMerc == nullptr)
+		return;
+
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE) {
+		Attributes attr = static_cast<Attributes>(MSYS_GetRegionUserData(pRegion, 0));
+		pRegion->SetFastHelpText(GetModifiersForEffectiveAttributes(gpSMCurrentMerc, attr));
+	}
+}
 
 static void SelectedMercButtonCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
 {
