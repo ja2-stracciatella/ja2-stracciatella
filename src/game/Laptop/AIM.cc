@@ -488,12 +488,12 @@ void InitAimMenuBar()
 	UINT16     const   y    = BOTTOM_BUTTON_START_Y;
 	const ST::string*  text = AimBottomMenuText.data();
 	LaptopMode const*  page = gCurrentAimPage;
-	FOR_EACHX(GUIButtonRef, i, guiBottomButtons, x += BOTTOM_BUTTON_START_WIDTH)
+	for (auto & b : guiBottomButtons)
 	{
-		GUIButtonRef const b = CreateIconAndTextButton(gfx, *text++, FONT10ARIAL, AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, y, MSYS_PRIORITY_HIGH, BtnAimBottomButtonsCallback);
+		b = CreateIconAndTextButton(gfx, *text++, FONT10ARIAL, AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, y, MSYS_PRIORITY_HIGH, BtnAimBottomButtonsCallback);
 		b->SetCursor(CURSOR_LAPTOP_SCREEN);
 		b->SetUserData(*page++);
-		*i = b;
+		x += BOTTOM_BUTTON_START_WIDTH;
 	}
 }
 
