@@ -7,6 +7,7 @@
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Event_Pump.h"
+#include "Soldier_Functions.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
@@ -1432,8 +1433,7 @@ static void UseLauncher(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo
 	const THROW_PARAMS* const t = pSoldier->pThrowParams;
 	CreatePhysicalObject(pSoldier->pTempObject, t->dLifeSpan, t->dX, t->dY, t->dZ, t->dForceX, t->dForceY, t->dForceZ, pSoldier, t->ubActionCode, t->target);
 
-	delete pSoldier->pTempObject;
-	pSoldier->pTempObject = NULL;
+	ClearTempObject(pSoldier);
 
 	delete pSoldier->pThrowParams;
 	pSoldier->pThrowParams = NULL;

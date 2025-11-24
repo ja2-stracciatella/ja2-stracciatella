@@ -9,6 +9,7 @@
 #include "HImage.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Object_Cache.h"
+#include "Soldier_Functions.h"
 #include "Soldier_Macros.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
@@ -3398,8 +3399,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					if ( sActionGridNo != -1 && gbItemPointerSrcSlot != NO_SLOT )
 					{
 							// Make a temp object for ammo...
-							gpItemPointerSoldier->pTempObject  = new OBJECTTYPE{};
-							*gpItemPointerSoldier->pTempObject = TempObject;
+							SetTempObject(gpItemPointerSoldier, TempObject);
 
 							// Remove from soldier's inv...
 							RemoveObjs( &( gpItemPointerSoldier->inv[ gbItemPointerSrcSlot ] ), 1 );
@@ -3492,8 +3492,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				switch ( gAnimControl[ gpItemPointerSoldier->usAnimState ].ubHeight )
 				{
 					case ANIM_STAND:
-						gpItemPointerSoldier->pTempObject = new OBJECTTYPE{};
-						*gpItemPointerSoldier->pTempObject = *gpItemPointer;
+						SetTempObject(gpItemPointerSoldier, *gpItemPointer);
 						gpItemPointerSoldier->sPendingActionData2 = usMapPos;
 
 						// Turn towards.....gridno
