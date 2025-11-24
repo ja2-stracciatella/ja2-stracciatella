@@ -53,11 +53,11 @@ void EnterAimLinks()
 	UINT16 const  x    = STD_SCREEN_X + AIM_LINK_LINK_OFFSET_X;
 	UINT16        y    = AIM_LINK_BOBBY_LINK_Y;
 	UINT8  const* page = gubLinkPages;
-	FOR_EACHX(MOUSE_REGION, i, gSelectedLinkRegion, y += AIM_LINK_LINK_OFFSET_Y)
+	for (auto & r : gSelectedLinkRegion)
 	{
-		MOUSE_REGION& r = *i;
 		MSYS_DefineRegion(&r, x, y, x + AIM_LINK_LINK_WIDTH, y + AIM_LINK_LINK_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectLinkRegionCallBack);
 		MSYS_SetRegionUserData(&r, 0, *page++);
+		y += AIM_LINK_LINK_OFFSET_Y;
 	}
 
 	RenderAimLinks();

@@ -126,12 +126,12 @@ static void InitEditorRegions()
 	UINT16       x   = 261;
 	UINT16 const y   = EDITOR_TASKBAR_POS_Y + 9;
 	INT32        idx =   0;
-	FOR_EACHX(MOUSE_REGION, i, TerrainTileButtonRegion, x += 42)
+	for (auto & r : TerrainTileButtonRegion)
 	{
-		MOUSE_REGION& r = *i;
 		MSYS_DefineRegion(&r, x, y, x + 42, y + 22, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, TerrainTileButtonRegionCallback);
 		MSYS_SetRegionUserData(&r, 0, idx++);
 		r.Disable();
+		x += 42;
 	}
 	gfShowTerrainTileButtons = FALSE;
 

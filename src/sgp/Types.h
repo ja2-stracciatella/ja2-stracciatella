@@ -23,8 +23,7 @@
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))
 #define endof(a) ((a) + lengthof(a))
 
-#define FOR_EACHX(type, iter, array, x) for (type* iter = (array); iter != endof((array)); (x), ++iter)
-#define FOR_EACH(type, iter, array)     FOR_EACHX(type, iter, (array), (void)0)
+#define FOR_EACH(type, iter, array) for (type* iter = (array); iter != endof((array)); ++iter)
 
 typedef int32_t     INT;
 typedef int32_t     INT32;

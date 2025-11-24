@@ -349,12 +349,12 @@ void InitBobbyMenuBar()
 	UINT16     const   y    = BOBBYR_CATALOGUE_BUTTON_Y;
 	const ST::string* text = &BobbyRText[BOBBYR_GUNS_GUNS];
 	LaptopMode const*  mode = ubCatalogueButtonValues;
-	FOR_EACHX(GUIButtonRef, i, guiBobbyRPageMenu, x += BOBBYR_CATALOGUE_BUTTON_GAP)
+	for (auto & b : guiBobbyRPageMenu)
 	{
 		// Catalogue buttons
-		GUIButtonRef const b = MakeButton(gfx, *text++, x, y, BtnBobbyRPageMenuCallback);
+		b = MakeButton(gfx, *text++, x, y, BtnBobbyRPageMenuCallback);
 		b->SetUserData(*mode++);
-		*i = b;
+		x += BOBBYR_CATALOGUE_BUTTON_GAP;
 	}
 
 	// Order Form button

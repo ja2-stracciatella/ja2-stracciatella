@@ -536,9 +536,9 @@ static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, UINT32
 static void InitCreditEyeBlinking(void)
 {
 	const UINT32 now = GetJA2Clock();
-	FOR_EACH(CreditFace, f, gCreditFaces)
+	for (auto & f : gCreditFaces)
 	{
-		f->uiLastBlinkTime = now + Random(f->sBlinkFreq * 2);
+		f.uiLastBlinkTime = now + Random(f.sBlinkFreq * 2);
 	}
 }
 
@@ -546,9 +546,8 @@ static void InitCreditEyeBlinking(void)
 static void HandleCreditEyeBlinking()
 {
 	UINT16 gfx = 0;
-	FOR_EACHX(CreditFace, i, gCreditFaces, gfx += 3)
+	for (auto & f : gCreditFaces)
 	{
-		CreditFace&  f   = *i;
 		UINT32 const now = GetJA2Clock();
 		if (now - f.uiLastBlinkTime > f.sBlinkFreq)
 		{
@@ -566,6 +565,8 @@ static void HandleCreditEyeBlinking()
 
 			f.uiEyesClosedTime = 0;
 		}
+
+		gfx += 3;
 	}
 }
 
