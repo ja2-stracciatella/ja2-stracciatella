@@ -5,6 +5,7 @@
 #include "LoadSaveRealObject.h"
 #include "Physics.h"
 #include "Overhead_Types.h"
+#include "Soldier_Functions.h"
 #include "Structure.h"
 #include "TileDat.h"
 #include "WCheck.h"
@@ -1793,13 +1794,10 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 	vForce.y = dForce * vDirNormal.y;
 	vForce.z = dForce * vDirNormal.z;
 
+	SetTempObject(pSoldier, *pItem);
 
 	// Allocate Throw Parameters
 	pSoldier->pThrowParams = new THROW_PARAMS{};
-
-	pSoldier->pTempObject  = new OBJECTTYPE{};
-
-	*pSoldier->pTempObject = *pItem;
 	pSoldier->pThrowParams->dX = (float)sSrcX;
 	pSoldier->pThrowParams->dY = (float)sSrcY;
 

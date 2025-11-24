@@ -8989,6 +8989,12 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE* const s)
 }
 
 
+void SetTempObject(SOLDIERTYPE * const pSoldier, OBJECTTYPE const& objectToCopy)
+{
+	pSoldier->pTempObject = new OBJECTTYPE{ objectToCopy };
+}
+
+
 void ClearTempObject(SOLDIERTYPE * const pSoldier)
 {
 	delete std::exchange(pSoldier->pTempObject, nullptr);
