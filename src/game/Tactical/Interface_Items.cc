@@ -13,6 +13,7 @@
 #include "Soldier_Macros.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
+#include "Types.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "Overhead.h"
@@ -1696,11 +1697,15 @@ BOOLEAN InItemDescriptionBox( )
 
 void CycleItemDescriptionItem( )
 {
+	// Don't try to cycle through keys in the keyring, because they do not
+	// have a dedicated slot where we could place the new item.
+	if (InKeyRingPopup()) return;
+
 	// Delete old box...
 	DeleteItemDescriptionBox( );
 
 	// Make new item....
-	const auto oldItemIndex = gpItemDescSoldier->inv[HANDPOS].usItem;
+	auto const oldItemIndex = gpItemDescObject->usItem;
 	auto items = GCM->getItems();
 	auto it = std::find_if(items.begin(), items.end(), [oldItemIndex](const ItemModel* item) -> bool {
 		return item->getItemIndex() == oldItemIndex;
@@ -1718,7 +1723,7 @@ void CycleItemDescriptionItem( )
 	else
 	{
 		// cycle forwards
-		it = it++;
+		++it;
 		if (it == items.end()) {
 			it = items.begin();
 		}
@@ -1726,9 +1731,10 @@ void CycleItemDescriptionItem( )
 
 	const auto newItemIndex = (*it)->getItemIndex();
 
-	CreateItem(newItemIndex, 100, &gpItemDescSoldier->inv[HANDPOS]);
+	CreateItem(newItemIndex, 100, gpItemDescObject);
 
-	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), INTERFACE_START_X + 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
+	InternalInitItemDescriptionBox(gpItemDescObject, gsInvDescX, gsInvDescY,
+		gubItemDescStatusIndex, gpItemDescSoldier);
 }
 
 
