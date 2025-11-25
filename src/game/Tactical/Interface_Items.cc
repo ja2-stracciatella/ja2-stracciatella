@@ -1740,12 +1740,15 @@ void InitItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, I
 
 void InitKeyItemDescriptionBox(SOLDIERTYPE* const pSoldier, const UINT8 ubPosition, const INT16 sX, const INT16 sY)
 {
-	OBJECTTYPE *pObject;
+	// To be able to display the key we must have create a temporary OBJECTTYPE
+	// from the keyring. Using a static variable is easier and safer than
+	// allocating a new object on the heap.
+	static OBJECTTYPE tempKeyObject;
 
-	AllocateObject( &pObject );
-	CreateKeyObject( pObject, pSoldier->pKeyRing[ ubPosition ].ubNumber ,pSoldier->pKeyRing[ ubPosition ].ubKeyID );
+	auto const keyInRing = pSoldier->pKeyRing[ubPosition];
+	CreateKeyObject(&tempKeyObject, keyInRing.ubNumber, keyInRing.ubKeyID);
 
-	InternalInitItemDescriptionBox(pObject, sX, sY, 0, pSoldier);
+	InternalInitItemDescriptionBox(&tempKeyObject, sX, sY, 0, pSoldier);
 }
 
 
@@ -2764,15 +2767,6 @@ void DeleteItemDescriptionBox( )
 		fMapPanelDirty = TRUE;
 		fTeamPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
-	}
-
-	if (InKeyRingPopup())
-	{
-		DeleteKeyObject(gpItemDescObject);
-		gpItemDescObject = NULL;
-		fShowDescriptionFlag = FALSE;
-		fInterfacePanelDirty = DIRTYLEVEL2;
-		return;
 	}
 
 	fShowDescriptionFlag = FALSE;
@@ -4019,8 +4013,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		}
 	}
 
-	OBJECTTYPE o;
-	o = OBJECTTYPE{};
+	OBJECTTYPE o{};
 	o.bStatus[0] = 100;
 
 	ETRLEObject const& pTrav = guiItemPopupBoxes->SubregionProperties(0);
