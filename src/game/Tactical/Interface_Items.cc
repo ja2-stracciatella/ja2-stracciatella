@@ -13,6 +13,7 @@
 #include "Soldier_Macros.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
+#include "Types.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "Overhead.h"
@@ -1696,11 +1697,15 @@ BOOLEAN InItemDescriptionBox( )
 
 void CycleItemDescriptionItem( )
 {
+	// Don't try to cycle through keys in the keyring, because they do not
+	// have a dedicated slot where we could place the new item.
+	if (InKeyRingPopup()) return;
+
 	// Delete old box...
 	DeleteItemDescriptionBox( );
 
 	// Make new item....
-	const auto oldItemIndex = gpItemDescSoldier->inv[HANDPOS].usItem;
+	auto const oldItemIndex = gpItemDescObject->usItem;
 	auto items = GCM->getItems();
 	auto it = std::find_if(items.begin(), items.end(), [oldItemIndex](const ItemModel* item) -> bool {
 		return item->getItemIndex() == oldItemIndex;
@@ -1718,7 +1723,7 @@ void CycleItemDescriptionItem( )
 	else
 	{
 		// cycle forwards
-		it = it++;
+		++it;
 		if (it == items.end()) {
 			it = items.begin();
 		}
@@ -1726,9 +1731,10 @@ void CycleItemDescriptionItem( )
 
 	const auto newItemIndex = (*it)->getItemIndex();
 
-	CreateItem(newItemIndex, 100, &gpItemDescSoldier->inv[HANDPOS]);
+	CreateItem(newItemIndex, 100, gpItemDescObject);
 
-	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), INTERFACE_START_X + 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
+	InternalInitItemDescriptionBox(gpItemDescObject, gsInvDescX, gsInvDescY,
+		gubItemDescStatusIndex, gpItemDescSoldier);
 }
 
 
@@ -1740,12 +1746,15 @@ void InitItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, I
 
 void InitKeyItemDescriptionBox(SOLDIERTYPE* const pSoldier, const UINT8 ubPosition, const INT16 sX, const INT16 sY)
 {
-	OBJECTTYPE *pObject;
+	// To be able to display the key we must have create a temporary OBJECTTYPE
+	// from the keyring. Using a static variable is easier and safer than
+	// allocating a new object on the heap.
+	static OBJECTTYPE tempKeyObject;
 
-	AllocateObject( &pObject );
-	CreateKeyObject( pObject, pSoldier->pKeyRing[ ubPosition ].ubNumber ,pSoldier->pKeyRing[ ubPosition ].ubKeyID );
+	auto const keyInRing = pSoldier->pKeyRing[ubPosition];
+	CreateKeyObject(&tempKeyObject, keyInRing.ubNumber, keyInRing.ubKeyID);
 
-	InternalInitItemDescriptionBox(pObject, sX, sY, 0, pSoldier);
+	InternalInitItemDescriptionBox(&tempKeyObject, sX, sY, 0, pSoldier);
 }
 
 
@@ -2764,15 +2773,6 @@ void DeleteItemDescriptionBox( )
 		fMapPanelDirty = TRUE;
 		fTeamPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
-	}
-
-	if (InKeyRingPopup())
-	{
-		DeleteKeyObject(gpItemDescObject);
-		gpItemDescObject = NULL;
-		fShowDescriptionFlag = FALSE;
-		fInterfacePanelDirty = DIRTYLEVEL2;
-		return;
 	}
 
 	fShowDescriptionFlag = FALSE;
@@ -4019,8 +4019,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		}
 	}
 
-	OBJECTTYPE o;
-	o = OBJECTTYPE{};
+	OBJECTTYPE o{};
 	o.bStatus[0] = 100;
 
 	ETRLEObject const& pTrav = guiItemPopupBoxes->SubregionProperties(0);
