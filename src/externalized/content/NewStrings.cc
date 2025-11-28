@@ -618,10 +618,11 @@ const ST::string GetModifiersForLockBlowUp(SOLDIERTYPE* const s)
 
 const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attributes const attrName)
 {
-	ST::string result{}, comment{}, possession, location;
+	ST::string result, comment, possession, location;
 	int32_t effAttr;
 	int32_t alcoMod{}, weightMod{}, healthMod, firstAidMod, phobiaMod{};
 	int32_t firstAid, drunkLevel;
+
 	auto getAlcoMod = [&s, attrName, &effAttr, &alcoMod, &result](int32_t attrVal) {
 		effAttr = attrVal;
 		alcoMod = EffectStatForBeingDrunk(s, effAttr) - effAttr;
@@ -630,6 +631,7 @@ const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attrib
 		result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
 		result += st_format_printf("\n" + tab + drugStrings[DRUG_TYPE_ALCOHOL], ColorCodeModifier("{+d}", alcoMod));
 	};
+
 	switch (attrName) {
 		case ATTR_AGILITY:
 			getAlcoMod(s->bAgility);
@@ -651,7 +653,7 @@ const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attrib
 			effAttr += firstAidMod;
 			if (effAttr < 2) {
 				effAttr = 2;
-				comment = st_format_printf(". " + commentStrings[COMMENT_LESS_THAN], 2);
+				comment = st_format_printf(". " + commentStrings[COMMENT_LESS_THAN], effAttr);
 			}
 
 			result += st_format_printf(effectiveStatStrings[ATTR_STRENGTH] + comment, ColorCodeModifier("{d}", effAttr, s->bStrength <= effAttr));
@@ -694,7 +696,7 @@ const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attrib
 			effAttr = s->bExpLevel + alcoMod + phobiaMod;
 			if (effAttr < 1) {
 				effAttr = 1;
-				comment = st_format_printf(". " + commentStrings[COMMENT_LESS_THAN], 1);
+				comment = st_format_printf(". " + commentStrings[COMMENT_LESS_THAN], effAttr);
 			}
 
 			result += st_format_printf(effectiveStatStrings[ATTR_EXPLEVEL] + comment, ColorCodeModifier("{d}", effAttr, s->bExpLevel <= effAttr));
