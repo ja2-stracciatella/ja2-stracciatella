@@ -1394,7 +1394,7 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 	SOLDIERTYPE* const soldier = gOpenDoorMenu.pSoldier;
 	DOOR* const          pDoor = gOpenDoorMenu.pDoor;
 
-	if (!gOpenDoorMenu.fClosingDoor && gamepolicy(informative_popups)) {
+	if (!gOpenDoorMenu.fClosingDoor && gamepolicy(informative_tooltips)) {
 		switch (idx) {
 			case LOCKPICK_DOOR_ICON:
 				revealedMods = GetModifiersForLockPicking(soldier, pDoor);

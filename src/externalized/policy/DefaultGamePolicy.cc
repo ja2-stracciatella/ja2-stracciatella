@@ -38,7 +38,7 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	enemy_elite_maximum_level = gp.getOptionalInt("enemy_elite_maximum_level", 10);
 
 	gui_extras = gp.getOptionalBool("gui_extras", true);
-	informative_popups = gp.getOptionalBool("informative_popups", false);
+	informative_tooltips = gp.getOptionalBool("informative_tooltips", false);
 	extra_attachments = gp.getOptionalBool("extra_attachments");
 	skip_sleep_explanation = gp.getOptionalBool("skip_sleep_explanation");
 

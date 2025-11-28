@@ -423,9 +423,9 @@ struct L10n_t
 	STRARRAY(gzIMPSkillTraitsText);
 };
 
-struct L10n_popups
+struct L10n_tooltips
 {
-	L10n_popups(SGPFile * popupsFile);
+	L10n_tooltips(SGPFile * tooltipsFile);
 
 	STRARRAY(demarcationStrings);
 	STRARRAY(booleanStrings);
@@ -453,6 +453,6 @@ struct L10n_popups
 
 /** Current language resources. */
 inline std::unique_ptr<L10n::L10n_t const> g_langRes;
-inline std::unique_ptr<L10n::L10n_popups const> g_popupsRes;
+inline std::unique_ptr<L10n::L10n_tooltips const> g_tooltipsRes;
 
 #endif

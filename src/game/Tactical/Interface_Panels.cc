@@ -955,8 +955,8 @@ void InitializeSMPanel()
 	InitInvSlotInterface(g_ui.m_invSlotPositionTac, &g_ui.m_invCamoRegion, SMInvMoveCallback, smInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
 
-	if (gamepolicy(informative_popups))
-	{	//Define regions for the informative popups displaying effective attribute values
+	if (gamepolicy(informative_tooltips))
+	{	//Define regions for the informative tooltips displaying effective attribute values
 		MakeRegionForAttributeHelpText(ATTR_AGILITY,      dx + SM_AGI_X - 10,    dy + SM_AGI_Y,    dx + SM_AGI_X + SM_STATS_WIDTH,    dy + SM_AGI_Y + 10);
 		MakeRegionForAttributeHelpText(ATTR_DEXTERITY,    dx + SM_DEX_X - 10,    dy + SM_DEX_Y,    dx + SM_DEX_X + SM_STATS_WIDTH,    dy + SM_DEX_Y + 10);
 		MakeRegionForAttributeHelpText(ATTR_STRENGTH,     dx + SM_STR_X - 10,    dy + SM_STR_Y,    dx + SM_STR_X + SM_STATS_WIDTH,    dy + SM_STR_Y + 10);
@@ -1138,7 +1138,7 @@ void ShutdownSMPanel()
 	MSYS_RemoveRegion(&gSM_SELMERCBarsRegion);
 	MSYS_RemoveRegion(&gSM_SELMERCMoneyRegion);
 	MSYS_RemoveRegion(&gSM_SELMERCEnemyIndicatorRegion);
-	if (gamepolicy(informative_popups)) {
+	if (gamepolicy(informative_tooltips)) {
 		for (auto& i : gSM_SELMERCStatsRegion) {
 			MSYS_RemoveRegion(&i);
 		}
