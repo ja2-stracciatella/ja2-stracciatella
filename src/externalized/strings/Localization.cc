@@ -279,14 +279,15 @@ L10n_t::L10n_t(SGPFile * const translationFile)
 
 }
 
-L10n_popups::L10n_popups(SGPFile * const popupsFile)
+L10n_tooltips::L10n_tooltips(SGPFile * const tooltipsFile)
 {
-	auto const json{ JsonValue::deserialize(popupsFile->readStringToEnd()).toObject() };
+	auto const json{ JsonValue::deserialize(tooltipsFile->readStringToEnd()).toObject() };
 
 	GetArray(demarcationStrings);
 	GetArray(booleanStrings);
 	GetArray(segmentHeaderStrings);
 	GetArray(skillPossessionStrings);
+	GetArray(personalityTraitStrings);
 	GetArray(effectiveStatStrings);
 	GetArray(toolModifierStrings);
 	GetArray(statusStrings);
@@ -297,6 +298,9 @@ L10n_popups::L10n_popups(SGPFile * const popupsFile)
 	GetArray(attemptStrings);
 	GetArray(commentStrings);
 	GetArray(possessiveStrings);
+	GetArray(drugStrings);
+	GetArray(inventoryStrings);
+	GetArray(locationStrings);
 }
 
 #undef GetString

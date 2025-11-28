@@ -1002,9 +1002,9 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 		"strings/translation{}.json", L10n::GetSuffix(m_gameVersion, false)))};
 	g_langRes = std::make_unique<L10n::L10n_t>(translation.get());
 
-	std::unique_ptr<SGPFile> const popupsTranslation { openGameResForReading(ST::format(
-		"strings/popups{}.json", L10n::GetSuffix(m_gameVersion, false)))};
-	g_popupsRes = std::make_unique<L10n::L10n_popups>(popupsTranslation.get());
+	std::unique_ptr<SGPFile> const tooltipsTranslation { openGameResForReading(ST::format(
+		"strings/tooltips{}.json", L10n::GetSuffix(m_gameVersion, false)))};
+	g_tooltipsRes = std::make_unique<L10n::L10n_tooltips>(tooltipsTranslation.get());
 
 	loadMaxArmourPerClass();
 
