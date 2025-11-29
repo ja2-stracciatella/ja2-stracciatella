@@ -32,7 +32,6 @@
 #include <string_theory/string>
 
 #include <algorithm>
-#include <iterator>
 #include <vector>
 
 // the max loyalty rating for any given town
@@ -808,10 +807,6 @@ static INT32 IsTownUnderCompleteControlByEnemy(INT8 bTownId)
 
 void AdjustLoyaltyForCivsEatenByMonsters(const SGPSector& sSector, UINT8 ubHowMany)
 {
-	UINT32 uiLoyaltyChange = 0;
-	ST::string str;
-	ST::string pSectorString;
-
 	UINT8 const bTownId = GetTownIdForSector(sSector);
 
 	// if NOT in a town
@@ -821,12 +816,12 @@ void AdjustLoyaltyForCivsEatenByMonsters(const SGPSector& sSector, UINT8 ubHowMa
 	}
 
 	//Report this to player
-	pSectorString = GetSectorIDString(sSector, TRUE);
-	str = st_format_printf(gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString);
+	auto const pSectorString = GetSectorIDString(sSector, TRUE);
+	auto const str = st_format_printf(gpStrategicString[STR_DIALOG_CREATURES_KILL_CIVILIANS], ubHowMany, pSectorString);
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 
 	// use same formula as if it were a civilian "murder" in tactical!!!
-	uiLoyaltyChange = ubHowMany * BASIC_COST_FOR_CIV_MURDER * MULTIPLIER_FOR_MURDER_BY_MONSTER;
+	UINT32 const uiLoyaltyChange = ubHowMany * BASIC_COST_FOR_CIV_MURDER * MULTIPLIER_FOR_MURDER_BY_MONSTER;
 	DecrementTownLoyalty( bTownId, uiLoyaltyChange );
 }
 

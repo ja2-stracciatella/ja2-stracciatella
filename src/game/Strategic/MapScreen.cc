@@ -7568,8 +7568,9 @@ static void HandlePostAutoresolveMessages(void)
 	if( gsCiviliansEatenByMonsters >= 1 )
 	{
 		SGPSector sSector(gsEnemyGainedControlOfSectorID);
-		AdjustLoyaltyForCivsEatenByMonsters(sSector, gsCiviliansEatenByMonsters);
-		gsCiviliansEatenByMonsters = -2;
+		// We must set gsCiviliansEatenByMonsters to its new value before
+		// calling this function to avoid infinite recursion.
+		AdjustLoyaltyForCivsEatenByMonsters(sSector, std::exchange(gsCiviliansEatenByMonsters, -2));
 	}
 	else if( gsCiviliansEatenByMonsters == -2 )
 	{
