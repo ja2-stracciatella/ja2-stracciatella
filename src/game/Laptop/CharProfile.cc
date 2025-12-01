@@ -28,9 +28,6 @@
 
 #include <string_theory/string>
 
-#include <algorithm>
-#include <iterator>
-
 BOOLEAN fReDrawCharProfile = FALSE;
 BOOLEAN fButtonPendingFlag = FALSE;
 
@@ -579,7 +576,7 @@ static void DestroyIMPButtons(void)
 }
 
 
-static void BtnIMPCancelCallback(GUI_BUTTON *btn, UINT32 reason)
+static void BtnIMPCancelCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{

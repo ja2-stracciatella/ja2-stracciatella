@@ -15,7 +15,6 @@
 #include "Text.h"
 #include "UILayout.h"
 #include "Video.h"
-#include "VObject.h"
 #include "VSurface.h"
 #include <string_theory/string>
 
@@ -37,9 +36,6 @@ struct BUTTON_PICS;
 
 #define MAP_BORDER_X (STD_SCREEN_X + 261)
 #define MAP_BORDER_Y (STD_SCREEN_Y + 0)
-
-#define MAP_BORDER_CORNER_X (STD_SCREEN_X + 584)
-#define MAP_BORDER_CORNER_Y (STD_SCREEN_Y + 279)
 
 
 // mouse levels
