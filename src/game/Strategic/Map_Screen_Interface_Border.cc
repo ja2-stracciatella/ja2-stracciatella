@@ -152,27 +152,12 @@ void CreateButtonsForMapBorder(void)
 
 void DeleteMapBorderButtons( void )
 {
-	UINT8 ubCnt;
+	static_assert(std::size(giMapBorderButtonsImage) == std::size(giMapBorderButtons));
 
-	RemoveButton( giMapBorderButtons[ 0 ]);
-	RemoveButton( giMapBorderButtons[ 1 ]);
-	RemoveButton( giMapBorderButtons[ 2 ]);
-	RemoveButton( giMapBorderButtons[ 3 ]);
-	RemoveButton( giMapBorderButtons[ 4 ]);
-	RemoveButton( giMapBorderButtons[ 5 ]);
-
-	// images
-	UnloadButtonImage( giMapBorderButtonsImage[ 0 ] );
-	UnloadButtonImage( giMapBorderButtonsImage[ 1 ] );
-	UnloadButtonImage( giMapBorderButtonsImage[ 2 ] );
-	UnloadButtonImage( giMapBorderButtonsImage[ 3 ] );
-	UnloadButtonImage( giMapBorderButtonsImage[ 4 ] );
-	UnloadButtonImage( giMapBorderButtonsImage[ 5 ] );
-
-
-	for ( ubCnt = 0; ubCnt < 6; ubCnt++ )
+	for (UINT8 ubCnt = 0; ubCnt < std::size(giMapBorderButtons); ++ubCnt)
 	{
-		giMapBorderButtonsImage[ubCnt] = NULL;
+		RemoveButton(giMapBorderButtons[ubCnt]);
+		UnloadButtonImage(giMapBorderButtonsImage[ubCnt]);
 	}
 }
 
