@@ -42,7 +42,6 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <climits>
 #include <vector>
 
 // status bar colors
