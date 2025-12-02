@@ -451,7 +451,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 				(INT16)(gTalkPanel.sY + TALK_PANEL_NAME_HEIGHT + TALK_PANEL_NAME_Y), MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, TalkPanelNameRegionMoveCallback,
 				TalkPanelNameRegionClickCallback );
 
-	for (INT32 cnt = 0; cnt < 6; ++cnt)
+	for (size_t cnt = 0; cnt < std::size(ubTalkMenuApproachIDs); ++cnt)
 	{
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion(&(gTalkPanel.Regions[cnt]), (INT16)(sX), (INT16)(sY),
@@ -528,7 +528,7 @@ void DeleteTalkingMenu( )
 	MSYS_RemoveRegion( &(gTalkPanel.NameRegion));
 
 	// Delete mouse regions
-	for ( cnt = 0; cnt < 6; cnt++ )
+	for ( cnt = 0; cnt < std::size(ubTalkMenuApproachIDs); cnt++ )
 	{
 		MSYS_RemoveRegion( &(gTalkPanel.Regions[cnt]));
 	}
@@ -657,7 +657,7 @@ void RenderTalkingMenu()
 		FRAME_BUFFER->ShadowRect(x, y, x + TALK_PANEL_SHADOW_AREA_WIDTH, y + TALK_PANEL_SHADOW_AREA_HEIGHT);
 
 		// Disable mouse regions....
-		for (INT32 cnt = 0; cnt < 6; ++cnt)
+		for (size_t cnt = 0; cnt < std::size(ubTalkMenuApproachIDs); ++cnt)
 		{
 			tp->Regions[cnt].Disable();
 		}
@@ -669,7 +669,7 @@ void RenderTalkingMenu()
 	else
 	{
 		// Enable mouse regions....
-		for (INT32 cnt = 0; cnt < 6; ++cnt)
+		for (size_t cnt = 0; cnt < std::size(ubTalkMenuApproachIDs); ++cnt)
 		{
 			tp->Regions[cnt].Enable();
 		}
@@ -724,7 +724,7 @@ void RenderTalkingMenu()
 	// Create menu selections....
 	INT16 const x = tp->sX + TALK_PANEL_MENUTEXT_STARTX;
 	INT16       y = tp->sY + TALK_PANEL_MENUTEXT_STARTY;
-	for (INT32 cnt = 0; cnt < 6; cnt++)
+	for (size_t cnt = 0; cnt < std::size(ubTalkMenuApproachIDs); cnt++)
 	{
 		if (tp->bCurSelect == cnt)
 		{
@@ -769,9 +769,7 @@ void RenderTalkingMenu()
 
 static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	UINT32 uiItemPos;
-
-	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
+	uint32_t const uiItemPos = pRegion - gTalkPanel.Regions;
 
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
@@ -790,10 +788,7 @@ static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 
 static void TalkPanelClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 {
-	UINT32  uiItemPos;
-	BOOLEAN fDoConverse = TRUE;
-	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-
+	uint32_t const uiItemPos = pRegion - gTalkPanel.Regions;
 
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -851,11 +846,8 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 			}
 			else
 			{
-				if ( fDoConverse )
-				{
-					//Speak
-					Converse(gTalkPanel.ubCharNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[uiItemPos]);
-				}
+				//Speak
+				Converse(gTalkPanel.ubCharNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[uiItemPos]);
 			}
 		}
 	}
