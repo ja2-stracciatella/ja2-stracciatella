@@ -182,7 +182,7 @@ constexpr std::size_t segmentHeaderStrings_SIZE = 5;
 constexpr std::size_t skillPossessionStrings_SIZE = 17;
 constexpr std::size_t personalityTraitStrings_SIZE = 8;
 constexpr std::size_t toolModifierStrings_SIZE = 2;
-constexpr std::size_t statusStrings_SIZE = 5;
+constexpr std::size_t statusStrings_SIZE = 6;
 constexpr std::size_t lockStrings_SIZE = 4;
 constexpr std::size_t vitalSignStrings_SIZE = 6;
 constexpr std::size_t rangeStrings_SIZE = 3;
@@ -192,7 +192,8 @@ constexpr std::size_t commentStrings_SIZE = 10;
 constexpr std::size_t possessiveStrings_SIZE = 3;
 constexpr std::size_t drugStrings_SIZE = 4;
 constexpr std::size_t inventoryStrings_SIZE = 1;
-constexpr std::size_t locationStrings_SIZE = 1;
+constexpr std::size_t locationStrings_SIZE = 3;
+constexpr std::size_t dialogueStrings_SIZE = 12;
 
 #define STRARRAY(arrayName) std::array<ST::string , arrayName##_SIZE> arrayName
 
@@ -445,6 +446,7 @@ struct L10n_tooltips
 	STRARRAY(drugStrings);
 	STRARRAY(inventoryStrings);
 	STRARRAY(locationStrings);
+	STRARRAY(dialogueStrings);
 };
 
 #undef STRARRAY

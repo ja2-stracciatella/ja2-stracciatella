@@ -998,13 +998,17 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 	m_scriptRecords.resize(NUM_PROFILES);
 	loadAllScriptRecords();
 
+	auto langSuffix = L10n::GetSuffix(m_gameVersion, false);
 	std::unique_ptr<SGPFile> const translation { openGameResForReading(ST::format(
-		"strings/translation{}.json", L10n::GetSuffix(m_gameVersion, false)))};
+		"strings/translation{}.json", langSuffix))};
 	g_langRes = std::make_unique<L10n::L10n_t>(translation.get());
 
-	std::unique_ptr<SGPFile> const tooltipsTranslation { openGameResForReading(ST::format(
-		"strings/tooltips{}.json", L10n::GetSuffix(m_gameVersion, false)))};
-	g_tooltipsRes = std::make_unique<L10n::L10n_tooltips>(tooltipsTranslation.get());
+	if (this->getGamePolicy()->informative_tooltips)
+	{
+		std::unique_ptr<SGPFile> const tooltipsTranslation{ openGameResForReading(ST::format(
+			"strings/tooltips{}.json", langSuffix)) };
+		g_tooltipsRes = std::make_unique<L10n::L10n_tooltips>(tooltipsTranslation.get());
+	}
 
 	loadMaxArmourPerClass();
 
