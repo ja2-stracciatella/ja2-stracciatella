@@ -1,7 +1,7 @@
 {
     "demarcationStrings": [
         "   ", // indentation
-        "----------------------------------------------" // segment divider
+        "-----------------------------------------------------------" // segment divider
     ],
     "booleanStrings": [
         "^N^o",
@@ -65,6 +65,7 @@
     ],
     "statusStrings": [
         "|?|?|?",
+        "???",
         "~N~/~A",
         "~u~n~u~s~a~b~l~e",
         "~i~m~p~o~s~s~i~b~l~e",
@@ -130,6 +131,22 @@
         "Overburdened: %s"
     ],
     "locationStrings": [
-        "Underground: %s"
+        "Underground: %s",
+        "Town Loyalty: %s",
+        "%s's Town Attachment: %s"
+    ],
+    "dialogueStrings": [
+        "Approach Effectiveness: %s",
+        "1st Time Friendly Approach: %s",
+        "1st Time Direct Approach: %s",
+        "1st Time Threatening Approach: %s",
+        "%s's Opinion Of %s: %s",
+        "Gun Deadliness: %s",
+        "Approach Skill: %s",
+        "%s's Approach Susceptibility: %s",
+        "Price Mod From Weapon Sales Skill: %s",
+        "%s's Fast Draw vs. %s's: %s vs. %s",
+        "Leadership: %s",
+        "%s's Effective Exp. Level: %s"
     ]
 }

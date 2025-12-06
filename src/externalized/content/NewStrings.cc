@@ -1,11 +1,17 @@
+#include "NewStrings.h"
+
+#include "Cheats.h"
+#include "GameInstance.h"
 #include "Drugs_And_Alcohol.h"
 #include "Items.h"
+#include "MercProfile.h"
 #include "Morale.h"
-#include "NewStrings.h"
 #include "SkillCheck.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
+#include "Strategic_Town_Loyalty.h"
 #include "Text.h"
+#include "WeaponModels.h"
 
 #define demarcationStrings                                  (g_tooltipsRes->demarcationStrings)
 #define booleanStrings                                      (g_tooltipsRes->booleanStrings)
@@ -25,6 +31,7 @@
 #define drugStrings                                         (g_tooltipsRes->drugStrings)
 #define inventoryStrings                                    (g_tooltipsRes->inventoryStrings)
 #define locationStrings                                     (g_tooltipsRes->locationStrings)
+#define dialogueStrings                                     (g_tooltipsRes->dialogueStrings)
 
 #define tab demarcationStrings[SINGLE_TAB]
 
@@ -62,6 +69,7 @@ enum
 enum
 {
 	STR_STATUS_HIDDEN,
+	STR_STATUS_HIDDEN_PLAIN,
 	STR_STATUS_N_SLASH_A,
 	STR_STATUS_UNUSABLE,
 	STR_STATUS_IMPOSSIBLE,
@@ -140,6 +148,24 @@ enum
 enum
 {
 	LOC_UNDERGROUND,
+	LOC_TOWN_LOYALTY,
+	LOC_TOWN_ATTACHMENT,
+};
+
+enum
+{
+	DIAL_EFFECTIVENESS,
+	DIAL_FRIENDLY,
+	DIAL_DIRECT,
+	DIAL_THREATEN,
+	DIAL_OPINION,
+	DIAL_GUN_DEADLINESS,
+	DIAL_APPROACH_SKILL,
+	DIAL_SUSCEPTIBILITY,
+	DIAL_WEAPON_SALES,
+	DIAL_FAST_DRAW,
+	DIAL_NOMINAL_LEADERSHIP,
+	DIAL_POSSESIVE_EFF_EXPLEVEL,
 };
 
 struct SKILLCHECKINFO
@@ -320,6 +346,30 @@ static const ST::string GetModifiersForSkillAttempts(SKILLCHECKINFO& inf)
 	return result;
 }
 
+static const ST::string GetRangeString(const int32_t lBound, const int32_t uBound, const bool isGreenIfZeroOrGreater = true, const bool isPlusSigned = false)
+{
+	ST::string result;
+	ST::string fmt = isPlusSigned ? "{+d}" : "{d}";
+	if (lBound != uBound) {
+		ST::string const lBoundStr = lBound < 1 ? ST::format("{}", lBound) : ColorCodeModifier(fmt, lBound, isGreenIfZeroOrGreater);
+		ST::string const uBoundStr = lBound < 1 ? ST::format("{}", uBound) : ColorCodeModifier(fmt, uBound, isGreenIfZeroOrGreater);
+		result = st_format_printf(rangeStrings[RANGE_NORMAL], lBoundStr, uBoundStr);
+		if (lBound < 1) {
+			if (uBound > 1) {
+				result += st_format_printf(rangeStrings[RANGE_EFFECTIVE], ColorCodeModifier(fmt, uBound, isGreenIfZeroOrGreater));
+			} else {
+				result += rangeStrings[RANGE_NOT_RANGE];
+			}
+		}
+	} else {
+		result = ColorCodeModifier(fmt, lBound, isGreenIfZeroOrGreater);
+		if (lBound < 1) {
+			result += rangeStrings[RANGE_NOT_RANGE];
+		}
+	}
+	return result;
+};
+
 const ST::string GetModifiersForLockExam(SOLDIERTYPE* const s, DOOR* const d)
 {
 	SKILLCHECKINFO skillCheckInf{};
@@ -351,30 +401,8 @@ const ST::string GetModifiersForLockExam(SOLDIERTYPE* const s, DOOR* const d)
 	result += "\n" + demarcationStrings[DIVIDER];
 	result += "\n" + segmentHeaderStrings[HEADER_TRAP_DETECTION]; // "Detection Level vs. Trap Level:"
 
-	auto getRangeStr = [](int32_t lBound, int32_t uBound) -> const ST::string {
-		ST::string result{};
-		if (lBound != uBound) {
-			ST::string const lBoundStr = lBound < 1 ? ST::format("{}", lBound) : ColorCodeModifier("{d}", lBound);
-			ST::string const uBoundStr = lBound < 1 ? ST::format("{}", uBound) : ColorCodeModifier("{d}", uBound);
-			result = st_format_printf(rangeStrings[RANGE_NORMAL], lBoundStr, uBoundStr);
-			if (lBound < 1) {
-				if (uBound > 1) {
-					result += st_format_printf(rangeStrings[RANGE_EFFECTIVE], ColorCodeModifier("{d}", uBound));
-				} else {
-					result += rangeStrings[RANGE_NOT_RANGE];
-				}
-			}
-		} else {
-			result = ColorCodeModifier("{d}", lBound);
-			if (lBound < 1) {
-				result += rangeStrings[RANGE_NOT_RANGE];
-			}
-		}
-		return result;
-	};
-
-	result += st_format_printf("\n" + tab + trapStrings[TRAP_PASSIVE_DETECTION], getRangeStr(lowerBound,     upperBound),           trapLvlColored);
-	result += st_format_printf("\n" + tab + trapStrings[TRAP_ACTIVE_DETECTION],  getRangeStr(lowerBound + 1, upperBound + randMod), trapLvlColored);
+	result += st_format_printf("\n" + tab + trapStrings[TRAP_PASSIVE_DETECTION], GetRangeString(lowerBound,     upperBound),           trapLvlColored);
+	result += st_format_printf("\n" + tab + trapStrings[TRAP_ACTIVE_DETECTION],  GetRangeString(lowerBound + 1, upperBound + randMod), trapLvlColored);
 
 	result +=                  "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
 	result +=                  "\n" + tab + segmentHeaderStrings[HEADER_BONUSES];
@@ -717,6 +745,111 @@ const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attrib
 		case ATTR_MEDICAL:
 			getAlcoMod(s->bMedical);
 			break;
+	}
+
+	return result;
+}
+
+const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERTYPE* const npcChar, Approach const apprName)
+{
+	uint16_t itemIdx;
+	int32_t salesSkill;
+	int32_t plrLeadership, plrEffStrength, plrGunDeadliness{};
+
+	bool const isCheater = CHEATER_CHEAT_LEVEL();
+	MERCPROFILESTRUCT const& plrProfile = MercProfile{ playerChar->ubProfile }.getStruct();
+	MERCPROFILESTRUCT const& npcProfile = MercProfile{ npcChar->ubProfile }.getStruct();
+
+	ST::string const totalApproachEffectiveness = ColorCodeModifier("{d}", CalcDesireToTalk(npcChar->ubProfile, playerChar->ubProfile, apprName));
+	ST::string result = st_format_printf(dialogueStrings[DIAL_EFFECTIVENESS], isCheater ? totalApproachEffectiveness : statusStrings[STR_STATUS_HIDDEN]);
+	result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+
+	switch (apprName) {
+		case APPROACH_THREATEN:
+			itemIdx = playerChar->inv[HANDPOS].usItem;
+			if (GCM->getItem(itemIdx)->isWeapon()) {
+				plrGunDeadliness = GCM->getWeapon(itemIdx)->ubDeadliness;
+			}
+			if (plrGunDeadliness == 0) {
+				plrGunDeadliness = -30;
+			}
+			plrLeadership = EffectiveLeadership(playerChar);
+			plrEffStrength = EffectiveStrength(playerChar);
+
+			result += st_format_printf("\n" + tab + effectiveStatStrings[ATTR_LEADERSHIP], ColorCodeModifier("{d}", plrLeadership));
+			result += st_format_printf("\n" + tab + effectiveStatStrings[ATTR_STRENGTH], ColorCodeModifier("{d}", plrEffStrength));
+			result += st_format_printf("\n" + tab + dialogueStrings[DIAL_GUN_DEADLINESS], ColorCodeModifier("{d}", plrGunDeadliness));
+			break;
+		case APPROACH_BUYSELL:
+			salesSkill = MercProfile{ npcChar->ubProfile }.getInfo().weaponSaleModifier;
+			result += st_format_printf("\n" + tab + dialogueStrings[DIAL_WEAPON_SALES], ColorCodeModifier("{+d}%", salesSkill - 100));
+			return result;
+	}
+
+	ST::string const plrNominalApprSkill = ColorCodeModifier("{+d}%", plrProfile.usApproachFactor[apprName - 1] - 100);
+	ST::string const townLoyalty = ColorCodeModifier("{d}", gTownLoyalty[npcProfile.bTown].ubRating);
+	ST::string const npcTownAttachment = ColorCodeModifier("{d}", npcProfile.bTownAttachment, false);
+	ST::string const npcOpinionOnPlr = ColorCodeModifier("{+d}", npcProfile.bMercOpinion[playerChar->ubProfile]);
+	int32_t const susceptibility = npcProfile.ubApproachVal[apprName - 1] - 100;
+	ST::string const npcApprSusceptibility = ColorCodeModifier("{+d}%", susceptibility);
+
+	if (apprName != APPROACH_THREATEN) {
+		result += st_format_printf("\n" + tab + dialogueStrings[DIAL_NOMINAL_LEADERSHIP], ColorCodeModifier("{d}", plrProfile.bLeadership));
+	}
+	result += st_format_printf("\n" + tab + dialogueStrings[DIAL_APPROACH_SKILL], plrNominalApprSkill);
+	result += st_format_printf("\n" + tab + locationStrings[LOC_TOWN_LOYALTY], townLoyalty);
+	result += st_format_printf("\n" + tab + locationStrings[LOC_TOWN_ATTACHMENT], npcProfile.zNickname, isCheater ? npcTownAttachment : statusStrings[STR_STATUS_HIDDEN]);
+	result += st_format_printf("\n" + tab + dialogueStrings[DIAL_OPINION], npcProfile.zNickname, plrProfile.zNickname, isCheater ? npcOpinionOnPlr : statusStrings[STR_STATUS_HIDDEN]);
+
+	result += st_format_printf("\n" + tab + dialogueStrings[DIAL_SUSCEPTIBILITY], npcProfile.zNickname, isCheater ? npcApprSusceptibility : statusStrings[STR_STATUS_HIDDEN]);
+	if (isCheater && susceptibility == 155) {
+		result += st_format_printf("\n" + tab + tab + commentStrings[COMMENT_MORE_THAN], susceptibility);
+	}
+	int32_t npc1stTimeMod;
+	ST::string mod;
+	bool hasBeenApproached;
+	for (size_t apprIdx = APPROACH_FRIENDLY; apprIdx < APPROACH_RECRUIT; apprIdx++) {
+		hasBeenApproached = npcProfile.bApproached & gbFirstApproachFlags[apprIdx - 1];
+		if (isCheater) {
+			npc1stTimeMod = npcProfile.ubApproachMod[apprIdx - 1][apprName - 1] - 100;
+			mod = hasBeenApproached ? ColorCodeModifier("{+d}%", npc1stTimeMod) : ST::format("{+d}%", npc1stTimeMod);
+		} else {
+			mod = hasBeenApproached ? statusStrings[STR_STATUS_HIDDEN] : statusStrings[STR_STATUS_HIDDEN_PLAIN];
+		}
+		result += st_format_printf("\n" + tab + tab + dialogueStrings[apprIdx], mod);
+	}
+
+	if (apprName == APPROACH_THREATEN) {
+		uint8_t const plrEffExpLvlSmall = EffectiveExpLevel(playerChar) / 2;
+		uint8_t const plrEffExpLvlLarge = EffectiveExpLevel(playerChar) - plrEffExpLvlSmall;
+		uint8_t npcEffExpLvlSmall = EffectiveExpLevel(npcChar) / 2;
+		uint8_t npcEffExpLvlLarge = EffectiveExpLevel(npcChar) - npcEffExpLvlSmall;
+		uint8_t threatPoint{};
+		if (npcProfile.bApproached & gbFirstApproachFlags[APPROACH_THREATEN - 1]) {
+			threatPoint = 1;
+		}
+		ST::string plrRange = GetRangeString(plrEffExpLvlLarge, plrEffExpLvlSmall + plrEffExpLvlLarge);
+		ST::string npcRange;
+		if (isCheater) {
+			npcRange = GetRangeString(npcEffExpLvlLarge + threatPoint, npcEffExpLvlSmall + npcEffExpLvlLarge + (threatPoint * 2), false);
+		} else {
+			npcRange = statusStrings[STR_STATUS_HIDDEN];
+		}
+		result +=                  "\n" + demarcationStrings[DIVIDER];
+		result += st_format_printf("\n" + dialogueStrings[DIAL_FAST_DRAW], plrProfile.zNickname, npcProfile.zNickname, plrRange, npcRange);
+		result +=                  "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+		plrRange = GetRangeString(plrEffExpLvlLarge, plrEffExpLvlSmall + plrEffExpLvlLarge, true, true);
+		npcRange = GetRangeString(npcEffExpLvlLarge, npcEffExpLvlSmall + npcEffExpLvlLarge, false, true);
+		result += st_format_printf("\n" + tab + dialogueStrings[DIAL_POSSESIVE_EFF_EXPLEVEL], plrProfile.zNickname, plrRange);
+		result += st_format_printf("\n" + tab + dialogueStrings[DIAL_POSSESIVE_EFF_EXPLEVEL], npcProfile.zNickname, isCheater ? npcRange : statusStrings[STR_STATUS_HIDDEN]);
+
+		ST::string threatRange = st_format_printf(rangeStrings[RANGE_NORMAL], 1, 2);
+		if (threatPoint > 0) {
+			threatRange = st_format_printf(rangeStrings[RANGE_NORMAL], "~+~1", "~+~2");
+		} else {
+			threatRange = "^0";
+		}
+		result += st_format_printf("\n" + tab + dialogueStrings[DIAL_THREATEN], threatRange);
 	}
 
 	return result;

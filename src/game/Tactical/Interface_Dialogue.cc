@@ -50,6 +50,7 @@
 #include "Message.h"
 #include "MessageBoxScreen.h"
 #include "Morale.h"
+#include "NewStrings.h"
 #include "NPC.h"
 #include "NpcActionParamsModel.h"
 #include "OppList.h"
@@ -458,7 +459,6 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 					(INT16)(sX + TALK_PANEL_REGION_WIDTH ),
 					(INT16)( sY + TALK_PANEL_REGION_HEIGHT ), MSYS_PRIORITY_HIGHEST,
 					CURSOR_NORMAL, TalkPanelMoveCallback, TalkPanelClickCallback);
-		MSYS_SetRegionUserData( &(gTalkPanel.Regions[cnt]), 0, cnt );
 
 		sY += TALK_PANEL_REGION_SPACEY;
 	}
@@ -783,6 +783,15 @@ static void TalkPanelMoveCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		gTalkPanel.bOldCurSelect = -1;
 	}
 
+	if (gamepolicy(informative_tooltips) && iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
+	{
+		Approach appr = ubTalkMenuApproachIDs[uiItemPos];
+		if (appr == APPROACH_REPEAT)
+			return;
+		if (appr == APPROACH_BUYSELL && !IsMercADealer(gTalkPanel.ubCharNum))
+			return; // this is an item-giving approach - no tooltip
+		pRegion->SetFastHelpText(GetModifiersForDialogue(gpSrcSoldier, gpDestSoldier, appr));
+	}
 }
 
 

@@ -301,6 +301,7 @@ L10n_tooltips::L10n_tooltips(SGPFile * const tooltipsFile)
 	GetArray(drugStrings);
 	GetArray(inventoryStrings);
 	GetArray(locationStrings);
+	GetArray(dialogueStrings);
 }
 
 #undef GetString
