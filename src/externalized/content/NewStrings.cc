@@ -761,8 +761,12 @@ const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERT
 	MERCPROFILESTRUCT const& npcProfile = MercProfile{ npcChar->ubProfile }.getStruct();
 
 	ST::string const totalApproachEffectiveness = ColorCodeModifier("{d}", CalcDesireToTalk(npcChar->ubProfile, playerChar->ubProfile, apprName));
-	ST::string result = st_format_printf(dialogueStrings[DIAL_EFFECTIVENESS], isCheater ? totalApproachEffectiveness : statusStrings[STR_STATUS_HIDDEN]);
-	result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+
+	ST::string result;
+	if (apprName != APPROACH_BUYSELL) {
+		result += st_format_printf(dialogueStrings[DIAL_EFFECTIVENESS], isCheater ? totalApproachEffectiveness : statusStrings[STR_STATUS_HIDDEN]);
+		result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
+	}
 
 	switch (apprName) {
 		case APPROACH_THREATEN:
@@ -781,8 +785,8 @@ const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERT
 			result += st_format_printf("\n" + tab + dialogueStrings[DIAL_GUN_DEADLINESS], ColorCodeModifier("{d}", plrGunDeadliness));
 			break;
 		case APPROACH_BUYSELL:
-			salesSkill = MercProfile{ npcChar->ubProfile }.getInfo().weaponSaleModifier;
-			result += st_format_printf("\n" + tab + dialogueStrings[DIAL_WEAPON_SALES], ColorCodeModifier("{+d}%", salesSkill - 100));
+			salesSkill = MercProfile{ playerChar->ubProfile }.getInfo().weaponSaleModifier;
+			result += st_format_printf(dialogueStrings[DIAL_WEAPON_SALES], ColorCodeModifier("{+d}%", salesSkill - 100));
 			return result;
 	}
 
