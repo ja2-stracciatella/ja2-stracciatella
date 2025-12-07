@@ -11,8 +11,6 @@
 //
 //=================================================================================================
 
-#include <stdexcept>
-
 #include "Font.h"
 #include "HImage.h"
 #include "Types.h"
@@ -731,8 +729,6 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 		FreeBackgroundRectPending(r->FastHelpRect);
 	}
 
-	r->FastHelpText.clear();
-
 	MSYS_DeleteRegionFromList(r);
 
 	if (MSYS_PrevRegion  == r) MSYS_PrevRegion  = 0;
@@ -786,17 +782,6 @@ void MOUSE_REGION::SetFastHelpText(const ST::string& str)
 }
 
 
-static UINT32 GetNumberOfLinesInHeight(const ST::utf32_buffer& codepoints)
-{
-	UINT32 Lines = 1;
-	for (const char32_t* i = codepoints.c_str(); *i != U'\0'; i++)
-	{
-		if (*i == U'\n') Lines++;
-	}
-	return Lines;
-}
-
-
 static UINT32 GetWidthOfString(const ST::utf32_buffer& codepoints);
 static void DisplayHelpTokenizedString(const ST::utf32_buffer& codepoints, INT16 sx, INT16 sy);
 
@@ -806,7 +791,8 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 	if (!(r->uiFlags & MSYS_FASTHELP)) return;
 
 	INT32 const w = GetWidthOfString(r->FastHelpText) + 10;
-	INT32 const h = GetNumberOfLinesInHeight(r->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + 8;
+	INT32 const lines = std::count(r->FastHelpText.begin(), r->FastHelpText.end(), U'\n') + 1;
+	INT32 const h = lines * (GetFontHeight(FONT10ARIAL) + 1) + 8;
 
 	INT32 x = r->RegionTopLeftX + 10;
 	if (x <  0)                x = 0;
