@@ -12,12 +12,11 @@
 
 #pragma once
 
-#include <optional>
-
 #include "JA2Types.h"
 #include "Types.h"
 
 #include <string_theory/string>
+#include <functional>
 
 // Mouse Region Flags
 #define MSYS_NO_FLAGS                0x00000000
@@ -146,7 +145,6 @@ struct MOUSE_REGION
 void MSYS_SetCurrentCursor(UINT16 Cursor);
 
 // External
-void MSYS_Init(void);
 void MSYS_Shutdown(void);
 void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UINT16 bry,INT8 priority,
 					   UINT16 crsr,MOUSE_CALLBACK movecallback,MOUSE_CALLBACK buttoncallback);

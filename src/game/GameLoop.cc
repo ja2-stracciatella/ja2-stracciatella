@@ -47,7 +47,6 @@ void InitializeGame(void)
 	UINT32				uiIndex;
 
 	// Initlaize mouse subsystems
-	MSYS_Init( );
 	InitButtonSystem();
 	InitCursors( );
 
