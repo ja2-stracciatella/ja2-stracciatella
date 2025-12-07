@@ -11,8 +11,6 @@
 //
 //=================================================================================================
 
-#include <stdexcept>
-
 #include "Font.h"
 #include "HImage.h"
 #include "Types.h"
@@ -130,8 +128,6 @@ INT16 MSYS_CurrentMY=0;
 static INT16 MSYS_CurrentButtons = 0;
 static UINT32 MSYS_Action         = 0;
 
-static BOOLEAN MSYS_SystemInitialized   = FALSE;
-
 static MOUSE_REGION* g_clicked_region;
 
 static MOUSE_REGION* MSYS_RegList = NULL;
@@ -150,32 +146,12 @@ static void MSYS_TrashRegList(void);
 
 
 //======================================================================================================
-//	MSYS_Init
-//
-//	Initialize the mouse system.
-//
-void MSYS_Init(void)
-{
-	MSYS_TrashRegList();
-
-	MSYS_CurrentMX = 0;
-	MSYS_CurrentMY = 0;
-	MSYS_CurrentButtons = 0;
-	MSYS_Action=MSYS_NO_ACTION;
-
-	MSYS_PrevRegion = NULL;
-	MSYS_SystemInitialized = TRUE;
-}
-
-
-//======================================================================================================
 //	MSYS_Shutdown
 //
 //	De-inits the "mousesystem" mouse region handling code.
 //
 void MSYS_Shutdown(void)
 {
-	MSYS_SystemInitialized = FALSE;
 	MSYS_TrashRegList();
 }
 
@@ -194,9 +170,6 @@ void UpdateButtons()
 
 void MouseSystemHook(UINT16 type, UINT32 button, UINT16 x, UINT16 y)
 {
-	// If the mouse system isn't initialized, get out o' here
-	if (!MSYS_SystemInitialized) return;
-
 	UINT32 action = MSYS_NO_ACTION;
 	switch (type)
 	{
@@ -731,8 +704,6 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 		FreeBackgroundRectPending(r->FastHelpRect);
 	}
 
-	r->FastHelpText.clear();
-
 	MSYS_DeleteRegionFromList(r);
 
 	if (MSYS_PrevRegion  == r) MSYS_PrevRegion  = 0;
@@ -786,17 +757,6 @@ void MOUSE_REGION::SetFastHelpText(const ST::string& str)
 }
 
 
-static UINT32 GetNumberOfLinesInHeight(const ST::utf32_buffer& codepoints)
-{
-	UINT32 Lines = 1;
-	for (const char32_t* i = codepoints.c_str(); *i != U'\0'; i++)
-	{
-		if (*i == U'\n') Lines++;
-	}
-	return Lines;
-}
-
-
 static UINT32 GetWidthOfString(const ST::utf32_buffer& codepoints);
 static void DisplayHelpTokenizedString(const ST::utf32_buffer& codepoints, INT16 sx, INT16 sy);
 
@@ -806,7 +766,8 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 	if (!(r->uiFlags & MSYS_FASTHELP)) return;
 
 	INT32 const w = GetWidthOfString(r->FastHelpText) + 10;
-	INT32 const h = GetNumberOfLinesInHeight(r->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + 8;
+	INT32 const lines = std::count(r->FastHelpText.begin(), r->FastHelpText.end(), U'\n') + 1;
+	INT32 const h = lines * (GetFontHeight(FONT10ARIAL) + 1) + 8;
 
 	INT32 x = r->RegionTopLeftX + 10;
 	if (x <  0)                x = 0;
