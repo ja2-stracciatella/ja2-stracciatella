@@ -757,13 +757,10 @@ const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERT
 	int32_t plrLeadership, plrEffStrength, plrGunDeadliness{};
 
 	bool const isCheater = CHEATER_CHEAT_LEVEL();
-	MERCPROFILESTRUCT const& plrProfile = MercProfile{ playerChar->ubProfile }.getStruct();
-	MERCPROFILESTRUCT const& npcProfile = MercProfile{ npcChar->ubProfile }.getStruct();
 
-	ST::string const totalApproachEffectiveness = ColorCodeModifier("{d}", CalcDesireToTalk(npcChar->ubProfile, playerChar->ubProfile, apprName));
-
-	ST::string result;
+	ST::string result, totalApproachEffectiveness;
 	if (apprName != APPROACH_BUYSELL) {
+		totalApproachEffectiveness = ColorCodeModifier("{d}", CalcDesireToTalk(npcChar->ubProfile, playerChar->ubProfile, apprName));
 		result += st_format_printf(dialogueStrings[DIAL_EFFECTIVENESS], isCheater ? totalApproachEffectiveness : statusStrings[STR_STATUS_HIDDEN]);
 		result += "\n" + segmentHeaderStrings[HEADER_MODIFIED_BY];
 	}
@@ -790,6 +787,9 @@ const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERT
 			return result;
 	}
 
+	MERCPROFILESTRUCT const& plrProfile = MercProfile{ playerChar->ubProfile }.getStruct();
+	MERCPROFILESTRUCT const& npcProfile = MercProfile{ npcChar->ubProfile }.getStruct();
+
 	ST::string const plrNominalApprSkill = ColorCodeModifier("{+d}%", plrProfile.usApproachFactor[apprName - 1] - 100);
 	ST::string const townLoyalty = ColorCodeModifier("{d}", gTownLoyalty[npcProfile.bTown].ubRating);
 	ST::string const npcTownAttachment = ColorCodeModifier("{d}", npcProfile.bTownAttachment, false);
@@ -810,17 +810,17 @@ const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERT
 		result += st_format_printf("\n" + tab + tab + commentStrings[COMMENT_MORE_THAN], susceptibility);
 	}
 	int32_t npc1stTimeMod;
-	ST::string mod;
-	bool hasBeenApproached;
+	ST::string apprMod;
 	for (size_t apprIdx = APPROACH_FRIENDLY; apprIdx < APPROACH_RECRUIT; apprIdx++) {
-		hasBeenApproached = npcProfile.bApproached & gbFirstApproachFlags[apprIdx - 1];
+		if (!(npcProfile.bApproached & gbFirstApproachFlags[apprIdx - 1]))
+			continue;
 		if (isCheater) {
 			npc1stTimeMod = npcProfile.ubApproachMod[apprIdx - 1][apprName - 1] - 100;
-			mod = hasBeenApproached ? ColorCodeModifier("{+d}%", npc1stTimeMod) : ST::format("{+d}%", npc1stTimeMod);
+			apprMod = ColorCodeModifier("{+d}%", npc1stTimeMod);
 		} else {
-			mod = hasBeenApproached ? statusStrings[STR_STATUS_HIDDEN] : statusStrings[STR_STATUS_HIDDEN_PLAIN];
+			apprMod = statusStrings[STR_STATUS_HIDDEN];
 		}
-		result += st_format_printf("\n" + tab + tab + dialogueStrings[apprIdx], mod);
+		result += st_format_printf("\n" + tab + tab + dialogueStrings[apprIdx], apprMod);
 	}
 
 	if (apprName == APPROACH_THREATEN) {
