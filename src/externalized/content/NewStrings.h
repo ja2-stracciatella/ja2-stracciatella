@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Keys.h"
+#include "NPC.h"
 
 enum NewStrings
 {
@@ -35,3 +36,5 @@ const ST::string GetModifiersForLockPicking(SOLDIERTYPE* const s, DOOR* const d)
 const ST::string GetModifiersForLockBlowUp(SOLDIERTYPE* const s);
 // attribute list
 const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attributes const attrName);
+// dialogue menu
+const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERTYPE* const npcChar, Approach const apprName);

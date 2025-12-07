@@ -1721,8 +1721,11 @@ void LoadTeamTurnsFromTheSavedGameFile(HWFILE const f)
 BOOLEAN NPCFirstDraw( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier )
 {
 	// if attacking an NPC check to see who draws first!
-
-	if ( pTargetSoldier->ubProfile != NO_PROFILE && pTargetSoldier->ubProfile != SLAY && pTargetSoldier->bNeutral && pTargetSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY && (	FindAIUsableObjClass( pTargetSoldier, IC_WEAPON ) != NO_SLOT ) )
+	if ( pTargetSoldier->ubProfile != NO_PROFILE &&
+		 pTargetSoldier->ubProfile != SLAY &&
+		 pTargetSoldier->bNeutral &&
+		 pTargetSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY &&
+		(FindAIUsableObjClass( pTargetSoldier, IC_WEAPON ) != NO_SLOT) )
 	{
 		UINT8	ubLargerHalf, ubSmallerHalf, ubTargetLargerHalf, ubTargetSmallerHalf;
 
