@@ -229,6 +229,7 @@
         "%s is hit in the shoulder and loses a point of dexterity!",
         "%s is hit in the chest and loses a point of strength!",
         "%s is hit in the legs and loses a point of agility!",
+        "%s is in the process of dying and loses a point of health!",
         "%s is hit in the head and loses %d points of wisdom!",
         "%s is hit in the shoulder and loses %d points of dexterity!",
         "%s is hit in the chest and loses %d points of strength!",
