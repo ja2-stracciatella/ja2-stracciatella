@@ -229,7 +229,7 @@
         "%s è stato colpito alla spalla e perde un punto di destrezza!",
         "%s è stato colpito al torace e perde un punto di forza!",
         "%s è stato colpito alle gambe e perde un punto di agilità!",
-        "%s sta per morire e perde un punto di salute!",
+        "%s sta per morire e perde permanentemente un punto di salute!",
         "%s è stato colpito alla testa e perde %d punti di saggezza!",
         "%s è stato colpito alle palle perde %d punti di destrezza!",
         "%s è stato colpito al torace e perde %d punti di forza!",

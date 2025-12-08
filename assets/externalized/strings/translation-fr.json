@@ -229,7 +229,7 @@
         "%s est touché à l'épaule et perd un point de dextérité !",
         "%s est touché à la poitrine et perd un point de force !",
         "%s est touché à la jambe et perd un point d'agilité !",
-        "%s est en train de mourir et perd un point de santé!",
+        "%s est en train de mourir et perd définitivement un point de santé!",
         "%s est touché à la tête et perd %d points de sagesse !",
         "%s est touché à l'épaule et perd %d points de dextérité !",
         "%s est touché à la poitrine et perd %d points de force !",

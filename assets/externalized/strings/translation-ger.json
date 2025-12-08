@@ -229,7 +229,7 @@
         "%s an der Schulter getroffen, verliert Geschicklichkeitspunkt!",
         "%s an der Brust getroffen, verliert einen Kraftpunkt!",
         "%s an den Beinen getroffen, verliert einen Beweglichkeitspunkt!",
-        "%s stirbt, verliert einen Gesundheitspunkt!",
+        "%s stirbt, verliert dauerhaft einen Gesundheitspunkt!",
         "%s am Kopf getroffen, verliert %d Weisheitspunkte!",
         "%s an der Schulter getroffen, verliert %d Geschicklichkeitspunkte!",
         "%s an der Brust getroffen, verliert %d Kraftpunkte!",
