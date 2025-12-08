@@ -53,7 +53,6 @@
 #include "StrategicMap.h"
 #include "UILayout.h"
 #include "Video.h"
-#include "VObject.h"
 #include "VSurface.h"
 #include "WCheck.h"
 #include "WordWrap.h"
@@ -708,7 +707,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 			DialogueHandler const handler_;
 	};
 
-	DialogueEvent::Add(new CharacterDialogueEventUsingAlternateFile(s, gTacticalStatus.ubGuideDescriptionToUse, handler));
+	DialogueEvent::Add(new CharacterDialogueEventUsingAlternateFile(s, quote, handler));
 }
 
 
@@ -1476,7 +1475,7 @@ void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, 
 }
 
 
-static void TextOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
+static void TextOverlayClickCallback(MOUSE_REGION *, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
@@ -1499,7 +1498,7 @@ static void TextOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 }
 
 
-static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, UINT32 iReason)
+static void FaceOverlayClickCallback(MOUSE_REGION *, UINT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
