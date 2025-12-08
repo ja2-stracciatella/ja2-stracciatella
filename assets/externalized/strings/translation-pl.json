@@ -229,6 +229,7 @@
         "%s dostał(a) w ramię i traci 1 punkt zręczności!",
         "%s dostał(a) w klatkę piersiową i traci 1 punkt siły!",
         "%s dostał(a) w nogi i traci 1 punkt zwinności!",
+        "%s w procesie umierania i traci 1 punkt zdrowia na stałe!",
         "%s dostał(a) w głowę i traci %d pkt. inteligencji!",
         "%s dostał(a) w ramię i traci %d pkt. zręczności!",
         "%s dostał(a) w klatkę piersiową i traci %d pkt. siły!",

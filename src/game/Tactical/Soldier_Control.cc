@@ -7873,6 +7873,12 @@ static INT32 CheckBleeding(SOLDIERTYPE* pSoldier)
 								// bleeding while "dying" costs a PERMANENT point of life each time!
 								pSoldier->bLifeMax--;
 								pSoldier->bBleeding--;
+								if (pSoldier->bTeam == OUR_TEAM) {
+									ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_1_HP], pSoldier->name));
+									// make stat RED for a while...
+									pSoldier->uiChangeHealthTime = GetJA2Clock();
+									pSoldier->usValueGoneUp &= ~(HEALTH_INCREASE);
+								} 
 							}
 						}
 					}

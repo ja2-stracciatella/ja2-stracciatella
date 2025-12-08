@@ -19,7 +19,7 @@ char const * GetSuffix(VanillaVersion, bool combineRusAndRusGold);
 
 constexpr std::size_t WeaponType_SIZE = 9;
 constexpr std::size_t TeamTurnString_SIZE = 5;
-constexpr std::size_t Message_SIZE = 59;
+constexpr std::size_t Message_SIZE = 60;
 constexpr std::size_t sTimeStrings_SIZE = 6;
 constexpr std::size_t pAssignmentStrings_SIZE = 35;
 constexpr std::size_t pMilitiaString_SIZE = 3;
