@@ -725,7 +725,11 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 
 	// Try to find soldier...
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubCharacterNum);
-	if ( pSoldier != NULL )
+	if (pSoldier == NULL && fFromSoldier)
+	{ // If from a soldier, and he does not exist anymore, do not play!
+		return false;
+	}
+	if (pSoldier != NULL && gubVideoConferencingMode != AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE)
 	{
 		// Check vital stats
 		if (pSoldier->bLife < CONSCIOUSNESS )
@@ -797,14 +801,6 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 				}
 			}
 		}*/
-	}
-	else
-	{
-		// If from a soldier, and he does not exist anymore, donot play!
-		if ( fFromSoldier )
-		{
-			return( FALSE );
-		}
 	}
 
 	// Check face index
