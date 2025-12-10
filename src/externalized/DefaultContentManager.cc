@@ -16,6 +16,7 @@
 #include "CalibreModel.h"
 #include "ContentMusic.h"
 #include "Item_Types.h"
+#include "Json.h"
 #include "SmokeEffectModel.h"
 #include "ExplosionAnimationModel.h"
 #include "ExplosiveModel.h"
@@ -26,7 +27,6 @@
 #include "LoadingScreenModel.h"
 #include "MagazineModel.h"
 #include "NPC.h"
-#include "RustInterface.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Profile_Type.h"
 #include "Types.h"
@@ -1017,24 +1017,12 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 
 JsonValue DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
-	auto r = Vfs_readPatchedJson(m_vfs.get(), fileName.c_str());
-	throwRustError(!r);
-	return JsonValue(r);
+	return JsonValue::readFromFile(m_vfs.get(), fileName);
 }
 
 JsonValue DefaultContentManager::readJsonDataFileWithSchema(const ST::string& jsonPath) const
 {
-	auto value = readJsonDataFile(jsonPath);
-	RustPointer<VecCString> errors(SchemaManager_validateValueForPath(m_schemaManager.get(), jsonPath.c_str(), value.get()));
-	if (errors) {
-		auto numErrors = VecCString_len(errors.get());
-		for (uintptr_t i = 0; i < numErrors; i++) {
-			RustPointer<char> error(VecCString_get(errors.get(), i));
-			SLOGE("{}", error.get());
-		}
-		throw DataError(ST::format("JSON schema validation error(s) occurred when validating JSON file `{}`", jsonPath));
-	}
-	return value;
+	return JsonValue::readFromFileWithSchema(m_vfs.get(), m_schemaManager.get(), jsonPath);
 }
 
 bool DefaultContentManager::loadPrioritizedData()

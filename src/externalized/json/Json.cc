@@ -1,11 +1,33 @@
 #include "Json.h"
 
+#include "Exceptions.h"
+#include "Logger.h"
 #include "string_theory/format"
 
 JsonValue JsonValue::deserialize(const ST::string& str) {
 	auto r = RJsonValue_deserialize(str.c_str());
 	throwRustError(!r);
 	return JsonValue(r);
+}
+
+JsonValue JsonValue::readFromFile(Vfs *vfs, const ST::string &file) {
+	auto r = Vfs_readPatchedJson(vfs, file.c_str());
+	throwRustError(!r);
+	return JsonValue(r);
+}
+
+JsonValue JsonValue::readFromFileWithSchema(Vfs *vfs, SchemaManager *schemaManager, const ST::string &file) {
+	auto value = JsonValue::readFromFile(vfs, file);
+	RustPointer<VecCString> errors(SchemaManager_validateValueForPath(schemaManager, file.c_str(), value.get()));
+	if (errors) {
+		auto numErrors = VecCString_len(errors.get());
+		for (uintptr_t i = 0; i < numErrors; i++) {
+			RustPointer<char> error(VecCString_get(errors.get(), i));
+			SLOGE("{}", error.get());
+		}
+		throw DataError(ST::format("JSON schema validation error(s) occurred when validating JSON file `{}`", file));
+	}
+	return value;
 }
 
 bool JsonValue::isVec() const {
@@ -249,4 +271,3 @@ JsonValue JsonObject::toValue() const
 {
 	return RJsonObject_toValue(m_value.get());
 }
-
