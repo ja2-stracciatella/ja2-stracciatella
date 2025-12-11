@@ -32,6 +32,7 @@ INT32	giDrunkModifier[] =
 
 #define HANGOVER_AP_REDUCE	5
 #define HANGOVER_BP_REDUCE	200
+#define HEART_ATTACK_STAT_REDUCE	5
 
 
 static UINT8 GetDrugType(UINT16 usItem)
@@ -143,9 +144,9 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 				DeductPoints( pSoldier, 0, 10000 );
 
 				// Permanently lower certain stats...
-				pSoldier->bWisdom    -= 5;
-				pSoldier->bDexterity -= 5;
-				pSoldier->bStrength  -= 5;
+				pSoldier->bWisdom    -= HEART_ATTACK_STAT_REDUCE;
+				pSoldier->bDexterity -= HEART_ATTACK_STAT_REDUCE;
+				pSoldier->bStrength  -= HEART_ATTACK_STAT_REDUCE;
 
 				if (pSoldier->bWisdom < 1)
 					pSoldier->bWisdom = 1;
@@ -156,11 +157,11 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 
 				// export stat changes to profile
 				gMercProfiles[ pSoldier->ubProfile ].bWisdom    = pSoldier->bWisdom;
-				gMercProfiles[ pSoldier->ubProfile ].bWisdomDelta    -= 5;
+				gMercProfiles[ pSoldier->ubProfile ].bWisdomDelta    -= HEART_ATTACK_STAT_REDUCE;
 				gMercProfiles[ pSoldier->ubProfile ].bDexterity = pSoldier->bDexterity;
-				gMercProfiles[ pSoldier->ubProfile ].bDexterityDelta -= 5;
+				gMercProfiles[ pSoldier->ubProfile ].bDexterityDelta -= HEART_ATTACK_STAT_REDUCE;
 				gMercProfiles[ pSoldier->ubProfile ].bStrength  = pSoldier->bStrength;
-				gMercProfiles[ pSoldier->ubProfile ].bStrengthDelta  -= 5;
+				gMercProfiles[ pSoldier->ubProfile ].bStrengthDelta  -= HEART_ATTACK_STAT_REDUCE;
 
 				// make those stats RED for a while...
 				pSoldier->uiChangeWisdomTime = GetJA2Clock();
