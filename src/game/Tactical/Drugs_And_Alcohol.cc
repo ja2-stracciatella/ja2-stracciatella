@@ -156,8 +156,11 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 
 				// export stat changes to profile
 				gMercProfiles[ pSoldier->ubProfile ].bWisdom    = pSoldier->bWisdom;
+				gMercProfiles[ pSoldier->ubProfile ].bWisdomDelta    -= 5;
 				gMercProfiles[ pSoldier->ubProfile ].bDexterity = pSoldier->bDexterity;
+				gMercProfiles[ pSoldier->ubProfile ].bDexterityDelta -= 5;
 				gMercProfiles[ pSoldier->ubProfile ].bStrength  = pSoldier->bStrength;
+				gMercProfiles[ pSoldier->ubProfile ].bStrengthDelta  -= 5;
 
 				// make those stats RED for a while...
 				pSoldier->uiChangeWisdomTime = GetJA2Clock();
