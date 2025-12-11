@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace TranslatableString {
-	const std::vector<ST::string>& Loader::getJsonTranslations(const ST::string& prefix) {
+	const std::vector<ST::string>& FileLoader::getJsonTranslations(const ST::string& prefix) {
 		auto found = m_loadedJson.find(prefix);
 		if (found != m_loadedJson.end()) {
 			return found->second;
@@ -27,7 +27,7 @@ namespace TranslatableString {
 		return m_loadedJson[prefix];
 	}
 
-	SGPFile* Loader::getBinaryFile(const ST::string& filename) {
+	SGPFile* FileLoader::getBinaryFile(const ST::string& filename) {
 		 auto file =  SGPFile::openInVfs(m_vfs, filename);
 
 		m_openFiles[filename] = std::move(file);
@@ -69,6 +69,10 @@ namespace TranslatableString {
 
 	ST::string Binary::resolve(Loader& loader) {
 		auto file = loader.getBinaryFile(m_file);
+		if (!file) {
+			// In unittests we return a nullptr from getBinaryFile
+			return ST::string();
+		}
 		return LoadEncryptedString(file, m_offset, m_length);
 	}
 }

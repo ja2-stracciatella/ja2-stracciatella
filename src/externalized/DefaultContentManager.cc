@@ -917,7 +917,7 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<ST
 /** Load the game data and the item descriptions from the original game resources. */
 bool DefaultContentManager::loadGameData()
 {
-	auto stringLoader = TranslatableString::Loader(m_vfs.get(), m_schemaManager.get(), m_gameVersion);
+	auto stringLoader = TranslatableString::FileLoader(m_vfs.get(), m_schemaManager.get(), m_gameVersion);
 	auto binaryProfileData = BinaryProfileData::deserialize(AutoSGPFile{ openGameResForReading(BinaryProfileData::profilesFilename()) });
 
 	return loadGameData(stringLoader, binaryProfileData);

@@ -13,20 +13,29 @@
 
 namespace TranslatableString {
 	/*
-	 * Loader class that can feed the translatable string loading, caching data inbetween calls
-	 * Note that it does not own its Vfs and SchemaManager instances and will not free them on delete
+	 * Interface for the loader class
 	 */
 	class Loader {
 		public:
-			Loader(Vfs* vfs, SchemaManager* schemaManager, GameVersion version) : m_vfs(vfs), m_schemaManager(schemaManager), m_version(version) {}
-			~Loader() {
+			virtual const std::vector<ST::string>& getJsonTranslations(const ST::string& file) = 0;
+			virtual SGPFile* getBinaryFile(const ST::string& file) = 0;
+	};
+
+	/*
+	 * Loader class that can feed the translatable string loading, caching data inbetween calls
+	 * Note that it does not own its Vfs and SchemaManager instances and will not free them on delete
+	 */
+	class FileLoader : public Loader {
+		public:
+			FileLoader(Vfs* vfs, SchemaManager* schemaManager, GameVersion version) : m_vfs(vfs), m_schemaManager(schemaManager), m_version(version) {}
+			~FileLoader() {
 				for (auto file : m_openFiles) {
 					DeleteSGPFile(file.second);
 				}
 			}
 
-			const std::vector<ST::string>& getJsonTranslations(const ST::string& file);
-			SGPFile* getBinaryFile(const ST::string& file);
+			const std::vector<ST::string>& getJsonTranslations(const ST::string& file) override;
+			SGPFile* getBinaryFile(const ST::string& file) override;
 		private:
 			Vfs* m_vfs;
 			SchemaManager* m_schemaManager;
@@ -35,6 +44,29 @@ namespace TranslatableString {
 			std::map<ST::string, std::vector<ST::string>> m_loadedJson;
 			std::map<ST::string, SGPFile*> m_openFiles;
 	};
+
+	namespace Unittests {
+		/*
+		 * Loader class for unit tests that always returns the same values
+		 */
+		class TestLoader : public Loader {
+			public:
+				TestLoader() {
+					for (auto i = 0; i < 512; i++) {
+						m_jsonTranslations.push_back(ST::format("Translation {}", i));
+					}
+				}
+
+				const std::vector<ST::string>& getJsonTranslations(const ST::string& file) override {
+					return m_jsonTranslations;
+				};
+				SGPFile* getBinaryFile(const ST::string& file) override {
+					return nullptr;
+				};
+			private:
+				std::vector<ST::string> m_jsonTranslations;
+		};
+	}
 
 	/*
 	 * A virtual class for all translatable string mutations

@@ -2,6 +2,7 @@
 
 #include "JA2Types.h"
 #include "Types.h"
+#include "Soldier_Profile_Type.h"
 
 #include <string_theory/string>
 
