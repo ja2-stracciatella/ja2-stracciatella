@@ -73,9 +73,9 @@ ArmourModel::ArmourModel(
 	this->ignoreForMaxProtection = ignoreForMaxProtection;
 }
 
-ArmourModel* ArmourModel::deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings) {
+ArmourModel* ArmourModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader) {
 	auto obj = json.toObject();
-	ItemModel::InitData const initData{ obj, vanillaItemStrings };
+	ItemModel::InitData const initData{ obj, stringLoader };
 
 	int itemIndex = obj.GetInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");

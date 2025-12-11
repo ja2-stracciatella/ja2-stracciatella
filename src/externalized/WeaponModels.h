@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ItemModel.h"
-#include "ItemStrings.h"
 #include "Sound_Control.h"
 
 #include <string_theory/string>
@@ -35,7 +34,7 @@ struct WeaponModel : ItemModel
 	static WeaponModel* deserialize(const JsonValue &json,
 	const std::map<ST::string, const CalibreModel*> &calibreMap,
 	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
-	const BinaryData& vanillaItemStrings);
+	TranslatableString::Loader& stringLoader);
 
 	virtual const WeaponModel* asWeapon() const   { return this; }
 

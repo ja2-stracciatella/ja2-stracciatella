@@ -6,5 +6,6 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/EncryptedString.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ItemStrings.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Localization.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/TranslatableString.cc
     PARENT_SCOPE
 )

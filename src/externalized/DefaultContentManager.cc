@@ -29,6 +29,7 @@
 #include "NPC.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Profile_Type.h"
+#include "TranslatableString.h"
 #include "Types.h"
 #include "VehicleModel.h"
 #include "WeaponModels.h"
@@ -334,15 +335,9 @@ std::vector<ST::string> DefaultContentManager::getAllScriptRecords() const
  * settings directory) and file is present.
  * If file is not found, try to find it relatively to 'Data' directory.
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
-SGPFile* DefaultContentManager::openGameResForReading(ST::string filename) const
+SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
-	RustPointer<VFile> vfile(Vfs_open(m_vfs.get(), filename.c_str()));
-	if (!vfile)
-	{
-		RustPointer<char> err{getRustError()};
-		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
-	}
-	return new SGPFile(vfile.release(), std::move(filename));
+	return SGPFile::openInVfs(m_vfs.get(), filename);
 }
 
 /* Open a game resource file for reading, evaluating all layers, I will return highest priority layer first. */
@@ -558,11 +553,11 @@ const ExplosionAnimationModel* DefaultContentManager::getExplosionAnimation(uint
 	return *it;
 }
 
-bool DefaultContentManager::loadWeapons(const BinaryData& vanillaItemStrings)
+bool DefaultContentManager::loadWeapons(TranslatableString::Loader& stringLoader)
 {
 	auto json = readJsonDataFileWithSchema("weapons.json");
 	for (auto& element : json.toVec()) {
-		WeaponModel *w = WeaponModel::deserialize(element, m_calibreMap, m_explosiveCalibres, vanillaItemStrings);
+		WeaponModel *w = WeaponModel::deserialize(element, m_calibreMap, m_explosiveCalibres, stringLoader);
 		SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
 		if (w->getItemIndex() >= m_items.size())
@@ -578,11 +573,11 @@ bool DefaultContentManager::loadWeapons(const BinaryData& vanillaItemStrings)
 	return true;
 }
 
-bool DefaultContentManager::loadArmours(const BinaryData& vanillaItemStrings)
+bool DefaultContentManager::loadArmours(TranslatableString::Loader& stringLoader)
 {
 	auto json = readJsonDataFileWithSchema("armours.json");
 	for (auto& element : json.toVec()) {
-		ArmourModel *a = ArmourModel::deserialize(element, vanillaItemStrings);
+		ArmourModel *a = ArmourModel::deserialize(element, stringLoader);
 		SLOGD("Loaded armour {} {}", a->getItemIndex(), a->getInternalName());
 
 		if (a->getItemIndex() >= m_items.size())
@@ -680,11 +675,11 @@ bool DefaultContentManager::loadExplosiveCalibres()
 	return true;
 }
 
-bool DefaultContentManager::loadExplosives(const BinaryData& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations)
+bool DefaultContentManager::loadExplosives(TranslatableString::Loader& stringLoader, const std::vector<const ExplosionAnimationModel*>& animations)
 {
 	auto json = readJsonDataFileWithSchema("explosives.json");
 	for (auto& element : json.toVec()) {
-		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_smokeEffects, m_explosionAnimations, vanillaItemStrings);
+		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_smokeEffects, m_explosionAnimations, stringLoader);
 		SLOGD("Loaded explosive {} {}", e->getItemIndex(), e->getInternalName());
 
 		m_items[e->getItemIndex()] = e;
@@ -693,12 +688,12 @@ bool DefaultContentManager::loadExplosives(const BinaryData& vanillaItemStrings,
 	return true;
 }
 
-bool DefaultContentManager::loadItems(const BinaryData& vanillaItemStrings)
+bool DefaultContentManager::loadItems(TranslatableString::Loader& stringLoader)
 {
 	auto json = readJsonDataFileWithSchema("items.json");
 	for (auto& el : json.toVec())
 	{
-		auto* item = ItemModel::deserialize(el, vanillaItemStrings);
+		auto* item = ItemModel::deserialize(el, stringLoader);
 		if (item->getItemIndex() <= MAX_WEAPONS || item->getItemIndex() > MAXITEMS)
 		{
 			ST::string err = ST::format("Item index must be in the interval {} - {}", MAX_WEAPONS+1, MAXITEMS);
@@ -719,12 +714,12 @@ bool DefaultContentManager::loadItems(const BinaryData& vanillaItemStrings)
 	return true;
 }
 
-bool DefaultContentManager::loadMagazines(const BinaryData& vanillaItemStrings)
+bool DefaultContentManager::loadMagazines(TranslatableString::Loader& stringLoader)
 {
 	auto json = readJsonDataFileWithSchema("magazines.json");
 	for (auto& element : json.toVec())
 	{
-		MagazineModel *mag = MagazineModel::deserialize(element, m_calibreMap, m_ammoTypeMap, vanillaItemStrings);
+		MagazineModel *mag = MagazineModel::deserialize(element, m_calibreMap, m_ammoTypeMap, stringLoader);
 		SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
 
 		m_magazines.push_back(mag);
@@ -922,14 +917,16 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<ST
 /** Load the game data and the item descriptions from the original game resources. */
 bool DefaultContentManager::loadGameData()
 {
-	return loadGameData(BinaryData::deserialize(
+	auto stringLoader = TranslatableString::Loader(m_vfs.get(), m_schemaManager.get(), m_gameVersion);
+
+	return loadGameData(stringLoader, BinaryData::deserialize(
 		AutoSGPFile{ openGameResForReading(BinaryData::itemsFilename()) },
 		AutoSGPFile{ openGameResForReading(BinaryData::profilesFilename()) }));
 }
 
 
 /** Load the game data. */
-bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
+bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoader, BinaryData const& binaryData)
 {
 	loadPrioritizedData();
 
@@ -937,16 +934,16 @@ bool DefaultContentManager::loadGameData(BinaryData const& binaryData)
 	m_gamePolicy = std::make_unique<DefaultGamePolicy>(game_json);
 
 	m_items.resize(MAXITEMS);
-	bool result = loadItems(binaryData)
+	bool result = loadItems(stringLoader)
 		&& loadCalibres()
 		&& loadExplosiveCalibres()
 		&& loadAmmoTypes()
-		&& loadMagazines(binaryData)
-		&& loadWeapons(binaryData)
+		&& loadMagazines(stringLoader)
+		&& loadWeapons(stringLoader)
 		&& loadSmokeEffects()
 		&& loadExplosionAnimations()
-		&& loadExplosives(binaryData, m_explosionAnimations)
-		&& loadArmours(binaryData)
+		&& loadExplosives(stringLoader, m_explosionAnimations)
+		&& loadArmours(stringLoader)
 		&& loadArmyData()
 		&& loadMusic();
 

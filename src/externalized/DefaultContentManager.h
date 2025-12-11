@@ -68,7 +68,7 @@ public:
 	virtual DirFs* tempFiles() const override;
 
 	/* Open a game resource file for reading. */
-	virtual SGPFile* openGameResForReading(ST::string filename) const override;
+	virtual SGPFile* openGameResForReading(const ST::string& filename) const override;
 
 	/* Open a game resource file for reading, evaluating all layers, I will return highest priority layer first. */
 	virtual std::vector<std::unique_ptr<SGPFile>> openGameResForReadingOnAllLayers(const ST::string& filename) const override;
@@ -292,17 +292,17 @@ protected:
 
 	RustPointer<Vfs> m_vfs;
 
-	bool loadGameData(const BinaryData& vanillaItemStrings);
+	bool loadGameData(TranslatableString::Loader& stringLoader, const BinaryData& vanillaItemStrings);
 	/* Extracts the content that requires load precedence and it can't be resolved
 	   by changing the order of execution of other functions. */
 	bool loadPrioritizedData();
-	bool loadWeapons(const BinaryData& vanillaItemStrings);
-	bool loadArmours(const BinaryData& vanillaItemStrings);
+	bool loadWeapons(TranslatableString::Loader& stringLoader);
+	bool loadArmours(TranslatableString::Loader& stringLoader);
 	bool loadSmokeEffects();
 	bool loadExplosionAnimations();
-	bool loadExplosives(const BinaryData& vanillaItemStrings, const std::vector<const ExplosionAnimationModel*>& animations);
-	bool loadItems(const BinaryData& vanillaItemStrings);
-	bool loadMagazines(const BinaryData& vanillaItemStrings);
+	bool loadExplosives(TranslatableString::Loader& stringLoader, const std::vector<const ExplosionAnimationModel*>& animations);
+	bool loadItems(TranslatableString::Loader& stringLoader);
+	bool loadMagazines(TranslatableString::Loader& stringLoader);
 	bool loadExplosiveCalibres();
 	bool loadCalibres();
 	bool loadAmmoTypes();

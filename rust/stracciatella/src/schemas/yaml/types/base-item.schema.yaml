@@ -58,7 +58,7 @@ properties:
     type: boolean
   description:
     title: Description
-    type: string
+    $ref: types/translatable-string.schema.yaml
   internalName:
     title: Internal name
     $ref: types/id.schema.yaml
@@ -83,10 +83,10 @@ properties:
     $ref: types/uint16.schema.yaml
   name:
     title: Name
-    type: string
+    $ref: types/translatable-string.schema.yaml
   shortName:
     title: Short name
-    type: string
+    $ref: types/translatable-string.schema.yaml
   tileGraphic:
     title: Tile graphic index
     description: Graphic that is used when the item is shown on the tactical map

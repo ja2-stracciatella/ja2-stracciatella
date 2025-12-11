@@ -1,7 +1,6 @@
 #include "DefaultContentManagerUT.h"
 
 #include "DefaultContentManager.h"
-#include "ItemStrings.h"
 #include "FileMan.h"
 #include "TestUtils.h"
 #include <utility>
@@ -24,5 +23,5 @@ DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 
 bool DefaultContentManagerUT::loadGameData()
 {
-	return DefaultContentManager::loadGameData(BinaryData{});
+	return DefaultContentManager::loadGameData();
 }
