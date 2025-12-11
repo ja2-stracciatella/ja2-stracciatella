@@ -9,7 +9,7 @@
 #include "ContentManager.h"
 #include "ContentMusic.h"
 #include "IEDT.h"
-#include "ItemStrings.h"
+#include "BinaryProfileData.h"
 #include "Json.h"
 #include "StringEncodingTypes.h"
 #include "Types.h"
@@ -292,7 +292,7 @@ protected:
 
 	RustPointer<Vfs> m_vfs;
 
-	bool loadGameData(TranslatableString::Loader& stringLoader, const BinaryData& vanillaItemStrings);
+	bool loadGameData(TranslatableString::Loader& stringLoader, const BinaryProfileData& binaryProfileData);
 	/* Extracts the content that requires load precedence and it can't be resolved
 	   by changing the order of execution of other functions. */
 	bool loadPrioritizedData();
@@ -320,7 +320,7 @@ protected:
 
 	bool loadStrategicLayerData();
 	bool loadTacticalLayerData();
-	bool loadMercsData(const BinaryData& binaryProfiles);
+	bool loadMercsData(const BinaryProfileData& binaryProfiles);
 	void loadVehicles();
 	void loadTranslationTable();
 	void loadAllScriptRecords();

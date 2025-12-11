@@ -1,8 +1,8 @@
 #include "DefaultContentManager.h"
 
+#include "BinaryProfileData.h"
 #include "Exceptions.h"
 #include "ItemModel.h"
-#include "ItemStrings.h"
 #include "Directories.h"
 
 // XXX: GameRes.h should be integrated to ContentManager
@@ -918,15 +918,14 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<ST
 bool DefaultContentManager::loadGameData()
 {
 	auto stringLoader = TranslatableString::Loader(m_vfs.get(), m_schemaManager.get(), m_gameVersion);
+	auto binaryProfileData = BinaryProfileData::deserialize(AutoSGPFile{ openGameResForReading(BinaryProfileData::profilesFilename()) });
 
-	return loadGameData(stringLoader, BinaryData::deserialize(
-		AutoSGPFile{ openGameResForReading(BinaryData::itemsFilename()) },
-		AutoSGPFile{ openGameResForReading(BinaryData::profilesFilename()) }));
+	return loadGameData(stringLoader, binaryProfileData);
 }
 
 
 /** Load the game data. */
-bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoader, BinaryData const& binaryData)
+bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoader, BinaryProfileData const& binaryData)
 {
 	loadPrioritizedData();
 
@@ -1276,7 +1275,7 @@ bool DefaultContentManager::loadTacticalLayerData()
 	return true;
 }
 
-bool DefaultContentManager::loadMercsData(const BinaryData& binaryProfiles)
+bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfiles)
 {
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
 

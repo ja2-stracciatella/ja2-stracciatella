@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ItemModel.h"
-#include "ItemStrings.h"
 #include "TranslatableString.h"
 
 #include <string_theory/string>
