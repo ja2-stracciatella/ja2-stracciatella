@@ -33,6 +33,7 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 #include "MercProfile.h"
+#include "TownModel.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -626,7 +627,7 @@ static void DisplayCharName(SOLDIERTYPE const& s)
 	{
 		// name of town, if any
 		INT8 const bTownId = GetTownIdForSector(s.sSector.AsByte());
-		if (bTownId != BLANK_SECTOR) sTownName = GCM->getTownName(bTownId);
+		if (bTownId != BLANK_SECTOR) sTownName = GCM->getTown(bTownId)->name;
 	}
 
 	ST::string sString;

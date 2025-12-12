@@ -159,8 +159,6 @@ public:
 	virtual const TownModel* getTown(int8_t townId) const  override;
 	virtual const TownModel* getTownByName(const ST::string& name) const  override;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const override;
-	virtual const ST::string getTownName(uint8_t townId) const override;
-	virtual const ST::string getTownLocative(uint8_t townId) const override;
 	virtual const std::vector <const UndergroundSectorModel*>& getUndergroundSectors() const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
 	virtual       int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const override;
@@ -289,7 +287,7 @@ protected:
 	bool loadGameData(TranslatableString::Loader& stringLoader, const BinaryProfileData& binaryProfileData);
 	/* Extracts the content that requires load precedence and it can't be resolved
 	   by changing the order of execution of other functions. */
-	bool loadPrioritizedData();
+	bool loadPrioritizedData(TranslatableString::Loader& stringLoader);
 	bool loadWeapons(TranslatableString::Loader& stringLoader);
 	bool loadArmours(TranslatableString::Loader& stringLoader);
 	bool loadSmokeEffects();
