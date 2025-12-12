@@ -656,7 +656,7 @@ static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 	INT16 sY;
 
 	const INT32 y = STD_SCREEN_Y + pers_stat_y[idx];
-	if (delta > 0)
+	if (delta)
 	{
 		sString = ST::format("( {+d} )", delta);
 		FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
@@ -694,7 +694,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 	// Health
 	if (s.bAssignment != ASSIGNMENT_POW)
 	{
-		if (p.bLifeDelta > 0)
+		if (p.bLifeDelta)
 		{
 			sString = ST::format("( {+d} )", p.bLifeDelta);
 			FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
