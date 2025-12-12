@@ -152,7 +152,6 @@ public:
 	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const = 0;
 	virtual const ShippingDestinationModel* getShippingDestination(uint8_t locationId) const = 0;
 	virtual const ShippingDestinationModel* getPrimaryShippingDestination() const = 0;
-	virtual const ST::string* getShippingDestinationName(uint8_t index) const = 0;
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
 

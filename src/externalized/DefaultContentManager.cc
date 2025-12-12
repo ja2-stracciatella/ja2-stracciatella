@@ -236,11 +236,6 @@ const ShippingDestinationModel* DefaultContentManager::getPrimaryShippingDestina
 	throw DataError("Bobby Ray primary destination is not defined");
 }
 
-const ST::string* DefaultContentManager::getShippingDestinationName(uint8_t index) const
-{
-	return &m_shippingDestinationNames[index];
-}
-
 const NpcActionParamsModel* DefaultContentManager::getNpcActionParams(uint16_t actionCode) const
 {
 	auto it = m_npcActionParams.find(actionCode);
@@ -954,14 +949,12 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 	auto sai_json = readJsonDataFileWithSchema("strategic-ai-policy.json");
 	m_strategicAIPolicy = std::make_unique<DefaultStrategicAIPolicy>(sai_json);
 
-	loadStringRes("strings/shipping-destinations", m_shippingDestinationNames);
-
 	auto shippingDestJson = readJsonDataFileWithSchema("shipping-destinations.json");
 	for (auto& element : shippingDestJson.toVec())
 	{
-		m_shippingDestinations.push_back(ShippingDestinationModel::deserialize(element));
+		m_shippingDestinations.push_back(ShippingDestinationModel::deserialize(element, stringLoader));
 	}
-	ShippingDestinationModel::validateData(m_shippingDestinations, m_shippingDestinationNames);
+	ShippingDestinationModel::validateData(m_shippingDestinations);
 
 	auto loadScreensList = readJsonDataFileWithSchema("loading-screens.json");
 	auto loadScreensMapping = readJsonDataFileWithSchema("loading-screens-mapping.json");
