@@ -2362,8 +2362,7 @@ void RenderItemDescriptionBox(void)
 			const WeaponModel * w = GCM->getWeapon(obj.usItem);
 			if (w->calibre->index != CalibreModel::NOAMMO)
 			{
-				ST::string name = *w->calibre->getName();
-				pStr += ST::format("{} ", name);
+				pStr += ST::format("{} ", w->calibre->getName());
 			}
 			pStr += ST::format("{}", WeaponType[w->ubWeaponType]);
 			ST::string imprint = GetObjectImprint(obj);
@@ -3243,8 +3242,7 @@ static bool IsValidAmmoToReloadRobot(SOLDIERTYPE const& s, OBJECTTYPE const& amm
 	OBJECTTYPE const& weapon = s.inv[HANDPOS];
 	if (!CompatibleAmmoForGun(&ammo, &weapon))
 	{
-		ST::string name = *GCM->getWeapon(weapon.usItem)->calibre->getName();
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], name));
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], GCM->getWeapon(weapon.usItem)->calibre->getName()));
 		return false;
 	}
 	return true;
@@ -5195,8 +5193,7 @@ ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 			const CalibreModel * calibre = GCM->getWeapon(usItem)->calibre;
 			if (calibre->showInHelpText)
 			{
-				ST::string name = *calibre->getName();
-				dst += ST::format(" ({})", name);
+				dst += ST::format(" ({})", calibre->getName());
 			}
 		}
 

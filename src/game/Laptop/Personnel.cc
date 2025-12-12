@@ -1140,7 +1140,7 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 
 		if (item->isGun())
 		{
-			sString = *item->asWeapon()->calibre->getName();
+			sString = item->asWeapon()->calibre->getName();
 			sString = ReduceStringLength(sString, 171 - 75, FONT10ARIAL);
 			MPrint(PosX + 65, PosY + 15, sString);
 		}

@@ -124,8 +124,6 @@ public:
 	virtual const std::vector<const MagazineModel*>& getMagazines() const = 0;
 
 	virtual const CalibreModel* getCalibre(uint8_t index) = 0;
-	virtual const ST::string* getCalibreName(uint8_t index) const = 0;
-	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const = 0;
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
 

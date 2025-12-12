@@ -12,6 +12,14 @@ items:
     internalName:
       title: Internal name
       $ref: types/id.schema.yaml
+    name:
+      title: Name
+      description: Display name for the calibre
+      $ref: types/translatable-string.schema.yaml
+    bobbyRaysName:
+      title: Bobby Rays Name
+      description: Display name for the calibre in the Bobby Rays shop
+      $ref: types/translatable-string.schema.yaml
     sound:
       title: Shot sound
       description: Path to sound that is played when a single shot is fired.
@@ -20,7 +28,7 @@ items:
       title: Burst sound
       description: |
         Path to sounds that are played as burst sounds for this calibre.
-        
+
         %d will replaced with the amount of bullets left in the gun.
       $ref: types/resource-path.schema.yaml
     silencedSound:
@@ -31,7 +39,7 @@ items:
       title: Silenced burst sound
       description: |
         Path to sounds that are played as burst sounds for this calibre when the gun is silenced somehow.
-        
+
         %d will replaced with the amount of bullets left in the gun.
       $ref: types/resource-path.schema.yaml
     showInHelpText:

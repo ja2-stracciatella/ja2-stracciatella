@@ -94,8 +94,6 @@ public:
 	virtual const std::vector<const MagazineModel*>& getMagazines() const override;
 
 	virtual const CalibreModel* getCalibre(uint8_t index) override;
-	virtual const ST::string* getCalibreName(uint8_t index) const override;
-	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const override;
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) override;
 
@@ -215,8 +213,6 @@ protected:
 	std::vector<const MagazineModel*> m_magazines;
 
 	std::vector<const CalibreModel*> m_calibres;
-	std::vector<ST::string> m_calibreNames;
-	std::vector<ST::string> m_calibreNamesBobbyRay;
 
 	std::vector<AmmoTypeModel const *> m_ammoTypes;
 
@@ -304,7 +300,7 @@ protected:
 	bool loadItems(TranslatableString::Loader& stringLoader);
 	bool loadMagazines(TranslatableString::Loader& stringLoader);
 	bool loadExplosiveCalibres();
-	bool loadCalibres();
+	bool loadCalibres(TranslatableString::Loader& stringLoader);
 	bool loadAmmoTypes();
 	bool loadArmyData();
 	bool loadMusicModeList(MusicMode mode, const JsonValue& array);

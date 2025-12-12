@@ -517,16 +517,6 @@ const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
 	return m_calibres[index];
 }
 
-const ST::string* DefaultContentManager::getCalibreName(uint8_t index) const
-{
-	return &m_calibreNames[index];
-}
-
-const ST::string* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
-{
-	return &m_calibreNamesBobbyRay[index];
-}
-
 const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 {
 	return m_ammoTypes[index];
@@ -730,11 +720,11 @@ bool DefaultContentManager::loadMagazines(TranslatableString::Loader& stringLoad
 	return true;
 }
 
-bool DefaultContentManager::loadCalibres()
+bool DefaultContentManager::loadCalibres(TranslatableString::Loader& stringLoader)
 {
 	auto json = readJsonDataFileWithSchema("calibres.json");
 	for (auto& element : json.toVec()) {
-		CalibreModel *calibre = CalibreModel::deserialize(element);
+		CalibreModel *calibre = CalibreModel::deserialize(element, stringLoader);
 		SLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
 
 		if(m_calibres.size() <= calibre->index)
@@ -934,7 +924,7 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 
 	m_items.resize(MAXITEMS);
 	bool result = loadItems(stringLoader)
-		&& loadCalibres()
+		&& loadCalibres(stringLoader)
 		&& loadExplosiveCalibres()
 		&& loadAmmoTypes()
 		&& loadMagazines(stringLoader)
@@ -978,9 +968,6 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 
 	m_loadingScreenModel.reset(LoadingScreenModel::deserialize(loadScreensList, loadScreensMapping));
 	m_loadingScreenModel->validateData(this);
-
-	loadStringRes("strings/ammo-calibre", m_calibreNames);
-	loadStringRes("strings/ammo-calibre-bobbyray", m_calibreNamesBobbyRay);
 
 	loadStringRes("strings/new-strings", m_newStrings);
 	loadStringRes("strings/strategic-map-land-types", m_landTypeStrings);
