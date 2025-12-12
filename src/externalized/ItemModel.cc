@@ -16,13 +16,20 @@ constexpr uint32_t BINARY_SIZE_SHORT_ITEM_NAME = 80;
 constexpr uint32_t BINARY_SIZE_ITEM_INFO = 240;
 constexpr uint32_t BINARY_SIZE_FULL_ITEM = BINARY_SIZE_ITEM_NAME + BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_INFO;
 
+constexpr const char* BINARY_STRING_BOBBYR_FILE = BINARYDATADIR "/braydesc.edt";
+constexpr uint32_t BINARY_SIZE_BOBBYR_ITEM_NAME = 80;
+constexpr uint32_t BINARY_SIZE_BOBBYR_ITEM_INFO = 320;
+constexpr uint32_t BINARY_SIZE_BOBBYR_FULL_ITEM = BINARY_SIZE_BOBBYR_ITEM_NAME + BINARY_SIZE_BOBBYR_ITEM_INFO;
+
 auto deserializeHelper(ItemModel::InitData const& initData,
+	char const * file,
 	char const * propertyName,
+	uint32_t itemSize,
 	uint32_t subOffset,
 	uint32_t length)
 {
 	auto itemIndex = initData.json.GetUInt("itemIndex");
-	std::unique_ptr<TranslatableString::String> translatableString = std::make_unique<TranslatableString::Binary>(BINARY_STRING_FILE, itemIndex * BINARY_SIZE_FULL_ITEM + subOffset, length);
+	std::unique_ptr<TranslatableString::String> translatableString = std::make_unique<TranslatableString::Binary>(file, itemIndex * itemSize + subOffset, length);
 	if (initData.json.has(propertyName)) {
 		translatableString = TranslatableString::String::parse(initData.json.GetValue(propertyName));
 	}
@@ -64,6 +71,8 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 			ST::string&& shortName,
 			ST::string&& name,
 			ST::string&& description,
+			ST::string&& bobbyRaysName,
+			ST::string&& bobbyRaysDescription,
 			uint32_t   usItemClass,
 			uint8_t    ubClassIndex,
 			ItemCursor ubCursor,
@@ -82,6 +91,8 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 	this->shortName             = std::move(shortName);
 	this->name                  = std::move(name);
 	this->description           = std::move(description);
+	this->bobbyRaysName         = std::move(bobbyRaysName);
+	this->bobbyRaysDescription  = std::move(bobbyRaysDescription);
 	this->usItemClass           = usItemClass;
 	this->ubClassIndex          = ubClassIndex;
 	this->ubCursor              = ubCursor;
@@ -99,6 +110,8 @@ const ST::string& ItemModel::getInternalName() const   { return internalName;   
 const ST::string& ItemModel::getShortName() const      { return shortName; }
 const ST::string& ItemModel::getName() const           { return name; }
 const ST::string& ItemModel::getDescription() const     { return description; }
+const ST::string& ItemModel::getBobbyRaysName() const           { return bobbyRaysName; }
+const ST::string& ItemModel::getBobbyRaysDescription() const     { return bobbyRaysDescription; }
 
 uint16_t        ItemModel::getItemIndex() const        { return itemIndex;             }
 uint32_t        ItemModel::getItemClass() const        { return usItemClass;           }
@@ -210,17 +223,27 @@ JsonValue ItemModel::serialize() const
 
 ST::string ItemModel::deserializeShortName(InitData const& initData)
 {
-	return deserializeHelper(initData, "shortName", 0, BINARY_SIZE_SHORT_ITEM_NAME);
+	return deserializeHelper(initData, BINARY_STRING_FILE, "shortName", BINARY_SIZE_FULL_ITEM, 0, BINARY_SIZE_SHORT_ITEM_NAME);
 }
 
 ST::string ItemModel::deserializeName(InitData const& initData)
 {
-	return deserializeHelper(initData, "name", BINARY_SIZE_SHORT_ITEM_NAME, BINARY_SIZE_ITEM_NAME);
+	return deserializeHelper(initData, BINARY_STRING_FILE, "name", BINARY_SIZE_FULL_ITEM, BINARY_SIZE_SHORT_ITEM_NAME, BINARY_SIZE_ITEM_NAME);
 }
 
 ST::string ItemModel::deserializeDescription(InitData const& initData)
 {
-	return deserializeHelper(initData, "description", BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_NAME, BINARY_SIZE_ITEM_INFO);
+	return deserializeHelper(initData, BINARY_STRING_FILE, "description", BINARY_SIZE_FULL_ITEM, BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_NAME, BINARY_SIZE_ITEM_INFO);
+}
+
+ST::string ItemModel::deserializeBobbyRaysName(InitData const& initData)
+{
+	return deserializeHelper(initData, BINARY_STRING_BOBBYR_FILE, "bobbyRaysName", BINARY_SIZE_BOBBYR_FULL_ITEM, 0, BINARY_SIZE_BOBBYR_ITEM_NAME);
+}
+
+ST::string ItemModel::deserializeBobbyRaysDescription(InitData const& initData)
+{
+	return deserializeHelper(initData, BINARY_STRING_BOBBYR_FILE, "bobbyRaysDescription", BINARY_SIZE_BOBBYR_FULL_ITEM, BINARY_SIZE_BOBBYR_ITEM_NAME, BINARY_SIZE_BOBBYR_ITEM_INFO);
 }
 
 const ItemModel* ItemModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader)
@@ -235,6 +258,8 @@ const ItemModel* ItemModel::deserialize(const JsonValue &json, TranslatableStrin
 	auto shortName = ItemModel::deserializeShortName(initData);
 	auto name = ItemModel::deserializeName(initData);
 	auto description = ItemModel::deserializeDescription(initData);
+	auto bobbyRaysName = ItemModel::deserializeName(initData);
+	auto bobbyRaysDescription = ItemModel::deserializeDescription(initData);
 	auto flags = ItemModel::deserializeFlags(obj);
 
 	return new ItemModel(
@@ -243,6 +268,8 @@ const ItemModel* ItemModel::deserialize(const JsonValue &json, TranslatableStrin
 		std::move(shortName),
 		std::move(name),
 		std::move(description),
+		std::move(bobbyRaysName),
+		std::move(bobbyRaysDescription),
 		obj.GetUInt("usItemClass"),
 		obj.GetUInt("ubClassIndex"),
 		(ItemCursor)obj.GetUInt("ubCursor"),

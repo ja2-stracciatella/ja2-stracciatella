@@ -660,7 +660,6 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 	UINT16  i;
 	ST::string sTemp;
 	UINT16  usPosY;
-	UINT32  uiStartLoc=0;
 	UINT32  uiTotal;
 
 	//Output the qty
@@ -715,6 +714,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 		//if the item was purchased
 		if( pBobbyRayPurchase[i].ubNumberPurchased )
 		{
+			auto item = GCM->getItem(pBobbyRayPurchase[i].usItemIndex);
 			uiTotal = 0;
 
 			//Display the qty, order#, item name, unit price and the total
@@ -724,28 +724,16 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIRST_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//weight
-			sTemp = ST::format("{3.1f}", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased);
+			sTemp = ST::format("{3.1f}", GetWeightBasedOnMetricOption( item->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased);
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_SECOND_COLUMN_X - 2, usPosY, BOBBYR_GRID_SECOND_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-
-			//Display Items Name
-			if( pBobbyRayPurchase[i].fUsed )
-			{
-				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayUsedInventory[ pBobbyRayPurchase[i].usBobbyItemIndex ].usItemIndex;
-			}
-			else
-			{
-				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayInventory[ pBobbyRayPurchase[i].usBobbyItemIndex ].usItemIndex;
-			}
-
 
 			ST::string sText;
 			if( pBobbyRayPurchase[i].fUsed )
 			{
-				ST::string sBack = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
-				sText = ST::format("* {}", sBack);
+				sText = ST::format("* {}", item->getBobbyRaysName());
 			}
 			else
-				sText = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				sText = item->getBobbyRaysName();
 
 			sText = ReduceStringLength(sText, BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 

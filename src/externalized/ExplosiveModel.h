@@ -40,6 +40,8 @@ struct ExplosiveModel : ItemModel
 		ST::string&& shortName,
 		ST::string&& name,
 		ST::string&& description,
+		ST::string&& bobbyRaysName,
+		ST::string&& bobbyRaysDescription,
 		uint32_t  itemClass,
 		ItemCursor cursor,
 		InventoryGraphicsModel&& inventoryGraphics,

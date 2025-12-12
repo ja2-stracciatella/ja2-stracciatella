@@ -11,6 +11,8 @@ struct ArmourModel : ItemModel
 		ST::string&& shortName,
 		ST::string&& name,
 		ST::string&& description,
+		ST::string&& bobbyRaysName,
+		ST::string&& bobbyRaysDescription,
 		InventoryGraphicsModel&& inventoryGraphics,
 		TilesetTileIndexModel&& tileGraphic,
 		uint8_t weight,
