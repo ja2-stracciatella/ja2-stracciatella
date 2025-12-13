@@ -1,19 +1,39 @@
 #include "ItemModel.h"
-#include <functional>
+#include "Directories.h"
+#include "TranslatableString.h"
+#include <cstdint>
+#include <memory>
+#include <string_theory/st_string.h>
 #include <utility>
 
 
 namespace {
+
+constexpr const char* BINARY_STRING_FILE = BINARYDATADIR "/itemdesc.edt";
+constexpr uint32_t VANILLA_MAX_ITEMS = 351;
+constexpr uint32_t BINARY_SIZE_ITEM_NAME = 80;
+constexpr uint32_t BINARY_SIZE_SHORT_ITEM_NAME = 80;
+constexpr uint32_t BINARY_SIZE_ITEM_INFO = 240;
+constexpr uint32_t BINARY_SIZE_FULL_ITEM = BINARY_SIZE_ITEM_NAME + BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_INFO;
+
 auto deserializeHelper(ItemModel::InitData const& initData,
 	char const * propertyName,
-	decltype(&BinaryData::getItemName) getterMethod)
+	uint32_t subOffset,
+	uint32_t length)
 {
-	auto result{ initData.json.getOptionalString(propertyName) };
-	if (result.empty()) {
-		result = std::invoke(getterMethod, initData.strings,
-		                     initData.json.GetUInt("itemIndex"));
+	auto itemIndex = initData.json.GetUInt("itemIndex");
+	std::unique_ptr<TranslatableString::String> translatableString = std::make_unique<TranslatableString::Binary>(BINARY_STRING_FILE, itemIndex * BINARY_SIZE_FULL_ITEM + subOffset, length);
+	if (initData.json.has(propertyName)) {
+		translatableString = TranslatableString::String::parse(initData.json.GetValue(propertyName));
 	}
-	return result;
+	try {
+		return translatableString->resolve(initData.stringLoader);
+	} catch (const std::runtime_error& error) {
+		if (itemIndex < VANILLA_MAX_ITEMS) {
+			SLOGE("Could not read itemdesc.edt to completion: {}", error.what());
+		}
+		return ST::string();
+	}
 }
 }
 
@@ -190,23 +210,23 @@ JsonValue ItemModel::serialize() const
 
 ST::string ItemModel::deserializeShortName(InitData const& initData)
 {
-	return deserializeHelper(initData, "shortName", &BinaryData::getItemShortName);
+	return deserializeHelper(initData, "shortName", 0, BINARY_SIZE_SHORT_ITEM_NAME);
 }
 
 ST::string ItemModel::deserializeName(InitData const& initData)
 {
-	return deserializeHelper(initData, "name", &BinaryData::getItemName);
+	return deserializeHelper(initData, "name", BINARY_SIZE_SHORT_ITEM_NAME, BINARY_SIZE_ITEM_NAME);
 }
 
 ST::string ItemModel::deserializeDescription(InitData const& initData)
 {
-	return deserializeHelper(initData, "description", &BinaryData::getItemDescription);
+	return deserializeHelper(initData, "description", BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_NAME, BINARY_SIZE_ITEM_INFO);
 }
 
-const ItemModel* ItemModel::deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings)
+const ItemModel* ItemModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader)
 {
 	auto obj = json.toObject();
-	InitData const initData{ obj, vanillaItemStrings };
+	InitData const initData{ obj, stringLoader };
 	uint16_t itemIndex = obj.GetUInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");
 	auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);

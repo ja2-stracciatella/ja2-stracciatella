@@ -31,6 +31,9 @@ public:
 	/** Closes file. */
 	~SGPFile();
 
+	/** Opens file in VFS */
+	static SGPFile* openInVfs(Vfs* vfs, const ST::string& filename);
+
 	/** Read exactly the number of bytes specified from the file into pDest. */
 	void read(void *const pDest, size_t const bytesToRead);
 	/** Read at most the number of bytes specified from the file into pDest. The actual number of bytes read is returned. */

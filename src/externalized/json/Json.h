@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RustInterface.h"
+#include "stracciatella.h"
 
 #include <string_theory/string>
 #include <vector>
@@ -20,6 +20,8 @@ class JsonValue {
 
 		static JsonValue deserialize(const ST::string& str);
 		static JsonValue deserialize(const ST::string& vanillaStr, const ST::string& patchStr);
+		static JsonValue readFromFile(Vfs* vfs, const ST::string& file);
+		static JsonValue readFromFileWithSchema(Vfs* vfs, SchemaManager* schemaManager, const ST::string& file);
 
 		ST::string serialize(bool pretty = false) const;
 		bool isInt() const;

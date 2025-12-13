@@ -1,5 +1,4 @@
 #include "SGPFile.h"
-#include "RustInterface.h"
 #include "Exceptions.h"
 #include "Logger.h"
 
@@ -96,6 +95,16 @@ SGPFile::SGPFile(VFile *f, ST::string && filename) :
 SGPFile::~SGPFile()
 {
     File_close(this->file);
+}
+
+SGPFile* SGPFile::openInVfs(Vfs* vfs, const ST::string& filename) {
+	RustPointer<VFile> vfile(Vfs_open(vfs, filename.c_str()));
+	if (!vfile)
+	{
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("SGPFile::openInVfs: {}", err.get()).to_std_string());
+	}
+	return new SGPFile(vfile.release(), std::move(filename));
 }
 
 void SGPFile::read(void *const pDest, size_t const uiBytesToRead)

@@ -3,6 +3,7 @@
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
 #include "ItemModel.h"
+#include "TranslatableString.h"
 #include <utility>
 
 MagazineModel::MagazineModel(uint16_t itemIndex_,
@@ -61,10 +62,10 @@ MagazineModel* MagazineModel::deserialize(
 	const JsonValue &json,
 	const std::map<ST::string, const CalibreModel*> &calibreMap,
 	const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
-	const BinaryData& vanillaItemStrings)
+	TranslatableString::Loader& stringLoader)
 {
 	auto obj = json.toObject();
-	ItemModel::InitData const initData{ obj, vanillaItemStrings };
+	ItemModel::InitData const initData{ obj, stringLoader };
 	int itemIndex                 = obj.GetInt("itemIndex");
 	ST::string internalName       = obj.GetString("internalName");
 	const CalibreModel *calibre   = getCalibre(obj.GetString("calibre"), calibreMap);

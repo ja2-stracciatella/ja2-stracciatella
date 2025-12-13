@@ -1,0 +1,46 @@
+title: Translatable String
+description: A string that can be translated into multiple languages via references to other files.
+oneOf:
+  - type: string
+    title: No Translation
+  - type: object
+    title: JSON Translation
+    description: A translated string loaded from JSON.
+    properties:
+      type:
+        type: string
+        const: json
+      prefix:
+        description: |
+          The prefix of the file. E.g. `strings/yourmod/weapons`.
+          Depending on the chosen language a suffix & `.json` will be added.
+          E.g. `strings/yourmod/weapons-eng.json`
+        $ref: types/resource-path.schema.yaml
+      index:
+        description: The index of the string within the files
+        $ref: types/uint32.schema.yaml
+    required:
+      - type
+      - prefix
+      - index
+  - type: object
+    title: Binary Translation
+    description: A translated string loaded from a binary data file. This is mostly used for compatibility with vanilla data.
+    properties:
+      type:
+        type: string
+        const: binary
+      file:
+        description: The file to load the string from
+        $ref: types/resource-path.schema.yaml
+      offset:
+        description: The offset of the string inside the file
+        $ref: types/uint32.schema.yaml
+      length:
+        description: The length of the string inside the file
+        $ref: types/uint32.schema.yaml
+    required:
+      - type
+      - file
+      - offset
+      - length

@@ -1,9 +1,11 @@
 #include "DefaultContentManagerUT.h"
 
+#include "BinaryProfileData.h"
 #include "DefaultContentManager.h"
-#include "ItemStrings.h"
 #include "FileMan.h"
+#include "GameRes.h"
 #include "TestUtils.h"
+#include "TranslatableString.h"
 #include <utility>
 
 DefaultContentManagerUT::DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions)
@@ -24,5 +26,6 @@ DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 
 bool DefaultContentManagerUT::loadGameData()
 {
-	return DefaultContentManager::loadGameData(BinaryData{});
+	auto loader = TranslatableString::Unittests::TestLoader();
+	return DefaultContentManager::loadGameData(loader, BinaryProfileData());
 }

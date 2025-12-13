@@ -2,10 +2,10 @@
 
 #include "GamePolicy.h"
 #include "Item_Types.h"
-#include "ItemStrings.h"
 #include "InventoryGraphicsModel.h"
 #include "Json.h"
 #include "TilesetTileIndexModel.h"
+#include "TranslatableString.h"
 
 #include <string_theory/string>
 
@@ -100,11 +100,11 @@ struct ItemModel
 	struct InitData
 	{
 		JsonObject const& json;
-		BinaryData const& strings;
+		TranslatableString::Loader& stringLoader;
 	};
 
 	virtual JsonValue serialize() const;
-	static const ItemModel* deserialize(const JsonValue &json, const BinaryData& vanillaItemStrings);
+	static const ItemModel* deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader);
 
 protected:
 	static ST::string deserializeShortName(InitData const&);

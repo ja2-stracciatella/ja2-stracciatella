@@ -1,7 +1,7 @@
 #include "ExplosiveModel.h"
 
 #include "Exceptions.h"
-#include "Weapons.h"
+#include "TranslatableString.h"
 
 uint32_t deserializeItemClass(const ST::string& s) {
 	if (s == "GRENADE") {
@@ -136,10 +136,10 @@ ExplosiveModel* ExplosiveModel::deserialize(
 	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 	const std::vector<const SmokeEffectModel*> &smokeEffects,
 	const std::vector<const ExplosionAnimationModel*> &animations,
-	const BinaryData& vanillaItemStrings
+	TranslatableString::Loader& stringLoader
 ) {
 	auto obj = json.toObject();
-	ItemModel::InitData const initData{ obj, vanillaItemStrings };
+	ItemModel::InitData const initData{ obj, stringLoader };
 
 	int itemIndex = obj.GetInt("itemIndex");
 	ST::string internalName = obj.GetString("internalName");
