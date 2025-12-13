@@ -5,6 +5,7 @@
 #include "Localization.h"
 #include "SGPFile.h"
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 namespace TranslatableString {
@@ -55,25 +56,30 @@ namespace TranslatableString {
 	}
 
 	ST::string Json::resolve(Loader& loader) {
-		auto translations = loader.getJsonTranslations(m_prefix);
-		if (translations.size() <= m_index) {
-			throw DataError(ST::format(
-				"Translation file {} has only {} entries for the current language, while requested index was {}",
-				m_prefix,
-				translations.size(),
-				m_index
-			));
+		try {
+			auto translations = loader.getJsonTranslations(m_prefix);
+			if (translations.size() <= m_index) {
+				throw DataError(ST::format("file has only {} entries", translations.size()));
+			}
+			return translations[m_index];
+		} catch (const std::runtime_error& error) {
+			SLOGE("failed to resolve TranslatableString::Json(`{}`, {}): {}", m_prefix, m_index, error.what());
 		}
-		return translations[m_index];
+		return ST::string();
 	}
 
 	ST::string Binary::resolve(Loader& loader) {
-		auto file = loader.getBinaryFile(m_file);
-		if (!file) {
-			// In unittests we return a nullptr from getBinaryFile
-			return ST::string();
+		try {
+			auto file = loader.getBinaryFile(m_file);
+			if (!file) {
+				// In unittests we return a nullptr from getBinaryFile
+				return ST::string();
+			}
+			return LoadEncryptedString(file, m_offset, m_length);
+		} catch (const std::runtime_error& error) {
+			SLOGE("failed to resolve TranslatableString::Binary(`{}`, {}, {})`: {}", m_file, m_offset, m_length, error.what());
 		}
-		return LoadEncryptedString(file, m_offset, m_length);
+		return ST::string();
 	}
 
 	namespace Utils {

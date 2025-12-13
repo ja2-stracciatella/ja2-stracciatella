@@ -7,37 +7,33 @@
 #include <utility>
 
 
-namespace {
+namespace ItemStrings {
+	constexpr const char* BINARY_STRING_FILE = BINARYDATADIR "/itemdesc.edt";
+	constexpr uint32_t BINARY_SIZE_ITEM_NAME = 80;
+	constexpr uint32_t BINARY_SIZE_SHORT_ITEM_NAME = 80;
+	constexpr uint32_t BINARY_SIZE_ITEM_INFO = 240;
+	constexpr uint32_t BINARY_SIZE_FULL_ITEM = BINARY_SIZE_ITEM_NAME + BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_INFO;
 
-constexpr const char* BINARY_STRING_FILE = BINARYDATADIR "/itemdesc.edt";
-constexpr uint32_t VANILLA_MAX_ITEMS = 351;
-constexpr uint32_t BINARY_SIZE_ITEM_NAME = 80;
-constexpr uint32_t BINARY_SIZE_SHORT_ITEM_NAME = 80;
-constexpr uint32_t BINARY_SIZE_ITEM_INFO = 240;
-constexpr uint32_t BINARY_SIZE_FULL_ITEM = BINARY_SIZE_ITEM_NAME + BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_INFO;
+	constexpr const char* BINARY_STRING_BOBBYR_FILE = BINARYDATADIR "/braydesc.edt";
+	constexpr uint32_t BINARY_SIZE_BOBBYR_ITEM_NAME = 80;
+	constexpr uint32_t BINARY_SIZE_BOBBYR_ITEM_INFO = 320;
+	constexpr uint32_t BINARY_SIZE_BOBBYR_FULL_ITEM = BINARY_SIZE_BOBBYR_ITEM_NAME + BINARY_SIZE_BOBBYR_ITEM_INFO;
 
-constexpr const char* BINARY_STRING_BOBBYR_FILE = BINARYDATADIR "/braydesc.edt";
-constexpr uint32_t BINARY_SIZE_BOBBYR_ITEM_NAME = 80;
-constexpr uint32_t BINARY_SIZE_BOBBYR_ITEM_INFO = 320;
-constexpr uint32_t BINARY_SIZE_BOBBYR_FULL_ITEM = BINARY_SIZE_BOBBYR_ITEM_NAME + BINARY_SIZE_BOBBYR_ITEM_INFO;
-
-auto deserializeHelper(ItemModel::InitData const& initData,
-	char const * file,
-	char const * propertyName,
-	uint32_t itemSize,
-	uint32_t subOffset,
-	uint32_t length)
-{
-	auto itemIndex = initData.json.GetUInt("itemIndex");
-	try {
-		return TranslatableString::Utils::resolveOptionalProperty(initData.stringLoader, initData.json, propertyName, std::make_unique<TranslatableString::Binary>(file, itemIndex * itemSize + subOffset, length));
-	} catch (const std::runtime_error& error) {
-		if (itemIndex < VANILLA_MAX_ITEMS) {
-			SLOGE("Could not read itemdesc.edt to completion: {}", error.what());
-		}
-		return ST::string();
+	auto deserializeHelper(ItemModel::InitData const& initData,
+		char const * file,
+		char const * propertyName,
+		uint32_t itemSize,
+		uint32_t subOffset,
+		uint32_t length)
+	{
+		auto itemIndex = initData.json.GetUInt("itemIndex");
+		return TranslatableString::Utils::resolveOptionalProperty(
+			initData.stringLoader,
+			initData.json,
+			propertyName,
+			std::make_unique<TranslatableString::Binary>(file, itemIndex * itemSize + subOffset, length)
+		);
 	}
-}
 }
 
 ItemModel::ItemModel(uint16_t itemIndex,
@@ -219,26 +215,31 @@ JsonValue ItemModel::serialize() const
 
 ST::string ItemModel::deserializeShortName(InitData const& initData)
 {
+	using namespace ItemStrings;
 	return deserializeHelper(initData, BINARY_STRING_FILE, "shortName", BINARY_SIZE_FULL_ITEM, 0, BINARY_SIZE_SHORT_ITEM_NAME);
 }
 
 ST::string ItemModel::deserializeName(InitData const& initData)
 {
+	using namespace ItemStrings;
 	return deserializeHelper(initData, BINARY_STRING_FILE, "name", BINARY_SIZE_FULL_ITEM, BINARY_SIZE_SHORT_ITEM_NAME, BINARY_SIZE_ITEM_NAME);
 }
 
 ST::string ItemModel::deserializeDescription(InitData const& initData)
 {
+	using namespace ItemStrings;
 	return deserializeHelper(initData, BINARY_STRING_FILE, "description", BINARY_SIZE_FULL_ITEM, BINARY_SIZE_SHORT_ITEM_NAME + BINARY_SIZE_ITEM_NAME, BINARY_SIZE_ITEM_INFO);
 }
 
 ST::string ItemModel::deserializeBobbyRaysName(InitData const& initData)
 {
+	using namespace ItemStrings;
 	return deserializeHelper(initData, BINARY_STRING_BOBBYR_FILE, "bobbyRaysName", BINARY_SIZE_BOBBYR_FULL_ITEM, 0, BINARY_SIZE_BOBBYR_ITEM_NAME);
 }
 
 ST::string ItemModel::deserializeBobbyRaysDescription(InitData const& initData)
 {
+	using namespace ItemStrings;
 	return deserializeHelper(initData, BINARY_STRING_BOBBYR_FILE, "bobbyRaysDescription", BINARY_SIZE_BOBBYR_FULL_ITEM, BINARY_SIZE_BOBBYR_ITEM_NAME, BINARY_SIZE_BOBBYR_ITEM_INFO);
 }
 
