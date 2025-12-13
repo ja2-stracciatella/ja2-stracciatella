@@ -75,4 +75,14 @@ namespace TranslatableString {
 		}
 		return LoadEncryptedString(file, m_offset, m_length);
 	}
+
+	namespace Utils {
+		ST::string resolveOptionalProperty(Loader& loader, const JsonObject &obj, const char* property, std::unique_ptr<TranslatableString::String>&& defaultValue) {
+			std::unique_ptr<TranslatableString::String> translatableName = std::move(defaultValue);
+			if (obj.has(property)) {
+				translatableName = TranslatableString::String::parse(obj.GetValue(property));
+			}
+			return translatableName->resolve(loader);
+		}
+	}
 }

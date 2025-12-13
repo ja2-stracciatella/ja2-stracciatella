@@ -29,12 +29,8 @@ auto deserializeHelper(ItemModel::InitData const& initData,
 	uint32_t length)
 {
 	auto itemIndex = initData.json.GetUInt("itemIndex");
-	std::unique_ptr<TranslatableString::String> translatableString = std::make_unique<TranslatableString::Binary>(file, itemIndex * itemSize + subOffset, length);
-	if (initData.json.has(propertyName)) {
-		translatableString = TranslatableString::String::parse(initData.json.GetValue(propertyName));
-	}
 	try {
-		return translatableString->resolve(initData.stringLoader);
+		return TranslatableString::Utils::resolveOptionalProperty(initData.stringLoader, initData.json, propertyName, std::make_unique<TranslatableString::Binary>(file, itemIndex * itemSize + subOffset, length));
 	} catch (const std::runtime_error& error) {
 		if (itemIndex < VANILLA_MAX_ITEMS) {
 			SLOGE("Could not read itemdesc.edt to completion: {}", error.what());

@@ -35,20 +35,12 @@ CalibreModel* CalibreModel::deserialize(const JsonValue &json, TranslatableStrin
 	auto silencedBurstSound = jsonObj.getOptionalString("silencedBurstSound");
 	auto showInHelpText = jsonObj.GetBool("showInHelpText");
 	auto monsterWeapon = jsonObj.GetBool("monsterWeapon");
-	std::unique_ptr<TranslatableString::String> translatableName = std::make_unique<TranslatableString::Json>(DEFAULT_NAME_TRANSLATION_PREFIX, index);
-	if (jsonObj.has("name")) {
-		translatableName = TranslatableString::String::parse(jsonObj.GetValue("name"));
-	}
-	std::unique_ptr<TranslatableString::String> translatableBobbyRaysName = std::make_unique<TranslatableString::Json>(DEFAULT_BOBBY_RAYS_NAME_TRANSLATION_PREFIX, index);
-	if (jsonObj.has("bobbyRaysName")) {
-		translatableBobbyRaysName = TranslatableString::String::parse(jsonObj.GetValue("bobbyRaysName"));
-	}
 
 	return new CalibreModel(
 		index,
 		std::move(internalName),
-		translatableName->resolve(stringLoader),
-		translatableBobbyRaysName->resolve(stringLoader),
+		TranslatableString::Utils::resolveOptionalProperty(stringLoader, jsonObj, "name", std::make_unique<TranslatableString::Json>(DEFAULT_NAME_TRANSLATION_PREFIX, index)),
+		TranslatableString::Utils::resolveOptionalProperty(stringLoader, jsonObj, "bobbyRaysName", std::make_unique<TranslatableString::Json>(DEFAULT_BOBBY_RAYS_NAME_TRANSLATION_PREFIX, index)),
 		std::move(sound),
 		std::move(burstSound),
 		std::move(silencedSound),

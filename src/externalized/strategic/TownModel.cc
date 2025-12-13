@@ -1,6 +1,7 @@
 #include "TownModel.h"
 
 #include "JsonUtility.h"
+#include "TranslatableString.h"
 #include <cstdint>
 
 const ST::string TownModel::NAME_TRANSLATION_PREFIX = "strings/strategic-map-town-names";
@@ -30,20 +31,11 @@ TownModel* TownModel::deserialize(const JsonValue& json, TranslatableString::Loa
 	townPoint.iX = tp.GetInt("x");
 	townPoint.iY = tp.GetInt("y");
 
-	std::unique_ptr<TranslatableString::String> translatableName = std::make_unique<TranslatableString::Json>(NAME_TRANSLATION_PREFIX, townId);
-	if (obj.has("name")) {
-		translatableName = TranslatableString::String::parse(obj.GetValue("name"));
-	}
-	std::unique_ptr<TranslatableString::String> translatableLocative = std::make_unique<TranslatableString::Json>(NAME_LOCATIVE_TRANSLATION_PREFIX, townId);
-	if (obj.has("locative")) {
-		translatableLocative = TranslatableString::String::parse(obj.GetValue("locative"));
-	}
-
 	return new TownModel(
 		obj.GetInt("townId"),
 		obj.getOptionalString("internalName"),
-		translatableName->resolve(stringLoader),
-		translatableLocative->resolve(stringLoader),
+		TranslatableString::Utils::resolveOptionalProperty(stringLoader, obj, "name", std::make_unique<TranslatableString::Json>(NAME_TRANSLATION_PREFIX, townId)),
+		TranslatableString::Utils::resolveOptionalProperty(stringLoader, obj, "nameLocative", std::make_unique<TranslatableString::Json>(NAME_LOCATIVE_TRANSLATION_PREFIX, townId)),
 		std::move(sectorIDs),
 		townPoint,
 		obj.getOptionalBool("isMilitiaTrainingAllowed")

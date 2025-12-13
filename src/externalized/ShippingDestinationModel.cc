@@ -37,18 +37,23 @@ ShippingDestinationModel* ShippingDestinationModel::deserialize(const JsonValue&
 		isPrimary = obj.getOptionalBool("isPrimary");
 	}
 	auto locationId = static_cast<uint8_t>(obj.GetInt("locationId"));
-	std::unique_ptr<TranslatableString::String> translatableName = std::make_unique<TranslatableString::Json>(NAME_TRANSLATION_PREFIX, locationId);
-	if (obj.has("name")) {
-		translatableName = TranslatableString::String::parse(obj.GetValue("name"));
-	}
 
 	return new ShippingDestinationModel(
-		locationId, obj.GetString("internalName"), translatableName->resolve(stringLoader),
-		obj.GetInt("chargeRateOverNight"), obj.GetInt("chargeRate2Days"), obj.GetInt("chargeRateStandard"),
-		obj.getOptionalInt("flowersNextDayDeliveryCost"), obj.getOptionalInt("flowersWhenItGetsThereCost"),
-		canDeliver, isPrimary,
-		destSectorId, destSectorZ, destGridNo,
-		obj.getOptionalInt("emailOffset"), obj.getOptionalInt("emailLength")
+		locationId,
+		obj.GetString("internalName"),
+		TranslatableString::Utils::resolveOptionalProperty(stringLoader, obj, "name", std::make_unique<TranslatableString::Json>(NAME_TRANSLATION_PREFIX, locationId)),
+		obj.GetInt("chargeRateOverNight"),
+		obj.GetInt("chargeRate2Days"),
+		obj.GetInt("chargeRateStandard"),
+		obj.getOptionalInt("flowersNextDayDeliveryCost"),
+		obj.getOptionalInt("flowersWhenItGetsThereCost"),
+		canDeliver,
+		isPrimary,
+		destSectorId,
+		destSectorZ,
+		destGridNo,
+		obj.getOptionalInt("emailOffset"),
+		obj.getOptionalInt("emailLength")
 	);
 }
 
