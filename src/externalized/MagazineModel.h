@@ -20,6 +20,8 @@ struct MagazineModel : ItemModel
 			ST::string&& shortName,
 			ST::string&& name,
 			ST::string&& description,
+			ST::string&& bobbyRaysName,
+			ST::string&& bobbyRaysDescription,
 			uint32_t  itemClass,
 			const CalibreModel *calibre,
 			uint16_t capacity,

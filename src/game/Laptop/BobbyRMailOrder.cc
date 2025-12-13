@@ -643,7 +643,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, UINT32 reason)
 				else
 				{
 					//else pop up a confirmation box
-					zTemp = st_format_printf(BobbyROrderFormText[BOBBYR_CONFIRM_DEST], *(GCM->getShippingDestinationName(gbSelectedCity)));
+					zTemp = st_format_printf(BobbyROrderFormText[BOBBYR_CONFIRM_DEST], GCM->getShippingDestination(gbSelectedCity)->name);
 					DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, zTemp, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmBobbyRPurchaseMessageBoxCallBack );
 				}
 			}
@@ -660,7 +660,6 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 	UINT16  i;
 	ST::string sTemp;
 	UINT16  usPosY;
-	UINT32  uiStartLoc=0;
 	UINT32  uiTotal;
 
 	//Output the qty
@@ -715,6 +714,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 		//if the item was purchased
 		if( pBobbyRayPurchase[i].ubNumberPurchased )
 		{
+			auto item = GCM->getItem(pBobbyRayPurchase[i].usItemIndex);
 			uiTotal = 0;
 
 			//Display the qty, order#, item name, unit price and the total
@@ -724,28 +724,16 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIRST_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//weight
-			sTemp = ST::format("{3.1f}", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased);
+			sTemp = ST::format("{3.1f}", GetWeightBasedOnMetricOption( item->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased);
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_SECOND_COLUMN_X - 2, usPosY, BOBBYR_GRID_SECOND_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-
-			//Display Items Name
-			if( pBobbyRayPurchase[i].fUsed )
-			{
-				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayUsedInventory[ pBobbyRayPurchase[i].usBobbyItemIndex ].usItemIndex;
-			}
-			else
-			{
-				uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * LaptopSaveInfo.BobbyRayInventory[ pBobbyRayPurchase[i].usBobbyItemIndex ].usItemIndex;
-			}
-
 
 			ST::string sText;
 			if( pBobbyRayPurchase[i].fUsed )
 			{
-				ST::string sBack = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
-				sText = ST::format("* {}", sBack);
+				sText = ST::format("* {}", item->getBobbyRaysName());
 			}
 			else
-				sText = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				sText = item->getBobbyRaysName();
 
 			sText = ReduceStringLength(sText, BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 
@@ -1034,7 +1022,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			if( gbSelectedCity == -1 )
 				DrawTextToScreen(BobbyROrderFormText[BOBBYR_SELECT_DEST], BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			else
-				DrawTextToScreen(*(GCM->getShippingDestinationName(gbSelectedCity)), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+				DrawTextToScreen(GCM->getShippingDestination(gbSelectedCity)->name, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//disable the r\close regiuon
 			gSelectedCloseDropDownRegion.Disable();
@@ -1199,7 +1187,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 	usPosY = BOBBYR_CITY_START_LOCATION_Y + 5;
 	for( i=gubCityAtTopOfList; i< gubCityAtTopOfList+BOBBYR_NUM_DISPLAYED_CITIES; i++)
 	{
-		DrawTextToScreen(*(GCM->getShippingDestinationName(i)), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(GCM->getShippingDestination(i)->name, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		usPosY += usFontHeight + 2;
 	}
 
@@ -1213,7 +1201,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X+4, usPosY+4, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH-4,	usPosY+usFontHeight+6, Get16BPPColor( FROMRGB( 200, 169, 87 ) ) );
 
 	SetFontShadow(NO_SHADOW);
-	ST::string city = *(GCM->getShippingDestinationName(ubCityNumber == 255 ? 0 : ubCityNumber));
+	ST::string city = GCM->getShippingDestination(ubCityNumber == 255 ? 0 : ubCityNumber)->name;
 	DrawTextToScreen(city, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY + 5, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1237,7 +1225,7 @@ static void DisplayShippingLocationCity(void)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 
 	//if there is no city selected
-	ST::string dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : *(GCM->getShippingDestinationName(gbSelectedCity)));
+	ST::string dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : GCM->getShippingDestination(gbSelectedCity)->name);
 	DrawTextToScreen(dest, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );

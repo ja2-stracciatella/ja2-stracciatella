@@ -11,7 +11,14 @@ items:
       description: The numeric ID of the town as set in codebase
       $ref: types/int8.schema.yaml
     internalName:
-      type: string
+      title: Internal name
+      $ref: types/id.schema.yaml
+    name:
+      title: Name
+      $ref: types/translatable-string.schema.yaml
+    nameLocative:
+      title: Name locative
+      $ref: types/translatable-string.schema.yaml
     sectors:
       title: Sectors
       description: List of sectors belonging to the town.

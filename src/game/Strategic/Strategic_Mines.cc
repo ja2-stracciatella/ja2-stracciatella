@@ -13,6 +13,7 @@
 #include "LoadSaveData.h"
 #include "Map_Screen_Interface.h"
 #include "MineModel.h"
+#include "TownModel.h"
 #include "Quests.h"
 #include "Random.h"
 #include "Soldier_Profile.h"
@@ -485,7 +486,7 @@ static INT32 MineAMine(UINT8 ubMineIndex)
 		if (amtExtracted > 0)
 		{
 			// debug message
-			SLOGD("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTownName(GetTownAssociatedWithMine(ubMineIndex)), amtExtracted);
+			SLOGD("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTown(GetTownAssociatedWithMine(ubMineIndex))->name, amtExtracted);
 
 			// if this is the first time this mine has produced income for the player in the game
 			if ( !gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer )

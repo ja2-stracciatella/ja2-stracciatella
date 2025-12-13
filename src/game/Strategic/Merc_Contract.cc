@@ -22,6 +22,7 @@
 #include "Assignments.h"
 #include "Strategic_Movement.h"
 #include "Text.h"
+#include "TownModel.h"
 #include "Strategic_Status.h"
 #include "Insurance_Contract.h"
 #include "Vehicles.h"
@@ -773,7 +774,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		gzUserDefinedButton1 = town_sector;
 		gzUserDefinedButton2 = SGPSector(elsewhere).AsShortString();
 
-		ST::string town = GCM->getTownLocative(GetTownIdForSector(elsewhere));
+		ST::string town = GCM->getTown(GetTownIdForSector(elsewhere))->nameLocative;
 		ST::string text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
 		msg = st_format_printf(text, s.name, town_sector, town, gzUserDefinedButton2);
 		flags = add_rehire_button ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;

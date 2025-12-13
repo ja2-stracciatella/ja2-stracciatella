@@ -75,6 +75,7 @@
 #include "Text.h"
 #include "Timer_Control.h"
 #include "Town_Militia.h"
+#include "TownModel.h"
 #include "Video.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
@@ -783,7 +784,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 			break;
 
 		case TRAIN_TOWN:
-			assignment2 = GCM->getTownName(GetTownIdForSector(s.sSector.AsByte()));
+			assignment2 = GCM->getTown(GetTownIdForSector(s.sSector.AsByte()))->name;
 			break;
 
 		case REPAIR:
@@ -7452,7 +7453,7 @@ static void HandleMilitiaRedistributionClick(void)
 			else
 			{
 				// can't have militia in this town
-				sString = st_format_printf(pMapErrorString[ 31 ], GCM->getTownName(bTownId));
+				sString = st_format_printf(pMapErrorString[ 31 ], GCM->getTown(bTownId)->name);
 				DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 			}
 		}

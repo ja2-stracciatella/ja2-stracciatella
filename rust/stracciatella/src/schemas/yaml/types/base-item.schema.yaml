@@ -56,12 +56,6 @@ properties:
   bWaterDamages:
     title: Damaged by water?
     type: boolean
-  description:
-    title: Description
-    $ref: types/translatable-string.schema.yaml
-  internalName:
-    title: Internal name
-    $ref: types/id.schema.yaml
   inventoryGraphics:
     title: Inventory Graphics
     description: Graphics that are used in the inventory interface for this item
@@ -81,11 +75,25 @@ properties:
   itemIndex:
     title: Item Index
     $ref: types/uint16.schema.yaml
+  internalName:
+    title: Internal name
+    $ref: types/id.schema.yaml
   name:
     title: Name
     $ref: types/translatable-string.schema.yaml
   shortName:
     title: Short name
+    $ref: types/translatable-string.schema.yaml
+  description:
+    title: Description
+    $ref: types/translatable-string.schema.yaml
+  bobbyRaysName:
+    title: Bobby Rays Name
+    description: Name used inside the Bobby Rays shop
+    $ref: types/translatable-string.schema.yaml
+  bobbyRaysDescription:
+    title: Bobby Rays Description
+    description: Description used inside the Bobby Rays shop
     $ref: types/translatable-string.schema.yaml
   tileGraphic:
     title: Tile graphic index

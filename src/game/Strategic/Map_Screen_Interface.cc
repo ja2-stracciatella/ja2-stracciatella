@@ -54,6 +54,7 @@
 #include "Tactical_Save.h"
 #include "Text.h"
 #include "Timer_Control.h"
+#include "TownModel.h"
 #include "Video.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -1047,7 +1048,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo 
 	if (MERC_LEAVE_ITEM* i = gpLeaveListHead[slot_idx])
 	{
 		ST::string sString;
-		ST::string town = GCM->getTownLocative(GetTownIdForSector(sector));
+		ST::string town = GCM->getTown(GetTownIdForSector(sector))->nameLocative;
 		SGPSector sMap(sector);
 		ProfileID      const id   = guiLeaveListOwnerProfileId[slot_idx];
 		if (id != NO_PROFILE)

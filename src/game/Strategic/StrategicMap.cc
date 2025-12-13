@@ -1214,7 +1214,7 @@ ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ
 	INT8 const town_name_id = StrategicMap[SGPSector(ubSectorID).AsStrategicIndex()].bNameId;
 	if (town_name_id != BLANK_SECTOR)
 	{	// show town name
-		return GCM->getTownName(town_name_id);
+		return GCM->getTown(town_name_id)->name;
 	}
 
 	if (ubSectorZ > 0)
@@ -1247,7 +1247,7 @@ ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed)
 	ST::string add;
 	if (mine_index != -1)
 	{
-		add = GCM->getTownName(GetTownAssociatedWithMine(mine_index));
+		add = GCM->getTown(GetTownAssociatedWithMine(mine_index))->name;
 		if (detailed && mine_index != -1)
 		{	// Append "Mine"
 			add += ST::format(" {}", pwMineStrings[0]);
@@ -2412,7 +2412,7 @@ static int16_t PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, uint8_t ubTacticalDi
 	sStartGridNo = sOldGridNo;
 	dirToggle = true;
 
-	do { // OK, here we go back one, check for OK destination...		
+	do { // OK, here we go back one, check for OK destination...
 		if (sGridNo > 0 && sGridNo < MAPLENGTH) {
 			if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) && FindBestPath(pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE)) {
 				return(sGridNo);
@@ -3224,4 +3224,3 @@ UINT GetWorldSector()
 	if (!gWorldSector.IsValid()) return NO_SECTOR;
 	return gWorldSector.AsByte();
 }
-

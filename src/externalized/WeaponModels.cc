@@ -609,6 +609,8 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	wep->shortName    = ItemModel::deserializeShortName(initData);
 	wep->name         = ItemModel::deserializeName(initData);
 	wep->description  = ItemModel::deserializeDescription(initData);
+	wep->bobbyRaysName         = ItemModel::deserializeBobbyRaysName(initData);
+	wep->bobbyRaysDescription  = ItemModel::deserializeBobbyRaysDescription(initData);
 	wep->internalType = std::move(internalType);
 
 	const auto inventoryGraphics = InventoryGraphicsModel::deserialize(obj["inventoryGraphics"]);

@@ -71,6 +71,7 @@
 #include "StrategicMap.h"
 #include "Text.h"
 #include "Town_Militia.h"
+#include "TownModel.h"
 #include "UILayout.h"
 #include "Vehicles.h"
 #include "VObject.h"
@@ -4558,7 +4559,7 @@ static void TrainingMenuBtnCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason
 					// can we keep militia in this town?
 					if (!MilitiaTrainingAllowedInSector(sSector))
 					{
-						sString = st_format_printf(pMapErrorString[ 31 ], GCM->getTownName(bTownId));
+						sString = st_format_printf(pMapErrorString[ 31 ], GCM->getTown(bTownId)->name);
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 						break;
 					}
@@ -4581,7 +4582,7 @@ static void TrainingMenuBtnCallbackPrimary(MOUSE_REGION* pRegion, UINT32 iReason
 					else
 					{
 						// town
-						sString = st_format_printf(zMarksMapScreenText[20], GCM->getTownName(bTownId));
+						sString = st_format_printf(zMarksMapScreenText[20], GCM->getTown(bTownId)->name);
 					}
 
 					DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );

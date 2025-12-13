@@ -19,6 +19,7 @@
 #include "VSurface.h"
 
 #include "ContentManager.h"
+#include "TownModel.h"
 #include "GameInstance.h"
 
 #include <string_theory/format>
@@ -549,7 +550,7 @@ static ST::string ProcessHistoryTransactionString(const HistoryUnit* h)
 		case HISTORY_MINE_RUNNING_OUT:
 		case HISTORY_MINE_SHUTDOWN:
 		case HISTORY_TALKED_TO_MINER:
-			return st_format_printf(pHistoryStrings[code], GCM->getTownName(h->ubSecondCode));
+			return st_format_printf(pHistoryStrings[code], GCM->getTown(h->ubSecondCode)->nameLocative);
 
 		case HISTORY_MERC_KILLED:
 			if (h->ubSecondCode == NO_PROFILE)

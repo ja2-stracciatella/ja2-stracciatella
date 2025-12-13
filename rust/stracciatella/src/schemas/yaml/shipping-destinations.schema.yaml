@@ -12,6 +12,12 @@ items:
         The on-screen display name comes from translation string files.
         It must match the item index within the list.
       $ref: types/uint8.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    name:
+      title: Name
+      $ref: types/translatable-string.schema.yaml
     chargeRateOverNight:
       title: Charge rate "Overnight Express"
       description: Delivery charge per kg for Bobby Ray's "Overnight Express" service
@@ -40,7 +46,7 @@ items:
       title: Is primary?
       description: |
         The primary delivery destination, i.e. Drassen.
-        
+
         This is the place where John Kulba sends his gifts, where shipments gets stolen. Pablo must be placed in the delivery sector.
       type: boolean
     deliverySector:
@@ -65,6 +71,7 @@ items:
       $ref: types/int32.schema.yaml
   required:
   - locationId
+  - internalName
   - chargeRateOverNight
   - chargeRate2Days
   - chargeRateStandard

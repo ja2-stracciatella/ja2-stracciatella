@@ -662,7 +662,7 @@ static void ShowTownText(void)
 			SetFontForeground(FONT_MCOLOR_LTGREEN);
 		}
 
-		ST::string name = GCM->getTownName(town);
+		ST::string name = GCM->getTown(town)->name;
 		INT16          const name_x = x - StringPixLength(name, MAP_FONT) / 2;
 		GDirtyPrint(name_x, y, name);
 	}
@@ -2500,7 +2500,7 @@ static void BlitMineText(UINT8 const mine_idx, const SGPSector& sMap)
 	ST::string buf;
 
 	// display associated town name, followed by "mine"
-	buf = ST::format("{} {}", GCM->getTownName(GetTownAssociatedWithMine(mine_idx)), pwMineStrings[0]);
+	buf = ST::format("{} {}", GCM->getTown(GetTownAssociatedWithMine(mine_idx))->name, pwMineStrings[0]);
 	PrintStringCenteredBoxed(x, y, buf);
 	y += h;
 
@@ -3140,7 +3140,7 @@ static bool IsThisMilitiaTownSectorAllowable(INT16 const sSectorIndexValue)
 
 static void DrawTownMilitiaName()
 {
-	ST::string town = GCM->getTownName(sSelectedMilitiaTown);
+	ST::string town = GCM->getTown(sSelectedMilitiaTown)->name;
 	INT16          const x    = MAP_MILITIA_BOX_POS_X;
 	INT16          const y    = MAP_MILITIA_BOX_POS_Y;
 	INT16          const w    = MILITIA_BOX_WIDTH;

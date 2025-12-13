@@ -236,11 +236,6 @@ const ShippingDestinationModel* DefaultContentManager::getPrimaryShippingDestina
 	throw DataError("Bobby Ray primary destination is not defined");
 }
 
-const ST::string* DefaultContentManager::getShippingDestinationName(uint8_t index) const
-{
-	return &m_shippingDestinationNames[index];
-}
-
 const NpcActionParamsModel* DefaultContentManager::getNpcActionParams(uint16_t actionCode) const
 {
 	auto it = m_npcActionParams.find(actionCode);
@@ -517,16 +512,6 @@ const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
 	return m_calibres[index];
 }
 
-const ST::string* DefaultContentManager::getCalibreName(uint8_t index) const
-{
-	return &m_calibreNames[index];
-}
-
-const ST::string* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
-{
-	return &m_calibreNamesBobbyRay[index];
-}
-
 const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 {
 	return m_ammoTypes[index];
@@ -730,11 +715,11 @@ bool DefaultContentManager::loadMagazines(TranslatableString::Loader& stringLoad
 	return true;
 }
 
-bool DefaultContentManager::loadCalibres()
+bool DefaultContentManager::loadCalibres(TranslatableString::Loader& stringLoader)
 {
 	auto json = readJsonDataFileWithSchema("calibres.json");
 	for (auto& element : json.toVec()) {
-		CalibreModel *calibre = CalibreModel::deserialize(element);
+		CalibreModel *calibre = CalibreModel::deserialize(element, stringLoader);
 		SLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
 
 		if(m_calibres.size() <= calibre->index)
@@ -927,14 +912,14 @@ bool DefaultContentManager::loadGameData()
 /** Load the game data. */
 bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoader, BinaryProfileData const& binaryData)
 {
-	loadPrioritizedData();
+	loadPrioritizedData(stringLoader);
 
 	auto game_json = readJsonDataFileWithSchema("game.json");
 	m_gamePolicy = std::make_unique<DefaultGamePolicy>(game_json);
 
 	m_items.resize(MAXITEMS);
 	bool result = loadItems(stringLoader)
-		&& loadCalibres()
+		&& loadCalibres(stringLoader)
 		&& loadExplosiveCalibres()
 		&& loadAmmoTypes()
 		&& loadMagazines(stringLoader)
@@ -964,23 +949,18 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 	auto sai_json = readJsonDataFileWithSchema("strategic-ai-policy.json");
 	m_strategicAIPolicy = std::make_unique<DefaultStrategicAIPolicy>(sai_json);
 
-	loadStringRes("strings/shipping-destinations", m_shippingDestinationNames);
-
 	auto shippingDestJson = readJsonDataFileWithSchema("shipping-destinations.json");
 	for (auto& element : shippingDestJson.toVec())
 	{
-		m_shippingDestinations.push_back(ShippingDestinationModel::deserialize(element));
+		m_shippingDestinations.push_back(ShippingDestinationModel::deserialize(element, stringLoader));
 	}
-	ShippingDestinationModel::validateData(m_shippingDestinations, m_shippingDestinationNames);
+	ShippingDestinationModel::validateData(m_shippingDestinations);
 
 	auto loadScreensList = readJsonDataFileWithSchema("loading-screens.json");
 	auto loadScreensMapping = readJsonDataFileWithSchema("loading-screens-mapping.json");
 
 	m_loadingScreenModel.reset(LoadingScreenModel::deserialize(loadScreensList, loadScreensMapping));
 	m_loadingScreenModel->validateData(this);
-
-	loadStringRes("strings/ammo-calibre", m_calibreNames);
-	loadStringRes("strings/ammo-calibre-bobbyray", m_calibreNamesBobbyRay);
 
 	loadStringRes("strings/new-strings", m_newStrings);
 	loadStringRes("strings/strategic-map-land-types", m_landTypeStrings);
@@ -1021,11 +1001,11 @@ JsonValue DefaultContentManager::readJsonDataFileWithSchema(const ST::string& js
 	return JsonValue::readFromFileWithSchema(m_vfs.get(), m_schemaManager.get(), jsonPath);
 }
 
-bool DefaultContentManager::loadPrioritizedData()
+bool DefaultContentManager::loadPrioritizedData(TranslatableString::Loader& stringLoader)
 {
 	auto json = readJsonDataFileWithSchema("strategic-map-towns.json");
 	for (auto& element : json.toVec()) {
-		auto town = TownModel::deserialize(element);
+		auto town = TownModel::deserialize(element, stringLoader);
 		m_towns.insert(std::make_pair(town->townId, town));
 	}
 
@@ -1554,24 +1534,6 @@ int8_t DefaultContentManager::getControllingSamSite(uint8_t sectorId) const
 const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() const
 {
 	return m_towns;
-}
-
-const ST::string DefaultContentManager::getTownName(uint8_t townId) const
-{
-	if (townId >= m_townNames.size()) {
-		SLOGD("Town name not defined for index {}", townId);
-		return {};
-	}
-	return m_townNames[townId];
-}
-
-const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
-{
-	if (townId >= m_townNameLocatives.size()) {
-		SLOGD("Town name locative not defined for index {}", townId);
-		return {};
-	}
-	return m_townNameLocatives[townId];
 }
 
 const std::vector<const UndergroundSectorModel*>& DefaultContentManager::getUndergroundSectors() const
