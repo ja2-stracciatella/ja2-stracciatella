@@ -64,6 +64,8 @@
 #include <stdexcept>
 #include <string_theory/format>
 
+extern BOOLEAN fExitingLaptopFlag;
+
 void InitScriptingEngine();
 
 UINT8			gubScreenCount=0;
@@ -211,7 +213,7 @@ void InitNewGame()
 	}
 
 	ClearTacticalMessageQueue();
-	FreeGlobalMessageList(); // Clear mapscreen messages
+	if (!fExitingLaptopFlag) FreeGlobalMessageList(); // Clear mapscreen messages
 
 	ResetGameStates();
 	InitScriptingEngine();
