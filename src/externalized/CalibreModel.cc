@@ -1,12 +1,14 @@
 #include "CalibreModel.h"
-#include "ContentManager.h"
-#include "GameInstance.h"
 #include "Json.h"
+#include "TranslatableString.h"
+#include <memory>
 #include <string_theory/format>
 #include <string_theory/string>
 #include <stdexcept>
 #include <utility>
 
+const ST::string CalibreModel::DEFAULT_NAME_TRANSLATION_PREFIX = "strings/ammo-calibre";
+const ST::string CalibreModel::DEFAULT_BOBBY_RAYS_NAME_TRANSLATION_PREFIX = "strings/ammo-calibre-bobbyray";
 
 JsonValue CalibreModel::serialize() const
 {
@@ -22,26 +24,40 @@ JsonValue CalibreModel::serialize() const
 	return obj.toValue();
 }
 
-CalibreModel* CalibreModel::deserialize(const JsonValue &json)
+CalibreModel* CalibreModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader)
 {
-	return new CalibreModel{ json.toObject() };
+	auto jsonObj = json.toObject();
+	auto index = static_cast<uint16_t>(jsonObj.GetInt("index"));
+	auto internalName = jsonObj.GetString("internalName");
+	auto sound = jsonObj.getOptionalString("sound");
+	auto burstSound = jsonObj.getOptionalString("burstSound");
+	auto silencedSound = jsonObj.getOptionalString("silencedSound");
+	auto silencedBurstSound = jsonObj.getOptionalString("silencedBurstSound");
+	auto showInHelpText = jsonObj.GetBool("showInHelpText");
+	auto monsterWeapon = jsonObj.GetBool("monsterWeapon");
+
+	return new CalibreModel(
+		index,
+		std::move(internalName),
+		TranslatableString::Utils::resolveOptionalProperty(stringLoader, jsonObj, "name", std::make_unique<TranslatableString::Json>(DEFAULT_NAME_TRANSLATION_PREFIX, index)),
+		TranslatableString::Utils::resolveOptionalProperty(stringLoader, jsonObj, "bobbyRaysName", std::make_unique<TranslatableString::Json>(DEFAULT_BOBBY_RAYS_NAME_TRANSLATION_PREFIX, index)),
+		std::move(sound),
+		std::move(burstSound),
+		std::move(silencedSound),
+		std::move(silencedBurstSound),
+		showInHelpText,
+		monsterWeapon
+	);
 }
 
-CalibreModel::CalibreModel(JsonObject const jsonObj) :
-	index{ static_cast<uint16_t>(jsonObj.GetInt("index")) },
-	internalName{ jsonObj.GetString("internalName") },
-	sound{ jsonObj.getOptionalString("sound") },
-	burstSound{ jsonObj.getOptionalString("burstSound") },
-	silencedSound{ jsonObj.getOptionalString("silencedSound") },
-	silencedBurstSound{ jsonObj.getOptionalString("silencedBurstSound") },
-	showInHelpText{ jsonObj.GetBool("showInHelpText") },
-	monsterWeapon{ jsonObj.GetBool("monsterWeapon") }
+const ST::string& CalibreModel::getName() const
 {
+	return name;
 }
 
-const ST::string* CalibreModel::getName() const
+const ST::string& CalibreModel::getBobbyRaysName() const
 {
-	return GCM->getCalibreName(index);
+	return name;
 }
 
 const CalibreModel* CalibreModel::getNoCalibreObject()

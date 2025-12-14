@@ -27,6 +27,7 @@
 #include "VObject.h"
 #include "VSurface.h"
 #include "ContentManager.h"
+#include "TownModel.h"
 #include "GameInstance.h"
 
 #include <string_theory/format>
@@ -239,7 +240,7 @@ static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 	ST::string buf;
 
 	// Name of town followed by "mine"
-	buf = ST::format("{} {}", GCM->getTownName(town), pwMineStrings[0]);
+	buf = ST::format("{} {}", GCM->getTown(town)->name, pwMineStrings[0]);
 	AddMonoString(box, buf);
 
 	AddMonoString(box, {}); // Blank line

@@ -11,6 +11,8 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 				ST::string&& shortName_,
 				ST::string&& name_,
 				ST::string&& description_,
+				ST::string&& bobbyRaysName_,
+				ST::string&& bobbyRaysDescription_,
 				uint32_t itemClass_,
 				const CalibreModel *calibre_,
 				uint16_t capacity_,
@@ -24,6 +26,8 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 	this->shortName = std::move(shortName_);
 	this->name = std::move(name_);
 	this->description = std::move(description_);
+	this->bobbyRaysName = std::move(bobbyRaysName_);
+	this->bobbyRaysDescription = std::move(bobbyRaysDescription_);
 }
 
 
@@ -76,12 +80,17 @@ MagazineModel* MagazineModel::deserialize(
 	auto shortName = ItemModel::deserializeShortName(initData);
 	auto name = ItemModel::deserializeName(initData);
 	auto description = ItemModel::deserializeDescription(initData);
+	auto bobbyRaysName = ItemModel::deserializeShortName(initData);
+	auto bobbyRaysDescription = ItemModel::deserializeDescription(initData);
+
 	MagazineModel *mag = new MagazineModel(
 		itemIndex,
 		std::move(internalName),
 		std::move(shortName),
 		std::move(name),
 		std::move(description),
+		std::move(bobbyRaysName),
+		std::move(bobbyRaysDescription),
 		itemClass,
 		calibre,
 		capacity,

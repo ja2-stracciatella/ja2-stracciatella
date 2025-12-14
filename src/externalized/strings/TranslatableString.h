@@ -73,6 +73,10 @@ namespace TranslatableString {
 	 */
 	class String {
 		public:
+			/**
+			 * Resolve a TranslatableString to its translated value. This function should do all error handling,
+			 * log errors and return an empty string if the lookup fails
+			 */
 			virtual ST::string resolve(Loader& loader) = 0;
 			static std::unique_ptr<String> parse(JsonValue value);
 	};
@@ -115,4 +119,8 @@ namespace TranslatableString {
 				uint32_t m_offset;
 				uint32_t m_length;
 	};
+
+	namespace Utils {
+		ST::string resolveOptionalProperty(Loader& loader, const JsonObject &obj, const char* property, std::unique_ptr<TranslatableString::String>&& defaultValue);
+	}
 }

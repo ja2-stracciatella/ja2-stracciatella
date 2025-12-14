@@ -482,7 +482,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	if (!DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(pSoldier))
 	{
 		// loyalty too low to continue training
-		sString = st_format_printf(pMilitiaConfirmStrings[8], GCM->getTownName(GetTownIdForSector(sector)), MIN_RATING_TO_TRAIN_TOWN);
+		sString = st_format_printf(pMilitiaConfirmStrings[8], GCM->getTown(GetTownIdForSector(sector))->name, MIN_RATING_TO_TRAIN_TOWN);
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
@@ -500,7 +500,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 		else
 		{
 			// town
-			sString = st_format_printf(pMilitiaConfirmStrings[9], GCM->getTownName(bTownId), MIN_RATING_TO_TRAIN_TOWN);
+			sString = st_format_printf(pMilitiaConfirmStrings[9], GCM->getTown(bTownId)->name, MIN_RATING_TO_TRAIN_TOWN);
 		}
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;

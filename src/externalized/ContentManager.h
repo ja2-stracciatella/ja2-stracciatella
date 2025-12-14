@@ -124,8 +124,6 @@ public:
 	virtual const std::vector<const MagazineModel*>& getMagazines() const = 0;
 
 	virtual const CalibreModel* getCalibre(uint8_t index) = 0;
-	virtual const ST::string* getCalibreName(uint8_t index) const = 0;
-	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const = 0;
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
 
@@ -154,7 +152,6 @@ public:
 	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const = 0;
 	virtual const ShippingDestinationModel* getShippingDestination(uint8_t locationId) const = 0;
 	virtual const ShippingDestinationModel* getPrimaryShippingDestination() const = 0;
-	virtual const ST::string* getShippingDestinationName(uint8_t index) const = 0;
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
 
@@ -182,8 +179,6 @@ public:
 	virtual const TownModel* getTown(int8_t townId) const = 0;
 	virtual const TownModel* getTownByName(const ST::string& name) const = 0;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const = 0;
-	virtual const ST::string getTownName(uint8_t townId) const = 0;
-	virtual const ST::string getTownLocative(uint8_t townId) const = 0;
 	virtual const std::vector <const UndergroundSectorModel*> & getUndergroundSectors() const = 0;
 	virtual const CacheSectorsModel* getCacheSectors() const = 0;
 	virtual const MovementCostsModel* getMovementCosts() const = 0;

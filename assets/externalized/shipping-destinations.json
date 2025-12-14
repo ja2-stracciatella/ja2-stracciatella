@@ -1,7 +1,7 @@
 /**
- * This defines the delivery destinations of Bobby Ray and Florist orders. 
+ * This defines the delivery destinations of Bobby Ray and Florist orders.
  *
- * It is possible to change destinations so packages are delivered to any sector. But if you want to change 
+ * It is possible to change destinations so packages are delivered to any sector. But if you want to change
  * the displayed city name in laptop screens, you need to update the translation strings  files.
  *
  * Field definitions:
@@ -21,8 +21,8 @@
  */
 [
     {
-        // BR_AUSTIN,
         "locationId": 0,
+        "internalName": "AUSTIN",
         "chargeRateOverNight": 20,
         "chargeRate2Days": 15,
         "chargeRateStandard": 10,
@@ -30,8 +30,8 @@
         "flowersWhenItGetsThereCost": 15
     },
     {
-        // BR_BAGHDAD,
         "locationId": 1,
+        "internalName": "BAGHDAD",
         "chargeRateOverNight": 295,
         "chargeRate2Days": 150,
         "chargeRateStandard": 85,
@@ -39,8 +39,8 @@
         "flowersWhenItGetsThereCost": 70
     },
     {
-        // BR_DRASSEN, the only one that really matters
         "locationId": 2,
+        "internalName": "DRASSEN",
         "chargeRateOverNight": 200,
         "chargeRate2Days": 100,
         "chargeRateStandard": 50,
@@ -55,8 +55,8 @@
         "emailLength": 4
     },
     {
-        // BR_HONG_KONG,
         "locationId": 3,
+        "internalName": "HONG_KONG",
         "chargeRateOverNight": 100,
         "chargeRate2Days": 55,
         "chargeRateStandard": 300,
@@ -64,8 +64,8 @@
         "flowersWhenItGetsThereCost": 35
     },
     {
-        // BR_BEIRUT,
         "locationId": 4,
+        "internalName": "BEIRUT",
         "chargeRateOverNight": 95,
         "chargeRate2Days": 65,
         "chargeRateStandard": 40,
@@ -73,8 +73,8 @@
         "flowersWhenItGetsThereCost": 50
     },
     {
-        // BR_LONDON,
         "locationId": 5,
+        "internalName": "LONDON",
         "chargeRateOverNight": 55,
         "chargeRate2Days": 40,
         "chargeRateStandard": 25,
@@ -82,8 +82,8 @@
         "flowersWhenItGetsThereCost": 50
     },
     {
-        // BR_LOS_ANGELES,
         "locationId": 6,
+        "internalName": "LOS_ANGELES",
         "chargeRateOverNight": 35,
         "chargeRate2Days": 25,
         "chargeRateStandard": 15,
@@ -91,8 +91,8 @@
         "flowersWhenItGetsThereCost": 25
     },
     {
-        // BR_MEDUNA,
         "locationId": 7,
+        "internalName": "MEDUNA",
         "chargeRateOverNight": 200,
         "chargeRate2Days": 100,
         "chargeRateStandard": 50,
@@ -107,8 +107,8 @@
         "emailLength": 4
     },
     {
-        // BR_METAVIRA,
         "locationId": 8,
+        "internalName": "METAVIRA",
         "chargeRateOverNight": 190,
         "chargeRate2Days": 90,
         "chargeRateStandard": 45,
@@ -116,8 +116,8 @@
         "flowersWhenItGetsThereCost": 75
     },
     {
-        // BR_MIAMI,
         "locationId": 9,
+        "internalName": "MIAMI",
         "chargeRateOverNight": 35,
         "chargeRate2Days": 25,
         "chargeRateStandard":15,
@@ -125,8 +125,8 @@
         "flowersWhenItGetsThereCost": 25
     },
     {
-        // BR_MOSCOW,
         "locationId": 10,
+        "internalName": "MOSCOW",
         "chargeRateOverNight": 100,
         "chargeRate2Days": 55,
         "chargeRateStandard": 30,
@@ -134,8 +134,8 @@
         "flowersWhenItGetsThereCost": 70
     },
     {
-        // BR_NEW_YORK,
         "locationId": 11,
+        "internalName": "NEW_YORK",
         "chargeRateOverNight": 35,
         "chargeRate2Days": 25,
         "chargeRateStandard": 15,
@@ -143,8 +143,8 @@
         "flowersWhenItGetsThereCost": 25
     },
     {
-        // BR_OTTAWA,
         "locationId": 12,
+        "internalName": "OTTAWA",
         "chargeRateOverNight": 45,
         "chargeRate2Days": 30,
         "chargeRateStandard": 20,
@@ -152,8 +152,8 @@
         "flowersWhenItGetsThereCost": 30
     },
     {
-        // BR_PARIS,
         "locationId": 13,
+        "internalName": "PARIS",
         "chargeRateOverNight": 55,
         "chargeRate2Days": 40,
         "chargeRateStandard": 25,
@@ -161,8 +161,8 @@
         "flowersWhenItGetsThereCost": 35
     },
     {
-        // BR_TRIPOLI,
         "locationId": 14,
+        "internalName": "TRIPOLI",
         "chargeRateOverNight": 100,
         "chargeRate2Days": 55,
         "chargeRateStandard": 30,
@@ -170,8 +170,8 @@
         "flowersWhenItGetsThereCost": 70
     },
     {
-        // BR_TOKYO,
         "locationId": 15,
+        "internalName": "TOKYO",
         "chargeRateOverNight": 100,
         "chargeRate2Days": 55,
         "chargeRateStandard": 30,
@@ -179,8 +179,8 @@
         "flowersWhenItGetsThereCost": 40
     },
     {
-        // BR_VANCOUVER,
         "locationId": 16,
+        "internalName": "VANCOUVER",
         "chargeRateOverNight": 45,
         "chargeRate2Days": 30,
         "chargeRateStandard": 20,
