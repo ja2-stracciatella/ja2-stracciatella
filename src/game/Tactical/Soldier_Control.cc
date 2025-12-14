@@ -1381,7 +1381,8 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 	}
 
 	// ATE: If not a moving animation - turn off reverse....
-	if ( !( gAnimControl[ usNewState ].uiFlags & ANIM_MOVING ) && usNewState != END_RIFLE_STAND )
+	if ( !( gAnimControl[ usNewState ].uiFlags & ANIM_MOVING ) &&
+		    usNewState != END_RIFLE_STAND && usNewState != END_DUAL_STAND )
 	{
 		pSoldier->bReverse = FALSE;
 	}
