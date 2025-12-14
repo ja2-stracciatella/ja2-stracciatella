@@ -28,9 +28,6 @@
 #define MSYS_STARTING_CURSORVAL 0
 
 
-#define MAX_BUTTON_ICONS 40
-
-
 #define GUI_BTN_NONE           0
 #define GUI_BTN_DUPLICATE_VOBJ 1
 
@@ -85,8 +82,6 @@ static HVOBJECT GenericButtonOffHilite;
 static HVOBJECT GenericButtonOnNormal;
 static HVOBJECT GenericButtonOnHilite;
 static UINT16   GenericButtonFillColors;
-
-static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
 static BOOLEAN gfDelayButtonDeletion   = FALSE;
 static bool gfPendingButtonDeletion = false;
@@ -272,10 +267,6 @@ static void InitializeButtonImageManager(void)
 	GenericButtonOnHilite   = NULL;
 	GenericButtonFillColors = 0;
 
-	// Blank out all icon images
-	for (int x = 0; x < MAX_BUTTON_ICONS; ++x)
-		GenericButtonIcons[x] = NULL;
-
 	// Load the default generic button images
 	GenericButtonOffNormal = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF);
 	GenericButtonOnNormal  = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
@@ -301,40 +292,15 @@ static void InitializeButtonImageManager(void)
 }
 
 
-// Finds the next available slot for button icon images.
-static INT16 FindFreeIconSlot(void)
+GenericIcon LoadGenericButtonIcon(const char* filename)
 {
-	for (INT16 x = 0; x < MAX_BUTTON_ICONS; ++x)
-	{
-		if (GenericButtonIcons[x] == NULL) return x;
-	}
-	throw std::runtime_error("Out of generic button icon slots");
+	return AddVideoObjectFromFile(filename);
 }
 
 
-INT16 LoadGenericButtonIcon(const char* filename)
+void UnloadGenericButtonIcon(GenericIcon icon)
 {
-	AssertMsg(filename != NULL, "Attempting to LoadGenericButtonIcon() with null filename.");
-
-	// Get slot for icon image
-	INT16 const ImgSlot = FindFreeIconSlot();
-
-	// Load the icon
-	GenericButtonIcons[ImgSlot] = AddVideoObjectFromFile(filename);
-
-	// Return the slot number
-	return ImgSlot;
-}
-
-
-void UnloadGenericButtonIcon(INT16 GenImg)
-{
-	AssertMsg(0 <= GenImg && GenImg < MAX_BUTTON_ICONS, ST::format("Attempting to UnloadGenericButtonIcon with out of range index {}.", GenImg));
-
-	if (!GenericButtonIcons[GenImg]) return;
-	// If an icon is present in the slot, remove it.
-	DeleteVideoObject(GenericButtonIcons[GenImg]);
-	GenericButtonIcons[GenImg] = NULL;
+	delete icon;
 }
 
 
@@ -373,12 +339,6 @@ static void ShutdownButtonImageManager(void)
 	}
 
 	GenericButtonFillColors = 0;
-
-	// Remove all button icons
-	for (int x = 0; x < MAX_BUTTON_ICONS; ++x)
-	{
-		if (GenericButtonIcons[x] != NULL) UnloadGenericButtonIcon(x);
-	}
 }
 
 
@@ -518,14 +478,15 @@ GUI_BUTTON::~GUI_BUTTON()
 static void DefaultMoveCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
-GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateIconButton(GenericIcon icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* const b = new GUI_BUTTON(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
-	b->icon        = GenericButtonIcons[Icon];
+	GUI_BUTTON * const b = new GUI_BUTTON(BUTTON_GENERIC, xloc, yloc, w, h,
+		Priority, std::move(ClickCallback), DefaultMoveCallback);
+	b->icon        = icon;
 	b->usIconIndex = IconIndex;
 	return b;
 }

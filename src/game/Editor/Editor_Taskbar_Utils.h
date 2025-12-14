@@ -2,6 +2,7 @@
 #define __EDITOR_TASKBAR_UTILS_H
 
 #include <string_theory/string>
+#include "Button_System.h"
 #include "Types.h"
 
 //These are utilities that are used within the editor.  This function absorbs the expensive
@@ -60,7 +61,7 @@ void MPrintEditor(INT16 x, INT16 y, const ST::string& str);
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom );
 void DrawEditorInfoBox(const ST::string& str, SGPFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h);
 
-extern INT32	giEditMercDirectionIcons[2];
+inline GenericIcon giEditMercDirectionIcons[2];
 extern SGPVObject* guiMercInventoryPanel;
 extern SGPVObject* guiOmertaMap;
 extern SGPVSurface* guiMercInvPanelBuffers[9];

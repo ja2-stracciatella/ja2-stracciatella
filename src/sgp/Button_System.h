@@ -202,11 +202,13 @@ void InitButtonSystem(void);
  */
 void ShutdownButtonSystem(void);
 
+using GenericIcon = SGPVObject const *;
+
 // Loads an image file for use as a button icon.
-INT16 LoadGenericButtonIcon(const char* filename);
+GenericIcon LoadGenericButtonIcon(const char* filename);
 
 // Removes a button icon graphic from the system
-void UnloadGenericButtonIcon(INT16 GenImg);
+void UnloadGenericButtonIcon(GenericIcon);
 
 // Load images for use with QuickButtons.
 BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
@@ -258,7 +260,7 @@ GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 off_normal, INT32 on_no
 GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 // Creates an Iconic type button.
-GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateIconButton(GenericIcon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 /* Creates a button like HotSpot. HotSpots have no graphics associated with
  * them.
