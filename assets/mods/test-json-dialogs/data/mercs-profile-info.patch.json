@@ -1,0 +1,30 @@
+[
+    {
+        "op": "add",
+        "path": "/0/fullName",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/mercs",
+            "index": 0
+        }
+    },
+    {
+        "op": "add",
+        "path": "/0/nickname",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/mercs",
+            "index": 1
+        }
+    },
+    {
+        "op": "add",
+        "path": "/1/fullName",
+        "value": "Keith \"Newblood\" Hanson"
+    },
+    {
+        "op": "add",
+        "path": "/1/nickname",
+        "value": "Newblood"
+    }
+]

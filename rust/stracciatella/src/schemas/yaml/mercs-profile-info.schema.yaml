@@ -1,6 +1,8 @@
 $schema: http://json-schema.org/draft-04/schema#
 type: array
 title: Named characters' profiles
+description: |
+  This will allow you to change character profiles. Note that changing values here will only affect new games, as the merc profiles are included in the save games.
 items:
   type: object
   properties:
@@ -13,9 +15,11 @@ items:
     type:
       $ref: types/merc-type.schema.yaml
     fullName:
-      type: string
+      title: Full Name
+      $ref: types/translatable-string.schema.yaml
     nickname:
-      type: string
+      title: Nickname
+      $ref: types/translatable-string.schema.yaml
     sex:
       type: string
       enum:

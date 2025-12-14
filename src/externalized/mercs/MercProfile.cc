@@ -1,9 +1,11 @@
+#include "TranslatableString.h"
 #include "enums.h"
 #include "Exceptions.h"
 #include "MercProfile.h"
 #include "MercProfileInfo.h"
 #include "Soldier_Profile_Type.h"
 #include "TownModel.h"
+#include <memory>
 
 MercProfile::MercProfile(ProfileID profileID) : m_profileID(profileID)
 {
@@ -134,12 +136,12 @@ void MercProfile::deserializeStructRelations(const MERCPROFILESTRUCT* binaryProf
 	}
 }
 
-std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROFILESTRUCT* binaryProf, const JsonObject& r, const ContentManager* contentManager)
+std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROFILESTRUCT* binaryProf, TranslatableString::Loader& stringLoader, const JsonObject& r, const ContentManager* contentManager)
 {
 	std::unique_ptr<MERCPROFILESTRUCT> prof = std::make_unique<MERCPROFILESTRUCT>();
 
-	prof->zName = r.getOptionalString("fullName", binaryProf->zName);
-	prof->zNickname = r.getOptionalString("nickname", binaryProf->zNickname);
+	prof->zName = TranslatableString::Utils::resolveOptionalProperty(stringLoader, r, "fullName", std::make_unique<TranslatableString::Untranslated>(binaryProf->zName));
+	prof->zNickname = TranslatableString::Utils::resolveOptionalProperty(stringLoader, r, "nickname", std::make_unique<TranslatableString::Untranslated>(binaryProf->zNickname));
 
 	if (r.has("sex")) {
 		prof->bSex = r.GetString("sex") == "F" ? Sexes::FEMALE : Sexes::MALE;

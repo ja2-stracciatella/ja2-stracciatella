@@ -1270,7 +1270,7 @@ bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfile
 		ProfileID profileID = profileInfo->profileID;
 		m_mercProfileInfo[profileID] = profileInfo;
 		m_mercProfiles.push_back(new MercProfile(profileID));
-		temp_mercStructs[profileID] = MercProfile::deserializeStruct(binaryProfiles.getProfile(profileID), charProperties, this);
+		temp_mercStructs[profileID] = MercProfile::deserializeStruct(binaryProfiles.getProfile(profileID), stringLoader, charProperties, this);
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
 
