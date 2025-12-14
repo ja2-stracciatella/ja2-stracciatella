@@ -3,7 +3,6 @@ type: array
 title: Mercs M.E.R.C. Listings
 description: |
   Defines the profile listings on the M.E.R.C. website, and also some of the things Speck says.
-  This only controls how the profiles show up on M.E.R.C. and not the soldier profiles themselves.
 
   Notes on mercs' availability:
 
@@ -21,8 +20,17 @@ items:
       $ref: types/id.schema.yaml
     bioIndex:
       title: Biography Index
-      description: The start location offset to the merc's bio in the mercbios.edt
+      description: |
+        The start location offset to the merc's bio in the mercbios.edt. This value is used as a fallback for `description` or `additionalInformation`.
       $ref: types/uint8.schema.yaml
+    description:
+      title: Description
+      description: Description displayed on the M.E.R.C. page.
+      $ref: types/translatable-string.schema.yaml
+    additionalInformation:
+      title: Additional Information
+      description: Additional information displayed on the M.E.R.C. page.
+      $ref: types/translatable-string.schema.yaml
     minDays:
       title: Min Days
       description: The day (in-game days) after which this merc may be available. Defaults to `0`.
@@ -64,5 +72,4 @@ items:
         - quoteID
   required:
   - profile
-  - bioIndex
   - quotes

@@ -1,15 +1,26 @@
+#include "Directories.h"
 #include "Exceptions.h"
 #include "MERCListingModel.h"
 #include "Soldier_Control.h"
+#include "TranslatableString.h"
 
+#include <cstdint>
+#include <memory>
 #include <set>
 #include <string_theory/format>
 #include <utility>
 
-MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, uint8_t bioIndex_,
+namespace BioStrings {
+	constexpr const char* BINARY_STRING_FILE = BINARYDATADIR "/mercbios.edt";
+	constexpr uint32_t BINARY_DESCRIPTION_SIZE = 400;
+	constexpr uint32_t BINARY_ADDITIONAL_INFORMATION_SIZE = 160;
+	constexpr uint32_t BINARY_ITEM_TOTAL_SIZE = BINARY_DESCRIPTION_SIZE + BINARY_ADDITIONAL_INFORMATION_SIZE;
+}
+
+MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, ST::string&& description_, ST::string&& additionalInformation_,
 	uint32_t minTotalSpending_, uint32_t minDays_,
 	std::vector<SpeckQuote>&& quotes_
-	) : index(index_), profileID(profileID_), bioIndex(bioIndex_),
+	) : index(index_), profileID(profileID_), description(std::move(description_)), additionalInformation(std::move(additionalInformation_)),
 	    minTotalSpending(minTotalSpending_), minDays(minDays_),
 	    quotes(std::move(quotes_)) {}
 
@@ -37,8 +48,10 @@ static SpeckQuoteType SpeckQuoteTypefromString(const ST::string& s)
 	throw DataError(ST::format("unknown quote type: {}", s));
 }
 
-MERCListingModel* MERCListingModel::deserialize(uint8_t index, const JsonValue& json, const MercSystem* mercSystem)
+MERCListingModel* MERCListingModel::deserialize(uint8_t index, const JsonValue& json, const MercSystem* mercSystem, TranslatableString::Loader& stringLoader)
 {
+	using namespace BioStrings;
+
 	auto reader = json.toObject();
 	ST::string profileName = reader.GetString("profile");
 	auto profile = mercSystem->getMercProfileInfoByName(profileName);
@@ -80,15 +93,30 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const JsonValue& 
 		quotes.push_back(quote);
 	}
 
+	if ((!reader.has("description") || !reader.has("additionalInformation")) && !reader.has("bioIndex")) {
+		SLOGE("M.E.R.C listing {} should have bioIndex set when description or additionalInformation are not set, defaulting to 0", profileName);
+	}
+	auto bioIndex = static_cast<uint32_t>(reader.getOptionalUInt("bioIndex"));
+
 	return new MERCListingModel(
 		index,
 		profile->profileID,
-		reader.GetUInt("bioIndex"),
+		TranslatableString::Utils::resolveOptionalProperty(
+			stringLoader,
+			reader,
+			"description",
+			std::make_unique<TranslatableString::Binary>(BINARY_STRING_FILE, BINARY_ITEM_TOTAL_SIZE * bioIndex, BINARY_DESCRIPTION_SIZE)
+		),
+		TranslatableString::Utils::resolveOptionalProperty(
+			stringLoader,
+			reader,
+			"additionalInformation",
+			std::make_unique<TranslatableString::Binary>(BINARY_STRING_FILE, BINARY_ITEM_TOTAL_SIZE * bioIndex + BINARY_DESCRIPTION_SIZE, BINARY_ADDITIONAL_INFORMATION_SIZE)
+		),
 		reader.getOptionalInt("minTotalSpending"),
 		reader.getOptionalInt("minDays"),
 		std::move(quotes)
 	);
-
 }
 
 void MERCListingModel::validateData(const std::vector<const MERCListingModel*>& models)

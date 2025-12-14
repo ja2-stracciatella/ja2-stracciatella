@@ -2,7 +2,6 @@
 #include "MercProfileInfo.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
-#include <algorithm>
 #include <utility>
 
 

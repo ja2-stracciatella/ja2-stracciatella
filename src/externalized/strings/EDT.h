@@ -38,7 +38,7 @@
 	requires some details about each individual file. These details are
 	contained in the EDTFilesTable below which also shows which files can
 	currently be overriden.
-	
+
 	To support a new file add an entry to the table then change the source
 	file to use EDTFile instead of ContentManager::loadEncryptedString.
 */
@@ -60,13 +60,6 @@ class EDTFile
 		*/
 		{ BINARYDATADIR "/aimbios.edt", { 400, 160 } },
 
-		/* Description strings of the M.E.R.C. files.
-		   One row per merc (10 in total) with two columns each:
-		   Column 0: Long description (original limit 400 characters)
-		   Column 1: Additional information (160 characters)
-		*/
-		{ BINARYDATADIR "/mercbios.edt", { 400, 160 } },
-
 		/* Strings of the help screen.
 		   123 rows, each with one column of 640 characters.
 		   See HelpScreenText.h to get a rough overview of the row contents.
@@ -80,7 +73,6 @@ public:
 	enum EDTFilesList
 	{
 		AIMBIOS,
-		MERCBIOS,
 		HELP
 	};
 

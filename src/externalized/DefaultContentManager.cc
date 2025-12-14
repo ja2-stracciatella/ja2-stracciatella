@@ -940,7 +940,7 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 
 	m_mapItemReplacements = MapItemReplacementModel::deserialize(replacement_json, this);
 
-	loadMercsData(binaryData);
+	loadMercsData(binaryData, stringLoader);
 	loadAllDealersAndInventory();
 
 	auto imp_json = readJsonDataFileWithSchema("imp.json");
@@ -1255,7 +1255,7 @@ bool DefaultContentManager::loadTacticalLayerData()
 	return true;
 }
 
-bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfiles)
+bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfiles, TranslatableString::Loader& stringLoader)
 {
 	MercProfileInfo::load = [this](uint8_t p) { return this->getMercProfileInfo(p); };
 
@@ -1299,7 +1299,7 @@ bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfile
 	int i = 0;
 	for (auto& element : json.toVec())
 	{
-		auto item = MERCListingModel::deserialize(i++, element, this);
+		auto item = MERCListingModel::deserialize(i++, element, this, stringLoader);
 		m_MERCListings.push_back(item);
 	}
 	MERCListingModel::validateData(m_MERCListings);

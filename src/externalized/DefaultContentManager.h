@@ -312,7 +312,7 @@ protected:
 
 	bool loadStrategicLayerData();
 	bool loadTacticalLayerData();
-	bool loadMercsData(const BinaryProfileData& binaryProfiles);
+	bool loadMercsData(const BinaryProfileData& binaryProfiles, TranslatableString::Loader& stringLoader);
 	void loadVehicles();
 	void loadTranslationTable();
 	void loadAllScriptRecords();
