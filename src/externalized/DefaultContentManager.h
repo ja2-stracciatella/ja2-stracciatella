@@ -4,6 +4,7 @@
  * of this class or inheriting from it there should not be any reason to
  * include this file instead of ContentManager.h.
  */
+#include "AIMListingModel.h"
 #include "GameRes.h"
 
 #include "ContentManager.h"
@@ -169,6 +170,8 @@ public:
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
+	virtual const std::vector<const AIMListingModel*>& getAIMListings() const override;
+	virtual const AIMListingModel* getAIMListing(uint8_t profileID) const override;
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const override;
 	virtual void resetMercProfileStructs() const override;
 	virtual const VehicleModel* getVehicle(uint8_t vehicleID) const override;
@@ -274,6 +277,7 @@ protected:
 
 	std::map<uint8_t, const RPCSmallFaceModel*> m_rpcSmallFaces;
 	std::vector<const MERCListingModel*> m_MERCListings;
+	std::vector<const AIMListingModel*> m_AIMListings;
 	std::vector<const VehicleModel*> m_vehicles;
 
 	// List of pre-constructed MercProfile objects; indices of elements are arbitrary (unlike gMercProfiles) and not guaranteed to follow any order

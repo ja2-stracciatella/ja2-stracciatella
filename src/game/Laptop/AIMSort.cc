@@ -1,6 +1,9 @@
+#include "AIMListingModel.h"
+#include "ContentManager.h"
 #include "Cursors.h"
 #include "Directories.h"
 #include "Font.h"
+#include "GameInstance.h"
 #include "Laptop.h"
 #include "AIMSort.h"
 #include "AIM.h"
@@ -13,6 +16,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+#include <algorithm>
 
 
 //#define
@@ -132,10 +136,11 @@ static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 
 void EnterAimSort()
 {
+	AimMercArray.clear();
 	//Everytime into Aim Sort, reset array.
-	for (UINT8 i = 0; i < MAX_NUMBER_MERCS; ++i)
+	for (auto listing : GCM->getAIMListings())
 	{
-		AimMercArray[i] = i;
+		AimMercArray.push_back(listing->profileID);
 	}
 
 	InitAimDefaults();
@@ -368,19 +373,19 @@ static void DrawSelectLight(const UINT8 ubMode, const UINT8 ubImage)
 }
 
 
-static INT32 QsortCompare(const void* pNum1, const void* pNum2);
+static INT32 MercArrayCompare(const UINT8& pNum1, const UINT8& pNum2);
 
 
 static void SortMercArray(void)
 {
-	qsort(AimMercArray, MAX_NUMBER_MERCS, sizeof(UINT8), QsortCompare);
+	std::sort(AimMercArray.begin(), AimMercArray.end(), MercArrayCompare);
 }
 
 
-static INT32 QsortCompare(const void* pNum1, const void* pNum2)
+static INT32 MercArrayCompare(const UINT8& pNum1, const UINT8& pNum2)
 {
-	MERCPROFILESTRUCT const& p1 = GetProfile(*(UINT8*)pNum1);
-	MERCPROFILESTRUCT const& p2 = GetProfile(*(UINT8*)pNum2);
+	MERCPROFILESTRUCT const& p1 = GetProfile(pNum1);
+	MERCPROFILESTRUCT const& p2 = GetProfile(pNum2);
 
 	INT32 v1;
 	INT32 v2;
@@ -395,6 +400,9 @@ static INT32 QsortCompare(const void* pNum1, const void* pNum2)
 
 		default: SLOGA("QsortCompare: invalid sort mode"); return 0;
 	}
-	const INT32 ret = (v1 > v2) - (v1 < v2);
-	return gubCurrentListMode == AIM_ASCEND ? ret : -ret;
+	if (gubCurrentListMode == AIM_ASCEND) {
+		return v1 < v2;
+	} else {
+		return v1 > v2;
+	}
 }

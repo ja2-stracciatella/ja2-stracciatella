@@ -1,0 +1,27 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Mercs AIM Listings
+description: |
+  Defines the profile listings on the AIM website.
+items:
+  type: object
+  properties:
+    profile:
+      title: Profile
+      description: The profile ID of the AIM merc
+      $ref: types/id.schema.yaml
+    bioIndex:
+      title: Biography Index
+      description: |
+        The start location offset to the merc's bio in the aimbios.edt. This value is used as a fallback for `description` or `additionalInformation`.
+      $ref: types/uint8.schema.yaml
+    description:
+      title: Description
+      description: Description displayed on the AIM page.
+      $ref: types/translatable-string.schema.yaml
+    additionalInformation:
+      title: Additional Information
+      description: Additional information displayed on the AIM page.
+      $ref: types/translatable-string.schema.yaml
+  required:
+    - profile

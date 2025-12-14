@@ -14,6 +14,7 @@
 #include <vector>
 
 
+class AIMListingModel;
 class ArmyCompositionModel;
 class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
@@ -198,6 +199,12 @@ public:
 
 	/* Returns the full list of profile listings on M.E.R.C. */
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const = 0;
+
+	/* Returns the full list of profile listings on AIM */
+	virtual const std::vector<const AIMListingModel*>& getAIMListings() const = 0;
+
+	/* Returns a profile listing for a specific merc on AIM */
+	virtual const AIMListingModel* getAIMListing(uint8_t profileID) const = 0;
 
 	//returns the full list of character profiles
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const = 0;

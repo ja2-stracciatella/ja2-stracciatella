@@ -1,5 +1,6 @@
 #include "DefaultContentManager.h"
 
+#include "AIMListingModel.h"
 #include "BinaryProfileData.h"
 #include "Exceptions.h"
 #include "ItemModel.h"
@@ -68,6 +69,8 @@
 #include "Strategic_AI.h"
 #include "Strategic_Status.h"
 
+#include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1304,6 +1307,15 @@ bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfile
 	}
 	MERCListingModel::validateData(m_MERCListings);
 
+	json = readJsonDataFileWithSchema("mercs-AIM-listings.json");
+	i = 0;
+	for (auto& element : json.toVec())
+	{
+		auto item = AIMListingModel::deserialize(i++, element, this, stringLoader);
+		m_AIMListings.push_back(item);
+	}
+	AIMListingModel::validateData(m_AIMListings);
+
 	return true;
 }
 
@@ -1589,6 +1601,21 @@ const RPCSmallFaceModel* DefaultContentManager::getRPCSmallFaceOffsets(uint8_t p
 const std::vector<const MERCListingModel*>& DefaultContentManager::getMERCListings() const
 {
 	return m_MERCListings;
+}
+
+const std::vector<const AIMListingModel*>& DefaultContentManager::getAIMListings() const
+{
+	return m_AIMListings;
+}
+
+const AIMListingModel* DefaultContentManager::getAIMListing(uint8_t const profileID) const {
+	auto result = std::find_if(m_AIMListings.begin(), m_AIMListings.end(), [profileID](const AIMListingModel* model) {
+		return model->profileID == profileID;
+	});
+	if (result == m_AIMListings.end()) {
+		return nullptr;
+	}
+	return *result;
 }
 
 const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const profileID) const

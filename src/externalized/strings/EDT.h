@@ -53,13 +53,6 @@ class EDTFile
 
 	static inline EDTFilesTable const EDTFilesTable[]
 	{
-		/* Description strings of the A.I.M. members screen.
-		   One row per merc (40 in total) with two columns each:
-		   Column 0: Long description (original limit 400 characters)
-		   Column 1: Additional information (160 characters)
-		*/
-		{ BINARYDATADIR "/aimbios.edt", { 400, 160 } },
-
 		/* Strings of the help screen.
 		   123 rows, each with one column of 640 characters.
 		   See HelpScreenText.h to get a rough overview of the row contents.
@@ -72,7 +65,6 @@ class EDTFile
 public:
 	enum EDTFilesList
 	{
-		AIMBIOS,
 		HELP
 	};
 
