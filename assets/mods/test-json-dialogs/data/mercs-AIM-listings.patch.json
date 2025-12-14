@@ -1,0 +1,20 @@
+[
+    {
+        "op": "add",
+        "path": "/0/additionalInformation",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/aimbios",
+            "index": 0
+        }
+    },
+    {
+        "op": "add",
+        "path": "/5/description",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/aimbios",
+            "index": 1
+        }
+    }
+]

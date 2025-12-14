@@ -1,0 +1,20 @@
+[
+    {
+        "op": "add",
+        "path": "/0/description",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/mercbios",
+            "index": 0
+        }
+    },
+    {
+        "op": "add",
+        "path": "/0/additionalInformation",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/mercbios",
+            "index": 1
+        }
+    }
+]
