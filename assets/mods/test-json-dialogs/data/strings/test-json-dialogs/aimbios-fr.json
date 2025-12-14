@@ -1,0 +1,4 @@
+[
+    "Ceci est l'information supplémentaire en français pour Barry, qui n'en a généralement pas. Le texte ci-dessus provient encore du fichier aimbios.edt original. Veuillez noter que ce texte dépasse l'ancienne limite de 160 caractères.",
+    "Description principale pour Trevor en français. Unicode semble fonctionner partiellement (cela dépend de la police, bien sûr) : ô£ÇБÿÄщµ¢ć. Les messages d'erreur concernant les caractères invalides dans la console sont attendus."
+]

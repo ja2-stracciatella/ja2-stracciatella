@@ -16,5 +16,10 @@
             "prefix": "strings/test-json-dialogs/mercbios",
             "index": 1
         }
+    },
+    {
+        "op": "add",
+        "path": "/1/description",
+        "value": "This is an untranslated description for Haywire that will not depend on the chosen language."
     }
 ]
