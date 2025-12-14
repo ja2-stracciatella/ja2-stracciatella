@@ -83,7 +83,7 @@ static INT16 iEndClickY;
 #define DOWN_ICON		2
 #define OK_ICON		3
 
-static INT16 iButtonIcons[4];
+static GenericIcon iButtonIcons[4];
 static GUIButtonRef iSelectWin;
 static GUIButtonRef iCancelWin;
 static GUIButtonRef iScrollUp;
@@ -228,7 +228,7 @@ static void UpClkCallback(GUI_BUTTON* button, UINT32 reason);
 
 static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBACK click, const ST::string& help)
 {
-	INT16 const img = LoadGenericButtonIcon(gfx);
+	auto const img = LoadGenericButtonIcon(gfx);
 	iButtonIcons[idx] = img;
 	GUIButtonRef const btn = CreateIconButton(img, 0, SCREEN_WIDTH - 40, y,
 	 40, h, MSYS_PRIORITY_HIGH, std::move(click));
@@ -604,7 +604,7 @@ static DisplayList* TrashList(DisplayList* pNode);
 //
 void ShutdownJA2SelectionWindow( void )
 {
-	for (INT16 const icon : iButtonIcons)
+	for (GenericIcon icon : iButtonIcons)
 		UnloadGenericButtonIcon(icon);
 
 	if (pDispList != NULL)

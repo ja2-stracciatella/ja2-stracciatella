@@ -54,7 +54,6 @@
 
 
 //editor icon storage vars
-INT32	giEditMercDirectionIcons[2];
 SGPVObject* guiMercInventoryPanel;
 SGPVObject* guiOmertaMap;
 SGPVSurface* guiMercInvPanelBuffers[9];
@@ -169,8 +168,8 @@ static void DeleteEditorImages(void)
 	DeleteVideoObject(guiMercInventoryPanel);
 	DeleteVideoObject(guiOmertaMap);
 	//The merc directional buttons
-	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[0] );
-	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[1] );
+	UnloadGenericButtonIcon(giEditMercDirectionIcons[0]);
+	UnloadGenericButtonIcon(giEditMercDirectionIcons[1]);
 }
 
 
