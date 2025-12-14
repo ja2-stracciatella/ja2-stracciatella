@@ -29,6 +29,11 @@ namespace TranslatableString {
 	}
 
 	SGPFile* FileLoader::getBinaryFile(const ST::string& filename) {
+		auto found = m_openFiles.find(filename);
+		if (found != m_openFiles.end()) {
+			return found->second;
+		}
+
 		 auto file =  SGPFile::openInVfs(m_vfs, filename);
 
 		m_openFiles[filename] = std::move(file);
