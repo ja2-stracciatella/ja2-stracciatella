@@ -187,6 +187,7 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_undergroundSectors);
 	deleteElements(m_rpcSmallFaces);
 	deleteElements(m_MERCListings);
+	deleteElements(m_AIMListings);
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
 	deleteElements(m_vehicles);
