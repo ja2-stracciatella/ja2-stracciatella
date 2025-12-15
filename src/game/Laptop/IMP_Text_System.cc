@@ -1,4 +1,4 @@
-#include "Directories.h"
+#include "EDT.h"
 #include "Font.h"
 #include "Text.h"
 #include "WordWrap.h"
@@ -11,13 +11,8 @@
 #include "IMP_MainPage.h"
 #include "Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
+#include <optional>
 #include <string_theory/string>
-
-
-#define IMP_SEEK_AMOUNT (5 * 80)
 
 #define IMP_LEFT_IDENT_TEXT_X  (STD_SCREEN_X + 116)
 #define IMP_RIGHT_IDENT_TEXT_X (STD_SCREEN_X + 509)
@@ -34,6 +29,15 @@ static const INT32 iIMPQuestionLengths[25] =
 #define QTN_FIRST_COLUMN_X   80
 #define QTN_SECOND_COLUMN_X 320
 
+std::optional<EDTFile> gImpText;
+
+void OpenIMPTexts() {
+	gImpText = EDTFile(EDTFile::IMP_TEXTS);
+}
+
+void CloseIMPTexts() {
+	gImpText = std::nullopt;
+}
 
 static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT16 sIMPTextRecordNumber, SGPFont const font, UINT8 ubColor, BOOLEAN fShadow, UINT32 uiFlags)
 {
@@ -45,7 +49,7 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
 		SetFontShadow(NO_SHADOW);
 	}
 
-	ST::string sString = GCM->loadEncryptedString(BINARYDATADIR "/imptext.edt", sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
+	ST::string sString = gImpText->at(sIMPTextRecordNumber, 0);
 	DisplayWrappedString(sStartX, sStartY, sLineLength, 2, font, ubColor, sString, FONT_BLACK, uiFlags);
 
 	// reset shadow

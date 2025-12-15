@@ -93,6 +93,11 @@ class EDTFile
 		   See Insurance.cc to get a rough overview of the row contents.
 		*/
 		{ BINARYDATADIR "/insurancemulti.edt", { 400 } },
+		/* Strings for IMP.
+		   478 rows, each with one column of 400 characters.
+		   See IMP_Text_System.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/imptext.edt", { 400 } },
 	};
 
 	IEDT::uptr mIEDT;
@@ -108,6 +113,7 @@ public:
 		AIM_POLICIES,
 		INSURANCE_SINGLE_LINE_TEXTS,
 		INSURANCE_MULTI_LINE_TEXTS,
+		IMP_TEXTS
 	};
 
 	EDTFile(EDTFilesList const whichFile)
