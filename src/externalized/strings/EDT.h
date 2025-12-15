@@ -83,6 +83,16 @@ class EDTFile
 		   See AIMPolicies.cc to get a rough overview of the row contents.
 		*/
 		{ BINARYDATADIR "/aimpol.edt", { 400 } },
+		/* Strings for single line descriptions on the insurance laptop page.
+		   60 rows, each with one column of 80 characters.
+		   See Insurance.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/insurancesingle.edt", { 80 } },
+		/* Strings for multi line descriptions on the insurance laptop page.
+		   72 rows, each with one column of 400 characters.
+		   See Insurance.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/insurancemulti.edt", { 400 } },
 	};
 
 	IEDT::uptr mIEDT;
@@ -96,6 +106,8 @@ public:
 		AIM_ALUMNI_NAMES,
 		AIM_ALUMNI_TEXTS,
 		AIM_POLICIES,
+		INSURANCE_SINGLE_LINE_TEXTS,
+		INSURANCE_MULTI_LINE_TEXTS,
 	};
 
 	EDTFile(EDTFilesList const whichFile)

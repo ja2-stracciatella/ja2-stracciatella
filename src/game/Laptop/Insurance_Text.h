@@ -1,13 +1,9 @@
-#ifndef _INSURANCE_TEXT_H_
-#define _INSURANCE_TEXT_H_
+#pragma once
 
-
-#define INSURANCE_TEXT_SINGLE_LINE_SIZE	80
-#define INSURANCE_TEXT_MULTI_LINE_SIZE	80 * 5
+#include "Types.h"
 
 #define INSURANCE_TEXT_SINGLE		1
 #define INSURANCE_TEXT_MULTI		2
-
 
 //Single line
 enum
@@ -87,7 +83,6 @@ enum
 
 };
 
-
-
-
-#endif
+void OpenInsuranceTexts();
+void CloseInsuranceTexts();
+ST::string GetInsuranceText(const UINT8 ubNumber);
