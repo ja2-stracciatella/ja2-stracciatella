@@ -1,5 +1,6 @@
 #include "Cursors.h"
 #include "Directories.h"
+#include "EDT.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "AIMPolicies.h"
@@ -12,18 +13,13 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
+#include <optional>
 #include <string_theory/format>
 #include <string_theory/string>
-
 #include <algorithm>
 
 #define NUM_AIM_POLICY_PAGES			11
 #define NUM_AIM_POLICY_TOC_BUTTONS		9
-#define AIMPOLICYFILE				BINARYDATADIR "/aimpol.edt"
-#define AIM_POLICY_LINE_SIZE			80 * 5
 
 #define AIM_POLICY_TITLE_FONT			FONT14ARIAL
 #define AIM_POLICY_TITLE_COLOR			AIM_GREEN
@@ -159,6 +155,7 @@ static cache_key_t const guiContentButton{ LAPTOPDIR "/contentbutton.sti" };
 static BOOLEAN     gfExitingAimPolicy;
 static BOOLEAN     AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
 
+std::optional<EDTFile> gAimPolicyTexts;
 
 void EnterInitAimPolicies()
 {
@@ -172,6 +169,8 @@ static void InitAimPolicyMenuBar();
 void EnterAimPolicies()
 {
 	InitAimDefaults();
+
+	gAimPolicyTexts = EDTFile(EDTFile::AIM_POLICIES);
 
 	gubCurPageNum = (UINT8) giCurrentSubPage;
 
@@ -206,6 +205,9 @@ void ExitAimPolicies()
 
 	if( gfInAgreementPage )
 		ExitAgreementButton();
+
+	gAimPolicyTexts = std::nullopt;
+
 	RemoveAimDefaults();
 
 	giCurrentSubPage = gubCurPageNum;
@@ -393,7 +395,7 @@ static void ExitAimPolicyMenuBar()
 
 static ST::string LoadAIMPolicyText(UINT32 Offset)
 {
-	return GCM->loadEncryptedString(AIMPOLICYFILE, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE);
+	return gAimPolicyTexts->at(Offset);
 }
 
 

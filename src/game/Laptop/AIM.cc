@@ -1,5 +1,6 @@
 #include "Cursors.h"
 #include "Directories.h"
+#include "EDT.h"
 #include "Font.h"
 #include "GameRes.h"
 #include "Laptop.h"
@@ -17,9 +18,7 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
+#include <optional>
 #include <string_theory/string>
 
 
@@ -154,6 +153,7 @@ static SGPVObject* guiInsuranceAdImages;
 static SGPVObject* guiFuneralAdImages;
 static SGPVObject* guiBobbyRAdImages;
 
+static std::optional<EDTFile> gAimTexts;
 
 static UINT8 gubCurrentAdvertisment;
 
@@ -398,6 +398,8 @@ void InitAimDefaults()
 	// load the Rust bacground graphic and add it
 	guiRustBackGround = AddVideoObjectFromFile(LAPTOPDIR "/rustbackground.sti");
 
+	OpenAIMTexts();
+
 	// load the Aim Symbol graphic and add it
 	guiAimSymbol = AddVideoObjectFromFile(MLG_AIMSYMBOL);
 
@@ -412,6 +414,7 @@ void InitAimDefaults()
 void RemoveAimDefaults()
 {
 	DeleteVideoObject(guiRustBackGround);
+	CloseAIMTexts();
 	DeleteVideoObject(guiAimSymbol);
 	MSYS_RemoveRegion( &gSelectedAimLogo);
 }
@@ -445,10 +448,19 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 	}
 }
 
+void OpenAIMTexts() {
+	if (!gAimTexts) {
+		gAimTexts = EDTFile(EDTFile::AIM_TEXT);
+	}
+}
 
-static ST::string LoadAIMText(UINT32 entry)
+void CloseAIMTexts() {
+	gAimTexts = std::nullopt;
+}
+
+ST::string LoadAIMText(UINT32 entry)
 {
-	return GCM->loadEncryptedString(AIMHISTORYFILE, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+	return gAimTexts->at(entry);
 }
 
 

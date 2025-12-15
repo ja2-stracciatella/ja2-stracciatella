@@ -1,5 +1,6 @@
 #include "Cursors.h"
 #include "Directories.h"
+#include "EDT.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "AIMArchives.h"
@@ -12,16 +13,10 @@
 #include "Video.h"
 #include "Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
+#include <optional>
 #include <string_theory/string>
 
 #include <algorithm>
-
-#define AIM_ALUMNI_NAME_FILE		BINARYDATADIR "/alumname.edt"
-#define AIM_ALUMNI_FILE			BINARYDATADIR "/alumni.edt"
-
 
 #define AIM_ALUMNI_TITLE_FONT		FONT14ARIAL
 #define AIM_ALUMNI_TITLE_COLOR		AIM_GREEN
@@ -92,11 +87,6 @@
 #define AIM_ALUMNI_DONE_WIDTH		36
 #define AIM_ALUMNI_DONE_HEIGHT		16
 
-#define AIM_ALUMNI_NAME_SIZE		80
-#define AIM_ALUMNI_DECRIPTION_SIZE	80 * 7
-#define AIM_ALUMNI_FILE_RECORD_SIZE	80 * 8
-#define AIM_ALUMNI_FULL_NAME_SIZE	80
-
 namespace {
 cache_key_t const guiAlumniFrame{ LAPTOPDIR "/alumniframe.sti" };
 cache_key_t const guiOldAim{ LAPTOPDIR "/old_aim.sti" };
@@ -124,6 +114,8 @@ static MOUSE_REGION gDoneRegion;
 static BUTTON_PICS* guiAlumniPageButtonImage;
 static GUIButtonRef guiAlumniPageButton[3];
 
+std::optional<EDTFile> gAimAlumniNames;
+std::optional<EDTFile> gAimAlumniTexts;
 
 void EnterInitAimArchives()
 {
@@ -149,6 +141,9 @@ void EnterAimArchives()
 	InitAimMenuBar();
 
 	gubPageNum = (UINT8)giCurrentSubPage;
+
+	gAimAlumniNames = EDTFile(EDTFile::AIM_ALUMNI_NAMES);
+	gAimAlumniTexts = EDTFile(EDTFile::AIM_ALUMNI_TEXTS);
 
 	InitAlumniFaceRegions();
 
@@ -195,6 +190,9 @@ void ExitAimArchives()
 	RemoveAimDefaults();
 	ExitAimMenuBar();
 	giCurrentSubPage = gubPageNum;
+
+	gAimAlumniNames = std::nullopt;
+	gAimAlumniTexts = std::nullopt;
 
 	CreateDestroyDoneMouseRegion(0);
 	gfDestroyPopUpBox = FALSE;
@@ -246,7 +244,7 @@ void RenderAimArchives()
 		BltVideoObject(FRAME_BUFFER, guiAlumniFrame, 0,        x,     y);     // Blt the alumni frame background
 
 		// Display the merc's name
-		ST::string sText = GCM->loadEncryptedString(AIM_ALUMNI_NAME_FILE, AIM_ALUMNI_NAME_SIZE * face_idx, AIM_ALUMNI_NAME_SIZE);
+		ST::string sText = gAimAlumniNames->at(face_idx, 0);
 		DrawTextToScreen(sText, x + AIM_ALUMNI_NAME_OFFSET_X, y + AIM_ALUMNI_NAME_OFFSET_Y, AIM_ALUMNI_NAME_WIDTH, AIM_ALUMNI_NAME_FONT, AIM_ALUMNI_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
@@ -321,12 +319,10 @@ static void DisplayAlumniOldMercPopUp(void)
 	UINT8  i,ubNumLines=11; //17
 	UINT16 usPosY;
 	UINT8  ubNumDescLines;
-	UINT32 uiStartLoc;
 	UINT16 usStringPixLength;
 
 	//Load the description
-	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc + AIM_ALUMNI_FULL_NAME_SIZE;
-	ST::string sDesc = GCM->loadEncryptedString(AIM_ALUMNI_FILE, uiStartLoc, AIM_ALUMNI_DECRIPTION_SIZE);
+	ST::string sDesc = gAimAlumniTexts->at(gubDrawOldMerc, 1);
 
 	usStringPixLength = StringPixLength( sDesc, AIM_ALUMNI_POPUP_FONT);
 	ubNumDescLines = (UINT8) (usStringPixLength / AIM_POPUP_TEXT_WIDTH);
@@ -359,8 +355,7 @@ static void DisplayAlumniOldMercPopUp(void)
 	BltVideoObject(FRAME_BUFFER, guiOldAim,   gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X + 1, AIM_ALUMNI_FACE_PANEL_Y + 1);
 
 	//Load and display the name
-	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc;
-	ST::string sName = GCM->loadEncryptedString(AIM_ALUMNI_FILE, uiStartLoc, AIM_ALUMNI_FULL_NAME_SIZE);
+	ST::string sName = gAimAlumniTexts->at(gubDrawOldMerc, 0);
 
 	DrawTextToScreen(sName, AIM_ALUMNI_POPUP_NAME_X, AIM_ALUMNI_POPUP_NAME_Y, 0, AIM_ALUMNI_POPUP_NAME_FONT, AIM_ALUMNI_POPUP_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 

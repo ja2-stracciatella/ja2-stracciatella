@@ -63,6 +63,26 @@ class EDTFile
 		   See Credits.cc to get a rough overview of the row contents and control characters.
 		*/
 		{ BINARYDATADIR "/credits.edt", { 80 } },
+		/* Strings for the AIM page.
+		   46 rows, each with one column of 400 characters.
+		   See AIM.cc and AIMHistory.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/aimhist.edt", { 400 } },
+		/* Strings for the AIM alumni names.
+		   102 rows, each with one column of 80 characters.
+		   See AIMArchives.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/alumname.edt", { 80 } },
+		/* Strings for the AIM alumni descriptions.
+		   102 rows, each with two column of 80 and 560 characters for full name and description.
+		   See AIMArchives.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/alumni.edt", { 80, 560 } },
+		/* Strings for the AIM policies.
+		   92 rows, each with one column of 400 characters.
+		   See AIMPolicies.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/aimpol.edt", { 400 } },
 	};
 
 	IEDT::uptr mIEDT;
@@ -71,7 +91,11 @@ public:
 	enum EDTFilesList
 	{
 		HELP,
-		CREDITS
+		CREDITS,
+		AIM_TEXT,
+		AIM_ALUMNI_NAMES,
+		AIM_ALUMNI_TEXTS,
+		AIM_POLICIES,
 	};
 
 	EDTFile(EDTFilesList const whichFile)
