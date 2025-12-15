@@ -104,7 +104,7 @@ SGPFile* SGPFile::openInVfs(Vfs* vfs, const ST::string& filename) {
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("SGPFile::openInVfs: {}", err.get()).to_std_string());
 	}
-	return new SGPFile(vfile.release(), std::move(filename));
+	return new SGPFile(vfile.release(), filename);
 }
 
 void SGPFile::read(void *const pDest, size_t const uiBytesToRead)

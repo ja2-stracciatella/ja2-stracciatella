@@ -17,6 +17,7 @@ namespace TranslatableString {
 	 */
 	class Loader {
 		public:
+			virtual ~Loader() = default;
 			virtual const std::vector<ST::string>& getJsonTranslations(const ST::string& file) = 0;
 			virtual SGPFile* getBinaryFile(const ST::string& file) = 0;
 	};
@@ -29,7 +30,7 @@ namespace TranslatableString {
 		public:
 			FileLoader(Vfs* vfs, SchemaManager* schemaManager, GameVersion version) : m_vfs(vfs), m_schemaManager(schemaManager), m_version(version) {}
 			~FileLoader() {
-				for (auto file : m_openFiles) {
+				for (auto& file : m_openFiles) {
 					DeleteSGPFile(file.second);
 				}
 			}
@@ -73,11 +74,15 @@ namespace TranslatableString {
 	 */
 	class String {
 		public:
+			virtual ~String() = default;
 			/**
 			 * Resolve a TranslatableString to its translated value. This function should do all error handling,
 			 * log errors and return an empty string if the lookup fails
 			 */
 			virtual ST::string resolve(Loader& loader) = 0;
+			/**
+			 * Parse a TranslatableString from JSON
+			 */
 			static std::unique_ptr<String> parse(JsonValue value);
 	};
 
@@ -86,7 +91,7 @@ namespace TranslatableString {
 	 */
 	class Untranslated : public String {
 		public:
-			Untranslated(ST::string str) : m_str(str) {}
+			Untranslated(const ST::string& str) : m_str(str) {}
 
 			ST::string resolve(Loader& loader) override;
 		private:
@@ -98,7 +103,7 @@ namespace TranslatableString {
 	 */
 	class Json : public String {
 			public:
-				Json(ST::string file, uint32_t index) : m_prefix(file), m_index(index) {}
+				Json(const ST::string& file, uint32_t index) : m_prefix(file), m_index(index) {}
 
 				ST::string resolve(Loader& loader) override;
 			private:
@@ -111,7 +116,7 @@ namespace TranslatableString {
 	 */
 	class Binary : public String {
 			public:
-				Binary(ST::string file, uint32_t offset, uint32_t length) : m_file(file), m_offset(offset), m_length(length) {};
+				Binary(const ST::string& file, uint32_t offset, uint32_t length) : m_file(file), m_offset(offset), m_length(length) {};
 
 				ST::string resolve(Loader& loader) override;
 			private:

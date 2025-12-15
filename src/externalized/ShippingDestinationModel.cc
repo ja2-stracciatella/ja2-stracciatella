@@ -11,7 +11,7 @@ ShippingDestinationModel::ShippingDestinationModel(uint8_t locationId_, ST::stri
 	bool canDeliver_, bool isPrimary_,
 	uint8_t deliverySectorId_, uint8_t deliverySectorZ_, int16_t deliverySectorGridNo_,
 	int16_t emailOffset_, int16_t emailLength_):
-		locationId(locationId_), internalName(internalName_), name(name_),
+		locationId(locationId_), internalName(std::move(internalName_)), name(std::move(name_)),
 		chargeRateOverNight(chargeRateOverNight_), chargeRate2Days(chargeRate2Days_), chargeRateStandard(chargeRateStandard_),
 		flowersNextDayDeliveryCost(flowersNextDayDeliveryCost_), flowersWhenItGetsThereCost(flowersWhenItGetsThereCost_),
 		canDeliver(canDeliver_), isPrimary(isPrimary_),

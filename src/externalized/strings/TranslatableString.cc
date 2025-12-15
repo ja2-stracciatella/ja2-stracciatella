@@ -24,7 +24,7 @@ namespace TranslatableString {
 			strings.push_back(value.toString());
 		}
 
-		m_loadedJson[prefix] = strings;
+		m_loadedJson[prefix] = std::move(strings);
 		return m_loadedJson[prefix];
 	}
 
