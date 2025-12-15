@@ -1353,7 +1353,6 @@ static void LeaveLapTopScreen(void)
 			{
 				LaptopSaveInfo.gfNewGameLaptop = FALSE;
 				fExitingLaptopFlag = TRUE;
-				InitNewGame();
 				gfDontStartTransitionFromLaptop = TRUE;
 				return;
 			}
