@@ -11,9 +11,6 @@
 #include "Video.h"
 #include "Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
 #include <string_theory/string>
 
 
@@ -123,7 +120,6 @@ void RenderFloristCards()
 {
 	UINT8  i,j, ubCount;
 	UINT16 usPosX, usPosY;
-	UINT32 uiStartLoc=0;
 	UINT16 usHeightOffset;
 
 	DisplayFloristDefaults();
@@ -141,8 +137,7 @@ void RenderFloristCards()
 			BltVideoObject(FRAME_BUFFER, guiCardBackground, 0, usPosX, usPosY);
 
 			//Get and display the card saying
-			uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * ubCount;
-			ST::string sTemp = GCM->loadEncryptedString(FLOR_CARD_TEXT_FILE, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
+			ST::string sTemp = GetFloristCardString(ubCount);
 
 			//DisplayWrappedString(usPosX + 7, usPosY + 15, FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 			usHeightOffset = IanWrappedStringHeight(FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, sTemp);

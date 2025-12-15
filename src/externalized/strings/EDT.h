@@ -98,6 +98,16 @@ class EDTFile
 		   See IMP_Text_System.cc to get a rough overview of the row contents.
 		*/
 		{ BINARYDATADIR "/imptext.edt", { 400 } },
+		/* Strings for florist cards.
+		   18 rows, each with one column of 400 characters.
+		   See Florist_Cards.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/flowercard.edt", { 400 } },
+		/* Strings for florist descriptions.
+		   20 rows, each with column of 80, 80 and 320 characters for name, price and description
+		   See Florist_Gallery.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/flowerdesc.edt", { 80, 80, 320 } },
 	};
 
 	IEDT::uptr mIEDT;
@@ -113,7 +123,9 @@ public:
 		AIM_POLICIES,
 		INSURANCE_SINGLE_LINE_TEXTS,
 		INSURANCE_MULTI_LINE_TEXTS,
-		IMP_TEXTS
+		IMP_TEXTS,
+		FLORIST_CARDS,
+		FLORIST_DESCRIPTIONS,
 	};
 
 	EDTFile(EDTFilesList const whichFile)

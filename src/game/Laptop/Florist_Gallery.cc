@@ -10,9 +10,6 @@
 #include "Video.h"
 #include "Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -132,7 +129,6 @@ void ExitFloristGallery()
 	UnloadButtonImage( guiFloralGalleryButtonImage  );
 
 	DeleteFlowerButtons();
-
 }
 
 void HandleFloristGallery()
@@ -287,7 +283,7 @@ static void DeleteFlowerButtons(void)
 
 static BOOLEAN DisplayFloralDescriptions(void)
 {
-	UINT32	uiStartLoc=0, i;
+	UINT32	uiIndex=0, i;
 	UINT16	usPosY, usPrice;
 
 	if( (FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex) >= 3 )
@@ -298,18 +294,16 @@ static BOOLEAN DisplayFloralDescriptions(void)
 	usPosY = FLOR_GALLERY_FLOWER_BUTTON_Y;
 	for(i=0; i<gubCurNumberOfFlowers; i++)
 	{
+		uiIndex = i + gubCurFlowerIndex;
+
 		{
 			//Display Flower title
-			uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * (i + gubCurFlowerIndex);
-			ST::string sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
-			DrawTextToScreen(sTemp, FLOR_GALLERY_FLOWER_TITLE_X, usPosY + FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y, 0, FLOR_GALLERY_FLOWER_TITLE_FONT, FLOR_GALLERY_FLOWER_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(GetFloristGalleryText(uiIndex, 0), FLOR_GALLERY_FLOWER_TITLE_X, usPosY + FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y, 0, FLOR_GALLERY_FLOWER_TITLE_FONT, FLOR_GALLERY_FLOWER_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 
 		{
 			//Display Flower Price
-			ST::string sTemp;
-			uiStartLoc += FLOR_GALLERY_TEXT_TITLE_SIZE;
-			sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE);
+			ST::string sTemp = GetFloristGalleryText(uiIndex, 1);
 			sscanf(sTemp.c_str(), "%hu", &usPrice);
 			sTemp = ST::format("${}.00 {}", usPrice, pMessageStrings[MSG_USDOLLAR_ABBREVIATION]);
 			DrawTextToScreen(sTemp, FLOR_GALLERY_FLOWER_TITLE_X, usPosY + FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y, 0, FLOR_GALLERY_FLOWER_PRICE_FONT, FLOR_GALLERY_FLOWER_PRICE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -317,8 +311,7 @@ static BOOLEAN DisplayFloralDescriptions(void)
 
 		{
 			//Display Flower Desc
-			uiStartLoc += FLOR_GALLERY_TEXT_PRICE_SIZE;
-			ST::string sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_DESC_SIZE);
+			ST::string sTemp = GetFloristGalleryText(uiIndex, 2);
 			DisplayWrappedString(FLOR_GALLERY_FLOWER_TITLE_X, usPosY + FLOR_GALLERY_FLOWER_DESC_OFFSET_Y, FLOR_GALLERY_DESC_WIDTH, 2, FLOR_GALLERY_FLOWER_DESC_FONT, FLOR_GALLERY_FLOWER_DESC_COLOR, sTemp, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 
