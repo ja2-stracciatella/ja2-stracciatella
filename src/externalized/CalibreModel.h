@@ -45,7 +45,7 @@ private:
 		ST::string&& silencedBurstSound_,
 		bool showInHelpText_,
 		bool monsterWeapon_
-	) : index(index_), internalName(internalName_), name(name_), bobbyRaysName(bobbyRaysName_), sound(sound_), burstSound(burstSound_), silencedSound(silencedSound_), silencedBurstSound(silencedBurstSound_), showInHelpText(showInHelpText_), monsterWeapon(monsterWeapon_) {}
+	) : index(index_), internalName(std::move(internalName_)), name(std::move(name_)), bobbyRaysName(std::move(bobbyRaysName_)), sound(std::move(sound_)), burstSound(std::move(burstSound_)), silencedSound(std::move(silencedSound_)), silencedBurstSound(std::move(silencedBurstSound_)), showInHelpText(showInHelpText_), monsterWeapon(monsterWeapon_) {}
 
 	static const ST::string DEFAULT_NAME_TRANSLATION_PREFIX;
 	static const ST::string DEFAULT_BOBBY_RAYS_NAME_TRANSLATION_PREFIX;
