@@ -1,5 +1,5 @@
 {
     "name": "Test JSON edt replacements",
-    "description": "This is a development helper mod that replaces all of Igor's dialog quotes with 'Test quote XXX' as well as several other srings stored in .edt files. End users should not enable this mod.",
-    "version": "2.0.2"
+    "description": "This is a development helper mod to test overriding strings with JSON. It replaces all of Igor's dialog quotes with 'Test quote XXX' as well as some merc names and descriptions. End users should not enable this mod.",
+    "version": "3.0.0"
 }

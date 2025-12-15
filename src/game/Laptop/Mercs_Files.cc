@@ -172,7 +172,7 @@ void ExitMercsFiles()
 static void DisplayMercFace(ProfileID);
 static void DisplayMercsStats(MERCPROFILESTRUCT const&);
 static void EnableDisableMercFilesNextPreviousButton(void);
-static void LoadAndDisplayMercBio(UINT8 ubMercID);
+static void LoadAndDisplayMercBio(const MERCListingModel* listing);
 
 
 void RenderMercsFiles()
@@ -194,7 +194,7 @@ void RenderMercsFiles()
 	DrawTextToScreen(p.zName, MERC_NAME_X, MERC_NAME_Y, 0, MERC_NAME_FONT, MERC_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Load and display the mercs bio
-	LoadAndDisplayMercBio(l->bioIndex);
+	LoadAndDisplayMercBio(l);
 
 	//Display the mercs statistic
 	DisplayMercsStats(p);
@@ -331,19 +331,16 @@ try
 catch (...) { /* XXX ignore */ }
 
 
-static void LoadAndDisplayMercBio(UINT8 ubMercID)
+static void LoadAndDisplayMercBio(const MERCListingModel* listing)
 {
-	EDTFile mercbios{ EDTFile::MERCBIOS };
-
 	{
 		//load and display the merc bio
-		auto const sText{ mercbios.at(ubMercID, 0) };
-		DisplayWrappedString(MERC_BIO_TEXT_X, MERC_BIO_TEXT_Y, MERC_BIO_WIDTH, 2, MERC_BIO_FONT, MERC_BIO_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DisplayWrappedString(MERC_BIO_TEXT_X, MERC_BIO_TEXT_Y, MERC_BIO_WIDTH, 2, MERC_BIO_FONT, MERC_BIO_COLOR, listing->description, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	{
 		//load and display the merc's additioanl info (if any)
-		auto const sText{ mercbios.at(ubMercID, 1) };
+		auto const sText = listing->additionalInformation;
 		if (!sText.empty())
 		{
 			DrawTextToScreen(MercInfo[MERC_FILES_ADDITIONAL_INFO], MERC_ADD_BIO_TITLE_X, MERC_ADD_BIO_TITLE_Y, 0, MERC_TITLE_FONT, MERC_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

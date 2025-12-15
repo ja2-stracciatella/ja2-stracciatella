@@ -8,7 +8,7 @@
 
 
 #define MAX_NUMBER_MERCS		40
-extern UINT8 AimMercArray[MAX_NUMBER_MERCS];
+extern std::vector<UINT8> AimMercArray;
 
 #define NUM_AIM_SCREENS			6
 

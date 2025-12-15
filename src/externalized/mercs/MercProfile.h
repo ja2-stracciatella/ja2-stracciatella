@@ -60,7 +60,7 @@ public:
 	JsonValue serializeStructRelations(const ContentManager* contentManager) const;
 
 	// Extract merc profile from the json data.
-	static std::unique_ptr<MERCPROFILESTRUCT> deserializeStruct(const MERCPROFILESTRUCT* binaryProf, const JsonObject& json, const ContentManager* contentManager);
+	static std::unique_ptr<MERCPROFILESTRUCT> deserializeStruct(const MERCPROFILESTRUCT* binaryProf, TranslatableString::Loader& stringLoader, const JsonObject& json, const ContentManager* contentManager);
 	// Extract relations tables for merc profiles from the json data.
 	static void deserializeStructRelations(const MERCPROFILESTRUCT* binaryProf, MERCPROFILESTRUCT* prof, const JsonObject& json, const ContentManager* contentManager);
 

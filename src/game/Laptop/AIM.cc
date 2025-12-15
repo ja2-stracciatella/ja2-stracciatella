@@ -4,6 +4,7 @@
 #include "GameRes.h"
 #include "Laptop.h"
 #include "AIM.h"
+#include "Types.h"
 #include "VObject.h"
 #include "Timer_Control.h"
 #include "WordWrap.h"
@@ -22,7 +23,7 @@
 #include <string_theory/string>
 
 
-UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
+std::vector<UINT8> AimMercArray;
 
 static LaptopMode const gCurrentAimPage[NUM_AIM_SCREENS] =
 {

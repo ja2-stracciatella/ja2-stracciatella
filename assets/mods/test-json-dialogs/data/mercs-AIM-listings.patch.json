@@ -1,0 +1,25 @@
+[
+    {
+        "op": "add",
+        "path": "/0/additionalInformation",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/aimbios",
+            "index": 0
+        }
+    },
+    {
+        "op": "add",
+        "path": "/5/description",
+        "value": {
+            "type": "json",
+            "prefix": "strings/test-json-dialogs/aimbios",
+            "index": 1
+        }
+    },
+    {
+        "op": "add",
+        "path": "/1/description",
+        "value": "This is an untranslated description for Blood that will not depend on the chosen language."
+    }
+]
