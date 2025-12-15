@@ -1,6 +1,7 @@
 #include "Cursors.h"
 #include "Debug.h"
 #include "Directories.h"
+#include "EDT.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "Input.h"
@@ -19,9 +20,7 @@
 #include "WordWrap.h"
 #include "UILayout.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
+#include <optional>
 #include <string_theory/string>
 
 
@@ -37,12 +36,6 @@ struct CRDT_NODE
 #define CRDT_FLAG__TITLE		0x00000001
 #define CRDT_FLAG__START_SECTION	0x00000002
 #define CRDT_FLAG__END_SECTION		0x00000004
-
-
-#define CRDT_NAME_OF_CREDIT_FILE	BINARYDATADIR "/credits.edt"
-
-#define CREDITS_LINESIZE		80
-
 
 //
 // Code tokens
@@ -92,6 +85,7 @@ struct CRDT_NODE
 
 #define CRDT_EYES_CLOSED_TIME		150
 
+std::optional<EDTFile> gCreditsStrings;
 
 struct CreditFace
 {
@@ -214,6 +208,7 @@ try
 	guiGapBetweenCreditNodes    = CRDT_SPACE_BN_NODES;
 	guiGapTillReadNextCredit    = CRDT_SPACE_BN_NODES;
 
+	gCreditsStrings = std::make_optional(EDTFile::CREDITS);
 
 	MSYS_DefineRegion(&gCrdtBackgroundRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	for (INT32 i = 0; i != lengthof(gCrdtMouseRegions); ++i)
@@ -251,6 +246,8 @@ static void ExitCreditScreen(void)
 {
 	RemoveVObject(guiCreditBackGroundImage);
 	RemoveVObject(guiCreditFaces);
+
+	gCreditsStrings = std::nullopt;
 
 	while (g_credits_head != NULL) DeleteFirstNode();
 
@@ -442,11 +439,16 @@ static void HandleCreditFlags(UINT32 uiFlags);
 
 static BOOLEAN GetNextCreditFromTextFile(void)
 {
+	if (!gCreditsStrings) {
+		return FALSE;
+	}
+
+	guiCurrentCreditRecord++;
+
 	ST::string text;
-	const UINT32 pos = CREDITS_LINESIZE * guiCurrentCreditRecord++;
 	try
 	{
-		text = GCM->loadEncryptedString(CRDT_NAME_OF_CREDIT_FILE, pos, CREDITS_LINESIZE);
+		text = gCreditsStrings->at(guiCurrentCreditRecord, 0);
 	}
 	catch (...) // XXX fishy, should check file size beforehand
 	{

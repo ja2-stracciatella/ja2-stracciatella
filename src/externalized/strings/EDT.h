@@ -58,6 +58,11 @@ class EDTFile
 		   See HelpScreenText.h to get a rough overview of the row contents.
 		*/
 		{ BINARYDATADIR "/help.edt", { 640 } },
+		/* Strings of the credits.
+		   496 rows, each with one column of 80 characters.
+		   See Credits.cc to get a rough overview of the row contents and control characters.
+		*/
+		{ BINARYDATADIR "/credits.edt", { 80 } },
 	};
 
 	IEDT::uptr mIEDT;
@@ -65,7 +70,8 @@ class EDTFile
 public:
 	enum EDTFilesList
 	{
-		HELP
+		HELP,
+		CREDITS
 	};
 
 	EDTFile(EDTFilesList const whichFile)
