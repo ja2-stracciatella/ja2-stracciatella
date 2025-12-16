@@ -1415,17 +1415,19 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 		}
 	}
 	
-	if (idx == EXAMINE_DOOR_ICON) {
-		if (pDoor->bPerceivedTrapped == DOOR_PROVED_TRAPPED) {
-			warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_DESCRIPTION_STR], GetTrapName(*pDoor));
-			disable = true;
-		} else if (pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED) {
-			warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_UNTRAPPED_STR], GetTrapName(*pDoor));
-			disable = true;
+	if (pDoor) {
+		if (idx == EXAMINE_DOOR_ICON) {
+			if (pDoor->bPerceivedTrapped == DOOR_PROVED_TRAPPED) {
+				warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_DESCRIPTION_STR], GetTrapName(*pDoor));
+				disable = true;
+			} else if (pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED) {
+				warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_UNTRAPPED_STR], GetTrapName(*pDoor));
+				disable = true;
+			}
 		}
-	}
-	if (idx == UNTRAP_DOOR_ICON) {
-		disable = pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED;
+		if (idx == UNTRAP_DOOR_ICON) {
+			disable = pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED;
+		}
 	}
 	if (soldier->bDesiredDirection & 1 && idx != OPEN_DOOR_ICON && idx != CANCEL_ICON) {
 		warnings += "\n" + *(GCM->getNewString(NS_DIAGONALITY_WARNING));
