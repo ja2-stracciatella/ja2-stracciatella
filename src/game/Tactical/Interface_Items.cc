@@ -2360,7 +2360,7 @@ void RenderItemDescriptionBox(void)
 	{
 		{
 			const WeaponModel * w = GCM->getWeapon(obj.usItem);
-			if (w->calibre->index != CalibreModel::NOAMMO)
+			if (w->calibre)
 			{
 				pStr += ST::format("{} ", w->calibre->getName());
 			}

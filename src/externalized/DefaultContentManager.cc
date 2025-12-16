@@ -2,6 +2,7 @@
 
 #include "AIMListingModel.h"
 #include "BinaryProfileData.h"
+#include "Containers.h"
 #include "Exceptions.h"
 #include "ItemModel.h"
 #include "Directories.h"
@@ -166,8 +167,6 @@ DefaultContentManager::~DefaultContentManager()
 	// is left to the compiler, no need to clear() them.
 
 	deleteElements(m_items);
-	deleteElements(m_calibres);
-	deleteElements(m_ammoTypes);
 	deleteElements(m_smokeEffects);
 	deleteElements(m_explosiveCalibres);
 	deleteElements(m_explosionAnimations);
@@ -187,7 +186,6 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_undergroundSectors);
 	deleteElements(m_rpcSmallFaces);
 	deleteElements(m_MERCListings);
-	deleteElements(m_AIMListings);
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
 	deleteElements(m_vehicles);
@@ -511,14 +509,14 @@ const std::vector<const MagazineModel*>& DefaultContentManager::getMagazines() c
 	return m_magazines;
 }
 
-const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
+const Containers::Named<uint16_t, CalibreModel>* DefaultContentManager::calibres() const
 {
-	return m_calibres[index];
+	return &m_calibres;
 }
 
-const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
+const Containers::Named<uint16_t, AmmoTypeModel>* DefaultContentManager::ammoTypes() const
 {
-	return m_ammoTypes[index];
+	return &m_ammoTypes;
 }
 
 const SmokeEffectModel* DefaultContentManager::getSmokeEffect(SmokeEffectID id) const
@@ -546,7 +544,7 @@ bool DefaultContentManager::loadWeapons(TranslatableString::Loader& stringLoader
 {
 	auto json = readJsonDataFileWithSchema("weapons.json");
 	for (auto& element : json.toVec()) {
-		WeaponModel *w = WeaponModel::deserialize(element, m_calibreMap, m_explosiveCalibres, stringLoader);
+		WeaponModel *w = WeaponModel::deserialize(element, m_calibres, m_explosiveCalibres, stringLoader);
 		SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
 		if (w->getItemIndex() >= m_items.size())
@@ -708,7 +706,7 @@ bool DefaultContentManager::loadMagazines(TranslatableString::Loader& stringLoad
 	auto json = readJsonDataFileWithSchema("magazines.json");
 	for (auto& element : json.toVec())
 	{
-		MagazineModel *mag = MagazineModel::deserialize(element, m_calibreMap, m_ammoTypeMap, stringLoader);
+		MagazineModel *mag = MagazineModel::deserialize(element, m_calibres, m_ammoTypes, stringLoader);
 		SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
 
 		m_magazines.push_back(mag);
@@ -723,21 +721,10 @@ bool DefaultContentManager::loadCalibres(TranslatableString::Loader& stringLoade
 {
 	auto json = readJsonDataFileWithSchema("calibres.json");
 	for (auto& element : json.toVec()) {
-		CalibreModel *calibre = CalibreModel::deserialize(element, stringLoader);
-		SLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
-
-		if(m_calibres.size() <= calibre->index)
-		{
-			m_calibres.resize(calibre->index + 1);
-		}
-
-		m_calibres[calibre->index] = calibre;
+		auto calibre = CalibreModel::deserialize(element, stringLoader);
+		SLOGD("Loaded calibre {} {}", calibre->getId(), calibre->getInternalName());
+		m_calibres.add(std::move(calibre));
 	}
-	for (const CalibreModel* calibre : m_calibres)
-	{
-		m_calibreMap.emplace(calibre->internalName, calibre);
-	}
-
 	return true;
 }
 
@@ -745,22 +732,10 @@ bool DefaultContentManager::loadAmmoTypes()
 {
 	auto json = readJsonDataFileWithSchema("ammo-types.json");
 	for (auto& element : json.toVec()) {
-		AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(element);
-		SLOGD("Loaded ammo type {} {}", ammoType->index, ammoType->internalName);
-
-		if(m_ammoTypes.size() <= ammoType->index)
-		{
-			m_ammoTypes.resize(ammoType->index + 1);
-		}
-
-		m_ammoTypes[ammoType->index] = ammoType;
+		auto ammoType = AmmoTypeModel::deserialize(element);
+		SLOGD("Loaded ammo type {} {}", ammoType->getId(), ammoType->getInternalName());
+		m_ammoTypes.add(std::move(ammoType));
 	}
-
-	for (const AmmoTypeModel* ammoType : m_ammoTypes)
-	{
-		m_ammoTypeMap.emplace(ammoType->internalName, ammoType);
-	}
-
 	return true;
 }
 
@@ -1309,13 +1284,10 @@ bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfile
 	MERCListingModel::validateData(m_MERCListings);
 
 	json = readJsonDataFileWithSchema("mercs-AIM-listings.json");
-	i = 0;
 	for (auto& element : json.toVec())
 	{
-		auto item = AIMListingModel::deserialize(i++, element, this, stringLoader);
-		m_AIMListings.push_back(item);
+		m_AIMListings.add(AIMListingModel::deserialize(element, this, stringLoader));
 	}
-	AIMListingModel::validateData(m_AIMListings);
 
 	return true;
 }
@@ -1604,19 +1576,9 @@ const std::vector<const MERCListingModel*>& DefaultContentManager::getMERCListin
 	return m_MERCListings;
 }
 
-const std::vector<const AIMListingModel*>& DefaultContentManager::getAIMListings() const
+const Containers::Indexed<uint8_t, AIMListingModel>* DefaultContentManager::aimListings() const
 {
-	return m_AIMListings;
-}
-
-const AIMListingModel* DefaultContentManager::getAIMListing(uint8_t const profileID) const {
-	auto result = std::find_if(m_AIMListings.begin(), m_AIMListings.end(), [profileID](const AIMListingModel* model) {
-		return model->profileID == profileID;
-	});
-	if (result == m_AIMListings.end()) {
-		return nullptr;
-	}
-	return *result;
+	return &m_AIMListings;
 }
 
 const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const profileID) const

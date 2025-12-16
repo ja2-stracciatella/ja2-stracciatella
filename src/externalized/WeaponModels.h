@@ -1,11 +1,10 @@
 #pragma once
 
+#include "Containers.h"
 #include "ItemModel.h"
 #include "Sound_Control.h"
 
 #include <string_theory/string>
-
-#include <map>
 #include <stdint.h>
 
 enum SoundID;
@@ -32,7 +31,7 @@ struct WeaponModel : ItemModel
 	virtual void serializeTo(JsonObject &obj) const;
 
 	static WeaponModel* deserialize(const JsonValue &json,
-	const std::map<ST::string, const CalibreModel*> &calibreMap,
+	const Containers::Named<uint16_t, CalibreModel>& calibres,
 	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 	TranslatableString::Loader& stringLoader);
 

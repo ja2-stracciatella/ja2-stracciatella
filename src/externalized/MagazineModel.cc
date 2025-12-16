@@ -2,6 +2,7 @@
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
+#include "Exceptions.h"
 #include "ItemModel.h"
 #include "TranslatableString.h"
 #include <utility>
@@ -38,7 +39,7 @@ JsonValue MagazineModel::serialize() const
 	obj.set("internalName",         internalName);
 	obj.set("calibre",              calibre->internalName);
 	obj.set("capacity",             capacity);
-	obj.set("ammoType",             ammoType->internalName);
+	obj.set("ammoType",             ammoType->getInternalName());
 
 	obj.set("inventoryGraphics",      inventoryGraphics.serialize());
 	obj.set("tileGraphic",      tileGraphic.serialize());
@@ -64,18 +65,30 @@ JsonValue MagazineModel::serialize() const
 
 MagazineModel* MagazineModel::deserialize(
 	const JsonValue &json,
-	const std::map<ST::string, const CalibreModel*> &calibreMap,
-	const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
+	const Containers::Named<uint16_t, CalibreModel>& calibres,
+	const Containers::Named<uint16_t, AmmoTypeModel>& ammoTypes,
 	TranslatableString::Loader& stringLoader)
 {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, stringLoader };
 	int itemIndex                 = obj.GetInt("itemIndex");
 	ST::string internalName       = obj.GetString("internalName");
-	const CalibreModel *calibre   = getCalibre(obj.GetString("calibre"), calibreMap);
+	auto failContext = ST::format("failed to deserialize {}(\"{}\")", "Magazine", internalName);
+
+	const CalibreModel* calibre = nullptr;
+	try {
+		calibre = calibres.byName(obj.GetString("calibre"));
+	} catch (const NotFoundError& e) {
+		throw NotFoundError(ST::format("{}: {}", failContext, e.what()));
+	}
 	uint32_t itemClass            = (calibre->index != CalibreModel::NOAMMO) ? IC_AMMO : IC_NONE;
 	uint16_t capacity             = obj.GetInt("capacity");
-	const AmmoTypeModel *ammoType = getAmmoType(obj.GetString("ammoType"), ammoTypeMap);
+	const AmmoTypeModel* ammoType = nullptr;
+	try {
+		ammoType = ammoTypes.byName(obj.GetString("ammoType"));
+	} catch (const NotFoundError& e) {
+		throw NotFoundError(ST::format("{}: {}", failContext, e.what()));
+	}
 	bool dontUseAsDefaultMagazine = obj.getOptionalBool("dontUseAsDefaultMagazine");
 	auto shortName = ItemModel::deserializeShortName(initData);
 	auto name = ItemModel::deserializeName(initData);

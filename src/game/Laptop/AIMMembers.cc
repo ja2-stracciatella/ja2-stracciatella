@@ -823,7 +823,7 @@ static void UpdateMercInfo(void)
 			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	auto aimListing = GCM->getAIMListing(gbCurrentSoldier);
+	auto aimListing = GCM->aimListings()->byId(gbCurrentSoldier);
 	const auto empty = ST::string();
 	const ST::string& MercInfoString = aimListing ? aimListing->description : empty;
 	const ST::string& AdditionalInfoString = aimListing ? aimListing->additionalInformation : empty;

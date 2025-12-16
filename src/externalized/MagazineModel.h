@@ -1,12 +1,11 @@
 #pragma once
 
+#include "Containers.h"
 #include "ItemModel.h"
 #include "TranslatableString.h"
 
+#include <cstdint>
 #include <string_theory/string>
-
-#include <map>
-#include <stdint.h>
 
 class JsonObject;
 class JsonObject;
@@ -34,8 +33,8 @@ struct MagazineModel : ItemModel
 	virtual JsonValue serialize() const;
 
 	static MagazineModel* deserialize(const JsonValue &json,
-						const std::map<ST::string, const CalibreModel*> &calibreMap,
-						const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap,
+						const Containers::Named<uint16_t, CalibreModel>& calibres,
+						const Containers::Named<uint16_t, AmmoTypeModel>& ammoTypes,
 						TranslatableString::Loader& stringLoader);
 
 

@@ -24,7 +24,7 @@ JsonValue CalibreModel::serialize() const
 	return obj.toValue();
 }
 
-CalibreModel* CalibreModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader)
+std::unique_ptr<CalibreModel> CalibreModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader)
 {
 	auto jsonObj = json.toObject();
 	auto index = static_cast<uint16_t>(jsonObj.GetInt("index"));
@@ -36,7 +36,7 @@ CalibreModel* CalibreModel::deserialize(const JsonValue &json, TranslatableStrin
 	auto showInHelpText = jsonObj.GetBool("showInHelpText");
 	auto monsterWeapon = jsonObj.GetBool("monsterWeapon");
 
-	return new CalibreModel(
+	return std::make_unique<CalibreModel>(
 		index,
 		std::move(internalName),
 		TranslatableString::Utils::resolveOptionalProperty(stringLoader, jsonObj, "name", std::make_unique<TranslatableString::Json>(DEFAULT_NAME_TRANSLATION_PREFIX, index)),
@@ -58,12 +58,6 @@ const ST::string& CalibreModel::getName() const
 const ST::string& CalibreModel::getBobbyRaysName() const
 {
 	return name;
-}
-
-const CalibreModel* CalibreModel::getNoCalibreObject()
-{
-	static CalibreModel noCalibre;
-	return &noCalibre;
 }
 
 const CalibreModel* getCalibre(const ST::string& calibreName,

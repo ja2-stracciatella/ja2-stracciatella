@@ -4,20 +4,21 @@
  * of this class or inheriting from it there should not be any reason to
  * include this file instead of ContentManager.h.
  */
+#include "AmmoTypeModel.h"
 #include "AIMListingModel.h"
-#include "GameRes.h"
-
+#include "BinaryProfileData.h"
+#include "CalibreModel.h"
+#include "Containers.h"
 #include "ContentManager.h"
 #include "ContentMusic.h"
+#include "GameRes.h"
 #include "IEDT.h"
-#include "BinaryProfileData.h"
 #include "Json.h"
 #include "StringEncodingTypes.h"
 #include "Types.h"
 
 #include <cstdint>
 #include <string_theory/string>
-
 #include <map>
 #include <memory>
 #include <string_view>
@@ -94,9 +95,8 @@ public:
 	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) override;
 	virtual const std::vector<const MagazineModel*>& getMagazines() const override;
 
-	virtual const CalibreModel* getCalibre(uint8_t index) override;
-
-	virtual const AmmoTypeModel* getAmmoType(uint8_t index) override;
+	virtual const Containers::Named<uint16_t, CalibreModel>* calibres() const override;
+	virtual const Containers::Named<uint16_t, AmmoTypeModel>* ammoTypes() const override;
 
 	virtual const SmokeEffectModel* getSmokeEffect(SmokeEffectID id) const override;
 
@@ -170,8 +170,7 @@ public:
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
-	virtual const std::vector<const AIMListingModel*>& getAIMListings() const override;
-	virtual const AIMListingModel* getAIMListing(uint8_t profileID) const override;
+	virtual const Containers::Indexed<uint8_t, AIMListingModel>* aimListings() const override;
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const override;
 	virtual void resetMercProfileStructs() const override;
 	virtual const VehicleModel* getVehicle(uint8_t vehicleID) const override;
@@ -212,17 +211,14 @@ protected:
 	std::vector<const ItemModel*> m_items;
 	std::vector<const MagazineModel*> m_magazines;
 
-	std::vector<const CalibreModel*> m_calibres;
+	Containers::Named<uint16_t, CalibreModel> m_calibres;
 
-	std::vector<AmmoTypeModel const *> m_ammoTypes;
+	Containers::Named<uint16_t, AmmoTypeModel> m_ammoTypes;
 
 	std::map<std::pair<uint8_t, uint8_t>, std::unique_ptr<NPCQuoteInfo const []>> m_scriptRecordsMeanwhiles;
 	                          std::vector<std::unique_ptr<NPCQuoteInfo const []>> m_scriptRecords;
 							              std::unique_ptr<NPCQuoteInfo const []>  m_scriptRecordsRecruited;
 
-	/** Mapping of calibre names to objects. */
-	std::map<ST::string, const AmmoTypeModel*> m_ammoTypeMap;
-	std::map<ST::string, const CalibreModel*> m_calibreMap;
 	std::map<ST::string, const MagazineModel*> m_magazineMap;
 	std::map<ST::string, const WeaponModel*> m_weaponMap;
 	std::map<ST::string, const ExplosiveModel*> m_explosiveMap;
@@ -277,7 +273,7 @@ protected:
 
 	std::map<uint8_t, const RPCSmallFaceModel*> m_rpcSmallFaces;
 	std::vector<const MERCListingModel*> m_MERCListings;
-	std::vector<const AIMListingModel*> m_AIMListings;
+	Containers::Indexed<uint8_t, AIMListingModel> m_AIMListings;
 	std::vector<const VehicleModel*> m_vehicles;
 
 	// List of pre-constructed MercProfile objects; indices of elements are arbitrary (unlike gMercProfiles) and not guaranteed to follow any order
