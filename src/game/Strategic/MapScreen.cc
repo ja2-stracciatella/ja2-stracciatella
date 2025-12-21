@@ -784,7 +784,12 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 			break;
 
 		case TRAIN_TOWN:
-			assignment2 = GCM->getTown(GetTownIdForSector(s.sSector.AsByte()))->name;
+			{
+				auto townId = GetTownIdForSector(s.sSector.AsByte());
+				if (townId != BLANK_SECTOR) {
+					assignment2 = GCM->getTown(townId)->name;
+				}
+			}
 			break;
 
 		case REPAIR:
