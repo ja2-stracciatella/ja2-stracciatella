@@ -1315,7 +1315,6 @@ struct OPENDOOR_MENU
 	INT16   sX;
 	INT16   sY;
 	BOOLEAN fMenuHandled;
-	BOOLEAN fClosingDoor;
 };
 
 static OPENDOOR_MENU gOpenDoorMenu;
@@ -1341,7 +1340,6 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, DOOR* const d, BOOLEAN const 
 
 	gOpenDoorMenu.pSoldier     = pSoldier;
 	gOpenDoorMenu.pDoor        = d;
-	gOpenDoorMenu.fClosingDoor = fClosingDoor;
 
 	// OK, Determine position...
 	// Center on guy
@@ -1394,7 +1392,7 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 	SOLDIERTYPE* const soldier = gOpenDoorMenu.pSoldier;
 	DOOR* const          pDoor = gOpenDoorMenu.pDoor;
 
-	if (!gOpenDoorMenu.fClosingDoor && gamepolicy(informative_tooltips)) {
+	if (gamepolicy(informative_tooltips)) {
 		switch (idx) {
 			case LOCKPICK_DOOR_ICON:
 				revealedMods = GetModifiersForLockPicking(soldier, pDoor);
@@ -1415,17 +1413,19 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 		}
 	}
 	
-	if (idx == EXAMINE_DOOR_ICON) {
-		if (pDoor->bPerceivedTrapped == DOOR_PROVED_TRAPPED) {
-			warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_DESCRIPTION_STR], GetTrapName(*pDoor));
-			disable = true;
-		} else if (pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED) {
-			warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_UNTRAPPED_STR], GetTrapName(*pDoor));
-			disable = true;
+	if (pDoor) {
+		if (idx == EXAMINE_DOOR_ICON) {
+			if (pDoor->bPerceivedTrapped == DOOR_PROVED_TRAPPED) {
+				warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_DESCRIPTION_STR], GetTrapName(*pDoor));
+				disable = true;
+			} else if (pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED) {
+				warnings += st_format_printf("\n" + TacticalStr[DOOR_LOCK_UNTRAPPED_STR], GetTrapName(*pDoor));
+				disable = true;
+			}
 		}
-	}
-	if (idx == UNTRAP_DOOR_ICON) {
-		disable = pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED;
+		if (idx == UNTRAP_DOOR_ICON) {
+			disable = pDoor->bPerceivedTrapped == DOOR_PROVED_UNTRAPPED;
+		}
 	}
 	if (soldier->bDesiredDirection & 1 && idx != OPEN_DOOR_ICON && idx != CANCEL_ICON) {
 		warnings += "\n" + *(GCM->getNewString(NS_DIAGONALITY_WARNING));
@@ -1605,14 +1605,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 				// Set UI
 				SetUIBusy(gOpenDoorMenu.pSoldier);
 
-				if (gOpenDoorMenu.fClosingDoor)
-				{
-					ChangeSoldierState(gOpenDoorMenu.pSoldier, GetAnimStateForInteraction(*gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR), 0, FALSE);
-				}
-				else
-				{
-					InteractWithClosedDoor(gOpenDoorMenu.pSoldier, HANDLE_DOOR_OPEN);
-				}
+				InteractWithClosedDoor(gOpenDoorMenu.pSoldier, HANDLE_DOOR_OPEN);
 			}
 			else
 			{
