@@ -218,19 +218,13 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 	{
 		if (IsOnOurTeam(s) && !(structure.fFlags & STRUCTURE_SWITCH))
 		{
-			// Bring up menu to decide what to do
 			if (!s.bCollapsed)
 			{
 				SoldierGotoStationaryStance(&s);
 			}
-			DOOR* const d = FindDoorInfoAtGridNo(base.sGridNo);
-			if (!d || !DoTrapCheckOnStartingMenu(s, *d))
-				InitDoorOpenMenu(&s, d, true);
 		}
-		else
-		{ // Easily close door
-			ChangeSoldierState(&s, GetAnimStateForInteraction(s, is_door, CLOSE_DOOR), 0, FALSE);
-		}
+		// Easily close door
+		ChangeSoldierState(&s, GetAnimStateForInteraction(s, is_door, CLOSE_DOOR), 0, FALSE);
 	}
 	else
 	{

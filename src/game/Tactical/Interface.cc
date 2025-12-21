@@ -1315,7 +1315,6 @@ struct OPENDOOR_MENU
 	INT16   sX;
 	INT16   sY;
 	BOOLEAN fMenuHandled;
-	BOOLEAN fClosingDoor;
 };
 
 static OPENDOOR_MENU gOpenDoorMenu;
@@ -1341,7 +1340,6 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, DOOR* const d, BOOLEAN const 
 
 	gOpenDoorMenu.pSoldier     = pSoldier;
 	gOpenDoorMenu.pDoor        = d;
-	gOpenDoorMenu.fClosingDoor = fClosingDoor;
 
 	// OK, Determine position...
 	// Center on guy
@@ -1394,7 +1392,7 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 	SOLDIERTYPE* const soldier = gOpenDoorMenu.pSoldier;
 	DOOR* const          pDoor = gOpenDoorMenu.pDoor;
 
-	if (!gOpenDoorMenu.fClosingDoor && gamepolicy(informative_tooltips)) {
+	if (gamepolicy(informative_tooltips)) {
 		switch (idx) {
 			case LOCKPICK_DOOR_ICON:
 				revealedMods = GetModifiersForLockPicking(soldier, pDoor);
@@ -1607,14 +1605,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, UINT32 reason)
 				// Set UI
 				SetUIBusy(gOpenDoorMenu.pSoldier);
 
-				if (gOpenDoorMenu.fClosingDoor)
-				{
-					ChangeSoldierState(gOpenDoorMenu.pSoldier, GetAnimStateForInteraction(*gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR), 0, FALSE);
-				}
-				else
-				{
-					InteractWithClosedDoor(gOpenDoorMenu.pSoldier, HANDLE_DOOR_OPEN);
-				}
+				InteractWithClosedDoor(gOpenDoorMenu.pSoldier, HANDLE_DOOR_OPEN);
 			}
 			else
 			{
