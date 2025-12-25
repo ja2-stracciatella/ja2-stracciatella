@@ -31,6 +31,8 @@ ENUM_BITSET(TileElementFlags)
 
 #define MAX_ANIMATED_TILES		200
 #define WALL_HEIGHT			50
+// Fixes projectiles penetrating roof surfaces unimpededly
+#define ROOF_HIT_ADJUSTMENT			2
 
 
 enum WallOrientationDefines
