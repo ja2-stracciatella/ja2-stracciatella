@@ -194,6 +194,8 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	// "attached weapon"
 	s->usAttackingWeapon = usHandItem;
 
+	s->bTargetLevel = bLevel;
+
 	// Find soldier flags depend on if it's our own merc firing or a NPC
 	SOLDIERTYPE* tgt = WhoIsThere2(usGridNo, bLevel);
 	if (tgt != NULL && fFromUI)
