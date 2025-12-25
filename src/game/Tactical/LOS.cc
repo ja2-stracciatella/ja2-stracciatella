@@ -3339,27 +3339,17 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		}
 		pBullet->sHitBy	= sHitBy;
 
-		if (dStartZ < WALL_HEIGHT_UNITS)
+		float wallHeightUnits = WALL_HEIGHT_UNITS + ROOF_HIT_ADJUSTMENT;
+		// Account for cliff-elevated sectors, e.g. Drassen mine. Everywhere else it's zero
+		wallHeightUnits += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[pFirer->sGridNo].sHeight );
+
+		if (dStartZ < wallHeightUnits)
 		{
-			if (dEndZ > WALL_HEIGHT_UNITS)
-			{
-				pBullet->fCheckForRoof = TRUE;
-			}
-			else
-			{
-				pBullet->fCheckForRoof = FALSE;
-			}
+			pBullet->fCheckForRoof = dEndZ > wallHeightUnits;
 		}
 		else // dStartZ >= WALL_HEIGHT_UNITS; presumably >
 		{
-			if (dEndZ < WALL_HEIGHT_UNITS)
-			{
-				pBullet->fCheckForRoof = TRUE;
-			}
-			else
-			{
-				pBullet->fCheckForRoof = FALSE;
-			}
+			pBullet->fCheckForRoof = dEndZ < wallHeightUnits;
 		}
 
 		if ( ubLoop == 0 )
