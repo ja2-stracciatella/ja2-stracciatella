@@ -336,6 +336,8 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 	AniParams.sY = FIXEDPT_TO_INT32( qCurrY );
 	AniParams.sZ = CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( qCurrZ ) );
 
+	// Account for cliff-elevated sectors, e.g. Drassen mine. Everywhere else it's zero
+	AniParams.sZ -= gpWorldLevelData[pBullet->pFirer->sGridNo].sHeight;
 
 	if ( pBullet->usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_TANK_CANNON ) )
 	{
