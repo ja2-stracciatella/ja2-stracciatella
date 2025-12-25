@@ -1569,10 +1569,12 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 
 	const BOOLEAN fHitSameStructureAsBefore = (usStructureID == pBullet->usLastStructureHit);
 
+	// Tile's height is here to account for cliff-elevated sectors, e.g. Drassen mine. Everywhere else it's zero
+	const int8_t level = sZPos > ( WALL_HEIGHT - ROOF_HIT_ADJUSTMENT ) + gpWorldLevelData[attacker->sGridNo].sHeight;
+
 	const GridNo sGridNo = pBullet->sGridNo;
 	if ( !fHitSameStructureAsBefore )
 	{
-		const INT8 level = (sZPos > WALL_HEIGHT ? 1 : 0);
 		MakeNoise(attacker, sGridNo, level, GCM->getWeapon(usWeaponIndex)->ubHitVolume, NOISE_BULLET_IMPACT);
 	}
 
@@ -1586,7 +1588,7 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 			SLOGD("Freeing up attacker - end of LAW fire");
 			FreeUpAttacker(attacker);
 
-			IgniteExplosion(attacker, 0, sGridNo, C1, sZPos >= WALL_HEIGHT);
+			IgniteExplosion(attacker, 0, sGridNo, C1, level);
 			//FreeUpAttacker(attacker);
 
 			return;
