@@ -3539,12 +3539,15 @@ void MoveBullet(BULLET* const pBullet)
 
 	pBullet->uiLastUpdate = uiTime;
 
+	// Account for cliff-elevated sectors, e.g. Drassen mine, where the tile height is not zero
+	uint8_t elevationFactor = gpWorldLevelData[pBullet->pFirer->sGridNo].sHeight == 0 ? 2 : 4;
+
 	do
 	{
 		// check a particular tile
 		// retrieve values from world for this particular tile
 		iGridNo = pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS;
-		if (!GridNoOnVisibleWorldTile( (INT16) iGridNo ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * 2 && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
+		if (!GridNoOnVisibleWorldTile( (INT16) iGridNo ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * elevationFactor && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
 		{
 			// bullet outside of world!
 			// NB remove bullet only flags a bullet for deletion; we still have access to the
@@ -4244,7 +4247,8 @@ void MoveBullet(BULLET* const pBullet)
 			}
 		} while( (pBullet->iCurrTileX == iOldTileX) && (pBullet->iCurrTileY == iOldTileY));
 
-		if ( !GridNoOnVisibleWorldTile( (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS) ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * 2 && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
+		if ( !GridNoOnVisibleWorldTile( (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS) ) ||
+			( pBullet->iCurrCubesZ > PROFILE_Z_SIZE * elevationFactor && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
 		{
 			// bullet outside of world!
 			RemoveBullet(pBullet);
