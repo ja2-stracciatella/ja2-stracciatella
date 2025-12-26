@@ -2927,11 +2927,11 @@ static SOLDIERTYPE* FindActiveAndAliveMerc(const SOLDIERTYPE* const curr, const 
 		s = &GetMan(i);
 		if (!s->bActive) continue;
 
-		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
-		if (s->bAssignment != curr->bAssignment)                  continue;
-		if (!OK_INTERRUPT_MERC(s))                                continue;
-		if (!s->bInSector)                                        continue;
-		if (s->bLife < (fGoodForLessOKLife ? 1 : OKLIFE))         continue;
+		if (fOnlyRegularMercs && (AM_AN_EPC(s) || !IS_MERC_BODY_TYPE(s))) continue;
+		if (s->bAssignment != curr->bAssignment)                          continue;
+		if (!OK_INTERRUPT_MERC(s))                                        continue;
+		if (!s->bInSector)                                                continue;
+		if (s->bLife < (fGoodForLessOKLife ? 1 : OKLIFE))                 continue;
 		break;
 	}
 	while (s != curr);

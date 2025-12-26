@@ -2744,6 +2744,7 @@ static void ChangeSoldiersBodyType(SoldierBodyType const ubBodyType, BOOLEAN con
 				std::fill_n(sel->inv, static_cast<size_t>(NUM_INV_SLOTS), OBJECTTYPE{});
 				AssignCreatureInventory(sel);
 				CreateItem(CREATURE_YOUNG_MALE_SPIT, 100, &sel->inv[HANDPOS]);
+				SetCurrentTacticalPanelCurrentMerc(sel);
 				break;
 
 			case TANK_NW:
