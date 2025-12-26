@@ -6674,6 +6674,7 @@ bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const& s)
 		s.bAssignment         != ASSIGNMENT_POW &&
 		!IsMechanical(s)                        &&
 		s.ubWhatKindOfMercAmI != MERC_TYPE__EPC &&
+		!CREATURE_OR_BLOODCAT(&s)               &&
 		s.bLife               >= OKLIFE;
 }
 
