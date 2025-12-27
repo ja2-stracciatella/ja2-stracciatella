@@ -265,10 +265,7 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason)
 	}
 }
 
-
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT&, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT&, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const&, UINT16 usItem);
 
 static void GiveItemsToPC(UINT8 ubProfileId)
 {
@@ -280,40 +277,20 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 	for (const IMPStartingItemSet& set : GCM->getIMPPolicy()->getInventory()) {
 		if (!set.Evaluate(p)) continue;
 		for (const ItemModel* item : set.items) {
+			UINT32 uiPos;
 			if (set.slot == InvSlotPos::NUM_INV_SLOTS) {
-				MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+				INT32 const iSlot = FirstFreeBigEnoughPocket(p, item->getItemIndex());
+				if (iSlot == -1) continue;
+				uiPos = iSlot;
 			} else {
-				MakeProfileInvItemThisSlot(p, set.slot, item->getItemIndex(), 100, 1);
+				uiPos = set.slot;
 			}
+			p.inv[uiPos] = item->getItemIndex();
+			p.bInvStatus[uiPos] = 100;
+			p.bInvNumber[uiPos] = 1;
 		}
 	}
 }
-
-
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const&, UINT16 usItem);
-
-
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT& p, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
-{
-	INT32 const iSlot = FirstFreeBigEnoughPocket(p, usItem);
-	if (iSlot == -1)
-	{
-		// no room, item not received
-		return;
-	}
-
-	// put the item into that slot
-	MakeProfileInvItemThisSlot(p, iSlot, usItem, ubStatus, ubHowMany);
-}
-
-
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT& p, UINT32 const uiPos, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
-{
-	p.inv[uiPos]        = usItem;
-	p.bInvStatus[uiPos] = ubStatus;
-	p.bInvNumber[uiPos] = ubHowMany;
-}
-
 
 static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const usItem)
 {
