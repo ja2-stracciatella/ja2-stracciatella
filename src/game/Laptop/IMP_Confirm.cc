@@ -233,9 +233,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 		iCurrentImpPage = IMP_HOME_PAGE;
 
 		// send email notice
-		//AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin());
 		AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2);
-		//RenderCharProfile();
 
 		ResetCharacterStats();
 
@@ -254,14 +252,6 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_FINISH;
-
-#if 0 // XXX was commented out
-		LaptopSaveInfo.fIMPCompletedFlag = FALSE;
-		ResetCharacterStats();
-
-		fButtonPendingFlag = TRUE;
-		iCurrentImpPage = IMP_HOME_PAGE;
-#endif
 	}
 }
 
