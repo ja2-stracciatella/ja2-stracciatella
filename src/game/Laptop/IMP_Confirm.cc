@@ -277,94 +277,15 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
 
-	for (const ItemModel *item : GCM->getIMPPolicy()->getInventory())
-	{
-		MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-	}
-
-	if ( PreRandom( 100 ) < (UINT32) p.bWisdom )
-	{
-		MakeProfileInvItemThisSlot(p, HELMETPOS, STEEL_HELMET, 100, 1);
-	}
-
-	if (p.bMarksmanship >= 80)
-	{
-		for (const ItemModel *item : GCM->getIMPPolicy()->getGoodShooterItems())
-		{
-			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+	for (const IMPStartingItemSet& set : GCM->getIMPPolicy()->getInventory()) {
+		if (!set.Evaluate(p)) continue;
+		for (const ItemModel* item : set.items) {
+			if (set.slot == InvSlotPos::NUM_INV_SLOTS) {
+				MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+			} else {
+				MakeProfileInvItemThisSlot(p, set.slot, item->getItemIndex(), 100, 1);
+			}
 		}
-	}
-	else
-	{
-		for (const ItemModel *item : GCM->getIMPPolicy()->getNormalShooterItems())
-		{
-			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-		}
-	}
-
-
-	// OPTIONAL EQUIPMENT: depends on skills & special skills
-
-	if (p.bMedical >= 60)
-	{
-		// strong medics get full medic kit
-		MakeProfileInvItemAnySlot(p, MEDICKIT, 100, 1);
-	}
-	else
-	if (p.bMedical >= 30)
-	{
-		// passable medics get first aid kit
-		MakeProfileInvItemAnySlot(p, FIRSTAIDKIT, 100, 1);
-	}
-
-	if (p.bMechanical >= 50)
-	{
-		// mechanics get toolkit
-		MakeProfileInvItemAnySlot(p, TOOLKIT, 100, 1);
-	}
-
-	if (p.bExplosive >= 50)
-	{
-		// loonies get TNT & Detonator
-		MakeProfileInvItemAnySlot(p, TNT, 100, 1);
-		MakeProfileInvItemAnySlot(p, DETONATOR, 100, 1);
-	}
-
-
-	// check for special skills
-	if (HasSkillTrait(p, LOCKPICKING) && iMechanical)
-	{
-		MakeProfileInvItemAnySlot(p, LOCKSMITHKIT, 100, 1);
-	}
-
-	if (HasSkillTrait(p, HANDTOHAND))
-	{
-		MakeProfileInvItemAnySlot(p, BRASS_KNUCKLES, 100, 1);
-	}
-
-	if (HasSkillTrait(p, ELECTRONICS) && iMechanical)
-	{
-		MakeProfileInvItemAnySlot(p, METALDETECTOR, 100, 1);
-	}
-
-	if (HasSkillTrait(p, NIGHTOPS))
-	{
-		MakeProfileInvItemAnySlot(p, BREAK_LIGHT, 100, 2);
-	}
-
-	if (HasSkillTrait(p, THROWING))
-	{
-		MakeProfileInvItemAnySlot(p, THROWING_KNIFE, 100, 1);
-	}
-
-	if (HasSkillTrait(p, STEALTHY))
-	{
-		MakeProfileInvItemAnySlot(p, SILENCER, 100, 1);
-	}
-
-	if (HasSkillTrait(p, KNIFING))
-	{
-		MakeProfileInvItemAnySlot(p, COMBAT_KNIFE, 100, 1);
 	}
 }
 

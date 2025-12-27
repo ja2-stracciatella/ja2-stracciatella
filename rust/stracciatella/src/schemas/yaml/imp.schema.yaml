@@ -16,23 +16,31 @@ properties:
   inventory:
     type: array
     title: Inventory
-    description: The default inventory of a created IMP merc.
+    description: The inventory of a created IMP merc.
     items:
-      $ref: types/id.schema.yaml
-  if_good_shooter:
-    type: array
-    title: Additional inventory if good shooter
-    description: Additional inventory items of a good shooter (marksmanship >= 80)
-    items:
-      $ref: types/id.schema.yaml
-  if_normal_shooter:
-    type: array
-    title: Additional inventory if normal shooter
-    description: Additional inventory items of a normal shooter (marksmanship < 80)
-    items:
-      $ref: types/id.schema.yaml
+      type: object
+      title: Item condition set
+      description: Data for when, where and what item to create.
+      properties:
+        items:
+          title: List of the items to grant
+          type: array
+          items:
+            $ref: types/id.schema.yaml
+        slot:
+          $ref: types/inv-slot.schema.yaml
+          title: Inventory slot
+          description: An optional slot to create the items in.
+        conditions:
+          title: Granting conditions
+          description: Optional pairs of greater-or-equal conditions to evaluate whether the I.M.P. should get the items.
+          type: array
+          items:
+            anyOf:
+              - $ref: types/uint8.schema.yaml
+              - type: string
+    required:
+    - items
 required:
 - activation_codes
 - inventory
-- if_good_shooter
-- if_normal_shooter
