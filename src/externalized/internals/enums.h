@@ -48,4 +48,6 @@ namespace Internals
 	MercType getMercTypeEnumFromString(const ST::string& s);
 
 	Quests getQuestEnumFromString(const ST::string& s);
+
+	Attributes getAttributeEnumFromString(const ST::string& s);
 }
