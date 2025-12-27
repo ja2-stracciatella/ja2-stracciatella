@@ -20,8 +20,7 @@ public:
 	virtual bool isCodeAccepted(const ST::string& code) const = 0;
 	virtual uint8_t getStartingLevel() const = 0;
 	virtual const std::vector<IMPStartingItemSet>& getInventory() const = 0;
-	// this could be defaulted in C++11
-	virtual ~IMPPolicy() {}
+	virtual ~IMPPolicy() = default;
 };
 
 class IMPItemCondition
