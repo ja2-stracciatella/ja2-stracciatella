@@ -146,8 +146,7 @@ static void GiveItemsToPC(UINT8 ubProfileId);
 
 static BOOLEAN AddCharacterToPlayersTeam(void)
 {
-	MERC_HIRE_STRUCT HireMercStruct;
-
+	MERC_HIRE_STRUCT HireMercStruct{};
 
 	// last minute change to make sure merc with right face has not only the right body, but body specific skills...
 	// ie. small mercs have martial arts, but big guys and women don't
@@ -155,8 +154,6 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	{
 		HandleMercStatsForChangesInFace();
 	}
-
-	HireMercStruct = MERC_HIRE_STRUCT{};
 
 	HireMercStruct.ubProfileID = ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) ;
 
@@ -183,14 +180,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	SetProfileFaceData(HireMercStruct.ubProfileID, 200 + iPortraitNumber, fi->eye_x, fi->eye_y, fi->mouth_x, fi->mouth_y);
 
 	//if we succesfully hired the merc
-	if (!HireMerc(HireMercStruct))
-	{
-		return(FALSE);
-	}
-	else
-	{
-		return ( TRUE );
-	}
+	return HireMerc(HireMercStruct);
 }
 
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
