@@ -63,8 +63,8 @@ fn resolve_refs(value: &mut Value) {
             let original_description = obj.get("description").and_then(|v| v.as_str());
             let link = link.as_str().expect("ref is not a string");
             let link = format!("{}/{}", SCHEMA_DIR, link);
-            let schema =
-                fs::read(&link).expect(&format!("schema {} not readable", link).to_string());
+            let link_unreadable = format!("schema {} not readable", link).to_string();
+            let schema = fs::read(&link).expect(&link_unreadable);
             let mut schema: Value =
                 serde_yaml::from_slice(&schema).expect("ref schema is not valid yaml");
             resolve_refs(&mut schema);
