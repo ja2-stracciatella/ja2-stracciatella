@@ -265,7 +265,32 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason)
 	}
 }
 
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const&, UINT16 usItem);
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const usItem)
+{
+	UINT32 uiPos;
+	// if it fits into a small pocket
+	if (GCM->getItem(usItem)->getPerPocket() != 0)
+	{
+		// check small pockets first
+		for (uiPos = SMALLPOCK1POS; uiPos <= SMALLPOCK8POS; uiPos++)
+		{
+			if (p.inv[uiPos] == NONE)
+			{
+				return(uiPos);
+			}
+		}
+	}
+
+	// check large pockets
+	for (uiPos = BIGPOCK1POS; uiPos <= BIGPOCK4POS; uiPos++)
+	{
+		if (p.inv[uiPos] == NONE)
+		{
+			return(uiPos);
+		}
+	}
+	return(-1);
+}
 
 static void GiveItemsToPC(UINT8 ubProfileId)
 {
@@ -290,37 +315,6 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 			p.bInvNumber[uiPos] = 1;
 		}
 	}
-}
-
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const usItem)
-{
-	UINT32 uiPos;
-
-
-	// if it fits into a small pocket
-	if (GCM->getItem(usItem)->getPerPocket() != 0)
-	{
-		// check small pockets first
-		for (uiPos = SMALLPOCK1POS; uiPos <= SMALLPOCK8POS; uiPos++)
-		{
-			if (p.inv[uiPos] == NONE)
-			{
-				return(uiPos);
-			}
-		}
-	}
-
-	// check large pockets
-	for (uiPos = BIGPOCK1POS; uiPos <= BIGPOCK4POS; uiPos++)
-	{
-		if (p.inv[uiPos] == NONE)
-		{
-			return(uiPos);
-		}
-	}
-
-
-	return(-1);
 }
 
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
