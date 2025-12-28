@@ -1609,7 +1609,7 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 		}
 	}
 
-	STRUCTURE* pStructure;
+	STRUCTURE* pStructure = nullptr;
 	// Get Structure pointer and damage it!
 	if ( usStructureID != INVALID_STRUCTURE_ID )
 	{
@@ -1640,7 +1640,7 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 
 		case MONSTERCLASS:
 			// If the structure is wall-oriented determine which side of it monster spit arrives at
-			pStructure = usStructureID != INVALID_STRUCTURE_ID ? FindStructureByID(sGridNo, usStructureID) : nullptr;
+			pStructure = FindStructureByID(sGridNo, usStructureID);
 			if (pStructure && pStructure->ubWallOrientation)
 			{
 				if (pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT || pStructure->ubWallOrientation == INSIDE_TOP_RIGHT)
