@@ -1640,7 +1640,6 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 
 		case MONSTERCLASS:
 			// If the structure is wall-oriented determine which side of it monster spit arrives at
-			pStructure = FindStructureByID(sGridNo, usStructureID);
 			if (pStructure && pStructure->ubWallOrientation)
 			{
 				if (pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT || pStructure->ubWallOrientation == INSIDE_TOP_RIGHT)
