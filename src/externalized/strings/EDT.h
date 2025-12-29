@@ -58,6 +58,56 @@ class EDTFile
 		   See HelpScreenText.h to get a rough overview of the row contents.
 		*/
 		{ BINARYDATADIR "/help.edt", { 640 } },
+		/* Strings of the credits.
+		   496 rows, each with one column of 80 characters.
+		   See Credits.cc to get a rough overview of the row contents and control characters.
+		*/
+		{ BINARYDATADIR "/credits.edt", { 80 } },
+		/* Strings for the AIM page.
+		   46 rows, each with one column of 400 characters.
+		   See AIM.cc and AIMHistory.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/aimhist.edt", { 400 } },
+		/* Strings for the AIM alumni names.
+		   102 rows, each with one column of 80 characters.
+		   See AIMArchives.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/alumname.edt", { 80 } },
+		/* Strings for the AIM alumni descriptions.
+		   102 rows, each with two column of 80 and 560 characters for full name and description.
+		   See AIMArchives.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/alumni.edt", { 80, 560 } },
+		/* Strings for the AIM policies.
+		   92 rows, each with one column of 400 characters.
+		   See AIMPolicies.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/aimpol.edt", { 400 } },
+		/* Strings for single line descriptions on the insurance laptop page.
+		   60 rows, each with one column of 80 characters.
+		   See Insurance.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/insurancesingle.edt", { 80 } },
+		/* Strings for multi line descriptions on the insurance laptop page.
+		   72 rows, each with one column of 400 characters.
+		   See Insurance.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/insurancemulti.edt", { 400 } },
+		/* Strings for IMP.
+		   478 rows, each with one column of 400 characters.
+		   See IMP_Text_System.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/imptext.edt", { 400 } },
+		/* Strings for florist cards.
+		   18 rows, each with one column of 400 characters.
+		   See Florist_Cards.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/flowercard.edt", { 400 } },
+		/* Strings for florist descriptions.
+		   20 rows, each with column of 80, 80 and 320 characters for name, price and description
+		   See Florist_Gallery.cc to get a rough overview of the row contents.
+		*/
+		{ BINARYDATADIR "/flowerdesc.edt", { 80, 80, 320 } },
 	};
 
 	IEDT::uptr mIEDT;
@@ -65,7 +115,17 @@ class EDTFile
 public:
 	enum EDTFilesList
 	{
-		HELP
+		HELP,
+		CREDITS,
+		AIM_TEXT,
+		AIM_ALUMNI_NAMES,
+		AIM_ALUMNI_TEXTS,
+		AIM_POLICIES,
+		INSURANCE_SINGLE_LINE_TEXTS,
+		INSURANCE_MULTI_LINE_TEXTS,
+		IMP_TEXTS,
+		FLORIST_CARDS,
+		FLORIST_DESCRIPTIONS,
 	};
 
 	EDTFile(EDTFilesList const whichFile)

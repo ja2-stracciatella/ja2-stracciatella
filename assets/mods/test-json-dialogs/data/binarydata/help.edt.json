@@ -1,3 +1,3 @@
 {
-	"0": { "0": "This is the footer of the help screen." }
+    "0": { "0": { "type": "json", "prefix": "strings/test-json-dialogs/help", "index": 0 } }
 }

@@ -9,8 +9,10 @@
 #include <memory>
 #include <numeric>
 #include <optional>
+#include <string>
 #include <string_view>
 #include <vector>
+#include "TranslatableString.h"
 #include "string_theory/string"
 
 namespace {
@@ -56,13 +58,12 @@ class JsonEDT final : public IEDT
 
 	std::optional<ST::string> attemptToGet(unsigned const row, unsigned const column) const
 	{
-		char buf[64];
-		if (jsonObject.has(conv(buf, row)))
+		auto rowIt = jsonOverrides.find(row);
+		if (rowIt != jsonOverrides.end())
 		{
-			auto const rowObject{ jsonObject.GetValue(buf).toObject() };
-			if (rowObject.has(conv(buf, column)))
-			{
-				return rowObject.GetString(buf);
+			auto valueIt = rowIt->second.find(column);
+			if (valueIt != rowIt->second.end()) {
+				return std::optional(valueIt->second);
 			}
 		}
 
@@ -70,10 +71,11 @@ class JsonEDT final : public IEDT
 	}
 
 	ClassicEDT backupEDT;
-	JsonObject jsonObject;
+	std::map<unsigned int, std::map<unsigned int, ST::string>> jsonOverrides;
 
 public:
 	JsonEDT(ContentManager const& cm,
+			TranslatableString::Loader& stringLoader,
 	        std::string_view const filename,
 	        IEDT::column_list columnsList)
 		: backupEDT{ cm, filename, columnsList }
@@ -82,7 +84,20 @@ public:
 		if (cm.doesGameResExists(jsonFilename))
 		{
 			std::unique_ptr<SGPFile> jsonfile{ cm.openGameResForReading(jsonFilename) };
-			jsonObject = JsonValue::deserialize(jsonfile->readStringToEnd()).toObject();
+			auto obj = JsonValue::deserialize(jsonfile->readStringToEnd()).toObject();
+			for (auto rowKey : obj.keys()) {
+				unsigned int rowIndex = std::stoi(rowKey.to_std_string());
+				auto rowObj = obj.GetValue(rowKey.c_str()).toObject();
+
+				jsonOverrides[rowIndex] = {};
+				for (auto colKey : rowObj.keys()) {
+					unsigned int colIndex = std::stoi(colKey.to_std_string());
+
+					auto str = TranslatableString::String::parse(rowObj.GetValue(colKey.c_str()));
+
+					jsonOverrides[rowIndex][colIndex] = str->resolve(stringLoader);
+				}
+			}
 		}
 	}
 
@@ -109,5 +124,6 @@ IEDT::uptr DefaultContentManager::openEDT(std::string_view const filename,
 IEDT::uptr ModPackContentManager::openEDT(std::string_view const filename,
 	IEDT::column_list columns) const
 {
-	return IEDT::uptr{ new JsonEDT(*this, filename, columns) };
+	auto stringLoader = TranslatableString::FileLoader(m_vfs.get(), m_schemaManager.get(), m_gameVersion);
+	return IEDT::uptr{ new JsonEDT(*this, stringLoader, filename, columns) };
 }

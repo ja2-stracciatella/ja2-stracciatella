@@ -1,5 +1,4 @@
-#ifndef IMP_TEXT_SYSTEM_H
-#define IMP_TEXT_SYSTEM_H
+#pragma once
 
 void PrintImpText(void);
 
@@ -129,4 +128,5 @@ enum{
 	IMP_CON_3,
 };
 
-#endif
+void OpenIMPTexts();
+void CloseIMPTexts();

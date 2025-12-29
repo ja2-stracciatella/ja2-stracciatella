@@ -102,6 +102,8 @@ void EnterCharProfile(void)
 
 	// grab the graphics
 	LoadImpGraphics( );
+
+	OpenIMPTexts();
 }
 
 
@@ -111,6 +113,8 @@ static void RemoveImpGraphics(void);
 
 void ExitCharProfile(void)
 {
+	CloseIMPTexts();
+
 	// get rid of graphics
 	RemoveImpGraphics( );
 

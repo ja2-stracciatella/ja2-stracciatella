@@ -12,9 +12,6 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
 #include <string_theory/string>
 
 #include <algorithm>
@@ -138,13 +135,6 @@ void ExitAimHistory()
 	ExitTocMenu();
 }
 
-
-static ST::string LoadAIMHistoryText(UINT32 entry)
-{
-	return GCM->loadEncryptedString(AIMHISTORYFILE, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
-}
-
-
 static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs);
 static void InitTocMenu(void);
 
@@ -187,7 +177,7 @@ void RenderAimHistory()
 			DisplayAimHistoryParagraph(WORD_FROM_FOUNDER, 1);
 
 			// display coloniel Mohanned...
-			sText = LoadAIMHistoryText(COLONEL_MOHANNED);
+			sText = LoadAIMText(COLONEL_MOHANNED);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 210 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 			break;
 
@@ -196,11 +186,11 @@ void RenderAimHistory()
 			DisplayAimHistoryParagraph(INCORPORATION, 2);
 
 			// display dunn and bradbord...
-			sText = LoadAIMHistoryText(DUNN_AND_BRADROAD);
+			sText = LoadAIMText(DUNN_AND_BRADROAD);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 270 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//AIM_HISTORY_PARAGRAPH_Y
-			sText = LoadAIMHistoryText(INCORPORATION_3);
+			sText = LoadAIMText(INCORPORATION_3);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 290 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			break;
 	}
@@ -256,14 +246,14 @@ static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 	UINT16	usNumPixels=0;
 
 	//title
-	sText = LoadAIMHistoryText(ubPageNum);
+	sText = LoadAIMText(ubPageNum);
 	DrawTextToScreen(sText, AIM_HISTORY_PARAGRAPH_X, AIM_HISTORY_SUBTITLE_Y, 0, AIM_HISTORY_PARAGRAPH_TITLE_FONT, AIM_HISTORY_PARAGRAPH_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	if(ubNumParagraphs >= 1)
 	{
 		usPosY = AIM_HISTORY_PARAGRAPH_Y;
 		//1st paragraph
-		sText = LoadAIMHistoryText(ubPageNum + 1);
+		sText = LoadAIMText(ubPageNum + 1);
 		usNumPixels = DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -271,7 +261,7 @@ static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 	{
 		//2nd paragraph
 		usPosY += usNumPixels + AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS;
-		sText = LoadAIMHistoryText(ubPageNum + 2);
+		sText = LoadAIMText(ubPageNum + 2);
 		DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -279,7 +269,7 @@ static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 	{
 		//3rd paragraph
 		usPosY += usNumPixels + AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS;
-		sText = LoadAIMHistoryText(ubPageNum + 3);
+		sText = LoadAIMText(ubPageNum + 3);
 		DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 }
@@ -300,7 +290,7 @@ static void InitTocMenu(void)
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;
 	for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
 	{
-		ST::string sText = LoadAIMHistoryText(ubLocInFile[i]);
+		ST::string sText = LoadAIMText(ubLocInFile[i]);
 
 		//if the mouse regions havent been inited, init them
 		if( !gfInToc )

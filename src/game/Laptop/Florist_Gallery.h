@@ -3,13 +3,6 @@
 
 #include "Types.h"
 
-#define FLOR_GALLERY_TEXT_FILE       BINARYDATADIR "/flowerdesc.edt"
-#define FLOR_GALLERY_TEXT_TITLE_SIZE 80
-#define FLOR_GALLERY_TEXT_PRICE_SIZE 80
-#define FLOR_GALLERY_TEXT_DESC_SIZE  80 * 4
-#define FLOR_GALLERY_TEXT_TOTAL_SIZE 80 * 6
-
-
 BOOLEAN EnterFloristGallery(void);
 void ExitFloristGallery(void);
 void HandleFloristGallery(void);

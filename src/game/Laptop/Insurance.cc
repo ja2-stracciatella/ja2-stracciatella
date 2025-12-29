@@ -16,15 +16,7 @@
 #include "Font_Control.h"
 #include "UILayout.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
 #include <string_theory/string>
-
-
-#define INSURANCE_TEXT_SINGLE_FILE		BINARYDATADIR "/insurancesingle.edt"
-#define INSURANCE_TEXT_MULTI_FILE		BINARYDATADIR "/insurancemulti.edt"
-
 
 #define INSURANCE_BACKGROUND_WIDTH		125
 #define INSURANCE_BACKGROUND_HEIGHT		100
@@ -82,7 +74,6 @@ static SGPVObject* guiInsuranceTitleImage;
 static SGPVObject* guiInsuranceRedBarImage;
 static SGPVObject* guiInsuranceBigRedLineImage;
 static SGPVObject* guiInsuranceBulletImage;
-
 
 //link to the varios pages
 static MOUSE_REGION gSelectedInsuranceLinkRegion[3];
@@ -219,6 +210,8 @@ void InitInsuranceDefaults()
 	// load the red bar on the side of the page and add it
 	guiInsuranceBigRedLineImage = AddVideoObjectFromFile(LAPTOPDIR "/largebar.sti");
 
+	OpenInsuranceTexts();
+
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
@@ -279,6 +272,8 @@ void RemoveInsuranceDefaults()
 	DeleteVideoObject(guiInsuranceRedBarImage);
 	DeleteVideoObject(guiInsuranceBigRedLineImage);
 
+	CloseInsuranceTexts();
+
 	//if it is not the first page, display the small title
 	if( guiPreviousLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
@@ -302,26 +297,6 @@ void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 End
 	// draw the black shadow line
 	LineDraw(FALSE, usStartX+1, usStartY+1, EndX+1, EndY+1, Get16BPPColor( FROMRGB( 0, 0, 0 ) ), pDestBuf);
 }
-
-
-ST::string GetInsuranceText(const UINT8 ubNumber)
-{
-	UINT32	uiStartLoc=0;
-
-	if( ubNumber < INS_MULTI_LINE_BEGINS )
-	{
-		//Get and display the card saying
-		uiStartLoc = INSURANCE_TEXT_SINGLE_LINE_SIZE * ubNumber;
-		return GCM->loadEncryptedString(INSURANCE_TEXT_SINGLE_FILE, uiStartLoc, INSURANCE_TEXT_SINGLE_LINE_SIZE);
-	}
-	else
-	{
-		//Get and display the card saying
-		uiStartLoc = INSURANCE_TEXT_MULTI_LINE_SIZE * ( ubNumber - INS_MULTI_LINE_BEGINS - 1 );
-		return GCM->loadEncryptedString(INSURANCE_TEXT_MULTI_FILE, uiStartLoc, INSURANCE_TEXT_MULTI_LINE_SIZE);
-	}
-}
-
 
 static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {

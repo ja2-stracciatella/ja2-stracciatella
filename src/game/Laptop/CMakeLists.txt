@@ -52,6 +52,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Insurance_Comments.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Insurance_Contract.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Insurance_Info.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Insurance_Text.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Laptop.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Mercs.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Mercs_Account.cc

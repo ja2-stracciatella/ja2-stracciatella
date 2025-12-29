@@ -1,7 +1,7 @@
-#ifndef __FLORIST_H
-#define __FLORIST_H
+#pragma once
 
-
+#include <cstdint>
+#include <string_theory/string>
 
 #define FLORIST_BUTTON_TEXT_FONT		FONT14ARIAL
 #define FLORIST_BUTTON_TEXT_UP_COLOR		2
@@ -16,5 +16,5 @@ void RenderFlorist(void);
 void RemoveFloristDefaults(void);
 void DisplayFloristDefaults(void);
 void InitFloristDefaults(void);
-
-#endif
+ST::string GetFloristGalleryText(uint32_t row, uint32_t col);
+ST::string GetFloristCardString(uint32_t index);

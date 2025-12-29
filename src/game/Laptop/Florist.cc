@@ -1,4 +1,5 @@
 #include "Directories.h"
+#include "EDT.h"
 #include "Laptop.h"
 #include "Florist.h"
 #include "Florist_Order_Form.h"
@@ -13,6 +14,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+#include <optional>
 
 
 #define FLORIST_SENTENCE_FONT				FONT12ARIAL
@@ -62,6 +64,8 @@ static SGPVObject* guiHandBullet;
 static SGPVObject* guiLargeTitleSymbol;
 static SGPVObject* guiSmallTitleSymbol;
 
+std::optional<EDTFile> gFloristGalleryTexts;
+std::optional<EDTFile> gCardStrings;
 
 static BOOLEAN gfHomePageActive = FALSE; // Specifies whether or not the home page or the sub pages are active
 
@@ -163,6 +167,9 @@ static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT
 
 void InitFloristDefaults()
 {
+	gFloristGalleryTexts = EDTFile(EDTFile::FLORIST_DESCRIPTIONS);
+	gCardStrings = EDTFile(EDTFile::FLORIST_CARDS);
+
 	// load the Florist background graphic and add it
 	guiFloristBackground = AddVideoObjectFromFile(LAPTOPDIR "/leafback.sti");
 
@@ -208,6 +215,9 @@ void RemoveFloristDefaults()
 {
 	DeleteVideoObject(guiFloristBackground);
 
+	gFloristGalleryTexts = std::nullopt;
+	gCardStrings = std::nullopt;
+
 	//if its the first page
 	if( gfHomePageActive )
 	{
@@ -238,4 +248,12 @@ static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, UINT
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
 	}
+}
+
+ST::string GetFloristGalleryText(uint32_t row, uint32_t col) {
+	return gFloristGalleryTexts->at(row, col);
+}
+
+ST::string GetFloristCardString(uint32_t index) {
+	return gCardStrings->at(index, 0);
 }

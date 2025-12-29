@@ -383,7 +383,6 @@ static void FlowerOrderDisplayShippingLocationCity(void);
 void RenderFloristOrderForm()
 {
 	UINT16 usPosX;
-	UINT32	uiStartLoc=0;
 
 	DisplayFloristDefaults();
 
@@ -400,9 +399,7 @@ void RenderFloristOrderForm()
 
 	//The flower name
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_NAME_BOUQUET], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_FLOWER_NAME_X;
-	uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * guiCurrentlySelectedFlower;
-	ST::string sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
-	DrawTextToScreen(sTemp, usPosX, FLOWER_ORDER_FLOWER_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(GetFloristGalleryText(guiCurrentlySelectedFlower, 0), usPosX, FLOWER_ORDER_FLOWER_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 
 	//Deliverry Date
@@ -613,7 +610,6 @@ static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, UI
 //display the things that change on the screen
 static void DisplayFlowerDynamicItems(void)
 {
-	UINT32	uiStartLoc=0;
 	UINT16	usPosX;
 	ST::string sTemp;
 	UINT16	usPrice;
@@ -642,8 +638,7 @@ static void DisplayFlowerDynamicItems(void)
 
 	//price
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_PRICE], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_BOUQUET_NAME_X;
-	uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * guiCurrentlySelectedFlower + FLOR_GALLERY_TEXT_TITLE_SIZE;
-	sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE);
+	sTemp = GetFloristGalleryText(guiCurrentlySelectedFlower, 1);
 	sscanf(sTemp.c_str(), "%hu", &usPrice);
 
 	//if its the next day delivery
@@ -921,10 +916,7 @@ static void InitFlowerOrderTextInputBoxes(void)
 	{
 		//Get and display the card saying
 		//Display Flower Desc
-
-		const UINT32 uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * gbCurrentlySelectedCard;
-		ST::string sTemp = GCM->loadEncryptedString( FLOR_CARD_TEXT_FILE, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
-		ST::string sText = CleanOutControlCodesFromString(sTemp);
+		ST::string sText = CleanOutControlCodesFromString(GetFloristCardString(gbCurrentlySelectedCard));
 
 		gsSentimentTextField = sText;
 
