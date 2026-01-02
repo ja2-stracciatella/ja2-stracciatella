@@ -3,6 +3,7 @@
 #include "Exceptions.h"
 
 #include <cstddef>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <string_theory/format>
@@ -26,19 +27,69 @@ namespace Containers {
 			virtual const ST::string& getInternalName() const = 0;
 	};
 
+	// Iterator class
+	template<typename Id, typename Model> class ContainerIterator {
+		static_assert(std::is_base_of_v<Entity<Id>, Model>, "Model must be a subclass of Entity for Containers::ContainerIterator");
+
+		public:
+			using iterator_category = std::forward_iterator_tag;
+			using value_type = const Model*;
+			using difference_type = std::ptrdiff_t;
+			using pointer = const Model**;
+			using reference = const Model*&;
+
+			ContainerIterator(typename std::vector<std::unique_ptr<Model>>::const_iterator it) : m_it(it) {}
+
+			const Model* operator*() const {
+				return m_it->get();
+			}
+
+			const Model* operator->() const {
+				return m_it->get();
+			}
+
+			ContainerIterator& operator++() {
+				++m_it;
+				return *this;
+			}
+
+			ContainerIterator operator++(int) {
+				ContainerIterator tmp = *this;
+				++m_it;
+				return tmp;
+			}
+
+			bool operator==(const ContainerIterator& other) const {
+				return m_it == other.m_it;
+			}
+
+			bool operator!=(const ContainerIterator& other) const {
+				return m_it != other.m_it;
+			}
+
+		private:
+			typename std::vector<std::unique_ptr<Model>>::const_iterator m_it;
+	};
+
 	template<typename Id, typename Model> class Indexed {
 		static_assert(std::is_base_of_v<Entity<Id>, Model>, "Model must be a subclass of Entity for Containers::Indexed or Containers::Named");
-		static_assert(std::is_pointer_v<decltype(Model::ENTITY_NAME)>, "Model must have a static entityName method for Containers::Indexed or Containers::Named");
+		static_assert(std::is_pointer_v<decltype(Model::ENTITY_NAME)>, "Model must have a static ENTITY_NAME constexpr for Containers::Indexed or Containers::Named");
 
 		public:
 			Indexed() = default;
 
-			const std::vector<std::unique_ptr<Model>>& all() const {
-				return m_models;
-			}
+			using iterator = ContainerIterator<Id, Model>;
 
 			size_t size() const {
 				return m_models.size();
+			}
+
+			iterator begin() const {
+				return iterator(m_models.begin());
+			}
+
+			iterator end() const {
+				return iterator(m_models.end());
 			}
 
 			const Model* byId(Id id) const {

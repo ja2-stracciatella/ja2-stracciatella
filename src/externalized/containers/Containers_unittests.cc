@@ -1,3 +1,4 @@
+#include <utility>
 #ifdef WITH_UNITTESTS
 
 #include "Containers.h"
@@ -54,6 +55,66 @@ TEST(Containers, Named)
 	ASSERT_EQ(container.optionalByName("e2")->getId(), 2);
 	ASSERT_EQ(container.optionalByName("e2")->getInternalName(), "e2");
 	ASSERT_EQ(container.optionalByName("nothing"), nullptr);
+}
+
+TEST(Containers, ContainerIterator)
+{
+	auto container = Containers::Indexed<uint8_t, TestEntity>();
+
+	container.add(std::make_unique<TestEntity>(1, "e1"));
+	container.add(std::make_unique<TestEntity>(2, "e2"));
+	container.add(std::make_unique<TestEntity>(3, "e3"));
+
+	// Test basic iteration with iterators
+	auto it = container.begin();
+	ASSERT_NE(it, container.end());
+
+	// Test dereferencing - should return const Model* not unique_ptr
+	const TestEntity* first = *it;
+	ASSERT_EQ(first->getId(), 1);
+	ASSERT_EQ(first->getInternalName(), "e1");
+
+	// Test arrow operator
+	ASSERT_EQ(it->getId(), 1);
+	ASSERT_EQ(it->getInternalName(), "e1");
+
+	// Test pre-increment
+	++it;
+	ASSERT_EQ(it->getId(), 2);
+	ASSERT_EQ(it->getInternalName(), "e2");
+
+	// Test post-increment
+	auto old_it = it++;
+	ASSERT_EQ(old_it->getId(), 2);
+	ASSERT_EQ(it->getId(), 3);
+
+	// Test increment to end
+	++it;
+	ASSERT_EQ(it, container.end());
+}
+
+TEST(Containers, ContainerIteratorRange)
+{
+	auto container = Containers::Indexed<uint8_t, TestEntity>();
+
+	container.add(std::make_unique<TestEntity>(10, "test1"));
+	container.add(std::make_unique<TestEntity>(20, "test2"));
+	container.add(std::make_unique<TestEntity>(30, "test3"));
+
+	// Test range-based for loop
+	std::vector<std::pair<uint8_t, ST::string>> results;
+
+	for (const TestEntity* entity : container) {
+		results.push_back(std::make_pair(entity->getId(), entity->getInternalName()));
+	}
+
+	ASSERT_EQ(results.size(), 3);
+	ASSERT_EQ(results[0].first, 10);
+	ASSERT_EQ(results[0].second, "test1");
+	ASSERT_EQ(results[1].first, 20);
+	ASSERT_EQ(results[1].second, "test2");
+	ASSERT_EQ(results[2].first, 30);
+	ASSERT_EQ(results[2].second, "test3");
 }
 
 #endif
