@@ -1544,6 +1544,31 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 	}
 }
 
+struct OppositeSideInfo
+{
+	StructureFlags flags;
+	bool mustBeBaseTile;
+	bool mustBeOpen;
+	WallOrientationDefines orientation;
+	WorldDirections direction;
+};
+const OppositeSideInfo oppGridNoDirections[] =
+{
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, OUTSIDE_TOP_RIGHT, EAST },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, INSIDE_TOP_RIGHT,  EAST },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, OUTSIDE_TOP_LEFT,  SOUTH },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, INSIDE_TOP_LEFT,   SOUTH },
+	{ STRUCTURE_GARAGEDOOR,                   false, false, OUTSIDE_TOP_RIGHT, EAST },
+	{ STRUCTURE_GARAGEDOOR,                   false, false, OUTSIDE_TOP_LEFT,  SOUTH },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, true , true,  INSIDE_TOP_RIGHT,  NORTH },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, false, true,  OUTSIDE_TOP_RIGHT, NORTH },
+	{                  STRUCTURE_DDOOR_RIGHT, true , true,  INSIDE_TOP_LEFT,   EAST },
+	{                  STRUCTURE_DDOOR_RIGHT, false, true,  OUTSIDE_TOP_LEFT,  EAST },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , true , true,  INSIDE_TOP_LEFT,   WEST },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , false, true,  OUTSIDE_TOP_LEFT,  WEST },
+	{                  STRUCTURE_DDOOR_LEFT , true , true,  INSIDE_TOP_RIGHT,  SOUTH },
+	{                  STRUCTURE_DDOOR_LEFT , false, true,  OUTSIDE_TOP_RIGHT, SOUTH },
+};
 
 void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
 {
@@ -1580,13 +1605,16 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 	if (pStructure && pStructure->ubWallOrientation)
 	{
 		GridNo oppositeSideGridNo = sGridNo;
-		if (pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT || pStructure->ubWallOrientation == INSIDE_TOP_RIGHT)
+		for (const OppositeSideInfo& oppGridNoDir : oppGridNoDirections)
 		{
-			oppositeSideGridNo += DirectionInc(EAST);
-		}
-		else
-		{
-			oppositeSideGridNo += DirectionInc(SOUTH);
+			if (oppGridNoDir.flags & pStructure->fFlags &&
+				oppGridNoDir.mustBeBaseTile == static_cast<bool>(pStructure->fFlags & STRUCTURE_BASE_TILE) &&
+				oppGridNoDir.mustBeOpen     == static_cast<bool>(pStructure->fFlags & STRUCTURE_OPEN) &&
+				oppGridNoDir.orientation    == pStructure->ubWallOrientation)
+			{
+				oppositeSideGridNo += DirectionInc(oppGridNoDir.direction);
+				break;
+			}
 		}
 		if (PythSpacesAway(attacker->sGridNo, sGridNo) > PythSpacesAway(attacker->sGridNo, oppositeSideGridNo))
 		{
