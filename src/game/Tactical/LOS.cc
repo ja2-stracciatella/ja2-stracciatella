@@ -3274,15 +3274,16 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 
 	ubShots = 1;
 
-	// Check if we have spit as a weapon!
-	if (GCM->getWeapon( usHandItem )->calibre->monsterWeapon)
+	auto weapon = GCM->getWeapon(usHandItem);
+	// Check if we need to set bullet flags for weapons
+	if (weapon->calibre && weapon->calibre->monsterWeapon)
 	{
 		usBulletFlags |= BULLET_FLAG_CREATURE_SPIT;
 	}
-	else if (GCM->getItem(usHandItem)->getItemClass() == IC_THROWING_KNIFE)
+	else if (weapon->getItemClass() == IC_THROWING_KNIFE)
 	{
 		usBulletFlags |= BULLET_FLAG_KNIFE;
-		if (GCM->getItem(usHandItem)->getItemIndex() == BLOODY_THROWING_KNIFE)
+		if (weapon->getItemIndex() == BLOODY_THROWING_KNIFE)
 			usBulletFlags |= BULLET_FLAG_BLOODY;
 	}
 	else if (usHandItem == ROCKET_LAUNCHER)
@@ -3303,7 +3304,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		ubSpreadIndex = 2;
 	}
 
-	ubImpact = GCM->getWeapon(usHandItem)->ubImpact;
+	ubImpact = weapon->ubImpact;
 	//if (!fFake)
 	{
 		if (fBuckshot)

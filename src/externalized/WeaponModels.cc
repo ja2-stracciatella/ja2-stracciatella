@@ -665,12 +665,12 @@ bool WeaponModel::shootsExplosiveCalibre() const {
 
 bool WeaponModel::matches(const CalibreModel *calibre) const
 {
-	return this->calibre->index == calibre->index;
+	return this->calibre && this->calibre->index == calibre->index;
 }
 
 bool WeaponModel::matches(const MagazineModel *mag) const
 {
-	return (this->calibre->index == mag->calibre->index)
+	return this->calibre && (this->calibre->index == mag->calibre->index)
 		&& (ubMagSize == mag->capacity);
 }
 

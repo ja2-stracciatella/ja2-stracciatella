@@ -3,6 +3,7 @@
 #include "Handle_Items.h"
 #include "Items.h"
 #include "Action_Items.h"
+#include "Item_Types.h"
 #include "JAScreens.h"
 #include "TileDef.h"
 #include "Weapons.h"
@@ -1349,6 +1350,7 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 
 INT8 FindAmmo(const SOLDIERTYPE* s, const CalibreModel * calibre, UINT8 const mag_size, INT8 const exclude_slot)
 {
+	if (!calibre) return NO_SLOT;
 	for (INT8 slot = HANDPOS; slot != NUM_INV_SLOTS; ++slot)
 	{
 		if (slot == exclude_slot) continue;
@@ -2420,6 +2422,10 @@ UINT16 DefaultMagazine(UINT16 const gun)
 	}
 
 	const WeaponModel * w = GCM->getWeapon(gun);
+	if (!w->calibre) {
+		throw std::logic_error("Tried to get default ammo for weapon without calibre");
+	}
+
 	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
 	for (const MagazineModel* mag : magazines)
 	{
@@ -2458,6 +2464,7 @@ UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_siz
 UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 const old_ammo_id, const WeaponModel *new_gun)
 {
 	const MagazineModel * old_mag = GCM->getMagazineByItemIndex(old_ammo_id);
+	if (!old_gun->calibre) return NOTHING;
 	if (old_mag->calibre->index != old_gun->calibre->index) return NOTHING;
 	if (old_mag->capacity != old_gun->ubMagSize) return NOTHING;
 	return FindReplacementMagazine(new_gun->calibre, new_gun->ubMagSize, old_mag->ammoType->index);
