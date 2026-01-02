@@ -1139,7 +1139,7 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		FindFontRightCoordinates(PosX + 65, PosY + 15, 171 - 75, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
 		MPrint(sX, sY, sString);
 
-		if (item->isGun())
+		if (item->isGun() && item->asWeapon()->calibre)
 		{
 			sString = item->asWeapon()->calibre->getName();
 			sString = ReduceStringLength(sString, 171 - 75, FONT10ARIAL);

@@ -1,4 +1,5 @@
 add_and_include_subdirectory("army")
+add_and_include_subdirectory("containers")
 add_and_include_subdirectory("content")
 add_and_include_subdirectory("internals")
 add_and_include_subdirectory("json")

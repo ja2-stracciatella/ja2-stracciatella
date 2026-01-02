@@ -138,7 +138,7 @@ void EnterAimSort()
 {
 	AimMercArray.clear();
 	//Everytime into Aim Sort, reset array.
-	for (auto listing : GCM->getAIMListings())
+	for (auto listing : *GCM->aimListings())
 	{
 		AimMercArray.push_back(listing->profileID);
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arms_Dealer.h"
+#include "Containers.h"
 #include "ContentMusic.h"
 #include "Facts.h"
 #include "ItemSystem.h"
@@ -8,6 +9,7 @@
 #include "DirFs.h"
 #include "IEDT.h"
 
+#include <cstdint>
 #include <string_theory/string>
 #include <map>
 #include <string_view>
@@ -124,9 +126,8 @@ public:
 	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) = 0;
 	virtual const std::vector<const MagazineModel*>& getMagazines() const = 0;
 
-	virtual const CalibreModel* getCalibre(uint8_t index) = 0;
-
-	virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
+	virtual const Containers::Named<uint16_t, CalibreModel>* calibres() const = 0;
+	virtual const Containers::Named<uint16_t, AmmoTypeModel>* ammoTypes() const = 0;
 
 	virtual const SmokeEffectModel* getSmokeEffect(SmokeEffectID id) const = 0;
 
@@ -201,10 +202,7 @@ public:
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const = 0;
 
 	/* Returns the full list of profile listings on AIM */
-	virtual const std::vector<const AIMListingModel*>& getAIMListings() const = 0;
-
-	/* Returns a profile listing for a specific merc on AIM */
-	virtual const AIMListingModel* getAIMListing(uint8_t profileID) const = 0;
+	virtual const Containers::Indexed<uint8_t, AIMListingModel>* aimListings() const = 0;
 
 	//returns the full list of character profiles
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const = 0;

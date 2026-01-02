@@ -3,6 +3,7 @@
 #include "Exceptions.h"
 #include "ExplosiveCalibreModel.h"
 #include "ItemModel.h"
+#include "Json.h"
 #include "Logger.h"
 #include "MagazineModel.h"
 #include "Points.h"
@@ -41,7 +42,7 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
 {
 	ubWeaponType         = weaponType;
 	ubWeaponClass        = NOGUNCLASS;
-	calibre              = CalibreModel::getNoCalibreObject();
+	calibre              = nullptr;
 	ubReadyTime          = 0;
 	ubShotsPer4Turns     = 0;
 	ubShotsPerBurst      = 0;
@@ -137,8 +138,19 @@ const ExplosiveCalibreModel* readExplosiveCalibreWithFallbacks(const ST::string&
 	return *calibreIt;
 }
 
+const CalibreModel* deserializeCalibre(const ST::string weaponName, const Containers::Named<uint16_t, CalibreModel>& calibres, const JsonObject& obj) {
+	auto calibreName = obj.GetString("calibre");
+	auto failContext = ST::format("failed to deserialize {}(\"{}\")", "Weapon", weaponName);
+
+	try {
+		return calibres.byName(obj.GetString("calibre"));
+	} catch (const NotFoundError& e) {
+		throw NotFoundError(ST::format("{}: {}", failContext, e.what()));
+	}
+}
+
 WeaponModel* WeaponModel::deserialize(const JsonValue &json,
-					const std::map<ST::string, const CalibreModel*> &calibreMap,
+					const Containers::Named<uint16_t, CalibreModel>& calibres,
 					const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 					TranslatableString::Loader& stringLoader)
 {
@@ -165,7 +177,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "PISTOL")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  BulletSpeed     = obj.GetInt("ubBulletSpeed");
@@ -194,7 +206,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "M_PISTOL")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
@@ -234,7 +246,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "SMG")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
@@ -274,7 +286,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "SN_RIFLE")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		// uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
@@ -308,7 +320,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if(internalType == "RIFLE")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		// uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
@@ -342,7 +354,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "ASRIFLE")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
@@ -382,7 +394,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "SHOTGUN")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
@@ -422,7 +434,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "LMG")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
@@ -577,7 +589,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 	}
 	else if (internalType == "MONSTSPIT")
 	{
-		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
+		auto calibre = deserializeCalibre(internalName, calibres, obj);
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
 		uint8_t  Impact          = obj.GetInt("ubImpact");
 		uint8_t  Deadliness      = obj.GetInt("ubDeadliness");
@@ -653,12 +665,12 @@ bool WeaponModel::shootsExplosiveCalibre() const {
 
 bool WeaponModel::matches(const CalibreModel *calibre) const
 {
-	return this->calibre->index == calibre->index;
+	return this->calibre && this->calibre->index == calibre->index;
 }
 
 bool WeaponModel::matches(const MagazineModel *mag) const
 {
-	return (this->calibre->index == mag->calibre->index)
+	return this->calibre && (this->calibre->index == mag->calibre->index)
 		&& (ubMagSize == mag->capacity);
 }
 
