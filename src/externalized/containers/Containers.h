@@ -37,6 +37,10 @@ namespace Containers {
 				return m_models;
 			}
 
+			size_t size() const {
+				return m_models.size();
+			}
+
 			const Model* byId(Id id) const {
 				auto model = optionalById(id);
 				if (!model) {
