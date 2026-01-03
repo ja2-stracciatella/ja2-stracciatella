@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Containers.h"
 #include "GamePolicy.h"
 #include "Item_Types.h"
 #include "InventoryGraphicsModel.h"
@@ -7,6 +8,7 @@
 #include "TilesetTileIndexModel.h"
 #include "TranslatableString.h"
 
+#include <cstdint>
 #include <string_theory/string>
 
 class JsonObject;
@@ -16,8 +18,9 @@ struct ExplosiveModel;
 struct MagazineModel;
 struct WeaponModel;
 
-struct ItemModel
+struct ItemModel : public Containers::NamedEntity<uint16_t>
 {
+public:
 	ItemModel(
 		uint16_t itemIndex,
 		ST::string&& internalName,
@@ -48,7 +51,14 @@ struct ItemModel
 
 	virtual ~ItemModel() = default;
 
-	const virtual ST::string& getInternalName() const;
+	static constexpr const char* ENTITY_NAME = "Item";
+	virtual uint16_t getId() const override {
+		return itemIndex;
+	};
+	const virtual ST::string& getInternalName() const override {
+		return internalName;
+	};
+
 	const virtual ST::string& getShortName() const;
 	const virtual ST::string& getName() const;
 	const virtual ST::string& getDescription() const;
@@ -108,7 +118,7 @@ struct ItemModel
 	};
 
 	virtual JsonValue serialize() const;
-	static const ItemModel* deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader);
+	static std::unique_ptr<ItemModel> deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader);
 
 protected:
 	static ST::string deserializeShortName(InitData const&);
@@ -140,3 +150,5 @@ protected:
 	void serializeFlags(JsonObject &obj) const;
 	static uint16_t deserializeFlags(const JsonObject &obj);
 };
+
+class ItemsContainer : public Containers::Named<uint16_t, ItemModel> {};

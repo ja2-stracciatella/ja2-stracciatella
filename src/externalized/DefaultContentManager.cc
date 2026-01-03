@@ -30,6 +30,7 @@
 #include "MagazineModel.h"
 #include "NPC.h"
 #include "ShippingDestinationModel.h"
+#include "Soldier_Profile.h"
 #include "Soldier_Profile_Type.h"
 #include "TranslatableString.h"
 #include "Types.h"
@@ -165,8 +166,6 @@ DefaultContentManager::~DefaultContentManager()
 {
 	// Deconstruction of vectors containing non-pointer types
 	// is left to the compiler, no need to clear() them.
-
-	deleteElements(m_items);
 	deleteElements(m_smokeEffects);
 	deleteElements(m_explosiveCalibres);
 	deleteElements(m_explosionAnimations);
@@ -434,13 +433,7 @@ const ExplosiveModel* DefaultContentManager::getExplosive(uint16_t itemIndex)
  */
 const ExplosiveModel* DefaultContentManager::getExplosiveByName(const ST::string &internalName)
 {
-	std::map<ST::string, const ExplosiveModel*>::const_iterator it = m_explosiveMap.find(internalName);
-	if(it == m_explosiveMap.end())
-	{
-		SLOGE("explosive '{}' was not found", internalName);
-		throw std::runtime_error(ST::format("explosive '{}' was not found", internalName).to_std_string());
-	}
-	return it->second;
+	return m_explosives.byName(internalName);
 }
 
 /** Get the weapon with the given index.
@@ -466,13 +459,7 @@ const ArmourModel* DefaultContentManager::getArmour(uint16_t itemIndex)
  */
 const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &internalName)
 {
-	std::map<ST::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
-	if(it == m_weaponMap.end())
-	{
-		SLOGE("weapon '{}' was not found", internalName);
-		throw std::runtime_error(ST::format("weapon '{}' was not found", internalName).to_std_string());
-	}
-	return it->second;//m_weaponMap[internalName];
+	return m_weapons.byName(internalName);
 }
 
 /** Get the armour with the given name.
@@ -480,23 +467,12 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &inte
  */
 const ArmourModel* DefaultContentManager::getArmourByName(const ST::string &internalName)
 {
-	std::map<ST::string, const ArmourModel*>::const_iterator it = m_armourMap.find(internalName);
-	if(it == m_armourMap.end())
-	{
-		SLOGE("armour '{}' was not found", internalName);
-		throw std::runtime_error(ST::format("armour '{}' was not found", internalName).to_std_string());
-	}
-	return it->second;
+	return m_armours.byName(internalName);
 }
 
 const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &internalName)
 {
-	if(m_magazineMap.find(internalName) == m_magazineMap.end())
-	{
-		SLOGE("magazine '{}' is not found", internalName);
-		throw std::runtime_error(ST::format("magazine '{}' is not found", internalName).to_std_string());
-	}
-	return m_magazineMap[internalName];
+	return m_magazines.byName(internalName);
 }
 
 const MagazineModel* DefaultContentManager::getMagazineByItemIndex(uint16_t itemIndex)
@@ -504,7 +480,7 @@ const MagazineModel* DefaultContentManager::getMagazineByItemIndex(uint16_t item
 	return getItem(itemIndex)->asAmmo();
 }
 
-const std::vector<const MagazineModel*>& DefaultContentManager::getMagazines() const
+const MagazinesContainer& DefaultContentManager::getMagazines() const
 {
 	return m_magazines;
 }
@@ -544,17 +520,20 @@ bool DefaultContentManager::loadWeapons(TranslatableString::Loader& stringLoader
 {
 	auto json = readJsonDataFileWithSchema("weapons.json");
 	for (auto& element : json.toVec()) {
-		WeaponModel *w = WeaponModel::deserialize(element, m_calibres, m_explosiveCalibres, stringLoader);
-		SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
+		auto w = WeaponModel::deserialize(element, m_calibres, m_explosiveCalibres, stringLoader);
 
-		if (w->getItemIndex() >= m_items.size())
+		if (w->getItemIndex() >= MAXITEMS)
 		{
-			SLOGE("Weapon index must be in the interval 0 - {}", m_items.size() - 1);
+			SLOGE("Weapon index must be in the interval 0 - {}", MAXITEMS - 1);
 			return false;
 		}
+		if (w->internalType == "NOWEAPON") {
+			SLOGW("Ignoring weapon {}, because it has internal type NOWEAPON", w->getInternalName());
+			continue;
+		}
 
-		m_items[w->getItemIndex()] = w;
-		m_weaponMap.try_emplace(w->getInternalName(), w);
+		SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
+		m_items.add(std::move(w));
 	}
 
 	return true;
@@ -564,8 +543,7 @@ bool DefaultContentManager::loadArmours(TranslatableString::Loader& stringLoader
 {
 	auto json = readJsonDataFileWithSchema("armours.json");
 	for (auto& element : json.toVec()) {
-		ArmourModel *a = ArmourModel::deserialize(element, stringLoader);
-		SLOGD("Loaded armour {} {}", a->getItemIndex(), a->getInternalName());
+		auto a = ArmourModel::deserialize(element, stringLoader);
 
 		if (a->getItemIndex() >= m_items.size())
 		{
@@ -573,8 +551,8 @@ bool DefaultContentManager::loadArmours(TranslatableString::Loader& stringLoader
 			return false;
 		}
 
-		m_items[a->getItemIndex()] = a;
-		m_armourMap.try_emplace(a->getInternalName(), a);
+		SLOGD("Loaded armour {} {}", a->getItemIndex(), a->getInternalName());
+		m_items.add(std::move(a));
 	}
 
 	return true;
@@ -666,11 +644,9 @@ bool DefaultContentManager::loadExplosives(TranslatableString::Loader& stringLoa
 {
 	auto json = readJsonDataFileWithSchema("explosives.json");
 	for (auto& element : json.toVec()) {
-		ExplosiveModel *e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_smokeEffects, m_explosionAnimations, stringLoader);
+		auto e = ExplosiveModel::deserialize(element, m_explosiveCalibres, m_smokeEffects, m_explosionAnimations, stringLoader);
 		SLOGD("Loaded explosive {} {}", e->getItemIndex(), e->getInternalName());
-
-		m_items[e->getItemIndex()] = e;
-		m_explosiveMap.insert(std::make_pair(e->getInternalName(), e));
+		m_items.add(std::move(e));
 	}
 	return true;
 }
@@ -680,11 +656,15 @@ bool DefaultContentManager::loadItems(TranslatableString::Loader& stringLoader)
 	auto json = readJsonDataFileWithSchema("items.json");
 	for (auto& el : json.toVec())
 	{
-		auto* item = ItemModel::deserialize(el, stringLoader);
+		auto item = ItemModel::deserialize(el, stringLoader);
 		if (item->getItemIndex() <= MAX_WEAPONS || item->getItemIndex() > MAXITEMS)
 		{
 			ST::string err = ST::format("Item index must be in the interval {} - {}", MAX_WEAPONS+1, MAXITEMS);
 			throw DataError(err);
+		}
+		if (item->getItemClass() == IC_NONE) {
+			SLOGW("Ignoring item `{}` in 'items.json', because it has IC_NONE item class", item->getInternalName());
+			continue;
 		}
 		if (item->getItemClass() == IC_GRENADE || item->getItemClass() == IC_BOMB) {
 			SLOGW("Ignoring grenade or bomb '{}' in 'items.json', should be in 'explosives.json'", item->getInternalName());
@@ -695,7 +675,8 @@ bool DefaultContentManager::loadItems(TranslatableString::Loader& stringLoader)
 			continue;
 		}
 
-		m_items[item->getItemIndex()] = item;
+		SLOGD("Loaded item {} {}", item->getItemIndex(), item->getInternalName());
+		m_items.add(std::move(item));
 	}
 
 	return true;
@@ -706,12 +687,20 @@ bool DefaultContentManager::loadMagazines(TranslatableString::Loader& stringLoad
 	auto json = readJsonDataFileWithSchema("magazines.json");
 	for (auto& element : json.toVec())
 	{
-		MagazineModel *mag = MagazineModel::deserialize(element, m_calibres, m_ammoTypes, stringLoader);
-		SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
+		if (element.toObject().GetString("calibre") == "NOAMMO") {
+			SLOGW(
+				"Ignoring magazine {} because it has the calibre {}",
+				element.toObject().GetString("internalName"),
+				"NOAMMO"
+			);
+			continue;
+		}
+		auto mag = MagazineModel::deserialize(element, m_calibres, m_ammoTypes, stringLoader);
+		if (mag->getInternalName() == "CLIP_NOTHING") {
 
-		m_magazines.push_back(mag);
-		m_items[mag->getItemIndex()] = mag;
-		m_magazineMap.insert(std::make_pair(mag->getInternalName(), mag));
+		}
+		SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
+		m_items.add(std::move(mag));
 	}
 
 	return true;
@@ -722,6 +711,10 @@ bool DefaultContentManager::loadCalibres(TranslatableString::Loader& stringLoade
 	auto json = readJsonDataFileWithSchema("calibres.json");
 	for (auto& element : json.toVec()) {
 		auto calibre = CalibreModel::deserialize(element, stringLoader);
+		if (calibre->internalName == "NOAMMO") {
+			SLOGW("Ignoring calibre {}, because it is deprecated", calibre->getInternalName());
+			continue;
+		}
 		SLOGD("Loaded calibre {} {}", calibre->getId(), calibre->getInternalName());
 		m_calibres.add(std::move(calibre));
 	}
@@ -896,24 +889,28 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 	auto game_json = readJsonDataFileWithSchema("game.json");
 	m_gamePolicy = std::make_unique<DefaultGamePolicy>(game_json);
 
-	m_items.resize(MAXITEMS);
-	bool result = loadItems(stringLoader)
-		&& loadCalibres(stringLoader)
-		&& loadExplosiveCalibres()
-		&& loadAmmoTypes()
-		&& loadMagazines(stringLoader)
-		&& loadWeapons(stringLoader)
-		&& loadSmokeEffects()
-		&& loadExplosionAnimations()
-		&& loadExplosives(stringLoader, m_explosionAnimations)
-		&& loadArmours(stringLoader)
-		&& loadArmyData()
-		&& loadMusic();
+	// Load prerequisites to items
+	loadAmmoTypes();
+	loadCalibres(stringLoader);
+	loadExplosiveCalibres();
+	loadSmokeEffects();
+	loadExplosionAnimations();
 
-	for (const ItemModel *item : m_items)
-	{
-		m_itemMap.insert(std::make_pair(item->getInternalName(), item));
-	}
+	// Load all items
+	loadItems(stringLoader);
+	loadMagazines(stringLoader);
+	loadWeapons(stringLoader);
+	loadExplosives(stringLoader, m_explosionAnimations);
+	loadArmours(stringLoader);
+
+	// Setup views
+	m_magazines = MagazinesContainer(m_items);
+	m_weapons = WeaponsContainer(m_items);
+	m_explosives = ExplosivesContainer(m_items);
+	m_armours = ArmoursContainer(m_items);
+
+	loadArmyData();
+	loadMusic();
 
 	auto replacement_json = readJsonDataFileWithSchema("tactical-map-item-replacements.json");
 
@@ -967,7 +964,7 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 
 	loadMaxArmourPerClass();
 
-	return result;
+	return true;
 }
 
 JsonValue DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
@@ -1017,30 +1014,24 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 	return true;
 }
 
-ItemRange DefaultContentManager::getItems() const
+const ItemsContainer& DefaultContentManager::getItems() const
 {
-	return ItemRange(m_items.begin() + 1, m_items.end());
+	return m_items;
 }
 
 const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
 {
-	return m_items.at(itemIndex);
+	return m_items.byId(itemIndex);
 }
 
 const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex, ItemSystem::nothrow_t const&) const noexcept
 {
-	return itemIndex < m_items.size() ? m_items[itemIndex] : nullptr;
+	return m_items.optionalById(itemIndex);
 }
 
 const ItemModel* DefaultContentManager::getItemByName(const ST::string &internalName) const
 {
-	std::map<ST::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
-	if(it == m_itemMap.end())
-	{
-		SLOGE("item '{}' is not found", internalName);
-		throw std::runtime_error(ST::format("item '{}' is not found", internalName).to_std_string());
-	}
-	return it->second;
+	return m_items.byName(internalName);
 }
 
 const ItemModel* DefaultContentManager::getKeyItemForKeyId(uint16_t usKeyItem) const

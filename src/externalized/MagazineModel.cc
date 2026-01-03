@@ -63,7 +63,7 @@ JsonValue MagazineModel::serialize() const
 	return obj.toValue();
 }
 
-MagazineModel* MagazineModel::deserialize(
+std::unique_ptr<MagazineModel> MagazineModel::deserialize(
 	const JsonValue &json,
 	const Containers::Named<uint16_t, CalibreModel>& calibres,
 	const Containers::Named<uint16_t, AmmoTypeModel>& ammoTypes,
@@ -129,7 +129,7 @@ MagazineModel* MagazineModel::deserialize(
 		mag->standardReplacement = replacement;
 	}
 
-	return mag;
+	return std::unique_ptr<MagazineModel>(mag);
 }
 
 

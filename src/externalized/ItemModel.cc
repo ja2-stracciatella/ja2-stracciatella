@@ -97,8 +97,6 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 	this->fFlags                = fFlags;
 }
 
-const ST::string& ItemModel::getInternalName() const   { return internalName;          }
-
 const ST::string& ItemModel::getShortName() const      { return shortName; }
 const ST::string& ItemModel::getName() const           { return name; }
 const ST::string& ItemModel::getDescription() const     { return description; }
@@ -243,7 +241,7 @@ ST::string ItemModel::deserializeBobbyRaysDescription(InitData const& initData)
 	return deserializeHelper(initData, BINARY_STRING_BOBBYR_FILE, "bobbyRaysDescription", BINARY_SIZE_BOBBYR_FULL_ITEM, BINARY_SIZE_BOBBYR_ITEM_NAME, BINARY_SIZE_BOBBYR_ITEM_INFO);
 }
 
-const ItemModel* ItemModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader)
+std::unique_ptr<ItemModel> ItemModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader)
 {
 	auto obj = json.toObject();
 	InitData const initData{ obj, stringLoader };
@@ -259,7 +257,7 @@ const ItemModel* ItemModel::deserialize(const JsonValue &json, TranslatableStrin
 	auto bobbyRaysDescription = ItemModel::deserializeDescription(initData);
 	auto flags = ItemModel::deserializeFlags(obj);
 
-	return new ItemModel(
+	return std::make_unique<ItemModel>(
 		itemIndex,
 		std::move(internalName),
 		std::move(shortName),

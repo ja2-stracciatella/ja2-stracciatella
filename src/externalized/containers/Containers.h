@@ -2,8 +2,6 @@
 
 #include "Exceptions.h"
 
-#include <cstddef>
-#include <iterator>
 #include <map>
 #include <memory>
 #include <string_theory/format>
@@ -27,12 +25,11 @@ namespace Containers {
 			virtual const ST::string& getInternalName() const = 0;
 	};
 
-	// Iterator class
 	template<typename Id, typename Model> class ContainerIterator {
 		static_assert(std::is_base_of_v<Entity<Id>, Model>, "Model must be a subclass of Entity for Containers::ContainerIterator");
 
 		public:
-			using iterator_category = std::forward_iterator_tag;
+			using iterator_category = std::bidirectional_iterator_tag;
 			using value_type = const Model*;
 			using difference_type = std::ptrdiff_t;
 			using pointer = const Model**;
@@ -59,12 +56,31 @@ namespace Containers {
 				return tmp;
 			}
 
+			ContainerIterator& operator--() {
+				--m_it;
+				return *this;
+			}
+
+			ContainerIterator operator--(int) {
+				ContainerIterator tmp = *this;
+				--m_it;
+				return tmp;
+			}
+
 			bool operator==(const ContainerIterator& other) const {
 				return m_it == other.m_it;
 			}
 
 			bool operator!=(const ContainerIterator& other) const {
 				return m_it != other.m_it;
+			}
+
+			bool operator<(const ContainerIterator& other) const {
+				return m_it < other.m_it;
+			}
+
+			bool operator>(const ContainerIterator& other) const {
+				return m_it > other.m_it;
 			}
 
 		private:
@@ -77,6 +93,10 @@ namespace Containers {
 
 		public:
 			Indexed() = default;
+			Indexed(const Indexed&) = delete;
+			Indexed& operator=(const Indexed&) = delete;
+			Indexed(Indexed&&) = default;
+			Indexed& operator=(Indexed&&) = default;
 
 			using iterator = ContainerIterator<Id, Model>;
 
@@ -126,6 +146,12 @@ namespace Containers {
 		static_assert(std::is_base_of_v<NamedEntity<Id>, Model>, "Model must be a subclass of NamedEntity for Containers::Named");
 
 		public:
+			Named() = default;
+			Named(const Named&) = delete;
+			Named& operator=(const Named&) = delete;
+			Named(Named&&) = default;
+			Named& operator=(Named&&) = default;
+
 			const Model* byName(const ST::string& internalName) const {
 				auto model = optionalByName(internalName);
 				if (!model) {
