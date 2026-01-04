@@ -74,6 +74,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -527,8 +528,8 @@ bool DefaultContentManager::loadWeapons(TranslatableString::Loader& stringLoader
 			SLOGE("Weapon index must be in the interval 0 - {}", MAXITEMS - 1);
 			return false;
 		}
-		if (w->internalType == "NOWEAPON") {
-			SLOGW("Ignoring weapon {}, because it has internal type NOWEAPON", w->getInternalName());
+		if (w->getItemClass() == IC_NONE) {
+			SLOGW("Ignoring weapon {}, because it has item class IC_NONE", w->getInternalName());
 			continue;
 		}
 
@@ -653,6 +654,8 @@ bool DefaultContentManager::loadExplosives(TranslatableString::Loader& stringLoa
 
 bool DefaultContentManager::loadItems(TranslatableString::Loader& stringLoader)
 {
+	m_items.add(std::make_unique<ItemModel>(NOTHING, "NOTHING", IC_NONE));
+
 	auto json = readJsonDataFileWithSchema("items.json");
 	for (auto& el : json.toVec())
 	{
