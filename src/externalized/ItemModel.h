@@ -151,4 +151,7 @@ protected:
 	static uint16_t deserializeFlags(const JsonObject &obj);
 };
 
-class ItemsContainer : public Containers::Named<uint16_t, ItemModel> {};
+class ItemsContainer : public Containers::Named<uint16_t, ItemModel> {
+	public:
+		std::vector<ST::string> getAllSmallInventoryGraphicPaths() const;
+};

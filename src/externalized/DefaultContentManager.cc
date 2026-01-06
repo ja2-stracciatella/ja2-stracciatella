@@ -1049,17 +1049,7 @@ const ItemModel* DefaultContentManager::getKeyItemForKeyId(uint16_t usKeyItem) c
 
 std::vector<ST::string> DefaultContentManager::getAllSmallInventoryGraphicPaths() const
 {
-	std::vector<ST::string> v = {};
-
-	for (auto item : m_items) {
-		auto& path = item->getInventoryGraphicSmall().getPath();
-		auto existing = std::find(v.begin(), v.end(), path);
-		if (existing == v.end()) {
-			v.push_back(path);
-		}
-	}
-
-	return v;
+	return m_items.getAllSmallInventoryGraphicPaths();
 }
 
 const std::map<uint16_t, uint16_t>& DefaultContentManager::getMapItemReplacements() const

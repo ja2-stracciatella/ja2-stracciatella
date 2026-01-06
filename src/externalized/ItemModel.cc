@@ -279,3 +279,17 @@ std::unique_ptr<ItemModel> ItemModel::deserialize(const JsonValue &json, Transla
 		flags
 	);
 }
+
+std::vector<ST::string> ItemsContainer::getAllSmallInventoryGraphicPaths() const {
+	std::vector<ST::string> v = {};
+
+	for (auto item : *this) {
+		auto& path = item->getInventoryGraphicSmall().getPath();
+		auto existing = std::find(v.begin(), v.end(), path);
+		if (existing == v.end()) {
+			v.push_back(path);
+		}
+	}
+
+	return v;
+}
