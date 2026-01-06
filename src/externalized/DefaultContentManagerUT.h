@@ -10,7 +10,7 @@ struct EngineOptions;
 
 class DefaultContentManagerUT : public DefaultContentManager
 {
-	DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions);
+	using DefaultContentManager::DefaultContentManager;
 
 public:
 	/** Create DefaultContentManager for usage in unit testing. */
