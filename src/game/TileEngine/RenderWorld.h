@@ -26,15 +26,7 @@ ENUM_BITSET(RenderFlags)
 #define SCROLL_LEFT  0x00000008
 
 
-#define Z_SUBLAYERS         8
-#define LAND_Z_LEVEL        0
-#define OBJECT_Z_LEVEL      1
-#define SHADOW_Z_LEVEL      2
-#define MERC_Z_LEVEL        3
-#define STRUCT_Z_LEVEL      4
-#define ROOF_Z_LEVEL        5
-#define ONROOF_Z_LEVEL      6
-#define TOPMOST_Z_LEVEL 32767
+constexpr INT16 TOPMOST_Z_LEVEL = 32767;
 
 /* number of pixels to show the exit sector cursor at the edge of the map */
 #define NO_PX_SHOW_EXIT_CURS			15

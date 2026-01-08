@@ -93,6 +93,18 @@ enum RenderLayerID : int8_t
 };
 
 
+enum ZLevels : INT16
+{
+	Z_SUBLAYERS         = 8,
+	LAND_Z_LEVEL        = 0,
+	OBJECT_Z_LEVEL      = 1,
+	SHADOW_Z_LEVEL      = 2,
+	MERC_Z_LEVEL        = 3,
+	STRUCT_Z_LEVEL      = 4,
+	ROOF_Z_LEVEL        = 5,
+	ONROOF_Z_LEVEL      = 6,
+};
+
 #define NUM_ITEM_CYCLE_COLORS 20
 
 
@@ -346,7 +358,7 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 	INT16 sZOffsetX = -1;
 	INT16 sZOffsetY = -1;
 	const ROTTING_CORPSE* pCorpse = NULL;
-	UINT32 uiTileElemFlags = 0;
+	TileElementFlags uiTileElemFlags{};
 
 	UINT16          usImageIndex = 0;
 	INT16           sZLevel      = 0;
@@ -380,28 +392,6 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 	INT8 bXOddFlag = 0;
 	do
 	{
-		static INT32 iTileMapPos[500];
-
-		{
-			INT32 iTempPosX_M = iAnchorPosX_M;
-			INT32 iTempPosY_M = iAnchorPosY_M;
-			INT32 iTempPosX_S = iAnchorPosX_S;
-			UINT32 uiMapPosIndex = 0;
-
-			// Build tile index list
-			do
-			{
-				iTileMapPos[uiMapPosIndex] = FASTMAPROWCOLTOPOS(iTempPosY_M, iTempPosX_M);
-
-				iTempPosX_S += 40;
-				iTempPosX_M++;
-				iTempPosY_M--;
-
-				uiMapPosIndex++;
-			}
-			while (iTempPosX_S < iEndXS);
-		}
-
 		for (UINT32 cnt = 0; cnt < ubNumLevels; cnt++)
 		{
 			RenderFXType const& RenderingFX{ RenderFX[psLevelIDs[cnt]] };
@@ -414,14 +404,12 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 			INT32 iTempPosY_M = iAnchorPosY_M;
 			INT32 iTempPosX_S = iAnchorPosX_S;
 			INT32 iTempPosY_S = iAnchorPosY_S;
-			UINT32 uiMapPosIndex = 0;
 
 			if (bXOddFlag) iTempPosX_S += 20;
 
 			do
 			{
-				const UINT32 uiTileIndex = iTileMapPos[uiMapPosIndex];
-				uiMapPosIndex++;
+				const UINT32 uiTileIndex = FASTMAPROWCOLTOPOS(iTempPosY_M, iTempPosX_M);
 
 				if (uiTileIndex < GRIDSIZE)
 				{
@@ -455,7 +443,7 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 						UINT32 uiAniTileFlags = 0;
 						INT16 gsForceSoldierZLevel = 0;
 
-						const UINT32 uiLevelNodeFlags = pNode->uiFlags;
+						LevelnodeFlags const uiLevelNodeFlags = pNode->uiFlags;
 
 						if (RenderingFX.fCheckForRedundency                      &&
 								me.uiFlags & MAPELEMENT_REDUNDENT                &&
@@ -724,7 +712,8 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 						switch (uiRowFlags)
 						{
 							case TILES_STATIC_LAND:
-								goto zlevel_land;
+								sZLevel = LAND_Z_LEVEL;
+								break;
 
 							case TILES_STATIC_OBJECTS:
 								// ATE: Modified to use constant z level, as these are same level as land items
@@ -758,11 +747,11 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 								goto zlevel_onroof;
 
 							case TILES_STATIC_TOPMOST:
-								goto zlevel_topmost;
+								sZLevel = TOPMOST_Z_LEVEL;
+								break;
 
 							case TILES_DYNAMIC_LAND:
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
-zlevel_land:
 								sZLevel = LAND_Z_LEVEL;
 								break;
 
@@ -899,7 +888,6 @@ zlevel_onroof:
 
 							case TILES_DYNAMIC_TOPMOST:
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
-zlevel_topmost:
 								sZLevel = TOPMOST_Z_LEVEL;
 								break;
 
@@ -1352,14 +1340,8 @@ zlevel_topmost:
 									{
 										if (fZBlitter)
 										{
-											if (fZWrite)
-											{
-												Blt8BPPDataTo16BPPBufferShadowZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-											}
-											else
-											{
-												Blt8BPPDataTo16BPPBufferShadowZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-											}
+											(fZWrite ? Blt8BPPDataTo16BPPBufferShadowZClip : Blt8BPPDataTo16BPPBufferShadowZNBClip)
+												(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 										}
 										else
 										{
@@ -1376,6 +1358,9 @@ zlevel_topmost:
 											}
 											else
 											{
+												// This should almost certainly call IntensityZNBClip, but that function
+												// does not even exist, while the other intensity blitter are merely
+												// stub implementations, so it doesn't really matter.
 												Blt8BPPDataTo16BPPBufferIntensityZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 											}
 										}
@@ -4220,8 +4205,6 @@ static void ResetRenderParameters(void)
 
 static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
 {
-	BOOLEAN fHidden = TRUE;
-
 	Assert(hSrcVObject != NULL);
 
 	// Get Offsets from Index into structure
@@ -4266,7 +4249,7 @@ static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 		ZPtr += LineSkip;
 	}
 	while (--usHeight > 0);
-	return fHidden;
+	return TRUE;
 }
 
 
