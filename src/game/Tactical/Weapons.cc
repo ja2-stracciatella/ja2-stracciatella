@@ -1544,6 +1544,31 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 	}
 }
 
+struct OppositeSideInfo
+{
+	StructureFlags flags;
+	bool mustBeBaseTile;
+	bool mustBeOpen;
+	WallOrientationDefines orientation;
+	WorldDirections direction;
+};
+const OppositeSideInfo oppGridNoDirections[] =
+{
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, OUTSIDE_TOP_RIGHT, EAST },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, INSIDE_TOP_RIGHT,  EAST },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, OUTSIDE_TOP_LEFT,  SOUTH },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, INSIDE_TOP_LEFT,   SOUTH },
+	{ STRUCTURE_GARAGEDOOR,                   false, false, OUTSIDE_TOP_RIGHT, EAST },
+	{ STRUCTURE_GARAGEDOOR,                   false, false, OUTSIDE_TOP_LEFT,  SOUTH },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, true , true,  INSIDE_TOP_RIGHT,  NORTH },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, false, true,  OUTSIDE_TOP_RIGHT, NORTH },
+	{                  STRUCTURE_DDOOR_RIGHT, true , true,  INSIDE_TOP_LEFT,   EAST },
+	{                  STRUCTURE_DDOOR_RIGHT, false, true,  OUTSIDE_TOP_LEFT,  EAST },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , true , true,  INSIDE_TOP_LEFT,   WEST },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , false, true,  OUTSIDE_TOP_LEFT,  WEST },
+	{                  STRUCTURE_DDOOR_LEFT , true , true,  INSIDE_TOP_RIGHT,  SOUTH },
+	{                  STRUCTURE_DDOOR_LEFT , false, true,  OUTSIDE_TOP_RIGHT, SOUTH },
+};
 
 void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
 {
@@ -1573,9 +1598,33 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 	const int8_t level = sZPos > ( WALL_HEIGHT - ROOF_HIT_ADJUSTMENT ) + gpWorldLevelData[attacker->sGridNo].sHeight;
 
 	const GridNo sGridNo = pBullet->sGridNo;
+	GridNo adjustedGridNo = sGridNo;
+
+	STRUCTURE* const pStructure = FindStructureByID(sGridNo, usStructureID);
+	// If the structure is wall-oriented determine the side on which monster spit or a missile lands
+	if (pStructure && pStructure->ubWallOrientation)
+	{
+		GridNo oppositeSideGridNo = sGridNo;
+		for (const OppositeSideInfo& oppGridNoDir : oppGridNoDirections)
+		{
+			if (oppGridNoDir.flags & pStructure->fFlags &&
+				oppGridNoDir.mustBeBaseTile == static_cast<bool>(pStructure->fFlags & STRUCTURE_BASE_TILE) &&
+				oppGridNoDir.mustBeOpen     == static_cast<bool>(pStructure->fFlags & STRUCTURE_OPEN) &&
+				oppGridNoDir.orientation    == pStructure->ubWallOrientation)
+			{
+				oppositeSideGridNo += DirectionInc(oppGridNoDir.direction);
+				break;
+			}
+		}
+		if (PythSpacesAway(attacker->sGridNo, sGridNo) > PythSpacesAway(attacker->sGridNo, oppositeSideGridNo))
+		{
+			adjustedGridNo = oppositeSideGridNo;
+		}
+	}
+
 	if ( !fHitSameStructureAsBefore )
 	{
-		MakeNoise(attacker, sGridNo, level, GCM->getWeapon(usWeaponIndex)->ubHitVolume, NOISE_BULLET_IMPACT);
+		MakeNoise(attacker, adjustedGridNo, level, GCM->getWeapon(usWeaponIndex)->ubHitVolume, NOISE_BULLET_IMPACT);
 	}
 
 	if (fStopped)
@@ -1588,7 +1637,7 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 			SLOGD("Freeing up attacker - end of LAW fire");
 			FreeUpAttacker(attacker);
 
-			IgniteExplosion(attacker, 0, sGridNo, C1, level);
+			IgniteExplosion(attacker, 0, adjustedGridNo, C1, level);
 			//FreeUpAttacker(attacker);
 
 			return;
@@ -1602,23 +1651,19 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 			SLOGD("Freeing up attacker - end of TANK fire");
 			FreeUpAttacker(attacker);
 
-			IgniteExplosion(attacker, 0, sGridNo, TANK_SHELL, sZPos >= WALL_HEIGHT);
+			IgniteExplosion(attacker, 0, adjustedGridNo, TANK_SHELL, sZPos >= WALL_HEIGHT);
 			//FreeUpAttacker(attacker);
 
 			return;
 		}
 	}
 
-	STRUCTURE* pStructure = nullptr;
 	// Get Structure pointer and damage it!
 	if ( usStructureID != INVALID_STRUCTURE_ID )
 	{
-		pStructure = FindStructureByID(sGridNo, usStructureID);
 		DamageStructure(pStructure, iImpact, STRUCTURE_DAMAGE_GUNFIRE, sGridNo, sXPos, sYPos, attacker);
 	}
 
-	GridNo adjustedGridNo = sGridNo;
-	GridNo oppositeSideGridNo = sGridNo;
 	switch(  GCM->getWeapon( usWeaponIndex )->ubWeaponClass )
 	{
 		case HANDGUNCLASS:
@@ -1639,22 +1684,6 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 			break;
 
 		case MONSTERCLASS:
-			// If the structure is wall-oriented determine which side of it monster spit arrives at
-			if (pStructure && pStructure->ubWallOrientation)
-			{
-				if (pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT || pStructure->ubWallOrientation == INSIDE_TOP_RIGHT)
-				{
-					oppositeSideGridNo += DirectionInc(EAST);
-				}
-				else
-				{
-					oppositeSideGridNo += DirectionInc(SOUTH);
-				}
-				if (PythSpacesAway(attacker->sGridNo, sGridNo) > PythSpacesAway(attacker->sGridNo, oppositeSideGridNo))
-				{
-					adjustedGridNo = oppositeSideGridNo;
-				}
-			}
 			DoSpecialEffectAmmoMiss(attacker, adjustedGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, pBullet);
 
 			RemoveBullet(pBullet);
