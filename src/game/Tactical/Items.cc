@@ -2426,7 +2426,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
 		throw std::logic_error("Tried to get default ammo for weapon without calibre");
 	}
 
-	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+	const auto& magazines = GCM->getMagazines();
 	for (const MagazineModel* mag : magazines)
 	{
 		if (!mag->calibre) break;
@@ -2443,7 +2443,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
 UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
 {
 	UINT16 default_mag = NOTHING;
-	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+	const auto& magazines = GCM->getMagazines();
 	for (const MagazineModel* mag : magazines)
 	{
 		if (!mag->calibre) break;
@@ -2484,7 +2484,7 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 	const WeaponModel *pWeapon = GCM->getWeapon(usItem);
 
 	// find & store all possible mag types that fit this gun
-	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+	const auto& magazines = GCM->getMagazines();
 	for (const MagazineModel* mag : magazines)
 	{
 		if (pWeapon->matches(mag))

@@ -1,8 +1,10 @@
 #include "TranslatableString.h"
 #include "enums.h"
 #include "Exceptions.h"
+#include "ItemModel.h"
 #include "MercProfile.h"
 #include "MercProfileInfo.h"
+#include "Soldier_Profile.h"
 #include "Soldier_Profile_Type.h"
 #include "TownModel.h"
 #include <memory>

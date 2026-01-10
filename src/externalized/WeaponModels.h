@@ -3,7 +3,9 @@
 #include "Containers.h"
 #include "ItemModel.h"
 #include "Sound_Control.h"
+#include "Views.h"
 
+#include <memory>
 #include <string_theory/string>
 #include <stdint.h>
 
@@ -19,8 +21,10 @@ struct MagazineModel;
 #define WEAPON_TYPE_PUNCH ("PUNCH")
 #define WEAPON_TYPE_THROWN ("THROWN")
 
-struct WeaponModel : ItemModel
+struct WeaponModel : public ItemModel
 {
+	static constexpr const char* ENTITY_NAME = "Weapon";
+
 	WeaponModel(uint32_t itemClass,
 			uint8_t weaponType,
 			uint8_t cursor,
@@ -30,7 +34,7 @@ struct WeaponModel : ItemModel
 	virtual JsonValue serialize() const;
 	virtual void serializeTo(JsonObject &obj) const;
 
-	static WeaponModel* deserialize(const JsonValue &json,
+	static std::unique_ptr<WeaponModel> deserialize(const JsonValue &json,
 	const Containers::Named<uint16_t, CalibreModel>& calibres,
 	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 	TranslatableString::Loader& stringLoader);
@@ -403,4 +407,11 @@ struct MonsterSpit : WeaponModel
 		uint16_t smokeEffect);
 
 	JsonValue serialize() const override;
+};
+
+class WeaponsContainer : public Containers::Views::Named<uint16_t, WeaponModel, ItemModel> {
+	public:
+		WeaponsContainer() = default;
+		WeaponsContainer(const ItemsContainer& items) :
+			Containers::Views::Named<uint16_t, WeaponModel, ItemModel>(items.begin(), items.end(), [](const ItemModel* entity) { return entity->asWeapon(); }) {}
 };

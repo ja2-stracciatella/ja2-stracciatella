@@ -75,7 +75,7 @@ ArmourModel::ArmourModel(
 	this->ignoreForMaxProtection = ignoreForMaxProtection;
 }
 
-ArmourModel* ArmourModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader) {
+std::unique_ptr<ArmourModel> ArmourModel::deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader) {
 	auto obj = json.toObject();
 	ItemModel::InitData const initData{ obj, stringLoader };
 
@@ -95,7 +95,7 @@ ArmourModel* ArmourModel::deserialize(const JsonValue &json, TranslatableString:
 	auto degradePercentage = obj.GetUInt("degradePercentage");
 	auto ignoreForMaxProtection = obj.getOptionalBool("ignoreForMaxProtection", false);
 
-	return new ArmourModel(
+	return std::make_unique<ArmourModel>(
 		itemIndex,
 		std::move(internalName),
 		std::move(shortName),

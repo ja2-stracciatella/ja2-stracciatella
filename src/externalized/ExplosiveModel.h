@@ -4,6 +4,7 @@
 #include "ExplosiveCalibreModel.h"
 #include "ItemModel.h"
 #include "SmokeEffectModel.h"
+#include "Views.h"
 
 struct ExplosiveBlastEffect
 {
@@ -32,8 +33,10 @@ struct ExplosiveSmokeEffect
 	uint8_t duration;
 };
 
-struct ExplosiveModel : ItemModel
+struct ExplosiveModel : public ItemModel
 {
+	static constexpr const char* ENTITY_NAME = "Explosive";
+
 	ExplosiveModel(
 		uint16_t itemIndex,
 		ST::string&& internalName,
@@ -67,7 +70,7 @@ struct ExplosiveModel : ItemModel
 
 	virtual const ExplosiveModel* asExplosive() const { return this; }
 
-	static ExplosiveModel* deserialize(const JsonValue &json,
+	static std::unique_ptr<ExplosiveModel> deserialize(const JsonValue &json,
 						const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 						const std::vector<const SmokeEffectModel*> &smokeEffects,
 						const std::vector<const ExplosionAnimationModel*> &animations,
@@ -97,4 +100,11 @@ struct ExplosiveModel : ItemModel
 		const ExplosiveLightEffect *lightEffect;
 		const ExplosionAnimationModel *animation;
 		const ExplosiveCalibreModel *calibre;
+};
+
+class ExplosivesContainer : public Containers::Views::Named<uint16_t, ExplosiveModel, ItemModel> {
+	public:
+		ExplosivesContainer() = default;
+		ExplosivesContainer(const ItemsContainer& items) :
+			Containers::Views::Named<uint16_t, ExplosiveModel, ItemModel>(items.begin(), items.end(), [](const ItemModel* entity) { return entity->asExplosive(); }) {}
 };

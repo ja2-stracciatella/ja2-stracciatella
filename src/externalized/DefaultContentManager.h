@@ -14,8 +14,12 @@
 #include "GameRes.h"
 #include "IEDT.h"
 #include "Json.h"
+#include "MagazineModel.h"
+#include "ExplosiveModel.h"
+#include "ArmourModel.h"
 #include "StringEncodingTypes.h"
 #include "Types.h"
+#include "WeaponModels.h"
 
 #include <cstdint>
 #include <string_theory/string>
@@ -93,7 +97,7 @@ public:
 
 	virtual const MagazineModel* getMagazineByName(const ST::string &internalName) override;
 	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) override;
-	virtual const std::vector<const MagazineModel*>& getMagazines() const override;
+	virtual const MagazinesContainer& getMagazines() const override;
 
 	virtual const Containers::Named<uint16_t, CalibreModel>* calibres() const override;
 	virtual const Containers::Named<uint16_t, AmmoTypeModel>* ammoTypes() const override;
@@ -107,7 +111,7 @@ public:
 	virtual const ArmourModel* getArmourByName(const ST::string &name) override;
 	virtual INT32 getMaxArmourPerClass(uint16_t armourClass) const override;
 
-	virtual ItemRange getItems() const override;
+	virtual const ItemsContainer& getItems() const override;
 	virtual const ItemModel* getItem(uint16_t index) const override;
 	virtual const ItemModel* getItem(uint16_t itemIndex, ItemSystem::nothrow_t const&) const noexcept override;
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
@@ -208,8 +212,11 @@ protected:
 	std::vector<ST::string> m_newStrings;
 	std::vector<ST::string> m_landTypeStrings;
 
-	std::vector<const ItemModel*> m_items;
-	std::vector<const MagazineModel*> m_magazines;
+	ItemsContainer m_items;
+	WeaponsContainer m_weapons;
+	MagazinesContainer m_magazines;
+	ExplosivesContainer m_explosives;
+	ArmoursContainer m_armours;
 
 	Containers::Named<uint16_t, CalibreModel> m_calibres;
 
@@ -219,12 +226,7 @@ protected:
 	                          std::vector<std::unique_ptr<NPCQuoteInfo const []>> m_scriptRecords;
 							              std::unique_ptr<NPCQuoteInfo const []>  m_scriptRecordsRecruited;
 
-	std::map<ST::string, const MagazineModel*> m_magazineMap;
-	std::map<ST::string, const WeaponModel*> m_weaponMap;
-	std::map<ST::string, const ExplosiveModel*> m_explosiveMap;
-	std::map<ST::string, const ArmourModel*> m_armourMap;
 	std::map<uint16_t, INT32> m_maxArmourPerClass;
-	std::map<ST::string, const ItemModel*> m_itemMap;
 	std::map<uint16_t, uint16_t> m_mapItemReplacements;
 	std::multimap<MusicMode, const ST::string> m_musicMap;
 

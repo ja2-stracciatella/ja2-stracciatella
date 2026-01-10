@@ -133,7 +133,7 @@ ExplosiveModel::~ExplosiveModel() {
 	delete lightEffect;
 }
 
-ExplosiveModel* ExplosiveModel::deserialize(
+std::unique_ptr<ExplosiveModel> ExplosiveModel::deserialize(
 	const JsonValue &json,
 	const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 	const std::vector<const SmokeEffectModel*> &smokeEffects,
@@ -223,7 +223,7 @@ ExplosiveModel* ExplosiveModel::deserialize(
 		lightEffect->duration = bObj.GetUInt("duration");
 	}
 
-	return new ExplosiveModel(
+	return std::make_unique<ExplosiveModel>(
 		itemIndex,
 		std::move(internalName),
 		std::move(shortName),

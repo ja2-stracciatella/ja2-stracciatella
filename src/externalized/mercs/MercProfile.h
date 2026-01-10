@@ -1,6 +1,6 @@
 #pragma once
 #include "ContentManager.h"
-#include "Soldier_Profile.h"
+#include "TranslatableString.h"
 #include "JA2Types.h"
 
 enum class MercType : int8_t;

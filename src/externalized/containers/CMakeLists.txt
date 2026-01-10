@@ -4,6 +4,7 @@ set(LOCAL_JA2_SOURCES "")
 if (WITH_UNITTESTS)
     set(LOCAL_JA2_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/Containers_unittests.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Views_unittests.cc
     )
 endif()
 

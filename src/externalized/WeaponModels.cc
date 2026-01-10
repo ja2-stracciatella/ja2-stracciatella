@@ -9,6 +9,7 @@
 #include "Points.h"
 #include "Sound_Control.h"
 #include "Weapons.h"
+#include <memory>
 #include <utility>
 
 // exact gun types
@@ -149,7 +150,7 @@ const CalibreModel* deserializeCalibre(const ST::string weaponName, const Contai
 	}
 }
 
-WeaponModel* WeaponModel::deserialize(const JsonValue &json,
+std::unique_ptr<WeaponModel> WeaponModel::deserialize(const JsonValue &json,
 					const Containers::Named<uint16_t, CalibreModel>& calibres,
 					const std::vector<const ExplosiveCalibreModel*> &explosiveCalibres,
 					TranslatableString::Loader& stringLoader)
@@ -614,8 +615,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 
 	if(!wep)
 	{
-		SLOGE("Weapon type '{}' is not found", internalType);
-		return wep;
+		throw DataError(ST::format("Weapon type '{}' is not found", internalType));
 	}
 
 	wep->shortName    = ItemModel::deserializeShortName(initData);
@@ -656,7 +656,7 @@ WeaponModel* WeaponModel::deserialize(const JsonValue &json,
 		wep->standardReplacement = replacement;
 	}
 
-	return wep;
+	return std::unique_ptr<WeaponModel>(wep);
 }
 
 bool WeaponModel::shootsExplosiveCalibre() const {

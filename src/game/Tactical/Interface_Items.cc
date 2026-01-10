@@ -1706,7 +1706,7 @@ void CycleItemDescriptionItem( )
 
 	// Make new item....
 	auto const oldItemIndex = gpItemDescObject->usItem;
-	auto items = GCM->getItems();
+	const auto& items = GCM->getItems();
 	auto it = std::find_if(items.begin(), items.end(), [oldItemIndex](const ItemModel* item) -> bool {
 		return item->getItemIndex() == oldItemIndex;
 	});
@@ -1718,7 +1718,7 @@ void CycleItemDescriptionItem( )
 	if (_KeyDown(SDLK_END))
 	{
 		// cycle backwards
-		it = it == items.begin() ? items.end() - 1 : it - 1;
+		it = it == items.begin() ? --items.end() : --it;
 	}
 	else
 	{

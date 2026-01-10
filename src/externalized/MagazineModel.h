@@ -3,6 +3,7 @@
 #include "Containers.h"
 #include "ItemModel.h"
 #include "TranslatableString.h"
+#include "Views.h"
 
 #include <cstdint>
 #include <string_theory/string>
@@ -12,8 +13,10 @@ class JsonObject;
 struct AmmoTypeModel;
 struct CalibreModel;
 
-struct MagazineModel : ItemModel
+struct MagazineModel : public ItemModel
 {
+	static constexpr const char* ENTITY_NAME = "Magazine";
+
 	MagazineModel(uint16_t itemIndex,
 			ST::string&& internalName,
 			ST::string&& shortName,
@@ -32,7 +35,7 @@ struct MagazineModel : ItemModel
 
 	virtual JsonValue serialize() const;
 
-	static MagazineModel* deserialize(const JsonValue &json,
+	static std::unique_ptr<MagazineModel> deserialize(const JsonValue &json,
 						const Containers::Named<uint16_t, CalibreModel>& calibres,
 						const Containers::Named<uint16_t, AmmoTypeModel>& ammoTypes,
 						TranslatableString::Loader& stringLoader);
@@ -47,4 +50,11 @@ struct MagazineModel : ItemModel
 	const AmmoTypeModel *ammoType;
 	const bool dontUseAsDefaultMagazine;
 
+};
+
+class MagazinesContainer : public Containers::Views::Named<uint16_t, MagazineModel, ItemModel> {
+	public:
+		MagazinesContainer() = default;
+		MagazinesContainer(const ItemsContainer& items) :
+			Containers::Views::Named<uint16_t, MagazineModel, ItemModel>(items.begin(), items.end(), [](const ItemModel* entity) { return entity->asAmmo(); }) {}
 };

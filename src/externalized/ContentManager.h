@@ -17,6 +17,7 @@
 
 
 class AIMListingModel;
+struct ArmourModel;
 class ArmyCompositionModel;
 class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
@@ -54,6 +55,7 @@ struct CalibreModel;
 struct ExplosiveModel;
 struct LoadingScreen;
 struct MagazineModel;
+class MagazinesContainer;
 struct RPCSmallFaceModel;
 struct WeaponModel;
 struct ARMY_COMPOSITION;
@@ -124,7 +126,7 @@ public:
 
 	virtual const MagazineModel* getMagazineByName(const ST::string &internalName) = 0;
 	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) = 0;
-	virtual const std::vector<const MagazineModel*>& getMagazines() const = 0;
+	virtual const MagazinesContainer& getMagazines() const = 0;
 
 	virtual const Containers::Named<uint16_t, CalibreModel>* calibres() const = 0;
 	virtual const Containers::Named<uint16_t, AmmoTypeModel>* ammoTypes() const = 0;

@@ -1,10 +1,14 @@
 #pragma once
 
 #include "ItemModel.h"
+#include "Views.h"
+
 #include <cstdint>
 
-struct ArmourModel : ItemModel
+struct ArmourModel : public ItemModel
 {
+	static constexpr const char* ENTITY_NAME = "Armour";
+
 	ArmourModel(
 		uint16_t itemIndex,
 		ST::string&& internalName,
@@ -31,7 +35,7 @@ struct ArmourModel : ItemModel
 
 	virtual const ArmourModel* asArmour() const override { return this; }
 
-	static ArmourModel* deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader);
+	static std::unique_ptr<ArmourModel> deserialize(const JsonValue &json, TranslatableString::Loader& stringLoader);
 
 	bool isIgnoredForMaxProtection() const;
 	uint8_t getArmourClass() const;
@@ -45,4 +49,11 @@ struct ArmourModel : ItemModel
 		uint8_t explosivesProtection;
 		uint8_t degradePercentage;
 		bool ignoreForMaxProtection;
+};
+
+class ArmoursContainer : public Containers::Views::Named<uint16_t, ArmourModel, ItemModel> {
+	public:
+		ArmoursContainer() = default;
+		ArmoursContainer(const ItemsContainer& items) :
+			Containers::Views::Named<uint16_t, ArmourModel, ItemModel>(items.begin(), items.end(), [](const ItemModel* entity) { return entity->asArmour(); }) {}
 };
