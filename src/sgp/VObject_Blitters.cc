@@ -327,7 +327,7 @@ Blt8BPPDataTo16BPPBufferMonoShadowClip
 	transparency is used for the background.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion, UINT16 usForeground, UINT16 usBackground, UINT16 usShadow )
+void Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, UINT16 usForeground, UINT16 usBackground, UINT16 usShadow )
 {
 	UINT32 Unblitted;
 	UINT8  *DestPtr;
@@ -1129,7 +1129,7 @@ Blt8BPPDataTo16BPPBufferTransShadowClip
 	254 are shaded instead of blitted.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, const UINT16* p16BPPPalette)
+void Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, const UINT16* p16BPPPalette)
 {
 	UINT8  *DestPtr;
 	UINT32 LineSkip;
@@ -1288,7 +1288,7 @@ Blt8BPPDataTo16BPPBufferTransShadowZNBClip
 	NOT updated.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, const UINT16* p16BPPPalette)
+void Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, const UINT16* p16BPPPalette)
 {
 	UINT32 Unblitted, uiLineFlag;
 	UINT8  *DestPtr, *ZPtr;
@@ -1535,7 +1535,7 @@ Blt8BPPDataTo16BPPBufferShadowZClip
 	must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT8  *DestPtr, *ZPtr;
 	UINT32 LineSkip;
@@ -1754,7 +1754,7 @@ Blt8BPPDataTo16BPPBufferShadowZNBClip
 	same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT32 Unblitted;
 	UINT8  *DestPtr, *ZPtr;
@@ -1912,7 +1912,7 @@ Blt8BPPDataTo16BPPBufferTransZClip
 	must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT32 Unblitted;
 	UINT8  *DestPtr, *ZPtr;
@@ -2074,7 +2074,7 @@ Blt8BPPDataTo16BPPBufferTransZNBClip
 	updated in this version. The Z-buffer is 16 bit, and must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT32 Unblitted;
 	UINT8  *DestPtr, *ZPtr;
@@ -2396,7 +2396,7 @@ SGPRect GetClippingRect()
 	  This was the only internal modification I made other than adding the usColor argument.
 
 *********************************************************************************************/
-static void Blt16BPPBufferPixelateRectWithColor(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPRect* area, const UINT8 Pattern[8][8], UINT16 usColor)
+static void Blt16BPPBufferPixelateRectWithColor(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPRect const * area, const UINT8 Pattern[8][8], UINT16 usColor)
 {
 	INT32  width, height;
 	UINT32 LineSkip;
@@ -2801,7 +2801,7 @@ Blt8BPPDataTo16BPPBufferShadowClip
 	clips brush if it doesn't fit on the viewport.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT8  *DestPtr;
 	UINT32 LineSkip;
@@ -2989,7 +2989,7 @@ BltIsClippedOrOffScreen
 	Determines whether a given blit will need clipping or not. Returns TRUE/FALSE.
 
 **********************************************************************************************/
-CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion )
+CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion )
 {
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -4460,7 +4460,7 @@ Blt8BPPDataTo16BPPBufferIntensityZClip
 	must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED
@@ -4811,7 +4811,7 @@ Blt8BPPDataTo16BPPBufferIntensityClip
 	clips brush if it doesn't fit on the viewport.
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED
@@ -5229,7 +5229,7 @@ Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured
 	Blits every second pixel ("pixelates").
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
+void Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT32 uiLineFlag;
 	UINT32 Unblitted;

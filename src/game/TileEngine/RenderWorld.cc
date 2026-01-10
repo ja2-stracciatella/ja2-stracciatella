@@ -273,11 +273,11 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 }
 
 
-static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
-static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
-static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
-static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
-static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
+static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion);
+static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion);
+static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion);
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
 
 
 class RenderTiles
@@ -1354,19 +1354,19 @@ zlevel_onroof:
 										{
 											if (fZWrite)
 											{
-												Blt8BPPDataTo16BPPBufferIntensityZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
+												//Blt8BPPDataTo16BPPBufferIntensityZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 											}
 											else
 											{
 												// This should almost certainly call IntensityZNBClip, but that function
 												// does not even exist, while the other intensity blitter are merely
 												// stub implementations, so it doesn't really matter.
-												Blt8BPPDataTo16BPPBufferIntensityZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
+												//Blt8BPPDataTo16BPPBufferIntensityZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 											}
 										}
 										else
 										{
-											Blt8BPPDataTo16BPPBufferIntensityClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
+											//Blt8BPPDataTo16BPPBufferIntensityClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 										}
 									}
 									else if (fZBlitter)
@@ -1476,16 +1476,16 @@ zlevel_onroof:
 										{
 											if (fZWrite)
 											{
-												Blt8BPPDataTo16BPPBufferIntensityZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
+												//Blt8BPPDataTo16BPPBufferIntensityZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 											}
 											else
 											{
-												Blt8BPPDataTo16BPPBufferIntensityZNB(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
+												//Blt8BPPDataTo16BPPBufferIntensityZNB(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 											}
 										}
 										else
 										{
-											Blt8BPPDataTo16BPPBufferIntensity(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex);
+											//Blt8BPPDataTo16BPPBufferIntensity(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex);
 										}
 									}
 									else if (fZBlitter)
@@ -2390,7 +2390,7 @@ Blt8BPPDataTo16BPPBufferTransZIncClip
 	must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
+static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -2653,7 +2653,7 @@ Blt8BPPDataTo16BPPBufferTransZIncClipSaveZBurnsThrough
 	must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
+static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -2918,7 +2918,7 @@ Blt8BPPDataTo16BPPBufferTransZIncObscureClip
 	// render at all
 
 **********************************************************************************************/
-static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
+static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -3181,7 +3181,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 	* 2) strip z-blitter
 	* 3) clipped
 	* 4) trans shadow - if value is 254, makes a shadow */
-static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -3449,7 +3449,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 	* 2) strip z-blitter
 	* 3) clipped
 	* 4) trans shadow - if value is 254, makes a shadow */
-static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
