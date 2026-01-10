@@ -70,7 +70,7 @@ public:
 struct IMPStartingItemSet
 {
 	std::vector<IMPItemCondition> conditions;
-	uint8_t slot = InvSlotPos::NUM_INV_SLOTS;
+	std::optional<uint8_t> slot;
 	std::vector<const ItemModel *> items;
 
 	bool Evaluate(const MERCPROFILESTRUCT& p) const

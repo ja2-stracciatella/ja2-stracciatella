@@ -283,12 +283,12 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 		if (!set.Evaluate(p)) continue;
 		for (const ItemModel* item : set.items) {
 			UINT32 uiPos;
-			if (set.slot == InvSlotPos::NUM_INV_SLOTS) {
+			if (set.slot) {
+				uiPos = *set.slot;
+			} else {
 				INT32 const iSlot = FirstFreeBigEnoughPocket(p, item->getItemIndex());
 				if (iSlot == -1) continue;
 				uiPos = iSlot;
-			} else {
-				uiPos = set.slot;
 			}
 			p.inv[uiPos] = item->getItemIndex();
 			p.bInvStatus[uiPos] = 100;
