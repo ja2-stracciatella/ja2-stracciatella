@@ -961,20 +961,14 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 				ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, FALSE, -1, owner, bLevel);
 
-				// ATE: Look for damage to walls ONLY for next two gridnos
-				sNewGridNo = NewGridNo( sGridNo, DirectionInc( NORTH ) );
-
-				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
+				// Seems like SOUTHEAST and SOUTH can be skipped
+				for (const WorldDirections& dir : { NORTH, NORTHEAST, EAST, SOUTHWEST, WEST, NORTHWEST })
 				{
-					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
-				}
-
-				// ATE: Look for damage to walls ONLY for next two gridnos
-				sNewGridNo = NewGridNo( sGridNo, DirectionInc( WEST ) );
-
-				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
-				{
-					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+					sNewGridNo = NewGridNo(sGridNo, DirectionInc(dir));
+					if (GridNoOnVisibleWorldTile(sNewGridNo))
+					{
+						ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+					}
 				}
 			}
 
