@@ -435,7 +435,6 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 						bool fShadowBlitter = RenderingFX.fShadowBlitter;
 
 						BOOLEAN fMultiZBlitter            = FALSE;
-						BOOLEAN fIntensityBlitter         = FALSE;
 						BOOLEAN fSaveZ                    = FALSE;
 						BOOLEAN fWallTile                 = FALSE;
 						BOOLEAN fMultiTransShadowZBlitter = FALSE;
@@ -720,11 +719,6 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 								goto zlevel_objects;
 
 							case TILES_STATIC_SHADOWS:
-								if (uiLevelNodeFlags & LEVELNODE_EXITGRID)
-								{
-									fIntensityBlitter = TRUE;
-									fShadowBlitter    = FALSE;
-								}
 								goto zlevel_shadows;
 
 							case TILES_STATIC_STRUCTURES:
@@ -1348,27 +1342,6 @@ zlevel_onroof:
 											Blt8BPPDataTo16BPPBufferShadowClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 										}
 									}
-									else if (fIntensityBlitter)
-									{
-										if (fZBlitter)
-										{
-											if (fZWrite)
-											{
-												//Blt8BPPDataTo16BPPBufferIntensityZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-											}
-											else
-											{
-												// This should almost certainly call IntensityZNBClip, but that function
-												// does not even exist, while the other intensity blitter are merely
-												// stub implementations, so it doesn't really matter.
-												//Blt8BPPDataTo16BPPBufferIntensityZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-											}
-										}
-										else
-										{
-											//Blt8BPPDataTo16BPPBufferIntensityClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-										}
-									}
 									else if (fZBlitter)
 									{
 										if (fZWrite)
@@ -1468,24 +1441,6 @@ zlevel_onroof:
 										else
 										{
 											Blt8BPPDataTo16BPPBufferShadow(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex);
-										}
-									}
-									else if (fIntensityBlitter)
-									{
-										if (fZBlitter)
-										{
-											if (fZWrite)
-											{
-												//Blt8BPPDataTo16BPPBufferIntensityZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
-											}
-											else
-											{
-												//Blt8BPPDataTo16BPPBufferIntensityZNB(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
-											}
-										}
-										else
-										{
-											//Blt8BPPDataTo16BPPBufferIntensity(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex);
 										}
 									}
 									else if (fZBlitter)
