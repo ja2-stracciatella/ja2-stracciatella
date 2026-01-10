@@ -24,6 +24,8 @@ static inline UINT8 TwoCDirection(UINT dir)     { return (dir + 2) % NUM_WORLD_D
 static inline UINT8 OneCCDirection(UINT dir)    { return (dir + 7) % NUM_WORLD_DIRECTIONS; }
 static inline UINT8 OneCDirection(UINT dir)     { return (dir + 1) % NUM_WORLD_DIRECTIONS; }
 
+static inline bool isDirectionDiagonal(uint32_t dir) { return dir & 1; }
+
 extern const UINT8 gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS];
 
 constexpr INT16 DirIncrementer[8]

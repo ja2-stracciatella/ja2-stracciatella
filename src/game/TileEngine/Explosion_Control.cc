@@ -961,20 +961,14 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 				ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, FALSE, -1, owner, bLevel);
 
-				// ATE: Look for damage to walls ONLY for next two gridnos
-				sNewGridNo = NewGridNo( sGridNo, DirectionInc( NORTH ) );
-
-				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
+				// Seems like SOUTHEAST and SOUTH can be skipped
+				for (const WorldDirections& dir : { NORTH, NORTHEAST, EAST, SOUTHWEST, WEST, NORTHWEST })
 				{
-					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
-				}
-
-				// ATE: Look for damage to walls ONLY for next two gridnos
-				sNewGridNo = NewGridNo( sGridNo, DirectionInc( WEST ) );
-
-				if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
-				{
-					ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+					sNewGridNo = NewGridNo(sGridNo, DirectionInc(dir));
+					if (GridNoOnVisibleWorldTile(sNewGridNo))
+					{
+						ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
+					}
 				}
 			}
 
@@ -1329,15 +1323,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 		uiTempRange = sRange;
 
-		INT32 cnt;
-		if (ubDir & 1)
-		{
-			cnt = 3;
-		}
-		else
-		{
-			cnt = 2;
-		}
+		INT32 cnt = isDirectionDiagonal(ubDir) ? 3 : 2;
 		while( cnt <= uiTempRange) // end of range loop
 		{
 			// move one tile in direction
@@ -1375,17 +1361,9 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 					uiBranchSpot = uiNewSpot;
 
 					// figure the branch direction - which is one dir clockwise
-					ubBranchDir = (ubDir + 1) % 8;
+					ubBranchDir = OneCDirection(ubDir);
 
-					if (ubBranchDir & 1)
-					{
-						branchCnt = 3;
-					}
-					else
-					{
-						branchCnt = 2;
-					}
-
+					branchCnt = isDirectionDiagonal(ubBranchDir) ? 3 : 2;
 					while( branchCnt <= ubBranchRange) // end of range loop
 					{
 						ubKeepGoing = TRUE;
@@ -1418,15 +1396,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 							}
 						}
 
-						if (ubBranchDir & 1)
-						{
-							branchCnt += 3;
-						}
-						else
-						{
-							branchCnt += 2;
-						}
-
+						branchCnt += isDirectionDiagonal(ubBranchDir) ? 3 : 2;
 					}
 				} // end of if a branch to do
 
@@ -1436,14 +1406,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 				break;
 			}
 
-			if (ubDir & 1)
-			{
-				cnt += 3;
-			}
-			else
-			{
-				cnt += 2;
-			}
+			cnt += isDirectionDiagonal(ubDir) ? 3 : 2;
 		}
 
 	} // end of dir loop
