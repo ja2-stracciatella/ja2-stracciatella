@@ -79,6 +79,45 @@
 #define NO_CHANCE_IN_HELL_SKILL_VALUE				0
 
 
+enum Attributes
+{
+	ATTR_AGILITY,
+	ATTR_DEXTERITY,
+	ATTR_STRENGTH,
+	ATTR_LEADERSHIP,
+	ATTR_WISDOM,
+	ATTR_EXPLEVEL,
+	ATTR_MARKSMANSHIP,
+	ATTR_EXPLOSIVES,
+	ATTR_MECHANICAL,
+	ATTR_MEDICAL,
+	NUM_ATTRIBUTES
+};
+
+// Get the value of an attribute from either a MERCPROFILESTRUCT
+// or a SOLDIERTYPE.
+template<typename T>
+INT8 Attribute(T const& who, int attributeIndex)
+{
+	switch (attributeIndex)
+	{
+		case  0: return who.bLifeMax;
+		case  1: return who.bAgility;
+		case  2: return who.bDexterity;
+		case  3: return who.bStrength;
+		case  4: return who.bLeadership;
+		case  5: return who.bWisdom;
+		case  6: return who.bExpLevel;
+		case  7: return who.bMarksmanship;
+		case  8: return who.bMechanical;
+		case  9: return who.bExplosive;
+		case 10: return who.bMedical;
+		default:
+			SLOGE("invalid attribute index");
+			return 0;
+	}
+}
+
 enum SkillTrait
 {
 	NO_SKILLTRAIT = 0,

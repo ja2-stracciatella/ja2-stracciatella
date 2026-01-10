@@ -16,14 +16,10 @@ public:
 
 	virtual bool isCodeAccepted(const ST::string& code) const;
 	virtual uint8_t getStartingLevel() const;
-	virtual const std::vector<const ItemModel *> & getInventory() const;
-	virtual const std::vector<const ItemModel *> & getGoodShooterItems() const;
-	virtual const std::vector<const ItemModel *> & getNormalShooterItems() const;
+	virtual const std::vector<IMPStartingItemSet>& getInventory() const;
 
 protected:
 	uint8_t m_startingLevel;
 	std::vector<ST::string> m_activationCodes;
-	std::vector<const ItemModel *> m_inventory;
-	std::vector<const ItemModel *> m_goodShooterItems;
-	std::vector<const ItemModel *> m_normalShooterItems;
+	std::vector<IMPStartingItemSet> m_inventory;
 };

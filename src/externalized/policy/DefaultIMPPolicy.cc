@@ -7,13 +7,55 @@
 
 struct ItemModel;
 
-static void readListOfItems(const JsonValue& value, std::vector<const ItemModel *> &items, const ItemSystem *itemSystem)
+static void readListOfItems(const JsonValue& value, std::vector<IMPStartingItemSet>& sets, const ItemSystem* itemSystem)
 {
-	std::vector<ST::string> strings;
-	JsonUtility::parseListStrings(value, strings);
-	for (const ST::string &str : strings)
-	{
-		items.push_back(itemSystem->getItemByName(str));
+	for (auto& set : value.toVec()) {
+		IMPStartingItemSet itemSet;
+		auto setObject = set.toObject();
+		if (setObject.has("slot")) {
+			itemSet.slot = Internals::getInventorySlotEnumFromString(setObject.GetString("slot"));
+		}
+
+		std::vector<ST::string> strings;
+		JsonUtility::parseListStrings(setObject["items"], strings);
+		for (const ST::string &str : strings)
+		{
+			itemSet.items.push_back(itemSystem->getItemByName(str));
+		}
+
+		auto PreserveType = [](const JsonValue& conVal)
+		{
+			Condition con;
+			if (conVal.isUInt()) {
+				con.emplace<uint8_t>(conVal.toUInt());
+			} else {
+				con.emplace<std::string>(conVal.toString().to_std_string());
+			}
+			return con;
+		};
+		if (!setObject.has("conditions")) {
+			sets.push_back(std::move(itemSet));
+			continue;
+		}
+
+		AssertMsg(setObject["conditions"].toVec().size() % 2 == 0, "IMP starting item condition list does not have an even number of values!");
+		std::vector<Condition> conditions;
+		Condition con1, con2;
+		int count = 0;
+		for (auto& con : setObject["conditions"].toVec()) {
+			if (count % 2 == 0) {
+				con1 = PreserveType(con);
+				++count;
+				continue;
+			} else {
+				con2 = PreserveType(con);
+				++count;
+			}
+
+			itemSet.conditions.emplace_back(con1, con2);
+		}
+
+		sets.push_back(std::move(itemSet));
 	}
 }
 
@@ -26,9 +68,6 @@ DefaultIMPPolicy::DefaultIMPPolicy(const JsonValue& json, const ItemSystem *item
 	m_startingLevel = r.getOptionalUInt("starting_level", 1);
 
 	readListOfItems(r["inventory"], m_inventory, itemSystem);
-
-	readListOfItems(r["if_good_shooter"], m_goodShooterItems, itemSystem);
-	readListOfItems(r["if_normal_shooter"], m_normalShooterItems, itemSystem);
 }
 
 bool DefaultIMPPolicy::isCodeAccepted(const ST::string& code) const
@@ -45,17 +84,7 @@ uint8_t DefaultIMPPolicy::getStartingLevel() const
 	return m_startingLevel;
 }
 
-const std::vector<const ItemModel *> & DefaultIMPPolicy::getInventory() const
+const std::vector<IMPStartingItemSet>& DefaultIMPPolicy::getInventory() const
 {
 	return m_inventory;
-}
-
-const std::vector<const ItemModel *> & DefaultIMPPolicy::getGoodShooterItems() const
-{
-	return m_goodShooterItems;
-}
-
-const std::vector<const ItemModel *> & DefaultIMPPolicy::getNormalShooterItems() const
-{
-	return m_normalShooterItems;
 }

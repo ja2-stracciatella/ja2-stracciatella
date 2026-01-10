@@ -6,12 +6,72 @@
     // vanilla setting: 1
     "starting_level": 1,
 
-    // Basic inventory items of any new I.M.P merc
-    "inventory": ["CANTEEN", "FLAK_JACKET"],
-
-    // Additional inventory items of a good shooter (marksmanship >= 80)
-    "if_good_shooter": ["MP5K", "CLIP9_30", "CLIP9_30"],
-
-    // Additional inventory items of a normal shooter (marksmanship < 80)
-    "if_normal_shooter": ["BERETTA_93R", "CLIP9_15", "CLIP9_15", "CLIP9_15"]
+    // Base and additional inventory items dependent on attributes and skills.
+    // Conditions come in pairs of values. Skill checks need to be paired with 'SKILL'.
+    // Conditions evaluate as a greater-or-equal relation; if there are several, all need to be true.
+    // 'RND100' is a special value that will resolve to a random number between 0 and 99.
+    // If slot is specified, the item will be placed there (don't do it twice), otherwise in the first empty slot.
+    "inventory": [
+        {
+            "items": ["CANTEEN", "FLAK_JACKET"] // everyone gets these
+        },
+        {
+            "conditions": ["WISDOM", "RND100"],
+            "items": ["STEEL_HELMET"],
+            "slot": "HELMET"
+        },
+        {
+            "conditions": ["MARKSMANSHIP", 80],
+            "items": ["MP5K", "CLIP9_30", "CLIP9_30"]
+        },
+        {
+            "conditions": [79, "MARKSMANSHIP"], // other shooters
+            "items": ["BERETTA_93R", "CLIP9_15", "CLIP9_15", "CLIP9_15"]
+        },
+        {
+            "conditions": ["MEDICAL", 60],
+            "items": ["MEDICKIT"]
+        },
+        {
+            "conditions": [59, "MEDICAL", "MEDICAL", 30], // mediocre medics
+            "items": ["FIRSTAIDKIT"]
+        },
+        {
+            "conditions": ["MECHANICAL", 50],
+            "items": ["TOOLKIT"]
+        },
+        {
+            "conditions": ["EXPLOSIVES", 50],
+            "items": ["TNT", "DETONATOR"]
+        },
+        // skill-based item granting
+        {
+            "conditions": ["SKILL", "LOCKPICKING", "MECHANICAL", 0],
+            "items": ["LOCKSMITHKIT"]
+        },
+        {
+            "conditions": ["SKILL", "HANDTOHAND"],
+            "items": ["BRASS_KNUCKLES"]
+        },
+        {
+            "conditions": ["SKILL", "ELECTRONICS", "MECHANICAL", 0],
+            "items": ["METALDETECTOR"]
+        },
+        {
+            "conditions": ["SKILL", "NIGHTOPS"],
+            "items": ["BREAK_LIGHT"]
+        },
+        {
+            "conditions": ["SKILL", "THROWING"],
+            "items": ["THROWING_KNIFE"]
+        },
+        {
+            "conditions": ["SKILL", "STEALTHY"],
+            "items": ["SILENCER"]
+        },
+        {
+            "conditions": ["SKILL", "KNIFING"],
+            "items": ["COMBAT_KNIFE"]
+        }
+    ]
 }

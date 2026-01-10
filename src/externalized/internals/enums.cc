@@ -771,3 +771,19 @@ Quests Internals::getQuestEnumFromString(const ST::string& s)
 	else if (s == "KILL_DEIDRANNA") return Quests::QUEST_KILL_DEIDRANNA;
 	else throw DataError(ST::format("unknown quest name value: {}", s));
 }
+
+Attributes Internals::getAttributeEnumFromString(const ST::string& s)
+{
+	if (s == "") return Attributes::NUM_ATTRIBUTES;
+	else if (s == "AGILITY") return Attributes::ATTR_AGILITY;
+	else if (s == "DEXTERITY") return Attributes::ATTR_DEXTERITY;
+	else if (s == "STRENGTH") return Attributes::ATTR_STRENGTH;
+	else if (s == "LEADERSHIP") return Attributes::ATTR_LEADERSHIP;
+	else if (s == "WISDOM") return Attributes::ATTR_WISDOM;
+	else if (s == "EXPLEVEL") return Attributes::ATTR_EXPLEVEL;
+	else if (s == "MARKSMANSHIP") return Attributes::ATTR_MARKSMANSHIP;
+	else if (s == "EXPLOSIVES") return Attributes::ATTR_EXPLOSIVES;
+	else if (s == "MECHANICAL") return Attributes::ATTR_MECHANICAL;
+	else if (s == "MEDICAL") return Attributes::ATTR_MEDICAL;
+	else throw DataError(ST::format("unknown attribute value: {}", s));
+}

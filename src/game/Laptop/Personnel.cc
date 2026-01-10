@@ -1396,32 +1396,6 @@ static void DisplayCostOfCurrentTeam(void)
 	MPrint(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
 }
 
-
-// Get the value of an attribute from either a MERCPROFILESTRUCT
-// or a SOLDIERTYPE.
-template<typename T>
-INT8 Attribute(T const& who, int attributeIndex)
-{
-	switch (attributeIndex)
-	{
-		case  0: return who.bLifeMax;
-		case  1: return who.bAgility;
-		case  2: return who.bDexterity;
-		case  3: return who.bStrength;
-		case  4: return who.bLeadership;
-		case  5: return who.bWisdom;
-		case  6: return who.bExpLevel;
-		case  7: return who.bMarksmanship;
-		case  8: return who.bMechanical;
-		case  9: return who.bExplosive;
-		case 10: return who.bMedical;
-		default:
-			AssertMsg(false, "invalid attribute index");
-			return 0;
-	}
-}
-
-
 static void DisplayTeamStats(void)
 {
 	INT16 sX;
