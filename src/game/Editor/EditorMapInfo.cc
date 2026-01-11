@@ -12,6 +12,7 @@
 #include "EditorMapInfo.h"
 #include "Environment.h"
 #include "Simple_Render_Utils.h"
+#include "WorldDef.h"
 
 #include <string_theory/format>
 #include <string_theory/string>

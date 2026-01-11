@@ -100,7 +100,7 @@ void RemoveStructFromUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, cons
 void AddStructToUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector);
 
 //Adds the exit grid to
-void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSector& sector);
+void AddExitGridToMapTempFile(GridNo usGridNo, EXITGRID const * pExitGrid, const SGPSector& sector);
 
 
 //This function removes a struct with the same MapIndex and graphic index from the given sectors temp file
