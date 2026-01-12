@@ -146,8 +146,7 @@ static void GiveItemsToPC(UINT8 ubProfileId);
 
 static BOOLEAN AddCharacterToPlayersTeam(void)
 {
-	MERC_HIRE_STRUCT HireMercStruct;
-
+	MERC_HIRE_STRUCT HireMercStruct{};
 
 	// last minute change to make sure merc with right face has not only the right body, but body specific skills...
 	// ie. small mercs have martial arts, but big guys and women don't
@@ -155,8 +154,6 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	{
 		HandleMercStatsForChangesInFace();
 	}
-
-	HireMercStruct = MERC_HIRE_STRUCT{};
 
 	HireMercStruct.ubProfileID = ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) ;
 
@@ -183,14 +180,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	SetProfileFaceData(HireMercStruct.ubProfileID, 200 + iPortraitNumber, fi->eye_x, fi->eye_y, fi->mouth_x, fi->mouth_y);
 
 	//if we succesfully hired the merc
-	if (!HireMerc(HireMercStruct))
-	{
-		return(FALSE);
-	}
-	else
-	{
-		return ( TRUE );
-	}
+	return HireMerc(HireMercStruct);
 }
 
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
@@ -233,9 +223,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 		iCurrentImpPage = IMP_HOME_PAGE;
 
 		// send email notice
-		//AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin());
 		AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2);
-		//RenderCharProfile();
 
 		ResetCharacterStats();
 
@@ -254,151 +242,12 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
 		iCurrentImpPage = IMP_FINISH;
-
-#if 0 // XXX was commented out
-		LaptopSaveInfo.fIMPCompletedFlag = FALSE;
-		ResetCharacterStats();
-
-		fButtonPendingFlag = TRUE;
-		iCurrentImpPage = IMP_HOME_PAGE;
-#endif
 	}
 }
-
-
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT&, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT&, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-
-
-static void GiveItemsToPC(UINT8 ubProfileId)
-{
-	// gives starting items to merc
-	// NOTE: Any guns should probably be from those available in regular gun set
-
-	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
-
-	for (const ItemModel *item : GCM->getIMPPolicy()->getInventory())
-	{
-		MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-	}
-
-	if ( PreRandom( 100 ) < (UINT32) p.bWisdom )
-	{
-		MakeProfileInvItemThisSlot(p, HELMETPOS, STEEL_HELMET, 100, 1);
-	}
-
-	if (p.bMarksmanship >= 80)
-	{
-		for (const ItemModel *item : GCM->getIMPPolicy()->getGoodShooterItems())
-		{
-			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-		}
-	}
-	else
-	{
-		for (const ItemModel *item : GCM->getIMPPolicy()->getNormalShooterItems())
-		{
-			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-		}
-	}
-
-
-	// OPTIONAL EQUIPMENT: depends on skills & special skills
-
-	if (p.bMedical >= 60)
-	{
-		// strong medics get full medic kit
-		MakeProfileInvItemAnySlot(p, MEDICKIT, 100, 1);
-	}
-	else
-	if (p.bMedical >= 30)
-	{
-		// passable medics get first aid kit
-		MakeProfileInvItemAnySlot(p, FIRSTAIDKIT, 100, 1);
-	}
-
-	if (p.bMechanical >= 50)
-	{
-		// mechanics get toolkit
-		MakeProfileInvItemAnySlot(p, TOOLKIT, 100, 1);
-	}
-
-	if (p.bExplosive >= 50)
-	{
-		// loonies get TNT & Detonator
-		MakeProfileInvItemAnySlot(p, TNT, 100, 1);
-		MakeProfileInvItemAnySlot(p, DETONATOR, 100, 1);
-	}
-
-
-	// check for special skills
-	if (HasSkillTrait(p, LOCKPICKING) && iMechanical)
-	{
-		MakeProfileInvItemAnySlot(p, LOCKSMITHKIT, 100, 1);
-	}
-
-	if (HasSkillTrait(p, HANDTOHAND))
-	{
-		MakeProfileInvItemAnySlot(p, BRASS_KNUCKLES, 100, 1);
-	}
-
-	if (HasSkillTrait(p, ELECTRONICS) && iMechanical)
-	{
-		MakeProfileInvItemAnySlot(p, METALDETECTOR, 100, 1);
-	}
-
-	if (HasSkillTrait(p, NIGHTOPS))
-	{
-		MakeProfileInvItemAnySlot(p, BREAK_LIGHT, 100, 2);
-	}
-
-	if (HasSkillTrait(p, THROWING))
-	{
-		MakeProfileInvItemAnySlot(p, THROWING_KNIFE, 100, 1);
-	}
-
-	if (HasSkillTrait(p, STEALTHY))
-	{
-		MakeProfileInvItemAnySlot(p, SILENCER, 100, 1);
-	}
-
-	if (HasSkillTrait(p, KNIFING))
-	{
-		MakeProfileInvItemAnySlot(p, COMBAT_KNIFE, 100, 1);
-	}
-}
-
-
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const&, UINT16 usItem);
-
-
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT& p, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
-{
-	INT32 const iSlot = FirstFreeBigEnoughPocket(p, usItem);
-	if (iSlot == -1)
-	{
-		// no room, item not received
-		return;
-	}
-
-	// put the item into that slot
-	MakeProfileInvItemThisSlot(p, iSlot, usItem, ubStatus, ubHowMany);
-}
-
-
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT& p, UINT32 const uiPos, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
-{
-	p.inv[uiPos]        = usItem;
-	p.bInvStatus[uiPos] = ubStatus;
-	p.bInvNumber[uiPos] = ubHowMany;
-}
-
 
 static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const usItem)
 {
 	UINT32 uiPos;
-
-
 	// if it fits into a small pocket
 	if (GCM->getItem(usItem)->getPerPocket() != 0)
 	{
@@ -420,9 +269,32 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const u
 			return(uiPos);
 		}
 	}
-
-
 	return(-1);
+}
+
+static void GiveItemsToPC(UINT8 ubProfileId)
+{
+	// gives starting items to merc
+	// NOTE: Any guns should probably be from those available in regular gun set
+
+	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
+
+	for (const IMPStartingItemSet& set : GCM->getIMPPolicy()->getInventory()) {
+		if (!set.Evaluate(p)) continue;
+		for (const ItemModel* item : set.items) {
+			UINT32 uiPos;
+			if (set.slot) {
+				uiPos = *set.slot;
+			} else {
+				INT32 const iSlot = FirstFreeBigEnoughPocket(p, item->getItemIndex());
+				if (iSlot == -1) continue;
+				uiPos = iSlot;
+			}
+			p.inv[uiPos] = item->getItemIndex();
+			p.bInvStatus[uiPos] = 100;
+			p.bInvNumber[uiPos] = 1;
+		}
+	}
 }
 
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)

@@ -745,6 +745,8 @@ const ST::string GetModifiersForEffectiveAttributes(SOLDIERTYPE* const s, Attrib
 		case ATTR_MEDICAL:
 			getAlcoMod(s->bMedical);
 			break;
+		default:
+			break;
 	}
 
 	return result;
@@ -785,6 +787,8 @@ const ST::string GetModifiersForDialogue(SOLDIERTYPE* const playerChar, SOLDIERT
 			salesSkill = MercProfile{ playerChar->ubProfile }.getInfo().weaponSaleModifier;
 			result += st_format_printf(dialogueStrings[DIAL_WEAPON_SALES], ColorCodeModifier("{+d}%", salesSkill - 100));
 			return result;
+		default:
+			break;
 	}
 
 	MERCPROFILESTRUCT const& plrProfile = MercProfile{ playerChar->ubProfile }.getStruct();
