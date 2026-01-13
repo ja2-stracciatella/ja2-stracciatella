@@ -579,10 +579,8 @@ void RemoveStructFromUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, cons
 }
 
 
-void AddExitGridToMapTempFile(UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSector& sector)
+void AddExitGridToMapTempFile(GridNo usGridNo, EXITGRID const *pExitGrid, const SGPSector& sector)
 {
-	MODIFY_MAP Map;
-
 	if (!ApplyMapChangesToMapTempFile::IsActive())
 	{
 		SLOGD("Called AddExitGridToMapTempFile() without holding ApplyMapChangesToMapTempFile");
@@ -592,7 +590,7 @@ void AddExitGridToMapTempFile(UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSec
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	Map = MODIFY_MAP{};
+	MODIFY_MAP Map{};
 
 	Map.usGridNo = usGridNo;
 //	Map.usIndex		= pExitGrid->ubGotoSector.x;

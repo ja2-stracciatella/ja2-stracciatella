@@ -1,9 +1,6 @@
-#include "Debug.h"
 #include "Isometric_Utils.h"
-#include "TileDat.h"
 #include "Types.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "Exit_Grids.h"
 #include "StrategicMap.h"
 #include "Strategic_Movement.h"
@@ -15,7 +12,7 @@
 #include "Sys_Globals.h"
 #include "SaveLoadMap.h"
 #include "Text.h"
-
+#include <map>
 
 BOOLEAN gfLoadingExitGrids = FALSE;
 
@@ -24,112 +21,66 @@ EXITGRID gExitGrid = {0, {1, 1, 0}};
 
 BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
 
+namespace {
+std::map<GridNo, EXITGRID> gExitGrids;
 
-static INT32 ConvertExitGridToINT32(EXITGRID* pExitGrid)
+auto find(GridNo gn)
 {
-	INT32 iExitGridInfo;
-	iExitGridInfo  = ((UINT8) pExitGrid->ubGotoSector.x - 1) << 28;
-	iExitGridInfo += ((UINT8) pExitGrid->ubGotoSector.y - 1) << 24;
-	iExitGridInfo += (UINT8) pExitGrid->ubGotoSector.z    << 20;
-	iExitGridInfo += pExitGrid->usGridNo & 0x0000ffff;
-	return iExitGridInfo;
+	return gExitGrids.find(gn);
+}
 }
 
-
-static void ConvertINT32ToExitGrid(INT32 iExitGridInfo, EXITGRID* pExitGrid)
+bool GetExitGrid(GridNo gridno, EXITGRID * pExitGrid)
 {
-	//convert the int into 4 unsigned bytes.
-	pExitGrid->ubGotoSector.x = (UINT8) (((iExitGridInfo & 0xf0000000) >> 28) + 1);
-	pExitGrid->ubGotoSector.y = (UINT8) (((iExitGridInfo & 0x0f000000) >> 24) + 1);
-	pExitGrid->ubGotoSector.z = (UINT8) ((iExitGridInfo & 0x00f00000) >> 20);
-	pExitGrid->usGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
-}
-
-BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
-{
-	LEVELNODE *pShadow;
-	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
-	//Search through object layer for an exitgrid
-	while( pShadow )
+	auto pos = find(gridno);
+	if (pos != gExitGrids.end())
 	{
-		if ( pShadow->uiFlags & LEVELNODE_EXITGRID )
-		{
-			ConvertINT32ToExitGrid( pShadow->iExitGridInfo, pExitGrid );
-			return TRUE;
-		}
-		pShadow = pShadow->pNext;
+		*pExitGrid = pos->second;
+		return true;
 	}
+
 	pExitGrid->ubGotoSector = SGPSector(0, 0, 0);
 	pExitGrid->usGridNo = 0;
-	return FALSE;
+	return false;
 }
 
-BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
+bool ExitGridAtGridNo(GridNo gridno)
 {
-	LEVELNODE *pShadow;
-	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
-	//Search through object layer for an exitgrid
-	while( pShadow )
-	{
-		if ( pShadow->uiFlags & LEVELNODE_EXITGRID )
-		{
-			return TRUE;
-		}
-		pShadow = pShadow->pNext;
-	}
-	return FALSE;
+	return find(gridno) != gExitGrids.end();
 }
 
 
-void AddExitGridToWorld(INT32 const map_idx, EXITGRID* const xg)
+void AddExitGridToWorld(GridNo gridno, EXITGRID const * xg)
 {
-	// Search through object layer for an exitgrid
-	for (LEVELNODE* i = gpWorldLevelData[map_idx].pShadowHead; i; i = i->pNext)
-	{
-		if (!(i->uiFlags & LEVELNODE_EXITGRID)) continue;
-		// We have found an existing exitgrid in this node, so replace it with the new information.
-		i->iExitGridInfo = ConvertExitGridToINT32(xg);
-		return;
-	}
-
-	LEVELNODE* const n = AddShadowToHead(map_idx, MOCKFLOOR1);
-	// Fill in the information for the new exitgrid levelnode.
-	n->iExitGridInfo  = ConvertExitGridToINT32(xg);
-	n->uiFlags       |= LEVELNODE_EXITGRID | LEVELNODE_HIDDEN;
+	gExitGrids[gridno] = *xg;
 
 	// Add the exit grid to the sector, only if ApplyMapChangesToMapTempFile is held.
 	if (!gfEditMode && !gfLoadingExitGrids)
 	{
-		AddExitGridToMapTempFile(map_idx, xg, gWorldSector);
+		AddExitGridToMapTempFile(gridno, xg, gWorldSector);
 	}
 }
 
 
-void RemoveExitGridFromWorld(INT32 iMapIndex)
+void RemoveExitGridFromWorld(GridNo gridno)
 {
-	RemoveAllShadowsOfTypeRange(iMapIndex, MOCKFLOOR, MOCKFLOOR);
+	gExitGrids.erase(gridno);
 }
 
 
-void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
+void SaveExitGrids(SGPFile & f)
 {
-	EXITGRID exitGrid;
-	UINT16 usNumSaved = 0;
-	fp->write(&usNumExitGrids, 2);
-	for (UINT16 x = 0; x < WORLD_MAX; x++)
+	UINT16 usNumExitGrids = static_cast<UINT16>(gExitGrids.size());
+	f.write(&usNumExitGrids, 2);
+	for (auto const& mapEntry : gExitGrids)
 	{
-		if( GetExitGrid( x, &exitGrid ) )
-		{
-			fp->write(&x, 2);
-			fp->write(&exitGrid.usGridNo, 2);
-			fp->write(&exitGrid.ubGotoSector.x, 1);
-			fp->write(&exitGrid.ubGotoSector.y, 1);
-			fp->write(&exitGrid.ubGotoSector.z, 1);
-			usNumSaved++;
-		}
+		EXITGRID const& exitGrid = mapEntry.second;
+		f.write(&mapEntry.first, 2);
+		f.write(&exitGrid.usGridNo, 2);
+		f.write(&exitGrid.ubGotoSector.x, 1);
+		f.write(&exitGrid.ubGotoSector.y, 1);
+		f.write(&exitGrid.ubGotoSector.z, 1);
 	}
-	//If these numbers aren't equal, something is wrong!
-	Assert( usNumExitGrids == usNumSaved );
 }
 
 
@@ -150,6 +101,12 @@ void LoadExitGrids(HWFILE const f)
 		AddExitGridToWorld( usMapIndex, &exitGrid );
 	}
 	gfLoadingExitGrids = FALSE;
+}
+
+
+void TrashExitGrids()
+{
+	gExitGrids.clear();
 }
 
 
@@ -203,7 +160,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 }
 
 
-UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier, const INT16 sSweetGridNo, const INT8 ubRadius)
+GridNo FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier, const GridNo sSweetGridNo, const INT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -303,7 +260,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 }
 
 
-UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadius )
+GridNo FindClosestExitGrid(const SOLDIERTYPE *, GridNo sSrcGridNo, INT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

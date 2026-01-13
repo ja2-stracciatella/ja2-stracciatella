@@ -59,7 +59,6 @@ enum LevelnodeFlags
 	LEVELNODE_DYNAMIC              = 0x02000000,
 	LEVELNODE_LASTDYNAMIC          = 0x04000000,
 	LEVELNODE_PHYSICSOBJECT        = 0x08000000,
-	LEVELNODE_EXITGRID             = 0x40000000,
 	LEVELNODE_CAVE                 = 0x80000000
 };
 ENUM_BITSET(LevelnodeFlags)
@@ -114,8 +113,7 @@ struct LEVELNODE
 		LEVELNODE *pPrevNode; // FOR LAND, GOING BACKWARDS POINTER
 		STRUCTURE *pStructureData; // STRUCTURE DATA
 		INT32     uiAPCost; // FOR AP DISPLAY
-		INT32     iExitGridInfo;
-	}; // ( 4 byte union )
+	};
 
 	union
 	{
@@ -126,8 +124,7 @@ struct LEVELNODE
 		};
 
 		SOLDIERTYPE *pSoldier; // POINTER TO SOLDIER
-
-	}; // ( 4 byte union )
+	};
 
 	union
 	{
@@ -138,24 +135,14 @@ struct LEVELNODE
 			INT16 sRelativeY; // Relative position values
 		};
 
-		struct
-		{
-			UINT32 uiAnimHitLocationFlags;	// Animation profile flags for soldier placeholders ( prone merc hit location values )
-		};
+		// Animation profile flags for soldier placeholders ( prone merc hit location values )
+		UINT32 uiAnimHitLocationFlags;
 
 		// Some can contains index values into animated tile data
-		struct
-		{
-			ANITILE* pAniTile;
-		};
+		ANITILE *pAniTile;
 
 		// Can be an item pool as well...
-		struct
-		{
-			ITEM_POOL *pItemPool; // ITEM POOLS
-		};
-
-
+		ITEM_POOL *pItemPool; // ITEM POOLS
 	};
 
 	INT16 sRelativeZ; // Relative position values

@@ -1509,8 +1509,8 @@ try
 		UINT8 n_shadows = 0;
 		for (LEVELNODE const* i = e.pShadowHead; i; i = i->pNext)
 		{
-			// Don't write any shadowbuddys or exit grids
-			if (i->uiFlags & (LEVELNODE_BUDDYSHADOW  | LEVELNODE_EXITGRID)) continue;
+			// Don't write any shadowbuddys
+			if (i->uiFlags & LEVELNODE_BUDDYSHADOW) continue;
 			++n_shadows;
 		}
 		if (!LimitCheck(n_shadows, cnt, n_warnings, "Shadow")) return FALSE;
@@ -1603,19 +1603,14 @@ try
 		}
 	}
 
-	UINT16 n_exit_grids = 0;
 	FOR_EACH_WORLD_TILE(e)
 	{ // Write shadows
 		for (LEVELNODE const* i = e->pShadowHead; i; i = i->pNext)
 		{
-			// Dont't write any buddys or exit grids
-			if (!(i->uiFlags & (LEVELNODE_BUDDYSHADOW | LEVELNODE_EXITGRID)))
+			// Dont't write any buddys
+			if (!(i->uiFlags & LEVELNODE_BUDDYSHADOW))
 			{
 				WriteLevelNode(f, i);
-			}
-			else if (i->uiFlags & LEVELNODE_EXITGRID)
-			{	// Count the number of exitgrids
-				++n_exit_grids;
 			}
 		}
 	}
@@ -1667,7 +1662,7 @@ try
 	}
 	if (flags & MAP_EXITGRIDS_SAVED)
 	{
-		SaveExitGrids(f, n_exit_grids);
+		SaveExitGrids(*f);
 	}
 	if (flags & MAP_DOORTABLE_SAVED)
 	{
@@ -2677,6 +2672,7 @@ void TrashWorld(void)
 	TrashDoorTable();
 	TrashMapEdgepoints();
 	TrashDoorStatusArray();
+	TrashExitGrids();
 
 	gfWorldLoaded = FALSE;
 }
