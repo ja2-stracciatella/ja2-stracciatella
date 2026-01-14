@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-class ItemModel;
+struct ItemModel;
 class ItemsContainer;
 
 class ItemSystem
