@@ -295,7 +295,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	NewRect.iRight  = w;
 	SGPRect const SaveRect = SetClippingRect(NewRect);
 
-	auto items = GCM->getItems();
+	const auto& items = GCM->getItems();
 	auto actionItemIt = std::find_if(items.begin(), items.end(), [](const ItemModel* item) -> bool {
 		return item->getItemIndex() == ACTION_ITEM;
 	});

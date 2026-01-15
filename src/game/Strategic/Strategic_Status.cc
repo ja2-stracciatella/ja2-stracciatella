@@ -484,7 +484,7 @@ using AlreadyDroppedTest = DefaultContentManagerUT::BaseTest;
 TEST_F(AlreadyDroppedTest, SetWeaponAlreadyDropped_Old_Weapons_Limit)
 {
 	ClearAllWeaponsAlreadyDropped();
-	for (uint16_t i = GLOCK_17; i < MAX_WEAPONS; ++i)
+	for (uint16_t i = GLOCK_17; i <= AUTO_ROCKET_RIFLE; ++i)
 	{
 		auto * const itemModel{ GCM->getItem(i) };
 		if (!itemModel->isWeapon()) continue;

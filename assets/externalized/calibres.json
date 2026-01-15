@@ -1,11 +1,5 @@
 [
     {
-        "index": 0,
-        "internalName": "NOAMMO",
-        "showInHelpText": false,
-        "monsterWeapon": false
-    },
-    {
         "index": 1,
         "internalName": "AMMO38",
         "sound": "sounds/weapons/38 caliber.wav",
