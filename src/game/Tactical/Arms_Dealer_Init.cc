@@ -94,7 +94,7 @@ static void InitializeOneArmsDealer(ArmsDealerID const ubArmsDealer)
 
 
 	//loop through all the item types
-	for (auto item : GCM->getItems())
+	for (auto item : *GCM->items())
 	{
 		const auto usItemIndex = item->getItemIndex();
 		//Can the item be sold by the arms dealer
@@ -272,7 +272,7 @@ static void SimulateArmsDealerCustomer(void)
 			continue;
 
 		//loop through all items of the same type
-		for (auto item : GCM->getItems())
+		for (auto item : *GCM->items())
 		{
 			const auto usItemIndex = item->getItemIndex();
 			//if there are some of these in stock
@@ -342,7 +342,7 @@ void DailyCheckOnItemQuantities()
 
 
 		//loop through all items of the same type
-		for (auto item : GCM->getItems())
+		for (auto item : *GCM->items())
 		{
 			const auto usItemIndex = item->getItemIndex();
 
@@ -510,7 +510,7 @@ static void LimitArmsDealersInventory(ArmsDealerID const ubArmsDealer, UINT32 ui
 		return;
 
 	//loop through all items of the same class and count the number in stock
-	for (auto item : GCM->getItems()) {
+	for (auto item : *GCM->items()) {
 		const auto usItemIndex = item->getItemIndex();
 
 		//if there is some items in stock
@@ -642,7 +642,7 @@ static void GuaranteeAtLeastOneItemOfType(ArmsDealerID const ubArmsDealer, UINT3
 		return;
 
 	//loop through all items of the same type
-	for (auto item : GCM->getItems()) {
+	for (auto item : *GCM->items()) {
 		const auto usItemIndex = item->getItemIndex();
 
 		//if the item is of the same dealer item type
@@ -914,7 +914,7 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 		return( FALSE );
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for (auto item : GCM->getItems()) {
+	for (auto item : *GCM->items()) {
 		const auto usItemIndex = item->getItemIndex();
 
 		//if there is some items in stock
@@ -1156,7 +1156,7 @@ UINT32 CountDistinctItemsInArmsDealersInventory(ArmsDealerID const ubArmsDealer)
 	UINT32	uiNumOfItems=0;
 
 
-	for (auto item : GCM->getItems()) {
+	for (auto item : *GCM->items()) {
 		const auto usItemIndex = item->getItemIndex();
 
 		//if there are any items
@@ -1223,7 +1223,7 @@ UINT16 CountTotalItemsRepairDealerHasInForRepairs(ArmsDealerID const ubArmsDeale
 		return( 0 );
 
 	//loop through the dealers inventory and count the number of items in for repairs
-	for (auto item : GCM->getItems()) {
+	for (auto item : *GCM->items()) {
 		const auto usItemIndex = item->getItemIndex();
 		usHowManyInForRepairs += CountSpecificItemsRepairDealerHasInForRepairs( ubArmsDealer, usItemIndex );
 	}
@@ -1665,7 +1665,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 
 	//loop through all the items in the dealer's inventory, and drop them all where the dealer was set up.
 
-	for (auto item : GCM->getItems()) {
+	for (auto item : *GCM->items()) {
 		const auto usItemIndex = item->getItemIndex();
 
 		//if the dealer has any items of this type
@@ -1892,7 +1892,7 @@ static UINT32 WhenWillRepairmanBeAllDoneRepairing(ArmsDealerID const ubArmsDeale
 	uiWhenFree = GetWorldTotalMin();
 
 	//loop through the dealers inventory
-	for (auto item : GCM->getItems()) {
+	for (auto item : *GCM->items()) {
 		const auto usItemIndex = item->getItemIndex();
 
 		//if there is some items in stock

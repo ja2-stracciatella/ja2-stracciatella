@@ -598,7 +598,7 @@ static void RenderItemDetails(void)
 		UINT32 uiActionQuantity[8] {};
 		UINT32 uiTriggerExistChance[8] {};
 		UINT32 uiActionExistChance[8] {};
-		for (auto item : GCM->getItems())
+		for (auto item : *GCM->items())
 		{
 			const auto index = item->getItemIndex();
 			uiQuantity = 0;
@@ -749,7 +749,7 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		else for (auto item : GCM->getItems())
+		else for (auto item : *GCM->items())
 		{
 			const auto index = item->getItemIndex();
 
@@ -818,7 +818,7 @@ static void RenderItemDetails(void)
 			MPrint(xp, yp, "None");
 			yp += 10;
 		}
-		for (auto item : GCM->getItems())
+		for (auto item : *GCM->items())
 		{
 			const auto index = item->getItemIndex();
 

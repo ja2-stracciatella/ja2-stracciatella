@@ -14,6 +14,7 @@
 
 #include "AmmoTypeModel.h"
 #include "ContentManager.h"
+#include "ExplosiveModel.h"
 #include "GameInstance.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
@@ -600,7 +601,7 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 		while( bAttachClass && !usNumMatches )
 		{
 			//Count the number of valid attachments.
-			for (auto pItem : GCM->getItems()) {
+			for (auto pItem : *GCM->items()) {
 				if( pItem->getItemClass() == IC_MISC && pItem->getCoolness() == bAttachClass && ValidAttachment( pItem->getItemIndex(), usGunIndex ) )
 					usNumMatches++;
 			}
@@ -612,7 +613,7 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 		if( usNumMatches )
 		{
 			usRandom = (UINT16)Random( usNumMatches );
-			for (auto pItem : GCM->getItems()) {
+			for (auto pItem : *GCM->items()) {
 				if( pItem->getItemClass() == IC_MISC && pItem->getCoolness() == bAttachClass && ValidAttachment( pItem->getItemIndex(), usGunIndex ) )
 				{
 					if( usRandom )
@@ -959,9 +960,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 		while( bHelmetClass && !usNumMatches )
 		{ //First step is to count the number of helmets in the helmet class range.  If we
 			//don't find one, we keep lowering the class until we do.
-			for (auto pItem : GCM->getItems()) {
+			for (auto pItem : *GCM->armours()) {
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
-				if( pItem->isArmour() && pItem->getCoolness() == bHelmetClass )
+				if( pItem->getCoolness() == bHelmetClass )
 				{
 					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_HELMET )
 						usNumMatches++;
@@ -973,8 +974,8 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 		if( usNumMatches )
 		{ //There is a helmet that we can choose.
 			usRandom = (UINT16)Random( usNumMatches );
-			for (auto pItem : GCM->getItems()) {
-				if( pItem->isArmour() && pItem->getCoolness() == bHelmetClass )
+			for (auto pItem : *GCM->armours()) {
+				if( pItem->getCoolness() == bHelmetClass )
 				{
 					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_HELMET )
 					{
@@ -1002,7 +1003,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 		{
 			//First step is to count the number of armours in the armour class range.  If we
 			//don't find one, we keep lowering the class until we do.
-			for (auto pItem : GCM->getItems()) {
+			for (auto pItem : *GCM->armours()) {
 				auto itemIndex = pItem->getItemIndex();
 
 				// these 3 have a non-zero coolness, and would otherwise be selected, so skip them
@@ -1010,7 +1011,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 					continue;
 
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
-				if( pItem->isArmour() && pItem->getCoolness() == bVestClass )
+				if( pItem->getCoolness() == bVestClass )
 				{
 					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_VEST )
 						usNumMatches++;
@@ -1023,14 +1024,14 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 		{
 			//There is an armour that we can choose.
 			usRandom = (UINT16)Random( usNumMatches );
-			for (auto pItem : GCM->getItems()) {
+			for (auto pItem : *GCM->armours()) {
 				auto itemIndex = pItem->getItemIndex();
 
 				// these 3 have a non-zero coolness, and would otherwise be selected, so skip them
 				if ( ( itemIndex == TSHIRT ) || ( itemIndex == LEATHER_JACKET ) || ( itemIndex == TSHIRT_DEIDRANNA ) )
 					continue;
 
-				if( pItem->isArmour() && pItem->getCoolness() == bVestClass )
+				if( pItem->getCoolness() == bVestClass )
 				{
 					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_VEST )
 					{
@@ -1069,9 +1070,9 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 		while( bLeggingsClass && !usNumMatches )
 		{ //First step is to count the number of Armours in the Armour class range.  If we
 			//don't find one, we keep lowering the class until we do.
-			for (auto pItem : GCM->getItems()) {
+			for (auto pItem : *GCM->armours()) {
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
-				if( pItem->isArmour() && pItem->getCoolness() == bLeggingsClass )
+				if( pItem->getCoolness() == bLeggingsClass )
 				{
 					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_LEGGINGS )
 						usNumMatches++;
@@ -1084,8 +1085,8 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 		{
 			//There is a legging that we can choose.
 			usRandom = (UINT16)Random( usNumMatches );
-			for (auto pItem : GCM->getItems()) {
-				if( pItem->isArmour() && pItem->getCoolness() == bLeggingsClass )
+			for (auto pItem : *GCM->armours()) {
+				if( pItem->getCoolness() == bLeggingsClass )
 				{
 					if( pItem->asArmour()->getArmourClass() == ARMOURCLASS_LEGGINGS )
 					{
@@ -1120,7 +1121,7 @@ static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp,
 	{
 		//First step is to count the number of weapons in the weapon class range.  If we
 		//don't find one, we keep lowering the class until we do.
-		for (auto pItem : GCM->getItems()) {
+		for (auto pItem : *GCM->weapons()) {
 			auto itemClass = pItem->getItemClass();
 
 			if( ( itemClass == IC_BLADE || itemClass == IC_THROWING_KNIFE ) && pItem->getCoolness() == bKnifeClass )
@@ -1135,7 +1136,7 @@ static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp,
 	{
 		//There is a knife that we can choose.
 		usRandom = (UINT16)Random( usNumMatches );
-		for (auto pItem : GCM->getItems()) {
+		for (auto pItem : *GCM->weapons()) {
 			auto itemClass = pItem->getItemClass();
 
 			if( ( itemClass == IC_BLADE || itemClass == IC_THROWING_KNIFE ) && pItem->getCoolness() == bKnifeClass )
@@ -1288,7 +1289,7 @@ static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKit
 	else
 	{
 		// count how many non-medical KITS are eligible ( of sufficient or lower coolness)
-		for (auto pItem : GCM->getItems()) {
+		for (auto pItem : *GCM->items()) {
 			// skip toolkits
 			if( ( pItem->getItemClass() == IC_KIT ) && ( pItem->getCoolness() > 0 ) && pItem->getCoolness() <= bKitClass && ( pItem->getItemIndex() != TOOLKIT ) )
 			{
@@ -1300,7 +1301,7 @@ static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKit
 		if( usNumMatches )
 		{
 			usRandom = (UINT16)Random( usNumMatches );
-			for (auto pItem : GCM->getItems()) {
+			for (auto pItem : *GCM->items()) {
 				auto itemIndex = pItem->getItemIndex();
 
 				// skip toolkits
@@ -1398,7 +1399,7 @@ static void ChooseBombsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bBo
 	OBJECTTYPE Object;
 
 	// count how many are eligible
-	for (auto pItem : GCM->getItems()) {
+	for (auto pItem : *GCM->explosives()) {
 		if( ( pItem->getItemClass() == IC_BOMB ) && ( pItem->getCoolness() > 0 ) && ( pItem->getCoolness() <= bBombClass ) )
 		{
 			usNumMatches++;
@@ -1410,7 +1411,7 @@ static void ChooseBombsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bBo
 	if( usNumMatches )
 	{
 		usRandom = (UINT16)Random( usNumMatches );
-		for (auto pItem : GCM->getItems()) {
+		for (auto pItem : *GCM->explosives()) {
 			if( ( pItem->getItemClass() == IC_BOMB ) && ( pItem->getCoolness() > 0 ) && ( pItem->getCoolness() <= bBombClass ) )
 			{
 				if( usRandom )

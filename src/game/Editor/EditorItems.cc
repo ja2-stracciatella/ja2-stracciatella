@@ -119,7 +119,7 @@ void EntryInitEditorItemsInfo()
 		eInfo.uiItemType = TBAR_MODE_ITEM_WEAPONS;
 		//Pre-calculate the number of each item type.
 		eInfo.sNumTriggers = NUMBER_TRIGGERS;
-		for (auto item : GCM->getItems())
+		for (auto item : *GCM->items())
 		{
 			const auto itemIdx = item->getItemIndex();
 
@@ -295,7 +295,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 	NewRect.iRight  = w;
 	SGPRect const SaveRect = SetClippingRect(NewRect);
 
-	const auto& items = GCM->getItems();
+	const auto& items = *GCM->items();
 	auto actionItemIt = std::find_if(items.begin(), items.end(), [](const ItemModel* item) -> bool {
 		return item->getItemIndex() == ACTION_ITEM;
 	});
