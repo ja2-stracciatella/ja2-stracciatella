@@ -443,7 +443,7 @@ static void InitBobbyRayNewInventory(void)
 	std::fill_n(LaptopSaveInfo.BobbyRayInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
-	for (auto item : GCM->getItems())
+	for (auto item : *GCM->items())
 	{
 		const auto itemIndex = item->getItemIndex();
 
@@ -477,7 +477,7 @@ static void InitBobbyRayUsedInventory(void)
 	std::fill_n(LaptopSaveInfo.BobbyRayUsedInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
-	for (auto item : GCM->getItems())
+	for (auto item : *GCM->items())
 	{
 		const auto itemIndex = item->getItemIndex();
 

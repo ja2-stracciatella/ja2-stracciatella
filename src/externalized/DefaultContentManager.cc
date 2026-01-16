@@ -1017,9 +1017,29 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 	return true;
 }
 
-const ItemsContainer& DefaultContentManager::getItems() const
+const ItemsContainer* DefaultContentManager::items() const
 {
-	return m_items;
+	return &m_items;
+}
+
+const WeaponsContainer* DefaultContentManager::weapons() const
+{
+	return &m_weapons;
+}
+
+const MagazinesContainer* DefaultContentManager::magazines() const
+{
+	return &m_magazines;
+}
+
+const ExplosivesContainer* DefaultContentManager::explosives() const
+{
+	return &m_explosives;
+}
+
+const ArmoursContainer* DefaultContentManager::armours() const
+{
+	return &m_armours;
 }
 
 const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const

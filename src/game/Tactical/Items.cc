@@ -772,14 +772,9 @@ UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 		return NOTHING;
 	}
 
-	for (auto item : GCM->getItems()) {
-		auto weapon = item->asWeapon();
-		if (!weapon) {
-			continue;
-		}
-
-		if (weapon->matches(explosiveCalibre)) {
-			return weapon->getItemIndex();
+	for (auto item : *GCM->weapons()) {
+		if (item->matches(explosiveCalibre)) {
+			return item->getItemIndex();
 		}
 	}
 	return NOTHING;
@@ -1403,11 +1398,10 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 	}
 	else if (weapon->shootsExplosiveCalibre())
 	{
-		for (auto item : GCM->getItems()) {
-			auto explosive = item->asExplosive();
-			if (explosive && explosive->isLaunchable()) {
-				if (explosive->getExplosiveCalibre()->getID() == weapon->explosiveCalibre->getID()) {
-					auto slot = FindObj(pSoldier, explosive->getItemIndex());
+		for (auto item : *GCM->explosives()) {
+			if (item->isLaunchable()) {
+				if (item->getExplosiveCalibre()->getID() == weapon->explosiveCalibre->getID()) {
+					auto slot = FindObj(pSoldier, item->getItemIndex());
 					if (slot != NO_SLOT) {
 						return slot;
 					}

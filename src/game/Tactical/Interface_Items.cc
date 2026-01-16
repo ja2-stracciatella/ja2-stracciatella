@@ -1706,7 +1706,7 @@ void CycleItemDescriptionItem( )
 
 	// Make new item....
 	auto const oldItemIndex = gpItemDescObject->usItem;
-	const auto& items = GCM->getItems();
+	const auto& items = *GCM->items();
 	auto it = std::find_if(items.begin(), items.end(), [oldItemIndex](const ItemModel* item) -> bool {
 		return item->getItemIndex() == oldItemIndex;
 	});

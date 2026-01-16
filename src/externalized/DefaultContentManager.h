@@ -111,7 +111,11 @@ public:
 	virtual const ArmourModel* getArmourByName(const ST::string &name) override;
 	virtual INT32 getMaxArmourPerClass(uint16_t armourClass) const override;
 
-	virtual const ItemsContainer& getItems() const override;
+	virtual const ItemsContainer* items() const override;
+	virtual const WeaponsContainer* weapons() const override;
+	virtual const MagazinesContainer* magazines() const override;
+	virtual const ExplosivesContainer* explosives() const override;
+	virtual const ArmoursContainer* armours() const override;
 	virtual const ItemModel* getItem(uint16_t index) const override;
 	virtual const ItemModel* getItem(uint16_t itemIndex, ItemSystem::nothrow_t const&) const noexcept override;
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
