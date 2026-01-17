@@ -1,5 +1,7 @@
 #include "Strategic_Status.h"
 #include "Inventory_Choosing.h"
+#include "ItemModel.h"
+#include "ItemSystem.h"
 #include "Item_Types.h"
 #include "SGPFile.h"
 #include "SaveLoadGameStates.h"
@@ -78,8 +80,8 @@ void SaveStrategicStatusToSaveGameFile(HWFILE const hFile)
 	wda[0] = FALSE; // NOTHING aka NONE
 	for (uint16_t idx = 1; idx < MAX_WEAPONS; ++idx)
 	{
-		auto * const itemModel{ GCM->getItem(idx) };
-		if (itemModel->isWeapon())
+		auto * const itemModel{ GCM->getItem(idx, ItemSystem::nothrow) };
+		if (itemModel && itemModel->isWeapon())
 		{
 			wda[idx] = WasWeaponAlreadyDropped(itemModel->asWeapon());
 		}
