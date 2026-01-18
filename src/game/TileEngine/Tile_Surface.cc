@@ -4,7 +4,6 @@
 #include "GameInstance.h"
 #include "HImage.h"
 #include "Logger.h"
-#include "PODObj.h"
 #include "Structure.h"
 #include "Structure_Internals.h"
 #include "Sys_Globals.h"
@@ -12,6 +11,7 @@
 #include "Types.h"
 #include "VObject.h"
 #include <array>
+#include <memory>
 #include <stdexcept>
 #include <string_theory/format>
 
@@ -46,7 +46,7 @@ try
 		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef.get(), FALSE, 0);
 	}
 
-	SGP::PODObj<TILE_IMAGERY> pTileSurf;
+	auto pTileSurf = std::make_unique<TILE_IMAGERY>();
 
 	if (pStructureFileRef && !pStructureFileRef->pAuxData.empty())
 	{
@@ -65,7 +65,7 @@ try
 
 	pTileSurf->vo                = hVObject.release();
 	pTileSurf->pStructureFileRef.swap(pStructureFileRef);
-	return pTileSurf.Release();
+	return pTileSurf.release();
 }
 catch (...)
 {

@@ -1,4 +1,3 @@
-#include "PODObj.h"
 #include "Structure.h"
 #include "TileDat.h"
 #include "WorldDef.h"
@@ -12,6 +11,7 @@
 #include "Render_Fun.h"  //for access to gubWorldRoomInfo;
 #include "Cursor_Modes.h"
 #include "Exit_Grids.h"
+#include <memory>
 
 
 /*
@@ -252,7 +252,7 @@ void AddLightToUndoList(INT32 const iMapIndex, INT32 const iLightRadius)
 	 * cleared, and lights are again allowed to be saved in the undo list. */
 	if (gfIgnoreUndoCmdsForLights) return;
 
-	SGP::PODObj<undo_struct> undo_info;
+	auto undo_info = std::make_unique<undo_struct>();
 	undo_info->fLightSaved = TRUE;
 	/* if ubLightRadius is 0, then we don't need to save the light information
 	 * because we will erase it when it comes time to execute the undo command. */
@@ -261,11 +261,11 @@ void AddLightToUndoList(INT32 const iMapIndex, INT32 const iLightRadius)
 	undo_info->pMapTile      = NULL;
 
 	//Add to undo stack
-	SGP::PODObj<undo_stack> n;
+	auto n = std::make_unique<undo_stack>();
 	n->iCmdCount    = 1;
-	n->pData        = undo_info.Release();
+	n->pData        = undo_info.release();
 	n->pNext        = gpTileUndoStack;
-	gpTileUndoStack = n.Release();
+	gpTileUndoStack = n.release();
 
 	CropStackToMaxLength(MAX_UNDO_COMMAND_LENGTH);
 }
@@ -311,8 +311,8 @@ static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 	INT32					iCoveredMapIndex;
 	UINT8					ubLoop;
 
-	SGP::PODObj<undo_stack>  pNode;
-	SGP::PODObj<undo_struct> pUndoInfo;
+	auto pNode = std::make_unique<undo_stack>();
+	auto pUndoInfo = std::make_unique<undo_struct>();
 
 	// Copy the world map's tile
 	MAP_ELEMENT* const pData = CopyMapElementFromWorld(iMapIndex);
@@ -327,10 +327,10 @@ static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 	pUndoInfo->pMapTile = pData;
 	pUndoInfo->iMapIndex = iMapIndex;
 
-	pNode->pData = pUndoInfo.Release();
+	pNode->pData = pUndoInfo.release();
 	pNode->iCmdCount = iCmdCount;
 	pNode->pNext = gpTileUndoStack;
-	gpTileUndoStack = pNode.Release();
+	gpTileUndoStack = pNode.release();
 
 	// loop through pData->pStructureHead list
 	// for each structure
