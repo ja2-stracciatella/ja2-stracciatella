@@ -3,7 +3,6 @@
 #include "Directories.h"
 #include "Font.h"
 #include "LoadSaveData.h"
-#include "PODObj.h"
 #include "Types.h"
 #include "Font_Control.h"
 #include "Message.h"
@@ -23,6 +22,7 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include <memory>
 #include <string_theory/string>
 
 
@@ -493,7 +493,7 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 	f->read(&size, sizeof(size));
 	if (size == 0) return 0;
 
-	SGP::PODObj<ScrollStringSt> s;
+	auto s = std::make_unique<ScrollStringSt>();
 	{
 		SGP::Buffer<uint8_t> data(size);
 		f->read(data, size);
@@ -522,7 +522,7 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 	EXTR_SKIP(d, 1)
 	Assert(d.getConsumed() == lengthof(data));
 
-	return s.Release();
+	return s.release();
 }
 
 

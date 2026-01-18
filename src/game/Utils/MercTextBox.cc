@@ -4,7 +4,6 @@
 #include "Local.h"
 #include "MercTextBox.h"
 #include "Object_Cache.h"
-#include "PODObj.h"
 #include "VObject.h"
 #include "VSurface.h"
 #include "Font_Control.h"
@@ -115,12 +114,13 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 
 	if (usWidth <= MERC_TEXT_MIN_WIDTH) usWidth = MERC_TEXT_MIN_WIDTH;
 
-	SGP::PODObj<MercPopUpBox> new_box(0);
+	std::unique_ptr<MercPopUpBox> new_box;
 	// check id value, if -1, box has not been inited yet
 	if (!box)
 	{
 		// no box yet
-		box = new_box.Allocate();
+		new_box.reset(new MercPopUpBox);
+		box = new_box.get();
 		LoadTextMercPopupImages(box, ubBackgroundIndex, ubBorderIndex);
 	}
 	else
@@ -251,8 +251,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
 
-	new_box.Release();
-	return box;
+	return new_box ? new_box.release() : box;
 }
 
 
