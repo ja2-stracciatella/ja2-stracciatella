@@ -505,14 +505,17 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		}
 
 		// OK, Check if this is a wall, then search and change other walls based on this
-		if (pCurrent->fFlags & STRUCTURE_WALLSTUFF)
+		if (pCurrent->fFlags & STRUCTURE_WALLSTUFF || pCurrent->fFlags & STRUCTURE_WIREFENCE)
 		{
 			/* ATE
 			 * Remove any decals in tile
 			 * Use tile database for this as apposed to stuct data */
 			RemoveAllStructsOfTypeRange(base_grid_no, FIRSTWALLDECAL, FOURTHWALLDECAL);
 			RemoveAllStructsOfTypeRange(base_grid_no, FIFTHWALLDECAL, EIGTHWALLDECAL);
+		}
 
+		if (pCurrent->fFlags & STRUCTURE_WALLSTUFF)
+		{
 			/* Based on orientation, go either x or y dir, check for wall in both _ve
 			 * and -ve directions and if found, then replace */
 			switch (UINT8 const orientation = pCurrent->ubWallOrientation)
