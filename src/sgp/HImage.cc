@@ -7,6 +7,7 @@
 #include "PCX.h"
 #include "STCI.h"
 #include "VObject.h"
+#include "VSurface.h"
 
 
 // This is the color substituted to keep a 24bpp -> 16bpp color
@@ -59,7 +60,7 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 		UINT8 const r = pPalette[cnt].r;
 		UINT8 const g = pPalette[cnt].g;
 		UINT8 const b = pPalette[cnt].b;
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = Get16BPPColor(r, g, b);
 	}
 
 	return p16BPPPalette;
@@ -118,7 +119,7 @@ UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale,
 		UINT8 r = std::min(rmod, 255U);
 		UINT8 g = std::min(gmod, 255U);
 		UINT8 b = std::min(bmod, 255U);
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = Get16BPPColor(r, g, b);
 	}
 	return p16BPPPalette;
 }
@@ -131,6 +132,12 @@ UINT16 Get16BPPColor( UINT32 RGBValue )
 	UINT8 g = SGPGetGValue(RGBValue);
 	UINT8 b = SGPGetBValue(RGBValue);
 
+	return Get16BPPColor(r, g, b);
+}
+
+
+UINT16 Get16BPPColor(UINT8 r, UINT8 g, UINT8 b)
+{
 	UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
 	UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
 	UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
@@ -140,82 +147,20 @@ UINT16 Get16BPPColor( UINT32 RGBValue )
 	// if our color worked out to absolute black, and the original wasn't
 	// absolute black, convert it to a VERY dark grey to avoid transparency
 	// problems
-	if (usColor == 0 && RGBValue != 0) usColor = BLACK_SUBSTITUTE;
-
-	return usColor;
+	return (usColor == 0 && r + g + b != 0) ? BLACK_SUBSTITUTE : usColor;
 }
 
 
 // Convert from 16 BPP to RGBvalue
 UINT32 GetRGBColor(UINT16 Value16BPP)
 {
-	UINT32 r16 = Value16BPP & gusRedMask;
-	UINT32 g16 = Value16BPP & gusGreenMask;
-	UINT32 b16 = Value16BPP & gusBlueMask;
-
-	UINT32 r = (gusRedShift   < 0 ? r16 << -gusRedShift   : r16 >> gusRedShift);
-	UINT32 g = (gusGreenShift < 0 ? g16 << -gusGreenShift : g16 >> gusGreenShift);
-	UINT32 b = (gusBlueShift  < 0 ? b16 << -gusBlueShift  : b16 >> gusBlueShift);
-
-	r &= 0x000000ff;
-	g &= 0x000000ff;
-	b &= 0x000000ff;
-
-	UINT32 val = FROMRGB(r, g, b);
-	return val;
+	UINT8 r, g, b;
+	SDL_GetRGB(Value16BPP, g_frame_buffer->GetSDLSurface().format, &r, &g, &b);
+	return FROMRGB(r, g, b);
 }
 
 
-void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
-{
-	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
-	{
-		*Px = ((*Px >> 1) & ~0x001F) | (*Px & 0x001F);
-	}
-}
-
-void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
-{
-	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
-	{
-		*Px = ((*Px >> 1) & 0x03E0) | (*Px & ~0x07E0);
-	}
-}
-
-void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
-{
-	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
-	{
-		*Px = (*Px & ~0x003F) | ((*Px << 1) & 0x003F);
-	}
-}
-
-
-void ConvertRGBDistribution565ToAny(UINT16* const p16BPPData, UINT32 const uiNumberOfPixels)
-{
-	UINT16* px = p16BPPData;
-	for (size_t n = uiNumberOfPixels; n != 0; --n)
-	{
-		// put the 565 RGB 16-bit value into a 32-bit RGB value
-		UINT32 const r   = (*px         ) >> 11;
-		UINT32 const g   = (*px & 0x07E0) >>  5;
-		UINT32 const b   = (*px & 0x001F);
-		UINT32 const rgb = FROMRGB(r, g, b);
-		// then convert the 32-bit RGB value to whatever 16 bit format is used
-		*px++ = Get16BPPColor(rgb);
-	}
-}
-
-
-#ifdef WITH_UNITTESTS
-#include "gtest/gtest.h"
-
-TEST(HImage, asserts)
-{
-	EXPECT_EQ(sizeof(AuxObjectData), 16u);
-	EXPECT_EQ(sizeof(RelTileLoc), 2u);
-	EXPECT_EQ(sizeof(ETRLEObject), 16u);
-	EXPECT_EQ(sizeof(SGPPaletteEntry), 4u);
-}
-
-#endif
+static_assert(sizeof(AuxObjectData) == 16u);
+static_assert(sizeof(RelTileLoc) == 2u);
+static_assert(sizeof(ETRLEObject) == 16u);
+static_assert(sizeof(SGPPaletteEntry) == 4u);

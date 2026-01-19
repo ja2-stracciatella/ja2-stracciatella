@@ -1207,7 +1207,7 @@ void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 
 	const int g = s(0xff & rgb >> 8);
 	const int b = s(0xff & rgb);
 
-	const UINT16 fill_color = Get16BPPColor((b << 16) + (g << 8) + r);
+	const UINT16 fill_color = Get16BPPColor(r, g, b);
 
 	UINT16* const dst = l.Buffer<UINT16>();
 

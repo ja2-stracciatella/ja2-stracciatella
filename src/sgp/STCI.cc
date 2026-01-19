@@ -1,19 +1,20 @@
 #include <stdexcept>
 
-#include "Buffer.h"
+#include "Exceptions.h"
 #include "ImgFmt.h"
 #include "HImage.h"
-#include "Debug.h"
 #include "SGPFile.h"
 #include "STCI.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "Logger.h"
+#include "SDL.h"
+#include <array>
 
-static SGPImage* STCILoadIndexed(UINT16 contents, HWFILE, STCIHeader const*);
-static SGPImage* STCILoadRGB(    UINT16 contents, HWFILE, STCIHeader const*);
-
+namespace {
+SGPImage* LoadIndexed(UINT16 contents, HWFILE, STCIHeader const&);
+SGPImage* LoadRGB(    UINT16 contents, HWFILE, STCIHeader const&);
+}
 
 SGPImage* LoadSTCIFileToImage(const ST::string& filename, UINT16 const fContents)
 {
@@ -33,58 +34,43 @@ SGPImage* LoadSTCIFileToImage(const ST::string& filename, UINT16 const fContents
 
 	// Determine from the header the data stored in the file. and run the appropriate loader
 	return
-		header.fFlags & STCI_RGB     ? STCILoadRGB(    fContents, f, &header) :
-		header.fFlags & STCI_INDEXED ? STCILoadIndexed(fContents, f, &header) :
+		header.fFlags & STCI_RGB     ? LoadRGB(    fContents, f, header) :
+		header.fFlags & STCI_INDEXED ? LoadIndexed(fContents, f, header) :
 		/* Unsupported type of data, or the right flags weren't set! */
 		throw std::runtime_error("Unknown data organization in STCI file.");
 }
 
+namespace {
+void ReadImageData(SGPImage & img, SGPFile *file, size_t dataBytes)
+{
+	// Allocate memory for the image data and read it in
+	file->read(img.pImageData.Allocate(dataBytes), dataBytes);
+	img.fFlags |= IMAGE_BITMAPDATA;
+}
 
-static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader const* const header)
+
+SGPImage* LoadRGB(UINT16 const contents, HWFILE const f, STCIHeader const& header)
 {
 	if (contents & IMAGE_PALETTE && (contents & IMAGE_ALLIMAGEDATA) != IMAGE_ALLIMAGEDATA)
 	{ // RGB doesn't have a palette!
 		throw std::logic_error("Invalid combination of content load flags");
 	}
 
-	AutoSGPImage img(new SGPImage(header->usWidth, header->usHeight, header->ubDepth));
+	AutoSGPImage img(new SGPImage(header.usWidth, header.usHeight, header.ubDepth));
 	if (contents & IMAGE_BITMAPDATA)
 	{
-		// Allocate memory for the image data and read it in
-		UINT8* const img_data = img->pImageData.Allocate(header->uiStoredSize);
-		f->read(img_data, header->uiStoredSize);
+		ReadImageData(*img, f, header.uiStoredSize);
 
-		img->fFlags |= IMAGE_BITMAPDATA;
-
-		if (header->ubDepth == 16)
+		if (header.ubDepth == 16)
 		{
 			// ASSUMPTION: file data is 565 R,G,B
-			if (gusRedMask   != (UINT16)header->RGB.uiRedMask   ||
-					gusGreenMask != (UINT16)header->RGB.uiGreenMask ||
-					gusBlueMask  != (UINT16)header->RGB.uiBlueMask)
+			auto const& masks = header.RGB;
+			auto pixelFormat = SDL_MasksToPixelFormatEnum(16, masks.uiRedMask,
+				masks.uiGreenMask, masks.uiBlueMask, masks.uiAlphaMask);
+			if (pixelFormat != SDL_PIXELFORMAT_RGB565)
 			{
-				// colour distribution of the file is different from hardware!  We have to change it!
-				SLOGD("Converting to current RGB distribution!");
-				// Convert the image to the current hardware's specifications
-				UINT32  const size = header->usWidth * header->usHeight;
-				UINT16* const data = (UINT16*)(UINT8*)img->pImageData;
-				if (gusRedMask == 0x7C00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
-				{
-					ConvertRGBDistribution565To555(data, size);
-				}
-				else if (gusRedMask == 0xFC00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
-				{
-					ConvertRGBDistribution565To655(data, size);
-				}
-				else if (gusRedMask == 0xF800 && gusGreenMask == 0x07C0 && gusBlueMask == 0x003F)
-				{
-					ConvertRGBDistribution565To556(data, size);
-				}
-				else
-				{
-					// take the long route
-					ConvertRGBDistribution565ToAny(data, size);
-				}
+				throw DataError{ ST::format(
+					"{} is in a 16-bit pixel format other than RGB565", f->getName()) };
 			}
 		}
 	}
@@ -92,20 +78,20 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 }
 
 
-static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHeader const* const header)
+SGPImage* LoadIndexed(UINT16 const contents, HWFILE const f, STCIHeader const& header)
 {
-	AutoSGPImage img(new SGPImage(header->usWidth, header->usHeight, header->ubDepth));
+	AutoSGPImage img(new SGPImage(header.usWidth, header.usHeight, header.ubDepth));
 	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
-		if (header->Indexed.uiNumberOfColours != 256)
+		if (header.Indexed.uiNumberOfColours != 256)
 		{
 			throw std::runtime_error("Palettized image has bad palette size.");
 		}
 
-		SGP::Buffer<STCIPaletteElement> pSTCIPalette(256);
+		std::array<STCIPaletteElement, 256> pSTCIPalette;
 
 		// Read in the palette
-		f->read(pSTCIPalette, sizeof(*pSTCIPalette) * 256);
+		f->read(pSTCIPalette.data(), sizeof(pSTCIPalette));
 
 		SGPPaletteEntry* const palette = img->pPalette.Allocate(256);
 		for (size_t i = 0; i < 256; i++)
@@ -120,43 +106,40 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 	}
 	else if (contents & (IMAGE_BITMAPDATA | IMAGE_APPDATA))
 	{ // seek past the palette
-		f->seek(sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT);
+		f->seek(sizeof(STCIPaletteElement) * header.Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT);
 	}
 
 	if (contents & IMAGE_BITMAPDATA)
 	{
-		if (header->fFlags & STCI_ETRLE_COMPRESSED)
+		if (header.fFlags & STCI_ETRLE_COMPRESSED)
 		{
 			// load data for the subimage (object) structures
-			Assert(sizeof(ETRLEObject) == sizeof(STCISubImage));
+			static_assert(sizeof(ETRLEObject) == sizeof(STCISubImage));
 
-			UINT16 const n_subimages = header->Indexed.usNumberOfSubImages;
+			UINT16 const n_subimages = header.Indexed.usNumberOfSubImages;
 			img->usNumberOfObjects = n_subimages;
 
 			ETRLEObject* const etrle_objects = img->pETRLEObject.Allocate(n_subimages);
 			f->read(etrle_objects, sizeof(*etrle_objects) * n_subimages);
 
-			img->uiSizePixData  = header->uiStoredSize;
+			img->uiSizePixData  = header.uiStoredSize;
 			img->fFlags        |= IMAGE_TRLECOMPRESSED;
 		}
 
-		UINT8* const image_data = img->pImageData.Allocate(header->uiStoredSize);
-		f->read(image_data, header->uiStoredSize);
-
-		img->fFlags |= IMAGE_BITMAPDATA;
+		ReadImageData(*img, f, header.uiStoredSize);
 	}
 	else if (contents & IMAGE_APPDATA) // then there's a point in seeking ahead
 	{
-		f->seek(header->uiStoredSize, FILE_SEEK_FROM_CURRENT);
+		f->seek(header.uiStoredSize, FILE_SEEK_FROM_CURRENT);
 	}
 
-	if (contents & IMAGE_APPDATA && header->uiAppDataSize > 0)
+	if (contents & IMAGE_APPDATA && header.uiAppDataSize > 0)
 	{
 		// load application-specific data
-		UINT8* const app_data = img->pAppData.Allocate(header->uiAppDataSize);
-		f->read(app_data, header->uiAppDataSize);
+		UINT8* const app_data = img->pAppData.Allocate(header.uiAppDataSize);
+		f->read(app_data, header.uiAppDataSize);
 
-		img->uiAppDataSize  = header->uiAppDataSize;
+		img->uiAppDataSize  = header.uiAppDataSize;
 		img->fFlags        |= IMAGE_APPDATA;
 	}
 	else
@@ -166,16 +149,8 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 
 	return img.release();
 }
-
-
-#ifdef WITH_UNITTESTS
-#include "gtest/gtest.h"
-
-TEST(STCI, asserts)
-{
-	EXPECT_EQ(sizeof(STCIHeader), 64u);
-	EXPECT_EQ(sizeof(STCISubImage), 16u);
-	EXPECT_EQ(sizeof(STCIPaletteElement), 3u);
 }
 
-#endif
+static_assert(sizeof(STCIHeader) == 64u);
+static_assert(sizeof(STCISubImage) == 16u);
+static_assert(sizeof(STCIPaletteElement) == 3u);
