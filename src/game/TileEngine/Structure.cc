@@ -1771,12 +1771,31 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 				fMinimumBlockingFound = TRUE;
 			}
 
-			// Default, if we are a wall, set full blocking
-			if ( ( pCurrent->fFlags & STRUCTURE_WALL ) && !fWallsBlock )
+			if ( pCurrent->fFlags & STRUCTURE_WALL )
 			{
-				// Return full blocking!
-				// OK! This will be handled by movement costs......!
-				fOKStructOnLevel = FALSE;
+				if (!fWallsBlock)
+				{
+					// OK! This will be handled by movement costs......!
+					fOKStructOnLevel = FALSE;
+				}
+				else
+				{
+					// Check how a wall is oriented relative to the direction the test ray is coming from
+					const uint8_t orientation{ pCurrent->ubWallOrientation };
+					if ((bDir >= NORTH && bDir <= SOUTH) && (orientation == INSIDE_TOP_RIGHT || orientation == OUTSIDE_TOP_RIGHT))
+					{
+						fOKStructOnLevel = FALSE;
+					}
+					else if ((bDir >= EAST && bDir <= WEST) && (orientation == INSIDE_TOP_LEFT || orientation == OUTSIDE_TOP_LEFT))
+					{
+						fOKStructOnLevel = FALSE;
+					}
+					else
+					{
+						fOKStructOnLevel = TRUE;
+						break;
+					}
+				}
 			}
 
 			// CHECK FOR WINDOW

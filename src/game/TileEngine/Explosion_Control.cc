@@ -504,7 +504,6 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 			}
 		}
 
-		// OK, Check if this is a wall, then search and change other walls based on this
 		if (pCurrent->fFlags & STRUCTURE_WALLSTUFF || pCurrent->fFlags & STRUCTURE_WIREFENCE)
 		{
 			/* ATE
@@ -514,6 +513,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 			RemoveAllStructsOfTypeRange(base_grid_no, FIFTHWALLDECAL, EIGTHWALLDECAL);
 		}
 
+		// OK, Check if this is a wall, then search and change other walls based on this
 		if (pCurrent->fFlags & STRUCTURE_WALLSTUFF)
 		{
 			/* Based on orientation, go either x or y dir, check for wall in both _ve
