@@ -14,7 +14,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/ci-functions.sh"
 
 echo "## prepare environment ##"
 if [[ "$CI_TARGET" == "linux" ]]; then
-    GCC_VER="${TARGET_GCC_MAJOR_VERSION:-8}"
+    GCC_VER="${TARGET_GCC_MAJOR_VERSION:-10}"
 
     # SDL2 and FLTK to link against
     linux-install-via-apt-get libsdl2-dev libfltk1.3-dev "gcc-$GCC_VER" "g++-$GCC_VER"
