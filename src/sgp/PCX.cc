@@ -76,7 +76,6 @@ SGPImage* LoadPCXFileToImage(const ST::string& filename, UINT16 const contents)
 			dst[i].b      = palette[i * 3 + 2];
 			dst[i].a      = 0;
 		}
-		img->pui16BPPPalette = Create16BPPPalette(dst);
 	}
 
 	return img.release();
@@ -103,13 +102,4 @@ static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 const w, UINT16
 	}
 }
 
-
-#ifdef WITH_UNITTESTS
-#include "gtest/gtest.h"
-
-TEST(PCX, asserts)
-{
-	EXPECT_EQ(sizeof(PcxHeader), 128u);
-}
-
-#endif
+static_assert(sizeof(PcxHeader) == 128u);

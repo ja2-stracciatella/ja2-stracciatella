@@ -66,6 +66,9 @@ public:
 
 	/** Get an SDL_RWops from the file. */
 	SDL_RWops* getRwOps();
+
+	/** Get the name of the file. */
+	auto const& getName() const noexcept { return name; }
 };
 
 void DeleteSGPFile(SGPFile *file);
