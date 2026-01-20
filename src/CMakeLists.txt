@@ -18,7 +18,7 @@ function(add_warnings target)
     )
 endfunction()
 
-target_compile_features(${JA2_BINARY} PUBLIC cxx_std_20)
+target_compile_features(${JA2_BINARY} PRIVATE cxx_std_20)
 
 target_include_directories(${JA2_BINARY} SYSTEM PRIVATE
     ${SDL2_INCLUDE_DIR}

@@ -51,6 +51,7 @@ else ()
     )
 endif ()
 
+target_compile_features(${LAUNCHER_BINARY} PRIVATE cxx_std_20)
 
 target_link_libraries(${LAUNCHER_BINARY} PRIVATE
     ${STRACCIATELLA_LIBRARIES}
