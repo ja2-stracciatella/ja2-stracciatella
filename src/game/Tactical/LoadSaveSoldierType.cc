@@ -4,6 +4,7 @@
 #include "LoadSaveSoldierType.h"
 #include "Overhead.h"
 #include "Types.h"
+#include "SGPFile.h"
 
 #include <string_theory/string>
 

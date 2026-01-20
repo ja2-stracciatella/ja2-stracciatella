@@ -24,8 +24,8 @@ protected:
 	void SetUp() override
 	{
 		// Initialize a test soldier with known values
-		memset(&testSoldier, 0, sizeof(SOLDIERTYPE));
-		
+		testSoldier = {};
+
 		// Basic identification
 		testSoldier.ubID = 42;
 		testSoldier.ubProfile = 123;

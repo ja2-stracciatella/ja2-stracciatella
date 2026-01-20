@@ -1,13 +1,11 @@
 #ifndef LOADSAVEDATA_H
 #define LOADSAVEDATA_H
 
+#include "Concepts.h"
 #include <cstdint>
 #include <cstring>
-#include <type_traits>
 #include <string_theory/string>
 
-template<typename T>
-concept memcpyable = std::is_trivially_copyable_v<T>;
 
 ////////////////////////////////////////////////////////////////////////////
 // DataWriter
