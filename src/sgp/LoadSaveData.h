@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <string_theory/string>
 
+template<typename T>
+concept memcpyable = std::is_trivially_copyable_v<T>;
 
 ////////////////////////////////////////////////////////////////////////////
 // DataWriter
@@ -39,20 +41,17 @@ public:
 	void writeU32(uint32_t value);        /**< Write uint32_t */
 
 	/* Write a value. */
-	template<typename T>
-	void write(const T& value)
+	void write(memcpyable auto const& value)
 	{
-		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
-		constexpr size_t numBytes = sizeof(T);
+		constexpr size_t numBytes = sizeof(value);
 		std::memcpy(m_buf, &value, numBytes);
 		move(numBytes);
 	}
 
 	/* Write an array of values. */
-	template<typename T>
+	template<memcpyable T>
 	void writeArray(const T* arr, size_t len)
 	{
-		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
 		size_t numBytes = len * sizeof(T);
 		std::memcpy(m_buf, arr, numBytes);
 		move(numBytes);
@@ -135,11 +134,10 @@ public:
 	void readBytes(uint8_t* bytes, size_t numBytes);
 
 	/* Read a value. */
-	template<typename T>
+	template<memcpyable T>
 	T read()
 	{
-		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
-		size_t numBytes = sizeof(T);
+		constexpr size_t numBytes = sizeof(T);
 		T value;
 		std::memcpy(&value, m_buf, numBytes);
 		move(numBytes);
@@ -147,10 +145,9 @@ public:
 	}
 
 	/* Read an array of values. */
-	template<typename T>
+	template<memcpyable T>
 	void readArray(T* arr, size_t len)
 	{
-		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
 		size_t numBytes = len * sizeof(T);
 		std::memcpy(arr, m_buf, numBytes);
 		move(numBytes);
@@ -204,9 +201,7 @@ protected:
 #define INJ_SKIP_U8(D)    (D).skip(1);
 #define INJ_SOLDIER(D, S) (D).write<SoldierID>(Soldier2ID((S)));
 #define INJ_VEC3(D, S) INJ_FLOAT(D, (S).x); INJ_FLOAT(D, (S).y); INJ_FLOAT(D, (S).z);
-// Could use auto as the type of S in C++20
-template<typename T>
-static inline void INJ_AUTO(DataWriter & D, T S) { D.write(S); }
+static inline void INJ_AUTO(DataWriter & D, auto const& S) { D.write(S); }
 
 #define EXTR_STR(S, D, Size)  (S).readArray<char>((D), (Size));
 #define EXTR_BOOLA(S, D, Size) (S).readArray<BOOLEAN>((D), (Size));
@@ -233,7 +228,6 @@ static inline void INJ_AUTO(DataWriter & D, T S) { D.write(S); }
 #define EXTR_SKIP_U8(S)    (S).skip(1);
 #define EXTR_SOLDIER(S, D) (D) = ID2Soldier((S).read<SoldierID>());
 #define EXTR_VEC3(S, D) EXTR_FLOAT(S, (D).x); EXTR_FLOAT(S, (D).y); EXTR_FLOAT(S, (D).z);
-template<typename T>
-static inline void EXTR_AUTO(DataReader & S, T & D) { D = S.read<std::remove_reference_t<decltype(D)>>(); }
+static inline void EXTR_AUTO(DataReader & S, auto & D) { D = S.read<std::remove_reference_t<decltype(D)>>(); }
 
 #endif
