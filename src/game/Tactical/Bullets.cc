@@ -239,24 +239,11 @@ void UpdateBullets(void)
 							b->pAniTile->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
 							b->pAniTile->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
 							b->pAniTile->pLevelNode->sRelativeZ = CONVERT_HEIGHTUNITS_TO_PIXELS(FIXEDPT_TO_INT32(b->qCurrZ));
+							// Correction for cliff-elevated sectors (e.g. Drassen mine)
+							b->pAniTile->pLevelNode->sRelativeZ -= gpWorldLevelData[b->sGridNo].sHeight;
 
-							// it seems some sectors deliver wrong depth informationen(Z)
-							// As there only a fixed amount of ways to throw a knife we can
-							// correct the relativeZ value
-							if(b->pAniTile->pLevelNode->sRelativeZ > 160)
-							{
-								b->pAniTile->pLevelNode->sRelativeZ -= 115;
-							}
-							else if(b->pAniTile->pLevelNode->sRelativeZ > 90)
-							{
-								b->pAniTile->pLevelNode->sRelativeZ -= 70;
-							}
-
-							if (b->usFlags & BULLET_FLAG_KNIFE)
-							{
-								b->pShadowAniTile->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
-								b->pShadowAniTile->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
-							}
+							b->pShadowAniTile->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
+							b->pShadowAniTile->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
 						}
 					}
 					// Are we a missle?

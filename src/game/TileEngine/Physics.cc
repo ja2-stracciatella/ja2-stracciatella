@@ -1403,6 +1403,9 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 	pObject->fTestPositionNotSet = TRUE;
 	pObject->fVisible = FALSE;
 
+	// Physical object is created with absolute height value
+	// Make it relative for correct simulation on cliff-elevated maps (e.g. Drassen mine)
+	pObject->Position.z -= CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight);
 	// Alrighty, move this beast until it dies....
 	while( pObject->fAlive )
 	{
