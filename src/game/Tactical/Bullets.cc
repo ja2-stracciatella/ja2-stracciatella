@@ -240,7 +240,7 @@ void UpdateBullets(void)
 							b->pAniTile->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
 							b->pAniTile->pLevelNode->sRelativeZ = CONVERT_HEIGHTUNITS_TO_PIXELS(FIXEDPT_TO_INT32(b->qCurrZ));
 
-							// it seems some sectors deliver wrong depth informationen(Z)
+							// Cliff-elevated sectors (e.g. Drassen mine) deliver wrong depth information(Z)
 							// As there only a fixed amount of ways to throw a knife we can
 							// correct the relativeZ value
 							if(b->pAniTile->pLevelNode->sRelativeZ > 160)
