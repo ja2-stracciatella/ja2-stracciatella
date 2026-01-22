@@ -2396,7 +2396,7 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDest
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
-	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr  = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -2466,18 +2466,6 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDest
 	usZIndex = usZStartIndex;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -2659,7 +2647,7 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuf
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
-	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr  = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -2728,18 +2716,6 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuf
 	usZIndex = usZStartIndex;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -2916,7 +2892,7 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
 	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
-	UINT32 uiLineFlag = iTempY & 1;
+	UINT32 uiLineFlag = (iTempY + TopSkip) & 1;
 
 	// calculate the remaining rows and columns to blit
 	const INT32 BlitLength = usWidth  - LeftSkip - RightSkip;
@@ -2926,7 +2902,7 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
-	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
+	UINT8 const* SrcPtr   = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -2996,19 +2972,6 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 	usZIndex = usZStartIndex;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		uiLineFlag ^= 1; // XXX evaluate before loop
-		TopSkip--;
-	}
 
 	do
 	{
@@ -3189,7 +3152,7 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuf
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
-	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	UINT8*       DestPtr = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr    = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -3258,18 +3221,6 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuf
 	usZIndex = usZStartIndex;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -3455,7 +3406,7 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UI
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
-	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr  = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -3524,18 +3475,6 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UI
 	usZIndex = usZStartIndex;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
