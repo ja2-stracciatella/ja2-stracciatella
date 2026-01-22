@@ -381,23 +381,11 @@ void Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const* SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -990,24 +978,12 @@ void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitc
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const* SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 Unblitted, LSCount;
-
-	while (TopSkip)
-	{
-		UINT8 const px = *SrcPtr++;
-		if (px & 0x80)  continue;
-		if (px)
-		{
-			SrcPtr += px;
-			continue;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -1182,24 +1158,12 @@ void Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitch
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 Unblitted;
 	INT32 LSCount;
-
-	while (TopSkip)
-	{
-		UINT8 const px = *SrcPtr++;
-		if (px & 0x80)  continue;
-		if (px)
-		{
-			SrcPtr += px;
-			continue;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -1342,7 +1306,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT32 
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
@@ -1350,18 +1314,6 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT32 
 	uiLineFlag = (iTempY + TopSkip) & 1;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -1588,24 +1540,12 @@ void Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -1808,24 +1748,12 @@ void Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -1966,25 +1894,13 @@ void Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -2128,25 +2044,13 @@ void Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -2646,25 +2550,13 @@ void Blt8BPPDataTo16BPPBufferTransparentClip(UINT16* const pBuffer, const UINT32
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 LSCount;
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -2854,24 +2746,12 @@ void Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 	UINT32 LSCount;
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -3165,24 +3045,12 @@ void Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* const pBuffer, const UINT32 uiD
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -3318,7 +3186,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32 ui
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 
@@ -3326,18 +3194,6 @@ void Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32 ui
 	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -3482,7 +3338,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuffer,
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 
@@ -3491,18 +3347,6 @@ void Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuffer,
 	uiLineFlag = (iTempY + TopSkip) & 1;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -4412,7 +4256,7 @@ void Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UINT32
 	if((TopSkip >=(INT32)usHeight) || (BottomSkip >=(INT32)usHeight))
 		return;
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
+	UINT8 const * SrcPtr = SkipLines(hSrcVObject->PixData(pTrav), TopSkip);
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
@@ -4420,18 +4264,6 @@ void Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UINT32
 	uiLineFlag = (iTempY + TopSkip) & 1;
 
 	UINT32 PxCount;
-
-	while (TopSkip > 0)
-	{
-		for (;;)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80) continue;
-			if (PxCount == 0) break;
-			SrcPtr += PxCount;
-		}
-		TopSkip--;
-	}
 
 	do
 	{
@@ -4511,4 +4343,18 @@ BlitNonTransLoop: // blit non-transparent pixels
 		uiLineFlag ^= 1;
 	}
 	while (--BlitHeight > 0);
+}
+
+
+UINT8 const * SkipLines(UINT8 const * SrcPtr, int TopSkip)
+{
+	while (TopSkip > 0)
+	{
+		UINT8 const PxCount = *SrcPtr++;
+		if (PxCount & 0x80) continue;
+		if (PxCount == 0) --TopSkip;
+		SrcPtr += PxCount;
+	}
+
+	return SrcPtr;
 }
