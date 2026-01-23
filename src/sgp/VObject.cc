@@ -239,9 +239,10 @@ void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 
 	UINT16* const pBuffer = l.Buffer<UINT16>();
 	UINT32  const uiPitch = l.Pitch();
 
-	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect))
+	ClipInfo const ci{ src, iDestX, iDestY, usRegionIndex, &ClippingRect };
+	if (ci.status != ClipInfo::Status::Not_Clipped)
 	{
-		Blt8BPPDataTo16BPPBufferTransparentClip(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex, &ClippingRect);
+		BltTransparent(ci, pBuffer, uiPitch);
 	}
 	else
 	{
@@ -256,9 +257,10 @@ void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcV
 	UINT16* const pBuffer = l.Buffer<UINT16>();
 	UINT32  const uiPitch = l.Pitch();
 
-	if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
+	ClipInfo ci { hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect };
+	if (ci.status != ClipInfo::Status::Not_Clipped)
 	{
-		Blt8BPPDataTo16BPPBufferOutlineClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, &ClippingRect);
+		BltOutline(ci, pBuffer, uiPitch, s16BPPColor);
 	}
 	else
 	{
