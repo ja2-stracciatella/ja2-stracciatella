@@ -634,7 +634,11 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 		{
 			if (pObject->fTestPositionNotSet )
 			{
-				if ( pObject->TestZTarget > 32 )
+				if ( pObject->TestZTarget == HEIGHT_UNITS )
+				{
+					iCollisionCode = COLLISION_ROOF;
+				}
+				else if ( pObject->TestZTarget > 32 )
 				{
 					pObject->fTestPositionNotSet = FALSE;
 					pObject->TestZTarget         = 0;
