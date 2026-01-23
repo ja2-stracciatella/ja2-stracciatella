@@ -385,7 +385,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime)
 				MakeNoise(pObject->owner, pObject->sGridNo, 0, 9 + PreRandom(9), NOISE_GRENADE_IMPACT);
 			}
 
-			if ( !pObject->fTestObject && pObject->iOldCollisionCode == COLLISION_GROUND )
+			if ( !pObject->fTestObject && ( pObject->iOldCollisionCode == COLLISION_GROUND || pObject->iOldCollisionCode == COLLISION_ROOF ) )
 			{
 				PlayLocationJA2Sample(pObject->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 			}
@@ -912,6 +912,12 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 			fDoCollision = TRUE;
 
+			if (!pObject->fTestObject && !pObject->fHaveHitGround)
+			{
+				PlayLocationJA2Sample(pObject->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
+			}
+
+			pObject->fHaveHitGround = TRUE;
 		}
 		//else if ( iCollisionCode == COLLISION_INTERIOR_ROOF )
 		//{
