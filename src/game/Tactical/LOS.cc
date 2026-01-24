@@ -4446,22 +4446,22 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 				iCurrCubesAboveLevelZ -= STRUCTURE_ON_ROOF;
 			}
 
+			// Prioritize roof over some other structure's collision returning first
+			if (pMapElement->pRoofHead || gfCaves || gfBasement)
+			{
+				if (dOldZUnits > HEIGHT_UNITS && dZUnits < HEIGHT_UNITS)
+				{
+					return(COLLISION_ROOF);
+				}
+				if (dOldZUnits < HEIGHT_UNITS && dZUnits  > HEIGHT_UNITS)
+				{
+					return(COLLISION_INTERIOR_ROOF);
+				}
+			}
+
 			// check structures for collision
 			while (pStructure != NULL)
 			{
-
-				if (pStructure->fFlags & STRUCTURE_ROOF || gfCaves || gfBasement )
-				{
-					if ( dOldZUnits > HEIGHT_UNITS && dZUnits  < HEIGHT_UNITS )
-					{
-						return( COLLISION_ROOF );
-					}
-					if ( dOldZUnits < HEIGHT_UNITS && dZUnits  > HEIGHT_UNITS )
-					{
-						return( COLLISION_INTERIOR_ROOF );
-					}
-				}
-
 				if (pStructure->sCubeOffset == sDesiredLevel)
 				{
 
