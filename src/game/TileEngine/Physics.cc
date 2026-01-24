@@ -160,14 +160,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const 
 	o->pNode                   = 0;
 	o->pShadow                 = 0;
 
-	// If gridno not equal to NOWHERE, use sHeight of land
-	if (o->sGridNo != NOWHERE)
-	{
-		float const h = CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[o->sGridNo].sHeight);
-		o->Position.z                   += h;
-		o->EndedWithCollisionPosition.z += h;
-	}
-	else
+	if (o->sGridNo == NOWHERE)
 	{
 		SLOGW("Physics object created at invalid gridno");
 	}
@@ -1188,6 +1181,8 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 				pObject->pNode->sRelativeX = (INT16)pObject->Position.x;
 				pObject->pNode->sRelativeY = (INT16)pObject->Position.y;
 				pObject->pNode->sRelativeZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
+				// Correction for cliff-elevated maps (e.g. Drassen mine)
+				pObject->pNode->sRelativeZ += gpWorldLevelData[pObject->sGridNo].sHeight;
 
 				// Update position data
 				pObject->pShadow->sRelativeX = (INT16)pObject->Position.x;
@@ -1413,9 +1408,6 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 	pObject->fTestPositionNotSet = TRUE;
 	pObject->fVisible = FALSE;
 
-	// Physical object is created with absolute height value
-	// Make it relative for correct simulation on cliff-elevated maps (e.g. Drassen mine)
-	pObject->Position.z -= CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight);
 	// Alrighty, move this beast until it dies....
 	while( pObject->fAlive )
 	{
@@ -1464,7 +1456,7 @@ static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE
 
 		// If NOT from UI, use exact collision position
 		*psNewGridNo = vector_3ToGridNo(fFromUI ? pObject->Position : pObject->EndedWithCollisionPosition);
-		(*pbLevel) = GET_OBJECT_LEVEL( pObject->EndedWithCollisionPosition.z - CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ (*psNewGridNo) ].sHeight ) );
+		(*pbLevel) = GET_OBJECT_LEVEL( pObject->EndedWithCollisionPosition.z );
 	}
 
 	PhysicsDeleteObject( pObject );
@@ -2013,7 +2005,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 	INT8       bLevel = 0;
 
 	// Calculate pixel position of z
-	sZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)( pObject->Position.z ) ) - gpWorldLevelData[ pObject->sGridNo ].sHeight;
+	sZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)( pObject->Position.z ) );
 
 	// get OBJECTTYPE
 	pObj = &(pObject->Obj);
@@ -2111,13 +2103,13 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 		}
 		if (explosive->isGrenade() && causesExplosion)
 		{
-			IgniteExplosionXY(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z - CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight)));
+			IgniteExplosionXY(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z));
 		}
 		if (pObject->Obj.usItem == MORTAR_SHELL)
 		{
 			sZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
 
-			IgniteExplosionXY(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z - CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight)));
+			IgniteExplosionXY(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z));
 		}
 	}
 }

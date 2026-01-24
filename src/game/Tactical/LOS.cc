@@ -4279,7 +4279,6 @@ void MoveBullet(BULLET* const pBullet)
 
 INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, UINT16* pusStructureID, FLOAT* pdNormalX, FLOAT* pdNormalY, FLOAT* pdNormalZ)
 {
-	INT32 iLandHeight;
 	INT32 iCurrAboveLevelZ;
 	INT32 iCurrCubesAboveLevelZ;
 	INT16 sDesiredLevel;
@@ -4309,7 +4308,6 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	// check a particular tile
 	// retrieve values from world for this particular tile
 	pMapElement = &(gpWorldLevelData[ sX + sY * WORLD_COLS] );
-	iLandHeight = CONVERT_PIXELS_TO_HEIGHTUNITS( pMapElement->sHeight );
 
 	// Calculate old height and new hieght in pixels
 	dOldZUnits = (dZ - dDeltaZ );
@@ -4343,7 +4341,7 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	// record old tile location for loop purposes
 
 	// check for collision with the ground
-	iCurrAboveLevelZ = (INT32) dZ - iLandHeight;
+	iCurrAboveLevelZ = (INT32) dZ;
 	if (iCurrAboveLevelZ < 0)
 	{
 		// ground is in the way!
@@ -4384,7 +4382,7 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 		//}
 
 		// check for ground collision
-		if ( dZ < iLandHeight)
+		if ( dZ < 0)
 		{
 			// ground is in the way!
 			if (pMapElement->ubTerrainID == DEEP_WATER || pMapElement->ubTerrainID == LOW_WATER ||
