@@ -275,9 +275,10 @@ void BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const
 	UINT16* const pBuffer = l.Buffer<UINT16>();
 	UINT32  const uiPitch = l.Pitch();
 
-	if (BltIsClipped(src, iDestX, iDestY, usIndex, &ClippingRect))
+	ClipInfo const ci{ src, iDestX, iDestY, usIndex, &ClippingRect };
+	if (ci.status != ClipInfo::Status::Not_Clipped)
 	{
-		Blt8BPPDataTo16BPPBufferOutlineShadowClip(pBuffer, uiPitch, src, iDestX, iDestY, usIndex, &ClippingRect);
+		BltOutlineShadow(ci, pBuffer, uiPitch);
 	}
 	else
 	{
