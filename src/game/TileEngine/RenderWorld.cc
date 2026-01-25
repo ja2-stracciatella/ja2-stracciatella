@@ -43,6 +43,7 @@
 #include <algorithm>
 #include <cmath>
 #include <initializer_list>
+#include <numeric>
 #include <stdint.h>
 
 UINT16* gpZBuffer = NULL;
@@ -2334,35 +2335,31 @@ void InvalidateWorldRedundency(void)
 }
 
 namespace {
-constexpr UINT16 Z_STRIP_DELTA_Y = (Z_SUBLAYERS * 10);
+constexpr int Z_STRIP_DELTA_Y = (Z_SUBLAYERS * 10);
+constexpr int HALF_TILE = WORLD_TILE_X / 2;
 
-/**********************************************************************************************
-Blt8BPPDataTo16BPPBufferTransZIncClip
-
-	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
-	buffer as a destination. As it is blitting, it checks the Z value of the ZBuffer, and if the
-	pixel's Z level is below that of the current pixel, it is written on, and the Z value is
-	updated to the current value, for any non-transparent pixels. The Z-buffer is 16 bit, and
-	must be the same dimensions (including Pitch) as the destination.
-
-**********************************************************************************************/
-void BltTransZInc(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue)
+//
+// Common function template for the BltTransZInc,
+// BltTransZIncSameZBurnsThrough and BltTransZIncObscure blitters.
+//
+template<typename BlitterCore>
+void MultiZBlitter(BlitterCore & core, ClipInfo const& ci,
+	UINT16 * pBuffer, UINT32 uiDestPitchBYTES, UINT16 usZValue)
 {
 	if (ci.status == ClipInfo::Status::Completely_Clipped) return;
 
-	UINT32 Unblitted;
-	INT32  LSCount;
-	UINT16 usZLevel, usZColsToGo, usZIndex;
+	int Unblitted, LSCount;
 
-	Assert(pBuffer     != NULL);
+	Assert(pBuffer);
 
-	UINT8 const * SrcPtr  = SkipLines(ci.srcPtr, ci.topSkip);
-	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (ci.iTempY + ci.topSkip) + (ci.iTempX + ci.leftSkip) * 2;
-	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (ci.iTempY + ci.topSkip) + (ci.iTempX + ci.leftSkip) * 2;
-	const UINT32 LineSkip = uiDestPitchBYTES - ci.blitLength * 2;
-	UINT16 const* const p16BPPPalette = ci.vobject->CurrentShade();
+	UINT32 uiLineFlag = (ci.iTempY + ci.topSkip) & 1;
 
-	if (ci.vobject->ppZStripInfo == NULL)
+	int const pitchWords = uiDestPitchBYTES / 2;
+	UINT8 const * SrcPtr = SkipLines(ci.srcPtr, ci.topSkip);
+	UINT16 *     DestPtr = pBuffer + pitchWords * (ci.iTempY + ci.topSkip) + (ci.iTempX + ci.leftSkip);
+	int const LineSkip   = pitchWords - ci.blitLength;
+
+	if (!ci.vobject->ppZStripInfo)
 	{
 		SLOGW("Missing Z-Strip info on multi-Z object");
 		return;
@@ -2375,14 +2372,14 @@ void BltTransZInc(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, 
 		return;
 	}
 
-	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_STRIP_DELTA_Y;
+	int usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_STRIP_DELTA_Y;
 	// set to odd number of pixels for first column
 
-	UINT16 usZStartCols;
-	if  (ci.leftSkip > pZInfo->ubFirstZStripWidth)
+	int usZStartCols;
+	if (ci.leftSkip > pZInfo->ubFirstZStripWidth)
 	{
 		usZStartCols = ci.leftSkip - pZInfo->ubFirstZStripWidth;
-		usZStartCols = 20 - usZStartCols % 20;
+		usZStartCols = HALF_TILE - usZStartCols % HALF_TILE;
 	}
 	else if (ci.leftSkip < pZInfo->ubFirstZStripWidth)
 	{
@@ -2390,56 +2387,41 @@ void BltTransZInc(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, 
 	}
 	else
 	{
-		usZStartCols = 20;
+		usZStartCols = HALF_TILE;
 	}
-
-	usZColsToGo = usZStartCols;
 
 	const INT8* const pZArray = pZInfo->pbZChange;
 
-	UINT16 usZStartIndex;
+	int usZStartIndex;
 	if (ci.leftSkip >= pZInfo->ubFirstZStripWidth)
 	{
 		// Index into array after doing left clipping
-		usZStartIndex = 1 + (ci.leftSkip - pZInfo->ubFirstZStripWidth) / 20;
+		usZStartIndex = 1 + (ci.leftSkip - pZInfo->ubFirstZStripWidth) / HALF_TILE;
 
 		//calculates the Z-value after left-side clipping
-		if (usZStartIndex)
-		{
-			for (UINT16 i = 0; i < usZStartIndex; i++)
-			{
-				switch (pZArray[i])
-				{
-					case -1: usZStartLevel -= Z_STRIP_DELTA_Y; break;
-					case  0: /* no change */                   break;
-					case  1: usZStartLevel += Z_STRIP_DELTA_Y; break;
-				}
-			}
-		}
+		usZStartLevel += Z_STRIP_DELTA_Y *
+			std::accumulate(&pZArray[0], &pZArray[usZStartIndex], 0);
 	}
 	else
 	{
 		usZStartIndex = 0;
 	}
 
-	usZLevel = usZStartLevel;
-	usZIndex = usZStartIndex;
-
-	UINT32 PxCount;
+	UINT8 PxCount;
 
 	int BlitHeight = ci.blitHeight;
 	do
 	{
-		usZLevel = usZStartLevel;
-		usZIndex = usZStartIndex;
-		usZColsToGo = usZStartCols;
+		int zLevel = usZStartLevel;
+		int usZIndex = usZStartIndex;
+		int usZColsToGo = usZStartCols;
 		for (LSCount = ci.leftSkip; LSCount > 0; LSCount -= PxCount)
 		{
 			PxCount = *SrcPtr++;
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > static_cast<UINT32>(LSCount))
+				if (PxCount > LSCount)
 				{
 					PxCount -= LSCount;
 					LSCount = ci.blitLength;
@@ -2448,7 +2430,7 @@ void BltTransZInc(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, 
 			}
 			else
 			{
-				if (PxCount > static_cast<UINT32>(LSCount))
+				if (PxCount > LSCount)
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -2467,26 +2449,18 @@ void BltTransZInc(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, 
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
+				if (PxCount > LSCount) PxCount = static_cast<UINT8>(LSCount);
 				LSCount -= PxCount;
-				DestPtr += 2 * PxCount;
-				ZPtr    += 2 * PxCount;
+				DestPtr += PxCount;
 				for (;;)
 				{
 					if (PxCount >= usZColsToGo)
 					{
 						PxCount -= usZColsToGo;
-						usZColsToGo = 20;
+						usZColsToGo = HALF_TILE;
 
-						INT8 delta = pZArray[usZIndex++];
-						if (delta < 0)
-						{
-							usZLevel -= Z_STRIP_DELTA_Y;
-						}
-						else if (delta > 0)
-						{
-							usZLevel += Z_STRIP_DELTA_Y;
-						}
+						INT8 delta = pZArray[usZIndex++] * Z_STRIP_DELTA_Y;
+						zLevel += delta;
 					}
 					else
 					{
@@ -2498,10 +2472,10 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > static_cast<UINT32>(LSCount))
+				if (PxCount > LSCount)
 				{
 					Unblitted = PxCount - LSCount;
-					PxCount = LSCount;
+					PxCount = static_cast<UINT8>(LSCount);
 				}
 				else
 				{
@@ -2511,27 +2485,15 @@ BlitNonTransLoop: // blit non-transparent pixels
 
 				do
 				{
-					if (*(UINT16*)ZPtr < usZLevel)
-					{
-						*(UINT16*)ZPtr = usZLevel;
-						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
-					}
+					core(SrcPtr, DestPtr, static_cast<UINT16>(zLevel), uiLineFlag);
 					SrcPtr++;
-					DestPtr += 2;
-					ZPtr += 2;
+					DestPtr++;
 					if (--usZColsToGo == 0)
 					{
-						usZColsToGo = 20;
+						usZColsToGo = HALF_TILE;
 
-						INT8 delta = pZArray[usZIndex++];
-						if (delta < 0)
-						{
-							usZLevel -= Z_STRIP_DELTA_Y;
-						}
-						else if (delta > 0)
-						{
-							usZLevel += Z_STRIP_DELTA_Y;
-						}
+						INT8 delta = pZArray[usZIndex++] * Z_STRIP_DELTA_Y;
+						zLevel += delta;
 					}
 				}
 				while (--PxCount > 0);
@@ -2540,10 +2502,46 @@ BlitNonTransLoop: // blit non-transparent pixels
 		}
 
 		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		uiLineFlag ^= 1;
 		DestPtr += LineSkip;
-		ZPtr += LineSkip;
 	}
 	while (--BlitHeight > 0);
+}
+
+
+/**********************************************************************************************
+Blt8BPPDataTo16BPPBufferTransZIncClip
+
+	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
+	buffer as a destination. As it is blitting, it checks the Z value of the ZBuffer, and if the
+	pixel's Z level is below that of the current pixel, it is written on, and the Z value is
+	updated to the current value, for any non-transparent pixels. The Z-buffer is 16 bit, and
+	must be the same dimensions (including Pitch) as the destination.
+
+**********************************************************************************************/
+void BltTransZInc(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue)
+{
+	struct TransZInc {
+		UINT16 * frameBuffer;
+		UINT16 * zBuffer;
+		UINT16 const * palette16;
+
+		void operator()(UINT8 const * SrcPtr, UINT16 * DestPtr, UINT16 zval, UINT32)
+		{
+			// Because the Z buffer must always have the same dimensions and
+			// pitch as the destination buffer there is no need to keep track
+			// of zptr separately, we can always compute it here:
+			auto * ZPtr = (DestPtr - frameBuffer) + zBuffer;
+			if (*ZPtr < zval)
+			{
+				*ZPtr = zval;
+				*DestPtr = palette16[*SrcPtr];
+			}
+		}
+	};
+
+	TransZInc core{ pBuffer, pZBuffer, ci.vobject->CurrentShade() };
+	MultiZBlitter(core, ci, pBuffer, uiDestPitchBYTES, usZValue);
 }
 
 
@@ -2559,201 +2557,26 @@ Blt8BPPDataTo16BPPBufferTransZIncClipSaveZBurnsThrough
 **********************************************************************************************/
 void BltTransZIncSameZBurnsThrough(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue)
 {
-	if (ci.status == ClipInfo::Status::Completely_Clipped) return;
+	struct TransZIncSameZBurnsThrough {
+		UINT16 * frameBuffer;
+		UINT16 * zBuffer;
+		UINT16 const * palette16;
 
-	UINT32 Unblitted;
-	INT32  LSCount;
-	UINT16 usZLevel, usZColsToGo, usZStartIndex, usZIndex;
-
-	Assert(pBuffer     != NULL);
-
-	UINT8 const * SrcPtr  = SkipLines(ci.srcPtr, ci.topSkip);
-	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (ci.iTempY + ci.topSkip) + (ci.iTempX + ci.leftSkip) * 2;
-	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (ci.iTempY + ci.topSkip) + (ci.iTempX + ci.leftSkip) * 2;
-	const UINT32 LineSkip = uiDestPitchBYTES - ci.blitLength * 2;
-	UINT16 const* const p16BPPPalette = ci.vobject->CurrentShade();
-
-	if (ci.vobject->ppZStripInfo == NULL)
-	{
-		SLOGW("Missing Z-Strip info on multi-Z object");
-		return;
-	}
-	// setup for the z-column blitting stuff
-	auto const& pZInfo = ci.vobject->ppZStripInfo[ci.vobjectIndex];
-	if (!pZInfo)
-	{
-		SLOGW("Missing Z-Strip info on multi-Z object");
-		return;
-	}
-
-	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_STRIP_DELTA_Y;
-	// set to odd number of pixels for first column
-
-	UINT16 usZStartCols;
-	if (ci.leftSkip > pZInfo->ubFirstZStripWidth)
-	{
-		usZStartCols = ci.leftSkip - pZInfo->ubFirstZStripWidth;
-		usZStartCols = 20 - usZStartCols % 20;
-	}
-	else if (ci.leftSkip < pZInfo->ubFirstZStripWidth)
-	{
-		usZStartCols  = pZInfo->ubFirstZStripWidth - ci.leftSkip;
-	}
-	else
-	{
-		usZStartCols = 20;
-	}
-
-	usZColsToGo = usZStartCols;
-
-	const INT8* const pZArray = pZInfo->pbZChange;
-
-	if (ci.leftSkip >= pZInfo->ubFirstZStripWidth)
-	{
-		// Index into array after doing left clipping
-		usZStartIndex = 1 + (ci.leftSkip - pZInfo->ubFirstZStripWidth) / 20;
-
-		//calculates the Z-value after left-side clipping
-		if (usZStartIndex)
+		// Exactly the same as TransZInc version, only the *ZPtr comparison
+		// differs (<= zval here, < zval there).
+		void operator()(UINT8 const * SrcPtr, UINT16 * DestPtr, UINT16 zval, UINT32)
 		{
-			for (UINT16 i = 0; i < usZStartIndex; i++)
+			auto * ZPtr = (DestPtr - frameBuffer) + zBuffer;
+			if (*ZPtr <= zval)
 			{
-				switch (pZArray[i])
-				{
-					case -1: usZStartLevel -= Z_STRIP_DELTA_Y; break;
-					case  0: /* no change */                   break;
-					case  1: usZStartLevel += Z_STRIP_DELTA_Y; break;
-				}
+				*ZPtr = zval;
+				*DestPtr = palette16[*SrcPtr];
 			}
 		}
-	}
-	else
-	{
-		usZStartIndex = 0;
-	}
+	};
 
-	usZLevel = usZStartLevel;
-	usZIndex = usZStartIndex;
-
-	UINT32 PxCount;
-
-	int BlitHeight = ci.blitHeight;
-	do
-	{
-		usZLevel = usZStartLevel;
-		usZIndex = usZStartIndex;
-		usZColsToGo = usZStartCols;
-		for (LSCount = ci.leftSkip; LSCount > 0; LSCount -= PxCount)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80)
-			{
-				PxCount &= 0x7F;
-				if (PxCount > static_cast<UINT32>(LSCount))
-				{
-					PxCount -= LSCount;
-					LSCount = ci.blitLength;
-					goto BlitTransparent;
-				}
-			}
-			else
-			{
-				if (PxCount > static_cast<UINT32>(LSCount))
-				{
-					SrcPtr += LSCount;
-					PxCount -= LSCount;
-					LSCount = ci.blitLength;
-					goto BlitNonTransLoop;
-				}
-				SrcPtr += PxCount;
-			}
-		}
-
-		LSCount = ci.blitLength;
-		while (LSCount > 0)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80)
-			{
-BlitTransparent: // skip transparent pixels
-				PxCount &= 0x7F;
-				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
-				LSCount -= PxCount;
-				DestPtr += 2 * PxCount;
-				ZPtr    += 2 * PxCount;
-				for (;;)
-				{
-					if (PxCount >= usZColsToGo)
-					{
-						PxCount -= usZColsToGo;
-						usZColsToGo = 20;
-
-						INT8 delta = pZArray[usZIndex++];
-						if (delta < 0)
-						{
-							usZLevel -= Z_STRIP_DELTA_Y;
-						}
-						else if (delta > 0)
-						{
-							usZLevel += Z_STRIP_DELTA_Y;
-						}
-					}
-					else
-					{
-						usZColsToGo -= PxCount;
-						break;
-					}
-				}
-			}
-			else
-			{
-BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > static_cast<UINT32>(LSCount))
-				{
-					Unblitted = PxCount - LSCount;
-					PxCount = LSCount;
-				}
-				else
-				{
-					Unblitted = 0;
-				}
-				LSCount -= PxCount;
-
-				do
-				{
-					if (*(UINT16*)ZPtr <= usZLevel)
-					{
-						*(UINT16*)ZPtr = usZLevel;
-						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
-					}
-					SrcPtr++;
-					DestPtr += 2;
-					ZPtr += 2;
-					if (--usZColsToGo == 0)
-					{
-						usZColsToGo = 20;
-
-						INT8 delta = pZArray[usZIndex++];
-						if (delta < 0)
-						{
-							usZLevel -= Z_STRIP_DELTA_Y;
-						}
-						else if (delta > 0)
-						{
-							usZLevel += Z_STRIP_DELTA_Y;
-						}
-					}
-				}
-				while (--PxCount > 0);
-				SrcPtr += Unblitted;
-			}
-		}
-
-		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
-		DestPtr += LineSkip;
-		ZPtr += LineSkip;
-	}
-	while (--BlitHeight > 0);
+	TransZIncSameZBurnsThrough core{ pBuffer, pZBuffer, ci.vobject->CurrentShade() };
+	MultiZBlitter(core, ci, pBuffer, uiDestPitchBYTES, usZValue);
 }
 
 
@@ -2772,206 +2595,25 @@ Blt8BPPDataTo16BPPBufferTransZIncObscureClip
 **********************************************************************************************/
 void BltTransZIncObscure(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue)
 {
-	if (ci.status == ClipInfo::Status::Completely_Clipped) return;
+	struct TransZIncObscure {
+		UINT16 * frameBuffer;
+		UINT16 * zBuffer;
+		UINT16 const * palette16;
 
-	UINT32 Unblitted;
-	INT32  LSCount;
-	UINT16 usZLevel, usZColsToGo, usZIndex;
-
-	Assert(pBuffer     != NULL);
-
-	UINT32 uiLineFlag = (ci.iTempY + ci.topSkip) & 1;
-
-	UINT8 const* SrcPtr   = SkipLines(ci.srcPtr, ci.topSkip);
-	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (ci.iTempY + ci.topSkip) + (ci.iTempX + ci.leftSkip) * 2;
-	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (ci.iTempY + ci.topSkip) + (ci.iTempX + ci.leftSkip) * 2;
-	const UINT32 LineSkip = uiDestPitchBYTES - ci.blitLength * 2;
-	UINT16 const* const p16BPPPalette = ci.vobject->CurrentShade();
-
-	if (ci.vobject->ppZStripInfo == NULL)
-	{
-		SLOGW("Missing Z-Strip info on multi-Z object");
-		return;
-	}
-	// setup for the z-column blitting stuff
-	auto const& pZInfo = ci.vobject->ppZStripInfo[ci.vobjectIndex];
-	if (!pZInfo)
-	{
-		SLOGW("Missing Z-Strip info on multi-Z object");
-		return;
-	}
-
-	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_STRIP_DELTA_Y;
-	// set to odd number of pixels for first column
-
-	UINT16 usZStartCols;
-	if (ci.leftSkip > pZInfo->ubFirstZStripWidth)
-	{
-		usZStartCols = ci.leftSkip - pZInfo->ubFirstZStripWidth;
-		usZStartCols = 20 - usZStartCols % 20;
-	}
-	else if (ci.leftSkip < pZInfo->ubFirstZStripWidth)
-	{
-		usZStartCols = pZInfo->ubFirstZStripWidth - ci.leftSkip;
-	}
-	else
-	{
-		usZStartCols = 20;
-	}
-
-	usZColsToGo = usZStartCols;
-
-	const INT8* const pZArray  = pZInfo->pbZChange;
-
-	UINT16 usZStartIndex;
-	if (ci.leftSkip >= pZInfo->ubFirstZStripWidth)
-	{
-		// Index into array after doing left clipping
-		usZStartIndex = 1 + (ci.leftSkip - pZInfo->ubFirstZStripWidth) / 20;
-
-		//calculates the Z-value after left-side clipping
-		if (usZStartIndex)
+		void operator()(UINT8 const * SrcPtr, UINT16 * DestPtr, UINT16 zval, UINT32 uiLineFlag)
 		{
-			for (UINT16 i = 0; i < usZStartIndex; i++)
+			auto * ZPtr = (DestPtr - frameBuffer) + zBuffer;
+			if (*ZPtr < zval ||
+				uiLineFlag == (((uintptr_t)DestPtr & 2) != 0)) // XXX update Z when pixelating?
 			{
-				switch (pZArray[i])
-				{
-					case -1: usZStartLevel -= Z_STRIP_DELTA_Y; break;
-					case  0: /* no change */                   break;
-					case  1: usZStartLevel += Z_STRIP_DELTA_Y; break;
-				}
+				*ZPtr = zval;
+				*DestPtr = palette16[*SrcPtr];
 			}
 		}
-	}
-	else
-	{
-		usZStartIndex = 0;
-	}
+	};
 
-	usZLevel = usZStartLevel;
-	usZIndex = usZStartIndex;
-
-	UINT32 PxCount;
-
-	int BlitHeight = ci.blitHeight;
-	do
-	{
-		usZLevel = usZStartLevel;
-		usZIndex = usZStartIndex;
-		usZColsToGo = usZStartCols;
-		for (LSCount = ci.leftSkip; LSCount > 0; LSCount -= PxCount)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80)
-			{
-				PxCount &= 0x7F;
-				if (PxCount > static_cast<UINT32>(LSCount))
-				{
-					PxCount -= LSCount;
-					LSCount = ci.blitLength;
-					goto BlitTransparent;
-				}
-			}
-			else
-			{
-				if (PxCount > static_cast<UINT32>(LSCount))
-				{
-					SrcPtr += LSCount;
-					PxCount -= LSCount;
-					LSCount = ci.blitLength;
-					goto BlitNonTransLoop;
-				}
-				SrcPtr += PxCount;
-			}
-		}
-
-		LSCount = ci.blitLength;
-		while (LSCount > 0)
-		{
-			PxCount = *SrcPtr++;
-			if (PxCount & 0x80)
-			{
-BlitTransparent: // skip transparent pixels
-				PxCount &= 0x7F;
-				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
-				LSCount -= PxCount;
-				DestPtr += 2 * PxCount;
-				ZPtr    += 2 * PxCount;
-				for (;;)
-				{
-					if (PxCount >= usZColsToGo)
-					{
-						PxCount -= usZColsToGo;
-						usZColsToGo = 20;
-
-						INT8 delta = pZArray[usZIndex++];
-						if (delta < 0)
-						{
-							usZLevel -= Z_STRIP_DELTA_Y;
-						}
-						else if (delta > 0)
-						{
-							usZLevel += Z_STRIP_DELTA_Y;
-						}
-					}
-					else
-					{
-						usZColsToGo -= PxCount;
-						break;
-					}
-				}
-			}
-			else
-			{
-BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > static_cast<UINT32>(LSCount))
-				{
-					Unblitted = PxCount - LSCount;
-					PxCount = LSCount;
-				}
-				else
-				{
-					Unblitted = 0;
-				}
-				LSCount -= PxCount;
-
-				do
-				{
-					if (*(UINT16*)ZPtr < usZLevel ||
-							uiLineFlag == (((uintptr_t)DestPtr & 2) != 0)) // XXX update Z when pixelating?
-					{
-						*(UINT16*)ZPtr = usZLevel;
-						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
-					}
-					SrcPtr++;
-					DestPtr += 2;
-					ZPtr += 2;
-					if (--usZColsToGo == 0)
-					{
-						usZColsToGo = 20;
-
-						INT8 delta = pZArray[usZIndex++];
-						if (delta < 0)
-						{
-							usZLevel -= Z_STRIP_DELTA_Y;
-						}
-						else if (delta > 0)
-						{
-							usZLevel += Z_STRIP_DELTA_Y;
-						}
-					}
-				}
-				while (--PxCount > 0);
-				SrcPtr += Unblitted;
-			}
-		}
-
-		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
-		uiLineFlag ^= 1;
-		DestPtr += LineSkip;
-		ZPtr += LineSkip;
-	}
-	while (--BlitHeight > 0);
+	TransZIncObscure core{ pBuffer, pZBuffer, ci.vobject->CurrentShade() };
+	MultiZBlitter(core, ci, pBuffer, uiDestPitchBYTES, usZValue);
 }
 
 
