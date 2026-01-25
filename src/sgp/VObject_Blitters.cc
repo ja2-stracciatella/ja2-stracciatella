@@ -746,7 +746,7 @@ Blt8BPPDataTo16BPPBufferTransShadowZClip
 template<typename UpdateZOrDont>
 void Blt8BPPDataTo16BPPBufferTransShadowZClip(ClipInfo const& ci, UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, const UINT16* p16BPPPalette)
 {
-	if (ci.status != ClipInfo::Status::Completely_Clipped) return;
+	if (ci.status == ClipInfo::Status::Completely_Clipped) return;
 
 	// Assertions
 	Assert( pBuffer != NULL );
