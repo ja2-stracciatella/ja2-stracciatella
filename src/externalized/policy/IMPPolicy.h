@@ -10,7 +10,7 @@
 #include "Soldier_Profile_Type.h"
 
 class IMPItemCondition;
-class IMPStartingItemSet;
+struct IMPStartingItemSet;
 class ItemSystem;
 using Condition = std::variant<uint8_t, std::string>;
 

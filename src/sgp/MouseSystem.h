@@ -17,6 +17,8 @@
 
 #include <string_theory/string>
 #include <functional>
+#include <span>
+
 
 // Mouse Region Flags
 #define MSYS_NO_FLAGS                0x00000000
@@ -149,6 +151,7 @@ void MSYS_Shutdown(void);
 void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UINT16 bry,INT8 priority,
 					   UINT16 crsr,MOUSE_CALLBACK movecallback,MOUSE_CALLBACK buttoncallback);
 void MSYS_RemoveRegion(MOUSE_REGION *region);
+void RemoveRegions(std::span<MOUSE_REGION>);
 
 /* Set one of the user data entries in a mouse region */
 #define MSYS_SetRegionUserData(region, index, data) ((region)->SetUserData<(index)>((data)))

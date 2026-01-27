@@ -959,3 +959,11 @@ MOUSE_CALLBACK MouseCallbackPrimarySecondary(
 {
 	return CallbackPrimarySecondary<MOUSE_REGION, MSYS_REGION_ENABLED>(primaryAction, secondaryAction, allEvents, triggerPrimaryOnMouseDown);
 }
+
+void RemoveRegions(std::span<MOUSE_REGION> regions)
+{
+	for (auto & r : regions)
+	{
+		MSYS_RemoveRegion(&r);
+	}
+}

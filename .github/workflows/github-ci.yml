@@ -102,7 +102,7 @@ jobs:
       env:
         CI_TARGET: ${{ matrix.cfg.target }}
         ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
-        TARGET_GCC_MAJOR_VERSION: 9
+        TARGET_GCC_MAJOR_VERSION: 10
 
     - name: Build and run tests
       shell: bash

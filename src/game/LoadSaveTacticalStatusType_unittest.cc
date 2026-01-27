@@ -10,7 +10,6 @@
 #include "DefaultContentManagerUT.h"
 
 #include <cstring>
-#include <memory>
 
 using LoadSaveTacticalStatusTypeTest = DefaultContentManagerUT::BaseTest;
 
@@ -20,8 +19,8 @@ protected:
 	void SetUp() override
 	{
 		// Initialize a test tactical status with known values
-		memset(&testTacticalStatus, 0, sizeof(TacticalStatusType));
-		
+		testTacticalStatus = {};
+
 		// Basic flags and timing
 		testTacticalStatus.uiFlags = 0x00000008; // IN_ENDGAME_SEQUENCE
 		testTacticalStatus.ubCurrentTeam = 1;

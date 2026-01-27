@@ -1,8 +1,7 @@
 #pragma once
 
-#include <stdint.h>
-
 #include "AutoObj.h"
+#include "Concepts.h"
 #include "Types.h"
 #include <string_theory/string>
 #include <SDL_rwops.h>
@@ -69,6 +68,18 @@ public:
 
 	/** Get the name of the file. */
 	auto const& getName() const noexcept { return name; }
+
+	/** Write a value with automatic type deduction. */
+	auto write(memcpyable auto const& value)
+	{
+		return write(&value, sizeof(value));
+	}
+
+	/** Read a value with automatic type deduction. */
+	auto read(memcpyable auto & value)
+	{
+		return read(&value, sizeof(value));
+	}
 };
 
 void DeleteSGPFile(SGPFile *file);

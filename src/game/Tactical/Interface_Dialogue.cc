@@ -90,6 +90,7 @@
 
 #include <string_theory/format>
 #include <string_theory/string>
+#include <cstddef>
 
 
 static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525, 13524 };
@@ -510,8 +511,6 @@ static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, UINT32 reason)
 
 void DeleteTalkingMenu( )
 {
-	INT32 cnt;
-
 	if ( !gfInTalkPanel )
 		return;
 
@@ -528,10 +527,7 @@ void DeleteTalkingMenu( )
 	MSYS_RemoveRegion( &(gTalkPanel.NameRegion));
 
 	// Delete mouse regions
-	for ( cnt = 0; cnt < std::size(ubTalkMenuApproachIDs); cnt++ )
-	{
-		MSYS_RemoveRegion( &(gTalkPanel.Regions[cnt]));
-	}
+	RemoveRegions(gTalkPanel.Regions);
 
 	if ( gTalkPanel.fTextRegionOn )
 	{
@@ -724,7 +720,7 @@ void RenderTalkingMenu()
 	// Create menu selections....
 	INT16 const x = tp->sX + TALK_PANEL_MENUTEXT_STARTX;
 	INT16       y = tp->sY + TALK_PANEL_MENUTEXT_STARTY;
-	for (size_t cnt = 0; cnt < std::size(ubTalkMenuApproachIDs); cnt++)
+	for (ptrdiff_t cnt = 0; cnt < std::ssize(ubTalkMenuApproachIDs); cnt++)
 	{
 		if (tp->bCurSelect == cnt)
 		{
