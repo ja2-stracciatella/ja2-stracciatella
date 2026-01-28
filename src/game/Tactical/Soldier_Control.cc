@@ -2740,7 +2740,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		sBreathLoss = BP_GET_HIT;
 		ubReason = TAKE_DAMAGE_BLADE;
 	}
-	else if ( GCM->getItem(usWeaponIndex)->isPunch() )
+	else if ( GCM->getItem(usWeaponIndex)->isPunch() || usWeaponIndex == NOTHING )
 	{
 		// damage from hand-to-hand is 1/4 normal, 3/4 breath.. the sDamage value
 		// is actually how much breath we'll take away
@@ -3031,7 +3031,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	{
 		SoldierGotHitExplosion(pSoldier, usWeaponIndex, bDirection, sRange);
 	}
-	if ( GCM->getItem(usWeaponIndex)->isPunch() )
+	if ( GCM->getItem(usWeaponIndex)->isPunch() || usWeaponIndex == NOTHING )
 	{
 		SoldierGotHitPunch(pSoldier);
 	}

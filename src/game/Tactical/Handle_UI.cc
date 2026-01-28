@@ -3514,7 +3514,7 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 		return false;
 	}
 
-	if (item->getItemClass() == IC_PUNCH)
+	if (item->getItemClass() & (IC_NONE | IC_PUNCH))
 	{
 		// can't punch the ground
 		if (!tgt) return false;

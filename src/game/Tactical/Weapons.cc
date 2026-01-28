@@ -396,6 +396,7 @@ FireWeaponResult FireWeapon(SOLDIERTYPE * const pSoldier, GridNo const sTargetGr
 
 			UseBlade( pSoldier, sTargetGridNo );
 			break;
+		case IC_NONE:
 		case IC_PUNCH:
 			UseHandToHand( pSoldier, sTargetGridNo, FALSE );
 			break;
@@ -1511,8 +1512,9 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 		const INT16 sZPos, const INT16 sRange, SOLDIERTYPE* const attacker, const UINT8 ubSpecial,
 		const UINT8 ubHitLocation)
 {
+	const UINT8 hitVolume = usWeaponIndex == NOTHING ? 0 : GCM->getWeapon(usWeaponIndex)->ubHitVolume;
 	MakeNoise(attacker, pTargetSoldier->sGridNo, pTargetSoldier->bLevel,
-			GCM->getWeapon(usWeaponIndex)->ubHitVolume, NOISE_BULLET_IMPACT);
+			hitVolume, NOISE_BULLET_IMPACT);
 
 	if ( EXPLOSIVE_GUN( usWeaponIndex ) )
 	{
@@ -3242,7 +3244,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		}
 		else
 		{
-			if ( GCM->getItem(usInHand)->getItemClass() != IC_PUNCH )
+			if ( !(GCM->getItem(usInHand)->getItemClass() & (IC_NONE | IC_PUNCH)) )
 			{
 				return(0);
 			}
