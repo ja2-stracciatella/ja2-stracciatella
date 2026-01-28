@@ -539,7 +539,7 @@ void UpdateItemStatsPanel()
 }
 
 
-static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
+static void RealisticOnlyCheckboxCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -555,7 +555,7 @@ static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SciFiOnlyCheckboxCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -571,7 +571,7 @@ static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void BothModesCheckboxCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BothModesCheckboxCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -623,11 +623,12 @@ static void RemoveGameTypeFlags(void)
 }
 
 
-static bool MakeAttachmentButton(AttachmentInfo& a, INT16 const x, INT16 const y, INT16 const w, GUI_CALLBACK const click)
+static bool MakeAttachmentButton(AttachmentInfo& a, INT16 const x, INT16 const y, INT16 const w, GUI_CALLBACK click)
 {
 	if (!ValidAttachment(a.attachment, gpItem->usItem)) return false;
 
-	GUIButtonRef const btn = CreateTextButton(a.label, SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = CreateTextButton(a.label, SMALLCOMPFONT, FONT_YELLOW,
+		FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, std::move(click));
 	btn->SetUserPtr(&a);
 	a.button   = btn;
 	a.attached = FindAttachment(gpItem, a.attachment) != -1;
@@ -800,7 +801,7 @@ static void SetupArmourGUI(void)
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
-	MakeAttachmentButton(g_ceramic_attachment, 558, EDITOR_TASKBAR_POS_Y + 15, 72, ToggleItemAttachment);
+	MakeAttachmentButton(g_ceramic_attachment, 554, EDITOR_TASKBAR_POS_Y + 23, 76, ToggleItemAttachment);
 }
 
 
@@ -900,7 +901,7 @@ static void SetupExplosivesGUI(void)
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
-	MakeAttachmentButton(g_detonator_attachment, 570, EDITOR_TASKBAR_POS_Y + 15, 60, ToggleItemAttachment);
+	MakeAttachmentButton(g_detonator_attachment, 570, EDITOR_TASKBAR_POS_Y + 23, 60, ToggleItemAttachment);
 }
 
 
@@ -1189,7 +1190,7 @@ static void ToggleWeaponAttachment(GUI_BUTTON* const btn, UINT32 const reason)
 }
 
 
-static void ActionItemCallback(GUI_BUTTON* btn, UINT32 reason)
+static void ActionItemCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
