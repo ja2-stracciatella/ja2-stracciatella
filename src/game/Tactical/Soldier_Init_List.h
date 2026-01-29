@@ -7,11 +7,12 @@ struct SOLDIERINITNODE
 {
 	UINT8 ubNodeID;
 	UINT8 ubSoldierID;
-	BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement;
+	BASIC_SOLDIERCREATE_STRUCT * const pBasicPlacement{ &basicPlacement };
 	SOLDIERCREATE_STRUCT *pDetailedPlacement;
 	SOLDIERTYPE *pSoldier;
 	SOLDIERINITNODE* prev;
 	SOLDIERINITNODE* next;
+	BASIC_SOLDIERCREATE_STRUCT basicPlacement;
 };
 
 extern SOLDIERINITNODE *gSoldierInitHead;
