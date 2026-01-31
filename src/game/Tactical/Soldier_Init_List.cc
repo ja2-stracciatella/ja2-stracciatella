@@ -62,7 +62,6 @@ SOLDIERINITNODE* AddBasicPlacementToSoldierInitList(BASIC_SOLDIERCREATE_STRUCT c
 {
 	SOLDIERINITNODE* const si = new SOLDIERINITNODE{};
 
-	si->pBasicPlacement  = new BASIC_SOLDIERCREATE_STRUCT{};
 	*si->pBasicPlacement = bp;
 
 	// It is impossible to set up detailed placement stuff now. If there is any
@@ -100,15 +99,9 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 		return;
 	if( gfOriginalList )
 		gMapInformation.ubNumIndividuals--;
-	if( pNode->pBasicPlacement )
-	{
-		delete pNode->pBasicPlacement;
-		pNode->pBasicPlacement = NULL;
-	}
 	if( pNode->pDetailedPlacement )
 	{
 		delete pNode->pDetailedPlacement;
-		pNode->pDetailedPlacement = NULL;
 	}
 	if( pNode->pSoldier )
 	{
