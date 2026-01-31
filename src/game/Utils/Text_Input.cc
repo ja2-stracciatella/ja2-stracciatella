@@ -60,6 +60,7 @@ struct STACKTEXTINPUTNODE
 {
 	TEXTINPUTNODE *head;
 	TEXTINPUTNODE *tail;
+	TEXTINPUTNODE *active;
 	TextInputColors *pColors;
 	STACKTEXTINPUTNODE* next;
 };
@@ -96,6 +97,7 @@ static void PushTextInputLevel(void)
 	STACKTEXTINPUTNODE* const pNewLevel = new STACKTEXTINPUTNODE{};
 	pNewLevel->head = gpTextInputHead;
 	pNewLevel->tail = gpTextInputTail;
+	pNewLevel->active = gpActive;
 	pNewLevel->pColors = pColors;
 	pNewLevel->next = pInputStack;
 	pInputStack = pNewLevel;
@@ -108,14 +110,11 @@ static void PushTextInputLevel(void)
 //happy with killing non-existant text input modes.
 static void PopTextInputLevel(void)
 {
-	STACKTEXTINPUTNODE *pLevel;
 	gpTextInputHead = pInputStack->head;
 	gpTextInputTail = pInputStack->tail;
+	gpActive = pInputStack->active;
 	pColors = pInputStack->pColors;
-	pLevel = pInputStack;
-	pInputStack = pInputStack->next;
-	delete pLevel;
-	pLevel = NULL;
+	delete std::exchange(pInputStack, pInputStack->next);
 	EnableAllTextFields();
 }
 
