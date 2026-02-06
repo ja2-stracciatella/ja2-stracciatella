@@ -1,14 +1,9 @@
 #include "GraphicModel.h"
+#include <utility>
 
-GraphicModel::GraphicModel(const ST::string path_, const uint8_t subImageIndex_) : path(path_), subImageIndex(subImageIndex_) {
-}
-
-const ST::string& GraphicModel::getPath() const {
-	return this->path;
-}
-
-uint8_t GraphicModel::getSubImageIndex() const {
-	return this->subImageIndex;
+GraphicModel::GraphicModel(ST::string path_, uint16_t subImageIndex_)
+	: path(std::move(path_)), subImageIndex(subImageIndex_)
+{
 }
 
 GraphicModel GraphicModel::deserialize(const JsonValue &json) {

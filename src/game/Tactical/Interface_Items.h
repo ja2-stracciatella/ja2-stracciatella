@@ -7,9 +7,9 @@
 #include "Soldier_Control.h"
 
 #include "UILayout.h"
+#include "VObject.h"
 
 #include <string_theory/string>
-#include <utility>
 
 
 struct ItemModel;
@@ -105,8 +105,8 @@ void DrawItemFreeCursor(void);
 void DrawItemTileCursor(void);
 BOOLEAN HandleItemPointerClick( UINT16 usMapPos );
 UINT8 GetAttachmentHintColor(const OBJECTTYPE* pObj);
-std::pair<const SGPVObject*, UINT8> GetSmallInventoryGraphicForItem(const ItemModel *item);
-std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel *item);
+CSubVObject GetSmallInventoryGraphicForItem(const ItemModel *item);
+CSubVObject GetBigInventoryGraphicForItem(const ItemModel *item);
 UINT16            GetTileGraphicForItem(const ItemModel *item);
 
 ST::string GetHelpTextForItem(const OBJECTTYPE& obj);
