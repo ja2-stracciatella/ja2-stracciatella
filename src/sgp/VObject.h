@@ -3,7 +3,7 @@
 
 #include "Types.h"
 #include <memory>
-
+#include <utility>
 
 // Defines for HVOBJECT limits
 #define HVOBJECT_SHADE_TABLES										48
@@ -88,6 +88,9 @@ class SGPVObject
 };
 ENUM_BITSET(SGPVObject::Flags)
 
+// A pair of a VObject and one of its SubRegions to specify one particular image.
+using SubVObject  = std::pair<SGPVObject *, UINT16>;
+using CSubVObject = std::pair<SGPVObject const *, UINT16>;
 
 // Creates a list to contain video objects
 void InitializeVideoObjectManager(void);
@@ -100,10 +103,7 @@ SGPVObject* AddVideoObjectFromHImage(SGPImage*);
 SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile);
 
 // Removes a video object
-static inline void DeleteVideoObject(SGPVObject* const vo)
-{
-	delete vo;
-}
+void DeleteVideoObject(SGPVObject const * vo);
 
 // Blits a video object to another video object
 void BltVideoObject(SGPVSurface* dst, SGPVObject const* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
@@ -116,5 +116,6 @@ void BltVideoObjectOutlineShadow(SGPVSurface* dst, SGPVObject const* src, UINT16
 void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
 
 typedef std::unique_ptr<SGPVObject> AutoSGPVObject;
+using CAutoSGPVObject = std::unique_ptr<SGPVObject const>;
 
 #endif

@@ -214,8 +214,8 @@ cache_key_t const guiBullet{ INTERFACEDIR "/bullet.sti" };
 cache_key_t const guiMoneyGraphicsForDescBox{ INTERFACEDIR "/info_bil.sti" };
 cache_key_t const guiGoldKeyVO{ INTERFACEDIR "/gold_key_button.sti" };
 }
-static SGPVObject *guiItemGraphic;
-static UINT8 guiItemGraphicIndex;
+static SGPVObject const * guiItemGraphic;
+static UINT16 guiItemGraphicIndex;
 BOOLEAN gfInItemDescBox = FALSE;
 static UINT32 guiCurrentItemDescriptionScreen=0;
 OBJECTTYPE *gpItemDescObject = NULL;
@@ -4095,14 +4095,14 @@ void DeleteKeyRingPopup(void)
 	FreeMouseCursor();
 }
 
-std::pair<const SGPVObject*, UINT8> GetFallbackSmallInventoryGraphicForItem(const ItemModel *item) {
+CSubVObject GetFallbackSmallInventoryGraphicForItem(const ItemModel *item) {
 	if (item->getPerPocket() != 0) {
-		return std::make_pair(guiSmallInventoryGraphicMissingSmallPocket, 0);
+		return { guiSmallInventoryGraphicMissingSmallPocket, 0 };
 	}
-	return std::make_pair(guiSmallInventoryGraphicMissingBigPocket, 0);
+	return { guiSmallInventoryGraphicMissingBigPocket, 0 };
 }
 
-std::pair<const SGPVObject*, UINT8> GetSmallInventoryGraphicForItem(const ItemModel *item)
+CSubVObject GetSmallInventoryGraphicForItem(const ItemModel *item)
 {
 	auto path = item->getInventoryGraphicSmall().getPath().to_lower();
 	auto subImageIndex = item->getInventoryGraphicSmall().getSubImageIndex();
@@ -4120,7 +4120,7 @@ std::pair<const SGPVObject*, UINT8> GetSmallInventoryGraphicForItem(const ItemMo
 		);
 		return GetFallbackSmallInventoryGraphicForItem(item);
 	}
-	return std::make_pair(i->second, subImageIndex);
+	return { i->second, subImageIndex };
 }
 
 UINT16 GetTileGraphicForItem(const ItemModel * item)
@@ -4128,11 +4128,11 @@ UINT16 GetTileGraphicForItem(const ItemModel * item)
 	return GetTileIndexFromTypeSubIndex(item->getTileGraphic().tileType, item->getTileGraphic().subIndex);
 }
 
-std::pair<SGPVObject*, UINT8> GetFallbackBigInventoryGraphic() {
-	return std::make_pair(AddVideoObjectFromFile(guiBigInventoryGraphicMissingPath), 0);
+CSubVObject GetFallbackBigInventoryGraphic() {
+	return { AddVideoObjectFromFile(guiBigInventoryGraphicMissingPath), 0 };
 }
 
-std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel * item)
+CSubVObject GetBigInventoryGraphicForItem(const ItemModel * item)
 {
 	auto path = item->getInventoryGraphicBig().getPath();
 	auto subImageIndex = item->getInventoryGraphicBig().getSubImageIndex();
@@ -4155,7 +4155,7 @@ std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel * it
 		);
 		return GetFallbackBigInventoryGraphic();
 	}
-	return std::make_pair(vObject, subImageIndex);
+	return { vObject, subImageIndex };
 }
 
 

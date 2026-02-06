@@ -710,7 +710,7 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
 	auto graphic = GetBigInventoryGraphicForItem(item);
-	AutoSGPVObject uiImage(graphic.first);
+	CAutoSGPVObject uiImage(graphic.first);
 	auto subImageIndex = graphic.second;
 
 	//center picture in frame

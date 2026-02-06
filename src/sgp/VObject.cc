@@ -229,6 +229,10 @@ SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
 	return AddVideoObjectFromHImage(hImage.get());
 }
 
+void DeleteVideoObject(SGPVObject const * vo)
+{
+	delete vo;
+}
 
 void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 const usRegionIndex, INT32 const iDestX, INT32 const iDestY)
 {
