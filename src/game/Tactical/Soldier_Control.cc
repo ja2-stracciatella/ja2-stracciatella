@@ -6985,7 +6985,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 void EVENT_SoldierEnterVehicle(SOLDIERTYPE& s, GridNo const gridno)
 {
 	SOLDIERTYPE const* const tgt = FindSoldier(gridno, FIND_SOLDIER_GRIDNO);
-	if (tgt && tgt->uiStatusFlags & SOLDIER_VEHICLE)
+	if (tgt && OK_ENTERABLE_VEHICLE(tgt))
 	{
 		VEHICLETYPE& v = GetVehicle(tgt->bVehicleID);
 		PutSoldierInVehicle(s, v);
