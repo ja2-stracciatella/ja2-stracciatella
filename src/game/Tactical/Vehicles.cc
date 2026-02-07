@@ -1,4 +1,3 @@
-#include "ItemModel.h"
 #include "LoadSaveVehicleType.h"
 #include "Map_Screen_Interface_Map.h"
 #include "SaveLoadGame.h"
@@ -787,8 +786,8 @@ void SetVehicleSectorValues(VEHICLETYPE& v, const SGPSector& sMap)
 void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 {
 	// If not a vehicle, ignore!
-	if (!(vs->uiStatusFlags & SOLDIER_VEHICLE)) return;
-	VEHICLETYPE const& v = pVehicleList[vs->bVehicleID];
+	if (!EnterableVehicle(*vs)) return;
+	VEHICLETYPE const& v = GetVehicle(vs->bVehicleID);
 
 	// Loop through passengers and update each guy's position
 	CFOR_EACH_PASSENGER(v, i)

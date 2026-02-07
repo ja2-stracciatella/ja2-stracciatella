@@ -66,6 +66,14 @@ static inline BOOLEAN OkControllableMerc(const SOLDIERTYPE* const s)
 
 #define TANK(p)			((p)->ubBodyType == TANK_NE || (p)->ubBodyType == TANK_NW)
 
-#define OK_ENTERABLE_VEHICLE(p)	((p)->uiStatusFlags & SOLDIER_VEHICLE && !TANK((p)) && (p)->bLife >= OKLIFE)
+static inline bool EnterableVehicle(SOLDIERTYPE const& s)
+{
+	return (s.uiStatusFlags & SOLDIER_VEHICLE) && !TANK(&s);
+}
+
+static inline bool OK_ENTERABLE_VEHICLE(SOLDIERTYPE const * s)
+{
+	return EnterableVehicle(*s) && s->bLife >= OKLIFE;
+}
 
 #endif
