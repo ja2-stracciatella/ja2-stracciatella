@@ -853,7 +853,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 			}
 
 			INT8  level;
-			bad_ctgh = !CalculateLaunchItemChanceToGetThrough(s, &TempObject, map_pos, gsInterfaceLevel, gsInterfaceLevel * 256, &final_grid_no, armed, &level, TRUE);
+			bad_ctgh = !CalculateLaunchItemChanceToGetThrough(s, &TempObject, map_pos, gsInterfaceLevel, gsInterfaceLevel * HEIGHT_UNITS, &final_grid_no, armed, &level, TRUE);
 			BeginPhysicsTrajectoryUI(final_grid_no, level, bad_ctgh);
 		}
 

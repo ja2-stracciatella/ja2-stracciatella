@@ -1182,7 +1182,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 				pObject->pNode->sRelativeY = (INT16)pObject->Position.y;
 				pObject->pNode->sRelativeZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
 				// Correction for cliff-elevated maps (e.g. Drassen mine)
-				pObject->pNode->sRelativeZ += gpWorldLevelData[pObject->sGridNo].sHeight;
+				pObject->pNode->sRelativeZ += gpWorldLevelData[sNewGridNo].sHeight;
 
 				// Update position data
 				pObject->pShadow->sRelativeX = (INT16)pObject->Position.x;
@@ -1494,8 +1494,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 
 	if ( fArmed && ( usLauncher == MORTAR || pItem->usItem == MORTAR ) )
 	{
-		// Start at 0....
-		sStartZ = ( pSoldier->bLevel * 256 );
+		sStartZ = ( pSoldier->bLevel * HEIGHT_UNITS ) + MORTAR_HEIGHT_UNITS;
 		fMortar = TRUE;
 		sMinRange = MIN_MORTAR_RANGE;
 	}
@@ -1626,6 +1625,11 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough(const SOLDIERTYPE* pSoldier, const
 	vPosition.x = sSrcX;
 	vPosition.y = sSrcY;
 	vPosition.z = GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel );
+
+	if ( GetLauncherFromLaunchable(pItem->usItem) == MORTAR )
+	{
+		vPosition.z = ( pSoldier->bLevel * HEIGHT_UNITS ) + MORTAR_HEIGHT_UNITS;
+	}
 
 	// OK, get direction normal
 	vDirNormal.x = (float)(sDestX - sSrcX);
@@ -1808,11 +1812,9 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 
 
 	sStartZ = GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel );
-	usLauncher = GetLauncherFromLaunchable( pItem->usItem );
-	if ( fArmed && usLauncher == MORTAR )
+	if ( fArmed && GetLauncherFromLaunchable( pItem->usItem ) == MORTAR )
 	{
-		// Start at 0....
-		sStartZ = ( pSoldier->bLevel * 256 ) + 50;
+		sStartZ = ( pSoldier->bLevel * HEIGHT_UNITS ) + MORTAR_HEIGHT_UNITS;
 	}
 
 	pSoldier->pThrowParams->dZ = (float)sStartZ;
@@ -2107,8 +2109,6 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 		}
 		if (pObject->Obj.usItem == MORTAR_SHELL)
 		{
-			sZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
-
 			IgniteExplosionXY(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z));
 		}
 	}
