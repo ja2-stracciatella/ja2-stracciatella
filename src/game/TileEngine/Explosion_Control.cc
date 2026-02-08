@@ -5,7 +5,6 @@
 #include "Animation_Control.h"
 #include "ContentManager.h"
 #include "Debug.h"
-#include "Directories.h"
 #include "ExplosionAnimationModel.h"
 #include "FOV.h"
 #include "GameInstance.h"
@@ -36,7 +35,6 @@
 #include "RenderWorld.h"
 #include "Render_Fun.h"
 #include "Rotting_Corpses.h"
-#include "SamSiteModel.h"
 #include "SaveLoadMap.h"
 #include "Smell.h"
 #include "SmokeEffects.h"
@@ -160,10 +158,6 @@ void IgniteExplosionXY(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY,
 
 static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 {
-	UINT8			ubTerrainType;
-
-	ANITILE_PARAMS	AniParams;
-
 	// Assign param values
 	const INT16 sX      = pExplosion->sX;
 	const INT16 sY      = pExplosion->sY;
@@ -179,21 +173,17 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 
 	pExplosion->light = NULL;
 
-	// OK, if we are over water.... use water explosion...
-	ubTerrainType = GetTerrainType( sGridNo );
-
 	auto explosionAnimation = GCM->getExplosionAnimation(pExplosion->ubTypeID);
 
 	// Setup explosion!
-	AniParams = ANITILE_PARAMS{};
-
+	ANITILE_PARAMS AniParams{};
 	AniParams.sGridNo							= sGridNo;
 	AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
 	AniParams.sDelay              = explosionAnimation->getBlastSpeed();
 	AniParams.sStartFrame					= pExplosion->sCurrentFrame;
 	AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_EXPLOSION;
 
-	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
+	if (Water(sGridNo))
 	{
 		// Change type to water explosion...
 		auto waterAnimation = explosionAnimation->getWaterAnimation();

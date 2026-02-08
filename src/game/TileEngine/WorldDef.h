@@ -2,6 +2,7 @@
 #define __WORLDDEF_H
 
 #include "JA2Types.h"
+#include "TileDef.h"
 #include "World_Tileset_Enums.h"
 
 #include <string_theory/string>
@@ -186,7 +187,7 @@ struct MAP_ELEMENT
 	UINT8 ubExtFlags[2];
 	UINT8 sHeight;
 	UINT8 ubAdjacentSoldierCnt;
-	UINT8 ubTerrainID;
+	TerrainTypeDefines ubTerrainID;
 
 	UINT8 ubReservedSoldierID;
 	UINT8 ubBloodInfo;

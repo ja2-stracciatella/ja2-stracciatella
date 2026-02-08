@@ -2097,9 +2097,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 			usMovementModeToUseForAPs = usMovementMode;
 
 			// ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-			if (gpWorldLevelData[sTempGrid].ubTerrainID == DEEP_WATER ||
-				gpWorldLevelData[sTempGrid].ubTerrainID == MED_WATER ||
-				gpWorldLevelData[sTempGrid].ubTerrainID == LOW_WATER)
+			if (Water(sTempGrid))
 			{
 				usMovementModeToUseForAPs = WALKING;
 			}

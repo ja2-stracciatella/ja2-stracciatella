@@ -4345,14 +4345,7 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	if (iCurrAboveLevelZ < 0)
 	{
 		// ground is in the way!
-		if ( pMapElement->ubTerrainID == DEEP_WATER || pMapElement->ubTerrainID == LOW_WATER || pMapElement->ubTerrainID == MED_WATER )
-		{
-			return ( COLLISION_WATER );
-		}
-		else
-		{
-			return ( COLLISION_GROUND );
-		}
+		return Water(pMapElement->ubTerrainID) ? COLLISION_WATER : COLLISION_GROUND;
 	}
 	// check for the existence of structures
 	pStructure = pMapElement->pStructureHead;
@@ -4385,15 +4378,7 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 		if ( dZ < 0)
 		{
 			// ground is in the way!
-			if (pMapElement->ubTerrainID == DEEP_WATER || pMapElement->ubTerrainID == LOW_WATER ||
-				pMapElement->ubTerrainID == MED_WATER )
-			{
-				return ( COLLISION_WATER );
-			}
-			else
-			{
-				return ( COLLISION_GROUND );
-			}
+			return Water(pMapElement->ubTerrainID) ? COLLISION_WATER : COLLISION_GROUND;
 		}
 
 		if ( gfCaves || gfBasement )
