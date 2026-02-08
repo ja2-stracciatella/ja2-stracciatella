@@ -39,6 +39,7 @@ struct CalibreModel;
 #define BUCKSHOT_SHOTS					9
 
 #define MIN_MORTAR_RANGE				150 // minimum range of a mortar
+#define MORTAR_HEIGHT_UNITS				50  // used for trajectory calculations
 
 // WEAPON CLASSES
 enum
