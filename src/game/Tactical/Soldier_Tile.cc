@@ -272,7 +272,6 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, INT16 sFinalDestTile )
 {
 	INT8  bBlocked;
-	INT16 bOverTerrainType;
 
 	// Check for blocking if in realtime
 	///if (!(gTacticalStatus.uiFlags & INCOMBAT))
@@ -346,10 +345,8 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 				MarkMovementReserved(*pSoldier, sGridNo);
 			}
 
-			bOverTerrainType = GetTerrainType( sGridNo );
-
 			// Check if we are going into water!
-			if ( bOverTerrainType == LOW_WATER || bOverTerrainType == MED_WATER || bOverTerrainType == DEEP_WATER )
+			if (Water(sGridNo))
 			{
 				// Check if we are of prone or crawl height and change stance accordingly....
 				switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )

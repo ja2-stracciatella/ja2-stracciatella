@@ -1505,7 +1505,7 @@ SOLDIERTYPE* WhoIsThere2(INT16 const gridno, INT8 const level)
 }
 
 
-UINT8	GetTerrainType(GridNo const grid_no)
+TerrainTypeDefines GetTerrainType(GridNo const grid_no)
 {
 	return gpWorldLevelData[grid_no].ubTerrainID;
 }
@@ -1515,7 +1515,12 @@ bool Water(GridNo const grid_no)
 {
 	if (grid_no == NOWHERE) return false;
 
-	UINT8 const terrain = GetTerrainType(grid_no);
+	return Water(GetTerrainType(grid_no));
+}
+
+
+bool Water(TerrainTypeDefines terrain)
+{
 	return
 		terrain == LOW_WATER ||
 		terrain == MED_WATER ||

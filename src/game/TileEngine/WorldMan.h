@@ -62,7 +62,6 @@ void DeleteAllLandLayers(UINT32 iMapIndex);
 void InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
 void RemoveHigherLandLevels(UINT32 map_idx, UINT32 src_type, std::vector<UINT32>& higher_types);
 
-UINT8 GetTerrainType(GridNo);
 bool  Water(GridNo);
 bool  DeepWater(GridNo);
 bool  WaterTooDeepForAttacks(GridNo);

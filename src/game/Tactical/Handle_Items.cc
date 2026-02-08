@@ -11,7 +11,6 @@
 #include "VObject.h"
 #include "Weapons.h"
 #include "Points.h"
-#include "TileDef.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Interface.h"
@@ -1450,14 +1449,10 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	INT16 sNewGridNo = *psGridNo;
 
 	/* if location is in water and item sinks, do not add */
-	switch (GetTerrainType(sNewGridNo))
+	if (Water(sNewGridNo))
 	{
-		case DEEP_WATER:
-		case LOW_WATER:
-		case MED_WATER:
-			if (GCM->getItem(pObject->usItem)->getFlags() & ITEM_SINKS)
-				return -1;
-			break;
+		if (GCM->getItem(pObject->usItem)->getFlags() & ITEM_SINKS)
+			return -1;
 	}
 
 	// First things first - look at where we are to place the items, and

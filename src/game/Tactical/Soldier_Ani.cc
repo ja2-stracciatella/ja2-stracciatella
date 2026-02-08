@@ -10,7 +10,6 @@
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Structure.h"
-#include "TileDef.h"
 #include "Weapons.h"
 #include "Soldier_Ani.h"
 #include "Random.h"
@@ -3277,7 +3276,7 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8
 	}
 
 	//NOT ok if in water....
-	if ( GetTerrainType( sGridNo ) == MED_WATER || GetTerrainType( sGridNo ) == DEEP_WATER || GetTerrainType( sGridNo ) == LOW_WATER )
+	if (Water(sGridNo))
 	{
 		return( FALSE );
 	}

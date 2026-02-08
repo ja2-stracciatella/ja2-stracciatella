@@ -89,7 +89,7 @@ struct TILE_ELEMENT
 	UINT16               fType;
 	UINT16               usRegionIndex;
 	INT16                sBuddyNum;
-	UINT8                ubTerrainID;
+	TerrainTypeDefines   ubTerrainID;
 	UINT8                ubNumberOfTiles;
 
 	// Land and overlay type
@@ -124,6 +124,8 @@ void SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType);
 
 bool GetTypeLandLevel(UINT32 map_idx, UINT32 new_type, UINT8* out_level);
 
+TerrainTypeDefines GetTerrainType(GridNo);
+bool Water(TerrainTypeDefines);
 
 // Database access functions
 UINT16 GetSubIndexFromTileIndex(UINT16 usIndex);

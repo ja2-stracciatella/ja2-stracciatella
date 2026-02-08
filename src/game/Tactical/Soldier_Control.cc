@@ -6477,15 +6477,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier)
 {
 	// Our water texture , for now is of a given type
-	if ( pSoldier->bOverTerrainType == LOW_WATER || pSoldier->bOverTerrainType == MED_WATER ||
-		pSoldier->bOverTerrainType == DEEP_WATER )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return Water(static_cast<TerrainTypeDefines>(pSoldier->bOverTerrainType));
 }
 
 
