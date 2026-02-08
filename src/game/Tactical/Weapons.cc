@@ -1428,7 +1428,7 @@ static void UseLauncher(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo
 
 	DeductPoints( pSoldier, sAPCost, 0 );
 
-	CalculateLaunchItemParamsForThrow( pSoldier, pSoldier->sTargetGridNo, pSoldier->bTargetLevel, 0, &Launchable, (INT8)(uiDiceRoll - uiHitChance), THROW_ARM_ITEM, 0 );
+	CalculateLaunchItemParamsForThrow( pSoldier, pSoldier->sTargetGridNo, pSoldier->bTargetLevel, pSoldier->bTargetLevel * HEIGHT_UNITS, &Launchable, (INT8)(uiDiceRoll - uiHitChance), THROW_ARM_ITEM, 0 );
 
 	const THROW_PARAMS* const t = pSoldier->pThrowParams;
 	CreatePhysicalObject(pSoldier->pTempObject, t->dLifeSpan, t->dX, t->dY, t->dZ, t->dForceX, t->dForceY, t->dForceZ, pSoldier, t->ubActionCode, t->target);
