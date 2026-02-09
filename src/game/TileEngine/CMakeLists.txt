@@ -18,7 +18,6 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveSmokeEffect.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Map_Edgepoints.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Overhead_Map.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Phys_Math.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Physics.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Pits.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Radar_Screen.cc

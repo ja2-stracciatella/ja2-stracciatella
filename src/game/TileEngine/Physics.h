@@ -3,11 +3,15 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
-#include "Phys_Math.h"
 #include "WorldDef.h"
 
 
 extern UINT32 guiNumObjectSlots;
+
+struct vector_3
+{
+	float x, y, z;
+};
 
 struct REAL_OBJECT
 {
