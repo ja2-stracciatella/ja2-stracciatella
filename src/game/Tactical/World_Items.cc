@@ -29,34 +29,16 @@ std::vector<WORLDITEM> gWorldItems;
 std::vector<WORLDBOMB> gWorldBombs;
 
 
-static INT32 GetFreeWorldBombIndex(void)
+static void AddBombToWorld(INT32 iItemIndex)
 {
-	INT32 idx;
+	auto pos = std::find_if(gWorldBombs.begin(), gWorldBombs.end(),
+		[](WORLDBOMB const& bomb) { return !bomb.fExists; });
 
-	Assert(gWorldBombs.size() <= INT32_MAX);
-	for (idx = 0; idx < static_cast<INT32>(gWorldBombs.size()); idx++)
-	{
-		if (!gWorldBombs[idx].fExists) return idx;
-	}
-
-	gWorldBombs.push_back(WORLDBOMB{});
-
-	// Return uiCount.....
-	return( idx );
-}
-
-
-static INT32 AddBombToWorld(INT32 iItemIndex)
-{
-	UINT32	iBombIndex;
-
-	iBombIndex = GetFreeWorldBombIndex( );
+	WORLDBOMB & bombPtr = pos != gWorldBombs.end() ? *pos : gWorldBombs.emplace_back();
 
 	//Add the new world item to the table.
-	gWorldBombs[ iBombIndex ].fExists = TRUE;
-	gWorldBombs[ iBombIndex ].iItemIndex = iItemIndex;
-
-	return ( iBombIndex );
+	bombPtr.fExists = TRUE;
+	bombPtr.iItemIndex = iItemIndex;
 }
 
 
@@ -186,7 +168,7 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 	// Add a bomb reference if needed
 	if (usFlags & WORLD_ITEM_ARMED_BOMB)
 	{
-		if (AddBombToWorld(iItemIndex) == -1) return -1;
+		AddBombToWorld(iItemIndex);
 	}
 
 	return iItemIndex;
