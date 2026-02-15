@@ -5433,8 +5433,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 			pSoldier->usAttackingWeapon != BRASS_KNUCKLES ) || !( pSoldier->uiStatusFlags & SOLDIER_BOXER ) )
 		{
 			// someone's cheating!
-			if ( (GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_BLADE ||
-				GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_PUNCH) && (pTarget->uiStatusFlags & SOLDIER_BOXER) )
+			if ( (GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() & (IC_BLADE | IC_PUNCH)) && (pTarget->uiStatusFlags & SOLDIER_BOXER) )
 			{
 				// knife or brass knuckles disqualify the player!
 				BoxingPlayerDisqualified( pSoldier, BAD_ATTACK );

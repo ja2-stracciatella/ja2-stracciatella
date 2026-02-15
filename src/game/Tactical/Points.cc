@@ -885,6 +885,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool con
 #endif
 			break;
 
+		case IC_NONE:
 		case IC_PUNCH:
 		case IC_BLADE:
 			// If we are at this gridno, calc min APs but if not, calc cost to goto this
@@ -976,6 +977,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool const add
 		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(*s, grid_no, add_turning_cost);
 		case IC_GRENADE:
 		case IC_THROWN:         return MinAPsToThrow(*s, grid_no, add_turning_cost);
+		case IC_NONE:
 		case IC_PUNCH:          return MinAPsToPunch(*s, grid_no, add_turning_cost);
 		default:                return 0;
 	}

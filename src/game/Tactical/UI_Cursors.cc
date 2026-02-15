@@ -1245,6 +1245,11 @@ ItemCursor GetActionModeCursor(SOLDIERTYPE const* const pSoldier)
 
 	usInHand = pSoldier->inv[HANDPOS].usItem;
 
+	if (usInHand == NOTHING)
+	{
+		return PUNCHCURS;
+	}
+
 	// Start off with what is in our hand
 	ItemCursor ubCursor = GCM->getItem(usInHand)->getCursor();
 

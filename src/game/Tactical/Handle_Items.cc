@@ -432,7 +432,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	//TRY PUNCHING
-	if (item->getItemClass() == IC_PUNCH)
+	if (item->getItemClass() & (IC_NONE | IC_PUNCH))
 	{
 		INT16 sGotLocation = NOWHERE;
 		UINT8 ubDirection;
