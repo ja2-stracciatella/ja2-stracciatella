@@ -2073,8 +2073,6 @@ static void ResetLastKnownLocs(SOLDIERTYPE const&);
 
 void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
 {
-
-	SOLDIERTYPE *pOpponent;
 	UINT8 ubTarget,ubLoop;
 
 
@@ -2082,13 +2080,15 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
 
 	// clean up the public opponent lists and locations
 	for (ubLoop = 0; ubLoop < MAXTEAMS; ubLoop++)
-	// never causes any additional looks
-	UpdatePublic(ubLoop, pSoldier, NOT_HEARD_OR_SEEN, NOWHERE, 0);
+	{
+		// never causes any additional looks
+		UpdatePublic(ubLoop, pSoldier, NOT_HEARD_OR_SEEN, NOWHERE, 0);
+	}
 
 	// clean up all opponent's opplists
 	for (ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++)
 	{
-		pOpponent = MercSlots[ ubLoop ];
+		auto * pOpponent = MercSlots[ubLoop];
 
 		// if the target is active, a true opponent and currently seen by this merc
 		if (pOpponent)
@@ -2100,7 +2100,7 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
 				RemoveOneOpponent(pOpponent);
 			}
 			UpdatePersonal(pOpponent, ubTarget, NOT_HEARD_OR_SEEN,NOWHERE,0);
-			gbSeenOpponents[ubLoop][ubTarget] = FALSE;
+			gbSeenOpponents[pOpponent->ubID][ubTarget] = FALSE;
 		}
 	}
 

@@ -1964,9 +1964,8 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 
 	const INT16  sMyGridNo           = pNPC->sGridNo;
 	INT16        sDesiredMercDist    = 100;
-	UINT8        ubDesiredMerc       = NOBODY;
 	UINT8        ubHighestTalkDesire = 0;
-	SOLDIERTYPE* pDesiredMerc        = NULL; // XXX HACK000E
+	SOLDIERTYPE const * pDesiredMerc{};
 	// loop through all mercs
 	for (UINT8 ubMerc = 0; ubMerc < guiNumMercSlots; ++ubMerc)
 	{
@@ -1980,7 +1979,7 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 		if (pMerc->bAssignment >= ON_DUTY) continue;
 
 		// if they're not visible, don't think about it
-		if (pNPC->bOppList[ubMerc] != SEEN_CURRENTLY) continue;
+		if (pNPC->bOppList[pMerc->ubID] != SEEN_CURRENTLY) continue;
 
 		/* what's the opinion required for the highest-opinion quote that we would
 		 * say to this merc */
@@ -1990,23 +1989,22 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 		if (ubTalkDesire > ubHighestTalkDesire)
 		{
 			ubHighestTalkDesire = ubTalkDesire;
-			ubDesiredMerc       = ubMerc;
-			pDesiredMerc        = &GetMan(ubMerc);
+			pDesiredMerc        = pMerc;
 			sDesiredMercDist    = PythSpacesAway(sMyGridNo, pDesiredMerc->sGridNo);
 		}
 		else if (ubTalkDesire == ubHighestTalkDesire)
 		{
-			INT16 const sDist = PythSpacesAway(sMyGridNo, GetMan(ubMerc).sGridNo);
+			INT16 const sDist = PythSpacesAway(sMyGridNo, pMerc->sGridNo);
 			if (sDist < sDesiredMercDist)
 			{
 				// we can say the same thing to this merc, and they're closer!
-				ubDesiredMerc    = ubMerc;
+				pDesiredMerc     = pMerc;
 				sDesiredMercDist = sDist;
 			}
 		}
 	}
 
-	return ubDesiredMerc == NOBODY ? NOWHERE : pDesiredMerc->sGridNo;
+	return pDesiredMerc == nullptr ? NOWHERE : pDesiredMerc->sGridNo;
 }
 
 
