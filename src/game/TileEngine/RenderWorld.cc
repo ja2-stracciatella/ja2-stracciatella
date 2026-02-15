@@ -507,7 +507,7 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 								// Handle independent-per-tile animations (i.e.: doors, exploding things, etc.)
 								if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1)
 								{
-									Assert(TileElem->pAnimData);
+									if (TileElem->pAnimData == nullptr) continue;
 									TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
 								}
 
@@ -522,9 +522,12 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 										{
 											if (uiTileElemFlags & ANIMATED_TILE)
 											{
-												Assert(TileElem->pAnimData);
-												TileElem        = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
-												uiTileElemFlags = TileElem->uiFlags;
+												if (TileElem->pAnimData == nullptr) { fRenderTile = FALSE; }
+												else
+												{
+													TileElem        = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
+													uiTileElemFlags = TileElem->uiFlags;
+												}
 											}
 											else
 											{
