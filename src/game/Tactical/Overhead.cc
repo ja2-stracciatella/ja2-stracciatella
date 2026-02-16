@@ -231,17 +231,22 @@ static UINT32 guiWaitingForAllMercsToExitTimer = 0;
 BOOLEAN       gfKillingGuysForLosingBattle     = FALSE;
 
 
+static bool Erase(std::vector<SOLDIERTYPE *> & v, SOLDIERTYPE * s)
+{
+	auto endBefore = v.end();
+	return v.erase(std::remove(v.begin(), v.end(), s), v.end()) != endBefore;
+}
+
 void AddMercSlot(SOLDIERTYPE* pSoldier)
 {
 	MercSlots.push_back(pSoldier);
 }
 
-
 BOOLEAN RemoveMercSlot(SOLDIERTYPE* pSoldier)
 {
 	CHECKF(pSoldier != NULL);
 
-	return std::erase(MercSlots, pSoldier) == 1;
+	return Erase(MercSlots, pSoldier);
 }
 
 
@@ -261,7 +266,7 @@ BOOLEAN RemoveAwaySlot(SOLDIERTYPE* pSoldier)
 {
 	CHECKF(pSoldier != NULL);
 
-	return std::erase(AwaySlots, pSoldier) == 1;
+	return Erase(AwaySlots, pSoldier);
 }
 
 
