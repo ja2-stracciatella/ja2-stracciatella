@@ -3,7 +3,7 @@
 
 #include "Debug.h"
 #include "Soldier_Control.h"
-
+#include <span>
 
 #define MAX_REALTIME_SPEED_VAL		10
 
@@ -169,16 +169,9 @@ static inline void SetSelectedMan(SOLDIERTYPE* const s)
 }
 
 // MERC SLOTS - A LIST OF ALL ACTIVE MERCS
-extern SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
-extern UINT32       guiNumMercSlots;
+std::span<SOLDIERTYPE *> ActiveMercs();
 
-#define FOR_EACH_MERC(iter)                                           \
-	for (SOLDIERTYPE** iter = MercSlots,                   \
-		** const end__##iter = MercSlots + guiNumMercSlots; \
-		iter != end__##iter;                                           \
-		++iter)                                                        \
-		if (Assert(!*iter || (*iter)->bActive), !*iter) continue; else
-
+#define FOR_EACH_MERC(iter) for (SOLDIERTYPE * _##iter : ActiveMercs()) if (SOLDIERTYPE ** iter = & _##iter; false) continue; else
 
 extern TacticalStatusType gTacticalStatus;
 
@@ -276,9 +269,9 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange);
 void    AddMercSlot(SOLDIERTYPE* pSoldier);
 BOOLEAN RemoveMercSlot( SOLDIERTYPE *pSoldier  );
 
-INT32   AddAwaySlot(SOLDIERTYPE* pSoldier);
+void    AddAwaySlot(SOLDIERTYPE* pSoldier);
 BOOLEAN RemoveAwaySlot(SOLDIERTYPE* pSoldier);
-INT32   MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier);
+void    MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier);
 void    MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* pSoldier);
 
 void EnterCombatMode( UINT8 ubStartingTeam );

@@ -1967,11 +1967,8 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 	UINT8        ubHighestTalkDesire = 0;
 	SOLDIERTYPE const * pDesiredMerc{};
 	// loop through all mercs
-	for (UINT8 ubMerc = 0; ubMerc < guiNumMercSlots; ++ubMerc)
+	for (SOLDIERTYPE const * const pMerc : ActiveMercs())
 	{
-		const SOLDIERTYPE* const pMerc = MercSlots[ubMerc];
-		if (pMerc == NULL) continue;
-
 		// only look for mercs on the side of the player
 		if (pMerc->bSide != Side::FRIENDLY) continue;
 

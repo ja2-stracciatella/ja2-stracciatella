@@ -64,6 +64,7 @@ if(ENABLE_PCH)
         <optional>
         <random>
         <set>
+        <span>
         <stdexcept>
         <stdint.h>
         <stdlib.h>

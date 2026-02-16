@@ -2086,22 +2086,17 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
 	}
 
 	// clean up all opponent's opplists
-	for (ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++)
+	for (auto * const pOpponent : ActiveMercs())
 	{
-		auto * pOpponent = MercSlots[ubLoop];
-
 		// if the target is active, a true opponent and currently seen by this merc
-		if (pOpponent)
+		// check to see if OPPONENT considers US neutral
+		if ((pOpponent->bOppList[ubTarget] == SEEN_CURRENTLY) && !pOpponent->bNeutral &&
+			!CONSIDERED_NEUTRAL(pOpponent, pSoldier) && (pSoldier->bSide != pOpponent->bSide))
 		{
-			// check to see if OPPONENT considers US neutral
-			if ((pOpponent->bOppList[ubTarget] == SEEN_CURRENTLY) && !pOpponent->bNeutral &&
-				!CONSIDERED_NEUTRAL(pOpponent, pSoldier) && (pSoldier->bSide != pOpponent->bSide))
-			{
-				RemoveOneOpponent(pOpponent);
-			}
-			UpdatePersonal(pOpponent, ubTarget, NOT_HEARD_OR_SEEN,NOWHERE,0);
-			gbSeenOpponents[pOpponent->ubID][ubTarget] = FALSE;
+			RemoveOneOpponent(pOpponent);
 		}
+		UpdatePersonal(pOpponent, ubTarget, NOT_HEARD_OR_SEEN,NOWHERE,0);
+		gbSeenOpponents[pOpponent->ubID][ubTarget] = FALSE;
 	}
 
 	ResetLastKnownLocs(*pSoldier);
