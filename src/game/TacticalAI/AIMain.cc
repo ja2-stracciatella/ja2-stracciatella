@@ -35,9 +35,7 @@
 #include "Civ_Quotes.h"
 #include "Quests.h"
 #include "Queen_Command.h"
-#include "Debug.h"
 
-#include <algorithm>
 
 constexpr milliseconds AI_DELAY = 100ms;
 
@@ -1943,10 +1941,8 @@ static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 	// THIS ROUTINE SHOULD ONLY BE CALLED FOR SOLDIERS ON STATUS GREEN or YELLOW
 
 	// go through each soldier, looking for "friends" (soldiers on same side)
-	FOR_EACH_MERC(i)
+	for (auto const * const pFriend : ActiveMercs())
 	{
-		const SOLDIERTYPE* const pFriend = *i;
-
 		// if this man is neutral / NOT on my side, he's not my friend
 		if (pFriend->bNeutral || (pSoldier->bSide != pFriend->bSide))
 			continue;  // next merc

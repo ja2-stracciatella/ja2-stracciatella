@@ -103,6 +103,8 @@
 
 #include <algorithm>
 #include <iterator>
+#include <span>
+#include <vector>
 
 #define RT_DELAY_BETWEEN_AI_HANDLING	50
 #define RT_AI_TIMESLICE			10
@@ -128,13 +130,11 @@ BOOLEAN gfSurrendered = FALSE;
 // Soldier List used for all soldier overhead interaction
 SOLDIERTYPE  Menptr[TOTAL_SOLDIERS];
 
-SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
-UINT32       guiNumMercSlots = 0;
+static std::vector<SOLDIERTYPE *> MercSlots;
 
 TacticalStatusType gTacticalStatus;
 
-static SOLDIERTYPE* AwaySlots[TOTAL_SOLDIERS];
-static UINT32       guiNumAwaySlots = 0;
+static std::vector<SOLDIERTYPE *> AwaySlots;
 
 // Global for current selected soldier
 SOLDIERTYPE* g_selected_man;
@@ -231,39 +231,9 @@ static UINT32 guiWaitingForAllMercsToExitTimer = 0;
 BOOLEAN       gfKillingGuysForLosingBattle     = FALSE;
 
 
-static INT32 GetFreeMercSlot(void)
-{
-	for (UINT32 i = 0; i < guiNumMercSlots; ++i)
-	{
-		if (MercSlots[i] == NULL) return i;
-	}
-
-	if (guiNumMercSlots < TOTAL_SOLDIERS) return guiNumMercSlots++;
-
-	return -1;
-}
-
-
-static void RecountMercSlots(void)
-{
-	// set equal to 0 as a default
-	for (INT32 i = (INT32)guiNumMercSlots - 1; i >= 0; --i)
-	{
-		if (MercSlots[i] != NULL)
-		{
-			guiNumMercSlots = i + 1;
-			return;
-		}
-	}
-	// no mercs found
-	guiNumMercSlots = 0;
-}
-
-
 void AddMercSlot(SOLDIERTYPE* pSoldier)
 {
-	const INT32 iMercIndex = GetFreeMercSlot();
-	if (iMercIndex != -1) MercSlots[iMercIndex] = pSoldier;
+	MercSlots.push_back(pSoldier);
 }
 
 
@@ -271,54 +241,19 @@ BOOLEAN RemoveMercSlot(SOLDIERTYPE* pSoldier)
 {
 	CHECKF(pSoldier != NULL);
 
-	for (UINT32 i = 0; i < guiNumMercSlots; ++i)
-	{
-		if (MercSlots[i] == pSoldier)
-		{
-			MercSlots[i] = NULL;
-			RecountMercSlots();
-			return TRUE;
-		}
-	}
-
-	// TOLD TO DELETE NON-EXISTANT SOLDIER
-	return FALSE;
+	return std::erase(MercSlots, pSoldier) == 1;
 }
 
 
-static INT32 GetFreeAwaySlot(void)
+std::span<SOLDIERTYPE *> ActiveMercs()
 {
-	for (UINT32 i = 0; i < guiNumAwaySlots; ++i)
-	{
-		if (AwaySlots[i] == NULL) return i;
-	}
-
-	if (guiNumAwaySlots < TOTAL_SOLDIERS) return guiNumAwaySlots++;
-
-	return -1;
+	return MercSlots;
 }
 
 
-static void RecountAwaySlots(void)
+void AddAwaySlot(SOLDIERTYPE* pSoldier)
 {
-	for (INT32 i = guiNumAwaySlots - 1; i >=0; --i)
-	{
-		if (AwaySlots[i] != NULL)
-		{
-			guiNumAwaySlots = i + 1;
-			return;
-		}
-	}
-	// no mercs found
-	guiNumAwaySlots = 0;
-}
-
-
-INT32 AddAwaySlot(SOLDIERTYPE* pSoldier)
-{
-	const INT32 iAwayIndex = GetFreeAwaySlot();
-	if (iAwayIndex != -1) AwaySlots[iAwayIndex] = pSoldier;
-	return iAwayIndex;
+	AwaySlots.push_back(pSoldier);
 }
 
 
@@ -326,25 +261,13 @@ BOOLEAN RemoveAwaySlot(SOLDIERTYPE* pSoldier)
 {
 	CHECKF(pSoldier != NULL);
 
-	for (UINT32 i = 0; i < guiNumAwaySlots; ++i)
-	{
-		if (AwaySlots[i] == pSoldier)
-		{
-			AwaySlots[i] = NULL;
-			RecountAwaySlots();
-			return TRUE;
-		}
-	}
-
-	// TOLD TO DELETE NON-EXISTANT SOLDIER
-	return FALSE;
+	return std::erase(AwaySlots, pSoldier) == 1;
 }
 
 
-INT32 MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier)
+void MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier)
 {
-	BOOLEAN fRet = RemoveMercSlot(pSoldier);
-	if (!fRet) return -1;
+	if (!RemoveMercSlot(pSoldier)) return;
 
 	if (!(pSoldier->uiStatusFlags & SOLDIER_OFF_MAP))
 	{
@@ -403,9 +326,9 @@ void ShutdownTacticalEngine(void)
 
 void InitOverhead()
 {
-	std::fill(std::begin(MercSlots), std::end(MercSlots), nullptr);
-	std::fill(std::begin(AwaySlots), std::end(AwaySlots), nullptr);
-	std::fill(std::begin(Menptr), std::end(Menptr), SOLDIERTYPE{});
+	MercSlots.clear();
+	AwaySlots.clear();
+	std::ranges::fill(Menptr, SOLDIERTYPE{});
 
 	TacticalStatusType& t = gTacticalStatus;
 	t = TacticalStatusType{};
@@ -457,7 +380,7 @@ void ShutdownOverhead(void)
 static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 {
 	UINT32 cnt;
-	if (uiCurrAISlot >= guiNumMercSlots)
+	if (uiCurrAISlot >= MercSlots.size())
 	{
 		// last person to handle was an off-map merc, so now we start looping at the beginning
 		// again
@@ -469,7 +392,7 @@ static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 		cnt = uiCurrAISlot + 1;
 	}
 
-	for (; cnt < guiNumMercSlots; ++cnt)
+	for (; cnt < MercSlots.size(); ++cnt)
 	{
 		if (MercSlots[cnt] &&
 				(MercSlots[cnt]->bTeam != OUR_TEAM || MercSlots[cnt]->uiStatusFlags & SOLDIER_PCUNDERAICONTROL))
@@ -486,9 +409,9 @@ static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 
 	// didn't find an AI guy to handle after the last one handled and the # of slots
 	// it's time to check for an off-map merc... maybe
-	if (guiNumAwaySlots > 0)
+	if (!AwaySlots.empty())
 	{
-		if (guiAIAwaySlotToHandle + 1 >= guiNumAwaySlots)
+		if (guiAIAwaySlotToHandle + 1 >= AwaySlots.size())
 		{
 			// start looping from the beginning
 			cnt = 0;
@@ -499,7 +422,7 @@ static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 			cnt = guiAIAwaySlotToHandle + 1;
 		}
 
-		for (; cnt < guiNumAwaySlots; ++cnt)
+		for (; cnt < AwaySlots.size(); ++cnt)
 		{
 			if (AwaySlots[cnt] && AwaySlots[cnt]->bTeam != OUR_TEAM)
 			{
@@ -585,7 +508,7 @@ void ExecuteOverhead(void)
 			}
 		}
 
-		for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
+		for (UINT32 cnt = 0; cnt < MercSlots.size(); ++cnt)
 		{
 			SOLDIERTYPE* pSoldier = MercSlots[cnt];
 
@@ -1125,7 +1048,7 @@ void ExecuteOverhead(void)
 			}
 		}
 
-		if (guiNumAwaySlots > 0 &&
+		if (!AwaySlots.empty() &&
 				!gfPauseAllAI &&
 				!(gTacticalStatus.uiFlags & INCOMBAT) &&
 				guiAISlotToHandle == HANDLE_OFF_MAP_MERC
@@ -4895,13 +4818,8 @@ BOOLEAN PlayerTeamFull( )
 
 UINT8 NumPCsInSector(void)
 {
-	UINT8 ubNumPlayers = 0;
-	FOR_EACH_MERC(i)
-	{
-		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam == OUR_TEAM && s->bLife > 0) ++ubNumPlayers;
-	}
-	return ubNumPlayers;
+	return static_cast<UINT8>(std::ranges::count_if(ActiveMercs(),
+		[](SOLDIERTYPE * s) { return s->bTeam == OUR_TEAM && s->bLife > 0; }));
 }
 
 
@@ -5239,9 +5157,8 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 	UINT8 ubPointsLost, ubTotalPointsLost, ubNewStance;
 	UINT8 ubLoop2;
 
-	FOR_EACH_MERC(i)
+	for (SOLDIERTYPE * const pSoldier : MercSlots)
 	{
-		SOLDIERTYPE* const pSoldier = *i;
 		if (IS_MERC_BODY_TYPE(pSoldier) && pSoldier->bLife >= OKLIFE && pSoldier->ubSuppressionPoints > 0)
 		{
 			bTolerance = CalcSuppressionTolerance( pSoldier );

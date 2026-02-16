@@ -2086,22 +2086,17 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
 	}
 
 	// clean up all opponent's opplists
-	for (ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++)
+	for (auto * const pOpponent : ActiveMercs())
 	{
-		auto * pOpponent = MercSlots[ubLoop];
-
 		// if the target is active, a true opponent and currently seen by this merc
-		if (pOpponent)
+		// check to see if OPPONENT considers US neutral
+		if ((pOpponent->bOppList[ubTarget] == SEEN_CURRENTLY) && !pOpponent->bNeutral &&
+			!CONSIDERED_NEUTRAL(pOpponent, pSoldier) && (pSoldier->bSide != pOpponent->bSide))
 		{
-			// check to see if OPPONENT considers US neutral
-			if ((pOpponent->bOppList[ubTarget] == SEEN_CURRENTLY) && !pOpponent->bNeutral &&
-				!CONSIDERED_NEUTRAL(pOpponent, pSoldier) && (pSoldier->bSide != pOpponent->bSide))
-			{
-				RemoveOneOpponent(pOpponent);
-			}
-			UpdatePersonal(pOpponent, ubTarget, NOT_HEARD_OR_SEEN,NOWHERE,0);
-			gbSeenOpponents[pOpponent->ubID][ubTarget] = FALSE;
+			RemoveOneOpponent(pOpponent);
 		}
+		UpdatePersonal(pOpponent, ubTarget, NOT_HEARD_OR_SEEN,NOWHERE,0);
+		gbSeenOpponents[pOpponent->ubID][ubTarget] = FALSE;
 	}
 
 	ResetLastKnownLocs(*pSoldier);
@@ -2297,11 +2292,7 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 	{
 		// Get total enemies.
 		// Loop through all mercs in sector and count # of enemies
-		FOR_EACH_MERC(i)
-		{
-			const SOLDIERTYPE* const t = *i;
-			if (OK_ENEMY_MERC(t)) ++ubNumEnemies;
-		}
+		ubNumEnemies = std::ranges::count_if(ActiveMercs(), OK_ENEMY_MERC);
 
 		// OK, after this, check our guys
 		FOR_EACH_MERC(i)
@@ -4542,7 +4533,7 @@ void NonCombatDecayPublicOpplist( UINT32 uiTime )
 	if ( uiTime - gTacticalStatus.uiTimeSinceLastOpplistDecay >= TIME_BETWEEN_RT_OPPLIST_DECAYS)
 	{
 		// decay!
-		FOR_EACH_MERC(i) VerifyAndDecayOpplist(*i);
+		std::ranges::for_each(ActiveMercs(), VerifyAndDecayOpplist);
 
 		for (UINT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
 		{
