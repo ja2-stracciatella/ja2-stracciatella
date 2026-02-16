@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "ItemModel.h"
 #include "Physics.h"
 #include "Soldier_Find.h"
@@ -49,7 +47,7 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	INT32                cached_tile = -1;
 	INT16          const gridno      = parms->sGridNo;
 	AnimationLevel const ubLevel     = parms->ubLevelID;
-	INT16                tile_index  = parms->usTileIndex;
+	UINT16               tile_index  = parms->usTileIndex;
 	AnimationFlags const flags       = parms->uiFlags;
 	LEVELNODE*           l           = parms->pGivenLevelNode;
 
@@ -57,9 +55,10 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	// before modifying any level node state. Cached tiles use gpTileCache
 	// and do not need pAnimData.
 	if (parms->zCachedFile == nullptr &&
-		(tile_index < 0 || tile_index >= NUMBEROFTILES || gTileDatabase[tile_index].pAnimData == nullptr))
+		(tile_index >= NUMBEROFTILES || gTileDatabase[tile_index].pAnimData == nullptr))
 	{
-		SLOGW("CreateAnimationTile: tile {} at gridno {} has no animation data", tile_index, gridno);
+		SLOGW("CreateAnimationTile: tile {} (tileset {}) at gridno {} has no animation data",
+			tile_index, giCurrentTilesetID, gridno);
 		return nullptr;
 	}
 
