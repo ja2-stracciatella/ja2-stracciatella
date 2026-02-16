@@ -21,7 +21,6 @@
 #include "StrategicMap.h"
 #include "Animation_Data.h"
 #include "Items.h"
-#include <algorithm>
 
 INT16   gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
 SOLDIERTYPE* gBoxer[NUM_BOXERS];
@@ -147,8 +146,17 @@ void TriggerEndOfBoxingRecord( SOLDIERTYPE * pSoldier )
 
 UINT8 CountPeopleInBoxingRing( void )
 {
-	return static_cast<UINT8>(std::ranges::count_if(ActiveMercs(),
-		[](SOLDIERTYPE * s) { return GetRoom(s->sGridNo) == BOXING_RING; }));
+	UINT8 ubTotalInRing = 0;
+
+	FOR_EACH_MERC(i)
+	{
+		if (GetRoom((*i)->sGridNo) == BOXING_RING)
+		{
+			++ubTotalInRing;
+		}
+	}
+
+	return( ubTotalInRing );
 }
 
 

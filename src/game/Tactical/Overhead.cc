@@ -328,7 +328,7 @@ void InitOverhead()
 {
 	MercSlots.clear();
 	AwaySlots.clear();
-	std::ranges::fill(Menptr, SOLDIERTYPE{});
+	std::fill(std::begin(Menptr), std::end(Menptr), SOLDIERTYPE{});
 
 	TacticalStatusType& t = gTacticalStatus;
 	t = TacticalStatusType{};
@@ -4818,8 +4818,13 @@ BOOLEAN PlayerTeamFull( )
 
 UINT8 NumPCsInSector(void)
 {
-	return static_cast<UINT8>(std::ranges::count_if(ActiveMercs(),
-		[](SOLDIERTYPE * s) { return s->bTeam == OUR_TEAM && s->bLife > 0; }));
+	UINT8 ubNumPlayers = 0;
+	FOR_EACH_MERC(i)
+	{
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam == OUR_TEAM && s->bLife > 0) ++ubNumPlayers;
+	}
+	return ubNumPlayers;
 }
 
 

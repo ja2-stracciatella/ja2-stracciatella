@@ -2292,7 +2292,11 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 	{
 		// Get total enemies.
 		// Loop through all mercs in sector and count # of enemies
-		ubNumEnemies = std::ranges::count_if(ActiveMercs(), OK_ENEMY_MERC);
+		FOR_EACH_MERC(i)
+		{
+			const SOLDIERTYPE* const t = *i;
+			if (OK_ENEMY_MERC(t)) ++ubNumEnemies;
+		}
 
 		// OK, after this, check our guys
 		FOR_EACH_MERC(i)
@@ -4533,7 +4537,7 @@ void NonCombatDecayPublicOpplist( UINT32 uiTime )
 	if ( uiTime - gTacticalStatus.uiTimeSinceLastOpplistDecay >= TIME_BETWEEN_RT_OPPLIST_DECAYS)
 	{
 		// decay!
-		std::ranges::for_each(ActiveMercs(), VerifyAndDecayOpplist);
+		FOR_EACH_MERC(i) VerifyAndDecayOpplist(*i);
 
 		for (UINT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
 		{
