@@ -936,12 +936,15 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 					pNode = CreateAnimationTile( &AniParams );
 
-					// Adjust for absolute positioning
-					pNode->pLevelNode->uiFlags |= LEVELNODE_USEABSOLUTEPOS;
+					if (pNode != nullptr)
+					{
+						// Adjust for absolute positioning
+						pNode->pLevelNode->uiFlags |= LEVELNODE_USEABSOLUTEPOS;
 
-					pNode->pLevelNode->sRelativeX = (INT16)pObject->Position.x;
-					pNode->pLevelNode->sRelativeY = (INT16)pObject->Position.y;
-					pNode->pLevelNode->sRelativeZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
+						pNode->pLevelNode->sRelativeX = (INT16)pObject->Position.x;
+						pNode->pLevelNode->sRelativeY = (INT16)pObject->Position.y;
+						pNode->pLevelNode->sRelativeZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
+					}
 				}
 			}
 

@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "ItemModel.h"
 #include "Physics.h"
 #include "Soldier_Find.h"
@@ -46,14 +44,26 @@ static UINT16 SetFrameByDir(UINT16 frame, const ANITILE* const a)
 
 ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 {
-	ANITILE* const a = new ANITILE{};
-
 	INT32                cached_tile = -1;
 	INT16          const gridno      = parms->sGridNo;
 	AnimationLevel const ubLevel     = parms->ubLevelID;
-	INT16                tile_index  = parms->usTileIndex;
+	UINT16               tile_index  = parms->usTileIndex;
 	AnimationFlags const flags       = parms->uiFlags;
 	LEVELNODE*           l           = parms->pGivenLevelNode;
+
+	// Early validation: for non-cached tiles, verify animation data exists
+	// before modifying any level node state. Cached tiles use gpTileCache
+	// and do not need pAnimData.
+	if (parms->zCachedFile == nullptr &&
+		(tile_index >= NUMBEROFTILES || gTileDatabase[tile_index].pAnimData == nullptr))
+	{
+		SLOGW("CreateAnimationTile: tile {} (tileset {}) at gridno {} has no animation data",
+			tile_index, giCurrentTilesetID, gridno);
+		return nullptr;
+	}
+
+	ANITILE* const a = new ANITILE{};
+
 	if (flags & ANITILE_EXISTINGTILE)
 	{
 		Assert(parms->zCachedFile == NULL);
