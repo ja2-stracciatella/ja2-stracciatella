@@ -63,7 +63,9 @@ if(ENABLE_PCH)
         <numeric>
         <optional>
         <random>
+        <ranges>
         <set>
+        <span>
         <stdexcept>
         <stdint.h>
         <stdlib.h>
@@ -93,3 +95,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR ENABLE_ASSERTS)
 endif()
 
 add_warnings(${JA2_BINARY})
+
+if(ANDROID)
+    target_compile_options(${JA2_BINARY} PRIVATE -fexperimental-library)
+endif()
