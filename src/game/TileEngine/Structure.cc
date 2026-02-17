@@ -409,7 +409,6 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructu
 			pStructure->ubWallOrientation = pDBStructure->ubWallOrientation;
 		}
 	}
-	pStructure->ubVehicleHitLocation = pTile->ubVehicleHitLocation;
 	return pStructure;
 }
 
@@ -1247,7 +1246,6 @@ StructureDamageResult DamageStructure(STRUCTURE* const s, UINT8 damage, Structur
 }
 
 
-#define LINE_HEIGHT 20
 void DebugStructurePage1()
 {
 	static const ST::string WallOrientationString[] =

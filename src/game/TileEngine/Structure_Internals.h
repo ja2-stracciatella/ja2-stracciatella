@@ -6,8 +6,8 @@
 // structure_extern.h, not structure.h!
 //
 
+#include "JA2Types.h"
 #include "SGPFile.h"
-#include "Types.h"
 #include <cstddef>
 #include <vector>
 
@@ -66,7 +66,7 @@ constexpr UINT8 AtHeight[PROFILE_Z_SIZE] { 0x01, 0x02, 0x04, 0x08 };
 
 // how to handle explodable structures
 
-enum StructureFlags
+enum StructureFlags : UINT32
 {
 	// NOT used in DB structures
 	STRUCTURE_BASE_TILE     = 0x00000001,
@@ -148,7 +148,7 @@ struct DB_STRUCTURE
 	UINT8								ubHitPoints;
 	UINT8								ubDensity;
 	UINT8								ubNumberOfTiles;
-	UINT32							fFlags;
+	StructureFlags					    fFlags;
 	UINT16							usStructureNumber;
 	UINT8								ubWallOrientation;
 	INT8								bDestructionPartner; // >0 = debris number (bDP - 1), <0 = partner graphic
@@ -168,27 +168,17 @@ struct STRUCTURE
 {
 	STRUCTURE*                    pPrev;
 	STRUCTURE*                    pNext;
-	INT16													sGridNo;
-	UINT16												usStructureID;
 	const DB_STRUCTURE_REF*       pDBStructureRef;
-	union
-	{
-		struct
-		{
-			UINT8											ubHitPoints;
-			UINT8											ubLockStrength;
-		};
-		struct
-		{
-			INT16											sBaseGridNo;
-		};
-	}; // 2 bytes
-	INT16													sCubeOffset;// height of bottom of object in profile "cubes"
-	UINT32												fFlags; // need to have something to indicate base tile/not
-	PROFILE *											pShape;
-	UINT8													ubWallOrientation;
-	UINT8													ubVehicleHitLocation;
-	UINT8													ubStructureHeight; // if 0, then unset; otherwise stores height of structure when last calculated
+	PROFILE*					  pShape;
+	StructureFlags				  fFlags; // need to have something to indicate base tile/not
+	GridNo						  sGridNo;
+	UINT16						  usStructureID;
+	UINT8						  ubHitPoints;
+	UINT8						  ubLockStrength;
+	GridNo						  sBaseGridNo;
+	INT16						  sCubeOffset;// height of bottom of object in profile "cubes"
+	UINT8						  ubWallOrientation;
+	UINT8						  ubStructureHeight; // if 0, then unset; otherwise stores height of structure when last calculated
 };
 
 struct STRUCTURE_FILE_REF

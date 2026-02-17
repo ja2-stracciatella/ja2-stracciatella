@@ -1837,7 +1837,6 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 
 	if (tgt.uiStatusFlags & SOLDIER_VEHICLE || (tgt.ubBodyType == COW || tgt.ubBodyType == CROW || tgt.ubBodyType == BLOODCAT))
 	{
-		//ubHitLocation = pStructure->ubVehicleHitLocation;
 		ubHitLocation = AIM_SHOT_TORSO;
 	}
 	else
