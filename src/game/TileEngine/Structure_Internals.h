@@ -9,6 +9,7 @@
 #include "JA2Types.h"
 #include "SGPFile.h"
 #include <cstddef>
+#include <span>
 #include <vector>
 
 // A few words about the overall structure scheme:
@@ -162,6 +163,11 @@ struct DB_STRUCTURE_REF
 {
 	DB_STRUCTURE * 												pDBStructure;
 	DB_STRUCTURE_TILE **									ppTile; // dynamic array
+
+	auto Tiles() const noexcept
+	{
+		return std::span{ ppTile, pDBStructure->ubNumberOfTiles };
+	}
 };
 
 struct STRUCTURE
