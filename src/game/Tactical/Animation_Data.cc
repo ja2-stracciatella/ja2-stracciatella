@@ -557,15 +557,13 @@ void InitAnimationSystem()
 					for (UINT8 dirIdx = 0; dirIdx < 8; dirIdx++)
 					{
 						DB_STRUCTURE_REF const* const pDBStructureRef = &pStructureFileRef->pDBStructureRef[dirIdx];
-						DB_STRUCTURE_TILE** ppTile = pDBStructureRef->ppTile;
-						UINT8 const n_tiles = pDBStructureRef->pDBStructure->ubNumberOfTiles;
 
-						for (UINT8 tileIdx = 0; tileIdx < n_tiles; tileIdx++)
+						for (auto tile : pDBStructureRef->Tiles())
 						{
 							// if not a base tile
-							if (ppTile[tileIdx]->sPosRelToBase != 0)
+							if (tile->sPosRelToBase != 0)
 							{
-								ppTile[tileIdx]->fFlags |= TILE_PASSABLE;
+								tile->fFlags |= TILE_PASSABLE;
 							}
 						}
 					}

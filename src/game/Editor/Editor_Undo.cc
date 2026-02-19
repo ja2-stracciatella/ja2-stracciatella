@@ -308,7 +308,6 @@ static MAP_ELEMENT* CopyMapElementFromWorld(INT32 map_index);
 
 static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 {
-	INT32					iCoveredMapIndex;
 	UINT8					ubLoop;
 
 	auto pNode = std::make_unique<undo_stack>();
@@ -340,12 +339,12 @@ static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 	//     add all covered tiles to undo list
 	while (pStructure)
 	{
-		for (ubLoop = 1; ubLoop < pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles; ubLoop++)
+		auto tiles = pStructure->pDBStructureRef->Tiles();
+		for (ubLoop = 1; ubLoop < tiles.size(); ubLoop++)
 		{
 			// this loop won't execute for single-tile structures; for multi-tile structures, we have to
 			// add to the undo list all the other tiles covered by the structure
-			iCoveredMapIndex = pStructure->sBaseGridNo + pStructure->pDBStructureRef->ppTile[ubLoop]->sPosRelToBase;
-			AddToUndoList( iCoveredMapIndex );
+			AddToUndoList(pStructure->sBaseGridNo + tiles[ubLoop]->sPosRelToBase);
 		}
 		pStructure = pStructure->pNext;
 	}

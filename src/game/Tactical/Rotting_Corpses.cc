@@ -527,10 +527,9 @@ try
 	{
 		const UINT16                  usStructIndex   = GetCorpseStructIndex(pCorpseDef, TRUE);
 		const DB_STRUCTURE_REF* const pDBStructureRef = &pStructureFileRef->pDBStructureRef[usStructIndex];
-		for (UINT8 ubLoop = 0; ubLoop < pDBStructureRef->pDBStructure->ubNumberOfTiles; ++ubLoop)
+		for (auto const * tile : pDBStructureRef->Tiles())
 		{
-			DB_STRUCTURE_TILE* const* const ppTile      = pDBStructureRef->ppTile;
-			const INT16                     sTileGridNo = pCorpseDef->sGridNo + ppTile[ubLoop]->sPosRelToBase;
+			GridNo sTileGridNo = pCorpseDef->sGridNo + tile->sPosRelToBase;
 			RemoveBlood(sTileGridNo, pCorpseDef->bLevel);
 		}
 	}

@@ -418,9 +418,6 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 			// Alrighty add!
 
 			// Add to every gridno structure is in
-			UINT8                     const n_tiles = base->pDBStructureRef->pDBStructure->ubNumberOfTiles;
-			DB_STRUCTURE_TILE* const* const ppTile  = base->pDBStructureRef->ppTile;
-
 			destruction_partner = orig_destruction_partner;
 
 			// OK, destrcution index is , as default, the partner, until we go over the first set of explsion
@@ -430,13 +427,13 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 				GetTileIndexFromTypeSubIndex(FIRSTEXPLDEBRIS,  destruction_partner);
 
 			// Free all the non-base tiles; the base tile is at pointer 0
-			for (UINT8 ubLoop = BASE_TILE; ubLoop != n_tiles; ++ubLoop)
+			for (auto const * tile : base->pDBStructureRef->Tiles())
 			{
-				if (ppTile[ubLoop]->fFlags & TILE_ON_ROOF) continue;
+				if (tile->fFlags & TILE_ON_ROOF) continue;
 
 				/* There might be two structures in this tile, one on each level, but
 				 * we just want to delete one on each pass */
-				GridNo const struct_grid_no = base_grid_no + ppTile[ubLoop]->sPosRelToBase;
+				GridNo const struct_grid_no = base_grid_no + tile->sPosRelToBase;
 				if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS)) continue;
 
 				ApplyMapChangesToMapTempFile app;
@@ -600,18 +597,15 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, const UINT32 uiDist, BOOLEAN* const pfRecompileMovementCosts, const BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, SOLDIERTYPE* const owner, const INT8 bLevel)
 {
 	STRUCTURE *pCurrent, *pNextCurrent, *pStructure;
-	STRUCTURE *pBaseStructure;
 	INT16     sDesiredLevel;
-	UINT8     ubLoop, ubLoop2;
-	INT16     sNewGridNo, sNewGridNo2;
+	UINT8     ubLoop2;
+	INT16     sNewGridNo2;
 	BOOLEAN   fToBreak = FALSE;
 	BOOLEAN   fMultiStructure = FALSE;
 	BOOLEAN   fMultiStructSpecialFlag = FALSE;
 	BOOLEAN   fExplodeDamageReturn = FALSE;
 
-	std::vector<DB_STRUCTURE_TILE*> ppTile;
 	GridNo              sBaseGridNo     = NOWHERE; // XXX HACK000E
-	UINT8               ubNumberOfTiles = 0;       // XXX HACK000E
 
 	// Based on distance away, damage any struct at this gridno
 	// OK, loop through structures and damage!
@@ -623,14 +617,12 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 	while (pCurrent != NULL)
 	{
 		// ATE: These are for the chacks below for multi-structs....
-		pBaseStructure = FindBaseStructure( pCurrent );
+		STRUCTURE * const pBaseStructure = FindBaseStructure(pCurrent);
 
 		if ( pBaseStructure )
 		{
 			sBaseGridNo = pBaseStructure->sGridNo;
-			ubNumberOfTiles = pBaseStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles;
 			fMultiStructure = ( ( pBaseStructure->fFlags & STRUCTURE_MULTI ) != 0 );
-			ppTile.assign(pBaseStructure->pDBStructureRef->ppTile, pBaseStructure->pDBStructureRef->ppTile + ubNumberOfTiles);
 
 			if ( bMultiStructSpecialFlag == -1 )
 			{
@@ -673,10 +665,9 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 			}
 
 			{
-
-				for ( ubLoop = BASE_TILE; ubLoop < ubNumberOfTiles; ubLoop++)
+				for (auto const * tile : pBaseStructure->pDBStructureRef->Tiles())
 				{
-					sNewGridNo = sBaseGridNo + ppTile[ubLoop]->sPosRelToBase;
+					GridNo sNewGridNo = sBaseGridNo + tile->sPosRelToBase;
 
 					// look in adjacent tiles
 					for ( ubLoop2 = 0; ubLoop2 < NUM_WORLD_DIRECTIONS; ubLoop2++ )
@@ -707,11 +698,6 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 			{
 				break;
 			}
-		}
-
-		if ( pBaseStructure )
-		{
-			ppTile.clear();
 		}
 
 		pCurrent = pNextCurrent;
