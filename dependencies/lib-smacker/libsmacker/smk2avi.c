@@ -26,12 +26,13 @@
 
 void process(const char *fn)
 {
-	FILE *fp;
+	FILE *fp = NULL;
 	smk s;
 	char outfile[256];
 	unsigned char b[5];
 
-	int		i,j,k;
+	unsigned int		i,k;
+	int j;
 	unsigned long temp_u;
 
 	/* all and video info */
@@ -49,14 +50,14 @@ void process(const char *fn)
 	unsigned long total_audio_size[7] = {0};
 	unsigned long total_total_audio_size = 0;
 
-	unsigned char *pal,*frame;
+	const unsigned char *pal,*frame;
 
 	unsigned long cur_frame;
 
 	printf("--------\nsmk2avi processing %s...\n",fn);
 
 	/* open the smk file */
-	s = smk_open_file(fn,SMK_MODE_MEMORY);
+	s = smk_open_file(fn,SMK_MODE_DISK);
 	if (s == NULL) goto error;
 
 	/* get some info about the file */
@@ -64,7 +65,7 @@ void process(const char *fn)
 	smk_info_video(s, &w, &h, NULL);
 	smk_info_audio(s, &a_t, a_c, a_d, a_r);
 
-	printf("\t\t\twidth: %u, height: %u, usec/frame: %lf, frames: %u\n",w,h,usf,f);
+	printf("\t\t\twidth: %lu, height: %lu, usec/frame: %lf, frames: %lu\n",w,h,usf,f);
 
 	total_frame_size = w * h * 3;
 
@@ -88,7 +89,7 @@ void process(const char *fn)
 	smk_first(s);
 	for (cur_frame = 0; cur_frame < f; cur_frame ++)
 	{
-		printf("%u... ",cur_frame);
+		printf("%lu... ",cur_frame);
 			fflush(stdout);
 		for (i = 0; i < 7; i ++)
 		{
@@ -175,7 +176,7 @@ puts("Video stream header list");
 					lu(-1); // quality
 					lu(total_frame_size); // samplesize
 					lu(0); // rcFrame
-					su(w); su(h); //  rcFrame: right, bottom
+					su(w); su(h); // rcFrame: right, bottom
 				}
 	
 				w("strf",4);
@@ -200,7 +201,7 @@ puts("Video stream header list");
 			{
 				if (audio_size[i] != NULL)
 				{
-printf("-> Audio header %d, %dhz, %d bits, %d channels\n",i,a_r[i],a_d[i],a_c[i]);
+printf("-> Audio header %d, %luhz, %d bits, %d channels\n",i,a_r[i],a_d[i],a_c[i]);
 					LIST
 					lu(94);
 					w("strl",4);
@@ -286,12 +287,12 @@ printf("-> Audio header %d, %dhz, %d bits, %d channels\n",i,a_r[i],a_d[i],a_c[i]
 			if (audio_size[i] != NULL)
 			{
 				k ++;
-				sprintf(b,"%02uwb",k);
+				sprintf((char *)b,"%02uwb",k);
 				w(b,4);
 				temp_u = total_audio_size[i];
 				lu(temp_u);
 
-				for (j = 0; j < f; j++)
+				for (j = 0; j < (int)f; j++)
 				{
 					w(audio_data[i][j],audio_size[i][j]);
 				}
@@ -307,7 +308,7 @@ printf("-> Audio header %d, %dhz, %d bits, %d channels\n",i,a_r[i],a_d[i],a_c[i]
 	return;
 
 error:
-	fclose(fp);	
+	if (fp) fclose(fp);	
 
 	smk_close(s);
 	printf("!!HAD ERRORS!!\n--------\n");

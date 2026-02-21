@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 void
-dump_bmp(unsigned char *pal, unsigned char *image_data, unsigned int w, unsigned int h, unsigned int framenum)
+dump_bmp(const unsigned char *pal, const unsigned char *image_data, unsigned int w, unsigned int h, unsigned int framenum)
 {
 	int		i;
 	FILE           *fp;
@@ -21,6 +21,7 @@ dump_bmp(unsigned char *pal, unsigned char *image_data, unsigned int w, unsigned
 	unsigned int	temp;
 	sprintf(filename, "bmp/out_%04u.bmp", framenum);
 	fp = fopen(filename, "wb");
+	if (!fp) { fprintf(stderr, "Failed to open %s for write\n", filename); return; }
 	fwrite("BM", 2, 1, fp);
 	temp = 1078 + (w * h);
 	fwrite(&temp, 4, 1, fp);
@@ -91,7 +92,7 @@ main(int argc, char *argv[])
 	smk_info_all(s, NULL, &f, &usf);
 	smk_info_video(s, &w, &h, NULL);
 
-	printf("Opened file %s\nWidth: %d\nHeight: %d\nFrames: %d\nFPS: %f\n", argv[1], w, h, f, 1000000.0 / usf);
+	printf("Opened file %s\nWidth: %lu\nHeight: %lu\nFrames: %lu\nFPS: %f\n", argv[1], w, h, f, 1000000.0 / usf);
 
 	unsigned char	a_t, a_c[7], a_d[7];
 	unsigned long	a_r[7];
@@ -101,7 +102,7 @@ main(int argc, char *argv[])
 	int		i;
 	for (i = 0; i < 7; i++)
 	{
-		printf("Audio track %d: %u bits, %u channels, %uhz\n", i, a_d[i], a_c[i], a_r[i]);
+		printf("Audio track %d: %u bits, %u channels, %luhz\n", i, a_d[i], a_c[i], a_r[i]);
 	}
 
 	/* Turn on decoding for palette, video, and audio track 0 */
@@ -136,7 +137,7 @@ main(int argc, char *argv[])
 			fwrite(smk_get_audio(s, i), smk_get_audio_size(s, i), 1, fpo[i]);
 		}
 	}
-	printf(" -> Frame %d\n", cur_frame);
+	printf(" -> Frame %lu\n", cur_frame);
 
 
 	for (cur_frame = 1; cur_frame < f; cur_frame ++)
@@ -153,7 +154,7 @@ main(int argc, char *argv[])
 				fwrite(smk_get_audio(s, i), smk_get_audio_size(s, i), 1, fpo[i]);
 			}
 		}
-		fprintf(stderr," -> Frame %d\n", cur_frame);
+		fprintf(stderr," -> Frame %lu\n", cur_frame);
 		//Advance to next frame
 
 	}
