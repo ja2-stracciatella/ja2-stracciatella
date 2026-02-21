@@ -31,6 +31,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* forward-declaration for an struct */
 typedef struct smk_t *smk;
 
@@ -105,5 +109,9 @@ char smk_first(smk object);
 char smk_next(smk object);
 /* seek to first keyframe before/at N in an smk */
 char smk_seek_keyframe(smk object, unsigned long );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
