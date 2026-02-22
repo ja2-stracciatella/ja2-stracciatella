@@ -1224,9 +1224,8 @@ static char smk_render_palette(struct smk_video_t * s, unsigned char * p, unsign
 			p ++;
 			size --;
 
-			/* overflow: see if we write/read beyond 256colors, or overwrite own palette */
-			if (i + count > 256 || src + count > 256 ||
-				(src < i && src + count > i)) {
+			/* overflow: see if we write/read beyond 256 colors */
+			if (i + count > 256 || src + count > 256) {
 				fprintf(stderr, "libsmacker::palette_render(s,p,size) - ERROR: overflow, 0x40 attempt to copy %d entries from %d to %d\n", count, src, i);
 				goto error;
 			}
