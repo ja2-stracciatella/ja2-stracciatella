@@ -48,15 +48,11 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <exception>
-#include <regex>
 #include <ctime>
 
 
 constexpr int NUM_SAVE_GAMES = 11;
 
-#define SAVE_LOAD_TITLE_FONT				FONT14ARIAL
-#define SAVE_LOAD_TITLE_COLOR				FONT_MCOLOR_WHITE
 
 #define SAVE_LOAD_NORMAL_FONT				FONT12ARIAL
 #define SAVE_LOAD_NORMAL_COLOR				2//FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
@@ -97,7 +93,6 @@ constexpr int NUM_SAVE_GAMES = 11;
 #define SLG_TITLE_POS_X				(STD_SCREEN_X)
 #define SLG_TITLE_POS_Y				(STD_SCREEN_Y)
 
-#define SLG_SAVE_CANCEL_POS_X				(226 + STD_SCREEN_X)
 #define SLG_LOAD_CANCEL_POS_X				(329 + STD_SCREEN_X)
 #define SLG_SAVE_LOAD_BTN_POS_X				(123 + STD_SCREEN_X)
 #define SLG_BTN_POS_Y					(438 + STD_SCREEN_Y)
@@ -486,9 +481,6 @@ static void EnterSaveLoadScreen()
 
 static void ExitSaveLoadScreen(void)
 {
-	INT8	i;
-
-
 	gfLoadGameUponEntry = FALSE;
 
 	if( !gfSaveLoadScreenButtonsCreated )
@@ -510,10 +502,7 @@ static void ExitSaveLoadScreen(void)
 		UnloadButtonImage( guiSaveLoadImage );
 	}
 
-	for(i=0; i<NUM_SAVE_GAMES; i++)
-	{
-		MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
-	}
+	RemoveRegions(gSelectedSaveRegion);
 
 	DeleteVideoObject(guiSlgBackGroundImage);
 	RemoveVObject(MLG_LOADSAVEHEADER);
@@ -1001,19 +990,19 @@ static void HandleScrollEvent(INT32 const reason) {
 	}
 }
 
-static void BtnScrollUpCallback(GUI_BUTTON* btn, UINT32 reason) {
+static void BtnScrollUpCallback(GUI_BUTTON *, UINT32 reason) {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN || reason & MSYS_CALLBACK_REASON_POINTER_REPEAT) {
 		ScrollUp();
 	}
 }
 
-static void BtnScrollDownCallback(GUI_BUTTON* btn, UINT32 reason) {
+static void BtnScrollDownCallback(GUI_BUTTON *, UINT32 reason) {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_DWN || reason & MSYS_CALLBACK_REASON_POINTER_REPEAT) {
 		ScrollDown();
 	}
 }
 
-static void BtnSlgCancelCallback(GUI_BUTTON* const btn, UINT32 const reason)
+static void BtnSlgCancelCallback(GUI_BUTTON *, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -1023,7 +1012,7 @@ static void BtnSlgCancelCallback(GUI_BUTTON* const btn, UINT32 const reason)
 }
 
 
-static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnSlgSaveLoadCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -1247,7 +1236,7 @@ static void DoneFadeInForSaveLoadScreen(void)
 }
 
 
-static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
+static void SelectedSLSEntireRegionCallBack(MOUSE_REGION *, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -1497,6 +1486,7 @@ static void DoSaveGame(const ST::string &saveName, const ST::string &saveDescrip
 	{
 		if( !SaveGame(saveName, saveDescription)) {
 			DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
 		}
 	}
 
