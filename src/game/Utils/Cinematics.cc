@@ -11,9 +11,7 @@
 #include <vector>
 
 #include <SDL.h>
-extern "C" {
 #include "smacker.h"
-}
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -144,7 +142,7 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 				unsigned long audio_size = smk_get_audio_size(sf->smacker, i);
 				if (audio_size > 0)
 				{
-					unsigned char* audio_data = smk_get_audio(sf->smacker, i);
+					const unsigned char* audio_data = smk_get_audio(sf->smacker, i);
 					audio[i].insert(audio[i].end(), audio_data, audio_data + audio_size);
 				}
 			}
@@ -277,8 +275,8 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
 {
 	// get frame (source)
 	// TODO handle flags SMK_FLAG_Y_* (I need a sample of each case)
-	unsigned char* src;
-	unsigned char* src_palette;
+	const unsigned char* src;
+	const unsigned char* src_palette;
 	unsigned long src_width;
 	unsigned long src_height;
 	src = smk_get_video(sf->smacker);
@@ -291,7 +289,7 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
 	UINT16 palette[256];
 	for (int i = 0; i < 256; i++)
 	{
-		unsigned char* rgb = src_palette + i * 3;
+		const unsigned char* rgb = src_palette + i * 3;
 		palette[i] = Get16BPPColor(FROMRGB(rgb[0], rgb[1], rgb[2]));
 	}
 
