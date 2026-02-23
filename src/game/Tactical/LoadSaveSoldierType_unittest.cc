@@ -13,7 +13,7 @@
 #include <memory>
 
 #ifndef NO_MAGICENUM_LIB
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 #endif
 
 using LoadSaveSoldierTypeTest = DefaultContentManagerUT::BaseTest;

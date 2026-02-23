@@ -6,20 +6,16 @@
 #  * SRC_DIR - where to extract the archive
 #  * BUILD_DIR - where the integrated sources are built
 
-cmake_minimum_required(VERSION 3.18...3.25)
+cmake_minimum_required(VERSION 3.18...3.31)
 
 project(getter NONE)
 
 include(ExternalProject)
 externalproject_add(get-magic_enum
-    URL "https://github.com/Neargye/magic_enum/archive/v0.8.2.zip"
-    URL_MD5 "3e684af4d7073c2d86f6ecf2f78b4120"
-    CMAKE_ARGS
-        "-G@CMAKE_GENERATOR@"
-        SOURCE_DIR          "@SRC_DIR@"
-        BINARY_DIR          "@BUILD_DIR@"
-        CONFIGURE_COMMAND   ""
-        BUILD_COMMAND       ""
-        INSTALL_COMMAND     ""
-        TEST_COMMAND        ""
+    URL "https://github.com/Neargye/magic_enum/archive/v0.9.7.zip"
+    URL_HASH SHA256=e293afdaf4d5918bc145903bccff06d28b3ed437f1ac8414ace9e8a769a9e470
+    CONFIGURE_COMMAND   ""
+    BUILD_COMMAND       ""
+    INSTALL_COMMAND     ""
+    TEST_COMMAND        ""
 )
