@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef NO_MAGICENUM_LIB
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 #ifdef MAGIC_ENUM_SUPPORTED
 #ifdef MAGIC_ENUM_SUPPORTED_ALIASES
 #define HAS_ENUMGEN_SUPPORT (1)

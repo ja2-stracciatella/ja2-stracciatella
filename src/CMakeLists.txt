@@ -25,7 +25,6 @@ target_include_directories(${JA2_BINARY} SYSTEM PRIVATE
     ${SOL_INCLUDE_DIR}
     ${LUA_INCLUDE_DIRS}
     ${MINIAUDIO_INCLUDE_DIRS}
-    ${MAGICENUM_INCLUDE_DIR}
 )
 
 add_subdirectory(launcher)
