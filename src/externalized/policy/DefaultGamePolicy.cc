@@ -21,6 +21,8 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 
 	multiple_interrupts = gp.getOptionalBool("multiple_interrupts");
 
+	fixed_cost_to_shoot = gp.getOptionalBool("fixed_cost_to_shoot");
+
 	enemy_weapon_minimal_status = gp.getOptionalInt("enemy_weapon_minimal_status", 0);
 
 	squad_size = gp.getOptionalUInt("squad_size", 6);

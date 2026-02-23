@@ -1000,18 +1000,35 @@ static INT8 CalcAimSkill(SOLDIERTYPE const& s, UINT16 const weapon)
 
 UINT8 BaseAPsToShootOrStab(INT8 const bAPs, INT8 const bAimSkill, OBJECTTYPE const& o)
 {
-	INT16 sTop, sBottom;
+	INT16 sTop{ bAPs }, sBottom, aimSkill{ bAimSkill };
+	UINT8 rateOfFire{ GCM->getWeapon(o.usItem)->ubShotsPer4Turns };
+
+	if ( gamepolicy(fixed_cost_to_shoot) )
+	{	// Stracc fix for issue #2345
+		// Skew bAPs to reduce the AP cost gap between garbage tier mercs and the rest:
+		// 5 is skewed up to 8, 14 and 15 to 17, 20 stays as is, 25 is skewed down to 21
+		sTop = (sTop + 20 * ((float)sTop / 14)) / (((float)sTop / 14) + 1);
+		// Shift the bAPs range from [5, 25] to [14, 34]
+		// Reverse bAPs' position to make better stats beneficial instead of detrimental:
+		// 5 is reversed to 34, 25 to 14, 14 to 25
+		sTop = 39 - sTop;
+		// Skew up aimSkill: 38 is skewed up to 65, 70 to 77, 80 stays as is
+		if (aimSkill < 80)
+		{
+			aimSkill = (aimSkill + 80 * ((float)aimSkill / 20)) / (((float)aimSkill / 20) + 1);
+		}
+	}
 
 	// Calculate default top & bottom of the magic "aiming" formula!
 
 	// get this man's maximum possible action points (ignoring carryovers)
 	// the 2 times is here only to allow rounding off using integer math later
-	sTop = 2 * bAPs;//CalcActionPoints( pSoldier );
+	sTop = 2 * sTop;
 
 	// Shots per turn rating is for max. aimSkill(100), drops down to 1/2 at = 0
 	// DIVIDE BY 4 AT THE END HERE BECAUSE THE SHOTS PER TURN IS NOW QUADRUPLED!
 	// NB need to define shots per turn for ALL Weapons then.
-	sBottom = ( ( 50 + (bAimSkill / 2) ) * GCM->getWeapon(o.usItem )->ubShotsPer4Turns ) / 4;
+	sBottom = ( ( 50 + (aimSkill / 2) ) * rateOfFire ) / 4;
 
 	INT8 const bAttachPos = FindAttachment(&o, SPRING_AND_BOLT_UPGRADE);
 	if ( bAttachPos != -1 )
