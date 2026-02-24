@@ -21,8 +21,12 @@ jobs:
           os: ubuntu-24.04
           target: linux-mingw64
 
-        - name: Mac
-          os: macos-latest
+        - name: macOS intel
+          os: macos-15-intel
+          target: mac
+
+        - name: macOS arm64
+          os: macos-15
           target: mac
 
         - name: Android
@@ -158,8 +162,11 @@ jobs:
         - os: ubuntu-latest
           target: linux
 
-        - os: macos-latest
-          target: mac
+        - name: macOS intel
+          os: macos-15-intel
+
+        - name: macOS arm64
+          os: macos-15
 
         - os: windows-latest
           target: windows
