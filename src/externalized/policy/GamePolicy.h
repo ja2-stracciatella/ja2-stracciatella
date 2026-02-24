@@ -44,6 +44,8 @@ public:
 
 	bool multiple_interrupts;             // can interrupt more than once per turn
 
+	bool fixed_cost_to_shoot;    // Changes the formula for APs to shoot
+
 	int8_t enemy_weapon_minimal_status;   /**< Minimal status of the enemy weapon (0 - 100). */
 
 	bool gui_extras;                      /* graphical user interface cosmetic mod */

@@ -67,6 +67,11 @@
   //  vanilla setting: false
   "multiple_interrupts": false,
 
+  // Boosting stats like agility, dexterity, exp. level and health absurdly increases the action points cost to shoot.
+  // With this option on: the better the stats the fewer APs will be needed.
+  // vanilla setting: false
+  "fixed_cost_to_shoot": false,
+
   //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
   //  vanilla value: 0
   "enemy_weapon_minimal_status": 0,
