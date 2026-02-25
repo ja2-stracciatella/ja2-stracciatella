@@ -2749,8 +2749,8 @@ static void HandleModNone(UINT32 const key)
 
 		case SDLK_PAUSE: HandlePlayerPauseUnPauseOfGame(); break;
 
-		case SDLK_LEFT:  GoToPrevCharacterInList(); break;
-		case SDLK_RIGHT: GoToNextCharacterInList(); break;
+		case SDLK_LEFT:
+		case SDLK_RIGHT: GoToNextCharacterInList(key); break;
 
 		case SDLK_UP:   MapScreenMsgScrollUp(1);   break;
 		case SDLK_DOWN: MapScreenMsgScrollDown(1); break;
@@ -3042,8 +3042,8 @@ static void GetMapKeyboardInput()
 		{
 			switch (InputEvent.usParam)
 			{
-				case SDLK_LEFT:  GoToPrevCharacterInList(); break;
-				case SDLK_RIGHT: GoToNextCharacterInList(); break;
+				case SDLK_LEFT:
+				case SDLK_RIGHT: GoToNextCharacterInList(InputEvent.usParam); break;
 
 				case SDLK_UP:   MapScreenMsgScrollUp(1);   break;
 				case SDLK_DOWN: MapScreenMsgScrollDown(1); break;
@@ -6177,7 +6177,7 @@ static void PrevInventoryMapBtnCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		GoToPrevCharacterInList();
+		GoToNextCharacterInList(SDLK_LEFT);
 	}
 }
 
@@ -6186,7 +6186,7 @@ static void NextInventoryMapBtnCallback(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		GoToNextCharacterInList();
+		GoToNextCharacterInList(SDLK_RIGHT);
 	}
 }
 
