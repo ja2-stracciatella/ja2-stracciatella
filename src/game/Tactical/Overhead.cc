@@ -233,8 +233,10 @@ BOOLEAN       gfKillingGuysForLosingBattle     = FALSE;
 
 static bool Erase(std::vector<SOLDIERTYPE *> & v, SOLDIERTYPE * s)
 {
-	auto endBefore = v.end();
-	return v.erase(std::remove(v.begin(), v.end(), s), v.end()) != endBefore;
+	auto newEnd = std::remove(v.begin(), v.end(), s);
+	bool removed = (newEnd != v.end());
+	v.erase(newEnd, v.end());
+	return removed;
 }
 
 void AddMercSlot(SOLDIERTYPE* pSoldier)
