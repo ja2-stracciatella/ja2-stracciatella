@@ -19,6 +19,5 @@ public:
 };
 
 class NotFoundError : public DataError {
-public:
-	NotFoundError(const ST::string& what_arg) : DataError(what_arg) {}
+	using DataError::DataError;
 };

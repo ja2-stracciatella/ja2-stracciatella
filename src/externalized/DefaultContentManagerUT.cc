@@ -3,15 +3,10 @@
 #include "BinaryProfileData.h"
 #include "DefaultContentManager.h"
 #include "FileMan.h"
-#include "GameRes.h"
 #include "TestUtils.h"
 #include "TranslatableString.h"
 #include <utility>
 
-DefaultContentManagerUT::DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions)
-	: DefaultContentManager(std::move(engineOptions))
-{
-}
 
 DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 {
