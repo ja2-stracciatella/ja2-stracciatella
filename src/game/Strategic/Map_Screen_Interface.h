@@ -344,8 +344,7 @@ void UpdateMapScreenAssignmentPositions( void );
 INT32 GetNumberOfPeopleInCharacterList( void );
 
 // the next and previous people in the mapscreen
-void GoToPrevCharacterInList( void );
-void GoToNextCharacterInList( void );
+void GoToNextCharacterInList( const UINT32 direction );
 
 // this does the whole miner giving player info speil
 void HandleMinerEvent(ProfileID ubMinerProfileID, INT16 sQuoteNumber, BOOLEAN fForceMapscreen);

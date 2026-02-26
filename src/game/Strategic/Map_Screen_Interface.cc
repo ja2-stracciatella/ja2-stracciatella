@@ -1533,10 +1533,8 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 
 
 
-void GoToNextCharacterInList( void )
+void GoToNextCharacterInList( UINT32 const direction )
 {
-	INT32 iCounter = 0, iCount = 0;
-
 	if (fShowDescriptionFlag) return;
 
 	if (bSelectedDestChar != -1 || fPlotForHelicopter)
@@ -1544,17 +1542,33 @@ void GoToNextCharacterInList( void )
 		AbortMovementPlottingMode( );
 	}
 
+	INT32 iCount, increment;
+	INT8 firstInThisDirection, lastInThisDirection;
+
+	if (direction == SDLK_LEFT)
+	{ // going up the list
+		increment = -1;
+		firstInThisDirection = MAX_CHARACTER_COUNT;
+		lastInThisDirection = 0;
+	}
+	else
+	{ // going down
+		increment = 1;
+		firstInThisDirection = 0;
+		lastInThisDirection = MAX_CHARACTER_COUNT;
+	}
+
 	// is the current guy invalid or the first one?
-	if( ( bSelectedInfoChar == -1 )|| ( bSelectedInfoChar == MAX_CHARACTER_COUNT ) )
+	if( ( bSelectedInfoChar == -1 )|| ( bSelectedInfoChar == lastInThisDirection ) )
 	{
-		iCount = 0;
+		iCount = firstInThisDirection;
 	}
 	else
 	{
-		iCount = bSelectedInfoChar + 1;
+		iCount = bSelectedInfoChar + increment;
 	}
 
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	for( INT32 iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
 		const SOLDIERTYPE* const s = gCharactersList[iCount].merc;
 		if (s != NULL &&
@@ -1562,66 +1576,23 @@ void GoToNextCharacterInList( void )
 				ValidSelectableCharForNextOrPrev(*s))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
+			if ( s->bLife > 0 && s->bAssignment != ASSIGNMENT_POW )
+			{
+				ChangeSelectedMapSector(s->sSector);
+			}
 			break;
 		}
 		else
 		{
-			iCount++;
+			iCount += increment;
 
-			if( iCount >= MAX_CHARACTER_COUNT )
+			if( iCount < 0 || iCount >= MAX_CHARACTER_COUNT )
 			{
-				iCount = 0;
+				iCount = firstInThisDirection;
 			}
 		}
 	}
 }
-
-
-void GoToPrevCharacterInList( void )
-{
-	INT32 iCounter = 0, iCount = 0;
-
-	if (fShowDescriptionFlag) return;
-
-	if (bSelectedDestChar != -1 || fPlotForHelicopter)
-	{
-		AbortMovementPlottingMode( );
-	}
-
-	// is the current guy invalid or the first one?
-	if( ( bSelectedInfoChar == -1 ) || ( bSelectedInfoChar == 0 ) )
-	{
-		iCount = MAX_CHARACTER_COUNT;
-	}
-	else
-	{
-		iCount = bSelectedInfoChar - 1;
-	}
-
-	// now run through the list and find first prev guy
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		const SOLDIERTYPE* const s = gCharactersList[iCount].merc;
-		if (s != NULL &&
-				iCount < MAX_CHARACTER_COUNT &&
-				ValidSelectableCharForNextOrPrev(*s))
-		{
-			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
-			break;
-		}
-		else
-		{
-			iCount--;
-
-			if( iCount < 0 )
-			{
-				// was FIRST_VEHICLE
-				iCount = MAX_CHARACTER_COUNT;
-			}
-		}
-	}
-}
-
 
 void HandleMinerEvent(ProfileID const ubMinerProfileID, INT16 const sQuoteNumber, BOOLEAN const fForceMapscreen)
 {
