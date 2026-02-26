@@ -1576,6 +1576,10 @@ void GoToNextCharacterInList( UINT32 const direction )
 				ValidSelectableCharForNextOrPrev(*s))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
+			if ( s->bLife > 0 && s->bAssignment != ASSIGNMENT_POW )
+			{
+				ChangeSelectedMapSector(s->sSector);
+			}
 			break;
 		}
 		else
