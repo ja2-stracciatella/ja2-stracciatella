@@ -72,9 +72,7 @@ INT32 iMaxPathQ = MAX_PATHQ;
 
 extern BOOLEAN gfGeneratingMapEdgepoints;
 
-#define VEHICLE
-
-#define TRAILCELLTYPE				UINT16
+using TRAILCELLTYPE = UINT16;
 
 // OLD PATHAI STUFF
 /////////////////////////////////////////////////
@@ -467,18 +465,9 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	INT32 iWaterToWater;
 	UINT8 ubCurAPCost,ubAPCost;
 	UINT8 ubNewAPCost=0;
-	#ifdef VEHICLE
-		//BOOLEAN fTurnSlow = FALSE;
-		//BOOLEAN fReverse = FALSE; // stuff for vehicles turning
-		BOOLEAN fMultiTile;
-		//BOOLEAN fVehicle;
-		//INT32 ubLastDir, iPrevToLastDir;
-		//INT8 bVehicleCheckDir;
-		//UINT16 adjLoc;
-		STRUCTURE_FILE_REF *pStructureFileRef=NULL;
-		UINT16 usAnimSurface;
-		//INT32 iCnt2, iCnt3;
-	#endif
+	BOOLEAN fMultiTile;
+	STRUCTURE_FILE_REF *pStructureFileRef{};
+	UINT16 usAnimSurface;
 
 	path_t *pNewPtr;
 	path_t *pCurrPtr;
@@ -519,7 +508,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	UINT16 usCounter = 0;
 #endif
 
-	//fVehicle = FALSE;
 	iOriginationX = iOriginationY = 0;
 	iOrigination = (INT32) s->sGridNo;
 
@@ -647,8 +635,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	guiTotalPathChecks++;
 #endif
 
-#ifdef VEHICLE
-
 	fMultiTile = ((s->uiStatusFlags & SOLDIER_MULTITILE) != 0);
 	if (fMultiTile)
 	{
@@ -660,20 +646,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 		if ( pStructureFileRef )
 		{
-			//fVehicle = ( (s->uiStatusFlags & SOLDIER_VEHICLE) != 0 );
-
 			fContinuousTurnNeeded = ( ( s->uiStatusFlags & (SOLDIER_MONSTER | SOLDIER_ANIMAL | SOLDIER_VEHICLE) ) != 0 );
 
-			/*
-			if (fVehicle && s->bReverse)
-			{
-				fReverse = TRUE;
-			}*/
-			/*
-			if (fVehicle || s->ubBodyType == COW || s->ubBodyType == BLOODCAT) // or a vehicle
-			{
-				fTurnSlow = TRUE;
-			}*/
 			if ( gfEstimatePath )
 			{
 				usOKToAddStructID = IGNORE_PEOPLE_STRUCTURE_ID;
@@ -696,8 +670,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	{
 		fContinuousTurnNeeded = FALSE;
 	}
-
-#endif
 
 	if (!fContinuousTurnNeeded)
 	{
@@ -813,31 +785,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		}
 #endif
 
-#ifdef VEHICLE
-		/*
-		if (fTurnSlow)
-		{
-			if (pCurrPtr->pNext[0] == 0)
-			{
-				if (fReverse)
-				{
-					ubLastDir = OppositeDirection(s->bDirection);
-				}
-				else
-				{
-					ubLastDir = s->bDirection;
-				}
-				// start prev-to-last dir at same as current (could cause a problem)
-				iPrevToLastDir = ubLastDir;
-			}
-			else
-			{
-				iPrevToLastDir = trailTree[trailTree[pCurrPtr->sPathNdx].nextLink].dirDelta;
-				ubLastDir = trailTree[pCurrPtr->sPathNdx].dirDelta;
-			}
-		}*/
-#endif
-
 		if (gubNPCAPBudget)
 		{
 			ubCurAPCost = pCurrPtr->ubTotalAPCost;
@@ -880,29 +827,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		//for ( ubCnt = ubLoopStart; ubCnt != ubLoopEnd; ubCnt = (ubCnt + iLoopIncrement) % MAXDIR )
 		for ( ubCnt = ubLoopStart; ; )
 		{
-
-#ifdef VEHICLE
-			/*
-			if (fTurnSlow)
-			{
-				if (ubLastDir == iPrevToLastDir)
-				{
-					if (ubCnt != ubLastDir &&
-							ubCnt != OneCDirection(ubLastDir) &&
-							ubCnt != OneCCDirection(ubLastDir))
-					{
-						goto NEXTDIR;
-					}
-				}
-				else
-				{
-					if ( ubCnt != ubLastDir )
-					{
-						goto NEXTDIR;
-					}
-				}
-			}*/
-
 			if ( bLoopState == LOOPING_REVERSE )
 			{
 				ubStructIndex = OppositeDirection(OneCDirection(ubCnt));
@@ -963,8 +887,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 					}
 				}
 			}
-
-#endif
 
 			newLoc = curLoc + DirIncrementer[ubCnt];
 
@@ -1188,7 +1110,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				}
 			}
 
-#ifdef VEHICLE
 			if (fMultiTile)
 			{
 				// vehicle test for obstacles: prevent movement to next tile if
@@ -1203,32 +1124,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				{
 					goto NEXTDIR;
 				}
-
-				/*
-				// vehicles aren't moving any more....
-				if (fVehicle)
-				{
-					// transmogrify pathing costs for vehicles!
-					switch(nextCost)
-					{
-						case TRAVELCOST_THICK:
-							nextCost = TRAVELCOST_GRASS;
-							break;
-						case TRAVELCOST_SHORE:
-						case TRAVELCOST_KNEEDEEP:
-						case TRAVELCOST_DEEPWATER:
-						//case TRAVELCOST_DOOR:
-						case TRAVELCOST_FENCE:
-							nextCost = TRAVELCOST_OBSTACLE;
-							break;
-
-						default:
-							break;
-					}
-				}
-				*/
 			}
-#endif
 
 			// NEW Apr 21 by Ian: abort if cost exceeds budget
 			if (gubNPCAPBudget)
@@ -1827,9 +1723,8 @@ ENDOFLOOP:
 
 void GlobalReachableTest( INT16 sStartGridNo )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s{};
 
-	s = SOLDIERTYPE{};
 	s.sGridNo = sStartGridNo;
 	s.bLevel = 0;
 	s.bTeam = 1;
@@ -1847,11 +1742,10 @@ void GlobalReachableTest( INT16 sStartGridNo )
 
 void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s{};
 	INT32 iCurrentGridNo = 0;
 	INT32 iX, iY;
 
-	s = SOLDIERTYPE{};
 	s.sGridNo = sStartGridNo;
 
 	//if we are moving on the gorund level
@@ -1889,9 +1783,8 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 
 void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s{};
 
-	s = SOLDIERTYPE{};
 	s.sGridNo = sStartGridNo1;
 	s.bLevel = 0;
 	s.bTeam = 1;
@@ -1914,9 +1807,8 @@ void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 
 void RoofReachableTest( INT16 sStartGridNo, UINT8 ubBuildingID )
 {
-	SOLDIERTYPE s;
+	SOLDIERTYPE s{};
 
-	s = SOLDIERTYPE{};
 	s.sGridNo = sStartGridNo;
 	s.bLevel = 1;
 	s.bTeam = 1;
