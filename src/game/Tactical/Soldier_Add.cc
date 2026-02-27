@@ -57,7 +57,7 @@ UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sS
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	soldier.bLevel = 0;
+	soldier.bLevel = pSoldier->bLevel;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
@@ -85,7 +85,7 @@ UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sS
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
-	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
+	FindBestPath( &soldier, NOWHERE, soldier.bLevel, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
 
 	uiLowestRange = 999999;
 
@@ -1111,9 +1111,17 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* const s, INT16 const sGridNo, 
 	if (s->uiStatusFlags & SOLDIER_DEAD) return;
 
 	// ATE: Double check if we are on the roof that there is a roof there!
-	if (s->bLevel == 1 && !FindStructure(s->sGridNo, STRUCTURE_ROOF))
+	if (s->bLevel == SECOND_LEVEL)
 	{
-		SetSoldierHeight(s, 0.0);
+		if (FindStructure(s->sGridNo, STRUCTURE_ROOF))
+		{
+			SetSoldierHeight(s, SECOND_LEVEL_Z_OFFSET);
+		}
+		else
+		{
+			s->bLevel = FIRST_LEVEL;
+			SetSoldierHeight(s, FIRST_LEVEL_Z_OFFSET);
+		}
 	}
 
 	if (insertion_code == INSERTION_CODE_ARRIVING_GAME) return;
