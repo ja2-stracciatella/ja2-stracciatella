@@ -460,200 +460,66 @@ static BOOLEAN AttemptToAddSubstring(ST::string& zDest, const ST::string& zTemp,
 static void GenerateProsString(ST::string& zItemPros, const OBJECTTYPE& o, UINT32 uiPixLimit)
 {
 	UINT32 uiStringLength = 0;
-	ST::string zTemp;
 	UINT16 usItem = o.usItem;
+	WeaponModel const * const weapon{ GCM->getWeapon(usItem) };
 
 	zItemPros.clear();
 
-	if (GCM->getItem(usItem)->getWeight() * 100 <= EXCEPTIONAL_WEIGHT)
+	auto AddIf = [&](bool condition, decltype(STR_LIGHT) messageId) -> bool
 	{
-		zTemp = g_langRes->Message[STR_LIGHT];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
+		return condition
+			? AttemptToAddSubstring(zItemPros, g_langRes->Message[messageId], &uiStringLength, uiPixLimit)
+			: true;
+	};
 
-	if (GCM->getItem(usItem)->getPerPocket() >= 1) // fits in a small pocket
-	{
-		zTemp = g_langRes->Message[STR_SMALL];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
+	   AddIf(weapon->getWeight() * 100 <= EXCEPTIONAL_WEIGHT, STR_LIGHT)
+	&& AddIf(weapon->getPerPocket() >= 1, STR_SMALL)
+	&& AddIf(GunRange(o) >= EXCEPTIONAL_RANGE, STR_LONG_RANGE)
+	&& AddIf(weapon->ubImpact >= EXCEPTIONAL_DAMAGE, STR_HIGH_DAMAGE)
+	&& AddIf(BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, o) <= EXCEPTIONAL_AP_COST, STR_QUICK_FIRING)
+	&& AddIf(weapon->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || usItem == G11, STR_FAST_BURST)
+	&& AddIf(weapon->ubMagSize > EXCEPTIONAL_MAGAZINE, STR_LARGE_AMMO_CAPACITY)
+	&& AddIf(weapon->getReliability() >= EXCEPTIONAL_RELIABILITY, STR_RELIABLE)
+	&& AddIf(weapon->getRepairEase() >= EXCEPTIONAL_REPAIR_EASE, STR_EASY_TO_REPAIR);
 
-	if (GunRange(o) >= EXCEPTIONAL_RANGE)
-	{
-		zTemp = g_langRes->Message[STR_LONG_RANGE];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (GCM->getWeapon(usItem)->ubImpact >= EXCEPTIONAL_DAMAGE)
-	{
-		zTemp = g_langRes->Message[STR_HIGH_DAMAGE];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *gpItemDescObject) <= EXCEPTIONAL_AP_COST)
-	{
-		zTemp = g_langRes->Message[STR_QUICK_FIRING];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (GCM->getWeapon(usItem)->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || usItem == G11)
-	{
-		zTemp = g_langRes->Message[STR_FAST_BURST];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (GCM->getWeapon(usItem)->ubMagSize > EXCEPTIONAL_MAGAZINE)
-	{
-		zTemp = g_langRes->Message[STR_LARGE_AMMO_CAPACITY];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if ( GCM->getItem(usItem)->getReliability() >= EXCEPTIONAL_RELIABILITY )
-	{
-		zTemp = g_langRes->Message[STR_RELIABLE];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if ( GCM->getItem(usItem)->getRepairEase() >= EXCEPTIONAL_REPAIR_EASE )
-	{
-		zTemp = g_langRes->Message[STR_EASY_TO_REPAIR];
-		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if ( zItemPros[0] == 0 )
-	{
-		// empty string, so display "None"
-		if ( ! AttemptToAddSubstring( zItemPros, g_langRes->Message[ STR_NONE ], &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
+	// Empty string?  Display "None".
+	AddIf(zItemPros.empty(), STR_NONE);
 }
 
 
 static void GenerateConsString(ST::string& zItemCons, const OBJECTTYPE& o, UINT32 uiPixLimit)
 {
 	UINT32 uiStringLength = 0;
-	ST::string zTemp;
-	UINT8 ubWeight;
 	UINT16 usItem = o.usItem;
+	WeaponModel const * const weapon{ GCM->getWeapon(usItem) };
 
 	zItemCons.clear();
 
+	auto AddIf = [&](bool condition, decltype(STR_LIGHT) messageId) -> bool
+	{
+		return condition
+			? AttemptToAddSubstring(zItemCons, g_langRes->Message[messageId], &uiStringLength, uiPixLimit)
+			: true;
+	};
+
 	// calculate the weight of the item plus ammunition but not including any attachments
-	ubWeight = GCM->getItem(usItem)->getWeight();
-	if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
+	int ubWeight{ GCM->getItem(usItem)->getWeight() };
+	if (weapon->getItemClass() == IC_GUN)
 	{
 		ubWeight += GCM->getItem(o.usGunAmmoItem)->getWeight();
 	}
 
-	if (ubWeight >= BAD_WEIGHT)
-	{
-		zTemp = g_langRes->Message[STR_HEAVY];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
+	   AddIf(ubWeight >= BAD_WEIGHT, STR_HEAVY)
+	&& AddIf(GunRange(o) <= BAD_RANGE, STR_SHORT_RANGE)
+	&& AddIf(weapon->ubImpact <= BAD_DAMAGE, STR_LOW_DAMAGE)
+	&& AddIf(BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, o) >= BAD_AP_COST, STR_SLOW_FIRING)
+	&& AddIf(weapon->ubShotsPerBurst == 0, STR_NO_BURST)
+	&& AddIf(weapon->ubMagSize < BAD_MAGAZINE, STR_SMALL_AMMO_CAPACITY)
+	&& AddIf(weapon->getReliability() <= BAD_RELIABILITY, STR_UNRELIABLE)
+	&& AddIf(weapon->getRepairEase() <= BAD_REPAIR_EASE, STR_HARD_TO_REPAIR);
 
-	if (GunRange(o) <= BAD_RANGE)
-	{
-		zTemp = g_langRes->Message[STR_SHORT_RANGE];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (GCM->getWeapon(usItem)->ubImpact <= BAD_DAMAGE)
-	{
-		zTemp = g_langRes->Message[STR_LOW_DAMAGE];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *gpItemDescObject) >= BAD_AP_COST)
-	{
-		zTemp = g_langRes->Message[STR_SLOW_FIRING];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (GCM->getWeapon(usItem)->ubShotsPerBurst == 0)
-	{
-		zTemp = g_langRes->Message[STR_NO_BURST];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if (GCM->getWeapon(usItem)->ubMagSize < BAD_MAGAZINE)
-	{
-		zTemp = g_langRes->Message[STR_SMALL_AMMO_CAPACITY];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if ( GCM->getItem(usItem)->getReliability() <= BAD_RELIABILITY )
-	{
-		zTemp = g_langRes->Message[STR_UNRELIABLE];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-	if ( GCM->getItem(usItem)->getRepairEase() <= BAD_REPAIR_EASE )
-	{
-		zTemp = g_langRes->Message[STR_HARD_TO_REPAIR];
-		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
-
-
-	if ( zItemCons[0] == 0 )
-	{
-		// empty string, so display "None"
-		if ( ! AttemptToAddSubstring( zItemCons, g_langRes->Message[ STR_NONE ], &uiStringLength, uiPixLimit ) )
-		{
-			return;
-		}
-	}
+	// Empty string?  Display "None".
+	AddIf(zItemCons.empty(), STR_NONE);
 }
 
 
