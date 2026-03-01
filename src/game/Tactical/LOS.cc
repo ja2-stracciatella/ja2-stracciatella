@@ -2626,6 +2626,14 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				// ground is in the way!
 				return( 0 );
 			}
+			if (pRoofStructure)
+			{
+				if ((qLastZ > qWallHeight && pBullet->qCurrZ < qWallHeight) ||
+					(qLastZ < qWallHeight && pBullet->qCurrZ > qWallHeight))
+				{
+					return( 0 ); // roof collision
+				}
+			}
 			// check for the existence of structures
 			pStructure = pMapElement->pStructureHead;
 			if (pStructure == NULL)
@@ -2778,25 +2786,8 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				{
 					pBullet->qCurrX += pBullet->qIncrX;
 					pBullet->qCurrY += pBullet->qIncrY;
-					if (pRoofStructure)
-					{
-						qLastZ = pBullet->qCurrZ;
-						pBullet->qCurrZ += pBullet->qIncrZ;
-						if ( (qLastZ > qWallHeight && pBullet->qCurrZ < qWallHeight) || (qLastZ < qWallHeight && pBullet->qCurrZ > qWallHeight))
-						{
-							// hit roof!
-							//pBullet->iImpactReduction += CTGTHandleBulletStructureInteraction( pBullet, pRoofStructure );
-							//if (pBullet->iImpactReduction >= pBullet->iImpact)
-							{
-								return( 0 );
-							}
-
-						}
-					}
-					else
-					{
-						pBullet->qCurrZ += pBullet->qIncrZ;
-					}
+					qLastZ = pBullet->qCurrZ; // for roof collision tracking
+					pBullet->qCurrZ += pBullet->qIncrZ;
 					pBullet->iLoop++;
 					pBullet->bLOSIndexX = CONVERT_WITHINTILE_TO_INDEX( FIXEDPT_TO_INT32( pBullet->qCurrX ) % CELL_X_SIZE );
 					pBullet->bLOSIndexY = CONVERT_WITHINTILE_TO_INDEX( FIXEDPT_TO_INT32( pBullet->qCurrY ) % CELL_Y_SIZE );
