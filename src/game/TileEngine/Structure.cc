@@ -1064,7 +1064,9 @@ INT8 GetStructureTargetHeight( INT16 sGridNo, BOOLEAN fOnRoof )
 		pCurrent = gpWorldLevelData[sGridNo].pStructureHead;
 		while (pCurrent != NULL)
 		{
-			if (pCurrent->sCubeOffset == sDesiredHeight)
+			// skip normal roof structures because they can have 3D shaped edge curbs
+			// making it impossible to target them
+			if (pCurrent->sCubeOffset == sDesiredHeight && !(pCurrent->fFlags & STRUCTURE_NORMAL_ROOF))
 			{
 				iHeight = StructureHeight( pCurrent );
 
