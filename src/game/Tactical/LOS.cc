@@ -3345,11 +3345,11 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 
 		if (dStartZ < wallHeightUnits)
 		{
-			pBullet->fCheckForRoof = dEndZ > wallHeightUnits;
+			pBullet->fCheckForRoof = dEndZ > dStartZ;
 		}
-		else // dStartZ >= WALL_HEIGHT_UNITS; presumably >
+		else
 		{
-			pBullet->fCheckForRoof = dEndZ < wallHeightUnits;
+			pBullet->fCheckForRoof = dEndZ < dStartZ;
 		}
 
 		if ( ubLoop == 0 )
