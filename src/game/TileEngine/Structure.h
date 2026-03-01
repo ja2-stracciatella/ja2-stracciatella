@@ -76,8 +76,7 @@ STRUCTURE* SwapStructureForPartnerAndStoreChangeInMap(STRUCTURE*);
 //
 INT8 StructureHeight( STRUCTURE * pStructure );
 INT8 StructureBottomLevel( STRUCTURE * pStructure );
-INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof );
-INT8 GetStructureTargetHeight( INT16 sGridNo, BOOLEAN fOnRoof );
+INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof, BOOLEAN preferOpenables = FALSE );
 
 BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pubLevel1, UINT8 * pubLevel2, UINT8 * pubLevel3 );
 

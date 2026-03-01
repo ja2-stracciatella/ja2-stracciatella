@@ -1004,25 +1004,29 @@ INT8 StructureHeight( STRUCTURE * pStructure )
 	return( bGreatestHeight + 1);
 }
 
-INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof )
+INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof, BOOLEAN preferOpenables )
 {
-	STRUCTURE *		pCurrent;
-	INT8					iHeight;
-	INT8					iTallest = 0;
-	INT16					sDesiredHeight;
+	STRUCTURE * pCurrent;
+	INT8        iHeight, iTallest{ 0 };
+	INT16       sDesiredHeight{ fOnRoof ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND };
 
-	if (fOnRoof)
+	if (preferOpenables)
 	{
-		sDesiredHeight = STRUCTURE_ON_ROOF;
+		// this prioritization is only used by target-shooting clients, not FOV
+		pCurrent = FindStructure(sGridNo, (STRUCTURE_DOOR | STRUCTURE_OPENABLE));
+		if (pCurrent && pCurrent->sCubeOffset == sDesiredHeight)
+		{
+			// don't aim at the very top of the door
+			return pCurrent->fFlags & STRUCTURE_DOOR ? 3 : StructureHeight(pCurrent);
+		}
 	}
-	else
-	{
-		sDesiredHeight = STRUCTURE_ON_GROUND;
-	}
+
 	pCurrent = gpWorldLevelData[sGridNo].pStructureHead;
 	while (pCurrent != NULL)
 	{
-		if (pCurrent->sCubeOffset == sDesiredHeight)
+		// Skip normal roof because it can have 3D shaped edge curbs making it impossible to target
+		// In case of FOV the roofs are irrelevant since it only cares about ground level
+		if (pCurrent->sCubeOffset == sDesiredHeight && !(pCurrent->fFlags & STRUCTURE_NORMAL_ROOF))
 		{
 			iHeight = StructureHeight( pCurrent );
 			if (iHeight > iTallest)
@@ -1031,57 +1035,6 @@ INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof )
 			}
 		}
 		pCurrent = pCurrent->pNext;
-	}
-	return( iTallest );
-}
-
-
-INT8 GetStructureTargetHeight( INT16 sGridNo, BOOLEAN fOnRoof )
-{
-	STRUCTURE *		pCurrent;
-	INT8					iHeight;
-	INT8					iTallest = 0;
-	INT16					sDesiredHeight;
-
-	if (fOnRoof)
-	{
-		sDesiredHeight = STRUCTURE_ON_ROOF;
-	}
-	else
-	{
-		sDesiredHeight = STRUCTURE_ON_GROUND;
-	}
-
-	// prioritize openable structures and doors
-	pCurrent = FindStructure( sGridNo, (STRUCTURE_DOOR | STRUCTURE_OPENABLE ) );
-	if ( pCurrent )
-	{
-		// use this structure
-		if ( pCurrent->fFlags & STRUCTURE_DOOR )
-		{
-			iTallest = 3; // don't aim at the very top of the door
-		}
-		else
-		{
-			iTallest = StructureHeight( pCurrent );
-		}
-	}
-	else
-	{
-		pCurrent = gpWorldLevelData[sGridNo].pStructureHead;
-		while (pCurrent != NULL)
-		{
-			if (pCurrent->sCubeOffset == sDesiredHeight)
-			{
-				iHeight = StructureHeight( pCurrent );
-
-				if (iHeight > iTallest)
-				{
-					iTallest = iHeight;
-				}
-			}
-			pCurrent = pCurrent->pNext;
-		}
 	}
 	return( iTallest );
 }
