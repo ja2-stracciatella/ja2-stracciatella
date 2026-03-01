@@ -1054,17 +1054,10 @@ INT8 GetStructureTargetHeight( INT16 sGridNo, BOOLEAN fOnRoof )
 
 	// prioritize openable structures and doors
 	pCurrent = FindStructure( sGridNo, (STRUCTURE_DOOR | STRUCTURE_OPENABLE ) );
-	if ( pCurrent )
+	if ( pCurrent && pCurrent->sCubeOffset == sDesiredHeight )
 	{
-		// use this structure
-		if ( pCurrent->fFlags & STRUCTURE_DOOR )
-		{
-			iTallest = 3; // don't aim at the very top of the door
-		}
-		else
-		{
-			iTallest = StructureHeight( pCurrent );
-		}
+		// don't aim at the very top of the door
+		iTallest = pCurrent->fFlags & STRUCTURE_DOOR ? 3 : StructureHeight(pCurrent);
 	}
 	else
 	{
