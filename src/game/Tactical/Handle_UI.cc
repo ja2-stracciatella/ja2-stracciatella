@@ -996,7 +996,7 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 	if (map_pos == NOWHERE) return GAME_SCREEN;
 
 	// Are we an OK dest?
-	if (!IsLocationSittable(map_pos, 0)) return GAME_SCREEN;
+	if (!IsLocationSittable(map_pos, gsInterfaceLevel)) return GAME_SCREEN;
 
 	UINT32       const roll = Random(10);
 	SoldierClass const sc   = roll < 4 ? SOLDIER_CLASS_ADMINISTRATOR :
@@ -1049,6 +1049,7 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 
 	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 	s->usStrategicInsertionData = map_pos;
+	s->bLevel = gsInterfaceLevel;
 	UpdateMercInSector(*s, gWorldSector);
 	AllTeamsLookForAll(NO_INTERRUPTS);
 

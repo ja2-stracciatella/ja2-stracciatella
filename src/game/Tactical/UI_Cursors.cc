@@ -248,7 +248,17 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		// Calculate chance to hit
 		if (recalc || giLastBodyLocationTargeted != s->bAimShotLocation || giLastAimTime != s->bShownAimTime)
 		{
-			GridNo targetTile = gUIFullTarget ? gUIFullTarget->sGridNo : map_pos;
+			GridNo targetTile;
+			if (gUIFullTarget)
+			{
+				targetTile = gUIFullTarget->sGridNo;
+				s->bTargetLevel = gUIFullTarget->bLevel;
+			}
+			else
+			{
+				targetTile = map_pos;
+				s->bTargetLevel = gsInterfaceLevel;
+			}
 			giHitChance = is_throwing_knife ? CalcThrownChanceToHit(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation) :
 				CalcChanceToHitGun(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation, false);
 			giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, gsInterfaceLevel, s->bTargetCubeLevel, 0) / 100.0f;
