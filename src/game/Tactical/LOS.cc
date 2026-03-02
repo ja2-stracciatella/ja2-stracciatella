@@ -2949,7 +2949,7 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, cons
 		}
 		else
 		{
-			INT8 const bStructHeight = GetStructureTargetHeight(sGridNo, bLevel == 1);
+			INT8 const bStructHeight = GetTallestStructureHeight(sGridNo, bLevel == SECOND_LEVEL, TRUE);
 			if (bStructHeight > 0)
 			{
 				// fire at the centre of the cube of the tallest structure
@@ -3030,7 +3030,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 		}
 		else
 		{
-			INT8 const bStructHeight = GetStructureTargetHeight(sGridNo, bLevel == 1);
+			INT8 const bStructHeight = GetTallestStructureHeight(sGridNo, bLevel == SECOND_LEVEL, TRUE);
 			if (bStructHeight > 0)
 			{
 				// fire at the centre of the cube of the tallest structure
