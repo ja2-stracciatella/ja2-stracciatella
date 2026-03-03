@@ -33,6 +33,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <vector>
 
 /* view directions */
 #define DLEFT           0
@@ -158,96 +159,29 @@ static void BuildSightDir(UINT32 dir, UINT32* One, UINT32* Two, UINT32* Three, U
 	}
 }
 
-#define NUM_SLANT_ROOF_SLOTS  200
 
-struct SLANT_ROOF_FOV_TYPE
-{
-	INT16   sGridNo;
-	BOOLEAN fAllocated;
-};
+static std::vector<GridNo> gSlantRoofData;
 
-SLANT_ROOF_FOV_TYPE gSlantRoofData[ NUM_SLANT_ROOF_SLOTS ];
-UINT32              guiNumSlantRoofs = 0;
-
-static INT32 GetFreeSlantRoof(void)
-{
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumSlantRoofs; uiCount++)
-	{
-		if( gSlantRoofData[uiCount].fAllocated==FALSE  )
-			return( (INT32)uiCount );
-	}
-
-	if( guiNumSlantRoofs < NUM_SLANT_ROOF_SLOTS )
-		return( (INT32) guiNumSlantRoofs++ );
-
-	return( -1 );
-}
 
 void ClearSlantRoofs( void )
 {
-	UINT32 uiCount;
-
-	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
-	{
-		if( ( gSlantRoofData[uiCount].fAllocated ) )
-		{
-			gSlantRoofData[uiCount].fAllocated = FALSE;
-		}
-	}
-	guiNumSlantRoofs = 0;
-}
-
-static BOOLEAN FindSlantRoofSlot(INT16 sGridNo)
-{
-	UINT32 uiCount;
-
-	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
-	{
-		if( ( gSlantRoofData[uiCount].fAllocated ) )
-		{
-			if ( gSlantRoofData[uiCount].sGridNo == sGridNo )
-			{
-				return( TRUE );
-			}
-		}
-	}
-	return( FALSE );
+	gSlantRoofData.clear();
 }
 
 void AddSlantRoofFOVSlot( INT16 sGridNo )
 {
-	INT32               iSlantRoofSlot;
-	SLANT_ROOF_FOV_TYPE *pSlantRoof;
-
 	// Check if this is a duplicate!
-	if ( FindSlantRoofSlot( sGridNo ) )
+	if (std::find(gSlantRoofData.begin(), gSlantRoofData.end(), sGridNo)
+		== gSlantRoofData.end())
 	{
-		return;
-	}
-
-	iSlantRoofSlot = GetFreeSlantRoof( );
-
-	if ( iSlantRoofSlot != -1 )
-	{
-		pSlantRoof = &gSlantRoofData[ iSlantRoofSlot ];
-		pSlantRoof->sGridNo = sGridNo;
-		pSlantRoof->fAllocated = TRUE;
+		gSlantRoofData.push_back(sGridNo);
 	}
 }
 
 void ExamineSlantRoofFOVSlots( )
 {
-	UINT32 uiCount;
-
-	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
-	{
-		if( ( gSlantRoofData[uiCount].fAllocated ) )
-		{
-			ExamineGridNoForSlantRoofExtraGraphic( gSlantRoofData[uiCount].sGridNo );
-		}
-	}
+	std::for_each(gSlantRoofData.begin(), gSlantRoofData.end(),
+		ExamineGridNoForSlantRoofExtraGraphic);
 	ClearSlantRoofs( );
 }
 
