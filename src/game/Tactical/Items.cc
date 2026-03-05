@@ -5,6 +5,8 @@
 #include "Action_Items.h"
 #include "Item_Types.h"
 #include "JAScreens.h"
+#include "OppList.h"
+#include "Overhead_Types.h"
 #include "TileDef.h"
 #include "Weapons.h"
 #include "Soldier_Control.h"
@@ -1853,18 +1855,14 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	// case of error
 
 	UINT8 ubNumberToDrop, ubLoop;
-	OBJECTTYPE *pInSlot;
-	BOOLEAN fObjectWasRobotRemote = FALSE;
-
-	if ( pObj->usItem == ROBOT_REMOTE_CONTROL )
-	{
-		fObjectWasRobotRemote = TRUE;
-	}
+	bool const fObjectWasRobotRemote{ pObj->usItem == ROBOT_REMOTE_CONTROL };
 
 	if ( !CanItemFitInPosition( pSoldier, pObj, bPos, TRUE ) )
 	{
 		return( FALSE );
 	}
+
+	ItemModel const * const item{ GCM->getItem(pObj->usItem) };
 
 	// If the position is either head slot, then the item must be IC_FACE (checked in
 	// CanItemFitInPosition).
@@ -1873,7 +1871,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD2POS ].usItem ) )
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
-					GCM->getItem(pObj->usItem)->getName(), GCM->getItem(pSoldier->inv[HEAD2POS].usItem)->getName()));
+					item->getName(), GCM->getItem(pSoldier->inv[HEAD2POS].usItem)->getName()));
 			return( FALSE );
 		}
 	}
@@ -1882,16 +1880,16 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD1POS ].usItem ) )
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
-					GCM->getItem(pObj->usItem)->getName(), GCM->getItem(pSoldier->inv[HEAD1POS].usItem)->getName()));
+					item->getName(), GCM->getItem(pSoldier->inv[HEAD1POS].usItem)->getName()));
 			return( FALSE );
 		}
 	}
 
-	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_KEY) CollectKey(*pSoldier, *pObj);
+	if (item->isKey()) CollectKey(*pSoldier, *pObj);
 
 	int ubSlotLimit = ItemSlotLimit(pObj->usItem, bPos);
 
-	pInSlot = &(pSoldier->inv[bPos]);
+	OBJECTTYPE * const pInSlot{ &pSoldier->inv[bPos] };
 
 	if (pInSlot->ubNumberOfObjects == 0)
 	{
@@ -1939,10 +1937,10 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		// replacement/reloading/merging/stacking
 		// keys have an additional check for key ID being the same
-		if ((pObj->usItem == pInSlot->usItem) && (GCM->getItem(pObj->usItem)->getItemClass() != IC_KEY ||
-			pObj->ubKeyID == pInSlot->ubKeyID))
+		if ((pObj->usItem == pInSlot->usItem) &&
+		    (!item->isKey() || pObj->ubKeyID == pInSlot->ubKeyID))
 		{
-			if (GCM->getItem(pObj->usItem)->getItemClass() == IC_MONEY)
+			if (item->isMoney())
 			{
 
 				UINT32 uiMoneyMax = MoneySlotLimit( bPos );
@@ -1996,9 +1994,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			switch (GCM->getItem(pInSlot->usItem)->getItemClass())
 			{
 				case IC_GUN:
-					if (GCM->getItem(pObj->usItem)->getItemClass() == IC_AMMO)
+					if (item->isAmmo())
 					{
-						if (GCM->getWeapon(pInSlot->usItem)->matches(GCM->getItem(pObj->usItem)->asAmmo()->calibre))
+						if (GCM->getWeapon(pInSlot->usItem)->matches(item->asAmmo()->calibre))
 						{
 							// reload...
 							return( ReloadGun( pSoldier, pInSlot, pObj ) );
@@ -2021,7 +2019,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				break;
 			}
 
-			if ( (GCM->getItem(pObj->usItem)->isTwoHanded()) && (bPos == HANDPOS) )
+			if (item->isTwoHanded() && bPos == HANDPOS)
 			{
 				if (pSoldier->inv[SECONDHANDPOS].usItem != 0)
 				{
@@ -2050,6 +2048,12 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	if ( pSoldier->bTeam == OUR_TEAM && fObjectWasRobotRemote )
 	{
 		UpdateRobotControllerGivenController( pSoldier );
+	}
+
+	if (item->isFace())
+	{
+		// Moving this item to or from the face could change what we see.
+		HandleSight(*pSoldier, SIGHT_LOOK);
 	}
 
 	EnsureConsistentWeaponMode(pSoldier);

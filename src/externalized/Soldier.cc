@@ -4,7 +4,9 @@
 #include "Handle_Items.h"
 #include "Interface.h"
 #include "Items.h"
+#include "OppList.h"
 #include "Overhead.h"
+#include "Overhead_Types.h"
 #include "Soldier_Control.h"
 #include "Soldier_Functions.h"
 #include "AI.h"
@@ -336,6 +338,7 @@ void Soldier::switchHeadGear(int switchDirection)
 			: showGearRemoveMessage(mSoldier, currentEyeGear->usItem);
 
 		SwapObjs(optimalEyeGear, currentEyeGear);
+		HandleSight(*mSoldier, SIGHT_LOOK);
 
 		if (detachedGear.usItem != NONE)
 		{
