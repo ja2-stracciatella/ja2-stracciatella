@@ -26,7 +26,7 @@ fn main() {
         }
 
         let schema = fs::read(entry.path()).expect("schema not readable");
-        let mut schema: Value = serde_yaml::from_slice(&schema).expect("schema is not valid yaml");
+        let mut schema: Value = yaml_serde::from_slice(&schema).expect("schema is not valid yaml");
         resolve_refs(&mut schema);
 
         let file_name = file_name
@@ -66,7 +66,7 @@ fn resolve_refs(value: &mut Value) {
             let link_unreadable = format!("schema {} not readable", link).to_string();
             let schema = fs::read(&link).expect(&link_unreadable);
             let mut schema: Value =
-                serde_yaml::from_slice(&schema).expect("ref schema is not valid yaml");
+                yaml_serde::from_slice(&schema).expect("ref schema is not valid yaml");
             resolve_refs(&mut schema);
             let mut schema = schema
                 .as_object()
