@@ -63,7 +63,7 @@ INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGr
 INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, INT16 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware );
 
 BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT* pdZPos);
-
+FLOAT GetTargetZPosFromStructureHeight(INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel);
 
 #define HEIGHT_UNITS				256
 #define HEIGHT_UNITS_PER_INDEX			(HEIGHT_UNITS / PROFILE_Z_SIZE)
