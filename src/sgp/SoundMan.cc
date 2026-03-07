@@ -16,6 +16,8 @@
 #include "Logger.h"
 
 #include "SDL3/SDL.h"
+#include <SDL3/SDL_audio.h>
+#include <SDL3/SDL_iostream.h>
 #include <string_theory/string>
 
 #include <algorithm>
@@ -84,7 +86,7 @@ enum
 
 // The audio device will be opened with the following values
 #define SOUND_FREQ      44100
-#define SOUND_FORMAT    AUDIO_S16SYS
+#define SOUND_FORMAT    SDL_AUDIO_S16
 #define SOUND_MA_SOUND_FORMAT ma_format::ma_format_s16
 #define SOUND_CHANNELS  2
 #define SOUND_SAMPLES   1024
@@ -108,7 +110,7 @@ struct SAMPLETAG
 	ma_data_converter* pDataConverter; // pointer to a data converter that decodes the data from pData
 
 	SGPFile* pFile;  // pointer to a SDL_RWops representing the file that we stream from
-	SDL_RWops* pRWOps; // RWOps on either pData or pSource
+	SDL_IOStream* pRWOps; // RWOps on either pData or pSource
 	ma_decoder* pDecoder; // pointer to a decoder that decodes the data from the SDL_RWops
 
 	UINT32  uiFlags;     // Status flags
@@ -154,6 +156,7 @@ static BOOLEAN fSoundSystemInit = FALSE; // Startup called
 static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
 static std::vector<INT32> gMixBuffer;
 
+SDL_AudioDeviceID gAudioDeviceID = SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK;
 SDL_AudioSpec gTargetAudioSpec;
 ma_decoder_config gTargetDecoderConfig;
 
@@ -335,7 +338,7 @@ void SoundStopAll(void)
 {
 	if (!fSoundSystemInit) return;
 
-	SDL_PauseAudio(1);
+	SDL_PauseAudioDevice(gAudioDeviceID);
 	FOR_EACH(SOUNDTAG, i, pSoundList)
 	{
 		if (SoundStopChannel(i))
@@ -347,7 +350,7 @@ void SoundStopAll(void)
 			i->State                 = CHANNEL_FREE;
 		}
 	}
-	SDL_PauseAudio(0);
+	SDL_ResumeAudioDevice(gAudioDeviceID);
 }
 
 
@@ -684,9 +687,9 @@ static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma
 }
 
 ma_result MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead, size_t *bytesRead) {
-	auto rwOps = (SDL_RWops*)pDecoder->pUserData;
+	auto rwOps = (SDL_IOStream*)pDecoder->pUserData;
 
-	*bytesRead = SDL_RWread(rwOps, pBufferOut, sizeof(UINT8), bytesToRead);
+	*bytesRead = SDL_ReadIO(rwOps, pBufferOut, bytesToRead);
 	if (*bytesRead != 0) {
 		return MA_SUCCESS;
 	}
@@ -694,16 +697,16 @@ ma_result MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytes
 }
 
 ma_result MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_origin origin) {
-	auto rwOps = (SDL_RWops*)pDecoder->pUserData;
-	auto sdlOrigin = RW_SEEK_SET;
+	auto rwOps = (SDL_IOStream*)pDecoder->pUserData;
+	auto sdlOrigin = SDL_IO_SEEK_SET;
 	if (origin == ma_seek_origin::ma_seek_origin_current) {
-		sdlOrigin = RW_SEEK_CUR;
+		sdlOrigin = SDL_IO_SEEK_CUR;
 	}
 	if (origin == ma_seek_origin::ma_seek_origin_end) {
-		sdlOrigin = RW_SEEK_END;
+		sdlOrigin = SDL_IO_SEEK_END;
 	}
 
-	if (SDL_RWseek(rwOps, byteOffset, sdlOrigin) != -1) {
+	if (SDL_SeekIO(rwOps, byteOffset, sdlOrigin) != -1) {
 		return MA_SUCCESS;
 	}
 
@@ -727,7 +730,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 	UINT8* inMemoryBuffer = NULL;
 	SGPFile* hFile = NULL;
-	SDL_RWops* rwOps = NULL;
+	SDL_IOStream* rwOps = NULL;
 	ma_decoder* decoder = NULL;
 
 	try
@@ -747,11 +750,11 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		if (hFileLen <= SOUND_FILE_STREAMING_THRESHOLD) {
 			// If the file length is below the streaming threshold we store the raw data in the inMemoryBuffer
 			inMemoryBuffer = new UINT8[hFileLen]{};
-			if (SDL_RWread(rwOps, inMemoryBuffer, sizeof(UINT8), hFileLen) != hFileLen) {
+			if (SDL_ReadIO(rwOps, inMemoryBuffer, hFileLen) != hFileLen) {
 				throw std::runtime_error("Could not read the whole file");
 			}
-			SDL_RWclose(rwOps);
-			rwOps = SDL_RWFromConstMem(inMemoryBuffer, hFileLen);
+			SDL_CloseIO(rwOps);
+			rwOps = SDL_IOFromConstMem(inMemoryBuffer, hFileLen);
 			hFile = NULL;
 			isStreamed = FALSE;
 		}
@@ -786,7 +789,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 			delete hFile;
 		}
 		if (rwOps != NULL) {
-			SDL_FreeRW(rwOps);
+			SDL_CloseIO(rwOps);
 		}
 		if (decoder != NULL) {
 			ma_free(decoder, NULL);
@@ -870,7 +873,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 		ma_free(s->pDataConverter, NULL);
 	}
 	if (s->pRWOps != NULL) {
-		SDL_RWclose(s->pRWOps);
+		SDL_CloseIO(s->pRWOps);
 	}
 	// Note: s->pFile is closed and deleted by SDL_RWclose implicitly, but s->pInMemoryBuffer is not
 	if (s->pInMemoryBuffer != NULL) {
@@ -895,16 +898,15 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 }
 
 
-static void SoundCallback(void* userdata, Uint8* stream, int len)
+void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int additional_amount, int total_amount)
 {
-	if (len < 0)
-	{
-		SLOGA("SoundCallback: unexpected negative len {}", len);
-		return;
-	}
+	if (additional_amount <= 0) return;
+
+	Uint8 *data = SDL_stack_alloc(Uint8, additional_amount);
+	if (!data) return;
 
 	// 16-bit stereo = 2 bytes per value, 2 values per sample
-	UINT32 want_bytes = static_cast<UINT32>(len);
+	UINT32 want_bytes = static_cast<UINT32>(additional_amount);
 	UINT32 want_values = want_bytes / sizeof(INT16);
 	UINT32 want_samples = want_values / 2;
 
@@ -971,8 +973,8 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 	// "The callback must completely initialize the buffer"
 	// see: https://wiki.libsdl.org/SDL_AudioSpec
-	UINT32 have_bytes = want_values * sizeof(INT16);
-	std::fill_n(stream + have_bytes, want_bytes - have_bytes, 0);
+	SDL_PutAudioStreamData(stream, data, additional_amount);
+	SDL_stack_free(data);
 
 	if (ringBuffersNeedService) {
 		// We try to lock the mutex. If it is already locked, buffers are already serviced
@@ -995,16 +997,16 @@ static BOOLEAN SoundInitHardware(void)
 			throw std::runtime_error(ST::format("SDL_InitSubSystem returned error: {}", SDL_GetError()).c_str());
 		}
 
+		SDL_zero(gTargetAudioSpec);
 		gTargetAudioSpec.freq     = SOUND_FREQ;
 		gTargetAudioSpec.format   = SOUND_FORMAT;
 		gTargetAudioSpec.channels = SOUND_CHANNELS;
-		gTargetAudioSpec.samples  = SOUND_SAMPLES;
-		gTargetAudioSpec.callback = SoundCallback;
-		gTargetAudioSpec.userdata = NULL;
 
-		if (SDL_OpenAudio(&gTargetAudioSpec, NULL) != 0) {
+		SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(gAudioDeviceID, &gTargetAudioSpec, SoundCallback, nullptr);
+		if (!stream) {
 			throw std::runtime_error(ST::format("SDL_OpenAudio returned error: {}", SDL_GetError()).c_str());
 		}
+		gAudioDeviceID = SDL_GetAudioStreamDevice(stream);
 
 		gTargetDecoderConfig = ma_decoder_config_init(SOUND_MA_SOUND_FORMAT, gTargetAudioSpec.channels, gTargetAudioSpec.freq);
 
@@ -1026,7 +1028,7 @@ static BOOLEAN SoundInitHardware(void)
 			throw std::runtime_error(ST::format("SDL_CreateThread for SoundManBufferServiceThread returned error: {}", SDL_GetError()).c_str());
 		}
 
-		SDL_PauseAudio(0);
+		SDL_ResumeAudioDevice(gAudioDeviceID);
 		return TRUE;
 
 	} catch (const std::runtime_error& err) {
