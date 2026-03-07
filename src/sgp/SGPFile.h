@@ -64,7 +64,7 @@ public:
 	UINT32 size() const;
 
 	/** Get an SDL_RWops from the file. */
-	SDL_RWops* getRwOps();
+	SDL_IOStream* getRwOps();
 
 	/** Get the name of the file. */
 	auto const& getName() const noexcept { return name; }
