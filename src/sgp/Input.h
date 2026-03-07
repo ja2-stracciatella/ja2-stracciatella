@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Types.h"
-#include "SDL_events.h"
-#include "SDL_keyboard.h"
+#include "SDL3/SDL_events.h"
+#include "SDL3/SDL_keyboard.h"
 
 #include <string_theory/string>
 

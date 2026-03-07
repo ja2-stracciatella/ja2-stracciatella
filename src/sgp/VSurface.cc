@@ -5,7 +5,7 @@
 #include "VSurface.h"
 #include "Logger.h"
 
-#include "SDL.h"
+#include "SDL3/SDL.h"
 #include <string_theory/format>
 #include <string_theory/string>
 
