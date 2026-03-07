@@ -47,6 +47,7 @@
 #include "EditScreen.h"
 #include "Logger.h"
 #include "GameSettings.h"
+#include <SDL3/SDL_pixels.h>
 
 #define ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
@@ -77,7 +78,7 @@ void MainGameScreenInit(void)
 {
 	// all blit functions expect z-buffer pitch to match framebuffer pitch
 	SDL_Surface const& surface = FRAME_BUFFER->GetSDLSurface();
-	gZBufferPitch = surface.pitch / surface.format->BytesPerPixel;
+	gZBufferPitch = surface.pitch / SDL_GetPixelFormatDetails(surface.format)->bits_per_pixel;
 	gpZBuffer = InitZBuffer(gZBufferPitch, SCREEN_HEIGHT);
 	gZBufferPitch *= sizeof(*gpZBuffer);
 	InitializeBackgroundRects();

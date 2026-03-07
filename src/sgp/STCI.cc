@@ -65,7 +65,7 @@ SGPImage* LoadRGB(UINT16 const contents, HWFILE const f, STCIHeader const& heade
 		{
 			// ASSUMPTION: file data is 565 R,G,B
 			auto const& masks = header.RGB;
-			auto pixelFormat = SDL_MasksToPixelFormatEnum(16, masks.uiRedMask,
+			auto pixelFormat = SDL_GetPixelFormatForMasks(16, masks.uiRedMask,
 				masks.uiGreenMask, masks.uiBlueMask, masks.uiAlphaMask);
 			if (pixelFormat != SDL_PIXELFORMAT_RGB565)
 			{
