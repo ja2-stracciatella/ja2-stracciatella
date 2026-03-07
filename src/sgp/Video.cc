@@ -137,7 +137,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	ScreenBuffer = SDL_CreateSurface(
 					SCREEN_WIDTH,
 					SCREEN_HEIGHT,
-					SDL_GetPixelFormatForMasks(PIXEL_DEPTH, RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK)
+					SDL_PIXELFORMAT_RGB565
 	);
 
 	if (ScreenBuffer == NULL) {
@@ -188,7 +188,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	FrameBuffer = SDL_CreateSurface(
 		SCREEN_WIDTH,
 		SCREEN_HEIGHT,
-		SDL_GetPixelFormatForMasks(PIXEL_DEPTH, RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK)
+		SDL_PIXELFORMAT_RGB565
 	);
 
 	if (FrameBuffer == NULL)
@@ -199,7 +199,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	MouseCursor = SDL_CreateSurface(
 		MAX_CURSOR_WIDTH,
 		MAX_CURSOR_HEIGHT,
-		SDL_GetPixelFormatForMasks(PIXEL_DEPTH, RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK)
+		SDL_PIXELFORMAT_RGB565
 	);
 	SDL_SetSurfaceColorKey(MouseCursor, true, 0);
 
