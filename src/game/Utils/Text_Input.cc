@@ -130,11 +130,11 @@ void SetEditingStatus(bool bIsEditing)
 		gfEditingText = bIsEditing;
 		if (bIsEditing)
 		{
-			SDL_StartTextInput();
+			SDL_StartTextInput(GAME_WINDOW);
 		}
 		else
 		{
-			SDL_StopTextInput();
+			SDL_StopTextInput(GAME_WINDOW);
 		}
 	}
 }
@@ -687,9 +687,9 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 			switch (a->usParam)
 			{
 #if 0
-				case SDLK_c: ExecuteCopyCommand();  return TRUE;
-				case SDLK_x: ExecuteCutCommand();   return TRUE;
-				case SDLK_v: ExecutePasteCommand(); return TRUE;
+				case SDLK_C: ExecuteCopyCommand();  return TRUE;
+				case SDLK_X: ExecuteCutCommand();   return TRUE;
+				case SDLK_V: ExecutePasteCommand(); return TRUE;
 #endif
 
 				case SDLK_DELETE:
