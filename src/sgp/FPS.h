@@ -7,7 +7,7 @@ class SGPVObject;
 namespace FPS
 {
 	using GameLoopFunc_t  = void (*)();
-	using RenderPresent_t = void (*)(SDL_Renderer *);
+	using RenderPresent_t = bool (*)(SDL_Renderer *);
 
 	extern GameLoopFunc_t  GameLoopPtr;
 	extern RenderPresent_t RenderPresentPtr;
