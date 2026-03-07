@@ -1661,7 +1661,7 @@ static void HandleKeyboardShortcuts(void)
 					}
 					break;
 
-				case SDLK_t: // Trees
+				case SDLK_T: // Trees
 				if (EditorInputEvent.usKeyState & SHIFT_DOWN)
 					{
 						if (fShowTrees)
