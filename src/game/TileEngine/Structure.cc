@@ -1018,8 +1018,7 @@ INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof, BOOLEAN preferOp
 		pCurrent = FindStructure(sGridNo, (STRUCTURE_DOOR | STRUCTURE_OPENABLE));
 		if (pCurrent && pCurrent->sCubeOffset == sDesiredHeight)
 		{
-			// don't aim at the very top of the door
-			return pCurrent->fFlags & STRUCTURE_DOOR ? 3 : StructureHeight(pCurrent);
+			return StructureHeight(pCurrent);
 		}
 	}
 

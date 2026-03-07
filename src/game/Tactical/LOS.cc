@@ -1489,6 +1489,36 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 	return( TRUE );
 }
 
+FLOAT GetTargetZPosFromStructureHeight(INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel)
+{
+	FLOAT dEndZPos;
+
+	if (bCubeLevel)
+	{
+		// fire at the centre of the cube specified
+		dEndZPos = ((FLOAT)(bCubeLevel + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
+	}
+	else
+	{
+		INT8 bStructHeight = GetTallestStructureHeight(sGridNo, bLevel == SECOND_LEVEL, TRUE);
+		if (bStructHeight > 0)
+		{
+			// fire at the centre of the cube *one below* the tallest of the tallest structure
+			if (bStructHeight > 1)
+			{
+				bStructHeight--;
+			}
+			dEndZPos = ((FLOAT)(bStructHeight + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
+		}
+		else
+		{
+			// fire at 1 unit above the level of the ground
+			dEndZPos = (FLOAT)((bLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1);
+		}
+	}
+
+	return dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[sGridNo].sHeight);
+}
 
 INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier, UINT8 ubTileSightLimit, const INT8 bAware)
 {
@@ -2927,8 +2957,6 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldie
 
 UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const INT16 sGridNo, const INT8 bLevel, const INT8 bCubeLevel, const SOLDIERTYPE* const target)
 {
-	FLOAT dEndZPos;
-
 	if (pStartSoldier->sGridNo == sGridNo)
 	{
 		return( 0 );
@@ -2942,31 +2970,11 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, cons
 	}
 	else
 	{
-		if (bCubeLevel)
-		{
-			// fire at the centre of the cube specified
-			dEndZPos = ( ( (FLOAT) (bCubeLevel + bLevel * PROFILE_Z_SIZE) ) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
-		}
-		else
-		{
-			INT8 const bStructHeight = GetTallestStructureHeight(sGridNo, bLevel == SECOND_LEVEL, TRUE);
-			if (bStructHeight > 0)
-			{
-				// fire at the centre of the cube of the tallest structure
-				dEndZPos = ((FLOAT) (bStructHeight + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
-			}
-			else
-			{
-				// fire at 1 unit above the level of the ground
-				dEndZPos = (FLOAT) ((bLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1);
-			}
-		}
-
-		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[sGridNo].sHeight );
-
 		// set startsoldier's target ID ... need an ID stored in case this
 		// is the AI calculating cover to a location where he might not be any more
 		pStartSoldier->CTGTTarget = target;
+
+		FLOAT dEndZPos{ GetTargetZPosFromStructureHeight(sGridNo, bLevel, bCubeLevel) };
 		return ChanceToGetThrough(pStartSoldier, sGridNo, dEndZPos);
 	}
 }
@@ -3005,11 +3013,6 @@ UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, con
 
 UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel )
 {
-	FLOAT dEndZPos;
-
-	UINT16 usTrueState;
-	UINT8 ubChance;
-
 	if (pStartSoldier->sGridNo == sGridNo)
 	{
 		return( 0 );
@@ -3023,27 +3026,8 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 	}
 	else
 	{
-		if (bCubeLevel)
-		{
-			// fire at the centre of the cube specified
-			dEndZPos = ( (FLOAT) (bCubeLevel + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
-		}
-		else
-		{
-			INT8 const bStructHeight = GetTallestStructureHeight(sGridNo, bLevel == SECOND_LEVEL, TRUE);
-			if (bStructHeight > 0)
-			{
-				// fire at the centre of the cube of the tallest structure
-				dEndZPos = ((FLOAT) (bStructHeight + bLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
-			}
-			else
-			{
-				// fire at 1 unit above the level of the ground
-				dEndZPos = (FLOAT) ((bLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1);
-			}
-		}
-
-		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[sGridNo].sHeight );
+		UINT16 usTrueState;
+		UINT8 ubChance;
 
 		// set startsoldier's target ID ... need an ID stored in case this
 		// is the AI calculating cover to a location where he might not be any more
@@ -3052,6 +3036,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 		usTrueState = pStartSoldier->usAnimState;
 		pStartSoldier->usAnimState = STANDING;
 
+		FLOAT dEndZPos{ GetTargetZPosFromStructureHeight(sGridNo, bLevel, bCubeLevel) };
 		ubChance = ChanceToGetThrough(pStartSoldier, sGridNo, dEndZPos);
 
 		pStartSoldier->usAnimState = usTrueState;

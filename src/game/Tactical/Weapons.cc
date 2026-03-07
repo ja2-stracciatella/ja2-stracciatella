@@ -416,9 +416,7 @@ FireWeaponResult FireWeapon(SOLDIERTYPE * const pSoldier, GridNo const sTargetGr
 
 void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT *pdXPos, FLOAT *pdYPos, FLOAT *pdZPos )
 {
-	FLOAT  dTargetX;
-	FLOAT  dTargetY;
-	FLOAT  dTargetZ;
+	FLOAT  dTargetX, dTargetY, dTargetZ;
 	INT16  sXMapPos, sYMapPos;
 	UINT32 uiRoll;
 
@@ -505,39 +503,13 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 	}
 	else
 	{
-
 		// GET TARGET XY VALUES
 		ConvertGridNoToCenterCellXY( sTargetGridNo, &sXMapPos, &sYMapPos );
 
 		// fire at centre of tile
 		dTargetX = (FLOAT) sXMapPos;
 		dTargetY = (FLOAT) sYMapPos;
-		if (pSoldier->bTargetCubeLevel)
-		{
-			// fire at the centre of the cube specified
-			dTargetZ = ( (FLOAT) (pSoldier->bTargetCubeLevel + pSoldier->bTargetLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
-		}
-		else
-		{
-			INT8 bStructHeight = GetTallestStructureHeight(sTargetGridNo, pSoldier->bTargetLevel == SECOND_LEVEL, TRUE);
-			if (bStructHeight > 0)
-			{
-				// fire at the centre of the cube *one below* the tallest of the tallest structure
-				if (bStructHeight > 1)
-				{
-					// reduce target level by 1
-					bStructHeight--;
-				}
-				dTargetZ = ((FLOAT) (bStructHeight + pSoldier->bTargetLevel * PROFILE_Z_SIZE) - 0.5f) * HEIGHT_UNITS_PER_INDEX;
-			}
-			else
-			{
-				// fire at 1 unit above the level of the ground
-				dTargetZ = (FLOAT) (pSoldier->bTargetLevel * PROFILE_Z_SIZE) * HEIGHT_UNITS_PER_INDEX + 1;
-			}
-		}
-		// adjust for terrain height
-		dTargetZ += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[sTargetGridNo].sHeight );
+		dTargetZ = GetTargetZPosFromStructureHeight(sTargetGridNo, pSoldier->bTargetLevel, pSoldier->bTargetCubeLevel);
 	}
 
 	*pdXPos = dTargetX;
