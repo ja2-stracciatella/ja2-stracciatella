@@ -6,6 +6,7 @@
 #include "Logger.h"
 
 #include "SDL3/SDL.h"
+#include <SDL3/SDL_pixels.h>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -20,7 +21,7 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 {
 	Assert(w > 0 && h > 0);
 
-	Uint32 pixelFormat;
+	SDL_PixelFormat pixelFormat;
 	switch (bpp)
 	{
 		case 8:
@@ -36,7 +37,7 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 		default:
 			throw std::logic_error("Tried to create video surface with invalid bpp, must be 8 or 16.");
 	}
-	SDL_Surface * const s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 0, pixelFormat);
+	SDL_Surface * const s = SDL_CreateSurface(w, h, pixelFormat);
 	if (!s) throw std::runtime_error("Failed to create SDL surface");
 	surface_.reset(s);
 	gpVSurfaceHead = this;
@@ -90,13 +91,13 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 
 		default: abort(); // HACK000E
 	}
-	SDL_SetColorKey(surface_.get(), SDL_TRUE, colour_key);
+	SDL_SetSurfaceColorKey(surface_.get(), true, colour_key);
 }
 
 
 void SGPVSurface::Fill(const UINT16 colour)
 {
-	SDL_FillRect(surface_.get(), NULL, colour);
+	SDL_FillSurfaceRect(surface_.get(), NULL, colour);
 }
 
 
@@ -150,7 +151,7 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 	if (img->ubBitDepth == 8) vs->SetPalette(img->pPalette);
 
 	auto && sdlSurface{ vs->GetSDLSurface() };
-	auto const format{ sdlSurface.format->format };
+	auto const format{ sdlSurface.format };
 
 	// Leave it to SDL to copy the pixel data from the image to the surface.
 	SDL_ConvertPixels(img->usWidth, img->usHeight,
@@ -195,7 +196,7 @@ void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDes
 	Rect.y = iDestY1;
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
-	SDL_FillRect(dst->surface_.get(), &Rect, Color16BPP);
+	SDL_FillSurfaceRect(dst->surface_.get(), &Rect, Color16BPP);
 }
 
 
@@ -282,7 +283,7 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 	UINT const dx     = src_rect->w;
 	UINT const dy     = src_rect->h;
 	UINT py = 0;
-	if (ssurface->flags & SDL_TRUE)
+	if (ssurface->flags & SDL_SURFACE_PREALLOCATED)
 	{
 //		const UINT16 key = ssurface->format->colorkey;
 		const UINT16 key = 0;

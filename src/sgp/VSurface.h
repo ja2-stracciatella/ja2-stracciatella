@@ -19,7 +19,7 @@ inline SGPVSurface* g_mouse_buffer;
 
 struct SDLDeleter
 {
-	void operator()(SDL_Surface *p) noexcept { SDL_FreeSurface(p); }
+	void operator()(SDL_Surface *p) noexcept { SDL_DestroySurface(p); }
 };
 using SurfaceUniquePtr = std::unique_ptr<SDL_Surface, SDLDeleter>;
 
@@ -34,7 +34,7 @@ class SGPVSurface
 
 		UINT16 Width()  const { return surface_->w; }
 		UINT16 Height() const { return surface_->h; }
-		UINT8  BPP()    const { return surface_->format->BitsPerPixel; }
+		UINT8  BPP()    const { return SDL_GetPixelFormatDetails(surface_->format)->bits_per_pixel; }
 
 		// Set palette, also sets 16BPP palette
 		void SetPalette(const SGPPaletteEntry* src_pal);
