@@ -1,6 +1,8 @@
 #include "Font.h"
 #include "FPS.h"
 #include "SDL3/SDL.h"
+#include <SDL3/SDL_rect.h>
+#include <SDL3/SDL_render.h>
 #include <chrono>
 #include <memory>
 #include <numeric>
@@ -16,7 +18,7 @@ namespace FPS
 
 struct SDLDeleter
 {
-	void operator()(SDL_Surface *s) { SDL_FreeSurface(s); }
+	void operator()(SDL_Surface *s) { SDL_DestroySurface(s); }
 	void operator()(SDL_Texture *t) { SDL_DestroyTexture(t); }
 };
 
@@ -39,7 +41,7 @@ void UpdateTexture(SDL_Renderer * const renderer)
 {
 	SetFontAttributes(DisplayFont, FONT_FCOLOR_WHITE);
 
-	SDL_FillRect(Surface.get(), nullptr, 0);
+	SDL_FillSurfaceRect(Surface.get(), nullptr, 0);
 
 	auto * const pixels = static_cast<UINT16*>(Surface->pixels);
 
@@ -64,7 +66,7 @@ void UpdateTexture(SDL_Renderer * const renderer)
 }
 
 
-void RenderPresentHook(SDL_Renderer * const renderer)
+bool RenderPresentHook(SDL_Renderer * const renderer)
 {
 	++FramesSinceLastDisplay;
 
@@ -80,8 +82,8 @@ void RenderPresentHook(SDL_Renderer * const renderer)
 		LastGameLoopDurations.clear();
 	}
 
-	SDL_Rect const dest{ 11, 23, Surface->w, Surface->h };
-	SDL_RenderCopy(renderer, Texture.get(), nullptr, &dest);
+	SDL_FRect const dest{ 11, 23, float(Surface->w), float(Surface->h) };
+	SDL_RenderTexture(renderer, Texture.get(), nullptr, &dest);
 	SDL_RenderPresent(renderer);
 }
 
@@ -115,8 +117,8 @@ void ToggleOnOff()
 		RenderPresentPtr = RenderPresentHook;
 		GameLoopPtr = GameLoopHook;
 
-		Surface.reset(SDL_CreateRGBSurfaceWithFormat(0, 320, 26, 0, SDL_PIXELFORMAT_RGB565));
-		SDL_SetColorKey(Surface.get(), true, 0);
+		Surface.reset(SDL_CreateSurface(320, 26, SDL_PIXELFORMAT_RGB565));
+		SDL_SetSurfaceColorKey(Surface.get(), true, 0);
 	}
 	else
 	{
