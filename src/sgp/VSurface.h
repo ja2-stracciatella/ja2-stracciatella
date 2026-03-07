@@ -4,7 +4,7 @@
 #include "Buffer.h"
 #include "Types.h"
 #include <memory>
-#include <SDL.h>
+#include "SDL3/SDL.h"
 
 
 #define BACKBUFFER   g_back_buffer

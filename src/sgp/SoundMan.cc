@@ -15,7 +15,7 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
-#include <SDL.h>
+#include "SDL3/SDL.h"
 #include <string_theory/string>
 
 #include <algorithm>

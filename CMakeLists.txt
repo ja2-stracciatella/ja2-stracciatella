@@ -155,9 +155,12 @@ else()
         message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
         set(ENV{SDL2DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
     endif()
-    find_package(SDL2 2.0.5 REQUIRED)
+    find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 endif()
-message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY}; SDL2 Include Dir: ${SDL2_INCLUDE_DIR}")
+# FIXME: We should not define global variables here
+get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared IMPORTED_LOCATION_NONE)
+get_target_property(SDL3_INCLUDES SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "SDL3 Libraries: ${SDL3_LIBRARIES}; SDL3 Include Dir: ${SDL3_INCLUDES}")
 
 
 # Dependencies must be processed first so the src directory can reliably use them.
@@ -193,7 +196,7 @@ if (WITH_UNITTESTS)
 endif()
 
 target_link_libraries(${JA2_BINARY} PRIVATE
-    ${SDL2_LIBRARY}
+    SDL3::SDL3
     ${GTEST_LIBRARIES}
     smacker
     ${STRACCIATELLA_LIBRARIES}

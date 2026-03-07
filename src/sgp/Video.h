@@ -3,7 +3,7 @@
 
 #include "Types.h"
 #include "RustInterface.h"
-#include "SDL.h"
+#include "SDL3/SDL.h"
 
 
 #define VIDEO_DEFAULT_TO_NO_CURSOR 0xFFFE // VIDEO_DEFAULT_TO_NO_CURSOR is equal to VIDEO_NO_CURSOR unless always_show_cursor_in_tactical is true
