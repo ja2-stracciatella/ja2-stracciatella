@@ -8,7 +8,7 @@
 
 use std::{collections::HashMap, convert::TryFrom, error::Error, path::Path};
 
-use jsonschema::{Draft, JSONSchema};
+use jsonschema::{Draft, Validator};
 use serde_json::Value;
 
 // This is set by the build script and contains all schemas in resolved json form
@@ -16,7 +16,7 @@ const SCHEMAS: &str = include_str!(env!("STRACCIATELLA_SCHEMAS"));
 
 /// A representation of a json schema
 pub struct Schema {
-    compiled: JSONSchema,
+    compiled: Validator,
     inner_value: Value,
     inner_str: String,
 }
@@ -37,9 +37,9 @@ impl TryFrom<Value> for Schema {
     type Error = Box<dyn Error>;
 
     fn try_from(value: Value) -> Result<Self, Self::Error> {
-        let compiled = JSONSchema::options()
+        let compiled = Validator::options()
             .with_draft(Draft::Draft4)
-            .compile(&value)
+            .build(&value)
             .map_err(|e| e.to_string())?;
         let inner_str = serde_json::to_string(&value)?;
         Ok(Self {
@@ -85,10 +85,16 @@ impl SchemaManager {
     // Validates a value loaded from path and returns validation errors
     pub fn validate(&self, path: &Path, value: &Value) -> Option<Vec<String>> {
         if let Some(schema) = self.get(path) {
-            schema.compiled.validate(value).err().map(|e| {
-                e.map(|v| format!("Error at JSON path `{}`: {}", v.instance_path, v))
-                    .collect()
-            })
+            let errors: Vec<_> = schema
+                .compiled
+                .iter_errors(value)
+                .map(|e| format!("Error at JSON path `{}`: {}", e.instance_path(), e))
+                .collect();
+            if errors.is_empty() {
+                None
+            } else {
+                Some(errors)
+            }
         } else {
             Some(vec![format!(
                 "could not find schema for path `{}`",
