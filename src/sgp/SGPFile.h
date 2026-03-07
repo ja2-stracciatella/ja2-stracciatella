@@ -4,7 +4,7 @@
 #include "Concepts.h"
 #include "Types.h"
 #include <string_theory/string>
-#include <SDL_rwops.h>
+#include "SDL3/SDL_iostream.h"
 
 enum FileSeekMode
 {

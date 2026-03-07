@@ -5,6 +5,8 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include <SDL3/SDL_keycode.h>
+#include <SDL3/SDL_scancode.h>
 #include <string_theory/string>
 
 #include <bitset>

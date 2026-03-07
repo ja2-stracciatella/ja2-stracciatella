@@ -10,7 +10,7 @@
 #include "SoundMan.h"
 #include "VObject.h"
 #include "Video.h"
-#include <SDL.h>
+#include "SDL3/SDL.h"
 #include "UILayout.h"
 #include "GameRes.h"
 #include "GameMode.h"

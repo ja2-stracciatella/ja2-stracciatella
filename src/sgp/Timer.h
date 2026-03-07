@@ -2,7 +2,7 @@
 #define TIMER_H
 
 #include "Types.h"
-#include <SDL.h>
+#include "SDL3/SDL.h"
 
 static inline UINT32 GetClock(void)
 {
