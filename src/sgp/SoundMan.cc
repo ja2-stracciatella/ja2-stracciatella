@@ -902,7 +902,7 @@ void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int addition
 {
 	if (additional_amount <= 0) return;
 
-	Uint8 *data = SDL_stack_alloc(Uint8, additional_amount);
+	Uint8* data = SDL_stack_alloc(Uint8, additional_amount);
 	if (!data) return;
 
 	// 16-bit stereo = 2 bytes per value, 2 values per sample
@@ -963,16 +963,14 @@ void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int addition
 	}
 
 	// Clip sounds and fill the stream
-	INT16* Stream = (INT16*)stream;
+	INT16* data_i16 = (INT16*)data;
 	for (UINT32 i = 0; i < want_values; ++i)
 	{
-		if (gMixBuffer[i] >= INT16_MAX)     Stream[i] = INT16_MAX;
-		else if(gMixBuffer[i] <= INT16_MIN) Stream[i] = INT16_MIN;
-		else                                Stream[i] = (INT16)gMixBuffer[i];
+		if (gMixBuffer[i] >= INT16_MAX)     data_i16[i] = INT16_MAX;
+		else if(gMixBuffer[i] <= INT16_MIN) data_i16[i] = INT16_MIN;
+		else                                data_i16[i] = (INT16)gMixBuffer[i];
 	}
 
-	// "The callback must completely initialize the buffer"
-	// see: https://wiki.libsdl.org/SDL_AudioSpec
 	SDL_PutAudioStreamData(stream, data, additional_amount);
 	SDL_stack_free(data);
 
@@ -993,7 +991,7 @@ void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int addition
 static BOOLEAN SoundInitHardware(void)
 {
 	try {
-		if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
+		if (!SDL_InitSubSystem(SDL_INIT_AUDIO)) {
 			throw std::runtime_error(ST::format("SDL_InitSubSystem returned error: {}", SDL_GetError()).c_str());
 		}
 
@@ -1002,9 +1000,9 @@ static BOOLEAN SoundInitHardware(void)
 		gTargetAudioSpec.format   = SOUND_FORMAT;
 		gTargetAudioSpec.channels = SOUND_CHANNELS;
 
-		SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(gAudioDeviceID, &gTargetAudioSpec, SoundCallback, nullptr);
+		SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &gTargetAudioSpec, SoundCallback, nullptr);
 		if (!stream) {
-			throw std::runtime_error(ST::format("SDL_OpenAudio returned error: {}", SDL_GetError()).c_str());
+			throw std::runtime_error(ST::format("SDL_OpenAudioDeviceStream returned error: {}", SDL_GetError()).c_str());
 		}
 		gAudioDeviceID = SDL_GetAudioStreamDevice(stream);
 
@@ -1024,13 +1022,13 @@ static BOOLEAN SoundInitHardware(void)
 		}
 
 		bufferServiceThread = SDL_CreateThread(SoundServiceBuffers, "SoundManBufferServiceThread", (void *)NULL);
-		if (bufferServiceThread == NULL) {
+		if (!bufferServiceThread) {
 			throw std::runtime_error(ST::format("SDL_CreateThread for SoundManBufferServiceThread returned error: {}", SDL_GetError()).c_str());
 		}
 
 		SDL_ResumeAudioDevice(gAudioDeviceID);
-		return TRUE;
 
+		return TRUE;
 	} catch (const std::runtime_error& err) {
 		SLOGE("SoundInitHardware: {}", err.what());
 		SoundShutdownHardware();
