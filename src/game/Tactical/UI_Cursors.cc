@@ -126,16 +126,14 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 				activated ? HandleActivatedTargetCursor(s, tgt_grid_no, recalc) :
 				HandleNonActivatedTargetCursor(s, tgt_grid_no, show_APs, recalc, cursor_flags);
 
-			if (gCurrentUIMode == ACTION_MODE       &&
-				gTacticalStatus.uiFlags & INCOMBAT  &&
-				recalc                              &&
-				tgt                                 &&
-				IsValidTargetMerc(tgt)              &&
-				EnoughAmmo(s, FALSE, HANDPOS)       && // ATE: Check for ammo
-				guiUIFullTargetFlags & ENEMY_MERC   && // IF it's an ememy, goto confirm action mode
-				guiUIFullTargetFlags & VISIBLE_MERC &&
-				!(guiUIFullTargetFlags & DEAD_MERC) &&
-				!gfCannotGetThrough)
+			if (gCurrentUIMode == ACTION_MODE                      &&
+				gTacticalStatus.uiFlags & INCOMBAT                 &&
+				recalc                                             &&
+				tgt                                                &&
+				IsValidTargetMerc(tgt)                             &&
+				EnoughAmmo(s, FALSE, HANDPOS)                      && // ATE: Check for ammo
+				guiUIFullTargetFlags & (ENEMY_MERC | VISIBLE_MERC) && // IF it's an enemy, goto confirm action mode
+				!(guiUIFullTargetFlags & DEAD_MERC))
 			{
 				guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
 			}
