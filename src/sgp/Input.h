@@ -2,7 +2,6 @@
 
 #include "Types.h"
 #include "SDL3/SDL_events.h"
-#include "SDL3/SDL_keyboard.h"
 
 #include <string_theory/string>
 
@@ -51,8 +50,8 @@ void MouseButtonDown(const SDL_MouseButtonEvent*);
 void MouseButtonUp(const SDL_MouseButtonEvent*);
 void MouseWheelScroll(const SDL_MouseWheelEvent*);
 
-void KeyDown(const SDL_Keysym*);
-void KeyUp(  const SDL_Keysym*);
+void KeyDown(const SDL_KeyboardEvent*);
+void KeyUp(  const SDL_KeyboardEvent*);
 void TextInput(  const SDL_TextInputEvent*);
 
 void FingerMove(const SDL_TouchFingerEvent*);
