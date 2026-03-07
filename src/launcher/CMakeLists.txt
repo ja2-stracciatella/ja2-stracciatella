@@ -55,13 +55,13 @@ target_compile_features(${LAUNCHER_BINARY} PRIVATE cxx_std_20)
 
 target_link_libraries(${LAUNCHER_BINARY} PRIVATE
     ${STRACCIATELLA_LIBRARIES}
-    ${SDL2_LIBRARY}
+    SDL3::SDL3
     string_theory-internal
 )
 
 target_include_directories(${LAUNCHER_BINARY} PRIVATE
     ${FLTK_INCLUDE_DIR}
-    ${SDL2_INCLUDE_DIR}
+    SDL3::SDL3
     "${CMAKE_SOURCE_DIR}/src/externalized"
     "${CMAKE_SOURCE_DIR}/src/game"
     "${CMAKE_SOURCE_DIR}/src/sgp"

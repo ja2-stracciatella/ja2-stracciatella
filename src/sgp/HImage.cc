@@ -1,3 +1,5 @@
+#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL_surface.h>
 #include <stdexcept>
 
 #include "Types.h"
@@ -155,7 +157,7 @@ UINT16 Get16BPPColor(UINT8 r, UINT8 g, UINT8 b)
 UINT32 GetRGBColor(UINT16 Value16BPP)
 {
 	UINT8 r, g, b;
-	SDL_GetRGB(Value16BPP, g_frame_buffer->GetSDLSurface().format, &r, &g, &b);
+	SDL_GetRGB(Value16BPP, SDL_GetPixelFormatDetails(g_frame_buffer->GetSDLSurface().format), nullptr, &r, &g, &b);
 	return FROMRGB(r, g, b);
 }
 
