@@ -23,6 +23,7 @@
 #include "EnumCodeGen.h"
 
 #include "Logger.h"
+#include <SDL3/SDL_events.h>
 #include <iostream>
 
 #ifdef WITH_UNITTESTS
@@ -108,7 +109,7 @@ static void deinitGameAndExit()
 void requestGameExit()
 {
 	SDL_Event event;
-	event.type = SDL_QUIT;
+	event.type = SDL_EVENT_QUIT;
 	SDL_PushEvent(&event);
 }
 
@@ -127,40 +128,38 @@ static void MainLoop()
 		{
 			switch (event.type)
 			{
-				case SDL_APP_WILLENTERBACKGROUND:
+				case SDL_EVENT_WILL_ENTER_BACKGROUND:
 					s_doGameCycles = false;
 					break;
 
-				case SDL_APP_WILLENTERFOREGROUND:
+				case SDL_EVENT_WILL_ENTER_FOREGROUND:
 					s_doGameCycles = true;
 					break;
 
-				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_f &&
-					    SDL_GetModState() & KMOD_CTRL)
+				case SDL_EVENT_KEY_DOWN:
+					if (event.key.key == SDLK_F &&
+					    SDL_GetModState() & SDL_KMOD_CTRL)
 					{
 						FPS::ToggleOnOff();
 					}
 					else
 					{
-						KeyDown(&event.key.keysym);
+						KeyDown(&event.key);
 					}
 					break;
-				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
-				case SDL_TEXTINPUT: TextInput(&event.text); break;
+				case SDL_EVENT_KEY_UP:   KeyUp(  &event.key); break;
+				case SDL_EVENT_TEXT_INPUT: TextInput(&event.text); break;
 
-				case SDL_MOUSEBUTTONDOWN: MouseButtonDown(&event.button); break;
-				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
+				case SDL_EVENT_MOUSE_BUTTON_DOWN: MouseButtonDown(&event.button); break;
+				case SDL_EVENT_MOUSE_BUTTON_UP:   MouseButtonUp(&event.button);   break;
+				case SDL_EVENT_MOUSE_MOTION: MouseMove(&event.motion); break;
+				case SDL_EVENT_MOUSE_WHEEL: MouseWheelScroll(&event.wheel); break;
 
-				case SDL_MOUSEMOTION: MouseMove(&event.motion); break;
+				case SDL_EVENT_FINGER_MOTION: FingerMove(&event.tfinger); break;
+				case SDL_EVENT_FINGER_UP:     FingerUp(&event.tfinger); break;
+				case SDL_EVENT_FINGER_DOWN:   FingerDown(&event.tfinger); break;
 
-				case SDL_MOUSEWHEEL: MouseWheelScroll(&event.wheel); break;
-
-				case SDL_FINGERMOTION: FingerMove(&event.tfinger); break;
-				case SDL_FINGERUP:     FingerUp(&event.tfinger); break;
-				case SDL_FINGERDOWN:   FingerDown(&event.tfinger); break;
-
-				case SDL_QUIT: deinitGameAndExit(); break;
+				case SDL_EVENT_QUIT: deinitGameAndExit(); break;
 			}
 		}
 		else
