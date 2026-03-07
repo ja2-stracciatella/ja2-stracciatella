@@ -261,7 +261,14 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			}
 			giHitChance = is_throwing_knife ? CalcThrownChanceToHit(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation) :
 				CalcChanceToHitGun(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation, false);
-			giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, gsInterfaceLevel, s->bTargetCubeLevel, 0) / 100.0f;
+			if (gUIFullTarget)
+			{
+				giHitChance *= SoldierToSoldierBodyPartChanceToGetThrough(s, gUIFullTarget, s->bAimShotLocation) / 100.0f;
+			}
+			else
+			{
+				giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, gsInterfaceLevel, s->bTargetCubeLevel, 0) / 100.0f;
+			}
 		}
 
 		// Attach chance-to-hit to mouse cursor
