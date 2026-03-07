@@ -5,6 +5,7 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include <SDL2/SDL_video.h>
 #include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_scancode.h>
 #include <string_theory/string>
@@ -18,7 +19,7 @@
 
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.  true = pressed, false = not pressed.
-static std::bitset<2 * SDL_NUM_SCANCODES> gfKeyState;
+static std::bitset<2 * SDL_SCANCODE_COUNT> gfKeyState;
 static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
@@ -113,9 +114,9 @@ static void QueueKeyEvent(UINT16 ubInputEvent, SDL_Keycode Key, SDL_Keymod Mod, 
 	if (gusQueueCount == lengthof(gEventQueue)) return;
 
 	UINT16 ModifierState = 0;
-	if (Mod & KMOD_SHIFT) ModifierState |= SHIFT_DOWN;
-	if (Mod & KMOD_CTRL)  ModifierState |= CTRL_DOWN;
-	if (Mod & KMOD_ALT)   ModifierState |= ALT_DOWN;
+	if (Mod & SDL_KMOD_SHIFT) ModifierState |= SHIFT_DOWN;
+	if (Mod & SDL_KMOD_CTRL)  ModifierState |= CTRL_DOWN;
+	if (Mod & SDL_KMOD_ALT)   ModifierState |= ALT_DOWN;
 	gEventQueue[gusTailIndex].usKeyState = ModifierState;
 	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
 	gEventQueue[gusTailIndex].usParam = Key;
@@ -276,9 +277,9 @@ void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
 
 void FingerMove(const SDL_TouchFingerEvent* event) {
 	#ifdef SDL_MOUSE_TOUCHID
-	if (event->touchId == SDL_MOUSE_TOUCHID) return;
+	if (event->touchID == SDL_MOUSE_TOUCHID) return;
 	#endif
-	if (event->fingerId != gMainFingerId) return;
+	if (event->fingerID != gMainFingerId) return;
 	gfIsUsingTouch = true;
 
 	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
@@ -288,10 +289,10 @@ void FingerMove(const SDL_TouchFingerEvent* event) {
 
 void FingerDown(const SDL_TouchFingerEvent* event) {
 	#ifdef SDL_MOUSE_TOUCHID
-	if (event->touchId == SDL_MOUSE_TOUCHID) return;
+	if (event->touchID == SDL_MOUSE_TOUCHID) return;
 	#endif
 
-	gMainFingerId = event->fingerId;
+	gMainFingerId = event->fingerID;
 	gfIsUsingTouch = true;
 
 	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
@@ -301,9 +302,9 @@ void FingerDown(const SDL_TouchFingerEvent* event) {
 
 void FingerUp(const SDL_TouchFingerEvent* event) {
 	#ifdef SDL_MOUSE_TOUCHID
-	if (event->touchId == SDL_MOUSE_TOUCHID) return;
+	if (event->touchID == SDL_MOUSE_TOUCHID) return;
 	#endif
-	if (event->fingerId != gMainFingerId) return;
+	if (event->fingerID != gMainFingerId) return;
 	gfIsUsingTouch = true;
 
 	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
@@ -317,7 +318,7 @@ void FingerUp(const SDL_TouchFingerEvent* event) {
 static SDL_Keycode RemapKeycode(SDL_Keycode const key)
 {
 	return (key & SDLK_SCANCODE_MASK)
-		? (key & ~SDLK_SCANCODE_MASK) + SDL_NUM_SCANCODES
+		? (key & ~SDLK_SCANCODE_MASK) + SDL_SCANCODE_COUNT
 		: key;
 }
 
@@ -328,11 +329,11 @@ bool _KeyDown(SDL_Keycode const keycode)
 }
 
 
-static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
+static void KeyChange(SDL_KeyboardEvent const* const event, bool const pressed)
 {
-	SDL_Keycode      key = key_sym->sym;
-	SDL_Keymod const mod = (SDL_Keymod) key_sym->mod;
-	bool   const num = mod & KMOD_NUM;
+	SDL_Keycode      key = event->key;
+	SDL_Keymod const mod = event->mod;
+	bool   const num = mod & SDL_KMOD_NUM;
 
 	// Special handling for some keys which often are used for different
 	// purposes for many keyboard layouts compared to the US keyboard layout
@@ -344,13 +345,13 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 	// which are not affected by the KeyChange function. (Issue #1844)
 	// Checked if neither alt, altgr, control, shift or the 'OS' key is
 	// pressed. Num lock, caps lock and scroll lock can be active.
-	if ((mod & (KMOD_ALT | KMOD_CTRL | KMOD_GUI | KMOD_MODE | KMOD_SHIFT)) == KMOD_NONE)
+	if ((mod & (SDL_KMOD_ALT | SDL_KMOD_CTRL | SDL_KMOD_GUI | SDL_KMOD_MODE | SDL_KMOD_SHIFT)) == SDL_KMOD_NONE)
 	{
-		switch (key_sym->scancode)
+		switch (event->scancode)
 		{
 			case SDL_SCANCODE_EQUALS:      key = SDLK_EQUALS;           break;
 			case SDL_SCANCODE_SLASH:       key = SDLK_SLASH;            break;
-			case SDL_SCANCODE_GRAVE:       key = SDLK_BACKQUOTE;        break;
+			case SDL_SCANCODE_GRAVE:       key = SDLK_GRAVE;        break;
 			default:                                                    break;
 		}
 	}
@@ -383,7 +384,7 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 		case SDLK_KP_ENTER:    key = SDLK_RETURN;                       break;
 
 		default:
-			if ((key & ~SDLK_SCANCODE_MASK) >= SDL_NUM_SCANCODES) return;
+			if ((key & ~SDLK_SCANCODE_MASK) >= SDL_SCANCODE_COUNT) return;
 			break;
 	}
 
@@ -404,9 +405,9 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 }
 
 
-void KeyDown(const SDL_Keysym* KeySym)
+void KeyDown(const SDL_KeyboardEvent* event)
 {
-	switch (KeySym->sym)
+	switch (event->key)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
@@ -429,15 +430,15 @@ void KeyDown(const SDL_Keysym* KeySym)
 			break;
 
 		default:
-			KeyChange(KeySym, true);
+			KeyChange(event, true);
 			break;
 	}
 }
 
 
-void KeyUp(const SDL_Keysym* KeySym)
+void KeyUp(const SDL_KeyboardEvent* event)
 {
-	switch (KeySym->sym)
+	switch (event->key)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
@@ -456,11 +457,10 @@ void KeyUp(const SDL_Keysym* KeySym)
 			break;
 
 		case SDLK_SCROLLLOCK:
-			SDL_SetWindowGrab
+			SDL_SetWindowMouseGrab
 			(
 				GAME_WINDOW,
-				SDL_GetWindowGrab(GAME_WINDOW) == SDL_FALSE ?
-					SDL_TRUE : SDL_FALSE
+				!SDL_GetWindowMouseGrab(GAME_WINDOW)
 			);
 			break;
 
@@ -473,14 +473,14 @@ void KeyUp(const SDL_Keysym* KeySym)
 			/* FALLTHROUGH */
 
 		default:
-			KeyChange(KeySym, false);
+			KeyChange(event, false);
 			break;
 	}
 }
 
 void TextInput(const SDL_TextInputEvent* TextEv) {
 	try {
-		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, ST::string(TextEv->text).to_utf32());
+		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, SDL_KMOD_NONE, ST::string(TextEv->text).to_utf32());
 	}
 	catch (const ST::unicode_error&)
 	{
