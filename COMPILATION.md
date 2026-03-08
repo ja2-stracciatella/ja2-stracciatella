@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-- SDL3 >= `3.0.0` (version `3.4.10` is included in this repo for Windows and macOS).
+- SDL3 >= `3.0.0` (version `3.4.14` is included in this repo for Windows and macOS).
 - cmake
 - Rust and Cargo
 - Your systems compiler

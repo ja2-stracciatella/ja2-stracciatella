@@ -91,7 +91,7 @@ class HIDDeviceBLESteamController extends BluetoothGattCallback implements HIDDe
             mOp = operation;
             mUuid = uuid;
             mDelayMs = delayMs;
-        }
+        }        
 
         private GattOperation(BluetoothGatt gatt, GattOperation.Operation operation, UUID uuid, byte[] value) {
             mGatt = gatt;
@@ -516,7 +516,7 @@ class HIDDeviceBLESteamController extends BluetoothGattCallback implements HIDDe
                     finalThis.queueGattOperation(retry);
                 }
             }
-        }, 1000);
+        }, 1000);            
     }
 
     void writeCharacteristic(UUID uuid, byte[] value) {
@@ -826,3 +826,4 @@ class HIDDeviceBLESteamController extends BluetoothGattCallback implements HIDDe
     }
 
 }
+

@@ -61,7 +61,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     private static final String TAG = "SDL";
     private static final int SDL_MAJOR_VERSION = 3;
     private static final int SDL_MINOR_VERSION = 4;
-    private static final int SDL_MICRO_VERSION = 10;
+    private static final int SDL_MICRO_VERSION = 14;
 /*
     // Display InputType.SOURCE/CLASS of events and devices
     //
@@ -530,7 +530,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         if (mHIDDeviceManager != null) {
             mHIDDeviceManager.setFrozen(true);
-        }
+        }        
 
         if (!mHasMultiWindow) {
             pauseNativeThread();
@@ -544,7 +544,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         if (mHIDDeviceManager != null) {
             mHIDDeviceManager.setFrozen(false);
-        }
+        }        
 
         if (!mHasMultiWindow) {
             resumeNativeThread();
@@ -623,7 +623,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         if (hasFocus || !SDLActivity.nativeGetHintBoolean("SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS", false)) {
             if (mHIDDeviceManager != null) {
                 mHIDDeviceManager.setFrozen(!hasFocus);
-            }
+            }            
         }
 
         if (SDLActivity.mBrokenLibraries) {
@@ -2237,3 +2237,4 @@ class SDLClipboardHandler implements
         SDLActivity.onNativeClipboardChanged();
     }
 }
+
