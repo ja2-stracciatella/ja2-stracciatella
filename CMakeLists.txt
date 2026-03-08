@@ -147,9 +147,7 @@ message(STATUS "Setting directory for libraries to: ${INSTALL_LIB_DIR}")
 add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
 if(BUILD_SDL_LIB)
-    set(SDL2_LIBRARY "")
-    set(SDL2_INCLUDE_DIR "")
-    add_subdirectory("dependencies/lib-sdl2")
+    add_subdirectory("dependencies/lib-sdl3")
 else()
     if (NOT (LOCAL_SDL_LIB STREQUAL ""))
         message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
@@ -196,7 +194,7 @@ if (WITH_UNITTESTS)
 endif()
 
 target_link_libraries(${JA2_BINARY} PRIVATE
-    SDL3::SDL3
+    SDL3::SDL3-shared
     ${GTEST_LIBRARIES}
     smacker
     ${STRACCIATELLA_LIBRARIES}
