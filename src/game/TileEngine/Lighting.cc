@@ -22,7 +22,6 @@
 #include "WorldDef.h"
 #include "RenderWorld.h"
 #include "Debug.h"
-#include "WCheck.h"
 #include "Isometric_Utils.h"
 #include "Sys_Globals.h"
 #include "TileDef.h"
@@ -40,7 +39,6 @@
 
 #include <algorithm>
 #include <iterator>
-#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -1596,6 +1594,9 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 			case OUTSIDE_TOP_LEFT:
 				if (!fDoLeftWalls) fDoRightWalls = FALSE;
 				break;
+
+			default:
+				break;
 		}
 	}
 
@@ -1626,6 +1627,9 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 					i->uiFlags &= ~LEVELNODE_REVEAL;
 					fRerender   = TRUE;
 				}
+				break;
+
+			default:
 				break;
 		}
 	}

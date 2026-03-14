@@ -96,10 +96,10 @@ void CreateTileDatabase()
 				{
 					AllocateAnimTileData(&TileElement, aux.ubNumberOfFrames);
 
-					TileElement.pAnimData->bCurrentFrame = aux.ubCurrentFrame;
-					for (UINT8 ubLoop = 0; ubLoop < TileElement.pAnimData->ubNumFrames; ++ubLoop)
+					TileElement.bCurrentFrame = aux.ubCurrentFrame;
+					for (UINT8 ubLoop = 0; ubLoop < TileElement.ubNumFrames; ++ubLoop)
 					{
-						TileElement.pAnimData->pusFrames[ubLoop] = gTileDatabaseSize - TileElement.pAnimData->bCurrentFrame + ubLoop;
+						TileElement.pusFrames[ubLoop] = gTileDatabaseSize - TileElement.bCurrentFrame + ubLoop;
 					}
 
 					// set into animation controller array
@@ -108,7 +108,7 @@ void CreateTileDatabase()
 
 					TileElement.uiFlags |= ANIMATED_TILE;
 				}
-				TileElement.usWallOrientation = aux.ubWallOrientation;
+				TileElement.usWallOrientation = static_cast<WallOrientationDefines>(aux.ubWallOrientation);
 				if (aux.ubNumberOfTiles > 0)
 				{
 					TileElement.ubNumberOfTiles = aux.ubNumberOfTiles;
@@ -176,9 +176,6 @@ void CreateTileDatabase()
 }
 
 
-static void FreeAnimTileData(TILE_ELEMENT* pTileElem);
-
-
 void DeallocateTileDatabase( )
 {
 	INT32 cnt;
@@ -186,10 +183,7 @@ void DeallocateTileDatabase( )
 	for( cnt = 0; cnt < NUMBEROFTILES; cnt++ )
 	{
 		// Check if an existing set of animated tiles are in place, remove if found
-		if ( gTileDatabase[ cnt ].pAnimData != NULL )
-		{
-			FreeAnimTileData( &gTileDatabase[ cnt ] );
-		}
+		delete [] gTileDatabase[cnt].pusFrames;
 	}
 
 	gTileDatabaseSize = 0;
@@ -313,7 +307,7 @@ bool AnyHeigherLand(UINT32 const map_idx, UINT32 const src_type, UINT8* const ou
 	return found;
 }
 
-UINT16 GetWallOrientation(UINT16 usIndex)
+WallOrientationDefines GetWallOrientation(UINT16 usIndex)
 {
 	Assert(usIndex < lengthof(gTileDatabase));
 	return gTileDatabase[usIndex].usWallOrientation;
@@ -322,22 +316,8 @@ UINT16 GetWallOrientation(UINT16 usIndex)
 
 void AllocateAnimTileData(TILE_ELEMENT* const pTileElem, UINT8 const ubNumFrames)
 {
-	pTileElem->pAnimData            = new TILE_ANIMATION_DATA{};
-	pTileElem->pAnimData->pusFrames = new UINT16[ubNumFrames]{};
+	pTileElem->pusFrames = new UINT16[ubNumFrames]{};
 
 	// Set # if frames!
-	pTileElem->pAnimData->ubNumFrames = ubNumFrames;
-}
-
-
-static void FreeAnimTileData(TILE_ELEMENT* pTileElem)
-{
-	if ( pTileElem->pAnimData != NULL )
-	{
-		// Free frames list
-		delete[] pTileElem->pAnimData->pusFrames;
-
-		// Free frames
-		delete pTileElem->pAnimData;
-	}
+	pTileElem->ubNumFrames = ubNumFrames;
 }

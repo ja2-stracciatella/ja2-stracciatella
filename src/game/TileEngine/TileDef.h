@@ -35,7 +35,7 @@ ENUM_BITSET(TileElementFlags)
 #define ROOF_HIT_ADJUSTMENT			2
 
 
-enum WallOrientationDefines
+enum WallOrientationDefines : UINT8
 {
 	NO_ORIENTATION, INSIDE_TOP_LEFT, INSIDE_TOP_RIGHT, OUTSIDE_TOP_LEFT,
 	OUTSIDE_TOP_RIGHT
@@ -71,13 +71,6 @@ struct TILE_IMAGERY
 	bool               bRaisedObjectType;
 };
 
-struct TILE_ANIMATION_DATA
-{
-	UINT16 *pusFrames;
-	INT8   bCurrentFrame;
-	UINT8  ubNumFrames;
-};
-
 
 // Tile data element
 struct TILE_ELEMENT
@@ -93,11 +86,13 @@ struct TILE_ELEMENT
 	UINT8                ubNumberOfTiles;
 
 	// Land and overlay type
-	UINT16               usWallOrientation;
+	WallOrientationDefines usWallOrientation;
 	UINT8                ubFullTile;
 
 	// For animated tiles
-	TILE_ANIMATION_DATA* pAnimData;
+	INT8                 bCurrentFrame;
+	UINT8                ubNumFrames;
+	UINT16*              pusFrames;
 };
 
 
@@ -139,7 +134,7 @@ UINT32 GetTileFlags(UINT16 usIndex);
 
 UINT8 GetTileTypeLogicalHeight(UINT32 type);
 bool  AnyHeigherLand(UINT32 map_idx, UINT32 src_type, UINT8* out_last_level);
-UINT16 GetWallOrientation(UINT16 usIndex);
+WallOrientationDefines GetWallOrientation(UINT16 usIndex);
 
 void SetSpecificDatabaseValues(UINT16 type, UINT16 database_elem, TILE_ELEMENT&, bool use_raised_object_type);
 

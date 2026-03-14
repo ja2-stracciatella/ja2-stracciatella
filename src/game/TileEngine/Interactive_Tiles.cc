@@ -257,12 +257,11 @@ static void GetLevelNodeScreenRect(LEVELNODE const& n, SGPRect& rect, INT16 cons
 		// Adjust for current frames and animations
 		if (te->uiFlags & ANIMATED_TILE)
 		{
-			TILE_ANIMATION_DATA const& a = *te->pAnimData;
-			te = &gTileDatabase[a.pusFrames[a.bCurrentFrame]];
+			te = &gTileDatabase[te->pusFrames[te->bCurrentFrame]];
 		}
 		else if (n.uiFlags & LEVELNODE_ANIMATION && n.sCurrentFrame != -1)
 		{
-			te = &gTileDatabase[te->pAnimData->pusFrames[n.sCurrentFrame]];
+			te = &gTileDatabase[te->pusFrames[n.sCurrentFrame]];
 		}
 		pTrav = &te->hTileSurface->SubregionProperties(te->usRegionIndex);
 	}
@@ -543,12 +542,11 @@ static BOOLEAN RefinePointCollisionOnStruct(INT16 const test_x, INT16 const test
 		// Adjust for current frames and animations
 		if (te->uiFlags & ANIMATED_TILE)
 		{
-			TILE_ANIMATION_DATA const& a = *te->pAnimData;
-			te = &gTileDatabase[a.pusFrames[a.bCurrentFrame]];
+			te = &gTileDatabase[te->pusFrames[te->bCurrentFrame]];
 		}
 		else if (n.uiFlags & LEVELNODE_ANIMATION && n.sCurrentFrame != -1)
 		{
-			te = &gTileDatabase[te->pAnimData->pusFrames[n.sCurrentFrame]];
+			te = &gTileDatabase[te->pusFrames[n.sCurrentFrame]];
 		}
 		vo  = te->hTileSurface;
 		idx = te->usRegionIndex;

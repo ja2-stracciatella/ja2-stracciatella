@@ -568,11 +568,10 @@ static void SetAnimData(UINT16 const database_elem, TILE_ELEMENT& te, const bool
 {
 	AllocateAnimTileData(&te, 5);
 
-	TILE_ANIMATION_DATA& a = *te.pAnimData;
-	a.bCurrentFrame = 0;
-	for (UINT8 k = 0; k != a.ubNumFrames; ++k)
+	te.bCurrentFrame = 0;
+	for (UINT8 k = 0; k != te.ubNumFrames; ++k)
 	{
-		a.pusFrames[k] = minus_plus ? database_elem + k : database_elem - k;
+		te.pusFrames[k] = minus_plus ? database_elem + k : database_elem - k;
 	}
 }
 

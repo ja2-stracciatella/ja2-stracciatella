@@ -505,9 +505,9 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 									&gTileDatabase[pNode->usIndex];
 
 								// Handle independent-per-tile animations (i.e.: doors, exploding things, etc.)
-								if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1 && TileElem->pAnimData)
+								if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1 && TileElem->pusFrames)
 								{
-									TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
+									TileElem = &gTileDatabase[TileElem->pusFrames[pNode->sCurrentFrame]];
 								}
 
 								// Set Tile elem flags here!
@@ -519,9 +519,9 @@ private: void Render(RenderTilesFlags const uiFlags, size_t const ubNumLevels, R
 									{
 										if (!(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC) && !(uiTileElemFlags & DYNAMIC_TILE))
 										{
-											if (uiTileElemFlags & ANIMATED_TILE && TileElem->pAnimData)
+											if (uiTileElemFlags & ANIMATED_TILE && TileElem->pusFrames)
 											{
-												TileElem        = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
+												TileElem        = &gTileDatabase[TileElem->pusFrames[TileElem->bCurrentFrame]];
 												uiTileElemFlags = TileElem->uiFlags;
 											}
 											else
@@ -1599,10 +1599,10 @@ void RenderWorld(void)
 	// For now here, update animated tiles
 	if (COUNTERDONE(ANIMATETILES))
 	{
-		for (UINT32 i = 0; i != gusNumAnimatedTiles; ++i)
+		for (auto tileIndex : std::span{ gusAnimatedTiles, gusNumAnimatedTiles })
 		{
-			TILE_ANIMATION_DATA& a = *gTileDatabase[gusAnimatedTiles[i]].pAnimData;
-			if (++a.bCurrentFrame >= a.ubNumFrames) a.bCurrentFrame = 0;
+			auto & te = gTileDatabase[tileIndex];
+			if (++te.bCurrentFrame >= te.ubNumFrames) te.bCurrentFrame = 0;
 		}
 	}
 
