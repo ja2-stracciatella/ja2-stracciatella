@@ -12,7 +12,6 @@
 #include "Tile_Animation.h"
 #include "Tile_Cache.h"
 #include "Explosion_Control.h"
-#include "Weapons.h"
 #include "Keys.h"
 #include "Bullets.h"
 #include "Rotting_Corpses.h"
@@ -55,7 +54,7 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	// before modifying any level node state. Cached tiles use gpTileCache
 	// and do not need pAnimData.
 	if (parms->zCachedFile == nullptr &&
-		(tile_index >= NUMBEROFTILES || gTileDatabase[tile_index].pAnimData == nullptr))
+		(tile_index >= NUMBEROFTILES || gTileDatabase[tile_index].pusFrames == nullptr))
 	{
 		SLOGW("CreateAnimationTile: tile {} (tileset {}) at gridno {} has no animation data",
 			tile_index, giCurrentTilesetID, gridno);
@@ -132,7 +131,7 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	}
 	else
 	{
-		a->usNumFrames = gTileDatabase[tile_index].pAnimData->ubNumFrames;
+		a->usNumFrames = gTileDatabase[tile_index].ubNumFrames;
 	}
 	a->ubLevelID        = ubLevel;
 	a->usTileIndex      = tile_index;
@@ -190,7 +189,7 @@ void DeleteAniTile(ANITILE* const a)
 	{
 		// update existing tile usIndex
 		LEVELNODE& l = *a->pLevelNode;
-		l.usIndex        = gTileDatabase[a->usTileIndex].pAnimData->pusFrames[l.sCurrentFrame];
+		l.usIndex        = gTileDatabase[a->usTileIndex].pusFrames[l.sCurrentFrame];
 		l.sCurrentFrame  = 0; // Set frame data back to zero
 		l.uiFlags       &= ~(LEVELNODE_DYNAMIC | LEVELNODE_USEZ | LEVELNODE_ANIMATION);
 

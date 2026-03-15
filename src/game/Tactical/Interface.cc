@@ -676,123 +676,71 @@ static void HandleUpDownArrowBackgrounds(void)
 
 void RenderArrows( )
 {
-	TILE_ELEMENT TileElem;
 
 	if ( guiShowUPDownArrows & ARROWS_HIDE_UP && guiShowUPDownArrows & ARROWS_HIDE_DOWN )
 	{
 		return;
 	}
 
+	auto BltArrow = [](TileDefines tile, short yOffset = 0)
+	{
+		auto const& TileElem{ gTileDatabase[tile] };
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + yOffset);
+	};
+
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_BESIDE )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-		BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-	}
-
-	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_G )
-	{
-		TileElem = gTileDatabase[ SECONDPOINTERS1 ];
-		BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		BltArrow(SECONDPOINTERS3);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_Y )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-		BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-	}
-
-	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YG )
-	{
-		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-		BltVideoObject( FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-		TileElem = gTileDatabase[ SECONDPOINTERS1 ];
-		BltVideoObject( FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
-	}
-
-	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_GG )
-	{
-		TileElem = gTileDatabase[ SECONDPOINTERS1 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
+		BltArrow(SECONDPOINTERS3);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YY )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
+		BltArrow(SECONDPOINTERS3);
+		BltArrow(SECONDPOINTERS3, 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS8 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-	}
-
-	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB2 )
-	{
-		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
-		TileElem = gTileDatabase[ SECONDPOINTERS8 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-	}
-
-	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB3 )
-	{
-		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-		TileElem = gTileDatabase[ SECONDPOINTERS8 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 40);
+		BltArrow(SECONDPOINTERS8);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BESIDE )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
-	}
-
-	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_G )
-	{
-		TileElem = gTileDatabase[ SECONDPOINTERS2 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		BltArrow(SECONDPOINTERS4);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_Y )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		BltArrow(SECONDPOINTERS4);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_CLIMB )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS7 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		BltArrow(SECONDPOINTERS7);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YG )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS2 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
-		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
+		BltArrow(SECONDPOINTERS2);
+		BltArrow(SECONDPOINTERS4, 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_GG )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS2 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
+		BltArrow(SECONDPOINTERS2);
+		BltArrow(SECONDPOINTERS2, 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YY )
 	{
-		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
-		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
+		BltArrow(SECONDPOINTERS4);
+		BltArrow(SECONDPOINTERS4, 20);
 	}
-
-
 }
 
 void EraseRenderArrows( )
@@ -830,14 +778,14 @@ static void GetArrowsBackground(void)
 		gsUpArrowY = sMercScreenY + UPARROW_Y_OFFSET;
 	}
 
-	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_G || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_Y)
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_Y)
 	{
 		// Setup blt rect
 		gsUpArrowX = sMercScreenX - 10;
 		gsUpArrowY = sMercScreenY - 50;
 	}
 
-	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YG || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_GG || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YY)
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YY)
 	{
 		// Setup blt rect
 		gsUpArrowX = sMercScreenX - 10;
@@ -853,29 +801,13 @@ static void GetArrowsBackground(void)
 		sArrowHeight = 2 * ARROWS_HEIGHT;
 	}
 
-	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB2)
-	{
-		// Setup blt rect
-		gsUpArrowX = sMercScreenX - 10;
-		gsUpArrowY = sMercScreenY - 80;
-		sArrowHeight = 3 * ARROWS_HEIGHT;
-	}
-
-	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB3)
-	{
-		// Setup blt rect
-		gsUpArrowX = sMercScreenX - 10;
-		gsUpArrowY = sMercScreenY - 900;
-		sArrowHeight = 5 * ARROWS_HEIGHT;
-	}
-
 	if (guiShowUPDownArrows & ARROWS_SHOW_DOWN_BESIDE)
 	{
 		gsDownArrowX = sMercScreenX + ARROWS_X_OFFSET;
 		gsDownArrowY = sMercScreenY + DOWNARROW_Y_OFFSET;
 	}
 
-	if (guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_Y || guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_G)
+	if (guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_Y)
 	{
 		gsDownArrowX = sMercScreenX -10;
 		gsDownArrowY = sMercScreenY + 10;
