@@ -3,6 +3,7 @@
 #include "PathAI.h"
 #include "AI.h"
 #include "Map_Information.h"
+#include "GridSquare.h"
 #include "Isometric_Utils.h"
 #include "Debug.h"
 #include "Random.h"
@@ -1075,22 +1076,11 @@ GridNo SearchForClosestSecondaryMapEdgepoint(GridNo sGridNo, UINT8 ubInsertionCo
 
 static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 {
-	INT32		iSearchRange;
-	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
-	INT8		bDirection;
-
 	pSoldier->sGridNo = sEdgepoint;
 
-	iSearchRange = EDGE_OF_MAP_SEARCH;
-
 	// determine maximum horizontal limits
-	sMaxLeft  = std::min(iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	sMaxRight = std::min(iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-
 	// determine maximum vertical limits
-	sMaxUp   = std::min(iSearchRange, (pSoldier->sGridNo / MAXROW));
-	sMaxDown = std::min(iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	GridSquare const square{ sEdgepoint, EDGE_OF_MAP_SEARCH };
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
@@ -1099,14 +1089,7 @@ static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 	gubNPCDistLimit = EDGE_OF_MAP_SEARCH;
 
 	// reset the "reachable" flags in the region we're looking at
-	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
-	{
-		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
-		{
-			sGridNo = sEdgepoint + sXOffset + (MAXCOL * sYOffset);
-			gpWorldLevelData[sGridNo].uiFlags &= ~(MAPELEMENT_REACHABLE);
-		}
-	}
+	ClearReachableFlags(square);
 
 	FindBestPath( pSoldier, NOWHERE, pSoldier->bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE );
 
@@ -1114,37 +1097,19 @@ static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 	// so we don't consider it
 	//gpWorldLevelData[sEdgepoint].uiFlags &= ~(MAPELEMENT_REACHABLE);
 
-	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
-	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
+	// any spots right on edge of map within 5 tiles?
+	return std::any_of(square.begin(), square.end(), [](GridNo gn)
 	{
-		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
-		{
-			// calculate the next potential gridno
-			sGridNo = sEdgepoint + sXOffset + (MAXCOL * sYOffset);
-
-			if (!(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE))
-			{
-				continue;
-			}
-
-			if (GridNoOnEdgeOfMap( sGridNo, &bDirection ) )
-			{
-				// ok!
-				return TRUE;
-			}
-		}
-	}
-
-	// no spots right on edge of map within 5 tiles
-	return FALSE;
+		INT8 bDirection;
+		return (gpWorldLevelData[gn].uiFlags & MAPELEMENT_REACHABLE)
+			&& GridNoOnEdgeOfMap(gn, &bDirection);
+	});
 }
 
 
 static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2)
 {
 	INT32		iSearchRange;
-	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
 
 	pSoldier->sGridNo = sEdgepoint1;
 
@@ -1157,14 +1122,6 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 		iSearchRange = EDGE_OF_MAP_SEARCH;
 	}
 
-	// determine maximum horizontal limits
-	sMaxLeft  = std::min(iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	sMaxRight = std::min(iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-
-	// determine maximum vertical limits
-	sMaxUp   = std::min(iSearchRange, (pSoldier->sGridNo / MAXROW));
-	sMaxDown = std::min(iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
 
@@ -1172,14 +1129,7 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 	gubNPCDistLimit = (UINT8)iSearchRange;
 
 	// reset the "reachable" flags in the region we're looking at
-	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
-	{
-		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
-		{
-			sGridNo = sEdgepoint1 + sXOffset + (MAXCOL * sYOffset);
-			gpWorldLevelData[sGridNo].uiFlags &= ~(MAPELEMENT_REACHABLE);
-		}
-	}
+	ClearReachableFlags({ sEdgepoint1, iSearchRange });
 
 	if( FindBestPath( pSoldier, sEdgepoint2, pSoldier->bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE ) )
 	{
