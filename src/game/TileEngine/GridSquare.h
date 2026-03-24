@@ -21,8 +21,8 @@ class GridSquare
 public:
 	std::pmr::vector<GridNo> c{ pa };
 
-	constexpr auto begin() const noexcept { return c.begin(); }
-	constexpr auto end()   const noexcept { return c.end(); }
+	auto begin() const noexcept { return c.begin(); }
+	auto end()   const noexcept { return c.end(); }
 
 	GridSquare(GridNo center, int apothem);
 };
