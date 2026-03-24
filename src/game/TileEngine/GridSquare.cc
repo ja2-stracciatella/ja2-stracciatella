@@ -13,6 +13,7 @@ void ClearReachableFlags(GridSquare const& square)
 
 GridSquare::GridSquare(GridNo const center, int const apothem)
 {
+	if (center < 0 || center >= WORLD_MAX) return;
 	if (apothem < 0) return;
 
 	int const centerRow = center / WORLD_COLS;
@@ -102,6 +103,18 @@ TEST(GridSquare, BottomEdgeClipped)
 	EXPECT_EQ(square.c.size(), 3 * 5);
 	EXPECT_EQ(square.c.front(), center - WORLD_COLS * 2 - 2);
 	EXPECT_EQ(square.c.back(), center + 2);
+}
+
+TEST(GridSquare, InvalidCenterGridNo)
+{
+	{
+		GridSquare square{ -1, 1 };
+		EXPECT_EQ(square.c.size(), 0);
+	}
+	{
+		GridSquare square{ WORLD_MAX, 5 };
+		EXPECT_EQ(square.c.size(), 0);
+	}
 }
 
 #endif
