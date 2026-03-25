@@ -20,6 +20,7 @@
 #include "Soldier_Profile.h"
 #include "Structure.h"
 #include "TeamTurns.h"
+#include "GridSquare.h"
 #include "Interactive_Tiles.h"
 #include "Render_Fun.h"
 #include "Text.h"
@@ -5016,20 +5017,10 @@ static void SetWatchedLocAsUsed(UINT8 ubID, INT16 sGridNo, INT8 bLevel)
 static BOOLEAN WatchedLocLocationIsEmpty(INT16 sGridNo, INT8 bLevel, INT8 bTeam)
 {
 	// look to see if there is anyone near the watched loc who is not on this team
-	INT16 sTempGridNo, sX, sY;
-
-	for ( sY = -WATCHED_LOC_RADIUS; sY <= WATCHED_LOC_RADIUS; sY++ )
+	for (GridNo const sTempGridNo : GridSquare{ sGridNo, WATCHED_LOC_RADIUS })
 	{
-		for ( sX = -WATCHED_LOC_RADIUS; sX <= WATCHED_LOC_RADIUS; sX++ )
-		{
-			sTempGridNo = sGridNo + sX + sY * WORLD_ROWS;
-			if ( sTempGridNo < 0 || sTempGridNo >= WORLD_MAX )
-			{
-				continue;
-			}
-			const SOLDIERTYPE* const tgt = WhoIsThere2(sTempGridNo, bLevel);
-			if (tgt != NULL && tgt->bTeam != bTeam) return FALSE;
-		}
+		const SOLDIERTYPE* const tgt = WhoIsThere2(sTempGridNo, bLevel);
+		if (tgt != NULL && tgt->bTeam != bTeam) return FALSE;
 	}
 	return( TRUE );
 }
