@@ -7,6 +7,7 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Exit_Grids.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Explosion_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Fog_Of_War.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GridSquare.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Interactive_Tiles.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Isometric_Utils.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/LightEffects.cc

@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "GridSquare.h"
 #include "ItemModel.h"
 #include "Items.h"
 #include "Action_Items.h"
@@ -3399,14 +3400,8 @@ void RefreshItemPools(const std::vector<WORLDITEM>& pItemList)
 
 INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 {
-	INT16   sTop, sBottom;
-	INT16   sLeft, sRight;
-	INT16   cnt1, cnt2;
-	INT16   sGridNo;
 	INT32   uiRange, uiLowestRange = 999999;
-	INT16   sLowestGridNo=0;
-	INT32   leftmost;
-	BOOLEAN fFound = FALSE;
+	GridNo  sLowestGridNo = NOWHERE;
 	SOLDIERTYPE soldier{};
 
 	//Save AI pathing vars.  changing the distlimit restricts how
@@ -3418,62 +3413,35 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + (WORLD_COLS * cnt1) + cnt2;
-			if ( sGridNo >=0 && sGridNo < WORLD_MAX )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, 0 );
 
-	uiLowestRange = 999999;
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (auto const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
+		if (gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && !Water(sGridNo))
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if ( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) &&
-				gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && !Water(sGridNo) )
+			// Go on sweet stop
+			if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.bLevel ) )
 			{
-				// Go on sweet stop
-				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.bLevel ) )
-				{
-					uiRange = GetRangeInCellCoordsFromGridNoDiff( sSweetGridNo, sGridNo );
+				uiRange = GetRangeInCellCoordsFromGridNoDiff( sSweetGridNo, sGridNo );
 
-					if ( uiRange < uiLowestRange )
-					{
-						sLowestGridNo = sGridNo;
-						uiLowestRange = uiRange;
-						fFound = TRUE;
-					}
+				if ( uiRange < uiLowestRange )
+				{
+					sLowestGridNo = sGridNo;
+					uiLowestRange = uiRange;
 				}
 			}
 		}
 	}
 
-	if ( fFound )
-	{
-		return sLowestGridNo;
-	}
-	return NOWHERE;
+	return sLowestGridNo;
 }
 
 

@@ -1,6 +1,7 @@
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"
+#include "GridSquare.h"
 #include "Isometric_Utils.h"
 #include "Interface_Panels.h"
 #include "Soldier_Macros.h"
@@ -43,12 +44,7 @@
 //destination was sittable (though it was possible that that location would be trapped.
 UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sSweetGridNo, const INT8 ubRadius)
 {
-	INT16 sTop, sBottom;
-	INT16 sLeft, sRight;
-	INT16 cnt1, cnt2;
-	INT16 sGridNo;
 	INT32 uiRange, uiLowestRange = 999999;
-	INT32 leftmost;
 	SOLDIERTYPE soldier{};
 
 	//Save AI pathing vars.  changing the distlimit restricts how
@@ -61,44 +57,21 @@ UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sS
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
-	// ATE: CHECK FOR BOUNDARIES!!!!!!
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, soldier.bLevel, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
 
-	uiLowestRange = 999999;
-
 	INT16 sLowestGridNo = NOWHERE;
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (GridNo const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
-				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
+			if (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE)
 			{
 				// Go on sweet stop
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
@@ -127,12 +100,7 @@ UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sS
 
 UINT16 FindGridNoFromSweetSpotThroughPeople(const SOLDIERTYPE* const pSoldier, const INT16 sSweetGridNo, const INT8 ubRadius)
 {
-	INT16 sTop, sBottom;
-	INT16 sLeft, sRight;
-	INT16 cnt1, cnt2;
-	INT16 sGridNo;
 	INT32 uiRange, uiLowestRange = 999999;
-	INT32 leftmost;
 	SOLDIERTYPE soldier{};
 
 	//Save AI pathing vars.  changing the distlimit restricts how
@@ -145,44 +113,21 @@ UINT16 FindGridNoFromSweetSpotThroughPeople(const SOLDIERTYPE* const pSoldier, c
 	soldier.bTeam = pSoldier->bTeam;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
-	// ATE: CHECK FOR BOUNDARIES!!!!!!
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
 
-	uiLowestRange = 999999;
-
 	INT16 sLowestGridNo = NOWHERE;
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (GridNo const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
-				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
+			if (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE)
 			{
 				// Go on sweet stop
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
@@ -208,13 +153,9 @@ UINT16 FindGridNoFromSweetSpotThroughPeople(const SOLDIERTYPE* const pSoldier, c
 //destination was sittable (though it was possible that that location would be trapped.
 UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc )
 {
-	INT16 sTop, sBottom;
-	INT16 sLeft, sRight;
-	INT16 cnt1, cnt2, cnt3;
-	INT16 sGridNo;
+	INT16 cnt3;
 	INT32 uiRange, uiLowestRange = 999999;
 	INT16 sLowestGridNo=-1;
-	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
 	SOLDIERTYPE soldier;
 	UINT8 ubBestDirection=0;
@@ -230,11 +171,6 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
 	// If we are already at this gridno....
 	if ( pSoldier->sGridNo == sSweetGridNo && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
@@ -242,39 +178,20 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 		return( sSweetGridNo );
 	}
 
+	GridSquare const square{ sSweetGridNo, ubRadius };
+
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
-	// ATE: CHECK FOR BOUNDARIES!!!!!!
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
 
-	uiLowestRange = 999999;
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (GridNo const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost &&
-				sGridNo < ( leftmost + WORLD_COLS )
-				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
+			if (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE)
 			{
 				// Go on sweet stop
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
@@ -346,15 +263,11 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 
 static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLDIERTYPE* pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8* pubDirection, BOOLEAN fClosestToMerc, INT8 bGivenDirection)
 {
-	INT16 sTop, sBottom;
-	INT16 sLeft, sRight;
-	INT16 cnt1, cnt2, cnt3;
-	INT16 sGridNo;
+	INT16 cnt3;
 	INT32 uiRange, uiLowestRange = 999999;
 	INT16 sLowestGridNo = -1;
-	INT32 leftmost;
 	BOOLEAN fFound = FALSE;
-	SOLDIERTYPE soldier;
+	SOLDIERTYPE soldier{};
 	UINT8 ubBestDirection = 0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
@@ -363,15 +276,9 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	soldier = SOLDIERTYPE{};
 	soldier.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
-
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
 
 	// If we are already at this gridno....
 	if ( pSoldier->sGridNo == sSweetGridNo && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -380,40 +287,20 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 		return( sSweetGridNo );
 	}
 
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
-	// ATE: CHECK FOR BOUNDARIES!!!!!!
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
 
-	uiLowestRange = 999999;
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (GridNo const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost &&
-				sGridNo < ( leftmost + WORLD_COLS )
-				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
+			if (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE)
 			{
 				// Go on sweet stop
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
@@ -496,12 +383,8 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 
 UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const pSoldier, const UINT16 usAnimState, const INT8 ubRadius, const BOOLEAN fClosestToMerc, const SOLDIERTYPE* const pSrcSoldier)
 {
-	INT16 sTop, sBottom;
-	INT16 sLeft, sRight;
-	INT16 cnt1, cnt2, cnt3;
-	INT16 sGridNo;
+	INT16 cnt3;
 	INT32 uiRange, uiLowestRange = 999999;
-	INT32 leftmost;
 	INT16 sSweetGridNo;
 	SOLDIERTYPE soldier{};
 
@@ -517,43 +400,20 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
-	// ATE: CHECK FOR BOUNDARIES!!!!!!
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
 
-	uiLowestRange = 999999;
-
 	INT16 sLowestGridNo = NOWHERE;
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (GridNo const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
-				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
+			if (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE)
 			{
 				// Go on sweet stop
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
@@ -620,38 +480,20 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 
 UINT16 FindGridNoFromSweetSpotExcludingSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sSweetGridNo, const INT8 ubRadius)
 {
-	INT16 sTop, sBottom;
-	INT16 sLeft, sRight;
-	INT16 cnt1, cnt2;
-	INT16 sGridNo;
 	INT32 uiRange, uiLowestRange = 999999;
-	INT32 leftmost;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
-	uiLowestRange = 999999;
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
 	INT16 sLowestGridNo = NOWHERE;
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (GridNo const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-
 			if ( sSweetGridNo == sGridNo )
 			{
 				continue;
 			}
 
-			if ( sGridNo >=0 && sGridNo < WORLD_MAX &&
-				sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
 			{
-
 					// Go on sweet stop
 					if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
 					{
@@ -691,8 +533,6 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(const SOLDIERTYPE* co
 		sBottom = 0;
 		sLeft = 0;
 	}
-
-	uiLowestRange = 999999;
 
 	INT16 sLowestGridNo = NOWHERE;
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
@@ -773,10 +613,6 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 	INT32   leftmost;
 	BOOLEAN fFound = FALSE;
 	UINT32  cnt = 0;
-	SOLDIERTYPE soldier;
-	INT16   sTop, sBottom;
-	INT16   sLeft, sRight;
-	INT16   cnt1, cnt2;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.
@@ -784,30 +620,14 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	soldier = SOLDIERTYPE{};
+	SOLDIERTYPE soldier{};
 	soldier.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
-	// ATE: CHECK FOR BOUNDARIES!!!!!!
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)

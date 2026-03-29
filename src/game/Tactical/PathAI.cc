@@ -12,6 +12,7 @@
 #include "Buildings.h"
 #include "English.h"
 #include "GameSettings.h"
+#include "GridSquare.h"
 #include "Handle_Doors.h"
 #include "Input.h"
 #include "Interface.h"
@@ -1743,9 +1744,6 @@ void GlobalReachableTest( INT16 sStartGridNo )
 void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 {
 	SOLDIERTYPE s{};
-	INT32 iCurrentGridNo = 0;
-	INT32 iX, iY;
-
 	s.sGridNo = sStartGridNo;
 
 	//if we are moving on the gorund level
@@ -1761,17 +1759,7 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 	s.bTeam = OUR_TEAM;
 
 	//reset the flag for gridno's
-	for ( iY = -bRadius; iY <= bRadius; iY++ )
-	{
-		for ( iX = -bRadius; iX <= bRadius; iX++ )
-		{
-			iCurrentGridNo = sStartGridNo + iX + iY * MAXCOL;
-			if (iCurrentGridNo >= 0 && iCurrentGridNo < WORLD_MAX)
-			{
-				gpWorldLevelData[ iCurrentGridNo ].uiFlags &= ~( MAPELEMENT_REACHABLE );
-			}
-		}
-	}
+	ClearReachableFlags({ sStartGridNo, bRadius });
 
 	// set the dist limit
 	gubNPCDistLimit = bRadius;

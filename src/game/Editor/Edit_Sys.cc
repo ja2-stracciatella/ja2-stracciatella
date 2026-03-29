@@ -11,6 +11,7 @@
 #include "EditorDefines.h"
 #include "Smoothing_Utils.h"
 #include "Render_Fun.h"
+#include "GridSquare.h"
 #include "Isometric_Utils.h"
 #include "Editor_Undo.h"
 #include "Exit_Grids.h"
@@ -712,38 +713,19 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 //	Puts a land index "under" an existing ground texture. Affects a radial area.
 static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace)
 {
-	INT16   sTop, sBottom;
-	INT16   sLeft, sRight;
-	INT16   cnt1, cnt2;
-	INT32   iNewIndex;
 	BOOLEAN fDoPaste = FALSE;
-	INT32   leftmost;
 	UINT8   ubLastHighLevel;
 	std::vector<UINT32> smoothTiles;
 	UINT16  usTemp;
 
-	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
 	if ( iMapIndex >= GRIDSIZE )
 		return ( FALSE );
 
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	GridSquare const square{ static_cast<GridNo>(iMapIndex), ubRadius };
+	for (GridNo const iNewIndex : square)
 	{
-
-		leftmost = ( ( iMapIndex + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
-			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
-
-			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-				iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
-
 				if ( fReplace )
 				{
 					fDoPaste = TRUE;

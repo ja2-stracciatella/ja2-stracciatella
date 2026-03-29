@@ -1,4 +1,5 @@
 #include "Directories.h"
+#include "GridSquare.h"
 #include "ItemModel.h"
 #include "Lighting.h"
 #include "Overhead.h"
@@ -1060,19 +1061,12 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8 ubRadius )
 {
 	INT16 sSweetGridNo;
-	INT16 sTop, sBottom;
-	INT16 sLeft, sRight;
-	INT16 cnt1, cnt2, cnt3;
-	INT16 sGridNo;
+	INT16 cnt3 = 0;
 	INT32 uiRange, uiLowestRange = 999999;
-	INT16 sLowestGridNo=0;
-	INT32 leftmost;
-	BOOLEAN fFound = FALSE;
+	INT16 sLowestGridNo = NOWHERE;
 	SOLDIERTYPE soldier{};
 	UINT8 ubBestDirection=0;
 	BOOLEAN fSetDirection = FALSE;
-
-	cnt3 = 0;
 
 	// Get root filename... this removes path and extension
 	// Used to find struct data for this corpse...
@@ -1092,24 +1086,11 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop    = ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	GridSquare const square{ sSweetGridNo, ubRadius };
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + (WORLD_COLS * cnt1) + cnt2;
-			if ( sGridNo >=0 && sGridNo < WORLD_MAX )
-			{
-				gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
-			}
-		}
-	}
+	ClearReachableFlags(square);
 
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
@@ -1117,16 +1098,9 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 
 	uiLowestRange = 999999;
 
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	for (auto const sGridNo : square)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if (sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost &&
-				sGridNo < (leftmost + WORLD_COLS) &&
-				gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE && !Water(sGridNo))
+			if (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE && !Water(sGridNo))
 			{
 				// Go on sweet stop
 				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.bLevel ) )
@@ -1165,25 +1139,19 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 							}
 							sLowestGridNo = sGridNo;
 							uiLowestRange = uiRange;
-							fFound = TRUE;
 						}
 					}
 
 				}
 			}
-		}
 	}
 
-	if ( fFound )
+	if (sLowestGridNo != NOWHERE && fSetDirection)
 	{
-		if ( fSetDirection )
-		{
-			pDef->bDirection = ubBestDirection;
-		}
-
-		return sLowestGridNo;
+		pDef->bDirection = ubBestDirection;
 	}
-	return NOWHERE;
+
+	return sLowestGridNo;
 }
 
 
