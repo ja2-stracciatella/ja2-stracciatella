@@ -2133,12 +2133,7 @@ static void ShowPeopleInMotion(const SGPSector& sSector)
 		SetFontAttributes(MAP_MVT_ICON_FONT, foreground);
 		SetFontDestBuffer(guiSAVEBUFFER);
 
-		ST::string buf = ST::format("{}", sExiting);
-
-		INT16 usX;
-		INT16 usY;
-		FindFontCenterCoordinates(iX + sTextXOffset, 0, ICON_WIDTH, 0, buf, MAP_FONT, &usX, &usY);
-		MPrint(usX, iY + sTextYOffset, buf);
+		MPrint(iX + sTextXOffset, iY + sTextYOffset, sExiting, CenterAlign(ICON_WIDTH));
 
 		INT32 iWidth;
 		INT32 iHeight;
@@ -2197,39 +2192,29 @@ void DisplayDistancesForHelicopter()
 
 	INT32 const x = MAP_HELICOPTER_ETA_POPUP_X + 5;
 	INT32       y = sYPosition + 5;
-	INT32 const w = MAP_HELICOPTER_ETA_POPUP_WIDTH;
 	INT32 const h = GetFontHeight(MAP_FONT);
+	RightAlign const alignment{ MAP_HELICOPTER_ETA_POPUP_WIDTH };
 	ST::string sString;
-	INT16       sX;
-	INT16       sY;
 
 	MPrint(x, y, pHelicopterEtaStrings[0]);
 	INT32 const total_distance = DistanceOfIntendedHelicopterPath();
-	sString = ST::format("{}", total_distance);
-	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT,  &sX, &sY);
-	MPrint(sX, y, sString);
+	MPrint(x, y, total_distance, alignment);
 	y += h;
 
 	MPrint(x, y, pHelicopterEtaStrings[1]);
 	INT16 const n_safe_sectors = GetNumSafeSectorsInPath();
-	sString = ST::format("{}", n_safe_sectors);
-	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, y, sString);
+	MPrint(x, y, n_safe_sectors, alignment);
 	y += h;
 
 	MPrint(x, y, pHelicopterEtaStrings[2]);
 	INT16 const n_unsafe_sectors = GetNumUnSafeSectorsInPath();
-	sString = ST::format("{}", n_unsafe_sectors);
-	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, y, sString);
+	MPrint(x, y, n_unsafe_sectors, alignment);
 	y += h;
 
 	// calculate the cost of the trip based on the number of safe and unsafe sectors it will pass through
 	MPrint(x, y, pHelicopterEtaStrings[3]);
 	UINT32 const uiTripCost = n_safe_sectors * COST_AIRSPACE_SAFE + n_unsafe_sectors * COST_AIRSPACE_UNSAFE;
-	sString = SPrintMoney(uiTripCost);
-	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, y, sString);
+	MPrint(x, y, SPrintMoney(uiTripCost), alignment);
 	y += h;
 
 	MPrint(x, y, pHelicopterEtaStrings[4]);
@@ -2238,15 +2223,12 @@ void DisplayDistancesForHelicopter()
 	// add travel time for any prior path segments (stored in the helicopter's mercpath, but waypoints aren't built)
 	iTime += GetPathTravelTimeDuringPlotting(GetHelicopter().pMercPath);
 	sString = ST::format("{}{} {}{}", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1]);
-	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, y, sString);
+	MPrint(x, y, sString, alignment);
 	y += h;
 
 	// show # of passengers aboard the chopper
 	MPrint(x, y, pHelicopterEtaStrings[6]);
-	sString = ST::format("{}", GetNumberInVehicle(GetHelicopter()));
-	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, y, sString);
+	MPrint(x, y, GetNumberInVehicle(GetHelicopter()), alignment);
 
 	InvalidateRegion(MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition, MAP_HELICOPTER_ETA_POPUP_X + MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, sOldYPosition + MAP_HELICOPTER_ETA_POPUP_HEIGHT);
 }
@@ -2334,7 +2316,7 @@ void DisplayPositionOfHelicopter( void )
 			BltVideoObject(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
 			SetFontAttributes(MAP_MVT_ICON_FONT, FONT_WHITE);
-			MPrint(x + 5, y + 1, ST::format("{}", GetNumberInVehicle(v)));
+			MPrint(x + 5, y + 1, GetNumberInVehicle(v));
 
 			InvalidateRegion( x, y, x + HELI_ICON_WIDTH, y + HELI_ICON_HEIGHT );
 

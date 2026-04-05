@@ -3,7 +3,6 @@
 #include "Types.h"
 #include "Font.h"
 #include "Debug.h"
-#include "Object_Cache.h"
 #include "VSurface.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
@@ -284,6 +283,12 @@ void MPrint(int const x, int const y, ST::string const& text, IAlignment const& 
 	auto const codepoints{ text.to_utf32() };
 	auto const alignedPosition{ alignment(x, y, codepoints, FontDefault) };
 	MPrint(alignedPosition.x, alignedPosition.y, codepoints);
+}
+
+
+void MPrint(int x, int y, int64_t value, IAlignment const& alignment)
+{
+	MPrint(x, y, ST::string::from_int(value), alignment);
 }
 
 

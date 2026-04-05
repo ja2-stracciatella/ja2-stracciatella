@@ -425,11 +425,7 @@ static void DrawHistoryRecordsText(void)
 		const INT32 y = RECORD_Y + entry_count * BOX_HEIGHT + 3;
 
 		// get and write the date
-		sString = ST::format("{}", h->uiDate / (24 * 60));
-		INT16 usX;
-		INT16 usY;
-		FindFontCenterCoordinates(RECORD_DATE_X + 5, 0, RECORD_DATE_WIDTH, 0, sString, HISTORY_TEXT_FONT, &usX, &usY);
-		MPrint(usX, y, sString);
+		MPrint(RECORD_DATE_X + 5, y, h->uiDate / (24 * 60), CenterAlign(RECORD_DATE_WIDTH));
 
 		if (!h->sSector.IsValid())
 		{
