@@ -23,7 +23,7 @@
 
 struct IAlignment
 {
-	virtual SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const = 0;
+	virtual SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const { return { x, y }; }
 	virtual ~IAlignment() = default;
 };
 
@@ -63,7 +63,7 @@ struct HCenterVCenterAlign : public IAlignment
 	SDL_Point operator()(int x, int y, ST::utf32_buffer const&, SGPFont) const override;
 };
 
-
+inline IAlignment const DefaultAlignment;
 extern SGPFont FontDefault;
 
 void SetFontColors(UINT16 usColors);
@@ -89,13 +89,10 @@ inline void MPrintBuffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT
 {
 	MPrintBuffer(pDestBuf, uiDestPitchBYTES, x, y, str.to_utf32());
 }
-void MPrint(INT32 x, INT32 y, const ST::utf32_buffer& codepoints);
-inline void MPrint(INT32 x, INT32 y, const ST::string& str)
-{
-	MPrint(x, y, str.to_utf32());
-}
 
-void MPrint(int x, int y, ST::string const& text, IAlignment const& alignment);
+void MPrint(INT32 x, INT32 y, const ST::utf32_buffer& codepoints);
+void MPrint(int x, int y, ST::string const& text, IAlignment const& alignment = DefaultAlignment);
+void MPrint(int x, int y, int64_t value, IAlignment const& alignment = DefaultAlignment);
 
 /* Sets the destination buffer for printing to and the clipping rectangle. */
 void SetFontDestBuffer(SGPVSurface* dst, INT32 x1, INT32 y1, INT32 x2, INT32 y2);

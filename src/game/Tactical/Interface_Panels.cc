@@ -1170,7 +1170,7 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 	SetFontAttributes(TINYFONT1, foreground);
 
 	RestoreExternBackgroundRect(x, y, w, h);
-	MPrint(x, y, ST::string::from_int(ap), HCenterVCenterAlign(w, h));
+	MPrint(x, y, ap, HCenterVCenterAlign(w, h));
 }
 
 
