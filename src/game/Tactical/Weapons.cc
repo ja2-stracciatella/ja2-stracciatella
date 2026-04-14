@@ -2951,6 +2951,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 						if ( bStatLoss > 0 )
 						{
 							pTarget->bWisdom -= bStatLoss;
+							pTarget->bWisdomDamage = bStatLoss;
 
 							if (pTarget->ubProfile != NO_PROFILE)
 							{
@@ -2990,6 +2991,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 							if ( bStatLoss > 0 )
 							{
 								pTarget->bDexterity -= bStatLoss;
+								pTarget->bDexterity = bStatLoss;
 
 								if (pTarget->ubProfile != NO_PROFILE)
 								{
@@ -3023,6 +3025,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 							if ( bStatLoss > 0 )
 							{
 								pTarget->bStrength -= bStatLoss;
+								pTarget->bStrengthDamage = bStatLoss;
 
 								if (pTarget->ubProfile != NO_PROFILE)
 								{
@@ -3056,6 +3059,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 						if ( bStatLoss > 0 )
 						{
 							pTarget->bAgility -= bStatLoss;
+							pTarget->bAgilityDamage = bStatLoss;
 
 							if (pTarget->ubProfile != NO_PROFILE)
 							{
