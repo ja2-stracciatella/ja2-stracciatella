@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include "Logger.h"
+
 static UINT32 MercChecksum(SOLDIERTYPE const& s)
 {
 	UINT32 sum = 1;
@@ -136,7 +138,9 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_U8(d, s->ubSkillTrait2)
 	EXTR_SKIP(d, 6)
 	EXTR_I8(d, s->bDexterity)
+	EXTR_I8(d, s->bDexterityDamage)
 	EXTR_I8(d, s->bWisdom)
+	EXTR_I8(d, s->bWisdomDamage)
 	EXTR_SKIP_I16(d)
 	EXTR_SOLDIER(d, s->attacker)
 	EXTR_SOLDIER(d, s->previous_attacker)
@@ -156,10 +160,12 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_U16(d, s->usAniFrame)
 	EXTR_I16(d, s->sAniDelay)
 	EXTR_I8(d, s->bAgility)
+	EXTR_I8(d, s->bAgilityDamage)
 	EXTR_SKIP(d, 1)
 	EXTR_I16(d, s->sDelayedMovementCauseGridNo)
 	EXTR_I16(d, s->sReservedMovementGridNo)
 	EXTR_I8(d, s->bStrength)
+	EXTR_I8(d, s->bStrengthDamage)
 	EXTR_SKIP(d, 1)
 	EXTR_I16(d, s->sTargetGridNo)
 	EXTR_I8(d, s->bTargetLevel)
@@ -547,11 +553,11 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_SKIP(d, 39)
 	if(stracLinuxFormat)
 	{
-		Assert(d.getConsumed() == 2352);
+		Assert(d.getConsumed() == 2358);
 	}
 	else
 	{
-		Assert(d.getConsumed() == 2328);
+		Assert(d.getConsumed() == 2332);
 	}
 
 	if (checksum != MercChecksum(*s))
@@ -566,7 +572,6 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT16 usPathDataSize;
 	UINT16 usPathIndex;
-
 	DataWriter d{data};
 	INJ_U8(d, s->ubID)
 	INJ_SKIP(d, 1)
@@ -647,7 +652,9 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_U8(d, s->ubSkillTrait2)
 	INJ_SKIP(d, 6)
 	INJ_I8(d, s->bDexterity)
+	INJ_I8(d, s->bDexterityDamage)
 	INJ_I8(d, s->bWisdom)
+	INJ_I8(d, s->bWisdomDamage)
 	INJ_SKIP_I16(d)
 	INJ_SOLDIER(d, s->attacker)
 	INJ_SOLDIER(d, s->previous_attacker)
@@ -667,10 +674,12 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_U16(d, s->usAniFrame)
 	INJ_I16(d, s->sAniDelay)
 	INJ_I8(d, s->bAgility)
+	INJ_I8(d, s->bAgilityDamage)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, s->sDelayedMovementCauseGridNo)
 	INJ_I16(d, s->sReservedMovementGridNo)
 	INJ_I8(d, s->bStrength)
+	INJ_I8(d, s->bStrengthDamage)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, s->sTargetGridNo)
 	INJ_I8(d, s->bTargetLevel)
@@ -1055,5 +1064,5 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I32(d, s->uiTimeSinceLastBleedGrunt)
 	INJ_SOLDIER(d, s->next_to_previous_attacker)
 	INJ_SKIP(d, 39)
-	Assert(d.getConsumed() == 2328);
+	Assert(d.getConsumed() == 2332);
 }

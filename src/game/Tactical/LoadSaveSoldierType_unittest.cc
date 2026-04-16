@@ -11,6 +11,7 @@
 
 #include <cstring>
 #include <memory>
+#include "Logger.h"
 
 #ifndef NO_MAGICENUM_LIB
 #include <magic_enum/magic_enum.hpp>
@@ -42,14 +43,18 @@ protected:
 		testSoldier.bLife = 85;
 		testSoldier.bLifeMax = 85;
 		testSoldier.bAgility = 75;
+		testSoldier.bAgilityDamage = 5;
 		testSoldier.bDexterity = 80;
+		testSoldier.bDexterityDamage = 60;
 		testSoldier.bStrength = 70;
+		testSoldier.bStrengthDamage = 30;
 		testSoldier.bMarksmanship = 90;
 		testSoldier.bMedical = 60;
 		testSoldier.bMechanical = 55;
 		testSoldier.bExplosive = 65;
 		testSoldier.bLeadership = 50;
 		testSoldier.bWisdom = 45;
+		testSoldier.bWisdomDamage = 10;
 		testSoldier.bExpLevel = 3;
 		
 		// Side and team
@@ -189,14 +194,18 @@ TEST_F(LoadSaveSoldierTypeTestImpl, RoundTripSerialization)
 	EXPECT_EQ(extractedSoldier.bLife, testSoldier.bLife);
 	EXPECT_EQ(extractedSoldier.bLifeMax, testSoldier.bLifeMax);
 	EXPECT_EQ(extractedSoldier.bAgility, testSoldier.bAgility);
+	EXPECT_EQ(extractedSoldier.bAgilityDamage, testSoldier.bAgilityDamage);
 	EXPECT_EQ(extractedSoldier.bDexterity, testSoldier.bDexterity);
+	EXPECT_EQ(extractedSoldier.bDexterityDamage, testSoldier.bDexterityDamage);
 	EXPECT_EQ(extractedSoldier.bStrength, testSoldier.bStrength);
+	EXPECT_EQ(extractedSoldier.bStrengthDamage, testSoldier.bStrengthDamage);
 	EXPECT_EQ(extractedSoldier.bMarksmanship, testSoldier.bMarksmanship);
 	EXPECT_EQ(extractedSoldier.bMedical, testSoldier.bMedical);
 	EXPECT_EQ(extractedSoldier.bMechanical, testSoldier.bMechanical);
 	EXPECT_EQ(extractedSoldier.bExplosive, testSoldier.bExplosive);
 	EXPECT_EQ(extractedSoldier.bLeadership, testSoldier.bLeadership);
 	EXPECT_EQ(extractedSoldier.bWisdom, testSoldier.bWisdom);
+	EXPECT_EQ(extractedSoldier.bWisdomDamage, testSoldier.bWisdomDamage);
 	EXPECT_EQ(extractedSoldier.bExpLevel, testSoldier.bExpLevel);
 	
 	// Verify side and team

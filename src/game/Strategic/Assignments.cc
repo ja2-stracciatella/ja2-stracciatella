@@ -81,6 +81,7 @@
 #include <iterator>
 #include <string_theory/format>
 #include <string_theory/string>
+#include <array>
 
 
 // various reason an assignment can be aborted before completion
@@ -193,8 +194,8 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 // number of pts needed for each point below OKLIFE
 #define POINT_COST_PER_HEALTH_BELOW_OKLIFE 2
 
-// divisor for rate of damaged stat healing compard to health healing
-#define STAT_HEALING_RATE_DIVISOR 10
+// divisor for rate of damaged stat healing compared to health healing
+#define STAT_HEALING_RATE_DIVISOR 3
 
 // how many points of healing each hospital patients gains per hour in the hospital
 #define HOSPITAL_HEALING_RATE		5				// a top merc doctor can heal about 4 pts/hour maximum, but that's spread among patients!
@@ -570,7 +571,13 @@ static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 {
 	return
 		s->bLife > 0 &&
-		s->bLife != s->bLifeMax &&
+		(
+		s->bLife != s->bLifeMax ||
+		s->bAgilityDamage > 0 ||
+		s->bDexterityDamage > 0 ||
+		s->bStrengthDamage > 0 ||
+		s->bWisdomDamage > 0
+		) &&
 		AreAssignmentConditionsMet(*s, AC_UNCONSCIOUS | AC_EPC | AC_UNDERGROUND);
 }
 
@@ -1204,9 +1211,11 @@ static void UpdatePatientsWhoAreDoneHealing()
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.bAssignment != PATIENT) continue;
-		if (s.bLife != s.bLifeMax)    continue;
-		// Patient who doesn't need healing
-		AssignmentDone(&s, TRUE, TRUE);
+		if (s.bLife == s.bLifeMax && s.bAgilityDamage == 0 && s.bDexterityDamage == 0 && s.bStrengthDamage == 0 && s.bWisdomDamage == 0)
+		{
+			// Patient who doesn't need healing
+			AssignmentDone(&s, TRUE, TRUE);
+		}		
 	}
 }
 
@@ -1351,17 +1360,30 @@ static UINT8 GetMinHealingSkillNeeded(SOLDIERTYPE const* const patient)
 // can this soldier be healed by this doctor?
 static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE const* const patient, SOLDIERTYPE const* const doctor, BOOLEAN const fThisHour, BOOLEAN const fSkipKitCheck, BOOLEAN const fSkipSkillCheck)
 {
-	bool fStatsDamaged = pPatient->bAgilityDamage == 0 && bPatient->bDexterityDamage == 0 && bPatient->bStrengthDamage == 0 && bPatient->bWisdomDamage == 0;
+	bool fStatsDamaged = patient->bAgilityDamage > 0 || patient->bDexterityDamage > 0 || patient->bStrengthDamage > 0 || patient->bWisdomDamage > 0;
 	if (patient->bAssignment != PATIENT && patient->bAssignment != DOCTOR)        return FALSE;
 	if (patient->bLife == 0)                                                      return FALSE;
-	if (fStatsDamaged)							      return FALSE;
-	if (patient->bLife == patient->bLifeMax)                                      return FALSE;
+	if (patient->bLife == patient->bLifeMax && !fStatsDamaged)		      return FALSE;
 	if (fThisHour && !EnoughTimeOnAssignment(*patient))                           return FALSE;
 	if (patient->sSector != doctor->sSector)                                      return FALSE;
 	if (patient->fBetweenSectors)                                                 return FALSE;
 	if (!fSkipSkillCheck && doctor->bMedical < GetMinHealingSkillNeeded(patient)) return FALSE;
 	if (!fSkipKitCheck && FindObj(doctor, MEDICKIT) == NO_SLOT)                   return FALSE;
 	return TRUE;
+}
+
+// heal a stat (pDamagedStat is the stat's damage e.g. AgilityDamage, pStatToHeal is the corresponding stat to heal e.g. Agility)
+static void HealStat(INT8& pDamagedStat, INT8& pStatToHeal, INT8 bStatAmountHealed)
+{
+	if (bStatAmountHealed > pDamagedStat)
+	{
+		bStatAmountHealed = pDamagedStat;
+	}
+	if (pDamagedStat <= MAX_STAT_VALUE)
+	{
+		pDamagedStat -= bStatAmountHealed;
+		pStatToHeal += bStatAmountHealed;
+	}
 }
 
 
@@ -1467,10 +1489,23 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 	}
 
 	// heal stats that are damaged
-	if (pPatient -> bAgilityDamage > 0 || bPatient -> bDexterityDamage > 0 || bPatient -> bStrengthDamage > 0 || bPatient -> bWisdomDamage > 0)
+	if (pPatient->bAgilityDamage > 0 ||
+		pPatient->bDexterityDamage > 0 ||
+		pPatient->bStrengthDamage > 0 ||
+		pPatient->bWisdomDamage > 0)
 	{
-		bPointsToUse = STAT_HEALING_RATE_DIVISOR * std:max(pPatient -> bAgilityDamage, pPatient -> bDexterityDamage, pPatient -> bStrengthDamage, pPatient -> bWisdomDamage);
+		INT8 damagedStats[] =
+		{
+			pPatient->bAgilityDamage,
+			pPatient->bDexterityDamage,
+			pPatient->bStrengthDamage,
+			pPatient->bWisdomDamage
+		};
+		// find the highest damaged stat and attempt to heal that
+		INT8* pHighestDamagedStat = std::max_element(std::begin(damagedStats), std::end(damagedStats));
+		BYTE damagedStatIndex = std::distance(std::begin(damagedStats), pHighestDamagedStat);
 
+		bPointsToUse = *pHighestDamagedStat;
 		// if guy is hurt more than points we have...heal only what we have
 		if( bPointsToUse > usHealingPtsLeft )
 		{
@@ -1484,59 +1519,32 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 			OBJECTTYPE& o = pDoctor->inv[bPocket];
 			if (IsMedicalKitItem(&o))
 			{
-				// ok, we have med kit in this pocket, use it  (use only half if it's worth double)
-				bPointsUsed   = UseKitPoints(o, bPointsToUse, *pDoctor);
+				// healing stats requires more points
+				bPointsUsed = UseKitPoints(o, bPointsToUse * STAT_HEALING_RATE_DIVISOR, *pDoctor);
 				bPointsHealed = bPointsUsed;
 
 				bPointsToUse -= bPointsHealed;
 				usHealingPtsLeft -= bPointsHealed;
 
-				pPatient -> bLife += bPointsHealed;
-
-				// heal stats that are damaged
 				bStatAmountHealed = (bPointsHealed / STAT_HEALING_RATE_DIVISOR);
-				if (pPatient -> bAgilityDamage > 0)
+				switch (damagedStatIndex)
 				{
-					if (bStatAmountHealed > pPatient -> bAgilityDamage)
-					{
-						bStatAmountHealed = pPatient -> bAgilityDamage;
-					}
-					pPatient -> bAgilityDamage -= bStatAmountHealed;
-					pPatient -> bAgility += bStatAmountHealed;
-				}
-
-				if (pPatient -> bDexterityDamage > 0)
-				{
-					if (bStatAmountHealed > pPatient -> bDexterityDamage)
-					{
-						bStatAmountHealed = pPatient -> bDexterityDamage;
-					}
-					pPatient -> bDexterityDamage -= bStatAmountHealed;
-					pPatient -> bDexterity += bStatAmountHealed;
-				}
-
-				if (pPatient -> bStrengthDamage > 0)
-				{
-					if (bStatAmountHealed > pPatient -> bStrengthDamage)
-					{
-						bStatAmountHealed = pPatient -> bStrengthDamage;
-					}
-					pPatient -> bStrengthDamage -= bStatAmountHealed;
-					pPatient -> bStrength += bStatAmountHealed;
-				}
-
-				if (pPatient -> bWisdomDamage > 0)
-				{
-					if (bStatAmountHealed > pPatient -> bWisdomDamage)
-					{
-						bStatAmountHealed = pPatient -> bWisdomDamage;
-					}
-					pPatient -> bWisdomDamage -= bStatAmountHealed;
-					pPatient -> bWisdom += bStatAmountHealed;
+				case 0:
+					HealStat(pPatient->bAgilityDamage, pPatient->bAgility, bStatAmountHealed);
+					break;
+				case 1:
+					HealStat(pPatient->bDexterityDamage, pPatient->bDexterity, bStatAmountHealed);
+					break;
+				case 2:
+					HealStat(pPatient->bStrengthDamage, pPatient->bStrength, bStatAmountHealed);
+					break;
+				case 3:
+					HealStat(pPatient->bWisdomDamage, pPatient->bWisdom, bStatAmountHealed);
+					break;
 				}
 
 				// if we're done all we're supposed to, or the guy's fully healed, bail
-				if ( ( bPointsToUse <= 0 ) || (pPatient -> bAgilityDamage == 0 && bPatient -> bDexterityDamage == 0 && bPatient -> bStrengthDamage == 0 && bPatient -> bWisdomDamage == 0 ))
+				if ( ( bPointsToUse <= 0 ) || (pPatient -> bAgilityDamage == 0 && pPatient -> bDexterityDamage == 0 && pPatient -> bStrengthDamage == 0 && pPatient -> bWisdomDamage == 0 ))
 				{
 					break;
 				}
@@ -1546,7 +1554,11 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 
 
 	// if this patient is fully healed
-	if( pPatient->bLife == pPatient->bLifeMax && pPatient -> bAgilityDamage == 0 && bPatient -> bDexterityDamage == 0 && bPatient -> bStrengthDamage == 0 && bPatient -> bWisdomDamage == 0 )
+	if( pPatient->bLife == pPatient->bLifeMax &&
+		pPatient -> bAgilityDamage == 0 &&
+		pPatient -> bDexterityDamage == 0 &&
+		pPatient -> bStrengthDamage == 0 &&
+		pPatient -> bWisdomDamage == 0 )
 	{
 		// don't count unused full healing points as being used
 		usTotalHundredthsUsed -= (100 * usHealingPtsLeft);
