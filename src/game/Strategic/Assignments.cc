@@ -565,19 +565,24 @@ static BOOLEAN CanCharacterRepair(SOLDIERTYPE const* const pSoldier)
 	return ( TRUE );
 }
 
+static BOOLEAN CanStatsBeHealed(const SOLDIERTYPE* const s)
+{
+	return gamepolicy(enable_stat_healing) &&
+		(
+			s->bAgilityDamage > 0 ||
+			s->bDexterityDamage > 0 ||
+			s->bStrengthDamage > 0 ||
+			s->bWisdomDamage > 0
+		);
+}
+
 
 // can character be set to patient?
 static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 {
 	return
 		s->bLife > 0 &&
-		(
-		s->bLife != s->bLifeMax ||
-		s->bAgilityDamage > 0 ||
-		s->bDexterityDamage > 0 ||
-		s->bStrengthDamage > 0 ||
-		s->bWisdomDamage > 0
-		) &&
+		(s->bLife != s->bLifeMax || CanStatsBeHealed(s)) &&
 		AreAssignmentConditionsMet(*s, AC_UNCONSCIOUS | AC_EPC | AC_UNDERGROUND);
 }
 
@@ -1211,7 +1216,7 @@ static void UpdatePatientsWhoAreDoneHealing()
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.bAssignment != PATIENT) continue;
-		if (s.bLife == s.bLifeMax && s.bAgilityDamage == 0 && s.bDexterityDamage == 0 && s.bStrengthDamage == 0 && s.bWisdomDamage == 0)
+		if (s.bLife == s.bLifeMax && !CanStatsBeHealed(i))
 		{
 			// Patient who doesn't need healing
 			AssignmentDone(&s, TRUE, TRUE);
@@ -1360,10 +1365,9 @@ static UINT8 GetMinHealingSkillNeeded(SOLDIERTYPE const* const patient)
 // can this soldier be healed by this doctor?
 static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE const* const patient, SOLDIERTYPE const* const doctor, BOOLEAN const fThisHour, BOOLEAN const fSkipKitCheck, BOOLEAN const fSkipSkillCheck)
 {
-	bool fStatsDamaged = patient->bAgilityDamage > 0 || patient->bDexterityDamage > 0 || patient->bStrengthDamage > 0 || patient->bWisdomDamage > 0;
 	if (patient->bAssignment != PATIENT && patient->bAssignment != DOCTOR)        return FALSE;
 	if (patient->bLife == 0)                                                      return FALSE;
-	if (patient->bLife == patient->bLifeMax && !fStatsDamaged)		      return FALSE;
+	if (patient->bLife == patient->bLifeMax && !CanStatsBeHealed(patient))		  return FALSE;
 	if (fThisHour && !EnoughTimeOnAssignment(*patient))                           return FALSE;
 	if (patient->sSector != doctor->sSector)                                      return FALSE;
 	if (patient->fBetweenSectors)                                                 return FALSE;
@@ -1487,12 +1491,8 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 			}
 		}
 	}
-
 	// heal stats that are damaged
-	if (pPatient->bAgilityDamage > 0 ||
-		pPatient->bDexterityDamage > 0 ||
-		pPatient->bStrengthDamage > 0 ||
-		pPatient->bWisdomDamage > 0)
+	if (CanStatsBeHealed(pPatient))
 	{
 		INT8 damagedStats[] =
 		{
@@ -1544,7 +1544,7 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 				}
 
 				// if we're done all we're supposed to, or the guy's fully healed, bail
-				if ( ( bPointsToUse <= 0 ) || (pPatient -> bAgilityDamage == 0 && pPatient -> bDexterityDamage == 0 && pPatient -> bStrengthDamage == 0 && pPatient -> bWisdomDamage == 0 ))
+				if ( ( bPointsToUse <= 0 ) || !CanStatsBeHealed(pPatient))
 				{
 					break;
 				}
@@ -1553,12 +1553,9 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 	}
 
 
+
 	// if this patient is fully healed
-	if( pPatient->bLife == pPatient->bLifeMax &&
-		pPatient -> bAgilityDamage == 0 &&
-		pPatient -> bDexterityDamage == 0 &&
-		pPatient -> bStrengthDamage == 0 &&
-		pPatient -> bWisdomDamage == 0 )
+	if( pPatient->bLife == pPatient->bLifeMax && !CanStatsBeHealed(pPatient) )
 	{
 		// don't count unused full healing points as being used
 		usTotalHundredthsUsed -= (100 * usHealingPtsLeft);
