@@ -1318,8 +1318,8 @@ static void SaveSoldierStructure(HWFILE const f)
 		if (!s.bActive) continue;
 
 		// Save the soldier structure
-		BYTE data[2332];
-		std::fill_n(data, 2332, 0);
+		BYTE data[2328];
+		std::fill_n(data, 2328, 0);
 		InjectSoldierType(data, &s);
 		NewJA2EncryptedFileWrite(f, data, sizeof(data));
 
