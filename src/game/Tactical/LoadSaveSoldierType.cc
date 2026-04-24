@@ -47,6 +47,13 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	*s = SOLDIERTYPE{};
 
 	DataReader d{data};
+
+	auto ExtractStatDamage = [&](INT8 & whichDamage)
+	{
+		INT8 val = d.read<INT8>();
+		whichDamage = uiSavedGameVersion >= 103 ? val : 0;
+	};
+
 	EXTR_U8(d, s->ubID)
 	EXTR_SKIP(d, 1)
 	EXTR_U8(d, s->ubBodyType)
@@ -131,10 +138,10 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	s->UpdateCounter = {};
 	s->DamageCounter = {};
 	EXTR_SKIP_I32(d)
-	EXTR_I8(d, s->bAgilityDamage)
-	EXTR_I8(d, s->bDexterityDamage)
-	EXTR_I8(d, s->bStrengthDamage)
-	EXTR_I8(d, s->bWisdomDamage)
+	ExtractStatDamage(s->bAgilityDamage);
+	ExtractStatDamage(s->bDexterityDamage);
+	ExtractStatDamage(s->bStrengthDamage);
+	ExtractStatDamage(s->bWisdomDamage);
 	EXTR_SKIP(d, 8)
 	s->AICounter = {};
 	s->FadeCounter = {};

@@ -177,7 +177,7 @@ TEST_F(LoadSaveSoldierTypeTestImpl, RoundTripSerialization)
 	
 	// Extract the soldier data
 	SOLDIERTYPE extractedSoldier;
-	ExtractSoldierType(buffer.get(), &extractedSoldier, false, 0);
+	ExtractSoldierType(buffer.get(), &extractedSoldier, false, 103);
 	
 	// Verify basic identification
 	EXPECT_EQ(extractedSoldier.ubID, testSoldier.ubID);
