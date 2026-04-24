@@ -91,6 +91,8 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	unhired_merc_deaths_medium = gp.getOptionalInt("unhired_merc_deaths_medium", 2);
 	unhired_merc_deaths_hard = gp.getOptionalInt("unhired_merc_deaths_hard", 3);
 
+	enable_stat_healing = gp.getOptionalBool("enable_stat_healing", false);
+
 	auto campaign = gp["campaign"].toObject();
 	ST::string sector_string = campaign.getOptionalString("start_sector");
 	start_sector = SGPSector::FromShortString(!sector_string.empty() ? sector_string : "A9").AsByte();

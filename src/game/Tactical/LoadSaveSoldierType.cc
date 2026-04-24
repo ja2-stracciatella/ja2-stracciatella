@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include "Logger.h"
+
 static UINT32 MercChecksum(SOLDIERTYPE const& s)
 {
 	UINT32 sum = 1;
@@ -45,6 +47,13 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	*s = SOLDIERTYPE{};
 
 	DataReader d{data};
+
+	auto ExtractStatDamage = [&](INT8 & whichDamage)
+	{
+		INT8 val = d.read<INT8>();
+		whichDamage = uiSavedGameVersion >= 103 ? val : 0;
+	};
+
 	EXTR_U8(d, s->ubID)
 	EXTR_SKIP(d, 1)
 	EXTR_U8(d, s->ubBodyType)
@@ -129,7 +138,11 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	s->UpdateCounter = {};
 	s->DamageCounter = {};
 	EXTR_SKIP_I32(d)
-	EXTR_SKIP(d, 12)
+	ExtractStatDamage(s->bAgilityDamage);
+	ExtractStatDamage(s->bDexterityDamage);
+	ExtractStatDamage(s->bStrengthDamage);
+	ExtractStatDamage(s->bWisdomDamage);
+	EXTR_SKIP(d, 8)
 	s->AICounter = {};
 	s->FadeCounter = {};
 	EXTR_U8(d, s->ubSkillTrait1)
@@ -566,7 +579,6 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT16 usPathDataSize;
 	UINT16 usPathIndex;
-
 	DataWriter d{data};
 	INJ_U8(d, s->ubID)
 	INJ_SKIP(d, 1)
@@ -640,7 +652,10 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I32(d, 0)
 	INJ_I32(d, 0)
 	INJ_SKIP_I32(d)
-	INJ_SKIP(d, 4)
+	INJ_I8(d, s->bAgilityDamage)
+	INJ_I8(d, s->bDexterityDamage)
+	INJ_I8(d, s->bStrengthDamage)
+	INJ_I8(d, s->bWisdomDamage)
 	INJ_I32(d, 0)
 	INJ_I32(d, 0)
 	INJ_U8(d, s->ubSkillTrait1)

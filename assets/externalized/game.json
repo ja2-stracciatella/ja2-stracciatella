@@ -224,6 +224,8 @@
   "unhired_merc_deaths_medium": 2,
   "unhired_merc_deaths_hard": 3,
 
+  "enable_stat_healing": false,
+
   //  Settings for newly started campaigns.
   //  Most probably you do not need to change these unless you are running a full conversion mod.
   "campaign": {

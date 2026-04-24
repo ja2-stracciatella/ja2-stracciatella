@@ -411,7 +411,9 @@ struct SOLDIERTYPE
 	UINT8 ubSkillTrait2;
 
 	INT8 bDexterity; // dexterity (hand coord) value
+	INT8 bDexterityDamage; // how much dexterity has been damaged by crits
 	INT8 bWisdom;
+	INT8 bWisdomDamage; // how much wisdom has been damaged by crits
 	SOLDIERTYPE* attacker;
 	SOLDIERTYPE* previous_attacker;
 	SOLDIERTYPE* next_to_previous_attacker;
@@ -437,10 +439,12 @@ struct SOLDIERTYPE
 
 	// MOVEMENT TO NEXT TILE HANDLING STUFF
 	INT8 bAgility; // agility (speed) value
+	INT8 bAgilityDamage; // how much agility has been damaged by crits
 	INT16 sDelayedMovementCauseGridNo;
 	INT16 sReservedMovementGridNo;
 
 	INT8 bStrength;
+	INT8 bStrengthDamage; // how much strength has been damaged by crits
 
 	// Weapon Stuff
 	INT16 sTargetGridNo;

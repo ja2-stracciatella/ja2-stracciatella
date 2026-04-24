@@ -475,6 +475,15 @@ properties:
       Max number of unhired merc deaths on hard difficulty
 
       Vanilla setting: `3`
+  
+  enable_stat_healing:
+    type: boolean
+    title: Enable stat healing
+    description: |
+      Enable ability to heal stat loss from critical hits with doctoring.
+
+      Vanilla setting: `false`
+
   campaign:
     type: object
     properties:
@@ -534,4 +543,5 @@ required:
   - unhired_merc_deaths_easy
   - unhired_merc_deaths_medium
   - unhired_merc_deaths_hard
+  - enable_stat_healing
   - campaign
