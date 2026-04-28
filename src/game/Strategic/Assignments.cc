@@ -1531,15 +1531,35 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 				{
 				case 0:
 					HealStat(pPatient->bAgilityDamage, pPatient->bAgility, bStatAmountHealed);
+					if (pPatient->ubProfile != NO_PROFILE)
+					{
+						gMercProfiles[ pPatient->ubProfile ].bAgility = pPatient->bAgility;
+						gMercProfiles[ pPatient->ubProfile ].bAgilityDelta += bStatAmountHealed;
+					}
 					break;
 				case 1:
 					HealStat(pPatient->bDexterityDamage, pPatient->bDexterity, bStatAmountHealed);
+					if (pPatient->ubProfile != NO_PROFILE)
+					{
+						gMercProfiles[ pPatient->ubProfile ].bDexterity = pPatient->bDexterity;
+						gMercProfiles[ pPatient->ubProfile ].bDexterityDelta += bStatAmountHealed;
+					}
 					break;
 				case 2:
 					HealStat(pPatient->bStrengthDamage, pPatient->bStrength, bStatAmountHealed);
+					if (pPatient->ubProfile != NO_PROFILE)
+					{
+						gMercProfiles[ pPatient->ubProfile ].bStrength = pPatient->bStrength;
+						gMercProfiles[ pPatient->ubProfile ].bStrengthDelta += bStatAmountHealed;
+					}
 					break;
 				case 3:
 					HealStat(pPatient->bWisdomDamage, pPatient->bWisdom, bStatAmountHealed);
+					if (pPatient->ubProfile != NO_PROFILE)
+					{
+						gMercProfiles[ pPatient->ubProfile ].bWisdom = pPatient->bWisdom;
+						gMercProfiles[ pPatient->ubProfile ].bWisdomDelta += bStatAmountHealed;
+					}
 					break;
 				}
 
