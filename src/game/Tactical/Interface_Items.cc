@@ -4567,6 +4567,7 @@ void RenderItemPickupMenu()
 	SetFont(ITEMDESC_FONT);
 	SetFontBackground(FONT_MCOLOR_BLACK);
 	SetFontShadow(ITEMDESC_FONTSHADOW2);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	{
 		SGPVSurface::Lock l(FRAME_BUFFER);
@@ -4595,13 +4596,7 @@ void RenderItemPickupMenu()
 			if (o.ubNumberOfObjects > 1)
 			{
 				SetFontAttributes(ITEM_FONT, FONT_GRAY4);
-
-				pStr = ST::format("{}", o.ubNumberOfObjects);
-
-				INT16 sFontX;
-				INT16 sFontY;
-				FindFontRightCoordinates(sX - 4, sY + 14, 42, 1, pStr, ITEM_FONT, &sFontX, &sFontY);
-				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
+				MPrint(sX - 4, sY + 14, o.ubNumberOfObjects, HRightVCenterAlign(42, 1));
 				SetFont(ITEMDESC_FONT);
 			}
 
@@ -4614,7 +4609,7 @@ void RenderItemPickupMenu()
 				UINT16         const uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
 				INT16          const sNewX          = sX + 43 - uiStringLength - 4;
 				INT16          const sNewY          = sY + 2;
-				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
+				MPrint(sNewX, sNewY, AttachMarker);
 			}
 
 			if (menu.bCurSelect == cnt + menu.ubScrollAnchor)
@@ -4638,12 +4633,9 @@ void RenderItemPickupMenu()
 			{
 				pStr = GCM->getItem(o.usItem)->getShortName();
 			}
-			INT16 sFontX;
-			INT16 sFontY;
 			INT16 const x = ITEMPICK_TEXT_X + menu.sX;
 			INT16 const y = ITEMPICK_TEXT_Y + menu.sY + ITEMPICK_TEXT_YSPACE * cnt;
-			FindFontCenterCoordinates(x, y, ITEMPICK_TEXT_WIDTH, 1, pStr, ITEMDESC_FONT, &sFontX, &sFontY);
-			MPrintBuffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
+			MPrint(x, y, pStr, HCenterVCenterAlign(ITEMPICK_TEXT_WIDTH, 1));
 
 			sY += ITEMPICK_GRAPHIC_YSPACE;
 		}

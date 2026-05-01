@@ -1164,12 +1164,8 @@ zlevel_onroof:
 
 							UINT8 const foreground = gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE;
 							SetFontAttributes(TINYFONT1, foreground);
-							SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
-							ST::string buf = ST::format("{}", pNode->uiAPCost);
-							INT16 sX;
-							INT16 sY;
-							FindFontCenterCoordinates(sXPos, sYPos, 1, 1, buf, TINYFONT1, &sX, &sY);
-							MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
+							SetFontDestBuffer(FRAME_BUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
+							MPrint(sXPos, sYPos, pNode->uiAPCost, HCenterVCenterAlign(1, 1));
 							SetFontDestBuffer(FRAME_BUFFER);
 						}
 						else if (uiLevelNodeFlags & LEVELNODE_ITEM)
@@ -3053,10 +3049,6 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 	INT16 sAnchorPosX_S = sStartPointX_S;
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
-	UINT32  const uiDestPitchBYTES = l.Pitch();
-
 	BOOLEAN bXOddFlag = FALSE;
 	do
 	{
@@ -3091,7 +3083,7 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 						case 3: SetFontForeground(FONT_LTBLUE);  break;
 						case 4: SetFontForeground(FONT_LTGREEN); break;
 					}
-					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", gubWorldRoomInfo[usTileIndex]));
+					MPrint(sX, sY, gubWorldRoomInfo[usTileIndex]);
 					SetFontDestBuffer(FRAME_BUFFER);
 				}
 			}
@@ -3158,7 +3150,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 					SetFont(SMALLCOMPFONT);
 					SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, gsVIEWPORT_END_Y);
 					SetFontForeground(FONT_GRAY3);
-					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", gubFOVDebugInfoInfo[usTileIndex]));
+					MPrint(sX, sY, gubFOVDebugInfoInfo[usTileIndex]);
 					SetFontDestBuffer(FRAME_BUFFER);
 
 					Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, gTileDatabase[0].hTileSurface, sTempPosX_S, sTempPosY_S, 0, &gClippingRect);
@@ -3169,7 +3161,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 					SetFont(SMALLCOMPFONT);
 					SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, gsVIEWPORT_END_Y);
 					SetFontForeground(FONT_FCOLOR_YELLOW);
-					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY + 4, "x");
+					MPrint(sX, sY + 4, "x");
 					SetFontDestBuffer(FRAME_BUFFER);
 				}
 			}
@@ -3202,10 +3194,6 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 	INT16 sAnchorPosY_M = sStartPointY_M;
 	INT16 sAnchorPosX_S = sStartPointX_S;
 	INT16 sAnchorPosY_S = sStartPointY_S;
-
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
-	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -3245,7 +3233,7 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 					{
 						SetFontForeground(FONT_GRAY3);
 					}
-					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", gsCoverValue[usTileIndex]));
+					MPrint(sX, sY, gsCoverValue[usTileIndex]);
 					SetFontDestBuffer(FRAME_BUFFER);
 				}
 			}
@@ -3278,10 +3266,6 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 	INT16 sAnchorPosY_M = sStartPointY_M;
 	INT16 sAnchorPosX_S = sStartPointX_S;
 	INT16 sAnchorPosY_S = sStartPointY_S;
-
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
-	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -3316,7 +3300,7 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 				{
 					SetFontForeground(FONT_GRAY3);
 				}
-				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", usTileIndex));
+				MPrint(sX, sY, usTileIndex);
 				SetFontDestBuffer(FRAME_BUFFER);
 			}
 
