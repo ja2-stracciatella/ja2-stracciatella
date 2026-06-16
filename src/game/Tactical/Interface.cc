@@ -688,6 +688,12 @@ void RenderArrows( )
 		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + yOffset);
 	};
 
+	auto BltArrowDown = [](TileDefines tile, short yOffset = 0)
+	{
+		auto const& TileElem{ gTileDatabase[tile] };
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + yOffset);
+	};
+
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_BESIDE )
 	{
 		BltArrow(SECONDPOINTERS3);
@@ -711,35 +717,35 @@ void RenderArrows( )
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BESIDE )
 	{
-		BltArrow(SECONDPOINTERS4);
+		BltArrowDown(SECONDPOINTERS4);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_Y )
 	{
-		BltArrow(SECONDPOINTERS4);
+		BltArrowDown(SECONDPOINTERS4);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_CLIMB )
 	{
-		BltArrow(SECONDPOINTERS7);
+		BltArrowDown(SECONDPOINTERS7);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YG )
 	{
-		BltArrow(SECONDPOINTERS2);
-		BltArrow(SECONDPOINTERS4, 20);
+		BltArrowDown(SECONDPOINTERS2);
+		BltArrowDown(SECONDPOINTERS4, 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_GG )
 	{
-		BltArrow(SECONDPOINTERS2);
-		BltArrow(SECONDPOINTERS2, 20);
+		BltArrowDown(SECONDPOINTERS2);
+		BltArrowDown(SECONDPOINTERS2, 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YY )
 	{
-		BltArrow(SECONDPOINTERS4);
-		BltArrow(SECONDPOINTERS4, 20);
+		BltArrowDown(SECONDPOINTERS4);
+		BltArrowDown(SECONDPOINTERS4, 20);
 	}
 }
 
