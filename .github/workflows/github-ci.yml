@@ -82,6 +82,14 @@ jobs:
           ${{ matrix.cfg.target }}-rust-v2-${{ hashFiles('rust') }}
           ${{ matrix.cfg.target }}-rust-v2-
 
+    - uses: libsdl-org/setup-sdl@a966470e7d9b6a5c93eec3f08d5dac370325c860
+      if: matrix.cfg.target == 'linux'
+      id: sdl
+      with:
+        install-linux-dependencies: true
+        add-to-environment: true
+        version: 3-latest
+
     - name: Set up JDK 18
       uses: actions/setup-java@v4
       if: matrix.cfg.target == 'android'
