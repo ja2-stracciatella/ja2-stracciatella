@@ -268,7 +268,7 @@ int main(int argc, char* argv[])
 {
     try {
 		#ifdef __ANDROID__
-		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+		JNIEnv* jniEnv = (JNIEnv*)SDL_GetAndroidJNIEnv();
 
 		if (setGlobalJniEnv(jniEnv) == FALSE) {
 			auto rustError = getRustError();
@@ -445,7 +445,7 @@ void TerminationHandler()
 	auto errorMessage = ST::string("Game has been terminated due to an unknown error");
 	#ifdef __ANDROID__
 	// Pull out some methods from JNI to set error on NativeExceptionContainer
-	auto jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+	auto jniEnv = (JNIEnv*)SDL_GetAndroidJNIEnv();
     jclass exceptionContainer = jniEnv->FindClass("io/github/ja2stracciatella/NativeExceptionContainer");
     jfieldID singletonFieldId = jniEnv->GetStaticFieldID(exceptionContainer, "INSTANCE", "Lio/github/ja2stracciatella/NativeExceptionContainer;");
     jobject exceptionContainerSingleton = jniEnv->GetStaticObjectField(exceptionContainer, singletonFieldId);
