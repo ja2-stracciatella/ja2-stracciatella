@@ -147,16 +147,16 @@ message(STATUS "Setting directory for libraries to: ${INSTALL_LIB_DIR}")
 add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
 if(BUILD_SDL_LIB)
+    message(STATUS "Building SDL from source")
     add_subdirectory("dependencies/lib-sdl3")
+elseif(NOT (LOCAL_SDL_LIB STREQUAL ""))
+    message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}/lib/cmake/SDL3/SDL3Config.cmake")
 else()
-    if (NOT (LOCAL_SDL_LIB STREQUAL ""))
-        message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-        set(ENV{SDL2DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-    endif()
     find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 endif()
 # FIXME: We should not define global variables here
-get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared IMPORTED_LOCATION_NONE)
+get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared TARGET_FILE)
 get_target_property(SDL3_INCLUDES SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
 message(STATUS "SDL3 Libraries: ${SDL3_LIBRARIES}; SDL3 Include Dir: ${SDL3_INCLUDES}")
 
@@ -230,10 +230,9 @@ if(WITH_EDITOR_SLF)
 endif()
 
 if (MSVC)
-    string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            ${SDL_DLL} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
+            $<IMPORTED_LOCATION:SDL3::SDL3-shared> "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
 if (APPLE)
     add_custom_command(TARGET ${JA2_BINARY}
@@ -277,7 +276,7 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "JA2 Stracciatella")
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "games")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libstdc++6, libgcc1, libc6, libfltk1.3-dev, libfltk-images1.3")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl3, libstdc++6, libgcc1, libc6, libfltk1.3-dev, libfltk-images1.3")
 
 set(CPACK_BUNDLE_NAME "JA2 Stracciatella")
 set(CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.icns")
