@@ -84,7 +84,7 @@ bool RenderPresentHook(SDL_Renderer * const renderer)
 
 	SDL_FRect const dest{ 11, 23, float(Surface->w), float(Surface->h) };
 	SDL_RenderTexture(renderer, Texture.get(), nullptr, &dest);
-	SDL_RenderPresent(renderer);
+	return SDL_RenderPresent(renderer);
 }
 
 
