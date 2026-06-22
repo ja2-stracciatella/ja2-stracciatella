@@ -105,7 +105,8 @@ if(MSVC)
     # set the source and execution charset
     add_compile_options(/utf-8 /bigobj)
     # suppress the min and max macro definitions
-    add_compile_definitions(NOMINMAX)
+    # enable M_PI and other math constants from <cmath>
+    add_compile_definitions(NOMINMAX _USE_MATH_DEFINES)
 
 	foreach(_var
 		CMAKE_CXX_FLAGS_DEBUG
@@ -151,12 +152,18 @@ if(BUILD_SDL_LIB)
     add_subdirectory("dependencies/lib-sdl3")
 elseif(NOT (LOCAL_SDL_LIB STREQUAL ""))
     message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-    include("${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}/lib/cmake/SDL3/SDL3Config.cmake")
+    # SDL3Config.cmake needs SDL_CPU_* to determine the library subdirectory for MSVC.
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(SDL_CPU_X64 ON CACHE BOOL "" FORCE)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(SDL_CPU_X86 ON CACHE BOOL "" FORCE)
+    endif()
+    include("${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
 else()
     find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 endif()
 # FIXME: We should not define global variables here
-get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared TARGET_FILE)
+get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared IMPORTED_LOCATION)
 get_target_property(SDL3_INCLUDES SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
 message(STATUS "SDL3 Libraries: ${SDL3_LIBRARIES}; SDL3 Include Dir: ${SDL3_INCLUDES}")
 
@@ -232,7 +239,7 @@ endif()
 if (MSVC)
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            $<IMPORTED_LOCATION:SDL3::SDL3-shared> "$<TARGET_FILE_DIR:${JA2_BINARY}>")
+            $<TARGET_FILE:SDL3::SDL3-shared> "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
 if (APPLE)
     add_custom_command(TARGET ${JA2_BINARY}
@@ -367,7 +374,6 @@ if(MSVC OR MINGW)
     include(InstallRequiredSystemLibraries)
 
     file(GLOB WIN_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win/*.txt")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.20-mingw/README-SDL.txt DESTINATION .)
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.ico DESTINATION .)
 endif()
@@ -377,14 +383,17 @@ if (MSVC)
 endif()
 
 if (MINGW)
+    get_target_property(_sdl3_dll SDL3::SDL3-shared IMPORTED_LOCATION_RELEASE)
+    get_filename_component(SDL3_DLL_DIR "${_sdl3_dll}" DIRECTORY)
     configure_file("${CMAKE_SOURCE_DIR}/cmake/install-dlls-mingw.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/install-dlls-mingw.cmake" @ONLY)
     install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/install-dlls-mingw.cmake")
+    unset(_sdl3_dll)
+    unset(SDL3_DLL_DIR)
 endif()
 
 if(APPLE)
     file(GLOB APPLE_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-mac/*.txt")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
-    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.20-macos/SDL2.framework DESTINATION .)
 endif()
 
 ## Build AppImage
