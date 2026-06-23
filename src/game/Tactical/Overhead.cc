@@ -5168,6 +5168,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 	INT16 sClosestOpponent, sClosestOppLoc;
 	UINT8 ubPointsLost, ubTotalPointsLost, ubNewStance;
 	UINT8 ubLoop2;
+	const UINT8 ubSuppressionModifier = gamepolicy(suppression_fire_modifier);
 
 	for (SOLDIERTYPE * const pSoldier : MercSlots)
 	{
@@ -5176,7 +5177,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 			bTolerance = CalcSuppressionTolerance( pSoldier );
 
 			// multiply by 2, add 1 and divide by 2 to round off to nearest whole number
-			ubPointsLost = ( ((pSoldier->ubSuppressionPoints * 6) / (bTolerance + 6)) * 2 + 1 ) / 2;
+			ubPointsLost = ( ((pSoldier->ubSuppressionPoints * ubSuppressionModifier) / (bTolerance + 6)) * 2 + 1 ) / 2;
 
 			// reduce loss of APs based on stance
 			// ATE: Taken out because we can possibly supress ourselves...
@@ -5218,8 +5219,8 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 			ubPointsLost -= pSoldier->ubAPsLostToSuppression;
 			ubNewStance = 0;
 
-			// merc may get to react
-			if ( pSoldier->ubSuppressionPoints >= ( 130 / (6 + bTolerance) ) )
+			// merc may get to react (threshold numerator is externalized; 0 = always react)
+			if (pSoldier->ubSuppressionPoints >= (gamepolicy(suppression_fire_reaction_threshold) / (6 + bTolerance)))
 			{
 				// merc gets to use APs to react!
 				switch (gAnimControl[ pSoldier->usAnimState ].ubEndHeight)

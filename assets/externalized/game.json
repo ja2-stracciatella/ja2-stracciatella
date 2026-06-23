@@ -236,5 +236,11 @@
     //  Is the start sector revealed at game start?
     //  vanilla settings: true
     "start_sector_revealed": true
-  }
+    },
+
+    // Scales AP loss from suppression (numerator of the AP-loss formula); vanilla 6, recommended setting is 24
+    "suppression_fire_modifier": 6,
+    // Threshold (numerator) above which a suppressed soldier drops to a lower stance.
+    // vanilla settings: 130. Set to 0 to make soldiers always react (1.13 behaviour); raise it to make them even more resistant.
+    "suppression_fire_reaction_threshold": 130
 }
