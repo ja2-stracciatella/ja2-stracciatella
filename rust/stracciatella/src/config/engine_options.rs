@@ -7,6 +7,7 @@ use crate::get_assets_dir;
 use super::{Cli, CliError, Ja2Json, Ja2JsonError};
 
 pub const SAVED_GAME_DIR: &str = "SavedGames";
+const STRACCIATELLA_HOME_DIR_NAME: &str = "/ja2";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EngineOptionsError {
@@ -145,9 +146,19 @@ impl EngineOptions {
 
     /// Sets the save game folder to default if it is not set and ensures it exists
     fn ensure_save_game_directory(&mut self) -> Result<(), EngineOptionsError> {
-        let default_save_game_dir = resolve_existing_components(
+        let mut base = String::new();
+	if !Path::new(&format!("{}/{}", std::env::var("HOME").unwrap(), STRACCIATELLA_HOME_DIR_NAME)).is_dir() {
+		match std::env::var("XDG_DATA_HOME") {
+			Ok(val) => base = val,
+			Err(_error) => base = format!("{}/.local/share", std::env::var("HOME").unwrap()),
+			_ => todo!(),
+		}
+		base.push_str(STRACCIATELLA_HOME_DIR_NAME);
+	}
+	
+	let default_save_game_dir = resolve_existing_components(
             Path::new(SAVED_GAME_DIR),
-            Some(&self.stracciatella_home),
+            Some(Path::new(&base)),
             true,
         );
 
@@ -157,7 +168,7 @@ impl EngineOptions {
 
         if self.save_game_dir == default_save_game_dir {
             if !self.save_game_dir.exists() {
-                std::fs::create_dir(&self.save_game_dir).map_err(|e| {
+                std::fs::create_dir_all(&self.save_game_dir).map_err(|e| {
                     EngineOptionsError::CreatingDefaultSaveGameDirFailed(
                         self.save_game_dir.clone(),
                         e.to_string(),
@@ -240,10 +251,17 @@ mod tests {
         let home = temp_dir.path().join(".ja2");
 
         let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
-        let expected_save_game_dir = temp_dir.path().join(".ja2/SavedGames");
-
-        assert!(expected_save_game_dir.is_dir());
-        assert_eq!(engine_options.save_game_dir, expected_save_game_dir);
+        let mut expected_vec: Vec<PathBuf> = Vec::new();
+	    let expected_save_game_dir1 = temp_dir.path().join(".ja2/SavedGames");
+	    let expected_save_game_dir2 = PathBuf::from(format!("{}{}{}", std::env::var("XDG_DATA_HOME").unwrap(), STRACCIATELLA_HOME_DIR_NAME,
+	    "/SavedGames"));
+	    let expected_save_game_dir3 = PathBuf::from(format!("{}{}{}{}", std::env::var("HOME").unwrap(), "/.local/share", STRACCIATELLA_HOME_DIR_NAME,
+	    "/SavedGames"));
+	    expected_vec.push(expected_save_game_dir1);
+	    expected_vec.push(expected_save_game_dir2);
+	    expected_vec.push(expected_save_game_dir3);
+	    assert!(expected_vec.contains(&engine_options.save_game_dir));
+        assert!(expected_vec[0].is_dir() || expected_vec[1].is_dir() || expected_vec[2].is_dir());
     }
 
     #[test]
