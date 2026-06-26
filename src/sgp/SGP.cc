@@ -312,11 +312,7 @@ int main(int argc, char* argv[])
 			return EXIT_SUCCESS;
 		}
 
-		if (EngineOptions_shouldStartInFullscreen(params.get())) {
-			VideoSetFullScreen(TRUE);
-		} else if (EngineOptions_shouldStartInWindow(params.get())) {
-			VideoSetFullScreen(FALSE);
-		}
+		auto shouldStartInFullScreen = EngineOptions_shouldStartInFullscreen(params.get());
 
 		if (EngineOptions_shouldStartWithoutSound(params.get())) {
 			SoundEnableSound(FALSE);
@@ -390,6 +386,12 @@ int main(int argc, char* argv[])
 		SLOGD("Initializing Video Manager");
 		InitializeVideoManager(scalingQuality, GCM->getGamePolicy()->target_fps);
 		VideoSetBrightness(brightness);
+
+		if (shouldStartInFullScreen) {
+			VideoSetFullScreen(TRUE);
+		} else {
+			VideoSetFullScreen(FALSE);
+		}
 
 		SLOGD("Initializing Video Object Manager");
 		InitializeVideoObjectManager();
