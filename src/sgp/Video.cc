@@ -93,13 +93,10 @@ void VideoToggleFullScreen(void)
 
 void VideoSetBrightness(float brightness)
 {
-	if (brightness >= 0)
-	{
-		// Do not set the brightness unless explicitly requested
-		// On Windows, setting the brightness resets color profile and some other disply options.
-		// FIXME: This is not supported anymore for SDL3
-		// SDL_SetWindowBrightness(g_game_window, brightness);
-	}
+	if (brightness < 0) return;
+
+	if (ScreenTexture)        SDL_SetTextureColorModFloat(ScreenTexture, brightness, brightness, brightness);
+	if (ScaledScreenTexture)  SDL_SetTextureColorModFloat(ScaledScreenTexture, brightness, brightness, brightness);
 }
 
 
