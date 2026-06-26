@@ -8,7 +8,7 @@ set(LOCAL_FLTK_LIB ON CACHE BOOL "" FORCE)
 set(LOCAL_GTEST_LIB ON CACHE BOOL "" FORCE)
 
 
-set(LOCAL_SDL_LIB "dependencies/lib-SDL3-3.4.2-VC/cmake/SDL3Config.cmake" CACHE STRING "" FORCE)
+set(LOCAL_SDL_LIB "dependencies/lib-SDL3-3.4.10-VC/cmake/SDL3Config.cmake" CACHE STRING "" FORCE)
 
 
 set(CMAKE_CXX_FLAGS_INIT "/bigobj")
