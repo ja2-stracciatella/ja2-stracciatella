@@ -572,11 +572,9 @@ static void GetRGBDistribution()
 	gusGreenMask = static_cast<UINT16>(g);
 	gusBlueMask  = static_cast<UINT16>(b);
 
-	// Old: Shift: R11G5B0 Loss: R3G2B3
-	// FIXME: How to get to losses programatically
-	gusRedShift   = f.Rshift - 3;
-	gusGreenShift = f.Gshift - 2;
-	gusBlueShift  = f.Bshift - 3;
+	gusRedShift   = f.Rshift - (8 - f.Rbits);
+	gusGreenShift = f.Gshift - (8 - f.Gbits);
+	gusBlueShift  = f.Bshift - (8 - f.Bbits);
 }
 
 
