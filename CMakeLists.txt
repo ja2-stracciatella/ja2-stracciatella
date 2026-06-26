@@ -162,10 +162,12 @@ elseif(NOT (LOCAL_SDL_LIB STREQUAL ""))
 else()
     find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 endif()
-# FIXME: We should not define global variables here
-get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared IMPORTED_LOCATION)
-get_target_property(SDL3_INCLUDES SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
-message(STATUS "SDL3 Libraries: ${SDL3_LIBRARIES}; SDL3 Include Dir: ${SDL3_INCLUDES}")
+function(print_sdl3_info)
+    get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared IMPORTED_LOCATION)
+    get_target_property(SDL3_INCLUDES SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
+    message(STATUS "SDL3 Libraries: ${SDL3_LIBRARIES}; SDL3 Include Dir: ${SDL3_INCLUDES}")
+endfunction()
+print_sdl3_info()
 
 
 # Dependencies must be processed first so the src directory can reliably use them.
