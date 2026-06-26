@@ -116,8 +116,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 					g_window_flags);
 
 	GameRenderer = SDL_CreateRenderer(g_game_window, nullptr);
-	// FIXME: Is stretch the correct way here? There are other options
-	SDL_SetRenderLogicalPresentation(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_STRETCH);
+	SDL_SetRenderLogicalPresentation(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
 	SurfaceUniquePtr windowIcon(SDL_CreateSurfaceFrom(
 			gWindowIconData.width,
