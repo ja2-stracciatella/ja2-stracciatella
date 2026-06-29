@@ -466,21 +466,23 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 		{
 			UINT32 const threshold_cth_head = gamepolicy(threshold_cth_head);
 			UINT32 const threshold_cth_legs = gamepolicy(threshold_cth_legs);
-			UINT32 const cth_aim_shot_head = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_HEAD );
-			UINT32 const cth_aim_shot_torso = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_TORSO );
-			UINT32 const cth_aim_shot_legs = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_LEGS );
 
-			UINT32 cth_choice = cth_aim_shot_torso;
+			UINT32 const cth_ctgt_head = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_HEAD );
+			UINT32 const cth_ctgt_torso = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_TORSO );
+			UINT32 const cth_ctgt_legs = SoldierToSoldierBodyPartChanceToGetThrough(pSoldier, pTargetSoldier, AIM_SHOT_LEGS);
+
+			UINT32 const cth_aim_shot_head = cth_ctgt_head * CalcChanceToHitGun(pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_HEAD, FALSE) / 100;
+			UINT32 const cth_aim_shot_torso = cth_ctgt_torso * CalcChanceToHitGun(pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_TORSO, FALSE) / 100;
+			UINT32 const cth_aim_shot_legs = cth_ctgt_legs * CalcChanceToHitGun(pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_LEGS, FALSE) / 100;
+
 			pSoldier->bAimShotLocation = AIM_SHOT_TORSO; // default
 
-			if (cth_aim_shot_legs >= threshold_cth_legs || (cth_aim_shot_legs + 5) > cth_choice)
+			if (gAnimControl[pTargetSoldier->usAnimState].ubEndHeight == ANIM_STAND && (cth_aim_shot_legs >= threshold_cth_legs || cth_aim_shot_legs >= cth_aim_shot_torso)) // good enough, override
 			{
 				pSoldier->bAimShotLocation = AIM_SHOT_LEGS;
-				cth_choice = cth_aim_shot_legs;
 			}
 
-			if (cth_aim_shot_head >= threshold_cth_head ||   // good enough, override
-				cth_aim_shot_head >= cth_choice) // close enough, better if extra damage
+			if (cth_aim_shot_head >= threshold_cth_head || cth_aim_shot_head >= cth_aim_shot_torso)  // even better, override
 			{
 				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
 			}
@@ -643,6 +645,11 @@ static void UseGun(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 	}
 
 
+	// ATE; Moved a whole blotch if logic code for finding target positions to a function
+	// so other places can use it
+
+	GetTargetWorldPositions(pSoldier, sTargetGridNo, &dTargetX, &dTargetY, &dTargetZ);
+
 	// CALC CHANCE TO HIT
 	if ( GCM->getItem(usItemNum)->getItemClass() == IC_THROWING_KNIFE )
 	{
@@ -663,10 +670,6 @@ static void UseGun(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 	uiDiceRoll = PreRandom( 100 );
 
 	bool const fGonnaHit = uiDiceRoll <= uiHitChance;
-
-	// ATE; Moved a whole blotch if logic code for finding target positions to a function
-	// so other places can use it
-	GetTargetWorldPositions( pSoldier, sTargetGridNo, &dTargetX, &dTargetY, &dTargetZ );
 
 	// Some things we don't do for knives...
 	if ( GCM->getItem(usItemNum)->getItemClass() != IC_THROWING_KNIFE )
