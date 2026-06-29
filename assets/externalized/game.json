@@ -62,6 +62,11 @@
   //  vanilla setting: false
   "all_drops_visible": false,
 
+  //  Don't draw bullets in flight; shots resolve faster. Revives the old
+  //  "hide bullets" option as a game policy.
+  //  vanilla setting: false
+  "hide_bullets": false,
+
   //  Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is that if you skipped reacting to the first interrupt
   //  (say your buddies took care of it), you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
   //  vanilla setting: false

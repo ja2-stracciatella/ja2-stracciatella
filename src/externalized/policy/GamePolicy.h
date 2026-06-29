@@ -42,6 +42,8 @@ public:
 	bool f_drop_everything;               /**< Enemy drop all equipment. */
 	bool f_all_dropped_visible;           /**< All dropped equipment is visible right away. */
 
+	bool hide_bullets;                    // don't draw bullets in flight; resolve shots faster (revives the old TOPTION_HIDE_BULLETS option)
+
 	bool multiple_interrupts;             // can interrupt more than once per turn
 
 	bool fixed_cost_to_shoot;    // Changes the formula for APs to shoot

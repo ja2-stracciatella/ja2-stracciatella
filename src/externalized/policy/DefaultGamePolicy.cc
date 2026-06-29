@@ -19,6 +19,8 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	f_drop_everything = gp.getOptionalBool("drop_everything");
 	f_all_dropped_visible = gp.getOptionalBool("all_drops_visible");
 
+	hide_bullets = gp.getOptionalBool("hide_bullets");
+
 	multiple_interrupts = gp.getOptionalBool("multiple_interrupts");
 
 	fixed_cost_to_shoot = gp.getOptionalBool("fixed_cost_to_shoot");
