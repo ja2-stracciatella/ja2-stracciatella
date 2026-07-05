@@ -162,6 +162,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 				"Please reduce game resolution or choose another scaling mode.");
 		}
 		SDL_SetWindowMinimumSize(g_game_window, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SDL_SetTextureScaleMode(ScreenTexture, SDL_SCALEMODE_NEAREST);
 		SDL_SetRenderLogicalPresentation(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
 	}
 	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT)
