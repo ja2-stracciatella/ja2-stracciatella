@@ -584,27 +584,7 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 		return;
 	}
 
-	int windowWidth, windowHeight;
-	SDL_GetWindowSize(GAME_WINDOW, &windowWidth, &windowHeight);
-
-	double windowWidthD = windowWidth;
-	double windowHeightD = windowHeight;
-	double screenWidthD = SCREEN_WIDTH;
-	double screenHeightD = SCREEN_HEIGHT;
-
-	double scaleFactorX = windowWidthD / screenWidthD;
-	double scaleFactorY = windowHeightD / screenHeightD;
-	double scaleFactor = windowWidth > windowHeight ? scaleFactorY : scaleFactorX;
-
-	double scaledWindowWidth = scaleFactor * screenWidthD;
-	double scaledWindowHeight = scaleFactor * screenHeightD;
-
-	double paddingX = (windowWidthD - scaledWindowWidth) / 2.0;
-	double paddingY = (windowHeight - scaledWindowHeight) / 2.0;
-	int windowPositionX = paddingX + (double)uiNewXPos * scaledWindowWidth / screenWidthD;
-	int windowPositionY = paddingY + (double)uiNewYPos * scaledWindowHeight / screenHeightD;
-
-	SDL_WarpMouseInWindow(GAME_WINDOW, windowPositionX, windowPositionY);
+	SDL_WarpMouseInWindow(GAME_WINDOW, uiNewXPos, uiNewYPos);
 }
 
 
