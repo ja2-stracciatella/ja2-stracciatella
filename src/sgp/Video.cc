@@ -84,6 +84,7 @@ BOOLEAN IsDesktopLargeEnough()
 void VideoSetFullScreen(const BOOLEAN enable)
 {
 	SDL_SetWindowFullscreen(g_game_window, enable);
+	SDL_SetWindowMouseGrab(g_game_window, enable);
 }
 
 void VideoToggleFullScreen(void)
