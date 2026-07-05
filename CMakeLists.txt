@@ -396,6 +396,7 @@ endif()
 if(APPLE)
     file(GLOB APPLE_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-mac/*.txt")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL3-3.4.10-macos/SDL3.xcframework DESTINATION .)
 endif()
 
 ## Build AppImage
