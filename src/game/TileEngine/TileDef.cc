@@ -145,12 +145,6 @@ void CreateTileDatabase()
 						TileElement.pDBStructureRef[19].pDBStructure->fFlags |= STRUCTURE_DDOOR_RIGHT;
 					}
 				}
-				// fix garage doors not having a flag of their own separate from sliding doors
-				if (TileElement.pDBStructureRef->pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR && TileElement.pDBStructureRef[0].pDBStructure->ubNumberOfTiles == 2)
-				{
-					TileElement.pDBStructureRef->pDBStructure->fFlags &= ~STRUCTURE_SLIDINGDOOR;
-					TileElement.pDBStructureRef->pDBStructure->fFlags |= STRUCTURE_GARAGEDOOR;
-				}
 			}			
 			gTileDatabase[gTileDatabaseSize++] = TileElement;
 		}
