@@ -386,10 +386,19 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructu
 
 	STRUCTURE* const pStructure = new STRUCTURE{};
 
-	// We need to clear the old STRUCTURE_HIDDEN flag, which had the same value
-	// as STRUCTURE_GARADGEDOOR to prevent problems with pathing and opening
-	// or closing doors, see PR #2348 and nightops-maps PR #11.
-	pStructure->fFlags          = pDBStructure->fFlags & ~STRUCTURE_GARAGEDOOR;
+	// fix garage doors not having a flag of their own separate from sliding doors
+	if (pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR && pDBStructure->ubNumberOfTiles == 2)
+	{
+		pStructure->fFlags      = (pDBStructure->fFlags & ~STRUCTURE_SLIDINGDOOR) | STRUCTURE_GARAGEDOOR;
+	}
+	else
+	{
+		// We need to clear the old STRUCTURE_HIDDEN flag, which had the same value
+		// as STRUCTURE_GARADGEDOOR to prevent problems with pathing and opening
+		// or closing doors, see PR #2348 and nightops-maps PR #11.
+		pStructure->fFlags      = pDBStructure->fFlags & ~STRUCTURE_GARAGEDOOR;
+	}
+
 	pStructure->pShape          = &pTile->Shape;
 	pStructure->pDBStructureRef = pDBStructureRef;
 	if (pTile->sPosRelToBase != 0 && ubTileNum == 0)
