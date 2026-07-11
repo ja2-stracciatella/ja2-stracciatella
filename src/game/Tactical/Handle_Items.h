@@ -106,6 +106,8 @@ INT8 GetZLevelOfItemPoolGivenStructure(INT16 sGridNo, UINT8 ubLevel, const STRUC
 
 INT8 GetLargestZLevelOfItemPool(const ITEM_POOL* pItemPool);
 
+void PutItemPoolOnGround(GridNo const gridNo, uint8_t const level);
+
 BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN fCheckAroundGridno, INT16 * psProblemGridNo );
 void MineSpottedDialogueCallBack( void );
 
