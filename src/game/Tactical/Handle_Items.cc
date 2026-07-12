@@ -1714,6 +1714,16 @@ INT8 GetLargestZLevelOfItemPool(ITEM_POOL const* ip)
 	return 0;
 }
 
+void PutItemPoolOnGround(GridNo const gridNo, uint8_t const level)
+{
+	const ITEM_POOL * itemPool{ GetItemPool(gridNo, level) };
+	while (itemPool)
+	{
+		WORLDITEM & wi{ GetWorldItem(itemPool->iItemIndex) };
+		wi.bRenderZHeightAboveLevel = 0;
+		itemPool = itemPool->pNext;
+	}
+}
 
 static void RemoveItemPool(INT16 sGridNo, UINT8 ubLevel)
 {

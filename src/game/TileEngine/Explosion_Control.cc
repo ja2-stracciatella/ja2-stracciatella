@@ -560,6 +560,11 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 			RecompileLocalMovementCostsForWall(base_grid_no, base->ubWallOrientation);
 		}
 
+		if (pCurrent->fFlags & STRUCTURE_HASITEMONTOP)
+		{
+			PutItemPoolOnGround(grid_no, level);
+		}
+
 		{ ApplyMapChangesToMapTempFile app;
 			RemoveStructFromLevelNode(base_grid_no, node);
 		}
