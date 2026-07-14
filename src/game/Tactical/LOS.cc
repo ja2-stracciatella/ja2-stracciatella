@@ -39,6 +39,7 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "Logger.h"
+#include "GamePolicy.h"
 
 #define STEPS_FOR_BULLET_MOVE_TRAILS				10
 #define STEPS_FOR_BULLET_MOVE_SMALL_TRAILS			5
@@ -3156,16 +3157,18 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 	else
 	{
 		pBullet->target = pFirer->target;
-		//if ( gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] )
-		//{
-		//	pBullet->uiLastUpdate = 0;
-		//	pBullet->ubTilesPerUpdate	= 4;
-		//}
-		//else
-		//{
+		if ( gamepolicy(hide_bullets) )
+		{
+			// bullets are not drawn - advance them several tiles per update so
+			// turns resolve quickly instead of waiting on the bullet animation
+			pBullet->uiLastUpdate = 0;
+			pBullet->ubTilesPerUpdate	= 4;
+		}
+		else
+		{
 			pBullet->uiLastUpdate = 0;
 			pBullet->ubTilesPerUpdate	= 1;
-		//}
+		}
 
 		// increment shots fired if shooter has a merc profile
 		if( ( pFirer->ubProfile != NO_PROFILE ) && ( pFirer->bTeam == 0 ) )

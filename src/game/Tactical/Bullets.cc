@@ -10,6 +10,9 @@
 #include "Random.h"
 #include "GameSettings.h"
 #include "Logger.h"
+#include "GamePolicy.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #include <algorithm>
 #include <iterator>
@@ -204,7 +207,7 @@ void UpdateBullets(void)
 					continue;
 				}
 
-				//if ( !( gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] ) )
+				if ( !gamepolicy(hide_bullets) )
 				{
 					// ALRIGHTY, CHECK WHAT TYPE OF BULLET WE ARE
 
@@ -230,7 +233,7 @@ void UpdateBullets(void)
 				if (b->usFlags & BULLET_STOPPED) continue;
 
 				// Display bullet
-				//if ( !( gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] ) )
+				if ( !gamepolicy(hide_bullets) )
 				{
 					if (b->usFlags & BULLET_FLAG_KNIFE)
 					{
