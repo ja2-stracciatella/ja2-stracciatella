@@ -290,9 +290,27 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 }
 
 
-static void ReplaceWall(GridNo const grid_no, UINT8 const orientation, INT16 const sub_idx)
+static void ReplaceWall(GridNo const grid_no, UINT8 orientation, INT16 const sub_idx)
 {
-	STRUCTURE* const wall_struct = GetWallStructOfSameOrientationAtGridno(grid_no, orientation);
+	STRUCTURE* wall_struct = GetWallStructOfSameOrientationAtGridno(grid_no, orientation);
+	if (!wall_struct)
+	{
+		switch (orientation)
+		{
+			case INSIDE_TOP_LEFT:
+				orientation = OUTSIDE_TOP_LEFT;
+				break;
+			case OUTSIDE_TOP_LEFT:
+				orientation = INSIDE_TOP_LEFT;
+				break;
+			case INSIDE_TOP_RIGHT:
+				orientation = OUTSIDE_TOP_RIGHT;
+				break;
+			case OUTSIDE_TOP_RIGHT:
+				orientation = INSIDE_TOP_RIGHT;
+		}
+		wall_struct = GetWallStructOfSameOrientationAtGridno(grid_no, orientation);
+	}
 	if (!wall_struct || !(wall_struct->fFlags & STRUCTURE_WALL)) return;
 
 	LEVELNODE* const node    = FindLevelNodeBasedOnStructure(wall_struct);
