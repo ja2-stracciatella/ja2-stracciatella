@@ -296,7 +296,16 @@ static void ReplaceWall(GridNo const grid_no, UINT8 const orientation, INT16 con
 	if (!wall_struct || !(wall_struct->fFlags & STRUCTURE_WALL)) return;
 
 	LEVELNODE* const node    = FindLevelNodeBasedOnStructure(wall_struct);
-	UINT16     const new_idx = GetTileIndexFromTypeSubIndex(gTileDatabase[node->usIndex].fType, sub_idx);
+
+	UINT16 tileType = gTileDatabase[node->usIndex].fType;
+	if (tileType > FOURTHWALL)
+	{
+		/* The subindex offsets for replacement only work if the tile type is wall.
+		 * If it's not then it's probably decorations which we shift back to wall */
+		tileType -= (FIRSTDECORATIONS - FIRSTWALL);
+	}
+
+	UINT16 const new_idx = GetTileIndexFromTypeSubIndex(tileType, sub_idx);
 	ApplyMapChangesToMapTempFile app;
 	RemoveStructFromLevelNode(grid_no, node);
 	AddWallToStructLayer(grid_no, new_idx, TRUE);
