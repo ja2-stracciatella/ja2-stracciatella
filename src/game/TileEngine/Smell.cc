@@ -63,7 +63,7 @@ constexpr UINT8 BLOOD_DELAY_MAX = 3;
 #define BLOOD_ROOF_TYPE( s )  ((s) & 0x02)
 #define BLOOD_FLOOR_TYPE( s )	((s) & 0x01)
 
-#define BLOOD_ROOF_STRENGTH( b )    ((b) & 0xE0)
+constexpr UINT8 BLOOD_ROOF_STRENGTH(UINT8 b) { return (b & 0b1110'0000) >> 5; }
 #define BLOOD_FLOOR_STRENGTH( b )		( ((b) & 0x1C) >> 2 )
 #define BLOOD_DELAY_TIME( b )				((b) & 0x03)
 #define NO_BLOOD_STRENGTH( b )			(((b) & 0xFC) == 0)
