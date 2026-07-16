@@ -401,7 +401,7 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 			{ // Combine blood strengths
 				UINT8 new_strength = std::max(old_strength, strength) + 1;
 				// make sure the strength is legal
-				new_strength = std::max(new_strength, BLOOD_STRENGTH_MAX);
+				new_strength = std::min(new_strength, BLOOD_STRENGTH_MAX);
 				SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else
