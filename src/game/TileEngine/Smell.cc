@@ -114,7 +114,7 @@ constexpr UINT8 BLOOD_DELAY_MAX = 3;
 	UINT8 ubRoofStrength; \
 	ubRoofStrength = BLOOD_ROOF_STRENGTH( (b) ); \
 	ubRoofStrength--; \
-	SET_BLOOD_FLOOR_STRENGTH( (b), ubRoofStrength ); \
+	SET_BLOOD_ROOF_STRENGTH( (b), ubRoofStrength ); \
 }
 
 static void SetRandomBloodDecayTime(MAP_ELEMENT & me)
