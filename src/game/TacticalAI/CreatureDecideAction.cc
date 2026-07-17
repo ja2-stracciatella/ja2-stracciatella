@@ -25,7 +25,6 @@ enum CreatureCaller
 {
 	CALLER_FEMALE  = 0,
 	CALLER_MALE,
-	CALLER_INFANT,
 	CALLER_QUEEN,
 	NUM_CREATURE_CALLERS
 };
@@ -49,18 +48,18 @@ static const INT8 gbCallPriority[NUM_CREATURE_CALLS][NUM_CREATURE_CALLERS] =
 	{6, 9, 12},//CALL_CRIPPLED
 };
 
-static const INT8 gbHuntCallPriority[NUM_CREATURE_CALLS] =
+static const INT8 gbHuntCallPriority[]
 {
+	0, //CALL_NONE
 	4, //CALL_1_PREY
 	5, //CALL_MULTIPLE_PREY
 	7, //CALL_ATTACKED
 	8  //CALL_CRIPPLED
 };
+static_assert(std::size(gbHuntCallPriority) == NUM_CREATURE_CALLS);
 
 #define PRIORITY_DECR_DISTANCE 30
 
-#define CALL_1_OPPONENT CALL_1_PREY
-#define CALL_MULTIPLE_OPPONENT CALL_MULTIPLE_PREY
 
 void CreatureCall( SOLDIERTYPE * pCaller )
 {
