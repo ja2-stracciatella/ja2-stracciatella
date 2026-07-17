@@ -5182,8 +5182,10 @@ static void HandleShadingOfLinesForContractMenu(void)
 		ShadeStringInBox(box, CONTRACT_MENU_TWO_WEEKS, true);
 	}
 
-	// if THIS soldier is involved in a fight (dismissing in a hostile sector IS ok...)
-	ShadeStringInBox(box, CONTRACT_MENU_TERMINATE, gTacticalStatus.uiFlags & INCOMBAT && s->bInSector);
+	bool const shadeTerminate =
+		(gTacticalStatus.uiFlags & INCOMBAT && s->bInSector) ||
+		s->bBleeding > MIN_BLEEDING_THRESHOLD;
+	ShadeStringInBox(box, CONTRACT_MENU_TERMINATE, shadeTerminate);
 }
 
 
