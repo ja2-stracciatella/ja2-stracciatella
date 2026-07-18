@@ -11,6 +11,7 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Video.h"
+#include "Visualizer.h"
 #include "UILayout.h"
 #include "Icon.h"
 #include <algorithm>
@@ -548,6 +549,11 @@ void RefreshScreen(void)
 	}
 	else {
 		SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
+	}
+
+	if (Visualizer::IsActivated())
+	{
+		Visualizer::Render(GameRenderer);
 	}
 
 	FPS::RenderPresentPtr(GameRenderer);

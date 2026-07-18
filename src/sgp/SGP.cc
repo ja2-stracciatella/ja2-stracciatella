@@ -10,6 +10,7 @@
 #include "SoundMan.h"
 #include "VObject.h"
 #include "Video.h"
+#include "Visualizer.h"
 #include <SDL.h>
 #include "UILayout.h"
 #include "GameRes.h"
@@ -136,10 +137,13 @@ static void MainLoop()
 					break;
 
 				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_f &&
-					    SDL_GetModState() & KMOD_CTRL)
+					if (event.key.keysym.sym == SDLK_f && SDL_GetModState() & KMOD_CTRL)
 					{
 						FPS::ToggleOnOff();
+					}
+					else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+					{
+						Visualizer::ToggleOnOff();
 					}
 					else
 					{
