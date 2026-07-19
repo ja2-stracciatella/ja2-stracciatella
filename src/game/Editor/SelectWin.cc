@@ -20,7 +20,6 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <optional>
 #include <span>
 #include <utility>
 
@@ -252,7 +251,7 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 	g_sel_win_box.w = SCREEN_WIDTH - g_sel_win_box.x - 40;
 	g_sel_win_box.h = TASKBAR_Y    - g_sel_win_box.y;
 
-	std::optional<std::span<DisplaySpec>> pDSpec;
+	std::span<DisplaySpec> pDSpec;
 
 	switch( sWhat )
 	{
@@ -352,9 +351,9 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 			break;
 	}
 
-	if (pDSpec)
+	if (!pDSpec.empty())
 	{
-		BuildDisplayWindow(*pDSpec, &pDispList, &g_sel_win_box, &SelWinSpacing);
+		BuildDisplayWindow(pDSpec, &pDispList, &g_sel_win_box, &SelWinSpacing);
 	}
 }
 
