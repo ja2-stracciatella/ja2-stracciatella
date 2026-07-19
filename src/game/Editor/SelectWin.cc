@@ -20,6 +20,8 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
+#include <optional>
+#include <span>
 #include <utility>
 
 // defines for DisplaySpec.ubType
@@ -218,7 +220,7 @@ static UINT16 const SelWinFillColor        = 0x0000; // Black
 static UINT16 const SelWinHilightFillColor = 0x000D; // A kind of medium dark blue
 
 
-static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing);
+static bool BuildDisplayWindow(std::span<DisplaySpec>, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing);
 static void CnclClkCallback(GUI_BUTTON* button, UINT32 reason);
 static void DwnClkCallback(GUI_BUTTON* button, UINT32 reason);
 static void OkClkCallback(GUI_BUTTON* button, UINT32 reason);
@@ -240,9 +242,6 @@ static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_
 // Create a selection window of the given type.
 void CreateJA2SelectionWindow(SelectWindow const sWhat)
 {
-	DisplaySpec *pDSpec; // XXX HACK000E
-	UINT16 usNSpecs;
-
 	fAllDone = FALSE;
 
 	DisableEditorTaskbar( );
@@ -268,121 +267,110 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 	g_sel_win_box.w = SCREEN_WIDTH - g_sel_win_box.x - 40;
 	g_sel_win_box.h = TASKBAR_Y    - g_sel_win_box.y;
 
+	std::optional<std::span<DisplaySpec>> pDSpec;
+
 	switch( sWhat )
 	{
 		case SELWIN_OSTRUCTS:
-			pDSpec = OStructs;
-			usNSpecs = gusNumOStructs;//OSTRUCTS_NUMELEMENTS;
+			pDSpec = { OStructs, gusNumOStructs };
 			pSelList = SelOStructs;
 			pNumSelList = &iNumOStructsSelected;
 			break;
 
 		case SELWIN_OSTRUCTS1:
 			pDSpec = OStructs1;
-			usNSpecs = OSTRUCTS1_NUMELEMENTS;
 			pSelList = SelOStructs1;
 			pNumSelList = &iNumOStructs1Selected;
 			break;
 
 		case SELWIN_OSTRUCTS2:
 			pDSpec = OStructs2;
-			usNSpecs = OSTRUCTS2_NUMELEMENTS;
 			pSelList = SelOStructs2;
 			pNumSelList = &iNumOStructs2Selected;
 			break;
 
 		case SELWIN_BANKS:
 			pDSpec = BanksList;
-			usNSpecs = BANKSLIST_NUMELEMENTS;
 			pSelList = SelBanks;
 			pNumSelList = &iNumBanksSelected;
 			break;
 
 		case SELWIN_ROADS:
 			pDSpec = RoadsList;
-			usNSpecs = ROADSLIST_NUMELEMENTS;
 			pSelList = SelRoads;
 			pNumSelList = &iNumRoadsSelected;
 			break;
 
 		case SELWIN_DEBRIS:
 			pDSpec = DebrisList;
-			usNSpecs = DEBRISLIST_NUMELEMENTS;
 			pSelList = SelDebris;
 			pNumSelList = &iNumDebrisSelected;
 			break;
 
 		case SELWIN_SINGLEWALL:
 			pDSpec = SingleWall;
-			usNSpecs = SINGLEWALL_NUMELEMENTS;
 			pSelList = SelSingleWall;
 			pNumSelList = &iNumWallsSelected;
 			break;
 		case SELWIN_SINGLEDOOR:
 			pDSpec = SingleDoor;
-			usNSpecs = SINGLEDOOR_NUMELEMENTS;
 			pSelList = SelSingleDoor;
 			pNumSelList = &iNumDoorsSelected;
 			break;
 		case SELWIN_SINGLEWINDOW:
 			pDSpec = SingleWindow;
-			usNSpecs = SINGLEWINDOW_NUMELEMENTS;
 			pSelList = SelSingleWindow;
 			pNumSelList = &iNumWindowsSelected;
 			break;
 		case SELWIN_SINGLEROOF:
 			pDSpec = SingleRoof;
-			usNSpecs = SINGLEROOF_NUMELEMENTS;
 			pSelList = SelSingleRoof;
 			pNumSelList = &iNumRoofsSelected;
 			break;
 		case SELWIN_SINGLENEWROOF:
 			pDSpec = SingleNewRoof;
-			usNSpecs = SINGLENEWROOF_NUMELEMENTS;
 			pSelList = SelSingleNewRoof;
 			pNumSelList = &iNumNewRoofsSelected;
 			break;
 		case SELWIN_SINGLEBROKENWALL:
 			pDSpec = SingleBrokenWall;
-			usNSpecs = SINGLEBROKENWALL_NUMELEMENTS;
 			pSelList = SelSingleBrokenWall;
 			pNumSelList = &iNumBrokenWallsSelected;
 			break;
 		case SELWIN_SINGLEDECOR:
 			pDSpec = SingleDecor;
-			usNSpecs = SINGLEDECOR_NUMELEMENTS;
 			pSelList = SelSingleDecor;
 			pNumSelList = &iNumDecorSelected;
 			break;
 		case SELWIN_SINGLEDECAL:
 			pDSpec = SingleDecal;
-			usNSpecs = SINGLEDECAL_NUMELEMENTS;
 			pSelList = SelSingleDecal;
 			pNumSelList = &iNumDecalsSelected;
 			break;
 		case SELWIN_SINGLEFLOOR:
 			pDSpec = SingleFloor;
-			usNSpecs = SINGLEFLOOR_NUMELEMENTS;
 			pSelList = SelSingleFloor;
 			pNumSelList = &iNumFloorsSelected;
 			break;
 		case SELWIN_SINGLETOILET:
 			pDSpec = SingleToilet;
-			usNSpecs = SINGLETOILET_NUMELEMENTS;
 			pSelList = SelSingleToilet;
 			pNumSelList = &iNumToiletsSelected;
 			break;
 		case SELWIN_ROOM:
 			pDSpec = Room;
-			usNSpecs = ROOM_NUMELEMENTS;
 			pSelList = SelRoom;
 			pNumSelList = &iNumRoomsSelected;
 			break;
 
-		default: abort(); // HACK000E
+		default:
+			break;
 	}
 
-	BuildDisplayWindow(pDSpec, usNSpecs, &pDispList, &g_sel_win_box, &SelWinSpacing);
+	if (pDSpec)
+	{
+		BuildDisplayWindow(*pDSpec, &pDispList, &g_sel_win_box, &SelWinSpacing);
+	}
 }
 
 
@@ -1055,7 +1043,7 @@ void RestoreSelectionList( void )
 
 
 //	Button callback function for the selection window's OK button
-static void OkClkCallback(GUI_BUTTON* button, UINT32 reason)
+static void OkClkCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -1069,7 +1057,7 @@ static void OkClkCallback(GUI_BUTTON* button, UINT32 reason)
 //
 //	Button callback function for the selection window's CANCEL button
 //
-static void CnclClkCallback(GUI_BUTTON* button, UINT32 reason)
+static void CnclClkCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -1080,7 +1068,7 @@ static void CnclClkCallback(GUI_BUTTON* button, UINT32 reason)
 
 
 //	Button callback function for scrolling the selection window up
-static void UpClkCallback(GUI_BUTTON* button, UINT32 reason)
+static void UpClkCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) ScrollSelWinUp();
 }
@@ -1114,7 +1102,7 @@ void ScrollSelWinDown(void)
 
 
 //	Button callback function to scroll the selection window down.
-static void DwnClkCallback(GUI_BUTTON* button, UINT32 reason)
+static void DwnClkCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP) ScrollSelWinDown();
 }
@@ -1148,7 +1136,7 @@ static void DrawSelections(void)
 
 /* Create a display list from a display specification list.  Also set variables
  * up for properly scrolling the window etc. */
-static BOOLEAN BuildDisplayWindow(DisplaySpec const* const pDisplaySpecs, UINT16 const usNumSpecs, DisplayList** const pDisplayList, SGPBox const* const area, SGPPoint const* const pSpacing)
+static bool BuildDisplayWindow(std::span<DisplaySpec> displaySpecs, DisplayList** const pDisplayList, SGPBox const* const area, SGPPoint const* const pSpacing)
 try
 {
 	SaveSelectionList();
@@ -1156,8 +1144,9 @@ try
 	INT32  x     = area->x;
 	INT32  y     = area->y;
 	UINT16 max_h = 0; // Maximum height in current row
-	for (DisplaySpec const* ds = pDisplaySpecs; ds != pDisplaySpecs + usNumSpecs; ++ds)
+	for (auto const& dspec : displaySpecs)
 	{
+		auto * const ds{ &dspec };
 		if (ds->ubType != DISPLAY_GRAPHIC) continue;
 
 		SGPVObject* const vo = ds->hVObject;
