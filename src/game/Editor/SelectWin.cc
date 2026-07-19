@@ -24,30 +24,15 @@
 #include <span>
 #include <utility>
 
-// defines for DisplaySpec.ubType
-#define DISPLAY_TEXT    1
-#define DISPLAY_GRAPHIC 2
-
 #define DISPLAY_ALL_OBJECTS 0xFFFF
 
 
 struct DisplaySpec
 {
-	UINT8 ubType;
-	union
-	{
-		struct
-		{
-			HVOBJECT hVObject;
-			UINT16   usStart;
-			UINT16   usEnd;
-			UINT32   uiObjIndx;
-		};
-		struct
-		{
-			UINT16* pString;
-		};
-	};
+	HVOBJECT hVObject;
+	UINT16   usStart;
+	UINT16   usEnd;
+	UINT32   uiObjIndx;
 };
 
 
@@ -376,7 +361,6 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 
 static void InitDisplayGfx(DisplaySpec* const ds, const HVOBJECT vo, const UINT16 start, const UINT16 end, const UINT32 obj_idx)
 {
-	ds->ubType    = DISPLAY_GRAPHIC;
 	ds->hVObject  = vo;
 	ds->usStart   = start;
 	ds->usEnd     = end;
@@ -1147,7 +1131,6 @@ try
 	for (auto const& dspec : displaySpecs)
 	{
 		auto * const ds{ &dspec };
-		if (ds->ubType != DISPLAY_GRAPHIC) continue;
 
 		SGPVObject* const vo = ds->hVObject;
 		if (!vo) return FALSE;
