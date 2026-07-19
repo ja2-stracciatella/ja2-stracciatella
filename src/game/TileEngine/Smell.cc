@@ -63,7 +63,7 @@ constexpr UINT8 BLOOD_DELAY_MAX = 3;
 #define BLOOD_ROOF_TYPE( s )  ((s) & 0x02)
 #define BLOOD_FLOOR_TYPE( s )	((s) & 0x01)
 
-#define BLOOD_ROOF_STRENGTH( b )    ((b) & 0xE0)
+constexpr UINT8 BLOOD_ROOF_STRENGTH(UINT8 b) { return (b & 0b1110'0000) >> 5; }
 #define BLOOD_FLOOR_STRENGTH( b )		( ((b) & 0x1C) >> 2 )
 #define BLOOD_DELAY_TIME( b )				((b) & 0x03)
 #define NO_BLOOD_STRENGTH( b )			(((b) & 0xFC) == 0)
@@ -71,7 +71,7 @@ constexpr UINT8 BLOOD_DELAY_MAX = 3;
 #define DECAY_SMELL_STRENGTH( s ) \
 { \
 	UINT8 ubStrength = SMELL_STRENGTH( (s) ); \
-	ubStrength--; \
+	if (ubStrength > 0) ubStrength--; \
 	ubStrength = ubStrength << SMELL_TYPE_NUM_BITS; \
 	(s) = SMELL_TYPE_BITS( (s) ) | ubStrength; \
 }
@@ -88,7 +88,7 @@ constexpr UINT8 BLOOD_DELAY_MAX = 3;
 
 #define DECAY_BLOOD_DELAY_TIME( b ) \
 { \
-	(b)--; \
+	if (BLOOD_DELAY_TIME(b) > 0) (b)--; \
 }
 
 #define SET_BLOOD_FLOOR_STRENGTH( b, nb ) \
@@ -96,16 +96,16 @@ constexpr UINT8 BLOOD_DELAY_MAX = 3;
 	(b) = ( (nb) << 2 ) | ( (b) & 0xE3); \
 }
 
-#define SET_BLOOD_ROOF_STRENGTH( b, nb ) \
-{ \
-	(b) = BLOOD_FLOOR_STRENGTH( (nb) ) << 5 | ( (b) & 0x1F); \
+constexpr void SET_BLOOD_ROOF_STRENGTH(UINT8 & bloodInfo, UINT8 roofBlood)
+{
+	bloodInfo = (bloodInfo & 0b0001'1111) | (roofBlood << 5);
 }
 
 #define DECAY_BLOOD_FLOOR_STRENGTH( b ) \
 { \
 	UINT8 ubFloorStrength; \
 	ubFloorStrength = BLOOD_FLOOR_STRENGTH( (b) ); \
-	ubFloorStrength--; \
+	if (ubFloorStrength > 0) ubFloorStrength--; \
 	SET_BLOOD_FLOOR_STRENGTH( (b), ubFloorStrength ); \
 }
 
@@ -113,8 +113,8 @@ constexpr UINT8 BLOOD_DELAY_MAX = 3;
 { \
 	UINT8 ubRoofStrength; \
 	ubRoofStrength = BLOOD_ROOF_STRENGTH( (b) ); \
-	ubRoofStrength--; \
-	SET_BLOOD_FLOOR_STRENGTH( (b), ubRoofStrength ); \
+	if (ubRoofStrength > 0) ubRoofStrength--; \
+	SET_BLOOD_ROOF_STRENGTH( (b), ubRoofStrength ); \
 }
 
 static void SetRandomBloodDecayTime(MAP_ELEMENT & me)
@@ -177,32 +177,26 @@ static void DecayBlood(void)
 				pMapElement->uiFlags |= MAPELEMENT_REEVALUATEBLOOD;
 
 				// reduce the floor blood strength if it is above zero
-				if (BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo ) > 0)
+				DECAY_BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo )
+				if (BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo ) == 0)
 				{
-					DECAY_BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo )
-					if (BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo ) == 0)
+					// delete the blood graphic on the floor!
+					// then
+					if (NO_BLOOD_STRENGTH( pMapElement->ubBloodInfo ))
 					{
-						// delete the blood graphic on the floor!
-						// then
-						if (NO_BLOOD_STRENGTH( pMapElement->ubBloodInfo ))
-						{
-							// wipe the whole byte to zero
-							pMapElement->ubBloodInfo = 0;
-						}
+						// wipe the whole byte to zero
+						pMapElement->ubBloodInfo = 0;
 					}
 				}
 				// reduce the roof blood strength if it is above zero
-				if (BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo ) > 0)
+				DECAY_BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo )
+				if (BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo ) == 0)
 				{
-					DECAY_BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo )
-					if (BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo ) == 0)
+					// delete the blood graphic on the roof!
+					if (NO_BLOOD_STRENGTH( pMapElement->ubBloodInfo ))
 					{
-						// delete the blood graphic on the roof!
-						if (NO_BLOOD_STRENGTH( pMapElement->ubBloodInfo ))
-						{
-							// wipe the whole byte to zero
-							pMapElement->ubBloodInfo = 0;
-						}
+						// wipe the whole byte to zero
+						pMapElement->ubBloodInfo = 0;
 					}
 				}
 
@@ -306,7 +300,7 @@ void DropSmell(SOLDIERTYPE& s)
 				// same smell; increase the strength to the bigger of the two strengths,
 				// plus 1/5 of the smaller
 				ubStrength = std::max( ubStrength, ubOldStrength ) + std::min( ubStrength, ubOldStrength ) / 5;
-				ubStrength = std::max(ubStrength, SMELL_STRENGTH_MAX);
+				ubStrength = std::min(ubStrength, SMELL_STRENGTH_MAX);
 				SET_SMELL(pMapElement->ubSmellInfo, ubStrength, ubSmell);
 			}
 			else
@@ -401,7 +395,7 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 			{ // Combine blood strengths
 				UINT8 new_strength = std::max(old_strength, strength) + 1;
 				// make sure the strength is legal
-				new_strength = std::max(new_strength, BLOOD_STRENGTH_MAX);
+				new_strength = std::min(new_strength, BLOOD_STRENGTH_MAX);
 				SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else
@@ -479,3 +473,80 @@ void UpdateBloodGraphics(GridNo const gridno, INT8 const level)
 		// XXX no visible blood on roofs
 	}
 }
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(BloodInfo, FloorStrength)
+{
+	UINT8 bloodInfo = 3;
+
+	SET_BLOOD_FLOOR_STRENGTH(bloodInfo, 5);
+	EXPECT_EQ(BLOOD_FLOOR_STRENGTH(bloodInfo), 5);
+
+	DECAY_BLOOD_FLOOR_STRENGTH(bloodInfo);
+	EXPECT_EQ(BLOOD_FLOOR_STRENGTH(bloodInfo), 4);
+
+	SET_BLOOD_FLOOR_STRENGTH(bloodInfo, 0);
+	DECAY_BLOOD_FLOOR_STRENGTH(bloodInfo);
+	EXPECT_EQ(BLOOD_FLOOR_STRENGTH(bloodInfo), 0);
+
+}
+
+TEST(BloodInfo, RoofStrength)
+{
+	UINT8 bloodInfo = 3;
+
+	SET_BLOOD_ROOF_STRENGTH(bloodInfo, 5);
+	EXPECT_EQ(BLOOD_ROOF_STRENGTH(bloodInfo), 5);
+
+	DECAY_BLOOD_ROOF_STRENGTH(bloodInfo);
+	EXPECT_EQ(BLOOD_ROOF_STRENGTH(bloodInfo), 4);
+
+	SET_BLOOD_ROOF_STRENGTH(bloodInfo, 0);
+	DECAY_BLOOD_ROOF_STRENGTH(bloodInfo);
+	EXPECT_EQ(BLOOD_ROOF_STRENGTH(bloodInfo), 0);
+}
+
+TEST(BloodInfo, FloorAndRoofStrength)
+{
+	UINT8 bloodInfo = 3;
+
+	SET_BLOOD_ROOF_STRENGTH(bloodInfo, 3);
+	SET_BLOOD_FLOOR_STRENGTH(bloodInfo, 7);
+
+	EXPECT_EQ(BLOOD_ROOF_STRENGTH(bloodInfo), 3);
+	EXPECT_EQ(BLOOD_FLOOR_STRENGTH(bloodInfo), 7);
+
+	DECAY_BLOOD_ROOF_STRENGTH(bloodInfo);
+	EXPECT_EQ(BLOOD_ROOF_STRENGTH(bloodInfo), 2);
+	EXPECT_EQ(BLOOD_FLOOR_STRENGTH(bloodInfo), 7);
+
+	DECAY_BLOOD_FLOOR_STRENGTH(bloodInfo);
+	EXPECT_EQ(BLOOD_ROOF_STRENGTH(bloodInfo), 2);
+	EXPECT_EQ(BLOOD_FLOOR_STRENGTH(bloodInfo), 6);
+}
+
+TEST(BloodInfo, NoBloodStrength)
+{
+	UINT8 bloodInfo = 3;
+
+	EXPECT_TRUE(NO_BLOOD_STRENGTH(bloodInfo));
+
+	SET_BLOOD_FLOOR_STRENGTH(bloodInfo, 1);
+	SET_BLOOD_ROOF_STRENGTH(bloodInfo, 0);
+	EXPECT_FALSE(NO_BLOOD_STRENGTH(bloodInfo));
+
+	SET_BLOOD_FLOOR_STRENGTH(bloodInfo, 0);
+	SET_BLOOD_ROOF_STRENGTH(bloodInfo, 2);
+	EXPECT_FALSE(NO_BLOOD_STRENGTH(bloodInfo));
+
+	DECAY_BLOOD_ROOF_STRENGTH(bloodInfo);
+	DECAY_BLOOD_ROOF_STRENGTH(bloodInfo);
+	EXPECT_TRUE(NO_BLOOD_STRENGTH(bloodInfo));
+
+	DECAY_BLOOD_ROOF_STRENGTH(bloodInfo);
+	EXPECT_TRUE(NO_BLOOD_STRENGTH(bloodInfo));
+}
+
+#endif
