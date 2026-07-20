@@ -2782,7 +2782,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			if (usKeyState & ALT_DOWN) HandleShortCutExitState();
 			break;
 
-		case SDLK_h:
+		case SDLK_H:
 			ShouldTheHelpScreenComeUp(HELP_SCREEN_LAPTOP, TRUE);
 			break;
 

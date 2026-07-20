@@ -1641,7 +1641,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 					DestroySummaryWindow();
 				break;
 
-			case SDLK_y:
+			case SDLK_Y:
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 				{
 					gfRenderSummary = TRUE;
@@ -1655,7 +1655,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 				}
 				break;
 
-			case SDLK_n:
+			case SDLK_N:
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 				{
 					gfOutdatedDenied = TRUE;

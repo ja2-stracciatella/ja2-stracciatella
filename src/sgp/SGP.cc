@@ -10,7 +10,7 @@
 #include "SoundMan.h"
 #include "VObject.h"
 #include "Video.h"
-#include <SDL.h>
+#include "SDL3/SDL.h"
 #include "UILayout.h"
 #include "GameRes.h"
 #include "GameMode.h"
@@ -23,6 +23,7 @@
 #include "EnumCodeGen.h"
 
 #include "Logger.h"
+#include <SDL3/SDL_events.h>
 #include <iostream>
 
 #ifdef WITH_UNITTESTS
@@ -108,7 +109,7 @@ static void deinitGameAndExit()
 void requestGameExit()
 {
 	SDL_Event event;
-	event.type = SDL_QUIT;
+	event.type = SDL_EVENT_QUIT;
 	SDL_PushEvent(&event);
 }
 
@@ -127,40 +128,38 @@ static void MainLoop()
 		{
 			switch (event.type)
 			{
-				case SDL_APP_WILLENTERBACKGROUND:
+				case SDL_EVENT_WILL_ENTER_BACKGROUND:
 					s_doGameCycles = false;
 					break;
 
-				case SDL_APP_WILLENTERFOREGROUND:
+				case SDL_EVENT_WILL_ENTER_FOREGROUND:
 					s_doGameCycles = true;
 					break;
 
-				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_f &&
-					    SDL_GetModState() & KMOD_CTRL)
+				case SDL_EVENT_KEY_DOWN:
+					if (event.key.key == SDLK_F &&
+					    SDL_GetModState() & SDL_KMOD_CTRL)
 					{
 						FPS::ToggleOnOff();
 					}
 					else
 					{
-						KeyDown(&event.key.keysym);
+						KeyDown(&event.key);
 					}
 					break;
-				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
-				case SDL_TEXTINPUT: TextInput(&event.text); break;
+				case SDL_EVENT_KEY_UP:   KeyUp(  &event.key); break;
+				case SDL_EVENT_TEXT_INPUT: TextInput(&event.text); break;
 
-				case SDL_MOUSEBUTTONDOWN: MouseButtonDown(&event.button); break;
-				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
+				case SDL_EVENT_MOUSE_BUTTON_DOWN: MouseButtonDown(&event.button); break;
+				case SDL_EVENT_MOUSE_BUTTON_UP:   MouseButtonUp(&event.button);   break;
+				case SDL_EVENT_MOUSE_MOTION: MouseMove(&event.motion); break;
+				case SDL_EVENT_MOUSE_WHEEL: MouseWheelScroll(&event.wheel); break;
 
-				case SDL_MOUSEMOTION: MouseMove(&event.motion); break;
+				case SDL_EVENT_FINGER_MOTION: FingerMove(&event.tfinger); break;
+				case SDL_EVENT_FINGER_UP:     FingerUp(&event.tfinger); break;
+				case SDL_EVENT_FINGER_DOWN:   FingerDown(&event.tfinger); break;
 
-				case SDL_MOUSEWHEEL: MouseWheelScroll(&event.wheel); break;
-
-				case SDL_FINGERMOTION: FingerMove(&event.tfinger); break;
-				case SDL_FINGERUP:     FingerUp(&event.tfinger); break;
-				case SDL_FINGERDOWN:   FingerDown(&event.tfinger); break;
-
-				case SDL_QUIT: deinitGameAndExit(); break;
+				case SDL_EVENT_QUIT: deinitGameAndExit(); break;
 			}
 		}
 		else
@@ -269,7 +268,7 @@ int main(int argc, char* argv[])
 {
     try {
 		#ifdef __ANDROID__
-		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+		JNIEnv* jniEnv = (JNIEnv*)SDL_GetAndroidJNIEnv();
 
 		if (setGlobalJniEnv(jniEnv) == FALSE) {
 			auto rustError = getRustError();
@@ -313,11 +312,7 @@ int main(int argc, char* argv[])
 			return EXIT_SUCCESS;
 		}
 
-		if (EngineOptions_shouldStartInFullscreen(params.get())) {
-			VideoSetFullScreen(TRUE);
-		} else if (EngineOptions_shouldStartInWindow(params.get())) {
-			VideoSetFullScreen(FALSE);
-		}
+		auto shouldStartInFullScreen = EngineOptions_shouldStartInFullscreen(params.get());
 
 		if (EngineOptions_shouldStartWithoutSound(params.get())) {
 			SoundEnableSound(FALSE);
@@ -392,6 +387,12 @@ int main(int argc, char* argv[])
 		InitializeVideoManager(scalingQuality, GCM->getGamePolicy()->target_fps);
 		VideoSetBrightness(brightness);
 
+		if (shouldStartInFullScreen) {
+			VideoSetFullScreen(TRUE);
+		} else {
+			VideoSetFullScreen(FALSE);
+		}
+
 		SLOGD("Initializing Video Object Manager");
 		InitializeVideoObjectManager();
 
@@ -446,7 +447,7 @@ void TerminationHandler()
 	auto errorMessage = ST::string("Game has been terminated due to an unknown error");
 	#ifdef __ANDROID__
 	// Pull out some methods from JNI to set error on NativeExceptionContainer
-	auto jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+	auto jniEnv = (JNIEnv*)SDL_GetAndroidJNIEnv();
     jclass exceptionContainer = jniEnv->FindClass("io/github/ja2stracciatella/NativeExceptionContainer");
     jfieldID singletonFieldId = jniEnv->GetStaticFieldID(exceptionContainer, "INSTANCE", "Lio/github/ja2stracciatella/NativeExceptionContainer;");
     jobject exceptionContainerSingleton = jniEnv->GetStaticObjectField(exceptionContainer, singletonFieldId);
