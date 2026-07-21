@@ -4,7 +4,7 @@
 #include "Concepts.h"
 #include "Types.h"
 #include <string_theory/string>
-#include <SDL_rwops.h>
+#include "SDL3/SDL_iostream.h"
 
 enum FileSeekMode
 {
@@ -64,7 +64,7 @@ public:
 	UINT32 size() const;
 
 	/** Get an SDL_RWops from the file. */
-	SDL_RWops* getRwOps();
+	SDL_IOStream* getRwOps();
 
 	/** Get the name of the file. */
 	auto const& getName() const noexcept { return name; }

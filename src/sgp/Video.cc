@@ -13,6 +13,10 @@
 #include "Video.h"
 #include "UILayout.h"
 #include "Icon.h"
+#include <SDL3/SDL_video.h>
+#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_surface.h>
 #include <algorithm>
 #include <chrono>
 #include <stdexcept>
@@ -66,10 +70,10 @@ static void DeletePrimaryVideoSurfaces(void);
 // returns if desktop resolution larger game resolution
 BOOLEAN IsDesktopLargeEnough()
 {
-	SDL_DisplayMode dm;
-	if (SDL_GetDesktopDisplayMode(0, &dm) == 0)
+	const SDL_DisplayMode* dm = SDL_GetDesktopDisplayMode(0);
+	if (dm)
 	{
-		if (dm.w < SCREEN_WIDTH || dm.h < SCREEN_HEIGHT)
+		if (dm->w < SCREEN_WIDTH || dm->h < SCREEN_HEIGHT)
 		{
 			return false;
 		}
@@ -79,36 +83,21 @@ BOOLEAN IsDesktopLargeEnough()
 
 void VideoSetFullScreen(const BOOLEAN enable)
 {
-	if (enable)
-	{
-		g_window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-	}
-	else
-	{
-		g_window_flags &= ~SDL_WINDOW_FULLSCREEN_DESKTOP;
-	}
+	SDL_SetWindowFullscreen(g_game_window, enable);
+	SDL_SetWindowMouseGrab(g_game_window, enable);
 }
 
 void VideoToggleFullScreen(void)
 {
-	if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN_DESKTOP)
-	{
-		SDL_SetWindowFullscreen(g_game_window, 0);
-	}
-	else
-	{
-		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-	}
+	VideoSetFullScreen(!(SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN));
 }
 
 void VideoSetBrightness(float brightness)
 {
-	if (brightness >= 0)
-	{
-		// Do not set the brightness unless explicitly requested
-		// On Windows, setting the brightness resets color profile and some other disply options.
-		SDL_SetWindowBrightness(g_game_window, brightness);
-	}
+	if (brightness < 0) return;
+
+	if (ScreenTexture)        SDL_SetTextureColorModFloat(ScreenTexture, brightness, brightness, brightness);
+	if (ScaledScreenTexture)  SDL_SetTextureColorModFloat(ScaledScreenTexture, brightness, brightness, brightness);
 }
 
 
@@ -124,75 +113,32 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	g_window_flags |= SDL_WINDOW_RESIZABLE;
 
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
-					SDL_WINDOWPOS_UNDEFINED,
-					SDL_WINDOWPOS_UNDEFINED,
 					SCREEN_WIDTH, SCREEN_HEIGHT,
 					g_window_flags);
 
-	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
-	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	GameRenderer = SDL_CreateRenderer(g_game_window, nullptr);
+	SDL_SetRenderLogicalPresentation(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-	SurfaceUniquePtr windowIcon(SDL_CreateRGBSurfaceWithFormatFrom(
-			(void*)gWindowIconData.pixel_data,
+	SurfaceUniquePtr windowIcon(SDL_CreateSurfaceFrom(
 			gWindowIconData.width,
 			gWindowIconData.height,
-			0,
-			gWindowIconData.bytes_per_pixel*gWindowIconData.width,
-			SDL_PIXELFORMAT_ABGR8888));
+			SDL_PIXELFORMAT_ABGR8888,
+			(void*)gWindowIconData.pixel_data,
+			gWindowIconData.bytes_per_pixel*gWindowIconData.width
+	));
 	SDL_SetWindowIcon(g_game_window, windowIcon.get());
 
 
 	ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	ScreenBuffer = SDL_CreateRGBSurface(
-					0,
+	ScreenBuffer = SDL_CreateSurface(
 					SCREEN_WIDTH,
 					SCREEN_HEIGHT,
-					PIXEL_DEPTH,
-					RED_MASK,
-					GREEN_MASK,
-					BLUE_MASK,
-					ALPHA_MASK
+					SDL_PIXELFORMAT_RGB565
 	);
 
 	if (ScreenBuffer == NULL) {
 		SLOGE("SDL_CreateRGBSurface for ScreenBuffer failed: {}\n", SDL_GetError());
-	}
-
-
-	if (ScaleQuality == VideoScaleQuality::PERFECT)
-	{
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-
-		if (!IsDesktopLargeEnough())
-		{
-			// Pixel-perfect mode cannot handle scaling down, and will
-			// result in a empty black screen if the window size is
-			// smaller than logical render resolution.
-			throw std::runtime_error("Game resolution must not be larger than desktop size. "
-				"Please reduce game resolution or choose another scaling mode.");
-		}
-		SDL_SetWindowMinimumSize(g_game_window, SCREEN_WIDTH, SCREEN_HEIGHT);
-		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
-	}
-	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT)
-	{
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
-			SDL_PIXELFORMAT_RGB565,
-			SDL_TEXTUREACCESS_TARGET,
-			SCREEN_WIDTH * OVERSAMPLING_SCALE, SCREEN_HEIGHT * OVERSAMPLING_SCALE);
-
-		if (ScaledScreenTexture == NULL)
-		{
-			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: {}\n", SDL_GetError());
-		}
-
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-	}
-	else
-	{
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	}
 
 	ScreenTexture = SDL_CreateTexture(GameRenderer,
@@ -204,9 +150,43 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 		SLOGE("SDL_CreateTexture for ScreenTexture failed: {}\n", SDL_GetError());
 	}
 
-	FrameBuffer = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
-		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
+
+	if (ScaleQuality == VideoScaleQuality::PERFECT)
+	{
+		if (!IsDesktopLargeEnough())
+		{
+			// Pixel-perfect mode cannot handle scaling down, and will
+			// result in a empty black screen if the window size is
+			// smaller than logical render resolution.
+			throw std::runtime_error("Game resolution must not be larger than desktop size. "
+				"Please reduce game resolution or choose another scaling mode.");
+		}
+		SDL_SetWindowMinimumSize(g_game_window, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SDL_SetTextureScaleMode(ScreenTexture, SDL_SCALEMODE_NEAREST);
+		SDL_SetRenderLogicalPresentation(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
+	}
+	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT)
+	{
+		SDL_SetTextureScaleMode(ScreenTexture, SDL_SCALEMODE_NEAREST);
+		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
+			SDL_PIXELFORMAT_RGB565,
+			SDL_TEXTUREACCESS_TARGET,
+			SCREEN_WIDTH * OVERSAMPLING_SCALE, SCREEN_HEIGHT * OVERSAMPLING_SCALE);
+
+		if (ScaledScreenTexture == NULL)
+		{
+			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: {}\n", SDL_GetError());
+		}
+	}
+	else
+	{
+		SDL_SetTextureScaleMode(ScreenTexture, SDL_SCALEMODE_LINEAR);
+	}
+
+	FrameBuffer = SDL_CreateSurface(
+		SCREEN_WIDTH,
+		SCREEN_HEIGHT,
+		SDL_PIXELFORMAT_RGB565
 	);
 
 	if (FrameBuffer == NULL)
@@ -214,18 +194,19 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 		SLOGE("SDL_CreateRGBSurface for FrameBuffer failed: {}\n", SDL_GetError());
 	}
 
-	MouseCursor = SDL_CreateRGBSurface(
-		0, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
-		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
+	MouseCursor = SDL_CreateSurface(
+		MAX_CURSOR_WIDTH,
+		MAX_CURSOR_HEIGHT,
+		SDL_PIXELFORMAT_RGB565
 	);
-	SDL_SetColorKey(MouseCursor, SDL_TRUE, 0);
+	SDL_SetSurfaceColorKey(MouseCursor, true, 0);
 
 	if (MouseCursor == NULL)
 	{
 		SLOGE("SDL_CreateRGBSurface for MouseCursor failed: {}\n", SDL_GetError());
 	}
 
-	SDL_ShowCursor(SDL_DISABLE);
+	SDL_HideCursor();
 
 	// Initialize state variables
 	gfForceFullScreenRefresh = TRUE;
@@ -465,7 +446,7 @@ void RefreshScreen(void)
 
 	// This variable will hold the union of all modified regions.
 	struct rect : SDL_Rect {
-		void operator+=(SDL_Rect const& r) { SDL_UnionRect(this, &r, this); }
+		void operator+=(SDL_Rect const& r) { SDL_GetRectUnion(this, &r, this); }
 	} ScreenTextureUpdateRect{ MouseBackground };
 
 	if (gfForceFullScreenRefresh || guiDirtyRegionCount > 0 || guiDirtyRegionExCount > 0)
@@ -527,13 +508,15 @@ void RefreshScreen(void)
 	SDL_Rect dst;
 	dst.x = cursorPos.iX - gsMouseCursorXOffset;
 	dst.y = cursorPos.iY - gsMouseCursorYOffset;
+	dst.w = src.w;
+	dst.h = src.h;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
 	ScreenTextureUpdateRect += dst;
 	MouseBackground = dst;
 
 	uint8_t const * SrcPixels = static_cast<uint8_t *>(ScreenBuffer->pixels)
 		+ ScreenTextureUpdateRect.y * ScreenBuffer->pitch
-		+ ScreenTextureUpdateRect.x * ScreenBuffer->format->BytesPerPixel;
+		+ ScreenTextureUpdateRect.x * SDL_GetPixelFormatDetails(ScreenBuffer->format)->bytes_per_pixel;
 	SDL_UpdateTexture(ScreenTexture, &ScreenTextureUpdateRect,
 	                  SrcPixels, ScreenBuffer->pitch);
 
@@ -541,13 +524,13 @@ void RefreshScreen(void)
 
 	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
 		SDL_SetRenderTarget(GameRenderer, ScaledScreenTexture);
-		SDL_RenderCopy(GameRenderer, ScreenTexture, nullptr, nullptr);
+		SDL_RenderTexture(GameRenderer, ScreenTexture, nullptr, nullptr);
 
 		SDL_SetRenderTarget(GameRenderer, nullptr);
-		SDL_RenderCopy(GameRenderer, ScaledScreenTexture, nullptr, nullptr);
+		SDL_RenderTexture(GameRenderer, ScaledScreenTexture, nullptr, nullptr);
 	}
 	else {
-		SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
+		SDL_RenderTexture(GameRenderer, ScreenTexture, NULL, NULL);
 	}
 
 	FPS::RenderPresentPtr(GameRenderer);
@@ -577,7 +560,7 @@ void RefreshScreenCapped()
 
 static void GetRGBDistribution()
 {
-	SDL_PixelFormat const& f = *ScreenBuffer->format;
+	auto f = *SDL_GetPixelFormatDetails(ScreenBuffer->format);
 
 	UINT32          const  r = f.Rmask;
 	UINT32          const  g = f.Gmask;
@@ -590,9 +573,9 @@ static void GetRGBDistribution()
 	gusGreenMask = static_cast<UINT16>(g);
 	gusBlueMask  = static_cast<UINT16>(b);
 
-	gusRedShift   = f.Rshift - f.Rloss;
-	gusGreenShift = f.Gshift - f.Gloss;
-	gusBlueShift  = f.Bshift - f.Bloss;
+	gusRedShift   = f.Rshift - (8 - f.Rbits);
+	gusGreenShift = f.Gshift - (8 - f.Gbits);
+	gusBlueShift  = f.Bshift - (8 - f.Bbits);
 }
 
 

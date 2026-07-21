@@ -10,7 +10,7 @@
 #include <cmath>
 #include <vector>
 
-#include <SDL.h>
+#include "SDL3/SDL.h"
 #include "smacker.h"
 
 #include "ContentManager.h"
