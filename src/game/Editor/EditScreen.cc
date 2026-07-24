@@ -114,9 +114,6 @@ BOOLEAN			gfFakeLights = FALSE;
 
 INT16				gsLightRadius = 5;
 
-static BOOLEAN gfOldDoVideoScroll;     // Saved for returning to previous settings
-static UINT8   gubOldCurScrollSpeedID; // Saved for returning to previous settings
-
 TaskMode iOldTaskMode    = TASK_OPTIONS;
 TaskMode iCurrentTaskbar = TASK_NONE;
 TaskMode iTaskMode       = TASK_NONE;
@@ -292,11 +289,6 @@ static void EditModeInit(void)
 	gfCorruptMap = FALSE;
 	gfCorruptSchedules = FALSE;
 
-	// save old scrolling mode, set renderer to not use video scroll
-	gfOldDoVideoScroll = gfDoVideoScroll;
-	gubOldCurScrollSpeedID = gubCurScrollSpeedID;
-	/// set new ones
-
 	gfRoofPlacement = FALSE;
 
 	EnableUndo();
@@ -422,11 +414,6 @@ static BOOLEAN EditModeShutdown(void)
 	// Make sure to turn off demo mode!
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
-
-	// RETURN TO PREVIOUS SCROLL MODE
-	gfDoVideoScroll = gfOldDoVideoScroll;
-	gubCurScrollSpeedID = gubOldCurScrollSpeedID;
-
 
 	DisableUndo();
 
