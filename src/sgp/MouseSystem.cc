@@ -140,8 +140,6 @@ static const INT16 gsFastHelpDelay = 600; // In timer ticks
 INT16 lastFingerDownX;
 INT16 lastFingerDownY;
 
-static BOOLEAN gfRefreshUpdate = FALSE;
-
 static void MSYS_TrashRegList(void);
 
 
@@ -267,10 +265,6 @@ void MouseSystemHook(UINT16 type, UINT32 button, UINT16 x, UINT16 y)
 		case MOUSE_POS:
 		case TOUCH_FINGER_MOVE:
 			action |= MSYS_DO_MOVE;
-			if (gfRefreshUpdate)
-			{
-				gfRefreshUpdate = FALSE;
-			}
 			break;
 
 		default:
@@ -677,7 +671,6 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 	r->prev               = 0;
 
 	MSYS_AddRegionToList(r);
-	gfRefreshUpdate = TRUE;
 }
 
 
@@ -710,7 +703,6 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 	if (MSYS_CurrRegion  == r) MSYS_CurrRegion  = 0;
 	if (g_clicked_region == r) g_clicked_region = 0;
 
-	gfRefreshUpdate = TRUE;
 	*r = MOUSE_REGION{};
 }
 
