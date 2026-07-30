@@ -282,10 +282,8 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 	fEastWest = ((ddHorizAngle > (0) && ddHorizAngle < (PI * 1 / 2)) ||
 			(ddHorizAngle < (-PI * 1 / 2) && ddHorizAngle > (-PI)));
 
-	fTopLeft = (pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
-			pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT);
-	fTopRight = (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
-			pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT);
+	fTopLeft = pStructure->ubWallOrientation & ORIENT_LEFT;
+	fTopRight = pStructure->ubWallOrientation & ORIENT_RIGHT;
 
 	if ( fNorthSouth )
 	{
@@ -337,13 +335,11 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 		else if ( bLocation == LOC_4_0 )
 		{
 			// if door is normal and OPEN and outside type then we let N-S pass
-			if ( (pStructure->fFlags & STRUCTURE_DOOR) && (pStructure->fFlags & STRUCTURE_OPEN) )
+			if ( (pStructure->fFlags & STRUCTURE_DOOR) &&
+				 (pStructure->fFlags & STRUCTURE_OPEN) &&
+				 (pStructure->ubWallOrientation & ORIENT_OUTSIDE) )
 			{
-				if (pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT ||
-					pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
-				{
-					return( FALSE );
-				}
+				return( FALSE );
 			}
 			else if ( fTopRight )
 			{
@@ -362,7 +358,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 		// Check E-W at north corner:   4,4   4,0   0,4
 		if ( bLocation == LOC_4_4 )
 		{
-			if ( pStructure->ubWallOrientation == NO_ORIENTATION)
+			if ( pStructure->ubWallOrientation == ORIENT_NONE )
 			{
 				// very top north corner of building, and going (screenwise) west or east
 				return( FALSE );
@@ -385,13 +381,11 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
 		else if ( bLocation == LOC_0_4 )
 		{
 			// if normal door and OPEN and inside type then we let E-W pass
-			if ( (pStructure->fFlags & STRUCTURE_DOOR) && (pStructure->fFlags & STRUCTURE_OPEN) )
+			if ( (pStructure->fFlags & STRUCTURE_DOOR) &&
+				 (pStructure->fFlags & STRUCTURE_OPEN) &&
+				 (pStructure->ubWallOrientation & ORIENT_INSIDE) )
 			{
-				if (pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
-					pStructure->ubWallOrientation == INSIDE_TOP_RIGHT)
-				{
-					return( FALSE );
-				}
+				return( FALSE );
 			}
 
 			// if wall orientation is top-left, then check W of this location
@@ -4033,7 +4027,7 @@ void MoveBullet(BULLET* const pBullet)
 												// by default knife at same tile as window
 												iKnifeGridNo = (INT16) iGridNo;
 
-												if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT || pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
+												if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 												{
 													if ( pBullet->qIncrX > 0)
 													{
@@ -4077,16 +4071,7 @@ void MoveBullet(BULLET* const pBullet)
 										}
 										else
 										{
-											BOOLEAN blow_south;
-											if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
-													pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
-											{
-												blow_south = pBullet->qIncrX > 0;
-											}
-											else
-											{
-												blow_south = pBullet->qIncrY > 0;
-											}
+											bool blow_south = pStructure->ubWallOrientation & ORIENT_RIGHT ? pBullet->qIncrX > 0 : pBullet->qIncrY > 0;
 											BulletHitWindow(pBullet, pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS, pStructure->usStructureID, blow_south);
 											LocateBullet(pBullet);
 											// have to remove this window from future hit considerations so the deleted structure data can't be referenced!
@@ -4433,29 +4418,13 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 						if (pStructure->fFlags & STRUCTURE_WALLNWINDOW && dZ >= WINDOW_BOTTOM_HEIGHT_UNITS &&
 							dZ <= WINDOW_TOP_HEIGHT_UNITS)
 						{
-							if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
-								pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
+							if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 							{
-
-								if (dDeltaX > 0)
-								{
-									return( COLLISION_WINDOW_SOUTHWEST );
-								}
-								else
-								{
-									return( COLLISION_WINDOW_NORTHWEST );
-								}
+								return dDeltaX > 0 ? COLLISION_WINDOW_SOUTHWEST : COLLISION_WINDOW_NORTHWEST;
 							}
 							else
 							{
-								if ( dDeltaY > 0)
-								{
-									return( COLLISION_WINDOW_SOUTHEAST );
-								}
-								else
-								{
-									return( COLLISION_WINDOW_NORTHEAST );
-								}
+								return dDeltaY > 0 ? COLLISION_WINDOW_SOUTHEAST : COLLISION_WINDOW_NORTHEAST;
 							}
 						}
 
@@ -4465,33 +4434,15 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 							*pdNormalY = 0;
 							*pdNormalZ = 0;
 
-							if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
-								pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
+							if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 							{
-
-								if (dDeltaX > 0)
-								{
-									*pdNormalX = -1;
-									return( COLLISION_WALL_SOUTHEAST );
-								}
-								else
-								{
-									*pdNormalX = 1;
-									return( COLLISION_WALL_NORTHEAST );
-								}
+								*pdNormalX = -1;
+								return dDeltaX > 0 ? COLLISION_WALL_SOUTHEAST : COLLISION_WALL_NORTHEAST;
 							}
 							else
 							{
-								if ( dDeltaY > 0)
-								{
-									*pdNormalY = -1;
-									return( COLLISION_WALL_SOUTHWEST );
-								}
-								else
-								{
-									*pdNormalY = 1;
-									return( COLLISION_WALL_NORTHWEST );
-								}
+								*pdNormalY = -1;
+								return dDeltaY > 0 ? COLLISION_WALL_SOUTHWEST : COLLISION_WALL_NORTHWEST;
 							}
 
 						}
@@ -4505,14 +4456,7 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 								{
 									if (!((*(pStructure->pShape))[bLOSIndexX][bLOSIndexY] & AtHeight[ iCurrCubesAboveLevelZ + 1 ]))
 									{
-										if ( ( pStructure->fFlags & STRUCTURE_ROOF ) )
-										{
-											return( COLLISION_ROOF );
-										}
-										else
-										{
-											return( COLLISION_STRUCTURE_Z );
-										}
+										return pStructure->fFlags & STRUCTURE_ROOF ? COLLISION_ROOF : COLLISION_STRUCTURE_Z;
 									}
 								}
 								else

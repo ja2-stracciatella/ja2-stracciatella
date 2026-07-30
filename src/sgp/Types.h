@@ -162,12 +162,12 @@ typedef SGPFile* HWFILE;
 
 
 #ifdef __cplusplus
-#	define ENUM_BITSET(type)                                                                 \
-		constexpr type operator ~  (type  a)         { return     (type)~(int)a;           } \
-		constexpr type operator &  (type  a, type b) { return     (type)((int)a & (int)b); } \
-		constexpr type operator &= (type& a, type b) { return a = (type)((int)a & (int)b); } \
-		constexpr type operator |  (type  a, type b) { return     (type)((int)a | (int)b); } \
-		constexpr type operator |= (type& a, type b) { return a = (type)((int)a | (int)b); }
+#	define ENUM_BITSET(type)                                                               \
+		constexpr type operator ~  (type  a)         { return     (type)~(std::underlying_type_t<type>)a;                                    } \
+		constexpr type operator &  (type  a, type b) { return     (type)((std::underlying_type_t<type>)a & (std::underlying_type_t<type>)b); } \
+		constexpr type operator &= (type& a, type b) { return a = (type)((std::underlying_type_t<type>)a & (std::underlying_type_t<type>)b); } \
+		constexpr type operator |  (type  a, type b) { return     (type)((std::underlying_type_t<type>)a | (std::underlying_type_t<type>)b); } \
+		constexpr type operator |= (type& a, type b) { return a = (type)((std::underlying_type_t<type>)a | (std::underlying_type_t<type>)b); }
 #else
 #	define ENUM_BITSET(type)
 #endif

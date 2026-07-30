@@ -2166,22 +2166,17 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 		if ( sGridNo == pSoldier->sGridNo && ubItemCursor != AIDCURS )
 		{
 			// Get orientation....
-			switch( pStructure->ubWallOrientation )
+			if ( pStructure->ubWallOrientation & ORIENT_LEFT )
 			{
-				case OUTSIDE_TOP_LEFT:
-				case INSIDE_TOP_LEFT:
-
-					sNewGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-					break;
-
-				case OUTSIDE_TOP_RIGHT:
-				case INSIDE_TOP_RIGHT:
-
-					sNewGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
-					break;
-
-				default:
-					sNewGridNo = sGridNo;
+				sNewGridNo = NewGridNo(sGridNo, DirectionInc(SOUTH));
+			}
+			else if (pStructure->ubWallOrientation & ORIENT_RIGHT)
+			{
+				sNewGridNo = NewGridNo(sGridNo, DirectionInc(EAST));
+			}
+			else
+			{
+				sNewGridNo = sGridNo;
 			}
 
 			// Set target gridno to this one...

@@ -270,7 +270,7 @@ void PasteSingleBrokenWall( UINT32 iMapIndex )
 	UINT16 usObjIndex        = sel_list[iCurBank].uiObject;
 	UINT16 usTileIndex       = GetTileIndexFromTypeSubIndex(usObjIndex, usIndex);
 	UINT16 usWallOrientation = GetWallOrientation(usTileIndex);
-	if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == INSIDE_TOP_RIGHT )
+	if( usWallOrientation & ORIENT_INSIDE )
 		EraseHorizontalWall( iMapIndex );
 	else
 		EraseVerticalWall( iMapIndex );

@@ -28,16 +28,14 @@ BOOLEAN	IsJumpableWindowPresentAtGridNo( INT32 sGridNo, INT8 bStartingDir)
 		{
 			case SOUTH:
 			case NORTH:
-				if (pStructure->ubWallOrientation != OUTSIDE_TOP_LEFT &&
-					pStructure->ubWallOrientation != INSIDE_TOP_LEFT)
+				if (!(pStructure->ubWallOrientation & ORIENT_LEFT))
 				{
 					return false;
 				}
 				break;
 			case EAST:
 			case WEST:
-				if (pStructure->ubWallOrientation != OUTSIDE_TOP_RIGHT &&
-					pStructure->ubWallOrientation != INSIDE_TOP_RIGHT)
+				if (!(pStructure->ubWallOrientation & ORIENT_RIGHT))
 				{
 					return false;
 				}
@@ -73,11 +71,11 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
 	return( FALSE );
 }
 
-STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, INT8 const orientation)
+STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, Orientation const orientation)
 {
 	FOR_EACH_STRUCTURE(pStructure, grid_no, STRUCTURE_WALLSTUFF)
 	{
-		if (pStructure->ubWallOrientation != orientation) continue;
+		if ( !(pStructure->ubWallOrientation & orientation) ) continue;
 
 		STRUCTURE* const base = FindBaseStructure(pStructure);
 		if (!base) continue;
@@ -98,46 +96,38 @@ BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo )
 	if ( pStructure != NULL )
 	{
 		// Check around based on orientation
-		switch( pStructure->ubWallOrientation )
+		if (pStructure->ubWallOrientation & ORIENT_LEFT)
 		{
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
+			// Here, check north direction
+			sNewGridNo = NewGridNo(sGridNo, DirectionInc(NORTH));
 
-				// Here, check north direction
-				sNewGridNo = NewGridNo( sGridNo, DirectionInc( NORTH ) );
+			if (IsRoofVisible2(sNewGridNo))
+			{
+				// OK, now check south, if true, she's not visible
+				sNewGridNo = NewGridNo(sGridNo, DirectionInc(SOUTH));
 
-				if ( IsRoofVisible2( sNewGridNo ) )
+				if (IsRoofVisible2(sNewGridNo))
 				{
-					// OK, now check south, if true, she's not visible
-					sNewGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-
-					if ( IsRoofVisible2( sNewGridNo ) )
-					{
-						return( FALSE );
-					}
+					return(FALSE);
 				}
-				break;
-
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-
-				// Here, check west direction
-				sNewGridNo = NewGridNo( sGridNo, DirectionInc( WEST ) );
-
-				if ( IsRoofVisible2( sNewGridNo ) )
-				{
-					// OK, now check south, if true, she's not visible
-					sNewGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
-
-					if ( IsRoofVisible2( sNewGridNo ) )
-					{
-						return( FALSE );
-					}
-				}
-				break;
-
+			}
 		}
+		else
+		{
+			// Here, check west direction
+			sNewGridNo = NewGridNo(sGridNo, DirectionInc(WEST));
 
+			if (IsRoofVisible2(sNewGridNo))
+			{
+				// OK, now check south, if true, she's not visible
+				sNewGridNo = NewGridNo(sGridNo, DirectionInc(EAST));
+
+				if (IsRoofVisible2(sNewGridNo))
+				{
+					return(FALSE);
+				}
+			}
+		}
 	}
 
 	// Return true here, even if she does not exist
@@ -151,8 +141,7 @@ BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo )
 	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_WALL)
 	{
 		// Check orientation
-		if ( pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
-			pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT )
+		if ( pStructure->ubWallOrientation & ORIENT_LEFT )
 		{
 			return( TRUE );
 		}
@@ -167,8 +156,7 @@ BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo )
 	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_WALL)
 	{
 		// Check orientation
-		if ( pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
-			pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT )
+		if ( pStructure->ubWallOrientation & ORIENT_RIGHT)
 		{
 			return( TRUE );
 		}
@@ -186,8 +174,7 @@ BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
 			(pStructure->fFlags & STRUCTURE_OPEN )))
 		{
 			// Check orientation
-			if (pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
-				pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT)
+			if (pStructure->ubWallOrientation & ORIENT_LEFT)
 			{
 				return( TRUE );
 			}
@@ -205,8 +192,7 @@ BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
 		if (!((pStructure->fFlags & STRUCTURE_ANYDOOR) && (pStructure->fFlags & STRUCTURE_OPEN)))
 		{
 			// Check orientation
-			if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
-				pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
+			if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 			{
 				return( TRUE );
 			}
@@ -222,14 +208,10 @@ BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
 	{
 		if (!(pStructure->fFlags & STRUCTURE_OPEN)) break;
 		// Check orientation
-		if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
-			pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
+		if (pStructure->ubWallOrientation & ORIENT_RIGHT &&
+			pStructure->fFlags & (STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT))
 		{
-			if ((pStructure->fFlags & STRUCTURE_DOOR) ||
-				(pStructure->fFlags & STRUCTURE_DDOOR_RIGHT))
-			{
-				return( TRUE );
-			}
+			return( TRUE );
 		}
 	}
 
@@ -242,14 +224,10 @@ BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo )
 	{
 		if (!(pStructure->fFlags & STRUCTURE_OPEN)) break;
 		// Check orientation
-		if (pStructure->ubWallOrientation == INSIDE_TOP_LEFT ||
-			pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT)
+		if (pStructure->ubWallOrientation & ORIENT_LEFT &&
+			pStructure->fFlags & (STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT))
 		{
-			if ((pStructure->fFlags & STRUCTURE_DOOR) ||
-				(pStructure->fFlags & STRUCTURE_DDOOR_LEFT))
-			{
-				return( TRUE );
-			}
+			return( TRUE );
 		}
 	}
 
@@ -262,7 +240,7 @@ static STRUCTURE* FindCuttableWireFenceAtGridNo(INT16 sGridNo)
 	STRUCTURE * pStructure;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_WIREFENCE );
-	if (pStructure != NULL && pStructure->ubWallOrientation != NO_ORIENTATION &&
+	if (pStructure != NULL && pStructure->ubWallOrientation != ORIENT_NONE &&
 		!(pStructure->fFlags & STRUCTURE_OPEN))
 	{
 		return( pStructure );
