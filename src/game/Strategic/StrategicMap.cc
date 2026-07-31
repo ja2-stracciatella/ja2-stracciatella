@@ -269,6 +269,8 @@ void InitStrategicEngine()
 	BuildListOfTownSectors( );
 
 	OnAirspaceControlUpdated.addListener("default", HandleAirspaceControlUpdated);
+
+	InitSAMSitesEngine();
 }
 
 

@@ -10,6 +10,9 @@
 
 extern Observable<> OnAirspaceControlUpdated;
 
+// Registers the engine-level hooks. Runs once per application run.
+void InitSAMSitesEngine();
+
 void InitializeSAMSites();
 
 void UpdateSAMDoneRepair(const SGPSector& sector);
