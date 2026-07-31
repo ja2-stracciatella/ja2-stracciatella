@@ -444,31 +444,27 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 					if (pStructure->fFlags & STRUCTURE_WIREFENCE && pStructure->fFlags & STRUCTURE_OPEN)
 					{
 						// prevent movement along the fence but allow in all other directions
-						switch( pStructure->ubWallOrientation )
+						if ( pStructure->ubWallOrientation & ORIENT_LEFT)
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
-								SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( EAST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( SOUTHEAST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( SOUTH, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_NOT_STANDING );
-								break;
-
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
-								SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( EAST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( SOUTHEAST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( SOUTH, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_NOT_STANDING );
-								SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_NOT_STANDING );
-								break;
+							SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(EAST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(SOUTHEAST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(SOUTH, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_NOT_STANDING);
+						}
+						else
+						{
+							SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(EAST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(SOUTHEAST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(SOUTH, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_NOT_STANDING);
+							SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_NOT_STANDING);
 						}
 					}
 					// all other passable structures do not block movement in any way
@@ -478,73 +474,69 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 					if ( (pStructure->fFlags & STRUCTURE_FENCE) && !(pStructure->fFlags & STRUCTURE_SPECIAL) )
 					{
 						// jumpable!
-						switch( pStructure->ubWallOrientation )
+						if ( pStructure->ubWallOrientation & ORIENT_LEFT )
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
-								// can be jumped north and south
-								SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_FENCE );
-								SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( EAST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( SOUTHEAST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( SOUTH, TRAVELCOST_FENCE );
-								SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-								// set values for the tiles EXITED from this location
-								if (gubWorldMovementCosts[usGridNo - WORLD_COLS][NORTH][0] < TRAVELCOST_BLOCKED)
-								{
-									// make sure no obstacle costs exists before changing path cost to 0
-									FORCE_SET_MOVEMENTCOST(usGridNo - WORLD_COLS, NORTH, 0, TRAVELCOST_NONE);
-								}
-								SET_MOVEMENTCOST( usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo + 1, EAST, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-								if (gubWorldMovementCosts[usGridNo + WORLD_COLS][SOUTH][0] < TRAVELCOST_BLOCKED)
-								{
-									FORCE_SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_NONE);
-								}
-								SET_MOVEMENTCOST( usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo - 1, WEST, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo - WORLD_COLS - 1, NORTHWEST, 0, TRAVELCOST_OBSTACLE );
-								break;
-
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
-								// can be jumped east and west
-								SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( EAST, TRAVELCOST_FENCE );
-								SET_CURRMOVEMENTCOST( SOUTHEAST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( SOUTH, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_FENCE );
-								SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-								// set values for the tiles EXITED from this location
-								SET_MOVEMENTCOST( usGridNo - WORLD_COLS, NORTH, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE );
+							// can be jumped north and south
+							SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_FENCE);
+							SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(EAST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(SOUTHEAST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(SOUTH, TRAVELCOST_FENCE);
+							SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_OBSTACLE);
+							// set values for the tiles EXITED from this location
+							if (gubWorldMovementCosts[usGridNo - WORLD_COLS][NORTH][0] < TRAVELCOST_BLOCKED)
+							{
 								// make sure no obstacle costs exists before changing path cost to 0
-								if ( gubWorldMovementCosts[ usGridNo + 1 ][ EAST ][ 0 ] < TRAVELCOST_BLOCKED )
-								{
-									FORCE_SET_MOVEMENTCOST( usGridNo + 1, EAST, 0, TRAVELCOST_NONE );
-								}
-								SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-								if ( gubWorldMovementCosts[ usGridNo - 1 ][ WEST ][ 0 ] < TRAVELCOST_BLOCKED )
-								{
-									FORCE_SET_MOVEMENTCOST( usGridNo - 1, WEST, 0, TRAVELCOST_NONE );
-								}
-								SET_MOVEMENTCOST( usGridNo - WORLD_COLS - 1, NORTHWEST, 0, TRAVELCOST_OBSTACLE );
-								break;
-
-							default:
-								// corners aren't jumpable
-								for (ubDirLoop=0; ubDirLoop < NUM_WORLD_DIRECTIONS; ubDirLoop++)
-								{
-									SET_CURRMOVEMENTCOST( ubDirLoop, TRAVELCOST_OBSTACLE );
-								}
-								break;
+								FORCE_SET_MOVEMENTCOST(usGridNo - WORLD_COLS, NORTH, 0, TRAVELCOST_NONE);
+							}
+							SET_MOVEMENTCOST(usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE);
+							SET_MOVEMENTCOST(usGridNo + 1, EAST, 0, TRAVELCOST_OBSTACLE);
+							SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE);
+							if (gubWorldMovementCosts[usGridNo + WORLD_COLS][SOUTH][0] < TRAVELCOST_BLOCKED)
+							{
+								FORCE_SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_NONE);
+							}
+							SET_MOVEMENTCOST(usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_OBSTACLE);
+							SET_MOVEMENTCOST(usGridNo - 1, WEST, 0, TRAVELCOST_OBSTACLE);
+							SET_MOVEMENTCOST(usGridNo - WORLD_COLS - 1, NORTHWEST, 0, TRAVELCOST_OBSTACLE);
+						}
+						else if ( pStructure->ubWallOrientation & ORIENT_RIGHT )
+						{
+							// can be jumped east and west
+							SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(EAST, TRAVELCOST_FENCE);
+							SET_CURRMOVEMENTCOST(SOUTHEAST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(SOUTH, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_OBSTACLE);
+							SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_FENCE);
+							SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_OBSTACLE);
+							// set values for the tiles EXITED from this location
+							SET_MOVEMENTCOST(usGridNo - WORLD_COLS, NORTH, 0, TRAVELCOST_OBSTACLE);
+							SET_MOVEMENTCOST(usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE);
+							// make sure no obstacle costs exists before changing path cost to 0
+							if (gubWorldMovementCosts[usGridNo + 1][EAST][0] < TRAVELCOST_BLOCKED)
+							{
+								FORCE_SET_MOVEMENTCOST(usGridNo + 1, EAST, 0, TRAVELCOST_NONE);
+							}
+							SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE);
+							SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_OBSTACLE);
+							SET_MOVEMENTCOST(usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_OBSTACLE);
+							if (gubWorldMovementCosts[usGridNo - 1][WEST][0] < TRAVELCOST_BLOCKED)
+							{
+								FORCE_SET_MOVEMENTCOST(usGridNo - 1, WEST, 0, TRAVELCOST_NONE);
+							}
+							SET_MOVEMENTCOST(usGridNo - WORLD_COLS - 1, NORTHWEST, 0, TRAVELCOST_OBSTACLE);
+						}
+						else
+						{
+							// corners aren't jumpable
+							for (ubDirLoop = 0; ubDirLoop < NUM_WORLD_DIRECTIONS; ubDirLoop++)
+							{
+								SET_CURRMOVEMENTCOST(ubDirLoop, TRAVELCOST_OBSTACLE);
+							}
 						}
  					}
 					else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_SANDBAG && StructureHeight( pStructure ) < 2 )
@@ -591,7 +583,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 						// double door, left side (as you look on the screen)
 						switch( pStructure->ubWallOrientation )
 						{
-							case OUTSIDE_TOP_RIGHT:
+							case ORIENT_OUTSIDE_RIGHT:
 								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 								{ // doorpost
 									SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
@@ -615,7 +607,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 									SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_DOOR_OPEN_NW_W );
 								}
 								break;
-							case OUTSIDE_TOP_LEFT:
+							case ORIENT_OUTSIDE_LEFT:
 								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 								{	// doorframe
 									SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_OBSTACLE);
@@ -642,7 +634,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 									SET_MOVEMENTCOST(usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_DOOR_OPEN_NE_N);
 								}
 								break;
-							case INSIDE_TOP_LEFT:
+							case ORIENT_INSIDE_LEFT:
 								// doorframe
 								SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_OBSTACLE);
 								SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_DOOR_CLOSED_HERE);
@@ -664,7 +656,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								SET_MOVEMENTCOST(usGridNo - WORLD_COLS, NORTHEAST, 0, TRAVELCOST_DOOR_OPEN_S);
 								SET_MOVEMENTCOST(usGridNo - WORLD_COLS - 1, NORTHWEST, 0, TRAVELCOST_DOOR_OPEN_SE);
 								break;
-							case INSIDE_TOP_RIGHT:
+							case ORIENT_INSIDE_RIGHT:
 								SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_OBSTACLE);
 								SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_DOOR_CLOSED_HERE);
 								SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_DOORS_CLOSED_HERE_N);
@@ -698,7 +690,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 						// double door, right side (as you look on the screen)
 						switch( pStructure->ubWallOrientation )
 						{
-							case OUTSIDE_TOP_LEFT:
+							case ORIENT_OUTSIDE_LEFT:
 								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 								{	// doorpost
 									SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
@@ -723,7 +715,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 									SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_DOOR_OPEN_NW_N );
 								}
 								break;
-							case OUTSIDE_TOP_RIGHT:
+							case ORIENT_OUTSIDE_RIGHT:
 								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 								{ // doorframe
 									SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_OBSTACLE);
@@ -748,7 +740,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 									SET_MOVEMENTCOST(usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_DOOR_OPEN_SW_W);
 								}
 								break;
-							case INSIDE_TOP_RIGHT:
+							case ORIENT_INSIDE_RIGHT:
 								SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_OBSTACLE);
 								SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_DOOR_CLOSED_HERE);
 								SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_DOORS_CLOSED_HERE_S);
@@ -771,7 +763,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								SET_MOVEMENTCOST(usGridNo - 1, SOUTHWEST, 0, TRAVELCOST_DOOR_OPEN_E);
 								SET_MOVEMENTCOST(usGridNo - WORLD_COLS - 1, NORTHWEST, 0, TRAVELCOST_DOOR_OPEN_SE);
 								break;
-							case INSIDE_TOP_LEFT:
+							case ORIENT_INSIDE_LEFT:
 								SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_DOORS_CLOSED_HERE_W);
 								SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_DOOR_CLOSED_HERE);
 								SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_OBSTACLE);
@@ -800,62 +792,59 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 					}
 					else if (pStructure->fFlags & STRUCTURE_GARAGEDOOR)
 					{
-						switch( pStructure->ubWallOrientation )
+						if (pStructure->ubWallOrientation & ORIENT_LEFT)
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
-								// doorframe post in one corner of each of the tiles
-								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
-								{
-									SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_WALL );
-									SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_DOOR_CLOSED_HERE );
-									SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_DOOR_CLOSED_HERE );
-									SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL );
-									SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_DOOR_CLOSED_N );
-									SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_DOOR_CLOSED_N );
-									SET_MOVEMENTCOST(usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL);
-									SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
-								}
-								else
-								{
-									SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_DOOR_CLOSED_HERE );
-									SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_DOOR_CLOSED_HERE );
-									SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_WALL );
-									SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_DOOR_CLOSED_N);
-									SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_DOOR_CLOSED_N);
-									SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_WALL );
-									SET_MOVEMENTCOST(usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_WALL);
-									SET_MOVEMENTCOST(usGridNo - 1, NORTHWEST, 0, TRAVELCOST_WALL);
-								}
-								break;
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
-								// doorframe post in one corner of each of the tiles
-								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
-								{
-									SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_WALL );
-									SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_DOOR_CLOSED_HERE );
-									SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_DOOR_CLOSED_HERE );
+							// doorframe post in one corner of each of the tiles
+							if (pStructure->fFlags & STRUCTURE_BASE_TILE)
+							{
+								SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_WALL);
+								SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_DOOR_CLOSED_HERE);
+								SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_DOOR_CLOSED_HERE);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_DOOR_CLOSED_N);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_DOOR_CLOSED_N);
+								SET_MOVEMENTCOST(usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
+							}
+							else
+							{
+								SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_DOOR_CLOSED_HERE);
+								SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_DOOR_CLOSED_HERE);
+								SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_DOOR_CLOSED_N);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_DOOR_CLOSED_N);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo - 1, NORTHWEST, 0, TRAVELCOST_WALL);
+							}
+						}
+						else
+						{
+							// doorframe post in one corner of each of the tiles
+							if (pStructure->fFlags & STRUCTURE_BASE_TILE)
+							{
+								SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_WALL);
+								SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_DOOR_CLOSED_HERE);
+								SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_DOOR_CLOSED_HERE);
 
-									SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL );
-									SET_MOVEMENTCOST( usGridNo + 1, EAST, 0, TRAVELCOST_DOOR_CLOSED_W );
-									SET_MOVEMENTCOST( usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_DOOR_CLOSED_W );
-									SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL);
-									SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL)
-								}
-								else
-								{
-									SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_DOOR_CLOSED_HERE );
-									SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_DOOR_CLOSED_HERE );
-									SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_WALL );
+								SET_MOVEMENTCOST(usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo + 1, EAST, 0, TRAVELCOST_DOOR_CLOSED_W);
+								SET_MOVEMENTCOST(usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_DOOR_CLOSED_W);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL)
+							}
+							else
+							{
+								SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_DOOR_CLOSED_HERE);
+								SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_DOOR_CLOSED_HERE);
+								SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_WALL);
 
-									SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_DOOR_CLOSED_W );
-									SET_MOVEMENTCOST( usGridNo + 1, EAST, 0, TRAVELCOST_DOOR_CLOSED_W );
-									SET_MOVEMENTCOST( usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_WALL );
-									SET_MOVEMENTCOST(usGridNo - WORLD_COLS, NORTHWEST, 0, TRAVELCOST_WALL);
-									SET_MOVEMENTCOST(usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_WALL);
-								}
-								break;
+								SET_MOVEMENTCOST(usGridNo + 1, NORTHEAST, 0, TRAVELCOST_DOOR_CLOSED_W);
+								SET_MOVEMENTCOST(usGridNo + 1, EAST, 0, TRAVELCOST_DOOR_CLOSED_W);
+								SET_MOVEMENTCOST(usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo - WORLD_COLS, NORTHWEST, 0, TRAVELCOST_WALL);
+								SET_MOVEMENTCOST(usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_WALL);
+							}
 						}
 					}
 					else
@@ -863,7 +852,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 						// standard door
 						switch( pStructure->ubWallOrientation )
 						{
-							case OUTSIDE_TOP_LEFT:
+							case ORIENT_OUTSIDE_LEFT:
 								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 								{	// doorframe
 									SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_WALL );
@@ -879,14 +868,6 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 									SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL );
 									SET_MOVEMENTCOST( usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_WALL );
 									SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL );
-
-
-									//SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_OBSTACLE );
-									//SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-									//SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-									//SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-									// corner
-									//SET_MOVEMENTCOST( usGridNo + 1 ,NORTHEAST, 0, TRAVELCOST_OBSTACLE );
 								}
 								else if (!(pStructure->fFlags & STRUCTURE_SLIDINGDOOR))
 								{ // door
@@ -899,7 +880,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								}
 								break;
 
-							case INSIDE_TOP_LEFT:
+							case ORIENT_INSIDE_LEFT:
 								SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_WALL );
 								SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_DOOR_CLOSED_HERE );
 								SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_WALL );
@@ -914,14 +895,6 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								SET_MOVEMENTCOST( usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
 								SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
 
-								// doorframe
-								//SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_OBSTACLE );
-								//SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-								//SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-								//SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-								// corner
-								//SET_MOVEMENTCOST( usGridNo + 1 ,NORTHEAST, 0, TRAVELCOST_OBSTACLE );
-								// door
 								if (!(pStructure->fFlags & STRUCTURE_SLIDINGDOOR))
 								{
 									SET_CURRMOVEMENTCOST( EAST, TRAVELCOST_DOOR_OPEN_HERE );
@@ -933,7 +906,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								}
 								break;
 
-							case OUTSIDE_TOP_RIGHT:
+							case ORIENT_OUTSIDE_RIGHT:
 								if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 								{ // doorframe
 									SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_OBSTACLE );
@@ -949,13 +922,6 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 									SET_MOVEMENTCOST( usGridNo - WORLD_COLS, NORTHWEST, 0, TRAVELCOST_OBSTACLE );
 									SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
 									SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-
-									//SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_OBSTACLE );
-									//SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-									//SET_MOVEMENTCOST( usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-									//SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE );
-									// corner
-									//SET_MOVEMENTCOST( usGridNo + 1 + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
 								}
 								else if (!(pStructure->fFlags & STRUCTURE_SLIDINGDOOR))
 								{	// door
@@ -968,7 +934,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								}
 								break;
 
-							case INSIDE_TOP_RIGHT:
+							case ORIENT_INSIDE_RIGHT:
 								SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_OBSTACLE );
 								SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_DOOR_CLOSED_HERE );
 								SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
@@ -983,15 +949,6 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
 								SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
 
-								// doorframe
-								/*
-								SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_OBSTACLE );
-								SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo + 1,SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-								SET_MOVEMENTCOST( usGridNo + 1,NORTHEAST, 0, TRAVELCOST_OBSTACLE );
-								// corner
-								SET_MOVEMENTCOST( usGridNo - WORLD_COLS,  NORTHWEST, 0, TRAVELCOST_OBSTACLE );
-								*/
 								if (!(pStructure->fFlags & STRUCTURE_SLIDINGDOOR))
 								{
 									// door
@@ -1009,92 +966,39 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								break;
 						}
 					}
-
-					/*
-					switch( pStructure->ubWallOrientation )
-					{
-						case OUTSIDE_TOP_LEFT:
-						case INSIDE_TOP_LEFT:
-							SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_OBSTACLE );
-							SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_DOOR_CLOSED_HERE );
-							SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_DOOR_CLOSED_N );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-
-							// DO CORNERS
-							SET_MOVEMENTCOST( usGridNo - 1, NORTHWEST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-							break;
-
-						case OUTSIDE_TOP_RIGHT:
-						case INSIDE_TOP_RIGHT:
-							SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_OBSTACLE );
-							SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_DOOR_CLOSED_HERE );
-							SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_OBSTACLE );
-
-							SET_MOVEMENTCOST( usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo + 1, EAST, 0, TRAVELCOST_DOOR_CLOSED_W );
-							SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE );
-
-							// DO CORNERS
-							SET_MOVEMENTCOST( usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo - WORLD_COLS, NORTHWEST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-							break;
-
-						default:
-							// wall with no orientation specified!?
-							break;
-					}
-					*/
-
-
 				}
 				else if (pStructure->fFlags & STRUCTURE_WALLSTUFF )
 				{
 					//ATE: IF a closed door, set to door value
-					switch( pStructure->ubWallOrientation )
+					if (pStructure->ubWallOrientation & ORIENT_LEFT)
 					{
-						case OUTSIDE_TOP_LEFT:
-						case INSIDE_TOP_LEFT:
-							SET_CURRMOVEMENTCOST( NORTHEAST, TRAVELCOST_WALL );
-							SET_CURRMOVEMENTCOST( NORTH, TRAVELCOST_WALL );
-							SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL );
+						SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_WALL);
+						SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_WALL);
+						SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHEAST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL);
 
-							// DO CORNERS
-							SET_MOVEMENTCOST( usGridNo - 1, NORTHWEST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL );
-							break;
+						// DO CORNERS
+						SET_MOVEMENTCOST(usGridNo - 1, NORTHWEST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
+					}
+					else
+					{
+						SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_WALL);
+						SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_WALL);
+						SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + 1, EAST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL);
 
-						case OUTSIDE_TOP_RIGHT:
-						case INSIDE_TOP_RIGHT:
-							SET_CURRMOVEMENTCOST( SOUTHWEST, TRAVELCOST_WALL );
-							SET_CURRMOVEMENTCOST( WEST, TRAVELCOST_WALL );
-							SET_CURRMOVEMENTCOST( NORTHWEST, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + 1, SOUTHEAST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + 1, EAST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + 1, NORTHEAST, 0, TRAVELCOST_WALL );
-
-							// DO CORNERS
-							SET_MOVEMENTCOST( usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo - WORLD_COLS, NORTHWEST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL );
-							SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL );
-							break;
-
-						default:
-							// wall with no orientation specified!?
-							break;
+						// DO CORNERS
+						SET_MOVEMENTCOST(usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo - WORLD_COLS, NORTHWEST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
+						SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL);
 					}
 				}
 			}
@@ -1317,24 +1221,23 @@ void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation )
 	INT16		sUp, sDown, sLeft, sRight;
 	INT16		sX, sY, sTempGridNo;
 
-	switch( ubOrientation )
+	if ( ubOrientation & ORIENT_RIGHT)
 	{
-		case OUTSIDE_TOP_RIGHT:
-		case INSIDE_TOP_RIGHT:
-			sUp = -1;
-			sDown = 1;
-			sLeft = 0;
-			sRight = 1;
-			break;
-		case OUTSIDE_TOP_LEFT:
-		case INSIDE_TOP_LEFT:
-			sUp = 0;
-			sDown = 1;
-			sLeft = -1;
-			sRight = 1;
-			break;
-		default:
-			return;
+		sUp = -1;
+		sDown = 1;
+		sLeft = 0;
+		sRight = 1;
+	}
+	else if (ubOrientation & ORIENT_LEFT)
+	{
+		sUp = 0;
+		sDown = 1;
+		sLeft = -1;
+		sRight = 1;
+	}
+	else
+	{
+		return;
 	}
 
 	for ( sY = sUp; sY <= sDown; sY++ )
@@ -2743,12 +2646,13 @@ static UINT16 GetWireframeGraphicNumToUseForWall(const INT16 sGridNo, STRUCTURE*
 		}
 	}
 
-	switch (s->ubWallOrientation)
+	if (s->ubWallOrientation & ORIENT_LEFT)
 	{
-		case OUTSIDE_TOP_LEFT:
-		case INSIDE_TOP_LEFT:   return WIREFRAMES6; break;
-		case OUTSIDE_TOP_RIGHT:
-		case INSIDE_TOP_RIGHT:  return WIREFRAMES5; break;
+		return WIREFRAMES6;
+	}
+	else
+	{
+		return WIREFRAMES5;
 	}
 
 	return 0;
@@ -2802,32 +2706,23 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 						// Based on orientation
 						ubWallOrientation = pStructure->ubWallOrientation;
 
-						switch( ubWallOrientation )
+						if (ubWallOrientation & ORIENT_LEFT)
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
+							sGridNo = NewGridNo((INT16)cnt, DirectionInc(SOUTH));
 
-								// Get gridno
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
+							if (IsRoofVisibleForWireframe(sGridNo) && !(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED))
+							{
+								AddWireFrame((INT16)cnt, WIREFRAMES4, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+							}
+						}
+						else
+						{
+							sGridNo = NewGridNo((INT16)cnt, DirectionInc(EAST));
 
-								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-								{
-									AddWireFrame((INT16)cnt, WIREFRAMES4, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-								}
-								break;
-
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
-
-								// Get gridno
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
-
-								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-								{
-									AddWireFrame((INT16)cnt, WIREFRAMES3, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-								}
-								break;
-
+							if (IsRoofVisibleForWireframe(sGridNo) && !(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED))
+							{
+								AddWireFrame((INT16)cnt, WIREFRAMES3, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+							}
 						}
 					}
 				}
@@ -2840,34 +2735,24 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 						// Based on orientation
 						ubWallOrientation = pStructure->ubWallOrientation;
 
-						switch( ubWallOrientation )
+						if ( ubWallOrientation & ORIENT_LEFT )
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
+							sGridNo = NewGridNo((INT16)cnt, DirectionInc(SOUTH));
 
-								// Get gridno
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
-
-								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-								{
-									AddWireFrame((INT16)cnt, WIREFRAMES2, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-								}
-								break;
-
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
-
-								// Get gridno
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
-
-								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-								{
-									AddWireFrame((INT16)cnt, WIREFRAMES1, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-								}
-								break;
-
+							if (IsRoofVisibleForWireframe(sGridNo) && !(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED))
+							{
+								AddWireFrame((INT16)cnt, WIREFRAMES2, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+							}
 						}
+						else
+						{
+							sGridNo = NewGridNo((INT16)cnt, DirectionInc(EAST));
 
+							if (IsRoofVisibleForWireframe(sGridNo) && !(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED))
+							{
+								AddWireFrame((INT16)cnt, WIREFRAMES1, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+							}
+						}
 					}
 
 					// Check for walls
@@ -2879,55 +2764,46 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 
 						usWireFrameIndex = GetWireframeGraphicNumToUseForWall( (UINT16)cnt, pStructure );
 
-						switch( ubWallOrientation )
+						if ( ubWallOrientation & ORIENT_LEFT )
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
+							sGridNo = NewGridNo((INT16)cnt, DirectionInc(SOUTH));
 
-								// Get gridno
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
+							if (IsRoofVisibleForWireframe(sGridNo))
+							{
+								bNumWallsSameGridNo++;
 
-								if ( IsRoofVisibleForWireframe( sGridNo ) )
+								AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+
+								// Check along our direction to see if we are a corner
+								sGridNo = NewGridNo((INT16)cnt, DirectionInc(WEST));
+								sGridNo = NewGridNo(sGridNo, DirectionInc(SOUTH));
+								if (!IsHiddenTileMarkerThere(sGridNo))
 								{
-									bNumWallsSameGridNo++;
-
-									AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-
-									// Check along our direction to see if we are a corner
-									sGridNo = NewGridNo( (INT16)cnt, DirectionInc( WEST ) );
-									sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-									if (!IsHiddenTileMarkerThere(sGridNo))
-									{
-										// Place corner!
-										AddWireFrame((INT16)cnt, WIREFRAMES9, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-									}
+									// Place corner!
+									AddWireFrame((INT16)cnt, WIREFRAMES9, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
 								}
-								break;
+							}
+						}
+						else
+						{
+							sGridNo = NewGridNo((INT16)cnt, DirectionInc(EAST));
 
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
+							if (IsRoofVisibleForWireframe(sGridNo))
+							{
+								bNumWallsSameGridNo++;
 
-								// Get gridno
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+								AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
 
-								if ( IsRoofVisibleForWireframe( sGridNo ) )
+								// Check along our direction to see if we are a corner
+								sGridNo = NewGridNo((INT16)cnt, DirectionInc(NORTH));
+								sGridNo = NewGridNo(sGridNo, DirectionInc(EAST));
+								if (!IsHiddenTileMarkerThere(sGridNo))
 								{
-									bNumWallsSameGridNo++;
-
-									AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-
-									// Check along our direction to see if we are a corner
-									sGridNo = NewGridNo( (INT16)cnt, DirectionInc( NORTH ) );
-									sGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
-									if (!IsHiddenTileMarkerThere(sGridNo))
-									{
-										// Place corner!
-										AddWireFrame((INT16)cnt, WIREFRAMES8, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-									}
-
+									// Place corner!
+									AddWireFrame((INT16)cnt, WIREFRAMES8, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
 								}
-								break;
 
+							}
 						}
 
 						// Check for both walls

@@ -498,21 +498,19 @@ static bool RefineLogicOnStruct(INT16 gridno, LEVELNODE const& n)
 	else if (structure.fFlags & STRUCTURE_SWITCH)
 	{ // A switch, reject in another direction
 		// Find a new gridno based on switch's orientation
-		switch (structure.pDBStructureRef->pDBStructure->ubWallOrientation)
+		if (structure.pDBStructureRef->pDBStructure->ubWallOrientation & ORIENT_LEFT)
 		{
-			case OUTSIDE_TOP_LEFT:
-			case INSIDE_TOP_LEFT:
-				// Move south
-				gridno = NewGridNo(gridno, DirectionInc(SOUTH));
-				break;
-
-			case OUTSIDE_TOP_RIGHT:
-			case INSIDE_TOP_RIGHT:
-				// Move east
-				gridno = NewGridNo(gridno, DirectionInc(EAST));
-				break;
-
-			default: return true; // XXX exception?
+			// Move south
+			gridno = NewGridNo(gridno, DirectionInc(SOUTH));
+		}
+		else if (structure.pDBStructureRef->pDBStructure->ubWallOrientation & ORIENT_RIGHT)
+		{
+			// Move east
+			gridno = NewGridNo(gridno, DirectionInc(EAST));
+		}
+		else
+		{
+			return true;
 		}
 	}
 

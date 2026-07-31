@@ -35,11 +35,27 @@ ENUM_BITSET(TileElementFlags)
 #define ROOF_HIT_ADJUSTMENT			2
 
 
-enum WallOrientationDefines : UINT8
+enum Orientation : uint8_t
 {
-	NO_ORIENTATION, INSIDE_TOP_LEFT, INSIDE_TOP_RIGHT, OUTSIDE_TOP_LEFT,
-	OUTSIDE_TOP_RIGHT
+	ORIENT_NONE          = 0x00,
+	ORIENT_INSIDE_LEFT   = 0x01,
+	ORIENT_INSIDE_RIGHT  = 0x02,
+	ORIENT_OUTSIDE_LEFT  = 0x04,
+	ORIENT_OUTSIDE_RIGHT = 0x08,
+
+	// Combination flags
+	ORIENT_LEFT          = 0x05,
+	ORIENT_RIGHT         = 0x0A,
+	ORIENT_INSIDE        = 0x03,
+	ORIENT_OUTSIDE       = 0x0C,
 };
+ENUM_BITSET(Orientation)
+
+// Assumes the flag always has only one bit set to 1
+static inline uint8_t GetBitPositionIndex(const uint8_t flag)
+{
+	return ( 0x34572610U >> ((((flag * 29) >> 5) & 7) * 4) ) & 7;
+}
 
 // TERRAIN ID VALUES.
 enum TerrainTypeDefines : UINT8
@@ -86,7 +102,7 @@ struct TILE_ELEMENT
 	UINT8                ubNumberOfTiles;
 
 	// Land and overlay type
-	WallOrientationDefines usWallOrientation;
+	Orientation          usWallOrientation;
 	UINT8                ubFullTile;
 
 	// For animated tiles
@@ -134,7 +150,7 @@ UINT32 GetTileFlags(UINT16 usIndex);
 
 UINT8 GetTileTypeLogicalHeight(UINT32 type);
 bool  AnyHeigherLand(UINT32 map_idx, UINT32 src_type, UINT8* out_last_level);
-WallOrientationDefines GetWallOrientation(UINT16 usIndex);
+Orientation GetWallOrientation(UINT16 usIndex);
 
 void SetSpecificDatabaseValues(UINT16 type, UINT16 database_elem, TILE_ELEMENT&, bool use_raised_object_type);
 

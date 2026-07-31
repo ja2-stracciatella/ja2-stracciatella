@@ -73,6 +73,7 @@ enum StructureFlags : UINT32
 	STRUCTURE_BASE_TILE     = 0x00000001,
 	STRUCTURE_OPEN          = 0x00000002,
 	STRUCTURE_OPENABLE      = 0x00000004,
+
 	STRUCTURE_GARAGEDOOR    = 0x00000008,
 
 	STRUCTURE_MOBILE        = 0x00000010,
@@ -143,6 +144,8 @@ struct DB_STRUCTURE_TILE
 
 #define NO_PARTNER_STRUCTURE 0
 
+enum Orientation : uint8_t;
+
 struct DB_STRUCTURE
 {
 	UINT8								ubArmour;
@@ -151,7 +154,7 @@ struct DB_STRUCTURE
 	UINT8								ubNumberOfTiles;
 	StructureFlags					    fFlags;
 	UINT16							usStructureNumber;
-	UINT8								ubWallOrientation;
+	Orientation							ubWallOrientation;
 	INT8								bDestructionPartner; // >0 = debris number (bDP - 1), <0 = partner graphic
 	INT8								bPartnerDelta; // opened/closed version, etc... 0 for unused
 	INT8								bZTileOffsetX;
@@ -183,7 +186,7 @@ struct STRUCTURE
 	UINT8						  ubLockStrength;
 	GridNo						  sBaseGridNo;
 	INT16						  sCubeOffset;// height of bottom of object in profile "cubes"
-	UINT8						  ubWallOrientation;
+	Orientation					  ubWallOrientation;
 	UINT8						  ubStructureHeight; // if 0, then unset; otherwise stores height of structure when last calculated
 };
 

@@ -410,7 +410,7 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructu
 		pStructure->fFlags      |= STRUCTURE_BASE_TILE;
 		pStructure->ubHitPoints  = pDBStructure->ubHitPoints;
 	}
-	if (pDBStructure->ubWallOrientation != NO_ORIENTATION)
+	if (pDBStructure->ubWallOrientation != ORIENT_NONE)
 	{
 		/* for multi-tile walls, which are only the special corner pieces, the
 		 * non-base tile gets no orientation value because this copy will be
@@ -492,22 +492,17 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 					for (INT8 bLoop = 1; bLoop < 4; ++bLoop)
 					{
 						INT16 sOtherGridNo;
-						switch (pExistingStructure->ubWallOrientation)
+						if (pExistingStructure->ubWallOrientation & ORIENT_LEFT)
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
-								sOtherGridNo = NewGridNo(sGridNo, DirectionInc( bLoop + 2 ));
-								break;
-
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
-								sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop));
-								break;
-
-							default:
-								// @%?@#%?@%
-								sOtherGridNo = NewGridNo(sGridNo, DirectionInc(SOUTHEAST));
-								break;
+							sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop + 2));
+						}
+						else if ( pExistingStructure->ubWallOrientation & ORIENT_RIGHT )
+						{
+							sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop));
+						}
+						else
+						{   // @%?@#%?@%
+							sOtherGridNo = NewGridNo(sGridNo, DirectionInc(SOUTHEAST));
 						}
 						for (INT8 bLoop2 = 0; bLoop2 < pDBStructure->ubNumberOfTiles; ++bLoop2)
 						{
@@ -534,22 +529,17 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 				for (INT8 bLoop = 1; bLoop < 4; ++bLoop)
 				{
 					INT16 sOtherGridNo;
-					switch (pDBStructure->ubWallOrientation)
+					if (pDBStructure->ubWallOrientation & ORIENT_LEFT)
 					{
-						case OUTSIDE_TOP_LEFT:
-						case INSIDE_TOP_LEFT:
-							sOtherGridNo = NewGridNo(sGridNo, DirectionInc( bLoop + 2 ));
-							break;
-
-						case OUTSIDE_TOP_RIGHT:
-						case INSIDE_TOP_RIGHT:
-							sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop));
-							break;
-
-						default:
-							// @%?@#%?@%
-							sOtherGridNo = NewGridNo(sGridNo, DirectionInc(SOUTHEAST));
-							break;
+						sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop + 2));
+					}
+					else if (pDBStructure->ubWallOrientation & ORIENT_RIGHT)
+					{
+						sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop));
+					}
+					else
+					{   // @%?@#%?@%
+						sOtherGridNo = NewGridNo(sGridNo, DirectionInc(SOUTHEAST));
 					}
 					for (ubTileIndex = 0; ubTileIndex < pDBStructure->ubNumberOfTiles; ++ubTileIndex)
 					{
@@ -1212,12 +1202,13 @@ void DebugStructurePage1()
 {
 	static const ST::string WallOrientationString[] =
 	{
-		"None",
 		"Inside left",
 		"Inside right",
 		"Outside left",
 		"Outside right"
 	};
+
+	ST::string orient;
 
 	GridNo const grid_no = guiCurrentCursorGridNo;
 	if (grid_no == NOWHERE) {
@@ -1267,6 +1258,11 @@ void DebugStructurePage1()
 
 		y += h;
 
+		if (s->ubWallOrientation)
+		{
+			orient = WallOrientationString[GetBitPositionIndex(s->ubWallOrientation)];
+		}
+
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Structure ID:", s->usStructureID);
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Type:");
 		if (s->fFlags & STRUCTURE_GENERIC)
@@ -1279,19 +1275,19 @@ void DebugStructurePage1()
 		}
 		else if (s->fFlags & STRUCTURE_FENCE)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Fence with orientation {}", WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Fence with orientation {}", orient));
 		}
 		else if (s->fFlags & STRUCTURE_WIREFENCE)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wirefence with orientation {}", WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wirefence with orientation {}", orient));
 		}
 		else if (s->fFlags & STRUCTURE_WALL)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wall with orientation {}", WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wall with orientation {}", orient));
 		}
 		else if (s->fFlags & STRUCTURE_WALLNWINDOW)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wall with window with orientation {}", WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wall with window with orientation {}", orient));
 		}
 		else if (s->fFlags & STRUCTURE_VEHICLE)
 		{
@@ -1327,25 +1323,25 @@ void DebugStructurePage1()
 		}
 		else if (s->fFlags & STRUCTURE_DOOR)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Door with orientation {}", WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Door with orientation {}", orient));
 		}
 		else if (s->fFlags & STRUCTURE_SLIDINGDOOR)
 		{
 			ST::string state = s->fFlags & STRUCTURE_OPEN ? "Open" : "Closed";
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} sliding door with orientation {}", state, WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} sliding door with orientation {}", state, orient));
 		}
 		else if (s->fFlags & STRUCTURE_GARAGEDOOR)
 		{
 			ST::string state = s->fFlags & STRUCTURE_OPEN ? "Open" : "Closed";
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} garage door with orientation {}", state, WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} garage door with orientation {}", state, orient));
 		}
 		else if (s->fFlags & STRUCTURE_DDOOR_LEFT)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("DDoorLft with orientation {}", WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("DDoorLft with orientation {}", orient));
 		}
 		else if (s->fFlags & STRUCTURE_DDOOR_RIGHT)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("DDoorRt with orientation {}", WallOrientationString[s->ubWallOrientation]));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("DDoorRt with orientation {}", orient));
 		}
 		else
 		{
@@ -1742,12 +1738,12 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 				else
 				{
 					// Check how a wall is oriented relative to the direction the test ray is coming from
-					const uint8_t orientation{ pCurrent->ubWallOrientation };
-					if ((bDir >= NORTH && bDir <= SOUTH) && (orientation == INSIDE_TOP_RIGHT || orientation == OUTSIDE_TOP_RIGHT))
+					const Orientation orientation{ pCurrent->ubWallOrientation };
+					if ((bDir >= NORTH && bDir <= SOUTH) && (orientation & ORIENT_RIGHT))
 					{
 						fOKStructOnLevel = FALSE;
 					}
-					else if ((bDir >= EAST && bDir <= WEST) && (orientation == INSIDE_TOP_LEFT || orientation == OUTSIDE_TOP_LEFT))
+					else if ((bDir >= EAST && bDir <= WEST) && (orientation & ORIENT_LEFT))
 					{
 						fOKStructOnLevel = FALSE;
 					}
@@ -1762,68 +1758,31 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 			// CHECK FOR WINDOW
 			if ( pCurrent->fFlags & STRUCTURE_WALLNWINDOW )
 			{
-				switch( pCurrent->ubWallOrientation )
+				(*pStructHeight) = StructureHeight( pCurrent );
+				(*ppTallestStructure) = pCurrent;
+				if ( pCurrent->ubWallOrientation & ORIENT_LEFT )
 				{
-					case OUTSIDE_TOP_LEFT:
-					case INSIDE_TOP_LEFT:
-
-						(*pStructHeight) = StructureHeight( pCurrent );
-						(*ppTallestStructure) = pCurrent;
-
-						if ( pCurrent->fFlags & STRUCTURE_OPEN )
-						{
-							return( BLOCKING_TOPLEFT_OPEN_WINDOW );
-						}
-						else
-						{
-							return( BLOCKING_TOPLEFT_WINDOW );
-						}
-
-					case OUTSIDE_TOP_RIGHT:
-					case INSIDE_TOP_RIGHT:
-
-						(*pStructHeight) = StructureHeight( pCurrent );
-						(*ppTallestStructure) = pCurrent;
-
-						if ( pCurrent->fFlags & STRUCTURE_OPEN )
-						{
-							return( BLOCKING_TOPRIGHT_OPEN_WINDOW );
-						}
-						else
-						{
-							return( BLOCKING_TOPRIGHT_WINDOW );
-						}
+					return pCurrent->fFlags & STRUCTURE_OPEN ? BLOCKING_TOPLEFT_OPEN_WINDOW : BLOCKING_TOPLEFT_WINDOW;
+				}
+				else
+				{
+					return pCurrent->fFlags & STRUCTURE_OPEN ? BLOCKING_TOPRIGHT_OPEN_WINDOW : BLOCKING_TOPRIGHT_WINDOW;
 				}
 			}
 
 			// Check for door
 			if ( pCurrent->fFlags & STRUCTURE_ANYDOOR )
 			{
+				(*pStructHeight) = StructureHeight( pCurrent );
+				(*ppTallestStructure) = pCurrent;
 				// If we are not opem, we are full blocking!
 				if ( !(pCurrent->fFlags & STRUCTURE_OPEN ) )
 				{
-					(*pStructHeight) = StructureHeight( pCurrent );
-					(*ppTallestStructure) = pCurrent;
 					return( FULL_BLOCKING );
 				}
 				else
 				{
-					switch( pCurrent->ubWallOrientation )
-					{
-						case OUTSIDE_TOP_LEFT:
-						case INSIDE_TOP_LEFT:
-
-							(*pStructHeight) = StructureHeight( pCurrent );
-							(*ppTallestStructure) = pCurrent;
-							return( BLOCKING_TOPLEFT_DOOR );
-
-						case OUTSIDE_TOP_RIGHT:
-						case INSIDE_TOP_RIGHT:
-
-							(*pStructHeight) = StructureHeight( pCurrent );
-							(*ppTallestStructure) = pCurrent;
-							return( BLOCKING_TOPRIGHT_DOOR );
-					}
+					return pCurrent->ubWallOrientation & ORIENT_LEFT ? BLOCKING_TOPLEFT_DOOR : BLOCKING_TOPRIGHT_DOOR;
 				}
 			}
 		}

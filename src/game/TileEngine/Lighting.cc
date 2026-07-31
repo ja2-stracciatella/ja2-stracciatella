@@ -421,17 +421,7 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 			return( TRUE );
 		}
 
-		switch(usWallOrientation)
-		{
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-				return( iSrcX < iX );
-
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
-				return( iSrcY < iY );
-
-		}
+		return usWallOrientation & ORIENT_RIGHT ? iSrcX < iX : iSrcY < iY;
 	}
 
 #endif
@@ -1471,19 +1461,17 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 
 #if 0
 	UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
-	switch(usWallOrientation)
+	if (usWallOrientation == ORIENT_NONE)
 	{
-		case NO_ORIENTATION:
-			return(TRUE);
-
-		case INSIDE_TOP_RIGHT:
-		case OUTSIDE_TOP_RIGHT:
-			return(iSourceX >= iTileX);
-
-		case INSIDE_TOP_LEFT:
-		case OUTSIDE_TOP_LEFT:
-			return(iSourceY >= iTileY);
-
+		return TRUE;
+	}
+	else if (usWallOrientation & ORIENT_RIGHT)
+	{
+		return iSourceX >= iTileX;
+	}
+	else
+	{
+		return iSourceY >= iTileY;
 	}
 	return(FALSE);
 
@@ -1583,20 +1571,13 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
 
 		const TILE_ELEMENT* const te = &gTileDatabase[i->usIndex];
-		switch (te->usWallOrientation)
+		if (te->usWallOrientation & ORIENT_RIGHT)
 		{
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-				if (!fDoRightWalls) fDoLeftWalls = FALSE;
-				break;
-
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
-				if (!fDoLeftWalls) fDoRightWalls = FALSE;
-				break;
-
-			default:
-				break;
+			if (!fDoRightWalls) fDoLeftWalls = FALSE;
+		}
+		else if (te->usWallOrientation & ORIENT_LEFT)
+		{
+			if (!fDoLeftWalls) fDoRightWalls = FALSE;
 		}
 	}
 
@@ -1607,30 +1588,23 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
 
 		const TILE_ELEMENT* const te = &gTileDatabase[i->usIndex];
-		switch (te->usWallOrientation)
+		if (te->usWallOrientation & ORIENT_RIGHT)
 		{
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-				fHitWall = TRUE;
-				if (fDoRightWalls && sX >= sSrcX)
-				{
-					i->uiFlags &= ~LEVELNODE_REVEAL;
-					fRerender   = TRUE;
-				}
-				break;
-
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
-				fHitWall = TRUE;
-				if (fDoLeftWalls && sY >= sSrcY)
-				{
-					i->uiFlags &= ~LEVELNODE_REVEAL;
-					fRerender   = TRUE;
-				}
-				break;
-
-			default:
-				break;
+			fHitWall = TRUE;
+			if (fDoRightWalls && sX >= sSrcX)
+			{
+				i->uiFlags &= ~LEVELNODE_REVEAL;
+				fRerender = TRUE;
+			}
+		}
+		else if (te->usWallOrientation & ORIENT_LEFT)
+		{
+			fHitWall = TRUE;
+			if (fDoLeftWalls && sY >= sSrcY)
+			{
+				i->uiFlags &= ~LEVELNODE_REVEAL;
+				fRerender = TRUE;
+			}
 		}
 	}
 

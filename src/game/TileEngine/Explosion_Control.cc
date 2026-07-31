@@ -290,27 +290,11 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 }
 
 
-static void ReplaceWall(GridNo const grid_no, UINT8 orientation, INT16 const sub_idx)
+static void ReplaceWall(GridNo const grid_no, Orientation orientation, INT16 const sub_idx)
 {
+	orientation = orientation & ORIENT_LEFT ? ORIENT_LEFT : ORIENT_RIGHT;
 	STRUCTURE* wall_struct = GetWallStructOfSameOrientationAtGridno(grid_no, orientation);
-	if (!wall_struct)
-	{
-		switch (orientation)
-		{
-			case INSIDE_TOP_LEFT:
-				orientation = OUTSIDE_TOP_LEFT;
-				break;
-			case OUTSIDE_TOP_LEFT:
-				orientation = INSIDE_TOP_LEFT;
-				break;
-			case INSIDE_TOP_RIGHT:
-				orientation = OUTSIDE_TOP_RIGHT;
-				break;
-			case OUTSIDE_TOP_RIGHT:
-				orientation = INSIDE_TOP_RIGHT;
-		}
-		wall_struct = GetWallStructOfSameOrientationAtGridno(grid_no, orientation);
-	}
+
 	if (!wall_struct || !(wall_struct->fFlags & STRUCTURE_WALL)) return;
 
 	LEVELNODE* const node    = FindLevelNodeBasedOnStructure(wall_struct);
@@ -470,30 +454,22 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 			// If we are a wall, add debris for the other side
 			if (pCurrent->fFlags & STRUCTURE_WALLSTUFF)
 			{
-				switch (pCurrent->ubWallOrientation)
+				if (pCurrent->ubWallOrientation & ORIENT_LEFT)
 				{
-					case OUTSIDE_TOP_LEFT:
-					case INSIDE_TOP_LEFT:
+					GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(SOUTH));
+					if (!TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
 					{
-						GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(SOUTH));
-						if (!TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
-						{
-							ApplyMapChangesToMapTempFile app;
-							AddObjectToHead(struct_grid_no, tile_idx + Random(3));
-						}
-						break;
+						ApplyMapChangesToMapTempFile app;
+						AddObjectToHead(struct_grid_no, tile_idx + Random(3));
 					}
-
-					case OUTSIDE_TOP_RIGHT:
-					case INSIDE_TOP_RIGHT:
+				}
+				else
+				{
+					GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(EAST));
+					if (!TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
 					{
-						GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(EAST));
-						if (!TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
-						{
-							ApplyMapChangesToMapTempFile app;
-							AddObjectToHead(struct_grid_no, tile_idx + Random(3));
-						}
-						break;
+						ApplyMapChangesToMapTempFile app;
+						AddObjectToHead(struct_grid_no, tile_idx + Random(3));
 					}
 				}
 			}
@@ -502,19 +478,15 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		else if (pCurrent->fFlags & STRUCTURE_FENCE)
 		{
 			// walk along based on orientation
-			switch (pCurrent->ubWallOrientation)
+			if (pCurrent->ubWallOrientation & ORIENT_RIGHT)
 			{
-				case OUTSIDE_TOP_RIGHT:
-				case INSIDE_TOP_RIGHT:
-					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(SOUTH)));
-					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(NORTH)));
-					break;
-
-				case OUTSIDE_TOP_LEFT:
-				case INSIDE_TOP_LEFT:
-					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(EAST)));
-					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(WEST)));
-					break;
+				HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(SOUTH)));
+				HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(NORTH)));
+			}
+			else
+			{
+				HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(EAST)));
+				HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(WEST)));
 			}
 		}
 
@@ -532,31 +504,27 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		{
 			/* Based on orientation, go either x or y dir, check for wall in both _ve
 			 * and -ve directions and if found, then replace */
-			switch (UINT8 const orientation = pCurrent->ubWallOrientation)
+			if (Orientation const orientation = pCurrent->ubWallOrientation; orientation & ORIENT_LEFT)
 			{
-				case OUTSIDE_TOP_LEFT:
-				case INSIDE_TOP_LEFT:
-					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(WEST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 48 : 52);
-					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(EAST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 49 : 53);
+				ReplaceWall(NewGridNo(base_grid_no, DirectionInc(WEST)), orientation, orientation == ORIENT_OUTSIDE_LEFT ? 48 : 52);
+				ReplaceWall(NewGridNo(base_grid_no, DirectionInc(EAST)), orientation, orientation == ORIENT_OUTSIDE_LEFT ? 49 : 53);
 
-					// look for attached structures in same tile
-					*ppNextCurrent = RemoveOnWall(base_grid_no, STRUCTURE_ON_LEFT_WALL, *ppNextCurrent);
+				// look for attached structures in same tile
+				*ppNextCurrent = RemoveOnWall(base_grid_no, STRUCTURE_ON_LEFT_WALL, *ppNextCurrent);
 
-					// Move in SOUTH, looking for attached structures to remove
-					RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(SOUTH)), STRUCTURE_ON_LEFT_WALL, 0);
-					break;
+				// Move in SOUTH, looking for attached structures to remove
+				RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(SOUTH)), STRUCTURE_ON_LEFT_WALL, 0);
+			}
+			else
+			{
+				ReplaceWall(NewGridNo(base_grid_no, DirectionInc(NORTH)), orientation, orientation == ORIENT_OUTSIDE_RIGHT ? 51 : 55);
+				ReplaceWall(NewGridNo(base_grid_no, DirectionInc(SOUTH)), orientation, orientation == ORIENT_OUTSIDE_RIGHT ? 50 : 54);
 
-				case OUTSIDE_TOP_RIGHT:
-				case INSIDE_TOP_RIGHT:
-					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(NORTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 51 : 55);
-					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(SOUTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 50 : 54);
+				// looking for attached structures to remove in base tile
+				*ppNextCurrent = RemoveOnWall(base_grid_no, STRUCTURE_ON_RIGHT_WALL, *ppNextCurrent);
 
-					// looking for attached structures to remove in base tile
-					*ppNextCurrent = RemoveOnWall(base_grid_no, STRUCTURE_ON_RIGHT_WALL, *ppNextCurrent);
-
-					// Move in EAST, looking for attached structures to remove
-					RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(EAST)), STRUCTURE_ON_RIGHT_WALL, 0);
-					break;
+				// Move in EAST, looking for attached structures to remove
+				RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(EAST)), STRUCTURE_ON_RIGHT_WALL, 0);
 			}
 		}
 

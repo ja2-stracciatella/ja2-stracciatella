@@ -707,8 +707,8 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 			if ( (uiTileType >= FIRSTWALL && uiTileType <= LASTWALL) ||
 				(uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR) )
 			{
-				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
-				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
+				Orientation usWallOrientation = GetWallOrientation(pStruct->usIndex);
+				if( usWallOrientation & ORIENT_RIGHT )
 				{
 					AddToUndoList( iMapIndex - 1 );
 					RemoveStruct( iMapIndex - 1, pStruct->usIndex );
@@ -730,7 +730,7 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 				(uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR) )
 			{
 				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
-				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
+				if( usWallOrientation & ORIENT_LEFT )
 				{
 					AddToUndoList( iMapIndex - WORLD_COLS );
 					RemoveStruct( iMapIndex - WORLD_COLS , pStruct->usIndex );

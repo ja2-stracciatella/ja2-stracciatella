@@ -1523,25 +1523,23 @@ struct OppositeSideInfo
 	StructureFlags flags;
 	bool mustBeBaseTile;
 	bool mustBeOpen;
-	WallOrientationDefines orientation;
+	Orientation orientation;
 	WorldDirections direction;
 };
 const OppositeSideInfo oppGridNoDirections[] =
 {
-	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, OUTSIDE_TOP_RIGHT, EAST },
-	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, INSIDE_TOP_RIGHT,  EAST },
-	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, OUTSIDE_TOP_LEFT,  SOUTH },
-	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, INSIDE_TOP_LEFT,   SOUTH },
-	{ STRUCTURE_GARAGEDOOR,                   false, false, OUTSIDE_TOP_RIGHT, EAST },
-	{ STRUCTURE_GARAGEDOOR,                   false, false, OUTSIDE_TOP_LEFT,  SOUTH },
-	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, true , true,  INSIDE_TOP_RIGHT,  NORTH },
-	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, false, true,  OUTSIDE_TOP_RIGHT, NORTH },
-	{                  STRUCTURE_DDOOR_RIGHT, true , true,  INSIDE_TOP_LEFT,   EAST },
-	{                  STRUCTURE_DDOOR_RIGHT, false, true,  OUTSIDE_TOP_LEFT,  EAST },
-	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , true , true,  INSIDE_TOP_LEFT,   WEST },
-	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , false, true,  OUTSIDE_TOP_LEFT,  WEST },
-	{                  STRUCTURE_DDOOR_LEFT , true , true,  INSIDE_TOP_RIGHT,  SOUTH },
-	{                  STRUCTURE_DDOOR_LEFT , false, true,  OUTSIDE_TOP_RIGHT, SOUTH },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, ORIENT_RIGHT, EAST },
+	{ STRUCTURE_WALL | STRUCTURE_ANYDOOR,     true,  false, ORIENT_LEFT,  SOUTH },
+	{ STRUCTURE_GARAGEDOOR,                   false, false, ORIENT_OUTSIDE_RIGHT, EAST },
+	{ STRUCTURE_GARAGEDOOR,                   false, false, ORIENT_OUTSIDE_LEFT,  SOUTH },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, true , true,  ORIENT_INSIDE_RIGHT,  NORTH },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_RIGHT, false, true,  ORIENT_OUTSIDE_RIGHT, NORTH },
+	{                  STRUCTURE_DDOOR_RIGHT, true , true,  ORIENT_INSIDE_LEFT,   EAST },
+	{                  STRUCTURE_DDOOR_RIGHT, false, true,  ORIENT_OUTSIDE_LEFT,  EAST },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , true , true,  ORIENT_INSIDE_LEFT,   WEST },
+	{ STRUCTURE_DOOR | STRUCTURE_DDOOR_LEFT , false, true,  ORIENT_OUTSIDE_LEFT,  WEST },
+	{                  STRUCTURE_DDOOR_LEFT , true , true,  ORIENT_INSIDE_RIGHT,  SOUTH },
+	{                  STRUCTURE_DDOOR_LEFT , false, true,  ORIENT_OUTSIDE_RIGHT, SOUTH },
 };
 
 void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
@@ -1584,7 +1582,7 @@ void StructureHit(BULLET* const pBullet, const UINT16 usStructureID, const INT32
 			if (oppGridNoDir.flags & pStructure->fFlags &&
 				oppGridNoDir.mustBeBaseTile == static_cast<bool>(pStructure->fFlags & STRUCTURE_BASE_TILE) &&
 				oppGridNoDir.mustBeOpen     == static_cast<bool>(pStructure->fFlags & STRUCTURE_OPEN) &&
-				oppGridNoDir.orientation    == pStructure->ubWallOrientation)
+				oppGridNoDir.orientation    &  pStructure->ubWallOrientation)
 			{
 				oppositeSideGridNo += DirectionInc(oppGridNoDir.direction);
 				break;
@@ -1867,7 +1865,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 		return;
 	}
 	MakeNoise(NULL, sGridNo, 0, WINDOW_SMASH_VOLUME, NOISE_BULLET_IMPACT);
-	if (pWallAndWindowInDB->ubWallOrientation == INSIDE_TOP_RIGHT || pWallAndWindowInDB->ubWallOrientation == OUTSIDE_TOP_RIGHT)
+	if (pWallAndWindowInDB->ubWallOrientation & ORIENT_RIGHT)
 	{
 		/*
 		sShatterGridNo = sGridNo + 1;

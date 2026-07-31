@@ -129,7 +129,7 @@ LEVELNODE* GetVerticalWall(UINT32 const map_idx)
 				(FIRSTDOOR <= tile_type && tile_type <= LASTDOOR))
 		{
 			UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
-			if (wall_orientation != INSIDE_TOP_RIGHT && wall_orientation != OUTSIDE_TOP_RIGHT) continue;
+			if (!(wall_orientation & ORIENT_RIGHT)) continue;
 			return i;
 		}
 	}
@@ -148,7 +148,7 @@ LEVELNODE* GetHorizontalWall(UINT32 const map_idx)
 				(FIRSTDOOR <= tile_type && tile_type <= LASTDOOR))
 		{
 			UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
-			if (wall_orientation != INSIDE_TOP_LEFT && wall_orientation != OUTSIDE_TOP_LEFT) continue;
+			if (!(wall_orientation & ORIENT_LEFT)) continue;
 			return i;
 		}
 	}
@@ -178,7 +178,7 @@ static LEVELNODE* GetVerticalFence(UINT32 const map_idx)
 		if (GetTileType(i->usIndex) != FENCESTRUCT) continue;
 
 		UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
-		if (wall_orientation != INSIDE_TOP_RIGHT && wall_orientation != OUTSIDE_TOP_RIGHT) continue;
+		if (!(wall_orientation & ORIENT_RIGHT)) continue;
 		return i;
 	}
 	return 0;
@@ -193,7 +193,7 @@ static LEVELNODE* GetHorizontalFence(UINT32 const map_idx)
 		if (GetTileType(i->usIndex) != FENCESTRUCT) continue;
 
 		UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
-		if (wall_orientation != INSIDE_TOP_LEFT && wall_orientation != OUTSIDE_TOP_LEFT) continue;
+		if (!(wall_orientation & ORIENT_LEFT)) continue;
 		return i;
 	}
 	return 0;
@@ -269,8 +269,8 @@ void RestoreWalls(UINT32 const map_idx)
 		RemoveAllShadowsOfTypeRange(map_idx, FIRSTWALL, LASTWALL);
 		switch (wall_orientation)
 		{
-			case OUTSIDE_TOP_LEFT: BuildWallPiece(map_idx, INTERIOR_BOTTOM, wall_type); break;
-			case INSIDE_TOP_LEFT:  BuildWallPiece(map_idx, EXTERIOR_BOTTOM, wall_type); break;
+			case ORIENT_OUTSIDE_LEFT: BuildWallPiece(map_idx, INTERIOR_BOTTOM, wall_type); break;
+			case ORIENT_INSIDE_LEFT:  BuildWallPiece(map_idx, EXTERIOR_BOTTOM, wall_type); break;
 		}
 		done = true;
 	}
@@ -284,8 +284,8 @@ void RestoreWalls(UINT32 const map_idx)
 		RemoveAllShadowsOfTypeRange(map_idx, FIRSTWALL, LASTWALL);
 		switch (wall_orientation)
 		{
-			case OUTSIDE_TOP_RIGHT: BuildWallPiece(map_idx, INTERIOR_RIGHT, wall_type); break;
-			case INSIDE_TOP_RIGHT:  BuildWallPiece(map_idx, EXTERIOR_RIGHT, wall_type); break;
+			case ORIENT_OUTSIDE_RIGHT: BuildWallPiece(map_idx, INTERIOR_RIGHT, wall_type); break;
+			case ORIENT_INSIDE_RIGHT:  BuildWallPiece(map_idx, EXTERIOR_RIGHT, wall_type); break;
 		}
 		done = true;
 	}

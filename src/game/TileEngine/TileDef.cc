@@ -83,11 +83,11 @@ void CreateTileDatabase()
 
 			TileElement.fType             = (UINT16)TileSurf->fType;
 			TileElement.ubTerrainID       = TileSurf->ubTerrainID;
-			TileElement.usWallOrientation = NO_ORIENTATION;
+			TileElement.usWallOrientation = ORIENT_NONE;
 
 			if (TileSurf->pAuxData)
 			{
-				AuxObjectData const& aux = TileSurf->pAuxData[cnt2];
+				AuxObjectData & aux = TileSurf->pAuxData[cnt2];
 				if (aux.fFlags & AUX_FULL_TILE)
 				{
 					TileElement.ubFullTile = 1;
@@ -108,7 +108,26 @@ void CreateTileDatabase()
 
 					TileElement.uiFlags |= ANIMATED_TILE;
 				}
-				TileElement.usWallOrientation = static_cast<WallOrientationDefines>(aux.ubWallOrientation);
+
+				// Convert contiguous named orientation values to flags
+				if (TileElement.pDBStructureRef)
+				{
+					switch (aux.ubWallOrientation)
+					{
+						case 2:
+							aux.ubWallOrientation = ORIENT_INSIDE_RIGHT;
+							break;
+						case 3:
+							aux.ubWallOrientation = ORIENT_OUTSIDE_LEFT;
+							break;
+						case 4:
+							aux.ubWallOrientation = ORIENT_OUTSIDE_RIGHT;
+							break;
+					}
+					TileElement.usWallOrientation = static_cast<Orientation>(aux.ubWallOrientation);
+					TileElement.pDBStructureRef->pDBStructure->ubWallOrientation = TileElement.usWallOrientation;
+				}
+
 				if (aux.ubNumberOfTiles > 0)
 				{
 					TileElement.ubNumberOfTiles = aux.ubNumberOfTiles;
@@ -118,21 +137,20 @@ void CreateTileDatabase()
 
 			SetSpecificDatabaseValues(cnt1, gTileDatabaseSize, TileElement, TileSurf->bRaisedObjectType);
 			// fix incorrect double door flags. in vanilla it only affects DOOR3 in PALACE! tileset and DOOR1 in QUEEN'S TROPICAL
-			if ((gTileSurfaceName[cnt1] == "DOOR1" || gTileSurfaceName[cnt1] == "DOOR2" || gTileSurfaceName[cnt1] == "DOOR3" || gTileSurfaceName[cnt1] == "DOOR4")
-				&& TileElement.pDBStructureRef != nullptr)
+			if (TileElement.pDBStructureRef && cnt1 >= FIRSTDOOR && cnt1 <=FOURTHDOOR)
 			{
 				if (TileElement.usRegionIndex == 0 && (TileElement.pDBStructureRef->pDBStructure->fFlags & (STRUCTURE_DDOOR_RIGHT|STRUCTURE_DDOOR_LEFT)))
 				{
 					// if a door in an open state takes up 1 tile and is flagged as outside-oriented...
-					if (TileElement.usWallOrientation == OUTSIDE_TOP_RIGHT && TileElement.pDBStructureRef[4].pDBStructure->ubNumberOfTiles == 1)
+					if (TileElement.usWallOrientation == ORIENT_OUTSIDE_RIGHT && TileElement.pDBStructureRef[4].pDBStructure->ubNumberOfTiles == 1)
 					{
 						// ... we found our problematic tile surface to be fixed
-						TileElement.usWallOrientation = INSIDE_TOP_RIGHT;
-						TileElement.pDBStructureRef->pDBStructure->ubWallOrientation = INSIDE_TOP_RIGHT;
-						TileElement.pDBStructureRef[4].pDBStructure->ubWallOrientation = INSIDE_TOP_RIGHT;
+						TileElement.usWallOrientation = ORIENT_INSIDE_RIGHT;
+						TileElement.pDBStructureRef->pDBStructure->ubWallOrientation = ORIENT_INSIDE_RIGHT;
+						TileElement.pDBStructureRef[4].pDBStructure->ubWallOrientation = ORIENT_INSIDE_RIGHT;
 						TileElement.pDBStructureRef[4].pDBStructure->ubArmour = MATERIAL_PLYWOOD_WALL;
-						TileElement.pDBStructureRef[5].pDBStructure->ubWallOrientation = INSIDE_TOP_LEFT;
-						TileElement.pDBStructureRef[9].pDBStructure->ubWallOrientation = INSIDE_TOP_LEFT;
+						TileElement.pDBStructureRef[5].pDBStructure->ubWallOrientation = ORIENT_INSIDE_LEFT;
+						TileElement.pDBStructureRef[9].pDBStructure->ubWallOrientation = ORIENT_INSIDE_LEFT;
 						// between subindices 0-4 and 10-14 there can only be 1 right part of a double door
 						TileElement.pDBStructureRef[10].pDBStructure->fFlags &= ~STRUCTURE_DDOOR_RIGHT;
 						TileElement.pDBStructureRef[10].pDBStructure->fFlags |= STRUCTURE_DDOOR_LEFT;
@@ -301,7 +319,7 @@ bool AnyHeigherLand(UINT32 const map_idx, UINT32 const src_type, UINT8* const ou
 	return found;
 }
 
-WallOrientationDefines GetWallOrientation(UINT16 usIndex)
+Orientation GetWallOrientation(UINT16 usIndex)
 {
 	Assert(usIndex < lengthof(gTileDatabase));
 	return gTileDatabase[usIndex].usWallOrientation;

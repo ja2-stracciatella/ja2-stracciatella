@@ -20,7 +20,7 @@ BOOLEAN	WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo );
 BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo );
 BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo );
 
-STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo, INT8 orientation);
+STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo, Orientation orientation);
 
 BOOLEAN CutWireFence( INT16 sGridNo );
 BOOLEAN IsCuttableWireFenceAtGridNo( INT16 sGridNo );
