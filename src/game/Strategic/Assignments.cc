@@ -2174,7 +2174,12 @@ static void HandleTrainingInSector(const SGPSector& sector)
 			// if he's training himself (alone, or by others), then he's a student
 			if ( ( pStudent -> bAssignment == TRAIN_SELF ) || ( pStudent -> bAssignment == TRAIN_BY_OTHER ) )
 			{
-				if (EnoughTimeOnAssignment(*pStudent) && !pStudent->fMercAsleep)
+				/* A student with nothing to do (e.g. no trainer for his stat in the sector at all) is
+				 * resting instead of being fatigued, so he mustn't gain any training points either.
+				 * A trainer who is merely asleep still counts as a partner, so in that case the
+				 * student keeps training at his own (slower) rate and keeps getting tired. */
+				if (EnoughTimeOnAssignment(*pStudent) && !pStudent->fMercAsleep &&
+						!pStudent->fDoneAssignmentAndNothingToDoFlag)
 				{
 					// figure out how much the grunt can learn in one training period
 					sTotalTrainingPts = GetSoldierTrainingPts( pStudent, pStudent -> bTrainStat, fAtGunRange, &usMaxPts );
