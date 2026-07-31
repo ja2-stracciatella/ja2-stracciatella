@@ -1212,12 +1212,11 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 			OBJECTTYPE Object = o;
 			if (!AutoPlaceObject(s, &Object, TRUE))
 			{
-				// check to see if the object has been swapped with one in inventory
-				if (Object.usItem != o.usItem || Object.ubNumberOfObjects != o.ubNumberOfObjects)
-				{
-					// copy back because item changed, and we must make sure the item pool reflects this.
-					o = Object;
-				}
+				/* Copy back because the object may have changed, and we must make
+				 * sure the item pool reflects this: it could have been swapped with
+				 * one in inventory, or only partly placed, which for money shows up
+				 * in uiMoneyAmount alone. */
+				o = Object;
 
 				pItemPoolToDelete = i;
 				continue; // try to place any others
