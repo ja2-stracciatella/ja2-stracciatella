@@ -503,10 +503,14 @@ static bool RefineLogicOnStruct(INT16 gridno, LEVELNODE const& n)
 			// Move south
 			gridno = NewGridNo(gridno, DirectionInc(SOUTH));
 		}
-		else
+		else if (structure.pDBStructureRef->pDBStructure->ubWallOrientation & ORIENT_RIGHT)
 		{
 			// Move east
 			gridno = NewGridNo(gridno, DirectionInc(EAST));
+		}
+		else
+		{
+			return true;
 		}
 	}
 

@@ -137,7 +137,7 @@ void CreateTileDatabase()
 
 			SetSpecificDatabaseValues(cnt1, gTileDatabaseSize, TileElement, TileSurf->bRaisedObjectType);
 			// fix incorrect double door flags. in vanilla it only affects DOOR3 in PALACE! tileset and DOOR1 in QUEEN'S TROPICAL
-			if (TileElement.pDBStructureRef != nullptr && cnt1 >= FIRSTDOOR && cnt1 <=FOURTHDOOR)
+			if (TileElement.pDBStructureRef && cnt1 >= FIRSTDOOR && cnt1 <=FOURTHDOOR)
 			{
 				if (TileElement.usRegionIndex == 0 && (TileElement.pDBStructureRef->pDBStructure->fFlags & (STRUCTURE_DDOOR_RIGHT|STRUCTURE_DDOOR_LEFT)))
 				{

@@ -4433,16 +4433,17 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 							*pdNormalX = 0;
 							*pdNormalY = 0;
 							*pdNormalZ = 0;
+							bool isDeltaXPositive{ dDeltaX > 0 };
 
 							if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 							{
-								*pdNormalX = -1;
-								return dDeltaX > 0 ? COLLISION_WALL_SOUTHEAST : COLLISION_WALL_NORTHEAST;
+								*pdNormalX = isDeltaXPositive ? -1 : 1;
+								return isDeltaXPositive ? COLLISION_WALL_SOUTHEAST : COLLISION_WALL_NORTHEAST;
 							}
 							else
 							{
-								*pdNormalY = -1;
-								return dDeltaY > 0 ? COLLISION_WALL_SOUTHWEST : COLLISION_WALL_NORTHWEST;
+								*pdNormalY = isDeltaXPositive ? -1 : 1;
+								return isDeltaXPositive ? COLLISION_WALL_SOUTHWEST : COLLISION_WALL_NORTHWEST;
 							}
 
 						}
