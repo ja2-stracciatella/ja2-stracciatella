@@ -313,7 +313,6 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 
 	RemovePlayerFromGroup(s);
 
-	s.ubGroupID      = 0;
 	s.sSector        = v.sSector;
 	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 

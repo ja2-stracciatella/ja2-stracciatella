@@ -224,10 +224,13 @@ void RemovePlayerFromGroup(SOLDIERTYPE& s)
 	//KM : August 6, 1999 Patch fix
 	//     Because the release build has no assertions, it was still possible for the group to be null,
 	//     causing a crash.  Instead of crashing, it'll simply return false.
-	if (!pGroup) return;
+	if (!pGroup)
+	{
+		SLOGE("RemovePlayerFromGroup failed, soldier ID {} ({}), group ID {}", s.ubID, s.name, s.ubGroupID);
+		s.ubGroupID = 0;
+		return;
+	}
 	//end
-
-	AssertMsg(pGroup, ST::format("Attempting to RemovePlayerFromGroup({}, {}) from non-existant group", s.ubGroupID, s.ubProfile));
 
 	RemovePlayerFromPGroup(*pGroup, s);
 }
