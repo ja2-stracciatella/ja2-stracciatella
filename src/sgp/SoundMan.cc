@@ -159,6 +159,7 @@ static std::vector<INT32> gMixBuffer;
 SDL_AudioDeviceID gAudioDeviceID = SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK;
 SDL_AudioSpec gTargetAudioSpec;
 ma_decoder_config gTargetDecoderConfig;
+static SDL_AudioStream* gAudioStream = NULL;
 
 // These synchronization primitives are used to signal between the buffer servicing thread and the sound callback thread
 // When the callback thread notices that the buffer for a channel is less than half filled, it will notify the stream processing
@@ -949,7 +950,8 @@ void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int addition
 				}
 
 				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples);
-				if (samples < want_samples || rbResult == MA_AT_END) {
+
+				if (Sound->DoneServicing && (samples < want_samples || rbResult == MA_AT_END)) {
 					Sound->State = CHANNEL_DEAD;
 				}
 
@@ -1004,6 +1006,7 @@ static BOOLEAN SoundInitHardware(void)
 		if (!stream) {
 			throw std::runtime_error(ST::format("SDL_OpenAudioDeviceStream returned error: {}", SDL_GetError()).c_str());
 		}
+		gAudioStream = stream;
 		gAudioDeviceID = SDL_GetAudioStreamDevice(stream);
 
 		gTargetDecoderConfig = ma_decoder_config_init(SOUND_MA_SOUND_FORMAT, gTargetAudioSpec.channels, gTargetAudioSpec.freq);
@@ -1062,6 +1065,10 @@ static void SoundShutdownHardware(void)
 		}
 	}
 	if (SDL_WasInit(SDL_INIT_AUDIO) != 0) {
+		if (gAudioStream != NULL) {
+			SDL_DestroyAudioStream(gAudioStream);
+			gAudioStream = NULL;
+		}
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	}
 }
