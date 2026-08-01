@@ -55,7 +55,7 @@ static UINT32   guiDirtyRegionExCount;
 
 static SDL_Surface* MouseCursor;
 static SDL_Surface* FrameBuffer;
-static SDL_Renderer*  GameRenderer;
+SDL_Renderer*  GameRenderer;
 SDL_Window* g_game_window;
 
 static SDL_Surface* ScreenBuffer;

@@ -12,6 +12,7 @@
 
 extern INT16 gsMouseSizeYModifier;
 extern SDL_Window* g_game_window;
+extern SDL_Renderer* GameRenderer;
 
 using VideoScaleQuality = ScalingQuality;
 

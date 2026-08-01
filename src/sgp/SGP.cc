@@ -127,6 +127,22 @@ static void MainLoop()
 		SDL_Event event;
 		if (SDL_PollEvent(&event))
 		{
+			// Convert mouse and finger event coordinates from window
+			// coordinates to render logical coordinates (accounts for
+			// letterboxing, e.g. on Android's portrait orientation)
+			switch (event.type) {
+				case SDL_EVENT_MOUSE_MOTION:
+				case SDL_EVENT_MOUSE_BUTTON_DOWN:
+				case SDL_EVENT_MOUSE_BUTTON_UP:
+				case SDL_EVENT_FINGER_MOTION:
+				case SDL_EVENT_FINGER_DOWN:
+				case SDL_EVENT_FINGER_UP:
+					SDL_ConvertEventToRenderCoordinates(GameRenderer, &event);
+					break;
+				default:
+					break;
+			}
+
 			switch (event.type)
 			{
 				case SDL_EVENT_WILL_ENTER_BACKGROUND:
@@ -388,11 +404,16 @@ int main(int argc, char* argv[])
 		InitializeVideoManager(scalingQuality, GCM->getGamePolicy()->target_fps);
 		VideoSetBrightness(brightness);
 
-		if (shouldStartInFullScreen) {
+		#ifdef __ANDROID__
+			// On Android, always run fullscreen to hide system bars
 			VideoSetFullScreen(TRUE);
-		} else {
-			VideoSetFullScreen(FALSE);
-		}
+		#else
+			if (shouldStartInFullScreen) {
+				VideoSetFullScreen(TRUE);
+			} else {
+				VideoSetFullScreen(FALSE);
+			}
+		#endif
 
 		SLOGD("Initializing Video Surface Manager");
 		InitializeVideoSurfaceManager();

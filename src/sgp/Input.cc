@@ -282,7 +282,7 @@ void FingerMove(const SDL_TouchFingerEvent* event) {
 	if (event->fingerID != gMainFingerId) return;
 	gfIsUsingTouch = true;
 
-	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
+	SetSafeMousePosition((int)event->x, (int)event->y);
 
 	QueuePointerEvent(TOUCH_FINGER_MOVE, 0);
 }
@@ -295,7 +295,7 @@ void FingerDown(const SDL_TouchFingerEvent* event) {
 	gMainFingerId = event->fingerID;
 	gfIsUsingTouch = true;
 
-	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
+	SetSafeMousePosition((int)event->x, (int)event->y);
 
 	gMainFingerState.handleDown();
 }
@@ -307,7 +307,7 @@ void FingerUp(const SDL_TouchFingerEvent* event) {
 	if (event->fingerID != gMainFingerId) return;
 	gfIsUsingTouch = true;
 
-	SetSafeMousePosition(event->x * SCREEN_WIDTH, event->y * SCREEN_HEIGHT);
+	SetSafeMousePosition((int)event->x, (int)event->y);
 
 	gMainFingerState.handleUp();
 }
