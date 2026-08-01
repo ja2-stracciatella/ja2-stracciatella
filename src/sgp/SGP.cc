@@ -39,6 +39,7 @@
 
 #ifdef __ANDROID__
 #include "jni.h"
+#include "SDL3/SDL_main.h"
 #endif
 
 #include <string_theory/format>
