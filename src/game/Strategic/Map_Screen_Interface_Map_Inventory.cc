@@ -856,9 +856,9 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 
 		if (pItemPtr->usItem == pInventorySlot->usItem)
 		{
-			if (pItemPtr->usItem == MONEY)
+			if (GCM->getItem(pItemPtr->usItem)->isMoney())
 			{
-				// always allow money to be combined!
+				// always allow money to be combined! this covers silver and gold ore too
 				// status of money is always 100
 				pInventorySlot->bMoneyStatus = 100;
 				pInventorySlot->uiMoneyAmount += pItemPtr->uiMoneyAmount;
