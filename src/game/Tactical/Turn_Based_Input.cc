@@ -1447,9 +1447,11 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 				*new_event = I_ENDTURN;
 			}
 
-			if (gamepolicy(can_enter_turnbased))
+			// Go through the regular entry point so the battle state gets set up
+			// properly. It refuses when there is nothing in the sector to fight.
+			if (gamepolicy(can_enter_turnbased) && !(gTacticalStatus.uiFlags & INCOMBAT))
 			{
-				gTacticalStatus.uiFlags |= INCOMBAT;
+				EnterCombatMode(OUR_TEAM);
 			}
 			break;
 
