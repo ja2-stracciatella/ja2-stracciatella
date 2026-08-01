@@ -268,6 +268,32 @@ void BuildSectorsWithSoldiersList( void )
 }
 
 
+/* Which characters were asleep during the hour that has just elapsed.  The
+ * hourly update sends mercs to bed and wakes them up before it hands out any
+ * assignment progress, so from that point on the live fMercAsleep flag describes
+ * the hour ahead and can no longer tell whether a merc spent the past hour
+ * working or sleeping. */
+static std::bitset<MAX_NUM_SOLDIERS> fSleptThroughPastHour;
+
+
+// Record who is asleep, before anyone is woken up or sent to bed
+static void RecordSleepStatusForPastHour( void )
+{
+	fSleptThroughPastHour.reset();
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
+	{
+		if (s->fMercAsleep) fSleptThroughPastHour.set(s->ubID);
+	}
+}
+
+
+// Was this merc asleep during the hour his assignment is now being paid out for?
+static bool SleptThroughPastHour(SOLDIERTYPE const& s)
+{
+	return fSleptThroughPastHour.test(s.ubID);
+}
+
+
 void ChangeSoldiersAssignment(SOLDIERTYPE * const pSoldier, Assignments const bAssignment)
 {
 	// This is the most basic assignment-setting function.  It must be called before setting any subsidiary
@@ -933,6 +959,11 @@ void UpdateAssignments()
 	// build list
 	BuildSectorsWithSoldiersList(  );
 
+	/* Note who slept through the hour that just ended.  Everything below credits
+	 * work done during that hour, so it must not use the sleep status that
+	 * HandleRestFatigueAndSleepStatus() is about to set for the hour ahead. */
+	RecordSleepStatusForPastHour( );
+
 	// handle natural healing
 	HandleNaturalHealing( );
 
@@ -1199,7 +1230,7 @@ static void HandleDoctorsInSector(const SGPSector& sector)
 		SOLDIERTYPE& s = *i;
 		if (s.sSector != sector) continue;
 		if (s.bAssignment != DOCTOR) continue;
-		if (s.fMercAsleep)           continue;
+		if (SleptThroughPastHour(s)) continue;
 		MakeSureMedKitIsInHand(&s);
 		// Character is in sector, check if can doctor, if so, heal people
 		if (!CanCharacterDoctor(&s))    continue;
@@ -1694,7 +1725,7 @@ static void HandleRepairmenInSector(const SGPSector& sector)
 		SOLDIERTYPE& s = *i;
 		if (s.sSector    != sector)  continue;
 		if (s.bAssignment != REPAIR) continue;
-		if (s.fMercAsleep)           continue;
+		if (SleptThroughPastHour(s)) continue;
 
 		MakeSureToolKitIsInHand(&s);
 
@@ -2148,7 +2179,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 				if (pTrainer->bAssignment == TRAIN_TEAMMATE &&
 						pTrainer->bTrainStat  == ubStat         &&
 						EnoughTimeOnAssignment(*pTrainer)       &&
-						!pTrainer->fMercAsleep)
+						!SleptThroughPastHour(*pTrainer))
 				{
 					sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, NULL, ubStat, fAtGunRange, &usMaxPts );
 
@@ -2178,7 +2209,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 				 * resting instead of being fatigued, so he mustn't gain any training points either.
 				 * A trainer who is merely asleep still counts as a partner, so in that case the
 				 * student keeps training at his own (slower) rate and keeps getting tired. */
-				if (EnoughTimeOnAssignment(*pStudent) && !pStudent->fMercAsleep &&
+				if (EnoughTimeOnAssignment(*pStudent) && !SleptThroughPastHour(*pStudent) &&
 						!pStudent->fDoneAssignmentAndNothingToDoFlag)
 				{
 					// figure out how much the grunt can learn in one training period
@@ -2232,7 +2263,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 			{
 				if (pTrainer->bAssignment == TRAIN_TOWN &&
 						EnoughTimeOnAssignment(*pTrainer)   &&
-						!pTrainer->fMercAsleep)
+						!SleptThroughPastHour(*pTrainer))
 				{
 					sTownTrainingPts = GetTownTrainPtsForCharacter( pTrainer, &usMaxPts );
 
