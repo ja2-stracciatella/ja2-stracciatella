@@ -1042,8 +1042,20 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						// XXX Code and comment do not match. Should we really skip 5 frames in total?
 						pSoldier->usAniCode += 4;
 
-						// Reduce by a bullet...
-						pSoldier->bBulletsLeft--;
+						// Reduce by a bullet... give back everything this shot reserved, as
+						// none of it gets fired. Buckshot reserves a whole spread of pellets
+						// (see EVENT_FireSoldierWeapon), and unless all of them are given back
+						// bBulletsLeft never reaches zero, FreeUpAttacker() below does nothing
+						// and the attack busy count is left standing, which locks the interface
+						// until the busy-state watchdog trips seconds later.
+						INT8 const bBulletsThisShot =
+							pSoldier->inv[pSoldier->ubAttackingHand].ubGunAmmoType == AMMO_BUCKSHOT ?
+								NUM_BUCKSHOT_PELLETS : 1;
+						pSoldier->bBulletsLeft -= bBulletsThisShot;
+						if ( pSoldier->bBulletsLeft < 0 )
+						{
+							pSoldier->bBulletsLeft = 0;
+						}
 
 						PlayLocationJA2Sample(pSoldier->sGridNo, S_DRYFIRE1, MIDVOLUME, 1);
 
