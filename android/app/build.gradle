@@ -4,7 +4,7 @@ apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion 34
-    ndkVersion "25.0.8775105"
+    ndkVersion "29.0.14206865"
 
 
     defaultConfig {

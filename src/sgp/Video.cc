@@ -104,11 +104,8 @@ void VideoSetBrightness(float brightness)
 static void GetRGBDistribution();
 
 
-void InitializeVideoManager(const VideoScaleQuality quality,
-                            const int32_t targetFPS)
+void InitializeVideoManager(const VideoScaleQuality quality, const int32_t targetFPS)
 {
-	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-
 	ScaleQuality = quality;
 	g_window_flags |= SDL_WINDOW_RESIZABLE;
 
