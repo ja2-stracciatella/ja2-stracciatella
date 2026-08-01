@@ -29,11 +29,10 @@ struct VEHICLETYPE
 	UINT8   ubMovementGroup; // the movement group this vehicle belongs to
 	UINT8   ubVehicleType; // type of vehicle
 	SGPSector sSector; // position on the Stategic Map
-	BOOLEAN fBetweenSectors; // between sectors?
-	INT16   sGridNo; // location in tactical
 	SOLDIERTYPE *pPassengers[MAX_PASSENGERS_IN_VEHICLE];
-	BOOLEAN fDestroyed;
 	UINT32  uiMovementSoundID;
+	BOOLEAN fBetweenSectors; // between sectors?
+	BOOLEAN fDestroyed;
 	BOOLEAN fValid;
 };
 
