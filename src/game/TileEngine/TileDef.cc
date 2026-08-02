@@ -109,25 +109,6 @@ void CreateTileDatabase()
 					TileElement.uiFlags |= ANIMATED_TILE;
 				}
 
-				// Convert contiguous named orientation values to flags
-				if (TileElement.pDBStructureRef)
-				{
-					switch (aux.ubWallOrientation)
-					{
-						case 2:
-							aux.ubWallOrientation = ORIENT_INSIDE_RIGHT;
-							break;
-						case 3:
-							aux.ubWallOrientation = ORIENT_OUTSIDE_LEFT;
-							break;
-						case 4:
-							aux.ubWallOrientation = ORIENT_OUTSIDE_RIGHT;
-							break;
-					}
-					TileElement.usWallOrientation = static_cast<Orientation>(aux.ubWallOrientation);
-					TileElement.pDBStructureRef->pDBStructure->ubWallOrientation = TileElement.usWallOrientation;
-				}
-
 				if (aux.ubNumberOfTiles > 0)
 				{
 					TileElement.ubNumberOfTiles = aux.ubNumberOfTiles;
