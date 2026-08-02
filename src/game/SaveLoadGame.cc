@@ -2176,7 +2176,7 @@ static void TruncateStrategicGroupSizes(void)
 	for( i = SEC_A1; i < SEC_P16; i++ )
 	{
 		pSector = &SectorInfo[ i ];
-		if( pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites > MAX_STRATEGIC_TEAM_SIZE )
+		if (Enemies(*pSector) > MAX_STRATEGIC_TEAM_SIZE)
 		{
 			if( pSector->ubNumAdmins > pSector->ubNumTroops )
 			{
@@ -2277,7 +2277,7 @@ static void TruncateStrategicGroupSizes(void)
 	//Enemy groups
 	FOR_EACH_ENEMY_GROUP(pGroup)
 	{
-		if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites > MAX_STRATEGIC_TEAM_SIZE )
+		if (Enemies(*pGroup->pEnemyGroup) > MAX_STRATEGIC_TEAM_SIZE)
 		{
 			pGroup->ubGroupSize = 20;
 			if( pGroup->pEnemyGroup->ubNumAdmins > pGroup->pEnemyGroup->ubNumTroops )

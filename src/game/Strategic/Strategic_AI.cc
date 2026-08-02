@@ -292,7 +292,7 @@ static void ValidateGroup(GROUP* pGroup)
 			}
 		}
 	}
-	if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites != pGroup->ubGroupSize ||
+	if (Enemies(*pGroup->pEnemyGroup) != pGroup->ubGroupSize ||
 			pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE )
 		{
 			SLOGE("Internal error (bad group populations).  Please send PRIOR save file and Debug Log.");
@@ -1006,8 +1006,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					pSector->ubNumElites = (UINT8)(pSector->ubNumElites + pGroup->pEnemyGroup->ubNumElites);
 
 					SLOGD("{} reinforcements have arrived to garrison sector {}",
-							pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops +
-							pGroup->pEnemyGroup->ubNumElites, sec);
+						  Enemies(*pGroup->pEnemyGroup), sec);
 					if (IsThisSectorASAMSector(sec))
 					{
 						StrategicMap[sec.AsStrategicIndex()].bSAMCondition = 100;
@@ -1064,9 +1063,9 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					pPatrolGroup->pEnemyGroup->ubNumTroops += pGroup->pEnemyGroup->ubNumTroops;
 					pPatrolGroup->pEnemyGroup->ubNumElites += pGroup->pEnemyGroup->ubNumElites;
 					pPatrolGroup->pEnemyGroup->ubNumAdmins += pGroup->pEnemyGroup->ubNumAdmins;
-					pPatrolGroup->ubGroupSize += (UINT8)(pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins );
+					pPatrolGroup->ubGroupSize += Enemies(*pGroup->pEnemyGroup);
 					SLOGD("{} reinforcements have joined patrol group at sector {} (new size: {})",
-							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
+							Enemies(*pGroup->pEnemyGroup),
 							pPatrolGroup->ubSector, pPatrolGroup->ubGroupSize);
 					if( pPatrolGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE )
 					{
@@ -1097,9 +1096,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 							}
 						}
 						pPatrolGroup->ubGroupSize = MAX_STRATEGIC_TEAM_SIZE;
-						Assert( pPatrolGroup->pEnemyGroup->ubNumAdmins +
-										pPatrolGroup->pEnemyGroup->ubNumTroops +
-										pPatrolGroup->pEnemyGroup->ubNumElites == MAX_STRATEGIC_TEAM_SIZE );
+						Assert(Enemies(*pPatrolGroup->pEnemyGroup) == MAX_STRATEGIC_TEAM_SIZE);
 					}
 					RemoveGroup(*pGroup);
 					RecalculatePatrolWeight(gPatrolGroup[i]);
@@ -1120,7 +1117,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 							AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 3 ] );
 					}
 					SLOGD("{} soldiers have arrived to patrol area near sector {}",
-							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, sec);
+							Enemies(*pGroup->pEnemyGroup), sec);
 					RecalculatePatrolWeight(gPatrolGroup[i]);
 				}
 				return TRUE;
@@ -1683,7 +1680,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		pGroup = *pOptionalGroup;
 
 		SLOGD("{} troops have been reassigned from {} to garrison sector {}",
-				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
+				Enemies(*pGroup->pEnemyGroup),
 				pGroup->ubSector,
 				dstSector);
 
@@ -1742,7 +1739,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		pGroup->ubMoveType = ONE_WAY;
 		gGarrisonGroup[ iDstGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 
-		ubGroupSize = (UINT8)(pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins);
+		ubGroupSize = Enemies(*pGroup->pEnemyGroup);
 
 		if( ubNumExtraReinforcements )
 		{
@@ -1810,7 +1807,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			pGroup->ubOriginalSector = dstSector.AsByte();
 			pGroup->ubMoveType = ONE_WAY;
 			gGarrisonGroup[ iDstGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
-			ubGroupSize = (UINT8)( pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins );
+			ubGroupSize = Enemies(*pGroup->pEnemyGroup);
 
 			if( ubNumExtraReinforcements )
 			{
@@ -1858,7 +1855,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 		pg->ubPendingGroupID = pGroup->ubGroupID;
 
 		SLOGD("{} troops have been reassigned from {} to reinforce patrol group covering sector {}",
-				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
+				Enemies(*pGroup->pEnemyGroup),
 				pGroup->ubSector, dstSector);
 
 		MoveSAIGroupToSector(pOptionalGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
@@ -1879,7 +1876,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 		pg->ubPendingGroupID = pGroup->ubGroupID;
 
 		SLOGD("{} troops have been sent from palace to patrol area near sector {}",
-				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, dstSector);
+				Enemies(*pGroup->pEnemyGroup), dstSector);
 
 		MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 		return;
@@ -1908,7 +1905,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 						RemoveSoldiersFromGarrisonBasedOnComposition( uiSrcGarrisonID, pGroup->ubGroupSize );
 
 						SLOGD("{} troops have been sent from garrison sector {} to patrol area near sector {}",
-								pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
+								Enemies(*pGroup->pEnemyGroup),
 								srcSector, dstSector);
 
 						MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
@@ -3183,9 +3180,7 @@ static BOOLEAN PatrolRequestingMinimumReinforcements(INT32 iPatrolID)
 
 static void EliminateSurplusTroopsForGarrison(GROUP* pGroup, SECTORINFO* pSector)
 {
-	INT32 iTotal;
-	iTotal = pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins +
-			pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
+	INT32 iTotal = Enemies(*pGroup->pEnemyGroup) + Enemies(*pSector);
 	if( iTotal <= MAX_STRATEGIC_TEAM_SIZE )
 	{
 		return;
@@ -3607,7 +3602,7 @@ static void ConvertGroupTroopsToComposition(GROUP* pGroup, INT32 iCompositionID)
 	Assert( !pGroup->fPlayer );
 	CalcNumTroopsBasedOnComposition( &pGroup->pEnemyGroup->ubNumTroops, &pGroup->pEnemyGroup->ubNumElites, pGroup->ubGroupSize, iCompositionID );
 	pGroup->pEnemyGroup->ubNumAdmins = 0;
-	pGroup->ubGroupSize = pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites;
+	pGroup->ubGroupSize = Enemies(*pGroup->pEnemyGroup);
 	ValidateLargeGroup( pGroup );
 }
 

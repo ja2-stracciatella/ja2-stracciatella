@@ -61,16 +61,13 @@ UINT8 NumHostilesInSector(const SGPSector& sSector)
 		pSector = FindUnderGroundSector(sSector);
 		if( pSector )
 		{
-			ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
+			ubNumHostiles = Hostiles(*pSector);
 		}
 	}
 	else
 	{
-		SECTORINFO *pSector;
-
 		//Count stationary hostiles
-		pSector = &SectorInfo[sSector.AsByte()];
-		ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
+		ubNumHostiles = Hostiles(SectorInfo[sSector.AsByte()]);
 
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
@@ -96,16 +93,13 @@ UINT8 NumEnemiesInAnySector(const SGPSector& sSector)
 		pSector = FindUnderGroundSector(sSector);
 		if( pSector )
 		{
-			ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+			ubNumEnemies = Enemies(*pSector);
 		}
 	}
 	else
 	{
-		SECTORINFO *pSector;
-
 		//Count stationary enemies
-		pSector = &SectorInfo[sSector.AsByte()];
-		ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+		ubNumEnemies = Enemies(SectorInfo[sSector.AsByte()]);
 
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
@@ -540,7 +534,7 @@ static void PrepareEnemyForUndergroundBattle()
 	Assert(u);
 	if (!u) return;
 
-	if (u->ubNumAdmins == 0 && u->ubNumTroops == 0 && u->ubNumElites == 0) return;
+	if (Enemies(*u) == 0) return;
 
 	UINT8 const ubTotalAdmins = u->ubNumAdmins - u->ubAdminsInBattle;
 	UINT8 const ubTotalTroops = u->ubNumTroops - u->ubTroopsInBattle;
@@ -709,7 +703,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				pSector = &SectorInfo[ GetAutoResolveSectorID() ];
 			}
 
-			ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
+			ubTotalEnemies = Enemies(*pSector);
 
 			switch( pSoldier->ubSoldierClass )
 			{
@@ -811,7 +805,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		{ //basement level (UNDERGROUND_SECTORINFO)
 			UNDERGROUND_SECTORINFO* pSector = FindUnderGroundSector(gWorldSector);
 			assert(pSector);
-			UINT32 ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
+			UINT32 ubTotalEnemies = Enemies(*pSector);
 			switch (pSoldier->ubSoldierClass)
 			{
 				case SOLDIER_CLASS_ADMINISTRATOR:
