@@ -40,6 +40,7 @@
 #include "WeaponModels.h"
 #include "Logger.h"
 #include "GamePolicy.h"
+#include <GameSettings.h>
 
 #define STEPS_FOR_BULLET_MOVE_TRAILS				10
 #define STEPS_FOR_BULLET_MOVE_SMALL_TRAILS			5
@@ -3151,7 +3152,7 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 	else
 	{
 		pBullet->target = pFirer->target;
-		if ( gamepolicy(hide_bullets) )
+		if (gGameSettings.fOptions[TOPTION_HIDE_BULLETS])
 		{
 			// bullets are not drawn - advance them several tiles per update so
 			// turns resolve quickly instead of waiting on the bullet animation
