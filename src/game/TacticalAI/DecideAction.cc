@@ -2034,7 +2034,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 									if ( PythSpacesAway( pSoldier->usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, sClosestDisturbance, pSoldier->bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
 									{
 										// reserve APs for a possible crouch plus a shot
-										pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, sClosestDisturbance, (INT8) (MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
+										pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, sClosestDisturbance, (INT8) (MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST, AFTER_MOVING) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
 										if ( pSoldier->usActionData != NOWHERE )
 										{
 											pSoldier->fAIFlags |= AI_CAUTIOUS;
@@ -2172,7 +2172,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 							{
 								// either moving significantly closer or into very close range
 								// ensure will we have enough APs for a possible crouch plus a shot
-								if ( InternalGoAsFarAsPossibleTowards( pSoldier, pSoldier->usActionData, (INT8) (MinAPsToAttack( pSoldier, sClosestOpponent, ADDTURNCOST) + AP_CROUCH), AI_ACTION_TAKE_COVER, 0 ) == pSoldier->usActionData )
+								if ( InternalGoAsFarAsPossibleTowards( pSoldier, pSoldier->usActionData, (INT8) (MinAPsToAttack( pSoldier, sClosestOpponent, ADDTURNCOST, AFTER_MOVING) + AP_CROUCH), AI_ACTION_TAKE_COVER, 0 ) == pSoldier->usActionData )
 								{
 									return(AI_ACTION_TAKE_COVER);
 								}
@@ -3251,7 +3251,13 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 				pSoldier->bTeam != OUR_TEAM)
 			{
 				UINT8 const ubBurstAPs = CalcAPsToBurst(CalcActionPoints(pSoldier), pSoldier->inv[BestAttack.bWeaponIn]);
-				if (pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) >= ubBurstAPs )
+				// a stance change lowers the weapon, so a raised one has to be raised again
+				UINT8 ubReraiseAPs = 0;
+				if (fChangeStanceFirst && (gAnimControl[pSoldier->usAnimState].uiFlags & (ANIM_FIREREADY | ANIM_FIRE)))
+				{
+					ubReraiseAPs = GCM->getWeapon(pSoldier->inv[BestAttack.bWeaponIn].usItem)->ubReadyTime;
+				}
+				if (pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) - ubReraiseAPs >= ubBurstAPs )
 				{
 					// Base chance of bursting is 25% if best shot was +0 aim, down to 8% at +4
 					if ( TANK( pSoldier ) )
