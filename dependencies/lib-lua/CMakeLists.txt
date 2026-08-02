@@ -34,7 +34,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_BINARY_DIR}/ge
 
 
 # include Lua source files in project
-if(UNIX AND NOT MINGW)
+if(UNIX AND NOT MINGW AND NOT ANDROID)
     add_definitions("-DLUA_USE_POSIX")
 endif()
 
