@@ -5,6 +5,7 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 #include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_scancode.h>
@@ -584,7 +585,13 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 		return;
 	}
 
-	SDL_WarpMouseInWindow(GAME_WINDOW, uiNewXPos, uiNewYPos);
+	float wx, wy;
+	if (SDL_RenderCoordinatesToWindow(GameRenderer, (float)uiNewXPos, (float)uiNewYPos, &wx, &wy)) {
+		SDL_WarpMouseInWindow(GAME_WINDOW, (int)wx, (int)wy);
+	} else {
+		// Fallback: use raw coordinates if conversion fails
+		SDL_WarpMouseInWindow(GAME_WINDOW, uiNewXPos, uiNewYPos);
+	}
 }
 
 
