@@ -364,6 +364,8 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF & pFileRef)
 				case 4:
 					dbs->ubWallOrientation = ORIENT_OUTSIDE_RIGHT;
 					break;
+				default:
+					break;
 			}
 			pFileRef.pAuxData[usIndex].ubWallOrientation = dbs->ubWallOrientation;
 		}
