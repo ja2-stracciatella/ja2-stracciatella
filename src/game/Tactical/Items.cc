@@ -3418,12 +3418,12 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 		return( FALSE );
 	}
 
-	/* A collapsed merc may still drink.  They only get back on their feet once
-	 * their breath reaches OKBREATH again, and the canteen is what puts it there,
-	 * so refusing it would deny them the very thing that ends the collapse.
-	 * EnoughPoints() turns down everything while collapsed, so only ask it about
-	 * the drink while the merc is on their feet. */
-	if (!pSoldier->bCollapsed && !EnoughPoints( pSoldier, AP_DRINK, 0, TRUE ) )
+	// Allow to drink if merc is collapsed, not dying, and not hit by a dart gun
+	const bool fCollapsedFromBreathAlone = pSoldier->bCollapsed &&
+		pSoldier->bLife >= OKLIFE &&
+		pSoldier->bSleepDrugCounter == 0;
+
+	if (!fCollapsedFromBreathAlone && !EnoughPoints( pSoldier, AP_DRINK, 0, TRUE ))
 	{
 		(*pfGoodAPs) = FALSE;
 		return( TRUE );
