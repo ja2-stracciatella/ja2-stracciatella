@@ -117,7 +117,10 @@ INT32 AddVehicleToList(const SGPSector& sMap, INT16, const UINT8 ubType)
 void RemoveVehicleFromList(VEHICLETYPE& v)
 {
 	v.pMercPath = ClearStrategicPathList(v.pMercPath, 0);
-	v = VEHICLETYPE{};
+	// We cannot really remove a vehicle from the vector because
+	// SOLDIERTYPE::bVehicleID is an index into this vector, so just
+	// mark this entry as invalid.
+	v.fValid = false;
 }
 
 
