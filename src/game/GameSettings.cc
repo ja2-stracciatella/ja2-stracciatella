@@ -31,7 +31,7 @@ GAME_OPTIONS		gGameOptions;
 
 
 //Change this number when we want any who gets the new build to reset the options
-#define GAME_SETTING_CURRENT_VERSION 522
+#define GAME_SETTING_CURRENT_VERSION 523
 
 
 static void InitGameSettings(void);
@@ -108,7 +108,7 @@ void SaveGameSettings(void)
 	// Record the current settings into the game settins structure
 	GAME_SETTINGS& g = gGameSettings;
 
-	BYTE  data[76];
+	BYTE  data[77];
 	DataWriter d{data};
 	INJ_I8(  d, g.bLastSavedGameSlot)
 	UINT8 const music_volume  = MusicGetVolume();
@@ -128,7 +128,6 @@ void SaveGameSettings(void)
 	INJ_U8(  d, g.ubSizeOfLOS)
 	INJ_SKIP(d, 20)
 	Assert(d.getConsumed() == lengthof(data));
-
 	AutoSGPFile f(GCM->userPrivateFiles()->openForWriting(GAME_SETTINGS_FILE, true));
 	f->write(data, sizeof(data));
 }

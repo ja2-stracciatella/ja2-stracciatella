@@ -44,12 +44,11 @@ enum
 	TOPTION_TOGGLE_WIREFRAME,
 	TOPTION_3D_CURSOR,
 
-	NUM_GAME_OPTIONS,				//Toggle up this will be able to be Toggled by the player
-
-	//These options will NOT be toggable by the Player
-	TOPTION_MERC_CASTS_LIGHT = NUM_GAME_OPTIONS,
+	TOPTION_MERC_CASTS_LIGHT,
 	TOPTION_HIDE_BULLETS,
 	TOPTION_TRACKING_MODE,
+
+	NUM_GAME_OPTIONS,				//Toggle up this will be able to be Toggled by the player
 
 	NUM_ALL_GAME_OPTIONS,
 };

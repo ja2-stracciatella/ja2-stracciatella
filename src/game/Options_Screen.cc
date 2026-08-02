@@ -60,7 +60,7 @@
 #define OPT_BTN_Y				(438 + STD_SCREEN_Y)
 
 
-#define OPT_GAP_BETWEEN_TOGGLE_BOXES		31//40
+#define OPT_GAP_BETWEEN_TOGGLE_BOXES		27//40
 
 
 //Text
@@ -104,7 +104,7 @@
 #define OPT_MUSIC_SLIDER_PLAY_SOUND_DELAY	75
 
 
-#define OPT_FIRST_COLUMN_TOGGLE_CUT_OFF	10//8
+#define OPT_FIRST_COLUMN_TOGGLE_CUT_OFF	11//8
 
 
 static SGPVObject* guiOptionBackGroundImage;
