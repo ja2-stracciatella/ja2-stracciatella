@@ -724,9 +724,7 @@ static INT32 ShowVehicles(const SGPSector& sSector, INT32 icon_pos)
 		if (v.sSector != sSector)                     continue;
 		if (v.fDestroyed)                             continue;
 		if (PlayerIDGroupInMotion(v.ubMovementGroup)) continue;
-
-		SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
-		if (vs.bTeam != OUR_TEAM) continue;
+		if (auto s = FindSoldierType(v); !s || s->bTeam != OUR_TEAM) continue;
 
 		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sSector, icon_pos++);
 	}
