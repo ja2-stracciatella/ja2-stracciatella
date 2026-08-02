@@ -5795,7 +5795,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 			if ( ubReason == TAKE_DAMAGE_EXPLOSION )
 			{
 				// EXPLOSIVES GAIN (combLoss):  Causing wounds in battle
-				StatChange(*attacker, EXPLODEAMT, 10 * ubCombinedLoss, FROM_FAILURE);
+				StatChange(*attacker, EXPLODEAMT, 10 * ubCombinedLoss, FROM_SUCCESS);
 			}
 			/*
 			else if ( ubReason == TAKE_DAMAGE_GUNFIRE )
