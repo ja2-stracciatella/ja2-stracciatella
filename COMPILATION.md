@@ -130,6 +130,30 @@ make package
 
 You now have a zip file with the game, including the dll dependencies.
 
+## Build for Android
+
+The Android project uses Gradle with CMake for the native code (see `android/app/build.gradle`).
+The supported ABIs are `armeabi-v7a`, `arm64-v8a`, `x86`, and `x86_64`.
+
+Install
+
+- Android NDK (see `ndkVersion` in [`android/app/build.gradle`](android/app/build.gradle))
+- Rust Android targets: `armv7-linux-androideabi`, `aarch64-linux-android`, `i686-linux-android`, `x86_64-linux-android`
+  (install via `rustup target add <target>`)
+
+The build with
+
+```sh
+cd android
+./gradlew assembleDebug
+```
+
+For a release build (requires a signing keystore, see [`ci-setup.sh`](.ci/ci-setup.sh)):
+
+```sh
+./gradlew assembleRelease
+```
+
 ## Generate Visual Studio Solution
 
 If you are most familiar using Visual Studio for development you can generate a solution from the sources.
