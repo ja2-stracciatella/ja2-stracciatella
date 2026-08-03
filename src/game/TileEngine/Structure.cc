@@ -353,6 +353,23 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF & pFileRef)
 
 		NormalizeStructureTiles(tiles, dbs->ubNumberOfTiles);
 
+		// Convert contiguous orientation values to flags
+		if (pFileRef.pAuxData.size() && dbs->ubWallOrientation > 2)
+		{
+			switch (dbs->ubWallOrientation)
+			{	// skip cases 1 and 2 which are identical to their bitwise counterparts
+				case 3:
+					dbs->ubWallOrientation = ORIENT_OUTSIDE_LEFT;
+					break;
+				case 4:
+					dbs->ubWallOrientation = ORIENT_OUTSIDE_RIGHT;
+					break;
+				default:
+					break;
+			}
+			pFileRef.pAuxData[usIndex].ubWallOrientation = dbs->ubWallOrientation;
+		}
+
 		// scale hit points down to something reasonable...
 		uiHitPoints = uiHitPoints * 100 / 255;
 		dbs->ubHitPoints = (UINT8)uiHitPoints;
