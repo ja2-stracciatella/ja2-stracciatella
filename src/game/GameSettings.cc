@@ -43,7 +43,7 @@ void LoadGameSettings(void)
 	{
 		AutoSGPFile f(GCM->userPrivateFiles()->openForReading(GAME_SETTINGS_FILE));
 
-		BYTE data[76];
+		BYTE data[77];
 		if (f->size() != sizeof(data)) goto fail;
 		f->read(data, sizeof(data));
 
