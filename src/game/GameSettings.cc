@@ -153,7 +153,7 @@ static void InitGameSettings(void)
 	g.fOptions[TOPTION_SHOW_MISSES]               = FALSE;
 	g.fOptions[TOPTION_RTCONFIRM]                 = FALSE;
 	g.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]    = TRUE;
-	g.fOptions[TOPTION_USE_METRIC_SYSTEM]         = FALSE;
+	g.fOptions[TOPTION_USE_METRIC_SYSTEM]         = TRUE;
 	g.fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP]      = FALSE;
 	g.fOptions[TOPTION_SMART_CURSOR]              = FALSE;
 	g.fOptions[TOPTION_SNAP_CURSOR_TO_DOOR]       = TRUE;
