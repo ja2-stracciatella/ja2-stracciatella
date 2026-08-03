@@ -1,7 +1,6 @@
 #include "Soldier_Create.h"
 #include "ItemModel.h"
 #include "Overhead.h"
-#include "Soldier_Macros.h"
 #include "Soldier_Profile.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"
@@ -47,6 +46,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <stdexcept>
 #include <math.h>
 
 // THESE 3 DIFFICULTY FACTORS MUST ALWAYS ADD UP TO 100% EXACTLY!!!
@@ -979,9 +979,14 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 
 	if (s.ubScheduleID) DeleteSchedule(s.ubScheduleID);
 
-	if (EnterableVehicle(s) && fRemoveVehicle)
+	if ((s.uiStatusFlags & SOLDIER_VEHICLE) && fRemoveVehicle)
 	{
-		RemoveVehicleFromList(GetVehicle(s.bVehicleID));
+		try {
+			RemoveVehicleFromList(GetVehicle(s.bVehicleID));
+		}
+		catch (std::logic_error const&) {
+			// GetVehicle can fail for tanks added in map editor, issue #1933.
+		}
 	}
 
 	if (s.ubBodyType == CROW) HandleCrowLeave(&s);
@@ -2092,7 +2097,7 @@ void TrashAllSoldiers(int const team)
 }
 
 
-static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
+static UINT8 GetLocationModifier(UINT8)
 {
 	UINT8 ubLocationModifier;
 	UINT8 ubPalaceDistance;

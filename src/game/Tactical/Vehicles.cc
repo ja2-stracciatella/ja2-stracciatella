@@ -142,6 +142,7 @@ bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const& s, VEHICLETYPE const& v
 	return !s.fBetweenSectors &&
 		!v.fBetweenSectors &&
 		s.sSector == v.sSector &&
+		!v.fDestroyed &&
 		OKUseVehicle(GCM->getVehicle(v.ubVehicleType)->profile);
 }
 
