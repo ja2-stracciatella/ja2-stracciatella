@@ -63,6 +63,7 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "Logger.h"
+#include "Debug.h"
 #include "MercProfile.h"
 
 #define NO_JUMP			0
@@ -1051,11 +1052,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						INT8 const bBulletsThisShot =
 							pSoldier->inv[pSoldier->ubAttackingHand].ubGunAmmoType == AMMO_BUCKSHOT ?
 								NUM_BUCKSHOT_PELLETS : 1;
+
+						Assert(pSoldier->bBulletsLeft >= bBulletsThisShot);
+
 						pSoldier->bBulletsLeft -= bBulletsThisShot;
-						if ( pSoldier->bBulletsLeft < 0 )
-						{
-							pSoldier->bBulletsLeft = 0;
-						}
 
 						PlayLocationJA2Sample(pSoldier->sGridNo, S_DRYFIRE1, MIDVOLUME, 1);
 
