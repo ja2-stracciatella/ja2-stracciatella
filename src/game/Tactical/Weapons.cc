@@ -842,12 +842,14 @@ static void UseGun(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 	}
 	else
 	{
-		// if the weapon has a silencer attached
-		bSilencerPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SILENCER );
-		if (bSilencerPos != -1)
+		// if the weapon we are firing has a silencer attached (which is not necessarily
+		// the one in the main hand - two-pistol shooting fires each hand separately)
+		OBJECTTYPE& gun = pSoldier->inv[ pSoldier->ubAttackingHand ];
+		bSilencerPos = FindAttachment( &gun, SILENCER );
+		if (bSilencerPos != NO_SLOT)
 		{
 			// reduce volume by a percentage equal to silencer's work %age (min 1)
-			ubVolume = 1 + ((100 - WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].bAttachStatus[bSilencerPos])) / (100 / (ubVolume - 1)));
+			ubVolume = 1 + ((100 - WEAPON_STATUS_MOD(gun.bAttachStatus[bSilencerPos])) / (100 / (ubVolume - 1)));
 		}
 	}
 
