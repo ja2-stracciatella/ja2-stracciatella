@@ -31,7 +31,7 @@ GAME_OPTIONS		gGameOptions;
 
 
 //Change this number when we want any who gets the new build to reset the options
-#define GAME_SETTING_CURRENT_VERSION 522
+#define GAME_SETTING_CURRENT_VERSION 523
 
 
 static void InitGameSettings(void);
@@ -43,7 +43,7 @@ void LoadGameSettings(void)
 	{
 		AutoSGPFile f(GCM->userPrivateFiles()->openForReading(GAME_SETTINGS_FILE));
 
-		BYTE data[76];
+		BYTE data[77];
 		if (f->size() != sizeof(data)) goto fail;
 		f->read(data, sizeof(data));
 
@@ -108,7 +108,7 @@ void SaveGameSettings(void)
 	// Record the current settings into the game settins structure
 	GAME_SETTINGS& g = gGameSettings;
 
-	BYTE  data[76];
+	BYTE  data[77];
 	DataWriter d{data};
 	INJ_I8(  d, g.bLastSavedGameSlot)
 	UINT8 const music_volume  = MusicGetVolume();
@@ -128,7 +128,6 @@ void SaveGameSettings(void)
 	INJ_U8(  d, g.ubSizeOfLOS)
 	INJ_SKIP(d, 20)
 	Assert(d.getConsumed() == lengthof(data));
-
 	AutoSGPFile f(GCM->userPrivateFiles()->openForWriting(GAME_SETTINGS_FILE, true));
 	f->write(data, sizeof(data));
 }
@@ -154,7 +153,7 @@ static void InitGameSettings(void)
 	g.fOptions[TOPTION_SHOW_MISSES]               = FALSE;
 	g.fOptions[TOPTION_RTCONFIRM]                 = FALSE;
 	g.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]    = TRUE;
-	g.fOptions[TOPTION_USE_METRIC_SYSTEM]         = FALSE;
+	g.fOptions[TOPTION_USE_METRIC_SYSTEM]         = TRUE;
 	g.fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP]      = FALSE;
 	g.fOptions[TOPTION_SMART_CURSOR]              = FALSE;
 	g.fOptions[TOPTION_SNAP_CURSOR_TO_DOOR]       = TRUE;

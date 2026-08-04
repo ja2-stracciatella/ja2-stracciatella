@@ -2123,7 +2123,10 @@
         "Wanneer INGESCHAKELD lichten |Items altijd op",
         "Wanneer INGESCHAKELD worden Boom|toppen getoond.",
         "Wanneer INGESCHAKELD worden Draadmodellen (|W) van niet-zichtbare muren getoond.",
-        "Wanneer INGESCHAKELD wordt de cursor in 3D getoond. (|H|o|m|e)"
+        "Wanneer INGESCHAKELD wordt de cursor in 3D getoond. (|H|o|m|e)",
+		"Wanneer INGESCHAKELD, worden huurlingen tijdens de duisternis met verlichting om hen heen weergegeven.",
+		"Wanneer INGESCHAKELD, worden kogels niet weergegeven.",
+		"Wanneer INGESCHAKELD, blijft de camera tijdens de gevechtsmodus op de geselecteerde huurling gericht."
     ],
     "zOptionsText": [
         "Spel Bewaren",
@@ -2150,13 +2153,16 @@
         "Bevestiging Real-Time",
         "Slaap/wakker-berichten",
         "Metrieke Stelsel",
-        "Huurling Oplichten",
+        "Toon lichten onder bewegende huurlingen",
         "Auto-Cursor naar Huurling",
         "Auto-Cursor naar Deuren",
         "Items Oplichten",
         "Toon Boomtoppen",
         "Toon Draadmodellen",
-        "Toon 3D Cursor"
+        "Toon 3D Cursor",
+		"Toon lichten onder huurlingen",
+		"Verberg kogels",
+		"Volgmodus"
     ],
     "zSaveLoadText": [
         "Spel Bewaren",

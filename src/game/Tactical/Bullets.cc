@@ -207,7 +207,7 @@ void UpdateBullets(void)
 					continue;
 				}
 
-				if ( !gamepolicy(hide_bullets) )
+				if (!gGameSettings.fOptions[TOPTION_HIDE_BULLETS])
 				{
 					// ALRIGHTY, CHECK WHAT TYPE OF BULLET WE ARE
 
@@ -233,7 +233,7 @@ void UpdateBullets(void)
 				if (b->usFlags & BULLET_STOPPED) continue;
 
 				// Display bullet
-				if ( !gamepolicy(hide_bullets) )
+				if (!gGameSettings.fOptions[TOPTION_HIDE_BULLETS])
 				{
 					if (b->usFlags & BULLET_FLAG_KNIFE)
 					{

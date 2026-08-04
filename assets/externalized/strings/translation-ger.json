@@ -2123,7 +2123,10 @@
         "Angeschaltet, bekommen Gegenstände einen pulsierenden Rahmen (|I).",
         "ANgeschaltet, werden die Baumkronen gezeigt (|T).",
         "ANgeschaltet, werden Drahtgitter für verborgene Wände gezeigt (|W).",
-        "ANgeschaltet, wird der Bewegungs-Cursor in 3D angezeigt (|P|o|s|1)."
+        "ANgeschaltet, wird der Bewegungs-Cursor in 3D angezeigt (|P|o|s|1).",
+		"ANgeschaltet, erscheinen Söldner im Dunkeln von Lichtern umgeben.",
+		"ANgeschaltet, werden keine Projektile angezeigt.",
+		"ANgeschaltet, bleibt die Kamera im Kampfmodus auf den ausgewählten Söldner fokussiert."
     ],
     "zOptionsText": [
         "Spiel sichern",
@@ -2150,13 +2153,16 @@
         "Bestätigung bei Echtzeit",
         "Schlaf-/Wachmeldung anzeigen",
         "Metrisches System benutzen",
-        "Boden beleuchten",
+        "Boden während der Bewegung beleuchten",
         "Cursor automatisch auf Söldner",
         "Cursor automatisch auf Türen",
         "Gegenstände leuchten",
         "Baumkronen zeigen",
         "Drahtgitter zeigen",
-        "3D Cursor zeigen"
+        "3D Cursor zeigen",
+		"Boden beleuchten",
+		"Projektile ausblenden",
+		"Verfolgungsmodus"
     ],
     "zSaveLoadText": [
         "Spiel sichern",

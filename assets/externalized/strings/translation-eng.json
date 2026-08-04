@@ -2123,7 +2123,10 @@
         "When ON, |Items continuously glow",
         "When ON, shows the |Tree tops.",
         "When ON, displays |Wireframes for obscured walls.",
-        "When ON, the movement cursor is shown in 3D. (|H|o|m|e)"
+        "When ON, the movement cursor is shown in 3D. (|H|o|m|e)",
+		"When ON, mercs will display with lights around them during darkness.",
+		"When ON, bullets will not be shown.",
+		"When ON, the camera will keep focus on the selected merc while in combat mode."
     ],
     "zOptionsText": [
         "Save Game",
@@ -2156,7 +2159,10 @@
         "Make Items Glow",
         "Show Tree Tops",
         "Show Wireframes",
-        "Show 3D Cursor"
+        "Show 3D Cursor",
+		"Show Lights under Mercs",
+		"Hide Bullets",
+		"Tracking Mode"
     ],
     "zSaveLoadText": [
         "Save Game",
