@@ -215,4 +215,19 @@ struct UNDERGROUND_SECTORINFO
 extern SECTORINFO SectorInfo[256];
 extern UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead;
 
+// Matches SECTORINFO, UNDERGROUND_SECTORINFO and ENEMYGROUP.
+template<typename T>
+concept HasEnemiesCount = requires(T t) { t.ubNumElites + t.ubNumTroops + t.ubNumAdmins; };
+
+constexpr UINT8 Enemies(HasEnemiesCount auto const& sector)
+{
+	return sector.ubNumElites + sector.ubNumTroops + sector.ubNumAdmins;
+}
+
+constexpr UINT8 Hostiles(HasEnemiesCount auto const& sector)
+requires requires(decltype(sector) s) { s.ubNumCreatures; }
+{
+	return Enemies(sector) + sector.ubNumCreatures;
+}
+
 #endif

@@ -474,7 +474,6 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 
 
 #define STAIRCASE_GRIDNO 12067
-#define STAIRCASE_DIRECTION 0
 
 INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 {
@@ -482,7 +481,7 @@ INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 
 
 	pBasementInfo = FindUnderGroundSector(SGPSector(3, MAP_ROW_P, 1));
-	if ( pBasementInfo && pBasementInfo->uiTimeCurrentSectorWasLastLoaded != 0 && ( pBasementInfo->ubNumElites + pBasementInfo->ubNumTroops + pBasementInfo->ubNumAdmins ) < 5 )
+	if (pBasementInfo && pBasementInfo->uiTimeCurrentSectorWasLastLoaded != 0 && Enemies(*pBasementInfo) < 5)
 	{
 		return( AI_ACTION_NONE );
 	}
@@ -501,7 +500,3 @@ INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 	}
 	return( AI_ACTION_NONE );
 }
-
-#define WARDEN_ALARM_GRIDNO 9376
-#define WARDEN_GAS_GRIDNO 9216
-// in both cases, direction 6
