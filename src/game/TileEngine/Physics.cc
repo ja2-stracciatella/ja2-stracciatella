@@ -2138,10 +2138,8 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 
 		if (lightEffect)
 		{
-			//if the light object will be created OFF the ground
-			if (pObject->Position.z > 0)
+			if (GET_OBJECT_LEVEL(pObject->Position.z) > 0)
 			{
-				//we cannot create the light source above the ground, or on a roof.  The system doesnt support it.
 				//if it causes any other type of effect we still make it explode, otherwise we just add the item
 				if (!causesExplosion) {
 					AddItemToPool(pObject->sGridNo, &(pObject->Obj), VISIBLE, 1, 0, -1);
