@@ -6886,6 +6886,7 @@ static bool CharacterIsTakingItEasy(SOLDIERTYPE const& s)
 
 	// On a real assignment, but done with it?
 	if (s.fDoneAssignmentAndNothingToDoFlag) return true;
+	if (!EnoughTimeOnAssignment(s)) return true;
 
 	// On assignment
 	return false;
