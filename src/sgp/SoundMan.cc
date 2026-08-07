@@ -938,8 +938,13 @@ void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int addition
 				UINT32    samples = want_samples;
 				const INT16* src;
 				auto rbResult = ma_pcm_rb_acquire_read(Sound->pRingBuffer, &samples, (void**)&src);
+				if (rbResult == MA_AT_END) {
+					// Ring buffer is empty and servicing is done, channel can be freed
+					Sound->State = CHANNEL_DEAD;
+					continue;
+				}
 				if (rbResult != MA_SUCCESS) {
-					SLOGE("Could not aquire read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
+					SLOGE("Could not acquire read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
 					continue;
 				}
 
@@ -951,7 +956,7 @@ void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int addition
 
 				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples);
 
-				if (Sound->DoneServicing && (samples < want_samples || rbResult == MA_AT_END)) {
+				if (Sound->DoneServicing && samples == 0) {
 					Sound->State = CHANNEL_DEAD;
 				}
 
