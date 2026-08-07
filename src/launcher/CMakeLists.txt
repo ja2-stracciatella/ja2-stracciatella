@@ -75,7 +75,7 @@ add_custom_target(run-${LAUNCHER_BINARY}
     DEPENDS "${LAUNCHER_BINARY}"
 )
 
-if(APPLE)
+if(APPLE AND NOT (LOCAL_SDL_LIB STREQUAL ""))
     add_custom_command(TARGET ${LAUNCHER_BINARY}
         POST_BUILD COMMAND
         ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"

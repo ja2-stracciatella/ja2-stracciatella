@@ -243,7 +243,7 @@ if (MSVC)
             COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:SDL3::SDL3-shared> "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
-if (APPLE)
+if (APPLE AND NOT (LOCAL_SDL_LIB STREQUAL ""))
     add_custom_command(TARGET ${JA2_BINARY}
             POST_BUILD COMMAND
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
@@ -396,7 +396,27 @@ endif()
 if(APPLE)
     file(GLOB APPLE_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-mac/*.txt")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
-    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL3-3.4.10-macos/SDL3.xcframework DESTINATION .)
+    if(NOT (LOCAL_SDL_LIB STREQUAL ""))
+        # When using a local SDL3 (e.g. pre-built xcframework), install the
+        # SDL3.framework next to the executables. CPack's Bundle generator puts
+        # everything into Contents/Resources, which is what @executable_path
+        # resolves to. On macOS the dynamic linker resolves
+        # @rpath/SDL3.framework, so we must install SDL3.framework itself, not
+        # the SDL3.xcframework wrapper.
+        get_target_property(_sdl3_location SDL3::SDL3-shared IMPORTED_LOCATION)
+        if(NOT _sdl3_location)
+            message(FATAL_ERROR "SDL3::SDL3-shared has no IMPORTED_LOCATION")
+        endif()
+        get_filename_component(_sdl3_fw_path "${_sdl3_location}" REALPATH)
+        # Walk up from <path>/SDL3.framework/SDL3 to find the SDL3.framework directory
+        while(NOT _sdl3_fw_path MATCHES "/SDL3\\.framework$")
+            get_filename_component(_sdl3_fw_path "${_sdl3_fw_path}" DIRECTORY)
+            if("${_sdl3_fw_path}" STREQUAL "" OR "${_sdl3_fw_path}" STREQUAL "/")
+                message(FATAL_ERROR "Could not find SDL3.framework directory from ${_sdl3_location}")
+            endif()
+        endwhile()
+        install(DIRECTORY "${_sdl3_fw_path}" DESTINATION .)
+    endif()
 endif()
 
 ## Build AppImage
