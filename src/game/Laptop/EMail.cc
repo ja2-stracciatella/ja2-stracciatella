@@ -11,6 +11,7 @@
 #include "IMP_Portraits.h"
 #include "AIMMembers.h"
 #include "Random.h"
+#include "Overhead.h"
 #include "Text.h"
 #include "LaptopSave.h"
 #include "Finances.h"
@@ -25,7 +26,6 @@
 
 #include <string_theory/format>
 #include <string_theory/string>
-
 
 #define MAX_MESSAGES_PAGE 18 // max number of messages per page
 
@@ -1899,6 +1899,10 @@ static void HandleIMPCharProfileResultsMessage(void)
 	// list doesn't exist, reload
 
 	MERCPROFILESTRUCT const& imp = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	INT8 const initialMarksmanship = LaptopSaveInfo.bIMPInitialMarksmanship != 0 ? LaptopSaveInfo.bIMPInitialMarksmanship : imp.bMarksmanship;
+	INT8 const initialMedical      = LaptopSaveInfo.bIMPInitialMedical      != 0 ? LaptopSaveInfo.bIMPInitialMedical      : imp.bMedical;
+	INT8 const initialMechanical   = LaptopSaveInfo.bIMPInitialMechanical   != 0 ? LaptopSaveInfo.bIMPInitialMechanical   : imp.bMechanical;
+	INT8 const initialExplosive    = LaptopSaveInfo.bIMPInitialExplosive    != 0 ? LaptopSaveInfo.bIMPInitialExplosive    : imp.bExplosive;
 
 	// load intro
 	iEndOfSection = IMP_RESULTS_INTRO_LENGTH;
@@ -2000,10 +2004,10 @@ static void HandleIMPCharProfileResultsMessage(void)
 	SkillBits Skill;
 
 	Skill = SKILL_NONE;
-	if (imp.bMarksmanship >= SUPER_SKILL_VALUE) Skill |= SKILL_MARK;
-	if (imp.bMedical      >= SUPER_SKILL_VALUE) Skill |= SKILL_MED;
-	if (imp.bMechanical   >= SUPER_SKILL_VALUE) Skill |= SKILL_MECH;
-	if (imp.bExplosive    >= SUPER_SKILL_VALUE) Skill |= SKILL_EXPL;
+	if (initialMarksmanship >= SUPER_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (initialMedical      >= SUPER_SKILL_VALUE) Skill |= SKILL_MED;
+	if (initialMechanical   >= SUPER_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (initialExplosive    >= SUPER_SKILL_VALUE) Skill |= SKILL_EXPL;
 
 	if (Skill != SKILL_NONE) AddIMPResultText(IMP_SKILLS_IMPERIAL_SKILLS);
 
@@ -2015,10 +2019,10 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// now the needs training values
 	Skill = SKILL_NONE;
-	if (imp.bMarksmanship > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bMarksmanship <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MARK;
-	if (imp.bMedical      > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bMedical      <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MED;
-	if (imp.bMechanical   > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bMechanical   <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MECH;
-	if (imp.bExplosive    > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bExplosive    <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_EXPL;
+	if (initialMarksmanship > NO_CHANCE_IN_HELL_SKILL_VALUE && initialMarksmanship <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (initialMedical      > NO_CHANCE_IN_HELL_SKILL_VALUE && initialMedical      <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MED;
+	if (initialMechanical   > NO_CHANCE_IN_HELL_SKILL_VALUE && initialMechanical   <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (initialExplosive    > NO_CHANCE_IN_HELL_SKILL_VALUE && initialExplosive    <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_EXPL;
 
 	if (Skill != SKILL_NONE) AddIMPResultText(IMP_SKILLS_NEED_TRAIN_SKILLS);
 
@@ -2030,10 +2034,10 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// and the no chance in hell of doing anything useful values
 	Skill = SKILL_NONE;
-	if (imp.bMarksmanship <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MARK;
-	if (imp.bMedical      <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MED;
-	if (imp.bMechanical   <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MECH;
-	if (imp.bExplosive    <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_EXPL;
+	if (initialMarksmanship <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (initialMedical      <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MED;
+	if (initialMechanical   <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (initialExplosive    <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_EXPL;
 
 	if (Skill != SKILL_NONE) AddIMPResultText(IMP_SKILLS_NO_SKILL);
 
@@ -2432,4 +2436,3 @@ static ST::string ReplaceMercNameAndAmountWithProperData(const ST::string& pFini
 	ST::string amount = SPrintMoney(pMail->iFirstData);
 	return pFinishedString.replace(sAmount, amount).replace(sMercName, mercName);
 }
-

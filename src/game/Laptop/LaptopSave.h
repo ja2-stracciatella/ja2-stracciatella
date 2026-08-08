@@ -77,6 +77,10 @@ struct LaptopSaveInfoStruct
 	//IMP Information
 	BOOLEAN fIMPCompletedFlag; // Has the player Completed the IMP process
 	BOOLEAN fSentImpWarningAlready; // Has the Imp email warning already been sent
+	INT8    bIMPInitialMarksmanship; // Initial marksmanship chosen during IMP creation
+	INT8    bIMPInitialMedical;      // Initial medical chosen during IMP creation
+	INT8    bIMPInitialMechanical;   // Initial mechanical chosen during IMP creation
+	INT8    bIMPInitialExplosive;    // Initial explosives chosen during IMP creation
 
 
 	//Personnel Info

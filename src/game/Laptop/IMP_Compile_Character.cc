@@ -50,6 +50,10 @@ void CreateACharacterFromPlayerEnteredStats(void)
 	p.bMedical      = iMedical;
 	p.bMechanical   = iMechanical;
 	p.bExplosive    = iExplosives;
+	LaptopSaveInfo.bIMPInitialMarksmanship = iMarksmanship;
+	LaptopSaveInfo.bIMPInitialMedical      = iMedical;
+	LaptopSaveInfo.bIMPInitialMechanical   = iMechanical;
+	LaptopSaveInfo.bIMPInitialExplosive    = iExplosives;
 
 	p.bPersonalityTrait = iPersonality;
 
