@@ -26,10 +26,16 @@ configure_file(
     @ONLY
 )
 
-# copy patch to build dir
+# copy patches to build dir
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/getter/gcc-15.patch"
     "${CMAKE_CURRENT_BINARY_DIR}/getter/gcc-15.patch"
+    @ONLY
+)
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/getter/lua-55.patch"
+    "${CMAKE_CURRENT_BINARY_DIR}/getter/lua-55.patch"
+    COPYONLY
     @ONLY
 )
 

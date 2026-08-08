@@ -1,0 +1,171 @@
+--- a/cmake/Packages/FindLuaBuild/LuaVanilla.cmake
++++ b/cmake/Packages/FindLuaBuild/LuaVanilla.cmake
+@@ -35,7 +35,8 @@
+ set(LUA_VANILLA_5.1_LATEST_VERSION 5.1.5)
+ set(LUA_VANILLA_5.2_LATEST_VERSION 5.2.4)
+ set(LUA_VANILLA_5.3_LATEST_VERSION 5.3.6)
+-set(LUA_VANILLA_5.4_LATEST_VERSION 5.4.4)
++set(LUA_VANILLA_5.4_LATEST_VERSION 5.4.8)
++set(LUA_VANILLA_5.5_LATEST_VERSION 5.5.1)
+ 
+ # Clean up some variables
+ if (LUA_VERSION MATCHES "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$")
+@@ -52,6 +53,8 @@
+ 			set(LUA_VANILLA_VERSION ${LUA_VANILLA_5.3_LATEST_VERSION})
+ 		elseif (${CMAKE_MATCH_2} EQUAL 4)
+ 			set(LUA_VANILLA_VERSION ${LUA_VANILLA_5.4_LATEST_VERSION})
++		elseif (${CMAKE_MATCH_2} EQUAL 5)
++			set(LUA_VANILLA_VERSION ${LUA_VANILLA_5.5_LATEST_VERSION})
+ 		else()			
+ 			# default to whatever the first two
+ 			# numbers happen to be, plus build 0
+@@ -143,8 +146,19 @@
+ 		set(LUA_VANILLA_LUAC_SOURCES luac.c)
+ 	endif()
+ 	set(LUA_VANILLA_GENERATE_LUA_HPP false)
++elseif (LUA_VANILLA_VERSION MATCHES "^5\\.5")
++	set(LUA_VANILLA_LIB_SOURCES lapi.c lauxlib.c lbaselib.c lcode.c lcorolib.c 
++		lctype.c ldblib.c ldebug.c ldo.c ldump.c lfunc.c lgc.c linit.c liolib.c
++		llex.c lmathlib.c lmem.c loadlib.c lobject.c lopcodes.c loslib.c
++		lparser.c lstate.c lstring.c lstrlib.c ltable.c ltablib.c ltm.c lundump.c
++		lutf8lib.c lvm.c lzio.c)
++	set(LUA_VANILLA_LUA_SOURCES lua.c)
++	if (LUA_BUILD_LUA_COMPILER)
++		set(LUA_VANILLA_LUAC_SOURCES luac.c)
++	endif()
++	set(LUA_VANILLA_GENERATE_LUA_HPP false)
+ else()
+-	MESSAGE(WARNING "Using Lua 5.4.4 file list for ${LUA_VERSION} version")
++	MESSAGE(WARNING "Using Lua 5.5.1 file list for ${LUA_VERSION} version")
+ 	set(LUA_VANILLA_LIB_SOURCES lapi.c lauxlib.c lbaselib.c lcode.c lcorolib.c 
+ 		lctype.c ldblib.c ldebug.c ldo.c ldump.c lfunc.c lgc.c linit.c liolib.c
+ 		llex.c lmathlib.c lmem.c loadlib.c lobject.c lopcodes.c loslib.c
+@@ -172,14 +186,18 @@
+ 	set(LUA_VANILLA_INCLUDE_DIRS ${LUA_VANILLA_INCLUDE_DIRS} "${LUA_VANILLA_SOURCE_DIR}/include")
+ else()
+ 	include(FetchContent)
+-	FetchContent_Declare(
+-		lua-vanilla
+-		URL ${LUA_VANILLA_DOWNLOAD_URL})
++	FetchContent_Declare(lua-vanilla URL ${LUA_VANILLA_DOWNLOAD_URL})
+ 	FetchContent_GetProperties(lua-vanilla)
+ 	if ( NOT lua-vanilla_POPULATED)
+ 		# Fetch the content using previously declared details
+-		FetchContent_Populate(lua-vanilla)
+ 		# do not add_subdirectory / build: we are JUST using ti as a download step!
++		# cmake >= 3.30 FetchContent_MakeAvailable will skip add_subdirectory silent when
++		# CMakeLists not present in lua-vanilla
++		if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.30)
++			FetchContent_MakeAvailable(lua-vanilla)
++		else()
++			FetchContent_Populate(lua-vanilla)
++		endif()
+ 	endif()
+ 	list(TRANSFORM LUA_VANILLA_LIB_SOURCES PREPEND "${lua-vanilla_SOURCE_DIR}/src/")
+ 	list(TRANSFORM LUA_VANILLA_LUA_SOURCES PREPEND "${lua-vanilla_SOURCE_DIR}/src/")
+--- a/cmake/Packages/FindLuaBuild.cmake
++++ b/cmake/Packages/FindLuaBuild.cmake
+@@ -107,7 +107,7 @@
+ 	endif()
+ endif()
+ if (NOT LUA_VERSION)
+-	set(LUA_VERSION 5.4.4)
++	set(LUA_VERSION 5.5.1)
+ endif()
+ find_lua_build(${LUA_VERSION})
+ unset(find_lua_build)
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@
+ 
+ # # # # sol2
+ # # # Required minimum version statement
+-cmake_minimum_required(VERSION 3.26.0)
++cmake_minimum_required(VERSION 3.26...4.2)
+ # # # Project Include - file that is included after project declaration is finished
+ set(CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Includes/Project.cmake")
+ 
+@@ -42,7 +42,7 @@
+ 
+ # # # Configuration
+ # # Cached defines, strings, paths and options
+-set(SOL2_LUA_VERSION "5.4.4" CACHE STRING "The version of Lua needed. Can be 5.1, 5.2, 5.3, 5.4, LuaJIT, or a more specific 3-part version number for a specifc Lua (e.g., 5.4.4 or luajit-2.0.5)")
++set(SOL2_LUA_VERSION "5.5.1" CACHE STRING "The version of Lua needed. Can be 5.1, 5.2, 5.3, 5.4, 5.5, LuaJIT, or a more specific 3-part version number for a specifc Lua (e.g., 5.5.1 or luajit-2.0.5)")
+ set(SOL2_BUILD_LUA TRUE CACHE BOOL "Always build Lua, do not search for it in the system")
+ set(SOL2_PLATFORM "x64" CACHE STRING "Target platform to compile for when building binaries (x86, x64)")
+ option(SOL2_CI "Whether or not we are in continguous integration mode" OFF)
+@@ -242,6 +242,9 @@
+ 		elseif(NORMALIZED_LUA_VERSION MATCHES "5.4")
+ 			set(CREATE_LUALIB_TARGET TRUE)
+ 			find_package(Lua 5.4 EXACT REQUIRED)
++		elseif(NORMALIZED_LUA_VERSION MATCHES "5.5")
++			set(CREATE_LUALIB_TARGET TRUE)
++			find_package(Lua 5.5 EXACT REQUIRED)
+ 		elseif(NORMALIZED_LUA_VERSION MATCHES "luajit")
+ 			set(CREATE_LUALIB_TARGET TRUE)
+ 			find_package(LuaJIT REQUIRED)
+--- a/include/sol/compatibility/compat-5.3.h
++++ b/include/sol/compatibility/compat-5.3.h
+@@ -405,11 +405,11 @@
+ 
+ 
+ /* other Lua versions */
+-#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 501 || LUA_VERSION_NUM > 504
++#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 501 || LUA_VERSION_NUM > 505
+ 
+-#  error "unsupported Lua version (i.e. not Lua 5.1, 5.2, 5.3, or 5.4)"
++#  error "unsupported Lua version (i.e. not Lua 5.1, 5.2, 5.3, 5.4, or 5.5)"
+ 
+-#endif /* other Lua versions except 5.1, 5.2, 5.3, and 5.4 */
++#endif /* other Lua versions except 5.1, 5.2, 5.3, 5.4, and 5.5 */
+ 
+ 
+ 
+--- a/include/sol/compatibility/compat-5.4.h
++++ b/include/sol/compatibility/compat-5.4.h
+@@ -17,15 +17,15 @@
+ }
+ #endif
+ 
+-#if defined(LUA_VERSION_NUM) && LUA_VERSION_NUM == 504
++#if defined(LUA_VERSION_NUM) && LUA_VERSION_NUM >= 504
+ 
+ #if !defined(LUA_ERRGCMM)
+-/* So Lua 5.4 actually removes this, which breaks sol2...
++/* So Lua 5.4 or later actually removes this, which breaks sol2...
+  man, this API is quite unstable...!
+ */
+ #  define LUA_ERRGCMM (LUA_ERRERR + 2)
+ #endif /* LUA_ERRGCMM define */
+ 
+-#endif // Lua 5.4 only
++#endif // Lua 5.4 or later
+ 
+ #endif // NOT_KEPLER_PROJECT_COMPAT54_H_
+\ Brak znaku nowej linii na końcu pliku
+--- a/include/sol/state.hpp
++++ b/include/sol/state.hpp
+@@ -27,6 +27,14 @@
+ #include <sol/state_view.hpp>
+ #include <sol/thread.hpp>
+ 
++inline lua_State* sol_lua_newstate(lua_Alloc f, void* ud, [[maybe_unused]] unsigned seed = 0) {
++#if LUA_VERSION_NUM >= 505
++	return ::lua_newstate(f, ud, seed);
++#else
++	return ::lua_newstate(f, ud);
++#endif
++}
++
+ namespace sol {
+ 
+ 	class state : private std::unique_ptr<lua_State, detail::state_deleter>, public state_view {
+@@ -39,7 +47,7 @@
+ 		}
+ 
+ 		state(lua_CFunction panic, lua_Alloc alfunc, void* alpointer = nullptr)
+-		: unique_base(lua_newstate(alfunc, alpointer)), state_view(unique_base::get()) {
++		: unique_base(sol_lua_newstate(alfunc, alpointer)), state_view(unique_base::get()) {
+ 			set_default_state(unique_base::get(), panic);
+ 		}
+ 
