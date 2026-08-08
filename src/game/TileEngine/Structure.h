@@ -18,6 +18,8 @@
 #define BLOCKING_TOPLEFT_OPEN_WINDOW		90
 #define BLOCKING_TOPRIGHT_OPEN_WINDOW		100
 
+#define STANDING_CUBES 3
+
 enum StructureDamageResult
 {
     STRUCTURE_NOT_DAMAGED, // structure not damaged
