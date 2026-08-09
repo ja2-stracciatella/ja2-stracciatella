@@ -1900,6 +1900,19 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	MERCPROFILESTRUCT const& imp = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 
+	// Use initial stats (current minus any gains since creation) so the e-mail
+	// reflects what IMP actually assessed, not stats grinded up after arrival.
+	INT8 const bInitialLife         = imp.bLife         - imp.bLifeDelta;
+	INT8 const bInitialAgility      = imp.bAgility      - imp.bAgilityDelta;
+	INT8 const bInitialDexterity    = imp.bDexterity    - imp.bDexterityDelta;
+	INT8 const bInitialStrength     = imp.bStrength     - imp.bStrengthDelta;
+	INT8 const bInitialLeadership   = imp.bLeadership   - imp.bLeadershipDelta;
+	INT8 const bInitialWisdom       = imp.bWisdom       - imp.bWisdomDelta;
+	INT8 const bInitialMarksmanship = imp.bMarksmanship - imp.bMarksmanshipDelta;
+	INT8 const bInitialMechanical   = imp.bMechanical   - imp.bMechanicDelta;
+	INT8 const bInitialExplosive    = imp.bExplosive    - imp.bExplosivesDelta;
+	INT8 const bInitialMedical      = imp.bMedical      - imp.bMedicalDelta;
+
 	// load intro
 	iEndOfSection = IMP_RESULTS_INTRO_LENGTH;
 	for (INT32 i = 0; i < iEndOfSection; ++i)
@@ -2000,10 +2013,10 @@ static void HandleIMPCharProfileResultsMessage(void)
 	SkillBits Skill;
 
 	Skill = SKILL_NONE;
-	if (imp.bMarksmanship >= SUPER_SKILL_VALUE) Skill |= SKILL_MARK;
-	if (imp.bMedical      >= SUPER_SKILL_VALUE) Skill |= SKILL_MED;
-	if (imp.bMechanical   >= SUPER_SKILL_VALUE) Skill |= SKILL_MECH;
-	if (imp.bExplosive    >= SUPER_SKILL_VALUE) Skill |= SKILL_EXPL;
+	if (bInitialMarksmanship >= SUPER_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (bInitialMedical      >= SUPER_SKILL_VALUE) Skill |= SKILL_MED;
+	if (bInitialMechanical   >= SUPER_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (bInitialExplosive    >= SUPER_SKILL_VALUE) Skill |= SKILL_EXPL;
 
 	if (Skill != SKILL_NONE) AddIMPResultText(IMP_SKILLS_IMPERIAL_SKILLS);
 
@@ -2015,10 +2028,10 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// now the needs training values
 	Skill = SKILL_NONE;
-	if (imp.bMarksmanship > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bMarksmanship <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MARK;
-	if (imp.bMedical      > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bMedical      <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MED;
-	if (imp.bMechanical   > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bMechanical   <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MECH;
-	if (imp.bExplosive    > NO_CHANCE_IN_HELL_SKILL_VALUE && imp.bExplosive    <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_EXPL;
+	if (bInitialMarksmanship > NO_CHANCE_IN_HELL_SKILL_VALUE && bInitialMarksmanship <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (bInitialMedical      > NO_CHANCE_IN_HELL_SKILL_VALUE && bInitialMedical      <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MED;
+	if (bInitialMechanical   > NO_CHANCE_IN_HELL_SKILL_VALUE && bInitialMechanical   <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (bInitialExplosive    > NO_CHANCE_IN_HELL_SKILL_VALUE && bInitialExplosive    <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_EXPL;
 
 	if (Skill != SKILL_NONE) AddIMPResultText(IMP_SKILLS_NEED_TRAIN_SKILLS);
 
@@ -2030,10 +2043,10 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// and the no chance in hell of doing anything useful values
 	Skill = SKILL_NONE;
-	if (imp.bMarksmanship <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MARK;
-	if (imp.bMedical      <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MED;
-	if (imp.bMechanical   <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MECH;
-	if (imp.bExplosive    <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_EXPL;
+	if (bInitialMarksmanship <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (bInitialMedical      <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MED;
+	if (bInitialMechanical   <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (bInitialExplosive    <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_EXPL;
 
 	if (Skill != SKILL_NONE) AddIMPResultText(IMP_SKILLS_NO_SKILL);
 
@@ -2074,12 +2087,12 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// super physical
 	Phys = PHYS_NONE;
-	if (imp.bLife       >= SUPER_STAT_VALUE) Phys |= PHYS_HLTH;
-	if (imp.bDexterity  >= SUPER_STAT_VALUE) Phys |= PHYS_DEX;
-	if (imp.bAgility    >= SUPER_STAT_VALUE) Phys |= PHYS_AGI;
-	if (imp.bStrength   >= SUPER_STAT_VALUE) Phys |= PHYS_STR;
-	if (imp.bWisdom     >= SUPER_STAT_VALUE) Phys |= PHYS_WIS;
-	if (imp.bLeadership >= SUPER_STAT_VALUE) Phys |= PHYS_LDR;
+	if (bInitialLife       >= SUPER_STAT_VALUE) Phys |= PHYS_HLTH;
+	if (bInitialDexterity  >= SUPER_STAT_VALUE) Phys |= PHYS_DEX;
+	if (bInitialAgility    >= SUPER_STAT_VALUE) Phys |= PHYS_AGI;
+	if (bInitialStrength   >= SUPER_STAT_VALUE) Phys |= PHYS_STR;
+	if (bInitialWisdom     >= SUPER_STAT_VALUE) Phys |= PHYS_WIS;
+	if (bInitialLeadership >= SUPER_STAT_VALUE) Phys |= PHYS_LDR;
 
 	if (Phys != PHYS_NONE) AddIMPResultText(IMP_PHYSICAL_SUPER);
 
@@ -2093,12 +2106,12 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// now the low attributes
 	Phys = PHYS_NONE;
-	if (imp.bLife       < NEEDS_TRAINING_STAT_VALUE && imp.bLife       > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
-	if (imp.bStrength   < NEEDS_TRAINING_STAT_VALUE && imp.bStrength   > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
-	if (imp.bAgility    < NEEDS_TRAINING_STAT_VALUE && imp.bAgility    > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
-	if (imp.bWisdom     < NEEDS_TRAINING_STAT_VALUE && imp.bWisdom     > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
-	if (imp.bLeadership < NEEDS_TRAINING_STAT_VALUE && imp.bLeadership > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
-	if (imp.bDexterity  < NEEDS_TRAINING_STAT_VALUE && imp.bDexterity  > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
+	if (bInitialLife       < NEEDS_TRAINING_STAT_VALUE && bInitialLife       > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
+	if (bInitialStrength   < NEEDS_TRAINING_STAT_VALUE && bInitialStrength   > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
+	if (bInitialAgility    < NEEDS_TRAINING_STAT_VALUE && bInitialAgility    > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
+	if (bInitialWisdom     < NEEDS_TRAINING_STAT_VALUE && bInitialWisdom     > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
+	if (bInitialLeadership < NEEDS_TRAINING_STAT_VALUE && bInitialLeadership > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
+	if (bInitialDexterity  < NEEDS_TRAINING_STAT_VALUE && bInitialDexterity  > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
 
 	if (Phys != PHYS_NONE) AddIMPResultText(IMP_PHYSICAL_LOW);
 
@@ -2112,12 +2125,12 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// very low physical
 	Phys = PHYS_NONE;
-	if (imp.bLife       <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
-	if (imp.bDexterity  <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
-	if (imp.bStrength   <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
-	if (imp.bAgility    <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
-	if (imp.bWisdom     <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
-	if (imp.bLeadership <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
+	if (bInitialLife       <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
+	if (bInitialDexterity  <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
+	if (bInitialStrength   <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
+	if (bInitialAgility    <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
+	if (bInitialWisdom     <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
+	if (bInitialLeadership <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
 
 	if (Phys != PHYS_NONE) AddIMPResultText(IMP_PHYSICAL_VERY_LOW);
 
