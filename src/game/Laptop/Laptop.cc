@@ -3243,7 +3243,6 @@ static void ExtractStoreInvetory(DataReader& d, STORE_INVENTORY& i)
 void SaveLaptopInfoToSavedGame(HWFILE const f)
 {
 	LaptopSaveInfoStruct const& l = LaptopSaveInfo;
-	UINT32 const impInitialStatsPresenceMarker = 0x49535454; // "ISTT"
 
 	BYTE  data[7440];
 	DataWriter d{data};
@@ -3304,12 +3303,7 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_U32(  d, l.uiFlowerOrderNumber)
 	INJ_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	INJ_U8(   d, l.ubLastMercAvailableId)
-	INJ_I8(   d, l.bIMPInitialMarksmanship)
-	INJ_I8(   d, l.bIMPInitialMedical)
-	INJ_I8(   d, l.bIMPInitialMechanical)
-	INJ_I8(   d, l.bIMPInitialExplosive)
-	INJ_U32(  d, impInitialStatsPresenceMarker)
-	INJ_SKIP( d, 79)
+	INJ_SKIP( d, 87)
 	Assert(d.getConsumed() == lengthof(data));
 
 	f->write(data, sizeof(data));
@@ -3330,7 +3324,6 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 void LoadLaptopInfoFromSavedGame(HWFILE const f)
 {
 	LaptopSaveInfoStruct& l = LaptopSaveInfo;
-	UINT32 const impInitialStatsPresenceMarker = 0x49535454; // "ISTT"
 
 	l.BobbyRayOrdersOnDeliveryArray.clear();
 
@@ -3397,31 +3390,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_U32(  d, l.uiFlowerOrderNumber)
 	EXTR_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	EXTR_U8(   d, l.ubLastMercAvailableId)
-	INT8 impInitialMarksmanship;
-	INT8 impInitialMedical;
-	INT8 impInitialMechanical;
-	INT8 impInitialExplosive;
-	UINT32 loadedImpInitialStatsPresenceMarker;
-	EXTR_I8(   d, impInitialMarksmanship)
-	EXTR_I8(   d, impInitialMedical)
-	EXTR_I8(   d, impInitialMechanical)
-	EXTR_I8(   d, impInitialExplosive)
-	EXTR_U32(  d, loadedImpInitialStatsPresenceMarker)
-	if (loadedImpInitialStatsPresenceMarker == impInitialStatsPresenceMarker)
-	{
-		l.bIMPInitialMarksmanship = impInitialMarksmanship;
-		l.bIMPInitialMedical      = impInitialMedical;
-		l.bIMPInitialMechanical   = impInitialMechanical;
-		l.bIMPInitialExplosive    = impInitialExplosive;
-	}
-	else
-	{
-		l.bIMPInitialMarksmanship = 0;
-		l.bIMPInitialMedical      = 0;
-		l.bIMPInitialMechanical   = 0;
-		l.bIMPInitialExplosive    = 0;
-	}
-	EXTR_SKIP( d, 79)
+	EXTR_SKIP( d, 87)
 	Assert(d.getConsumed() == lengthof(data));
 
 	// Handle old saves in M.E.R.C. module
