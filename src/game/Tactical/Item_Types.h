@@ -37,7 +37,7 @@ enum ItemCursor
 
 #define MAX_OBJECTS_PER_SLOT		8
 #define MAX_ATTACHMENTS		4
-#define MAX_MONEY_PER_SLOT		20000
+#define MAX_MONEY_PER_SLOT		30000
 
 enum DetonatorType
 {
