@@ -164,7 +164,6 @@ static const UINT32 guiStructureHitChance[MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_H
 
 #define SMELL_REDUCTION_FOR_NEARBY_OBSTACLE			80
 
-#define STANDING_CUBES						3
 
 // MoveBullet and ChanceToGetThrough use this array to maintain which
 // of which structures in a tile might be hit by a bullet.

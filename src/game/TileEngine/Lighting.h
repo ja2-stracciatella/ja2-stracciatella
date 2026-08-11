@@ -25,14 +25,6 @@
 #define LIGHT_DUSK_CUTOFF		8
 #define LIGHT_DECAY			0.9 // shade level decay per tile distance
 
-// lightlist node flags
-#define LIGHT_NODE_DRAWN		0x00000001 // light node duplicate marker
-#define LIGHT_ROOF_ONLY			0x00001000 // light only rooftops
-#define LIGHT_IGNORE_WALLS		0x00002000 // doesn't take walls into account
-#define LIGHT_BACKLIGHT			0x00004000 // light does not light objs, trees
-#define LIGHT_NEW_RAY			0x00008000 // start of new ray in linked list
-#define LIGHT_EVERYTHING		0x00010000 // light up everything
-#define LIGHT_FAKE			0x10000000 // "fake" light for display only
 
 // standard light file symbols
 
@@ -86,10 +78,6 @@ void SetDefaultWorldLightingColors(void);
 
 // Sets the normal light level for all tiles in the world
 void LightSetBaseLevel(UINT8 iIntensity);
-// Adds a light value to all tiles in the world
-void LightAddBaseLevel(UINT8 iIntensity);
-// Subtracts a light value from all tiles
-void LightSubtractBaseLevel(UINT8 iIntensity);
 // Creates an omni (circular) light
 LightTemplate* LightCreateOmni(UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y

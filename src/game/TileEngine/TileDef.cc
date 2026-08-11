@@ -87,7 +87,7 @@ void CreateTileDatabase()
 
 			if (TileSurf->pAuxData)
 			{
-				AuxObjectData & aux = TileSurf->pAuxData[cnt2];
+				AuxObjectData const& aux = TileSurf->pAuxData[cnt2];
 				if (aux.fFlags & AUX_FULL_TILE)
 				{
 					TileElement.ubFullTile = 1;
@@ -109,6 +109,8 @@ void CreateTileDatabase()
 					TileElement.uiFlags |= ANIMATED_TILE;
 				}
 
+				TileElement.usWallOrientation = static_cast<Orientation>(aux.ubWallOrientation);
+
 				if (aux.ubNumberOfTiles > 0)
 				{
 					TileElement.ubNumberOfTiles = aux.ubNumberOfTiles;
@@ -118,7 +120,7 @@ void CreateTileDatabase()
 
 			SetSpecificDatabaseValues(cnt1, gTileDatabaseSize, TileElement, TileSurf->bRaisedObjectType);
 			// fix incorrect double door flags. in vanilla it only affects DOOR3 in PALACE! tileset and DOOR1 in QUEEN'S TROPICAL
-			if (TileElement.pDBStructureRef && cnt1 >= FIRSTDOOR && cnt1 <=FOURTHDOOR)
+			if (TileElement.pDBStructureRef && cnt1 >= FIRSTDOOR && cnt1 <= FOURTHDOOR)
 			{
 				if (TileElement.usRegionIndex == 0 && (TileElement.pDBStructureRef->pDBStructure->fFlags & (STRUCTURE_DDOOR_RIGHT|STRUCTURE_DDOOR_LEFT)))
 				{
