@@ -620,14 +620,13 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 		while(pStruct)
 		{
 			TileTypeDefines tileType = static_cast<TileTypeDefines>(gTileDatabase[pStruct->usIndex].fType);
-			bool isOrientedBlock{}, isCaveWall{};
+			bool isOrientedBlock{};
 			Orientation wallOrient{};
 
 			if (pStruct->pStructureData)
 			{
 				isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
 				wallOrient = pStruct->pStructureData->ubWallOrientation;
-				isCaveWall = pStruct->pStructureData->fFlags & STRUCTURE_CAVEWALL;
 			}
 			else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
 			{
@@ -635,10 +634,9 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 				wallOrient = filter.allowedOrients;
 			}
 
-			bool isCliff = tileType == FIRSTCLIFFHANG;
 			if ( (filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
 				 (isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
-				  isCliff )
+				  tileType == FIRSTCLIFFHANG)
 			{
 				pStruct = pStruct->pNext;
 				continue;
@@ -724,19 +722,24 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 		pStruct = gpWorldLevelData[uiTile].pStructHead;
 		while(pStruct)
 		{
-			bool isCliff = gTileDatabase[pStruct->usIndex].fType == FIRSTCLIFFHANG;
-			bool isOrientedBlock{}, isCaveWall{};
+			TileTypeDefines tileType = static_cast<TileTypeDefines>(gTileDatabase[pStruct->usIndex].fType);
+			bool isOrientedBlock{};
 			Orientation wallOrient{};
+
 			if (pStruct->pStructureData)
 			{
 				isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
 				wallOrient = pStruct->pStructureData->ubWallOrientation;
-				isCaveWall = pStruct->pStructureData->fFlags & STRUCTURE_CAVEWALL;
+			}
+			else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
+			{
+				isOrientedBlock = true;
+				wallOrient = filter.allowedOrients;
 			}
 
 			if ( (filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
 				 (isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
-				  isCliff )
+				  tileType == FIRSTCLIFFHANG)
 			{
 				pStruct = pStruct->pNext;
 				continue;
