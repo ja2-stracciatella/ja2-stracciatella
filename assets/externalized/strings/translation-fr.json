@@ -2124,9 +2124,9 @@
         "Activez cette option pour afficher le cime des arbres. (|T)",
         "Activez cette option pour afficher les murs en fil de fer. (|W)",
         "Activez cette option pour afficher le curseur en 3D. (|H|o|m|e)",
-		"Activez cette option pour afficher de la lumière sous les mercenaires dans l'obscurité.",
-		"Activez cette option pour masquer les balles. ",
-		"Activez cette option pour afficher la caméra restera centrée sur le mercenaire sélectionné pendant le mode combat."
+        "Activez cette option pour afficher de la lumière sous les mercenaires dans l'obscurité. (|G)",
+        "Activez cette option pour masquer les balles. ",
+        "Activez cette option pour afficher la caméra restera centrée sur le mercenaire sélectionné pendant le mode combat."
     ],
     "zOptionsText": [
         "Enregistrer",
@@ -2160,9 +2160,9 @@
         "Afficher cimes",
         "Affichage fil de fer",
         "Curseur 3D",
-		"Afficher les lumières sous les mercenaires",
-		"Masquer les projectiles",
-		"Mode de suivi"
+        "Afficher les lumières sous les mercenaires",
+        "Masquer les projectiles",
+        "Mode de suivi"
     ],
     "zSaveLoadText": [
         "Enregistrer",

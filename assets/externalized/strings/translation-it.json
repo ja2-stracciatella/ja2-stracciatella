@@ -2124,9 +2124,9 @@
         "Se attivata, mostra le |fronde degli alberi.",
         "Se attivata, visualizza le |Strutture dei muri nascosti.",
         "Se attivata, il cursore di movimento verrà mostrato in 3D (|H|o|m|e).",
-		"Se attivata, durante il buio il mercenario sarà visualizzata circondata di luce.",
-		"Se attivata, i proiettili non saranno visibili.",
-		"Se attivata, la telecamera manterrà la messa a fuoco sul mercenario selezionato in modalità combattimento."
+        "Se attivata, durante il buio il mercenario sarà visualizzata circondata di luce (|G).",
+        "Se attivata, i proiettili non saranno visibili.",
+        "Se attivata, la telecamera manterrà la messa a fuoco sul mercenario selezionato in modalità combattimento."
     ],
     "zOptionsText": [
         "Salva partita",
@@ -2160,9 +2160,9 @@
         "Mostra le fronde degli alberi",
         "Mostra strutture",
         "Mostra il cursore 3D",
-		"Mostra luci sotto i mercenari",
-		"Nascondi proiettili",
-		"Modalità di tracciamento"
+        "Mostra luci sotto i mercenari",
+        "Nascondi proiettili",
+        "Modalità di tracciamento"
     ],
     "zSaveLoadText": [
         "Salva partita",
