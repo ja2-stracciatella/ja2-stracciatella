@@ -11,6 +11,7 @@
 #define AP_VEHICLE_MAXIMUM		50 // no merc can have more for his turn
 #define AP_INCREASE			10 // optional across-the-board AP boost
 #define MAX_AP_CARRIED			5 // APs carried from turn-to-turn
+#define MAX_AP_DEBT			100 // deepest AP hole (suppression, wounds) an INT8 can safely hold
 
 // monster AP bonuses, expressed in 10ths (12 = 120% normal)
 #define AP_YOUNG_MONST_FACTOR		15

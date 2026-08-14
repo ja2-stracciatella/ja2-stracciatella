@@ -5231,17 +5231,12 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 							sClosestOpponent = ClosestKnownOpponent( pSoldier, &sClosestOppLoc, NULL );
 							if (sClosestOpponent == NOWHERE || SpacesAway( pSoldier->sGridNo, sClosestOppLoc ) > 8)
 							{
-								if (ubPointsLost < AP_PRONE)
-								{
-									// Have to give APs back so that we can change stance without
-									// losing more APs
-									pSoldier->bActionPoints += (AP_PRONE - ubPointsLost);
-									ubPointsLost = 0;
-								}
-								else
-								{
-									ubPointsLost -= AP_PRONE;
-								}
+								// The stance change below is issued with
+								// fDontChargeAPsForStanceChange, so it costs nothing and
+								// ubPointsLost is the whole price of being suppressed - same as
+								// the standing branch. Discounting AP_PRONE here used to pay for
+								// a deduction that never lands, and for a small ubPointsLost it
+								// handed the merc more APs than the suppression took away.
 								ubNewStance = ANIM_PRONE;
 							}
 						}

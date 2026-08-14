@@ -506,11 +506,17 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 		fInterfacePanelDirty = DIRTYLEVEL1;
 	}
 
-	// If we cannot deduct points, return FALSE
-	if ( sNewAP < 0 )
+	// Floor the cost at 0 APs, but only for someone who still had points to spend.
+	// Suppression can leave a merc in AP debt that is meant to carry into the next
+	// turn, and flooring that at 0 would hand the points back - so getting shot while
+	// suppressed used to *raise* the merc's APs.
+	if ( sNewAP < 0 && pSoldier->bActionPoints > 0 )
 	{
 		sNewAP = 0;
 	}
+
+	// bActionPoints is an INT8, so keep the debt from wrapping around into a windfall
+	sNewAP = std::max<INT16>( sNewAP, -MAX_AP_DEBT );
 
 	pSoldier->bActionPoints = (INT8)sNewAP;
 
