@@ -4134,6 +4134,7 @@ say_personality_quote:
 	s.usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
 	s.bNumHitsThisTurn     = 0;
 	s.ubSuppressionPoints  = 0;
+	s.ubAPsLostToSuppression = 0;
 	s.fCloseCall           = FALSE;
 	s.ubMovementNoiseHeard = 0;
 
