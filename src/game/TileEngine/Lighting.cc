@@ -619,32 +619,34 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 		pStruct = gpWorldLevelData[uiTile].pStructHead;
 		while(pStruct)
 		{
-			TileTypeDefines tileType = static_cast<TileTypeDefines>(gTileDatabase[pStruct->usIndex].fType);
-			bool isOrientedBlock{};
-			Orientation wallOrient{};
-
-			if (pStruct->pStructureData)
+			if (pStruct->usIndex < NUMBEROFTILES)
 			{
-				isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
-				wallOrient = pStruct->pStructureData->ubWallOrientation;
-			}
-			else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
-			{
-				isOrientedBlock = true;
-				wallOrient = filter.allowedOrients;
-			}
+				TileTypeDefines tileType = static_cast<TileTypeDefines>(gTileDatabase[pStruct->usIndex].fType);
+				bool isOrientedBlock{};
+				Orientation wallOrient{};
 
-			if ( (filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
-				 (isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
-				  tileType == FIRSTCLIFFHANG)
-			{
-				pStruct = pStruct->pNext;
-				continue;
+				if (pStruct->pStructureData)
+				{
+					isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
+					wallOrient = pStruct->pStructureData->ubWallOrientation;
+				}
+				else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
+				{
+					isOrientedBlock = true;
+					wallOrient = filter.allowedOrients;
+				}
+
+				if ((filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
+					(isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
+					tileType == FIRSTCLIFFHANG)
+				{
+					pStruct = pStruct->pNext;
+					continue;
+				}
+
+				LightAddTileNode(pStruct, ubShadeAdd, FALSE);
 			}
-
-			LightAddTileNode(pStruct, ubShadeAdd, FALSE);
-
-			pStruct=pStruct->pNext;
+			pStruct = pStruct->pNext;
 		}
 
 		ubShadeAdd = ubShade;
@@ -662,7 +664,10 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 			pObject = gpWorldLevelData[uiTile].pObjectHead;
 			while(pObject != NULL)
 			{
-				LightAddTileNode(pObject, ubShadeAdd, FALSE);
+				if (pObject->usIndex < NUMBEROFTILES)
+				{
+					LightAddTileNode(pObject, ubShadeAdd, FALSE);
+				}
 				pObject = pObject->pNext;
 			}
 
@@ -683,15 +688,20 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 		pRoof = gpWorldLevelData[uiTile].pRoofHead;
 		while(pRoof!=NULL)
 		{
-			LightAddTileNode(pRoof, ubShadeAdd, fFake);
+			if (pRoof->usIndex < NUMBEROFTILES)
+			{
+				LightAddTileNode(pRoof, ubShadeAdd, fFake);
+			}
 			pRoof=pRoof->pNext;
 		}
 
 		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;
 		while(pOnRoof!=NULL)
 		{
-			LightAddTileNode(pOnRoof, ubShadeAdd, FALSE);
-
+			if (pOnRoof->usIndex < NUMBEROFTILES)
+			{
+				LightAddTileNode(pOnRoof, ubShadeAdd, FALSE);
+			}
 			pOnRoof=pOnRoof->pNext;
 		}
 	}
@@ -722,32 +732,34 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 		pStruct = gpWorldLevelData[uiTile].pStructHead;
 		while(pStruct)
 		{
-			TileTypeDefines tileType = static_cast<TileTypeDefines>(gTileDatabase[pStruct->usIndex].fType);
-			bool isOrientedBlock{};
-			Orientation wallOrient{};
-
-			if (pStruct->pStructureData)
+			if (pStruct->usIndex < NUMBEROFTILES)
 			{
-				isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
-				wallOrient = pStruct->pStructureData->ubWallOrientation;
-			}
-			else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
-			{
-				isOrientedBlock = true;
-				wallOrient = filter.allowedOrients;
-			}
+				TileTypeDefines tileType = static_cast<TileTypeDefines>(gTileDatabase[pStruct->usIndex].fType);
+				bool isOrientedBlock{};
+				Orientation wallOrient{};
 
-			if ( (filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
-				 (isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
-				  tileType == FIRSTCLIFFHANG)
-			{
-				pStruct = pStruct->pNext;
-				continue;
+				if (pStruct->pStructureData)
+				{
+					isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
+					wallOrient = pStruct->pStructureData->ubWallOrientation;
+				}
+				else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
+				{
+					isOrientedBlock = true;
+					wallOrient = filter.allowedOrients;
+				}
+
+				if ((filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
+					(isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
+					tileType == FIRSTCLIFFHANG)
+				{
+					pStruct = pStruct->pNext;
+					continue;
+				}
+
+				LightSubtractTileNode(pStruct, ubShadeSubstract, FALSE);
 			}
-
-			LightSubtractTileNode(pStruct, ubShadeSubstract, FALSE);
-
-			pStruct=pStruct->pNext;
+			pStruct = pStruct->pNext;
 		}
 
 		ubShadeSubstract = ubShade;
@@ -765,7 +777,10 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 			pObject = gpWorldLevelData[uiTile].pObjectHead;
 			while(pObject!=NULL)
 			{
-				LightSubtractTileNode(pObject, ubShadeSubstract, FALSE);
+				if (pObject->usIndex < NUMBEROFTILES)
+				{
+					LightSubtractTileNode(pObject, ubShadeSubstract, FALSE);
+				}
 				pObject = pObject->pNext;
 			}
 
@@ -786,15 +801,20 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 		pRoof = gpWorldLevelData[uiTile].pRoofHead;
 		while(pRoof!=NULL)
 		{
-			LightSubtractTileNode(pRoof, ubShadeSubstract, fFake);
+			if (pRoof->usIndex < NUMBEROFTILES)
+			{
+				LightSubtractTileNode(pRoof, ubShadeSubstract, fFake);
+			}
 			pRoof=pRoof->pNext;
 		}
 
 		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;
 		while(pOnRoof!=NULL)
 		{
-			LightSubtractTileNode(pOnRoof, ubShadeSubstract, FALSE);
-
+			if (pOnRoof->usIndex < NUMBEROFTILES)
+			{
+				LightSubtractTileNode(pOnRoof, ubShadeSubstract, FALSE);
+			}
 			pOnRoof=pOnRoof->pNext;
 		}
 	}
