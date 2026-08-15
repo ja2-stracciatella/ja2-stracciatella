@@ -66,6 +66,13 @@
   //  (say your buddies took care of it), you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
   //  vanilla setting: false
   "multiple_interrupts": false,
+  
+  //  Allow interrupts after being shot at on an earlier turn. In vanilla, being under fire blocks a
+  //  soldier's interrupts until their own turn begins, so an attack silences them for the whole next
+  //  turn as well. With this on, only being shot at during the turn in progress blocks the reaction.
+  //  Mercs and enemies alike react a turn sooner, so the AI can punish 'shoot and hide' tactics.
+  //  vanilla setting: false
+  "interrupt_after_being_under_fire": false,
 
   // Boosting stats like agility, dexterity, exp. level and health absurdly increases the action points cost to shoot.
   // With this option on: the better the stats the fewer APs will be needed.

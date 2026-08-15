@@ -64,6 +64,8 @@ public:
 	bool avoid_ambushes;                  // AI able to recognize and avoid ambushes on seeing friendlies' corpses
 	bool stay_on_rooftop;                 // AI on guard on rooftop are disallowed to go down
 
+	bool interrupt_after_being_under_fire; // only being shot at during the turn in progress blocks a soldier's interrupts; vanilla keeps them blocked through the next turn too, since the under-fire mark is only cleared once their own turn begins. Applies to mercs and AI alike
+
 	int8_t enemy_elite_minimum_level;     // increase challenge: minimum experience level for enemy elite soldier
 	int8_t enemy_elite_maximum_level;     // maximum experience level for enemy elite soldier
 
