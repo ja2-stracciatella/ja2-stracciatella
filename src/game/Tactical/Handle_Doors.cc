@@ -29,6 +29,8 @@
 #include "Soldier_Macros.h"
 #include "Debug.h"
 #include "GameRes.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
 #include "GamePolicy.h"
 
 #include <string_theory/string>
