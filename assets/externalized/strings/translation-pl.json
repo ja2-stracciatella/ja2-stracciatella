@@ -2124,9 +2124,9 @@
         "Gdy opcja ta jest włączona, wyświetlane są korony drzew. ( |T )",
         "Gdy opcja ta jest włączona, wyświetlane są zarysy niewidocznych ścian. ( |W )",
         "Gdy opcja ta jest włączona, kursor ruchu wyświetlany jest w 3D. (|H|o|m|e)",
-		"Gdy opcja ta jest włączona, najemnicy będą wyświetlani w ciemnościach, otoczeni światłami.",
-		"Gdy opcja ta jest włączona, kule nie będą wyświetlane.",
-		"Gdy opcja ta jest włączona, kamera będzie utrzymywać ostrość na wybranym najemniku w trybie walki."
+        "Gdy opcja ta jest włączona, najemnicy będą wyświetlani w ciemnościach, otoczeni światłami. ( |G )",
+        "Gdy opcja ta jest włączona, kule nie będą wyświetlane.",
+        "Gdy opcja ta jest włączona, kamera będzie utrzymywać ostrość na wybranym najemniku w trybie walki."
     ],
     "zOptionsText": [
         "Zapisz grę",
@@ -2160,9 +2160,9 @@
         "Pokazuj korony drzew",
         "Pokazuj siatkę",
         "Pokazuj kursor 3D",
-		"Pokazuj światła pod najemnikami",
-		"Ukryj pociski",
-		"Tryb śledzenia"
+        "Pokazuj światła pod najemnikami",
+        "Ukryj pociski",
+        "Tryb śledzenia"
     ],
     "zSaveLoadText": [
         "Zapisz grę",

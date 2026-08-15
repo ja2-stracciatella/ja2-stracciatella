@@ -2124,9 +2124,9 @@
         "ANgeschaltet, werden die Baumkronen gezeigt (|T).",
         "ANgeschaltet, werden Drahtgitter für verborgene Wände gezeigt (|W).",
         "ANgeschaltet, wird der Bewegungs-Cursor in 3D angezeigt (|P|o|s|1).",
-		"ANgeschaltet, erscheinen Söldner im Dunkeln von Lichtern umgeben.",
-		"ANgeschaltet, werden keine Projektile angezeigt.",
-		"ANgeschaltet, bleibt die Kamera im Kampfmodus auf den ausgewählten Söldner fokussiert."
+        "ANgeschaltet, erscheinen Söldner im Dunkeln von Lichtern umgeben (|G).",
+        "ANgeschaltet, werden keine Projektile angezeigt.",
+        "ANgeschaltet, bleibt die Kamera im Kampfmodus auf den ausgewählten Söldner fokussiert."
     ],
     "zOptionsText": [
         "Spiel sichern",
@@ -2160,9 +2160,9 @@
         "Baumkronen zeigen",
         "Drahtgitter zeigen",
         "3D Cursor zeigen",
-		"Boden beleuchten",
-		"Projektile ausblenden",
-		"Verfolgungsmodus"
+        "Boden beleuchten",
+        "Projektile ausblenden",
+        "Verfolgungsmodus"
     ],
     "zSaveLoadText": [
         "Spiel sichern",
