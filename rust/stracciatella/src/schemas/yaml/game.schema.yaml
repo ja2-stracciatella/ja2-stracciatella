@@ -103,11 +103,20 @@ properties:
       (say your buddies took care of it), you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
 
       Vanilla setting: `false`
+  fixed_cost_to_shoot:
+    type: boolean
+    title: Fixed cost to shoot
+    description: |
+      Boosting stats like agility, dexterity, exp. level and health absurdly increases the action points cost to shoot.
+      With this option on: the better the stats the fewer APs will be needed. Note that you also won't get an AP
+      discount when injured.
+
+      Vanilla setting: `false`
   enemy_weapon_minimal_status:
     $ref: types/percentage.schema.yaml
     title: Minimal status of enemy weapons
     description: |
-      Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
+      Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour like CtH.
 
       Vanilla setting: `0`
   squad_size:
@@ -129,9 +138,29 @@ properties:
         type: boolean
         title: Better aiming choice
         description: |
-          AI will choose other body parts to shoot at when appropriate and random choice was selected.
+          In vanilla, under normal conditions, enemies measure CtH against the target's torso and then a random
+          location is selected during the hit. The chances are: head 5%, torso 80%, legs 15%.
+
+          With this setting on, when possible, enemies select the target location when the threshold CtH is reached
+          against that body part, with head being the higher priority.
 
           Vanilla setting: `false`
+      threshold_cth_head:
+        $ref: types/int8.schema.yaml
+        title: Threshold chance-to-hit head
+        description: |
+          AI will choose to target the head if CtH is over this threshold. Only used when `better_aiming_choice`
+          is enabled.
+
+          Vanilla setting: N/A
+      threshold_cth_legs:
+        $ref: types/int8.schema.yaml
+        title: Threshold chance-to-hit legs
+        description: |
+          AI will choose to target the legs if CtH is over this threshold. Only used when `better_aiming_choice`
+          is enabled.
+
+          Vanilla setting: N/A
       go_prone_more_often:
         type: boolean
         title: Go prone more often
@@ -139,14 +168,6 @@ properties:
           When already facing its focus, lay down if nothing else.
 
           Vanilla setting: `false`
-      threshold_cth_head:
-        $ref: types/int8.schema.yaml
-        title: Threshold chance-to-hit head
-        description: AI will choose to target head if CTH is over this threshold
-      threshold_cth_legs:
-        $ref: types/int8.schema.yaml
-        title: Threshold chance-to-hit legs
-        description: AI will choose to target legs if CTH is over this threshold
       avoid_ambushes:
         type: boolean
         title: Avoid ambushes
@@ -164,9 +185,9 @@ properties:
           Vanilla setting: `false`
     required:
       - better_aiming_choice
-      - go_prone_more_often
       - threshold_cth_head
       - threshold_cth_legs
+      - go_prone_more_often
       - avoid_ambushes
       - stay_on_rooftop
   enemy_elite_minimum_level:
@@ -504,6 +525,24 @@ properties:
     required:
       - start_sector
       - start_sector_revealed
+
+  suppression_fire_modifier:
+    $ref: types/uint8.schema.yaml
+    title: Suppression fire modifier
+    description: |
+      Scales AP loss from suppression fire (numerator of the AP-loss formula); set to 0 if you want to disable
+      suppression completely.
+
+      Vanilla setting: `6`
+  suppression_fire_reaction_threshold:
+    $ref: types/uint16.schema.yaml
+    title: Suppression fire reaction threshold
+    description: |
+      Threshold (numerator) above which a suppressed soldier drops to a lower stance. Set to 0 to make soldiers
+      always react (1.13 behaviour); raise it to make them even more resistant (it's not the same as suppression
+      tolerance).
+
+      Vanilla setting: `130`
 required:
   - extra_hotkeys
   - can_enter_turnbased
