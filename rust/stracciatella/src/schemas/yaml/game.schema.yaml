@@ -190,6 +190,16 @@ properties:
       - go_prone_more_often
       - avoid_ambushes
       - stay_on_rooftop
+  interrupt_after_being_under_fire:
+    type: boolean
+    title: Interrupt after being under fire
+    description: |
+      A soldier who is under fire cannot interrupt. The mark is only cleared when the soldier's own turn begins, so in
+      the original game it silences their interrupts through the whole next turn as well, long after the attack. With
+      this enabled only being shot at during the turn in progress blocks the reaction, so mercs and enemies alike react
+      again a turn sooner - fights get a bit more challenging.
+
+      Vanilla setting: `false`
   enemy_elite_minimum_level:
     $ref: types/int8.schema.yaml
     title: Elite enemies minimum level
