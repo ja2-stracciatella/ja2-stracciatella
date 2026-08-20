@@ -1225,6 +1225,11 @@ static INT8 AimMemberHireMerc(void)
 		if (!s) return FALSE;
 		s->bTypeOfLastContract = contract_type;
 
+		if (!gfBuyEquipment && pid == NAILS)
+		{
+			CreateItem(LEATHER_JACKET, 100, &s->inv[VESTPOS]);
+		}
+
 		MERCPROFILESTRUCT& p = GetProfile(pid);
 		if (gfBuyEquipment) p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
 
