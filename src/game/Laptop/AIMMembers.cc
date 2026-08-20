@@ -17,6 +17,7 @@
 #include "Soldier_Profile_Type.h"
 #include "Soldier_Control.h"
 #include "Interface_Items.h"
+#include "Items.h"
 #include "WordWrap.h"
 #include "Finances.h"
 #include "VSurface.h"
