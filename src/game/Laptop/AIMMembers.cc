@@ -17,6 +17,7 @@
 #include "Soldier_Profile_Type.h"
 #include "Soldier_Control.h"
 #include "Interface_Items.h"
+#include "Items.h"
 #include "WordWrap.h"
 #include "Finances.h"
 #include "VSurface.h"
@@ -1224,6 +1225,11 @@ static INT8 AimMemberHireMerc(void)
 		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(pid);
 		if (!s) return FALSE;
 		s->bTypeOfLastContract = contract_type;
+
+		if (!gfBuyEquipment && pid == NAILS)
+		{
+			CreateItem(LEATHER_JACKET, 100, &s->inv[VESTPOS]);
+		}
 
 		MERCPROFILESTRUCT& p = GetProfile(pid);
 		if (gfBuyEquipment) p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
