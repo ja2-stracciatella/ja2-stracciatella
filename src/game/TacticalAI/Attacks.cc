@@ -1458,8 +1458,10 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 	}
 	else if (iExplosDamage)
 	{
-		// EXPLOSION DAMAGE is spread amongst locations
-		iArmourAmount = ArmourVersusExplosivesPercent( pSoldier );
+		// EXPLOSION DAMAGE is spread amongst locations.
+		// It is the armour on the person we are about to blow up that soaks the blast,
+		// not the armour on the person throwing.
+		iArmourAmount = ArmourVersusExplosivesPercent( pOpponent );
 		iExplosDamage -= iExplosDamage * iArmourAmount / 100;
 
 		if (iExplosDamage < 1)
@@ -1467,7 +1469,7 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 	}
 
 	// if this opponent is standing
-	if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
+	if (gAnimControl[ pOpponent->usAnimState ].ubEndHeight == ANIM_STAND)
 	{
 		// 15 pt. flat bonus for knocking him down (for ANY type of explosion)
 		iDamage += 15;
