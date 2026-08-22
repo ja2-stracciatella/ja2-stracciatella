@@ -30,11 +30,11 @@ static SGPVObject* gpVObjectHead = 0;
 
 
 SGPVObject::SGPVObject(SGPImage * const img) :
-	flags_(),
 	palette16_(),
 	pix_data_{ img->pImageData.moveToUnique() },
 	etrle_object_{ img->pETRLEObject.moveToUnique() },
 	current_shade_(),
+	flags_(),
 	subregion_count_{ img->usNumberOfObjects },
 	bit_depth_{ img->ubBitDepth },
 	next_(gpVObjectHead)
@@ -195,15 +195,6 @@ void SGPVObject::ShareShadetables(SGPVObject* const other)
 	{
 		pShades[i] = other->pShades[i];
 	}
-}
-
-
-void InitializeVideoObjectManager(void)
-{
-	//Shouldn't be calling this if the video object manager already exists.
-	//Call shutdown first...
-	Assert(gpVObjectHead == NULL);
-	gpVObjectHead = NULL;
 }
 
 

@@ -392,9 +392,6 @@ int main(int argc, char* argv[])
 		InitializeVideoManager(scalingQuality, GCM->getGamePolicy()->target_fps);
 		VideoSetBrightness(brightness);
 
-		SLOGD("Initializing Video Object Manager");
-		InitializeVideoObjectManager();
-
 		SLOGD("Initializing Video Surface Manager");
 		InitializeVideoSurfaceManager();
 
