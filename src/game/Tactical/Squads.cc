@@ -447,6 +447,28 @@ INT32 CurrentSquad( void )
 	return( iCurrentTacticalSquad );
 }
 
+static void AddSquadMercsToTeamPanel(INT32 const iSquad)
+{
+	if (iSquad == NO_CURRENT_SQUAD) return;
+
+	FOR_EACH_IN_SQUAD(i, iSquad)
+	{
+		CheckForAndAddMercToTeamPanel(*i);
+	}
+
+	for (INT32 iCounter = 0; iCounter < NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD; ++iCounter)
+	{
+		const INT16 dead_id = sDeadMercs[iSquad][iCounter];
+		if (dead_id == -1) continue;
+
+		SOLDIERTYPE* const dead_soldier = FindSoldierByProfileIDOnPlayerTeam(dead_id);
+		if (!dead_soldier) continue;
+
+		CheckForAndAddMercToTeamPanel(dead_soldier);
+	}
+}
+
+
 BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 {
 	// set the current tactical squad
@@ -496,14 +518,7 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 	// set all auto faces inactive
 	SetAllAutoFacesInactive( );
 
-	if (iCurrentSquad != NO_CURRENT_SQUAD)
-	{
-		FOR_EACH_IN_SQUAD(i, iCurrentSquad)
-		{
-			// squad set, now add soldiers in
-			CheckForAndAddMercToTeamPanel(*i);
-		}
-	}
+	AddSquadMercsToTeamPanel(iCurrentSquad);
 
 	// check if the currently selected guy is on this squad, if not, get the first one on the new squad
 	const SOLDIERTYPE* const sel = GetSelectedMan();
@@ -538,26 +553,7 @@ void RebuildCurrentSquad( void )
 
 	gfPausedTacticalRenderInterfaceFlags = DIRTYLEVEL2;
 
-	if( iCurrentTacticalSquad != NO_CURRENT_SQUAD )
-	{
-		FOR_EACH_IN_SQUAD(i, iCurrentTacticalSquad)
-		{
-			// squad set, now add soldiers in
-			CheckForAndAddMercToTeamPanel(*i);
-		}
-
-		for (INT32 iCounter = 0; iCounter < NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD; ++iCounter)
-		{
-			const INT16 dead_id = sDeadMercs[iCurrentTacticalSquad][iCounter];
-			if (dead_id == -1) continue;
-
-			SOLDIERTYPE* const dead_soldier = FindSoldierByProfileIDOnPlayerTeam(dead_id);
-			if (!dead_soldier) continue;
-
-			// squad set, now add soldiers in
-			CheckForAndAddMercToTeamPanel(dead_soldier);
-		}
-	}
+	AddSquadMercsToTeamPanel(iCurrentTacticalSquad);
 }
 
 
