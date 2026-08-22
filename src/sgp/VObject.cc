@@ -198,15 +198,6 @@ void SGPVObject::ShareShadetables(SGPVObject* const other)
 }
 
 
-void InitializeVideoObjectManager(void)
-{
-	//Shouldn't be calling this if the video object manager already exists.
-	//Call shutdown first...
-	Assert(gpVObjectHead == NULL);
-	gpVObjectHead = NULL;
-}
-
-
 void ShutdownVideoObjectManager(void)
 {
 	extern void ClearObjectCache();

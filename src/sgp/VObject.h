@@ -65,7 +65,6 @@ class SGPVObject
 		};
 
 	private:
-		Flags                        flags_;                         // Special flags
 		std::unique_ptr<SGPPaletteEntry const []> palette_;          // 8BPP Palette
 		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
@@ -80,6 +79,7 @@ class SGPVObject
 		std::unique_ptr<std::unique_ptr<ZStripInfo> []> ppZStripInfo;// Z-value strip info arrays
 
 	private:
+		Flags                        flags_;                         // Special flags
 		UINT16                       subregion_count_;               // Total number of objects
 		UINT8                        bit_depth_;                     // BPP
 
@@ -91,9 +91,6 @@ ENUM_BITSET(SGPVObject::Flags)
 // A pair of a VObject and one of its SubRegions to specify one particular image.
 using SubVObject  = std::pair<SGPVObject *, UINT16>;
 using CSubVObject = std::pair<SGPVObject const *, UINT16>;
-
-// Creates a list to contain video objects
-void InitializeVideoObjectManager(void);
 
 // Deletes any video object placed into list
 void ShutdownVideoObjectManager(void);
