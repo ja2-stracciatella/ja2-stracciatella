@@ -30,11 +30,11 @@ static SGPVObject* gpVObjectHead = 0;
 
 
 SGPVObject::SGPVObject(SGPImage * const img) :
-	flags_(),
 	palette16_(),
 	pix_data_{ img->pImageData.moveToUnique() },
 	etrle_object_{ img->pETRLEObject.moveToUnique() },
 	current_shade_(),
+	flags_(),
 	subregion_count_{ img->usNumberOfObjects },
 	bit_depth_{ img->ubBitDepth },
 	next_(gpVObjectHead)
