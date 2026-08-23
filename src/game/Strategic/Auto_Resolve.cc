@@ -2595,7 +2595,7 @@ static void CalculateAttackValues(void)
 												pSoldier->bMedical +
 												pSoldier->bMorale;
 		//100 team leadership adds a bonus of 10%
-		usBonus = 100 + gpAR->ubPlayerLeadership/10;// + sOutnumberBonus;
+		usBonus = 100 + gpAR->ubEnemyLeadership/10;// + sOutnumberBonus;
 		//bExpLevel adds a bonus of 7% per level after 2, level 1 soldiers get a 7% decrease
 		//usBonus += 7 * (pSoldier->bExpLevel-2);
 		usBonus += gpAR->ubEnemyDefenceAdvantage;
