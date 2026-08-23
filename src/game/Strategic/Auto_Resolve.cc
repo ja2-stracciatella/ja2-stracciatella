@@ -1655,6 +1655,8 @@ static void RemoveAutoResolveInterface()
 
 	if (ar.pRobotCell) UpdateRobotControllerGivenRobot(ar.pRobotCell->pSoldier);
 
+	const SGPSector arSector(ar.ubSector);
+
 	for (UINT8 i{ 0 }; i != ar.ubMercs; ++i)
 	{
 		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
@@ -1662,6 +1664,14 @@ static void RemoveAutoResolveInterface()
 		if (s.bLife == 0)
 		{
 			StrategicHandlePlayerTeamMercDeath(s);
+			/* HandleStrategicDeath() only leaves a corpse behind while the map
+			 * screen is up, and it never is during autoresolve, so drop the body
+			 * and their gear here the way the militia and enemies do. Losing the
+			 * battle doesn't hand the gear back for free: every defeat sets
+			 * gsEnemyGainedControlOfSectorID, and the takeover it triggers loots
+			 * the fallen through RemoveRandomItemsInSector() just like a lost
+			 * tactical battle does. */
+			AddDeadSoldierToUnLoadedSector(arSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 		}
 		else switch (ar.ubBattleStatus)
 		{
@@ -1710,8 +1720,6 @@ static void RemoveAutoResolveInterface()
 	{
 		DeleteVideoObject(gpMercs[i].uiVObjectID);
 	}
-
-	const SGPSector arSector(ar.ubSector.x, ar.ubSector.y);
 
 	// Delete all militia
 	gbGreenToElitePromotions = 0;
