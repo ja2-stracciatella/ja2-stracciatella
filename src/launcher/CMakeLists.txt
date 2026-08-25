@@ -41,6 +41,10 @@ add_dependencies(${LAUNCHER_BINARY} stracciatella)
 
 if (NOT LOCAL_FLTK_LIB AND APPLE)
     find_package(PNG REQUIRED)
+    # The static libraries below are the fltk@1.3 ones, so the headers have to be
+    # 1.3 as well. find_package picks up a linked FLTK 1.4 from /opt/homebrew/include
+    # if one is installed, which compiles but then fails to link against 1.3.
+    set(FLTK_INCLUDE_DIR "/opt/homebrew/opt/fltk@1.3/include")
     # force static linking
     target_link_libraries(${LAUNCHER_BINARY} PRIVATE
         /opt/homebrew/opt/fltk@1.3/lib/libfltk_forms.a /opt/homebrew/opt/fltk@1.3/lib/libfltk_images.a /opt/homebrew/opt/fltk@1.3/lib/libfltk.a ${PNG_LIBRARIES}

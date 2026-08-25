@@ -61,6 +61,7 @@
 #include "Environment.h"
 #include "Music_Control.h"
 #include "ContentMusic.h"
+#include "IMP_Compile_Character.h"
 #include "LaptopSave.h"
 #include "RenderWorld.h"
 #include "GameLoop.h"
@@ -391,8 +392,9 @@ void InitLaptopAndLaptopScreens(void)
 	GameInitFinances();
 	GameInitHistory();
 
-	//Reset the flag so we can create a new IMP character
+	//Reset the flags so we can create a new IMP character
 	LaptopSaveInfo.fIMPCompletedFlag = FALSE;
+	LaptopSaveInfo.ubIMPCreatedGenders = 0;
 
 	//Reset the flag so that BOBBYR's isnt available at the begining of the game
 	LaptopSaveInfo.fBobbyRSiteCanBeAccessed = FALSE;
@@ -3303,7 +3305,8 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_U32(  d, l.uiFlowerOrderNumber)
 	INJ_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	INJ_U8(   d, l.ubLastMercAvailableId)
-	INJ_SKIP( d, 87)
+	INJ_U8(   d, l.ubIMPCreatedGenders)
+	INJ_SKIP( d, 86)
 	Assert(d.getConsumed() == lengthof(data));
 
 	f->write(data, sizeof(data));
@@ -3390,8 +3393,22 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_U32(  d, l.uiFlowerOrderNumber)
 	EXTR_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	EXTR_U8(   d, l.ubLastMercAvailableId)
-	EXTR_SKIP( d, 87)
+	EXTR_U8(   d, l.ubIMPCreatedGenders)
+	EXTR_SKIP( d, 86)
 	Assert(d.getConsumed() == lengthof(data));
+
+	// Saves made before multiple I.M.P.s were supported carry nothing here, so
+	// reconstruct the mask: back then the one character the player could make is
+	// the one iVoiceId still points at.
+	l.ubIMPCreatedGenders &= IMP_GENDER_MALE | IMP_GENDER_FEMALE;
+	if (!l.fIMPCompletedFlag)
+	{
+		l.ubIMPCreatedGenders = 0;
+	}
+	else if (l.ubIMPCreatedGenders == 0)
+	{
+		l.ubIMPCreatedGenders = GetIMPGenderFlag(l.iVoiceId);
+	}
 
 	// Handle old saves in M.E.R.C. module
 	SyncLastMercFromSaveGame();

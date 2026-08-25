@@ -365,6 +365,15 @@ properties:
           Bonus attribute points is your initial pool of points to distribute.
 
           Vanilla setting: `40`
+      max_characters:
+        $ref: types/uint8.schema.yaml
+        title: Maximum number of I.M.P. characters
+        description: |
+          Number of I.M.P. characters that can be created over a campaign.
+
+          Note: only one character per gender is possible, because male and female I.M.P.s use separate merc profile slots. Values outside 1 to 2 are clamped.
+
+          Vanilla setting: `1`
       pick_skills_directly:
         type: boolean
         title: Pick skills directly

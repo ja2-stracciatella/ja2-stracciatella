@@ -29,6 +29,42 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
+UINT8 GetIMPGenderFlag(INT32 const iVoiceId)
+{
+	return iVoiceId < NUMBER_OF_PLAYER_VOICES_PER_GENDER ? IMP_GENDER_MALE : IMP_GENDER_FEMALE;
+}
+
+
+UINT8 GetNumberOfIMPCharactersCreated(void)
+{
+	UINT8 const ubGenders = LaptopSaveInfo.ubIMPCreatedGenders;
+	return (ubGenders & IMP_GENDER_MALE   ? 1 : 0) +
+		(ubGenders & IMP_GENDER_FEMALE ? 1 : 0);
+}
+
+
+bool CanCreateAnotherIMPCharacter(void)
+{
+	return GetNumberOfIMPCharactersCreated() < gamepolicy(imp_max_characters);
+}
+
+
+bool CanCreateIMPCharacterOfGender(bool const fMale)
+{
+	if (!CanCreateAnotherIMPCharacter()) return false;
+
+	UINT8 const ubGender = fMale ? IMP_GENDER_MALE : IMP_GENDER_FEMALE;
+	return (LaptopSaveInfo.ubIMPCreatedGenders & ubGender) == 0;
+}
+
+
+void MarkIMPCharacterCreated(INT32 const iVoiceId)
+{
+	LaptopSaveInfo.ubIMPCreatedGenders |= GetIMPGenderFlag(iVoiceId);
+	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+}
+
+
 void CreateACharacterFromPlayerEnteredStats(void)
 {
 	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);

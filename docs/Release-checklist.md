@@ -28,7 +28,10 @@ Runtime tests:
 - Buying from Bobby Ray's
 - Visual inspection of laptop screens
 
-If you want to build the packages manually:
+If you want to build the packages manually, see
+[macOS-dmg-build.md](macOS-dmg-build.md) for macOS. The `make` targets below no
+longer exist, the top-level Makefile was removed in d1442ad67; `.ci/ci-build.sh`
+is what actually builds the packages.
 
     $ make clean
     $ make build-releases # to build all releases

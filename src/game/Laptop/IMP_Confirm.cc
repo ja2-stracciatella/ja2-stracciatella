@@ -187,9 +187,9 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		if (LaptopSaveInfo.fIMPCompletedFlag)
+		if (!CanCreateAnotherIMPCharacter())
 		{
-			// already here, leave
+			// already made as many I.M.P. characters as allowed, leave
 			return;
 		}
 
@@ -200,8 +200,10 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 		}
 
 		// line moved by CJC Nov 28 2002 to AFTER the check for money
-		LaptopSaveInfo.fIMPCompletedFlag = AddCharacterToPlayersTeam();
-		if (!LaptopSaveInfo.fIMPCompletedFlag) return; // only if merc hiring failed: no charge, give it another go
+		if (!AddCharacterToPlayersTeam()) return; // only if merc hiring failed: no charge, give it another go
+
+		// claims this character's gender, so a further I.M.P. cannot reuse its profile slot
+		MarkIMPCharacterCreated(LaptopSaveInfo.iVoiceId);
 
 		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 		if (!pSoldier) return;

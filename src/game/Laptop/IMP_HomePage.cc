@@ -2,6 +2,7 @@
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
+#include "IMP_Compile_Character.h"
 #include "IMP_HomePage.h"
 #include "IMPVideoObjects.h"
 #include "MessageBoxScreen.h"
@@ -60,7 +61,7 @@ static void ProcessPlayerInputActivationString(void)
 	ST::string str = GetStringFromField(0);
 	bool stringMatchesCode = GCM->getIMPPolicy()->isCodeAccepted(str);
 
-	if (stringMatchesCode && !LaptopSaveInfo.fIMPCompletedFlag) {
+	if (stringMatchesCode && CanCreateAnotherIMPCharacter()) {
 		iCurrentImpPage = IMP_MAIN_PAGE;
 		return;
 	}
