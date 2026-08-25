@@ -1,12 +1,10 @@
 {
   //  game.json
   //  The settings in this file have an influence on the game in general.
-
   //  --------------------------------------------------
   //  New hotkeys and input
   //  vanilla setting for all hotkeys: false
   //  --------------------------------------------------
-
   //  Press 'ctrl+i' to show sector inventory of selected sector in strategic view.
   //  Press 'j' to jump over fences, climb on rooftops etc.
   //  Press 'ctrl+n' to swap the squad's head gear from night mode (NV or UV Goggles) to day mode (sun goggles) and back.
@@ -15,81 +13,65 @@
   //  Press 'shift+j' to climb through open window
   //  Press 'alt+a' to select the whole squad of the currently selected merc (real-time only).
   "extra_hotkeys": true,
-
   //  Press d in realtime mode to manually start turn based mode.
   //  vanilla setting: false
   "can_enter_turnbased": false,
-
   //  Enables middle mouse button to trigger a look into cursor direction
   //  vanilla setting: false
   "middle_mouse_look": true,
-
   //  --------------------------------------------------
   //  System settings
   //  --------------------------------------------------
-
   //  Automatically draw a shadow for all items in a merc's inventory.
   //  vanilla setting: true
   "draw_item_shadow": true,
-
   //  Specifies how often the game tries to refresh the screen. Lower values reduce
   //  power consumption, higher values can make the game appear to be more responsive.
   //  Minimum: 1, Maximum: 144
   //  Stracciatella default value: 40
-  "target_fps": 40,
-
+  "target_fps": 120,
   // Many of the game's predefined durations are multiplied by this value, including animations. This means
   // that a value greater than 1 slows down the game, while values less than 1 speed it up. For example, the
   // dot on the radar map blinks once every 400 milliseconds by default; with game_durations_multiplier set
   // to 1.15 this would be slowed down to once every 460 milliseconds.
   //  Stracciatella standard value: 1.0
   "game_durations_multiplier": 1.0,
-
   //  --------------------------------------------------
   //  Gameplay settings
   //  --------------------------------------------------
-
   //  Amount of money the player starts the game with on each difficulty.
   //  vanilla values: 45000/35000/30000 (easy/medium/hard)
-  "starting_cash_easy": 45000,
-  "starting_cash_medium": 35000,
-  "starting_cash_hard": 30000,
-
+  "starting_cash_easy": 90000,
+  "starting_cash_medium": 70000,
+  "starting_cash_hard": 60000,
   //  Will enemies drop ALL of their equipment when they die?
   //  vanilla setting: false
-  "drop_everything": false,
-
+  "drop_everything": true,
   //  Will dropped items always be visible to the player, regardless of distance?
   //  vanilla setting: false
   "all_drops_visible": false,
-
   //  Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is that if you skipped reacting to the first interrupt
   //  (say your buddies took care of it), you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
   //  vanilla setting: false
-  "multiple_interrupts": false,
-  
+  "multiple_interrupts": true,
   //  Allow interrupts after being shot at on an earlier turn. In vanilla, being under fire blocks a
   //  soldier's interrupts until their own turn begins, so an attack silences them for the whole next
   //  turn as well. With this on, only being shot at during the turn in progress blocks the reaction.
   //  Mercs and enemies alike react a turn sooner, so the AI can punish 'shoot and hide' tactics.
   //  vanilla setting: false
   "interrupt_after_being_under_fire": false,
-
   // Boosting stats like agility, dexterity, exp. level and health absurdly increases the action points cost to shoot.
   // With this option on: the better the stats the fewer APs will be needed. Note that you also won't get AP discount when injured.
   // vanilla setting: false
   "fixed_cost_to_shoot": false,
-
   //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour like CTH.
   //  vanilla value: 0
   "enemy_weapon_minimal_status": 0,
-
   // Maxiumum number of soldiers in one squad.
   // Larger squad sizes requires the wider screen to display all members. For a squad size of n, the screen must be at
   // least (640 + (n-6)*83) pixels wide. For example, squad size of 8 requires the screen to be at least 806px wide.
   // vanilla value: 6
-  "squad_size": 6,
-
+  "squad_size": 8,
   // Enable improvements over vanilla game's tactical AI
   "ai": {
     //  In vanilla under normal conditions enemies measure cth agains target's torso and then a random location
@@ -103,78 +85,62 @@
     //  When already facing its focus, lay down if nothing else.
     // vanilla setting: false
     "go_prone_more_often": false,
-
     //  AI is capable of knowing and avoid of an ambush on seeing corpses of friendlies, but
     //  it was not enabled in the original game due to a bug
     //  vanilla value: false
     "avoid_ambushes": false,
-
     //  Enemy guards on rooftop are disallowed to climb down
     //  vanilla value: false
     "stay_on_rooftop": false
   },
-
   //  How much variation should there be in elite soldier xp level?
   //  vanilla_setting: 6, 10
   "enemy_elite_minimum_level": 6,
   "enemy_elite_maximum_level": 10,
-
   //  Enables extra GUI features. Currently includes:
   //  Progress Bars for the Mercs stats in tactical Mode.
   //  vanilla_setting: false
   "gui_extras": true,
-
   //  Displays modifiers in hover boxes revealing hidden mechanics.
   //  vanilla_setting: false
   "informative_tooltips": false,
-
   //  Skips the "cannot sleep" popup when driving or when the merc is already rested.
   //  vanilla setting: false
   "skip_sleep_explanation": false,
-
   //  Enables extra attachments: boosters and break lights on leggings, goggles on helmets.
   //  vanilla setting: false
   "extra_attachments": false,
-
   //  Packages at Drassen airport never get stolen, no need to bribe Pablo.
   //  vanilla_setting: false
   "pablo_wont_steal": false,
-
   //  Min/max chance to hit and headshot damage multiplier.
   //  vanilla_setting: 1, 99, 1.5, 0.5
   "chance_to_hit_minimum": 1,
   "chance_to_hit_maximum": 99,
   "tactical_head_damage_multiplier": 1.5,
   "tactical_legs_damage_multiplier": 0.5,
-
   //  Aim bonus per spent AP and for using scopes
   //  vanilla setting (%): 10, 20, 20
   "aim_bonus_per_std_ap": 10,
   "aim_bonus_sniperscope": 20,
   "aim_bonus_laserscope": 20,
-
   //  Range bonuses and penalties. 10 per 1 tile.
   //  vanilla setting: 0, 100
   "range_penalty_silencer": 0,
   "range_bonus_barrel_extender": 100,
-
   //  Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
   //  vanilla setting: false
   "always_show_cursor_in_tactical": false,
-
   //  Show chance-to-hit next to mouse cursor when preparing an attack
   //  vanilla setting: false
   "show_hit_chance": false,
-
   //  Scales the loading time of websites on the laptop. Lower value means faster loading. Setting this to 0.0 removes the loading entirely.
   //  vanilla setting: 1.0
   "website_loading_time_scale": 1.0,
-
   //  Open or close doors diagonally (unless AI-controlled). Makes room clearings much easier by reducing exposure when opening doors.
   //  Your character must already stand on the door-adjacent tile to effect diagonal interaction.
   //  vanilla setting: false
   "diagonally_interactable_doors": false,
-
   //  IMP creation tweaks
   "imp": {
     //  IMP attribute point defaults:
@@ -184,22 +150,19 @@
     //  Zero attribute point bonus is what you receive for setting a skill to 0.
     //  Bonus attribute points is your initial pool of points to distribute.
     //  vanilla setting: 85, 35, 15, 40
-    "max_attribute_points": 85,
-    "min_attribute_points": 35,
+    "max_attribute_points": 99,
+    "min_attribute_points": 1,
     "zero_attribute_points_bonus": 15,
-    "bonus_attribute_points": 40,
-
+    "bonus_attribute_points": 80,
     // Number of I.M.P. characters that can be created over a campaign.
     // Only one character per gender is possible, because male and female I.M.P.s
     // use separate merc profile slots, so the useful values are 1 and 2.
     // vanilla setting: 1
     "max_characters": 2,
-
     // Replace the IMP personality quiz with a form to select skills directly
     // NOTE: does not set any personality
     // vanilla setting: false
     "pick_skills_directly": false,
-
     //  Load an IMP merc from a previous save game by typing in same nickname on IMP form.
     //  Make sure to put in only the nickname and use the same capitalization!
     //  This setting must be already enabled during saving to enable a later load.
@@ -207,40 +170,34 @@
     "load_saved_merc_by_nickname": false,
     "load_keep_inventory": false
   },
-
   // When a new game starts, it picks randomly in the range of min and max (both inclusive) 
   // on which day M.E.R.C. goes online and Speck sends the player an email. If 0 is picked, 
   // then M.E.R.C. will be available right from the start.
   // vanilla setting: 1, 2
   "merc_online_min_days": 1,
   "merc_online_max_days": 2,
-
   "progress": {
     //  Progress weight of parameter on campaign progress
     //  vanilla settings: kills 25, control 25, income 50
     "weight_kills": 25,
     "weight_control": 25,
     "weight_income": 50,
-
     //  Progress point progression
     //  vanilla settings: 0_easy 7, 1_medium 10, 2_hard 15
     "kills_per_point_easy": 7,
     "kills_per_point_medium": 10,
     "kills_per_point_hard": 15,
-
     //  Minimum first time progress to trigger event
     //  vanilla settings: madlab: 35, mike: 50, iggy: 70
     "event_madlab_min": 35,
     "event_mike_min": 50,
     "event_iggy_min": 70
   },
-
   //  Allowed unhired merc deaths at given difficulty level
   //  vanilla settings: 1, 2, 3
   "unhired_merc_deaths_easy": 1,
   "unhired_merc_deaths_medium": 2,
   "unhired_merc_deaths_hard": 3,
-
   "enable_stat_healing": false,
 
   //  Enrico nags you with "lack of progress" e-mails after several idle days, and from then on
@@ -248,7 +205,7 @@
   //  to switch that mechanic off entirely. His other e-mails (progress, setbacks, creatures in
   //  the mines) are unaffected.
   //  vanilla setting: false
-  "enrico_never_complains": false,
+  "enrico_never_complains": true,
 
   //  Settings for newly started campaigns.
   //  Most probably you do not need to change these unless you are running a full conversion mod.
@@ -256,16 +213,13 @@
     //  The sector where your team lands at the start.
     //  vanilla settings: A9
     "start_sector": "A9",
-
     //  Is the start sector revealed at game start?
     //  vanilla settings: true
     "start_sector_revealed": true
   },
-
   //  Scales AP loss from suppression fire (numerator of the AP-loss formula); set to 0 if you want to disable suppression completely.
   //  vanilla setting: 6
   "suppression_fire_modifier": 6,
-
   //  Threshold (numerator) above which a suppressed soldier drops to a lower stance.
   //  Set to 0 to make soldiers always react (1.13 behaviour); raise it to make them even more resistant (it's not the same as suppression tolerance).
   //  vanilla setting: 130
