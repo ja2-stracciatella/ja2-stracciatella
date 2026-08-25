@@ -506,14 +506,15 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 		fInterfacePanelDirty = DIRTYLEVEL1;
 	}
 
-	// Floor the cost at 0 APs, but only for someone who still had points to spend.
-	// Suppression can leave a merc in AP debt that is meant to carry into the next
-	// turn, and flooring that at 0 would hand the points back - so getting shot while
-	// suppressed used to *raise* the merc's APs.
-	if ( sNewAP < 0 && pSoldier->bActionPoints > 0 )
-	{
-		sNewAP = 0;
-	}
+	// A deduction can empty a merc, but it must not dig them any deeper, and it must not
+	// fill in a hole that is already there. Suppression subtracts APs directly and can
+	// leave a merc in debt that is meant to carry into their next turn; flooring at a
+	// flat 0 would hand those points back, so getting shot while suppressed used to
+	// *raise* the merc's APs. Flooring at 0 unconditionally is just as wrong the other
+	// way: charging an already empty merc for every reflex they are put through during
+	// the enemy's turn is what turned an 8 AP suppression penalty into a hole dozens of
+	// APs deep.
+	sNewAP = std::max<INT16>( sNewAP, std::min<INT16>( 0, pSoldier->bActionPoints ) );
 
 	// bActionPoints is an INT8, so keep the debt from wrapping around into a windfall
 	sNewAP = std::max<INT16>( sNewAP, -MAX_AP_DEBT );
