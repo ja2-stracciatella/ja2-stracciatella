@@ -242,6 +242,13 @@
 
   "enable_stat_healing": false,
 
+  //  Enrico nags you with "lack of progress" e-mails after several idle days, and from then on
+  //  every further idle day costs loyalty in every town you have a presence in. Set this to true
+  //  to switch that mechanic off entirely. His other e-mails (progress, setbacks, creatures in
+  //  the mines) are unaffected.
+  //  vanilla setting: false
+  "enrico_never_complains": false,
+
   //  Settings for newly started campaigns.
   //  Most probably you do not need to change these unless you are running a full conversion mod.
   "campaign": {
