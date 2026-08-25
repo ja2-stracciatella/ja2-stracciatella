@@ -7,7 +7,8 @@ TAGS
 .project
 .idea
 .vs
-.vscode
+.vscode/*
+!/.vscode/tasks.json
 .clangd
 .clang-tidy
 .zed

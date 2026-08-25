@@ -1,0 +1,132 @@
+{
+	// Ctrl+Shift+B runs "Run ja2", which builds first and then starts the game.
+	//
+	// The build tree is ci-build/, configured the way .ci/ci-build.sh configures it.
+	// Run "Configure ci-build" once if the directory is not there yet; after that
+	// cmake --build re-runs the configure step by itself whenever a CMakeLists.txt
+	// changes, so it does not belong in the everyday path.
+	//
+	// The game takes its game directory, mods, resolution and resource version from
+	// ~/.ja2/ja2.json, which is why none of that is passed on the command line here.
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run ja2",
+			"detail": "Build and start the game",
+			"type": "shell",
+			"command": "${workspaceFolder}/ci-build/ja2",
+			"dependsOn": "Build ja2",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"clear": true
+			}
+		},
+		{
+			"label": "Run ja2 (windowed)",
+			"detail": "Build and start the game in a window, overriding ja2.json",
+			"type": "shell",
+			"command": "${workspaceFolder}/ci-build/ja2",
+			"args": [
+				"-window"
+			],
+			"dependsOn": "Build ja2",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"clear": true
+			}
+		},
+		{
+			"label": "Build ja2",
+			"detail": "Compile the game binary only, leaving the launcher alone",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--build",
+				".",
+				"--config",
+				"ReleaseWithDebInfo",
+				"--target",
+				"ja2",
+				"--parallel",
+				"8"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/ci-build"
+			},
+			"group": "build",
+			"problemMatcher": "$gcc",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Build everything",
+			"detail": "Compile the game, the launcher and the Rust library",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--build",
+				".",
+				"--config",
+				"ReleaseWithDebInfo",
+				"--parallel",
+				"8"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/ci-build"
+			},
+			"group": "build",
+			"problemMatcher": "$gcc",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Run unit tests",
+			"detail": "Build and run the gtest suite the game binary embeds",
+			"type": "shell",
+			"command": "${workspaceFolder}/ci-build/ja2",
+			"args": [
+				"-unittests"
+			],
+			"dependsOn": "Build ja2",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"clear": true
+			}
+		},
+		{
+			"label": "Configure ci-build",
+			"detail": "Create the build tree, only needed once",
+			"type": "shell",
+			"command": "mkdir -p ci-build && cd ci-build && PATH=\"/opt/homebrew/opt/fltk@1.3/bin:$PATH\" cmake -DCMAKE_BUILD_TYPE=ReleaseWithDebInfo -DVERSION_TAG= -DWITH_EDITOR_SLF=ON -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle ..",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		}
+	]
+}
