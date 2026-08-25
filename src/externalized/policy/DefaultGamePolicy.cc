@@ -150,6 +150,7 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
 		{
 			switch(key)
 			{
+				case 'a':
 				case 'r':         return extra_hotkeys;
 			}
 		}
