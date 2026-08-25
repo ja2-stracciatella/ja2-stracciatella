@@ -2,12 +2,12 @@
 
 ## Pre-release development
 
-- [ ] Fix or postpone issues in the [milestone](https://github.com/ja2-stracciatella/ja2-stracciatella/milestone/6)
+- [ ] Fix or postpone issues in the current [milestone](https://github.com/ja2-stracciatella/ja2-stracciatella/milestones)
 - [ ] Triage open pull requests and recent bugs
 - [ ] Finalize choice of version number
   - [ ] Decide if this version should be 1.0 #443
-- [ ] Add new contributors to contributors.txt
-- [ ] Update changes.md (run docs/draft-changelog.sh to get started)
+- [ ] Add new contributors to contributors.txt (`make rebuild-contributors-list`)
+- [ ] Update changes.md (run `docs/draft-changelog.sh` to get started)
 - [ ] Update man page if necessary
 
 ## Release candidate
@@ -27,14 +27,6 @@ Runtime tests:
 - Taking Drassen airport or more
 - Buying from Bobby Ray's
 - Visual inspection of laptop screens
-
-If you want to build the packages manually:
-
-    $ make clean
-    $ make build-releases # to build all releases
-    $ make build-win-release-on-linux # crosscompile Windows release on Linux
-    $ make build-release-on-mac # build the mac bundle
-    $ make build-debian-package # build the .DEB package
 
 
 ## Release
