@@ -13,3 +13,5 @@ TAGS
 .zed
 /compile_commands.json
 /*/CMakeUserPresets.json
+/build/
+/ci-build/

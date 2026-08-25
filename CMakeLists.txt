@@ -359,6 +359,13 @@ else()
         install(FILES "${EDITORSLF_FILE}" DESTINATION ./externalized)
     endif()
     install(FILES changes.md DESTINATION .)
+    if(APPLE)
+        # Runs last on purpose: it rewrites the binaries installed just above.
+        install(CODE "
+            include(\"${CMAKE_CURRENT_SOURCE_DIR}/cmake/bundle-macos-dylibs.cmake\")
+            ja2_bundle_macos_dylibs(\"\${CMAKE_INSTALL_PREFIX}\" \"${JA2_BINARY}\" \"${LAUNCHER_BINARY}\")
+        ")
+    endif()
 endif()
 
 if(MSVC OR MINGW)

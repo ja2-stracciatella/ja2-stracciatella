@@ -38,7 +38,16 @@ if(UNIX AND NOT MINGW)
     add_definitions("-DLUA_USE_POSIX")
 endif()
 
-set(LUA_INCLUDE_DIRS ${SRC_DIR}/src PARENT_SCOPE)
+# sol2 reaches for <lua/lua.h> before plain <lua.h> and takes whichever it finds
+# first. Homebrew installs its Lua headers as include/lua/lua.h, so on a machine
+# that has the lua formula the system Lua shadows the version downloaded here and
+# the build fails at link time against a different Lua ABI. Publishing the bundled
+# headers under a lua/ subdirectory too means the intended Lua answers both spellings.
+set(LUA_COMPAT_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/include")
+file(GLOB LUA_PUBLIC_HEADERS "${SRC_DIR}/src/*.h" "${SRC_DIR}/src/lua.hpp")
+file(COPY ${LUA_PUBLIC_HEADERS} DESTINATION "${LUA_COMPAT_INCLUDE_DIR}/lua")
+
+set(LUA_INCLUDE_DIRS "${LUA_COMPAT_INCLUDE_DIR}" "${SRC_DIR}/src" PARENT_SCOPE)
 
 FILE(GLOB LUA_SRC "${SRC_DIR}/src/*.c")
 LIST(REMOVE_ITEM LUA_SRC
