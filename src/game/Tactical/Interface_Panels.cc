@@ -74,6 +74,7 @@
 #include <algorithm>
 #include <iterator>
 #include <memory>
+#include <vector>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -3153,6 +3154,49 @@ BOOLEAN RemovePlayerFromTeamSlot(const SOLDIERTYPE* const s)
 }
 
 
+/* The mapscreen team list is kept in whichever order the player sorted it into,
+ * by name, assignment, sleep status and so on. Line the faces up the same way,
+ * rather than in the order the mercs happened to join the squad, so that the two
+ * screens agree on which merc is the third one from the left.
+ *
+ * Only the merc pointers are permuted. Every slot owns mouse regions pinned to
+ * its own place on the panel and hands itself to their callbacks, which read the
+ * merc out of the slot when they fire, so moving the pointers moves the mercs.
+ *
+ * The mapscreen list holds the whole team while the panel holds one squad, so it
+ * only ever supplies the relative order. Anyone the list does not know about,
+ * which is what an empty or not yet rebuilt list amounts to, keeps the position
+ * he would have had. */
+static void SortTeamPanelToMatchMapScreen()
+{
+	std::vector<SOLDIERTYPE*> mercs;
+	mercs.reserve(gTeamPanel.size());
+	for (TeamPanelSlot const& i : gTeamPanel)
+	{
+		if (i.merc) mercs.push_back(i.merc);
+	}
+
+	std::stable_sort(mercs.begin(), mercs.end(),
+		[](SOLDIERTYPE const* const a, SOLDIERTYPE const* const b)
+		{
+			INT32 const rank_a = GetCharacterListIndex(a);
+			INT32 const rank_b = GetCharacterListIndex(b);
+			if (rank_a == rank_b) return false; // includes both being unranked
+			if (rank_a < 0)       return false; // unranked mercs sort to the back
+			if (rank_b < 0)       return true;
+			return rank_a < rank_b;
+		});
+
+	// Sorting drops any gap a removed merc left behind, so the slots the mercs do
+	// not fill are the trailing ones.
+	size_t next = 0;
+	for (TeamPanelSlot& i : gTeamPanel)
+	{
+		i.merc = next < mercs.size() ? mercs[next++] : NULL;
+	}
+}
+
+
 static void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 {
 	if (PlayerExistsInSlot(s)) return;
@@ -3165,6 +3209,11 @@ static void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 		fInterfacePanelDirty = DIRTYLEVEL2;
 		break;
 	}
+
+	/* Done for every merc rather than once per rebuild: the panel is filled from
+	 * several places, some of them one merc at a time as he walks into the sector,
+	 * and the order has to hold for all of them. */
+	SortTeamPanelToMatchMapScreen();
 }
 
 
