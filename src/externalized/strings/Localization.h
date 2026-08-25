@@ -65,6 +65,7 @@ constexpr std::size_t pwMineStrings_SIZE = 14;
 constexpr std::size_t pwMiscSectorStrings_SIZE = 7;
 constexpr std::size_t pMapInventoryErrorString_SIZE = 5;
 constexpr std::size_t pMapInventoryStrings_SIZE = 2;
+constexpr std::size_t pMapInventoryActionStrings_SIZE = 6;
 constexpr std::size_t pMovementMenuStrings_SIZE = 4;
 constexpr std::size_t pUpdateMercStrings_SIZE = 6;
 constexpr std::size_t pMapScreenBorderButtonHelpText_SIZE = 6;
@@ -245,6 +246,7 @@ struct L10n_t
 	STRARRAY(pwMiscSectorStrings);
 	STRARRAY(pMapInventoryErrorString);
 	STRARRAY(pMapInventoryStrings);
+	STRARRAY(pMapInventoryActionStrings);
 	STRARRAY(pMovementMenuStrings);
 	STRARRAY(pUpdateMercStrings);
 	STRARRAY(pMapScreenBorderButtonHelpText);

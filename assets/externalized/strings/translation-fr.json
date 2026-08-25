@@ -1309,6 +1309,14 @@
         "Lieu",
         "Objets"
     ],
+    "pMapInventoryActionStrings": [
+        "Inventaire du secteur trié.",
+        "Inventaire du secteur trié, %d pile(s) regroupée(s).",
+        "Pointez d'abord l'objet servant à recharger.",
+        "%s ne permet de recharger aucun objet.",
+        "Rien à recharger avec %s ici.",
+        "%d %s rechargé(s) (%d points)."
+    ],
     "pMapPlotStrings": [
         "Cliquez à nouveau sur votre destination pour la confirmer ou cliquez sur d'autres secteurs pour définir de nouvelles étapes.",
         "Route confirmée.",

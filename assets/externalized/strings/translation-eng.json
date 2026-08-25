@@ -1309,6 +1309,14 @@
         "Location",
         "Total Items"
     ],
+    "pMapInventoryActionStrings": [
+        "Sector inventory sorted.",
+        "Sector inventory sorted, %d stack(s) combined.",
+        "Point at the item to refill from first.",
+        "%s cannot be used to refill anything.",
+        "Nothing to refill with %s here.",
+        "Refilled %d %s (%d points)."
+    ],
     "pMapPlotStrings": [
         "Click again on the destination to confirm your final route, or click on another sector to place more waypoints.",
         "Travel route confirmed.",

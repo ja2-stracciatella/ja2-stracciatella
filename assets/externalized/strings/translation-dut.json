@@ -1309,6 +1309,14 @@
         "Locatie",
         "Aantal Items"
     ],
+    "pMapInventoryActionStrings": [
+        "Sectorinventaris gesorteerd.",
+        "Sectorinventaris gesorteerd, %d stapel(s) samengevoegd.",
+        "Wijs eerst het item aan om mee bij te vullen.",
+        "%s kan niets bijvullen.",
+        "Hier is niets bij te vullen met %s.",
+        "%d %s bijgevuld (%d punten)."
+    ],
     "pMapPlotStrings": [
         "Klik nogmaals op de bestemming om de route te bevestigen, of klik op een andere sector om meer routepunten te plaatsen.",
         "Route bevestigd.",
