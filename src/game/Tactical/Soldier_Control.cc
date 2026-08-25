@@ -441,6 +441,18 @@ void CalcNewActionPoints( SOLDIERTYPE *pSoldier )
 
 	pSoldier->bActionPoints += CalcActionPoints( pSoldier);
 
+	// Suppression (and other deductions taken while already empty) can leave a merc in
+	// AP debt. That debt is settled here, out of this turn's APs, and whatever this turn
+	// cannot cover is written off instead of being carried any further. A bad burst can
+	// dig a hole several turns deep, and making a merc crawl out of it over turns in
+	// which nothing suppressed them again is not what suppression is meant to model:
+	// being suppressed costs the next turn, no more. Get suppressed again and the next
+	// turn is paid for again.
+	if (pSoldier->bActionPoints < 0)
+	{
+		pSoldier->bActionPoints = 0;
+	}
+
 	// Don't max out if we are drugged....
 	if ( !GetDrugEffect( pSoldier, DRUG_TYPE_ADRENALINE ) )
 	{
