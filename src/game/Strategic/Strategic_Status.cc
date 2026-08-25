@@ -17,6 +17,7 @@
 #include "History.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Debug.h"
+#include "policy/GamePolicy.h"
 #include "WeaponModels.h"
 #include <set>
 
@@ -301,7 +302,10 @@ void HandleEnricoEmail(void)
 		// remember that the original setback has been overcome, so another one can generate another E-mail
 		gStrategicStatus.usEnricoEmailFlags |= ENRICO_EMAIL_FLAG_SETBACK_OVER;
 	}
-	else if ( GetWorldDay() > (UINT32) (gStrategicStatus.usLastDayOfPlayerActivity) )
+	// Enrico nags about a lack of progress and docks loyalty everywhere for every further idle
+	// day; the policy flag lets a player opt out of that mechanic entirely.
+	else if ( !gamepolicy(enrico_never_complains) &&
+		GetWorldDay() > (UINT32) (gStrategicStatus.usLastDayOfPlayerActivity) )
 	{
 		INT8			bComplaint = 0;
 		UINT8			ubTolerance;

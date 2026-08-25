@@ -125,6 +125,8 @@ public:
 
 	bool enable_stat_healing;		// Enable ability to heal stats with doctoring
 
+	bool enrico_never_complains;  // Suppress Enrico's lack-of-progress e-mails and the daily loyalty penalty they carry
+
 	uint16_t start_sector;        // Starting sector
 	bool reveal_start_sector;     // Should the start sector radar map be shown at start
 

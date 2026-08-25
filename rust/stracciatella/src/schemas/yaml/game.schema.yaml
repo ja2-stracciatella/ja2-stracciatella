@@ -524,6 +524,19 @@ properties:
 
       Vanilla setting: `false`
 
+  enrico_never_complains:
+    type: boolean
+    title: Enrico never complains
+    description: |
+      Enrico watches how fast you make progress. Once you have gone several days without any
+      sign of activity he starts sending "lack of progress" e-mails, and from then on every
+      further idle day costs loyalty in every town you have a presence in. Enabling this stops
+      that mechanic completely: no nagging e-mails and no loyalty penalty for taking your time.
+
+      His other e-mails (progress milestones, setbacks, creatures in the mines) are unaffected.
+
+      Vanilla setting: `false`
+
   campaign:
     type: object
     properties:
