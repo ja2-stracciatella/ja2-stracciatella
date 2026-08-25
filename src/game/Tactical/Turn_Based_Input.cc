@@ -1885,6 +1885,26 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 
+		case 'a': // Multi-select every merc of the currently active squad
+			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_ALT, 'a')) &&
+				!(gTacticalStatus.uiFlags & INCOMBAT))
+			{
+				// Drop whatever was selected before, so the squad is the whole selection
+				ResetMultiSelection();
+
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
+				{
+					if (!OkControllableMerc(s))           continue;
+					if (s->bAssignment != CurrentSquad()) continue;
+					if (s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER))
+						continue;
+					s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
+				}
+
+				EndMultiSoldierSelection(TRUE);
+			}
+			break;
+
 		case 'f':
 		{
 			BOOLEAN& tracking = gGameSettings.fOptions[TOPTION_TRACKING_MODE];
