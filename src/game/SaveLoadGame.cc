@@ -1235,6 +1235,21 @@ static SGPFile* IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 	return f;
 }
 
+/* Reads the profile slot a saved I.M.P. would be restored into, without touching
+ * gMercProfiles. Returns -1 if there is no usable profile under that nickname. */
+int IMPSavedProfileReadVoiceId(const ST::string& nickname)
+{
+	if (!IMPSavedProfileDoesFileExist(nickname)) return -1;
+	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
+	MERCPROFILESTRUCT profile_saved;
+	f->read(&profile_saved, sizeof(MERCPROFILESTRUCT));
+	delete f;
+
+	int const voiceid = profile_saved.ubSuspiciousDeath;
+	if (voiceid >= NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS) return -1;
+	return voiceid;
+}
+
 int IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 {
 	if (!IMPSavedProfileDoesFileExist(nickname)) {

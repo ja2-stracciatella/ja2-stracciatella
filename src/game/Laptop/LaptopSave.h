@@ -75,8 +75,9 @@ struct LaptopSaveInfoStruct
 
 
 	//IMP Information
-	BOOLEAN fIMPCompletedFlag; // Has the player Completed the IMP process
+	BOOLEAN fIMPCompletedFlag; // Has the player Completed the IMP process at least once
 	BOOLEAN fSentImpWarningAlready; // Has the Imp email warning already been sent
+	UINT8   ubIMPCreatedSlots; // bit per player generated profile slot an I.M.P. character occupies
 
 
 	//Personnel Info

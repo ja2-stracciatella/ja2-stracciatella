@@ -29,6 +29,89 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
+static_assert(IMP_MAX_CHARACTERS_LIMIT == NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS,
+	"the policy ceiling must be the number of player generated profile slots");
+
+
+UINT8 GetIMPVoiceSlotFlag(INT32 const iVoiceId)
+{
+	if (iVoiceId < 0 || iVoiceId >= NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS) return 0;
+	return 1 << iVoiceId;
+}
+
+
+bool IsIMPVoiceTaken(INT32 const iVoiceId)
+{
+	UINT8 const ubSlot = GetIMPVoiceSlotFlag(iVoiceId);
+	return ubSlot == 0 || (LaptopSaveInfo.ubIMPCreatedSlots & ubSlot) != 0;
+}
+
+
+bool IsIMPPortraitTaken(INT32 const iPortraitNumber)
+{
+	// Which portraits are gone is not recorded separately: the face every
+	// character created so far ended up with is the record.
+	for (INT32 iSlot = 0; iSlot < NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS; ++iSlot)
+	{
+		if (!(LaptopSaveInfo.ubIMPCreatedSlots & (1 << iSlot))) continue;
+		if (gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + iSlot].ubFaceIndex == 200 + iPortraitNumber) return true;
+	}
+	return false;
+}
+
+
+UINT8 GetNumberOfIMPCharactersCreated(void)
+{
+	UINT8 ubCreated = 0;
+	for (INT32 iSlot = 0; iSlot < NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS; ++iSlot)
+	{
+		if (LaptopSaveInfo.ubIMPCreatedSlots & (1 << iSlot)) ++ubCreated;
+	}
+	return ubCreated;
+}
+
+
+bool CanCreateAnotherIMPCharacter(void)
+{
+	return GetNumberOfIMPCharactersCreated() < gamepolicy(imp_max_characters);
+}
+
+
+bool CanCreateIMPCharacterOfGender(bool const fMale)
+{
+	return CanCreateAnotherIMPCharacter() && GetFirstFreeIMPVoice(fMale) >= 0;
+}
+
+
+INT32 GetFirstFreeIMPVoice(bool const fMale)
+{
+	INT32 const iBase = fMale ? 0 : NUMBER_OF_PLAYER_VOICES_PER_GENDER;
+	for (INT32 i = 0; i < NUMBER_OF_PLAYER_VOICES_PER_GENDER; ++i)
+	{
+		if (!IsIMPVoiceTaken(iBase + i)) return i;
+	}
+	return -1;
+}
+
+
+INT32 GetFirstFreeIMPPortrait(bool const fMale)
+{
+	INT32 const iBase = fMale ? 0 : NUMBER_OF_PLAYER_PORTRAITS_PER_GENDER;
+	for (INT32 i = 0; i < NUMBER_OF_PLAYER_PORTRAITS_PER_GENDER; ++i)
+	{
+		if (!IsIMPPortraitTaken(iBase + i)) return i;
+	}
+	return -1;
+}
+
+
+void MarkIMPCharacterCreated(INT32 const iVoiceId)
+{
+	LaptopSaveInfo.ubIMPCreatedSlots |= GetIMPVoiceSlotFlag(iVoiceId);
+	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+}
+
+
 void CreateACharacterFromPlayerEnteredStats(void)
 {
 	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);

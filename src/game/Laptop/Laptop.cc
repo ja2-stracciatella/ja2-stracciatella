@@ -61,6 +61,7 @@
 #include "Environment.h"
 #include "Music_Control.h"
 #include "ContentMusic.h"
+#include "IMP_Compile_Character.h"
 #include "LaptopSave.h"
 #include "RenderWorld.h"
 #include "GameLoop.h"
@@ -391,8 +392,9 @@ void InitLaptopAndLaptopScreens(void)
 	GameInitFinances();
 	GameInitHistory();
 
-	//Reset the flag so we can create a new IMP character
+	//Reset the flags so we can create a new IMP character
 	LaptopSaveInfo.fIMPCompletedFlag = FALSE;
+	LaptopSaveInfo.ubIMPCreatedSlots = 0;
 
 	//Reset the flag so that BOBBYR's isnt available at the begining of the game
 	LaptopSaveInfo.fBobbyRSiteCanBeAccessed = FALSE;
@@ -3303,7 +3305,8 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_U32(  d, l.uiFlowerOrderNumber)
 	INJ_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	INJ_U8(   d, l.ubLastMercAvailableId)
-	INJ_SKIP( d, 87)
+	INJ_U8(   d, l.ubIMPCreatedSlots)
+	INJ_SKIP( d, 86)
 	Assert(d.getConsumed() == lengthof(data));
 
 	f->write(data, sizeof(data));
@@ -3390,8 +3393,23 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_U32(  d, l.uiFlowerOrderNumber)
 	EXTR_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	EXTR_U8(   d, l.ubLastMercAvailableId)
-	EXTR_SKIP( d, 87)
+	EXTR_U8(   d, l.ubIMPCreatedSlots)
+	EXTR_SKIP( d, 86)
 	Assert(d.getConsumed() == lengthof(data));
+
+	// This byte was part of the block older saves skipped, so what it holds cannot
+	// be trusted. It is only believed when it agrees with iVoiceId, which back when
+	// one I.M.P. was the limit pointed at that one character; anything else is a
+	// pre-feature save and is reconstructed from iVoiceId alone.
+	l.ubIMPCreatedSlots &= (1 << NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS) - 1;
+	if (!l.fIMPCompletedFlag)
+	{
+		l.ubIMPCreatedSlots = 0;
+	}
+	else if (!(l.ubIMPCreatedSlots & GetIMPVoiceSlotFlag(l.iVoiceId)))
+	{
+		l.ubIMPCreatedSlots = GetIMPVoiceSlotFlag(l.iVoiceId);
+	}
 
 	// Handle old saves in M.E.R.C. module
 	SyncLastMercFromSaveGame();

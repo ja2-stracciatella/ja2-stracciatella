@@ -1,5 +1,8 @@
 #include "DefaultGamePolicy.h"
+#include "Logger.h"
 #include "Types.h"
+
+#include <algorithm>
 
 DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 {
@@ -72,6 +75,16 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	imp_attribute_zero_bonus = imp.getOptionalInt("zero_attribute_points_bonus", 15);
 	imp_attribute_bonus = imp.getOptionalInt("bonus_attribute_points", 40);
 	imp_pick_skills_directly = imp.getOptionalBool("pick_skills_directly");
+
+	// Three I.M.P.s per gender is the most that can be handed out: player generated
+	// characters draw from a fixed block of merc profile slots, one per voice, and
+	// anything beyond that would overwrite a character that already exists.
+	imp_max_characters = imp.getOptionalUInt("max_characters", 1);
+	if (imp_max_characters < 1 || imp_max_characters > IMP_MAX_CHARACTERS_LIMIT)
+	{
+		SLOGW("imp.max_characters must be between 1 and {}, clamping {}", IMP_MAX_CHARACTERS_LIMIT, imp_max_characters);
+		imp_max_characters = std::clamp<uint8_t>(imp_max_characters, 1, IMP_MAX_CHARACTERS_LIMIT);
+	}
 
 	merc_online_min_days = gp.getOptionalUInt("merc_online_min_days", 1);
 	merc_online_max_days = gp.getOptionalUInt("merc_online_max_days", 2);

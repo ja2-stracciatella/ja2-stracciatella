@@ -1,6 +1,7 @@
 #include "CharProfile.h"
 #include "Directories.h"
 #include "Font.h"
+#include "IMP_Compile_Character.h"
 #include "IMP_Portraits.h"
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
@@ -34,8 +35,23 @@ INT32 iPortraitNumber = 0;
 static void CreateIMPPortraitButtons(void);
 
 
+// the face index a portrait of the gender being profiled stands for
+static INT32 PortraitSlot(INT32 const iPortrait)
+{
+	return iPortrait + (fCharacterIsMale ? 0 : NUMBER_OF_PLAYER_PORTRAITS_PER_GENDER);
+}
+
+
 void EnterIMPPortraits( void )
 {
+	// The picture left over from an earlier character is that character's face by
+	// now, so open on one that is still free.
+	if (IsIMPPortraitTaken(PortraitSlot(iCurrentPortrait)))
+	{
+		INT32 const iFree = GetFirstFreeIMPPortrait(fCharacterIsMale);
+		if (iFree >= 0) iCurrentPortrait = iFree;
+	}
+
 	// create buttons
 	CreateIMPPortraitButtons( );
 
@@ -98,26 +114,38 @@ static void RenderPortrait(INT16 const x, INT16 const y)
 
 static void IncrementPictureIndex(void)
 {
-	// cycle to next picture
-	iCurrentPortrait++;
-
-	// gone too far?
-	if( iCurrentPortrait > iLastPicture )
+	// cycle to the next picture, stepping over the faces earlier I.M.P.s wear. There
+	// are more pictures than profile slots, so one is always free, but bound the
+	// walk anyway so it cannot spin.
+	for (INT32 i = 0; i <= iLastPicture; ++i)
 	{
-		iCurrentPortrait = 0;
+		iCurrentPortrait++;
+
+		// gone too far?
+		if( iCurrentPortrait > iLastPicture )
+		{
+			iCurrentPortrait = 0;
+		}
+
+		if (!IsIMPPortraitTaken(PortraitSlot(iCurrentPortrait))) return;
 	}
 }
 
 
 static void DecrementPicture(void)
 {
-	// cycle to previous picture
-	iCurrentPortrait--;
-
-	// gone too far?
-	if( iCurrentPortrait < 0 )
+	// cycle to the previous picture, stepping over the faces earlier I.M.P.s wear
+	for (INT32 i = 0; i <= iLastPicture; ++i)
 	{
-		iCurrentPortrait = iLastPicture;
+		iCurrentPortrait--;
+
+		// gone too far?
+		if( iCurrentPortrait < 0 )
+		{
+			iCurrentPortrait = iLastPicture;
+		}
+
+		if (!IsIMPPortraitTaken(PortraitSlot(iCurrentPortrait))) return;
 	}
 }
 
@@ -202,7 +230,7 @@ static void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 		if (iCurrentProfileMode == 5) iCurrentImpPage = IMP_FINISH;
 
 		// grab picture number
-		iPortraitNumber = iCurrentPortrait + (fCharacterIsMale ? 0 : 8);
+		iPortraitNumber = PortraitSlot(iCurrentPortrait);
 
 		fButtonPendingFlag = TRUE;
 	}

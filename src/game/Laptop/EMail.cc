@@ -1672,7 +1672,7 @@ static void ReDisplayBoxes(void)
 }
 
 
-static void HandleIMPCharProfileResultsMessage(void);
+static void HandleIMPCharProfileResultsMessage(Email const* pMail);
 static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords);
 
 
@@ -1683,7 +1683,7 @@ static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 	{
 		case( IMP_EMAIL_PROFILE_RESULTS ):
 
-			HandleIMPCharProfileResultsMessage( );
+			HandleIMPCharProfileResultsMessage( pMail );
 		break;
 		case( MERC_INTRO ):
 			SetBookMark( MERC_BOOKMARK );
@@ -1887,7 +1887,7 @@ static void AddSkillTraitText(MERCPROFILESTRUCT const& imp, SkillTrait const Ski
 }
 
 
-static void HandleIMPCharProfileResultsMessage(void)
+static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 {
 	// special case, IMP profile return
 	INT32 iOffSet;
@@ -1898,7 +1898,15 @@ static void HandleIMPCharProfileResultsMessage(void)
 	if (pMessageRecordList != NULL) return;
 	// list doesn't exist, reload
 
-	MERCPROFILESTRUCT const& imp = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	// The mail carries the voice id of the character it reports on, so with several
+	// I.M.P.s in the campaign each report still describes its own. Mails written
+	// before that was recorded carry a zero, which is only a voice id if an I.M.P.
+	// actually holds that slot; otherwise fall back to the character last profiled.
+	INT32 const iMailVoiceId = pMail->iFirstData;
+	bool const fMailNamesCharacter = GetIMPVoiceSlotFlag(iMailVoiceId) != 0 && IsIMPVoiceTaken(iMailVoiceId);
+	INT32 const iVoiceId = fMailNamesCharacter ? iMailVoiceId : LaptopSaveInfo.iVoiceId;
+	MERCPROFILESTRUCT const& imp = GetProfile(PLAYER_GENERATED_CHARACTER_ID + iVoiceId);
+	INT32 const iPortrait = imp.ubFaceIndex - 200;
 
 	// Use initial stats (current minus any gains since creation) so the e-mail
 	// reflects what IMP actually assessed, not stats grinded up after arrival.
@@ -2146,7 +2154,7 @@ static void HandleIMPCharProfileResultsMessage(void)
 	iEndOfSection = IMP_RESULTS_PORTRAIT_LENGTH;
 	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
 
-	switch (iPortraitNumber)
+	switch (iPortrait)
 	{
 		case  0: iOffSet = IMP_PORTRAIT_MALE_1;   break;
 		case  1: iOffSet = IMP_PORTRAIT_MALE_2;   break;
