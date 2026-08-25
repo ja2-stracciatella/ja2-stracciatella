@@ -2896,6 +2896,16 @@ static void HandleModShift(UINT const key)
 			SelectAllCharactersInSquad(squad_no);
 			break;
 		}
+
+		case 'r':
+			// Refill the mercs' copies of the pointed at item from the sector stash
+			if (fShowMapInventoryPool) RefillMercItemsFromMapInventoryPool();
+			break;
+
+		case 's':
+			// Combine the sector inventory into full stacks and sort it
+			if (fShowMapInventoryPool) StackAndSortMapInventoryPool();
+			break;
 	}
 }
 
