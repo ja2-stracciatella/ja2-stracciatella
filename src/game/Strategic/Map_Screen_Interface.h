@@ -257,6 +257,11 @@ void BuildSelectedListFromAToB( INT8 bA, INT8 bB );
 // isa this entry int he selected character list set?
 BOOLEAN IsEntryInSelectedListSet( INT8 bEntry );
 
+// position this soldier currently occupies in the mapscreen team list, -1 if the
+// list does not hold him. The list is kept in the order the player sorted it into,
+// so this doubles as the rank other screens have to follow to show the same order.
+INT32 GetCharacterListIndex(const SOLDIERTYPE* s);
+
 // is there more than one person selected?
 BOOLEAN MultipleCharacterListEntriesSelected( void );
 

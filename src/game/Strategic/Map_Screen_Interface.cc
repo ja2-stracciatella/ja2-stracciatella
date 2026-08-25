@@ -300,6 +300,18 @@ BOOLEAN IsEntryInSelectedListSet( INT8 bEntry )
 }
 
 
+INT32 GetCharacterListIndex(const SOLDIERTYPE* const s)
+{
+	if (s == NULL) return -1;
+
+	for (INT32 i = 0; i < MAX_CHARACTER_COUNT; ++i)
+	{
+		if (gCharactersList[i].merc == s) return i;
+	}
+	return -1;
+}
+
+
 void ToggleEntryInSelectedList( INT8 bEntry )
 {
 	Assert( ( bEntry >= 0 ) && ( bEntry < MAX_CHARACTER_COUNT ) );
