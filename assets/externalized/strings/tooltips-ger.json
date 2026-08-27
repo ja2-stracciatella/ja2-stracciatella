@@ -1,0 +1,152 @@
+{
+    "demarcationStrings": [
+        "   ", // indentation
+        "-----------------------------------------------------------" // segment divider
+    ],
+    "booleanStrings": [
+        "^N^e^i^n",
+        "~N~e~i~n",
+        "^J^a",
+        "~J~a",
+        "Nichts davon trifft zu: %s",
+        "Eines davon trifft zu: %s"
+    ],
+    "segmentHeaderStrings": [
+        "Erfolgschance: %s",
+        "Verändert durch:",
+        "Boni:",
+        "Abzüge:",
+        "Entdeckungsstufe gegen Fallenstufe:"
+    ],
+    "effectiveStatStrings": [
+        "Effektive Beweglichkeit: %s",
+        "Effektive Geschicklichkeit: %s",
+        "Effektive Kraft: %s",
+        "Effektive Führungsqualität: %s",
+        "Effektive Weisheit: %s",
+        "Effektive Erfahrungsstufe: %s",
+        "Effektive Treffsicherheit: %s",
+        "Effektive Sprengstoffe: %s",
+        "Effektive Technik: %s",
+        "Effektive Medizin: %s"
+    ],
+    "skillPossessionStrings": [ // enumerated equally to gzMercSkillText
+        "",
+        "Fähigkeit Schlösser knacken (%s): %s",
+        "Fähigkeit Nahkampf (%s): %s",
+        "Fähigkeit Elektronik (%s): %s",
+        "Fähigkeit Nachteinsatz (%s): %s",
+        "Fähigkeit Werfen (%s): %s",
+        "Fähigkeit Lehren (%s): %s",
+        "Fähigkeit Schwere Waffen (%s): %s",
+        "Fähigkeit Autom. Waffen (%s): %s",
+        "Fähigkeit Schleichen (%s): %s",
+        "Fähigkeit Geschickt (%s): %s",
+        "Fähigkeit Dieb (%s): %s",
+        "Fähigkeit Kampfsport (%s): %s",
+        "Fähigkeit Messer (%s): %s",
+        "Fähigkeit Dach-Treffer-Bonus (%s): %s",
+        "Fähigkeit Getarnt (%s): %s",
+        ""
+    ],
+    "personalityTraitStrings": [
+        "Hat keine Persönlichkeitsmerkmale",
+        "Hitzeempfindlichkeit (%s): %s",
+        "Neurotische Persönlichkeit (%s): %s",
+        "Klaustrophobie (%s): %s",
+        "Schwimmfähigkeit (%s): %s",
+        "Insektenangst (%s): %s",
+        "Vergesslichkeit (%s): %s",
+        "Psychotische Persönlichkeit (%s): %s"
+    ],
+    "toolModifierStrings": [
+        "Zustand des Dietrich-Sets: %s",
+        "Brecheisen: %s"
+    ],
+    "statusStrings": [
+        "|?|?|?",
+        "???",
+        "~N~/~A",
+        "~u~n~b~r~a~u~c~h~b~a~r",
+        "~u~n~m~ö~g~l~i~c~h",
+        "ungesichert"
+    ],
+    "lockStrings": [
+        "Schwierigkeit des Schlosses: %s",
+        "Elektronisches Schloss: %s",
+        "Schaden am Schloss: %s",
+        "Aufbrech-Schwierigkeit: %s"
+    ],
+    "vitalSignStrings": [
+        "Gesundheit: %s",
+        "Erschöpfung: %s",
+        "Moral: %s",
+        "Im Schock: %s",
+        "Starke Blutung: %s",
+        "Erste Hilfe: %s"
+    ],
+    "rangeStrings": [
+        "%s bis %s",
+        " (effektiv ^1 bis %s)",
+        " (effektiv ^1)"
+    ],
+    "trapStrings": [
+        "Wahrnehmung: %s",
+        "Passiv: %s gegen %s",
+        "|A|k|t|i|v: %s gegen %s",
+        "Bei |a|k|t|i|v|e|r Suche: ^+^1 bis %s",
+        "Sprengstoff: ",
+        "Elektronisch: ",
+        "Elektronische Falle: %s",
+        "Fallenstufe: %s"
+    ],
+    "attemptStrings": [
+        "Bisherige Versuche: %s von %s nötig, um die Chance zu ermitteln.",
+        "Pflichtversuche: ~+~2"
+    ],
+    "commentStrings": [
+        "Sprengstoffe sind null.",
+        "Medizin ist null.",
+        "Technik ist null.",
+        ". Effektiv ~0~% (unter dem Minimum von 30%).",
+        ". Effektiv ^9^9^%.",
+        ". Mehr Versuche nötig, um die Chance zu ermitteln.",
+        "Kein passendes Werkzeug.",
+        "Das Werkzeug ist unbrauchbar.",
+        "Kann nicht kleiner als %s sein.",
+        "Kann nicht größer als %s sein."
+    ],
+    "possessiveStrings": [
+        "Nein",
+        "Ja",
+        "Ja, Experte"
+    ],
+    "drugStrings": [
+        "Adrenalin-Schub: %s",
+        "Alkohol: %s",
+        "",
+        "Regenerations-Schub: %s"
+    ],
+    "inventoryStrings": [
+        "Überladen: %s"
+    ],
+    "locationStrings": [
+        "Unterirdisch: %s",
+        "Loyalität der Stadt: %s",
+        "Stadtbindung von %s: %s"
+    ],
+    "dialogueStrings": [
+        "Wirksamkeit der Taktik: %s",
+        "Erstmals freundliche Taktik: %s",
+        "Erstmals direkte Taktik: %s",
+        "Erstmals drohende Taktik: %s",
+        "Meinung von %s über %s: %s",
+        "Tödlichkeit der Waffe: %s",
+        "Taktik-Geschick: %s",
+        "Empfänglichkeit von %s für die Taktik: %s",
+        "Preisänderung durch Waffenhandels-Geschick: %s",
+        "Schnellziehen %s gegen %s: %s gegen %s",
+        "Führungsqualität: %s",
+        "Effektive Erfahrungsstufe von %s: %s"
+    ]
+}
