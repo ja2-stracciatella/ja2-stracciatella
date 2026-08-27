@@ -46,17 +46,17 @@
 
 #define MIN_BOX_COLUMNS 8 // minimum number of columns to consider a structure light-blocking
 
-// lightlist node flags
-#define LIGHT_NODE_DRAWN_FULLY	 0x00000001 // light node duplicate marker
-#define LIGHT_NODE_DRAWN_NORTH	 0x00000002 // light was cast only from one side
-#define LIGHT_NODE_DRAWN_WEST	 0x00000004 // light was cast only from one side
-#define LIGHT_ROOF_ONLY			 0x00001000 // light only rooftops
-#define LIGHT_IGNORE_WALLS		 0x00002000 // doesn't take walls into account
-#define LIGHT_BACKLIGHT			 0x00004000 // light does not light objs, trees
-#define LIGHT_NEW_RAY			 0x00008000 // start of new ray in linked list
-#define LIGHT_EVERYTHING		 0x00010000 // light up everything
-#define LIGHT_FAKE				 0x10000000 // "fake" light for display only
-
+enum LightFlags : UINT32
+{
+	LIGHT_NODE_DRAWN_FULLY   = 0x00000001, // light node duplicate marker
+	LIGHT_NODE_DRAWN_NONWALL = 0x00000002,
+	LIGHT_ROOF_ONLY        = 0x00001000, // light only rooftops
+	LIGHT_IGNORE_WALLS     = 0x00002000, // doesn't take walls into account
+	LIGHT_BACKLIGHT        = 0x00004000, // light does not light objs, trees
+	LIGHT_NEW_RAY          = 0x00008000, // start of new ray in linked list
+	LIGHT_EVERYTHING       = 0x00010000, // light up everything
+	LIGHT_FAKE             = 0x10000000  // "fake" light for display only
+};
 
 // stucture of node in linked list for lights
 struct LIGHT_NODE
@@ -1460,13 +1460,24 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 			uiCount = LightFindNextRay(t, uiCount);
 		}
 
+		bool isDstInSWQuadrant = pLight->iDX < 0 && pLight->iDY > 0;
+		bool isDstInNEQuadrant = pLight->iDX > 0 && pLight->iDY < 0;
+		bool isDstInNWQuadrant = pLight->iDX < 0 && pLight->iDY < 0;
+
+		if (!(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL)
+		{
+			if ((isDstInSWQuadrant || isDstInNEQuadrant) ||
+				(isDstInNWQuadrant && !filter.illuminateOrientedBlocksOnly))
+			{
+				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+			}
+		}
+
 		if (!filter.illuminateNothing && !(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->ubLight)
 		{
 			UINT32 uiFlags = (UINT32)(usNodeIndex & LIGHT_BACKLIGHT);
 			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
 			if (l->uiFlags & LIGHT_SPR_ONROOF)   uiFlags |= LIGHT_ROOF_ONLY;
-			if (filter.srcToDstDir == NORTH)     uiFlags |= LIGHT_NODE_DRAWN_NORTH;
-			else if (filter.srcToDstDir == WEST) uiFlags |= LIGHT_NODE_DRAWN_WEST;
 
 			if (filter.baseGridNo)
 			{ // make a detour to the structure's base tile
@@ -1479,10 +1490,28 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 				LightAddTile(dstX, dstY, pLight->ubLight, uiFlags, filter);
 			}
 
-			bool isCenterToDstDirCardinal = centerX == dstX || centerY == dstY;
-			if (isCenterToDstDirCardinal || (pLight->uiFlags & (LIGHT_NODE_DRAWN_NORTH | LIGHT_NODE_DRAWN_WEST)))
+			if ( (centerX == dstX || centerY == dstY) || /* Destination tile is on a cardinal direction ... */
+				 (pLight->iDX > 0 && pLight->iDY > 0) )  /* ... or the SE quadrant */
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+			}
+			else if (filter.illuminateOrientedBlocksOnly)
+			{
+			}
+			else if (isDstInSWQuadrant || isDstInNEQuadrant)
+			{
+				if (filter.srcToDstDir == WEST || filter.srcToDstDir == NORTH)
+				{
+					pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+				}
+				else
+				{
+					pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
+				}
+			}
+			else if (isDstInNWQuadrant)
+			{
+				pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 			}
 		}
 
@@ -1629,13 +1658,24 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 			uiCount = LightFindNextRay(t, uiCount);
 		}
 
+		bool isDstInSWQuadrant = pLight->iDX < 0 && pLight->iDY > 0;
+		bool isDstInNEQuadrant = pLight->iDX > 0 && pLight->iDY < 0;
+		bool isDstInNWQuadrant = pLight->iDX < 0 && pLight->iDY < 0;
+
+		if (!(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL)
+		{
+			if ((isDstInSWQuadrant || isDstInNEQuadrant) ||
+				(isDstInNWQuadrant && !filter.illuminateOrientedBlocksOnly))
+			{
+				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+			}
+		}
+
 		if (!filter.illuminateNothing && !(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->ubLight)
 		{
 			UINT32 uiFlags = (UINT32)(usNodeIndex & LIGHT_BACKLIGHT);
 			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
 			if (l->uiFlags & LIGHT_SPR_ONROOF)   uiFlags |= LIGHT_ROOF_ONLY;
-			if (filter.srcToDstDir == NORTH)     uiFlags |= LIGHT_NODE_DRAWN_NORTH;
-			else if (filter.srcToDstDir == WEST) uiFlags |= LIGHT_NODE_DRAWN_WEST;
 
 			if (filter.baseGridNo)
 			{ // make a detour to the structure's base tile
@@ -1648,10 +1688,28 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 				LightSubtractTile(dstX, dstY, pLight->ubLight, uiFlags, filter);
 			}
 
-			bool isCenterToDstDirCardinal = centerX == dstX || centerY == dstY;
-			if (isCenterToDstDirCardinal || (pLight->uiFlags & (LIGHT_NODE_DRAWN_NORTH | LIGHT_NODE_DRAWN_WEST)))
+			if ((centerX == dstX || centerY == dstY) || /* Destination tile is on a cardinal direction ... */
+				(pLight->iDX > 0 && pLight->iDY > 0))   /* ... or the SE quadrant */
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+			}
+			else if (filter.illuminateOrientedBlocksOnly)
+			{
+			}
+			else if (isDstInSWQuadrant || isDstInNEQuadrant)
+			{
+				if (filter.srcToDstDir == WEST || filter.srcToDstDir == NORTH)
+				{
+					pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+				}
+				else
+				{
+					pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
+				}
+			}
+			else if (isDstInNWQuadrant)
+			{
+				pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 			}
 		}
 
