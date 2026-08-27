@@ -1705,7 +1705,8 @@
         "Esc. 18",
         "Esc. 19",
         "Esc. 20",
-        "Annuler"
+        "Annuler",
+        "Attribution auto"
     ],
     "pTacticalPopupButtonStrings": [
         "Debout/Marcher (|S)",

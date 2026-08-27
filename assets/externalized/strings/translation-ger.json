@@ -1705,7 +1705,8 @@
         "Trupp 18",
         "Trupp 19",
         "Trupp 20",
-        "Abbrechen"
+        "Abbrechen",
+        "Automatisch"
     ],
     "pTacticalPopupButtonStrings": [
         "|Stehen/Gehen",
