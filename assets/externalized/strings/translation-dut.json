@@ -1705,7 +1705,8 @@
         "Team 18",
         "Team 19",
         "Team 20",
-        "Stop"
+        "Stop",
+        "Auto Assign"
     ],
     "pTacticalPopupButtonStrings": [
         "|Staan/Lopen",

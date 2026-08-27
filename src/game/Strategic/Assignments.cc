@@ -159,6 +159,10 @@ static MOUSE_REGION gRepairMenuRegion[20];
 // mouse region for vehicle menu
 static MOUSE_REGION gVehicleMenuRegion[20];
 
+// The auto assignment line of the squad menu is the first line of the box, the
+// squads are listed below it
+#define SQUAD_MENU_AUTO_ASSIGN_LINE 0
+
 static MOUSE_REGION gAssignmentScreenMaskRegion;
 
 BOOLEAN fShownAssignmentMenu    = FALSE;
@@ -4091,6 +4095,7 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason);
 static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 static void CreateSquadBox(void);
+static BOOLEAN AutoAssignSquadsForSelectedMercs(BOOLEAN fDryRun);
 
 
 static void CreateDestroyMouseRegionsForSquadMenu()
@@ -4116,7 +4121,8 @@ static void CreateDestroyMouseRegionsForSquadMenu()
 		{
 			MOUSE_REGION* const r = &gSquadMenuRegion[i];
 			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback);
-			MSYS_SetRegionUserData(r, 0, i);
+			// the first line auto assigns, the rest are the squads themselves
+			MSYS_SetRegionUserData(r, 0, i == SQUAD_MENU_AUTO_ASSIGN_LINE ? SQUAD_MENU_AUTO_ASSIGN : i - 1);
 			y += h;
 		}
 
@@ -4260,6 +4266,19 @@ static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 }
 
 
+// which line of the squad box a squad menu value is printed on
+static UINT32 LineOfSquadMenuValue(INT32 const value)
+{
+	switch (value)
+	{
+		case SQUAD_MENU_AUTO_ASSIGN: return SQUAD_MENU_AUTO_ASSIGN_LINE;
+		case SQUAD_MENU_CANCEL:      return GetNumberOfLinesOfTextInBox(ghSquadBox) - 1;
+		// the squads sit below the auto assignment line
+		default:                     return value + 1;
+	}
+}
+
+
 static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	// mvt callback handler for assignment region
@@ -4271,18 +4290,11 @@ static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 	{
 		// highlight string
 
-		if( iValue != SQUAD_MENU_CANCEL )
+		UINT32 const uiLine = LineOfSquadMenuValue(iValue);
+		if( iValue == SQUAD_MENU_CANCEL || !GetBoxShadeFlag(ghSquadBox, uiLine))
 		{
-			if (!GetBoxShadeFlag(ghSquadBox, iValue))
-			{
-				// get the string line handle
-				HighLightBoxLine( ghSquadBox, iValue );
-			}
-		}
-		else
-		{
-			// highlight cancel line
-			HighLightBoxLine(ghSquadBox, GetNumberOfLinesOfTextInBox(ghSquadBox) - 1);
+			// get the string line handle
+			HighLightBoxLine( ghSquadBox, uiLine );
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -4568,6 +4580,18 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, UINT32 const reaso
 		{ // Stop displaying, leave
 			UnHighLightBox(ghAssignmentBox);
 			fShowSquadMenu           = FALSE;
+			fTeamPanelDirty          = TRUE;
+			fMapScreenBottomDirty    = TRUE;
+			fCharacterInfoPanelDirty = TRUE;
+			gfRenderPBInterface      = TRUE;
+			return;
+		}
+
+		if (value == SQUAD_MENU_AUTO_ASSIGN)
+		{ // Sort everyone this menu applies to into squads by sector, then leave
+			AutoAssignSquadsForSelectedMercs(FALSE);
+			fShowAssignmentMenu      = FALSE;
+			giAssignHighLine         = -1;
 			fTeamPanelDirty          = TRUE;
 			fMapScreenBottomDirty    = TRUE;
 			fCharacterInfoPanelDirty = TRUE;
@@ -5145,6 +5169,9 @@ static void CreateSquadBox(void)
 	PopUpBox* const box = MakeBox(SquadPosition, 0);
 	ghSquadBox = box;
 
+	// auto assignment goes on top, above squad 1
+	AddMonoString(box, pSquadMenuStrings[SQUAD_MENU_AUTO_ASSIGN]);
+
 	// add strings for box
 	UINT32 const uiMaxSquad = GetLastSquadListedInSquadMenu();
 	for (UINT32 i = 0; i <= uiMaxSquad; ++i)
@@ -5202,6 +5229,10 @@ static void HandleShadingOfLinesForSquadMenu(void)
 	PopUpBox* const box = ghSquadBox;
 	if (box == NO_POPUP_BOX) return;
 
+	// Only offer auto assignment while it has someone to move
+	ShadeStringInBox(box, SQUAD_MENU_AUTO_ASSIGN_LINE,
+		AutoAssignSquadsForSelectedMercs(TRUE) ? POPUP_SHADE_NONE : POPUP_SHADE);
+
 	SOLDIERTYPE const& s         = *gAssignmentTargetSoldier;
 	UINT32      const  max_squad = GetLastSquadListedInSquadMenu();
 	for (UINT32 i = 0; i <= max_squad; ++i)
@@ -5212,7 +5243,7 @@ static void HandleShadingOfLinesForSquadMenu(void)
 			bResult == CHARACTER_CANT_JOIN_SQUAD ? POPUP_SHADE      :
 			bResult == CHARACTER_CAN_JOIN_SQUAD  ? POPUP_SHADE_NONE :
 					POPUP_SHADE_SECONDARY;
-		ShadeStringInBox(box, i, shade);
+		ShadeStringInBox(box, LineOfSquadMenuValue(i), shade);
 	}
 }
 
@@ -6746,6 +6777,134 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 
 	// check if we should start/stop flashing any mercs' assignment strings after these changes
 	gfReEvaluateEveryonesNothingToDo = TRUE;
+}
+
+
+// The squad auto assignment picks for this merc: the lowest numbered squad that
+// already stands in his sector and has room for him, his own squad included, or
+// failing that the first empty squad.  -1 when there is nowhere for him to go.
+static INT8 FindAutoAssignSquadForSoldier(SOLDIERTYPE const& s)
+{
+	INT8 bFirstEmptySquad = -1;
+
+	for (INT8 bSquad = 0; bSquad < NUMBER_OF_SQUADS; ++bSquad)
+	{
+		// empty squads say nothing about where the merc is, keep the first one in
+		// reserve and look for company in his sector first
+		if (SquadIsEmpty(bSquad))
+		{
+			if (bFirstEmptySquad == -1) bFirstEmptySquad = bSquad;
+			continue;
+		}
+
+		switch (CanCharacterSquad(s, bSquad))
+		{
+			case CHARACTER_CAN_JOIN_SQUAD:
+			case CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT:
+				return bSquad;
+
+			// squads in other sectors, full ones and ones on the move don't count
+			default:
+				break;
+		}
+	}
+
+	// nobody of ours in his sector yet, he starts a squad of his own
+	if (bFirstEmptySquad != -1 &&
+			CanCharacterSquad(s, bFirstEmptySquad) == CHARACTER_CAN_JOIN_SQUAD)
+	{
+		return bFirstEmptySquad;
+	}
+
+	return -1;
+}
+
+
+enum AutoAssignResult
+{
+	AUTO_ASSIGN_MOVED,
+	AUTO_ASSIGN_ALREADY_THERE,
+	AUTO_ASSIGN_FAILED,
+};
+
+
+// Puts one merc on the squad auto assignment picked for him.  A dry run reports
+// what would happen without touching him.
+static AutoAssignResult AutoAssignSoldierToSquad(SOLDIERTYPE& s, BOOLEAN const fDryRun)
+{
+	INT8 const bSquad = FindAutoAssignSquadForSoldier(s);
+	if (bSquad == -1)             return AUTO_ASSIGN_FAILED;
+	if (s.bAssignment == bSquad)  return AUTO_ASSIGN_ALREADY_THERE;
+	if (fDryRun)                  return AUTO_ASSIGN_MOVED;
+
+	bool const fExitingHelicopter = InHelicopter(s);
+
+	PreChangeAssignment(s);
+
+	// if the squad is between sectors, leave the old mvt group behind
+	const SOLDIERTYPE* const t = Squad[bSquad][0];
+	if (t                        &&
+			t->fBetweenSectors       &&
+			s.bAssignment >= ON_DUTY &&
+			s.ubGroupID != 0)
+	{
+		RemovePlayerFromGroup(s);
+	}
+
+	if (!AddCharacterToSquad(&s, bSquad)) return AUTO_ASSIGN_FAILED;
+
+	if (fExitingHelicopter) SetSoldierExitHelicopterInsertionData(&s); // XXX TODO001D
+	MakeSoldiersTacticalAnimationReflectAssignment(&s);
+	return AUTO_ASSIGN_MOVED;
+}
+
+
+/* Auto assignment sorts the mercs this menu applies to - the one it was opened
+ * for plus everyone else selected in mapscreen - into squads by the sector they
+ * stand in: mercs sharing a sector share a squad, every other sector gets a
+ * squad of its own.  Picking a single squad by hand can't do that for a bunch
+ * scattered over the map, it only ever refuses the mercs who are too far away.
+ * A dry run reports whether there is anyone to move without moving anybody. */
+static BOOLEAN AutoAssignSquadsForSelectedMercs(BOOLEAN const fDryRun)
+{
+	SOLDIERTYPE& target        = *gAssignmentTargetSoldier;
+	BOOLEAN      fMovedAnyone  = FALSE;
+	BOOLEAN      fFailedAnyone = FALSE;
+
+	switch (AutoAssignSoldierToSquad(target, fDryRun))
+	{
+		case AUTO_ASSIGN_MOVED:  fMovedAnyone  = TRUE; break;
+		case AUTO_ASSIGN_FAILED: fFailedAnyone = TRUE; break;
+		default:                                       break;
+	}
+
+	// mapscreen is the only place several mercs can be selected at once
+	if (fInMapMode)
+	{
+		CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
+		{
+			SOLDIERTYPE& s = *c->merc;
+			if (&s == &target || s.uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+			switch (AutoAssignSoldierToSquad(s, fDryRun))
+			{
+				case AUTO_ASSIGN_MOVED:  fMovedAnyone  = TRUE; break;
+				case AUTO_ASSIGN_FAILED: fFailedAnyone = TRUE; break;
+				default:                                       break;
+			}
+		}
+	}
+
+	if (!fDryRun)
+	{
+		// report the ones we couldn't place, once for all of them
+		if (fFailedAnyone) NotifyPlayerOfAssignmentAttemptFailure(ON_DUTY);
+
+		// check if we should start/stop flashing any mercs' assignment strings after these changes
+		gfReEvaluateEveryonesNothingToDo = TRUE;
+	}
+
+	return fMovedAnyone;
 }
 
 

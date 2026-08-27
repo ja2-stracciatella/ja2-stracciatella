@@ -1705,7 +1705,8 @@
         "Squad 18",
         "Squad 19",
         "Squad 20",
-        "Cancel"
+        "Cancel",
+        "Auto Assign"
     ],
     "pTacticalPopupButtonStrings": [
         "|Stand/Walk",

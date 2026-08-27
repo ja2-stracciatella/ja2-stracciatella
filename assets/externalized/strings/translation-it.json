@@ -1705,7 +1705,8 @@
         "Squadra 18",
         "Squadra 19",
         "Squadra 20",
-        "Annulla"
+        "Annulla",
+        "Assegna auto"
     ],
     "pTacticalPopupButtonStrings": [
         "|Stare fermi/Camminare",

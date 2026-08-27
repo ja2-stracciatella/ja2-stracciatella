@@ -114,6 +114,9 @@ enum{
 	SQUAD_MENU_19,
 	SQUAD_MENU_20,
 	SQUAD_MENU_CANCEL,
+	// Auto assignment is listed last in pSquadMenuStrings, but printed on the
+	// first line of the menu, above squad 1.  It is not a squad number.
+	SQUAD_MENU_AUTO_ASSIGN,
 	MAX_SQUAD_MENU_STRING_COUNT,
 };
 
