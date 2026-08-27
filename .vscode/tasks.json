@@ -6,6 +6,11 @@
 	// cmake --build re-runs the configure step by itself whenever a CMakeLists.txt
 	// changes, so it does not belong in the everyday path.
 	//
+	// "Clean ja2 build" drops the object files and keeps the configuration,
+	// "Rebuild from scratch" deletes ci-build/ and starts over.  Neither is wired
+	// into Ctrl+Shift+B: run them from Terminal > Run Task when a build looks
+	// stale, so the everyday path stays incremental.
+	//
 	// The game takes its game directory, mods, resolution and resource version from
 	// ~/.ja2/ja2.json, which is why none of that is passed on the command line here.
 	"version": "2.0.0",
@@ -110,6 +115,44 @@
 			"presentation": {
 				"reveal": "always",
 				"panel": "dedicated",
+				"clear": true
+			}
+		},
+		{
+			"label": "Clean ja2 build",
+			"detail": "Throw away the compiled objects, keep the CMake configuration",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--build",
+				".",
+				"--target",
+				"clean"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/ci-build"
+			},
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Rebuild from scratch",
+			"detail": "Delete ci-build/ entirely, configure it again and compile everything",
+			"type": "shell",
+			"command": "rm -rf ci-build && mkdir -p ci-build && cd ci-build && PATH=\"/opt/homebrew/opt/fltk@1.3/bin:$PATH\" cmake -DCMAKE_BUILD_TYPE=ReleaseWithDebInfo -DVERSION_TAG= -DWITH_EDITOR_SLF=ON -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle .. && cmake --build . --parallel 8",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": "build",
+			"problemMatcher": "$gcc",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
 				"clear": true
 			}
 		},

@@ -34,7 +34,7 @@ else
   export BUILD_TYPE="Debug"
 fi
 export BUILD_CMD="cmake --build . --config ${BUILD_TYPE}"
-export BUILD_TOOL_ARGS="-- -j 4"
+export BUILD_TOOL_ARGS="-- -j $(getconf _NPROCESSORS_ONLN)"
 export CONFIGURE_CMD="cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DVERSION_TAG=${VERSION_TAG}"
 if [[ "${BUILD_TYPE}" != "Debug" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DWITH_EDITOR_SLF=ON"
@@ -52,7 +52,7 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
 
 elif [[ "$CI_TARGET" == "mac" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
-  export BUILD_TOOL_ARGS="-- -j 4"
+  export BUILD_TOOL_ARGS="-- -j $(getconf _NPROCESSORS_ONLN)"
 
 elif [[ "$CI_TARGET" == "android" ]]; then
   export CONFIGURE_CMD="true"
