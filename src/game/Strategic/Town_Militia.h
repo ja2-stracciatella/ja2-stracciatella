@@ -7,6 +7,7 @@
 
 #include <string_theory/string>
 #include <optional>
+#include <vector>
 
 
 // how many militia of all ranks can be in any one sector at once
@@ -39,6 +40,11 @@ ST::string BuildMilitiaPromotionsString();
 
 UINT8 CountAllMilitiaInSector(const SGPSector& sMap);
 UINT8 MilitiaInSectorOfRank(const SGPSector& sMap, UINT8 ubRank);
+
+/* Returns the sectors whose militia defend the given sector: the sector itself,
+ * followed by the adjacent sectors of the same town that can spare their men.
+ * They are only five minutes of travel away, so they join the fight. */
+std::vector<SGPSector> GetMilitiaDefenceSectors(const SGPSector& sector);
 
 // Returns TRUE if sector is under player control, has no enemies in it, and isn't currently in combat mode
 BOOLEAN SectorOursAndPeaceful(const SGPSector& sector);

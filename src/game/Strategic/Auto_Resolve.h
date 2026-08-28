@@ -9,6 +9,12 @@ struct SOLDIERTYPE;
 
 void EnterAutoResolveMode(const SGPSector& ubSector);
 
+/* The number of militia that will defend the sector when the battle for it is
+ * auto resolved: the ones stationed there plus the reinforcements sent by the
+ * adjacent sectors of the same town, as far as they fit onto the panel next to
+ * the given number of mercs. */
+UINT8 CountMilitiaDefendingSector(const SGPSector& sector, UINT8 n_mercs);
+
 // is the autoresolve active?
 BOOLEAN IsAutoResolveActive( void );
 

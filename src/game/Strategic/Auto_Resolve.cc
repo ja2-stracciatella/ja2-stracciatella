@@ -57,6 +57,7 @@
 #include <array>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -96,7 +97,26 @@ struct SOLDIERCELL
 	SOLDIERCELL* pAttacker[3];
 	UINT32 uiFlashTime;
 	INT8 bWeaponSlot;
+	// only used for militia: the sector they came from and return to
+	SGPSector sHomeSector;
 };
+
+
+/* The militia defending the sector are joined by the militia of the adjacent
+ * sectors of the same town, so we have to remember which sector each of them
+ * belongs to. */
+struct MILITIA_DEFENDER
+{
+	SGPSector sector;
+	UINT8     rank;
+};
+
+
+/* The player's side of the panel is five columns wide and ten rows tall at the
+ * most, which is where this limit comes from.  The mercs get first pick of those
+ * rows, so every five of them cost the militia a row of five -- see
+ * MilitiaRoomInAutoResolve(). */
+#define MAX_AUTORESOLVE_MILITIA 50
 
 struct AUTORESOLVE_STRUCT
 {
@@ -156,8 +176,10 @@ struct AUTORESOLVE_STRUCT
 	MOUSE_REGION AutoResolveRegion;
 
 	std::array<SOLDIERCELL, 20> mercs;
-	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
-	std::array<SOLDIERCELL, MAX_ALLOWABLE_MILITIA_PER_SECTOR> civs;
+	//Militia -- MAX_AUTORESOLVE_MILITIA max
+	std::array<SOLDIERCELL, MAX_AUTORESOLVE_MILITIA> civs;
+	//Which sector and rank each of the militia above came from
+	std::vector<MILITIA_DEFENDER> militia;
 	//Enemies -- 32 max
 	std::array<SOLDIERCELL, 32> enemies;
 };
@@ -423,7 +445,7 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 	gpAR = new AUTORESOLVE_STRUCT{};
 	//Mercs -- 20 max
 	gpMercs = gpAR->mercs.data();
-	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
+	//Militia -- MAX_AUTORESOLVE_MILITIA max
 	gpCivs = gpAR->civs.data();
 	//Enemies -- 32 max
 	gpEnemies = gpAR->enemies.data();
@@ -458,6 +480,7 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 }
 
 
+static std::vector<MILITIA_DEFENDER> BuildMilitiaDefenderList(const SGPSector& sector, UINT8 n_mercs);
 static void CalculateAttackValues(void);
 static void CalculateAutoResolveInfo(void);
 static void CalculateSoldierCells();
@@ -1505,50 +1528,43 @@ static void CreateAutoResolveInterface(void)
 		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 	}
 
-	UINT8 n_militia_elite = MilitiaInSectorOfRank(ar->ubSector, ELITE_MILITIA);
-	UINT8 n_militia_reg   = MilitiaInSectorOfRank(ar->ubSector, REGULAR_MILITIA);
-	UINT8 n_militia_green = MilitiaInSectorOfRank(ar->ubSector, GREEN_MILITIA);
-	while (n_militia_elite + n_militia_reg + n_militia_green < ar->ubCivs)
-	{
-		switch (PreRandom(3))
-		{
-			case 0: ++n_militia_elite; break;
-			case 1:	++n_militia_reg;   break;
-			case 2:	++n_militia_green; break;
-		}
-	}
 	for (INT32 i = 0; i < ar->ubCivs; ++i)
 	{
 		// reset counter of how many mortars this team has rolled
 		ResetMortarsOnTeamCount();
 
+		MILITIA_DEFENDER const& defender = ar->militia[i];
 		SOLDIERTYPE*       s;
 		UINT16             idx;
-		if (i < n_militia_elite)
+		switch (defender.rank)
 		{
-			s   = TacticalCreateMilitia(SOLDIER_CLASS_ELITE_MILITIA);
-			idx = s->ubBodyType == REGFEMALE ? MILITIA3F_FACE : MILITIA3_FACE;
-		}
-		else if (i < n_militia_reg + n_militia_elite)
-		{
-			s   = TacticalCreateMilitia(SOLDIER_CLASS_REG_MILITIA);
-			idx = s->ubBodyType == REGFEMALE ? MILITIA2F_FACE : MILITIA2_FACE;
-		}
-		else if (i < n_militia_green + n_militia_reg + n_militia_elite)
-		{
-			s   = TacticalCreateMilitia(SOLDIER_CLASS_GREEN_MILITIA);
-			idx = s->ubBodyType == REGFEMALE ? MILITIA1F_FACE : MILITIA1_FACE;
-		}
-		else
-		{
-			SLOGA("Attempting to illegally create a militia soldier.");
-			s   = 0;
-			idx = 0;
+			case ELITE_MILITIA:
+				s   = TacticalCreateMilitia(SOLDIER_CLASS_ELITE_MILITIA);
+				idx = s->ubBodyType == REGFEMALE ? MILITIA3F_FACE : MILITIA3_FACE;
+				break;
+
+			case REGULAR_MILITIA:
+				s   = TacticalCreateMilitia(SOLDIER_CLASS_REG_MILITIA);
+				idx = s->ubBodyType == REGFEMALE ? MILITIA2F_FACE : MILITIA2_FACE;
+				break;
+
+			case GREEN_MILITIA:
+				s   = TacticalCreateMilitia(SOLDIER_CLASS_GREEN_MILITIA);
+				idx = s->ubBodyType == REGFEMALE ? MILITIA1F_FACE : MILITIA1_FACE;
+				break;
+
+			default:
+				SLOGA("Attempting to illegally create a militia soldier.");
+				s   = 0;
+				idx = 0;
+				break;
 		}
 		SOLDIERCELL* const cell = &gpCivs[i];
 		cell->pSoldier    = s;
 		cell->usIndex     = idx;
 		cell->uiVObjectID = ar->iFaces;
+		// they fight here, but the survivors and casualties are counted at home
+		cell->sHomeSector = defender.sector;
 
 		Assert(s); // Failed to create militia soldier for autoresolve?
 		s->sSector = ar->ubSector;
@@ -1718,10 +1734,13 @@ static void RemoveAutoResolveInterface()
 	gbGreenToRegPromotions   = 0;
 	gbRegToElitePromotions   = 0;
 	gbMilitiaPromotions      = 0;
-	for (INT32 i = 0; i != MAX_ALLOWABLE_MILITIA_PER_SECTOR; ++i)
+	for (INT32 i = 0; i != MAX_AUTORESOLVE_MILITIA; ++i)
 	{
 		if (!gpCivs[i].pSoldier) continue;
 		SOLDIERTYPE& s = *gpCivs[i].pSoldier;
+		/* Militia from the neighbouring sectors of the town fought here too, so
+		 * losses and promotions have to be booked in the sector they came from. */
+		SGPSector const& homeSector = gpCivs[i].sHomeSector;
 		// The soldiers in the gpCivs array should all be regular militia
 		// members. Thr might get promoted before they're removed.
 		auto const rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
@@ -1733,12 +1752,12 @@ static void RemoveAutoResolveInterface()
 			if (s.bLife < OKLIFE / 2)
 			{
 				AddDeadSoldierToUnLoadedSector(arSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
-				StrategicRemoveMilitiaFromSector(arSector, current_rank, 1);
+				StrategicRemoveMilitiaFromSector(homeSector, current_rank, 1);
 				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, arSector);
 			}
 			else
 			{ // This will check for promotions
-				UINT8 const promotions = CheckOneMilitiaForPromotion(arSector, current_rank, s.ubMilitiaKills);
+				UINT8 const promotions = CheckOneMilitiaForPromotion(homeSector, current_rank, s.ubMilitiaKills);
 				if (promotions == 1)
 				{
 					if (current_rank == GREEN_MILITIA)
@@ -2057,6 +2076,63 @@ static void MercCellMouseClickCallback(MOUSE_REGION* reg, UINT32 reason)
 static void CalculateRowsAndColumns(void);
 
 
+/* How many militia fit onto the panel next to the given number of mercs.  The
+ * mercs take up the topmost rows of the player's five columns, the militia get
+ * what is left of the ten rows the panel can show. */
+static UINT8 MilitiaRoomInAutoResolve(UINT8 const n_mercs)
+{
+	UINT8 const merc_rows = (n_mercs + 4) / 5;
+	return MAX_AUTORESOLVE_MILITIA - 5 * merc_rows;
+}
+
+
+/* Gathers the militia that defend the given sector.  The militia stationed
+ * there are joined by the militia of the adjacent sectors of the same town, as
+ * those are only five minutes of travel away.  The sector's own men always make
+ * the cut, the reinforcements fill up whatever room is left with their best
+ * soldiers first. */
+static std::vector<MILITIA_DEFENDER> BuildMilitiaDefenderList(const SGPSector& sector, UINT8 const n_mercs)
+{
+	std::vector<MILITIA_DEFENDER> militia;
+
+	size_t const room = MilitiaRoomInAutoResolve(n_mercs);
+	std::vector<SGPSector> const sectors = GetMilitiaDefenceSectors(sector);
+
+	auto const AddMilitia = [&militia, room](SGPSector const& from, UINT8 const rank)
+	{
+		UINT8 n = MilitiaInSectorOfRank(from, rank);
+		while (n-- != 0 && militia.size() < room)
+		{
+			militia.push_back({ from, rank });
+		}
+	};
+
+	// the defenders of the sector itself, best first
+	for (UINT8 rank = MAX_MILITIA_LEVELS; rank-- != 0;)
+	{
+		AddMilitia(sector, rank);
+	}
+
+	// then the reinforcements from the neighbouring sectors, best first
+	for (UINT8 rank = MAX_MILITIA_LEVELS; rank-- != 0;)
+	{
+		// the first entry is the attacked sector itself, which is done already
+		for (auto i = sectors.begin() + 1; i != sectors.end(); ++i)
+		{
+			AddMilitia(*i, rank);
+		}
+	}
+
+	return militia;
+}
+
+
+UINT8 CountMilitiaDefendingSector(const SGPSector& sector, UINT8 const n_mercs)
+{
+	return (UINT8)BuildMilitiaDefenderList(sector, n_mercs).size();
+}
+
+
 //Determine how many players, militia, and enemies that are going at it, and use these values
 //to figure out how many rows and columns we can use.  The will effect the size of the panel.
 static void CalculateAutoResolveInfo(void)
@@ -2085,7 +2161,6 @@ static void CalculateAutoResolveInfo(void)
 		gpAR->ubEnemies = (UINT8)std::min(gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32);
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
-	gpAR->ubCivs = CountAllMilitiaInSector(gpAR->ubSector);
 	gpAR->ubMercs = 0;
 	CFOR_EACH_GROUP(i)
 	{
@@ -2116,6 +2191,10 @@ static void CalculateAutoResolveInfo(void)
 			}
 		}
 	}
+
+	// the militia take up whatever room on the panel the mercs leave them
+	gpAR->militia = BuildMilitiaDefenderList(gpAR->ubSector, gpAR->ubMercs);
+	gpAR->ubCivs  = (UINT8)gpAR->militia.size();
 
 	CalculateRowsAndColumns();
 }
@@ -2170,7 +2249,7 @@ static void CalculateRowsAndColumns(void)
 		gpAR->ubCivRows = (gpAR->ubCivs+2)/3;
 	}
 	else
-	{ //16-MAX_ALLOWABLE_MILITIA_PER_SECTOR
+	{ //16-MAX_AUTORESOLVE_MILITIA
 		gpAR->ubCivCols = 4;
 		gpAR->ubCivRows = (gpAR->ubCivs+3)/4;
 	}
@@ -2236,24 +2315,29 @@ static void CalculateRowsAndColumns(void)
 
 	if( gpAR->ubMercRows + gpAR->ubCivRows > 9 )
 	{
-		if( gpAR->ubMercCols < 5 )
+		if( gpAR->ubMercs && gpAR->ubMercCols < 5 )
 		{ //bump it up
 			gpAR->ubMercCols++;
 			gpAR->ubMercRows = (gpAR->ubMercs+gpAR->ubMercCols-1)/gpAR->ubMercCols;
 		}
-		if( gpAR->ubCivCols < 5 )
-		{ //match it up with the mercs
-			gpAR->ubCivCols = gpAR->ubMercCols;
+		//match the militia up with the mercs, or widen them on their own if the
+		//militia are defending the sector without them
+		UINT8 const ubCols = gpAR->ubMercs ? gpAR->ubMercCols : 5;
+		if( gpAR->ubCivCols < ubCols )
+		{
+			gpAR->ubCivCols = ubCols;
 			gpAR->ubCivRows = (gpAR->ubCivs+gpAR->ubCivCols-1)/gpAR->ubCivCols;
 		}
 	}
 
-	if( gpAR->ubMercCols + gpAR->ubEnemyCols == 9 )
-		gpAR->rect.w = SCREEN_WIDTH;
-	else
-		gpAR->rect.w = 146 + 55 * (std::max(int(std::max(gpAR->ubMercCols, gpAR->ubCivCols)), 2) + std::max(int(gpAR->ubEnemyCols), 2));
+	/* The mercs and the militia share the columns left of the center, the enemies
+	 * get the ones to the right.  Nine columns are a hair wider than the 640
+	 * pixels this panel was laid out for, so the width is capped to the screen. */
+	INT32 const player_cols = std::max(int(std::max(gpAR->ubMercCols, gpAR->ubCivCols)), 2);
+	INT32 const enemy_cols  = std::max(int(gpAR->ubEnemyCols), 2);
+	gpAR->rect.w = std::min(146 + 55 * (player_cols + enemy_cols), int(SCREEN_WIDTH));
 
-	gpAR->sCenterStartX = STD_SCREEN_X + 323 - gpAR->rect.w / 2 + std::max(std::max(int(gpAR->ubMercCols), 2), std::max(int(gpAR->ubCivCols), 2)) * 55;
+	gpAR->sCenterStartX = STD_SCREEN_X + 323 - gpAR->rect.w / 2 + player_cols * 55;
 
 	//Anywhere from 48*3 to 48*10
 	gpAR->rect.h = 48 * std::max(3, std::max(gpAR->ubMercRows + gpAR->ubCivRows, int(gpAR->ubEnemyRows)));

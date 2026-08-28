@@ -348,6 +348,37 @@ UINT8 MilitiaInSectorOfRank(const SGPSector& sMap, UINT8 ubRank)
 }
 
 
+std::vector<SGPSector> GetMilitiaDefenceSectors(const SGPSector& sector)
+{
+	// the militia stationed in the sector are always the first to defend it
+	std::vector<SGPSector> sectors{ sector };
+
+	// underground sectors don't hold militia, and towns don't reach down there
+	if (sector.z != 0) return sectors;
+
+	UINT8 const ubTownId = GetTownIdForSector(sector);
+	if (ubTownId == BLANK_SECTOR) return sectors;
+
+	static SGPSector const offsets[] = { { 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 } };
+	for (SGPSector const& offset : offsets)
+	{
+		SGPSector const neighbour(static_cast<INT16>(sector.x + offset.x),
+						static_cast<INT16>(sector.y + offset.y));
+		if (!neighbour.IsValid()) continue;
+
+		// only sectors of the same town are close enough to help out
+		if (GetTownIdForSector(neighbour) != ubTownId) continue;
+
+		// militia with troubles of their own stay where they are
+		if (!SectorOursAndPeaceful(neighbour)) continue;
+
+		sectors.push_back(neighbour);
+	}
+
+	return sectors;
+}
+
+
 BOOLEAN SectorOursAndPeaceful(const SGPSector& sector)
 {
 	// if this sector is currently loaded

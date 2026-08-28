@@ -854,8 +854,8 @@ void RenderPreBattleInterface()
 		// Player
 		str = ST::format("{}", guiNumInvolved);
 		MPrintCentered(142, 36, 27, str);
-		// Militia
-		str = ST::format("{}", CountAllMilitiaInSector(gubPBSector));
+		// Militia -- including the ones the neighbouring town sectors send over
+		str = ST::format("{}", CountMilitiaDefendingSector(gubPBSector, (UINT8)guiNumInvolved));
 		MPrintCentered(227, 36, 27, str);
 		SetFontShadow(FONT_NEARBLACK);
 
