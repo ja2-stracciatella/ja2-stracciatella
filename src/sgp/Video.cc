@@ -330,6 +330,17 @@ void InvalidateScreen(void)
 }
 
 
+/* Clip an SDL Rect to the SDL_Surface. This was previously done automatically by SDL_BlitSurface */
+static SDL_Rect ClipToSurface(SDL_Rect const& rect, SDL_Surface const* const surface)
+{
+	SDL_Rect const bounds{ 0, 0, surface->w, surface->h };
+	SDL_Rect clipped;
+	// On an empty intersection SDL leaves a rect with a negative extent behind.
+	if (!SDL_GetRectIntersection(&rect, &bounds, &clipped)) return SDL_Rect{ 0, 0, 0, 0 };
+	return clipped;
+}
+
+
 //#define SCROLL_TEST
 
 static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
@@ -501,21 +512,29 @@ void RefreshScreen(void)
 	src.x = 0;
 	src.y = 0;
 	src.w = gusMouseCursorWidth;
-	src.h = gusMouseCursorHeight + gsMouseSizeYModifier;
-	SDL_Rect dst;
-	dst.x = cursorPos.iX - gsMouseCursorXOffset;
-	dst.y = cursorPos.iY - gsMouseCursorYOffset;
-	dst.w = src.w;
-	dst.h = src.h;
+	// gsMouseSizeYModifier can push the height past the cursor surface
+	src.h = std::min<int>(gusMouseCursorHeight + gsMouseSizeYModifier, MouseCursor->h);
+	// The cursor hot spot offset can move this off screen on any side.
+	SDL_Rect const dst{
+		cursorPos.iX - gsMouseCursorXOffset,
+		cursorPos.iY - gsMouseCursorYOffset,
+		src.w, src.h };
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
-	ScreenTextureUpdateRect += dst;
-	MouseBackground = dst;
 
-	uint8_t const * SrcPixels = static_cast<uint8_t *>(ScreenBuffer->pixels)
-		+ ScreenTextureUpdateRect.y * ScreenBuffer->pitch
-		+ ScreenTextureUpdateRect.x * SDL_GetPixelFormatDetails(ScreenBuffer->format)->bytes_per_pixel;
-	SDL_UpdateTexture(ScreenTexture, &ScreenTextureUpdateRect,
-	                  SrcPixels, ScreenBuffer->pitch);
+	// The part that actually ended up on screen
+	SDL_Rect const blitted{ ClipToSurface(dst, ScreenBuffer) };
+	ScreenTextureUpdateRect += blitted;
+	MouseBackground = blitted;
+
+	SDL_Rect const UpdateRect{ ClipToSurface(ScreenTextureUpdateRect, ScreenBuffer) };
+	if (UpdateRect.w > 0 && UpdateRect.h > 0)
+	{
+		uint8_t const * SrcPixels = static_cast<uint8_t *>(ScreenBuffer->pixels)
+			+ UpdateRect.y * ScreenBuffer->pitch
+			+ UpdateRect.x * SDL_GetPixelFormatDetails(ScreenBuffer->format)->bytes_per_pixel;
+		SDL_UpdateTexture(ScreenTexture, &UpdateRect,
+		                  SrcPixels, ScreenBuffer->pitch);
+	}
 
 	SDL_RenderClear(GameRenderer);
 
