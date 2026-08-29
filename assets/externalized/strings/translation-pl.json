@@ -1311,7 +1311,7 @@
     ],
     "pMapInventoryActionStrings": [
         "Zawartość sektora posortowana.",
-        "Zawartość sektora posortowana, połączono stosy: %d.",
+        "Zawartość sektora posortowana: rozładowano broni: %d, zdjęto przystawek: %d, połączono obiektów: %d, połączono stosów: %d.",
         "Najpierw wskaż przedmiot, z którego chcesz uzupełnić.",
         "Za pomocą %s nie można niczego uzupełnić.",
         "Nie ma tu czego uzupełnić za pomocą %s.",

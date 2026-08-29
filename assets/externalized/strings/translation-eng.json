@@ -1311,7 +1311,7 @@
     ],
     "pMapInventoryActionStrings": [
         "Sector inventory sorted.",
-        "Sector inventory sorted, %d stack(s) combined.",
+        "Sector inventory sorted: %d gun(s) unloaded, %d attachment(s) removed, %d object(s) merged, %d stack(s) combined.",
         "Point at the item to refill from first.",
         "%s cannot be used to refill anything.",
         "Nothing to refill with %s here.",

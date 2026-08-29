@@ -1311,7 +1311,7 @@
     ],
     "pMapInventoryActionStrings": [
         "Sektorinventar sortiert.",
-        "Sektorinventar sortiert, %d Stapel zusammengelegt.",
+        "Sektorinventar sortiert: %d Waffe(n) entladen, %d Anbauteil(e) abgenommen, %d Objekt(e) vereinigt, %d Stapel zusammengelegt.",
         "Zeigen Sie zuerst auf den Gegenstand, aus dem aufgefüllt werden soll.",
         "Mit %s kann nichts aufgefüllt werden.",
         "Hier gibt es nichts, was mit %s aufgefüllt werden könnte.",

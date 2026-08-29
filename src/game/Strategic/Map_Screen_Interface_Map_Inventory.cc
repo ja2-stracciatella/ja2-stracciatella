@@ -980,6 +980,173 @@ static BOOLEAN CanMergeSectorInventorySlots(const WORLDITEM& target, const WORLD
 }
 
 
+// Guns keep their loaded rounds inside the gun object, where nothing can stack them and no other
+// gun can be fed from them.  Take them out as a magazine of their own.
+static BOOLEAN UnloadSectorInventoryGun(WORLDITEM& wi, std::vector<WORLDITEM>& extracted)
+{
+	OBJECTTYPE& gun = wi.o;
+
+	// the ammo fields share their bytes with the status of the 2nd and 3rd object of a stack
+	if (gun.ubNumberOfObjects != 1) return FALSE;
+
+	if (!GCM->getItem(gun.usItem)->isGun()) return FALSE;
+	if (gun.ubGunShotsLeft == 0)            return FALSE;
+
+	const ItemModel* const ammo = GCM->getItem(gun.usGunAmmoItem, ItemSystem::nothrow);
+	if (ammo == NULL || !ammo->isAmmo()) return FALSE;
+
+	WORLDITEM mag           = wi;
+	mag.o                   = OBJECTTYPE{};
+	mag.o.usItem            = gun.usGunAmmoItem;
+	mag.o.ubNumberOfObjects = 1;
+	mag.o.ubShotsLeft[0]    = gun.ubGunShotsLeft;
+
+	gun.ubGunShotsLeft = 0;
+	gun.ubGunAmmoType  = 0;
+	// usGunAmmoItem stays, the gun uses it to know what it was loaded with
+
+	extracted.push_back(mag);
+	return TRUE;
+}
+
+
+// An attachment hides inside the item it is bolted onto, so it is neither counted nor sorted and
+// it keeps its host out of every stack.  Returns how many came off.
+static UINT32 DetachSectorInventoryAttachments(WORLDITEM& wi, std::vector<WORLDITEM>& extracted)
+{
+	UINT32 uiDetached = 0;
+
+	for (INT8 bPos = 0; bPos < MAX_ATTACHMENTS; ++bPos)
+	{
+		if (wi.o.usAttachItem[bPos] == NOTHING) continue;
+
+		WORLDITEM detached = wi;
+		detached.o         = OBJECTTYPE{};
+
+		// fails for the attachments that are welded on, those simply stay where they are
+		if (!RemoveAttachment(&wi.o, bPos, &detached.o)) continue;
+
+		extracted.push_back(detached);
+		++uiDetached;
+
+		--bPos; // removing one moves the remaining attachments down a slot
+	}
+
+	return uiDetached;
+}
+
+
+// Pull everything an item carries out of it.  Armed bombs and trapped items are left alone, taking
+// those apart is a job for a merc, not for a sorting pass.
+static void StripSectorInventoryItem(WORLDITEM& wi, std::vector<WORLDITEM>& extracted, UINT32& uiGunsUnloaded, UINT32& uiDetached)
+{
+	if (wi.o.ubNumberOfObjects == 0)     return;
+	if (wi.o.bTrap > 0)                  return;
+	if (wi.o.fFlags & OBJECT_ARMED_BOMB) return;
+
+	if (UnloadSectorInventoryGun(wi, extracted)) ++uiGunsUnloaded;
+	uiDetached += DetachSectorInventoryAttachments(wi, extracted);
+}
+
+
+// Only objects that hold nothing but points may have their points poured into another object.
+static BOOLEAN CanPourSectorInventoryPoints(const WORLDITEM& wi)
+{
+	if (wi.o.ubNumberOfObjects == 0) return FALSE;
+	if (wi.o.bTrap > 0)              return FALSE;
+	if (ItemHasAttachments(wi.o))    return FALSE;
+
+	return TRUE;
+}
+
+
+static BOOLEAN GetRefillablePointCapacity(const ItemModel* item, INT8& bMaxPoints);
+
+
+// Magazines, kits and medkits hold points - rounds resp. charges - that can be moved between
+// objects of the same item.  Pool them per item so that what is left is full objects and at most
+// one part-used one.  Returns how many objects were emptied out this way.
+static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
+{
+	UINT32 uiObjectsMerged = 0;
+
+	std::vector<bool>       fPooled(items.size(), false);
+	std::vector<WORLDITEM*> group;
+
+	for (size_t iFirst = 0; iFirst < items.size(); ++iFirst)
+	{
+		if (fPooled[iFirst])                             continue;
+		if (!CanPourSectorInventoryPoints(items[iFirst])) continue;
+
+		INT8 bMaxPoints;
+		if (!GetRefillablePointCapacity(GCM->getItem(items[iFirst].o.usItem), bMaxPoints)) continue;
+
+		group.clear();
+		group.push_back(&items[iFirst]);
+		fPooled[iFirst] = true;
+
+		for (size_t i = iFirst + 1; i < items.size(); ++i)
+		{
+			if (fPooled[i])                                             continue;
+			if (!CanPourSectorInventoryPoints(items[i]))                continue;
+			if (!CanMergeSectorInventorySlots(items[iFirst], items[i])) continue;
+
+			group.push_back(&items[i]);
+			fPooled[i] = true;
+		}
+
+		UINT32 uiPoints  = 0;
+		UINT32 uiObjects = 0;
+		for (const WORLDITEM* wi : group)
+		{
+			for (UINT8 ubObj = 0; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
+			{
+				INT8 const bPoints = wi->o.bStatus[ubObj];
+				if (bPoints > 0) uiPoints += std::min(bPoints, bMaxPoints);
+				++uiObjects;
+			}
+		}
+
+		if (uiPoints == 0) continue; // nothing but empties, leave them be
+
+		// The group is repacked even when that frees no object at all: two half used bags
+		// hold their points in two objects either way, but pouring one into the other still
+		// leaves a full one and a part-used one rather than two part-used ones.
+		UINT32 const uiNeeded = (uiPoints + bMaxPoints - 1) / bMaxPoints;
+
+		// fill up the objects at the front of the group and drop the ones left over
+		UINT32 uiLeft = uiPoints;
+		for (WORLDITEM* wi : group)
+		{
+			UINT8 ubKept = 0;
+			while (ubKept < wi->o.ubNumberOfObjects && uiLeft > 0)
+			{
+				INT8 const bHere = static_cast<INT8>(std::min<UINT32>(uiLeft, bMaxPoints));
+				wi->o.bStatus[ubKept++] = bHere;
+				uiLeft -= bHere;
+			}
+
+			if (ubKept == 0)
+			{
+				DeleteObj(&wi->o);
+			}
+			else
+			{
+				for (UINT8 ubObj = ubKept; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
+				{
+					wi->o.bStatus[ubObj] = 0;
+				}
+				wi->o.ubNumberOfObjects = ubKept;
+			}
+		}
+
+		uiObjectsMerged += uiObjects - uiNeeded;
+	}
+
+	return uiObjectsMerged;
+}
+
+
 void StackAndSortMapInventoryPool(void)
 {
 	if (!fShowMapInventoryPool) return;
@@ -1000,6 +1167,27 @@ void StackAndSortMapInventoryPool(void)
 	{
 		if (wi.o.ubNumberOfObjects > 0) items.push_back(wi);
 	}
+
+	UINT32 uiGunsUnloaded = 0;
+	UINT32 uiDetached     = 0;
+
+	// Take every item apart first.  What comes out is collected in a second list so that the list
+	// being walked cannot move under us; that list is then walked in turn, which also takes apart
+	// an attachment that carried an attachment of its own.
+	std::vector<WORLDITEM> pending;
+	for (WORLDITEM& wi : items) StripSectorInventoryItem(wi, pending, uiGunsUnloaded, uiDetached);
+
+	while (!pending.empty())
+	{
+		std::vector<WORLDITEM> next;
+		for (WORLDITEM& wi : pending) StripSectorInventoryItem(wi, next, uiGunsUnloaded, uiDetached);
+
+		items.insert(items.end(), pending.begin(), pending.end());
+		pending.swap(next);
+	}
+
+	// pour part-used magazines and kits together before packing what is left into stacks
+	UINT32 const uiObjectsMerged = MergeRefillableSectorInventory(items);
 
 	UINT32 uiSlotsMerged = 0;
 
@@ -1058,8 +1246,9 @@ void StackAndSortMapInventoryPool(void)
 	fMapPanelDirty        = TRUE;
 	fMapScreenBottomDirty = TRUE;
 
-	MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, uiSlotsMerged > 0 ?
-		st_format_printf(pMapInventoryActionStrings[1], uiSlotsMerged) :
+	MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+		uiGunsUnloaded > 0 || uiDetached > 0 || uiObjectsMerged > 0 || uiSlotsMerged > 0 ?
+		st_format_printf(pMapInventoryActionStrings[1], uiGunsUnloaded, uiDetached, uiObjectsMerged, uiSlotsMerged) :
 		pMapInventoryActionStrings[0]);
 }
 

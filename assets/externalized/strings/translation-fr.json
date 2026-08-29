@@ -1311,7 +1311,7 @@
     ],
     "pMapInventoryActionStrings": [
         "Inventaire du secteur trié.",
-        "Inventaire du secteur trié, %d pile(s) regroupée(s).",
+        "Inventaire du secteur trié : %d arme(s) déchargée(s), %d accessoire(s) retiré(s), %d objet(s) fusionné(s), %d pile(s) regroupée(s).",
         "Pointez d'abord l'objet servant à recharger.",
         "%s ne permet de recharger aucun objet.",
         "Rien à recharger avec %s ici.",

@@ -1311,7 +1311,7 @@
     ],
     "pMapInventoryActionStrings": [
         "Sectorinventaris gesorteerd.",
-        "Sectorinventaris gesorteerd, %d stapel(s) samengevoegd.",
+        "Sectorinventaris gesorteerd: %d wapen(s) ontladen, %d aanbouwdeel/-delen verwijderd, %d object(en) samengevoegd, %d stapel(s) samengevoegd.",
         "Wijs eerst het item aan om mee bij te vullen.",
         "%s kan niets bijvullen.",
         "Hier is niets bij te vullen met %s.",

@@ -1311,7 +1311,7 @@
     ],
     "pMapInventoryActionStrings": [
         "Inventario del settore ordinato.",
-        "Inventario del settore ordinato, %d pila/e unita/e.",
+        "Inventario del settore ordinato: %d arma/i scaricata/e, %d accessorio/i rimosso/i, %d oggetto/i unito/i, %d pila/e unita/e.",
         "Puntate prima l'oggetto da cui attingere.",
         "%s non può essere usato per ricaricare nulla.",
         "Non c'è nulla da ricaricare con %s qui.",
