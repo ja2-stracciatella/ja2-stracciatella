@@ -1,5 +1,5 @@
 use crate::fs::resolve_existing_components;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[cfg(not(windows))]
 const STRACCIATELLA_HOME_DIR_NAME: &str = ".ja2";
@@ -10,7 +10,13 @@ const STRACCIATELLA_HOME_DIR_NAME: &str = "JA2";
 /// Find ja2 stracciatella configuration directory inside the user's home directory or the android app dir
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     #[cfg(not(target_os = "android"))]
-    let base = dirs::home_dir();
+	let base: Option<PathBuf>;
+	if Path::new(&format!("{}/{}", std::env::var("HOME").unwrap(), STRACCIATELLA_HOME_DIR_NAME)).is_dir() {
+		base = dirs::home_dir();
+	} else {
+		base = dirs::config_dir();
+	};
+
     #[cfg(target_os = "android")]
     let base = match crate::android::get_android_app_dir() {
         Ok(v) => Some(v),
@@ -21,7 +27,7 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     };
 
     match base {
-        Some(mut path) => {
+	Some(mut path) => {
             path.push(STRACCIATELLA_HOME_DIR_NAME);
             Ok(resolve_existing_components(&path, None, true))
         }
@@ -71,13 +77,14 @@ mod tests {
     #[cfg(all(not(windows), not(target_os = "android")))]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
         use std::path::Path;
-
         use crate::config::find_stracciatella_home;
 
-        let stracciatella_home = find_stracciatella_home().unwrap();
-        let expected = format!("{}/.ja2", std::env::var("HOME").unwrap());
-
-        assert_eq!(stracciatella_home, Path::new(&expected));
+        let stracciatella_home = String::from(find_stracciatella_home().unwrap().to_str().unwrap());
+	let mut expected_vec: Vec<String> = Vec::new();
+	expected_vec.push(format!("{}/.ja2", std::env::var("HOME").unwrap()));
+	expected_vec.push(format!("{}/.ja2", std::env::var("XDG_CONFIG_HOME").unwrap()));
+	assert!(expected_vec.contains(&stracciatella_home));
+	
     }
 
     #[test]
