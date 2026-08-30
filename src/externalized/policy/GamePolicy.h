@@ -19,11 +19,6 @@ enum HotkeyModifier
 
 #define gamepolicy(element) (GCM->getGamePolicy()->element)
 
-/** Upper limit for imp_max_characters.
- * Player generated characters live in a fixed set of merc profile slots, three
- * for each gender, and there is nowhere to put a character beyond those. */
-#define IMP_MAX_CHARACTERS_LIMIT 6
-
 class GamePolicy
 {
 public:

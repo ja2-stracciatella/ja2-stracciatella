@@ -29,10 +29,6 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
-static_assert(IMP_MAX_CHARACTERS_LIMIT == NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS,
-	"the policy ceiling must be the number of player generated profile slots");
-
-
 UINT8 GetIMPVoiceSlotFlag(INT32 const iVoiceId)
 {
 	if (iVoiceId < 0 || iVoiceId >= NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS) return 0;
