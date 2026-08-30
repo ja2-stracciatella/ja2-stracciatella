@@ -35,6 +35,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 #include "ShippingDestinationModel.h"
 #include "VehicleModel.h"
 
@@ -851,6 +852,8 @@ void NewLoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 
 bool VehicleHasStash(VEHICLETYPE const& v)
 {
+	if (!gamepolicy(vehicle_cargo)) return false;
+
 	return v.ubVehicleType == HUMMER || v.ubVehicleType == ICE_CREAM_TRUCK;
 }
 
