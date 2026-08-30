@@ -76,6 +76,7 @@
 #include "Timer_Control.h"
 #include "Town_Militia.h"
 #include "TownModel.h"
+#include "Vehicles.h"
 #include "Video.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
@@ -3453,17 +3454,39 @@ static void MAPInvMoveCamoCallback(MOUSE_REGION* pRegion, UINT32 iReason);
 void CreateDestroyMapInvButton()
 {
 	static BOOLEAN fOldShowInventoryFlag=FALSE;
+	static BOOLEAN fOldVehiclePanel=FALSE;
+
+	/* A vehicle's cargo grid and a merc's paper doll are two different panels in the
+	 * same place, so switching the selection from one to the other has to swap the
+	 * mouse regions over as well as redraw. */
+	BOOLEAN const fVehiclePanel = fShowInventoryFlag && GetStashVehicleForSoldier(GetSelectedInfoChar()) != NULL;
+
+	if (fShowInventoryFlag && fOldShowInventoryFlag && fVehiclePanel != fOldVehiclePanel)
+	{
+		// tear the old panel down and let the branch below build the other one
+		if (fOldVehiclePanel) CreateDestroyVehicleStashSlots(FALSE);
+		else                  ShutdownInvSlotInterface();
+		fOldShowInventoryFlag = FALSE;
+	}
 
 	if( fShowInventoryFlag && !fOldShowInventoryFlag )
 	{
 		// create inventory button
 		fOldShowInventoryFlag=TRUE;
+		fOldVehiclePanel=fVehiclePanel;
 		// disable allmouse regions in this space
 		fTeamPanelDirty=TRUE;
 
-		INV_REGION_DESC gSCamoXY = {INV_BODY_X, INV_BODY_Y};
+		if (fVehiclePanel)
+		{
+			CreateDestroyVehicleStashSlots(TRUE);
+		}
+		else
+		{
+			INV_REGION_DESC gSCamoXY = {INV_BODY_X, INV_BODY_Y};
 
-		InitInvSlotInterface(g_ui.m_invSlotPositionMap, &gSCamoXY, MAPInvMoveCallback, MouseCallbackPrimarySecondary(MAPInvClickCallbackPrimary, MAPInvClickCallbackSecondary, MAPInvClickCallbackCancelMessage), MAPInvMoveCamoCallback, MAPInvClickCamoCallback);
+			InitInvSlotInterface(g_ui.m_invSlotPositionMap, &gSCamoXY, MAPInvMoveCallback, MouseCallbackPrimarySecondary(MAPInvClickCallbackPrimary, MAPInvClickCallbackSecondary, MAPInvClickCallbackCancelMessage), MAPInvMoveCamoCallback, MAPInvClickCamoCallback);
+		}
 		gMPanelRegion.Enable();
 
 		// switch hand region help text to "Exit Inventory"
@@ -3475,8 +3498,10 @@ void CreateDestroyMapInvButton()
 	else if( !fShowInventoryFlag && fOldShowInventoryFlag )
 	{
 		// destroy inventory button
-		ShutdownInvSlotInterface( );
+		if (fOldVehiclePanel) CreateDestroyVehicleStashSlots(FALSE);
+		else                  ShutdownInvSlotInterface( );
 		fOldShowInventoryFlag=FALSE;
+		fOldVehiclePanel=FALSE;
 		fTeamPanelDirty=TRUE;
 		gMPanelRegion.Disable();
 
@@ -4983,6 +5008,10 @@ static void RenderTeamRegionBackground()
 		DisplayCharacterList();
 		DisplayIconsForMercsAsleep();
 	}
+	else if (GetStashVehicleForSoldier(GetSelectedInfoChar()) != NULL)
+	{
+		BltVehicleStashPanel();
+	}
 	else
 	{
 		BltCharInvPanel();
@@ -5899,26 +5928,50 @@ static void UpdateStatusOfMapSortButtons(void)
 static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, UINT32 reason);
 
 
+/* The trash can and the key ring are painted into mapinv.sti, so they only exist as
+ * pictures while the paper doll is on screen.  The vehicle cargo panel does not blit
+ * that background, so creating their regions there would leave invisible click
+ * targets sitting on top of the cargo slots.  Follows the selection so that
+ * switching between a merc and a vehicle swaps them in and out. */
+static void CreateDestroyMercInventoryFurniture(BOOLEAN const fWanted)
+{
+	static BOOLEAN fCreated = FALSE;
+
+	if (fWanted && !fCreated)
+	{
+		fCreated = TRUE;
+
+		// trash can
+		MSYS_DefineRegion( &gTrashCanRegion, 	TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , MSYS_PRIORITY_HIGHEST - 4 ,
+					MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
+		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
+
+		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
+	}
+	else if (!fWanted && fCreated)
+	{
+		fCreated = FALSE;
+		MSYS_RemoveRegion( &gTrashCanRegion );
+		ShutdownKeyRingInterface( );
+	}
+}
+
+
 static void CreateDestroyTrashCanRegion(void)
 {
 	static BOOLEAN fCreated = FALSE;
+
+	CreateDestroyMercInventoryFurniture(fShowInventoryFlag &&
+		GetStashVehicleForSoldier(GetSelectedInfoChar()) == NULL);
 
 	if (fShowInventoryFlag && !fCreated)
 	{
 
 		fCreated = TRUE;
 
-		// trash can
-		MSYS_DefineRegion( &gTrashCanRegion, 	TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , MSYS_PRIORITY_HIGHEST - 4 ,
-					MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
-
 		// done inventory button define
 		giMapInvDoneButton = QuickCreateButtonImg(INTERFACEDIR "/done_button2.sti", 0, 1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
 		giMapInvDoneButton->SetFastHelpText(pMiscMapScreenMouseRegionHelpText[2]);
-
-		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
-
-		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
 
 			// reset the compatable item array at this point
 		ResetCompatibleItemArray( );
@@ -5926,14 +5979,10 @@ static void CreateDestroyTrashCanRegion(void)
 	}
 	else if (!fShowInventoryFlag && fCreated)
 	{
-		// trash can region
 		fCreated = FALSE;
-		MSYS_RemoveRegion( &gTrashCanRegion );
 
 		// map inv done button
 		RemoveButton( giMapInvDoneButton );
-
-		ShutdownKeyRingInterface( );
 
 		if (fShowDescriptionFlag)
 		{
@@ -6649,8 +6698,10 @@ static bool CanToggleSelectedCharInventory()
 	// nobody selected?
 	if (pSoldier == NULL) return FALSE;
 
-	// does the selected guy have inventory and can we get at it?
-	if (!MapCharacterHasAccessibleInventory(*pSoldier)) return FALSE;
+	// does the selected guy have inventory and can we get at it?  A vehicle has no
+	// pockets but may have cargo, which opens in the same panel slot.
+	if (!MapCharacterHasAccessibleInventory(*pSoldier) &&
+		GetStashVehicleForSoldier(pSoldier) == NULL) return FALSE;
 
 	// if not in inventory, and holding an item from sector inventory
 	if( !fShowInventoryFlag &&
@@ -7007,7 +7058,8 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 		if ( fShowInventoryFlag )
 		{
 			// and we're changing to nobody or a guy whose inventory can't be accessed
-			if (!s || !MapCharacterHasAccessibleInventory(*s))
+			if (!s || (!MapCharacterHasAccessibleInventory(*s) &&
+					GetStashVehicleForSoldier(s) == NULL))
 			{
 				// then get out of inventory mode
 				fShowInventoryFlag = FALSE;

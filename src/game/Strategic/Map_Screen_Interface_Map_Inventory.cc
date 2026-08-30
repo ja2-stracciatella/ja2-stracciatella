@@ -12,6 +12,7 @@
 #include "Object_Cache.h"
 #include "Timer_Control.h"
 #include "VObject.h"
+#include "VObject_Blitters.h"
 #include "SysUtil.h"
 #include "Map_Screen_Interface_Border.h"
 #include "Map_Screen_Interface.h"
@@ -24,6 +25,7 @@
 #include "StrategicMap.h"
 #include "World_Items.h"
 #include "Tactical_Save.h"
+#include "Vehicles.h"
 #include "Soldier_Control.h"
 #include "English.h"
 #include "MapScreen.h"
@@ -1360,4 +1362,267 @@ static BOOLEAN CanPlayerUseSectorInventory(void)
 		sSelMap.x           != sector.x ||
 		sSelMap.y           != sector.y ||
 		iCurrentMapSectorZ != sector.z;
+}
+
+
+/* ------------------------------------------------------------------------- *
+ * Vehicle cargo panel
+ *
+ * A vehicle carries its cargo in VEHICLETYPE::stash rather than in the inventory
+ * of the SOLDIERTYPE that represents it, so none of the merc pocket rules apply:
+ * every cargo slot behaves like a big pocket.  The panel takes over the team
+ * panel while a vehicle is the selected character, and is deliberately plain -
+ * a truck has no head, hands, armour or camouflage to draw.
+ * ------------------------------------------------------------------------- */
+
+/* The cargo grid is drawn with the sector inventory's own slot artwork.  That
+ * artwork is baked into the one big sector_inventory.sti background rather than
+ * being a sub-image we could blit on its own, so the background is blitted with a
+ * clipping rectangle over the target grid and an offset that lines its slot lattice
+ * up with ours.  That fixes the cell size at the sector inventory's 72x32, which is
+ * what makes the grid three columns of six rather than two columns of nine. */
+#define VEHICLE_STASH_COLS 3
+#define VEHICLE_STASH_ROWS (VEHICLE_STASH_SLOTS / VEHICLE_STASH_COLS)
+
+// Where the slot lattice sits inside sector_inventory.sti itself.
+#define VEHICLE_STASH_SRC_X (g_sector_inv_slot_box.x - g_sector_inv_box.x)
+#define VEHICLE_STASH_SRC_Y (g_sector_inv_slot_box.y - g_sector_inv_box.y)
+
+// panel backdrop, behind and around the borrowed slot artwork
+#define VEHICLE_STASH_PANEL_COLOR FROMRGB( 24,  22,  18)
+
+// The team panel the grid takes over, and the grid centred inside it.  The cells
+// themselves keep the sector inventory's geometry so the artwork lines up.
+static const SGPBox g_vehicle_stash_box       = {   0, 107, 261, 252 };
+static const SGPBox g_vehicle_stash_title_box = {   5, 108, 251,  13 };
+// The grid stops short of INV_BTN_Y, where the done button sits.
+static const SGPBox g_vehicle_stash_grid_box  = {  22, 122, VEHICLE_STASH_COLS * 72, VEHICLE_STASH_ROWS * 32 };
+
+static MOUSE_REGION VehicleStashSlots[VEHICLE_STASH_SLOTS];
+static MOUSE_REGION VehicleStashMask;
+
+
+// the vehicle the cargo panel is currently showing, if any
+static VEHICLETYPE* GetPanelVehicle(void)
+{
+	return GetStashVehicleForSoldier(GetSelectedInfoChar());
+}
+
+
+// Cargo can only be handled while the vehicle is parked in the sector on display,
+// for the same reason the sector inventory insists the merc be standing in it.
+static bool IsVehicleParkedInSelectedSector(SOLDIERTYPE const& vs)
+{
+	return
+		vs.sSector.x == sSelMap.x &&
+		vs.sSector.y == sSelMap.y &&
+		vs.sSector.z == iCurrentMapSectorZ &&
+		!vs.fBetweenSectors;
+}
+
+
+static void VehicleStashSlotOrigin(INT32 const slot, INT32* const px, INT32* const py)
+{
+	const SGPBox* const gb = &g_vehicle_stash_grid_box;
+	const SGPBox* const sb = &g_sector_inv_slot_box;
+	*px = STD_SCREEN_X + gb->x + sb->w * (slot / VEHICLE_STASH_ROWS);
+	*py = STD_SCREEN_Y + gb->y + sb->h * (slot % VEHICLE_STASH_ROWS);
+}
+
+
+// Borrow the empty slot lattice out of the sector inventory background.
+static void BltVehicleStashSlotFrames(void)
+{
+	const SGPBox* const gb = &g_vehicle_stash_grid_box;
+	const INT32 x = STD_SCREEN_X + gb->x;
+	const INT32 y = STD_SCREEN_Y + gb->y;
+
+	SGPRect clip;
+	clip.set(x, y, x + gb->w, y + gb->h);
+	SGPRect const old_clip = SetClippingRect(clip);
+
+	// offset the background so its lattice origin lands on ours
+	BltVideoObject(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0,
+		x - VEHICLE_STASH_SRC_X, y - VEHICLE_STASH_SRC_Y);
+
+	SetClippingRect(old_clip);
+}
+
+
+static void RenderVehicleStashSlot(VEHICLETYPE const& v, INT32 const slot, bool const reachable)
+{
+	OBJECTTYPE const& o = v.stash[slot];
+	if (o.ubNumberOfObjects == 0) return;
+
+	INT32 dx;
+	INT32 dy;
+	VehicleStashSlotOrigin(slot, &dx, &dy);
+
+	// the item, positioned in the cell exactly as the sector inventory positions its own
+	const SGPBox* const ib = &g_sector_inv_item_box;
+	INVRenderItem(guiSAVEBUFFER, NULL, o, dx + ib->x, dy + ib->y, ib->w, ib->h, DIRTYLEVEL2, 0, SGP_TRANSPARENT);
+
+	// condition bar down the left edge
+	const UINT16 col0 = Get16BPPColor(DESC_STATUS_BAR);
+	const UINT16 col1 = Get16BPPColor(DESC_STATUS_BAR_SHADOW);
+	const SGPBox* const bb = &g_sector_inv_bar_box;
+	DrawItemUIBarEx(o, 0, dx + bb->x, dy + bb->y + bb->h - 1, bb->h, col0, col1, guiSAVEBUFFER);
+
+	// out of reach - the vehicle is parked somewhere else
+	if (!reachable) DrawHatchOnInventory(guiSAVEBUFFER, dx + ib->x, dy + ib->y, ib->w, ib->h);
+
+	// the name, on the label strip the borrowed artwork already provides
+	const SGPBox* const nb = &g_sector_inv_name_box;
+	auto const sString = ReduceStringLength(GCM->getItem(o.usItem)->getShortName(), nb->w, MAP_IVEN_FONT);
+	SetFontAttributes(MAP_IVEN_FONT, FONT_WHITE);
+	MPrintCenteredInBox(dx, dy, sString, *nb);
+}
+
+
+static void UpdateHelpTextForVehicleStashSlots(VEHICLETYPE const& v)
+{
+	for (INT32 i = 0; i != VEHICLE_STASH_SLOTS; ++i)
+	{
+		OBJECTTYPE const& o = v.stash[i];
+		ST::string help;
+		if (o.ubNumberOfObjects > 0) help = GetHelpTextForItem(o);
+		VehicleStashSlots[i].SetFastHelpText(help);
+	}
+}
+
+
+void BltVehicleStashPanel(void)
+{
+	VEHICLETYPE const* const v = GetPanelVehicle();
+	if (v == NULL) return;
+
+	const SGPBox* const box = &g_vehicle_stash_box;
+	const INT32 x = STD_SCREEN_X + box->x;
+	const INT32 y = STD_SCREEN_Y + box->y;
+	ColorFillVideoSurfaceArea(guiSAVEBUFFER, x, y, x + box->w, y + box->h, Get16BPPColor(VEHICLE_STASH_PANEL_COLOR));
+
+	BltVehicleStashSlotFrames();
+
+	SetFontDestBuffer(guiSAVEBUFFER);
+
+	// the vehicle's name across the top, where the team list header would be
+	SetFontAttributes(BLOCKFONT2, FONT_WHITE);
+	MPrintCenteredInBox(STD_SCREEN_X, STD_SCREEN_Y, pVehicleStrings[v->ubVehicleType], g_vehicle_stash_title_box);
+
+	SOLDIERTYPE const* const vs = GetSelectedInfoChar();
+	const bool reachable = vs != NULL && IsVehicleParkedInSelectedSector(*vs) && CanPlayerUseSectorInventory();
+
+	for (INT32 i = 0; i != VEHICLE_STASH_SLOTS; ++i)
+	{
+		RenderVehicleStashSlot(*v, i, reachable);
+	}
+
+	SetFontDestBuffer(FRAME_BUFFER);
+
+	UpdateHelpTextForVehicleStashSlots(*v);
+}
+
+
+static void VehicleStashSlotsMove(MOUSE_REGION* pRegion, UINT32 iReason);
+static void VehicleStashSlotsPrimary(MOUSE_REGION* pRegion, UINT32 iReason);
+static void VehicleStashSlotsSecondary(MOUSE_REGION* pRegion, UINT32 iReason);
+
+
+void CreateDestroyVehicleStashSlots(BOOLEAN const fCreate)
+{
+	static BOOLEAN fCreated = FALSE;
+
+	if (fCreate && !fCreated)
+	{
+		fCreated = TRUE;
+
+		// mask the team panel underneath so its rows cannot be clicked through
+		const SGPBox* const box = &g_vehicle_stash_box;
+		const UINT16 mx = STD_SCREEN_X + box->x;
+		const UINT16 my = STD_SCREEN_Y + box->y;
+		MSYS_DefineRegion(&VehicleStashMask, mx, my, mx + box->w - 1, my + box->h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+
+		const SGPBox* const rb = &g_sector_inv_region_box;
+		for (INT32 i = 0; i != VEHICLE_STASH_SLOTS; ++i)
+		{
+			INT32 dx;
+			INT32 dy;
+			VehicleStashSlotOrigin(i, &dx, &dy);
+
+			MOUSE_REGION* const r = &VehicleStashSlots[i];
+			MSYS_DefineRegion(r, dx + rb->x, dy + rb->y, dx + rb->x + rb->w - 1, dy + rb->y + rb->h - 1,
+				MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, VehicleStashSlotsMove,
+				MouseCallbackPrimarySecondary(VehicleStashSlotsPrimary, VehicleStashSlotsSecondary));
+			MSYS_SetRegionUserData(r, 0, i);
+		}
+	}
+	else if (!fCreate && fCreated)
+	{
+		fCreated = FALSE;
+		FOR_EACH(MOUSE_REGION, i, VehicleStashSlots) MSYS_RemoveRegion(&*i);
+		MSYS_RemoveRegion(&VehicleStashMask);
+	}
+}
+
+
+static void VehicleStashSlotsMove(MOUSE_REGION* const pRegion, UINT32 const iReason)
+{
+	if (iReason & (MSYS_CALLBACK_REASON_GAIN_MOUSE | MSYS_CALLBACK_REASON_LOST_MOUSE))
+	{
+		fTeamPanelDirty = TRUE;
+	}
+}
+
+
+static void VehicleStashSlotsPrimary(MOUSE_REGION* const pRegion, UINT32 const iReason)
+{
+	VEHICLETYPE* const v = GetPanelVehicle();
+	if (v == NULL) return;
+
+	OBJECTTYPE& slot = v->stash[MSYS_GetRegionUserData(pRegion, 0)];
+
+	// nothing in hand and nothing in the slot
+	if (gpItemPointer == NULL && slot.usItem == NOTHING) return;
+
+	// If in battle inform player they will have to do this in tactical
+	if (!CanPlayerUseSectorInventory())
+	{
+		ST::string const& msg = gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[3];
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
+
+	SOLDIERTYPE const* const vs = GetSelectedInfoChar();
+	if (vs == NULL || !IsVehicleParkedInSelectedSector(*vs))
+	{
+		ST::string const& msg = gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4];
+		ST::string const buf = st_format_printf(msg, vs != NULL ? vs->name : ST::string{});
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, buf, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
+
+	if (gpItemPointer == NULL)
+	{
+		// cargo has no gridno of its own until it is put down somewhere
+		sObjectSourceGridNo = NOWHERE;
+		BeginInventoryPoolPtr(&slot);
+	}
+	else if (PlaceObjectInInventoryStash(&slot, gpItemPointer))
+	{
+		if (gpItemPointer->ubNumberOfObjects == 0) MAPEndItemPointer();
+		else                                      SetMapCursorItem();
+	}
+
+	fTeamPanelDirty = TRUE;
+	fMapPanelDirty  = TRUE;
+}
+
+
+static void VehicleStashSlotsSecondary(MOUSE_REGION* const pRegion, UINT32 const iReason)
+{
+	// right click leaves the cargo panel, as it leaves a merc's inventory
+	if (gpItemPointer != NULL) return;
+
+	fShowInventoryFlag = FALSE;
+	fTeamPanelDirty    = TRUE;
 }

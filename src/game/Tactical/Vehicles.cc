@@ -19,6 +19,7 @@
 #include "Random.h"
 #include "Text.h"
 #include "Explosion_Control.h"
+#include "Handle_Items.h"
 #include "StrategicMap.h"
 #include "Campaign_Types.h"
 #include "Sys_Globals.h"
@@ -674,6 +675,10 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 		CheckForAndHandleSoldierDeath(&vs, &fMadeCorpse);
 
 		KillAllInVehicle(v);
+
+		// The cargo survives the mercs - tip it out where the wreck stands rather
+		// than deleting it silently.
+		SpillVehicleStash(v, sGridNo, vs.bLevel);
 	}
 }
 
@@ -841,6 +846,42 @@ void NewLoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 {
 	//Load in the Squad movement id's
 	hFile->read(gubVehicleMovementGroups);
+}
+
+
+bool VehicleHasStash(VEHICLETYPE const& v)
+{
+	return v.ubVehicleType == HUMMER || v.ubVehicleType == ICE_CREAM_TRUCK;
+}
+
+
+VEHICLETYPE* GetStashVehicleForSoldier(SOLDIERTYPE const* const s)
+{
+	if (s == NULL)                             return NULL;
+	if (!(s->uiStatusFlags & SOLDIER_VEHICLE)) return NULL;
+
+	/* This is asked once per frame from the mapscreen render, so check the id here
+	 * rather than letting GetVehicle() throw for a vehicle that has already been
+	 * cleaned out of the list. */
+	INT32 const id = s->bVehicleID;
+	if (id < 0 || static_cast<size_t>(id) >= pVehicleList.size()) return NULL;
+
+	VEHICLETYPE& v = pVehicleList[id];
+	if (!v.fValid || v.fDestroyed) return NULL;
+
+	return VehicleHasStash(v) ? &v : NULL;
+}
+
+
+void SpillVehicleStash(VEHICLETYPE& v, INT16 const sGridNo, UINT8 const ubLevel)
+{
+	for (OBJECTTYPE& o : v.stash)
+	{
+		if (o.ubNumberOfObjects == 0) continue;
+
+		AddItemToPool(sGridNo, &o, VISIBLE, ubLevel, 0, 0);
+		o = OBJECTTYPE{};
+	}
 }
 
 

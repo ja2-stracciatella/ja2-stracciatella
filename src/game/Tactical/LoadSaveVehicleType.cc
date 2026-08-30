@@ -3,6 +3,7 @@
 #include "Isometric_Utils.h"
 #include "LoadSaveVehicleType.h"
 #include "LoadSaveData.h"
+#include "LoadSaveObjectType.h"
 #include "SGPFile.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
@@ -73,6 +74,17 @@ void ExtractVehicleTypeFromFile(HWFILE const file, VEHICLETYPE* const v, UINT32 
 	EXTR_BOOL(d, v->fValid)
 	EXTR_SKIP(d, 2)
 	Assert(d.getConsumed() == lengthof(data));
+
+	// Cargo was added in save version 104; older saves simply have none.
+	if (savegame_version >= 104)
+	{
+		BYTE stash_data[VEHICLE_STASH_SLOTS * SIZE_OF_SAVED_OBJECTTYPE];
+		file->read(stash_data, sizeof(stash_data));
+
+		DataReader sd{stash_data};
+		for (OBJECTTYPE& o : v->stash) ExtractObject(sd, &o);
+		Assert(sd.getConsumed() == lengthof(stash_data));
+	}
 }
 
 
@@ -107,4 +119,12 @@ void InjectVehicleTypeIntoFile(HWFILE const file, VEHICLETYPE const* const v)
 	Assert(d.getConsumed() == lengthof(data));
 
 	file->write(data, sizeof(data));
+
+	BYTE stash_data[VEHICLE_STASH_SLOTS * SIZE_OF_SAVED_OBJECTTYPE];
+
+	DataWriter sd{stash_data};
+	for (OBJECTTYPE const& o : v->stash) InjectObject(sd, &o);
+	Assert(sd.getConsumed() == lengthof(stash_data));
+
+	file->write(stash_data, sizeof(stash_data));
 }
