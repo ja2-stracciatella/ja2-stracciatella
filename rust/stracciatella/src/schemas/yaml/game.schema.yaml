@@ -371,7 +371,7 @@ properties:
         description: |
           Number of I.M.P. characters that can be created over a campaign.
 
-          Note: each character keeps one of the player generated merc profile slots, of which there are three per gender, so at most three men and three women can be made. Values outside 1 to 6 are clamped.
+          Note: each character keeps one of the merc profiles marked as an I.M.P. slot in mercs-profile-info.json for the rest of the campaign, so the ceiling is how many of those the data declares. Voices and portraits may be reused freely.
 
           Vanilla setting: `1`
       pick_skills_directly:

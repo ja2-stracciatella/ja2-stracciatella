@@ -1898,14 +1898,15 @@ static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 	if (pMessageRecordList != NULL) return;
 	// list doesn't exist, reload
 
-	// The mail carries the voice id of the character it reports on, so with several
+	// The mail carries the profile of the character it reports on, so with several
 	// I.M.P.s in the campaign each report still describes its own. Mails written
-	// before that was recorded carry a zero, which is only a voice id if an I.M.P.
-	// actually holds that slot; otherwise fall back to the character last profiled.
-	INT32 const iMailVoiceId = pMail->iFirstData;
-	bool const fMailNamesCharacter = GetIMPVoiceSlotFlag(iMailVoiceId) != 0 && IsIMPVoiceTaken(iMailVoiceId);
-	INT32 const iVoiceId = fMailNamesCharacter ? iMailVoiceId : LaptopSaveInfo.iVoiceId;
-	MERCPROFILESTRUCT const& imp = GetProfile(PLAYER_GENERATED_CHARACTER_ID + iVoiceId);
+	// before that was recorded carry a zero, which is not an I.M.P. profile;
+	// those fall back to the character profiled last.
+	ProfileID const mailProfile = static_cast<ProfileID>(pMail->iFirstData);
+	bool const fMailNamesCharacter = mailProfile < NUM_PROFILES &&
+		gMercProfiles[mailProfile].ubIMPSlotState == IMP_SLOT_TAKEN;
+	MERCPROFILESTRUCT const& imp = fMailNamesCharacter ?
+		GetProfile(mailProfile) : GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 	INT32 const iPortrait = imp.ubFaceIndex - 200;
 
 	// Use initial stats (current minus any gains since creation) so the e-mail

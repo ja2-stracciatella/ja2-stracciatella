@@ -241,6 +241,9 @@ struct MERCPROFILESTRUCT
 	 * character uses. Independent of the character's own ID, like ubFaceIndex,
 	 * and defaults to it on profile load. */
 	UINT8 ubVoiceId{};
+	/* I.M.P.: whether a player generated character is being built in this
+	 * profile, or has been. Only ever set on profiles of type IMP. */
+	UINT8 ubIMPSlotState{};
 
 	ST::string PANTS;
 	ST::string VEST;
@@ -391,6 +394,15 @@ static inline bool HasSkillTrait(MERCPROFILESTRUCT const& p, SkillTrait const sk
 {
 	return p.bSkillTrait == skill || p.bSkillTrait2 == skill;
 }
+
+
+// The following values are used with the 'ubIMPSlotState' variable
+
+// No player generated character lives here. The character being built, if any,
+// is always the first free slot, so being part way through needs no state.
+#define IMP_SLOT_FREE						0
+// A finished character holds this profile for the rest of the campaign
+#define IMP_SLOT_TAKEN						1
 
 
 #define TIME_BETWEEN_HATED_COMPLAINTS				24

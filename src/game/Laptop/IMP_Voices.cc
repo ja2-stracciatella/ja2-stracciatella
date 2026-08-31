@@ -45,23 +45,8 @@ static void CreateIMPVoicesButtons(void);
 static void PlayVoice();
 
 
-// the profile slot a voice of the gender being profiled would claim
-static INT32 VoiceSlot(INT32 const iVoice)
-{
-	return iVoice + (fCharacterIsMale ? 0 : NUMBER_OF_PLAYER_VOICES_PER_GENDER);
-}
-
-
 void EnterIMPVoices( void )
 {
-	// The voice left over from an earlier character may be one that character now
-	// owns, so open on a free one rather than on a silhouette that cannot be taken.
-	if (IsIMPVoiceTaken(VoiceSlot(iCurrentVoices)))
-	{
-		INT32 const iFree = GetFirstFreeIMPVoice(fCharacterIsMale);
-		if (iFree >= 0) iCurrentVoices = iFree;
-	}
-
 	// create buttons
 	CreateIMPVoicesButtons( );
 
@@ -129,38 +114,24 @@ void HandleIMPVoices( void )
 
 static void IncrementVoice(void)
 {
-	// cycle to the next voice, stepping over the ones an earlier I.M.P. took. All
-	// of them being taken cannot happen on a screen that was reached at all, but
-	// bound the walk anyway so it cannot spin.
-	for (INT32 i = 0; i <= iLastVoice; ++i)
+	iCurrentVoices++;
+
+	// gone too far?
+	if( iCurrentVoices > iLastVoice )
 	{
-		iCurrentVoices++;
-
-		// gone too far?
-		if( iCurrentVoices > iLastVoice )
-		{
-			iCurrentVoices = 0;
-		}
-
-		if (!IsIMPVoiceTaken(VoiceSlot(iCurrentVoices))) return;
+		iCurrentVoices = 0;
 	}
 }
 
 
 static void DecrementVoice(void)
 {
-	// cycle to the previous voice, stepping over the ones an earlier I.M.P. took
-	for (INT32 i = 0; i <= iLastVoice; ++i)
+	iCurrentVoices--;
+
+	// gone too far?
+	if( iCurrentVoices < 0 )
 	{
-		iCurrentVoices--;
-
-		// gone too far?
-		if( iCurrentVoices < 0 )
-		{
-			iCurrentVoices = iLastVoice;
-		}
-
-		if (!IsIMPVoiceTaken(VoiceSlot(iCurrentVoices))) return;
+		iCurrentVoices = iLastVoice;
 	}
 }
 
@@ -259,8 +230,8 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 			iCurrentImpPage = IMP_FINISH;
 		}
 
-		// set voice id, to grab character slot
-		LaptopSaveInfo.iVoiceId = VoiceSlot(iCurrentVoices);
+		// the voice the character will speak with, counted over both genders
+		LaptopSaveInfo.iVoiceId = iCurrentVoices + (fCharacterIsMale ? 0 : NUMBER_OF_PLAYER_VOICES_PER_GENDER);
 
 		// set button up image pending
 		fButtonPendingFlag = TRUE;

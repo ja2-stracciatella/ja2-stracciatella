@@ -103,8 +103,7 @@ extern UINT32 guiJA2EncryptionSet;
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname);
 bool IMPSavedProfileDoesFileExist(const ST::string& nickname);
 SGPFile* IMPSavedProfileOpenFileForRead(const ST::string& nickname);
-int IMPSavedProfileReadVoiceId(const ST::string& nickname);
-int IMPSavedProfileLoadMercProfile(const ST::string& nickname);
+ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname);
 void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSoldier);
 
 class SaveGameInfo {

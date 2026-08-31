@@ -1206,11 +1206,15 @@ static void SaveMercProfiles(HWFILE const f)
 		NewJA2EncryptedFileWrite(f, data, sizeof(data));
 	}
 
-	// The profile record is full, and its layout is also prof.dat's, so the
-	// voice ids follow the records as a block of their own.
+	// The profile record is full, and its layout is also prof.dat's, so fields
+	// added since follow the records, one block per field.
 	BYTE voiceIds[NUM_PROFILES];
 	for (UINT32 i = 0; i != NUM_PROFILES; ++i) voiceIds[i] = gMercProfiles[i].ubVoiceId;
 	f->write(voiceIds, sizeof(voiceIds));
+
+	BYTE impSlotStates[NUM_PROFILES];
+	for (UINT32 i = 0; i != NUM_PROFILES; ++i) impSlotStates[i] = gMercProfiles[i].ubIMPSlotState;
+	f->write(impSlotStates, sizeof(impSlotStates));
 }
 
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
@@ -1241,22 +1245,10 @@ static SGPFile* IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 	return f;
 }
 
-/* Reads the profile slot a saved I.M.P. would be restored into, without touching
- * gMercProfiles. Returns -1 if there is no usable profile under that nickname. */
-int IMPSavedProfileReadVoiceId(const ST::string& nickname)
-{
-	if (!IMPSavedProfileDoesFileExist(nickname)) return -1;
-	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
-	MERCPROFILESTRUCT profile_saved;
-	f->read(&profile_saved, sizeof(MERCPROFILESTRUCT));
-	delete f;
-
-	int const voiceid = profile_saved.ubSuspiciousDeath;
-	if (voiceid >= NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS) return -1;
-	return voiceid;
-}
-
-int IMPSavedProfileLoadMercProfile(const ST::string& nickname)
+/* Restores a saved I.M.P. into the slot the character being built would take.
+ * The character keeps the voice it was made with, which the saved profile
+ * carries itself. */
+ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 {
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
 		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
@@ -1265,11 +1257,14 @@ int IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 	MERCPROFILESTRUCT profile_saved;
 	f->read(&profile_saved, sizeof(MERCPROFILESTRUCT));
 	delete f;
-	int voiceid = profile_saved.ubSuspiciousDeath;
-	MERCPROFILESTRUCT& profile_new = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + voiceid];
+
+	ProfileID const profile = GetIMPSlotInProgress();
+	MERCPROFILESTRUCT& profile_new = gMercProfiles[profile];
 	profile_new = profile_saved;
 	profile_new.bMercStatus = MERC_OK;
-	return voiceid;
+	// The slot is not held until the player confirms the character.
+	profile_new.ubIMPSlotState = IMP_SLOT_FREE;
+	return profile;
 }
 
 void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSoldier)
@@ -1300,7 +1295,6 @@ void SaveIMPPlayerProfiles()
 		SGPFile *f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname);
 		if (!f) continue;
 
-		mercprofile->ubSuspiciousDeath = i - PLAYER_GENERATED_CHARACTER_ID; // save voice_id, field not used for resuscitated merc
 		f->write(mercprofile, sizeof(MERCPROFILESTRUCT));
 		f->write(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
 		delete f;
@@ -1330,12 +1324,23 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 		// Before the voice id existed every character spoke with the files
 		// named after its own profile.
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].ubVoiceId = i;
+
+		// One I.M.P. was the limit, and it lived in the slot iVoiceId pointed
+		// at. The laptop block is read before this one, so it can be believed.
+		if (LaptopSaveInfo.fIMPCompletedFlag)
+		{
+			gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].ubIMPSlotState = IMP_SLOT_TAKEN;
+		}
 		return;
 	}
 
 	BYTE voiceIds[NUM_PROFILES];
 	f->read(voiceIds, sizeof(voiceIds));
 	for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].ubVoiceId = voiceIds[i];
+
+	BYTE impSlotStates[NUM_PROFILES];
+	f->read(impSlotStates, sizeof(impSlotStates));
+	for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].ubIMPSlotState = impSlotStates[i];
 }
 
 

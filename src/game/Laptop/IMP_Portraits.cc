@@ -44,14 +44,6 @@ static INT32 PortraitSlot(INT32 const iPortrait)
 
 void EnterIMPPortraits( void )
 {
-	// The picture left over from an earlier character is that character's face by
-	// now, so open on one that is still free.
-	if (IsIMPPortraitTaken(PortraitSlot(iCurrentPortrait)))
-	{
-		INT32 const iFree = GetFirstFreeIMPPortrait(fCharacterIsMale);
-		if (iFree >= 0) iCurrentPortrait = iFree;
-	}
-
 	// create buttons
 	CreateIMPPortraitButtons( );
 
@@ -114,38 +106,24 @@ static void RenderPortrait(INT16 const x, INT16 const y)
 
 static void IncrementPictureIndex(void)
 {
-	// cycle to the next picture, stepping over the faces earlier I.M.P.s wear. There
-	// are more pictures than profile slots, so one is always free, but bound the
-	// walk anyway so it cannot spin.
-	for (INT32 i = 0; i <= iLastPicture; ++i)
+	iCurrentPortrait++;
+
+	// gone too far?
+	if( iCurrentPortrait > iLastPicture )
 	{
-		iCurrentPortrait++;
-
-		// gone too far?
-		if( iCurrentPortrait > iLastPicture )
-		{
-			iCurrentPortrait = 0;
-		}
-
-		if (!IsIMPPortraitTaken(PortraitSlot(iCurrentPortrait))) return;
+		iCurrentPortrait = 0;
 	}
 }
 
 
 static void DecrementPicture(void)
 {
-	// cycle to the previous picture, stepping over the faces earlier I.M.P.s wear
-	for (INT32 i = 0; i <= iLastPicture; ++i)
+	iCurrentPortrait--;
+
+	// gone too far?
+	if( iCurrentPortrait < 0 )
 	{
-		iCurrentPortrait--;
-
-		// gone too far?
-		if( iCurrentPortrait < 0 )
-		{
-			iCurrentPortrait = iLastPicture;
-		}
-
-		if (!IsIMPPortraitTaken(PortraitSlot(iCurrentPortrait))) return;
+		iCurrentPortrait = iLastPicture;
 	}
 }
 

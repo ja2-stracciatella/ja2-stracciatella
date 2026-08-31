@@ -223,11 +223,14 @@
     { "profileID": 161, "internalName": "PROF_ELDERODO", "type": "VEHICLE" },
     { "profileID": 162, "internalName": "PROF_ICECREAM", "type": "VEHICLE" },
     { "profileID": 163, "internalName": "PROF_HELICOPTER", "type": "VEHICLE" },
-     /* Unused slots */
-    { "profileID": 164, "internalName": "NPC164", "type": "NOT_USED" },
-    { "profileID": 165, "internalName": "NPC165", "type": "NOT_USED" },
-    { "profileID": 166, "internalName": "NPC166", "type": "NOT_USED" },
-    { "profileID": 167, "internalName": "NPC167", "type": "NOT_USED" },
-    { "profileID": 168, "internalName": "NPC168", "type": "NOT_USED" },
-    { "profileID": 169, "internalName": "NPC169", "type": "NOT_USED" }
+     /* Unused slot */
+    { "profileID": 164, "internalName": "NPC164", "type": "NOT_USED" }, // in use as the placeholder profile of the unused vehicles
+    /* Spare profiles, handed out to player generated characters as they are made.
+       A character takes the first free one and carries its own voice, so these
+       need no files of their own. */
+    { "profileID": 165, "internalName": "NPC165", "type": "IMP" },
+    { "profileID": 166, "internalName": "NPC166", "type": "IMP" },
+    { "profileID": 167, "internalName": "NPC167", "type": "IMP" },
+    { "profileID": 168, "internalName": "NPC168", "type": "IMP" },
+    { "profileID": 169, "internalName": "NPC169", "type": "IMP" }
 ]

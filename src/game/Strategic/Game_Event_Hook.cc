@@ -124,7 +124,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			AddEmail(MERC_INTRO, MERC_INTRO_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin( ) );
 			break;
 		case EVENT_DAY2_ADD_EMAIL_FROM_IMP:
-			// the parameter is the voice id of the character being reported on
+			// the parameter is the profile of the character being reported on
 			AddEmailWithSpecialData(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), pEvent->uiParam, 0 );
 			break;
 		//If a merc gets hired and they dont show up immediately, the merc gets added to the queue and shows up

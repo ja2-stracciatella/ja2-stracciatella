@@ -4,6 +4,8 @@
 #include "GamePolicy.h"
 #include "IMPPolicy.h"
 #include "ContentManager.h"
+#include "MercProfileInfo.h"
+#include "Soldier_Control.h"
 #include "IMP_Portraits.h"
 #include "IMP_SkillTraits.h"
 #include "IMP_Compile_Character.h"
@@ -29,93 +31,75 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
-UINT8 GetIMPVoiceSlotFlag(INT32 const iVoiceId)
+static bool IsIMPSlot(ProfileID const profile)
 {
-	if (iVoiceId < 0 || iVoiceId >= NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS) return 0;
-	return 1 << iVoiceId;
+	return GCM->getMercProfileInfo(profile)->mercType == MercType::IMP;
 }
 
 
-bool IsIMPVoiceTaken(INT32 const iVoiceId)
+UINT8 GetNumberOfIMPSlots(void)
 {
-	UINT8 const ubSlot = GetIMPVoiceSlotFlag(iVoiceId);
-	return ubSlot == 0 || (LaptopSaveInfo.ubIMPCreatedSlots & ubSlot) != 0;
-}
-
-
-bool IsIMPPortraitTaken(INT32 const iPortraitNumber)
-{
-	// Which portraits are gone is not recorded separately: the face every
-	// character created so far ended up with is the record.
-	for (INT32 iSlot = 0; iSlot < NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS; ++iSlot)
+	UINT8 ubSlots = 0;
+	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
 	{
-		if (!(LaptopSaveInfo.ubIMPCreatedSlots & (1 << iSlot))) continue;
-		if (gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + iSlot].ubFaceIndex == 200 + iPortraitNumber) return true;
+		if (IsIMPSlot(profile)) ++ubSlots;
 	}
-	return false;
+	return ubSlots;
 }
 
 
 UINT8 GetNumberOfIMPCharactersCreated(void)
 {
 	UINT8 ubCreated = 0;
-	for (INT32 iSlot = 0; iSlot < NUMBER_OF_PLAYER_GENERATED_CHARACTER_SLOTS; ++iSlot)
+	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
 	{
-		if (LaptopSaveInfo.ubIMPCreatedSlots & (1 << iSlot)) ++ubCreated;
+		if (IsIMPSlot(profile) && gMercProfiles[profile].ubIMPSlotState == IMP_SLOT_TAKEN) ++ubCreated;
 	}
 	return ubCreated;
 }
 
 
+ProfileID GetIMPSlotInProgress(void)
+{
+	// The set of taken slots does not change while a character is being built,
+	// so the first free one stays the same one across the whole process and
+	// over a save and load in the middle of it.
+	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
+	{
+		if (IsIMPSlot(profile) && gMercProfiles[profile].ubIMPSlotState == IMP_SLOT_FREE) return profile;
+	}
+	return NO_PROFILE;
+}
+
+
 bool CanCreateAnotherIMPCharacter(void)
 {
+	if (GetIMPSlotInProgress() == NO_PROFILE) return false;
 	return GetNumberOfIMPCharactersCreated() < gamepolicy(imp_max_characters);
 }
 
 
-bool CanCreateIMPCharacterOfGender(bool const fMale)
+void MarkIMPCharacterCreated(ProfileID const profile)
 {
-	return CanCreateAnotherIMPCharacter() && GetFirstFreeIMPVoice(fMale) >= 0;
-}
-
-
-INT32 GetFirstFreeIMPVoice(bool const fMale)
-{
-	INT32 const iBase = fMale ? 0 : NUMBER_OF_PLAYER_VOICES_PER_GENDER;
-	for (INT32 i = 0; i < NUMBER_OF_PLAYER_VOICES_PER_GENDER; ++i)
-	{
-		if (!IsIMPVoiceTaken(iBase + i)) return i;
-	}
-	return -1;
-}
-
-
-INT32 GetFirstFreeIMPPortrait(bool const fMale)
-{
-	INT32 const iBase = fMale ? 0 : NUMBER_OF_PLAYER_PORTRAITS_PER_GENDER;
-	for (INT32 i = 0; i < NUMBER_OF_PLAYER_PORTRAITS_PER_GENDER; ++i)
-	{
-		if (!IsIMPPortraitTaken(iBase + i)) return i;
-	}
-	return -1;
-}
-
-
-void MarkIMPCharacterCreated(INT32 const iVoiceId)
-{
-	LaptopSaveInfo.ubIMPCreatedSlots |= GetIMPVoiceSlotFlag(iVoiceId);
+	gMercProfiles[profile].ubIMPSlotState = IMP_SLOT_TAKEN;
 	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
 }
 
 
 void CreateACharacterFromPlayerEnteredStats(void)
 {
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	p.zName = pFullName;
 	p.zNickname = pNickName;
 
 	p.bSex = fCharacterIsMale ? MALE : FEMALE;
+
+	// The voice the player picked, which is where this character's speech,
+	// dialogue text and battle sounds come from. Slots past the six the game
+	// shipped with have none of their own, so this also makes it hireable.
+	p.ubVoiceId   = PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId;
+	p.bMercStatus = MERC_OK;
 
 	p.bLifeMax    = iHealth;
 	p.bLife       = iHealth;
@@ -243,7 +227,7 @@ static void ValidateSkillsList(void)
 {
 	// remove from the generated traits list any traits that don't match
 	// the character's skills
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	if (p.bMechanical == 0)
 	{
@@ -409,7 +393,7 @@ static void SetMercSkinAndHairColors(void);
 static void SelectMercFace(void)
 {
 	// this procedure will select the approriate face for the merc and save offsets
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	// now the offsets
 	p.ubFaceIndex = 200 + iPortraitNumber;
@@ -465,7 +449,7 @@ static void SetMercSkinAndHairColors(void)
 	};
 
 	Assert(iPortraitNumber < static_cast<INT32>(lengthof(Colors)));
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 	p.HAIR = Colors[iPortraitNumber].Hair;
 	p.SKIN = Colors[iPortraitNumber].Skin;
 }
@@ -480,7 +464,7 @@ void HandleMercStatsForChangesInFace(void)
 
 	CreatePlayerSkills();
 
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	// body type
 	if (fCharacterIsMale)
@@ -514,5 +498,5 @@ static BOOLEAN ShouldThisMercHaveABigBody(void)
 	// should this merc be a big body typ
 	return
 		(iPortraitNumber == 0 || iPortraitNumber == 6 || iPortraitNumber == 7) &&
-		gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].bStrength >= 75;
+		gMercProfiles[GetIMPSlotInProgress()].bStrength >= 75;
 }

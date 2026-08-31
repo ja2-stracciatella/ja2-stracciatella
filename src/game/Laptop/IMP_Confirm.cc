@@ -155,7 +155,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 		HandleMercStatsForChangesInFace();
 	}
 
-	HireMercStruct.ubProfileID = ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) ;
+	HireMercStruct.ubProfileID = GetIMPSlotInProgress() ;
 
 	if (!fLoadingCharacterForPreviousImpProfile)
 	{
@@ -199,18 +199,22 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 			return;
 		}
 
+		// Taken before the slot is claimed, after which the first free slot is
+		// the next character's, not this one's.
+		ProfileID const profile = GetIMPSlotInProgress();
+
 		// line moved by CJC Nov 28 2002 to AFTER the check for money
 		if (!AddCharacterToPlayersTeam()) return; // only if merc hiring failed: no charge, give it another go
 
-		// claims this character's gender, so a further I.M.P. cannot reuse its profile slot
-		MarkIMPCharacterCreated(LaptopSaveInfo.iVoiceId);
+		// holds the profile for the rest of the campaign
+		MarkIMPCharacterCreated(profile);
 
-		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(profile);
 		if (!pSoldier) return;
 
 		if (fLoadingCharacterForPreviousImpProfile && gamepolicy(imp_load_keep_inventory))
 		{
-			IMPSavedProfileLoadInventory(gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].zNickname, pSoldier);
+			IMPSavedProfileLoadInventory(gMercProfiles[profile].zNickname, pSoldier);
 			// re-add letter, since it just got wiped and almost certainly is not present in the import
 			if (pSoldier->ubID == 0 && FindObj(pSoldier, LETTER) == NO_SLOT) {
 				CreateSpecialItem(pSoldier, LETTER);
@@ -218,7 +222,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 		}
 
 		// charge the player
-		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
+		AddTransactionToPlayersBook(IMP_PROFILE, profile, GetWorldTotalMin(), -COST_OF_PROFILE);
 		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
 
 		fButtonPendingFlag = TRUE;
@@ -226,7 +230,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 
 		// send email notice, naming the character it reports on: by the time the mail
 		// arrives a further I.M.P. may be the one iVoiceId points at
-		AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, LaptopSaveInfo.iVoiceId, 2);
+		AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, profile, 2);
 
 		ResetCharacterStats();
 
