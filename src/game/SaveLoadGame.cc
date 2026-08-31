@@ -1205,6 +1205,12 @@ static void SaveMercProfiles(HWFILE const f)
 		InjectMercProfile(data, *i);
 		NewJA2EncryptedFileWrite(f, data, sizeof(data));
 	}
+
+	// The profile record is full, and its layout is also prof.dat's, so the
+	// voice ids follow the records as a block of their own.
+	BYTE voiceIds[NUM_PROFILES];
+	for (UINT32 i = 0; i != NUM_PROFILES; ++i) voiceIds[i] = gMercProfiles[i].ubVoiceId;
+	f->write(voiceIds, sizeof(voiceIds));
 }
 
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
@@ -1318,6 +1324,18 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 			throw std::runtime_error("Merc profile checksum mismatch");
 		}
 	}
+
+	if (savegame_version < 104)
+	{
+		// Before the voice id existed every character spoke with the files
+		// named after its own profile.
+		for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].ubVoiceId = i;
+		return;
+	}
+
+	BYTE voiceIds[NUM_PROFILES];
+	f->read(voiceIds, sizeof(voiceIds));
+	for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].ubVoiceId = voiceIds[i];
 }
 
 

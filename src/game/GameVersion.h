@@ -17,6 +17,6 @@ extern const char g_version_number[16];
 //	you will invalidate the saved game file
 //
 
-constexpr UINT32 SAVE_GAME_VERSION = 103;
+constexpr UINT32 SAVE_GAME_VERSION = 104;
 
 #endif

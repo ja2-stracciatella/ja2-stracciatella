@@ -237,6 +237,10 @@ struct MERCPROFILESTRUCT
 	UINT16 usMouthY;
 	UINT32 uiBlinkFrequency{ 3000 };
 	UINT32 uiExpressionFrequency{ 2000 };
+	/* Voice: the profile whose speech, dialogue text and battle sounds this
+	 * character uses. Independent of the character's own ID, like ubFaceIndex,
+	 * and defaults to it on profile load. */
+	UINT8 ubVoiceId{};
 
 	ST::string PANTS;
 	ST::string VEST;
