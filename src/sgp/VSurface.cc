@@ -14,6 +14,34 @@
 
 extern SGPVSurface* gpVSurfaceHead;
 
+namespace {
+
+// Helper class to set a SDL surface's clipping rectangle to the equivalent
+// of JA2's global clipping rectangle. Restores the previous clipping
+// rectangle when it is destroyed.
+class ApplyClippingRect
+{
+	SDL_Surface * surface;
+	SDL_Rect oldClipRect;
+
+public:
+	ApplyClippingRect(SDL_Surface * s) : surface(s)
+	{
+          SDL_GetSurfaceClipRect(s, &oldClipRect);
+
+          SGPRect clipRect = GetClippingRect();
+          SDL_Rect newClipRect{clipRect.iLeft, clipRect.iTop,
+                               clipRect.iRight - clipRect.iLeft + 1,
+                               clipRect.iBottom - clipRect.iTop + 1};
+          SDL_SetSurfaceClipRect(s, &newClipRect);
+	}
+
+	~ApplyClippingRect()
+	{
+		SDL_SetSurfaceClipRect(surface, &oldClipRect);
+	}
+};
+}
 
 SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	p16BPPPalette(),
@@ -101,43 +129,30 @@ void SGPVSurface::Fill(const UINT16 colour)
 }
 
 
-static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* const filter_table)
+static void InternalShadowVideoSurfaceRect(SDL_Surface * dst, INT32 x1, INT32 y1, INT32 x2, INT32 y2, float shadeFactor)
 {
-	if (X1 < 0) X1 = 0;
-	if (X2 < 0) return;
+	ApplyClippingRect acr{ dst };
 
-	if (Y2 < 0) return;
-	if (Y1 < 0) Y1 = 0;
+	Uint8 modF = static_cast<Uint8>(255 * shadeFactor);
+	SDL_SetSurfaceColorMod(dst, modF, modF, modF);
 
-	if (X2 >= dst->Width())  X2 = dst->Width() - 1;
-	if (Y2 >= dst->Height()) Y2 = dst->Height() - 1;
+	SDL_Rect blitRect{ x1, y1, x2 - x1 + 1, y2 - y1 + 1 };
+	SDL_BlitSurface(dst, &blitRect, dst, &blitRect);
 
-	if (X1 >= dst->Width())  return;
-	if (Y1 >= dst->Height()) return;
-
-	if (X2 - X1 <= 0) return;
-	if (Y2 - Y1 <= 0) return;
-
-	SGPRect area;
-	area.iTop    = Y1;
-	area.iBottom = Y2;
-	area.iLeft   = X1;
-	area.iRight  = X2;
-
-	SGPVSurface::Lock ldst(dst);
-	Blt16BPPBufferFilterRect(ldst.Buffer<UINT16>(), ldst.Pitch(), filter_table, &area);
+	SDL_SetSurfaceColorMod(dst, 255, 255, 255);
 }
 
 
 void SGPVSurface::ShadowRect(INT32 const x1, INT32 const y1, INT32 const x2, INT32 const y2)
 {
-	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, ShadeTable);
+	InternalShadowVideoSurfaceRect(surface_.get(), x1, y1, x2, y2, GetShadeTablePercent());
 }
 
 
 void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1, INT32 const x2, INT32 const y2)
 {
-	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, IntensityTable);
+	// 0.8 is the factor that was used to compute the IntensityTable in vanilla.
+	InternalShadowVideoSurfaceRect(surface_.get(), x1, y1, x2, y2, 0.80f);
 }
 
 

@@ -3,11 +3,15 @@
 
 #include "Types.h"
 
-void BuildShadeTable(void);
-void BuildIntensityTable(void);
-void SetShadeTablePercent(float uiShadePercent);
+inline float guiShadePercent = 0.48f;
 
-extern UINT16 IntensityTable[65536];
+void BuildShadeTable(void);
+void SetShadeTablePercent(float uiShadePercent);
+static inline float GetShadeTablePercent()
+{
+	return guiShadePercent;
+}
+
 extern UINT16 ShadeTable[65536];
 extern UINT16 White16BPPPalette[256];
 
