@@ -2,12 +2,11 @@
 #include "Exceptions.h"
 #include "Logger.h"
 
+#include <SDL3/SDL_iostream.h>
 #include <string_theory/string>
 #include <string_theory/format>
 #include <string_view>
 #include <utility>
-
-#define SDL_RWOPS_SGP 222
 
 void DeleteSGPFile(SGPFile *file)
 {
@@ -26,15 +25,15 @@ public:
 	}
 };
 
-static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
+static Sint64 SDLCALL SGPSeekRW(void *userdata, Sint64 offset, SDL_IOWhence whence)
 {
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
+	SGPFile* sgpFile = (SGPFile*)(userdata);
 	FileSeekMode mode = FILE_SEEK_FROM_CURRENT;
 	switch (whence) {
-		case RW_SEEK_SET:
+		case SDL_IO_SEEK_SET:
 			mode = FILE_SEEK_FROM_START;
 			break;
-		case RW_SEEK_END:
+		case SDL_IO_SEEK_END:
 			mode = FILE_SEEK_FROM_END;
 			break;
 		default:
@@ -46,37 +45,33 @@ static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
 	return int64_t(sgpFile->pos());
 }
 
-static int64_t SGPSizeRW(SDL_RWops *context)
+static Sint64 SDLCALL SGPSizeRW(void *userdata)
 {
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
-
+	SGPFile* sgpFile = (SGPFile*)(userdata);
 	return sgpFile->size();
 }
 
-static size_t SGPReadRW(SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
+static size_t SDLCALL SGPReadRW(void *userdata, void *ptr, size_t size, SDL_IOStatus *status)
 {
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
-	return sgpFile->readAtMost(ptr, size * maxnum) / size;
-}
-
-static size_t SGPWriteRW(SDL_RWops *context, const void *ptr, size_t size, size_t num)
-{
-    SLOGA("SGPWriteRW not supported");
-	return 0;
-}
-
-static int SGPCloseRW(SDL_RWops *context)
-{
-	if(context->type != SDL_RWOPS_SGP)
-	{
-		return SDL_SetError("Wrong kind of SDL_RWops for SGPCloseRW()");
+	SGPFile* sgpFile = (SGPFile*)(userdata);
+	auto bytesRead = sgpFile->readAtMost(ptr, size);
+	if (bytesRead < size) {
+		*status = SDL_IO_STATUS_EOF;
 	}
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
+	return bytesRead;
+}
 
-	delete sgpFile;
-	SDL_FreeRW(context);
-
+static size_t SDLCALL SGPWriteRW(void *userdata, const void *ptr, size_t size, SDL_IOStatus *status)
+{
+	*status = SDL_IO_STATUS_READONLY;
 	return 0;
+}
+
+static bool SDLCALL SGPCloseRW(void *userdata)
+{
+	SGPFile* sgpFile = (SGPFile*)(userdata);
+	delete sgpFile;
+	return true;
 }
 
 SGPFile::SGPFile(VFile *f, ST::string const& filename) :
@@ -232,19 +227,20 @@ UINT32 SGPFile::size() const
     return static_cast<UINT32>(len);
 }
 
-SDL_RWops* SGPFile::getRwOps()
+SDL_IOStream* SGPFile::getRwOps()
 {
-	SDL_RWops* rwOps = SDL_AllocRW();
-	if(rwOps == NULL) {
-		return NULL;
-	}
-	rwOps->type = SDL_RWOPS_SGP;
-	rwOps->size = SGPSizeRW;
-	rwOps->seek = SGPSeekRW;
-	rwOps->read = SGPReadRW;
-	rwOps->write= SGPWriteRW;
-	rwOps->close= SGPCloseRW;
-	rwOps->hidden.unknown.data1 = this;
+	SDL_IOStreamInterface iface;
 
-	return rwOps;
+	SDL_INIT_INTERFACE(&iface);
+	iface.size = SGPSizeRW;
+	iface.seek = SGPSeekRW;
+	iface.read = SGPReadRW;
+	iface.write= SGPWriteRW;
+	iface.close= SGPCloseRW;
+
+	auto rwops = SDL_OpenIO(&iface, this);
+    if (!rwops) {
+        iface.close(this);
+    }
+    return rwops;
 }

@@ -2,10 +2,7 @@
 
 ## Dependencies
 
-- SDL2 >= `2.0.5` (version `2.0.20` is included in this repo for Windows and macOS).
-  __WARNING__: There is an issue with SDL in version `2.0.6` that causes segfaults when playing sounds.
-  Please ensure that you run the game with a different version of the SDL2 library otherwise sound will be
-  disabled.
+- SDL3 >= `3.0.0` (version `3.4.14` is included in this repo for Windows and macOS).
 - cmake
 - Rust and Cargo
 - Your systems compiler
@@ -111,13 +108,13 @@ pacman -S base-devel
 to build 64-bit:
 
 ```sh
-pacman -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-rust mingw-w64-x86_64-cmake mingw-w64-x86_64-SDL2 mingw-w64-x86_64-fltk
+pacman -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-rust mingw-w64-x86_64-cmake mingw-w64-x86_64-SDL3 mingw-w64-x86_64-fltk
 ```
 
 to build 32-bit:
 
 ```sh
-pacman -S mingw-w64-i686-toolchain mingw-w64-i686-rust mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-fltk
+pacman -S mingw-w64-i686-toolchain mingw-w64-i686-rust mingw-w64-i686-cmake mingw-w64-i686-SDL3 mingw-w64-i686-fltk
 ```
 
 Get ja2-stracciatella, cd into it, and build the package:
@@ -129,6 +126,32 @@ make package
 ```
 
 You now have a zip file with the game, including the dll dependencies.
+
+## Build for Android
+
+The Android project uses Gradle with CMake for the native code (see `android/app/build.gradle`).
+The supported ABIs are `armeabi-v7a`, `arm64-v8a`, `x86`, and `x86_64`.
+
+Install
+
+- Android NDK (see `ndkVersion` in [`android/app/build.gradle`](android/app/build.gradle))
+- Rust Android targets: `armv7-linux-androideabi`, `aarch64-linux-android`, `i686-linux-android`, `x86_64-linux-android`
+  (install via `rustup target add <target>`)
+
+The build with
+
+```sh
+cd android
+./gradlew assembleDebug
+```
+
+For a release build (requires a signing keystore, see [`ci-setup.sh`](.ci/ci-setup.sh)):
+
+```sh
+./gradlew assembleRelease
+```
+
+You can also use Android Studio to compile the project. For this, just open the `android` directory in Android Studio with all prerequisites installed.
 
 ## Generate Visual Studio Solution
 

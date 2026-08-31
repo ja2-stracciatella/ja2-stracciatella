@@ -21,7 +21,6 @@ endfunction()
 target_compile_features(${JA2_BINARY} PRIVATE cxx_std_20)
 
 target_include_directories(${JA2_BINARY} SYSTEM PRIVATE
-    ${SDL2_INCLUDE_DIR}
     ${SOL_INCLUDE_DIR}
     ${LUA_INCLUDE_DIRS}
     ${MINIAUDIO_INCLUDE_DIRS}

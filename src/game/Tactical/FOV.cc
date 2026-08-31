@@ -26,7 +26,7 @@
 #include "Input.h"
 #include "Timer_Control.h"
 #include "Video.h"
-#include "SDL.h"
+#include "SDL3/SDL.h"
 #endif
 
 #include <string_theory/format>

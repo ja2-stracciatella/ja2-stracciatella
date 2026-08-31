@@ -105,7 +105,8 @@ if(MSVC)
     # set the source and execution charset
     add_compile_options(/utf-8 /bigobj)
     # suppress the min and max macro definitions
-    add_compile_definitions(NOMINMAX)
+    # enable M_PI and other math constants from <cmath>
+    add_compile_definitions(NOMINMAX _USE_MATH_DEFINES)
 
 	foreach(_var
 		CMAKE_CXX_FLAGS_DEBUG
@@ -147,17 +148,26 @@ message(STATUS "Setting directory for libraries to: ${INSTALL_LIB_DIR}")
 add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
 if(BUILD_SDL_LIB)
-    set(SDL2_LIBRARY "")
-    set(SDL2_INCLUDE_DIR "")
-    add_subdirectory("dependencies/lib-sdl2")
-else()
-    if (NOT (LOCAL_SDL_LIB STREQUAL ""))
-        message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-        set(ENV{SDL2DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    message(STATUS "Building SDL from source")
+    add_subdirectory("dependencies/lib-sdl3")
+elseif(NOT (LOCAL_SDL_LIB STREQUAL ""))
+    message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    # SDL3Config.cmake needs SDL_CPU_* to determine the library subdirectory for MSVC.
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(SDL_CPU_X64 ON CACHE BOOL "" FORCE)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(SDL_CPU_X86 ON CACHE BOOL "" FORCE)
     endif()
-    find_package(SDL2 2.0.5 REQUIRED)
+    include("${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+else()
+    find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 endif()
-message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY}; SDL2 Include Dir: ${SDL2_INCLUDE_DIR}")
+function(print_sdl3_info)
+    get_target_property(SDL3_LIBRARIES SDL3::SDL3-shared IMPORTED_LOCATION)
+    get_target_property(SDL3_INCLUDES SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
+    message(STATUS "SDL3 Libraries: ${SDL3_LIBRARIES}; SDL3 Include Dir: ${SDL3_INCLUDES}")
+endfunction()
+print_sdl3_info()
 
 
 # Dependencies must be processed first so the src directory can reliably use them.
@@ -193,7 +203,7 @@ if (WITH_UNITTESTS)
 endif()
 
 target_link_libraries(${JA2_BINARY} PRIVATE
-    ${SDL2_LIBRARY}
+    SDL3::SDL3-shared
     ${GTEST_LIBRARIES}
     smacker
     ${STRACCIATELLA_LIBRARIES}
@@ -229,12 +239,11 @@ if(WITH_EDITOR_SLF)
 endif()
 
 if (MSVC)
-    string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            ${SDL_DLL} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
+            $<TARGET_FILE:SDL3::SDL3-shared> "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
-if (APPLE)
+if (APPLE AND NOT (LOCAL_SDL_LIB STREQUAL ""))
     add_custom_command(TARGET ${JA2_BINARY}
             POST_BUILD COMMAND
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
@@ -276,7 +285,7 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "JA2 Stracciatella")
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "games")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libstdc++6, libgcc1, libc6, libfltk1.3-dev, libfltk-images1.3")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl3, libstdc++6, libgcc1, libc6, libfltk1.3-dev, libfltk-images1.3")
 
 set(CPACK_BUNDLE_NAME "JA2 Stracciatella")
 set(CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.icns")
@@ -367,7 +376,6 @@ if(MSVC OR MINGW)
     include(InstallRequiredSystemLibraries)
 
     file(GLOB WIN_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win/*.txt")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.20-mingw/README-SDL.txt DESTINATION .)
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.ico DESTINATION .)
 endif()
@@ -377,14 +385,38 @@ if (MSVC)
 endif()
 
 if (MINGW)
+    get_target_property(_sdl3_dll SDL3::SDL3-shared IMPORTED_LOCATION_RELEASE)
+    get_filename_component(SDL3_DLL_DIR "${_sdl3_dll}" DIRECTORY)
     configure_file("${CMAKE_SOURCE_DIR}/cmake/install-dlls-mingw.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/install-dlls-mingw.cmake" @ONLY)
     install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/install-dlls-mingw.cmake")
+    unset(_sdl3_dll)
+    unset(SDL3_DLL_DIR)
 endif()
 
 if(APPLE)
     file(GLOB APPLE_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-mac/*.txt")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
-    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.20-macos/SDL2.framework DESTINATION .)
+    if(NOT (LOCAL_SDL_LIB STREQUAL ""))
+        # When using a local SDL3 (e.g. pre-built xcframework), install the
+        # SDL3.framework next to the executables. CPack's Bundle generator puts
+        # everything into Contents/Resources, which is what @executable_path
+        # resolves to. On macOS the dynamic linker resolves
+        # @rpath/SDL3.framework, so we must install SDL3.framework itself, not
+        # the SDL3.xcframework wrapper.
+        get_target_property(_sdl3_location SDL3::SDL3-shared IMPORTED_LOCATION)
+        if(NOT _sdl3_location)
+            message(FATAL_ERROR "SDL3::SDL3-shared has no IMPORTED_LOCATION")
+        endif()
+        get_filename_component(_sdl3_fw_path "${_sdl3_location}" REALPATH)
+        # Walk up from <path>/SDL3.framework/SDL3 to find the SDL3.framework directory
+        while(NOT _sdl3_fw_path MATCHES "/SDL3\\.framework$")
+            get_filename_component(_sdl3_fw_path "${_sdl3_fw_path}" DIRECTORY)
+            if("${_sdl3_fw_path}" STREQUAL "" OR "${_sdl3_fw_path}" STREQUAL "/")
+                message(FATAL_ERROR "Could not find SDL3.framework directory from ${_sdl3_location}")
+            endif()
+        endwhile()
+        install(DIRECTORY "${_sdl3_fw_path}" DESTINATION .)
+    endif()
 endif()
 
 ## Build AppImage

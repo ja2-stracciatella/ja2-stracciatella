@@ -1,7 +1,7 @@
 # install the dlls of the executables
 
 set(CMAKE_CXX_COMPILER "@CMAKE_CXX_COMPILER@")
-set(SDL2MAIN_LIBRARY "@SDL2MAIN_LIBRARY@")
+set(SDL3_DLL_DIR "@SDL3_DLL_DIR@")
 
 # Add more core dlls when needed
 # these dlls will never be installed
@@ -57,8 +57,7 @@ macro (search_dirs)
     endforeach()
 endmacro()
 
-get_filename_component(SDL2_LIB_DIR "${SDL2MAIN_LIBRARY}" DIRECTORY)
-search_dirs("${SDL2_LIB_DIR}" "${SDL2_LIB_DIR}/../bin")# sdl2 lib and bin dirs
+search_dirs("${SDL3_DLL_DIR}")  # SDL3 DLL directory
 
 execute_process(
     COMMAND "${CMAKE_CXX_COMPILER}" -print-search-dirs

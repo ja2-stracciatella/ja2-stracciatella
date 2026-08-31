@@ -16,8 +16,8 @@ echo "## prepare environment ##"
 if [[ "$CI_TARGET" == "linux" ]]; then
     GCC_VER="${TARGET_GCC_MAJOR_VERSION:-10}"
 
-    # SDL2 and FLTK to link against
-    linux-install-via-apt-get libsdl2-dev libfltk1.3-dev "gcc-$GCC_VER" "g++-$GCC_VER"
+    # FLTK to link against
+    linux-install-via-apt-get libfltk1.3-dev "gcc-$GCC_VER" "g++-$GCC_VER"
 
     # choose a new-enough gcc version
     linux-set-gcc-version "$GCC_VER"
@@ -86,7 +86,7 @@ elif [[ "$CI_TARGET" == "android" ]]; then
     unix-install-rustup armv7-linux-androideabi aarch64-linux-android i686-linux-android x86_64-linux-android
 
     # Specific version of Android NDK
-    linux-install-via-android-sdkmanager "ndk;25.0.8775105"
+    linux-install-via-android-sdkmanager "ndk;29.0.14206865"
 
     linux-setup-android-signing-keys
 else
