@@ -1904,7 +1904,7 @@ static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 	// those fall back to the character profiled last.
 	ProfileID const mailProfile = static_cast<ProfileID>(pMail->iFirstData);
 	bool const fMailNamesCharacter = mailProfile < NUM_PROFILES &&
-		gMercProfiles[mailProfile].ubIMPSlotState == IMP_SLOT_TAKEN;
+		gMercProfiles[mailProfile].impSlotState == IMPSlotState::TAKEN;
 	MERCPROFILESTRUCT const& imp = fMailNamesCharacter ?
 		GetProfile(mailProfile) : GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 	INT32 const iPortrait = imp.ubFaceIndex - 200;

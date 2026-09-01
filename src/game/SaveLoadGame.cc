@@ -1213,7 +1213,7 @@ static void SaveMercProfiles(HWFILE const f)
 	f->write(voiceIds, sizeof(voiceIds));
 
 	BYTE impSlotStates[NUM_PROFILES];
-	for (UINT32 i = 0; i != NUM_PROFILES; ++i) impSlotStates[i] = gMercProfiles[i].ubIMPSlotState;
+	for (UINT32 i = 0; i != NUM_PROFILES; ++i) impSlotStates[i] = static_cast<BYTE>(gMercProfiles[i].impSlotState);
 	f->write(impSlotStates, sizeof(impSlotStates));
 }
 
@@ -1263,7 +1263,7 @@ ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 	profile_new = profile_saved;
 	profile_new.bMercStatus = MERC_OK;
 	// The slot is not held until the player confirms the character.
-	profile_new.ubIMPSlotState = IMP_SLOT_FREE;
+	profile_new.impSlotState = IMPSlotState::FREE;
 	return profile;
 }
 
@@ -1329,7 +1329,7 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 		// at. The laptop block is read before this one, so it can be believed.
 		if (LaptopSaveInfo.fIMPCompletedFlag)
 		{
-			gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].ubIMPSlotState = IMP_SLOT_TAKEN;
+			gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].impSlotState = IMPSlotState::TAKEN;
 		}
 		return;
 	}
@@ -1340,7 +1340,7 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 
 	BYTE impSlotStates[NUM_PROFILES];
 	f->read(impSlotStates, sizeof(impSlotStates));
-	for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].ubIMPSlotState = impSlotStates[i];
+	for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].impSlotState = static_cast<IMPSlotState>(impSlotStates[i]);
 }
 
 

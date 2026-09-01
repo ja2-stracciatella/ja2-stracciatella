@@ -53,7 +53,7 @@ UINT8 GetNumberOfIMPCharactersCreated(void)
 	UINT8 ubCreated = 0;
 	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
 	{
-		if (IsIMPSlot(profile) && gMercProfiles[profile].ubIMPSlotState == IMP_SLOT_TAKEN) ++ubCreated;
+		if (IsIMPSlot(profile) && gMercProfiles[profile].impSlotState == IMPSlotState::TAKEN) ++ubCreated;
 	}
 	return ubCreated;
 }
@@ -66,7 +66,7 @@ ProfileID GetIMPSlotInProgress(void)
 	// over a save and load in the middle of it.
 	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
 	{
-		if (IsIMPSlot(profile) && gMercProfiles[profile].ubIMPSlotState == IMP_SLOT_FREE) return profile;
+		if (IsIMPSlot(profile) && gMercProfiles[profile].impSlotState == IMPSlotState::FREE) return profile;
 	}
 	return NO_PROFILE;
 }
@@ -81,7 +81,7 @@ bool CanCreateAnotherIMPCharacter(void)
 
 void MarkIMPCharacterCreated(ProfileID const profile)
 {
-	gMercProfiles[profile].ubIMPSlotState = IMP_SLOT_TAKEN;
+	gMercProfiles[profile].impSlotState = IMPSlotState::TAKEN;
 	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
 }
 
