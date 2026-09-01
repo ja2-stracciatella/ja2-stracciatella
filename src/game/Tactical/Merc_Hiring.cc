@@ -370,21 +370,25 @@ bool IsMercDead(MERCPROFILESTRUCT const& p)
 }
 
 
-/* Whether someone already on the ground speaks with this merc's voice. Several
- * player generated characters may be given the same one, and they then share
- * every recording, so anything both of them say is the second one repeating the
- * first word for word. */
-static bool VoiceHasAlreadyLanded(SOLDIERTYPE const& s)
+/* Whether this merc is the one that speaks for its voice. Several player
+ * generated characters may be given the same voice, and a voice is one set of
+ * recordings, so letting each of them talk plays the same line back twice over.
+ * A whole team is dropped from the helicopter at once, which leaves no "who
+ * spoke first" to go by, so the lowest numbered profile sharing a voice speaks
+ * for it: exactly one character of each voice talks, in any order of dropping,
+ * and every voice on the team is heard. */
+static bool SpeaksForItsVoice(SOLDIERTYPE const& s)
 {
 	UINT8 const ubVoiceId = GetProfile(s.ubProfile).ubVoiceId;
 	FOR_EACH_IN_TEAM(other, OUR_TEAM)
 	{
 		if (other == &s) continue;
-		// still on its way, so it has not said anything yet
+		// still on its way, so not part of this arrival
 		if (other->bAssignment == IN_TRANSIT) continue;
-		if (GetProfile(other->ubProfile).ubVoiceId == ubVoiceId) return true;
+		if (GetProfile(other->ubProfile).ubVoiceId != ubVoiceId) continue;
+		if (other->ubProfile < s.ubProfile) return false;
 	}
-	return false;
+	return true;
 }
 
 
@@ -393,12 +397,11 @@ void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 	// If we are approaching with helicopter, don't say any ( yet )
 	if (s.ubStrategicInsertionCode == INSERTION_CODE_CHOPPER) return;
 
-	// Player-generated characters issue a comment about arriving in Omerta, but
-	// only the first of a voice to land: the rest would be playing the same
-	// recording back.
+	// Player-generated characters issue a comment about arriving in Omerta, one
+	// character per voice: the others would be playing the same recording back.
 	if (s.ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER &&
 		gubQuest[QUEST_DELIVER_LETTER] == QUESTINPROGRESS &&
-		!VoiceHasAlreadyLanded(s))
+		SpeaksForItsVoice(s))
 	{
 		TacticalCharacterDialogue(&s, QUOTE_PC_DROPPED_OMERTA);
 	}
