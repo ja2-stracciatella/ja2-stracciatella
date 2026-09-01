@@ -1,8 +1,6 @@
 #include "DefaultGamePolicy.h"
 #include "Types.h"
 
-#include <algorithm>
-
 DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 {
 	auto gp = json.toObject();
@@ -75,7 +73,7 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	imp_attribute_bonus = imp.getOptionalInt("bonus_attribute_points", 40);
 	imp_pick_skills_directly = imp.getOptionalBool("pick_skills_directly");
 
-	imp_max_characters = std::max<unsigned int>(imp.getOptionalUInt("max_characters", 1), 1);
+	imp_max_characters = imp.getOptionalUInt("max_characters", 1);
 
 	merc_online_min_days = gp.getOptionalUInt("merc_online_min_days", 1);
 	merc_online_max_days = gp.getOptionalUInt("merc_online_max_days", 2);
