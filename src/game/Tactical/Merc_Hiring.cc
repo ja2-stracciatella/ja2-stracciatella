@@ -370,14 +370,35 @@ bool IsMercDead(MERCPROFILESTRUCT const& p)
 }
 
 
+/* Whether someone already on the ground speaks with this merc's voice. Several
+ * player generated characters may be given the same one, and they then share
+ * every recording, so anything both of them say is the second one repeating the
+ * first word for word. */
+static bool VoiceHasAlreadyLanded(SOLDIERTYPE const& s)
+{
+	UINT8 const ubVoiceId = GetProfile(s.ubProfile).ubVoiceId;
+	FOR_EACH_IN_TEAM(other, OUR_TEAM)
+	{
+		if (other == &s) continue;
+		// still on its way, so it has not said anything yet
+		if (other->bAssignment == IN_TRANSIT) continue;
+		if (GetProfile(other->ubProfile).ubVoiceId == ubVoiceId) return true;
+	}
+	return false;
+}
+
+
 void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 {
 	// If we are approaching with helicopter, don't say any ( yet )
 	if (s.ubStrategicInsertionCode == INSERTION_CODE_CHOPPER) return;
 
-	// Player-generated characters issue a comment about arriving in Omerta.
+	// Player-generated characters issue a comment about arriving in Omerta, but
+	// only the first of a voice to land: the rest would be playing the same
+	// recording back.
 	if (s.ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER &&
-		gubQuest[QUEST_DELIVER_LETTER] == QUESTINPROGRESS)
+		gubQuest[QUEST_DELIVER_LETTER] == QUESTINPROGRESS &&
+		!VoiceHasAlreadyLanded(s))
 	{
 		TacticalCharacterDialogue(&s, QUOTE_PC_DROPPED_OMERTA);
 	}
