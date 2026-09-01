@@ -58,6 +58,12 @@ INT32 GetIMPPortraitIndex( bool fMale, INT32 iNth );
  * when the data no longer offers it. */
 INT32 FindIMPPortraitByFace( UINT8 ubFaceIndex );
 
+/** Whether a character was built with the heavy male build: one of the portraits
+ * the data marks as burly, carried by someone with the strength for it. Both the
+ * body the character is given and the way the I.M.P. report describes it hang off
+ * this, so the two cannot describe different people. */
+bool IMPCharacterHasBigBody( const MERCPROFILESTRUCT& p );
+
 /** The portrait the character being built wears. Every screen takes its index
  * from GetIMPPortraitIndex, so it is only ever out of range if the data changed
  * under a half built character. */

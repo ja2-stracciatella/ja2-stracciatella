@@ -2155,16 +2155,23 @@ static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 	iEndOfSection = IMP_RESULTS_PORTRAIT_LENGTH;
 	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
 
+	/* Which blurb describes the character's looks. The burly portraits only get
+	 * the burly description if the character also had the strength to be given
+	 * that build, so the report and the merc who turns up are the same person.
+	 * A portrait the game did not ship with has no description of its own and
+	 * falls back on the plainest one of its build. */
+	bool const fBigBody = IMPCharacterHasBigBody(imp);
+
 	switch (iPortrait)
 	{
-		case  0: iOffSet = IMP_PORTRAIT_MALE_1;   break;
+		case  0: iOffSet = fBigBody ? IMP_PORTRAIT_MALE_1 : IMP_PORTRAIT_MALE_2; break;
 		case  1: iOffSet = IMP_PORTRAIT_MALE_2;   break;
 		case  2: iOffSet = IMP_PORTRAIT_MALE_3;   break;
 		case  3: iOffSet = IMP_PORTRAIT_MALE_4;   break;
 		case  4:
 		case  5: iOffSet = IMP_PORTRAIT_MALE_5;   break;
 		case  6:
-		case  7: iOffSet = IMP_PORTRAIT_MALE_6;   break;
+		case  7: iOffSet = fBigBody ? IMP_PORTRAIT_MALE_6 : IMP_PORTRAIT_MALE_2; break;
 		case  8: iOffSet = IMP_PORTRAIT_FEMALE_1; break;
 		case  9: iOffSet = IMP_PORTRAIT_FEMALE_2; break;
 		case 10: iOffSet = IMP_PORTRAIT_FEMALE_3; break;
@@ -2172,10 +2179,12 @@ static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 		case 12: iOffSet = IMP_PORTRAIT_FEMALE_4; break;
 		case 13:
 		case 14: iOffSet = IMP_PORTRAIT_FEMALE_5; break;
-		// the blurb describing the character's looks only covers the portraits
-		// the game shipped with; any others are described by the first of their
-		// gender rather than by whatever ran last
-		default: iOffSet = imp.bSex == MALE ? IMP_PORTRAIT_MALE_1 : IMP_PORTRAIT_FEMALE_1; break;
+		default:
+			iOffSet =
+				imp.bSex != MALE ? IMP_PORTRAIT_FEMALE_1 :
+				fBigBody         ? IMP_PORTRAIT_MALE_1   :
+				                   IMP_PORTRAIT_MALE_2;
+			break;
 	}
 
 	if (iRand % 2 == 0) iOffSet += 2;

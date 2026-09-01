@@ -18,6 +18,9 @@
 
 #define ATTITUDE_LIST_SIZE 20
 
+// the strength a burly portrait has to be carried by to become a burly body
+#define IMP_BIG_BODY_MIN_STRENGTH 75
+
 
 static INT32 AttitudeList[ATTITUDE_LIST_SIZE];
 static INT32 iLastElementInAttitudeList = 0;
@@ -150,6 +153,19 @@ IMPPortrait const& GetCurrentIMPPortrait(void)
 	std::vector<IMPPortrait> const& portraits = GetIMPPortraits();
 	Assert(iPortraitNumber >= 0 && iPortraitNumber < static_cast<INT32>(portraits.size()));
 	return portraits[iPortraitNumber];
+}
+
+
+bool IMPCharacterHasBigBody(MERCPROFILESTRUCT const& p)
+{
+	if (p.bSex != MALE) return false;
+
+	INT32 const iPortrait = FindIMPPortraitByFace(p.ubFaceIndex);
+	if (iPortrait < 0 || !GetIMPPortraits()[iPortrait].bigBody) return false;
+
+	// the strength the character was made with, which is what the build was
+	// decided on: training up afterwards does not change anyone's shape
+	return p.bStrength - p.bStrengthDelta >= IMP_BIG_BODY_MIN_STRENGTH;
 }
 
 
@@ -498,7 +514,6 @@ static void SetMercSkinAndHairColors(void)
 }
 
 
-static BOOLEAN ShouldThisMercHaveABigBody(void);
 
 
 void HandleMercStatsForChangesInFace(void)
@@ -512,7 +527,7 @@ void HandleMercStatsForChangesInFace(void)
 	// body type
 	if (fCharacterIsMale)
 	{
-		if (ShouldThisMercHaveABigBody())
+		if (IMPCharacterHasBigBody(p))
 		{
 			p.ubBodyType = BIGMALE;
 			if (iSkillA == MARTIALARTS) iSkillA = HANDTOHAND;
@@ -533,13 +548,4 @@ void HandleMercStatsForChangesInFace(void)
 	// skill trait
 	p.bSkillTrait  = iSkillA;
 	p.bSkillTrait2 = iSkillB;
-}
-
-
-static BOOLEAN ShouldThisMercHaveABigBody(void)
-{
-	// should this merc be a big body typ
-	return
-		GetCurrentIMPPortrait().bigBody &&
-		gMercProfiles[GetIMPSlotInProgress()].bStrength >= 75;
 }
