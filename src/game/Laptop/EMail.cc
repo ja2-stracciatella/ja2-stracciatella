@@ -1907,7 +1907,7 @@ static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 		gMercProfiles[mailProfile].impSlotState == IMPSlotState::TAKEN;
 	MERCPROFILESTRUCT const& imp = fMailNamesCharacter ?
 		GetProfile(mailProfile) : GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
-	INT32 const iPortrait = imp.ubFaceIndex - 200;
+	INT32 const iPortrait = FindIMPPortraitByFace(imp.ubFaceIndex);
 
 	// Use initial stats (current minus any gains since creation) so the e-mail
 	// reflects what IMP actually assessed, not stats grinded up after arrival.
@@ -2172,6 +2172,10 @@ static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 		case 12: iOffSet = IMP_PORTRAIT_FEMALE_4; break;
 		case 13:
 		case 14: iOffSet = IMP_PORTRAIT_FEMALE_5; break;
+		// the blurb describing the character's looks only covers the portraits
+		// the game shipped with; any others are described by the first of their
+		// gender rather than by whatever ran last
+		default: iOffSet = imp.bSex == MALE ? IMP_PORTRAIT_MALE_1 : IMP_PORTRAIT_FEMALE_1; break;
 	}
 
 	if (iRand % 2 == 0) iOffSet += 2;

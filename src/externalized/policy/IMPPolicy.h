@@ -14,12 +14,39 @@ struct IMPStartingItemSet;
 class ItemSystem;
 using Condition = std::variant<uint8_t, std::string>;
 
+/** A voice an I.M.P. character can be given: the merc profile whose speech,
+ * dialogue text and battle sound files it is made of. Several characters may
+ * be given the same one. */
+struct IMPVoice
+{
+	uint8_t profile;
+	bool isMale;
+};
+
+/** A portrait an I.M.P. character can be given, and everything the character's
+ * looks are made of: the face image, the palettes the body is rendered with,
+ * the offsets the talking head animates at, and whether it is a burly one. */
+struct IMPPortrait
+{
+	uint8_t face;
+	bool isMale;
+	bool bigBody;
+	ST::string skin;
+	ST::string hair;
+	uint16_t eyesX;
+	uint16_t eyesY;
+	uint16_t mouthX;
+	uint16_t mouthY;
+};
+
 class IMPPolicy
 {
 public:
 	virtual bool isCodeAccepted(const ST::string& code) const = 0;
 	virtual uint8_t getStartingLevel() const = 0;
 	virtual const std::vector<IMPStartingItemSet>& getInventory() const = 0;
+	virtual const std::vector<IMPVoice>& getVoices() const = 0;
+	virtual const std::vector<IMPPortrait>& getPortraits() const = 0;
 	virtual ~IMPPolicy() = default;
 };
 

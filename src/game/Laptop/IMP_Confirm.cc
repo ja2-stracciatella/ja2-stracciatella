@@ -37,35 +37,6 @@ static BUTTON_PICS* giIMPConfirmButtonImage[2];
 GUIButtonRef giIMPConfirmButton[2];
 
 
-struct FacePosInfo
-{
-	UINT8 eye_x;
-	UINT8 eye_y;
-	UINT8 mouth_x;
-	UINT8 mouth_y;
-};
-
-static const FacePosInfo g_face_info[] =
-{
-	{  8,  5,  8, 21 },
-	{  9,  4,  9, 23 },
-	{  8,  5,  7, 24 },
-	{  6,  6,  7, 25 },
-	{ 13,  5, 11, 23 },
-	{ 11,  5, 10, 24 },
-	{  8,  4,  8, 24 },
-	{  8,  4,  8, 24 },
-	{  4,  4,  5, 25 },
-	{  5,  5,  6, 24 },
-	{  7,  5,  7, 24 },
-	{  5,  7,  6, 26 },
-	{  7,  6,  7, 24 },
-	{ 11,  5,  9, 23 },
-	{  8,  5,  7, 24 },
-	{  5,  6,  5, 26 }
-};
-
-
 static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason);
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason);
 
@@ -176,8 +147,8 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
 	HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );
 
-	const FacePosInfo* const fi = &g_face_info[iPortraitNumber];
-	SetProfileFaceData(HireMercStruct.ubProfileID, 200 + iPortraitNumber, fi->eye_x, fi->eye_y, fi->mouth_x, fi->mouth_y);
+	IMPPortrait const& portrait = GetCurrentIMPPortrait();
+	SetProfileFaceData(HireMercStruct.ubProfileID, portrait.face, portrait.eyesX, portrait.eyesY, portrait.mouthX, portrait.mouthY);
 
 	//if we succesfully hired the merc
 	return HireMerc(HireMercStruct);
@@ -306,12 +277,15 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
 {
-	MERCPROFILESTRUCT& p = GetProfile(ubMercProfileID);
-	if (p.ubFaceIndex < 200 || p.ubFaceIndex >= 200 + lengthof(g_face_info) || ubMercProfileID >= PROF_HUMMER) return;
+	if (ubMercProfileID >= PROF_HUMMER) return;
 
-	const FacePosInfo* const fi = &g_face_info[p.ubFaceIndex - 200];
-	p.usEyesX  = fi->eye_x;
-	p.usEyesY  = fi->eye_y;
-	p.usMouthX = fi->mouth_x;
-	p.usMouthY = fi->mouth_y;
+	MERCPROFILESTRUCT& p = GetProfile(ubMercProfileID);
+	INT32 const iPortrait = FindIMPPortraitByFace(p.ubFaceIndex);
+	if (iPortrait < 0) return;
+
+	IMPPortrait const& portrait = GetIMPPortraits()[iPortrait];
+	p.usEyesX  = portrait.eyesX;
+	p.usEyesY  = portrait.eyesY;
+	p.usMouthX = portrait.mouthX;
+	p.usMouthY = portrait.mouthY;
 }

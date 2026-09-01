@@ -86,6 +86,84 @@ void MarkIMPCharacterCreated(ProfileID const profile)
 }
 
 
+const std::vector<IMPVoice>& GetIMPVoices(void)
+{
+	return GCM->getIMPPolicy()->getVoices();
+}
+
+
+const std::vector<IMPPortrait>& GetIMPPortraits(void)
+{
+	return GCM->getIMPPolicy()->getPortraits();
+}
+
+
+template<typename T> static INT32 CountForGender(std::vector<T> const& entries, bool const fMale)
+{
+	INT32 iCount = 0;
+	for (T const& entry : entries)
+	{
+		if (entry.isMale == fMale) ++iCount;
+	}
+	return iCount;
+}
+
+
+template<typename T> static INT32 IndexForGender(std::vector<T> const& entries, bool const fMale, INT32 const iNth)
+{
+	INT32 iSeen = 0;
+	for (size_t i = 0; i != entries.size(); ++i)
+	{
+		if (entries[i].isMale != fMale) continue;
+		if (iSeen++ == iNth) return static_cast<INT32>(i);
+	}
+	return -1;
+}
+
+
+INT32 GetNumberOfIMPVoices(bool const fMale)
+{
+	return CountForGender(GetIMPVoices(), fMale);
+}
+
+
+INT32 GetNumberOfIMPPortraits(bool const fMale)
+{
+	return CountForGender(GetIMPPortraits(), fMale);
+}
+
+
+INT32 GetIMPVoiceIndex(bool const fMale, INT32 const iNth)
+{
+	return IndexForGender(GetIMPVoices(), fMale, iNth);
+}
+
+
+INT32 GetIMPPortraitIndex(bool const fMale, INT32 const iNth)
+{
+	return IndexForGender(GetIMPPortraits(), fMale, iNth);
+}
+
+
+IMPPortrait const& GetCurrentIMPPortrait(void)
+{
+	std::vector<IMPPortrait> const& portraits = GetIMPPortraits();
+	Assert(iPortraitNumber >= 0 && iPortraitNumber < static_cast<INT32>(portraits.size()));
+	return portraits[iPortraitNumber];
+}
+
+
+INT32 FindIMPPortraitByFace(UINT8 const ubFaceIndex)
+{
+	std::vector<IMPPortrait> const& portraits = GetIMPPortraits();
+	for (size_t i = 0; i != portraits.size(); ++i)
+	{
+		if (portraits[i].face == ubFaceIndex) return static_cast<INT32>(i);
+	}
+	return -1;
+}
+
+
 void CreateACharacterFromPlayerEnteredStats(void)
 {
 	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
@@ -96,9 +174,10 @@ void CreateACharacterFromPlayerEnteredStats(void)
 	p.bSex = fCharacterIsMale ? MALE : FEMALE;
 
 	// The voice the player picked, which is where this character's speech,
-	// dialogue text and battle sounds come from. Slots past the six the game
-	// shipped with have none of their own, so this also makes it hireable.
-	p.ubVoiceId   = PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId;
+	// dialogue text and battle sounds come from. A slot with no dialogue file of
+	// its own was left unhireable when the profiles were read, so borrowing one
+	// is also what makes it hireable.
+	p.ubVoiceId   = GetIMPVoices()[LaptopSaveInfo.iVoiceId].profile;
 	p.bMercStatus = MERC_OK;
 
 	p.bLifeMax    = iHealth;
@@ -396,7 +475,7 @@ static void SelectMercFace(void)
 	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	// now the offsets
-	p.ubFaceIndex = 200 + iPortraitNumber;
+	p.ubFaceIndex = GetCurrentIMPPortrait().face;
 
 	// eyes
 	p.usEyesX = 0;
@@ -413,45 +492,10 @@ static void SelectMercFace(void)
 
 static void SetMercSkinAndHairColors(void)
 {
-#define PINKSKIN  "PINKSKIN"
-#define TANSKIN   "TANSKIN"
-#define DARKSKIN  "DARKSKIN"
-#define BLACKSKIN "BLACKSKIN"
-
-#define BROWNHEAD "BROWNHEAD"
-#define BLACKHEAD "BLACKHEAD" // black skin till here
-#define WHITEHEAD "WHITEHEAD" // dark skin till here
-#define BLONDHEAD "BLONDHEAD"
-#define REDHEAD   "REDHEAD"   // pink/tan skin till here
-
-	static const struct
-	{
-		const char* Skin;
-		const char* Hair;
-	} Colors[] =
-	{
-		{ BLACKSKIN, BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ DARKSKIN,  BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ DARKSKIN,  BLACKHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ PINKSKIN,  BROWNHEAD },
-		{ TANSKIN,   BLACKHEAD },
-		{ TANSKIN,   BLACKHEAD },
-		{ PINKSKIN,  BROWNHEAD },
-		{ BLACKSKIN, BROWNHEAD },
-		{ TANSKIN,   REDHEAD   },
-		{ TANSKIN,   BLONDHEAD }
-	};
-
-	Assert(iPortraitNumber < static_cast<INT32>(lengthof(Colors)));
+	IMPPortrait const& portrait = GetCurrentIMPPortrait();
 	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
-	p.HAIR = Colors[iPortraitNumber].Hair;
-	p.SKIN = Colors[iPortraitNumber].Skin;
+	p.HAIR = portrait.hair;
+	p.SKIN = portrait.skin;
 }
 
 
@@ -497,6 +541,6 @@ static BOOLEAN ShouldThisMercHaveABigBody(void)
 {
 	// should this merc be a big body typ
 	return
-		(iPortraitNumber == 0 || iPortraitNumber == 6 || iPortraitNumber == 7) &&
+		GetCurrentIMPPortrait().bigBody &&
 		gMercProfiles[GetIMPSlotInProgress()].bStrength >= 75;
 }

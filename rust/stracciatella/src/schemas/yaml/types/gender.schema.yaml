@@ -1,0 +1,6 @@
+title: Gender
+description: The gender of a merc.
+type: string
+enum:
+  - MALE
+  - FEMALE

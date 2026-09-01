@@ -307,7 +307,11 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 
 			fLoadingCharacterForPreviousImpProfile = true;
 			MERCPROFILESTRUCT& profile_saved = gMercProfiles[IMPSavedProfileLoadMercProfile(pNickNameString)];
-			iPortraitNumber = profile_saved.ubFaceIndex - 200;
+			// the imported character keeps its own face where the data still
+			// offers it, and is given the first one of its gender where it does not
+			INT32 const iSavedPortrait = FindIMPPortraitByFace(profile_saved.ubFaceIndex);
+			iPortraitNumber = iSavedPortrait >= 0 ?
+				iSavedPortrait : GetIMPPortraitIndex(profile_saved.bSex == MALE, 0);
 			fCharacterIsMale = ( profile_saved.bSex == MALE );
 			iCurrentImpPage = IMP_CONFIRM;
 			fButtonPendingFlag = TRUE;
