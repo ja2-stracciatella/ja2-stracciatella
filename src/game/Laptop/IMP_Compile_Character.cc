@@ -465,7 +465,7 @@ void ResetSkillsAttributesAndPersonality( void )
 }
 
 
-static void SetMercSkinAndHairColors(void);
+static void SetMercPalettes(void);
 
 
 static void SelectMercFace(void)
@@ -485,16 +485,23 @@ static void SelectMercFace(void)
 	p.usMouthY = 0;
 
 	// set merc skins and hair color
-	SetMercSkinAndHairColors();
+	SetMercPalettes();
 }
 
 
-static void SetMercSkinAndHairColors(void)
+static void SetMercPalettes(void)
 {
 	IMPPortrait const& portrait = GetCurrentIMPPortrait();
 	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 	p.HAIR = portrait.hair;
 	p.SKIN = portrait.skin;
+
+	// The clothes were never set here: the six profiles the game shipped for
+	// player characters carry them in prof.dat, so they arrived with the slot.
+	// Every other profile carries an empty palette name, which renders as a
+	// colour the player did not pick, so set what those six declare.
+	p.PANTS = "BLACKPANTS";
+	p.VEST  = "WHITEVEST";
 }
 
 
