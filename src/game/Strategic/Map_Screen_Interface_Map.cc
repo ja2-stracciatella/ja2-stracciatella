@@ -413,7 +413,7 @@ void InitMapScreenInterfaceMap()
 	for (auto const& pair : GCM->getTowns())
 	{
 		auto town = pair.second;
-		sBaseSectorList.push_back(town->getBaseSector());
+		sBaseSectorList.push_back(town->getMilitiaMapBaseSector());
 		pTownPoints.push_back(town->townPoint);
 	}
 

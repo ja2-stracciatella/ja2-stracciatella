@@ -5,6 +5,9 @@
  *  - townId:    The numeric ID of the town as set in codebase
  *  - internalName:    The name to refer to this town from other json files
  *  - sectors:    List of sectors belonging to the town.
+ *  - militiaMapBaseSector:    Top left corner of the 3x3 grid the militia panel draws for this
+ *      town. It must match the town's cutout in interface/militiamaps.sti, so it is art data and
+ *      not always the town's own top left sector. Defaults to the town's own top left sector.
  *  - townPoint:    Position of town names on the map. These are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town.
  *  - isMilitiaTrainingAllowed:   Whether or not militia is allowed in town
  */
@@ -13,6 +16,7 @@
 		"townId": 1,
 		"internalName": "OMERTA",
 		"sectors": [ "A9", "A10" ],
+		"militiaMapBaseSector": "A9",
 		"townPoint": { "x": 90, "y": 10 },
 		"isMilitiaTrainingAllowed": false
 	},
@@ -20,6 +24,7 @@
 		"townId": 2,
 		"internalName": "DRASSEN",
 		"sectors": [ "B13", "C13", "D13" ],
+		"militiaMapBaseSector": "B13",
 		"townPoint": { "x": 125, "y": 40 },
 		"isMilitiaTrainingAllowed": true
 	},
@@ -27,6 +32,7 @@
 		"townId": 3,
 		"internalName": "ALMA",
 		"sectors": [ "H13", "H14", "I13", "I14" ],
+		"militiaMapBaseSector": "H13",
 		"townPoint": { "x": 130, "y": 90 },
 		"isMilitiaTrainingAllowed": true
 	},
@@ -34,6 +40,7 @@
 		"townId": 4,
 		"internalName": "GRUMM",
 		"sectors": [ "G1", "G2", "H1", "H2", "H3" ],
+		"militiaMapBaseSector": "G1",
 		"townPoint": { "x": 15, "y": 80 },
 		"isMilitiaTrainingAllowed": true
 	},
@@ -41,6 +48,7 @@
 		"townId": 5,
 		"internalName": "TIXA",
 		"sectors": [ "J9" ],
+		"militiaMapBaseSector": "I8",
 		"townPoint": { "x": 85, "y": 100 },
 		"isMilitiaTrainingAllowed": false
 	},
@@ -48,6 +56,7 @@
 		"townId": 6,
 		"internalName": "CAMBRIA",
 		"sectors": [ "F8", "F9", "G8", "G9", "H8" ],
+		"militiaMapBaseSector": "F8",
 		"townPoint": { "x": 95, "y": 70 },
 		"isMilitiaTrainingAllowed": true
 	},
@@ -55,6 +64,7 @@
 		"townId": 7,
 		"internalName": "SAN_MONA",
 		"sectors": [ "C5", "C6", "D4", "D5" ],
+		"militiaMapBaseSector": "B4",
 		"townPoint": { "x": 45, "y": 40 },
 		"isMilitiaTrainingAllowed": false
 	},
@@ -62,6 +72,7 @@
 		"townId": 8,
 		"internalName": "ESTONI",
 		"sectors": [ "I6" ],
+		"militiaMapBaseSector": "H5",
 		"townPoint": { "x": 55, "y": 90 },
 		"isMilitiaTrainingAllowed": false
 	},
@@ -69,6 +80,7 @@
 		"townId": 9,
 		"internalName": "ORTA",
 		"sectors": [ "K4" ],
+		"militiaMapBaseSector": "J3",
 		"townPoint": { "x": 35, "y": 110 },
 		"isMilitiaTrainingAllowed": false
 	},
@@ -76,6 +88,7 @@
 		"townId": 10,
 		"internalName": "BALIME",
 		"sectors": [ "L11", "L12" ],
+		"militiaMapBaseSector": "K11",
 		"townPoint": { "x": 110, "y": 120 },
 		"isMilitiaTrainingAllowed": true
 	},
@@ -83,6 +96,7 @@
 		"townId": 11,
 		"internalName": "MEDUNA",
 		"sectors": [ "N3", "N4", "N5", "O3", "O4", "P3" ],
+		"militiaMapBaseSector": "N3",
 		"townPoint": { "x": 45, "y": 150 },
 		"isMilitiaTrainingAllowed": true
 	},
@@ -90,6 +104,7 @@
 		"townId": 12,
 		"internalName": "CHITZENA",
 		"sectors": [ "A2", "B2" ],
+		"militiaMapBaseSector": "A2",
 		"townPoint": { "x": 15, "y": 20 },
 		"isMilitiaTrainingAllowed": true
 	}
