@@ -174,11 +174,8 @@ void CreateACharacterFromPlayerEnteredStats(void)
 	p.bSex = fCharacterIsMale ? MALE : FEMALE;
 
 	// The voice the player picked, which is where this character's speech,
-	// dialogue text and battle sounds come from. A slot with no dialogue file of
-	// its own was left unhireable when the profiles were read, so borrowing one
-	// is also what makes it hireable.
-	p.ubVoiceId   = GetIMPVoices()[LaptopSaveInfo.iVoiceId].profile;
-	p.bMercStatus = MERC_OK;
+	// dialogue text and battle sounds come from.
+	p.ubVoiceId = GetIMPVoices()[LaptopSaveInfo.iVoiceId].profile;
 
 	p.bLifeMax    = iHealth;
 	p.bLife       = iHealth;
@@ -199,8 +196,10 @@ void CreateACharacterFromPlayerEnteredStats(void)
 
 	p.bExpLevel = GCM->getIMPPolicy()->getStartingLevel();
 
-	// set time away
-	p.bMercStatus = 0;
+	// Clears MERC_HAS_NO_TEXT_FILE, which loading the profiles stamps on every
+	// slot with no dialogue file named after it. That is all of them past the six
+	// the game shipped with, until the voice picked above lends them one.
+	p.bMercStatus = MERC_OK;
 
 	SelectMercFace();
 }
