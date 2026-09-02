@@ -5323,6 +5323,9 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 					pSoldier->bActionInProgress = TRUE;
 				}
 
+				// Stop first aid, or they'd get back up into the aid crouch
+				InternalGivingSoldierCancelServices( pSoldier, FALSE );
+
 				// go for it!
 				// ATE: Cancel any PENDING ANIMATIONS...
 				pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
