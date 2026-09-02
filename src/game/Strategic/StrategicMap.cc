@@ -533,6 +533,9 @@ void SetCurrentWorldSector(const SGPSector& sector)
 		// ATE: Check what sector we are in, to show description if we have an RPC
 		HandleRPCDescriptionOfSector(sector);
 
+		// useful for mods that want to detect first-time area entry
+		SetSectorFlag(sector, SF_HAS_ENTERED_TACTICAL);
+
 		ResetMultiSelection();
 
 		gTacticalStatus.fHasEnteredCombatModeSinceEntering = FALSE;
