@@ -1,6 +1,7 @@
 #include "CharProfile.h"
 #include "Directories.h"
 #include "Font.h"
+#include "IMP_Compile_Character.h"
 #include "IMP_Portraits.h"
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
@@ -16,9 +17,8 @@
 #include <string_theory/string>
 
 
-//current and last pages
+// which of the portraits offered for this gender is on show
 INT32 iCurrentPortrait = 0;
-INT32 iLastPicture = 7;
 
 // buttons needed for the IMP portrait screen
 GUIButtonRef giIMPPortraitButton[3];
@@ -36,6 +36,10 @@ static void CreateIMPPortraitButtons(void);
 
 void EnterIMPPortraits( void )
 {
+	// the data may offer a different number of portraits per gender, so an index
+	// left over from profiling the other one can be past the end
+	if (iCurrentPortrait >= GetNumberOfIMPPortraits(fCharacterIsMale)) iCurrentPortrait = 0;
+
 	// create buttons
 	CreateIMPPortraitButtons( );
 
@@ -90,19 +94,20 @@ void HandleIMPPortraits( void )
 
 static void RenderPortrait(INT16 const x, INT16 const y)
 { // Render the portrait of the current picture
-	INT32 const portrait = (fCharacterIsMale ? 200 : 208) + iCurrentPortrait;
-	ST::string filename = ST::format(FACESDIR "/bigfaces/{}.sti", portrait);
+	INT32 const portrait = GetIMPPortraitIndex(fCharacterIsMale, iCurrentPortrait);
+	if (portrait < 0) return;
+
+	ST::string filename = ST::format(FACESDIR "/bigfaces/{}.sti", GetIMPPortraits()[portrait].face);
 	BltVideoObjectOnce(FRAME_BUFFER, filename.c_str(), 0, LAPTOP_SCREEN_UL_X + x, LAPTOP_SCREEN_WEB_UL_Y + y);
 }
 
 
 static void IncrementPictureIndex(void)
 {
-	// cycle to next picture
 	iCurrentPortrait++;
 
 	// gone too far?
-	if( iCurrentPortrait > iLastPicture )
+	if( iCurrentPortrait >= GetNumberOfIMPPortraits(fCharacterIsMale) )
 	{
 		iCurrentPortrait = 0;
 	}
@@ -111,13 +116,12 @@ static void IncrementPictureIndex(void)
 
 static void DecrementPicture(void)
 {
-	// cycle to previous picture
 	iCurrentPortrait--;
 
 	// gone too far?
 	if( iCurrentPortrait < 0 )
 	{
-		iCurrentPortrait = iLastPicture;
+		iCurrentPortrait = GetNumberOfIMPPortraits(fCharacterIsMale) - 1;
 	}
 }
 
@@ -202,7 +206,7 @@ static void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 		if (iCurrentProfileMode == 5) iCurrentImpPage = IMP_FINISH;
 
 		// grab picture number
-		iPortraitNumber = iCurrentPortrait + (fCharacterIsMale ? 0 : 8);
+		iPortraitNumber = GetIMPPortraitIndex(fCharacterIsMale, iCurrentPortrait);
 
 		fButtonPendingFlag = TRUE;
 	}

@@ -42,7 +42,7 @@ ST::string Content::GetDialogueTextFilename(const MercProfile &profile,
 	{
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			zFileName = ST::format("{}/{03d}.edt", MERCEDTDIR, profile.getID());
+			zFileName = ST::format("{}/{03d}.edt", MERCEDTDIR, profile.getStruct().ubVoiceId);
 		}
 	}
 
@@ -84,22 +84,23 @@ ST::string Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16_
 	else
 	{
 		{
+			uint8_t const ubVoiceId = profile.getStruct().ubVoiceId;
 			if(isRussianVersion)
 			{
 				if (profile.isNPCorRPC() && profile.isRecruited())
 				{
-					zFileName = ST::format("{}/r_{03d}_{03d}.wav", SPEECHDIR, profile.getID(), usQuoteNum);
+					zFileName = ST::format("{}/r_{03d}_{03d}.wav", SPEECHDIR, ubVoiceId, usQuoteNum);
 				}
 				else
 				{
 					// build name of wav file (characternum + quotenum)
-					zFileName = ST::format("{}/{03d}_{03d}.wav", SPEECHDIR, profile.getID(), usQuoteNum);
+					zFileName = ST::format("{}/{03d}_{03d}.wav", SPEECHDIR, ubVoiceId, usQuoteNum);
 				}
 			}
 			else
 			{
 				// build name of wav file (characternum + quotenum)
-				zFileName = ST::format("{}/{03d}_{03d}.wav", SPEECHDIR, profile.getID(), usQuoteNum);
+				zFileName = ST::format("{}/{03d}_{03d}.wav", SPEECHDIR, ubVoiceId, usQuoteNum);
 			}
 		}
 	}

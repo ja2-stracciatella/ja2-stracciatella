@@ -37,35 +37,6 @@ static BUTTON_PICS* giIMPConfirmButtonImage[2];
 GUIButtonRef giIMPConfirmButton[2];
 
 
-struct FacePosInfo
-{
-	UINT8 eye_x;
-	UINT8 eye_y;
-	UINT8 mouth_x;
-	UINT8 mouth_y;
-};
-
-static const FacePosInfo g_face_info[] =
-{
-	{  8,  5,  8, 21 },
-	{  9,  4,  9, 23 },
-	{  8,  5,  7, 24 },
-	{  6,  6,  7, 25 },
-	{ 13,  5, 11, 23 },
-	{ 11,  5, 10, 24 },
-	{  8,  4,  8, 24 },
-	{  8,  4,  8, 24 },
-	{  4,  4,  5, 25 },
-	{  5,  5,  6, 24 },
-	{  7,  5,  7, 24 },
-	{  5,  7,  6, 26 },
-	{  7,  6,  7, 24 },
-	{ 11,  5,  9, 23 },
-	{  8,  5,  7, 24 },
-	{  5,  6,  5, 26 }
-};
-
-
 static void BtnIMPConfirmNo(GUI_BUTTON *btn, UINT32 reason);
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason);
 
@@ -155,7 +126,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 		HandleMercStatsForChangesInFace();
 	}
 
-	HireMercStruct.ubProfileID = ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) ;
+	HireMercStruct.ubProfileID = GetIMPSlotInProgress() ;
 
 	if (!fLoadingCharacterForPreviousImpProfile)
 	{
@@ -176,8 +147,8 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
 	HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );
 
-	const FacePosInfo* const fi = &g_face_info[iPortraitNumber];
-	SetProfileFaceData(HireMercStruct.ubProfileID, 200 + iPortraitNumber, fi->eye_x, fi->eye_y, fi->mouth_x, fi->mouth_y);
+	IMPPortrait const& portrait = GetCurrentIMPPortrait();
+	SetProfileFaceData(HireMercStruct.ubProfileID, portrait.face, portrait.eyesX, portrait.eyesY, portrait.mouthX, portrait.mouthY);
 
 	//if we succesfully hired the merc
 	return HireMerc(HireMercStruct);
@@ -187,9 +158,9 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		if (LaptopSaveInfo.fIMPCompletedFlag)
+		if (!CanCreateAnotherIMPCharacter())
 		{
-			// already here, leave
+			// already made as many I.M.P. characters as allowed, leave
 			return;
 		}
 
@@ -199,16 +170,22 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 			return;
 		}
 
-		// line moved by CJC Nov 28 2002 to AFTER the check for money
-		LaptopSaveInfo.fIMPCompletedFlag = AddCharacterToPlayersTeam();
-		if (!LaptopSaveInfo.fIMPCompletedFlag) return; // only if merc hiring failed: no charge, give it another go
+		// Taken before the slot is claimed, after which the first free slot is
+		// the next character's, not this one's.
+		ProfileID const profile = GetIMPSlotInProgress();
 
-		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+		// line moved by CJC Nov 28 2002 to AFTER the check for money
+		if (!AddCharacterToPlayersTeam()) return; // only if merc hiring failed: no charge, give it another go
+
+		// holds the profile for the rest of the campaign
+		MarkIMPCharacterCreated(profile);
+
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(profile);
 		if (!pSoldier) return;
 
 		if (fLoadingCharacterForPreviousImpProfile && gamepolicy(imp_load_keep_inventory))
 		{
-			IMPSavedProfileLoadInventory(gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].zNickname, pSoldier);
+			IMPSavedProfileLoadInventory(gMercProfiles[profile].zNickname, pSoldier);
 			// re-add letter, since it just got wiped and almost certainly is not present in the import
 			if (pSoldier->ubID == 0 && FindObj(pSoldier, LETTER) == NO_SLOT) {
 				CreateSpecialItem(pSoldier, LETTER);
@@ -216,14 +193,15 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 		}
 
 		// charge the player
-		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
+		AddTransactionToPlayersBook(IMP_PROFILE, profile, GetWorldTotalMin(), -COST_OF_PROFILE);
 		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
 
 		fButtonPendingFlag = TRUE;
 		iCurrentImpPage = IMP_HOME_PAGE;
 
-		// send email notice
-		AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2);
+		// send email notice, naming the character it reports on: by the time the mail
+		// arrives a further I.M.P. may be the one iVoiceId points at
+		AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, profile, 2);
 
 		ResetCharacterStats();
 
@@ -299,12 +277,15 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
 {
-	MERCPROFILESTRUCT& p = GetProfile(ubMercProfileID);
-	if (p.ubFaceIndex < 200 || p.ubFaceIndex >= 200 + lengthof(g_face_info) || ubMercProfileID >= PROF_HUMMER) return;
+	if (ubMercProfileID >= PROF_HUMMER) return;
 
-	const FacePosInfo* const fi = &g_face_info[p.ubFaceIndex - 200];
-	p.usEyesX  = fi->eye_x;
-	p.usEyesY  = fi->eye_y;
-	p.usMouthX = fi->mouth_x;
-	p.usMouthY = fi->mouth_y;
+	MERCPROFILESTRUCT& p = GetProfile(ubMercProfileID);
+	INT32 const iPortrait = FindIMPPortraitByFace(p.ubFaceIndex);
+	if (iPortrait < 0) return;
+
+	IMPPortrait const& portrait = GetIMPPortraits()[iPortrait];
+	p.usEyesX  = portrait.eyesX;
+	p.usEyesY  = portrait.eyesY;
+	p.usMouthX = portrait.mouthX;
+	p.usMouthY = portrait.mouthY;
 }

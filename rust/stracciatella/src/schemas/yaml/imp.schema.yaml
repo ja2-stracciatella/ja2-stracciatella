@@ -13,6 +13,72 @@ properties:
     $ref: types/uint8.schema.yaml
     title: Starting level
     description: The starting level of a created IMP merc.
+  voices:
+    type: array
+    title: Voices
+    description: |
+      The voices an I.M.P. character can be offered, in the order the site shows them.
+
+      A voice is a set of speech, dialogue text and battle sound files, all named after the merc profile they were recorded for. The voice picked is stored on the character's own profile, so any number of characters may share one.
+    minItems: 1
+    items:
+      type: object
+      title: Voice
+      properties:
+        gender:
+          $ref: types/gender.schema.yaml
+          title: Gender
+          description: The gender this voice is offered for.
+        profile:
+          $ref: types/uint8.schema.yaml
+          title: Profile
+          description: The merc profile whose speech, dialogue text and battle sound files make up this voice.
+      required:
+      - gender
+      - profile
+  portraits:
+    type: array
+    title: Portraits
+    description: The portraits an I.M.P. character can be offered, in the order the site shows them.
+    minItems: 1
+    items:
+      type: object
+      title: Portrait
+      properties:
+        gender:
+          $ref: types/gender.schema.yaml
+          title: Gender
+          description: The gender this portrait is offered for.
+        face:
+          $ref: types/uint8.schema.yaml
+          title: Face
+          description: The face image, `FACES/<face>.sti`, with `FACES/bigfaces/<face>.sti` shown while picking.
+        skin:
+          type: string
+          title: Skin colour
+          description: The palette the character's skin is rendered with, for example `TANSKIN`.
+        hair:
+          type: string
+          title: Hair colour
+          description: The palette the character's hair is rendered with, for example `BROWNHEAD`.
+        eyes:
+          $ref: types/face-offset.schema.yaml
+        mouth:
+          $ref: types/face-offset.schema.yaml
+        big_body:
+          type: boolean
+          title: Big body
+          description: |
+            Whether this portrait is a burly one, which is given the big male body when the character is strong enough to carry it.
+
+            Defaults to `false`.
+      required:
+      - gender
+      - face
+      - skin
+      - hair
+      - eyes
+      - mouth
   inventory:
     type: array
     title: Inventory
@@ -43,4 +109,6 @@ properties:
     - items
 required:
 - activation_codes
+- voices
+- portraits
 - inventory

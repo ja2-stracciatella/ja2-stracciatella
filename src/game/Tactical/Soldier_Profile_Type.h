@@ -216,6 +216,15 @@ enum HatedSlot
 	NUM_HATED_SLOTS
 };
 
+/* Whether a profile the data marks as an I.M.P. slot holds a player generated
+ * character. There is no "being built" state: that character is always the
+ * first free slot, which stays the same one across a save and load. */
+enum class IMPSlotState : UINT8
+{
+	FREE,
+	TAKEN
+};
+
 struct MERCPROFILESTRUCT
 {
 	ST::string zName;
@@ -237,6 +246,13 @@ struct MERCPROFILESTRUCT
 	UINT16 usMouthY;
 	UINT32 uiBlinkFrequency{ 3000 };
 	UINT32 uiExpressionFrequency{ 2000 };
+	/* Voice: the profile whose speech, dialogue text and battle sounds this
+	 * character uses. Independent of the character's own ID, like ubFaceIndex,
+	 * and defaults to it on profile load. */
+	UINT8 ubVoiceId{};
+	/* I.M.P.: whether a player generated character holds this profile. Only
+	 * ever set on profiles of type IMP. */
+	IMPSlotState impSlotState{ IMPSlotState::FREE };
 
 	ST::string PANTS;
 	ST::string VEST;

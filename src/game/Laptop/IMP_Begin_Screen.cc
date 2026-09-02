@@ -133,6 +133,11 @@ void EnterIMPBeginScreen( void )
 {
 	InitImpBeginScreeenTextInputBoxes();
 
+	// Every character starts out here, including a restored one, which only sets
+	// the flag further down in the done callback. Clearing it now keeps a merc
+	// imported earlier from robbing the next I.M.P. of its starting gear.
+	fLoadingCharacterForPreviousImpProfile = FALSE;
+
 	bGenderFlag = iCurrentProfileMode != 0 ? fCharacterIsMale : -1;
 
 	ubFocus = OTHER_INPUT;
@@ -293,10 +298,20 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 		}
 		else if (GCM->getGamePolicy()->imp_load_saved_merc_by_nickname && IMPSavedProfileDoesFileExist(pNickNameString))
 		{
+			if (!CanCreateAnotherIMPCharacter())
+			{
+				DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pImpPopUpStrings[4], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+				iCurrentProfileMode = 0;
+				return;
+			}
+
 			fLoadingCharacterForPreviousImpProfile = true;
-			LaptopSaveInfo.iVoiceId = IMPSavedProfileLoadMercProfile(pNickNameString);
-			MERCPROFILESTRUCT& profile_saved = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
-			iPortraitNumber = profile_saved.ubFaceIndex - 200;
+			MERCPROFILESTRUCT& profile_saved = gMercProfiles[IMPSavedProfileLoadMercProfile(pNickNameString)];
+			// the imported character keeps its own face where the data still
+			// offers it, and is given the first one of its gender where it does not
+			INT32 const iSavedPortrait = FindIMPPortraitByFace(profile_saved.ubFaceIndex);
+			iPortraitNumber = iSavedPortrait >= 0 ?
+				iSavedPortrait : GetIMPPortraitIndex(profile_saved.bSex == MALE, 0);
 			fCharacterIsMale = ( profile_saved.bSex == MALE );
 			iCurrentImpPage = IMP_CONFIRM;
 			fButtonPendingFlag = TRUE;
@@ -324,7 +339,8 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 				case SDLK_RETURN:
 				case SDLK_SPACE:
 					if (ubFocus != OTHER_INPUT) {
-						bGenderFlag = ubFocus == MALE_GENDER ? IMP_MALE : IMP_FEMALE;
+						bool const fMale = ubFocus == MALE_GENDER;
+						bGenderFlag = fMale ? IMP_MALE : IMP_FEMALE;
 					}
 					SetActiveField(0);
 					break;
@@ -403,6 +419,8 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
+		if (!CanCreateAnotherIMPCharacter()) return;
+
 		// set mode to nick name type in
 		bGenderFlag = IMP_MALE;
 		InvalidateCheckboxes();
@@ -414,6 +432,8 @@ static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
+		if (!CanCreateAnotherIMPCharacter()) return;
+
 		// set mode to nick name type in
 		bGenderFlag = IMP_FEMALE;
 		InvalidateCheckboxes();

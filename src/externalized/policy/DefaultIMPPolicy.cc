@@ -59,6 +59,52 @@ static void readListOfItems(const JsonValue& value, std::vector<IMPStartingItemS
 	}
 }
 
+static bool readIsMale(const JsonObject& json)
+{
+	return json.GetString("gender") == "MALE";
+}
+
+
+// an [x, y] pair, the same shape the merc profile and RPC face offsets use
+static void readOffset(const JsonValue& value, uint16_t& x, uint16_t& y)
+{
+	auto const xy = value.toVec();
+	x = xy[0].toUInt();
+	y = xy[1].toUInt();
+}
+
+
+static void readVoices(const JsonValue& value, std::vector<IMPVoice>& voices)
+{
+	for (auto& entry : value.toVec())
+	{
+		auto obj = entry.toObject();
+		IMPVoice voice;
+		voice.profile = obj.GetUInt("profile");
+		voice.isMale  = readIsMale(obj);
+		voices.push_back(std::move(voice));
+	}
+}
+
+
+static void readPortraits(const JsonValue& value, std::vector<IMPPortrait>& portraits)
+{
+	for (auto& entry : value.toVec())
+	{
+		auto obj = entry.toObject();
+		IMPPortrait portrait;
+		portrait.face    = obj.GetUInt("face");
+		portrait.isMale  = readIsMale(obj);
+		portrait.bigBody = obj.getOptionalBool("big_body");
+		portrait.skin    = obj.GetString("skin");
+		portrait.hair    = obj.GetString("hair");
+		readOffset(obj["eyes"],  portrait.eyesX,  portrait.eyesY);
+		readOffset(obj["mouth"], portrait.mouthX, portrait.mouthY);
+		portraits.push_back(std::move(portrait));
+	}
+}
+
+
 DefaultIMPPolicy::DefaultIMPPolicy(const JsonValue& json, const ItemSystem *itemSystem)
 {
 	auto r = json.toObject();
@@ -66,6 +112,9 @@ DefaultIMPPolicy::DefaultIMPPolicy(const JsonValue& json, const ItemSystem *item
 	JsonUtility::parseListStrings(r["activation_codes"], m_activationCodes);
 
 	m_startingLevel = r.getOptionalUInt("starting_level", 1);
+
+	readVoices(r["voices"], m_voices);
+	readPortraits(r["portraits"], m_portraits);
 
 	readListOfItems(r["inventory"], m_inventory, itemSystem);
 }
@@ -87,4 +136,14 @@ uint8_t DefaultIMPPolicy::getStartingLevel() const
 const std::vector<IMPStartingItemSet>& DefaultIMPPolicy::getInventory() const
 {
 	return m_inventory;
+}
+
+const std::vector<IMPVoice>& DefaultIMPPolicy::getVoices() const
+{
+	return m_voices;
+}
+
+const std::vector<IMPPortrait>& DefaultIMPPolicy::getPortraits() const
+{
+	return m_portraits;
 }

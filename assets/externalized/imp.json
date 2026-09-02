@@ -6,6 +6,46 @@
     // vanilla setting: 1
     "starting_level": 1,
 
+    // The voices an I.M.P. character can be offered, in the order the site shows
+    // them. A voice is a set of speech, dialogue text and battle sounds, all named
+    // after the merc profile they were recorded for: SPEECH/051_*.wav,
+    // MERCEDT/051.edt and BATTLESNDS/051_*.wav make up voice 51. The voice picked
+    // is written to the character's own profile, so any number of characters may
+    // share one.
+    "voices": [
+        { "gender": "MALE",   "profile": 51 },
+        { "gender": "MALE",   "profile": 52 },
+        { "gender": "MALE",   "profile": 53 },
+        { "gender": "FEMALE", "profile": 54 },
+        { "gender": "FEMALE", "profile": 55 },
+        { "gender": "FEMALE", "profile": 56 }
+    ],
+
+    // The portraits an I.M.P. character can be offered, in the order the site shows
+    // them. "face" names FACES/<face>.sti, with FACES/bigfaces/<face>.sti shown
+    // while picking; "eyes" and "mouth" are the offsets the talking head animates
+    // at; "skin" and "hair" are the palettes the body is rendered with; "big_body"
+    // marks the burly portraits, which are given the big male body when the
+    // character is strong enough to carry it.
+    "portraits": [
+        { "gender": "MALE",   "face": 200, "skin": "BLACKSKIN", "hair": "BROWNHEAD", "eyes": [  8, 5 ], "mouth": [  8, 21 ], "big_body": true },
+        { "gender": "MALE",   "face": 201, "skin": "TANSKIN",   "hair": "BROWNHEAD", "eyes": [  9, 4 ], "mouth": [  9, 23 ] },
+        { "gender": "MALE",   "face": 202, "skin": "TANSKIN",   "hair": "BROWNHEAD", "eyes": [  8, 5 ], "mouth": [  7, 24 ] },
+        { "gender": "MALE",   "face": 203, "skin": "DARKSKIN",  "hair": "BROWNHEAD", "eyes": [  6, 6 ], "mouth": [  7, 25 ] },
+        { "gender": "MALE",   "face": 204, "skin": "TANSKIN",   "hair": "BROWNHEAD", "eyes": [ 13, 5 ], "mouth": [ 11, 23 ] },
+        { "gender": "MALE",   "face": 205, "skin": "DARKSKIN",  "hair": "BLACKHEAD", "eyes": [ 11, 5 ], "mouth": [ 10, 24 ] },
+        { "gender": "MALE",   "face": 206, "skin": "TANSKIN",   "hair": "BROWNHEAD", "eyes": [  8, 4 ], "mouth": [  8, 24 ], "big_body": true },
+        { "gender": "MALE",   "face": 207, "skin": "TANSKIN",   "hair": "BROWNHEAD", "eyes": [  8, 4 ], "mouth": [  8, 24 ], "big_body": true },
+        { "gender": "FEMALE", "face": 208, "skin": "TANSKIN",   "hair": "BROWNHEAD", "eyes": [  4, 4 ], "mouth": [  5, 25 ] },
+        { "gender": "FEMALE", "face": 209, "skin": "PINKSKIN",  "hair": "BROWNHEAD", "eyes": [  5, 5 ], "mouth": [  6, 24 ] },
+        { "gender": "FEMALE", "face": 210, "skin": "TANSKIN",   "hair": "BLACKHEAD", "eyes": [  7, 5 ], "mouth": [  7, 24 ] },
+        { "gender": "FEMALE", "face": 211, "skin": "TANSKIN",   "hair": "BLACKHEAD", "eyes": [  5, 7 ], "mouth": [  6, 26 ] },
+        { "gender": "FEMALE", "face": 212, "skin": "PINKSKIN",  "hair": "BROWNHEAD", "eyes": [  7, 6 ], "mouth": [  7, 24 ] },
+        { "gender": "FEMALE", "face": 213, "skin": "BLACKSKIN", "hair": "BROWNHEAD", "eyes": [ 11, 5 ], "mouth": [  9, 23 ] },
+        { "gender": "FEMALE", "face": 214, "skin": "TANSKIN",   "hair": "REDHEAD",   "eyes": [  8, 5 ], "mouth": [  7, 24 ] },
+        { "gender": "FEMALE", "face": 215, "skin": "TANSKIN",   "hair": "BLONDHEAD", "eyes": [  5, 6 ], "mouth": [  5, 26 ] }
+    ],
+
     // Base and additional inventory items dependent on attributes and skills.
     // Conditions come in pairs of values. Skill checks need to be paired with 'SKILL'.
     // Conditions evaluate as a greater-or-equal relation; if there are several, all need to be true.

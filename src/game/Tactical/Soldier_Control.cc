@@ -6004,7 +6004,7 @@ no_sub:
 	ST::string basename;
 	if (s->ubProfile != NO_PROFILE)
 	{
-		basename = ST::format("{03d}", s->ubProfile);
+		basename = ST::format("{03d}", GetProfile(s->ubProfile).ubVoiceId);
 	}
 	else
 	{

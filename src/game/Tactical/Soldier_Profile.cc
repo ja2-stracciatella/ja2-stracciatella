@@ -127,6 +127,11 @@ void LoadMercProfiles()
 		{
 			MERCPROFILESTRUCT& p = gMercProfiles[i];
 
+			// Voice independent of ID num, default is the profile ID. Must
+			// precede the dialogue check below, which looks up the text file
+			// by voice.
+			p.ubVoiceId = i;
+
 			// // dumping std inventory
 			// printf("%03d/%s\n", i, p.zNickname.c_str());
 			// FOR_EACH(UINT16, k, p.inv)

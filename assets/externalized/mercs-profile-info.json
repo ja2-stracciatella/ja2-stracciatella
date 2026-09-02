@@ -105,13 +105,15 @@
     { "profileID": 48, "internalName": "COUGAR", "type": "MERC" },
     { "profileID": 49, "internalName": "NUMB", "type": "MERC" },
     { "profileID": 50, "internalName": "BUBBA", "type": "MERC" },
-     /* IMP */
-    { "profileID": 51, "internalName": "PGMALE1", "type": "IMP" },
-    { "profileID": 52, "internalName": "PGMALE2", "type": "IMP" },
-    { "profileID": 53, "internalName": "PGMALE3", "type": "IMP" },
-    { "profileID": 54, "internalName": "PGLADY1", "type": "IMP" },
-    { "profileID": 55, "internalName": "PGLADY2", "type": "IMP" },
-    { "profileID": 56, "internalName": "PGLADY3", "type": "IMP" },
+     /* IMP: the clothes a player generated character is dressed in. The six the
+        game shipped carry them in prof.dat too, the spare slots at the end carry
+        nothing at all, so they are declared here for all of them alike. */
+    { "profileID": 51, "internalName": "PGMALE1", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 52, "internalName": "PGMALE2", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 53, "internalName": "PGMALE3", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 54, "internalName": "PGLADY1", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 55, "internalName": "PGLADY2", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 56, "internalName": "PGLADY3", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
      /* RPC (rebels) */
     { "profileID": 57, "internalName": "MIGUEL", "type": "RPC" },
     { "profileID": 58, "internalName": "CARLOS", "type": "RPC" },
@@ -223,11 +225,14 @@
     { "profileID": 161, "internalName": "PROF_ELDERODO", "type": "VEHICLE" },
     { "profileID": 162, "internalName": "PROF_ICECREAM", "type": "VEHICLE" },
     { "profileID": 163, "internalName": "PROF_HELICOPTER", "type": "VEHICLE" },
-     /* Unused slots */
-    { "profileID": 164, "internalName": "NPC164", "type": "NOT_USED" },
-    { "profileID": 165, "internalName": "NPC165", "type": "NOT_USED" },
-    { "profileID": 166, "internalName": "NPC166", "type": "NOT_USED" },
-    { "profileID": 167, "internalName": "NPC167", "type": "NOT_USED" },
-    { "profileID": 168, "internalName": "NPC168", "type": "NOT_USED" },
-    { "profileID": 169, "internalName": "NPC169", "type": "NOT_USED" }
+     /* Unused slot */
+    { "profileID": 164, "internalName": "NPC164", "type": "NOT_USED" }, // in use as the placeholder profile of the unused vehicles
+    /* Spare profiles, handed out to player generated characters as they are made.
+       A character takes the first free one and carries its own voice, so these
+       need no files of their own. */
+    { "profileID": 165, "internalName": "NPC165", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 166, "internalName": "NPC166", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 167, "internalName": "NPC167", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 168, "internalName": "NPC168", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 169, "internalName": "NPC169", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" }
 ]

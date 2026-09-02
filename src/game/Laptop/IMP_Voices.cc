@@ -1,6 +1,7 @@
 #include "CharProfile.h"
 #include "Directories.h"
 #include "Font.h"
+#include "IMP_Compile_Character.h"
 #include "IMP_Voices.h"
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
@@ -19,11 +20,8 @@
 #include <string_theory/string>
 
 
-//current and last pages
+// which of the voices offered for this gender is on show
 INT32 iCurrentVoices = 0;
-static INT32 const iLastVoice = 2;
-
-//INT32 iVoiceId = 0;
 
 
 static UINT32 uiVocVoiceSound = 0;
@@ -46,6 +44,10 @@ static void PlayVoice();
 
 void EnterIMPVoices( void )
 {
+	// the data may offer a different number of voices per gender, so an index
+	// left over from profiling the other one can be past the end
+	if (iCurrentVoices >= GetNumberOfIMPVoices(fCharacterIsMale)) iCurrentVoices = 0;
+
 	// create buttons
 	CreateIMPVoicesButtons( );
 
@@ -113,11 +115,10 @@ void HandleIMPVoices( void )
 
 static void IncrementVoice(void)
 {
-	// cycle to next voice
 	iCurrentVoices++;
 
 	// gone too far?
-	if( iCurrentVoices > iLastVoice )
+	if( iCurrentVoices >= GetNumberOfIMPVoices(fCharacterIsMale) )
 	{
 		iCurrentVoices = 0;
 	}
@@ -126,13 +127,12 @@ static void IncrementVoice(void)
 
 static void DecrementVoice(void)
 {
-	// cycle to previous voice
 	iCurrentVoices--;
 
 	// gone too far?
 	if( iCurrentVoices < 0 )
 	{
-		iCurrentVoices = iLastVoice;
+		iCurrentVoices = GetNumberOfIMPVoices(fCharacterIsMale) - 1;
 	}
 }
 
@@ -231,8 +231,8 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 			iCurrentImpPage = IMP_FINISH;
 		}
 
-		// set voice id, to grab character slot
-		LaptopSaveInfo.iVoiceId = iCurrentVoices + (fCharacterIsMale ? 0 : 3);
+		// the voice the character will speak with, counted over both genders
+		LaptopSaveInfo.iVoiceId = GetIMPVoiceIndex(fCharacterIsMale, iCurrentVoices);
 
 		// set button up image pending
 		fButtonPendingFlag = TRUE;
@@ -242,28 +242,12 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static void PlayVoice()
 {
-	char const* filename;
-	if (fCharacterIsMale)
-	{
-		switch (iCurrentVoices)
-		{
-			case 0:  filename = SPEECHDIR "/051_001.wav"; break;
-			case 1:  filename = SPEECHDIR "/052_001.wav"; break;
-			case 2:  filename = SPEECHDIR "/053_001.wav"; break;
-			default: return;
-		}
-	}
-	else
-	{
-		switch (iCurrentVoices)
-		{
-			case 0:  filename = SPEECHDIR "/054_001.wav"; break;
-			case 1:  filename = SPEECHDIR "/055_001.wav"; break;
-			case 2:  filename = SPEECHDIR "/056_001.wav"; break;
-			default: return;
-		}
-	}
-	uiVocVoiceSound = PlayJA2SampleFromFile(filename, MIDVOLUME, 1, MIDDLEPAN);
+	INT32 const iVoice = GetIMPVoiceIndex(fCharacterIsMale, iCurrentVoices);
+	if (iVoice < 0) return;
+
+	// the first quote of the voice's own speech files
+	ST::string filename = ST::format(SPEECHDIR "/{03d}_001.wav", GetIMPVoices()[iVoice].profile);
+	uiVocVoiceSound = PlayJA2SampleFromFile(filename.c_str(), MIDVOLUME, 1, MIDDLEPAN);
 }
 
 

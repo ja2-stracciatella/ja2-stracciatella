@@ -4,6 +4,8 @@
 #include "GamePolicy.h"
 #include "IMPPolicy.h"
 #include "ContentManager.h"
+#include "MercProfileInfo.h"
+#include "Soldier_Control.h"
 #include "IMP_Portraits.h"
 #include "IMP_SkillTraits.h"
 #include "IMP_Compile_Character.h"
@@ -15,6 +17,9 @@
 
 
 #define ATTITUDE_LIST_SIZE 20
+
+// the strength a burly portrait has to be carried by to become a burly body
+#define IMP_BIG_BODY_MIN_STRENGTH 75
 
 
 static INT32 AttitudeList[ATTITUDE_LIST_SIZE];
@@ -29,14 +34,164 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
+static bool IsIMPSlot(ProfileID const profile)
+{
+	return GCM->getMercProfileInfo(profile)->mercType == MercType::IMP;
+}
+
+
+UINT8 GetNumberOfIMPSlots(void)
+{
+	UINT8 ubSlots = 0;
+	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
+	{
+		if (IsIMPSlot(profile)) ++ubSlots;
+	}
+	return ubSlots;
+}
+
+
+UINT8 GetNumberOfIMPCharactersCreated(void)
+{
+	UINT8 ubCreated = 0;
+	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
+	{
+		if (IsIMPSlot(profile) && gMercProfiles[profile].impSlotState == IMPSlotState::TAKEN) ++ubCreated;
+	}
+	return ubCreated;
+}
+
+
+ProfileID GetIMPSlotInProgress(void)
+{
+	// The set of taken slots does not change while a character is being built,
+	// so the first free one stays the same one across the whole process and
+	// over a save and load in the middle of it.
+	for (ProfileID profile = 0; profile < NUM_PROFILES; ++profile)
+	{
+		if (IsIMPSlot(profile) && gMercProfiles[profile].impSlotState == IMPSlotState::FREE) return profile;
+	}
+	return NO_PROFILE;
+}
+
+
+bool CanCreateAnotherIMPCharacter(void)
+{
+	if (GetIMPSlotInProgress() == NO_PROFILE) return false;
+	return GetNumberOfIMPCharactersCreated() < gamepolicy(imp_max_characters);
+}
+
+
+void MarkIMPCharacterCreated(ProfileID const profile)
+{
+	gMercProfiles[profile].impSlotState = IMPSlotState::TAKEN;
+	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+}
+
+
+const std::vector<IMPVoice>& GetIMPVoices(void)
+{
+	return GCM->getIMPPolicy()->getVoices();
+}
+
+
+const std::vector<IMPPortrait>& GetIMPPortraits(void)
+{
+	return GCM->getIMPPolicy()->getPortraits();
+}
+
+
+template<typename T> static INT32 CountForGender(std::vector<T> const& entries, bool const fMale)
+{
+	INT32 iCount = 0;
+	for (T const& entry : entries)
+	{
+		if (entry.isMale == fMale) ++iCount;
+	}
+	return iCount;
+}
+
+
+template<typename T> static INT32 IndexForGender(std::vector<T> const& entries, bool const fMale, INT32 const iNth)
+{
+	INT32 iSeen = 0;
+	for (size_t i = 0; i != entries.size(); ++i)
+	{
+		if (entries[i].isMale != fMale) continue;
+		if (iSeen++ == iNth) return static_cast<INT32>(i);
+	}
+	return -1;
+}
+
+
+INT32 GetNumberOfIMPVoices(bool const fMale)
+{
+	return CountForGender(GetIMPVoices(), fMale);
+}
+
+
+INT32 GetNumberOfIMPPortraits(bool const fMale)
+{
+	return CountForGender(GetIMPPortraits(), fMale);
+}
+
+
+INT32 GetIMPVoiceIndex(bool const fMale, INT32 const iNth)
+{
+	return IndexForGender(GetIMPVoices(), fMale, iNth);
+}
+
+
+INT32 GetIMPPortraitIndex(bool const fMale, INT32 const iNth)
+{
+	return IndexForGender(GetIMPPortraits(), fMale, iNth);
+}
+
+
+IMPPortrait const& GetCurrentIMPPortrait(void)
+{
+	std::vector<IMPPortrait> const& portraits = GetIMPPortraits();
+	Assert(iPortraitNumber >= 0 && iPortraitNumber < static_cast<INT32>(portraits.size()));
+	return portraits[iPortraitNumber];
+}
+
+
+bool IMPCharacterHasBigBody(MERCPROFILESTRUCT const& p)
+{
+	if (p.bSex != MALE) return false;
+
+	INT32 const iPortrait = FindIMPPortraitByFace(p.ubFaceIndex);
+	if (iPortrait < 0 || !GetIMPPortraits()[iPortrait].bigBody) return false;
+
+	// the strength the character was made with, which is what the build was
+	// decided on: training up afterwards does not change anyone's shape
+	return p.bStrength - p.bStrengthDelta >= IMP_BIG_BODY_MIN_STRENGTH;
+}
+
+
+INT32 FindIMPPortraitByFace(UINT8 const ubFaceIndex)
+{
+	std::vector<IMPPortrait> const& portraits = GetIMPPortraits();
+	for (size_t i = 0; i != portraits.size(); ++i)
+	{
+		if (portraits[i].face == ubFaceIndex) return static_cast<INT32>(i);
+	}
+	return -1;
+}
+
+
 void CreateACharacterFromPlayerEnteredStats(void)
 {
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	p.zName = pFullName;
 	p.zNickname = pNickName;
 
 	p.bSex = fCharacterIsMale ? MALE : FEMALE;
+
+	// The voice the player picked, which is where this character's speech,
+	// dialogue text and battle sounds come from.
+	p.ubVoiceId = GetIMPVoices()[LaptopSaveInfo.iVoiceId].profile;
 
 	p.bLifeMax    = iHealth;
 	p.bLife       = iHealth;
@@ -57,8 +212,10 @@ void CreateACharacterFromPlayerEnteredStats(void)
 
 	p.bExpLevel = GCM->getIMPPolicy()->getStartingLevel();
 
-	// set time away
-	p.bMercStatus = 0;
+	// Clears MERC_HAS_NO_TEXT_FILE, which loading the profiles stamps on every
+	// slot with no dialogue file named after it. That is all of them past the six
+	// the game shipped with, until the voice picked above lends them one.
+	p.bMercStatus = MERC_OK;
 
 	SelectMercFace();
 }
@@ -164,7 +321,7 @@ static void ValidateSkillsList(void)
 {
 	// remove from the generated traits list any traits that don't match
 	// the character's skills
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	if (p.bMechanical == 0)
 	{
@@ -330,10 +487,10 @@ static void SetMercSkinAndHairColors(void);
 static void SelectMercFace(void)
 {
 	// this procedure will select the approriate face for the merc and save offsets
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	// now the offsets
-	p.ubFaceIndex = 200 + iPortraitNumber;
+	p.ubFaceIndex = GetCurrentIMPPortrait().face;
 
 	// eyes
 	p.usEyesX = 0;
@@ -350,49 +507,13 @@ static void SelectMercFace(void)
 
 static void SetMercSkinAndHairColors(void)
 {
-#define PINKSKIN  "PINKSKIN"
-#define TANSKIN   "TANSKIN"
-#define DARKSKIN  "DARKSKIN"
-#define BLACKSKIN "BLACKSKIN"
-
-#define BROWNHEAD "BROWNHEAD"
-#define BLACKHEAD "BLACKHEAD" // black skin till here
-#define WHITEHEAD "WHITEHEAD" // dark skin till here
-#define BLONDHEAD "BLONDHEAD"
-#define REDHEAD   "REDHEAD"   // pink/tan skin till here
-
-	static const struct
-	{
-		const char* Skin;
-		const char* Hair;
-	} Colors[] =
-	{
-		{ BLACKSKIN, BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ DARKSKIN,  BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ DARKSKIN,  BLACKHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ TANSKIN,   BROWNHEAD },
-		{ PINKSKIN,  BROWNHEAD },
-		{ TANSKIN,   BLACKHEAD },
-		{ TANSKIN,   BLACKHEAD },
-		{ PINKSKIN,  BROWNHEAD },
-		{ BLACKSKIN, BROWNHEAD },
-		{ TANSKIN,   REDHEAD   },
-		{ TANSKIN,   BLONDHEAD }
-	};
-
-	Assert(iPortraitNumber < static_cast<INT32>(lengthof(Colors)));
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
-	p.HAIR = Colors[iPortraitNumber].Hair;
-	p.SKIN = Colors[iPortraitNumber].Skin;
+	IMPPortrait const& portrait = GetCurrentIMPPortrait();
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
+	p.HAIR = portrait.hair;
+	p.SKIN = portrait.skin;
 }
 
 
-static BOOLEAN ShouldThisMercHaveABigBody(void);
 
 
 void HandleMercStatsForChangesInFace(void)
@@ -401,12 +522,12 @@ void HandleMercStatsForChangesInFace(void)
 
 	CreatePlayerSkills();
 
-	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
 
 	// body type
 	if (fCharacterIsMale)
 	{
-		if (ShouldThisMercHaveABigBody())
+		if (IMPCharacterHasBigBody(p))
 		{
 			p.ubBodyType = BIGMALE;
 			if (iSkillA == MARTIALARTS) iSkillA = HANDTOHAND;
@@ -427,13 +548,4 @@ void HandleMercStatsForChangesInFace(void)
 	// skill trait
 	p.bSkillTrait  = iSkillA;
 	p.bSkillTrait2 = iSkillB;
-}
-
-
-static BOOLEAN ShouldThisMercHaveABigBody(void)
-{
-	// should this merc be a big body typ
-	return
-		(iPortraitNumber == 0 || iPortraitNumber == 6 || iPortraitNumber == 7) &&
-		gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].bStrength >= 75;
 }

@@ -1672,7 +1672,7 @@ static void ReDisplayBoxes(void)
 }
 
 
-static void HandleIMPCharProfileResultsMessage(void);
+static void HandleIMPCharProfileResultsMessage(Email const* pMail);
 static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords);
 
 
@@ -1683,7 +1683,7 @@ static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 	{
 		case( IMP_EMAIL_PROFILE_RESULTS ):
 
-			HandleIMPCharProfileResultsMessage( );
+			HandleIMPCharProfileResultsMessage( pMail );
 		break;
 		case( MERC_INTRO ):
 			SetBookMark( MERC_BOOKMARK );
@@ -1887,7 +1887,7 @@ static void AddSkillTraitText(MERCPROFILESTRUCT const& imp, SkillTrait const Ski
 }
 
 
-static void HandleIMPCharProfileResultsMessage(void)
+static void HandleIMPCharProfileResultsMessage(Email const* const pMail)
 {
 	// special case, IMP profile return
 	INT32 iOffSet;
@@ -1898,7 +1898,16 @@ static void HandleIMPCharProfileResultsMessage(void)
 	if (pMessageRecordList != NULL) return;
 	// list doesn't exist, reload
 
-	MERCPROFILESTRUCT const& imp = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	// The mail carries the profile of the character it reports on, so with several
+	// I.M.P.s in the campaign each report still describes its own. Mails written
+	// before that was recorded carry a zero, which is not an I.M.P. profile;
+	// those fall back to the character profiled last.
+	ProfileID const mailProfile = static_cast<ProfileID>(pMail->iFirstData);
+	bool const fMailNamesCharacter = mailProfile < NUM_PROFILES &&
+		gMercProfiles[mailProfile].impSlotState == IMPSlotState::TAKEN;
+	MERCPROFILESTRUCT const& imp = fMailNamesCharacter ?
+		GetProfile(mailProfile) : GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	INT32 const iPortrait = FindIMPPortraitByFace(imp.ubFaceIndex);
 
 	// Use initial stats (current minus any gains since creation) so the e-mail
 	// reflects what IMP actually assessed, not stats grinded up after arrival.
@@ -2146,16 +2155,23 @@ static void HandleIMPCharProfileResultsMessage(void)
 	iEndOfSection = IMP_RESULTS_PORTRAIT_LENGTH;
 	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
 
-	switch (iPortraitNumber)
+	/* Which blurb describes the character's looks. The burly portraits only get
+	 * the burly description if the character also had the strength to be given
+	 * that build, so the report and the merc who turns up are the same person.
+	 * A portrait the game did not ship with has no description of its own and
+	 * falls back on the plainest one of its build. */
+	bool const fBigBody = IMPCharacterHasBigBody(imp);
+
+	switch (iPortrait)
 	{
-		case  0: iOffSet = IMP_PORTRAIT_MALE_1;   break;
+		case  0: iOffSet = fBigBody ? IMP_PORTRAIT_MALE_1 : IMP_PORTRAIT_MALE_2; break;
 		case  1: iOffSet = IMP_PORTRAIT_MALE_2;   break;
 		case  2: iOffSet = IMP_PORTRAIT_MALE_3;   break;
 		case  3: iOffSet = IMP_PORTRAIT_MALE_4;   break;
 		case  4:
 		case  5: iOffSet = IMP_PORTRAIT_MALE_5;   break;
 		case  6:
-		case  7: iOffSet = IMP_PORTRAIT_MALE_6;   break;
+		case  7: iOffSet = fBigBody ? IMP_PORTRAIT_MALE_6 : IMP_PORTRAIT_MALE_2; break;
 		case  8: iOffSet = IMP_PORTRAIT_FEMALE_1; break;
 		case  9: iOffSet = IMP_PORTRAIT_FEMALE_2; break;
 		case 10: iOffSet = IMP_PORTRAIT_FEMALE_3; break;
@@ -2163,6 +2179,12 @@ static void HandleIMPCharProfileResultsMessage(void)
 		case 12: iOffSet = IMP_PORTRAIT_FEMALE_4; break;
 		case 13:
 		case 14: iOffSet = IMP_PORTRAIT_FEMALE_5; break;
+		default:
+			iOffSet =
+				imp.bSex != MALE ? IMP_PORTRAIT_FEMALE_1 :
+				fBigBody         ? IMP_PORTRAIT_MALE_1   :
+				                   IMP_PORTRAIT_MALE_2;
+			break;
 	}
 
 	if (iRand % 2 == 0) iOffSet += 2;

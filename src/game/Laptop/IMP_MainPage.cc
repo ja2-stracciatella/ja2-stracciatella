@@ -10,6 +10,7 @@
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Attribute_Selection.h"
+#include "IMP_Compile_Character.h"
 #include "IMP_Finish.h"
 #include "MouseSystem.h"
 #include "LaptopSave.h"
@@ -472,7 +473,7 @@ static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, UINT32 iR
 
 SGPVObject* LoadIMPPortait()
 {
-	ST::string filename = ST::format(FACESDIR "/{}.sti", 200 + iPortraitNumber);
+	ST::string filename = ST::format(FACESDIR "/{}.sti", GetCurrentIMPPortrait().face);
 	return AddVideoObjectFromFile(filename);
 }
 
