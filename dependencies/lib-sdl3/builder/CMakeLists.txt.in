@@ -25,6 +25,7 @@ externalproject_add(sdl3
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DSDL_SHARED=ON
         -DSDL_STATIC=OFF
+        -DSDL_X11_XTEST=OFF
     BUILD_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo
     INSTALL_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo --target install
     BUILD_ALWAYS 1

@@ -284,7 +284,7 @@ static void DeleteFlowerButtons(void)
 static BOOLEAN DisplayFloralDescriptions(void)
 {
 	UINT32	uiIndex=0, i;
-	UINT16	usPosY, usPrice;
+	UINT16	usPosY, usPrice = 0;
 
 	if( (FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex) >= 3 )
 		gubCurNumberOfFlowers = 3;

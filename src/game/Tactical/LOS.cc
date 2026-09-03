@@ -2443,7 +2443,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 	STRUCTURE * pStructure;
 	STRUCTURE * pRoofStructure = NULL;
 
-	FIXEDPT qLastZ;
+	FIXEDPT qLastZ = 0;
 
 	BOOLEAN fIntended;
 	INT8 bOldLOSIndexX;
