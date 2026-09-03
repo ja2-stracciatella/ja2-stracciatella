@@ -926,7 +926,7 @@ void LoadSavedGame(const ST::string &saveName)
 	BAR(1, "Backed up NPC Info...");
 	if (version >= 53)
 	{
-		LoadBackupNPCInfoFromSavedGameFile(f);
+		LoadBackupNPCInfoFromSavedGameFile(f, version);
 	}
 
 	BAR(1, "Meanwhile definitions...");
@@ -1196,6 +1196,12 @@ void LoadSavedGame(const ST::string &saveName)
 }
 
 
+UINT32 NumProfilesInSavedGame(UINT32 const savegame_version)
+{
+	return savegame_version < 105 ? NUM_VANILLA_PROFILES : NUM_PROFILES;
+}
+
+
 static void SaveMercProfiles(HWFILE const f)
 {
 	// Loop through all the profiles to save
@@ -1303,11 +1309,26 @@ void SaveIMPPlayerProfiles()
 
 static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version, bool stracLinuxFormat)
 {
+	/* Saves written before the profiles were extended hold the vanilla ones
+	 * only. The slots past them are not in the file, so they are set up as a
+	 * new campaign would have them, and whatever the data files declare there
+	 * is honoured in a game saved before it was installed. */
+	UINT32 const profiles_in_save = NumProfilesInSavedGame(savegame_version);
+	if (profiles_in_save < NUM_PROFILES)
+	{
+		GCM->resetMercProfileStructs();
+		for (ProfileID i = profiles_in_save; i != NUM_PROFILES; ++i)
+		{
+			InitProfileFromContent(i);
+		}
+	}
+
 	// Loop through all the profiles to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
 		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
-	for (auto & profile : gMercProfiles)
+	for (UINT32 i = 0; i != profiles_in_save; ++i)
 	{
+		MERCPROFILESTRUCT& profile = gMercProfiles[i];
 		UINT32 checksum;
 		std::array<BYTE, std::max(MERC_PROFILE_SIZE_STRAC_LINUX, MERC_PROFILE_SIZE)> data;
 		UINT32 dataSize = stracLinuxFormat ? MERC_PROFILE_SIZE_STRAC_LINUX : MERC_PROFILE_SIZE;
@@ -1335,12 +1356,12 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 	}
 
 	BYTE voiceIds[NUM_PROFILES];
-	f->read(voiceIds, sizeof(voiceIds));
-	for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].ubVoiceId = voiceIds[i];
+	f->read(voiceIds, profiles_in_save);
+	for (UINT32 i = 0; i != profiles_in_save; ++i) gMercProfiles[i].ubVoiceId = voiceIds[i];
 
 	BYTE impSlotStates[NUM_PROFILES];
-	f->read(impSlotStates, sizeof(impSlotStates));
-	for (UINT32 i = 0; i != NUM_PROFILES; ++i) gMercProfiles[i].impSlotState = static_cast<IMPSlotState>(impSlotStates[i]);
+	f->read(impSlotStates, profiles_in_save);
+	for (UINT32 i = 0; i != profiles_in_save; ++i) gMercProfiles[i].impSlotState = static_cast<IMPSlotState>(impSlotStates[i]);
 }
 
 

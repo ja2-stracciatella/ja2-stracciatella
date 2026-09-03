@@ -25,6 +25,7 @@
 #include "QuestText.h"
 #include "Quests.h"
 #include "Render_Fun.h"
+#include "SaveLoadGame.h"
 #include "Scheduling.h"
 #include "SkillCheck.h"
 #include "Soldier_Add.h"
@@ -2406,7 +2407,7 @@ void LoadNPCInfoFromSavedGameFile(HWFILE const f, UINT32 const uiSaveGameVersion
 	// If we are trying to restore a saved game prior to version 44, use the
 	// MAX_NUM_SOLDIERS, else use NUM_PROFILES.  Dave used the wrong define!
 	if( uiSaveGameVersion >= 44 )
-		uiNumberToLoad = NUM_PROFILES;
+		uiNumberToLoad = NumProfilesInSavedGame(uiSaveGameVersion);
 	else
 		uiNumberToLoad = MAX_NUM_SOLDIERS;
 
@@ -2503,11 +2504,12 @@ void SaveBackupNPCInfoToSaveGameFile(HWFILE const f)
 }
 
 
-void LoadBackupNPCInfoFromSavedGameFile(HWFILE const f)
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE const f, UINT32 const uiSaveGameVersion)
 {
-	FOR_EACH(NPCQuoteInfo*, i, gpBackupNPCQuoteInfoArray)
+	UINT32 const uiNumberToLoad = NumProfilesInSavedGame(uiSaveGameVersion);
+	for (UINT32 cnt = 0; cnt != uiNumberToLoad; ++cnt)
 	{
-		ConditionalExtractNPCQuoteInfoArrayFromFile(f, *i);
+		ConditionalExtractNPCQuoteInfoArrayFromFile(f, gpBackupNPCQuoteInfoArray[cnt]);
 	}
 }
 
