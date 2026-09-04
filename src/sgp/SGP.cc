@@ -11,6 +11,7 @@
 #include "VObject.h"
 #include "Video.h"
 #include "SDL3/SDL.h"
+#include "Visualizer.h"
 #include "UILayout.h"
 #include "GameRes.h"
 #include "GameMode.h"
@@ -158,6 +159,10 @@ static void MainLoop()
 					    SDL_GetModState() & SDL_KMOD_CTRL)
 					{
 						FPS::ToggleOnOff();
+					}
+					else if (event.key.key == SDLK_C && SDL_GetModState() & SDL_KMOD_CTRL)
+					{
+						Visualizer::ToggleOnOff();
 					}
 					else
 					{
