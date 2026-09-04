@@ -1442,7 +1442,7 @@ static BOOLEAN HandleExit(void)
 	if (LaptopSaveInfo.gfNewGameLaptop)
 	{
 		// Set an event to send this email (day 2 8:00-12:00)
-		if (!LaptopSaveInfo.fIMPCompletedFlag && !LaptopSaveInfo.fSentImpWarningAlready)
+		if (CanCreateAnotherIMPCharacter() && !LaptopSaveInfo.fSentImpWarningAlready)
 		{
 			AddFutureDayStrategicEvent(EVENT_HAVENT_MADE_IMP_CHARACTER_EMAIL, (8 + Random(4)) * 60, 0, 1);
 			fExitingLaptopFlag = TRUE;
@@ -1455,8 +1455,8 @@ static BOOLEAN HandleExit(void)
 
 void HaventMadeImpMercEmailCallBack()
 {
-	//if the player STILL hasnt made an imp merc yet
-	if (!LaptopSaveInfo.fIMPCompletedFlag && !LaptopSaveInfo.fSentImpWarningAlready)
+	//if the player STILL hasnt made an imp merc yet, and still could
+	if (CanCreateAnotherIMPCharacter() && !LaptopSaveInfo.fSentImpWarningAlready)
 	{
 		LaptopSaveInfo.fSentImpWarningAlready = TRUE;
 		AddEmail(IMP_EMAIL_AGAIN,IMP_EMAIL_AGAIN_LENGTH, 1, GetWorldTotalMin());
