@@ -2194,53 +2194,6 @@ BlitNonTransLoop: // blit non-transparent pixels
 }
 
 
-void Blt16BPPBufferFilterRect(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const UINT16* filter_table, SGPRect* area)
-{
-INT32  width, height;
-UINT32 LineSkip;
-UINT16 *DestPtr;
-
-	// Assertions
-	Assert( pBuffer != NULL );
-
-	// Clipping
-	if( area->iLeft < ClippingRect.iLeft )
-		area->iLeft = ClippingRect.iLeft;
-	if( area->iTop < ClippingRect.iTop )
-		area->iTop = ClippingRect.iTop;
-	if( area->iRight >= ClippingRect.iRight )
-		area->iRight = ClippingRect.iRight - 1;
-	if( area->iBottom >= ClippingRect.iBottom )
-		area->iBottom = ClippingRect.iBottom - 1;
-	//CHECKF(area->iLeft >= ClippingRect.iLeft );
-	//CHECKF(area->iTop >= ClippingRect.iTop );
-	//CHECKF(area->iRight <= ClippingRect.iRight );
-	//CHECKF(area->iBottom <= ClippingRect.iBottom );
-
-	DestPtr=(pBuffer+(area->iTop*(uiDestPitchBYTES/2))+area->iLeft);
-	width=area->iRight-area->iLeft+1;
-	height=area->iBottom-area->iTop+1;
-	LineSkip=(uiDestPitchBYTES-(width*2));
-
-	CHECKV(width  >= 1);
-	CHECKV(height >= 1);
-
-	do
-	{
-		UINT32 w = width;
-
-		do
-		{
-			*DestPtr = filter_table[*DestPtr];
-			DestPtr++;
-		}
-		while (--w > 0);
-		DestPtr = (UINT16*)((UINT8*)DestPtr + LineSkip);
-	}
-	while (--height > 0);
-}
-
-
 ClipInfo::ClipInfo(SGPVObject const * hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const * clipregion)
 {
 	vobject = hSrcVObject;
