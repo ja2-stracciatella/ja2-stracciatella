@@ -5,8 +5,6 @@ struct SDL_Renderer;
 
 namespace Visualizer
 {
-	bool IsActivated();
-
 	void Render(SDL_Renderer * const renderer);
 	void ToggleOnOff();
 }

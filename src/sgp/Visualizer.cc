@@ -55,15 +55,6 @@ constexpr SDL_Vertex verticesLvl0[]
 	{ {baseCoord.position.x,                baseCoord.position.y + oppLegLength * 2}, baseCoord.color }, // nearest
 	{ {baseCoord.position.x - adjLegLength, baseCoord.position.y + oppLegLength},     baseCoord.color }, // left
 };
-// Brown walkable roof rhombus
-constexpr SDL_Vertex verticesLvl1[]
-{
-	{ {verticesLvl0[0].position.x, verticesLvl0[0].position.y - PROFILE_Z_SIZE * boxHeight}, tileColorLvl1 },
-	{ {verticesLvl0[1].position.x, verticesLvl0[1].position.y - PROFILE_Z_SIZE * boxHeight}, tileColorLvl1 },
-	{ {verticesLvl0[2].position.x, verticesLvl0[2].position.y - PROFILE_Z_SIZE * boxHeight}, tileColorLvl1 },
-	{ {verticesLvl0[3].position.x, verticesLvl0[3].position.y - PROFILE_Z_SIZE * boxHeight}, tileColorLvl1 },
-};
-
 
 // Triangle rendering sequence
 const int indices[]
@@ -188,9 +179,9 @@ static void UpdateTexture(SDL_Renderer * const renderer)
 
 static void InitTextures(SDL_Renderer* const renderer)
 {
-	finalTexture.reset(SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_TARGET, bgRectDest.w, bgRectDest.h));
+	finalTexture.reset(SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, bgRectDest.w, bgRectDest.h));
 
-	bgTexture.reset(SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_TARGET, bgRectDest.w, bgRectDest.h));
+	bgTexture.reset(SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, bgRectDest.w, bgRectDest.h));
 	SDL_SetRenderTarget(renderer, bgTexture.get());
 
 	// Black background
@@ -204,6 +195,11 @@ static void InitTextures(SDL_Renderer* const renderer)
 
 void Render(SDL_Renderer * const renderer)
 {
+	if (!toggledOn)
+	{
+		return;
+	}
+
 	if (guiCurrentScreen != GAME_SCREEN)
 	{
 		ToggleOnOff();
@@ -231,11 +227,8 @@ void Render(SDL_Renderer * const renderer)
 	}
 
 	SDL_RenderTexture(renderer, finalTexture.get(), nullptr, &bgRectDest);
-}
-
-bool IsActivated()
-{
-	return toggledOn;
+	// set this back to total black for subsequent SDL_RenderClear
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 }
 
 void ToggleOnOff()

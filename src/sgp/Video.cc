@@ -550,10 +550,7 @@ void RefreshScreen(void)
 		SDL_RenderTexture(GameRenderer, ScreenTexture, NULL, NULL);
 	}
 
-	if (Visualizer::IsActivated())
-	{
-		Visualizer::Render(GameRenderer);
-	}
+	Visualizer::Render(GameRenderer);
 
 	FPS::RenderPresentPtr(GameRenderer);
 
