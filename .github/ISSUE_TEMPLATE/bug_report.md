@@ -7,6 +7,11 @@ assignees: ''
 ---
 
 #### Bug description
+
+| JA2S version | Game version        | Vanilla bug? | Used to work? |
+| ------------ | ------------------- | ------------ | ------------- |
+|  release/git | eg. JA2 Gold Dutch  |    yes/no    |    yes/no     |
+
 Add a clear and concise description of what the bug is, who or what is
 involved, what is the expected behaviour ... anything that you think will help
 with understanding and fixing the bug.
