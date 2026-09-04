@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "FPS.h"
+#include "SDL_helpers.h"
 #include "SDL3/SDL.h"
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
@@ -15,13 +16,6 @@ using namespace std::chrono_literals;
 
 namespace FPS
 {
-
-struct SDLDeleter
-{
-	void operator()(SDL_Surface *s) { SDL_DestroySurface(s); }
-	void operator()(SDL_Texture *t) { SDL_DestroyTexture(t); }
-};
-
 
 GameLoopFunc_t  ActualGameLoop; // the real game loop function
 GameLoopFunc_t  GameLoopPtr;    // the function MainLoop will call

@@ -5,6 +5,7 @@
 #include "Handle_UI.h"
 #include "Interface.h"
 #include "JAScreens.h"
+#include "SDL_helpers.h"
 #include "SDL3/SDL.h"
 #include "Soldier_Control.h"
 #include "Structure_Internals.h"
@@ -16,12 +17,6 @@ namespace Visualizer
 {
 
 bool toggledOn{ };
-
-struct SDLDeleter
-{
-	void operator()(SDL_Surface* s) { SDL_DestroySurface(s); }
-	void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); }
-};
 
 std::unique_ptr<SDL_Texture, SDLDeleter> bgTexture;
 std::unique_ptr<SDL_Texture, SDLDeleter> finalTexture;
