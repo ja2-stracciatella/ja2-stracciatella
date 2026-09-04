@@ -1822,12 +1822,19 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 }
 
 
+static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN fNewItem, INT8 bExcludeSlot);
+
+
 static BOOLEAN DropObjIfThereIsRoom(SOLDIERTYPE* pSoldier, INT8 bPos, OBJECTTYPE* pObj)
 {
 	// try autoplacing item in bSlot elsewhere, then do a placement
 	BOOLEAN fAutoPlacedOld;
 
-	fAutoPlacedOld = AutoPlaceObject( pSoldier, &(pSoldier->inv[bPos]), FALSE );
+	/* Exclude bPos itself. Autoplace tops up slots that already hold the same
+	 * item, and the slot we are emptying is one of them, so without this it
+	 * places the object onto itself: money merged into its own slot doubles the
+	 * amount and is then deleted along with the source. */
+	fAutoPlacedOld = InternalAutoPlaceObject( pSoldier, &(pSoldier->inv[bPos]), FALSE, bPos );
 	if ( fAutoPlacedOld )
 	{
 		return( PlaceObject( pSoldier, bPos, pObj ) );
