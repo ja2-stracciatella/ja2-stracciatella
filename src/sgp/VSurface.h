@@ -2,6 +2,7 @@
 #define VSURFACE_H
 
 #include "Buffer.h"
+#include "SDL_helpers.h"
 #include "Types.h"
 #include <memory>
 #include "SDL3/SDL.h"
@@ -17,10 +18,6 @@ inline SGPVSurface* g_back_buffer;
 inline SGPVSurface* g_frame_buffer;
 inline SGPVSurface* g_mouse_buffer;
 
-struct SDLDeleter
-{
-	void operator()(SDL_Surface *p) noexcept { SDL_DestroySurface(p); }
-};
 using SurfaceUniquePtr = std::unique_ptr<SDL_Surface, SDLDeleter>;
 
 
