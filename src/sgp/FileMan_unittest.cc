@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "DirFs.h"
 #include "FileMan.h"
 #include "TestUtils.h"
 #include <utility>
@@ -112,48 +113,11 @@ TEST(FileManTest, findFilesInDir)
 }
 
 
-TEST(FileManTest, RemoveAllFilesInDir)
-{
-	RustPointer<TempDir> tempDir(TempDir_create());
-	ASSERT_NE(tempDir.get(), nullptr);
-	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
-	ASSERT_NE(tempPath.get(), nullptr);
-	ST::string subDir = FileMan::joinPaths(tempPath.get(), "subdir");
-	FileMan::createDir(subDir);
-
-	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
-	ST::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
-
-	SGPFile* fileA = FileMan::openForWriting(std::move(pathA));
-	ASSERT_NE(fileA, nullptr);
-	SGPFile* fileB = FileMan::openForWriting(std::move(pathB));
-	ASSERT_NE(fileB, nullptr);
-
-	fileA->write("foo", 3);
-	fileB->write("bar", 3);
-
-	delete fileA;
-	delete fileB;
-
-	std::vector<ST::string> results = FileMan::findAllFilesInDir(tempPath.get(), true);
-	ASSERT_EQ(results.size(), 2u);
-
-	FileMan::eraseDir(tempPath.get());
-
-	// check that the subdirectory is still there
-	ASSERT_EQ(FileMan::isDir(subDir), true);
-
-	results = FileMan::findAllFilesInDir(tempPath.get(), true);
-	ASSERT_EQ(results.size(), 0u);
-}
-
 TEST(FileManTest, ReadTextFile)
 {
-	RustPointer<TempDir> tempDir(TempDir_create());
-	ASSERT_NE(tempDir.get(), nullptr);
-	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
-	ASSERT_NE(tempPath.get(), nullptr);
-	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
+	auto tempDir = DirFs::createTemp();
+	ST::string tempPath = tempDir->basePath();
+	ST::string pathA = FileMan::joinPaths(tempPath, "foo.txt");
 
 	SGPFile* fileA = FileMan::openForWriting(pathA);
 	ASSERT_NE(fileA, nullptr);
@@ -222,13 +186,4 @@ TEST(FileManTest, ReplaceExtension)
 	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "."),     "c:\\a\\foo..");
 	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".bin"),  "c:\\a\\foo..bin");
 	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin"),   "c:\\a\\foo.bin");
-}
-
-TEST(FileManTest, FreeSpace)
-{
-	RustPointer<TempDir> tempDir(TempDir_create());
-	ASSERT_NE(tempDir.get(), nullptr);
-	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
-	ASSERT_NE(tempPath.get(), nullptr);
-	EXPECT_NE(FileMan::getFreeSpace(tempPath.get()), 0u);
 }

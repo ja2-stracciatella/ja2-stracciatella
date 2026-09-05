@@ -115,15 +115,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
 	// Initialize temp dir
-	RustPointer<TempDir> tempDir(TempDir_create());
-	if (tempDir.get() == NULL) {
-		RustPointer<char> err{ getRustError() };
-		auto error = ST::format("Failed to create temporary directory: {}", err.get());
-		throw std::runtime_error(error.c_str());
-	}
-	m_tempDir = std::move(tempDir);
-	RustPointer<char> tempDirPath(TempDir_path(m_tempDir.get()));
-	m_tempFiles = std::make_unique<DirFs>(tempDirPath.get());
+	m_tempFiles = DirFs::createTemp();
 
 	// Initialize VFS
 	auto succeeded = Vfs_init(m_vfs.get(), m_engineOptions.get(), m_modManager.get());

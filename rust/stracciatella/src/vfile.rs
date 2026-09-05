@@ -7,6 +7,7 @@ use crate::vfs::VfsFile;
 
 pub enum VFile {
     VfsFile(BufReader<Box<dyn VfsFile>>),
+    VfsFileMut(Box<dyn VfsFile>),
     File(File),
     BufFile(BufReader<File>),
 }
@@ -28,9 +29,15 @@ impl VFile {
         VFile::BufFile(BufReader::new(f))
     }
 
+    /// Wraps a virtual file that was opened for writing.
+    pub fn writable_vfs_file(f: Box<dyn VfsFile>) -> Self {
+        VFile::VfsFileMut(f)
+    }
+
     pub fn len(&self) -> std::io::Result<u64> {
         match self {
             VFile::VfsFile(file) => file.get_ref().len(),
+            VFile::VfsFileMut(file) => file.len(),
             VFile::File(file) => file.metadata().map(|m| m.len()),
             VFile::BufFile(file) => file.get_ref().metadata().map(|m| m.len()),
         }
@@ -45,6 +52,7 @@ impl Read for VFile {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
         match self {
             VFile::VfsFile(file) => file.read(buf),
+            VFile::VfsFileMut(file) => file.read(buf),
             VFile::File(file) => file.read(buf),
             VFile::BufFile(read) => read.read(buf),
         }
@@ -55,6 +63,7 @@ impl Write for VFile {
     fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
         match self {
             VFile::File(file) => file.write(buf),
+            VFile::VfsFileMut(file) => file.write(buf),
             VFile::BufFile(_) | VFile::VfsFile(_) => Err(std::io::Error::new(
                 std::io::ErrorKind::PermissionDenied,
                 "Attempted to write to a file opened with read permissions",
@@ -65,6 +74,7 @@ impl Write for VFile {
     fn flush(&mut self) -> std::io::Result<()> {
         match self {
             VFile::File(file) => file.flush(),
+            VFile::VfsFileMut(file) => file.flush(),
             VFile::BufFile(_) | VFile::VfsFile(_) => Err(std::io::Error::new(
                 std::io::ErrorKind::PermissionDenied,
                 "Attempted to flush a file opened with read permissions",
@@ -77,6 +87,7 @@ impl Seek for VFile {
     fn seek(&mut self, pos: std::io::SeekFrom) -> std::io::Result<u64> {
         match self {
             VFile::VfsFile(file) => file.seek(pos),
+            VFile::VfsFileMut(file) => file.seek(pos),
             VFile::File(file) => file.seek(pos),
             VFile::BufFile(read) => read.seek(pos),
         }

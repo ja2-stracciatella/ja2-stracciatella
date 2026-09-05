@@ -1,26 +1,53 @@
 #pragma once
 
+#include "RustInterface.h"
 #include "SGPFile.h"
 
+#include <memory>
 #include <string_theory/string>
 
 
 /** Provides oprations for files within a subdirectory.
  *  Should be kept in sync with FileMan namespace to provide the same interface.
+ *
+ *  All paths are relative to the root of the DirFs and are resolved case insensitively, because
+ *  the class is a thin wrapper around a writable VFS layer.
  */
 class DirFs
 {
 private:
-	ST::string m_basePath;
-public:
-	/** Create a DirFs with base path */
-	DirFs(const ST::string& path) : m_basePath(path) {};
+	ST::string m_location;
+	RustPointer<VfsLayer> m_layer;
 
-	/** Return absolute path for file within DirFs */
+	/** Create a DirFs for a layer that is already open. */
+	DirFs(RustPointer<VfsLayer> layer, ST::string location)
+		: m_location(std::move(location)), m_layer(std::move(layer)) {};
+
+	/** The underlying VFS layer, opened on first use. Throws when it cannot be opened.
+	 *  Opening is deferred so that creating a DirFs for a directory that does not exist yet only
+	 *  fails once something uses it, which is how this behaved when it was a plain path. */
+	VfsLayer *layer();
+
+	/** The underlying VFS layer, or null when it cannot be opened. */
+	VfsLayer *layerOrNull() noexcept;
+
+	/** Open file with the given options. Throws when it fails. */
+	SGPFile *open(const ST::string &path, uint8_t options, const char *operation);
+
+public:
+	/** Create a DirFs for a filesystem directory. */
+	explicit DirFs(ST::string location) : m_location(std::move(location)) {};
+
+	/** Create a DirFs for a fresh temporary directory.
+	 * The directory and everything in it is deleted when the DirFs is destroyed. */
+	static std::unique_ptr<DirFs> createTemp();
+
+	/** Return where the files are, for diagnostics. */
 	ST::string basePath();
 
-	/** Return absolute path for file within DirFs */
-	ST::string absolutePath(const ST::string &path);
+	/** Move a file from one DirFs to another.
+	 * Falls back to copying when the two are not both backed by a filesystem directory. */
+	static void moveFileBetween(DirFs &fromFs, const ST::string &from, DirFs &toFs, const ST::string &to);
 
 	/** Open file for writing.
 	 * If file is missing it will be created.
@@ -45,7 +72,7 @@ public:
 	 * Other operations
 	 * ------------------------------------------------------------ */
 
-	/** Create directory.
+	/** Create directory, including missing parents.
 	 * If directory already exists, do nothing.
 	 * If failed to create, raise an exception. */
 	void createDir(const ST::string &path);
@@ -56,13 +83,13 @@ public:
 
 	/**
 	 * Find all files with the given extension in the given directory.
-	 * @param dirPath Path to the directory
-	 * @param extension Extension (e.g. "txt")
-	 * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
-	 * @param returnOnlyNames When True, return only names (without the directory path) except when resursive is True
-	 * @param sortResults When True, sort found paths.
-	 * @param recursive When True, recurse into subs. Function returns full path regardless of returnOnlyNames
-	 * @return List of paths (dir + filename) or filenames. */
+	 * @param path Path to the directory
+	 * @param ext Extension (e.g. "txt")
+	 * @param caseInsensitive Ignored, the lookup is always case-insensitive.
+	 * @param returnOnlyNames When True, return only names (without the directory path) except when recursive is True
+	 * @param sortResults Ignored, the results are always sorted.
+	 * @param recursive When True, recurse into subs.
+	 * @return List of paths relative to the DirFs, or filenames. */
 	std::vector<ST::string>
 	findFilesInDir(const ST::string &path,
 				   const ST::string &ext,
@@ -73,19 +100,19 @@ public:
 
 	/**
 	 * Find all files in a directory.
-	 * @param dirPath Path to the directory
-	 * @param sortResults When True, sort found paths.
+	 * @param path Path to the directory
+	 * @param sortResults Ignored, the results are always sorted.
 	 * @param recursive When True, recurse into subs.
-	 * @return List of paths (dir + filename). */
+	 * @return List of paths relative to the DirFs. */
 	std::vector<ST::string>
 	findAllFilesInDir(const ST::string &path, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
 
 	/**
 	 * Find all directories in directory
-	 * @param dirPath Path to the directory
-	 * @param sortResults When True, sort found paths.
+	 * @param path Path to the directory
+	 * @param sortResults Ignored, the results are always sorted.
 	 * @param recursive When True, recurse into subs.
-	 * @return List of paths (dir + filename). */
+	 * @return List of paths relative to the DirFs. */
 	std::vector<ST::string>
 	findAllDirsInDir(const ST::string &path, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
 
@@ -104,7 +131,7 @@ public:
 	/** Returns if the given path (dir or file) exists */
 	bool exists(const ST::string &path);
 
-	/** Move a file */
+	/** Move a file within this DirFs */
 	void moveFile(const ST::string &from, const ST::string &to);
 
 	/** Get last modified time in seconds since UNIX epoch */

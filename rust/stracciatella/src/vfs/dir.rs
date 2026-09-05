@@ -11,11 +11,12 @@ use std::num::NonZeroUsize;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::Mutex;
+use std::time::UNIX_EPOCH;
 
 use crate::fs;
 use crate::fs::File;
 use crate::unicode::Nfc;
-use crate::vfs::{VfsFile, VfsLayer};
+use crate::vfs::{VfsFile, VfsLayer, VfsMetadata, VfsOpenOptions, read_only_error};
 
 /// The size of the cache used for canonicalization
 const CANONICALIZATION_CACHE_SIZE: usize = 256;
@@ -25,6 +26,11 @@ const CANONICALIZATION_CACHE_SIZE: usize = 256;
 pub struct DirFs {
     /// Path to the directory.
     pub dir_path: PathBuf,
+    /// Whether this layer accepts writes.
+    ///
+    /// This is intent, not capability: the vanilla game data and the mod directories are mounted
+    /// read-only even though the process could write to them.
+    writable: bool,
     /// Cache that is used for canonicalization. It will contain an entry for each path that is listed during path canonicalization
     canonicalization_cache: Mutex<LruCache<PathBuf, Vec<(Nfc, OsString)>>>,
 }
@@ -41,20 +47,79 @@ pub struct DirFsFile {
 }
 
 impl DirFs {
-    /// Creates a new virtual filesystem.
+    /// Creates a new read-only virtual filesystem.
     pub fn new(path: &Path) -> io::Result<Arc<DirFs>> {
+        Self::with_mode(path, false)
+    }
+
+    /// Creates a new virtual filesystem that accepts writes.
+    pub fn new_writable(path: &Path) -> io::Result<Arc<DirFs>> {
+        Self::with_mode(path, true)
+    }
+
+    /// Creates a new virtual filesystem.
+    pub fn with_mode(path: &Path, writable: bool) -> io::Result<Arc<DirFs>> {
         fs::read_dir(path)?;
         Ok(Arc::new(DirFs {
             dir_path: path.to_owned(),
+            writable,
             canonicalization_cache: Mutex::new(LruCache::new(
                 NonZeroUsize::new(CANONICALIZATION_CACHE_SIZE).unwrap(),
             )),
         }))
     }
 
+    /// Maps a path to a concrete filesystem path, whether or not it exists yet.
+    ///
+    /// Existing components are matched case insensitively, components that do not exist yet are
+    /// used verbatim, so this also works for the target of a create or a rename.
+    fn to_fs_path(&self, file_path: &str) -> io::Result<PathBuf> {
+        for component in file_path.split('/') {
+            if component == "." || component == ".." {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    "special path components are not supported",
+                ));
+            }
+        }
+        Ok(fs::resolve_existing_components(
+            Path::new(file_path),
+            Some(&self.dir_path),
+            true,
+        ))
+    }
+
+    /// Fails unless this layer accepts writes.
+    fn ensure_writable(&self) -> io::Result<()> {
+        if self.writable {
+            Ok(())
+        } else {
+            Err(read_only_error(self))
+        }
+    }
+
+    /// Drops the cached listings of every directory above `path`.
+    ///
+    /// Needed after a write, because those listings are now stale. Creating a directory can add
+    /// more than one level at a time, so stopping at the direct parent is not enough.
+    fn invalidate_cache_for(&self, path: &Path) {
+        let Ok(mut cache) = self.canonicalization_cache.lock() else {
+            return;
+        };
+        let mut current = path.parent();
+        while let Some(dir) = current {
+            cache.pop(dir);
+            if dir == self.dir_path {
+                break;
+            }
+            current = dir.parent();
+        }
+    }
+
     /// Maps a path to all candidates that might match the path case insensitively
     ///
-    /// The returned paths are already containing the dir path
+    /// The returned paths are already containing the dir path.
+    /// The case of `file_path` does not matter, it is folded here.
     fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.dir_path.to_owned()];
         let mut canonicalization_cache = self.canonicalization_cache.lock().map_err(|err| {
@@ -76,6 +141,7 @@ impl DirFs {
                     "special path components are not supported",
                 ));
             }
+            let want = Nfc::caseless(want);
             for candidate in candidates {
                 let entries = if let Some(cache_entry) = canonicalization_cache.get(&candidate) {
                     cache_entry
@@ -112,7 +178,7 @@ impl DirFs {
                 };
 
                 for (nfc, os_string) in entries {
-                    if want == nfc.as_str() {
+                    if &want == nfc {
                         next.push(candidate.join(os_string));
                     }
                 }
@@ -174,6 +240,108 @@ impl VfsLayer for DirFs {
         }
 
         Ok(result)
+    }
+
+    fn is_writable(&self) -> bool {
+        self.writable
+    }
+
+    fn metadata(&self, file_path: &Nfc) -> io::Result<VfsMetadata> {
+        let candidates = self.canonicalize(file_path)?;
+        let path = candidates.first().ok_or(io::ErrorKind::NotFound)?;
+        let metadata = fs::metadata(path)?;
+        let is_dir = metadata.is_dir();
+        Ok(VfsMetadata {
+            is_dir,
+            len: if is_dir { 0 } else { metadata.len() },
+            modified_secs: metadata
+                .modified()
+                .ok()
+                .and_then(|time| time.duration_since(UNIX_EPOCH).ok())
+                .map(|duration| duration.as_secs_f64()),
+            read_only: metadata.permissions().readonly(),
+        })
+    }
+
+    fn resolve_existing_components(&self, file_path: &Nfc) -> Nfc {
+        let resolved = match self.to_fs_path(file_path) {
+            Ok(path) => path,
+            Err(_) => return file_path.to_owned(),
+        };
+        // Keeps the case of the resolved components, which is the whole point of resolving them.
+        resolved
+            .strip_prefix(&self.dir_path)
+            .ok()
+            .and_then(|path| path.to_str())
+            .map(|path| Nfc::path(&path.replace('\\', "/")))
+            .unwrap_or_else(|| file_path.to_owned())
+    }
+
+    fn open_with_options(
+        &self,
+        file_path: &Nfc,
+        options: VfsOpenOptions,
+    ) -> io::Result<Box<dyn VfsFile>> {
+        if !options.is_write() {
+            return self.open(file_path);
+        }
+        self.ensure_writable()?;
+        let path = self.to_fs_path(file_path)?;
+        let file = fs::OpenOptions::new()
+            .read(options.read)
+            .write(options.write)
+            .append(options.append)
+            .truncate(options.truncate)
+            .create(options.create)
+            .create_new(options.create_new)
+            .open(&path)?;
+        self.invalidate_cache_for(&path);
+        Ok(Box::new(DirFsFile {
+            file_path: file_path.to_owned(),
+            dir_path: self.dir_path.to_owned(),
+            file,
+        }))
+    }
+
+    fn remove_file(&self, file_path: &Nfc) -> io::Result<()> {
+        self.ensure_writable()?;
+        let candidates = self.canonicalize(file_path)?;
+        let path = candidates
+            .into_iter()
+            .find(|candidate| candidate.is_file())
+            .ok_or(io::ErrorKind::NotFound)?;
+        fs::remove_file(&path)?;
+        self.invalidate_cache_for(&path);
+        Ok(())
+    }
+
+    fn create_dir(&self, file_path: &Nfc) -> io::Result<()> {
+        self.ensure_writable()?;
+        let path = self.to_fs_path(file_path)?;
+        if path.is_dir() {
+            return Ok(());
+        }
+        fs::create_dir_all(&path)?;
+        self.invalidate_cache_for(&path);
+        Ok(())
+    }
+
+    fn rename(&self, from: &Nfc, to: &Nfc) -> io::Result<()> {
+        self.ensure_writable()?;
+        let from_path = self
+            .canonicalize(from)?
+            .into_iter()
+            .next()
+            .ok_or(io::ErrorKind::NotFound)?;
+        let to_path = self.to_fs_path(to)?;
+        fs::rename(from_path.clone(), to_path.clone())?;
+        self.invalidate_cache_for(&from_path);
+        self.invalidate_cache_for(&to_path);
+        Ok(())
+    }
+
+    fn free_space(&self) -> io::Result<u64> {
+        fs::free_space(&self.dir_path)
     }
 }
 

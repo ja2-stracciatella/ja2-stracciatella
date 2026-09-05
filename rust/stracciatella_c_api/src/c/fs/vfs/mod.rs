@@ -1,6 +1,8 @@
 //! This module contains the C interface for [`stracciatella::vfs`].
 //!
-//! [`stracciatella::vfs`]: ../../../stracciatella/vfs/index.html
+//! [`stracciatella::vfs`]: ../../../../stracciatella/vfs/index.html
+
+pub mod layer;
 
 use stracciatella::config::EngineOptions;
 use stracciatella::mods::ModManager;
@@ -9,10 +11,8 @@ use stracciatella::vfile::VFile;
 use stracciatella::vfs::{Vfs, VfsLayer};
 
 use crate::c::common::*;
-use crate::c::vec::VecCString;
-
-use super::json::RJsonValue;
-use super::vec::VecUSize;
+use crate::c::json::RJsonValue;
+use crate::c::vec::{VecCString, VecUSize};
 
 /// Creates a virtual filesystem.
 /// coverity[+alloc]

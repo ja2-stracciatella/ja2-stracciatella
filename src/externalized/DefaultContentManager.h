@@ -205,9 +205,7 @@ protected:
 	RustPointer<ModManager> m_modManager;
 	RustPointer<SchemaManager> m_schemaManager;
 
-	RustPointer<TempDir> m_tempDir;
 	std::unique_ptr<DirFs> m_tempFiles;
-
 	std::unique_ptr<DirFs> m_userPrivateFiles;
 	std::unique_ptr<DirFs> m_saveGameFiles;
 

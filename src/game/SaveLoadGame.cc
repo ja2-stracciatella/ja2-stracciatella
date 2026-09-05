@@ -16,6 +16,7 @@
 #include "Creature_Spreading.h"
 #include "Debug.h"
 #include "Dialogue_Control.h"
+#include "DirFs.h"
 #include "Enemy_Soldier_Save.h"
 #include "Environment.h"
 #include "Explosion_Control.h"
@@ -485,9 +486,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		// Close the file.
 		f.Deallocate();
 
-		FileMan::moveFile(GCM->tempFiles()->absolutePath(savegameTempPath), GCM->saveGameFiles()->absolutePath(savegamePath));
-
-		GCM->tempFiles()->deleteFile(savegameTempPath);
+		DirFs::moveFileBetween(*GCM->tempFiles(), savegameTempPath, *GCM->saveGameFiles(), savegamePath);
 	}
 	catch (std::runtime_error const& e)
 	{

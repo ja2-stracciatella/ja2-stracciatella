@@ -3,7 +3,6 @@
 //! [`stracciatella::fs`]: ../../stracciatella/fs/index.html
 
 use std::ptr;
-use std::time;
 
 use stracciatella::fs;
 
@@ -11,19 +10,7 @@ use crate::c::common::*;
 use crate::c::vec::VecCString;
 
 pub mod file;
-pub mod tempdir;
-
-/// Creates a directory.
-/// Sets the rust error.
-#[unsafe(no_mangle)]
-pub extern "C" fn Fs_createDir(path: *const c_char) -> bool {
-    forget_rust_error();
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    if let Err(err) = fs::create_dir(&path) {
-        remember_rust_error(format!("Fs_createDir {:?}: {}", path, err));
-    }
-    no_rust_error()
-}
+pub mod vfs;
 
 /// Checks if the path exists.
 #[unsafe(no_mangle)]
@@ -32,37 +19,11 @@ pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
     fs::metadata(&path).is_ok()
 }
 
-/// Gets the free space in the target path.
-/// On error the free space will be 0.
-/// Sets the rust error.
-#[unsafe(no_mangle)]
-pub extern "C" fn Fs_freeSpace(path: *const c_char, bytes: *mut u64) -> bool {
-    forget_rust_error();
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    let bytes = unsafe_mut(bytes);
-    let free_space = match fs::free_space(&path) {
-        Err(err) => {
-            remember_rust_error(format!("Fs_freeSpace {:?}: {}", path, err));
-            0
-        }
-        Ok(n) => n,
-    };
-    *bytes = free_space;
-    no_rust_error()
-}
-
 /// Checks if the path points to a directory.
 #[unsafe(no_mangle)]
 pub extern "C" fn Fs_isDir(path: *const c_char) -> bool {
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     fs::metadata(&path).map(|x| x.is_dir()).unwrap_or(false)
-}
-
-/// Checks if the path points to a file.
-#[unsafe(no_mangle)]
-pub extern "C" fn Fs_isFile(path: *const c_char) -> bool {
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    fs::metadata(&path).map(|x| x.is_file()).unwrap_or(false)
 }
 
 /// Finds all files in directory
@@ -107,37 +68,6 @@ pub extern "C" fn Fs_findAllDirsInDir(
             into_ptr(c_vec)
         }
     }
-}
-
-/// Gets the modified time in seconds since the unix epoch.
-/// On error the modified time will be the minimum value.
-/// Sets the rust error.
-#[unsafe(no_mangle)]
-pub extern "C" fn Fs_modifiedSecs(path: *const c_char, modified_secs: *mut f64) -> bool {
-    forget_rust_error();
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    let modified_secs = unsafe_mut(modified_secs);
-    // FIXME use Duration.as_secs_f64 with rust 1.38.0+
-    let as_secs_f64 = |duration: time::Duration| {
-        const NANOSECOND: f64 = 0.000_000_001;
-        duration.as_secs() as f64 + f64::from(duration.subsec_nanos()) * NANOSECOND
-    };
-    let secs_result = fs::metadata(&path).and_then(|x| x.modified()).map(|x| {
-        match x.duration_since(time::UNIX_EPOCH) {
-            Ok(duration) => as_secs_f64(duration),
-            Err(err) => -as_secs_f64(err.duration()),
-        }
-    });
-    match secs_result {
-        Err(err) => {
-            remember_rust_error(format!("Fs_modifiedSecs {:?}: {}", path, err));
-            *modified_secs = f64::MIN;
-        }
-        Ok(secs) => {
-            *modified_secs = secs;
-        }
-    }
-    no_rust_error()
 }
 
 /// Removes a file.

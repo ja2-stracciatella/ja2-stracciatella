@@ -25,45 +25,6 @@ void FileMan::deleteFile(const ST::string& path)
 	}
 }
 
-void FileMan::createDir(const ST::string& path)
-{
-	if (!Fs_isDir(path.c_str()) && !Fs_createDir(path.c_str()))
-	{
-		RustPointer<char> err{getRustError()};
-		throw IoException(ST::format("FileMan::createDir('{}') failed: {}", path, err.get()));
-	}
-}
-
-
-void FileMan::eraseDir(const ST::string& dirPath)
-{
-	std::vector<ST::string> paths = FileMan::findAllFilesInDir(dirPath);
-	for (const ST::string& path : paths)
-	{
-		if (FileMan::isDir(path)) continue;
-		try
-		{
-			FileMan::deleteFile(path);
-		}
-		catch (const IoException& ex)
-		{
-			throw IoException(ST::format("FileMan::eraseDir('{}') failed because {}", dirPath, ex.what()));;
-		}
-	}
-}
-
-uint64_t FileMan::getFreeSpace(const ST::string& path)
-{
-	uint64_t bytes;
-	if (!Fs_freeSpace(path.c_str(), &bytes))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGW("FileMan::getFreeSpace('{}') failed: {}", path, err.get());
-		return 0;
-	}
-	return bytes;
-}
-
 
 ST::string FileMan::joinPaths(const ST::string& first, const ST::string& second)
 {
@@ -116,31 +77,9 @@ SGPFile* FileMan::openForWriting(ST::string filename, bool truncate)
 
 /** Open file for appending data.
  * If file doesn't exist, it will be created. */
-SGPFile* FileMan::openForAppend(ST::string filename)
-{
-	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_APPEND | FILE_OPEN_CREATE)};
-	if (!file)
-	{
-		RustPointer<char> err{getRustError()};
-		throw IoException(ST::format("FileMan::openForAppend('{}') failed: {}", filename, err.get()));
-	}
-	return new SGPFile(file.release(), std::move(filename));
-}
-
 
 /** Open file for reading and writing.
  * If file doesn't exist, it will be created. */
-SGPFile* FileMan::openForReadWrite(ST::string filename)
-{
-	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_READ | FILE_OPEN_WRITE | FILE_OPEN_CREATE)};
-	if (!file)
-	{
-		RustPointer<char> err{getRustError()};
-		throw IoException(ST::format("FileMan::openForReadWrite('{}') failed: {}", filename, err.get()));
-	}
-	return new SGPFile(file.release(), std::move(filename));
-}
-
 /** Open file for reading. */
 SGPFile* FileMan::openForReading(ST::string filename)
 {
@@ -291,10 +230,6 @@ ST::string FileMan::getFileNameWithoutExt(const ST::string& path)
 	return filestem ? ST::string(filestem.get()) : ST::string();
 }
 
-bool FileMan::isFile(const ST::string& path) {
-	return Fs_isFile(path.c_str());
-}
-
 bool FileMan::isDir(const ST::string& path) {
 	return Fs_isDir(path.c_str());
 }
@@ -326,15 +261,4 @@ void FileMan::moveFile(const ST::string& from, const ST::string& to)
 		RustPointer<char> err{getRustError()};
 		throw IoException(ST::format("FileMan::moveFile('{}', '{}') failed: {}", from, to, err.get()));
 	}
-}
-
-double FileMan::getLastModifiedTime(const ST::string& path)
-{
-	double lastModified = 0;
-	if (!Fs_modifiedSecs( path.c_str(), &lastModified ))
-	{
-		RustPointer<char> err{getRustError()};
-		throw IoException(ST::format("FileMan::getLastModifiedTime('{}') failed: {}", path, err.get()));
-	}
-	return lastModified;
 }

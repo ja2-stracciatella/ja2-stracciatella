@@ -19,14 +19,6 @@ namespace FileMan
 	 * If file exists, it's content will be removed. */
 	SGPFile* openForWriting(ST::string filename, bool truncate=true);
 
-	/** Open file for appending data.
-	 * If file doesn't exist, it will be created. */
-	SGPFile* openForAppend(ST::string filename);
-
-	/** Open file for reading and writing.
-	 * If file doesn't exist, it will be created. */
-	SGPFile* openForReadWrite(ST::string filename);
-
 	/** Open file for reading. */
 	SGPFile* openForReading(ST::string filename);
 
@@ -36,15 +28,6 @@ namespace FileMan
 	/* ------------------------------------------------------------
 	 * Other operations
 	 * ------------------------------------------------------------ */
-
-	/** Create directory.
-	 * If directory already exists, do nothing.
-	 * If failed to create, raise an exception. */
-	void createDir(const ST::string& path);
-
-	/* Removes ALL FILES in the specified directory, but leaves the directory alone.
- 	 * Does not affect any subdirectories! */
-	void eraseDir(const ST::string& dirPath);
 
 	/**
 	 * Find all files with the given extension in the given directory.
@@ -102,9 +85,6 @@ namespace FileMan
 	/* Resolve existing components of a path in a case insensitive manner */
 	ST::string resolveExistingComponents(const ST::string& path);
 
-	/** Check if path exists and is a file */
-	bool isFile(const ST::string& path);
-
 	/** Check if path exists and is a directory */
 	bool isDir(const ST::string& path);
 
@@ -119,10 +99,4 @@ namespace FileMan
 
 	/** Move a file */
 	void moveFile(const ST::string& from, const ST::string& to);
-
-	/** Get last modified time in seconds since UNIX epoch */
-	double getLastModifiedTime(const ST::string& path);
-
-	/** Gets the amount of free space on the harddrive in a directory */
-	uint64_t getFreeSpace(const ST::string& path);
 };

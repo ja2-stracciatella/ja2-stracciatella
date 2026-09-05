@@ -13,7 +13,6 @@ pub mod path;
 pub mod schema_manager;
 pub mod subprocess;
 pub mod vec;
-pub mod vfs;
 
 pub mod error {
     //! This module contains error handling code for C.

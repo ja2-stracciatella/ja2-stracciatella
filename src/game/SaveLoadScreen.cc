@@ -444,8 +444,9 @@ static void EnterSaveLoadScreen()
 	gbSelectedSaveLocation = gSavedGamesList.size() > 0 ? 0 : -1;
 	if (!gGameSettings.sCurrentSavedGameName.empty()) {
 		for (auto i = gSavedGamesList.begin(); i < gSavedGamesList.end(); i++) {
-			// If a current save name is used select it
-			if ((*i).name() == gGameSettings.sCurrentSavedGameName) {
+			// If a current save name is used select it. The listing folds the case of the file
+			// name, while the setting holds the name the way the player typed it.
+			if ((*i).name().compare(gGameSettings.sCurrentSavedGameName, ST::case_insensitive) == 0) {
 				gbSelectedSaveLocation = std::distance(gSavedGamesList.begin(), i);
 				break;
 			}

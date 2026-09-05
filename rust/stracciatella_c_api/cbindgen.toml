@@ -23,11 +23,11 @@ struct RustDelete
 	void operator()(char* ptr) const { CString_destroy(ptr); }
 	void operator()(EngineOptions* ptr) const { EngineOptions_destroy(ptr); }
 	void operator()(VFile* ptr) const { File_close(ptr); }
-	void operator()(TempDir* ptr) const { TempDir_destroy(ptr); }
 	void operator()(VecCString* ptr) const { VecCString_destroy(ptr); }
 	void operator()(VecU8* ptr) const { VecU8_destroy(ptr); }
 	void operator()(VecUSize* ptr) const { VecUSize_destroy(ptr); }
 	void operator()(Vfs* ptr) const { Vfs_destroy(ptr); }
+	void operator()(VfsLayer* ptr) const { VfsLayer_close(ptr); }
 	void operator()(ModManager* ptr) const { ModManager_destroy(ptr); }
 	void operator()(Mod* ptr) const { Mod_destroy(ptr); }
 	void operator()(SchemaManager* ptr) const { SchemaManager_destroy(ptr); }
