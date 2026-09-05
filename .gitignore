@@ -14,3 +14,4 @@ TAGS
 .zed
 /compile_commands.json
 /*/CMakeUserPresets.json
+docs-generated/
