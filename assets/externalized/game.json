@@ -135,6 +135,12 @@
   //  vanilla setting: false
   "extra_attachments": false,
 
+  //  Gives the hummer and the ice cream truck a cargo hold of eighteen slots, opened from
+  //  the mapscreen while the vehicle is the selected character. Cargo travels with the
+  //  vehicle and is tipped onto the ground if it is destroyed.
+  //  vanilla setting: false
+  "vehicle_cargo": false,
+
   //  Packages at Drassen airport never get stolen, no need to bribe Pablo.
   //  vanilla_setting: false
   "pablo_wont_steal": false,

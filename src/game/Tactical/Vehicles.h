@@ -1,6 +1,7 @@
 #ifndef _VEHICLES_H
 #define _VEHICLES_H
 
+#include "Item_Types.h"
 #include "JA2Types.h"
 #include "Strategic_Movement.h"
 
@@ -9,6 +10,10 @@
 
 #define MAX_VEHICLES 10
 #define MAX_PASSENGERS_IN_VEHICLE 10
+
+// Cargo slots in the vehicles that carry a stash.  The mapscreen panel lays these
+// out as a grid; see the cargo panel in Map_Screen_Interface_Map_Inventory.cc.
+#define VEHICLE_STASH_SLOTS 18
 
 // type of vehicles
 enum{
@@ -30,6 +35,7 @@ struct VEHICLETYPE
 	UINT8   ubVehicleType; // type of vehicle
 	SGPSector sSector; // position on the Stategic Map
 	SOLDIERTYPE *pPassengers[MAX_PASSENGERS_IN_VEHICLE];
+	OBJECTTYPE stash[VEHICLE_STASH_SLOTS]; // cargo; stays empty unless VehicleHasStash()
 	UINT32  uiMovementSoundID;
 	BOOLEAN fBetweenSectors; // between sectors?
 	BOOLEAN fDestroyed;
@@ -57,6 +63,17 @@ extern std::vector<VEHICLETYPE> pVehicleList;
 
 
 void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle );
+
+/* Can the mercs load cargo into this vehicle?  The hummer and the ice cream truck can:
+ * they are enterable and they have a SOLDIERTYPE to select in the mapscreen team panel.
+ * The tank is not enterable and the helicopter has no SOLDIERTYPE at all. */
+bool VehicleHasStash(VEHICLETYPE const&);
+
+// The vehicle the selected mapscreen character stands for, iff it has a stash.
+VEHICLETYPE* GetStashVehicleForSoldier(SOLDIERTYPE const*);
+
+// Tip the cargo out onto the ground when the vehicle is destroyed.
+void SpillVehicleStash(VEHICLETYPE&, INT16 sGridNo, UINT8 ubLevel);
 
 // add vehicle to list and return id value
 INT32 AddVehicleToList(const SGPSector& sMap, INT16 sGridNo, UINT8 ubType);
