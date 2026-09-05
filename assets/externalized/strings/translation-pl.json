@@ -1309,6 +1309,14 @@
         "Położenie",
         "Razem przedmiotów"
     ],
+    "pMapInventoryActionStrings": [
+        "Zawartość sektora posortowana.",
+        "Zawartość sektora posortowana: rozładowano broni: %d, zdjęto przystawek: %d, połączono obiektów: %d, połączono stosów: %d.",
+        "Najpierw wskaż przedmiot, z którego chcesz uzupełnić.",
+        "Za pomocą %s nie można niczego uzupełnić.",
+        "Nie ma tu czego uzupełnić za pomocą %s.",
+        "Uzupełniono %d %s (punkty: %d)."
+    ],
     "pMapPlotStrings": [
         "Kliknij ponownie sektor docelowy, aby zatwierdzić trasę podróży, lub kliknij inny sektor, aby ją wydłużyć.",
         "Trasa podróży zatwierdzona.",

@@ -64,6 +64,7 @@ extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 #define pwMiscSectorStrings                                 (g_langRes->pwMiscSectorStrings)
 #define pMapInventoryErrorString                            (g_langRes->pMapInventoryErrorString)
 #define pMapInventoryStrings                                (g_langRes->pMapInventoryStrings)
+#define pMapInventoryActionStrings                          (g_langRes->pMapInventoryActionStrings)
 #define pMovementMenuStrings                                (g_langRes->pMovementMenuStrings)
 #define pUpdateMercStrings                                  (g_langRes->pUpdateMercStrings)
 #define pMapScreenBorderButtonHelpText                      (g_langRes->pMapScreenBorderButtonHelpText)

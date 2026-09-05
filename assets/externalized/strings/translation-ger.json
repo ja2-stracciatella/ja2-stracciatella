@@ -1309,6 +1309,14 @@
         "Ort",
         "Zahl der Gegenstände"
     ],
+    "pMapInventoryActionStrings": [
+        "Sektorinventar sortiert.",
+        "Sektorinventar sortiert: %d Waffe(n) entladen, %d Anbauteil(e) abgenommen, %d Objekt(e) vereinigt, %d Stapel zusammengelegt.",
+        "Zeigen Sie zuerst auf den Gegenstand, aus dem aufgefüllt werden soll.",
+        "Mit %s kann nichts aufgefüllt werden.",
+        "Hier gibt es nichts, was mit %s aufgefüllt werden könnte.",
+        "%d %s aufgefüllt (%d Punkte)."
+    ],
     "pMapPlotStrings": [
         "Klicken Sie noch einmal auf das Ziel, um die Route zu bestätigen. Klicken Sie auf andere Sektoren, um die Route zu ändern.",
         "Route bestätigt.",

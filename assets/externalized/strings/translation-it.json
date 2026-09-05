@@ -1309,6 +1309,14 @@
         "Posizione",
         "Totale oggetti"
     ],
+    "pMapInventoryActionStrings": [
+        "Inventario del settore ordinato.",
+        "Inventario del settore ordinato: %d arma/i scaricata/e, %d accessorio/i rimosso/i, %d oggetto/i unito/i, %d pila/e unita/e.",
+        "Puntate prima l'oggetto da cui attingere.",
+        "%s non può essere usato per ricaricare nulla.",
+        "Non c'è nulla da ricaricare con %s qui.",
+        "Ricaricati %d %s (%d punti)."
+    ],
     "pMapPlotStrings": [
         "Cliccate di nuovo su una destinazione per confermare la vostra meta finale, oppure cliccate su un altro settore per fissare più tappe.",
         "Rotta di spostamento confermata.",
