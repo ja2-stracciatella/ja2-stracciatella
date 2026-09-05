@@ -56,6 +56,14 @@ cmake path/to/source -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-openbsd.cmake
 make
 ```
 
+## Build on NixOS
+
+Open a nix-shell that downloads all required dependencies, builds, and then automatically exits the nix-shell.
+
+```sh
+nix-shell -p rustc cargo sdl3 fltk cmake libGL --run "cmake path/to/source && make"
+```
+
 ## Build for Windows on Linux using MinGW (cross build)
 
 Additional requirements: MinGW compiler
