@@ -2659,7 +2659,7 @@ static void CreateRandomItem(void)
 	const GridNo usMapPos = guiCurrentCursorGridNo;
 	if (usMapPos != NOWHERE)
 	{
-		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &Object );
+		CreateItem( (UINT16) (Random( 326 ) + 1), 100, &Object );
 		AddItemToPool(usMapPos, &Object, INVISIBLE, 0, 0, 0);
 	}
 }
