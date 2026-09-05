@@ -234,5 +234,30 @@
     { "profileID": 166, "internalName": "NPC166", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
     { "profileID": 167, "internalName": "NPC167", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
     { "profileID": 168, "internalName": "NPC168", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
-    { "profileID": 169, "internalName": "NPC169", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" }
+    { "profileID": 169, "internalName": "NPC169", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+     /* IMP: more slots for player generated characters, in the profiles that
+        exist past the ones the original game shipped with. Nothing is recorded
+        for these anywhere else -- no portrait, no dialogue, no speech -- and
+        nothing needs to be: a character brings its own, given to it out of
+        imp.json when the site builds it.
+        There are enough of them that the player's team runs out of room first,
+        with some to spare for replacing the ones that die. 187 to 199 are left
+        free for whatever else wants a profile. */
+    { "profileID": 170, "internalName": "PGSLOT170", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 171, "internalName": "PGSLOT171", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 172, "internalName": "PGSLOT172", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 173, "internalName": "PGSLOT173", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 174, "internalName": "PGSLOT174", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 175, "internalName": "PGSLOT175", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 176, "internalName": "PGSLOT176", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 177, "internalName": "PGSLOT177", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 178, "internalName": "PGSLOT178", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 179, "internalName": "PGSLOT179", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 180, "internalName": "PGSLOT180", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 181, "internalName": "PGSLOT181", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 182, "internalName": "PGSLOT182", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 183, "internalName": "PGSLOT183", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 184, "internalName": "PGSLOT184", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 185, "internalName": "PGSLOT185", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
+    { "profileID": 186, "internalName": "PGSLOT186", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" }
 ]

@@ -119,94 +119,102 @@ static void DecideActiveTerrorists();
 static void StartSomeMercsOnAssignment(void);
 
 
+/* Gives one profile everything a campaign starts it with that is not in the
+ * data itself: what its ID implies, what the game options ask for, and what
+ * follows from its inventory. The struct must already hold the content data.
+ * Profiles a saved game predates are set up with this on load. */
+void InitProfileFromContent(ProfileID const i)
+{
+	MERCPROFILESTRUCT& p = gMercProfiles[i];
+
+	// Voice independent of ID num, default is the profile ID. Must
+	// precede the dialogue check below, which looks up the text file
+	// by voice.
+	p.ubVoiceId = i;
+
+	// // dumping std inventory
+	// printf("%03d/%s\n", i, p.zNickname.c_str());
+	// FOR_EACH(UINT16, k, p.inv)
+	// {
+	//   const ItemModel *item = GCM->getItem(*k);
+	//   printf("  %s\n", item->getInternalName().c_str());
+	// }
+
+	// If the dialogue exists for the merc, allow the merc to be hired
+	p.bMercStatus = Content::canMercBeHired(GCM, i) ? 0 : MERC_HAS_NO_TEXT_FILE;
+
+	p.sMedicalDepositAmount = p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0;
+
+	// ATE: New, face display independent of ID num now, default is the
+	// profile ID
+	p.ubFaceIndex = i;
+
+	if (!gGameOptions.fGunNut)
+	{
+		// CJC: replace guns in profile if they aren't available
+		FOR_EACH(UINT16, k, p.inv)
+		{
+			const ItemModel *item = GCM->getItem(*k);
+			if (!item->isGun() || !item->isInBigGunList()) continue;
+
+			const WeaponModel *oldWeapon = item->asWeapon();
+			const WeaponModel *newWeapon = GCM->getWeaponByName(oldWeapon->getStandardReplacement());
+
+			*k = newWeapon->getItemIndex();
+
+			// Search through inventory and replace ammo accordingly
+			FOR_EACH(UINT16, l, p.inv)
+			{
+				UINT16 const ammo = *l;
+				if (!(GCM->getItem(ammo)->isAmmo())) continue;
+				UINT16 const new_ammo = FindReplacementMagazineIfNecessary(oldWeapon, ammo, newWeapon);
+				if (new_ammo == NOTHING) continue;
+				// Found a new magazine, replace
+				*l = new_ammo;
+			}
+		}
+	}
+
+	// Calculate inital attractiveness for the merc's initial gun and armour.
+	// Calculate the optional gear cost.
+	p.bMainGunAttractiveness = -1;
+	p.bArmourAttractiveness  = -1;
+	p.usOptionalGearCost     =  0;
+	FOR_EACH(UINT16 const, k, p.inv)
+	{
+		UINT16 const item_id = *k;
+		if (item_id == NOTHING) continue;
+		const ItemModel * item = GCM->getItem(item_id);
+
+		if (item->isGun()) {
+			p.bMainGunAttractiveness = item->asWeapon()->ubDeadliness;
+		}
+		if (item->isArmour()) {
+			p.bArmourAttractiveness = item->asArmour()->getProtection();
+		}
+
+		p.usOptionalGearCost += item->getPrice();
+	}
+
+	// These variables to get loaded in
+	p.fUseProfileInsertionInfo = FALSE;
+	p.sGridNo                  = 0;
+
+	// ARM: this is also being done inside the profile editor, but put it here
+	// too, so this project's code makes sense
+	p.bHatedCount[0]    = p.bHatedTime[0];
+	p.bHatedCount[1]    = p.bHatedTime[1];
+	p.bLearnToHateCount = p.bLearnToHateTime;
+	p.bLearnToLikeCount = p.bLearnToLikeTime;
+}
+
+
 void LoadMercProfiles()
 {
+	GCM->resetMercProfileStructs();
+	for (ProfileID i = 0; i != NUM_PROFILES; ++i)
 	{
-		GCM->resetMercProfileStructs();
-		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
-		{
-			MERCPROFILESTRUCT& p = gMercProfiles[i];
-
-			// Voice independent of ID num, default is the profile ID. Must
-			// precede the dialogue check below, which looks up the text file
-			// by voice.
-			p.ubVoiceId = i;
-
-			// // dumping std inventory
-			// printf("%03d/%s\n", i, p.zNickname.c_str());
-			// FOR_EACH(UINT16, k, p.inv)
-			// {
-			//   const ItemModel *item = GCM->getItem(*k);
-			//   printf("  %s\n", item->getInternalName().c_str());
-			// }
-
-			// If the dialogue exists for the merc, allow the merc to be hired
-			p.bMercStatus = Content::canMercBeHired(GCM, i) ? 0 : MERC_HAS_NO_TEXT_FILE;
-
-			p.sMedicalDepositAmount = p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0;
-
-			// ATE: New, face display independent of ID num now, default is the
-			// profile ID
-			p.ubFaceIndex = i;
-
-			if (!gGameOptions.fGunNut)
-			{
-				// CJC: replace guns in profile if they aren't available
-				FOR_EACH(UINT16, k, p.inv)
-				{
-					const ItemModel *item = GCM->getItem(*k);
-					if (!item->isGun() || !item->isInBigGunList()) continue;
-
-					const WeaponModel *oldWeapon = item->asWeapon();
-					const WeaponModel *newWeapon = GCM->getWeaponByName(oldWeapon->getStandardReplacement());
-
-					*k = newWeapon->getItemIndex();
-
-					// Search through inventory and replace ammo accordingly
-					FOR_EACH(UINT16, l, p.inv)
-					{
-						UINT16 const ammo = *l;
-						if (!(GCM->getItem(ammo)->isAmmo())) continue;
-						UINT16 const new_ammo = FindReplacementMagazineIfNecessary(oldWeapon, ammo, newWeapon);
-						if (new_ammo == NOTHING) continue;
-						// Found a new magazine, replace
-						*l = new_ammo;
-					}
-				}
-			}
-
-			// Calculate inital attractiveness for the merc's initial gun and armour.
-			// Calculate the optional gear cost.
-			p.bMainGunAttractiveness = -1;
-			p.bArmourAttractiveness  = -1;
-			p.usOptionalGearCost     =  0;
-			FOR_EACH(UINT16 const, k, p.inv)
-			{
-				UINT16 const item_id = *k;
-				if (item_id == NOTHING) continue;
-				const ItemModel * item = GCM->getItem(item_id);
-
-				if (item->isGun()) {
-					p.bMainGunAttractiveness = item->asWeapon()->ubDeadliness;
-				}
-				if (item->isArmour()) {
-					p.bArmourAttractiveness = item->asArmour()->getProtection();
-				}
-
-				p.usOptionalGearCost += item->getPrice();
-			}
-
-			// These variables to get loaded in
-			p.fUseProfileInsertionInfo = FALSE;
-			p.sGridNo                  = 0;
-
-			// ARM: this is also being done inside the profile editor, but put it here
-			// too, so this project's code makes sense
-			p.bHatedCount[0]    = p.bHatedTime[0];
-			p.bHatedCount[1]    = p.bHatedTime[1];
-			p.bLearnToHateCount = p.bLearnToHateTime;
-			p.bLearnToLikeCount = p.bLearnToLikeTime;
-		}
+		InitProfileFromContent(i);
 	}
 
 	DecideActiveTerrorists();

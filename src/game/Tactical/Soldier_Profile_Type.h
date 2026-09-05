@@ -5,7 +5,16 @@
 #include <string_theory/string>
 
 
-#define NUM_PROFILES						170
+/* The profiles the original game shipped with. That is all prof.dat holds, and
+ * all that saves written before version 105 carry. */
+#define NUM_VANILLA_PROFILES					170
+
+/* One more than the highest profile ID there can be. NO_PROFILE is 200 and is
+ * stored in the same byte as any other profile ID -- in the maps, in the saves
+ * -- so the profiles have to stay below it. Everything from
+ * NUM_VANILLA_PROFILES up is an empty slot for the data files to fill. */
+#define NUM_PROFILES						200
+
 #define NUM_RECRUITABLE						75
 
 #define NAME_LENGTH						30

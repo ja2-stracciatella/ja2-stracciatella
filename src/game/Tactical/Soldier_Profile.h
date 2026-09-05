@@ -187,12 +187,17 @@ enum NPCIDs : ProfileID
 	NPC168,
 	NPC169
 
+	// The IDs from here to NUM_PROFILES are free for the data files to name.
 	// 200 is NO_PROFILE, defined in Soldier_Control.h
 };
 
 BOOLEAN IsProfileIdAnAimOrMERCMerc(UINT8 ubProfileID);
 
 void LoadMercProfiles();
+
+/* Sets up one profile as the start of a campaign would, on top of the content
+ * data the struct already holds. */
+void InitProfileFromContent(ProfileID);
 
 // Overload the default for the face index (which is the profile ID)
 void SetProfileFaceData(ProfileID, UINT8 face_idx, UINT16 eyes_x, UINT16 eyes_y, UINT16 mouth_x, UINT16 mouth_y);

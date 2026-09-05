@@ -14,6 +14,13 @@
 #define NUM_SAVE_GAME_BACKUPS				2
 
 
+/* How many merc profiles a saved game of the given version holds. The slots
+ * past the vanilla profiles only exist from version 105 on, so an older save
+ * stops short of them -- in the profiles themselves and in everything else it
+ * writes one of per profile. */
+UINT32 NumProfilesInSavedGame(UINT32 savegame_version);
+
+
 struct SAVED_GAME_HEADER
 {
 	static constexpr size_t GAME_VERSION_LENGTH{ 16 };

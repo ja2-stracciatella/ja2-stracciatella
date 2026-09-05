@@ -7,8 +7,10 @@ items:
   type: object
   properties:
     profileID:
+      description: |
+        Profiles 0 to 169 are the ones the original game shipped with; the rest, up to 199, are free slots.
       minimum: 0
-      maximum: 169
+      maximum: 199
       $ref: types/uint8.schema.yaml
     internalName:
       type: string
