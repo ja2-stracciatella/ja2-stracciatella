@@ -194,8 +194,18 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROF
 
 	prof->SKIN = r.getOptionalString("skinColor", binaryProf->SKIN);
 	prof->HAIR = r.getOptionalString("hairColor", binaryProf->HAIR);
+	/* A profile prof.dat has no colors for -- the slots it leaves blank, and
+	 * everything past the ones it holds at all -- gets the ones a player
+	 * generated character wears, so that a profile declared in the JSON alone
+	 * needs nothing said about its clothes to be drawn. */
 	prof->VEST = r.getOptionalString("vestColor", binaryProf->VEST);
+	if (prof->VEST.empty()) {
+		prof->VEST = "WHITEVEST";
+	}
 	prof->PANTS = r.getOptionalString("pantsColor", binaryProf->PANTS);
+	if (prof->PANTS.empty()) {
+		prof->PANTS = "BLACKPANTS";
+	}
 
 	ST::string jSexismMode = r.getOptionalString("sexismMode");
 	if (jSexismMode.empty()) {
