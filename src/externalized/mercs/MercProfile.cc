@@ -61,7 +61,13 @@ bool MercProfile::isMERCMerc() const
 
 bool MercProfile::isIMPMerc() const
 {
-	return getInfo().mercType == MercType::IMP;
+	/* A slot the I.M.P. site has handed out holds one of the player's own
+	 * however it came to be used, including the slots past the vanilla
+	 * profiles that no data file declares. Everything that asks whether a
+	 * profile is a player merc has to hear yes for those too, or a character
+	 * made in one is taken for an NPC. */
+	return getInfo().mercType == MercType::IMP ||
+		m_profile->impSlotState == IMPSlotState::TAKEN;
 }
 
 bool MercProfile::isRPC() const
@@ -194,18 +200,8 @@ std::unique_ptr<MERCPROFILESTRUCT> MercProfile::deserializeStruct(const MERCPROF
 
 	prof->SKIN = r.getOptionalString("skinColor", binaryProf->SKIN);
 	prof->HAIR = r.getOptionalString("hairColor", binaryProf->HAIR);
-	/* A profile prof.dat has no colors for -- the slots it leaves blank, and
-	 * everything past the ones it holds at all -- gets the ones a player
-	 * generated character wears, so that a profile declared in the JSON alone
-	 * needs nothing said about its clothes to be drawn. */
 	prof->VEST = r.getOptionalString("vestColor", binaryProf->VEST);
-	if (prof->VEST.empty()) {
-		prof->VEST = "WHITEVEST";
-	}
 	prof->PANTS = r.getOptionalString("pantsColor", binaryProf->PANTS);
-	if (prof->PANTS.empty()) {
-		prof->PANTS = "BLACKPANTS";
-	}
 
 	ST::string jSexismMode = r.getOptionalString("sexismMode");
 	if (jSexismMode.empty()) {

@@ -34,9 +34,23 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
+/* A profile past the ones the original game shipped that no data file says
+ * anything about at all. The I.M.P. site may put a character there, so that
+ * raising max_characters is enough on its own and no mod has to be installed
+ * to make room. Anything a mod does declare is left alone, whatever it
+ * declares it as, and the slots declared as I.M.P. slots come first because
+ * they sit below these. */
+static bool IsUndeclaredSlot(ProfileID const profile)
+{
+	return profile >= NUM_VANILLA_PROFILES &&
+		GCM->getMercProfileInfo(profile)->profileID == NO_PROFILE;
+}
+
+
 static bool IsIMPSlot(ProfileID const profile)
 {
-	return GCM->getMercProfileInfo(profile)->mercType == MercType::IMP;
+	return GCM->getMercProfileInfo(profile)->mercType == MercType::IMP ||
+		IsUndeclaredSlot(profile);
 }
 
 

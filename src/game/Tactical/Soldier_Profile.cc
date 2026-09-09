@@ -149,6 +149,14 @@ void InitProfileFromContent(ProfileID const i)
 	// profile ID
 	p.ubFaceIndex = i;
 
+	/* A profile nothing dresses -- a slot prof.dat leaves blank, or one past
+	 * the profiles it holds that no JSON declares at all -- wears what a player
+	 * generated character wears, since those are the slots a character is made
+	 * in. Soldier creation would otherwise pick colors at random for it, which
+	 * suits a passer-by but not one of the player's own. */
+	if (p.VEST.empty())  p.VEST  = "WHITEVEST";
+	if (p.PANTS.empty()) p.PANTS = "BLACKPANTS";
+
 	if (!gGameOptions.fGunNut)
 	{
 		// CJC: replace guns in profile if they aren't available
