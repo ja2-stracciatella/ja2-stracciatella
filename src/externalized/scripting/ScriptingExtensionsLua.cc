@@ -26,6 +26,10 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
+/** \addtogroup modding
+ *  @{
+ */
+
 #define SCRIPTS_DIR "scripts"
 #define ENTRYPOINT_SCRIPT "main.lua"
 
@@ -34,8 +38,7 @@
 struct GAME_OPTIONS;
 /*! \struct TacticalStatusType
     \brief Status information of the game
-    \details Accessible via the gTacticalStatusType global variable
-    */
+    \details Accessible via the gTacticalStatusType global variable */
 struct TacticalStatusType;
 
 static bool isLuaInitialized = false;
@@ -469,3 +472,5 @@ static void UnregisterListener(std::string observable, std::string key)
 {
 	_RegisterListener(observable, "___noop", key);
 }
+
+/** @} */
