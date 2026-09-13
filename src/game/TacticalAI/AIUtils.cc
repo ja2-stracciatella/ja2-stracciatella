@@ -1207,8 +1207,12 @@ static INT16 FindClosestClimbPointAvailableToAI(SOLDIERTYPE* pSoldier, INT16 sSt
 	//if the enemy is on the roof currently
 	if (gamepolicy(stay_on_rooftop) && pSoldier->bLevel == 1)
 	{
-		//if the soldier is currently on close patrol or on guard
-		if (pSoldier->bOrders == ONGUARD || pSoldier->bOrders == CLOSEPATROL)
+		//if the soldier is currently on close patrol, on guard, or far patrol
+
+		//FARPATROL counts too: CheckForChangingOrders bumps an alerted soldier's orders
+		//up one category (ONGUARD -> CLOSEPATROL -> FARPATROL), so a rooftop guard that
+		//has spotted anyone is no longer ONGUARD or CLOSEPATROL.
+		if (pSoldier->bOrders == ONGUARD || pSoldier->bOrders == CLOSEPATROL || pSoldier->bOrders == FARPATROL)
 		{
 			//Make it so he cant climb down off the roof
 			SLOGD("TacticalAI: soldier #{} is on guard ({}) and not allowed to climb down", pSoldier->ubID, pSoldier->bOrders);
