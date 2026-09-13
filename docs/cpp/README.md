@@ -21,12 +21,6 @@ doxygen Doxyfile.full
 
 It will generate the full HTML developer documentation, covering the entire engine source tree.
 
-By default, the commands writes its output into a new `docs-generated/` directory, but you can change this by modifying the `OUTPUT_DIRECTORY` setting by setting `OUTPUT_DIRECTORY` argument:
-
-```sh
-doxygen Doxyfile.mod-api-only --output-directory <output_directory>
-```
-
 #### Alternative, modder-focused code docs
 
 Instead of the above full-sized documentation, a smaller subset of the documentation can be generated, focusing only on the C++ API reachable from the Lua scripting extension:
