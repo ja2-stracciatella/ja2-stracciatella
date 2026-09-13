@@ -11,6 +11,18 @@ extern UINT32 guiNumObjectSlots;
 struct vector_3
 {
 	float x, y, z;
+
+	constexpr vector_3 & operator+=(vector_3 const& rhs)
+	{
+		x += rhs.x, y += rhs.y, z += rhs.z;
+		return *this;
+	}
+
+	constexpr vector_3 & operator*=(float multiplier)
+	{
+		x *= multiplier, y *= multiplier, z *= multiplier;
+		return *this;
+	}
 };
 
 struct REAL_OBJECT
