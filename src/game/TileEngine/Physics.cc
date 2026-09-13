@@ -80,26 +80,10 @@ constexpr float EPSILONP = 0.01f;
 #define REALOBJ2ID(o) 				((o) - ObjectSlots)
 
 namespace {
-vector_3 VAdd( vector_3 *a, vector_3 *b )
+constexpr vector_3 operator*(vector_3 lhs, float multiplier)
 {
-	vector_3 c;
-
-	c.x = a->x + b->x;
-	c.y = a->y + b->y;
-	c.z = a->z + b->z;
-
-	return( c );
-}
-
-vector_3 VMultScalar( vector_3 *a, float b )
-{
-	vector_3 c;
-
-	c.x = a->x * b;
-	c.y = a->y * b;
-	c.z = a->z * b;
-
-	return( c );
+	lhs *= multiplier;
+	return lhs;
 }
 
 
@@ -205,7 +189,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const 
 	o->InitialForce.x          = SCALE_VERT_VAL_TO_HORZ(xForce);
 	o->InitialForce.y          = SCALE_VERT_VAL_TO_HORZ(yForce);
 	o->InitialForce.z          = zForce;
-	o->InitialForce            = VMultScalar(&o->InitialForce, (float)(1.5 / TIME_MULTI));
+	o->InitialForce            *= (float)(1.5 / TIME_MULTI);
 	o->sGridNo                 = vector_3ToGridNo(o->Position);
 	o->pNode                   = 0;
 	o->pShadow                 = 0;
@@ -336,8 +320,6 @@ static void SimulateObject(REAL_OBJECT * const pObject)
 
 static void PhysicsComputeForces(REAL_OBJECT* pObject)
 {
-	vector_3			vTemp;
-
 	// Calculate forces
 	pObject->Force = pObject->InitialForce;
 
@@ -348,8 +330,7 @@ static void PhysicsComputeForces(REAL_OBJECT* pObject)
 
 	if ( pObject->fApplyFriction )
 	{
-		vTemp = VMultScalar( &(pObject->Velocity), -pObject->AppliedMu );
-		pObject->Force = VAdd( &(vTemp), &(pObject->Force) );
+		pObject->Force += pObject->Velocity * -pObject->AppliedMu;
 
 		pObject->fApplyFriction = FALSE;
 	}
@@ -473,14 +454,11 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime)
 
 static void PhysicsIntegrate(REAL_OBJECT * const pObject, float const DeltaTime)
 {
-	vector_3			vTemp;
-
 	// Save old position
 	pObject->OldPosition = pObject->Position;
 	pObject->OldVelocity = pObject->Velocity;
 
-	vTemp = VMultScalar( &(pObject->Velocity), DeltaTime );
-	pObject->Position = VAdd( &(pObject->Position), &vTemp );
+	pObject->Position += pObject->Velocity * DeltaTime;
 
 	// Save test TargetPosition
 	if ( pObject->fTestPositionNotSet )
@@ -488,8 +466,7 @@ static void PhysicsIntegrate(REAL_OBJECT * const pObject, float const DeltaTime)
 		pObject->TestTargetPosition = pObject->Position;
 	}
 
-	vTemp = VMultScalar( &(pObject->Force), ( DeltaTime / 60.0f ) );
-	pObject->Velocity = VAdd( &(pObject->Velocity), &vTemp );
+	pObject->Velocity += pObject->Force * (DeltaTime / 60.0f);
 
 	if ( pObject->fPotentialForDebug )
 	{
@@ -1080,17 +1057,9 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, float CoefficientOfRestitution)
 {
-	float ImpulseNumerator, Impulse;
-	vector_3 vTemp;
+	float Impulse = -1 * CoefficientOfRestitution * VDotProduct( pVelocity , pNormal );
 
-	ImpulseNumerator = -1 * CoefficientOfRestitution * VDotProduct( pVelocity , pNormal );
-
-	Impulse = ImpulseNumerator;
-
-	vTemp = VMultScalar( pNormal, Impulse );
-
-	pObject->Velocity = VAdd( &(pObject->Velocity), &vTemp );
-
+	pObject->Velocity += *pNormal * Impulse;
 }
 
 
@@ -1296,9 +1265,7 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 
 
 		// Now use a force
-		vForce.x = dForce * vDirNormal.x;
-		vForce.y = dForce * vDirNormal.y;
-		vForce.z = dForce * vDirNormal.z;
+		vForce = vDirNormal * dForce;
 
 		dTestRange = CalculateObjectTrajectory( sEndZ, pItem, &vPosition, &vForce, psGridNo );
 
@@ -1382,9 +1349,7 @@ static float FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 s
 		iNumChecks++;
 
 		// Now use a force
-		vForce.x = dForce * vDirNormal.x;
-		vForce.y = dForce * vDirNormal.y;
-		vForce.z = dForce * vDirNormal.z;
+		vForce = vDirNormal * dForce;
 
 		dTestRange = CalculateObjectTrajectory( sEndZ, pItem, &vPosition, &vForce, psGridNo );
 
@@ -1417,9 +1382,7 @@ static float FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 s
 			// From degrees, calculate Z portion of normal
 			vDirNormal.z	= (float)sin( dzDegrees );
 			// Now use a force
-			vForce.x = dForce * vDirNormal.x;
-			vForce.y = dForce * vDirNormal.y;
-			vForce.z = dForce * vDirNormal.z;
+			vForce = vDirNormal * dForce;
 			dTestRange = CalculateObjectTrajectory( sEndZ, pItem, &vPosition, &vForce, psGridNo );
 			return( (FLOAT)( dzDegrees ) );
 		}
@@ -1694,9 +1657,7 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough(const SOLDIERTYPE* pSoldier, const
 	vDirNormal.z = (float)sin( dDegrees );
 
 	// Do force....
-	vForce.x = dForce * vDirNormal.x;
-	vForce.y = dForce * vDirNormal.y;
-	vForce.z = dForce * vDirNormal.z;
+	vForce = vDirNormal * dForce;
 
 	// OK, we have our force, calculate change to get through without collide
 	if ( ChanceToGetThroughObjectTrajectory( sEndZ, pItem, &vPosition, &vForce, psFinalGridNo, pbLevel, fFromUI ) == 0 )
@@ -1849,9 +1810,7 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 	vDirNormal.z = (float)sin( dDegrees );
 
 	// Do force....
-	vForce.x = dForce * vDirNormal.x;
-	vForce.y = dForce * vDirNormal.y;
-	vForce.z = dForce * vDirNormal.z;
+	vForce = vDirNormal * dForce;
 
 	SetTempObject(pSoldier, *pItem);
 
