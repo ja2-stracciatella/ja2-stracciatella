@@ -7,6 +7,7 @@
 
 // Implements pusher and getter for string_theory/string. It should be handled just like a std::string
 // @see https://sol2.readthedocs.io/en/latest/tutorial/customization.html
+/** @ingroup modding */
 template <typename Handler>
 bool sol_lua_check(sol::types<ST::string>, lua_State* L, int index, Handler&& handler, sol::stack::record& tracking)
 {
@@ -20,6 +21,7 @@ bool sol_lua_check(sol::types<ST::string>, lua_State* L, int index, Handler&& ha
 	return true;
 }
 
+/** @ingroup modding */
 ST::string sol_lua_get(sol::types<ST::string>, lua_State* L, int index, sol::stack::record& tracking)
 {
 	if (sol::stack::check_usertype<ST::string>(L, index)) {
@@ -30,6 +32,7 @@ ST::string sol_lua_get(sol::types<ST::string>, lua_State* L, int index, sol::sta
 	return ST::string(str);
 }
 
+/** @ingroup modding */
 int sol_lua_push(sol::types<ST::string>, lua_State* L, const ST::string& st)
 {
 	return sol::stack::push(L, st.to_std_string());

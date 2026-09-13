@@ -19,6 +19,7 @@
  * @tparam E type of a named C enum that maps to integer values
  * @param os stream to print the generated Lua code to
  * @param zTypeName optional type name. Uses the C enum name if not provided
+ * @ingroup modding
  */
 template<typename E>
 void PrintEnum(std::ostream& os, const ST::string& zTypeName = {})
@@ -46,6 +47,7 @@ void PrintEnum(std::ostream& os, const ST::string& zTypeName = {})
  * @tparam E
  * @param os
  * @param zTypeName
+ * @ingroup modding
  */
 template<typename E>
 void PrintEnumFlags(std::ostream& os, const ST::string& zTypeName = {})
@@ -73,6 +75,7 @@ void PrintEnumFlags(std::ostream& os, const ST::string& zTypeName = {})
 
 /**
  * Prints a enum-class but using the underlying values.
+ * @ingroup modding
  */
 template<typename E, typename V>
 void PrintEnumClass(std::ostream& os, const ST::string& zTypeName = {})
@@ -95,4 +98,5 @@ void PrintEnumClass(std::ostream& os, const ST::string& zTypeName = {})
 #endif
 }
 
+/** @ingroup modding */
 void PrintAllJA2Enums(std::ostream& os);

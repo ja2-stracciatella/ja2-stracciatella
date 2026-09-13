@@ -30,11 +30,13 @@
 #define ENTRYPOINT_SCRIPT "main.lua"
 
 /*! \struct GAME_OPTIONS
-    \brief Options which the current game was started with */
+    \brief Options which the current game was started with
+    \ingroup modding */
 struct GAME_OPTIONS;
 /*! \struct TacticalStatusType
     \brief Status information of the game
     \details Accessible via the gTacticalStatusType global variable
+    \ingroup modding
     */
 struct TacticalStatusType;
 
@@ -450,7 +452,7 @@ static void _RegisterListener(const std::string& observable, const std::string& 
  * This function can only be used during initialization.
  * @param observable the name of an Observable
  * @param luaFunc name of the function handling callback
- * @ingroup funclib-general
+ * @ingroup modding
  */
 static void RegisterListener(std::string observable, std::string luaFunc)
 {
@@ -463,7 +465,7 @@ static void RegisterListener(std::string observable, std::string luaFunc)
  * This function can only be used during initialization.
  * @param observable
  * @param key
- * @ingroup funclib-general
+ * @ingroup modding
  */
 static void UnregisterListener(std::string observable, std::string key)
 {
