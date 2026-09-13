@@ -3233,6 +3233,12 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	UnLockPauseState( );
 	UpdatePausedStatesDueToTimeCompression( );
 
+	// nothing in tactical would lift a pause the mapscreen left behind
+	if ( guiPendingScreen == GAME_SCREEN && !gfPauseDueToPlayerGamePause )
+	{
+		UnPauseGame( );
+	}
+
 	if( !gfDontStartTransitionFromLaptop )
 	{
 		//Load a tiny graphic of the on screen and draw it to the buffer.
