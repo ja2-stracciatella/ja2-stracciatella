@@ -1,7 +1,5 @@
 # C++ source docs
 
-## Generating code documentation with Doxygen
-
 Code-specific C++ documentation is generated using [Doxygen](https://www.doxygen.nl).
 
 ### Installing Doxygen
@@ -13,23 +11,26 @@ Code-specific C++ documentation is generated using [Doxygen](https://www.doxygen
 
 Verify the install with `doxygen --version`.
 
-### Generating the documentation
+### Generating the full documentation
 
-Run these commands from this `docs/cpp/` directory.
-
-Full developer documentation, covering the entire engine source tree:
+Run this command from this `docs/cpp/` directory:
 
 ```sh
 doxygen Doxyfile.full
 ```
 
-Modder-focused documentation, covering only the C++ API reachable from the Lua scripting extension:
+It will generate the full HTML developer documentation, covering the entire engine source tree.
+
+By default, the commands writes its output into a new `docs-generated/` directory, but you can change this by modifying the `OUTPUT_DIRECTORY` setting by setting `OUTPUT_DIRECTORY` argument:
+
+```sh
+doxygen Doxyfile.mod-api-only --output-directory <output_directory>
+```
+
+#### Alternative, modder-focused code docs
+
+Instead of the above full-sized documentation, a smaller subset of the documentation can be generated, focusing only on the C++ API reachable from the Lua scripting extension:
 
 ```sh
 doxygen Doxyfile.mod-api-only
-```
-
-By default, both commands write their output into `docs-generated/` directory, but you can change this by modifying the `OUTPUT_DIRECTORY` setting in `Doxyfile.full` or `Doxyfile.mod-api-only`, or by setting `OUTPUT_DIRECTORY` directly in the command line.
-```sh
-doxygen Doxyfile.full --output-directory <output_directory>
 ```
