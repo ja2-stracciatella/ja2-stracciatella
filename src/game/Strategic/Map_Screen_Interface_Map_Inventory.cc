@@ -16,8 +16,13 @@
 #include "Map_Screen_Interface_Border.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map.h"
+#include "Assignments.h"
 #include "Items.h"
 #include "Interface_Items.h"
+#include "MagazineModel.h"
+#include "Message.h"
+#include "Overhead.h"
+#include "SGPStrings.h"
 #include "Interface_Utils.h"
 #include "Text.h"
 #include "Font_Control.h"
@@ -42,6 +47,7 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
+#include <algorithm>
 #include <vector>
 
 // status bar colors
@@ -927,6 +933,508 @@ void AutoPlaceObjectInInventoryStash(OBJECTTYPE* pItemPtr)
 
 	// remove a like number of objects from pObj
 	RemoveObjs( pItemPtr, ubNumberToDrop );
+}
+
+
+// Rebuild the pool list from the given items, padding it back out to whole pages.
+static void ReplaceMapInventoryPool(const std::vector<WORLDITEM>& items)
+{
+	pInventoryPoolList = items;
+
+	size_t const visible_slots = pInventoryPoolList.size();
+	size_t const empty_slots   = MAP_INVENTORY_POOL_SLOT_COUNT - visible_slots % MAP_INVENTORY_POOL_SLOT_COUNT;
+	pInventoryPoolList.resize(visible_slots + empty_slots, WORLDITEM{});
+
+	iLastInventoryPoolPage = static_cast<INT32>((pInventoryPoolList.size() - 1) / MAP_INVENTORY_POOL_SLOT_COUNT);
+	if (iCurrentInventoryPoolPage > iLastInventoryPoolPage)
+	{
+		iCurrentInventoryPoolPage = iLastInventoryPoolPage;
+	}
+}
+
+
+// How many objects of this item may share one sector inventory slot?
+static UINT8 SectorInventoryStackLimit(const ItemModel* const item)
+{
+	return std::min<UINT8>(item->getPerPocket(), MAX_OBJECTS_PER_SLOT);
+}
+
+
+// Can the source slot be poured into the target slot without losing anything?
+static BOOLEAN CanMergeSectorInventorySlots(const WORLDITEM& target, const WORLDITEM& source)
+{
+	if (target.o.usItem != source.o.usItem) return FALSE;
+	if (target.ubLevel  != source.ubLevel)  return FALSE;
+
+	// unreachable items must not become reachable by being piled onto a reachable stack, and vice versa
+	if ((target.usFlags & WORLD_ITEM_REACHABLE) != (source.usFlags & WORLD_ITEM_REACHABLE)) return FALSE;
+
+	// attachments and traps belong to a single object, stacking would drop them
+	if (ItemHasAttachments(target.o) || ItemHasAttachments(source.o)) return FALSE;
+	if (target.o.bTrap > 0 || source.o.bTrap > 0) return FALSE;
+
+	// keys keep their lock id in the same bytes as the status array
+	if (GCM->getItem(target.o.usItem)->isKey()) return FALSE;
+
+	return TRUE;
+}
+
+
+// Guns keep their loaded rounds inside the gun object, where nothing can stack them and no other
+// gun can be fed from them.  Take them out as a magazine of their own.
+static BOOLEAN UnloadSectorInventoryGun(WORLDITEM& wi, std::vector<WORLDITEM>& extracted)
+{
+	OBJECTTYPE& gun = wi.o;
+
+	// the ammo fields share their bytes with the status of the 2nd and 3rd object of a stack
+	if (gun.ubNumberOfObjects != 1) return FALSE;
+
+	if (!GCM->getItem(gun.usItem)->isGun()) return FALSE;
+	if (gun.ubGunShotsLeft == 0)            return FALSE;
+
+	const ItemModel* const ammo = GCM->getItem(gun.usGunAmmoItem, ItemSystem::nothrow);
+	if (ammo == NULL || !ammo->isAmmo()) return FALSE;
+
+	WORLDITEM mag           = wi;
+	mag.o                   = OBJECTTYPE{};
+	mag.o.usItem            = gun.usGunAmmoItem;
+	mag.o.ubNumberOfObjects = 1;
+	mag.o.ubShotsLeft[0]    = gun.ubGunShotsLeft;
+
+	gun.ubGunShotsLeft = 0;
+	gun.ubGunAmmoType  = 0;
+	// usGunAmmoItem stays, the gun uses it to know what it was loaded with
+
+	extracted.push_back(mag);
+	return TRUE;
+}
+
+
+// An attachment hides inside the item it is bolted onto, so it is neither counted nor sorted and
+// it keeps its host out of every stack.  Returns how many came off.
+static UINT32 DetachSectorInventoryAttachments(WORLDITEM& wi, std::vector<WORLDITEM>& extracted)
+{
+	UINT32 uiDetached = 0;
+
+	for (INT8 bPos = 0; bPos < MAX_ATTACHMENTS; ++bPos)
+	{
+		if (wi.o.usAttachItem[bPos] == NOTHING) continue;
+
+		WORLDITEM detached = wi;
+		detached.o         = OBJECTTYPE{};
+
+		// fails for the attachments that are welded on, those simply stay where they are
+		if (!RemoveAttachment(&wi.o, bPos, &detached.o)) continue;
+
+		extracted.push_back(detached);
+		++uiDetached;
+
+		--bPos; // removing one moves the remaining attachments down a slot
+	}
+
+	return uiDetached;
+}
+
+
+// Pull everything an item carries out of it.  Armed bombs and trapped items are left alone, taking
+// those apart is a job for a merc, not for a sorting pass.
+static void StripSectorInventoryItem(WORLDITEM& wi, std::vector<WORLDITEM>& extracted, UINT32& uiGunsUnloaded, UINT32& uiDetached)
+{
+	if (wi.o.ubNumberOfObjects == 0)     return;
+	if (wi.o.bTrap > 0)                  return;
+	if (wi.o.fFlags & OBJECT_ARMED_BOMB) return;
+
+	if (UnloadSectorInventoryGun(wi, extracted)) ++uiGunsUnloaded;
+	uiDetached += DetachSectorInventoryAttachments(wi, extracted);
+}
+
+
+// Only objects that hold nothing but points may have their points poured into another object.
+static BOOLEAN CanPourSectorInventoryPoints(const WORLDITEM& wi)
+{
+	if (wi.o.ubNumberOfObjects == 0) return FALSE;
+	if (wi.o.bTrap > 0)              return FALSE;
+	if (ItemHasAttachments(wi.o))    return FALSE;
+
+	return TRUE;
+}
+
+
+static BOOLEAN GetRefillablePointCapacity(const ItemModel* item, INT8& bMaxPoints);
+
+
+// Magazines, kits and medkits hold points - rounds resp. charges - that can be moved between
+// objects of the same item.  Pool them per item so that what is left is full objects and at most
+// one part-used one.  Returns how many objects were emptied out this way.
+static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
+{
+	UINT32 uiObjectsMerged = 0;
+
+	std::vector<bool>       fPooled(items.size(), false);
+	std::vector<WORLDITEM*> group;
+
+	for (size_t iFirst = 0; iFirst < items.size(); ++iFirst)
+	{
+		if (fPooled[iFirst])                             continue;
+		if (!CanPourSectorInventoryPoints(items[iFirst])) continue;
+
+		INT8 bMaxPoints;
+		if (!GetRefillablePointCapacity(GCM->getItem(items[iFirst].o.usItem), bMaxPoints)) continue;
+
+		group.clear();
+		group.push_back(&items[iFirst]);
+		fPooled[iFirst] = true;
+
+		for (size_t i = iFirst + 1; i < items.size(); ++i)
+		{
+			if (fPooled[i])                                             continue;
+			if (!CanPourSectorInventoryPoints(items[i]))                continue;
+			if (!CanMergeSectorInventorySlots(items[iFirst], items[i])) continue;
+
+			group.push_back(&items[i]);
+			fPooled[i] = true;
+		}
+
+		UINT32 uiPoints  = 0;
+		UINT32 uiObjects = 0;
+		for (const WORLDITEM* wi : group)
+		{
+			for (UINT8 ubObj = 0; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
+			{
+				INT8 const bPoints = wi->o.bStatus[ubObj];
+				if (bPoints > 0) uiPoints += std::min(bPoints, bMaxPoints);
+				++uiObjects;
+			}
+		}
+
+		if (uiPoints == 0) continue; // nothing but empties, leave them be
+
+		// The group is repacked even when that frees no object at all: two half used bags
+		// hold their points in two objects either way, but pouring one into the other still
+		// leaves a full one and a part-used one rather than two part-used ones.
+		UINT32 const uiNeeded = (uiPoints + bMaxPoints - 1) / bMaxPoints;
+
+		// fill up the objects at the front of the group and drop the ones left over
+		UINT32 uiLeft = uiPoints;
+		for (WORLDITEM* wi : group)
+		{
+			UINT8 ubKept = 0;
+			while (ubKept < wi->o.ubNumberOfObjects && uiLeft > 0)
+			{
+				INT8 const bHere = static_cast<INT8>(std::min<UINT32>(uiLeft, bMaxPoints));
+				wi->o.bStatus[ubKept++] = bHere;
+				uiLeft -= bHere;
+			}
+
+			if (ubKept == 0)
+			{
+				DeleteObj(&wi->o);
+			}
+			else
+			{
+				for (UINT8 ubObj = ubKept; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
+				{
+					wi->o.bStatus[ubObj] = 0;
+				}
+				wi->o.ubNumberOfObjects = ubKept;
+			}
+		}
+
+		uiObjectsMerged += uiObjects - uiNeeded;
+	}
+
+	return uiObjectsMerged;
+}
+
+
+void StackAndSortMapInventoryPool(void)
+{
+	if (!fShowMapInventoryPool) return;
+
+	// don't shuffle the list while the player is carrying an item out of it
+	if (gpItemPointer != NULL) return;
+
+	// If in battle inform player they will have to do this in tactical
+	if (!CanPlayerUseSectorInventory())
+	{
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[2], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
+
+	// the empty slots are only padding, the occupied ones are all we have to look at
+	std::vector<WORLDITEM> items;
+	for (const WORLDITEM& wi : pInventoryPoolList)
+	{
+		if (wi.o.ubNumberOfObjects > 0) items.push_back(wi);
+	}
+
+	UINT32 uiGunsUnloaded = 0;
+	UINT32 uiDetached     = 0;
+
+	// Take every item apart first.  What comes out is collected in a second list so that the list
+	// being walked cannot move under us; that list is then walked in turn, which also takes apart
+	// an attachment that carried an attachment of its own.
+	std::vector<WORLDITEM> pending;
+	for (WORLDITEM& wi : items) StripSectorInventoryItem(wi, pending, uiGunsUnloaded, uiDetached);
+
+	while (!pending.empty())
+	{
+		std::vector<WORLDITEM> next;
+		for (WORLDITEM& wi : pending) StripSectorInventoryItem(wi, next, uiGunsUnloaded, uiDetached);
+
+		items.insert(items.end(), pending.begin(), pending.end());
+		pending.swap(next);
+	}
+
+	// pour part-used magazines and kits together before packing what is left into stacks
+	UINT32 const uiObjectsMerged = MergeRefillableSectorInventory(items);
+
+	UINT32 uiSlotsMerged = 0;
+
+	for (size_t iTarget = 0; iTarget < items.size(); ++iTarget)
+	{
+		OBJECTTYPE& target = items[iTarget].o;
+		if (target.ubNumberOfObjects == 0) continue;
+
+		const ItemModel* const item         = GCM->getItem(target.usItem);
+		BOOLEAN          const fMoney       = item->isMoney();
+		UINT8            const ubStackLimit = SectorInventoryStackLimit(item);
+
+		if (!fMoney && ubStackLimit < 2) continue;
+
+		for (size_t iSource = iTarget + 1; iSource < items.size(); ++iSource)
+		{
+			OBJECTTYPE& source = items[iSource].o;
+			if (source.ubNumberOfObjects == 0) continue;
+			if (!CanMergeSectorInventorySlots(items[iTarget], items[iSource])) continue;
+
+			if (fMoney)
+			{
+				// money is one object carrying an amount, not a stack of objects
+				if (target.uiMoneyAmount >= MAX_MONEY_PER_SLOT) break;
+
+				UINT32 const uiToTransfer = std::min<UINT32>(MAX_MONEY_PER_SLOT - target.uiMoneyAmount, source.uiMoneyAmount);
+				target.uiMoneyAmount += uiToTransfer;
+				target.bMoneyStatus   = 100;
+				source.uiMoneyAmount -= uiToTransfer;
+
+				if (source.uiMoneyAmount == 0)
+				{
+					DeleteObj(&source);
+					++uiSlotsMerged;
+				}
+			}
+			else
+			{
+				if (target.ubNumberOfObjects >= ubStackLimit) break;
+
+				UINT8 const ubToTransfer = std::min<UINT8>(ubStackLimit - target.ubNumberOfObjects, source.ubNumberOfObjects);
+				StackObjs(&source, &target, ubToTransfer);
+
+				if (source.ubNumberOfObjects == 0) ++uiSlotsMerged;
+			}
+		}
+	}
+
+	// throw away the slots that were emptied out
+	items.erase(std::remove_if(items.begin(), items.end(),
+		[](const WORLDITEM& wi) { return wi.o.ubNumberOfObjects == 0; }), items.end());
+
+	SortSectorInventory(items.data(), items.size());
+	ReplaceMapInventoryPool(items);
+
+	fMapPanelDirty        = TRUE;
+	fMapScreenBottomDirty = TRUE;
+
+	MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+		uiGunsUnloaded > 0 || uiDetached > 0 || uiObjectsMerged > 0 || uiSlotsMerged > 0 ?
+		st_format_printf(pMapInventoryActionStrings[1], uiGunsUnloaded, uiDetached, uiObjectsMerged, uiSlotsMerged) :
+		pMapInventoryActionStrings[0]);
+}
+
+
+// Magazines, kits and medkits hold points (rounds resp. kit charges) that can be moved between
+// objects of the same item.  Returns how many points one such object holds when it is full.
+static BOOLEAN GetRefillablePointCapacity(const ItemModel* const item, INT8& bMaxPoints)
+{
+	if (item->isAmmo())
+	{
+		// the round count shares its byte with the signed status value
+		if (item->asAmmo()->capacity > 127) return FALSE;
+
+		bMaxPoints = static_cast<INT8>(item->asAmmo()->capacity);
+		return bMaxPoints > 0;
+	}
+
+	if (item->isKit() || item->isMedkit())
+	{
+		bMaxPoints = 100;
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
+// Only mercs standing in the sector the inventory belongs to may swap items with it.
+static BOOLEAN IsMercInSectorShownInInventory(const SOLDIERTYPE& s)
+{
+	if (s.bLife <= 0)                      return FALSE;
+	if (s.uiStatusFlags & SOLDIER_VEHICLE) return FALSE;
+	if (s.bAssignment == ASSIGNMENT_POW)   return FALSE;
+	if (s.bAssignment == IN_TRANSIT)       return FALSE;
+	if (s.fBetweenSectors)                 return FALSE;
+
+	return s.sSector.x == sSelMap.x &&
+		s.sSector.y == sSelMap.y &&
+		s.sSector.z == iCurrentMapSectorZ;
+}
+
+
+// Take up to bWanted points out of the stash, emptying one object at a time so that what is
+// left behind is a few full objects rather than a lot of nearly empty ones.
+static INT8 TakeRefillPointsFromStash(const std::vector<WORLDITEM*>& sources, size_t& uiNext, INT8 const bWanted)
+{
+	while (uiNext < sources.size())
+	{
+		OBJECTTYPE& o = sources[uiNext]->o;
+
+		if (o.ubNumberOfObjects == 0)
+		{
+			++uiNext;
+			continue;
+		}
+
+		UINT8 const ubLast     = o.ubNumberOfObjects - 1;
+		INT8&       bAvailable = o.bStatus[ubLast];
+
+		if (bAvailable <= 0)
+		{
+			// spent object, drop it and take from the one below
+			RemoveObjFrom(&o, ubLast);
+			continue;
+		}
+
+		INT8 const bTaken = std::min<INT8>(bWanted, bAvailable);
+		bAvailable -= bTaken;
+		if (bAvailable == 0) RemoveObjFrom(&o, ubLast);
+
+		return bTaken;
+	}
+
+	return 0;
+}
+
+
+void RefillMercItemsFromMapInventoryPool(void)
+{
+	if (!fShowMapInventoryPool) return;
+
+	if (gpItemPointer != NULL) return;
+
+	// If in battle inform player they will have to do this in tactical
+	if (!CanPlayerUseSectorInventory())
+	{
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[2], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
+
+	if (iCurrentlyHighLightedItem == -1)
+	{
+		MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMapInventoryActionStrings[2]);
+		return;
+	}
+
+	size_t const uiSlot = iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT + iCurrentlyHighLightedItem;
+	if (uiSlot >= pInventoryPoolList.size()) return;
+
+	WORLDITEM& highlighted = pInventoryPoolList[uiSlot];
+	if (highlighted.o.ubNumberOfObjects == 0) return;
+
+	// is this item reachable
+	if (!(highlighted.usFlags & WORLD_ITEM_REACHABLE))
+	{
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_38], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return;
+	}
+
+	UINT16           const usItem = highlighted.o.usItem;
+	const ItemModel* const item   = GCM->getItem(usItem);
+
+	INT8 bMaxPoints;
+	if (!GetRefillablePointCapacity(item, bMaxPoints))
+	{
+		MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+			st_format_printf(pMapInventoryActionStrings[3], item->getName()));
+		return;
+	}
+
+	// The pointed at stack is spent first, then every other reachable stack of the same item in
+	// this sector, so that one keypress can top up the whole squad.
+	std::vector<WORLDITEM*> sources;
+	sources.push_back(&highlighted);
+	for (WORLDITEM& wi : pInventoryPoolList)
+	{
+		if (&wi == &highlighted)                  continue;
+		if (wi.o.ubNumberOfObjects == 0)          continue;
+		if (wi.o.usItem != usItem)                continue;
+		if (!(wi.usFlags & WORLD_ITEM_REACHABLE)) continue;
+		if (wi.o.bTrap > 0)                       continue;
+		if (ItemHasAttachments(wi.o))             continue;
+
+		sources.push_back(&wi);
+	}
+
+	size_t uiNextSource    = 0;
+	UINT32 uiPointsMoved   = 0;
+	UINT32 uiObjectsTopped = 0;
+
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
+	{
+		if (uiNextSource >= sources.size()) break;
+		if (!IsMercInSectorShownInInventory(*s)) continue;
+
+		FOR_EACH_SOLDIER_INV_SLOT(o, *s)
+		{
+			if (uiNextSource >= sources.size()) break;
+			if (o->usItem != usItem)            continue;
+			if (ItemHasAttachments(*o))         continue;
+
+			for (UINT8 ubObj = 0; ubObj < o->ubNumberOfObjects; ++ubObj)
+			{
+				INT8& bStatus = o->bStatus[ubObj];
+				if (bStatus >= bMaxPoints) continue;
+
+				BOOLEAN fTopped = FALSE;
+				while (bStatus < bMaxPoints)
+				{
+					INT8 const bTaken = TakeRefillPointsFromStash(sources, uiNextSource, bMaxPoints - bStatus);
+					if (bTaken == 0) break; // nothing left in the stash
+
+					bStatus       += bTaken;
+					uiPointsMoved += bTaken;
+					fTopped        = TRUE;
+				}
+
+				if (fTopped) ++uiObjectsTopped;
+			}
+		}
+	}
+
+	if (uiPointsMoved == 0)
+	{
+		MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+			st_format_printf(pMapInventoryActionStrings[4], item->getName()));
+		return;
+	}
+
+	MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+		st_format_printf(pMapInventoryActionStrings[5], uiObjectsTopped, item->getName(), uiPointsMoved));
+
+	fMapPanelDirty           = TRUE;
+	fMapScreenBottomDirty    = TRUE;
+	fTeamPanelDirty          = TRUE;
+	fCharacterInfoPanelDirty = TRUE;
 }
 
 
