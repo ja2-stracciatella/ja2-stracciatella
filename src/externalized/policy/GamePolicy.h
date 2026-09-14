@@ -61,7 +61,8 @@ public:
 	int8_t threshold_cth_head;            // threshold AI always take head shots, increase game difficulty
 	int8_t threshold_cth_legs;            // threshold AI switch to leg shots from torso
 
-	bool avoid_ambushes;                  // AI able to recognize and avoid ambushes on seeing friendlies' corpses
+	uint8_t corpse_warning_duration;      // how long a fresh corpse keeps warning the AI of a possible ambush; 0 disables ambush avoidance entirely
+	uint8_t corpse_warning_distance;      // how far from a corpse, in tiles, the AI still heeds that warning
 	bool stay_on_rooftop;                 // AI on guard on rooftop are disallowed to go down
 
 	bool interrupt_after_being_under_fire; // only being shot at during the turn in progress blocks a soldier's interrupts; vanilla keeps them blocked through the next turn too, since the under-fire mark is only cleared once their own turn begins. Applies to mercs and AI alike

@@ -33,7 +33,8 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	threshold_cth_head = ai.getOptionalInt("threshold_cth_head", 67);
 	threshold_cth_legs = ai.getOptionalInt("threshold_cth_legs", 67);
 
-	avoid_ambushes = ai.getOptionalBool("avoid_ambushes");
+	corpse_warning_duration = ai.getOptionalUInt("corpse_warning_duration", 0);
+	corpse_warning_distance = ai.getOptionalUInt("corpse_warning_distance", 5);
 	stay_on_rooftop = ai.getOptionalBool("stay_on_rooftop");
 
 	interrupt_after_being_under_fire = gp.getOptionalBool("interrupt_after_being_under_fire", true);

@@ -170,14 +170,26 @@ properties:
           When already facing its focus, lay down if nothing else.
 
           Vanilla setting: `false`
-      avoid_ambushes:
-        type: boolean
-        title: Avoid ambushes
+      corpse_warning_duration:
+        $ref: types/uint8.schema.yaml
+        title: Corpse ambush warning duration
         description: |
-          AI is capable of knowing and avoid of an ambush on seeing corpses of friendlies, but
-          it was not enabled in the original game due to a bug
-          
-          Vanilla setting: `false`
+          On seeing a corpse, the AI suspects an ambush and refuses to walk into the tiles around it. This
+          was never enabled in the original game due to a bug.
+
+          This is how many turns a corpse keeps warning the AI, and `0` turns the feature off. `5` is next
+          to useless: the warning also decays once per real-time turn, so a corpse stops being a warning
+          within seconds of combat dropping out of turn-based. 60 is the recommended value.
+
+          Vanilla setting: `5`
+      corpse_warning_distance:
+        $ref: types/uint8.schema.yaml
+        title: Corpse ambush warning distance
+        description: |
+          How far from a corpse, in tiles, the AI still heeds the ambush warning. Only used when
+          `corpse_warning_duration` is not `0`.
+
+          Vanilla setting: `5`
       stay_on_rooftop:
         type: boolean
         title: Stay on rooftop
@@ -190,7 +202,8 @@ properties:
       - threshold_cth_head
       - threshold_cth_legs
       - go_prone_more_often
-      - avoid_ambushes
+      - corpse_warning_duration
+      - corpse_warning_distance
       - stay_on_rooftop
   interrupt_after_being_under_fire:
     type: boolean
