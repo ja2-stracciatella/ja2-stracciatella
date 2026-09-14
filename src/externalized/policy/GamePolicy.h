@@ -98,6 +98,7 @@ public:
 	int32_t imp_attribute_zero_bonus;     // IMP character attribute points given instead of imp_attribute_min, vanilla 15
 	bool imp_pick_skills_directly;        // Use the IMP_SkillTrait selection screen from JA2.5, skipping the personality quiz, vanilla falase
 	uint8_t imp_max_characters;           // Number of IMP characters that can be created in one campaign, capped by the I.M.P. slots the data declares, vanilla 1
+	bool imp_send_profile_results_email;  // Whether the I.M.P. mails its profile results the day after a character was made, vanilla true
 
 	/* M.E.R.C. */
 	uint8_t merc_online_min_days;         // The earliest day on or after which M.E.R.C. goes online
