@@ -34,6 +34,13 @@ jobs:
           mkdir ${COV_TOOLS_DIR}
           tar xzf cov-analysis-linux64.tar.gz --strip 1 -C ${COV_TOOLS_DIR}
 
+      - uses: libsdl-org/setup-sdl@a966470e7d9b6a5c93eec3f08d5dac370325c860
+        id: sdl
+        with:
+          install-linux-dependencies: true
+          add-to-environment: true
+          version: 3-latest
+
       - name: Prepare CMake build
         run: |
           mkdir ${COV_BUILD_DIR}
