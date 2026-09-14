@@ -246,7 +246,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 		if (!gfEditMode)
 		{
 			// Check for matching item existance modes and only add if there is a match
-			if (wi.usFlags & (gGameOptions.fSciFi ? WORLD_ITEM_SCIFI_ONLY : WORLD_ITEM_REALISTIC_ONLY)) continue;
+			if (wi.usFlags & (gGameOptions.fSciFi ? WORLD_ITEM_REALISTIC_ONLY : WORLD_ITEM_SCIFI_ONLY)) continue;
 
 			// Check if we have a item replacement mapping for this item
 			if (itemReplacements.find(o.usItem) != itemReplacements.end())
