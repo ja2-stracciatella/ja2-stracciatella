@@ -34,12 +34,27 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
-/* A profile past the ones the original game shipped that no data file says
- * anything about at all. The I.M.P. site may put a character there, so that
- * raising max_characters is enough on its own and no mod has to be installed
- * to make room. Anything a mod does declare is left alone, whatever it
- * declares it as, and the slots declared as I.M.P. slots come first because
- * they sit below these. */
+/* An I.M.P. slot is a profile a player generated character can be made in, and
+ * a profile becomes one in either of two ways, covering ranges that do not
+ * overlap.
+ *
+ * Below the count of profiles the original game shipped, the data has to say
+ * so. Every profile down there is declared, so being spare is not something
+ * that could be read off anything; and some that look spare are spoken for --
+ * 164 stands in for the vehicles that go unused -- while 51 to 56 are where
+ * the game has always put its player generated characters, which old saves and
+ * the I.M.P. mail still reach by number.
+ *
+ * Past that count the data says nothing at all, and the silence is the signal:
+ * a profile nothing declares is free for the site to use, so raising
+ * max_characters is enough on its own and no mod has to be installed to make
+ * room. A mod claims one of those profiles by declaring it, whatever it
+ * declares it as, and the declared slots are handed out first because they all
+ * sit lower.
+ *
+ * Nothing declared an I.M.P. slot is above the vanilla count, so the range test
+ * below decides nothing as the data stands. It is there to keep the two apart
+ * if a mod ever drops an entry from the range underneath. */
 static bool IsUndeclaredSlot(ProfileID const profile, MercProfileInfo const& info)
 {
 	return profile >= NUM_VANILLA_PROFILES && info.profileID == NO_PROFILE;
