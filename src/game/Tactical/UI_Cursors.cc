@@ -1219,6 +1219,96 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 }
 
 
+// Steps the shown aim level one refinement up or down, for mouse wheel input.
+// Unlike repeated right clicks this never wraps around: it stops at the lowest
+// aim and at the highest one the merc can afford, so rolling the wheel back and
+// forth always lands on the same aim level.
+void HandleWheelAdjustCursor(SOLDIERTYPE* const pSoldier, INT16 usMapPos, const INT8 bDirection)
+{
+	INT8 bStep;
+	INT8 bMinAim;
+	INT8 bMaxAim;
+
+	ItemCursor const ubCursor = GetActionModeCursor(pSoldier);
+
+	switch( ubCursor )
+	{
+		case TARGETCURS:
+			// A burst has no aim levels to step through
+			if ( pSoldier->bDoBurst ) return;
+
+			bStep   = 2;
+			bMinAim = REFINE_AIM_1;
+			bMaxAim = REFINE_AIM_5;
+			break;
+
+		case PUNCHCURS:
+			bStep   = REFINE_PUNCH_2;
+			bMinAim = REFINE_PUNCH_1;
+			bMaxAim = REFINE_PUNCH_2;
+			break;
+
+		case KNIFECURS:
+			bStep   = REFINE_KNIFE_2;
+			bMinAim = REFINE_KNIFE_1;
+			bMaxAim = REFINE_KNIFE_2;
+			break;
+
+		default:
+			return;
+	}
+
+	// 'snap' cursor to target tile....
+	if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;
+
+	if ( bDirection < 0 )
+	{
+		// Taking aim away never costs more APs than we are already showing, so
+		// there is nothing to check but the bottom of the range
+		if ( pSoldier->bShownAimTime <= bMinAim ) return;
+
+		INT8 const bFutureAim = (INT8)( pSoldier->bShownAimTime - bStep );
+		pSoldier->bShownAimTime = bFutureAim < bMinAim ? bMinAim : bFutureAim;
+
+		gfDisplayFullCountRing = FALSE;
+	}
+	else
+	{
+		// Already as high as this cursor goes, just show the full ring
+		if ( pSoldier->bShownAimTime >= bMaxAim )
+		{
+			gfDisplayFullCountRing = TRUE;
+			return;
+		}
+
+		// Warn about a shot that is unlikely to reach before spending APs on it
+		const SOLDIERTYPE* const tgt = gUIFullTarget;
+		if ( ubCursor == TARGETCURS && tgt != NULL &&
+			!HandleCheckForBadChangeToGetThrough(pSoldier, tgt, tgt->sGridNo, pSoldier->bLevel) )
+		{
+			return;
+		}
+
+		INT8 bFutureAim = (INT8)( pSoldier->bShownAimTime + bStep );
+		if ( bFutureAim > bMaxAim ) bFutureAim = bMaxAim;
+
+		INT16 const sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(bFutureAim / 2) );
+
+		// Cannot afford it, hold where we are and show the full ring
+		if ( !EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
+		{
+			gfDisplayFullCountRing = TRUE;
+			return;
+		}
+
+		pSoldier->bShownAimTime = bFutureAim;
+		gfDisplayFullCountRing = FALSE;
+	}
+
+	gfUIForceReExamineCursorData = TRUE;
+}
+
+
 ItemCursor GetActionModeCursor(SOLDIERTYPE const* const pSoldier)
 {
 	UINT16 usInHand;

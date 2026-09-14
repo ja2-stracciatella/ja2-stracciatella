@@ -11,6 +11,7 @@ UICursorID GetProperItemCursor(SOLDIERTYPE*, GridNo map_pos, BOOLEAN activated);
 
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier );
 void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+void HandleWheelAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos, INT8 bDirection );
 
 ItemCursor GetActionModeCursor(SOLDIERTYPE const*);
 

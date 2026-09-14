@@ -147,7 +147,7 @@ static void QueryTBMiddleButton(UIEventKind* const puiNewEvent)
 					case LOOKCURSOR_MODE:
 					case MENU_MODE:
 					default:
-						if (gamepolicy(middle_mouse_look)) *puiNewEvent = LC_ON_TERRAIN;
+						if (gamepolicy(extra_mousewheel_actions)) *puiNewEvent = LC_ON_TERRAIN;
 						break;
 				}
 			}
@@ -1223,6 +1223,21 @@ void TacticalViewPortTouchCallbackTB(MOUSE_REGION* region, UINT32 reason) {
 	} else if (reason & MSYS_CALLBACK_REASON_MBUTTON_UP) {
 		if (gCurrentUIMode == PAN_MODE) {
 			TogglePanMode();
+		}
+	} else if (reason & (MSYS_CALLBACK_REASON_WHEEL_UP | MSYS_CALLBACK_REASON_WHEEL_DOWN)) {
+		if (gamepolicy(extra_mousewheel_actions) &&
+			gCurrentUIMode == CONFIRM_ACTION_MODE &&
+			gpItemPointer == NULL &&
+			guiCurrentCursorGridNo != NOWHERE)
+		{
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel)
+			{
+				// Rolling the wheel towards yourself pulls the aim in, so wheel
+				// down raises the aim level and wheel up takes it back off
+				INT8 const bDirection = (reason & MSYS_CALLBACK_REASON_WHEEL_UP) ? -1 : 1;
+				HandleWheelAdjustCursor(sel, guiCurrentCursorGridNo, bDirection);
+			}
 		}
 	} else if (reason & MSYS_CALLBACK_REASON_TFINGER_UP) {
 		auto selected = GetSelectedMan();

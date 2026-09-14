@@ -24,11 +24,13 @@ properties:
       Press d in realtime mode to manually start turn based mode.
 
       Vanilla setting: `false`
-  middle_mouse_look:
+  extra_mousewheel_actions:
     type: boolean
-    title: Middle mouse button look
+    title: Extra mouse wheel actions
     description: |
-      Enables middle mouse button to trigger a look into cursor direction.
+      Binds extra tactical actions to the mouse wheel. Clicking the wheel triggers a look into the cursor
+      direction, and rolling it raises and lowers the aim level in turn-based mode, while the attack cursor
+      is confirmed on a target. Right clicking to add aim clicks still works.
 
       Vanilla setting: `false`
   draw_item_shadow:
@@ -565,7 +567,7 @@ properties:
 required:
   - extra_hotkeys
   - can_enter_turnbased
-  - middle_mouse_look
+  - extra_mousewheel_actions
   - draw_item_shadow
   - starting_cash_easy
   - starting_cash_medium

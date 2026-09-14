@@ -6,7 +6,7 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	auto gp = json.toObject();
 	extra_hotkeys = gp.getOptionalBool("extra_hotkeys", true);
 	can_enter_turnbased = gp.getOptionalBool("can_enter_turnbased");
-	middle_mouse_look = gp.getOptionalBool("middle_mouse_look", true);
+	extra_mousewheel_actions = gp.getOptionalBool("extra_mousewheel_actions", true);
 
 	f_draw_item_shadow = gp.getOptionalBool("draw_item_shadow", true);
 	target_fps = gp.getOptionalInt("target_fps", 40);
