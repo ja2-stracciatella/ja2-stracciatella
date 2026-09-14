@@ -19,9 +19,12 @@
   //  vanilla setting: false
   "can_enter_turnbased": false,
 
-  //  Enables middle mouse button to trigger a look into cursor direction
+  //  Binds extra tactical actions to the mouse wheel. Clicking the wheel
+  //  triggers a look into the cursor direction, and rolling it raises and
+  //  lowers the aim level in turn-based mode, while the attack cursor is
+  //  confirmed on a target. Right clicking to add aim clicks still works.
   //  vanilla setting: false
-  "middle_mouse_look": true,
+  "extra_mousewheel_actions": true,
 
   //  --------------------------------------------------
   //  System settings

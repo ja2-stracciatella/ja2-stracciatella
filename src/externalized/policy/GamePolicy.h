@@ -53,7 +53,7 @@ public:
 	bool extra_attachments;               // allow more item attachments options
 	bool skip_sleep_explanation;          // skip annoying popups
 
-	bool middle_mouse_look;               // Look cursor with middle mouse button
+	bool extra_mousewheel_actions;        // Extra tactical mouse wheel bindings: look cursor on wheel click, aim level on wheel scroll
 	bool can_enter_turnbased;             // 'd' can start turnbased if in real-time
 
 	bool ai_better_aiming_choice;         // decide where to shoot depending on to-hit probability if random choice is being made
