@@ -1592,7 +1592,13 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const p
 		return m_mercProfileInfo.at(profileID);
 	}
 
-	SLOGD("MercProfileInfo is not defined at {}", profileID);
+	/* Only the profiles the original game shipped are all expected to be
+	 * declared. Past those the data files are meant to leave gaps -- the I.M.P.
+	 * site hands the free ones out -- so nothing is wrong there and saying so on
+	 * every lookup buries the cases where something is. */
+	if (profileID < NUM_VANILLA_PROFILES) {
+		SLOGD("MercProfileInfo is not defined at {}", profileID);
+	}
 	return &EMPTY_MERC_PROFILE_INFO;
 }
 

@@ -40,17 +40,17 @@ static void SelectMercFace(void);
  * to make room. Anything a mod does declare is left alone, whatever it
  * declares it as, and the slots declared as I.M.P. slots come first because
  * they sit below these. */
-static bool IsUndeclaredSlot(ProfileID const profile)
+static bool IsUndeclaredSlot(ProfileID const profile, MercProfileInfo const& info)
 {
-	return profile >= NUM_VANILLA_PROFILES &&
-		GCM->getMercProfileInfo(profile)->profileID == NO_PROFILE;
+	return profile >= NUM_VANILLA_PROFILES && info.profileID == NO_PROFILE;
 }
 
 
 static bool IsIMPSlot(ProfileID const profile)
 {
-	return GCM->getMercProfileInfo(profile)->mercType == MercType::IMP ||
-		IsUndeclaredSlot(profile);
+	// One lookup answers both questions; these run over every profile in turn.
+	MercProfileInfo const& info = *GCM->getMercProfileInfo(profile);
+	return info.mercType == MercType::IMP || IsUndeclaredSlot(profile, info);
 }
 
 
