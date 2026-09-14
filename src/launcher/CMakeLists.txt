@@ -40,11 +40,28 @@ set_target_properties(${LAUNCHER_BINARY}
 add_dependencies(${LAUNCHER_BINARY} stracciatella)
 
 if (NOT LOCAL_FLTK_LIB AND APPLE)
-    find_package(PNG REQUIRED)
-    # force static linking
-    target_link_libraries(${LAUNCHER_BINARY} PRIVATE
-        /opt/homebrew/opt/fltk@1.3/lib/libfltk_forms.a /opt/homebrew/opt/fltk@1.3/lib/libfltk_images.a /opt/homebrew/opt/fltk@1.3/lib/libfltk.a ${PNG_LIBRARIES}
+    # homebrew keeps fltk@1.3 keg-only and its prefix differs between intel and
+    # arm, so locate the libraries relative to fltk-config instead of hardcoding
+    # a single prefix
+    find_program(FLTK_CONFIG_EXECUTABLE fltk-config REQUIRED
+        HINTS /opt/homebrew/opt/fltk@1.3/bin /usr/local/opt/fltk@1.3/bin
     )
+    get_filename_component(FLTK_STATIC_LIB_DIR "${FLTK_CONFIG_EXECUTABLE}/../../lib" ABSOLUTE)
+
+    # force static linking
+    set(FLTK_STATIC_LIBRARIES "")
+    foreach(FLTK_LIB fltk_forms fltk_images fltk)
+        find_library(FLTK_STATIC_${FLTK_LIB}_LIBRARY
+            NAMES "lib${FLTK_LIB}.a"
+            HINTS "${FLTK_STATIC_LIB_DIR}"
+            NO_DEFAULT_PATH
+            REQUIRED
+        )
+        list(APPEND FLTK_STATIC_LIBRARIES "${FLTK_STATIC_${FLTK_LIB}_LIBRARY}")
+    endforeach()
+
+    find_package(PNG REQUIRED)
+    target_link_libraries(${LAUNCHER_BINARY} PRIVATE ${FLTK_STATIC_LIBRARIES} ${PNG_LIBRARIES})
 else ()
     target_link_libraries(${LAUNCHER_BINARY} PRIVATE
         ${FLTK_LIBRARIES}
