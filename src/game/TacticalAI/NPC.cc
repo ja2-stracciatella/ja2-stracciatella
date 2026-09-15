@@ -25,6 +25,7 @@
 #include "QuestText.h"
 #include "Quests.h"
 #include "Render_Fun.h"
+#include "SaveLoadGame.h"
 #include "Scheduling.h"
 #include "SkillCheck.h"
 #include "Soldier_Add.h"
@@ -2406,7 +2407,7 @@ void LoadNPCInfoFromSavedGameFile(HWFILE const f, UINT32 const uiSaveGameVersion
 	// If we are trying to restore a saved game prior to version 44, use the
 	// MAX_NUM_SOLDIERS, else use NUM_PROFILES.  Dave used the wrong define!
 	if( uiSaveGameVersion >= 44 )
-		uiNumberToLoad = NUM_PROFILES;
+		uiNumberToLoad = NumProfilesInSavedGame(uiSaveGameVersion);
 	else
 		uiNumberToLoad = MAX_NUM_SOLDIERS;
 
@@ -2503,11 +2504,12 @@ void SaveBackupNPCInfoToSaveGameFile(HWFILE const f)
 }
 
 
-void LoadBackupNPCInfoFromSavedGameFile(HWFILE const f)
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE const f, UINT32 const uiSaveGameVersion)
 {
-	FOR_EACH(NPCQuoteInfo*, i, gpBackupNPCQuoteInfoArray)
+	UINT32 const uiNumberToLoad = NumProfilesInSavedGame(uiSaveGameVersion);
+	for (UINT32 cnt = 0; cnt != uiNumberToLoad; ++cnt)
 	{
-		ConditionalExtractNPCQuoteInfoArrayFromFile(f, *i);
+		ConditionalExtractNPCQuoteInfoArrayFromFile(f, gpBackupNPCQuoteInfoArray[cnt]);
 	}
 }
 
@@ -2742,3 +2744,58 @@ INT8 ConsiderCivilianQuotes(const SGPSector& sector, BOOLEAN const set_as_used)
 
 	return -1;
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "DefaultContentManagerUT.h"
+#include "GameVersion.h"
+#include "SGPFile.h"
+#include "gtest/gtest.h"
+
+namespace
+{
+	/* A run of "this profile has no records" markers, which is what the quote
+	 * sections of a save look like for every profile nobody has talked to. */
+	void WriteAbsentQuoteRecords(HWFILE const f, UINT32 const profiles)
+	{
+		UINT8 const absent = 0;
+		for (UINT32 i = 0; i != profiles; ++i) f->write(&absent, sizeof(absent));
+	}
+}
+
+/* The quote records are written one entry per profile, so a save from before
+ * the profiles were extended holds fewer of them than there are profiles now.
+ * Reading the wrong number of entries would leave the file in the middle of
+ * the section, and every section the save keeps after it would then be read
+ * from the wrong offset. */
+TEST(NPCQuoteInfoTest, backupQuoteRecordsFromOlderSave)
+{
+	std::unique_ptr<DefaultContentManagerUT> cm(DefaultContentManagerUT::createDefaultCMForTesting());
+
+	{
+		AutoSGPFile f(cm->tempFiles()->openForWriting("backup-npc-104.dat", true));
+		WriteAbsentQuoteRecords(f, NUM_VANILLA_PROFILES);
+	}
+
+	AutoSGPFile f(cm->tempFiles()->openForReading("backup-npc-104.dat"));
+	UINT32 const written = f->size();
+	LoadBackupNPCInfoFromSavedGameFile(f, 104);
+	EXPECT_EQ(static_cast<UINT32>(f->pos()), written);
+}
+
+TEST(NPCQuoteInfoTest, backupQuoteRecordsFromCurrentSave)
+{
+	std::unique_ptr<DefaultContentManagerUT> cm(DefaultContentManagerUT::createDefaultCMForTesting());
+
+	{
+		AutoSGPFile f(cm->tempFiles()->openForWriting("backup-npc-105.dat", true));
+		WriteAbsentQuoteRecords(f, NUM_PROFILES);
+	}
+
+	AutoSGPFile f(cm->tempFiles()->openForReading("backup-npc-105.dat"));
+	UINT32 const written = f->size();
+	LoadBackupNPCInfoFromSavedGameFile(f, SAVE_GAME_VERSION);
+	EXPECT_EQ(static_cast<UINT32>(f->pos()), written);
+}
+
+#endif

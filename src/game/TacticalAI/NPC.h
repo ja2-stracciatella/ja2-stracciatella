@@ -97,7 +97,7 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach(UINT8 ubNPC, Approach);
 BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj );
 
 void SaveBackupNPCInfoToSaveGameFile(HWFILE);
-void LoadBackupNPCInfoFromSavedGameFile(HWFILE);
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE, UINT32 uiSaveGameVersion);
 void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier );
 
 #define WALTER_BRIBE_AMOUNT 20000
