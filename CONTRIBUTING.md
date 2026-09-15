@@ -6,9 +6,7 @@ That being said, not all contributions are welcome, since the project has a defi
 
 Play the game and see what bothers you, what bug you hit, then report it and try to fix it. If you don't have an itch to scratch, we suggest looking at our bug tracker, for example the [help wanted](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) list.
 
-Instructions on building and IDE setup can be found in [COMPILATION](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/COMPILATION.md).
-
-Code-specific C++ documentation can be generated using [Doxygen](https://www.doxygen.nl). Once installed, run `doxygen` in the project `src/` directory to generate the documentation locally.
+Instructions on building and IDE setup can be found in [COMPILATION](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/COMPILATION.md). Consider reading (or contributing to) our [docs]([docs/](https://github.com/ja2-stracciatella/ja2-stracciatella/tree/master/docs) directory. Code-specific documentation can be generated locally there.
 
 If you are not a developer, there are many other possibilities which do not require programming skills to help JA2 Stracciatella to evolve. For example, you can help by retesting bug reports labelled with [retest](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3Aretest), help triage bugs, test solutions, research, create mods and more.
 

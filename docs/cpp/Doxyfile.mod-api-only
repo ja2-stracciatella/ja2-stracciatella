@@ -1,0 +1,7 @@
+# Doxyfile overlay for the Modder API documentation.
+
+@INCLUDE = Doxyfile.full
+
+PROJECT_NAME           = "JA2 Stracciatella: Modder API"
+OUTPUT_DIRECTORY       = docs-generated/
+INPUT                  = ../../src/externalized/scripting
