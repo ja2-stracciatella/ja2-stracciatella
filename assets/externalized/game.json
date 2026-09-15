@@ -106,10 +106,17 @@
     // vanilla setting: false
     "go_prone_more_often": false,
 
-    //  AI is capable of knowing and avoid of an ambush on seeing corpses of friendlies, but
-    //  it was not enabled in the original game due to a bug
-    //  vanilla value: false
-    "avoid_ambushes": false,
+    //  Avoid ambushes
+    //  On seeing a corpse, the AI suspects an ambush and refuses to walk into the tiles around it.
+    //  This was never enabled in the original game due to a bug.
+    //  corpse_warning_duration is how many turns a corpse keeps warning the AI, and 0 turns the
+    //  feature off. 5 is next to useless: the warning also decays once per real-time turn, so a
+    //  corpse stops being a warning within seconds of combat dropping out of turn-based. 60 is the
+    //  recommended value.
+    //  corpse_warning_distance is how far from a corpse, in tiles, the AI still heeds the warning.
+    //  vanilla values: 5, 5
+    "corpse_warning_duration": 0,
+    "corpse_warning_distance": 5,
 
     //  Enemy guards on rooftop are disallowed to climb down
     //  vanilla value: false

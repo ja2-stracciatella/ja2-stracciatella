@@ -1980,7 +1980,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						if (pSoldier->usActionData != NOWHERE)
 						{
 							// Check for a trap
-							if (gamepolicy(avoid_ambushes) && !ArmySeesOpponents())
+							if (gamepolicy(corpse_warning_duration) > 0 && !ArmySeesOpponents())
 							{
 								UINT8 ubWarnLevel = GetNearestRottingCorpseAIWarning(pSoldier->usActionData);
 								if (ubWarnLevel > 0)

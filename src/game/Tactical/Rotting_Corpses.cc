@@ -48,9 +48,6 @@
 // INVALID_STRUCTURE_ID in Structure.h!
 static_assert(MAX_ROTTING_CORPSES + TOTAL_SOLDIERS == INVALID_STRUCTURE_ID);
 
-#define CORPSE_WARNING_MAX			5
-#define CORPSE_WARNING_DIST			5
-
 #define DELAY_UNTIL_ROTTING			( 1 * NUM_SEC_IN_DAY / 60 )
 #define DELAY_UNTIL_DONE_ROTTING		( 3 * NUM_SEC_IN_DAY / 60 )
 
@@ -502,7 +499,7 @@ try
 
 	c->fActivated = TRUE;
 	ani->v.user.uiData = c->ID();
-	c->def.ubAIWarningValue = CORPSE_WARNING_MAX;
+	c->def.ubAIWarningValue = gamepolicy(corpse_warning_duration);
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 
@@ -1365,7 +1362,7 @@ UINT8 GetNearestRottingCorpseAIWarning(const INT16 sGridNo)
 	CFOR_EACH_ROTTING_CORPSE(c)
 	{
 		if (c->def.ubAIWarningValue > 0 &&
-			PythSpacesAway(sGridNo, c->def.sGridNo) <= CORPSE_WARNING_DIST &&
+			PythSpacesAway(sGridNo, c->def.sGridNo) <= gamepolicy(corpse_warning_distance) &&
 			c->def.ubAIWarningValue > ubHighestWarning)
 		{
 			ubHighestWarning = c->def.ubAIWarningValue;
