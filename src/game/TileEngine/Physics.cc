@@ -42,10 +42,14 @@
 #include <math.h>
 #include <stdexcept>
 
-#define NO_TEST_OBJECT				0
-#define TEST_OBJECT_NO_COLLISIONS		1
-#define TEST_OBJECT_ANY_COLLISION		2
-#define TEST_OBJECT_NOTWALLROOF_COLLISIONS	3
+enum TestObjectCollisions : int8_t
+{
+	NO_TEST_OBJECT = 0,
+	TEST_OBJECT_NO_COLLISIONS = 1,
+	// TEST_OBJECT_ANY_COLLISION was removed, keep the next
+	// enumerator's value of 3 for save game compatibility.
+	TEST_OBJECT_NOTWALLROOF_COLLISIONS = 3
+};
 
 #define OUTDOORS_START_ANGLE			(FLOAT)( PI/4 )
 #define INDOORS_START_ANGLE			(FLOAT)( PI/30 )
@@ -95,22 +99,14 @@ float VDotProduct( vector_3 *a, vector_3 *b )
 
 vector_3 VGetNormal( vector_3 *a )
 {
-	vector_3 c;
 	const float length = VDotProduct(a, a);
 	if (length == 0)
 	{
-		c.x = 0;
-		c.y = 0;
-		c.z = 0;
+		return { 0, 0, 0 };
 	}
-	else
-	{
-		const float OneOverLength = 1 / sqrt(length);
-		c.x = OneOverLength * a->x;
-		c.y = OneOverLength * a->y;
-		c.z = OneOverLength * a->z;
-	}
-	return ( c );
+
+	const float OneOverLength = 1 / sqrt(length);
+	return *a * OneOverLength;
 }
 }
 
@@ -677,17 +673,6 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 
 	// If a test object and we have collided with something ( should only be ground ( or roof? ) )
-	// Or destination?
-	if ( pObject->fTestObject == TEST_OBJECT_ANY_COLLISION )
-	{
-		if ( iCollisionCode != COLLISION_GROUND && iCollisionCode != COLLISION_ROOF && iCollisionCode != COLLISION_WATER && iCollisionCode != COLLISION_NONE )
-		{
-			pObject->fTestEndedWithCollision = TRUE;
-			pObject->fAlive = FALSE;
-			return( FALSE );
-		}
-	}
-
 	if ( pObject->fTestObject == TEST_OBJECT_NOTWALLROOF_COLLISIONS )
 	{
 		// So we don't collide with ourselves.....
@@ -866,7 +851,6 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 		}
 		else if ( iCollisionCode == COLLISION_WATER )
 		{
-			ANITILE_PARAMS	AniParams;
 			ANITILE						*pNode;
 
 			// Continue going...
@@ -895,7 +879,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 					pObject->fInWater = TRUE;
 
 					// Make ripple
-					AniParams = ANITILE_PARAMS{};
+					ANITILE_PARAMS AniParams{};
 					AniParams.sGridNo = sGridNo;
 					AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 					AniParams.usTileIndex = THIRDMISS1;
@@ -1219,7 +1203,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo);
 
 
-static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo, float* pdMagForce)
+static float FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3 vDirNormal, vPosition, vForce;
 	INT16    sDestX, sDestY, sSrcX, sSrcY;
@@ -1298,13 +1282,8 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 		//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Chance to get through throw is 0." );
 	}
 
-	if ( pdMagForce )
-	{
-		(*pdMagForce) = dForce;
-	}
 	SLOGD("Number of integration: {}", iNumChecks);
-
-	return( vForce );
+	return dForce;
 }
 
 
@@ -1476,11 +1455,7 @@ static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE
 	PhysicsDeleteObject( pObject );
 
 	// See If we collided
-	if ( pObject->fTestEndedWithCollision )
-	{
-		return( 0 );
-	}
-	return( 100 );
+	return pObject->fTestEndedWithCollision ? 0 : 100;
 }
 
 
@@ -1574,7 +1549,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 	}
 
 	// Find force for basic
-	FindBestForceForTrajectory( pSoldier->sGridNo, sGridNo, sStartZ, sEndZ, dDegrees, pItem, psFinalGridNo, &dMagForce );
+	dMagForce = FindBestForceForTrajectory(pSoldier->sGridNo, sGridNo, sStartZ, sEndZ, dDegrees, pItem, psFinalGridNo);
 
 	// Adjust due to max range....
 	dMaxForce = CalculateSoldierMaxForce(pSoldier, pItem, fArmed);
@@ -1681,7 +1656,6 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough(const SOLDIERTYPE* pSoldier, const
 
 static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees)
 {
-	FLOAT      dMagForce;
 	INT16      sSrcGridNo, sDestGridNo;
 	OBJECTTYPE Object;
 	INT16      sFinalGridNo;
@@ -1694,9 +1668,8 @@ static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees)
 	// Use a grenade objecttype
 	CreateItem( HAND_GRENADE, 100, &Object );
 
-	FindBestForceForTrajectory( sSrcGridNo, sDestGridNo, GET_SOLDIER_THROW_HEIGHT( 0 ), 0, dDegrees, &Object, &sFinalGridNo, &dMagForce );
-
-	return( dMagForce );
+	return FindBestForceForTrajectory(sSrcGridNo, sDestGridNo,
+		GET_SOLDIER_THROW_HEIGHT(0), 0, dDegrees, &Object, &sFinalGridNo);
 }
 
 
