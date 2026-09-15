@@ -32,7 +32,7 @@ struct REAL_OBJECT
 	BOOLEAN      fApplyFriction;
 	BOOLEAN      fVisible;
 	BOOLEAN      fInWater;
-	BOOLEAN      fTestObject;
+	INT8         fTestObject;
 	BOOLEAN      fTestEndedWithCollision;
 	BOOLEAN      fTestPositionNotSet;
 
