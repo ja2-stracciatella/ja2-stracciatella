@@ -55,6 +55,7 @@
 #include "Text.h"
 #include "Timer_Control.h"
 #include "TownModel.h"
+#include "Vehicles.h"
 #include "Video.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -1441,7 +1442,8 @@ static bool ValidSelectableCharForNextOrPrev(SOLDIERTYPE const& s)
 	return
 		/* If showing merc inventory or holding an item, then the new guy must have
 			* accessible inventory */
-		((!holding_item && !fShowInventoryFlag) || MapCharacterHasAccessibleInventory(s)) &&
+		((!holding_item && !fShowInventoryFlag) || MapCharacterHasAccessibleInventory(s) ||
+			GetStashVehicleForSoldier(&s) != NULL) &&
 		(!holding_item || MapscreenCanPassItemToChar(&s));
 }
 

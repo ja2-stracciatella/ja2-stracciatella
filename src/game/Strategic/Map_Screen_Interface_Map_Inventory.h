@@ -45,4 +45,15 @@ extern BOOLEAN fMapInventoryItemCompatable[ ];
 
 BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM& wi);
 
+
+/* The vehicle cargo panel.  It takes over the team panel the same way a merc's
+ * inventory does, but draws a plain grid of cargo slots instead of the paper doll,
+ * because a truck has no head, hands or camouflage to show. */
+
+// draw the cargo grid for the currently selected vehicle
+void BltVehicleStashPanel(void);
+
+// create or tear down the cargo slot mouse regions
+void CreateDestroyVehicleStashSlots(BOOLEAN fCreate);
+
 #endif
