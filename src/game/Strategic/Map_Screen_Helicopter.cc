@@ -196,7 +196,7 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 	return( TakeSoldierOutOfVehicle( pSoldier ) );
 }
 
-BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
+BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap, bool const fNeverLeft)
 {
 	UINT8 ubNumEnemies;
 	BOOLEAN endOfHelicoptersPath;
@@ -205,7 +205,7 @@ BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 	endOfHelicoptersPath = (!v.pMercPath || !v.pMercPath->pNext);
 
 	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
-	if (HandleSAMSiteAttackOfHelicopterInSector(sMap))
+	if (!fNeverLeft && HandleSAMSiteAttackOfHelicopterInSector(sMap))
 	{
 		// destroyed
 		return( TRUE );
@@ -215,7 +215,7 @@ BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 	ubNumEnemies = NumEnemiesInSector(sMap);
 
 	// any baddies?
-	if( ubNumEnemies > 0 )
+	if( ubNumEnemies > 0 && !fNeverLeft )
 	{
 		// if the player didn't know about these prior to the chopper's arrival
 		if (WhatPlayerKnowsAboutEnemiesInSector(sMap) == KNOWS_NOTHING)
@@ -244,8 +244,10 @@ BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 		}
 	}
 
-	// player pays for travel if Skyrider is NOT returning to base (even if empty while scouting/going for pickup)
-	if (!fHeliReturnStraightToBase)
+	/* Player pays for travel if Skyrider is NOT returning to base (even if empty
+	 * while scouting/going for pickup).  A flight cancelled before it ever left
+	 * covers no ground, so there is nothing to charge for. */
+	if (!fHeliReturnStraightToBase && !fNeverLeft)
 	{
 		// charge cost for flying another sector
 		INT32 iCost;

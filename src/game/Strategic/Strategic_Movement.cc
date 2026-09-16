@@ -1151,7 +1151,9 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	g.ubNext.x   = 0;
 	g.ubNext.y   = 0;
 
-	if (g.fPlayer)
+	/* A group that turned around before ever leaving hasn't travelled any
+	 * distance, so it must not be charged for the trip. */
+	if (g.fPlayer && !never_left)
 	{
 		// Award life 'experience' for traveling, based on travel time.
 		if (!g.fVehicle)
@@ -1300,7 +1302,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			}
 			else
 			{
-				if (HandleHeliEnteringSector(v.sSector))
+				if (HandleHeliEnteringSector(v.sSector, never_left))
 				{ // Helicopter destroyed
 					group_destroyed = true;
 				}
