@@ -151,8 +151,9 @@ void HandleHeliHoverTooLong( void );
 // drop off everyone in helicopter
 void DropOffEveryOneInHelicopter( void );
 
-// handle heli entering this sector
-BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap);
+/* Handle heli entering this sector.  fNeverLeft means the flight was cancelled
+ * before any time passed, so the sector was never actually flown over. */
+BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap, bool fNeverLeft = false);
 
 // set up helic, if it doesn't have a mvt group
 void SetUpHelicopterForMovement( void );
