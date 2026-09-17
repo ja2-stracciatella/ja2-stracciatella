@@ -515,15 +515,14 @@ enum
 // Struct for animation 'surface' information
 struct AnimationSurfaceType
 {
-	const UINT16 ubName;
-	const char   Filename[50];
+	const char * Filename;
 	const CHAR8  bStructDataType;
 	const UINT8  ubFlags;
-	const UINT32 uiNumDirections;
-	UINT32       uiNumFramesPerDir;
-	HVOBJECT     hVideoObject;
-	INT8         bUsageCount;
+	const UINT8  ubNumDirections;
 	const INT8   bProfile;
+	UINT16       usNumFramesPerDir;
+	INT8         bUsageCount;
+	HVOBJECT     hVideoObject;
 };
 
 

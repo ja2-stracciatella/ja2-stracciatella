@@ -16,8 +16,9 @@
 #include <iterator>
 #include <stdexcept>
 
-#define EMPTY_SLOT					-1
-#define TO_INIT					0
+// Placeholder value for AnAnimationSurfaceType::usNumFramesPerDir, the actual
+// value gets set by LoadAnimationSurface.
+constexpr UINT16 TO_INIT = 0;
 
 #define ANIMPROFILEFILENAME				BINARYDATADIR "/ja2prof.dat"
 
@@ -32,7 +33,7 @@ static UINT8 gubNumAnimProfiles = 0;
 INT8 gbAnimUsageHistory[ NUMANIMATIONSURFACETYPES ][ MAX_NUM_SOLDIERS ];
 
 
-#define M(name, file, type, flags, dir, profile)	{ name, file, type, flags, dir, TO_INIT, NULL, 0, profile }
+#define M(name, file, type, flags, dir, profile)	{ file, type, flags, dir, profile, TO_INIT, 0, nullptr }
 
 AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES] =
 {
@@ -683,7 +684,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 
 			// Valid auxiliary data, so get # of frames from data
 			AuxObjectData const* const pAuxData = (AuxObjectData const*)(UINT8 const*)hImage->pAppData;
-			a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
+			a->usNumFramesPerDir = pAuxData->ubNumberOfFrames;
 
 			// get structure data if any
 			const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
@@ -706,7 +707,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 			a->hVideoObject = hVObject.release();
 
 			// Determine if we have a problem with #frames + directions ( ie mismatch )
-			if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->SubregionCount())
+			if (a->ubNumDirections * a->usNumFramesPerDir != a->hVideoObject->SubregionCount())
 			{
 				SLOGW("Surface Database: Surface {} has #frames mismatch.", usSurfaceIndex);
 			}
