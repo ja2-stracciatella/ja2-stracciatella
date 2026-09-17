@@ -3256,6 +3256,15 @@ static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const UINT16 usW
 	ReceivingSoldierCancelServices( pSoldier );
 	GivingSoldierCancelServices( pSoldier );
 
+	// A grenade landing on an occupied tile hits the soldier on the way down, and that
+	// hit animation is non-interruptible. Let the blast knock them down anyway.
+	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_HITSTART &&
+		gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
+	{
+		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+		pSoldier->fInNonintAnim      = FALSE;
+		pSoldier->fRTInNonintAnim    = FALSE;
+	}
 
 	if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 	{
