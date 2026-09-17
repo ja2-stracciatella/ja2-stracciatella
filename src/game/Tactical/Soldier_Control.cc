@@ -4171,7 +4171,7 @@ BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 	UINT8 temp_dir = OneCDirection(s->bDirection);
 
 	// Check # of directions/surface, adjust if ness.
-	switch (as.uiNumDirections)
+	switch (as.ubNumDirections)
 	{
 		case  1: temp_dir  = 0;                                     break;
 		case  4: temp_dir /= 2;                                     break;
@@ -4200,12 +4200,12 @@ BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 	}
 	else
 	{
-		ani_frame += as.uiNumFramesPerDir * temp_dir;
+		ani_frame += as.usNumFramesPerDir * temp_dir;
 		if (ani_frame >= as.hVideoObject->SubregionCount())
 		{
 			// Debug msg here....
 			SLOGW("Wrong Number of frames per number of objects: {} vs {}, {}",
-				as.uiNumFramesPerDir, as.hVideoObject->SubregionCount(),
+				as.usNumFramesPerDir, as.hVideoObject->SubregionCount(),
 				gAnimControl[s->usAnimState].zAnimStr);
 			ani_frame = 0;
 		}
