@@ -181,63 +181,60 @@ void ScrollString(void)
 
 	// FIRST CHECK IF WE HAVE ANY IN OUR QUEUE
 	auto& head = pStringS.front();
-	if (head)
+	if (!head) return;
+
+	// CHECK IF WE HAVE A SLOT!
+	// CHECK OUR LAST SLOT!
+	if (gpDisplayList[MAX_LINE_COUNT - 1]) return;
+
+	// MOVE ALL UP!
+	// cpy, then move
+	for (UINT32 cnt = MAX_LINE_COUNT - 1; cnt > 0; cnt--)
 	{
-		// CHECK IF WE HAVE A SLOT!
-		// CHECK OUR LAST SLOT!
-		if (gpDisplayList[MAX_LINE_COUNT - 1] == NULL)
+		gpDisplayList[cnt] = gpDisplayList[cnt - 1];
+	}
+
+	INT32 iNumberOfNewStrings = 0; // the count of new strings, so we can update position by WIDTH_BETWEEN_NEW_STRINGS pixels in the y
+
+	// now add in the new string
+	gpDisplayList[0] = head;
+	head->video_overlay = RegisterVideoOverlay(BlitString, X_START, Y_START, TINYFONT1, head->usColor, FONT_MCOLOR_BLACK, head->pString);
+	if (head->fBeginningOfNewString)
+	{
+		iNumberOfNewStrings++;
+	}
+
+	// set up age
+	head->uiTimeOfLastUpdate = GetJA2Clock();
+
+	// now move
+	for (UINT32 cnt = 0; cnt <= MAX_LINE_COUNT - 1; cnt++)
+	{
+		// Adjust position!
+		if (gpDisplayList[cnt] != NULL)
 		{
-			// MOVE ALL UP!
+			SetStringVideoOverlayPosition(gpDisplayList[cnt].get(), X_START, Y_START - cnt * GetFontHeight(SMALLFONT1) - WIDTH_BETWEEN_NEW_STRINGS * iNumberOfNewStrings);
 
-			// cpy, then move
-			for (UINT32 cnt = MAX_LINE_COUNT - 1; cnt > 0; cnt--)
-			{
-				gpDisplayList[cnt] = gpDisplayList[cnt - 1];
-			}
-
-			INT32 iNumberOfNewStrings = 0; // the count of new strings, so we can update position by WIDTH_BETWEEN_NEW_STRINGS pixels in the y
-
-			// now add in the new string
-			gpDisplayList[0] = head;
-			head->video_overlay = RegisterVideoOverlay(BlitString, X_START, Y_START, TINYFONT1, head->usColor, FONT_MCOLOR_BLACK, head->pString);
-			if (head->fBeginningOfNewString)
+			// start of new string, increment count of new strings, for spacing purposes
+			if (gpDisplayList[cnt]->fBeginningOfNewString)
 			{
 				iNumberOfNewStrings++;
 			}
-
-			// set up age
-			head->uiTimeOfLastUpdate = GetJA2Clock();
-
-			// now move
-			for (UINT32 cnt = 0; cnt <= MAX_LINE_COUNT - 1; cnt++)
-			{
-				// Adjust position!
-				if (gpDisplayList[cnt] != NULL)
-				{
-					SetStringVideoOverlayPosition(gpDisplayList[cnt].get(), X_START, Y_START - cnt * GetFontHeight(SMALLFONT1) - WIDTH_BETWEEN_NEW_STRINGS * iNumberOfNewStrings);
-
-					// start of new string, increment count of new strings, for spacing purposes
-					if (gpDisplayList[cnt]->fBeginningOfNewString)
-					{
-						iNumberOfNewStrings++;
-					}
-				}
-			}
-
-			// WE NOW HAVE A FREE SPACE, INSERT!
-
-			// Adjust head!
-			pStringS.pop_front();
-
-			//check if new meesage we have not seen since mapscreen..if so, beep
-			if (fOkToBeepNewMessage &&
-					gpDisplayList[MAX_LINE_COUNT - 2] == NULL &&
-					(guiCurrentScreen == GAME_SCREEN || guiCurrentScreen == MAP_SCREEN) &&
-					!gfFacePanelActive)
-			{
-				PlayNewMessageSound();
-			}
 		}
+	}
+
+	// WE NOW HAVE A FREE SPACE, INSERT!
+
+	// Adjust head!
+	pStringS.pop_front();
+
+	//check if new meesage we have not seen since mapscreen..if so, beep
+	if (fOkToBeepNewMessage &&
+			gpDisplayList[MAX_LINE_COUNT - 2] == NULL &&
+			(guiCurrentScreen == GAME_SCREEN || guiCurrentScreen == MAP_SCREEN) &&
+			!gfFacePanelActive)
+	{
+		PlayNewMessageSound();
 	}
 }
 
