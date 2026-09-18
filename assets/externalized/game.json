@@ -207,6 +207,11 @@
     //  vanilla setting: 1
     "max_characters": 1,
 
+    //  Whether the I.M.P. sends its profile results mail on the day after a
+    //  character was made. Unfinished Business does without it.
+    //  vanilla setting: true
+    "send_profile_results_email": true,
+
     // Replace the IMP personality quiz with a form to select skills directly
     // NOTE: does not set any personality
     // vanilla setting: false
