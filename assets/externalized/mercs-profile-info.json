@@ -230,9 +230,9 @@
     /* Spare profiles, handed out to player generated characters as they are made.
        A character takes the first free one and carries its own voice, so these
        need no files of their own. */
-    { "profileID": 165, "internalName": "NPC165", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
-    { "profileID": 166, "internalName": "NPC166", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
-    { "profileID": 167, "internalName": "NPC167", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
-    { "profileID": 168, "internalName": "NPC168", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" },
-    { "profileID": 169, "internalName": "NPC169", "type": "IMP", "pantsColor": "BLACKPANTS", "vestColor": "WHITEVEST" }
+    { "profileID": 165, "internalName": "NPC165", "type": "IMP" },
+    { "profileID": 166, "internalName": "NPC166", "type": "IMP" },
+    { "profileID": 167, "internalName": "NPC167", "type": "IMP" },
+    { "profileID": 168, "internalName": "NPC168", "type": "IMP" },
+    { "profileID": 169, "internalName": "NPC169", "type": "IMP" }
 ]

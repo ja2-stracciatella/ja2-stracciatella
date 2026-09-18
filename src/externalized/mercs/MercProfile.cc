@@ -61,7 +61,13 @@ bool MercProfile::isMERCMerc() const
 
 bool MercProfile::isIMPMerc() const
 {
-	return getInfo().mercType == MercType::IMP;
+	/* A slot the I.M.P. site has handed out holds one of the player's own
+	 * however it came to be used, including the slots past the vanilla
+	 * profiles that no data file declares. Everything that asks whether a
+	 * profile is a player merc has to hear yes for those too, or a character
+	 * made in one is taken for an NPC. */
+	return getInfo().mercType == MercType::IMP ||
+		m_profile->impSlotState == IMPSlotState::TAKEN;
 }
 
 bool MercProfile::isRPC() const

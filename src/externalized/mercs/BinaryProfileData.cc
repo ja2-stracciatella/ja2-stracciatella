@@ -13,8 +13,10 @@ BinaryProfileData::BinaryProfileData() {}
 
 const MERCPROFILESTRUCT* BinaryProfileData::getProfile(ProfileID profileIndex) const
 {
-	// This is to avoid failures due to prof.dat unavailability during unit-testing
-	if (profiles.empty()) {
+	/* Profiles past the ones prof.dat holds have no binary template to start
+	 * from, and neither has anything at all during unit-testing, where the file
+	 * is not read. Both get an empty one, which the JSON then fills in. */
+	if (profileIndex >= profiles.size()) {
 		static const MERCPROFILESTRUCT DEFAULT_PROFILE{};
 		return &DEFAULT_PROFILE;
 	}
@@ -29,9 +31,9 @@ ST::string BinaryProfileData::profilesFilename() {
 BinaryProfileData BinaryProfileData::deserialize(SGPFile* profilesFile) {
 	auto binData = BinaryProfileData();
 
-	binData.profiles.resize(NUM_PROFILES);
+	binData.profiles.resize(NUM_VANILLA_PROFILES);
 	bool const isCorrectlyEncoded = !(isRussianVersion() || isRussianGoldVersion());
-	for (ProfileID profileID = 0; profileID != NUM_PROFILES; ++profileID) {
+	for (ProfileID profileID = 0; profileID != NUM_VANILLA_PROFILES; ++profileID) {
 		BYTE data[MERC_PROFILE_SIZE];
 		JA2EncryptedFileRead(profilesFile, data, sizeof(data));
 		auto prof = std::make_unique<MERCPROFILESTRUCT>();
