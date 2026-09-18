@@ -250,6 +250,9 @@ void CreateSummaryWindow()
 	if( gfSummaryWindowActive )
 		return;
 
+	if( InOverheadMap() )
+		KillOverheadMap();
+
 	DisableEditorTaskbar();
 	DisableAllTextFields();
 
