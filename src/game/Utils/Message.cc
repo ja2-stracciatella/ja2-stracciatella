@@ -23,6 +23,7 @@
 #include "UILayout.h"
 
 #include <array>
+#include <deque>
 #include <memory>
 #include <string_theory/string>
 
@@ -34,7 +35,6 @@ struct ScrollStringSt
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
 	UINT32  uiTimeOfLastUpdate;
-	std::shared_ptr<ScrollStringSt> pNext;
 };
 
 
@@ -64,7 +64,7 @@ BOOLEAN fOkToBeepNewMessage = TRUE;
 
 static std::array<std::shared_ptr<ScrollStringSt>, MAX_LINE_COUNT> gpDisplayList;
 static std::array<std::shared_ptr<ScrollStringSt>, 256> gMapScreenMessageList;
-static std::shared_ptr<ScrollStringSt> pStringS;
+static std::deque<std::shared_ptr<ScrollStringSt>> pStringS;
 
 static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
@@ -77,7 +77,6 @@ static std::shared_ptr<ScrollStringSt> AddString(const ST::string& str, UINT16 u
 	i->video_overlay         = NULL;
 	i->usColor               = usColor;
 	i->fBeginningOfNewString = fStartOfNewString;
-	i->pNext                 = NULL;
 	return i;
 }
 
@@ -123,7 +122,6 @@ void ClearDisplayedListOfTacticalStrings(void)
 }
 
 
-static INT32 GetMessageQueueSize(void);
 static void PlayNewMessageSound(void);
 
 
@@ -146,7 +144,7 @@ void ScrollString(void)
 		return;
 	}
 
-	INT32 iNumberOfMessagesOnQueue = GetMessageQueueSize();
+	INT32 iNumberOfMessagesOnQueue = pStringS.size();
 	INT32 iMaxAge = MAX_AGE;
 
 	BOOLEAN fDitchLastMessage = (iNumberOfMessagesOnQueue > 0 && gpDisplayList[MAX_LINE_COUNT - 1] != NULL);
@@ -182,7 +180,8 @@ void ScrollString(void)
 	// CHECK FOR FREE SPOTS AND ADD ANY STRINGS IF WE HAVE SOME TO ADD!
 
 	// FIRST CHECK IF WE HAVE ANY IN OUR QUEUE
-	if (pStringS != NULL)
+	auto& head = pStringS.front();
+	if (head)
 	{
 		// CHECK IF WE HAVE A SLOT!
 		// CHECK OUR LAST SLOT!
@@ -199,15 +198,15 @@ void ScrollString(void)
 			INT32 iNumberOfNewStrings = 0; // the count of new strings, so we can update position by WIDTH_BETWEEN_NEW_STRINGS pixels in the y
 
 			// now add in the new string
-			gpDisplayList[0] = pStringS;
-			pStringS->video_overlay = RegisterVideoOverlay(BlitString, X_START, Y_START, TINYFONT1, pStringS->usColor, FONT_MCOLOR_BLACK, pStringS->pString);
-			if (pStringS->fBeginningOfNewString)
+			gpDisplayList[0] = head;
+			head->video_overlay = RegisterVideoOverlay(BlitString, X_START, Y_START, TINYFONT1, head->usColor, FONT_MCOLOR_BLACK, head->pString);
+			if (head->fBeginningOfNewString)
 			{
 				iNumberOfNewStrings++;
 			}
 
 			// set up age
-			pStringS->uiTimeOfLastUpdate = GetJA2Clock();
+			head->uiTimeOfLastUpdate = GetJA2Clock();
 
 			// now move
 			for (UINT32 cnt = 0; cnt <= MAX_LINE_COUNT - 1; cnt++)
@@ -228,7 +227,7 @@ void ScrollString(void)
 			// WE NOW HAVE A FREE SPACE, INSERT!
 
 			// Adjust head!
-			pStringS = pStringS->pNext;
+			pStringS.pop_front();
 
 			//check if new meesage we have not seen since mapscreen..if so, beep
 			if (fOkToBeepNewMessage &&
@@ -323,15 +322,10 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::str
 		case MSG_INTERFACE: colour = INTERFACE_COLOR; break;
 	}
 
-	auto anchor = &pStringS;
-	while (*anchor) anchor = &(*anchor)->pNext;
-
 	BOOLEAN new_string = TRUE;
 	for (auto const& codepoints : LineWrap(TINYFONT1, LINE_WIDTH, str))
 	{
-		auto tmp{ AddString(codepoints, colour, new_string) };
-		*anchor    = tmp;
-		anchor     = &tmp->pNext;
+		pStringS.push_back(AddString(codepoints, colour, new_string));
 		new_string = FALSE;
 	}
 }
@@ -590,29 +584,10 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFo
 	MoveToEndOfMapScreenMessageList();
 }
 
-
-static INT32 GetMessageQueueSize(void)
-{
-	INT32 iCounter = 0;
-	for (const ScrollStringSt* i = pStringS.get(); i != NULL; i = i->pNext.get())
-	{
-		iCounter++;
-	}
-	return iCounter;
-}
-
-
 void ClearTacticalMessageQueue(void)
 {
 	ClearDisplayedListOfTacticalStrings();
-
-	// now run through all the tactical messages
-	for (auto& i = pStringS; i != NULL;)
-	{
-		i = i->pNext;
-	}
-
-	pStringS = NULL;
+	pStringS.clear();
 }
 
 
