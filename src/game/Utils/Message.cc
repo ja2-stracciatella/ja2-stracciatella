@@ -35,6 +35,10 @@ struct ScrollStringSt
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
 	UINT32  uiTimeOfLastUpdate;
+
+	ScrollStringSt() = default;
+	ScrollStringSt(const ST::string& str, UINT16 usColor, BOOLEAN fStartOfNewString)
+	: pString(str), video_overlay(nullptr), usColor(usColor), fBeginningOfNewString(fStartOfNewString) {}
 };
 
 
@@ -68,18 +72,6 @@ static std::deque<std::shared_ptr<ScrollStringSt>> pStringS;
 
 static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
-
-
-static std::shared_ptr<ScrollStringSt> AddString(const ST::string& str, UINT16 usColor, BOOLEAN fStartOfNewString)
-{
-	auto i = std::make_shared<ScrollStringSt>();
-	i->pString = str;
-	i->video_overlay         = NULL;
-	i->usColor               = usColor;
-	i->fBeginningOfNewString = fStartOfNewString;
-	return i;
-}
-
 
 static void RemoveStringVideoOverlay(ScrollStringSt* pStringSt)
 {
@@ -322,7 +314,7 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::str
 	BOOLEAN new_string = TRUE;
 	for (auto const& codepoints : LineWrap(TINYFONT1, LINE_WIDTH, str))
 	{
-		pStringS.push_back(AddString(codepoints, colour, new_string));
+		pStringS.push_back(std::make_shared<ScrollStringSt>(codepoints, colour, new_string));
 		new_string = FALSE;
 	}
 }
@@ -379,7 +371,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 // add string to the map screen message list
 static void AddStringToMapScreenMessageList(const ST::string& pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
-	auto pStringSt = AddString(pString, usColor, fStartOfNewString);
+	auto pStringSt = std::make_shared<ScrollStringSt>(pString, usColor, fStartOfNewString);
 
 	// Figure out which queue slot index we're going to use to store this
 	// If queue isn't full, this is easy, if is is full, we'll re-use the oldest slot
