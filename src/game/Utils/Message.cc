@@ -103,12 +103,12 @@ static void BlitString(VIDEO_OVERLAY* pBlitter)
 // this function will go through list of display strings and clear them all out
 void ClearDisplayedListOfTacticalStrings(void)
 {
-	for (UINT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
+	for (auto& string : gpDisplayList)
 	{
-		if (gpDisplayList[cnt] != NULL)
+		if (string)
 		{
-			RemoveStringVideoOverlay(gpDisplayList[cnt].get());
-			gpDisplayList[cnt] = NULL;
+			RemoveStringVideoOverlay(string.get());
+			string = nullptr;
 		}
 	}
 }
@@ -251,13 +251,12 @@ void HideMessagesDuringNPCDialogue(void)
 	fScrollMessagesHidden = TRUE;
 	uiStartOfPauseTime = GetJA2Clock();
 
-	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
+	for (const auto& string : gpDisplayList)
 	{
-		const auto& s = gpDisplayList[cnt];
-		if (s != NULL)
+		if (string)
 		{
-			RestoreExternBackgroundRectGivenID(s->video_overlay->background);
-			EnableVideoOverlay(FALSE, s->video_overlay);
+			RestoreExternBackgroundRectGivenID(string->video_overlay->background);
+			EnableVideoOverlay(FALSE, string->video_overlay);
 		}
 	}
 }
@@ -267,13 +266,12 @@ void UnHideMessagesDuringNPCDialogue(void)
 {
 	fScrollMessagesHidden = FALSE;
 
-	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
+	for (const auto& string : gpDisplayList)
 	{
-		const auto& s = gpDisplayList[cnt];
-		if (s != NULL)
+		if (string)
 		{
-			s->uiTimeOfLastUpdate += GetJA2Clock() - uiStartOfPauseTime;
-			EnableVideoOverlay(TRUE, s->video_overlay);
+			string->uiTimeOfLastUpdate += GetJA2Clock() - uiStartOfPauseTime;
+			EnableVideoOverlay(TRUE, string->video_overlay);
 		}
 	}
 }
@@ -433,12 +431,11 @@ void EnableDisableScrollStringVideoOverlay(BOOLEAN fEnable)
 {
 	/* will go through the list of video overlays for the tactical scroll message
 	 * system, and enable/disable video overlays depending on fEnable */
-	for (INT8 bCounter = 0; bCounter < MAX_LINE_COUNT; bCounter++)
+	for (const auto& string : gpDisplayList)
 	{
-		const auto& s = gpDisplayList[bCounter];
-		if (s != NULL)
+		if (string)
 		{
-			EnableVideoOverlay(fEnable, s->video_overlay);
+			EnableVideoOverlay(fEnable, string->video_overlay);
 		}
 	}
 }
