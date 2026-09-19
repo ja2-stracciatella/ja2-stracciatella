@@ -37,8 +37,9 @@ All of this makes reviewing and bisecting for regressions easier.
 
 1. New code should have tests if possible.
 
-### For maintainers
+### For developers with commit access
 
-1. Merge a PR only after it has at least one other approval and it builds successfully on all buildbots (currently AppVeyor and GitHub Actions).
+0. The master branch is considered protected, meaning changes are expected to go in through PRs.
+1. Merge a PR only after it has at least one other approval and it builds successfully on all buildbots (or the failures are known to be unrelated).
 2. Squash merge only if the history is a mess or it makes more sense (eg. the whitespace sync PR).
-3. For release planning check the milestones (copied over each time) and the [checklist](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/docs/Release-checklist.md)
+3. For release planning check the milestones and the [checklist](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/docs/Release-checklist.md)
