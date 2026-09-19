@@ -452,7 +452,7 @@ static void _RegisterListener(const std::string& observable, const std::string& 
  * This function can only be used during initialization.
  * @param observable the name of an Observable
  * @param luaFunc name of the function handling callback
- * @ingroup modding
+ * @ingroup funclib-general
  */
 static void RegisterListener(std::string observable, std::string luaFunc)
 {
@@ -465,7 +465,7 @@ static void RegisterListener(std::string observable, std::string luaFunc)
  * This function can only be used during initialization.
  * @param observable
  * @param key
- * @ingroup modding
+ * @ingroup funclib-general
  */
 static void UnregisterListener(std::string observable, std::string key)
 {
