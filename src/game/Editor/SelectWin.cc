@@ -200,8 +200,8 @@ INT32				iCurBank = 0;
 static DisplayList* pDispList;
 static INT16 iTopWinCutOff;
 
-static UINT16 const SelWinFillColor        = 0x0000; // Black
-static UINT16 const SelWinHilightFillColor = 0x000D; // A kind of medium dark blue
+static UINT32 const SelWinFillColor        = 0x000000FF; // Black
+static UINT32 const SelWinHilightFillColor = 0x0000DDFF; // A kind of medium dark blue
 
 
 static bool BuildDisplayWindow(std::span<DisplaySpec>, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing);
@@ -639,7 +639,7 @@ static void DrawSelections(void);
 void RenderSelectionWindow( void )
 {
 	INT32 iSX,iSY,iEX,iEY;
-	UINT16 usFillColor;
+	UINT32 usFillColor;
 	static UINT8 usFillGreen = 0;
 	static UINT8 usDir = 5;
 
@@ -679,7 +679,7 @@ void RenderSelectionWindow( void )
 			iEY = std::min(359, iEY);
 			iEY = std::max(INT32(g_sel_win_box.y), iEY);
 
-			usFillColor = Get16BPPColor(FROMRGB(255, usFillGreen, 0));
+			usFillColor = RGB(255, usFillGreen, 0);
 			usFillGreen += usDir;
 			if( usFillGreen > 250 )
 				usDir = 251;
@@ -1194,8 +1194,8 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 	INT16 const y = n->iY + area->y - top_cut_off;
 	if (y > area->y + area->h) return;
 
-	UINT16 const fill_colour = n->fChosen ? SelWinHilightFillColor : SelWinFillColor;
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + n->iWidth, y + n->iHeight, fill_colour);
+	UINT32 const fill_color = n->fChosen ? SelWinHilightFillColor : SelWinFillColor;
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + n->iWidth, y + n->iHeight, fill_color);
 
 	SGPVObject* const  vo = n->hObj;
 	ETRLEObject const& e  = vo->SubregionProperties(n->uiIndex);

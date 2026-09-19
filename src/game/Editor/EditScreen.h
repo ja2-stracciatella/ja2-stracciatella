@@ -26,9 +26,9 @@ BOOLEAN RemoveLight(GridNo pos);
 extern BOOLEAN gfMercResetUponEditorEntry;
 
 //These go together.  The taskbar has a specific color scheme.
-extern UINT16 gusEditorTaskbarColor;
-extern UINT16 gusEditorTaskbarHiColor;
-extern UINT16 gusEditorTaskbarLoColor;
+extern UINT32 gusEditorTaskbarColor;
+extern UINT32 gusEditorTaskbarHiColor;
+extern UINT32 gusEditorTaskbarLoColor;
 
 extern TaskMode iOldTaskMode;
 extern TaskMode iCurrentTaskbar;
