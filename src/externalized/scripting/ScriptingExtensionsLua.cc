@@ -30,11 +30,13 @@
 #define ENTRYPOINT_SCRIPT "main.lua"
 
 /*! \struct GAME_OPTIONS
-    \brief Options which the current game was started with */
+    \brief Options which the current game was started with
+    \ingroup modding */
 struct GAME_OPTIONS;
 /*! \struct TacticalStatusType
     \brief Status information of the game
     \details Accessible via the gTacticalStatusType global variable
+    \ingroup modding
     */
 struct TacticalStatusType;
 

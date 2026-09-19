@@ -8,7 +8,8 @@
 
 typedef std::map<std::string, std::variant<std::string, int32_t, float, bool>> ExtraGameStatesTable;
 
-/*! \file FunctionsLibrary.h */
+/*! \file FunctionsLibrary.h
+    \ingroup modding */
 
 /*! \struct OBJECTTYPE
     \brief Representation of an inventory item in the game world */
@@ -32,6 +33,7 @@ struct MERCPROFILESTRUCT;
 struct STRATEGICEVENT;
 
 /*! \defgroup funclib-dealers Shops and arms dealers
+    \ingroup modding
     \brief Manage behavior, inventory and prices of dealers */
 
 /*! \struct DEALER_ITEM_HEADER
@@ -40,6 +42,7 @@ struct DEALER_ITEM_HEADER;
 
 /**
  * @defgroup observables Observables
+ * @ingroup modding
  * @brief Register listeners on these observables to receive callbacks when somemthing happens in game.
  * @see RegisterListener
  */
@@ -87,12 +90,14 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStruc
  * Callback when an event is due and to be handled. Implement handlers here if custom strategic events are added.
  * @param the event to be handled
  * @param set to true if the event should not be further processed by the base game
+ * @ingroup observables
  */
 extern Observable<STRATEGICEVENT*, BOOLEAN_S*> OnStrategicEvent;
 
 /**
  * Allows to override the player progress calculation.
  * @param the progress percentage calculated by the base game. This can be adjusted or overridden.
+ * @ingroup observables
  */
 extern Observable<UINT8_S*> OnCalcPlayerProgress;
 
@@ -100,6 +105,7 @@ extern Observable<UINT8_S*> OnCalcPlayerProgress;
  * Callback every morning to check quests' statuses..
  * @param the current day
  * @param set to true to skip base game checks
+ * @ingroup observables
  */
 extern Observable<UINT32, BOOLEAN_S*> OnCheckQuests;
 
@@ -109,6 +115,7 @@ extern Observable<UINT32, BOOLEAN_S*> OnCheckQuests;
  * @param sector X
  * @param sector Y
  * @param whether or not to write an update to the laptop history page
+ * @ingroup observables
  */
 extern Observable<UINT8, INT16, INT16, BOOLEAN> OnQuestEnded;
 
@@ -167,15 +174,18 @@ extern Observable<SOLDIERTYPE*> OnRPCRecruited;
 
 /**
  * @defgroup funclib-general General
+ * @ingroup modding
  * @brief Functions to compose mod modules
  */
 
 /**
  * @defgroup funclib-mercs Personnel
+ * @ingroup modding
  * @brief Functions to access soldiers and characters in the game
  */
 
 /** @defgroup funclib-sectors Map sectors
+ *  @ingroup modding
  *  @brief Access and alter sectors' strategic-level data
  */
 
@@ -203,6 +213,7 @@ SECTORINFO* GetSectorInfo(std::string const sectorID);
 UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(std::string const sectorID);
 
 /** @defgroup funclib-items Items and objects
+ *  @ingroup modding
  *  @brief Functions to handle items, objects and inventories
  */
 
@@ -311,6 +322,7 @@ void EnterShopKeeperInterfaceScreen(UINT8 ubArmsDealer);
 
 /**
  * @defgroup ui-control UI controls
+ * @ingroup modding
  * @brief Functions for controlling the game UI
  */
 

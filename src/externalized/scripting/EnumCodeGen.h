@@ -14,6 +14,9 @@
 #include <ostream>
 #include <string_theory/format>
 
+/*! \file EnumCodeGen.h
+    \ingroup modding */
+
 /**
  * Lua code generation for C enums
  * @tparam E type of a named C enum that maps to integer values
