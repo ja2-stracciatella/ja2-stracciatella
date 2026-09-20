@@ -1221,14 +1221,38 @@ static void SaveMercProfiles(HWFILE const f)
 /* An I.M.P. profile file holds one character the player built, so that a later
  * game can take it back. It carries the profile record in the layout
  * MERCPROFILESTRUCT has on the day it was written, so a build whose layout
- * differs cannot read it as it stands. The saved game version says which
- * layout that is: it is raised whenever a save's contents are invalidated,
- * which is what a change to the profile record does, so a profile file leads
- * with the same number a save does. */
+ * differs cannot read it as it stands. The file therefore leads with the
+ * version of the layout its record is in.
+ *
+ * That version is the profile's own, and is raised when the record's layout
+ * changes and on no other occasion. The saved game version will not serve in
+ * its place: it is raised whenever a save's contents are invalidated, which
+ * happens for all manner of reasons that leave this record exactly where it
+ * stood, and a profile would then be refused for a change that never touched
+ * it. */
+static UINT32 const IMP_PROFILE_VERSION = 1;
+
 static size_t const IMP_PROFILE_HEADER_SIZE = sizeof(UINT32);
+static size_t const IMP_PROFILE_PAYLOAD_SIZE =
+	sizeof(MERCPROFILESTRUCT) + sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
 static size_t const IMP_PROFILE_FILE_SIZE =
-	IMP_PROFILE_HEADER_SIZE + sizeof(MERCPROFILESTRUCT) +
-	sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
+	IMP_PROFILE_HEADER_SIZE + IMP_PROFILE_PAYLOAD_SIZE;
+
+/* What the version above stands for. This gives way as soon as the record or
+ * the inventory beside it changes shape, and whoever makes it give way raises
+ * IMP_PROFILE_VERSION to say so and puts the new size here. */
+static_assert(IMP_PROFILE_PAYLOAD_SIZE == 1356,
+	"The I.M.P. profile record has changed shape. Raise IMP_PROFILE_VERSION and "
+	"give this assertion the size the record and inventory now come to.");
+
+/* The length of a profile file from before profiles carried a version. Such a
+ * file opens with the record itself, and nothing within it says so: where the
+ * version would stand is a pointer the writing game left in the record, which
+ * could read as any number, a version among them. Only the length tells such
+ * a file from one that leads with a version, so the length is written here as
+ * the plain number it is. It is a fact about files already on disk and stays
+ * this number however the record changes afterwards. */
+static size_t const IMP_PROFILE_VERSIONLESS_FILE_SIZE = 1356;
 
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
@@ -1243,15 +1267,13 @@ bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 }
 
 /* The version a profile file leads with, or nothing at all when the file is
- * not the length a profile of this version is. The length is what makes the
- * leading number a version: a file written before the version existed, or by
- * a version whose record is a different size, begins with the record itself,
- * and what stands there is a pointer left over from the game that wrote it,
- * which could read as any number including this one. Leaves the file on the
- * record where there is a version to be had. */
+ * one of the versionless ones. The length is asked one question only, and of
+ * one length only: whether this is a file from before the version existed.
+ * Every other file leads with a version, whatever this build goes on to make
+ * of the number it finds there. Leaves the file at the record either way. */
 static std::optional<UINT32> IMPSavedProfileReadVersion(SGPFile* const f)
 {
-	if (f->size() != IMP_PROFILE_FILE_SIZE) return std::nullopt;
+	if (f->size() == IMP_PROFILE_VERSIONLESS_FILE_SIZE) return std::nullopt;
 
 	UINT32 version;
 	f->read(&version, sizeof(version));
@@ -1286,13 +1308,18 @@ ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 	std::optional<UINT32> const version = IMPSavedProfileReadVersion(f);
 	if (!version)
 	{
-		throw std::runtime_error(ST::format("IMP profile '{}' is {} bytes, a profile of this version is {}!",
-			nickname, f->size(), IMP_PROFILE_FILE_SIZE).to_std_string());
+		throw std::runtime_error(ST::format("IMP profile '{}' was written before profiles carried a version!",
+			nickname).to_std_string());
 	}
-	if (*version != SAVE_GAME_VERSION)
+	if (*version != IMP_PROFILE_VERSION)
 	{
-		throw std::runtime_error(ST::format("IMP profile '{}' was saved at version {}, this game is at {}!",
-			nickname, *version, SAVE_GAME_VERSION).to_std_string());
+		throw std::runtime_error(ST::format("IMP profile '{}' holds a record of version {}, this game reads version {}!",
+			nickname, *version, IMP_PROFILE_VERSION).to_std_string());
+	}
+	if (f->size() != IMP_PROFILE_FILE_SIZE)
+	{
+		throw std::runtime_error(ST::format("IMP profile '{}' leads with version {} but is {} bytes, not {}!",
+			nickname, *version, f->size(), IMP_PROFILE_FILE_SIZE).to_std_string());
 	}
 
 	MERCPROFILESTRUCT profile_saved;
@@ -1316,7 +1343,8 @@ void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSold
 
 	// A character being confirmed can share a nickname with a profile no
 	// version of this game would recognise. It keeps what it has.
-	if (IMPSavedProfileReadVersion(f) != SAVE_GAME_VERSION) return;
+	if (f->size() != IMP_PROFILE_FILE_SIZE) return;
+	if (IMPSavedProfileReadVersion(f) != IMP_PROFILE_VERSION) return;
 
 	f->seek(IMP_PROFILE_HEADER_SIZE + sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
 	f->read(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
@@ -1339,7 +1367,7 @@ void SaveIMPPlayerProfiles()
 		AutoSGPFile f{IMPSavedProfileOpenFileForWrite(mercprofile->zNickname)};
 		if (!f) continue;
 
-		UINT32 const version = SAVE_GAME_VERSION;
+		UINT32 const version = IMP_PROFILE_VERSION;
 		f->write(&version, sizeof(version));
 		f->write(mercprofile, sizeof(MERCPROFILESTRUCT));
 		f->write(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
