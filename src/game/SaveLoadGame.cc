@@ -118,6 +118,7 @@
 #include <regex>
 #include <algorithm>
 #include <array>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -1217,6 +1218,18 @@ static void SaveMercProfiles(HWFILE const f)
 	f->write(impSlotStates, sizeof(impSlotStates));
 }
 
+/* An I.M.P. profile file holds one character the player built, so that a later
+ * game can take it back. It carries the profile record in the layout
+ * MERCPROFILESTRUCT has on the day it was written, so a build whose layout
+ * differs cannot read it as it stands. The saved game version says which
+ * layout that is: it is raised whenever a save's contents are invalidated,
+ * which is what a change to the profile record does, so a profile file leads
+ * with the same number a save does. */
+static size_t const IMP_PROFILE_HEADER_SIZE = sizeof(UINT32);
+static size_t const IMP_PROFILE_FILE_SIZE =
+	IMP_PROFILE_HEADER_SIZE + sizeof(MERCPROFILESTRUCT) +
+	sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
+
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
 	return ST::format("mercprofile.{}", nickname);
@@ -1227,6 +1240,22 @@ bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
 	bool fexists = GCM->saveGameFiles()->exists(profile_filename);
 	return fexists;
+}
+
+/* The version a profile file leads with, or nothing at all when the file is
+ * not the length a profile of this version is. The length is what makes the
+ * leading number a version: a file written before the version existed, or by
+ * a version whose record is a different size, begins with the record itself,
+ * and what stands there is a pointer left over from the game that wrote it,
+ * which could read as any number including this one. Leaves the file on the
+ * record where there is a version to be had. */
+static std::optional<UINT32> IMPSavedProfileReadVersion(SGPFile* const f)
+{
+	if (f->size() != IMP_PROFILE_FILE_SIZE) return std::nullopt;
+
+	UINT32 version;
+	f->read(&version, sizeof(version));
+	return version;
 }
 
 SGPFile* IMPSavedProfileOpenFileForRead(const ST::string& nickname)
@@ -1250,13 +1279,24 @@ static SGPFile* IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
  * carries itself. */
 ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 {
-	if (!IMPSavedProfileDoesFileExist(nickname)) {
-		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
+	AutoSGPFile f{IMPSavedProfileOpenFileForRead(nickname)};
+
+	/* Reading a record another version laid out differently is a matter of
+	 * migration, which is still to come. */
+	std::optional<UINT32> const version = IMPSavedProfileReadVersion(f);
+	if (!version)
+	{
+		throw std::runtime_error(ST::format("IMP profile '{}' is {} bytes, a profile of this version is {}!",
+			nickname, f->size(), IMP_PROFILE_FILE_SIZE).to_std_string());
 	}
-	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
+	if (*version != SAVE_GAME_VERSION)
+	{
+		throw std::runtime_error(ST::format("IMP profile '{}' was saved at version {}, this game is at {}!",
+			nickname, *version, SAVE_GAME_VERSION).to_std_string());
+	}
+
 	MERCPROFILESTRUCT profile_saved;
 	f->read(&profile_saved, sizeof(MERCPROFILESTRUCT));
-	delete f;
 
 	ProfileID const profile = GetIMPSlotInProgress();
 	MERCPROFILESTRUCT& profile_new = gMercProfiles[profile];
@@ -1272,10 +1312,14 @@ void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSold
 	if (!IMPSavedProfileDoesFileExist(nickname)) return;
 	if (!pSoldier) return;
 
-	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
-	f->seek(sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
+	AutoSGPFile f{IMPSavedProfileOpenFileForRead(nickname)};
+
+	// A character being confirmed can share a nickname with a profile no
+	// version of this game would recognise. It keeps what it has.
+	if (IMPSavedProfileReadVersion(f) != SAVE_GAME_VERSION) return;
+
+	f->seek(IMP_PROFILE_HEADER_SIZE + sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
 	f->read(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
-	delete f;
 }
 
 void SaveIMPPlayerProfiles()
@@ -1292,12 +1336,13 @@ void SaveIMPPlayerProfiles()
 		if (pSoldier->bTeam != OUR_TEAM) continue;
 		if (pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER) continue;
 
-		SGPFile *f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname);
+		AutoSGPFile f{IMPSavedProfileOpenFileForWrite(mercprofile->zNickname)};
 		if (!f) continue;
 
+		UINT32 const version = SAVE_GAME_VERSION;
+		f->write(&version, sizeof(version));
 		f->write(mercprofile, sizeof(MERCPROFILESTRUCT));
 		f->write(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
-		delete f;
 	}
 }
 
