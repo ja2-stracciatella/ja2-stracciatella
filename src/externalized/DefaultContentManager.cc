@@ -1249,8 +1249,19 @@ bool DefaultContentManager::loadMercsData(const BinaryProfileData& binaryProfile
 		auto profileInfo = MercProfileInfo::deserialize(charProperties);
 		ProfileID profileID = profileInfo->profileID;
 		m_mercProfileInfo[profileID] = profileInfo;
-		m_mercProfiles.push_back(new MercProfile(profileID));
 		temp_mercStructs[profileID] = MercProfile::deserializeStruct(binaryProfiles.getProfile(profileID), stringLoader, charProperties, this);
+	}
+
+	/* Every profile is listed, declared or not. A free slot is a profile like
+	 * any other once the I.M.P. site puts a character in it, and the loops that
+	 * walk this list looking for the player's own -- saving a character under
+	 * its nickname, refreshing the quote records a PC carries -- have to find
+	 * it there. The loops that look for somebody the data describes go on
+	 * asking what kind of profile it is, and an undeclared one answers that it
+	 * is nobody. */
+	for (ProfileID profileID = 0; profileID != NUM_PROFILES; ++profileID)
+	{
+		m_mercProfiles.push_back(new MercProfile(profileID));
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
 
@@ -1592,13 +1603,11 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const p
 		return m_mercProfileInfo.at(profileID);
 	}
 
-	/* Only the profiles the original game shipped are all expected to be
-	 * declared. Past those the data files are meant to leave gaps -- the I.M.P.
-	 * site hands the free ones out -- so nothing is wrong there and saying so on
-	 * every lookup buries the cases where something is. */
-	if (profileID < NUM_VANILLA_PROFILES) {
-		SLOGD("MercProfileInfo is not defined at {}", profileID);
-	}
+	/* No profile has to be declared, and the gaps are the point: what no entry
+	 * names is a free slot the I.M.P. site may put a character in, at 51 to 56
+	 * as much as past the profiles the original game shipped. The site reads
+	 * every profile on every scan, so a line logged here would say nothing and
+	 * bury what else a debug log was opened to find. */
 	return &EMPTY_MERC_PROFILE_INFO;
 }
 
