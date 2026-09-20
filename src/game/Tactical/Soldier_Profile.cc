@@ -149,11 +149,12 @@ void InitProfileFromContent(ProfileID const i)
 	// profile ID
 	p.ubFaceIndex = i;
 
-	/* A profile nothing dresses -- a slot prof.dat leaves blank, or one past
-	 * the profiles it holds that no JSON declares at all -- wears what a player
-	 * generated character wears, since those are the slots a character is made
-	 * in. Soldier creation would otherwise pick colors at random for it, which
-	 * suits a passer-by but not one of the player's own. */
+	/* A profile nothing dresses wears what a player generated character wears,
+	 * since those are the slots a character is made in: the free ones, which
+	 * come out of the content with nothing filled in at all because no entry
+	 * declares them, and the ones prof.dat leaves blank. Soldier creation would
+	 * otherwise pick colors at random for it, which suits a passer-by but not
+	 * one of the player's own. */
 	if (p.VEST.empty())  p.VEST  = "WHITEVEST";
 	if (p.PANTS.empty()) p.PANTS = "BLACKPANTS";
 

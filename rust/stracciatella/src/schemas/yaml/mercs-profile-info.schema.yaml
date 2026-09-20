@@ -8,7 +8,8 @@ items:
   properties:
     profileID:
       description: |
-        Profiles 0 to 169 are the ones the original game shipped with; the rest, up to 199, are free slots.
+        Profiles 0 to 169 are the ones the original game shipped with, 170 to 199 are the room added on top.
+        A profile no entry declares is a free slot, which the I.M.P. site may put a player generated character in.
       minimum: 0
       maximum: 199
       $ref: types/uint8.schema.yaml
