@@ -455,7 +455,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 							SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_OBSTACLE);
 							SET_CURRMOVEMENTCOST(NORTHWEST, TRAVELCOST_NOT_STANDING);
 						}
-						else
+						else if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 						{
 							SET_CURRMOVEMENTCOST(NORTH, TRAVELCOST_OBSTACLE);
 							SET_CURRMOVEMENTCOST(NORTHEAST, TRAVELCOST_NOT_STANDING);
@@ -818,7 +818,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 								SET_MOVEMENTCOST(usGridNo - 1, NORTHWEST, 0, TRAVELCOST_WALL);
 							}
 						}
-						else
+						else if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 						{
 							// doorframe post in one corner of each of the tiles
 							if (pStructure->fFlags & STRUCTURE_BASE_TILE)
@@ -985,7 +985,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 						SET_MOVEMENTCOST(usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_WALL);
 						SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
 					}
-					else
+					else if (pStructure->ubWallOrientation & ORIENT_RIGHT)
 					{
 						SET_CURRMOVEMENTCOST(SOUTHWEST, TRAVELCOST_WALL);
 						SET_CURRMOVEMENTCOST(WEST, TRAVELCOST_WALL);
@@ -1000,6 +1000,8 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 						SET_MOVEMENTCOST(usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_WALL);
 						SET_MOVEMENTCOST(usGridNo + WORLD_COLS, SOUTHWEST, 0, TRAVELCOST_WALL);
 					}
+					// a wall with no orientation, such as the non-base tile of a
+					// corner piece, blocks nothing
 				}
 			}
 			else
