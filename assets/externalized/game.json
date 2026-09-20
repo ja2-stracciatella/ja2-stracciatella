@@ -189,13 +189,7 @@
     "bonus_attribute_points": 40,
 
     //  Number of I.M.P. characters that can be created over a campaign.
-    //  0 switches the I.M.P. site off entirely.
-    //  A character holds a merc profile for the rest of the campaign: one of the
-    //  eleven that mercs-profile-info.json marks as an I.M.P. slot, or, once
-    //  those are spoken for, one of the thirty past them that no data file
-    //  declares at all. Raising this needs nothing else changed, and the team
-    //  fills up first: hiring refuses the nineteenth merc. Voices and portraits
-    //  may be reused freely and do not limit it.
+    //  0 switches the I.M.P. site off entirely, 18 is as many as a team holds.
     //  vanilla setting: 1
     "max_characters": 1,
 
