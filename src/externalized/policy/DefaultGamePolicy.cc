@@ -74,7 +74,6 @@ DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 	imp_pick_skills_directly = imp.getOptionalBool("pick_skills_directly");
 
 	imp_max_characters = imp.getOptionalUInt("max_characters", 1);
-	imp_send_profile_results_email = imp.getOptionalBool("send_profile_results_email", true);
 
 	merc_online_min_days = gp.getOptionalUInt("merc_online_min_days", 1);
 	merc_online_max_days = gp.getOptionalUInt("merc_online_max_days", 2);

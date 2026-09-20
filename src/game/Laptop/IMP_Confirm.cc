@@ -201,7 +201,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, UINT32 reason)
 
 		// send email notice, naming the character it reports on: by the time the mail
 		// arrives a further I.M.P. may be the one iVoiceId points at
-		if (gamepolicy(imp_send_profile_results_email))
+		if (GCM->getIMPPolicy()->sendsProfileResultsEmail())
 		{
 			AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, profile, 2);
 		}

@@ -112,6 +112,7 @@ DefaultIMPPolicy::DefaultIMPPolicy(const JsonValue& json, const ItemSystem *item
 	JsonUtility::parseListStrings(r["activation_codes"], m_activationCodes);
 
 	m_startingLevel = r.getOptionalUInt("starting_level", 1);
+	m_sendsProfileResultsEmail = r.getOptionalBool("send_profile_results_email", true);
 
 	readVoices(r["voices"], m_voices);
 	readPortraits(r["portraits"], m_portraits);
@@ -131,6 +132,11 @@ bool DefaultIMPPolicy::isCodeAccepted(const ST::string& code) const
 uint8_t DefaultIMPPolicy::getStartingLevel() const
 {
 	return m_startingLevel;
+}
+
+bool DefaultIMPPolicy::sendsProfileResultsEmail() const
+{
+	return m_sendsProfileResultsEmail;
 }
 
 const std::vector<IMPStartingItemSet>& DefaultIMPPolicy::getInventory() const

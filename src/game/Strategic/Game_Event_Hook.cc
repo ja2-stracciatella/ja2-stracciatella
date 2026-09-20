@@ -35,7 +35,7 @@
 #include "Observable.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "GamePolicy.h"
+#include "policy/IMPPolicy.h"
 
 extern UINT32	guiTimeStampOfCurrentlyExecutingEvent;
 extern BOOLEAN gfPreventDeletionOfAnyEvent;
@@ -128,7 +128,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		case EVENT_DAY2_ADD_EMAIL_FROM_IMP:
 			// a save may carry this event from before the mail was switched off
-			if (gamepolicy(imp_send_profile_results_email))
+			if (GCM->getIMPPolicy()->sendsProfileResultsEmail())
 			{
 				// the parameter is the profile of the character being reported on
 				AddEmailWithSpecialData(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), pEvent->uiParam, 0 );
