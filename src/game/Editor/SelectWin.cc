@@ -1194,8 +1194,8 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 	INT16 const y = n->iY + area->y - top_cut_off;
 	if (y > area->y + area->h) return;
 
-	UINT32 const fill_color = n->fChosen ? SelWinHilightFillColor : SelWinFillColor;
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + n->iWidth, y + n->iHeight, fill_color);
+	UINT32 const fill_colour = n->fChosen ? SelWinHilightFillColor : SelWinFillColor;
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + n->iWidth, y + n->iHeight, fill_colour);
 
 	SGPVObject* const  vo = n->hObj;
 	ETRLEObject const& e  = vo->SubregionProperties(n->uiIndex);
