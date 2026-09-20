@@ -172,8 +172,8 @@ void ScrollString(void)
 	// CHECK FOR FREE SPOTS AND ADD ANY STRINGS IF WE HAVE SOME TO ADD!
 
 	// FIRST CHECK IF WE HAVE ANY IN OUR QUEUE
+	if (pStringS.empty()) return;
 	auto& head = pStringS.front();
-	if (!head) return;
 
 	// CHECK IF WE HAVE A SLOT!
 	// CHECK OUR LAST SLOT!
