@@ -800,6 +800,31 @@ ProfileCurrent ToCurrent(ProfileV22 const& from)
 
 }
 
+std::optional<IMPProfileLayout> IMPProfileLayoutOfVersion(UINT32 const version)
+{
+	/* A versioned file is the version, then the record, then the inventory. */
+	auto const of = [](IMPProfileFormat format, size_t record)
+		-> std::optional<IMPProfileLayout>
+	{
+		size_t const lead = sizeof(UINT32);
+		return IMPProfileLayout{ format, lead, record, lead + record };
+	};
+
+	switch (version)
+	{
+		case 1: return of(IMPProfileFormat::ProfileVersion1, sizeof(ProfileCurrent));
+	}
+	return std::nullopt;
+}
+
+/* Every version up to the one this build writes must be named above. Raising
+ * IMP_PROFILE_VERSION without giving it a layout gives way here. */
+static_assert(IMP_PROFILE_VERSION == 1,
+	"A profile version has been raised. Give it a case in "
+	"IMPProfileLayoutOfVersion, freeze the record the version before it wrote "
+	"as a struct of its own, and name that struct's layout in "
+	"IMPProfileFormat.");
+
 std::optional<IMPProfileLayout> IMPProfileVersionlessLayoutOfSize(size_t const fileSize)
 {
 	size_t const inventory = sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
@@ -813,9 +838,9 @@ std::optional<IMPProfileLayout> IMPProfileVersionlessLayoutOfSize(size_t const f
 		return IMPProfileLayout{ format, 0, record, record };
 	};
 
-	if (auto l = of(IMPProfileFormat::V104, sizeof(ProfileCurrent))) return l;
-	if (auto l = of(IMPProfileFormat::V22, sizeof(ProfileV22))) return l;
-	if (auto l = of(IMPProfileFormat::V21, sizeof(ProfileV21))) return l;
+	if (auto l = of(IMPProfileFormat::SaveVersion104, sizeof(ProfileCurrent))) return l;
+	if (auto l = of(IMPProfileFormat::Release022, sizeof(ProfileV22))) return l;
+	if (auto l = of(IMPProfileFormat::Release021, sizeof(ProfileV21))) return l;
 	return std::nullopt;
 }
 
@@ -823,20 +848,20 @@ MERCPROFILESTRUCT IMPProfileMigrate(IMPProfileFormat const format, BYTE const* c
 {
 	switch (format)
 	{
-		case IMPProfileFormat::V21:
+		case IMPProfileFormat::Release021:
 		{
 			ProfileV21 v21;
 			std::memcpy(&v21, record, sizeof(v21));
 			return ToProfile(ToCurrent(ToV22(v21)));
 		}
-		case IMPProfileFormat::V22:
+		case IMPProfileFormat::Release022:
 		{
 			ProfileV22 v22;
 			std::memcpy(&v22, record, sizeof(v22));
 			return ToProfile(ToCurrent(v22));
 		}
-		case IMPProfileFormat::V104:
-		case IMPProfileFormat::Current:
+		case IMPProfileFormat::SaveVersion104:
+		case IMPProfileFormat::ProfileVersion1:
 		{
 			ProfileCurrent current;
 			std::memcpy(&current, record, sizeof(current));

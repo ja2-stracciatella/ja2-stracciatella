@@ -1224,28 +1224,17 @@ static void SaveMercProfiles(HWFILE const f)
  * game can take it back. It carries the profile record in the layout
  * MERCPROFILESTRUCT has on the day it was written, so a build whose layout
  * differs cannot read it as it stands. The file therefore leads with the
- * version of the layout its record is in.
+ * version of the layout its record is in, and IMPProfileMigration is where the
+ * versions and their layouts are named. Only the writing is done here.
  *
- * That version is the profile's own, and is raised when the record's layout
- * changes and on no other occasion. The saved game version will not serve in
- * its place: it is raised whenever a save's contents are invalidated, which
- * happens for all manner of reasons that leave this record exactly where it
- * stood, and a profile would then be refused for a change that never touched
- * it. */
-static UINT32 const IMP_PROFILE_VERSION = 1;
-
-static size_t const IMP_PROFILE_HEADER_SIZE = sizeof(UINT32);
-static size_t const IMP_PROFILE_PAYLOAD_SIZE =
-	sizeof(MERCPROFILESTRUCT) + sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
-static size_t const IMP_PROFILE_FILE_SIZE =
-	IMP_PROFILE_HEADER_SIZE + IMP_PROFILE_PAYLOAD_SIZE;
-
-/* What the version above stands for. This gives way as soon as the record or
- * the inventory beside it changes shape, and whoever makes it give way raises
- * IMP_PROFILE_VERSION to say so and puts the new size here. */
-static_assert(IMP_PROFILE_PAYLOAD_SIZE == 1356,
-	"The I.M.P. profile record has changed shape. Raise IMP_PROFILE_VERSION and "
-	"give this assertion the size the record and inventory now come to.");
+ * What is written is the record and the inventory beside it, and this is what
+ * IMP_PROFILE_VERSION currently stands for. The assertion gives way as soon as
+ * either changes shape — including the inventory, which the record's own
+ * assertions say nothing about — and whoever makes it give way raises the
+ * version and puts the new size here. */
+static_assert(sizeof(MERCPROFILESTRUCT) + sizeof(OBJECTTYPE) * NUM_INV_SLOTS == 1356,
+	"The I.M.P. profile record or its inventory has changed shape. Raise "
+	"IMP_PROFILE_VERSION and give this assertion the size they now come to.");
 
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
@@ -1304,18 +1293,20 @@ ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 	std::optional<UINT32> const version = IMPSavedProfileReadVersion(f);
 	if (version)
 	{
-		if (*version != IMP_PROFILE_VERSION)
+		std::optional<IMPProfileLayout> const versioned = IMPProfileLayoutOfVersion(*version);
+		if (!versioned)
 		{
-			throw std::runtime_error(ST::format("IMP profile '{}' holds a record of version {}, this game reads version {}!",
-				nickname, *version, IMP_PROFILE_VERSION).to_std_string());
+			throw std::runtime_error(ST::format("IMP profile '{}' leads with version {}, which no version of this game ever wrote!",
+				nickname, *version).to_std_string());
 		}
-		if (f->size() != IMP_PROFILE_FILE_SIZE)
+		layout = *versioned;
+
+		size_t const expected = layout.inventoryOffset + sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
+		if (f->size() != expected)
 		{
 			throw std::runtime_error(ST::format("IMP profile '{}' leads with version {} but is {} bytes, not {}!",
-				nickname, *version, f->size(), IMP_PROFILE_FILE_SIZE).to_std_string());
+				nickname, *version, f->size(), expected).to_std_string());
 		}
-		layout = IMPProfileLayout{ IMPProfileFormat::Current, IMP_PROFILE_HEADER_SIZE,
-			sizeof(MERCPROFILESTRUCT), IMP_PROFILE_HEADER_SIZE + sizeof(MERCPROFILESTRUCT) };
 	}
 	else
 	{
@@ -1334,7 +1325,7 @@ ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 	/* Before the I.M.P. slots a character spoke with the files named after the
 	 * profile it sat in, so one from back then takes the voice of the slot it
 	 * is put back into. */
-	if (layout.format < IMPProfileFormat::V104) profile_new.ubVoiceId = profile;
+	if (layout.format < IMPProfileFormat::SaveVersion104) profile_new.ubVoiceId = profile;
 	// The slot is not held until the player confirms the character.
 	profile_new.impSlotState = IMPSlotState::FREE;
 	return profile;
@@ -1351,20 +1342,17 @@ void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSold
 	 * of this game ever wrote. It keeps the kit it was given. The inventory
 	 * itself has never changed shape, so wherever the record ends, it reads the
 	 * same. */
-	size_t inventoryOffset;
-	std::optional<IMPProfileLayout> const layout = IMPProfileVersionlessLayoutOfSize(f->size());
-	if (layout)
+	std::optional<IMPProfileLayout> layout = IMPProfileVersionlessLayoutOfSize(f->size());
+	if (!layout)
 	{
-		inventoryOffset = layout->inventoryOffset;
-	}
-	else
-	{
-		if (f->size() != IMP_PROFILE_FILE_SIZE) return;
-		if (IMPSavedProfileReadVersion(f) != IMP_PROFILE_VERSION) return;
-		inventoryOffset = IMP_PROFILE_HEADER_SIZE + sizeof(MERCPROFILESTRUCT);
+		std::optional<UINT32> const version = IMPSavedProfileReadVersion(f);
+		if (!version) return;
+		layout = IMPProfileLayoutOfVersion(*version);
+		if (!layout) return;
+		if (f->size() != layout->inventoryOffset + sizeof(OBJECTTYPE) * NUM_INV_SLOTS) return;
 	}
 
-	f->seek(inventoryOffset, FILE_SEEK_FROM_START);
+	f->seek(layout->inventoryOffset, FILE_SEEK_FROM_START);
 	f->read(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
 }
 

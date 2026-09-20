@@ -70,19 +70,19 @@ TEST(IMPProfileMigrationTest, everyLengthAVersionlessReleaseWroteIsKnown)
 {
 	auto const v21 = IMPProfileVersionlessLayoutOfSize(V21_RECORD + INVENTORY);
 	ASSERT_TRUE(v21.has_value());
-	EXPECT_EQ(v21->format, IMPProfileFormat::V21);
+	EXPECT_EQ(v21->format, IMPProfileFormat::Release021);
 	EXPECT_EQ(v21->recordOffset, 0u);
 	EXPECT_EQ(v21->inventoryOffset, V21_RECORD);
 
 	auto const v22 = IMPProfileVersionlessLayoutOfSize(V22_RECORD + INVENTORY);
 	ASSERT_TRUE(v22.has_value());
-	EXPECT_EQ(v22->format, IMPProfileFormat::V22);
+	EXPECT_EQ(v22->format, IMPProfileFormat::Release022);
 	EXPECT_EQ(v22->recordOffset, 0u);
 	EXPECT_EQ(v22->inventoryOffset, V22_RECORD);
 
 	auto const v104 = IMPProfileVersionlessLayoutOfSize(sizeof(MERCPROFILESTRUCT) + INVENTORY);
 	ASSERT_TRUE(v104.has_value());
-	EXPECT_EQ(v104->format, IMPProfileFormat::V104);
+	EXPECT_EQ(v104->format, IMPProfileFormat::SaveVersion104);
 	EXPECT_EQ(v104->recordOffset, 0u);
 	EXPECT_EQ(v104->inventoryOffset, sizeof(MERCPROFILESTRUCT));
 }
@@ -95,6 +95,31 @@ TEST(IMPProfileMigrationTest, aFileThatLeadsWithAVersionIsNotKnownByItsLength)
 {
 	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(
 		sizeof(UINT32) + sizeof(MERCPROFILESTRUCT) + INVENTORY).has_value());
+}
+
+TEST(IMPProfileMigrationTest, aVersionNamesTheLayoutItStandsFor)
+{
+	auto const v1 = IMPProfileLayoutOfVersion(1);
+	ASSERT_TRUE(v1.has_value());
+	EXPECT_EQ(v1->format, IMPProfileFormat::ProfileVersion1);
+	EXPECT_EQ(v1->recordOffset, sizeof(UINT32));
+	EXPECT_EQ(v1->recordSize, sizeof(MERCPROFILESTRUCT));
+	EXPECT_EQ(v1->inventoryOffset, sizeof(UINT32) + sizeof(MERCPROFILESTRUCT));
+}
+
+/* The version this build writes has to be one it can also read back, which is
+ * the whole point of writing it down. */
+TEST(IMPProfileMigrationTest, theVersionThisBuildWritesIsOneItKnows)
+{
+	EXPECT_TRUE(IMPProfileLayoutOfVersion(IMP_PROFILE_VERSION).has_value());
+}
+
+TEST(IMPProfileMigrationTest, aVersionNoBuildEverWroteIsTurnedAway)
+{
+	EXPECT_FALSE(IMPProfileLayoutOfVersion(0).has_value());
+	EXPECT_FALSE(IMPProfileLayoutOfVersion(IMP_PROFILE_VERSION + 1).has_value());
+	EXPECT_FALSE(IMPProfileLayoutOfVersion(104).has_value());
+	EXPECT_FALSE(IMPProfileLayoutOfVersion(0xFFFFFFFF).has_value());
 }
 
 TEST(IMPProfileMigrationTest, aLengthNoVersionlessReleaseWroteIsTurnedAway)
@@ -118,7 +143,7 @@ TEST(IMPProfileMigrationTest, aProfileFromV21ComesForwardWhole)
 	PutByte(record, V21_FACE_INDEX, 200);
 	PutByte(record, V21_SEX, MALE);
 
-	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::V21, record.data());
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
 
 	EXPECT_EQ(p.zName, "Ned Lee");
 	EXPECT_EQ(p.zNickname, "Needle");
@@ -139,7 +164,7 @@ TEST(IMPProfileMigrationTest, aProfileFromV22ComesForwardWhole)
 	PutByte(record, V22_FACE_INDEX, 200);
 	PutByte(record, V22_SEX, FEMALE);
 
-	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::V22, record.data());
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release022, record.data());
 
 	EXPECT_EQ(p.zName, "Ned Lee");
 	EXPECT_EQ(p.zNickname, "Needle");
@@ -153,7 +178,7 @@ TEST(IMPProfileMigrationTest, whatAnOlderRecordNeverCarriedIsLeftAtItsDefault)
 	std::vector<BYTE> record(V21_RECORD, 0);
 	PutString(record, V21_NICKNAME, "Needle");
 
-	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::V21, record.data());
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
 
 	// the slot is only held once the player confirms the character
 	EXPECT_EQ(p.impSlotState, IMPSlotState::FREE);
@@ -169,7 +194,7 @@ TEST(IMPProfileMigrationTest, aStringTooLongToHaveBeenWrittenDownIsGivenUp)
 	PutString(record, V21_NAME, "Ned Lee Of Arnhem", 17);
 	PutString(record, V21_NICKNAME, "Needle");
 
-	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::V21, record.data());
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
 
 	EXPECT_TRUE(p.zName.empty());
 	EXPECT_EQ(p.zNickname, "Needle");
@@ -180,7 +205,7 @@ TEST(IMPProfileMigrationTest, aStringThatJustFitsIsKept)
 	std::vector<BYTE> record(V21_RECORD, 0);
 	PutString(record, V21_NAME, "Ned Lee Of Arnh");  // fifteen, the most that fits
 
-	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::V21, record.data());
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
 
 	EXPECT_EQ(p.zName, "Ned Lee Of Arnh");
 }
