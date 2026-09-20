@@ -2011,11 +2011,7 @@ static bool PointInRect(SGPRect const * pRect, INT32 x, INT32 y)
 }
 
 
-<<<<<<< HEAD
-static void DrawRect(SGPRect const * pRect, INT16 color)
-=======
-static void DrawRect(SGPRect* pRect, UINT32 color)
->>>>>>> acae014c6 (Changed screen color depth to 32bpp.)
+static void DrawRect(SGPRect const * pRect, UINT32 color)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
