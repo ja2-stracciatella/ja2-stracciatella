@@ -22,6 +22,12 @@ struct ZStripInfo
 // From RGB to COLORVAL
 #define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16)))
 
+#define RGBA(r, g, b, a)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | UINT32(a))
+#define RGB(r, g, b)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | 0xFF)
+#define SHADE_NONE RGBA(0, 0, 0, 0)
+#define SHADE_MONO(r, g, b) RGBA(r, g, b, 1)
+#define SHADE_STD(r, g, b) RGBA(r, g, b, 2)
+
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
 class SGPVObject
