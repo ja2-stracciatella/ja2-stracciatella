@@ -732,7 +732,7 @@ static void RenderSelectedItemBlownUp(void)
 	ETRLEObject const& e  = vo->SubregionProperties(index);
 	x = screen_x - e.sOffsetX + (40 - e.usWidth)  / 2;
 	y = screen_y - e.sOffsetY + (20 - e.usHeight) / 2;
-	BltVideoObjectOutline(FRAME_BUFFER, vo, index, x, y, RGB(0, 140, 170));
+	BltVideoObjectOutline32(FRAME_BUFFER, vo, index, x, y, RGB(0, 140, 170));
 
 	// Display the item name above it
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
@@ -907,5 +907,3 @@ void ProcessEditorRendering()
 	RenderFastHelp();
 
 }
-
-
