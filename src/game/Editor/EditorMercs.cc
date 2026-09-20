@@ -2011,7 +2011,7 @@ static bool PointInRect(SGPRect const * pRect, INT32 x, INT32 y)
 }
 
 
-static void DrawRect(SGPRect const * pRect, UINT32 color)
+static void DrawRect(SGPRect const * pRect, UINT32 colour)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
