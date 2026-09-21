@@ -8,7 +8,9 @@
 
 typedef std::map<std::string, std::variant<std::string, int32_t, float, bool>> ExtraGameStatesTable;
 
-/*! \file FunctionsLibrary.h */
+/** \addtogroup modding
+ *  @{
+ */
 
 /*! \struct OBJECTTYPE
     \brief Representation of an inventory item in the game world */
@@ -87,12 +89,14 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStruc
  * Callback when an event is due and to be handled. Implement handlers here if custom strategic events are added.
  * @param the event to be handled
  * @param set to true if the event should not be further processed by the base game
+ * @ingroup observables
  */
 extern Observable<STRATEGICEVENT*, BOOLEAN_S*> OnStrategicEvent;
 
 /**
  * Allows to override the player progress calculation.
  * @param the progress percentage calculated by the base game. This can be adjusted or overridden.
+ * @ingroup observables
  */
 extern Observable<UINT8_S*> OnCalcPlayerProgress;
 
@@ -100,6 +104,7 @@ extern Observable<UINT8_S*> OnCalcPlayerProgress;
  * Callback every morning to check quests' statuses..
  * @param the current day
  * @param set to true to skip base game checks
+ * @ingroup observables
  */
 extern Observable<UINT32, BOOLEAN_S*> OnCheckQuests;
 
@@ -109,6 +114,7 @@ extern Observable<UINT32, BOOLEAN_S*> OnCheckQuests;
  * @param sector X
  * @param sector Y
  * @param whether or not to write an update to the laptop history page
+ * @ingroup observables
  */
 extern Observable<UINT8, INT16, INT16, BOOLEAN> OnQuestEnded;
 
@@ -331,3 +337,5 @@ void DoBasicMessageBox(ST::string text);
  * @ingroup ui-control
  */
 void ExecuteTacticalTextBox_(INT16 sLeftPosition, INT16 sTopPosition, ST::string pString);
+
+/** @} */

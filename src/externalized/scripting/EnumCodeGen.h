@@ -14,6 +14,10 @@
 #include <ostream>
 #include <string_theory/format>
 
+/** \addtogroup modding
+ *  @{
+ */
+
 /**
  * Lua code generation for C enums
  * @tparam E type of a named C enum that maps to integer values
@@ -96,3 +100,5 @@ void PrintEnumClass(std::ostream& os, const ST::string& zTypeName = {})
 }
 
 void PrintAllJA2Enums(std::ostream& os);
+
+/** @} */
