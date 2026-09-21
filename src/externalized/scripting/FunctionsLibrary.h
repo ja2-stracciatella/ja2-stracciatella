@@ -34,7 +34,6 @@ struct MERCPROFILESTRUCT;
 struct STRATEGICEVENT;
 
 /*! \defgroup funclib-dealers Shops and arms dealers
-    \ingroup modding
     \brief Manage behavior, inventory and prices of dealers */
 
 /*! \struct DEALER_ITEM_HEADER
@@ -43,7 +42,6 @@ struct DEALER_ITEM_HEADER;
 
 /**
  * @defgroup observables Observables
- * @ingroup modding
  * @brief Register listeners on these observables to receive callbacks when somemthing happens in game.
  * @see RegisterListener
  */
@@ -175,18 +173,15 @@ extern Observable<SOLDIERTYPE*> OnRPCRecruited;
 
 /**
  * @defgroup funclib-general General
- * @ingroup modding
  * @brief Functions to compose mod modules
  */
 
 /**
  * @defgroup funclib-mercs Personnel
- * @ingroup modding
  * @brief Functions to access soldiers and characters in the game
  */
 
 /** @defgroup funclib-sectors Map sectors
- *  @ingroup modding
  *  @brief Access and alter sectors' strategic-level data
  */
 
@@ -214,7 +209,6 @@ SECTORINFO* GetSectorInfo(std::string const sectorID);
 UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(std::string const sectorID);
 
 /** @defgroup funclib-items Items and objects
- *  @ingroup modding
  *  @brief Functions to handle items, objects and inventories
  */
 
@@ -323,7 +317,6 @@ void EnterShopKeeperInterfaceScreen(UINT8 ubArmsDealer);
 
 /**
  * @defgroup ui-control UI controls
- * @ingroup modding
  * @brief Functions for controlling the game UI
  */
 
