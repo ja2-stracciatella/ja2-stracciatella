@@ -111,26 +111,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 		// Get new frame code
 		sNewAniFrame = gusAnimInst[ pSoldier->usAnimState ][ pSoldier->usAniCode ];
 
-		// Handle muzzel flashes
-		if ( pSoldier->bMuzFlashCount > 0 )
-		{
-			// FLash for about 3 frames
-			if ( pSoldier->bMuzFlashCount > MAX_ANIFRAMES_PER_FLASH )
-			{
-				pSoldier->bMuzFlashCount = 0;
-				if (pSoldier->muzzle_flash != NULL)
-				{
-					LightSpriteDestroy(pSoldier->muzzle_flash);
-					pSoldier->muzzle_flash = NULL;
-				}
-			}
-			else
-			{
-				pSoldier->bMuzFlashCount++;
-			}
-
-		}
-
 		if ( pSoldier->bBreathCollapsed )
 		{
 			// ATE: If we have fallen, and we can't get up... no
@@ -169,6 +149,26 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 		// Check for special code
 		if ( sNewAniFrame < 399 )
 		{
+			// Handle muzzel flashes, counting frames actually drawn rather than
+			// script codes processed
+			if ( pSoldier->bMuzFlashCount > 0 )
+			{
+				// FLash for about 3 frames
+				if ( pSoldier->bMuzFlashCount > MAX_ANIFRAMES_PER_FLASH )
+				{
+					pSoldier->bMuzFlashCount = 0;
+					if (pSoldier->muzzle_flash != NULL)
+					{
+						LightSpriteDestroy(pSoldier->muzzle_flash);
+						pSoldier->muzzle_flash = NULL;
+					}
+				}
+				else
+				{
+					pSoldier->bMuzFlashCount++;
+				}
+
+			}
 
 			// Adjust / set true ani frame
 			// Use -1 because ani files are 1-based, these are 0-based
@@ -452,6 +452,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// DO ONLY IF WE'RE AT A GOOD LEVEL
 					if (ubAmbientLightLevel < MIN_AMB_LEVEL_FOR_MERC_LIGHTS) break;
 
+					// Only one sprite is tracked, so let go of the previous round's
+					if (pSoldier->muzzle_flash != NULL)
+					{
+						LightSpriteDestroy(pSoldier->muzzle_flash);
+						pSoldier->muzzle_flash = NULL;
+					}
+
 					LIGHT_SPRITE* const l = LightSpriteCreate("L-R03.LHT");
 					pSoldier->muzzle_flash = l;
 					if (l == NULL) return TRUE;
@@ -685,6 +692,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					if ( fStop )
 					{
+						// This round is not fired after all, put its flash out before it shows
+						if (pSoldier->muzzle_flash != NULL)
+						{
+							LightSpriteDestroy(pSoldier->muzzle_flash);
+							pSoldier->muzzle_flash = NULL;
+						}
+						pSoldier->bMuzFlashCount = 0;
+
 						pSoldier->fDoSpread = FALSE;
 						pSoldier->bDoBurst = 1;
 
