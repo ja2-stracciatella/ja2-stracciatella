@@ -381,7 +381,7 @@ if(MSVC OR MINGW)
 endif()
 
 if (MSVC)
-    install(FILES ${SDL_DLL} DESTINATION .)
+    install(FILES $<TARGET_FILE:SDL3::SDL3-shared> DESTINATION .)
 endif()
 
 if (MINGW)
