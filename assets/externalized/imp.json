@@ -6,6 +6,11 @@
     // vanilla setting: 1
     "starting_level": 1,
 
+    // Whether the I.M.P. sends its profile results mail on the day after a
+    // character was made. Unfinished Business does without it.
+    // vanilla setting: true
+    "send_profile_results_email": true,
+
     // The voices an I.M.P. character can be offered, in the order the site shows
     // them. A voice is a set of speech, dialogue text and battle sounds, all named
     // after the merc profile they were recorded for: SPEECH/051_*.wav,

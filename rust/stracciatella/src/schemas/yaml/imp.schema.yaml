@@ -13,6 +13,13 @@ properties:
     $ref: types/uint8.schema.yaml
     title: Starting level
     description: The starting level of a created IMP merc.
+  send_profile_results_email:
+    type: boolean
+    title: Send the I.M.P. profile results e-mail
+    description: |
+      Whether the I.M.P. sends its profile results mail on the day after a character was made. Unfinished Business does without it.
+
+      Vanilla setting: `true`
   voices:
     type: array
     title: Voices

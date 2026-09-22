@@ -19,6 +19,7 @@
 #include "GamePolicy.h"
 #include "GameSettings.h"
 #include "HelpScreen.h"
+#include "IMP_Compile_Character.h"
 #include "Interface.h"
 #include "Interface_Dialogue.h"
 #include "Laptop.h"
@@ -230,7 +231,11 @@ void InitNewGame()
 		AddPreReadEmail(OLD_ENRICO_2, OLD_ENRICO_2_LENGTH, MAIL_ENRICO, now);
 		AddPreReadEmail(RIS_REPORT,   RIS_REPORT_LENGTH,   RIS_EMAIL,   now);
 		AddPreReadEmail(OLD_ENRICO_3, OLD_ENRICO_3_LENGTH, MAIL_ENRICO, now);
-		AddEmail(IMP_EMAIL_INTRO, IMP_EMAIL_INTRO_LENGTH, CHAR_PROFILE_SITE, now);
+		// No invitation to a site that will not make a character for anyone.
+		if (CanCreateAnotherIMPCharacter())
+		{
+			AddEmail(IMP_EMAIL_INTRO, IMP_EMAIL_INTRO_LENGTH, CHAR_PROFILE_SITE, now);
+		}
 
 		// ATE: Set starting cash
 		INT32 starting_cash;
