@@ -118,7 +118,7 @@
 #include <regex>
 #include <algorithm>
 #include <array>
-#include <optional>
+#include <vector>
 #include <stdexcept>
 #include <utility>
 
@@ -1218,42 +1218,6 @@ static void SaveMercProfiles(HWFILE const f)
 	f->write(impSlotStates, sizeof(impSlotStates));
 }
 
-/* An I.M.P. profile file holds one character the player built, so that a later
- * game can take it back. It carries the profile record in the layout
- * MERCPROFILESTRUCT has on the day it was written, so a build whose layout
- * differs cannot read it as it stands. The file therefore leads with the
- * version of the layout its record is in.
- *
- * That version is the profile's own, and is raised when the record's layout
- * changes and on no other occasion. The saved game version will not serve in
- * its place: it is raised whenever a save's contents are invalidated, which
- * happens for all manner of reasons that leave this record exactly where it
- * stood, and a profile would then be refused for a change that never touched
- * it. */
-static UINT32 const IMP_PROFILE_VERSION = 1;
-
-static size_t const IMP_PROFILE_HEADER_SIZE = sizeof(UINT32);
-static size_t const IMP_PROFILE_PAYLOAD_SIZE =
-	sizeof(MERCPROFILESTRUCT) + sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
-static size_t const IMP_PROFILE_FILE_SIZE =
-	IMP_PROFILE_HEADER_SIZE + IMP_PROFILE_PAYLOAD_SIZE;
-
-/* What the version above stands for. This gives way as soon as the record or
- * the inventory beside it changes shape, and whoever makes it give way raises
- * IMP_PROFILE_VERSION to say so and puts the new size here. */
-static_assert(IMP_PROFILE_PAYLOAD_SIZE == 1356,
-	"The I.M.P. profile record has changed shape. Raise IMP_PROFILE_VERSION and "
-	"give this assertion the size the record and inventory now come to.");
-
-/* The length of a profile file from before profiles carried a version. Such a
- * file opens with the record itself, and nothing within it says so: where the
- * version would stand is a pointer the writing game left in the record, which
- * could read as any number, a version among them. Only the length tells such
- * a file from one that leads with a version, so the length is written here as
- * the plain number it is. It is a fact about files already on disk and stays
- * this number however the record changes afterwards. */
-static size_t const IMP_PROFILE_VERSIONLESS_FILE_SIZE = 1356;
-
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
 	return ST::format("mercprofile.{}", nickname);
@@ -1264,20 +1228,6 @@ bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
 	bool fexists = GCM->saveGameFiles()->exists(profile_filename);
 	return fexists;
-}
-
-/* The version a profile file leads with, or nothing at all when the file is
- * one of the versionless ones. The length is asked one question only, and of
- * one length only: whether this is a file from before the version existed.
- * Every other file leads with a version, whatever this build goes on to make
- * of the number it finds there. Leaves the file at the record either way. */
-static std::optional<UINT32> IMPSavedProfileReadVersion(SGPFile* const f)
-{
-	if (f->size() == IMP_PROFILE_VERSIONLESS_FILE_SIZE) return std::nullopt;
-
-	UINT32 version;
-	f->read(&version, sizeof(version));
-	return version;
 }
 
 SGPFile* IMPSavedProfileOpenFileForRead(const ST::string& nickname)
@@ -1296,34 +1246,34 @@ static SGPFile* IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 	return f;
 }
 
+/* Reads the profile file of the given nickname into the profile and the
+ * NUM_INV_SLOTS objects of its inventory. Throws when there is none, or when it
+ * is not one this game can read. Reading a file another version laid out
+ * differently is a matter of migration, which is still to come. */
+static void IMPSavedProfileRead(const ST::string& nickname, MERCPROFILESTRUCT& profile, OBJECTTYPE* const inv)
+{
+	AutoSGPFile f{IMPSavedProfileOpenFileForRead(nickname)};
+
+	std::vector<BYTE> data(f->size());
+	f->read(data.data(), data.size());
+	try
+	{
+		ExtractIMPSavedProfile(data.data(), data.size(), profile, inv);
+	}
+	catch (std::runtime_error const& e)
+	{
+		throw std::runtime_error(ST::format("IMP profile '{}' cannot be read: {}!", nickname, e.what()).to_std_string());
+	}
+}
+
 /* Restores a saved I.M.P. into the slot the character being built would take.
  * The character keeps the voice it was made with, which the saved profile
  * carries itself. */
 ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 {
-	AutoSGPFile f{IMPSavedProfileOpenFileForRead(nickname)};
-
-	/* Reading a record another version laid out differently is a matter of
-	 * migration, which is still to come. */
-	std::optional<UINT32> const version = IMPSavedProfileReadVersion(f);
-	if (!version)
-	{
-		throw std::runtime_error(ST::format("IMP profile '{}' was written before profiles carried a version!",
-			nickname).to_std_string());
-	}
-	if (*version != IMP_PROFILE_VERSION)
-	{
-		throw std::runtime_error(ST::format("IMP profile '{}' holds a record of version {}, this game reads version {}!",
-			nickname, *version, IMP_PROFILE_VERSION).to_std_string());
-	}
-	if (f->size() != IMP_PROFILE_FILE_SIZE)
-	{
-		throw std::runtime_error(ST::format("IMP profile '{}' leads with version {} but is {} bytes, not {}!",
-			nickname, *version, f->size(), IMP_PROFILE_FILE_SIZE).to_std_string());
-	}
-
 	MERCPROFILESTRUCT profile_saved;
-	f->read(&profile_saved, sizeof(MERCPROFILESTRUCT));
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	IMPSavedProfileRead(nickname, profile_saved, inv);
 
 	ProfileID const profile = GetIMPSlotInProgress();
 	MERCPROFILESTRUCT& profile_new = gMercProfiles[profile];
@@ -1339,15 +1289,20 @@ void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSold
 	if (!IMPSavedProfileDoesFileExist(nickname)) return;
 	if (!pSoldier) return;
 
-	AutoSGPFile f{IMPSavedProfileOpenFileForRead(nickname)};
-
 	// A character being confirmed can share a nickname with a profile no
 	// version of this game would recognise. It keeps what it has.
-	if (f->size() != IMP_PROFILE_FILE_SIZE) return;
-	if (IMPSavedProfileReadVersion(f) != IMP_PROFILE_VERSION) return;
-
-	f->seek(IMP_PROFILE_HEADER_SIZE + sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
-	f->read(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+	MERCPROFILESTRUCT profile;
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	try
+	{
+		IMPSavedProfileRead(nickname, profile, inv);
+	}
+	catch (std::runtime_error const& e)
+	{
+		SLOGW("Keeping the inventory of '{}': {}", nickname, e.what());
+		return;
+	}
+	std::copy(std::begin(inv), std::end(inv), pSoldier->inv);
 }
 
 void SaveIMPPlayerProfiles()
@@ -1367,10 +1322,9 @@ void SaveIMPPlayerProfiles()
 		AutoSGPFile f{IMPSavedProfileOpenFileForWrite(mercprofile->zNickname)};
 		if (!f) continue;
 
-		UINT32 const version = IMP_PROFILE_VERSION;
-		f->write(&version, sizeof(version));
-		f->write(mercprofile, sizeof(MERCPROFILESTRUCT));
-		f->write(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+		std::array<BYTE, IMP_SAVED_PROFILE_SIZE> data;
+		InjectIMPSavedProfile(data.data(), *mercprofile, pSoldier->inv);
+		f->write(data.data(), data.size());
 	}
 }
 

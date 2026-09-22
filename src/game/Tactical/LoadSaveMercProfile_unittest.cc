@@ -2,11 +2,16 @@
 
 #include "gtest/gtest.h"
 
+#include "DefaultContentManagerUT.h"
 #include "IMP_Compile_Character.h"
+#include "Item_Types.h"
 #include "LoadSaveMercProfile.h"
 #include "SGPFile.h"
 #include "Soldier_Profile_Type.h"
 #include "TestUtils.h"
+
+#include <array>
+#include <stdexcept>
 
 
 TEST(LoadSaveMercProfileTest, vanillaProfile)
@@ -311,4 +316,73 @@ TEST(LoadSaveMercProfileTest, stracLinuxProfile)
 	// UINT8 ubSuspiciousDeath;
 	// INT32 iMercMercContractLength;
 	// UINT32 uiTotalCostToDate;
+}
+
+
+using IMPSavedProfileTest = DefaultContentManagerUT::BaseTest;
+
+static MERCPROFILESTRUCT MakeIMPSavedProfile()
+{
+	MERCPROFILESTRUCT p;
+	// longer than a string keeps within itself, which a copy of the struct
+	// in memory could never have carried
+	p.zName = "Foo Barington the Longwinded";
+	p.zNickname = "Foobar";
+	p.PANTS = "BLUEPANTS";
+	p.bSex = FEMALE;
+	p.bStrength = 77;
+	p.bLifeMax = 66;
+	p.ubVoiceId = 55;
+	return p;
+}
+
+TEST_F(IMPSavedProfileTest, roundTrip)
+{
+	MERCPROFILESTRUCT const in = MakeIMPSavedProfile();
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	inv[HANDPOS].usItem = GLOCK_17;
+	inv[HANDPOS].ubNumberOfObjects = 1;
+	inv[HANDPOS].bGunStatus = 90;
+
+	std::array<BYTE, IMP_SAVED_PROFILE_SIZE> data{};
+	InjectIMPSavedProfile(data.data(), in, inv);
+
+	MERCPROFILESTRUCT out;
+	OBJECTTYPE outInv[NUM_INV_SLOTS]{};
+	ExtractIMPSavedProfile(data.data(), data.size(), out, outInv);
+
+	EXPECT_EQ(out.zName, in.zName);
+	EXPECT_EQ(out.zNickname, in.zNickname);
+	EXPECT_EQ(out.PANTS, in.PANTS);
+	EXPECT_EQ(out.bSex, in.bSex);
+	EXPECT_EQ(out.bStrength, in.bStrength);
+	EXPECT_EQ(out.bLifeMax, in.bLifeMax);
+	EXPECT_EQ(out.ubVoiceId, in.ubVoiceId);
+	EXPECT_EQ(outInv[HANDPOS].usItem, GLOCK_17);
+	EXPECT_EQ(outInv[HANDPOS].ubNumberOfObjects, 1);
+	EXPECT_EQ(outInv[HANDPOS].bGunStatus, 90);
+	EXPECT_EQ(outInv[HELMETPOS].usItem, NONE);
+}
+
+TEST_F(IMPSavedProfileTest, refusesWhatItCannotRead)
+{
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	std::array<BYTE, IMP_SAVED_PROFILE_SIZE> data{};
+	InjectIMPSavedProfile(data.data(), MakeIMPSavedProfile(), inv);
+
+	MERCPROFILESTRUCT out;
+
+	// a copy of the struct as it lay in memory, from before the version
+	std::array<BYTE, 1356> versionless{};
+	EXPECT_THROW(ExtractIMPSavedProfile(versionless.data(), versionless.size(), out, inv), std::runtime_error);
+
+	EXPECT_THROW(ExtractIMPSavedProfile(data.data(), data.size() - 1, out, inv), std::runtime_error);
+
+	std::array<BYTE, IMP_SAVED_PROFILE_SIZE> otherVersion = data;
+	otherVersion[4] = 2;
+	EXPECT_THROW(ExtractIMPSavedProfile(otherVersion.data(), otherVersion.size(), out, inv), std::runtime_error);
+
+	std::array<BYTE, IMP_SAVED_PROFILE_SIZE> corrupted = data;
+	corrupted[8 + 696] ^= 0xFF; // the checksum inside the profile record
+	EXPECT_THROW(ExtractIMPSavedProfile(corrupted.data(), corrupted.size(), out, inv), std::runtime_error);
 }
