@@ -427,8 +427,8 @@ void InjectMercProfileIntoFile(HWFILE const f, MERCPROFILESTRUCT const& p)
  * Raise IMP_PROFILE_VERSION whenever this layout changes.
  *
  * Files from before the version were a copy of the profile as it lay in memory,
- * its strings pointers into the game that wrote it. They cannot be read back,
- * and are told apart by lacking the magic. */
+ * its strings pointers into the game that wrote it. They are told apart by
+ * lacking the magic, and IMPProfileMigration brings them forward. */
 static char const IMP_PROFILE_MAGIC[4] = { 'I', 'M', 'P', 'P' };
 static UINT32 const IMP_PROFILE_VERSION = 1;
 

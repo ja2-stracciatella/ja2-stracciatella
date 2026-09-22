@@ -1,6 +1,9 @@
 #include "IMPProfileMigration.h"
 
+#include "Debug.h"
 #include "Item_Types.h"
+#include "LoadSaveData.h"
+#include "LoadSaveObjectType.h"
 #include "Soldier_Control.h"
 
 #include <cstddef>
@@ -10,17 +13,24 @@
 namespace
 {
 
-/* An ST::string as a record holds it. The pointer is into the heap of the game
- * that wrote the file and means nothing here; the text is only there when it
- * was short enough to live inside the string itself. */
-struct SavedString
+/* An object as the inventory beside the record held it. It has no pointer in
+ * it, so every build laid it out the same, and the same as a saved game does,
+ * which is what lets ExtractObject read it. */
+size_t const SAVED_OBJECT_SIZE = 36;
+
+/* An ST::string as a 64-bit build held it, and so as its record holds it. The
+ * pointer is into the heap of the game that wrote the file and means nothing
+ * here; the text is only there when it was short enough to live inside the
+ * string itself. This describes files on disk, not the string of the build
+ * reading them, so it is aligned as those builds aligned it whatever this
+ * build's own alignment of a uint64_t. */
+struct alignas(8) SavedString
 {
 	uint64_t chars;
 	uint64_t size;
 	char     text[16];
 };
-static_assert(sizeof(SavedString) == sizeof(ST::string),
-	"a saved string no longer describes the string the game writes");
+static_assert(sizeof(SavedString) == 32);
 
 ST::string Restore(SavedString const& saved)
 {
@@ -321,10 +331,9 @@ struct ProfileV22
 	INT8 bHatedNationalityCareLevel;
 };
 
-/* The record this version writes, as bytes. The live struct cannot stand in
- * for it: its strings own their storage, and a file holds only what an
- * ST::string keeps inside itself. */
-struct ProfileCurrent
+/* The record as master wrote it at save version 104, the last before profiles
+ * carried a version. */
+struct ProfileSave104
 {
 	SavedString zName;
 	SavedString zNickname;
@@ -616,7 +625,7 @@ ProfileV22 ToV22(ProfileV21 const& from)
 	return to;
 }
 
-MERCPROFILESTRUCT ToProfile(ProfileCurrent const& from)
+MERCPROFILESTRUCT ToProfile(ProfileSave104 const& from)
 {
 	MERCPROFILESTRUCT to{};
 	to.zName = Restore(from.zName);
@@ -767,27 +776,26 @@ MERCPROFILESTRUCT ToProfile(ProfileCurrent const& from)
  * is known by, so these are the load-bearing numbers of the whole business. */
 static_assert(sizeof(ProfileV21) == 648);
 static_assert(sizeof(ProfileV22) == 664);
-static_assert(sizeof(ProfileCurrent) == sizeof(MERCPROFILESTRUCT),
-	"the record written today is no longer the struct it is written from");
+static_assert(sizeof(ProfileSave104) == 672);
 static_assert(offsetof(ProfileV21, PANTS) == 72);
 
 /* 0.22 moved nothing that came after it: the voice id and the slot state were
  * put in where the palette strings used to begin, and everything from there on
  * was pushed down by as much. */
 static_assert(offsetof(ProfileV22, PANTS) == 96);
-static_assert(offsetof(ProfileCurrent, ubVoiceId) == 96);
-static_assert(offsetof(ProfileCurrent, PANTS) == 104);
-static_assert(sizeof(ProfileCurrent) - sizeof(ProfileV22) ==
-	offsetof(ProfileCurrent, PANTS) - offsetof(ProfileV22, PANTS));
+static_assert(offsetof(ProfileSave104, ubVoiceId) == 96);
+static_assert(offsetof(ProfileSave104, PANTS) == 104);
+static_assert(sizeof(ProfileSave104) - sizeof(ProfileV22) ==
+	offsetof(ProfileSave104, PANTS) - offsetof(ProfileV22, PANTS));
 
-ProfileCurrent ToCurrent(ProfileV22 const& from)
+ProfileSave104 ToSave104(ProfileV22 const& from)
 {
-	ProfileCurrent to{};
+	ProfileSave104 to{};
 	BYTE const* const src = reinterpret_cast<BYTE const*>(&from);
 	BYTE* const dst = reinterpret_cast<BYTE*>(&to);
 
 	std::memcpy(dst, src, offsetof(ProfileV22, PANTS));
-	std::memcpy(dst + offsetof(ProfileCurrent, PANTS), src + offsetof(ProfileV22, PANTS),
+	std::memcpy(dst + offsetof(ProfileSave104, PANTS), src + offsetof(ProfileV22, PANTS),
 		sizeof(ProfileV22) - offsetof(ProfileV22, PANTS));
 
 	/* A character from before the I.M.P. slots spoke with the files named
@@ -800,34 +808,9 @@ ProfileCurrent ToCurrent(ProfileV22 const& from)
 
 }
 
-std::optional<IMPProfileLayout> IMPProfileLayoutOfVersion(UINT32 const version)
-{
-	/* A versioned file is the version, then the record, then the inventory. */
-	auto const of = [](IMPProfileFormat format, size_t record)
-		-> std::optional<IMPProfileLayout>
-	{
-		size_t const lead = sizeof(UINT32);
-		return IMPProfileLayout{ format, lead, record, lead + record };
-	};
-
-	switch (version)
-	{
-		case 1: return of(IMPProfileFormat::ProfileVersion1, sizeof(ProfileCurrent));
-	}
-	return std::nullopt;
-}
-
-/* Every version up to the one this build writes must be named above. Raising
- * IMP_PROFILE_VERSION without giving it a layout gives way here. */
-static_assert(IMP_PROFILE_VERSION == 1,
-	"A profile version has been raised. Give it a case in "
-	"IMPProfileLayoutOfVersion, freeze the record the version before it wrote "
-	"as a struct of its own, and name that struct's layout in "
-	"IMPProfileFormat.");
-
 std::optional<IMPProfileLayout> IMPProfileVersionlessLayoutOfSize(size_t const fileSize)
 {
-	size_t const inventory = sizeof(OBJECTTYPE) * NUM_INV_SLOTS;
+	size_t const inventory = SAVED_OBJECT_SIZE * NUM_INV_SLOTS;
 
 	/* A versionless file is the record and the inventory and nothing else, so
 	 * the record begins where the file does. */
@@ -838,7 +821,7 @@ std::optional<IMPProfileLayout> IMPProfileVersionlessLayoutOfSize(size_t const f
 		return IMPProfileLayout{ format, 0, record, record };
 	};
 
-	if (auto l = of(IMPProfileFormat::SaveVersion104, sizeof(ProfileCurrent))) return l;
+	if (auto l = of(IMPProfileFormat::SaveVersion104, sizeof(ProfileSave104))) return l;
 	if (auto l = of(IMPProfileFormat::Release022, sizeof(ProfileV22))) return l;
 	if (auto l = of(IMPProfileFormat::Release021, sizeof(ProfileV21))) return l;
 	return std::nullopt;
@@ -852,21 +835,27 @@ MERCPROFILESTRUCT IMPProfileMigrate(IMPProfileFormat const format, BYTE const* c
 		{
 			ProfileV21 v21;
 			std::memcpy(&v21, record, sizeof(v21));
-			return ToProfile(ToCurrent(ToV22(v21)));
+			return ToProfile(ToSave104(ToV22(v21)));
 		}
 		case IMPProfileFormat::Release022:
 		{
 			ProfileV22 v22;
 			std::memcpy(&v22, record, sizeof(v22));
-			return ToProfile(ToCurrent(v22));
+			return ToProfile(ToSave104(v22));
 		}
 		case IMPProfileFormat::SaveVersion104:
-		case IMPProfileFormat::ProfileVersion1:
 		{
-			ProfileCurrent current;
+			ProfileSave104 current;
 			std::memcpy(&current, record, sizeof(current));
 			return ToProfile(current);
 		}
 	}
 	return MERCPROFILESTRUCT{};
+}
+
+void IMPProfileMigrateInventory(BYTE const* const inventory, OBJECTTYPE* const inv)
+{
+	DataReader d{inventory};
+	for (size_t i = 0; i != NUM_INV_SLOTS; ++i) ExtractObject(d, &inv[i]);
+	Assert(d.getConsumed() == SAVED_OBJECT_SIZE * NUM_INV_SLOTS);
 }

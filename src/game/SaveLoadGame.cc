@@ -119,7 +119,6 @@
 #include <regex>
 #include <algorithm>
 #include <array>
-#include <cstring>
 #include <optional>
 #include <stdexcept>
 #include <utility>
@@ -1268,11 +1267,11 @@ static std::optional<IMPProfileFormat> IMPSavedProfileRead(const ST::string& nic
 		std::optional<IMPProfileLayout> const layout = IMPProfileVersionlessLayoutOfSize(data.size());
 		if (!layout)
 		{
-			throw std::runtime_error(ST::format("IMP profile '{}' is {} bytes long, which no version of this game ever wrote!",
+			throw std::runtime_error(ST::format("IMP profile '{}' is {} bytes long, which no 64-bit version of this game ever wrote!",
 				nickname, data.size()).to_std_string());
 		}
 		profile = IMPProfileMigrate(layout->format, data.data() + layout->recordOffset);
-		std::memcpy(inv, data.data() + layout->inventoryOffset, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+		IMPProfileMigrateInventory(data.data() + layout->inventoryOffset, inv);
 		return layout->format;
 	}
 

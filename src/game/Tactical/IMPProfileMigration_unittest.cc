@@ -2,7 +2,11 @@
 
 #include "gtest/gtest.h"
 
+#include "DefaultContentManagerUT.h"
 #include "IMPProfileMigration.h"
+#include "Item_Types.h"
+#include "LoadSaveMercProfile.h"
+#include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
 
 #include <array>
@@ -37,6 +41,8 @@ size_t const V22_SEX = 64;
 size_t const V22_FACE_INDEX = 76;
 size_t const V22_PANTS = 96;
 size_t const V22_RECORD = 664;
+
+size_t const V104_RECORD = 672;
 
 size_t const INVENTORY = 684;
 
@@ -80,46 +86,26 @@ TEST(IMPProfileMigrationTest, everyLengthAVersionlessReleaseWroteIsKnown)
 	EXPECT_EQ(v22->recordOffset, 0u);
 	EXPECT_EQ(v22->inventoryOffset, V22_RECORD);
 
-	auto const v104 = IMPProfileVersionlessLayoutOfSize(sizeof(MERCPROFILESTRUCT) + INVENTORY);
+	auto const v104 = IMPProfileVersionlessLayoutOfSize(V104_RECORD + INVENTORY);
 	ASSERT_TRUE(v104.has_value());
 	EXPECT_EQ(v104->format, IMPProfileFormat::SaveVersion104);
 	EXPECT_EQ(v104->recordOffset, 0u);
-	EXPECT_EQ(v104->inventoryOffset, sizeof(MERCPROFILESTRUCT));
+	EXPECT_EQ(v104->inventoryOffset, V104_RECORD);
 }
 
-/* The length a file that leads with a version has is not one of these, and
- * must not be: were it taken for a versionless length, the version it leads
- * with would never be read, and the record it stands for never told apart
- * from a record of any other version the same length. */
+/* A file that leads with a version is told apart by its magic, but its length
+ * must not pass for a versionless one either, or a file cut short or grown
+ * could be taken for one. */
 TEST(IMPProfileMigrationTest, aFileThatLeadsWithAVersionIsNotKnownByItsLength)
 {
-	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(
-		sizeof(UINT32) + sizeof(MERCPROFILESTRUCT) + INVENTORY).has_value());
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(IMP_SAVED_PROFILE_SIZE).has_value());
 }
 
-TEST(IMPProfileMigrationTest, aVersionNamesTheLayoutItStandsFor)
+/* A 32-bit build laid the record out smaller, and nothing reads its files. */
+TEST(IMPProfileMigrationTest, aFileFromA32BitBuildIsTurnedAway)
 {
-	auto const v1 = IMPProfileLayoutOfVersion(1);
-	ASSERT_TRUE(v1.has_value());
-	EXPECT_EQ(v1->format, IMPProfileFormat::ProfileVersion1);
-	EXPECT_EQ(v1->recordOffset, sizeof(UINT32));
-	EXPECT_EQ(v1->recordSize, sizeof(MERCPROFILESTRUCT));
-	EXPECT_EQ(v1->inventoryOffset, sizeof(UINT32) + sizeof(MERCPROFILESTRUCT));
-}
-
-/* The version this build writes has to be one it can also read back, which is
- * the whole point of writing it down. */
-TEST(IMPProfileMigrationTest, theVersionThisBuildWritesIsOneItKnows)
-{
-	EXPECT_TRUE(IMPProfileLayoutOfVersion(IMP_PROFILE_VERSION).has_value());
-}
-
-TEST(IMPProfileMigrationTest, aVersionNoBuildEverWroteIsTurnedAway)
-{
-	EXPECT_FALSE(IMPProfileLayoutOfVersion(0).has_value());
-	EXPECT_FALSE(IMPProfileLayoutOfVersion(IMP_PROFILE_VERSION + 1).has_value());
-	EXPECT_FALSE(IMPProfileLayoutOfVersion(104).has_value());
-	EXPECT_FALSE(IMPProfileLayoutOfVersion(0xFFFFFFFF).has_value());
+	// save version 104 as armeabi-v7a laid it out
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(616 + INVENTORY).has_value());
 }
 
 TEST(IMPProfileMigrationTest, aLengthNoVersionlessReleaseWroteIsTurnedAway)
@@ -208,4 +194,55 @@ TEST(IMPProfileMigrationTest, aStringThatJustFitsIsKept)
 	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
 
 	EXPECT_EQ(p.zName, "Ned Lee Of Arnh");
+}
+
+using IMPProfileMigrationInventoryTest = DefaultContentManagerUT::BaseTest;
+
+/* The inventory was a copy of the objects as they lay in memory, which is the
+ * layout ExtractObject reads, so an object copied out of memory comes back. */
+TEST_F(IMPProfileMigrationInventoryTest, theInventoryComesForward)
+{
+	OBJECTTYPE saved[NUM_INV_SLOTS]{};
+	saved[HANDPOS].usItem = GLOCK_17;
+	saved[HANDPOS].ubNumberOfObjects = 1;
+	saved[HANDPOS].bGunStatus = 90;
+	saved[HANDPOS].ubGunAmmoType = 1;
+	saved[HANDPOS].ubGunShotsLeft = 12;
+	saved[HANDPOS].usGunAmmoItem = CLIP9_15;
+	saved[SMALLPOCK1POS].usItem = CLIP9_15;
+	saved[SMALLPOCK1POS].ubNumberOfObjects = 2;
+	saved[SMALLPOCK1POS].ubShotsLeft[0] = 15;
+	saved[SMALLPOCK1POS].ubShotsLeft[1] = 7;
+
+	std::vector<BYTE> inventory(INVENTORY);
+	static_assert(sizeof(saved) == INVENTORY);
+	std::memcpy(inventory.data(), saved, sizeof(saved));
+
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	IMPProfileMigrateInventory(inventory.data(), inv);
+
+	EXPECT_EQ(inv[HANDPOS].usItem, GLOCK_17);
+	EXPECT_EQ(inv[HANDPOS].ubNumberOfObjects, 1);
+	EXPECT_EQ(inv[HANDPOS].bGunStatus, 90);
+	EXPECT_EQ(inv[HANDPOS].ubGunAmmoType, 1);
+	EXPECT_EQ(inv[HANDPOS].ubGunShotsLeft, 12);
+	EXPECT_EQ(inv[HANDPOS].usGunAmmoItem, CLIP9_15);
+	EXPECT_EQ(inv[SMALLPOCK1POS].usItem, CLIP9_15);
+	EXPECT_EQ(inv[SMALLPOCK1POS].ubNumberOfObjects, 2);
+	EXPECT_EQ(inv[SMALLPOCK1POS].ubShotsLeft[0], 15);
+	EXPECT_EQ(inv[SMALLPOCK1POS].ubShotsLeft[1], 7);
+	EXPECT_EQ(inv[HELMETPOS].usItem, NONE);
+}
+
+TEST_F(IMPProfileMigrationInventoryTest, anItemThisGameDoesNotKnowIsDropped)
+{
+	std::vector<BYTE> inventory(INVENTORY);
+	UINT16 const unknown = 0xFFF0;
+	std::memcpy(inventory.data() + 36 * HANDPOS, &unknown, sizeof(unknown));
+	inventory[36 * HANDPOS + 2] = 1;
+
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	IMPProfileMigrateInventory(inventory.data(), inv);
+
+	EXPECT_EQ(inv[HANDPOS].usItem, NONE);
 }
