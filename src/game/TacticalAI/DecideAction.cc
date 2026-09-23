@@ -1620,6 +1620,28 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	// WHEN IN THE LIGHT, GET OUT OF THERE!
 	////////////////////////////////////////////////////////////////////////////
 	bool in_light_at_night = InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel );
+
+	// Standing lit up only costs us with an opponent near enough to make use of it.
+	// On maps strewn with lights, bolting for the dark every time otherwise tears the
+	// approach apart. Militia never bother at all: a whole team picking its way between
+	// streetlights drags out every militia turn.
+	if ( in_light_at_night && gamepolicy(avoid_light_tiles_at_night) )
+	{
+		if ( pSoldier->bTeam == MILITIA_TEAM )
+		{
+			in_light_at_night = false;
+		}
+		else
+		{
+			const INT16 sKnownOpponent = ClosestKnownOpponent( pSoldier, NULL, NULL );
+			if ( sKnownOpponent == NOWHERE ||
+				PythSpacesAway( pSoldier->sGridNo, sKnownOpponent ) > MaxDistanceVisible() + STRAIGHT )
+			{
+				in_light_at_night = false;
+			}
+		}
+	}
+
 	if ( ubCanMove && in_light_at_night && pSoldier->bOrders != STATIONARY )
 	{
 		pSoldier->usActionData = FindNearbyDarkerSpot( pSoldier );

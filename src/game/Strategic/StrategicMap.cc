@@ -1760,6 +1760,7 @@ void AllMercsHaveWalkedOffSector( )
 	if (fEnemiesInLoadedSector)
 	{
 		HandleLoyaltyImplicationsOfMercRetreat(RETREAT_TACTICAL_TRAVERSAL, gWorldSector);
+		ClearAIExposedTileMap();
 	}
 
 	//Setup strategic traversal information

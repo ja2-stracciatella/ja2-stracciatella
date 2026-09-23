@@ -21,6 +21,10 @@ INT16 EstimatePlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, I
 
 void ErasePath();
 INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags);
+
+// Tiles lit at night and visible to a player merc; enemies path around them
+void BuildAIExposedTileMap(void);
+void ClearAIExposedTileMap(void);
 void GlobalReachableTest( INT16 sStartGridNo );
 void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 );
 void RoofReachableTest( INT16 sStartGridNo, UINT8 ubBuildingID );

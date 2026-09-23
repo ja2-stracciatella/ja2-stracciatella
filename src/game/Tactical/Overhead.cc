@@ -4455,6 +4455,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// battle for us
 		EndAllAITurns( );
 
+		ClearAIExposedTileMap();
+
 		// Set enemy presence to false
 		// This is safe 'cause we're about to unload the friggen sector anyway....
 		gTacticalStatus.fEnemyInSector = FALSE;
@@ -4523,6 +4525,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// CJC: End AI's turn here.... first... so that UnSetUIBusy will succeed if militia win
 		// battle for us
 		EndAllAITurns( );
+
+		ClearAIExposedTileMap();
 
 		UnSetUIBusy(GetSelectedMan());
 

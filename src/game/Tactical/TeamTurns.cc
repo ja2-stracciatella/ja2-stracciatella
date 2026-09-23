@@ -342,6 +342,9 @@ void BeginTeamTurn( UINT8 ubTeam )
 
 		if (ubTeam == OUR_TEAM )
 		{
+			// the snapshot is about to go stale
+			ClearAIExposedTileMap();
+
 			// ATE: Check if we are still in a valid battle...
 			// ( they could have blead to death above )
 			if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -352,6 +355,13 @@ void BeginTeamTurn( UINT8 ubTeam )
 		}
 		else
 		{
+			// snapshot before the enemy moves
+			if ( ubTeam == ENEMY_TEAM && ( gTacticalStatus.uiFlags & INCOMBAT )
+				&& gamepolicy(avoid_light_tiles_at_night) )
+			{
+				BuildAIExposedTileMap();
+			}
+
 			// Set First enemy merc to AI control
 			if ( BuildAIListForTeam( ubTeam ) )
 			{
