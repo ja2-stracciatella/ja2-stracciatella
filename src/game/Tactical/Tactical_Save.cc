@@ -433,6 +433,8 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 {
 	UINT32 const flags = GetSectorFlags(gWorldSector);
 
+	gfWasInMeanwhile = FALSE;
+
 	if (AreInMeanwhile())
 	{
 		// There will never be a temp file for the meanwhile scene, so return TRUE.
@@ -594,6 +596,7 @@ static void LoadAndAddWorldItemsFromTempFile(const SGPSector& sMap)
 
 void InitTacticalSave()
 {
+	gfWasInMeanwhile = FALSE;
 	GCM->tempFiles()->createDir(TACTICAL_SAVE_TEMPDIR);
 	GCM->tempFiles()->eraseDir(TACTICAL_SAVE_TEMPDIR);
 }
