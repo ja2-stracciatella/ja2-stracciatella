@@ -1,0 +1,248 @@
+// -*-coding: utf-8-unix;-*-
+
+#include "gtest/gtest.h"
+
+#include "DefaultContentManagerUT.h"
+#include "IMPProfileMigration.h"
+#include "Item_Types.h"
+#include "LoadSaveMercProfile.h"
+#include "Soldier_Control.h"
+#include "Soldier_Profile_Type.h"
+
+#include <array>
+#include <cstdint>
+#include <cstring>
+#include <vector>
+
+/* The records are built here by hand, at the offsets the releases put their
+ * fields at, rather than through the structs the migration describes them
+ * with: a test that asked those structs where a field goes would agree with
+ * itself whatever they said. The offsets below are read off files the
+ * releases actually wrote. */
+
+namespace
+{
+
+// 0.21 led its record with the portrait and the palette strings
+size_t const V21_NAME = 0;
+size_t const V21_NICKNAME = 32;
+size_t const V21_FACE_INDEX = 64;
+size_t const V21_PANTS = 72;
+size_t const V21_VEST = 104;
+size_t const V21_SKIN = 136;
+size_t const V21_HAIR = 168;
+size_t const V21_SEX = 200;
+size_t const V21_RECORD = 648;
+
+// 0.22 put the character's own particulars first and the strings after
+size_t const V22_NAME = 0;
+size_t const V22_NICKNAME = 32;
+size_t const V22_SEX = 64;
+size_t const V22_FACE_INDEX = 76;
+size_t const V22_PANTS = 96;
+size_t const V22_RECORD = 664;
+
+size_t const V104_RECORD = 672;
+
+size_t const INVENTORY = 684;
+
+/* An ST::string as a record holds it: a pointer into the game that wrote the
+ * file, the length, and as much of the text as fits inside the string. */
+void PutString(std::vector<BYTE>& record, size_t const offset, ST::string const& text,
+	size_t const claimedSize)
+{
+	// whatever this address pointed at is long gone; nothing may follow it
+	uint64_t const stalePointer = 0x00007f9e1d228f18ULL;
+	uint64_t const size = claimedSize;
+	std::memcpy(record.data() + offset, &stalePointer, sizeof(stalePointer));
+	std::memcpy(record.data() + offset + 8, &size, sizeof(size));
+	size_t const inlineRoom = 16;
+	std::memcpy(record.data() + offset + 16, text.c_str(), std::min(text.size(), inlineRoom));
+}
+
+void PutString(std::vector<BYTE>& record, size_t const offset, ST::string const& text)
+{
+	PutString(record, offset, text, text.size());
+}
+
+void PutByte(std::vector<BYTE>& record, size_t const offset, UINT8 const value)
+{
+	record[offset] = value;
+}
+
+}
+
+TEST(IMPProfileMigrationTest, everyLengthAVersionlessReleaseWroteIsKnown)
+{
+	auto const v21 = IMPProfileVersionlessLayoutOfSize(V21_RECORD + INVENTORY);
+	ASSERT_TRUE(v21.has_value());
+	EXPECT_EQ(v21->format, IMPProfileFormat::Release021);
+	EXPECT_EQ(v21->recordOffset, 0u);
+	EXPECT_EQ(v21->inventoryOffset, V21_RECORD);
+
+	auto const v22 = IMPProfileVersionlessLayoutOfSize(V22_RECORD + INVENTORY);
+	ASSERT_TRUE(v22.has_value());
+	EXPECT_EQ(v22->format, IMPProfileFormat::Release022);
+	EXPECT_EQ(v22->recordOffset, 0u);
+	EXPECT_EQ(v22->inventoryOffset, V22_RECORD);
+
+	auto const v104 = IMPProfileVersionlessLayoutOfSize(V104_RECORD + INVENTORY);
+	ASSERT_TRUE(v104.has_value());
+	EXPECT_EQ(v104->format, IMPProfileFormat::SaveVersion104);
+	EXPECT_EQ(v104->recordOffset, 0u);
+	EXPECT_EQ(v104->inventoryOffset, V104_RECORD);
+}
+
+/* A file that leads with a version is told apart by its magic, but its length
+ * must not pass for a versionless one either, or a file cut short or grown
+ * could be taken for one. */
+TEST(IMPProfileMigrationTest, aFileThatLeadsWithAVersionIsNotKnownByItsLength)
+{
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(IMP_SAVED_PROFILE_SIZE).has_value());
+}
+
+/* A 32-bit build laid the record out smaller, and nothing reads its files. */
+TEST(IMPProfileMigrationTest, aFileFromA32BitBuildIsTurnedAway)
+{
+	// save version 104 as armeabi-v7a laid it out
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(616 + INVENTORY).has_value());
+}
+
+TEST(IMPProfileMigrationTest, aLengthNoVersionlessReleaseWroteIsTurnedAway)
+{
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(0).has_value());
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(V21_RECORD).has_value());
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(V21_RECORD + INVENTORY - 1).has_value());
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(V21_RECORD + INVENTORY + 1).has_value());
+	EXPECT_FALSE(IMPProfileVersionlessLayoutOfSize(1000000).has_value());
+}
+
+TEST(IMPProfileMigrationTest, aProfileFromV21ComesForwardWhole)
+{
+	std::vector<BYTE> record(V21_RECORD, 0);
+	PutString(record, V21_NAME, "Ned Lee");
+	PutString(record, V21_NICKNAME, "Needle");
+	PutString(record, V21_PANTS, "BLACKPANTS");
+	PutString(record, V21_VEST, "WHITEVEST");
+	PutString(record, V21_SKIN, "BLACKSKIN");
+	PutString(record, V21_HAIR, "BROWNHEAD");
+	PutByte(record, V21_FACE_INDEX, 200);
+	PutByte(record, V21_SEX, MALE);
+
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
+
+	EXPECT_EQ(p.zName, "Ned Lee");
+	EXPECT_EQ(p.zNickname, "Needle");
+	EXPECT_EQ(p.PANTS, "BLACKPANTS");
+	EXPECT_EQ(p.VEST, "WHITEVEST");
+	EXPECT_EQ(p.SKIN, "BLACKSKIN");
+	EXPECT_EQ(p.HAIR, "BROWNHEAD");
+	EXPECT_EQ(p.ubFaceIndex, 200);
+	EXPECT_EQ(p.bSex, MALE);
+}
+
+TEST(IMPProfileMigrationTest, aProfileFromV22ComesForwardWhole)
+{
+	std::vector<BYTE> record(V22_RECORD, 0);
+	PutString(record, V22_NAME, "Ned Lee");
+	PutString(record, V22_NICKNAME, "Needle");
+	PutString(record, V22_PANTS, "BLACKPANTS");
+	PutByte(record, V22_FACE_INDEX, 200);
+	PutByte(record, V22_SEX, FEMALE);
+
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release022, record.data());
+
+	EXPECT_EQ(p.zName, "Ned Lee");
+	EXPECT_EQ(p.zNickname, "Needle");
+	EXPECT_EQ(p.PANTS, "BLACKPANTS");
+	EXPECT_EQ(p.ubFaceIndex, 200);
+	EXPECT_EQ(p.bSex, FEMALE);
+}
+
+TEST(IMPProfileMigrationTest, whatAnOlderRecordNeverCarriedIsLeftAtItsDefault)
+{
+	std::vector<BYTE> record(V21_RECORD, 0);
+	PutString(record, V21_NICKNAME, "Needle");
+
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
+
+	// the slot is only held once the player confirms the character
+	EXPECT_EQ(p.impSlotState, IMPSlotState::FREE);
+	// the voice is the caller's to give: the record has nothing to say about it
+	EXPECT_EQ(p.ubVoiceId, 0);
+}
+
+TEST(IMPProfileMigrationTest, aStringTooLongToHaveBeenWrittenDownIsGivenUp)
+{
+	std::vector<BYTE> record(V21_RECORD, 0);
+	// a name of 16 characters or more lived on the heap; the file kept only
+	// the pointer, so there is nothing here to bring forward
+	PutString(record, V21_NAME, "Ned Lee Of Arnhem", 17);
+	PutString(record, V21_NICKNAME, "Needle");
+
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
+
+	EXPECT_TRUE(p.zName.empty());
+	EXPECT_EQ(p.zNickname, "Needle");
+}
+
+TEST(IMPProfileMigrationTest, aStringThatJustFitsIsKept)
+{
+	std::vector<BYTE> record(V21_RECORD, 0);
+	PutString(record, V21_NAME, "Ned Lee Of Arnh");  // fifteen, the most that fits
+
+	MERCPROFILESTRUCT const p = IMPProfileMigrate(IMPProfileFormat::Release021, record.data());
+
+	EXPECT_EQ(p.zName, "Ned Lee Of Arnh");
+}
+
+using IMPProfileMigrationInventoryTest = DefaultContentManagerUT::BaseTest;
+
+/* The inventory was a copy of the objects as they lay in memory, which is the
+ * layout ExtractObject reads, so an object copied out of memory comes back. */
+TEST_F(IMPProfileMigrationInventoryTest, theInventoryComesForward)
+{
+	OBJECTTYPE saved[NUM_INV_SLOTS]{};
+	saved[HANDPOS].usItem = GLOCK_17;
+	saved[HANDPOS].ubNumberOfObjects = 1;
+	saved[HANDPOS].bGunStatus = 90;
+	saved[HANDPOS].ubGunAmmoType = 1;
+	saved[HANDPOS].ubGunShotsLeft = 12;
+	saved[HANDPOS].usGunAmmoItem = CLIP9_15;
+	saved[SMALLPOCK1POS].usItem = CLIP9_15;
+	saved[SMALLPOCK1POS].ubNumberOfObjects = 2;
+	saved[SMALLPOCK1POS].ubShotsLeft[0] = 15;
+	saved[SMALLPOCK1POS].ubShotsLeft[1] = 7;
+
+	std::vector<BYTE> inventory(INVENTORY);
+	static_assert(sizeof(saved) == INVENTORY);
+	std::memcpy(inventory.data(), saved, sizeof(saved));
+
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	IMPProfileMigrateInventory(inventory.data(), inv);
+
+	EXPECT_EQ(inv[HANDPOS].usItem, GLOCK_17);
+	EXPECT_EQ(inv[HANDPOS].ubNumberOfObjects, 1);
+	EXPECT_EQ(inv[HANDPOS].bGunStatus, 90);
+	EXPECT_EQ(inv[HANDPOS].ubGunAmmoType, 1);
+	EXPECT_EQ(inv[HANDPOS].ubGunShotsLeft, 12);
+	EXPECT_EQ(inv[HANDPOS].usGunAmmoItem, CLIP9_15);
+	EXPECT_EQ(inv[SMALLPOCK1POS].usItem, CLIP9_15);
+	EXPECT_EQ(inv[SMALLPOCK1POS].ubNumberOfObjects, 2);
+	EXPECT_EQ(inv[SMALLPOCK1POS].ubShotsLeft[0], 15);
+	EXPECT_EQ(inv[SMALLPOCK1POS].ubShotsLeft[1], 7);
+	EXPECT_EQ(inv[HELMETPOS].usItem, NONE);
+}
+
+TEST_F(IMPProfileMigrationInventoryTest, anItemThisGameDoesNotKnowIsDropped)
+{
+	std::vector<BYTE> inventory(INVENTORY);
+	UINT16 const unknown = 0xFFF0;
+	std::memcpy(inventory.data() + 36 * HANDPOS, &unknown, sizeof(unknown));
+	inventory[36 * HANDPOS + 2] = 1;
+
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	IMPProfileMigrateInventory(inventory.data(), inv);
+
+	EXPECT_EQ(inv[HANDPOS].usItem, NONE);
+}
