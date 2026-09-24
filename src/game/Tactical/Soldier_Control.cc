@@ -8059,7 +8059,7 @@ static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier)
 	// bleeding faster the lower life gets, and if merc is running around
 	//pSoldier->nextbleed = 2 + (pSoldier->life / (10 + pSoldier->tilesMoved));  // min = 2
 
-	return( (FLOAT)1 + (FLOAT)( pSoldier->effectiveLife() / (10 + pSoldier->bTilesMoved) ) );  // min = 1
+	return( (FLOAT)1 + (FLOAT)pSoldier->effectiveLife() / (10 + pSoldier->bTilesMoved) );  // min = 1
 }
 
 
