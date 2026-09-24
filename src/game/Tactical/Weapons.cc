@@ -1984,7 +1984,6 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	UINT16 usInHand;
 	OBJECTTYPE *pInHand;
 	INT8 bAttachPos;
-	INT8 bBandaged;
 	INT16 sDistVis;
 	UINT8 ubAdjAimPos;
 
@@ -2492,11 +2491,8 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	// IF CHANCE EXISTS, BUT SHOOTER IS INJURED
 	if ((iChance > 0) && (pSoldier->bLife < pSoldier->bLifeMax))
 	{
-		// if bandaged, give 1/2 of the bandaged life points back into equation
-		bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-
 		// injury penalty is based on % damage taken (max 2/3rds chance)
-		iPenalty = (iChance * 2 * (pSoldier->bLifeMax - pSoldier->bLife + (bBandaged / 2))) /
+		iPenalty = (iChance * 2 * (pSoldier->bLifeMax - pSoldier->effectiveLife())) /
 						(3 * pSoldier->bLifeMax);
 
 		// reduce injury penalty due to merc's experience level (he can take it!)
@@ -3219,7 +3215,6 @@ void ShotMiss(const BULLET* const b)
 static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime, UINT8 ubMode, bool skipSafetyCheck = false)
 {
 	UINT16 usInHand;
-	UINT8  ubBandaged;
 	INT32  iAttRating, iDefRating;
 	INT32  iChance;
 
@@ -3309,10 +3304,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 	// If attacker injured, reduce chance accordingly (by up to 2/3rds)
 	if ((iAttRating > 0) && (pAttacker->bLife < pAttacker->bLifeMax))
 	{
-		// if bandaged, give 1/2 of the bandaged life points back into equation
-		ubBandaged = pAttacker->bLifeMax - pAttacker->bLife - pAttacker->bBleeding;
-
-		iAttRating -= (2 * iAttRating * (pAttacker->bLifeMax - pAttacker->bLife + (ubBandaged / 2))) /
+		iAttRating -= (2 * iAttRating * (pAttacker->bLifeMax - pAttacker->effectiveLife())) /
 				(3 * pAttacker->bLifeMax);
 	}
 
@@ -3378,10 +3370,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 	// If defender injured, reduce chance accordingly (by up to 2/3rds)
 	if ((iDefRating > 0) && (pDefender->bLife < pDefender->bLifeMax))
 	{
-		// if bandaged, give 1/2 of the bandaged life points back into equation
-		ubBandaged = pDefender->bLifeMax - pDefender->bLife - pDefender->bBleeding;
-
-		iDefRating -= (2 * iDefRating * (pDefender->bLifeMax - pDefender->bLife + (ubBandaged / 2))) /
+		iDefRating -= (2 * iDefRating * (pDefender->bLifeMax - pDefender->effectiveLife())) /
 		(3 * pDefender->bLifeMax);
 
 	}
@@ -3597,7 +3586,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 {
 	INT32  iChance, iMaxRange, iRange;
 	UINT16 usHandItem;
-	INT8   bPenalty, bBandaged;
+	INT8   bPenalty;
 
 	if ( pSoldier->bWeaponMode == WM_ATTACHED)
 	{
@@ -3701,11 +3690,8 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	// IF CHANCE EXISTS, BUT ATTACKER IS INJURED
 	if ((iChance > 0) && (pSoldier->bLife < pSoldier->bLifeMax))
 	{
-		// if bandaged, give 1/2 of the bandaged life points back into equation
-		bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-
 		// injury penalty is based on % damage taken (max 2/3rds iChance)
-		bPenalty = (2 * iChance * (pSoldier->bLifeMax - pSoldier->bLife + (bBandaged / 2))) /
+		bPenalty = (2 * iChance * (pSoldier->bLifeMax - pSoldier->effectiveLife())) /
 				(3 * pSoldier->bLifeMax);
 
 		// for mechanically-fired projectiles, reduce penalty in half

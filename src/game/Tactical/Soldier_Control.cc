@@ -322,7 +322,6 @@ static const UINT8 gubMaxActionPoints[] =
 INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 {
 	UINT8 ubPoints,ubMaxAPs;
-	INT8  bBandage;
 
 	// dead guys don't get any APs (they shouldn't be here asking for them!)
 	if (!pSold->bLife)
@@ -339,13 +338,10 @@ INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 			2 * pSold->bLifeMax   +
 			2 * EffectiveDexterity( pSold ) ) + 20) / 40);
 
-	// Calculate bandage
-	bBandage = pSold->bLifeMax - pSold->bLife - pSold->bBleeding;
-
 	// If injured, reduce action points accordingly (by up to 2/3rds)
 	if (pSold->bLife < pSold->bLifeMax)
 	{
-		ubPoints -= (2 * ubPoints * (pSold->bLifeMax - pSold->bLife + (bBandage / 2))) /
+		ubPoints -= (2 * ubPoints * (pSold->bLifeMax - pSold->effectiveLife())) /
 				(3 * pSold->bLifeMax);
 	}
 
