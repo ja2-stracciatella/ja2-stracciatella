@@ -816,6 +816,9 @@ struct SOLDIERTYPE
 	BOOLEAN fComplainedThatTired;
 	INT16 sLastTwoLocations[2];
 	INT32 uiTimeSinceLastBleedGrunt;
+
+	// life with half of the bandaged damage counted back
+	INT8 effectiveLife() const { return bLife + (bLifeMax - bLife - bBleeding) / 2; }
 };
 
 #define BASE_FOR_EACH_SOLDIER_INV_SLOT(type, iter, soldier) \

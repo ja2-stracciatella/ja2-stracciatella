@@ -585,7 +585,6 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
 {
 	INT16 sBreathFactor = 100;
-	UINT8 ubBandaged;
 
 	// in real time, there IS no AP cost, (only breath cost)
 	/*
@@ -600,9 +599,7 @@ static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
 	sBreathFactor += (100 - pSold->bBreath);
 
 	// adjust breath factor for current life deficiency (but add 1/2 bandaging)
-	ubBandaged = pSold->bLifeMax - pSold->bLife - pSold->bBleeding;
-	//sBreathFactor += (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2)));
-	sBreathFactor += 100 * (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2))) / pSold->bLifeMax;
+	sBreathFactor += 100 * (pSold->bLifeMax - pSold->effectiveLife()) / pSold->bLifeMax;
 
 	if ( pSold->bStrength > 80 )
 	{
