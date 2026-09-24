@@ -13,6 +13,7 @@
 #include "Laptop.h"
 #include "LaptopSave.h"
 #include "Line.h"
+#include "Logger.h"
 #include "SaveLoadGame.h"
 #include "Soldier_Profile_Type.h"
 #include "Soldier_Profile.h"
@@ -305,8 +306,21 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, UINT32 reason)
 				return;
 			}
 
+			ProfileID loaded;
+			try
+			{
+				loaded = IMPSavedProfileLoadMercProfile(pNickNameString);
+			}
+			catch (const std::exception& e)
+			{
+				SLOGE("The saved I.M.P. '{}' cannot be taken on: {}", pNickNameString, e.what());
+				DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pImpPopUpStrings[4], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+				iCurrentProfileMode = 0;
+				return;
+			}
+
 			fLoadingCharacterForPreviousImpProfile = true;
-			MERCPROFILESTRUCT& profile_saved = gMercProfiles[IMPSavedProfileLoadMercProfile(pNickNameString)];
+			MERCPROFILESTRUCT& profile_saved = gMercProfiles[loaded];
 			// the imported character keeps its own face where the data still
 			// offers it, and is given the first one of its gender where it does not
 			INT32 const iSavedPortrait = FindIMPPortraitByFace(profile_saved.ubFaceIndex);
