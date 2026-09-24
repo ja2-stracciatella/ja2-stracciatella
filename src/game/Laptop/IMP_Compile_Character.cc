@@ -34,9 +34,26 @@ static INT32 iLastElementInPersonalityList = 0;
 static void SelectMercFace(void);
 
 
+/* An I.M.P. slot is a profile a player generated character can be made in, and
+ * that is any profile the data leaves undeclared. A declaration is what claims
+ * a profile -- 164 is declared because it stands in for the vehicles that go
+ * unused, every named character is declared because it is somebody -- so what
+ * no entry names is by that fact spare, whether it sits among the profiles the
+ * original game shipped or in the range past them that the game only just
+ * gained. The shipped data now declares no I.M.P. slot at all: the six the
+ * original game kept at 51 to 56 are simply left out, and the site finds them
+ * the same way it finds the rest.
+ *
+ * So raising max_characters is enough on its own, with no mod installed and
+ * nothing else to edit, and a mod that wants one of these profiles for
+ * something else takes it by declaring it, whatever it declares it as.
+ *
+ * A profile a mod declares as an I.M.P. slot counts as well, for the mods that
+ * already say so and because the type means exactly this. */
 static bool IsIMPSlot(ProfileID const profile)
 {
-	return GCM->getMercProfileInfo(profile)->mercType == MercType::IMP;
+	MercProfileInfo const& info = *GCM->getMercProfileInfo(profile);
+	return info.profileID == NO_PROFILE || info.mercType == MercType::IMP;
 }
 
 
@@ -549,3 +566,94 @@ void HandleMercStatsForChangesInFace(void)
 	p.bSkillTrait  = iSkillA;
 	p.bSkillTrait2 = iSkillB;
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "DefaultContentManagerUT.h"
+#include "MercProfile.h"
+#include "gtest/gtest.h"
+
+using IMPSlotTest = DefaultContentManagerUT::BaseTest;
+
+/* What the shipped data leaves free, in the order the site hands it out. The
+ * six the original game kept for player generated characters come first, then
+ * the ones nobody ever filled in, then the range added past the profiles the
+ * original game shipped. 164 is not among them although nothing is recorded
+ * for it either: it is declared, because the unused vehicles stand on it. */
+TEST_F(IMPSlotTest, theFreeProfilesAreTheUndeclaredOnes)
+{
+	for (ProfileID i = 0; i != NUM_PROFILES; ++i)
+	{
+		gMercProfiles[i].impSlotState = IMPSlotState::FREE;
+	}
+
+	std::vector<ProfileID> handedOut;
+	for (ProfileID slot; (slot = GetIMPSlotInProgress()) != NO_PROFILE; )
+	{
+		handedOut.push_back(slot);
+		gMercProfiles[slot].impSlotState = IMPSlotState::TAKEN;
+	}
+
+	std::vector<ProfileID> expected{ 51, 52, 53, 54, 55, 56, 165, 166, 167, 168, 169 };
+	for (ProfileID i = NUM_VANILLA_PROFILES; i != NUM_PROFILES; ++i) expected.push_back(i);
+
+	EXPECT_EQ(handedOut, expected);
+	EXPECT_EQ(GetNumberOfIMPSlots(), expected.size());
+	EXPECT_EQ(GetNumberOfIMPCharactersCreated(), expected.size());
+
+	for (ProfileID i = 0; i != NUM_PROFILES; ++i)
+	{
+		gMercProfiles[i].impSlotState = IMPSlotState::FREE;
+	}
+}
+
+
+/* A character made in a free slot is a whole character, although the content
+ * had nothing to say about the profile it went into. The voice in particular:
+ * it is the one the player picked, not the slot's own number, which is what
+ * lets any profile hold a character at all. */
+TEST_F(IMPSlotTest, aCharacterMadeInAFreeSlotCarriesWhatItWasGiven)
+{
+	for (ProfileID i = 0; i != NUM_PROFILES; ++i)
+	{
+		gMercProfiles[i].impSlotState = IMPSlotState::FREE;
+	}
+
+	ProfileID const slot = GetIMPSlotInProgress();
+	ASSERT_EQ(slot, 51);
+	MERCPROFILESTRUCT const untouched = gMercProfiles[slot];
+
+	// the third female voice, so that a wrong answer cannot look right by
+	// happening to match the slot the character is made in
+	fCharacterIsMale = FALSE;
+	LaptopSaveInfo.iVoiceId = 5;
+	pFullName = "Testy McTestface";
+	pNickName = "Testy";
+	iHealth = iAgility = iStrength = iDexterity = iWisdom = iLeadership = 55;
+	iMarksmanship = iMedical = iMechanical = iExplosives = 55;
+	iSkillA = iSkillB = 0;
+	iPersonality = iAttitude = 0;
+
+	CreateACharacterFromPlayerEnteredStats();
+	MarkIMPCharacterCreated(slot);
+
+	MERCPROFILESTRUCT const& p = gMercProfiles[slot];
+	EXPECT_EQ(p.ubVoiceId, GetIMPVoices()[5].profile);
+	EXPECT_EQ(p.zNickname, "Testy");
+	EXPECT_EQ(p.bSex, FEMALE);
+	EXPECT_EQ(p.bMercStatus, MERC_OK);
+
+	// and the character is one of the player's own, in a profile that says
+	// nothing about itself
+	EXPECT_TRUE(MercProfile(slot).isIMPMerc());
+	EXPECT_TRUE(MercProfile(slot).isPlayerMerc());
+	EXPECT_EQ(GetIMPSlotInProgress(), 52);
+
+	gMercProfiles[slot] = untouched;
+	for (ProfileID i = 0; i != NUM_PROFILES; ++i)
+	{
+		gMercProfiles[i].impSlotState = IMPSlotState::FREE;
+	}
+	LaptopSaveInfo.fIMPCompletedFlag = FALSE;
+}
+#endif
