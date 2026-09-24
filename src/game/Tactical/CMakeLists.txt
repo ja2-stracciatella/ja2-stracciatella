@@ -27,6 +27,7 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Interface_Cursors.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Interface_Dialogue.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Interface_Items.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/IMPProfileJson.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Interface_Panels.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Interface_Utils.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Inventory_Choosing.cc
@@ -81,6 +82,7 @@ set(LOCAL_JA2_SOURCES
 if (WITH_UNITTESTS)
     set(LOCAL_JA2_SOURCES
         ${LOCAL_JA2_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/IMPProfileJson_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveMercProfile_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveSoldierType_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/Weapons_unittest.cc
@@ -91,6 +93,13 @@ set_property(
     SOURCE ${LOCAL_JA2_SOURCES}
     DIRECTORY ${CMAKE_SOURCE_DIR}
     PROPERTY UNITY_GROUP "Tactical"
+)
+
+# IMPProfileJson keeps short helper names in an anonymous namespace.
+set_property(
+    SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/IMPProfileJson.cc
+    DIRECTORY ${CMAKE_SOURCE_DIR}
+    PROPERTY UNITY_GROUP "Tactical_IMPProfileJson"
 )
 
 # Interface_Panels has enum values that clash with Interface.cc

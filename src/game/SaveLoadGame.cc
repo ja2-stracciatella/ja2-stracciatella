@@ -35,6 +35,7 @@
 #include "IMP_Compile_Character.h"
 #include "IMP_Confirm.h"
 #include "IMP_Portraits.h"
+#include "IMPProfileJson.h"
 #include "Interface_Dialogue.h"
 #include "Interface_Items.h"
 #include "Interface_Panels.h"
@@ -117,6 +118,7 @@
 
 #include <regex>
 #include <algorithm>
+#include <memory>
 #include <array>
 #include <stdexcept>
 #include <utility>
@@ -1225,7 +1227,7 @@ static void SaveMercProfiles(HWFILE const f)
 
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
-	return ST::format("mercprofile.{}", nickname);
+	return ST::format("mercprofile.{}.json", nickname);
 }
 
 bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
@@ -1235,34 +1237,23 @@ bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 	return fexists;
 }
 
-SGPFile* IMPSavedProfileOpenFileForRead(const ST::string& nickname)
+static void IMPSavedProfileRead(const ST::string& nickname, MERCPROFILESTRUCT& profile, OBJECTTYPE (&inv)[NUM_INV_SLOTS])
 {
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
 		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
 	}
-	SGPFile *f = GCM->saveGameFiles()->openForReading(IMPSavedProfileCreateFilename(nickname));
-	return f;
-}
-
-static SGPFile* IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
-{
-	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	SGPFile *f = GCM->saveGameFiles()->openForWriting(profile_filename, true);
-	return f;
+	std::unique_ptr<SGPFile> f{ GCM->saveGameFiles()->openForReading(IMPSavedProfileCreateFilename(nickname)) };
+	DeserializeIMPProfile(f->readStringToEnd(), profile, inv);
 }
 
 /* Restores a saved I.M.P. into the slot the character being built would take.
  * The character keeps the voice it was made with, which the saved profile
- * carries itself. */
+ * carries itself. Throws if the file cannot be read, before anything changed. */
 ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 {
-	if (!IMPSavedProfileDoesFileExist(nickname)) {
-		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
-	}
-	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
 	MERCPROFILESTRUCT profile_saved;
-	f->read(&profile_saved, sizeof(MERCPROFILESTRUCT));
-	delete f;
+	OBJECTTYPE inv[NUM_INV_SLOTS];
+	IMPSavedProfileRead(nickname, profile_saved, inv);
 
 	ProfileID const profile = GetIMPSlotInProgress();
 	MERCPROFILESTRUCT& profile_new = gMercProfiles[profile];
@@ -1278,10 +1269,20 @@ void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSold
 	if (!IMPSavedProfileDoesFileExist(nickname)) return;
 	if (!pSoldier) return;
 
-	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
-	f->seek(sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
-	f->read(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
-	delete f;
+	MERCPROFILESTRUCT profile;
+	OBJECTTYPE inv[NUM_INV_SLOTS];
+	try
+	{
+		IMPSavedProfileRead(nickname, profile, inv);
+	}
+	catch (const std::exception& e)
+	{
+		// The profile was read before, so the file changed since: keep the
+		// inventory the character was given.
+		SLOGE("I.M.P. '{}' keeps its inventory, the saved one could not be read: {}", nickname, e.what());
+		return;
+	}
+	std::copy(std::begin(inv), std::end(inv), std::begin(pSoldier->inv));
 }
 
 void SaveIMPPlayerProfiles()
@@ -1298,12 +1299,10 @@ void SaveIMPPlayerProfiles()
 		if (pSoldier->bTeam != OUR_TEAM) continue;
 		if (pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER) continue;
 
-		SGPFile *f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname);
+		ST::string const json = SerializeIMPProfile(*mercprofile, pSoldier->inv);
+		std::unique_ptr<SGPFile> f{ GCM->saveGameFiles()->openForWriting(IMPSavedProfileCreateFilename(mercprofile->zNickname), true) };
 		if (!f) continue;
-
-		f->write(mercprofile, sizeof(MERCPROFILESTRUCT));
-		f->write(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
-		delete f;
+		f->write(json.c_str(), json.size());
 	}
 }
 
