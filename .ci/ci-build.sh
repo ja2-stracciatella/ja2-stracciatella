@@ -64,7 +64,7 @@ elif [[ "$CI_TARGET" == "android" ]]; then
   fi
   export BUILD_TOOL_ARGS="-p ../android assemble$ANDROID_BUILD_TYPE -PbuildDir=$(pwd)/ci-build"
   export RUN_TESTS=false
-  export PACKAGE_NAME="ja2-stracciatella_$(./android/gradlew -q -p ./android projectVersion)-$VERSION_TAG+$(git rev-parse --short HEAD)_android.apk"
+  export PACKAGE_NAME="ja2-stracciatella_$(./android/gradlew -q -p ./android projectVersion)-${VERSION_TAG:-git}+$(git rev-parse --short HEAD)_android.apk"
 else
   echo "unexpected target ${CI_TARGET}"
   exit 1
