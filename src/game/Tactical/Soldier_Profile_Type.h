@@ -234,6 +234,7 @@ enum class IMPSlotState : UINT8
 	TAKEN
 };
 
+// A field added here also belongs in the saved I.M.P. file, IMPProfileJson.cc.
 struct MERCPROFILESTRUCT
 {
 	ST::string zName;
