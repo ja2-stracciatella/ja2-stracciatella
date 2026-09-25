@@ -118,6 +118,7 @@
 #include <regex>
 #include <algorithm>
 #include <array>
+#include <vector>
 #include <stdexcept>
 #include <utility>
 
@@ -1251,18 +1252,34 @@ static SGPFile* IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 	return f;
 }
 
+/* Reads the profile file of the given nickname into the profile and the
+ * NUM_INV_SLOTS objects of its inventory. Throws when there is none, or when it
+ * is not one this game can read. Reading a file another version laid out
+ * differently is a matter of migration, which is still to come. */
+static void IMPSavedProfileRead(const ST::string& nickname, MERCPROFILESTRUCT& profile, OBJECTTYPE* const inv)
+{
+	AutoSGPFile f{IMPSavedProfileOpenFileForRead(nickname)};
+
+	std::vector<BYTE> data(f->size());
+	f->read(data.data(), data.size());
+	try
+	{
+		ExtractIMPSavedProfile(data.data(), data.size(), profile, inv);
+	}
+	catch (std::runtime_error const& e)
+	{
+		throw std::runtime_error(ST::format("IMP profile '{}' cannot be read: {}!", nickname, e.what()).to_std_string());
+	}
+}
+
 /* Restores a saved I.M.P. into the slot the character being built would take.
  * The character keeps the voice it was made with, which the saved profile
  * carries itself. */
 ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 {
-	if (!IMPSavedProfileDoesFileExist(nickname)) {
-		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
-	}
-	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
 	MERCPROFILESTRUCT profile_saved;
-	f->read(&profile_saved, sizeof(MERCPROFILESTRUCT));
-	delete f;
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	IMPSavedProfileRead(nickname, profile_saved, inv);
 
 	ProfileID const profile = GetIMPSlotInProgress();
 	MERCPROFILESTRUCT& profile_new = gMercProfiles[profile];
@@ -1278,10 +1295,20 @@ void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSold
 	if (!IMPSavedProfileDoesFileExist(nickname)) return;
 	if (!pSoldier) return;
 
-	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
-	f->seek(sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
-	f->read(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
-	delete f;
+	// A character being confirmed can share a nickname with a profile no
+	// version of this game would recognise. It keeps what it has.
+	MERCPROFILESTRUCT profile;
+	OBJECTTYPE inv[NUM_INV_SLOTS]{};
+	try
+	{
+		IMPSavedProfileRead(nickname, profile, inv);
+	}
+	catch (std::runtime_error const& e)
+	{
+		SLOGW("Keeping the inventory of '{}': {}", nickname, e.what());
+		return;
+	}
+	std::copy(std::begin(inv), std::end(inv), pSoldier->inv);
 }
 
 void SaveIMPPlayerProfiles()
@@ -1298,12 +1325,12 @@ void SaveIMPPlayerProfiles()
 		if (pSoldier->bTeam != OUR_TEAM) continue;
 		if (pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER) continue;
 
-		SGPFile *f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname);
+		AutoSGPFile f{IMPSavedProfileOpenFileForWrite(mercprofile->zNickname)};
 		if (!f) continue;
 
-		f->write(mercprofile, sizeof(MERCPROFILESTRUCT));
-		f->write(pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
-		delete f;
+		std::array<BYTE, IMP_SAVED_PROFILE_SIZE> data;
+		InjectIMPSavedProfile(data.data(), *mercprofile, pSoldier->inv);
+		f->write(data.data(), data.size());
 	}
 }
 

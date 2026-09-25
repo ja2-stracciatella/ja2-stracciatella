@@ -1,11 +1,15 @@
 #include "Debug.h"
 #include "LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
+#include "LoadSaveObjectType.h"
 #include "Overhead_Types.h"
 #include "SGPFile.h"
+#include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
 
 #include <array>
+#include <cstring>
+#include <stdexcept>
 
 
 /** Calculates soldier profile checksum. */
@@ -407,4 +411,78 @@ void InjectMercProfileIntoFile(HWFILE const f, MERCPROFILESTRUCT const& p)
 	BYTE Data[716];
 	InjectMercProfile(Data, p);
 	f->write(Data, sizeof(Data));
+}
+
+
+/* A saved I.M.P. profile holds one character the player built, so that a later
+ * game can take it back. It is written field by field, so it reads the same on
+ * every platform whatever MERCPROFILESTRUCT looks like in memory:
+ *
+ *   magic      4 bytes             IMP_PROFILE_MAGIC
+ *   version    UINT32              IMP_PROFILE_VERSION
+ *   profile    MERC_PROFILE_SIZE   the record the saved game keeps of every profile
+ *   voice      UINT8               ubVoiceId, which that record has no room for
+ *   inventory  NUM_INV_SLOTS objects, as the saved game keeps them
+ *
+ * Raise IMP_PROFILE_VERSION whenever this layout changes.
+ *
+ * Files from before the version were a copy of the profile as it lay in memory,
+ * its strings pointers into the game that wrote it. They cannot be read back,
+ * and are told apart by lacking the magic. */
+static char const IMP_PROFILE_MAGIC[4] = { 'I', 'M', 'P', 'P' };
+static UINT32 const IMP_PROFILE_VERSION = 1;
+
+static size_t const IMP_PROFILE_OBJECT_SIZE = 36; // what InjectObject writes
+static_assert(IMP_SAVED_PROFILE_SIZE ==
+	sizeof(IMP_PROFILE_MAGIC) + sizeof(UINT32) + MERC_PROFILE_SIZE + sizeof(UINT8) +
+	IMP_PROFILE_OBJECT_SIZE * NUM_INV_SLOTS);
+
+
+void InjectIMPSavedProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p, OBJECTTYPE const* const inv)
+{
+	DataWriter D(Dst);
+	D.writeArray(IMP_PROFILE_MAGIC, sizeof(IMP_PROFILE_MAGIC));
+	INJ_U32(D, IMP_PROFILE_VERSION)
+	size_t const record = D.getConsumed();
+	INJ_SKIP(D, MERC_PROFILE_SIZE) // zeroes the room, so fill it after
+	InjectMercProfile(Dst + record, p);
+	INJ_U8(D, p.ubVoiceId)
+	for (size_t i = 0; i != NUM_INV_SLOTS; ++i) InjectObject(D, &inv[i]);
+	Assert(D.getConsumed() == IMP_SAVED_PROFILE_SIZE);
+}
+
+
+void ExtractIMPSavedProfile(BYTE const* const Src, size_t const size, MERCPROFILESTRUCT& p, OBJECTTYPE* const inv)
+{
+	if (size < sizeof(IMP_PROFILE_MAGIC) + sizeof(UINT32) ||
+		std::memcmp(Src, IMP_PROFILE_MAGIC, sizeof(IMP_PROFILE_MAGIC)) != 0)
+	{
+		throw std::runtime_error("it was written before profiles carried a version");
+	}
+
+	DataReader S(Src);
+	EXTR_SKIP(S, sizeof(IMP_PROFILE_MAGIC))
+	UINT32 version;
+	EXTR_U32(S, version)
+	if (version != IMP_PROFILE_VERSION)
+	{
+		throw std::runtime_error(ST::format("it is of version {}, this game reads version {}",
+			version, IMP_PROFILE_VERSION).to_std_string());
+	}
+	if (size != IMP_SAVED_PROFILE_SIZE)
+	{
+		throw std::runtime_error(ST::format("it is of version {} but {} bytes long, not {}",
+			version, size, IMP_SAVED_PROFILE_SIZE).to_std_string());
+	}
+
+	UINT32 checksum;
+	ExtractMercProfile(Src + S.getConsumed(), p, false, &checksum, true);
+	EXTR_SKIP(S, MERC_PROFILE_SIZE)
+	if (checksum != SoldierProfileChecksum(p))
+	{
+		throw std::runtime_error("it fails its checksum");
+	}
+	EXTR_U8(S, p.ubVoiceId)
+	for (size_t i = 0; i != NUM_INV_SLOTS; ++i) ExtractObject(S, &inv[i]);
+	Assert(S.getConsumed() == IMP_SAVED_PROFILE_SIZE);
 }
