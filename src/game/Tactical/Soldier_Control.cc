@@ -322,7 +322,6 @@ static const UINT8 gubMaxActionPoints[] =
 INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 {
 	UINT8 ubPoints,ubMaxAPs;
-	INT8  bBandage;
 
 	// dead guys don't get any APs (they shouldn't be here asking for them!)
 	if (!pSold->bLife)
@@ -339,13 +338,10 @@ INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 			2 * pSold->bLifeMax   +
 			2 * EffectiveDexterity( pSold ) ) + 20) / 40);
 
-	// Calculate bandage
-	bBandage = pSold->bLifeMax - pSold->bLife - pSold->bBleeding;
-
 	// If injured, reduce action points accordingly (by up to 2/3rds)
 	if (pSold->bLife < pSold->bLifeMax)
 	{
-		ubPoints -= (2 * ubPoints * (pSold->bLifeMax - pSold->bLife + (bBandage / 2))) /
+		ubPoints -= (2 * ubPoints * (pSold->bLifeMax - pSold->effectiveLife())) /
 				(3 * pSold->bLifeMax);
 	}
 
@@ -8059,16 +8055,11 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 
 static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier)
 {
-	INT8 bBandaged;
-
 	// calculate how many turns before he bleeds again
 	// bleeding faster the lower life gets, and if merc is running around
 	//pSoldier->nextbleed = 2 + (pSoldier->life / (10 + pSoldier->tilesMoved));  // min = 2
 
-	// if bandaged, give 1/2 of the bandaged life points back into equation
-	bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-
-	return( (FLOAT)1 + (FLOAT)( (pSoldier->bLife + bBandaged / 2) / (10 + pSoldier->bTilesMoved) ) );  // min = 1
+	return( (FLOAT)1 + (FLOAT)pSoldier->effectiveLife() / (10 + pSoldier->bTilesMoved) );  // min = 1
 }
 
 

@@ -16,9 +16,8 @@ INT8 EffectiveStrength(const SOLDIERTYPE* s)
 	// Effective strength is:
 	// 1/2 full strength
 	// plus 1/2 strength scaled according to how hurt we are
-	const INT8 bBandaged    = s->bLifeMax - s->bLife - s->bBleeding;
-	INT32      iEffStrength = s->bStrength / 2;
-	iEffStrength += (s->bStrength / 2) * (s->bLife + bBandaged / 2) / (s->bLifeMax);
+	INT32 iEffStrength = s->bStrength / 2;
+	iEffStrength += (s->bStrength / 2) * s->effectiveLife() / (s->bLifeMax);
 
 	// ATE: Make sure at least 2...
 	iEffStrength = std::max(iEffStrength, 2);

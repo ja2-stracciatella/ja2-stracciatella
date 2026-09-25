@@ -3248,8 +3248,7 @@ UINT8 MovementNoise(SOLDIERTYPE const * const pSoldier)
 		iStealthSkill += 25 * NUM_SKILL_TRAITS(pSoldier, STEALTHY);
 	}
 
-	UINT8 const ubBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-	UINT8 const ubEffLife = pSoldier->bLife + (ubBandaged / 2);
+	UINT8 const ubEffLife = pSoldier->effectiveLife();
 
 	// IF "SNEAKER'S" "EFFECTIVE LIFE" IS AT LESS THAN 50
 	if (ubEffLife < 50)
