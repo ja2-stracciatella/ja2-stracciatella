@@ -1,0 +1,67 @@
+name: I.M.P. Profile Converter
+
+# Tests and builds tools/imp-converter into a single HTML file. On master it is
+# also published to GitHub Pages, once a maintainer has enabled Pages for this
+# repository (Settings → Pages → Source: GitHub Actions) and set the repository
+# variable DEPLOY_IMP_CONVERTER to "true".
+
+on:
+  push:
+    branches: [ master ]
+    paths: [ 'tools/imp-converter/**', 'assets/externalized/**', '.github/workflows/imp-converter.yml' ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    paths: [ 'tools/imp-converter/**', 'assets/externalized/**', '.github/workflows/imp-converter.yml' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Test and build
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: tools/imp-converter
+    steps:
+    - uses: actions/checkout@v5
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: 24
+        cache: npm
+        cache-dependency-path: tools/imp-converter/package-lock.json
+
+    - run: npm ci
+    - run: npm test
+    - run: npm run build
+
+    # The hosted page: the converter as index.html, and the empty file that
+    # switches it to standalone mode.
+    - name: Assemble the site
+      run: |
+        mkdir -p site
+        cp dist/imp-converter.html site/index.html
+        touch site/standalone
+
+    - uses: actions/upload-artifact@v6
+      with:
+        name: imp-converter
+        path: tools/imp-converter/dist/imp-converter.html
+
+    - uses: actions/upload-pages-artifact@v5
+      with:
+        path: tools/imp-converter/site
+
+  deploy:
+    name: Publish to GitHub Pages
+    needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && vars.DEPLOY_IMP_CONVERTER == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - id: deployment
+      uses: actions/deploy-pages@v5
