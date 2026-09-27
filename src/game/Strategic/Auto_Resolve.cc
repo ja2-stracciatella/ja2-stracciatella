@@ -2903,6 +2903,8 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 		{
 			pTarget->usNextHit[ bAttackIndex ] = (UINT16)( 50 + PreRandom( 400 ) );
 			pTarget->pAttacker[ bAttackIndex ] = pAttacker;
+			// Clear the damage of an earlier bullet, or a miss would land with it
+			pTarget->usHitDamage[ bAttackIndex ] = 0;
 		}
 	}
 	if( usAttack < usDefence )
