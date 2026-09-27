@@ -90,7 +90,7 @@ public:
 		Attributes attrIdx = Internals::getAttributeEnumFromString(check);
 		if (attrIdx == Attributes::NUM_ATTRIBUTES) return false;
 
-		uint8_t checkVal = static_cast<uint8_t>(Attribute(p, attrIdx + 1)); // +1 is to skip the extra LifeMax entry
+		uint8_t checkVal = static_cast<uint8_t>(Attribute(p, attrIdx));
 		return reverse ? (value >= checkVal) : (checkVal >= value);
 	}
 };

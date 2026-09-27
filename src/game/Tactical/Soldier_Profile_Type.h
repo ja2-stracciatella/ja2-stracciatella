@@ -127,6 +127,28 @@ INT8 Attribute(T const& who, int attributeIndex)
 	}
 }
 
+// Same as above, but indexed by the Attributes enum, whose order differs.
+template<typename T>
+INT8 Attribute(T const& who, Attributes attribute)
+{
+	switch (attribute)
+	{
+		case ATTR_AGILITY:      return who.bAgility;
+		case ATTR_DEXTERITY:    return who.bDexterity;
+		case ATTR_STRENGTH:     return who.bStrength;
+		case ATTR_LEADERSHIP:   return who.bLeadership;
+		case ATTR_WISDOM:       return who.bWisdom;
+		case ATTR_EXPLEVEL:     return who.bExpLevel;
+		case ATTR_MARKSMANSHIP: return who.bMarksmanship;
+		case ATTR_EXPLOSIVES:   return who.bExplosive;
+		case ATTR_MECHANICAL:   return who.bMechanical;
+		case ATTR_MEDICAL:      return who.bMedical;
+		default:
+			SLOGE("invalid attribute");
+			return 0;
+	}
+}
+
 enum SkillTrait
 {
 	NO_SKILLTRAIT = 0,
