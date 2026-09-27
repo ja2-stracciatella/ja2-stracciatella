@@ -2834,6 +2834,17 @@ static BOOLEAN TargetHasLoadedGun(SOLDIERTYPE* pSoldier)
 }
 
 
+// How well a hit landed. A forced hit on an unconscious target can come with an
+// attack roll below the defence roll, which counts as no accuracy at all. A
+// target with a defence above 950 rolls 950-999, which can fall below its own
+// defence, so the random bonus can't go negative either.
+static UINT8 CalcHitAccuracy(UINT16 usAttack, UINT16 usDefence, SOLDIERCELL const* pTarget)
+{
+	INT32 const iMargin = usAttack - usDefence + (INT32)PreRandom( std::max(usDefence - pTarget->usDefence, 0) );
+	return (UINT8)(std::max(iMargin, 0) / 10);
+}
+
+
 static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 {
 	UINT16 usAttack;
@@ -2947,7 +2958,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 			ubLocation = AIM_SHOT_LEGS;
 		else
 			ubLocation = AIM_SHOT_TORSO;
-		ubAccuracy = (UINT8)((usAttack - usDefence + PreRandom( usDefence - pTarget->usDefence ) )/10);
+		ubAccuracy = CalcHitAccuracy(usAttack, usDefence, pTarget);
 		iImpact = BulletImpact( pAttacker->pSoldier, pTarget->pSoldier, ubLocation, ubImpact, ubAccuracy, NULL );
 
 		if ( bAttackIndex == -1 )
@@ -2970,7 +2981,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 			return;
 		}
 
-		ubAccuracy = (UINT8)((usAttack - usDefence + PreRandom( usDefence - pTarget->usDefence ) )/10);
+		ubAccuracy = CalcHitAccuracy(usAttack, usDefence, pTarget);
 
 		//Determine attacking weapon.
 		pAttacker->pSoldier->usAttackingWeapon = 0;
