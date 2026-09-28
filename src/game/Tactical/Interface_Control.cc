@@ -328,6 +328,16 @@ static void RenderRubberBanding(void)
 	}
 	UINT16 const colour = Get16BPPColor(guiColors[flash_colour]);
 
+	// Keep the box inside the viewport. The lines are clipped there anyway, but
+	// the background rects are not, and restoring them over the bottom panel
+	// corrupts it.
+	if (l > r) std::swap(l, r);
+	if (t > b) std::swap(t, b);
+	l = std::max(l, INT16(0));
+	t = std::max(t, INT16(0));
+	r = std::min(r, INT16(gsVIEWPORT_END_X - 1));
+	b = std::min(b, INT16(gsVIEWPORT_WINDOW_END_Y - 1));
+
 	// Draw rectangle.....
 	SGPVSurface::Lock lock(FRAME_BUFFER);
 	UINT16* const pDestBuf = lock.Buffer<UINT16>();
@@ -335,7 +345,6 @@ static void RenderRubberBanding(void)
 
 	if (l != r)
 	{
-		if (l > r) std::swap(l, r);
 		LineDraw(TRUE, l, t, r, t, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, r - l + 1, 1);
 		LineDraw(TRUE, l, b, r, b, colour, pDestBuf);
@@ -344,7 +353,6 @@ static void RenderRubberBanding(void)
 
 	if (t != b)
 	{
-		if (t > b) std::swap(t, b);
 		LineDraw(TRUE, l, t, l, b, colour, pDestBuf);
 		RegisterBackgroundRectSingleFilled(l, t, 1, b - t + 1);
 		LineDraw(TRUE, r, t, r, b, colour, pDestBuf);
