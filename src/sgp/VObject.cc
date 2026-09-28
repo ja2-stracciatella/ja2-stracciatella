@@ -252,7 +252,7 @@ void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcV
 	UINT16* const pBuffer = l.Buffer<UINT16>();
 	UINT32  const uiPitch = l.Pitch();
 
-	ClipInfo ci { hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect };
+	ClipInfo const ci{ hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect };
 	if (ci.status != ClipInfo::Status::Not_Clipped)
 	{
 		BltOutline(ci, pBuffer, uiPitch, s16BPPColor);
@@ -270,14 +270,8 @@ void BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const
 	UINT16* const pBuffer = l.Buffer<UINT16>();
 	UINT32  const uiPitch = l.Pitch();
 
-	if (BltIsClipped(src, iDestX, iDestY, usIndex, &ClippingRect))
-	{
-		Blt8BPPDataTo16BPPBufferOutlineShadowClip(pBuffer, uiPitch, src, iDestX, iDestY, usIndex, &ClippingRect);
-	}
-	else
-	{
-		Blt8BPPDataTo16BPPBufferOutlineShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
-	}
+	ClipInfo const ci{ src, iDestX, iDestY, usIndex, &ClippingRect };
+	BltOutlineShadow(ci, pBuffer, uiPitch);
 }
 
 

@@ -9,8 +9,6 @@
 #include "SGPStrings.h"
 #include "Logger.h"
 
-#define UNIMPLEMENTED \
-	SLOGA("===> {}:{}: {}() is not implemented", __FILE__, __LINE__, __func__);
 
 #ifdef WITH_FIXMES
 	#define FIXME \
