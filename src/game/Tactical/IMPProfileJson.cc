@@ -13,6 +13,7 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_theory/format>
 
+#include <concepts>
 #include <exception>
 #include <limits>
 #include <set>
@@ -218,7 +219,7 @@ JsonValue ToJson(ST::string const& s)
 	return JsonValue(s);
 }
 
-template<typename T, std::enable_if_t<std::is_integral_v<T>, int> = 0>
+template<std::integral T>
 JsonValue ToJson(T const v)
 {
 	if constexpr (std::is_signed_v<T>) return JsonValue(static_cast<int>(v));
@@ -381,7 +382,7 @@ void FromJson(JsonValue const& v, ST::string& out, ST::string const& path)
 	out = v.toString();
 }
 
-template<typename T, std::enable_if_t<std::is_integral_v<T>, int> = 0>
+template<std::integral T>
 void FromJson(JsonValue const& v, T& out, ST::string const& path)
 {
 	out = ToIntegral<T>(v, path);
