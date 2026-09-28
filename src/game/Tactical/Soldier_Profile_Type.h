@@ -105,33 +105,37 @@ enum Attributes
 
 // Get the value of an attribute from either a MERCPROFILESTRUCT
 // or a SOLDIERTYPE.
+// isForStatsDisplay: attributeIndex is a row of the Personnel stats list,
+// where 0 is bLifeMax and mechanical comes before explosives. Otherwise
+// it is an Attributes value.
 template<typename T>
-INT8 Attribute(T const& who, int attributeIndex)
+INT8 Attribute(T const& who, int attributeIndex, bool isForStatsDisplay = false)
 {
-	switch (attributeIndex)
+	if (isForStatsDisplay)
 	{
-		case  0: return who.bLifeMax;
-		case  1: return who.bAgility;
-		case  2: return who.bDexterity;
-		case  3: return who.bStrength;
-		case  4: return who.bLeadership;
-		case  5: return who.bWisdom;
-		case  6: return who.bExpLevel;
-		case  7: return who.bMarksmanship;
-		case  8: return who.bMechanical;
-		case  9: return who.bExplosive;
-		case 10: return who.bMedical;
-		default:
+		static constexpr Attributes statsDisplayOrder[] =
+		{
+			ATTR_AGILITY,
+			ATTR_DEXTERITY,
+			ATTR_STRENGTH,
+			ATTR_LEADERSHIP,
+			ATTR_WISDOM,
+			ATTR_EXPLEVEL,
+			ATTR_MARKSMANSHIP,
+			ATTR_MECHANICAL,
+			ATTR_EXPLOSIVES,
+			ATTR_MEDICAL
+		};
+		if (attributeIndex == 0) return who.bLifeMax;
+		if (attributeIndex < 0 || attributeIndex > NUM_ATTRIBUTES)
+		{
 			SLOGE("invalid attribute index");
 			return 0;
+		}
+		attributeIndex = statsDisplayOrder[attributeIndex - 1];
 	}
-}
 
-// Same as above, but indexed by the Attributes enum, whose order differs.
-template<typename T>
-INT8 Attribute(T const& who, Attributes attribute)
-{
-	switch (attribute)
+	switch (attributeIndex)
 	{
 		case ATTR_AGILITY:      return who.bAgility;
 		case ATTR_DEXTERITY:    return who.bDexterity;
@@ -144,7 +148,7 @@ INT8 Attribute(T const& who, Attributes attribute)
 		case ATTR_MECHANICAL:   return who.bMechanical;
 		case ATTR_MEDICAL:      return who.bMedical;
 		default:
-			SLOGE("invalid attribute");
+			SLOGE("invalid attribute index");
 			return 0;
 	}
 }

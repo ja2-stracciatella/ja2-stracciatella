@@ -48,3 +48,25 @@ TEST(IMPPolicyTest, attributeConditionsReadTheRightStat)
 		EXPECT_FALSE(Check(p, name, value + 1)) << name;
 	}
 }
+
+TEST(IMPPolicyTest, attributeStatsDisplayOrder)
+{
+	MERCPROFILESTRUCT p{};
+	p.bLifeMax      = 10;
+	p.bAgility      = 11;
+	p.bDexterity    = 12;
+	p.bStrength     = 13;
+	p.bLeadership   = 14;
+	p.bWisdom       = 15;
+	p.bExpLevel     = 16;
+	p.bMarksmanship = 17;
+	p.bMechanical   = 18;
+	p.bExplosive    = 19;
+	p.bMedical      = 20;
+
+	// rows of the Personnel stats list, as in pPersonnelTeamStatsStrings
+	for (int row = 0; row <= NUM_ATTRIBUTES; ++row)
+	{
+		EXPECT_EQ(Attribute(p, row, true), 10 + row) << row;
+	}
+}
