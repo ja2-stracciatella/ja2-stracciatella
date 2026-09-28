@@ -13,16 +13,38 @@ static bool Check(const MERCPROFILESTRUCT& p, std::string attribute, uint8_t val
 
 TEST(IMPPolicyTest, attributeConditionsReadTheRightStat)
 {
+	// every stat gets a different value, so reading the wrong one either
+	// fails the check at its own value or passes it one above
 	MERCPROFILESTRUCT p{};
-	p.bMechanical = 60;
-	p.bExplosive  = 10;
+	p.bLifeMax      = 99;
+	p.bAgility      = 11;
+	p.bDexterity    = 12;
+	p.bStrength     = 13;
+	p.bLeadership   = 14;
+	p.bWisdom       = 15;
+	p.bExpLevel     =  6;
+	p.bMarksmanship = 17;
+	p.bExplosive    = 18;
+	p.bMechanical   = 19;
+	p.bMedical      = 20;
 
-	EXPECT_TRUE(Check(p, "MECHANICAL", 50));
-	EXPECT_FALSE(Check(p, "EXPLOSIVES", 50));
+	const std::pair<const char*, uint8_t> attributes[] = {
+		{ "AGILITY",      11 },
+		{ "DEXTERITY",    12 },
+		{ "STRENGTH",     13 },
+		{ "LEADERSHIP",   14 },
+		{ "WISDOM",       15 },
+		{ "EXPLEVEL",      6 },
+		{ "MARKSMANSHIP", 17 },
+		{ "EXPLOSIVES",   18 },
+		{ "MECHANICAL",   19 },
+		{ "MEDICAL",      20 },
+	};
+	static_assert(std::size(attributes) == NUM_ATTRIBUTES);
 
-	p.bMechanical = 10;
-	p.bExplosive  = 60;
-
-	EXPECT_FALSE(Check(p, "MECHANICAL", 50));
-	EXPECT_TRUE(Check(p, "EXPLOSIVES", 50));
+	for (auto const& [name, value] : attributes)
+	{
+		EXPECT_TRUE(Check(p, name, value)) << name;
+		EXPECT_FALSE(Check(p, name, value + 1)) << name;
+	}
 }
