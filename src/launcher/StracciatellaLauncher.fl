@@ -22,7 +22,7 @@ class StracciatellaLauncher {open
             xywh {160 150 200 25}
           }
           Fl_Button playButton {
-            label {Play Ja2 Stracciatella}
+            label {Play JA2 Stracciatella}
             xywh {160 185 200 55}
           }
         }
