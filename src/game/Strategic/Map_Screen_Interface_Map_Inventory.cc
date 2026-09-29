@@ -966,9 +966,6 @@ static BOOLEAN CanMergeSectorInventorySlots(const WORLDITEM& target, const WORLD
 	if (target.o.usItem != source.o.usItem) return FALSE;
 	if (target.ubLevel  != source.ubLevel)  return FALSE;
 
-	// unreachable items must not become reachable by being piled onto a reachable stack, and vice versa
-	if ((target.usFlags & WORLD_ITEM_REACHABLE) != (source.usFlags & WORLD_ITEM_REACHABLE)) return FALSE;
-
 	// attachments and traps belong to a single object, stacking would drop them
 	if (ItemHasAttachments(target.o) || ItemHasAttachments(source.o)) return FALSE;
 	if (target.o.bTrap > 0 || source.o.bTrap > 0) return FALSE;
@@ -1161,11 +1158,14 @@ void StackAndSortMapInventoryPool(void)
 		return;
 	}
 
-	// the empty slots are only padding, the occupied ones are all we have to look at
+	// The empty slots are only padding, the occupied ones are all we have to look at.  Unreachable
+	// items are set aside untouched: the player cannot handle them in this panel either.
 	std::vector<WORLDITEM> items;
+	std::vector<WORLDITEM> unreachable;
 	for (const WORLDITEM& wi : pInventoryPoolList)
 	{
-		if (wi.o.ubNumberOfObjects > 0) items.push_back(wi);
+		if (wi.o.ubNumberOfObjects == 0) continue;
+		(wi.usFlags & WORLD_ITEM_REACHABLE ? items : unreachable).push_back(wi);
 	}
 
 	UINT32 uiGunsUnloaded = 0;
@@ -1240,6 +1240,7 @@ void StackAndSortMapInventoryPool(void)
 	items.erase(std::remove_if(items.begin(), items.end(),
 		[](const WORLDITEM& wi) { return wi.o.ubNumberOfObjects == 0; }), items.end());
 
+	items.insert(items.end(), unreachable.begin(), unreachable.end());
 	SortSectorInventory(items.data(), items.size());
 	ReplaceMapInventoryPool(items);
 
