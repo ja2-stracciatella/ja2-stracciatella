@@ -1057,7 +1057,7 @@ static BOOLEAN CanPourSectorInventoryPoints(const WORLDITEM& wi)
 }
 
 
-static BOOLEAN GetRefillablePointCapacity(const ItemModel* item, INT8& bMaxPoints);
+static BOOLEAN GetRefillablePointCapacity(const ItemModel* item, UINT8& ubMaxPoints);
 
 
 // Magazines, kits and medkits hold points - rounds resp. charges - that can be moved between
@@ -1075,8 +1075,8 @@ static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
 		if (fPooled[iFirst])                             continue;
 		if (!CanPourSectorInventoryPoints(items[iFirst])) continue;
 
-		INT8 bMaxPoints;
-		if (!GetRefillablePointCapacity(GCM->getItem(items[iFirst].o.usItem), bMaxPoints)) continue;
+		UINT8 ubMaxPoints;
+		if (!GetRefillablePointCapacity(GCM->getItem(items[iFirst].o.usItem), ubMaxPoints)) continue;
 
 		group.clear();
 		group.push_back(&items[iFirst]);
@@ -1098,8 +1098,7 @@ static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
 		{
 			for (UINT8 ubObj = 0; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
 			{
-				INT8 const bPoints = wi->o.bStatus[ubObj];
-				if (bPoints > 0) uiPoints += std::min(bPoints, bMaxPoints);
+				uiPoints += std::min(wi->o.ubShotsLeft[ubObj], ubMaxPoints);
 				++uiObjects;
 			}
 		}
@@ -1109,7 +1108,7 @@ static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
 		// The group is repacked even when that frees no object at all: two half used bags
 		// hold their points in two objects either way, but pouring one into the other still
 		// leaves a full one and a part-used one rather than two part-used ones.
-		UINT32 const uiNeeded = (uiPoints + bMaxPoints - 1) / bMaxPoints;
+		UINT32 const uiNeeded = (uiPoints + ubMaxPoints - 1) / ubMaxPoints;
 
 		// fill up the objects at the front of the group and drop the ones left over
 		UINT32 uiLeft = uiPoints;
@@ -1118,9 +1117,9 @@ static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
 			UINT8 ubKept = 0;
 			while (ubKept < wi->o.ubNumberOfObjects && uiLeft > 0)
 			{
-				INT8 const bHere = static_cast<INT8>(std::min<UINT32>(uiLeft, bMaxPoints));
-				wi->o.bStatus[ubKept++] = bHere;
-				uiLeft -= bHere;
+				UINT8 const ubHere = static_cast<UINT8>(std::min<UINT32>(uiLeft, ubMaxPoints));
+				wi->o.ubShotsLeft[ubKept++] = ubHere;
+				uiLeft -= ubHere;
 			}
 
 			if (ubKept == 0)
@@ -1131,7 +1130,7 @@ static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
 			{
 				for (UINT8 ubObj = ubKept; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
 				{
-					wi->o.bStatus[ubObj] = 0;
+					wi->o.ubShotsLeft[ubObj] = 0;
 				}
 				wi->o.ubNumberOfObjects = ubKept;
 			}
@@ -1256,20 +1255,17 @@ void StackAndSortMapInventoryPool(void)
 
 // Magazines, kits and medkits hold points (rounds resp. kit charges) that can be moved between
 // objects of the same item.  Returns how many points one such object holds when it is full.
-static BOOLEAN GetRefillablePointCapacity(const ItemModel* const item, INT8& bMaxPoints)
+static BOOLEAN GetRefillablePointCapacity(const ItemModel* const item, UINT8& ubMaxPoints)
 {
 	if (item->isAmmo())
 	{
-		// the round count shares its byte with the signed status value
-		if (item->asAmmo()->capacity > 127) return FALSE;
-
-		bMaxPoints = static_cast<INT8>(item->asAmmo()->capacity);
-		return bMaxPoints > 0;
+		ubMaxPoints = item->asAmmo()->capacity;
+		return ubMaxPoints > 0;
 	}
 
 	if (item->isKit() || item->isMedkit())
 	{
-		bMaxPoints = 100;
+		ubMaxPoints = 100;
 		return TRUE;
 	}
 
@@ -1292,9 +1288,9 @@ static BOOLEAN IsMercInSectorShownInInventory(const SOLDIERTYPE& s)
 }
 
 
-// Take up to bWanted points out of the stash, emptying one object at a time so that what is
+// Take up to ubWanted points out of the stash, emptying one object at a time so that what is
 // left behind is a few full objects rather than a lot of nearly empty ones.
-static INT8 TakeRefillPointsFromStash(const std::vector<WORLDITEM*>& sources, size_t& uiNext, INT8 const bWanted)
+static UINT8 TakeRefillPointsFromStash(const std::vector<WORLDITEM*>& sources, size_t& uiNext, UINT8 const ubWanted)
 {
 	while (uiNext < sources.size())
 	{
@@ -1307,20 +1303,20 @@ static INT8 TakeRefillPointsFromStash(const std::vector<WORLDITEM*>& sources, si
 		}
 
 		UINT8 const ubLast     = o.ubNumberOfObjects - 1;
-		INT8&       bAvailable = o.bStatus[ubLast];
+		UINT8&      ubAvailable = o.ubShotsLeft[ubLast];
 
-		if (bAvailable <= 0)
+		if (ubAvailable == 0)
 		{
 			// spent object, drop it and take from the one below
 			RemoveObjFrom(&o, ubLast);
 			continue;
 		}
 
-		INT8 const bTaken = std::min<INT8>(bWanted, bAvailable);
-		bAvailable -= bTaken;
-		if (bAvailable == 0) RemoveObjFrom(&o, ubLast);
+		UINT8 const ubTaken = std::min(ubWanted, ubAvailable);
+		ubAvailable -= ubTaken;
+		if (ubAvailable == 0) RemoveObjFrom(&o, ubLast);
 
-		return bTaken;
+		return ubTaken;
 	}
 
 	return 0;
@@ -1362,8 +1358,8 @@ void RefillMercItemsFromMapInventoryPool(void)
 	UINT16           const usItem = highlighted.o.usItem;
 	const ItemModel* const item   = GCM->getItem(usItem);
 
-	INT8 bMaxPoints;
-	if (!GetRefillablePointCapacity(item, bMaxPoints))
+	UINT8 ubMaxPoints;
+	if (!GetRefillablePointCapacity(item, ubMaxPoints))
 	{
 		MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
 			st_format_printf(pMapInventoryActionStrings[3], item->getName()));
@@ -1403,17 +1399,17 @@ void RefillMercItemsFromMapInventoryPool(void)
 
 			for (UINT8 ubObj = 0; ubObj < o->ubNumberOfObjects; ++ubObj)
 			{
-				INT8& bStatus = o->bStatus[ubObj];
-				if (bStatus >= bMaxPoints) continue;
+				UINT8& ubPoints = o->ubShotsLeft[ubObj];
+				if (ubPoints >= ubMaxPoints) continue;
 
 				BOOLEAN fTopped = FALSE;
-				while (bStatus < bMaxPoints)
+				while (ubPoints < ubMaxPoints)
 				{
-					INT8 const bTaken = TakeRefillPointsFromStash(sources, uiNextSource, bMaxPoints - bStatus);
-					if (bTaken == 0) break; // nothing left in the stash
+					UINT8 const ubTaken = TakeRefillPointsFromStash(sources, uiNextSource, ubMaxPoints - ubPoints);
+					if (ubTaken == 0) break; // nothing left in the stash
 
-					bStatus       += bTaken;
-					uiPointsMoved += bTaken;
+					ubPoints      += ubTaken;
+					uiPointsMoved += ubTaken;
 					fTopped        = TRUE;
 				}
 
