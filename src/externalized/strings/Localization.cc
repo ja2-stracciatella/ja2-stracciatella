@@ -103,7 +103,6 @@ L10n_t::L10n_t(SGPFile * const translationFile)
 	GetArray(pwMiscSectorStrings);
 	GetArray(pMapInventoryErrorString);
 	GetArray(pMapInventoryStrings);
-	GetArray(pMapInventoryActionStrings);
 	GetArray(pMovementMenuStrings);
 	GetArray(pUpdateMercStrings);
 	GetArray(pMapScreenBorderButtonHelpText);
