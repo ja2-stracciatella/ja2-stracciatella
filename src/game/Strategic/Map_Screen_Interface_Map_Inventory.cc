@@ -956,7 +956,8 @@ static void ReplaceMapInventoryPool(const std::vector<WORLDITEM>& items)
 // How many objects of this item may share one sector inventory slot?
 static UINT8 SectorInventoryStackLimit(const ItemModel* const item)
 {
-	return std::min<UINT8>(item->getPerPocket(), MAX_OBJECTS_PER_SLOT);
+	// items that only fit big pockets - medkits, toolkits - have a per pocket count of 0
+	return std::clamp<UINT8>(item->getPerPocket(), 1, MAX_OBJECTS_PER_SLOT);
 }
 
 
