@@ -113,26 +113,8 @@ INT8 Attribute(T const& who, int attributeIndex, bool isForStatsDisplay = false)
 {
 	if (isForStatsDisplay)
 	{
-		static constexpr Attributes statsDisplayOrder[] =
-		{
-			ATTR_AGILITY,
-			ATTR_DEXTERITY,
-			ATTR_STRENGTH,
-			ATTR_LEADERSHIP,
-			ATTR_WISDOM,
-			ATTR_EXPLEVEL,
-			ATTR_MARKSMANSHIP,
-			ATTR_MECHANICAL,
-			ATTR_EXPLOSIVES,
-			ATTR_MEDICAL
-		};
 		if (attributeIndex == 0) return who.bLifeMax;
-		if (attributeIndex < 0 || attributeIndex > NUM_ATTRIBUTES)
-		{
-			SLOGE("invalid attribute index");
-			return 0;
-		}
-		attributeIndex = statsDisplayOrder[attributeIndex - 1];
+		--attributeIndex;
 	}
 
 	switch (attributeIndex)
@@ -144,10 +126,14 @@ INT8 Attribute(T const& who, int attributeIndex, bool isForStatsDisplay = false)
 		case ATTR_WISDOM:       return who.bWisdom;
 		case ATTR_EXPLEVEL:     return who.bExpLevel;
 		case ATTR_MARKSMANSHIP: return who.bMarksmanship;
-		case ATTR_EXPLOSIVES:   return who.bExplosive;
-		case ATTR_MECHANICAL:   return who.bMechanical;
 		case ATTR_MEDICAL:      return who.bMedical;
 		default:
+			// The Personnel stats list shows mechanical before explosives,
+			// the Attributes enum has them the other way round.
+			if (attributeIndex == ATTR_EXPLOSIVES)
+				return isForStatsDisplay ? who.bMechanical : who.bExplosive;
+			if (attributeIndex == ATTR_MECHANICAL)
+				return isForStatsDisplay ? who.bExplosive : who.bMechanical;
 			SLOGE("invalid attribute index");
 			return 0;
 	}
