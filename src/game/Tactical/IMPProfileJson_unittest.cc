@@ -592,7 +592,7 @@ TEST_F(IMPProfileJsonTest, RejectsWhatNoPlayerCouldHaveMade)
 		SCOPED_TRACE(c.key);
 		ExpectRejected(WithProfileKey(c.key, JsonValue(c.value)), c.message);
 	}
-	ExpectRejected(WithProfileKey("bBuddy", JsonValue::deserialize("[-1, 5, -2, -1, -1]")), "profile.bBuddy[2]: -2 is not in the range -1..169");
+	ExpectRejected(WithProfileKey("bBuddy", JsonValue::deserialize("[-1, 5, -2, -1, -1]")), ST::format("profile.bBuddy[2]: -2 is not in the range -1..{}", NUM_PROFILES - 1).c_str());
 	ExpectRejected(WithProfileKey("bInvNumber", JsonValue::deserialize("[9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]")), "profile.bInvNumber[0]");
 	ExpectRejected(WithProfileKey("bInvStatus", JsonValue::deserialize("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,101]")), "profile.bInvStatus[18]");
 }
