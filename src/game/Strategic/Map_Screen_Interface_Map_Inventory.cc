@@ -960,20 +960,28 @@ static UINT8 SectorInventoryStackLimit(const ItemModel* const item)
 }
 
 
+// Can this slot be stacked with others without losing anything?
+static BOOLEAN IsLooseSectorInventorySlot(const WORLDITEM& wi)
+{
+	if (wi.o.ubNumberOfObjects == 0) return FALSE;
+
+	// attachments and traps belong to a single object, stacking would drop them
+	if (ItemHasAttachments(wi.o)) return FALSE;
+	if (wi.o.bTrap > 0)           return FALSE;
+
+	// keys keep their lock id in the same bytes as the status array
+	if (GCM->getItem(wi.o.usItem)->isKey()) return FALSE;
+
+	return TRUE;
+}
+
+
 // Can the source slot be poured into the target slot without losing anything?
 static BOOLEAN CanMergeSectorInventorySlots(const WORLDITEM& target, const WORLDITEM& source)
 {
-	if (target.o.usItem != source.o.usItem) return FALSE;
-	if (target.ubLevel  != source.ubLevel)  return FALSE;
+	if (!IsLooseSectorInventorySlot(target) || !IsLooseSectorInventorySlot(source)) return FALSE;
 
-	// attachments and traps belong to a single object, stacking would drop them
-	if (ItemHasAttachments(target.o) || ItemHasAttachments(source.o)) return FALSE;
-	if (target.o.bTrap > 0 || source.o.bTrap > 0) return FALSE;
-
-	// keys keep their lock id in the same bytes as the status array
-	if (GCM->getItem(target.o.usItem)->isKey()) return FALSE;
-
-	return TRUE;
+	return target.o.usItem == source.o.usItem && target.ubLevel == source.ubLevel;
 }
 
 
@@ -1046,100 +1054,99 @@ static void StripSectorInventoryItem(WORLDITEM& wi, std::vector<WORLDITEM>& extr
 }
 
 
-// Only objects that hold nothing but points may have their points poured into another object.
-static BOOLEAN CanPourSectorInventoryPoints(const WORLDITEM& wi)
-{
-	if (wi.o.ubNumberOfObjects == 0) return FALSE;
-	if (wi.o.bTrap > 0)              return FALSE;
-	if (ItemHasAttachments(wi.o))    return FALSE;
-
-	return TRUE;
-}
-
-
 static BOOLEAN GetRefillablePointCapacity(const ItemModel* item, UINT8& ubMaxPoints);
 
 
-// Magazines, kits and medkits hold points - rounds resp. charges - that can be moved between
-// objects of the same item.  Pool them per item so that what is left is full objects and at most
-// one part-used one.  Returns how many objects were emptied out this way.
-static UINT32 MergeRefillableSectorInventory(std::vector<WORLDITEM>& items)
+// Repack one group of mergeable slots into as few slots as it takes.  Magazines, kits and medkits
+// hold points - rounds resp. charges - and money holds an amount; those are poured together first,
+// so that what is left is full objects and at most one part-used one.  Everything ends up where
+// the first slot of the group is, the same as when the player stacks items by hand.
+static void RepackSectorInventoryGroup(const std::vector<const WORLDITEM*>& group, std::vector<WORLDITEM>& packed,
+	UINT32& uiObjectsMerged, UINT32& uiSlotsMerged)
 {
-	UINT32 uiObjectsMerged = 0;
+	const WORLDITEM&       first  = *group.front();
+	const ItemModel* const item   = GCM->getItem(first.o.usItem);
+	BOOLEAN          const fMoney = item->isMoney();
 
-	std::vector<bool>       fPooled(items.size(), false);
-	std::vector<WORLDITEM*> group;
-
-	for (size_t iFirst = 0; iFirst < items.size(); ++iFirst)
+	// how much one object holds when full, 0 when nothing can be poured
+	UINT32 uiCapacity = 0;
+	UINT8  ubPerSlot  = 1;
+	if (fMoney)
 	{
-		if (fPooled[iFirst])                             continue;
-		if (!CanPourSectorInventoryPoints(items[iFirst])) continue;
-
+		uiCapacity = MAX_MONEY_PER_SLOT;
+	}
+	else
+	{
 		UINT8 ubMaxPoints;
-		if (!GetRefillablePointCapacity(GCM->getItem(items[iFirst].o.usItem), ubMaxPoints)) continue;
-
-		group.clear();
-		group.push_back(&items[iFirst]);
-		fPooled[iFirst] = true;
-
-		for (size_t i = iFirst + 1; i < items.size(); ++i)
-		{
-			if (fPooled[i])                                             continue;
-			if (!CanPourSectorInventoryPoints(items[i]))                continue;
-			if (!CanMergeSectorInventorySlots(items[iFirst], items[i])) continue;
-
-			group.push_back(&items[i]);
-			fPooled[i] = true;
-		}
-
-		UINT32 uiPoints  = 0;
-		UINT32 uiObjects = 0;
-		for (const WORLDITEM* wi : group)
-		{
-			for (UINT8 ubObj = 0; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
-			{
-				uiPoints += std::min(wi->o.ubShotsLeft[ubObj], ubMaxPoints);
-				++uiObjects;
-			}
-		}
-
-		if (uiPoints == 0) continue; // nothing but empties, leave them be
-
-		// The group is repacked even when that frees no object at all: two half used bags
-		// hold their points in two objects either way, but pouring one into the other still
-		// leaves a full one and a part-used one rather than two part-used ones.
-		UINT32 const uiNeeded = (uiPoints + ubMaxPoints - 1) / ubMaxPoints;
-
-		// fill up the objects at the front of the group and drop the ones left over
-		UINT32 uiLeft = uiPoints;
-		for (WORLDITEM* wi : group)
-		{
-			UINT8 ubKept = 0;
-			while (ubKept < wi->o.ubNumberOfObjects && uiLeft > 0)
-			{
-				UINT8 const ubHere = static_cast<UINT8>(std::min<UINT32>(uiLeft, ubMaxPoints));
-				wi->o.ubShotsLeft[ubKept++] = ubHere;
-				uiLeft -= ubHere;
-			}
-
-			if (ubKept == 0)
-			{
-				DeleteObj(&wi->o);
-			}
-			else
-			{
-				for (UINT8 ubObj = ubKept; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
-				{
-					wi->o.ubShotsLeft[ubObj] = 0;
-				}
-				wi->o.ubNumberOfObjects = ubKept;
-			}
-		}
-
-		uiObjectsMerged += uiObjects - uiNeeded;
+		if (GetRefillablePointCapacity(item, ubMaxPoints)) uiCapacity = ubMaxPoints;
+		ubPerSlot = SectorInventoryStackLimit(item);
 	}
 
-	return uiObjectsMerged;
+	if (uiCapacity == 0 && ubPerSlot < 2)
+	{
+		// nothing to pour and nothing to stack, leave the slots where they are
+		for (const WORLDITEM* wi : group) packed.push_back(*wi);
+		return;
+	}
+
+	// what each object of the group carries: points, a money amount, or else its status, which is
+	// copied through the unsigned view byte for byte
+	std::vector<UINT32> values;
+	for (const WORLDITEM* wi : group)
+	{
+		if (fMoney)
+		{
+			values.push_back(wi->o.uiMoneyAmount);
+			continue;
+		}
+
+		for (UINT8 ubObj = 0; ubObj < wi->o.ubNumberOfObjects; ++ubObj)
+		{
+			UINT8 const ubValue = wi->o.ubShotsLeft[ubObj];
+			values.push_back(uiCapacity > 0 ? std::min<UINT32>(ubValue, uiCapacity) : ubValue);
+		}
+	}
+
+	UINT32 uiTotal = 0;
+	for (UINT32 const uiValue : values) uiTotal += uiValue;
+
+	// Poured even when that frees no object at all: two half used bags hold their points in two
+	// objects either way, but pouring one into the other leaves a full one and a part-used one
+	// rather than two part-used ones.  A group of nothing but empties is left be.
+	if (uiCapacity > 0 && uiTotal > 0)
+	{
+		size_t const uiBefore = values.size();
+
+		values.assign(uiTotal / uiCapacity, uiCapacity);
+		if (uiTotal % uiCapacity > 0) values.push_back(uiTotal % uiCapacity);
+
+		if (!fMoney) uiObjectsMerged += static_cast<UINT32>(uiBefore - values.size());
+	}
+
+	size_t uiSlots = 0;
+	for (size_t uiNext = 0; uiNext < values.size(); uiNext += ubPerSlot)
+	{
+		WORLDITEM slot = first;
+		slot.o.ubNumberOfObjects = static_cast<UINT8>(std::min<size_t>(ubPerSlot, values.size() - uiNext));
+
+		if (fMoney)
+		{
+			slot.o.uiMoneyAmount = values[uiNext];
+		}
+		else
+		{
+			std::fill(std::begin(slot.o.ubShotsLeft), std::end(slot.o.ubShotsLeft), 0);
+			for (UINT8 ubObj = 0; ubObj < slot.o.ubNumberOfObjects; ++ubObj)
+			{
+				slot.o.ubShotsLeft[ubObj] = static_cast<UINT8>(values[uiNext + ubObj]);
+			}
+		}
+
+		packed.push_back(slot);
+		++uiSlots;
+	}
+
+	if (group.size() > uiSlots) uiSlotsMerged += static_cast<UINT32>(group.size() - uiSlots);
 }
 
 
@@ -1185,59 +1192,35 @@ void StackAndSortMapInventoryPool(void)
 		pending.swap(next);
 	}
 
-	// pour part-used magazines and kits together before packing what is left into stacks
-	UINT32 const uiObjectsMerged = MergeRefillableSectorInventory(items);
+	// Group the slots that can be merged, then repack each group in one go.
+	UINT32 uiObjectsMerged = 0;
+	UINT32 uiSlotsMerged   = 0;
 
-	UINT32 uiSlotsMerged = 0;
-
-	for (size_t iTarget = 0; iTarget < items.size(); ++iTarget)
+	std::vector<WORLDITEM>         packed;
+	std::vector<bool>              fGrouped(items.size(), false);
+	std::vector<const WORLDITEM*>  group;
+	for (size_t iFirst = 0; iFirst < items.size(); ++iFirst)
 	{
-		OBJECTTYPE& target = items[iTarget].o;
-		if (target.ubNumberOfObjects == 0) continue;
+		if (fGrouped[iFirst]) continue;
 
-		const ItemModel* const item         = GCM->getItem(target.usItem);
-		BOOLEAN          const fMoney       = item->isMoney();
-		UINT8            const ubStackLimit = SectorInventoryStackLimit(item);
-
-		if (!fMoney && ubStackLimit < 2) continue;
-
-		for (size_t iSource = iTarget + 1; iSource < items.size(); ++iSource)
+		if (!IsLooseSectorInventorySlot(items[iFirst]))
 		{
-			OBJECTTYPE& source = items[iSource].o;
-			if (source.ubNumberOfObjects == 0) continue;
-			if (!CanMergeSectorInventorySlots(items[iTarget], items[iSource])) continue;
-
-			if (fMoney)
-			{
-				// money is one object carrying an amount, not a stack of objects
-				if (target.uiMoneyAmount >= MAX_MONEY_PER_SLOT) break;
-
-				UINT32 const uiToTransfer = std::min<UINT32>(MAX_MONEY_PER_SLOT - target.uiMoneyAmount, source.uiMoneyAmount);
-				target.uiMoneyAmount += uiToTransfer;
-				target.bMoneyStatus   = 100;
-				source.uiMoneyAmount -= uiToTransfer;
-
-				if (source.uiMoneyAmount == 0)
-				{
-					DeleteObj(&source);
-					++uiSlotsMerged;
-				}
-			}
-			else
-			{
-				if (target.ubNumberOfObjects >= ubStackLimit) break;
-
-				UINT8 const ubToTransfer = std::min<UINT8>(ubStackLimit - target.ubNumberOfObjects, source.ubNumberOfObjects);
-				StackObjs(&source, &target, ubToTransfer);
-
-				if (source.ubNumberOfObjects == 0) ++uiSlotsMerged;
-			}
+			packed.push_back(items[iFirst]);
+			continue;
 		}
-	}
 
-	// throw away the slots that were emptied out
-	items.erase(std::remove_if(items.begin(), items.end(),
-		[](const WORLDITEM& wi) { return wi.o.ubNumberOfObjects == 0; }), items.end());
+		group.assign(1, &items[iFirst]);
+		for (size_t i = iFirst + 1; i < items.size(); ++i)
+		{
+			if (fGrouped[i] || !CanMergeSectorInventorySlots(items[iFirst], items[i])) continue;
+
+			group.push_back(&items[i]);
+			fGrouped[i] = true;
+		}
+
+		RepackSectorInventoryGroup(group, packed, uiObjectsMerged, uiSlotsMerged);
+	}
+	items.swap(packed);
 
 	items.insert(items.end(), unreachable.begin(), unreachable.end());
 	SortSectorInventory(items.data(), items.size());
