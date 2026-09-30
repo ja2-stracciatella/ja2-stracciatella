@@ -336,10 +336,6 @@ int main(int argc, char* argv[])
 
 		auto shouldStartInFullScreen = EngineOptions_shouldStartInFullscreen(params.get());
 
-		if (EngineOptions_shouldStartWithoutSound(params.get())) {
-			SoundEnableSound(FALSE);
-		}
-
 		if (EngineOptions_shouldStartInDebugMode(params.get())) {
 			Logger_setLevel(LogLevel::Debug);
 			GameMode::getInstance()->setDebugging(true);
@@ -369,6 +365,7 @@ int main(int argc, char* argv[])
 		VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params.get());
 
 		FLOAT brightness = EngineOptions_getBrightness(params.get());
+		bool noSound = EngineOptions_shouldStartWithoutSound(params.get());
 
 		////////////////////////////////////////////////////////////
 
@@ -426,7 +423,7 @@ int main(int argc, char* argv[])
 		InitJA2SplashScreen();
 
 		SLOGD("Initializing Sound Manager");
-		InitializeSoundManager();
+		InitializeSoundManager(noSound);
 
 		SLOGD("Initializing Random");
 		// Initialize random number generator

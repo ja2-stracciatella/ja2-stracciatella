@@ -1,6 +1,7 @@
 #ifndef __SOUNDMAN_
 #define __SOUNDMAN_
 
+#include "Sound_Control.h"
 #include "Types.h"
 
 #include <vector>
@@ -8,14 +9,16 @@
 
 #define MAXVOLUME 127
 
+using SoundManagerID = UINT32;
 
 // Sound error values (they're all the same)
-#define NO_SAMPLE	0xffffffff
-#define SOUND_ERROR	0xffffffff
+constexpr SoundManagerID NO_SAMPLE   = 0xffffffff;
+constexpr SoundManagerID SOUND_ERROR = 0xffffffff;
 
 
-// Zeros out the structs for the system info, and initializes the cache.
-void InitializeSoundManager(void);
+/* Opaque initialization of the sound manager. If noSound is true, the sound functions
+ * can still be called normally, but there will be no sound output */
+void InitializeSoundManager(bool noSound);
 
 /* Silences all currently playing sound, deallocates any memory allocated, and
  * releases the sound hardware. */
@@ -98,8 +101,6 @@ UINT32 SoundGetVolume(UINT32 uiSoundID);
  * Returns: The current time of the sample in milliseconds. */
 UINT32 SoundGetPosition(UINT32 uiSoundID);
 
-// Allows or disallows the startup of the sound hardware.
-void SoundEnableSound(BOOLEAN fEnable);
 bool IsSoundEnabled();
 
 #endif
