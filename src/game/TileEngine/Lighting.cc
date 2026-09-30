@@ -326,7 +326,7 @@ struct IlluminationFilter
 	WorldDirections srcToDstDir{ DIRECTION_IRRELEVANT }; // Direction from source to destination tile
 	int32_t         baseGridNo{};                        // E.g. open door slab and its frame (base) can be in different tiles
 
-	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY)
+	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags)
 	{
 		UINT16 dstTileNo = MAPROWCOLTOPOS(iY, iX);
 		UINT16 srcTileNo = MAPROWCOLTOPOS(iSrcY, iSrcX);
@@ -349,6 +349,11 @@ struct IlluminationFilter
 		}
 
 		srcToDstDir = static_cast<WorldDirections>(atan8(iSrcX, iSrcY, iX, iY));
+
+		if (spriteFlags & LIGHT_SPR_ONROOF)
+		{	// there are no light-blocking structures on roofs, so we can skip all the checks
+			return;
+		}
 
 		UINT8 ubTravelCost = gubWorldMovementCosts[dstTileNo][srcToDstDir][0];
 
@@ -1462,7 +1467,7 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
-		IlluminationFilter filter{ srcX, srcY, dstX, dstY };
+		IlluminationFilter filter{ srcX, srcY, dstX, dstY, l->uiFlags };
 
 		srcX = centerX;
 		srcY = centerY;
@@ -1669,7 +1674,7 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
-		IlluminationFilter filter{ srcX, srcY, dstX, dstY };
+		IlluminationFilter filter{ srcX, srcY, dstX, dstY, l->uiFlags };
 
 		srcX = centerX;
 		srcY = centerY;
