@@ -48,8 +48,17 @@
 
 enum LightFlags : UINT32
 {
-	LIGHT_NODE_DRAWN_FULLY   = 0x00000001, // light node duplicate marker
-	LIGHT_NODE_DRAWN_NONWALL = 0x00000002,
+	LIGHT_NODE_DRAWN_N       = 1 << NORTH,
+	LIGHT_NODE_DRAWN_NE      = 1 << NORTHEAST,
+	LIGHT_NODE_DRAWN_E       = 1 << EAST,
+	LIGHT_NODE_DRAWN_SE      = 1 << SOUTHEAST,
+	LIGHT_NODE_DRAWN_S       = 1 << SOUTH,
+	LIGHT_NODE_DRAWN_SW      = 1 << SOUTHWEST,
+	LIGHT_NODE_DRAWN_W       = 1 << WEST,
+	LIGHT_NODE_DRAWN_NW      = 1 << NORTHWEST,
+	LIGHT_NODE_DRAWN_FULLY   = 1 << 8,    // Indicates there is nothing to illuminate in this tile anymore
+	LIGHT_NODE_DRAWN_NO_DIR  = 1 << DIRECTION_IRRELEVANT, // Indicates destination and source are the same tile
+	LIGHT_NODE_DRAWN_NONWALL = 1 << 10,
 	LIGHT_ROOF_ONLY        = 0x00001000, // light only rooftops
 	LIGHT_IGNORE_WALLS     = 0x00002000, // doesn't take walls into account
 	LIGHT_BACKLIGHT        = 0x00004000, // light does not light objs, trees
@@ -63,7 +72,7 @@ struct LIGHT_NODE
 {
 	INT16 iDX;
 	INT16 iDY;
-	UINT8 uiFlags;
+	UINT16 uiFlags;
 	UINT8 ubLight;
 };
 
@@ -317,7 +326,7 @@ struct IlluminationFilter
 	WorldDirections srcToDstDir{ DIRECTION_IRRELEVANT }; // Direction from source to destination tile
 	int32_t         baseGridNo{};                        // E.g. open door slab and its frame (base) can be in different tiles
 
-	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY)
+	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags)
 	{
 		UINT16 dstTileNo = MAPROWCOLTOPOS(iY, iX);
 		UINT16 srcTileNo = MAPROWCOLTOPOS(iSrcY, iSrcX);
@@ -334,7 +343,17 @@ struct IlluminationFilter
 			return;
 		}
 
+		if (dstTileNo == srcTileNo)
+		{
+			return;
+		}
+
 		srcToDstDir = static_cast<WorldDirections>(atan8(iSrcX, iSrcY, iX, iY));
+
+		if (spriteFlags & LIGHT_SPR_ONROOF)
+		{	// there are no light-blocking structures on roofs, so we can skip all the checks
+			return;
+		}
 
 		UINT8 ubTravelCost = gubWorldMovementCosts[dstTileNo][srcToDstDir][0];
 
@@ -358,11 +377,6 @@ struct IlluminationFilter
 				}
 				return;
 			}
-		}
-
-		if (dstTileNo == srcTileNo)
-		{
-			return;
 		}
 
 		if (ubTravelCost == TRAVELCOST_WALL)
@@ -1453,27 +1467,43 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
-		IlluminationFilter filter{ srcX, srcY, dstX, dstY };
+		IlluminationFilter filter{ srcX, srcY, dstX, dstY, l->uiFlags };
+
+		srcX = centerX;
+		srcY = centerY;
 
 		if (filter.blocked)
 		{
 			uiCount = LightFindNextRay(t, uiCount);
 		}
+		else
+		{
+			srcX += pLight->iDX;
+			srcY += pLight->iDY;
+		}
+
+		bool areSrcAndDstSame = filter.srcToDstDir == DIRECTION_IRRELEVANT;
+
+		if ((!areSrcAndDstSame && IsDirectionDiagonal(filter.srcToDstDir)) ||
+			 (areSrcAndDstSame && usNodeIndex != 1)       || /* dst and src tiles are the same tile and it's not the center */
+			  pLight->uiFlags & (1 << filter.srcToDstDir) || /* double pass: this direction has already been drawn */
+			  pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY)
+		{
+			continue;
+		}
 
 		bool isDstInSWQuadrant = pLight->iDX < 0 && pLight->iDY > 0;
 		bool isDstInNEQuadrant = pLight->iDX > 0 && pLight->iDY < 0;
 		bool isDstInNWQuadrant = pLight->iDX < 0 && pLight->iDY < 0;
+		bool isDstInSEQuadrant = pLight->iDX > 0 && pLight->iDY > 0;
 
-		if (!(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL)
+		if (pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL && !isDstInSEQuadrant && !filter.illuminateOrientedBlocksOnly)
 		{
-			if ((isDstInSWQuadrant || isDstInNEQuadrant) ||
-				(isDstInNWQuadrant && !filter.illuminateOrientedBlocksOnly))
-			{
-				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
-			}
+			pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+			continue;
 		}
 
-		if (!filter.illuminateNothing && !(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->ubLight)
+		if (!filter.illuminateNothing && pLight->ubLight)
 		{
 			UINT32 uiFlags = (UINT32)(usNodeIndex & LIGHT_BACKLIGHT);
 			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
@@ -1490,8 +1520,10 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 				LightAddTile(dstX, dstY, pLight->ubLight, uiFlags, filter);
 			}
 
-			if ( (centerX == dstX || centerY == dstY) || /* Destination tile is on a cardinal direction ... */
-				 (pLight->iDX > 0 && pLight->iDY > 0) )  /* ... or the SE quadrant */
+			pLight->uiFlags |= (1 << filter.srcToDstDir);
+
+			// Destination tile is on a cardinal direction or in SE
+			if ( (centerX == dstX || centerY == dstY) || isDstInSEQuadrant)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
 			}
@@ -1513,15 +1545,6 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 			}
-		}
-
-		srcX = centerX;
-		srcY = centerY;
-
-		if (!filter.blocked)
-		{
-			srcX += pLight->iDX;
-			srcY += pLight->iDY;
 		}
 	}
 
@@ -1651,27 +1674,43 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
-		IlluminationFilter filter{ srcX, srcY, dstX, dstY };
+		IlluminationFilter filter{ srcX, srcY, dstX, dstY, l->uiFlags };
+
+		srcX = centerX;
+		srcY = centerY;
 
 		if (filter.blocked)
 		{
 			uiCount = LightFindNextRay(t, uiCount);
 		}
+		else
+		{
+			srcX += pLight->iDX;
+			srcY += pLight->iDY;
+		}
+
+		bool areSrcAndDstSame = filter.srcToDstDir == DIRECTION_IRRELEVANT;
+
+		if ((!areSrcAndDstSame && IsDirectionDiagonal(filter.srcToDstDir)) ||
+			 (areSrcAndDstSame && usNodeIndex != 1)       || /* dst and src tiles are the same tile and it's not the center */
+			  pLight->uiFlags & (1 << filter.srcToDstDir) || /* double pass: this direction has already been drawn */
+			  pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY)
+		{
+			continue;
+		}
 
 		bool isDstInSWQuadrant = pLight->iDX < 0 && pLight->iDY > 0;
 		bool isDstInNEQuadrant = pLight->iDX > 0 && pLight->iDY < 0;
 		bool isDstInNWQuadrant = pLight->iDX < 0 && pLight->iDY < 0;
+		bool isDstInSEQuadrant = pLight->iDX > 0 && pLight->iDY > 0;
 
-		if (!(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL)
+		if (pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL && !isDstInSEQuadrant && !filter.illuminateOrientedBlocksOnly)
 		{
-			if ((isDstInSWQuadrant || isDstInNEQuadrant) ||
-				(isDstInNWQuadrant && !filter.illuminateOrientedBlocksOnly))
-			{
-				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
-			}
+			pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
+			continue;
 		}
 
-		if (!filter.illuminateNothing && !(pLight->uiFlags & LIGHT_NODE_DRAWN_FULLY) && pLight->ubLight)
+		if (!filter.illuminateNothing && pLight->ubLight)
 		{
 			UINT32 uiFlags = (UINT32)(usNodeIndex & LIGHT_BACKLIGHT);
 			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
@@ -1688,8 +1727,10 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 				LightSubtractTile(dstX, dstY, pLight->ubLight, uiFlags, filter);
 			}
 
-			if ((centerX == dstX || centerY == dstY) || /* Destination tile is on a cardinal direction ... */
-				(pLight->iDX > 0 && pLight->iDY > 0))   /* ... or the SE quadrant */
+			pLight->uiFlags |= (1 << filter.srcToDstDir);
+
+			// Destination tile is on a cardinal direction or in SE
+			if ((centerX == dstX || centerY == dstY) || isDstInSEQuadrant)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
 			}
@@ -1711,15 +1752,6 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 			}
-		}
-
-		srcX = centerX;
-		srcY = centerY;
-
-		if (!filter.blocked)
-		{
-			srcX += pLight->iDX;
-			srcY += pLight->iDY;
 		}
 	}
 
@@ -1755,11 +1787,33 @@ static LightTemplate* LightLoad(const ST::string& pFilename)
 {
 	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
 
+	struct FILE_LIGHT_NODE
+	{
+		INT16 iDX;
+		INT16 iDY;
+		UINT8 uiFlags;
+		UINT8 ubLight;
+	};
+
 	UINT16 numLights;
 	hFile->read(&numLights, sizeof(UINT16));
+	std::vector<FILE_LIGHT_NODE> fileLights;
+	fileLights.assign(numLights, FILE_LIGHT_NODE{});
+	hFile->read(fileLights.data(), sizeof(FILE_LIGHT_NODE) * numLights);
+
+	// Widen the template file's uiFlag to 16 bit
 	std::vector<LIGHT_NODE> lights;
-	lights.assign(numLights, LIGHT_NODE{});
-	hFile->read(lights.data(), sizeof(LIGHT_NODE) * numLights);
+	lights.reserve(fileLights.size());
+	std::transform(fileLights.begin(), fileLights.end(),
+					std::back_inserter(lights),
+					[](const FILE_LIGHT_NODE& val) {
+						LIGHT_NODE lightNode;
+						lightNode.iDX     = val.iDX;
+						lightNode.iDY     = val.iDY;
+						lightNode.uiFlags = static_cast<UINT16>(val.uiFlags);
+						lightNode.ubLight = val.ubLight;
+						return lightNode;
+	});
 
 	UINT16 numRays;
 	hFile->read(&numRays, sizeof(UINT16));
@@ -2085,7 +2139,7 @@ const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 
 TEST(Lighting, asserts)
 {
-	EXPECT_EQ(sizeof(LIGHT_NODE), 6u);
+	EXPECT_EQ(sizeof(LIGHT_NODE), 8u);
 }
 
 #endif
