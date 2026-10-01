@@ -13,13 +13,15 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+#include "Types.h"
 
+#include <cstdint>
 #include <string_theory/string>
 
 #include <algorithm>
 #include <assert.h>
-#include <vector>
 #include <stdexcept>
+#include <variant>
 
 // Miniaudio includes needs some defines
 
@@ -55,14 +57,54 @@ bool IsSoundEnabled()
 }
 
 //namespace {
-void Require(ma_result result)
+constexpr float SoundLibsConversionFactor{ 127.0f };
+// Convert an integer in the range [0..127] as used by the Miles Sound System
+// to a float in the range [0..1] as used by miniaudio.
+constexpr float MSStoMA(UINT32 value)
+{
+	return float(std::min(value, 127U)) / SoundLibsConversionFactor;
+}
+
+void Require(ma_result result, char const * functionName = "")
 {
 	if (result == MA_SUCCESS) return;
 
-	throw std::runtime_error("");
+	throw std::runtime_error(ST::format("miniaudio call of {} failed: {}",
+		functionName, ma_result_description(result)).c_str());
 }
 
-ma_result MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead, size_t *bytesRead)
+
+struct SoundObject
+{
+	ma_sound sound;
+	std::variant<ma_decoder, UINT8 *> dataSource;
+
+	void (*endCallback)(void *);
+	void *callbackUserData;
+
+	~SoundObject()
+	{
+		ma_sound_uninit(&sound);
+		if (dataSource.index() == 0)
+		{
+			ma_decoder & decoder = std::get<ma_decoder>(dataSource);
+			ma_decoder_uninit(&decoder);
+			DeleteSGPFile(reinterpret_cast<SGPFile *>(decoder.pUserData));
+		}
+		else
+		{
+			delete [] std::get<UINT8 *>(dataSource);
+		}
+	}
+};
+
+
+
+std::map<SoundManagerID, SoundObject> sounds;
+ma_engine engine;
+
+static ma_result MiniaudioReadProc(ma_decoder * pDecoder,
+	void * pBufferOut, size_t bytesToRead, size_t *bytesRead)
 {
 	auto file = reinterpret_cast<SGPFile *>(pDecoder->pUserData);
 
@@ -70,17 +112,19 @@ ma_result MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytes
 	return *bytesRead == bytesToRead ? MA_SUCCESS : MA_ERROR;
 }
 
-ma_result MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_origin origin)
+static ma_result MiniaudioSeekProc(ma_decoder * pDecoder,
+	ma_int64 byteOffset, ma_seek_origin origin)
 {
 	auto file = reinterpret_cast<SGPFile *>(pDecoder->pUserData);
 
-	try {
+	try
+	{
 		file->seek(static_cast<INT32>(byteOffset), [origin] {
 			switch (origin)
 			{
-				case ma_seek_origin_current: return FileSeekMode::FILE_SEEK_FROM_CURRENT;
-				case ma_seek_origin_start:   return FileSeekMode::FILE_SEEK_FROM_START;
-				case ma_seek_origin_end:     return FileSeekMode::FILE_SEEK_FROM_END;
+				case ma_seek_origin_current: return FILE_SEEK_FROM_CURRENT;
+				case ma_seek_origin_start:   return FILE_SEEK_FROM_START;
+				case ma_seek_origin_end:     return FILE_SEEK_FROM_END;
 			}}());
 	}
 	catch (...)
@@ -90,88 +134,90 @@ ma_result MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_o
 	return MA_SUCCESS;
 }
 
-class SoundEngine
+ma_sound * FromID(SoundManagerID id)
 {
-	std::map<UINT32, ma_sound> sounds;
-	ma_engine engine;
+	auto pos = sounds.find(id);
+	return pos != sounds.end() ? &pos->second.sound : nullptr;
+}
 
-
-public:
-	SOUNDTAG * FromID(SoundManagerID id)
+void Init([[maybe_unused]]bool noSound)
+{
 	{
-		auto pos = sounds.find(id);
-		return pos != sounds.end() ? &pos->second : nullptr;
+		auto cfg = ma_engine_config_init();
+		Require(ma_engine_init(&cfg, &engine));
+	}
+}
+
+void Uninit()
+{
+	ma_engine_uninit(&engine);
+}
+
+auto GetSoundObject()
+{
+	for (UINT32 id = 1; id < SOUND_ERROR; ++id)
+	{
+		auto [ pos, created ] = sounds.try_emplace(id);
+		if (created) return pos;
 	}
 
-	SoundManagerID GetUniqueID()
-	{
-		for (UINT32 id = 1; id < SOUND_ERROR; ++id)
-		{
-			if (sounds.find(id) == sounds.end())
-			{
-				return id;
-			}
-		}
-		return SOUND_ERROR;
-	}
+	throw std::logic_error("Could not create a new ma_sound object");
+}
 
-	void Init([[maybe_unused]]bool noSound)
-	{
-		{
-			auto cfg = ma_engine_config_init();
-			Require(ma_engine_init(&cfg, &engine));
-			Require(ma_engine_start(&engine));
-		}
+// Create a new sound object for a SGPFile.
+auto GetSoundObject(char const * filename)
+{
+	auto pos = GetSoundObject();
+	SoundObject & so{ pos->second };
+	SGPFile * file{ GCM->openGameResForReading(filename) };
 
-		{
-			auto cfg = ma_resource_manager_config_init();
-			cfg.pVFS = nullptr;
-		}
-		auto resourceMgr = ma_engine_get_resource_manager(&engine);
-		//auto  ma_resource_manager_config_init();
-	}
+	so.dataSource = ma_decoder{};
+	auto * decoder = &std::get<ma_decoder>(so.dataSource);
 
-	void Uninit()
-	{
-		ma_engine_uninit(&engine);
-	}
+	Require(ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, file,
+		nullptr, decoder));
+	Require(ma_sound_init_from_data_source(&engine, decoder, 0, nullptr,
+			&so.sound));
 
-	ma_decoder * GetDecoder(char const * filename)
-	{
-		auto decoder = std::make_unique<ma_decoder>();
+	return pos;
+}
 
-		SGPFile * file{ GCM->openGameResForReading(filename) };
+// Create a new sound object for a memory buffer of raw PCM data.
+auto GetSoundObject(UINT8 * memAddr, size_t len, ma_format format, UINT32 channels, UINT32 rate)
+{
+	auto pos = GetSoundObject();
+	SoundObject & so{ pos->second };
+	so.dataSource = memAddr;
 
-		ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, file, nullptr, decoder.get());
+	ma_uint64 frames = (len / channels) / (format == ma_format_s16 ? 2 : 1);
+	ma_resource_manager * resourceMgr = ma_engine_get_resource_manager(&engine);
 
-		return decoder.release();
-	}
+	Require(ma_resource_manager_register_decoded_data(
+		resourceMgr, "bla",
+		memAddr, frames, format, channels, rate));
 
-	auto GetSoundObject(ma_decoder * decoder)
-	{
-		for (UINT32 id = 1; id < SOUND_ERROR; ++id)
-		{
-			auto [ pos, created ] = sounds.try_emplace(id);
-			if (created)
-			{
-				Require(ma_sound_init_from_data_source(&engine, decoder, 0, nullptr, &pos->second));
-				return pos;
-			}
-		}
+	ma_resource_manager_data_source source;
+	Require(ma_resource_manager_data_source_init(resourceMgr, "bla", 0, nullptr, &source));
+	Require(ma_sound_init_from_data_source(&engine, &source, 0, nullptr,
+			&so.sound));
 
-		throw std::logic_error("Could not create a new ma_sound object");
-	}
-};
+	return pos;
+}
 
-static SoundEngine gEngine;
+void Start(ma_sound * sound)
+{
+	//auto graph = ma_engine_get_node_graph(&engine);
+	//ma_node_graph_
+	ma_sound_start(sound);
+}
 
 /* Searches out a sound instance referred to by its ID number.
  *
  * Returns: If the instance was found, the pointer to the channel.  NULL
  *          otherwise. */
-static SOUNDTAG * SoundGetChannelByID(SoundManagerID id)
+static ma_sound * SoundGetByID(SoundManagerID id)
 {
-	return gfEnableStartup ? gEngine.FromID(id) : nullptr;
+	return gfEnableStartup ? FromID(id) : nullptr;
 }
 //}
 
@@ -179,7 +225,7 @@ void InitializeSoundManager(bool noSound)
 {
 	if (fSoundSystemInit) return;
 
-	gEngine.Init(noSound);
+	Init(noSound);
 
 	fSoundSystemInit = true;
 }
@@ -190,31 +236,42 @@ static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma
 
 void ShutdownSoundManager(void)
 {
-	gEngine.Uninit();
+	Uninit();
 	fSoundSystemInit = FALSE;
 }
 
 
 //static SOUNDTAG*  SoundGetFreeChannel(void);
 //static SAMPLETAG* SoundLoadSample(const char* pFilename);
-static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
+//static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
-UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, [[maybe_unused]] void (*end_callback)(void*), [[maybe_unused]] void* data)
+UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	auto decoder = gEngine.GetDecoder(pFilename);
-
-	auto result = gEngine.GetSoundObject(decoder);
-	auto id = result->first;
-	auto * sound = &result->second;
+	auto result = GetSoundObject(pFilename);
+	SoundManagerID id = result->first;
+	SoundObject & so = result->second;
+	auto * sound = &so.sound;
 
 	SoundSetPan(id, pan);
 	SoundSetVolume(id, volume);
 	ma_sound_set_looping(sound, loop > 1);
-	ma_sound_start(sound);
 
+	if (end_callback)
+	{
+		so.endCallback = end_callback;
+		so.callbackUserData = data;
+
+		ma_sound_set_end_callback(sound, [](void * userData, ma_sound *)
+		{
+			auto cbd = reinterpret_cast<SoundObject *>(userData);
+			cbd->endCallback(cbd->callbackUserData);
+		}, &so);
+	}
+
+	Start(sound);
 	SLOGI("Playing {}; ID {}", pFilename, id);
 	return id;
 }
@@ -223,9 +280,12 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
  *
  * Allocates space for the sound sample within the sound system
  */
-UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UINT32 rate, std::vector<UINT8>& buf, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
+SoundManagerID SoundPlayFromSmackBuff(const char* name, UINT8 channels,
+	UINT8 depth, UINT32 rate, std::span<UINT8> buf, UINT32 volume, UINT32 pan)
 {
 	ma_format format;
+
+//	ma_resource_manager_register_decoded_data( *pResourceManager, const char *pName, const void *pData, ma_uint64 frameCount, ma_format format, ma_uint32 channels, ma_uint32 sampleRate)
 
 	if (buf.empty()) return SOUND_ERROR;
 
@@ -243,8 +303,12 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 		// We expect the Endianess for the Smacker buffer to be little endian, but ma_format_s16 is native endian, so we need to do some conversion
 		convertLittleEndianBufferToNativeEndianU16(inMemoryBuffer, uiBufferSize);
 	}
-	SAMPLETAG* s = SoundLoadBuffer(inMemoryBuffer, uiBufferSize, format, channels, rate);
-	if (s == NULL) return SOUND_ERROR;
+
+	auto pos = GetSoundObject(inMemoryBuffer, uiBufferSize, format, channels, rate);
+	//Start(&pos->second.sound);
+	return pos->first;
+	//SAMPLETAG* s = SoundLoadBuffer(inMemoryBuffer, uiBufferSize
+	//if (s == NULL) return SOUND_ERROR;
 
 #if 0
 	s->pName           = name;
@@ -254,14 +318,13 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return SOUND_ERROR;
 #endif
-	SOUNDTAG * channel{};
-	return SoundStartSample(s, channel, volume, pan, loop, end_callback, data);
+	return SOUND_ERROR; // SoundStartSample(s, channel, volume, pan, loop, end_callback, data);
 }
 
 
-UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
+UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max)
 {
-	SLOGD("playing random Sound: \"{}\"", pFilename);
+	SLOGI("playing random Sound: \"{}\"", pFilename);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 #if 0
@@ -284,82 +347,55 @@ UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, 
 
 	return (UINT32)(s - pSampleList);
 #endif
+	return SOUND_ERROR;
 }
 
 
-BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
+bool SoundIsPlaying(SoundManagerID id)
 {
-	if (!fSoundSystemInit) return FALSE;
-#if 0
-	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	return channel != NULL &&  channel->State != CHANNEL_FREE;
-#endif
+	auto sound = SoundGetByID(id);
+	return sound && ma_sound_is_playing(sound);
 }
 
 
-static BOOLEAN SoundStopChannel(SOUNDTAG* channel);
-
-
-BOOLEAN SoundStop(UINT32 uiSoundID)
+bool SoundStop(SoundManagerID id)
 {
-	if (!fSoundSystemInit) return FALSE;
-	if (!SoundIsPlaying(uiSoundID)) return FALSE;
-#if 0
-	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return FALSE;
-
-	SoundStopChannel(channel);
-#endif
-	return TRUE;
+	return sounds.erase(id) != 0;
 }
 
 
 void SoundStopAll(void)
 {
-	if (!fSoundSystemInit) return;
-
-#if 0
-	FOR_EACH(SOUNDTAG, i, pSoundList)
-	{
-		if (SoundStopChannel(i))
-		{
-			assert(i->pSample->uiInstances != 0);
-			i->pSample->uiInstances -= 1;
-			i->pSample               = NULL;
-			i->uiSoundID             = SOUND_ERROR;
-			i->State                 = CHANNEL_FREE;
-		}
-	}
-#endif
+	sounds.clear();
 }
 
 
-BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
+bool SoundSetVolume(SoundManagerID id, UINT32 uiVolume)
 {
-	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
+	auto * const channel = SoundGetByID(id);
 	if (channel == NULL) return FALSE;
 
-	ma_sound_set_volume(channel, std::min(uiVolume, UINT32(MAXVOLUME)) / 127.0f);
+	ma_sound_set_volume(channel, MSStoMA(uiVolume));
 	return TRUE;
 }
 
 
-BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
+bool SoundSetPan(SoundManagerID id, UINT32 uiPan)
 {
-	ma_sound * const channel = SoundGetChannelByID(uiSoundID);
+	ma_sound * const channel = SoundGetByID(id);
 	if (channel == NULL) return FALSE;
 
-	ma_sound_set_pan(channel, std::min(uiPan, 127U) / 127.0f);
+	ma_sound_set_pan(channel, MSStoMA(uiPan));
 	return TRUE;
 }
 
 
-UINT32 SoundGetVolume(UINT32 uiSoundID)
+UINT32 SoundGetVolume(SoundManagerID id)
 {
-	ma_sound * const channel = SoundGetChannelByID(uiSoundID);
+	ma_sound * const channel = SoundGetByID(id);
 	if (channel == NULL) return SOUND_ERROR;
 
-	return static_cast<UINT32>(ma_sound_get_volume(channel) * 127.0f);
+	return static_cast<UINT32>(ma_sound_get_volume(channel) * SoundLibsConversionFactor);
 }
 
 
@@ -440,24 +476,14 @@ void SoundStopAllRandom(void)
 }
 
 
-void maResultToRuntimeError(ma_result result, const char* functionName) {
-		if (result != MA_SUCCESS) {
-			throw std::runtime_error(ST::format("{}: {}", functionName, ma_result_description(result)).c_str());
-		}
-}
-
-
-
-UINT32 SoundGetPosition(UINT32 uiSoundID)
+UINT32 SoundGetPosition(SoundManagerID uiSoundID)
 {
-	if (!fSoundSystemInit) return 0;
+	ma_sound const * const sound = SoundGetByID(uiSoundID);
+	if (sound == NULL) return 0;
 
-	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return 0;
-
-	ma_uint64 cursor;
-	return ma_sound_get_cursor_in_pcm_frames(channel, &cursor) == MA_SUCCESS
-		? static_cast<UINT32>(cursor)
+	float cursor;
+	return ma_sound_get_cursor_in_seconds(sound, &cursor) == MA_SUCCESS
+		? static_cast<UINT32>(cursor * 1000.0f)
 		: 0;
 }
 
@@ -880,23 +906,6 @@ static void SoundShutdownHardware(void)
 }
 #endif
 
-/* Finds an unused sound channel in the channel list.
- *
- * Returns: Pointer to a sound channel if one was found, NULL if not. */
-static SOUNDTAG* SoundGetFreeChannel(void)
-{
-#if 0
-	FOR_EACH(SOUNDTAG, i, pSoundList)
-	{
-		if (i->State == CHANNEL_FREE) return i;
-	}
-#endif
-	return NULL;
-}
-
-
-static UINT32 SoundGetUniqueID(void);
-
 /* Starts up a sample on the specified channel. Override parameters are passed
  * in through the structure pointer pParms. Any entry with a value of 0xffffffff
  * will be filled in by the system.
@@ -913,9 +922,6 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	channel->Pan           = pan;
 	channel->EOSCallback   = end_callback;
 	channel->pCallbackData = data;
-#endif
-	UINT32 uiSoundID = SoundGetUniqueID();
-#if 0
 	channel->uiSoundID    = uiSoundID;
 	channel->pSample      = sample;
 	channel->uiTimeStamp  = GetClock();
@@ -932,19 +938,9 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	sample->uiInstances++;
 	sample->uiCacheHits++;
 #endif
-	return uiSoundID;
+	return SOUND_ERROR;
 }
 
-/* Returns a unique ID number with every call. Basically it's just a 32-bit
- * static value that is incremented each time. */
-static UINT32 SoundGetUniqueID(void)
-{
-	static UINT32 uiNextID = 0;
-
-	if (uiNextID == SOUND_ERROR) uiNextID++;
-
-	return uiNextID++;
-}
 
 /* Stops a sound referred to by its channel.  This function is the only one
  * that should be deallocating sample handles. The random sounds have to have
@@ -972,6 +968,15 @@ void SoundStopRandom(UINT32 uiSample)
 #endif
 }
 
+
 void SoundServiceStreams()
 {
+	// Garbage collect all sounds that have already finished playing.
+	for (auto it = sounds.begin(); it != sounds.end(); )
+	{
+		if (ma_sound_at_end(&it->second.sound))
+			it = sounds.erase(it);
+		else
+			++it;
+	}
 }
