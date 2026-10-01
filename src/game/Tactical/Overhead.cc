@@ -1234,7 +1234,8 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gri
 		EVENT_StopMerc(s);
 		*keep_moving = FALSE;
 
-		gpWorldLevelData[mine_gridno].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
+		gpWorldLevelData[mine_gridno].uiFlags |= s->bSide == Side::FRIENDLY ?
+			MAPELEMENT_PLAYER_MINE_PRESENT : MAPELEMENT_ENEMY_MINE_PRESENT;
 
 		// Better stop and reconsider what to do
 		SetNewSituation(s);

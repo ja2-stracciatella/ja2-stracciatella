@@ -1457,7 +1457,7 @@ static void DisplayTeamStats(void)
 			{
 				if (s->bLife <= 0 || AM_A_ROBOT(s)) continue;
 
-				compare(Attribute(*s, stat), s->name);
+				compare(Attribute(*s, stat, true), s->name);
 			}
 		}
 		else
@@ -1473,7 +1473,7 @@ static void DisplayTeamStats(void)
 					if (id == -1) continue;
 
 					MERCPROFILESTRUCT const& p = GetProfile(id);
-					compare(Attribute(p, stat), p.zNickname);
+					compare(Attribute(p, stat, true), p.zNickname);
 				}
 			}
 		}
