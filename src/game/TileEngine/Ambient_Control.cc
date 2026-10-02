@@ -76,9 +76,9 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 
 	const AMBIENTDATA_STRUCT* const a   = &gAmbData[uiAmbientID];
 	const UINT32                    vol = CalculateSoundEffectsVolume(a->uiVol);
-	const auto filename = ST::format("{}/{}", AMBIENTDIR, a->zFilename);
+	const auto filename = ST::format(AMBIENTDIR "/{}", static_cast<char const *>(a->zFilename));
 
-	return SoundPlayRandom(filename.c_str(), a->uiMinTime, a->uiMaxTime, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
+	return SoundPlayRandom(filename.c_str(), a->uiMinTime, a->uiMaxTime, vol, vol, MIDDLEPAN, MIDDLEPAN);
 }
 
 

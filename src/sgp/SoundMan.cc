@@ -6,30 +6,19 @@
 * Derek Beland, May 28, 1997
 *********************************************************************************/
 
-#include "Debug.h"
-#include "Random.h"
 #include "SoundMan.h"
-#include "Timer.h"
+#include "SGPFile.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+#include "Types.h"
 
-#include "SDL3/SDL.h"
-#include <SDL3/SDL_audio.h>
-#include <SDL3/SDL_iostream.h>
-#include <string_theory/string>
-
+#include <string_theory/format>
 #include <algorithm>
-#include <assert.h>
-#include <cmath>
-#include <climits>
-#include <vector>
-#include <iterator>
 #include <stdexcept>
-#include <atomic>
-#include <mutex>
-#include <condition_variable>
+#include <variant>
+#include <vector>
 
 // Miniaudio includes needs some defines
 
@@ -37,850 +26,182 @@
 #include "extras/stb_vorbis.c"
 
 #define MINIAUDIO_IMPLEMENTATION
-
-#define MA_NO_DEVICE_IO
 #define MA_NO_GENERATION
 #define MA_NO_ENCODING
+#define MA_NO_RESOURCE_MANAGER
 #include <miniaudio.h>
 
 #undef STB_VORBIS_HEADER_ONLY
 #include "extras/stb_vorbis.c"
 
-#undef MINIAUDIO_IMPLEMENTATION
-
-/*
- * from\to FREE PLAY STOP DEAD
- *    FREE       M
- *    PLAY  2         M    C
- *    STOP  2              C
- *    DEAD  M         1
- *
- * M = Regular state transition done by main thread
- * C = Regular state transition done by sound callback
- * 1 = Unimportant race, dead channel can be marked stopped by main thread
- *     Gets marked as dead again in the next sound callback run
- * 2 = Only when stopping all sounds, sound callback is deactivated when this
- *     happens
- */
-enum
-{
-	CHANNEL_FREE,
-	CHANNEL_PLAY,
-	CHANNEL_STOP,
-	CHANNEL_DEAD
-};
-
-
-// Sample status flags
-enum
-{
-	SAMPLE_ALLOCATED = 1U << 0,
-	SAMPLE_LOCKED    = 1U << 1,
-	SAMPLE_RANDOM    = 1U << 2,
-	SAMPLE_STEREO    = 1U << 3
-};
-
-
-#define SOUND_MAX_CACHED 128 // number of cache slots
-#define SOUND_MAX_CHANNELS 16 // number of mixer channels
-
-// The audio device will be opened with the following values
-#define SOUND_FREQ      44100
-#define SOUND_FORMAT    SDL_AUDIO_S16
-#define SOUND_MA_SOUND_FORMAT ma_format::ma_format_s16
-#define SOUND_CHANNELS  2
-#define SOUND_SAMPLES   1024
-
-// Threshold from which a sound is streamed from file instead of from memory (currently 1 MB)
-#define SOUND_FILE_STREAMING_THRESHOLD (1024 * 1024)
-// Buffer size for a single channel in the sound system
-#define SOUND_RING_BUFFER_SIZE (128 * SOUND_SAMPLES)
-
-// Struct definition for sample slots in the cache
-// Holds the regular sample data, as well as the data for the random samples
-struct SAMPLETAG
-{
-	ST::string pName;  // Path to sample data
-
-	UINT8* pInMemoryBuffer; // pointer to sample data memory (if playing from an in-memory buffer)
-	UINT32 uiBufferSize; // The size of the in-memory buffer
-	ma_format eInMemoryFormat;
-	UINT32 uiInMemoryChannels;
-
-	ma_data_converter* pDataConverter; // pointer to a data converter that decodes the data from pData
-
-	SGPFile* pFile;  // pointer to a SDL_RWops representing the file that we stream from
-	SDL_IOStream* pRWOps; // RWOps on either pData or pSource
-	ma_decoder* pDecoder; // pointer to a decoder that decodes the data from the SDL_RWops
-
-	UINT32  uiFlags;     // Status flags
-	UINT32  uiCacheHits;
-
-	// Random sound data
-	UINT32  uiTimeNext;
-	UINT32  uiTimeMin;
-	UINT32  uiTimeMax;
-	UINT32  uiVolMin;
-	UINT32  uiVolMax;
-	UINT32  uiPanMin;
-	UINT32  uiPanMax;
-	UINT32  uiInstances;
-	UINT32  uiMaxInstances;
-};
-
-
-// Structure definition for slots in the sound output
-// These are used for both the cached and double-buffered streams
-struct SOUNDTAG
-{
-	SAMPLETAG*    pSample;
-	UINT32        uiSoundID;
-	void          (*EOSCallback)(void*);
-	void*         pCallbackData;
-	UINT32        uiTimeStamp;
-	HWFILE        hFile;
-	UINT32        uiFadeVolume;
-	UINT32        uiFadeRate;
-	UINT32        uiFadeTime;
-	UINT32        Loops;
-	UINT32        Pan;
-
-	// The following properties might be accessed from multiple threads, so they need to be thread safe (or accessed in a thread safe way)
-	ma_pcm_rb*    pRingBuffer; // Pointer to the ring buffer that holds decoded and converted data
-	UINT32 State; // This represents the state of the sound (PLAYING / DEAD)
-	UINT32 Pos; // This represents the position of the sound that we are currently at (in samples)
-	BOOLEAN DoneServicing;
-};
-
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called
-static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
-static std::vector<INT32> gMixBuffer;
-
-SDL_AudioDeviceID gAudioDeviceID = SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK;
-SDL_AudioSpec gTargetAudioSpec;
-ma_decoder_config gTargetDecoderConfig;
-static SDL_AudioStream* gAudioStream = NULL;
-
-// These synchronization primitives are used to signal between the buffer servicing thread and the sound callback thread
-// When the callback thread notices that the buffer for a channel is less than half filled, it will notify the stream processing
-// thread that it needs to do some processing through the condition_variable
-// When the system needs to be shut down, fShutdownBufferServiceThread needs to be set to true and the buffer servicing thread
-// needs to be notified using the condition_variable
-SDL_Thread *bufferServiceThread = NULL;
-std::mutex mutexBuffersNeedService;
-std::condition_variable conditionBuffersNeedService;
-BOOLEAN fBuffersNeedService = FALSE;
-BOOLEAN fShutdownBufferServiceThread = FALSE;
-
-// Sample cache list for files loaded
-static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
-// Sound channel list for output channels
-static SOUNDTAG pSoundList[SOUND_MAX_CHANNELS];
-
-
-void SoundEnableSound(BOOLEAN fEnable)
-{
-	gfEnableStartup = fEnable;
-}
 
 bool IsSoundEnabled()
 {
-	return gfEnableStartup;
+	return fSoundSystemInit;
+}
+
+//namespace {
+constexpr float SoundLibsConversionFactor{ 127.0f };
+// Convert an integer in the range [0..127] as used by the Miles Sound System
+// to a float in the range [0..1] as used by miniaudio.
+constexpr float MSStoMA(UINT32 value)
+{
+	return float(std::min(value, 127U)) / SoundLibsConversionFactor;
+}
+
+static void Require(ma_result result, char const * functionName)
+{
+	if (result == MA_SUCCESS) return;
+
+	throw std::runtime_error(ST::format("miniaudio call of {} failed: {}",
+		functionName, ma_result_description(result)).c_str());
 }
 
 
-static void    SoundInitCache(void);
-static BOOLEAN SoundInitHardware(void);
-static int SoundServiceBuffers(void *_ptr);
-
-void InitializeSoundManager(void)
+struct SoundObject
 {
-	if (fSoundSystemInit) ShutdownSoundManager();
-
-	std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
-
-	if (gfEnableStartup && SoundInitHardware()) fSoundSystemInit = TRUE;
-
-	SoundInitCache();
-}
-
-
-static void SoundEmptyCache(void);
-static void SoundShutdownHardware(void);
-
-
-void ShutdownSoundManager(void)
-{
-	SoundStopAll();
-	SoundEmptyCache();
-	SoundShutdownHardware();
-	fSoundSystemInit = FALSE;
-	gMixBuffer.clear();
-}
-
-
-static SOUNDTAG*  SoundGetFreeChannel(void);
-static SAMPLETAG* SoundLoadSample(const char* pFilename);
-static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
-
-
-UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
-{
-	if (!fSoundSystemInit) return SOUND_ERROR;
-
-	SAMPLETAG* const sample = SoundLoadSample(pFilename);
-	if (sample == NULL) return SOUND_ERROR;
-
-	SOUNDTAG* const channel = SoundGetFreeChannel();
-	if (channel == NULL) return SOUND_ERROR;
-
-	return SoundStartSample(sample, channel, volume, pan, loop, end_callback, data);
-}
-
-static SAMPLETAG* SoundLoadBuffer(UINT8* buf, UINT32 bufSize, ma_format format, UINT32 channels, int freq);
-static BOOLEAN    SoundCleanCache(void);
-static SAMPLETAG* SoundGetEmptySample(void);
-
-/* Play a sound sample from a Smacker Flick
- *
- * Allocates space for the sound sample within the sound system
- */
-UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UINT32 rate, std::vector<UINT8>& buf, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
-{
-	ma_format format;
-
-	if (buf.empty()) return SOUND_ERROR;
-
-	//Originaly Sound Blaster could only play mono unsigned 8-bit PCM data.
-	//Later it became capable of playing 16-bit audio data, but needed to be signed and LSB.
-	//They were the de facto standard so I'm assuming smacker uses the same.
-	if (depth == 8) format = ma_format_u8;
-	else if (depth == 16) format = ma_format_s16;
-	else return SOUND_ERROR;
-
-	UINT32 uiBufferSize = buf.size();
-	UINT8* inMemoryBuffer = new UINT8[uiBufferSize]{};
-	memcpy(inMemoryBuffer, buf.data(), uiBufferSize);
-	if (format == ma_format_s16) {
-		// We expect the Endianess for the Smacker buffer to be little endian, but ma_format_s16 is native endian, so we need to do some conversion
-		convertLittleEndianBufferToNativeEndianU16(inMemoryBuffer, uiBufferSize);
-	}
-
-	SAMPLETAG* s = SoundLoadBuffer(inMemoryBuffer, uiBufferSize, format, channels, rate);
-	if (s == NULL) return SOUND_ERROR;
-
-	s->pName           = name;
-	s->uiPanMax        = 64;
-	s->uiMaxInstances  = 1;
-
-	SOUNDTAG* const channel = SoundGetFreeChannel();
-	if (channel == NULL) return SOUND_ERROR;
-
-	return SoundStartSample(s, channel, volume, pan, loop, end_callback, data);
-}
-
-
-UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
-{
-	SLOGD("playing random Sound: \"{}\"", pFilename);
-
-	if (!fSoundSystemInit) return SOUND_ERROR;
-
-	SAMPLETAG* const s = SoundLoadSample(pFilename);
-	if (s == NULL) return SOUND_ERROR;
-
-	s->uiFlags        |= SAMPLE_RANDOM | SAMPLE_LOCKED;
-	s->uiTimeMin       = time_min;
-	s->uiTimeMax       = time_max;
-	s->uiVolMin        = vol_min;
-	s->uiVolMax        = vol_max;
-	s->uiPanMin        = pan_min;
-	s->uiPanMax        = pan_max;
-	s->uiMaxInstances  = max_instances;
-
-	s->uiTimeNext =
-		GetClock() +
-		s->uiTimeMin +
-		Random(s->uiTimeMax - s->uiTimeMin);
-
-	return (UINT32)(s - pSampleList);
-}
-
-
-static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID);
-
-
-BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
-{
-	if (!fSoundSystemInit) return FALSE;
-
-	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	return channel != NULL &&  channel->State != CHANNEL_FREE;
-}
-
-
-static BOOLEAN SoundStopChannel(SOUNDTAG* channel);
-
-
-BOOLEAN SoundStop(UINT32 uiSoundID)
-{
-	if (!fSoundSystemInit) return FALSE;
-	if (!SoundIsPlaying(uiSoundID)) return FALSE;
-
-	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return FALSE;
-
-	SoundStopChannel(channel);
-	return TRUE;
-}
-
-
-void SoundStopAll(void)
-{
-	if (!fSoundSystemInit) return;
-
-	SDL_PauseAudioDevice(gAudioDeviceID);
-	FOR_EACH(SOUNDTAG, i, pSoundList)
+	struct audio_buffer
 	{
-		if (SoundStopChannel(i))
+		ma_audio_buffer audioBuffer;
+		std::vector<UINT8> rawPCMData;
+	};
+
+	ma_sound sound;
+	std::variant<ma_decoder, audio_buffer> dataSource;
+
+	void (*endCallback)(void *);
+	void * callbackUserData; // Points to the memory buffer is the data source is an audio buffer
+
+	~SoundObject()
+	{
+		ma_sound_uninit(&sound);
+		if (dataSource.index() == 0)
 		{
-			assert(i->pSample->uiInstances != 0);
-			i->pSample->uiInstances -= 1;
-			i->pSample               = NULL;
-			i->uiSoundID             = SOUND_ERROR;
-			i->State                 = CHANNEL_FREE;
+			ma_decoder & decoder{ std::get<ma_decoder>(dataSource) };
+			ma_decoder_uninit(&decoder);
+			DeleteSGPFile(reinterpret_cast<SGPFile *>(decoder.pUserData));
 		}
-	}
-	SDL_ResumeAudioDevice(gAudioDeviceID);
-}
-
-
-BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
-{
-	if (!fSoundSystemInit) return FALSE;
-
-	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return FALSE;
-
-	channel->uiFadeVolume = std::min(uiVolume, UINT32(MAXVOLUME));
-	return TRUE;
-}
-
-
-BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
-{
-	if (!fSoundSystemInit) return FALSE;
-
-	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return FALSE;
-
-	channel->Pan = std::min(uiPan, 127U);
-	return TRUE;
-}
-
-
-UINT32 SoundGetVolume(UINT32 uiSoundID)
-{
-	if (!fSoundSystemInit) return SOUND_ERROR;
-
-	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return SOUND_ERROR;
-
-	return channel->uiFadeVolume;
-}
-
-
-static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s);
-static UINT32 SoundStartRandom(SAMPLETAG* s);
-
-
-void SoundServiceRandom(void)
-{
-	FOR_EACH(SAMPLETAG, i, pSampleList)
-	{
-		if (SoundRandomShouldPlay(i)) SoundStartRandom(i);
-	}
-}
-
-
-/* Determines whether a random sound is ready for playing or not.
- *
- * Returns: TRUE if a the sample should be played. */
-static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s)
-{
-	return
-		s->uiFlags & SAMPLE_RANDOM &&
-		s->uiTimeNext <= GetClock() &&
-		s->uiInstances < s->uiMaxInstances;
-}
-
-
-/* Starts an instance of a random sample.
- *
- * Returns: TRUE if a new random sound was created, FALSE if nothing was done. */
-static UINT32 SoundStartRandom(SAMPLETAG* s)
-{
-	SOUNDTAG* const channel = SoundGetFreeChannel();
-	if (channel == NULL) return NO_SAMPLE;
-
-	const UINT32 volume = s->uiVolMin + Random(s->uiVolMax - s->uiVolMin);
-	const UINT32 pan    = s->uiPanMin + Random(s->uiPanMax - s->uiPanMin);
-
-	const UINT32 uiSoundID = SoundStartSample(s, channel, volume, pan, 1, NULL, NULL);
-	if (uiSoundID == SOUND_ERROR) return NO_SAMPLE;
-
-	s->uiTimeNext =
-		GetClock() +
-		s->uiTimeMin +
-		Random(s->uiTimeMax - s->uiTimeMin);
-	return uiSoundID;
-}
-
-
-void SoundStopAllRandom(void)
-{
-	// Stop all currently playing random sounds
-	FOR_EACH(SOUNDTAG, i, pSoundList)
-	{
-		if (i->State == CHANNEL_PLAY && i->pSample->uiFlags & SAMPLE_RANDOM)
+		else
 		{
-			SoundStopChannel(i);
+			ma_audio_buffer_uninit(&std::get<audio_buffer>(dataSource).audioBuffer);
 		}
 	}
+};
 
-	// Unlock all random sounds so they can be dumped from the cache, and
-	// take the random flag off so they won't be serviced/played
-	FOR_EACH(SAMPLETAG, i, pSampleList)
-	{
-		if (i->uiFlags & SAMPLE_RANDOM)
-		{
-			i->uiFlags &= ~(SAMPLE_RANDOM | SAMPLE_LOCKED);
-		}
-	}
+std::map<SoundManagerID, SoundObject> sounds;
+ma_engine engine;
+
+
+static void Start(SoundObject & so, UINT32 volume, UINT32 pan)
+{
+	ma_sound_set_volume(&so.sound, MSStoMA(volume));
+	ma_sound_set_pan(&so.sound, MSStoMA(pan));
+	ma_sound_start(&so.sound);
 }
 
-static BOOLEAN DoesChannelRingBufferNeedService(SOUNDTAG* channel) {
-	if (channel->DoneServicing) {
-		return FALSE;
-	}
-	auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
-	// If the ring buffer is still filled more than half the way, we dont need to service the stream
-	return bytesToWrite >= SOUND_RING_BUFFER_SIZE / 2;
-}
 
-void maResultToRuntimeError(ma_result result, const char* functionName) {
-		if (result != MA_SUCCESS) {
-			throw std::runtime_error(ST::format("{}: {}", functionName, ma_result_description(result)).c_str());
-		}
-}
-
-static void FillRingBuffer(SOUNDTAG* channel) {
-	auto sample = channel->pSample;
+static ma_result MiniaudioReadProc(ma_decoder * pDecoder,
+	void * pBufferOut, size_t bytesToRead, size_t * bytesRead)
+{
+	auto * file{ reinterpret_cast<SGPFile *>(pDecoder->pUserData) };
 
 	try {
-		if (!DoesChannelRingBufferNeedService(channel)) {
-			return;
-		}
-		auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
-
-		void* pFramesInClientFormat;
-		maResultToRuntimeError(ma_pcm_rb_acquire_write(channel->pRingBuffer, &bytesToWrite, &pFramesInClientFormat), "ma_pcm_rb_acquire_write");
-		ma_uint64 framesRead = 0;
-		if (sample->pDecoder != NULL) {
-			maResultToRuntimeError(ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->Pos), "ma_decoder_seek_to_pcm_frame");
-			// We stream from file
-			auto result = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite, &framesRead);
-			if (result != MA_SUCCESS && result != MA_AT_END) {
-				throw std::runtime_error(ST::format("ma_decoder_read_pcm_frames: {}", ma_result_description(result)).c_str());
-			}
-		} else if (sample->pDataConverter != NULL) {
-			auto bytesPerFrame = ma_get_bytes_per_frame(sample->eInMemoryFormat, sample->uiInMemoryChannels);
-
-			ma_uint64 posInBytes;
-			maResultToRuntimeError(ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos, &posInBytes), "ma_data_converter_get_required_input_frame_count");
-			posInBytes *= bytesPerFrame;
-
-			ma_uint64 requiredInputFrameCount;
-			maResultToRuntimeError(ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite, &requiredInputFrameCount), "ma_data_converter_get_required_input_frame_count");
-			// We might not have as many bytes available
-			auto availableFrames = std::min(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
-
-			ma_uint64 expectedOutputFrameCount;
-			maResultToRuntimeError(ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames, &expectedOutputFrameCount), "ma_data_converter_get_expected_output_frame_count");
-
-			maResultToRuntimeError(ma_data_converter_process_pcm_frames(
-				sample->pDataConverter,
-				sample->pInMemoryBuffer + posInBytes,
-				&availableFrames,
-				pFramesInClientFormat,
-				&expectedOutputFrameCount
-			), "ma_data_converter_process_pcm_frames");
-			framesRead = expectedOutputFrameCount;
-		} else {
-			throw std::runtime_error("Dont know how to process ring buffer");
-		}
-		maResultToRuntimeError(ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead), "ma_pcm_rb_commit_write");
-
-		channel->Pos += framesRead;
-		if (framesRead < bytesToWrite) {
-			// If the sound is looped, continue to fill buffer in the next iteration
-			if (channel->Loops > 1) {
-				channel->Loops -= 1;
-				channel->Pos = 0;
-			} else {
-				channel->DoneServicing = TRUE;
-			}
-		}
-	} catch (const std::runtime_error& err) {
-		SLOGE("Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, err.what());
+		*bytesRead = file->readAtMost(pBufferOut, bytesToRead);
 	}
+	catch (...) {
+		return MA_IO_ERROR;
+	}
+	return MA_SUCCESS;
 }
 
-static int SoundServiceBuffers(void *_ptr)
+static ma_result MiniaudioSeekProc(ma_decoder * pDecoder,
+	ma_int64 byteOffset, ma_seek_origin origin)
 {
-	SLOGD("Started SoundManBufferServiceThread");
-	while (1) {
-		std::unique_lock<std::mutex> lk(mutexBuffersNeedService);
-		conditionBuffersNeedService.wait(lk, []{
-			return fBuffersNeedService || fShutdownBufferServiceThread;
-		});
-		if (fShutdownBufferServiceThread) {
-			SLOGD("Stopped SoundManBufferServiceThread");
-			return 0;
-		}
-		if (fBuffersNeedService) {
-			for (UINT32 i = 0; i < lengthof(pSoundList); i++)
-			{
-				SOUNDTAG* Sound = &pSoundList[i];
-				if (Sound->State == CHANNEL_PLAY) {
-					FillRingBuffer(Sound);
-				}
-			}
-			fBuffersNeedService = FALSE;
-		}
-	}
-}
-
-void SoundServiceStreams(void)
-{
-	if (!fSoundSystemInit) return;
-
-	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
-	{
-		SOUNDTAG* Sound = &pSoundList[i];
-		if (Sound->State == CHANNEL_DEAD)
-		{
-			SLOGD("DEAD channel {} file \"{}\" (refcount {})", i, Sound->pSample->pName, Sound->pSample->uiInstances);
-			if (Sound->EOSCallback != NULL) Sound->EOSCallback(Sound->pCallbackData);
-			assert(Sound->pSample->uiInstances != 0);
-			Sound->pSample->uiInstances--;
-			Sound->pSample   = NULL;
-			Sound->uiSoundID = SOUND_ERROR;
-			Sound->State     = CHANNEL_FREE;
-		}
-	}
-}
-
-UINT32 SoundGetPosition(UINT32 uiSoundID)
-{
-	if (!fSoundSystemInit) return 0;
-
-	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	if (channel == NULL) return 0;
-
-	const UINT32 now = GetClock();
-	return now - channel->uiTimeStamp;
-}
-
-
-// Zeros out the structures of the sample list.
-static void SoundInitCache(void)
-{
-	std::fill(std::begin(pSampleList), std::end(pSampleList), SAMPLETAG{});
-}
-
-
-static void SoundFreeSample(SAMPLETAG* s);
-
-
-// Frees up all samples in the cache.
-static void SoundEmptyCache(void)
-{
-	SoundStopAll();
-
-	FOR_EACH(SAMPLETAG, i, pSampleList)
-	{
-		SoundFreeSample(i);
-	}
-}
-
-
-static SAMPLETAG* SoundGetCached(const char* pFilename);
-static SAMPLETAG* SoundLoadDisk(const char* pFilename);
-
-
-static SAMPLETAG* SoundLoadSample(const char* pFilename)
-{
-	SAMPLETAG* const s = SoundGetCached(pFilename);
-	if (s != NULL) return s;
-
-	return SoundLoadDisk(pFilename);
-}
-
-
-/* Tries to locate a sound by looking at what is currently loaded in the cache.
- *
- * Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
- *          in the cache. */
-static SAMPLETAG* SoundGetCached(const char* pFilename)
-{
-	if (pFilename[0] == '\0') return NULL; // XXX HACK0009
-
-	FOR_EACH(SAMPLETAG, i, pSampleList)
-	{
-		if (i->pName.compare_i(pFilename) == 0) return i;
-	}
-
-	return NULL;
-}
-
-/* Loads a sound from a buffer into the cache.
- * The sound system will take over ownership over the buffer
- *
- * Returns: The sample if successful, NULL otherwise. */
-static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma_format format, UINT32 channels, int freq)
-{
-	try {
-		SAMPLETAG* s = SoundGetEmptySample();
-
-		// if we don't have a sample slot
-		if (s == NULL)
-		{
-			throw std::runtime_error("sound channels are full");
-		}
-
-		ma_data_converter_config config = ma_data_converter_config_init(
-			format,
-			SOUND_MA_SOUND_FORMAT,
-			channels,
-			gTargetAudioSpec.channels,
-			freq,
-			gTargetAudioSpec.freq
-		);
-		ma_data_converter* converter = (ma_data_converter*)ma_malloc(sizeof(ma_data_converter), NULL);
-		maResultToRuntimeError(ma_data_converter_init(&config, NULL, converter), "ma_data_converter_init");
-
-		s->pInMemoryBuffer = inMemoryBuffer;
-		s->uiBufferSize = uiBufferSize;
-		s->pDataConverter = converter;
-		s->eInMemoryFormat = format;
-		s->uiInMemoryChannels = channels;
-
-		s->uiFlags |= SAMPLE_ALLOCATED;
-
-		SLOGD("SoundLoadBuffer Success");
-		return s;
-	} catch (const std::runtime_error& err) {
-		SLOGE("SoundLoadBuffer Error: {}", err.what());
-		return NULL;
-	}
-}
-
-ma_result MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead, size_t *bytesRead) {
-	auto rwOps = (SDL_IOStream*)pDecoder->pUserData;
-
-	*bytesRead = SDL_ReadIO(rwOps, pBufferOut, bytesToRead);
-	if (*bytesRead != 0) {
-		return MA_SUCCESS;
-	}
-	return MA_ERROR;
-}
-
-ma_result MiniaudioSeekProc(ma_decoder* pDecoder, ma_int64 byteOffset, ma_seek_origin origin) {
-	auto rwOps = (SDL_IOStream*)pDecoder->pUserData;
-	auto sdlOrigin = SDL_IO_SEEK_SET;
-	if (origin == ma_seek_origin::ma_seek_origin_current) {
-		sdlOrigin = SDL_IO_SEEK_CUR;
-	}
-	if (origin == ma_seek_origin::ma_seek_origin_end) {
-		sdlOrigin = SDL_IO_SEEK_END;
-	}
-
-	if (SDL_SeekIO(rwOps, byteOffset, sdlOrigin) != -1) {
-		return MA_SUCCESS;
-	}
-
-	return MA_ERROR;
-}
-
-
-/* Loads a sound file from disk into the cache, allocating memory and a slot
- * for storage.
- *
- * Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
- *          in the cache. */
-static SAMPLETAG* SoundLoadDisk(const char* pFilename)
-{
-	Assert(pFilename != NULL);
-
-	if(pFilename[0] == '\0') {
-		SLOGA("SoundLoadDisk Error: pFilename is an empty string.");
-		return NULL;
-	}
-
-	UINT8* inMemoryBuffer = NULL;
-	SGPFile* hFile = NULL;
-	SDL_IOStream* rwOps = NULL;
-	ma_decoder* decoder = NULL;
+	auto * file{ reinterpret_cast<SGPFile *>(pDecoder->pUserData) };
 
 	try
 	{
-		auto isStreamed = TRUE;
-		SAMPLETAG* s = SoundGetEmptySample();
-
-		// if we don't have a sample slot
-		if (s == NULL)
-		{
-			throw std::runtime_error("sound channels are full");
-		}
-
-		hFile = GCM->openGameResForReading(pFilename);
-		rwOps = hFile->getRwOps();
-		auto hFileLen = hFile->size();
-		if (hFileLen <= SOUND_FILE_STREAMING_THRESHOLD) {
-			// If the file length is below the streaming threshold we store the raw data in the inMemoryBuffer
-			inMemoryBuffer = new UINT8[hFileLen]{};
-			if (SDL_ReadIO(rwOps, inMemoryBuffer, hFileLen) != hFileLen) {
-				throw std::runtime_error("Could not read the whole file");
-			}
-			SDL_CloseIO(rwOps);
-			rwOps = SDL_IOFromConstMem(inMemoryBuffer, hFileLen);
-			hFile = NULL;
-			isStreamed = FALSE;
-		}
-
-		// Initialize decoder to convert WAV/MP3/OGG data to raw sample data
-		decoder = (ma_decoder*)ma_malloc(sizeof(ma_decoder), NULL);
-		auto result = ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, rwOps, &gTargetDecoderConfig, decoder);
-
-		if (result != MA_SUCCESS) {
-			throw std::runtime_error(ST::format("Error initializing sound decoder for file \"{}\"- {}", pFilename, ma_result_description(result)).c_str());
-		}
-		s->pFile = hFile;
-		s->pInMemoryBuffer = inMemoryBuffer;
-		s->pRWOps = rwOps;
-		s->pDecoder = decoder;
-		s->pName = pFilename;
-
-		s->uiFlags |= SAMPLE_ALLOCATED;
-
-		if (isStreamed) {
-			SLOGD("SoundLoadDisk success creating file stream for \"{}\"", pFilename);
-		} else {
-			SLOGD("SoundLoadDisk success creating in-memory stream for \"{}\"", pFilename);
-		}
-		return s;
+		file->seek(static_cast<INT32>(byteOffset), [origin] {
+			switch (origin)
+			{
+				default:
+				case ma_seek_origin_current: return FILE_SEEK_FROM_CURRENT;
+				case ma_seek_origin_start:   return FILE_SEEK_FROM_START;
+				case ma_seek_origin_end:     return FILE_SEEK_FROM_END;
+			}}());
 	}
-	catch (const std::runtime_error& err)
+	catch (...)
 	{
-		SLOGE("SoundLoadDisk Error for \"{}\": {}", pFilename, err.what());
-		// Clean up possible allocations
-		if (hFile != NULL) {
-			delete hFile;
-		}
-		if (rwOps != NULL) {
-			SDL_CloseIO(rwOps);
-		}
-		if (decoder != NULL) {
-			ma_free(decoder, NULL);
-		}
-		return NULL;
+		return MA_BAD_SEEK;
 	}
+	return MA_SUCCESS;
 }
 
 
-// Returns TRUE/FALSE that a sample is currently in use for playing a sound.
-static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
+static ma_sound * FromID(SoundManagerID id)
 {
-	return s->uiInstances > 0;
+	auto pos{ sounds.find(id) };
+	return pos != sounds.end() ? &pos->second.sound : nullptr;
 }
 
 
-/* Removes the least-used sound from the cache to make room.
- *
- * Returns: TRUE if a sample was freed, FALSE if none */
-static BOOLEAN SoundCleanCache(void)
+static void InitDataSource(ma_data_source * source, SoundObject & so)
 {
-	SAMPLETAG* candidate = NULL;
-
-	FOR_EACH(SAMPLETAG, i, pSampleList)
-	{
-		if (i->uiFlags & SAMPLE_ALLOCATED &&
-				!(i->uiFlags & SAMPLE_LOCKED) &&
-				(candidate == NULL || candidate->uiCacheHits > i->uiCacheHits))
-		{
-			if (!SoundSampleIsPlaying(i)) candidate = i;
-		}
-	}
-
-	if (candidate != NULL)
-	{
-		SLOGD("freeing sample {} \"{}\" with {} hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
-		SoundFreeSample(candidate);
-		return TRUE;
-	}
-
-	return FALSE;
+	Require(ma_sound_init_from_data_source(&engine, source, 0, nullptr,
+		&so.sound), "ma_sound_init_from_data_source");
 }
 
 
-/* Returns an available sample. Clears out other samples if necessary
- *
- * Returns: A free sample or NULL if none are left. */
-static SAMPLETAG* SoundGetEmptySample(void)
+static auto GetSoundObject()
 {
-	FOR_EACH(SAMPLETAG, i, pSampleList)
-	{
-		if (!(i->uiFlags & SAMPLE_ALLOCATED)) return i;
-	}
+	static SoundManagerID currentID = 1;
 
-	// Clean cache if no sample has been found yet and try again
-	SoundCleanCache();
+	auto [ pos, created ] { sounds.try_emplace(currentID++) };
+	if (created) return pos;
 
-	FOR_EACH(SAMPLETAG, i, pSampleList)
-	{
-		if (!(i->uiFlags & SAMPLE_ALLOCATED)) return i;
-	}
-
-	return NULL;
+	throw std::logic_error("Could not create a new ma_sound object");
 }
 
-// Frees up a sample referred to by its index slot number.
-static void SoundFreeSample(SAMPLETAG* s)
+// Create a new sound object for a SGPFile.
+static auto GetSoundObject(char const * filename)
 {
-	if (!(s->uiFlags & SAMPLE_ALLOCATED)) return;
+	auto pos{ GetSoundObject() };
+	SoundObject & so{ pos->second };
+	SGPFile * file{ GCM->openGameResForReading(filename) };
 
-	SLOGD("SoundFreeSample: Freeing sample {}", s - pSampleList);
+	so.dataSource = ma_decoder{};
+	auto * decoder{ &std::get<ma_decoder>(so.dataSource) };
 
-	assert(s->uiInstances == 0);
+	Require(ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, file,
+		nullptr, decoder), "ma_decoder_init");
 
-	if (s->pDecoder != NULL) {
-		ma_decoder_uninit(s->pDecoder);
-		ma_free(s->pDecoder, NULL);
-	}
-	if (s->pDataConverter != NULL) {
-		ma_data_converter_uninit(s->pDataConverter, NULL);
-		ma_free(s->pDataConverter, NULL);
-	}
-	if (s->pRWOps != NULL) {
-		SDL_CloseIO(s->pRWOps);
-	}
-	// Note: s->pFile is closed and deleted by SDL_RWclose implicitly, but s->pInMemoryBuffer is not
-	if (s->pInMemoryBuffer != NULL) {
-		delete[] s->pInMemoryBuffer;
-	}
-	*s = SAMPLETAG{};
+	InitDataSource(decoder, so);
+	return pos;
+}
+
+// Create a new sound object for a memory buffer of raw PCM data.
+static auto GetSoundObject(std::vector<UINT8> & rawData, ma_format format,
+	UINT32 channels, UINT32 rate)
+{
+	auto pos{ GetSoundObject() };
+	SoundObject & so{ pos->second };
+	ma_uint64 frames{ (rawData.size() / channels) / (format == ma_format_s16 ? 2 : 1) };
+
+	so.dataSource = SoundObject::audio_buffer{};
+	auto & audioBuffer{ std::get<SoundObject::audio_buffer>(so.dataSource) };
+
+	// The audio object takes ownership of the underlying memory.
+	audioBuffer.rawPCMData = std::move(rawData);
+
+	auto config { ma_audio_buffer_config_init(format,
+		channels, frames, audioBuffer.rawPCMData.data(), nullptr) };
+	config.sampleRate = rate;
+
+	Require(ma_audio_buffer_init(&config, &audioBuffer.audioBuffer), "ma_audio_buffer_init");
+
+	InitDataSource(&audioBuffer.audioBuffer, so);
+	return pos;
 }
 
 
@@ -888,285 +209,186 @@ static void SoundFreeSample(SAMPLETAG* s)
  *
  * Returns: If the instance was found, the pointer to the channel.  NULL
  *          otherwise. */
-static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
+static ma_sound * SoundGetByID(SoundManagerID id)
 {
-	FOR_EACH(SOUNDTAG, i, pSoundList)
-	{
-		if (i->uiSoundID == uiSoundID) return i;
-	}
+	return fSoundSystemInit ? FromID(id) : nullptr;
+}
+//}
 
-	return NULL;
+void InitializeSoundManager(bool noSound)
+{
+	if (fSoundSystemInit || noSound) return;
+
+	auto cfg { ma_engine_config_init() };
+	Require(ma_engine_init(&cfg, &engine), "ma_engine_config_init");
+
+	fSoundSystemInit = true;
 }
 
 
-void SDLCALL SoundCallback(void* userdata, SDL_AudioStream* stream, int additional_amount, int total_amount)
+void ShutdownSoundManager(void)
 {
-	if (additional_amount <= 0) return;
-
-	Uint8* data = SDL_stack_alloc(Uint8, additional_amount);
-	if (!data) return;
-
-	// 16-bit stereo = 2 bytes per value, 2 values per sample
-	UINT32 want_bytes = static_cast<UINT32>(additional_amount);
-	UINT32 want_values = want_bytes / sizeof(INT16);
-	UINT32 want_samples = want_values / 2;
-
-	gMixBuffer.assign(want_values, 0);
-
-	auto ringBuffersNeedService = FALSE;
-
-	// Mix sounds
-	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
-	{
-		SOUNDTAG* Sound = &pSoundList[i];
-
-		switch (Sound->State)
-		{
-			default:
-			case CHANNEL_FREE:
-			case CHANNEL_DEAD:
-				continue;
-
-			case CHANNEL_STOP:
-				Sound->State = CHANNEL_DEAD;
-				continue;
-
-			case CHANNEL_PLAY:
-			{
-				const INT vol_l   = Sound->uiFadeVolume * (127 - Sound->Pan) / MAXVOLUME;
-				const INT vol_r   = Sound->uiFadeVolume * (  0 + Sound->Pan) / MAXVOLUME;
-				UINT32    samples = want_samples;
-				const INT16* src;
-				auto rbResult = ma_pcm_rb_acquire_read(Sound->pRingBuffer, &samples, (void**)&src);
-				if (rbResult == MA_AT_END) {
-					// Ring buffer is empty and servicing is done, channel can be freed
-					Sound->State = CHANNEL_DEAD;
-					continue;
-				}
-				if (rbResult != MA_SUCCESS) {
-					SLOGE("Could not acquire read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
-					continue;
-				}
-
-				for (UINT32 i = 0; i < samples; ++i)
-				{
-					gMixBuffer[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
-					gMixBuffer[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
-				}
-
-				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples);
-
-				if (Sound->DoneServicing && samples == 0) {
-					Sound->State = CHANNEL_DEAD;
-				}
-
-				if (rbResult != MA_SUCCESS && rbResult != MA_AT_END) {
-					SLOGE("Could not commit read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
-				} else {
-					ringBuffersNeedService |= DoesChannelRingBufferNeedService(Sound);
-				}
-			}
-		}
-	}
-
-	// Clip sounds and fill the stream
-	INT16* data_i16 = (INT16*)data;
-	for (UINT32 i = 0; i < want_values; ++i)
-	{
-		if (gMixBuffer[i] >= INT16_MAX)     data_i16[i] = INT16_MAX;
-		else if(gMixBuffer[i] <= INT16_MIN) data_i16[i] = INT16_MIN;
-		else                                data_i16[i] = (INT16)gMixBuffer[i];
-	}
-
-	SDL_PutAudioStreamData(stream, data, additional_amount);
-	SDL_stack_free(data);
-
-	if (ringBuffersNeedService) {
-		// We try to lock the mutex. If it is already locked, buffers are already serviced
-		if (mutexBuffersNeedService.try_lock()) {
-			fBuffersNeedService = true;
-			mutexBuffersNeedService.unlock();
-			conditionBuffersNeedService.notify_one();
-		}
-	}
+	SoundStopAll();
+	ma_engine_uninit(&engine);
+	fSoundSystemInit = false;
 }
 
 
-/*
- * Initializes SDL Audio Subsystem and the channel ring buffers
- */
-static BOOLEAN SoundInitHardware(void)
+SoundManagerID SoundPlay(const char * pFilename, UINT32 volume, UINT32 pan,
+	UINT32 loop, void (*end_callback)(void *), void * data)
 {
-	try {
-		if (!SDL_InitSubSystem(SDL_INIT_AUDIO)) {
-			throw std::runtime_error(ST::format("SDL_InitSubSystem returned error: {}", SDL_GetError()).c_str());
-		}
-
-		SDL_zero(gTargetAudioSpec);
-		gTargetAudioSpec.freq     = SOUND_FREQ;
-		gTargetAudioSpec.format   = SOUND_FORMAT;
-		gTargetAudioSpec.channels = SOUND_CHANNELS;
-
-		SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &gTargetAudioSpec, SoundCallback, nullptr);
-		if (!stream) {
-			throw std::runtime_error(ST::format("SDL_OpenAudioDeviceStream returned error: {}", SDL_GetError()).c_str());
-		}
-		gAudioStream = stream;
-		gAudioDeviceID = SDL_GetAudioStreamDevice(stream);
-
-		gTargetDecoderConfig = ma_decoder_config_init(SOUND_MA_SOUND_FORMAT, gTargetAudioSpec.channels, gTargetAudioSpec.freq);
-
-		std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
-		for(auto channel = std::begin(pSoundList); channel != std::end(pSoundList); ++channel) {
-			channel->pRingBuffer = (ma_pcm_rb*)ma_malloc(sizeof(ma_pcm_rb), NULL);
-			ma_result result = ma_pcm_rb_init(SOUND_MA_SOUND_FORMAT, SOUND_CHANNELS, SOUND_RING_BUFFER_SIZE, NULL, NULL, channel->pRingBuffer);
-			if (result != MA_SUCCESS) {
-				throw std::runtime_error(ST::format(
-					"ma_pcm_rb_init for channel {} returned error: {}",
-					channel - pSoundList,
-					ma_result_description(result)
-				).c_str());
-			}
-		}
-
-		bufferServiceThread = SDL_CreateThread(SoundServiceBuffers, "SoundManBufferServiceThread", (void *)NULL);
-		if (!bufferServiceThread) {
-			throw std::runtime_error(ST::format("SDL_CreateThread for SoundManBufferServiceThread returned error: {}", SDL_GetError()).c_str());
-		}
-
-		SDL_ResumeAudioDevice(gAudioDeviceID);
-
-		return TRUE;
-	} catch (const std::runtime_error& err) {
-		SLOGE("SoundInitHardware: {}", err.what());
-		SoundShutdownHardware();
-		return FALSE;
-	}
-}
-
-
-/*
- * Shutdown SDL Audio Subsystem, if initialized and the channel ring buffers if initialized
- */
-static void SoundShutdownHardware(void)
-{
-	if (bufferServiceThread != NULL) {
-		{
-			std::lock_guard<std::mutex> lk(mutexBuffersNeedService);
-			fShutdownBufferServiceThread = true;
-		}
-		conditionBuffersNeedService.notify_one();
-		int returnValue = 1;
-		SDL_WaitThread(bufferServiceThread, &returnValue);
-		if (returnValue != 0) {
-			SLOGE("SoundManBufferServiceThread exited with code: {}", returnValue);
-		}
-	}
-	for(auto channel = std::begin(pSoundList); channel != std::end(pSoundList); ++channel) {
-		if (channel->pRingBuffer != NULL) {
-			ma_pcm_rb_uninit(channel->pRingBuffer);
-			ma_free(channel->pRingBuffer, NULL);
-			channel->pRingBuffer = NULL;
-		}
-	}
-	if (SDL_WasInit(SDL_INIT_AUDIO) != 0) {
-		if (gAudioStream != NULL) {
-			SDL_DestroyAudioStream(gAudioStream);
-			gAudioStream = NULL;
-		}
-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
-	}
-}
-
-
-/* Finds an unused sound channel in the channel list.
- *
- * Returns: Pointer to a sound channel if one was found, NULL if not. */
-static SOUNDTAG* SoundGetFreeChannel(void)
-{
-	FOR_EACH(SOUNDTAG, i, pSoundList)
-	{
-		if (i->State == CHANNEL_FREE) return i;
-	}
-
-	return NULL;
-}
-
-
-static UINT32 SoundGetUniqueID(void);
-
-/* Starts up a sample on the specified channel. Override parameters are passed
- * in through the structure pointer pParms. Any entry with a value of 0xffffffff
- * will be filled in by the system.
- *
- * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
-static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
-{
-	SLOGD("playing channel {} sample {} file \"{}\"", channel - pSoundList, sample - pSampleList, sample->pName);
-
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	channel->uiFadeVolume  = volume;
-	channel->Loops         = loop;
-	channel->Pan           = pan;
-	channel->EOSCallback   = end_callback;
-	channel->pCallbackData = data;
+	auto && [ id, soundObj] { *GetSoundObject(pFilename) };
+	ma_sound * sound{ &soundObj.sound };
 
-	UINT32 uiSoundID = SoundGetUniqueID();
-	channel->uiSoundID    = uiSoundID;
-	channel->pSample      = sample;
-	channel->uiTimeStamp  = GetClock();
-	channel->Pos          = 0;
-	channel->DoneServicing = FALSE;
+	ma_sound_set_looping(sound, loop > 1);
 
-	// Reset ring buffer
-	ma_pcm_rb_reset(channel->pRingBuffer);
-	// Fill ring buffer with initial data
-	FillRingBuffer(channel);
+	if (end_callback)
+	{
+		soundObj.endCallback = end_callback;
+		soundObj.callbackUserData = data;
 
-	channel->State        = CHANNEL_PLAY;
+		ma_sound_set_end_callback(sound, [](void * userData, ma_sound *)
+		{
+			auto cbd  { reinterpret_cast<SoundObject *>(userData) };
+			cbd->endCallback(cbd->callbackUserData);
+		}, &soundObj);
+	}
 
-	sample->uiInstances++;
-	sample->uiCacheHits++;
-
-	return uiSoundID;
+	Start(soundObj, volume, pan);
+	return id;
 }
 
-/* Returns a unique ID number with every call. Basically it's just a 32-bit
- * static value that is incremented each time. */
-static UINT32 SoundGetUniqueID(void)
-{
-	static UINT32 uiNextID = 0;
-
-	if (uiNextID == SOUND_ERROR) uiNextID++;
-
-	return uiNextID++;
-}
-
-/* Stops a sound referred to by its channel.  This function is the only one
- * that should be deallocating sample handles. The random sounds have to have
- * their counters maintained, and using this as the central function ensures
- * that they stay in sync.
+/* Play a sound sample from a Smacker Flick
  *
- * Returns: TRUE if the sample was stopped, FALSE if it could not be found. */
-static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
+ * Allocates space for the sound sample within the sound system
+ */
+SoundManagerID SoundPlayRawPCMData(char const * name, UINT8 channels,
+	UINT8 depth, UINT32 rate, std::vector<UINT8> & buf, UINT32 volume, UINT32 pan)
 {
-	if (!fSoundSystemInit) return FALSE;
+	SLOGI("SoundPlayRawPCMData {}", name);
 
-	if (channel->pSample == NULL) return FALSE;
+	if (buf.empty()) return SOUND_ERROR;
 
-	SLOGD("stopping channel channel {}", (channel - pSoundList));
-	channel->State = CHANNEL_STOP;
+	//Originaly Sound Blaster could only play mono unsigned 8-bit PCM data.
+	//Later it became capable of playing 16-bit audio data, but needed to be signed and LSB.
+	//They were the de facto standard so I'm assuming smacker uses the same.
+	ma_format format;
+	if (depth == 8) format = ma_format_u8;
+	else if (depth == 16) format = ma_format_s16;
+	else return SOUND_ERROR;
+
+	if (format == ma_format_s16) {
+		// We expect the Endianess for the Smacker buffer to be little endian, but ma_format_s16 is native endian, so we need to do some conversion
+		convertLittleEndianBufferToNativeEndianU16(buf.data(), buf.size());
+	}
+
+	auto && [ id, soundObject] { *GetSoundObject(buf, format, channels, rate) };
+
+	Start(soundObject, volume, pan);
+	return id;
+}
+
+
+bool SoundIsPlaying(SoundManagerID id)
+{
+	ma_sound * const sound { SoundGetByID(id) };
+	return sound && ma_sound_is_playing(sound);
+}
+
+
+bool SoundStop(SoundManagerID id)
+{
+	return sounds.erase(id) != 0;
+}
+
+
+void SoundStopAll(void)
+{
+	sounds.clear();
+}
+
+
+bool SoundSetVolume(SoundManagerID id, UINT32 uiVolume)
+{
+	ma_sound * const sound { SoundGetByID(id) };
+	if (!sound) return FALSE;
+
+	ma_sound_set_volume(sound, MSStoMA(uiVolume));
 	return TRUE;
 }
 
 
-void SoundStopRandom(UINT32 uiSample)
+bool SoundSetPan(SoundManagerID id, UINT32 uiPan)
 {
-	// CHECK FOR VALID SAMPLE
-	SAMPLETAG* const s = &pSampleList[uiSample];
-	if (s->uiFlags & SAMPLE_ALLOCATED)
+	ma_sound * const sound { SoundGetByID(id) };
+	if (!sound) return FALSE;
+
+	ma_sound_set_pan(sound, MSStoMA(uiPan));
+	return TRUE;
+}
+
+
+UINT32 SoundGetVolume(SoundManagerID id)
+{
+	ma_sound * const sound { SoundGetByID(id) };
+	if (!sound) return SOUND_ERROR;
+
+	return static_cast<UINT32>(ma_sound_get_volume(sound) * SoundLibsConversionFactor);
+}
+
+
+UINT32 SoundPlayRandom(const char* pFilename, [[maybe_unused]] UINT32 time_min, [[maybe_unused]] UINT32 time_max, [[maybe_unused]] UINT32 vol_min,
+[[maybe_unused]] UINT32 vol_max,[[maybe_unused]] UINT32 pan_min, [[maybe_unused]] UINT32 pan_max)
+{
+	// TODO: implement this
+	SLOGI("playing random Sound: \"{}\"", pFilename);
+
+	if (!fSoundSystemInit) return SOUND_ERROR;
+
+	return SOUND_ERROR;
+}
+
+
+void SoundStopRandom(UINT32)
+{
+	// TODO: implement this
+}
+
+
+void SoundStopAllRandom()
+{
+	// TODO: implement this.
+}
+
+
+void SoundServiceRandom()
+{
+	// TODO: implement this
+}
+
+
+UINT32 SoundGetPosition(SoundManagerID id)
+{
+	ma_sound * const sound { SoundGetByID(id) };
+	if (!sound) return 0;
+
+	float cursor;
+	return ma_sound_get_cursor_in_seconds(sound, &cursor) == MA_SUCCESS
+		? static_cast<UINT32>(cursor * 1000.0f)
+		: 0;
+}
+
+
+void SoundServiceStreams()
+{
+	// Garbage collect all sounds that have already finished playing.
+	for (auto it{ sounds.begin() }; it != sounds.end(); )
 	{
-		s->uiFlags &= ~SAMPLE_RANDOM;
+		if (ma_sound_at_end(&it->second.sound))
+			it = sounds.erase(it);
+		else
+			++it;
 	}
 }
