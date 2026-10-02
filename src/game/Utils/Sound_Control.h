@@ -21,9 +21,6 @@
 #define HIGHVOLUME	127
 
 
-#define LOOPING	0
-
-
 // SOUNDS ENUMERATION
 enum SoundID
 {

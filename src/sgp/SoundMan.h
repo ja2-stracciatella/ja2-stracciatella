@@ -1,15 +1,14 @@
-#ifndef __SOUNDMAN_
-#define __SOUNDMAN_
+#ifndef SGP_SOUNDMAN_H
+#define SGP_SOUNDMAN_H
 
-#include "Sound_Control.h"
 #include "Types.h"
+#include <vector>
 
-#include <span>
 
-
-#define MAXVOLUME 127
+constexpr UINT32 MAXVOLUME = 127U;
 
 using SoundManagerID = UINT32;
+using RandomSoundID = UINT32;
 
 // Sound error values (they're all the same)
 constexpr SoundManagerID NO_SAMPLE   = 0xffffffff;
@@ -25,7 +24,7 @@ void InitializeSoundManager(bool noSound);
 void ShutdownSoundManager(void);
 
 
-SoundManagerID SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UINT32 rate, std::span<UINT8> buf, UINT32 volume, UINT32 pan);
+SoundManagerID SoundPlayRawPCMData(const char* name, UINT8 channels, UINT8 depth, UINT32 rate, std::vector<UINT8> & buf, UINT32 volume, UINT32 pan);
 
 
 /* Starts a sample playing. If the sample is not loaded in the cache, it will
@@ -45,7 +44,7 @@ SoundManagerID SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT3
  *
  * Returns: If successful, it returns the sample index it is loaded to, else
  *          SOUND_ERROR is returned. */
-UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max);
+RandomSoundID SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max);
 
 /* Can be polled in tight loops where sound buffers might starve due to heavy
  * hardware use, etc. Streams DO NOT normally need to be serviced manually, but
@@ -77,7 +76,7 @@ void SoundStopAllRandom(void);
  */
 bool SoundStop(SoundManagerID id);
 
-void SoundStopRandom(UINT32 uiSample);
+void SoundStopRandom(RandomSoundID rid);
 
 // Returns TRUE/FALSE that an instance of a sound is still playing.
 bool SoundIsPlaying(SoundManagerID id);
