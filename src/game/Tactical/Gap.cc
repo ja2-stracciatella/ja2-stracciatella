@@ -18,6 +18,7 @@ static void AudioGapListInit(const ST::string& zSoundFile, AudioGapList* pGapLis
 	// the number of elements loaded
 
 	SLOGD("File is {}", zSoundFile);
+	pGapList->clear();
 
 	// strip .wav and change to .gap
 	ST::string sFileName(FileMan::replaceExtension(zSoundFile, "gap"));
@@ -33,13 +34,10 @@ static void AudioGapListInit(const ST::string& zSoundFile, AudioGapList* pGapLis
 		const UINT32 count = size / 8;
 		if (count > 0)
 		{
+			pGapList->reserve(count);
+
 			BYTE *data = new BYTE[size]{};
 			f->read(data, size);
-
-			AUDIO_GAP* const gaps  = new AUDIO_GAP[count]{};
-
-			pGapList->gaps = gaps;
-			pGapList->end  = gaps + count;
 
 			DataReader d{data};
 			for (UINT32 i = 0; i < count; ++i)
@@ -50,8 +48,7 @@ static void AudioGapListInit(const ST::string& zSoundFile, AudioGapList* pGapLis
 				EXTR_U32(d, start);
 				EXTR_U32(d, end);
 
-				gaps[i].start = start;
-				gaps[i].end   = end;
+				pGapList->emplace_back(start, end);
 
 				SLOGD("Gap Start {} and Ends {}", start, end);
 			}
@@ -63,24 +60,17 @@ static void AudioGapListInit(const ST::string& zSoundFile, AudioGapList* pGapLis
 			return;
 		}
 	}
-	catch (...) { /* Handled below */ }
-
-	pGapList->gaps = NULL;
-	pGapList->end  = NULL;
+	catch (...) { /* Nothing to do. */ }
 }
 
 
 void AudioGapListDone(AudioGapList* pGapList)
 {
-	// Free the array and nullify the pointers in the AudioGapList
-	delete[] pGapList->gaps;
-	pGapList->gaps = NULL;
-	pGapList->end  = NULL;
-	SLOGD("Audio Gap List Deleted");
+	pGapList->clear();
 }
 
 
-BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
+bool PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 {
 	// This procedure will access the AudioGapList pertaining to the .wav about
 	// to be played and returns whether there is a gap currently.  This is done
@@ -90,23 +80,20 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	// current time, set current to next and repeat ...if next elements start
 	// is larger than current time, or no more elements..  return FALSE
 
-	if (!pGapList)
+	if (!pGapList || pGapList->empty())
 	{
 		// no gap list, return
 		return FALSE;
 	}
 
-	const AUDIO_GAP* i = pGapList->gaps;
-	if (i == NULL) return FALSE;
-
 	const UINT32 time = SoundGetPosition(uiSampleNum);
 	SLOGD("Sound Sample Time is {}", time);
 
 	// Check to see if we have fallen behind.  If so, catch up
-	const AUDIO_GAP* const end = pGapList->end;
+	auto i = pGapList->begin();
 	while (time > i->end)
 	{
-		if (++i == end) return FALSE;
+		if (++i == pGapList->end()) return FALSE;
 	}
 
 	// check to see if time is within the next AUDIO_GAPs start time

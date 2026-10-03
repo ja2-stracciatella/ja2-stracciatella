@@ -1,6 +1,7 @@
 #ifndef __TALKING_H_
 #define __TALKING_H_
 
+#include "Gap.h"
 #include "JA2Types.h"
 #include "Types.h"
 #include <string_theory/string>
@@ -34,21 +35,6 @@
 #define FACE_DRAW_TEXT_OVER			2
 #define FACE_ERASE_TEXT_OVER			1
 #define FACE_NO_TEXT_OVER			0
-
-
-struct AUDIO_GAP
-{
-	UINT32 start;
-	UINT32 end;
-};
-
-// This is a structure that will contain data about the gaps in a particular
-// wave file
-struct AudioGapList
-{
-	AUDIO_GAP*       gaps; // Pointer to gap array
-	const AUDIO_GAP* end;  // Pointer one past the end of the gap array
-};
 
 
 struct FACETYPE
