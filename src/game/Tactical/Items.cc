@@ -1856,6 +1856,29 @@ static void CollectKey(SOLDIERTYPE const& s, OBJECTTYPE const& o)
 }
 
 
+/* Money carries its quantity in uiMoneyAmount rather than in a count of
+ * objects, and a slot only holds so much of it. Move as much as bPos still has
+ * room for, leaving any remainder in obj for the caller to place elsewhere. */
+static void FillMoneySlot(OBJECTTYPE& inSlot, OBJECTTYPE& obj, INT8 const bPos)
+{
+	if (inSlot.ubNumberOfObjects == 0)
+	{
+		inSlot                   = obj;
+		inSlot.ubNumberOfObjects = 1;
+		inSlot.uiMoneyAmount     = 0;
+	}
+
+	UINT32 const uiLimit = MoneySlotLimit( bPos );
+	UINT32 const uiRoom  = uiLimit > inSlot.uiMoneyAmount ? uiLimit - inSlot.uiMoneyAmount : 0;
+	UINT32 const uiMoved = std::min( obj.uiMoneyAmount, uiRoom );
+
+	inSlot.uiMoneyAmount += uiMoved;
+	obj.uiMoneyAmount    -= uiMoved;
+
+	if (obj.uiMoneyAmount == 0) DeleteObj( &obj );
+}
+
+
 BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 {
 	// returns object to have in hand after placement... same as original in the
@@ -1898,7 +1921,14 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 	OBJECTTYPE * const pInSlot{ &pSoldier->inv[bPos] };
 
-	if (pInSlot->ubNumberOfObjects == 0)
+	if (pInSlot->ubNumberOfObjects == 0 && item->isMoney())
+	{
+		/* A slot only takes MoneySlotLimit() worth of money, but the generic
+		 * path below copies the object over wholesale and never looks at
+		 * uiMoneyAmount, so any amount at all would fit into any pocket. */
+		FillMoneySlot( *pInSlot, *pObj, bPos );
+	}
+	else if (pInSlot->ubNumberOfObjects == 0)
 	{
 		// placement in an empty slot
 		ubNumberToDrop = pObj->ubNumberOfObjects;
@@ -1949,24 +1979,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		{
 			if (item->isMoney())
 			{
-
-				UINT32 uiMoneyMax = MoneySlotLimit( bPos );
-
 				// always allow money to be combined!
 				// IGNORE STATUS!
-
-				if (pInSlot->uiMoneyAmount + pObj->uiMoneyAmount > uiMoneyMax)
-				{
-					// remove X dollars
-					pObj->uiMoneyAmount -= (uiMoneyMax - pInSlot->uiMoneyAmount);
-					// set in slot to maximum
-					pInSlot->uiMoneyAmount = uiMoneyMax;
-				}
-				else
-				{
-					pInSlot->uiMoneyAmount += pObj->uiMoneyAmount;
-					DeleteObj( pObj );
-				}
+				FillMoneySlot( *pInSlot, *pObj, bPos );
 			}
 			else if ( ubSlotLimit == 1 || (ubSlotLimit == 0 && bPos >= HANDPOS && bPos <= BIGPOCK4POS ) )
 			{
