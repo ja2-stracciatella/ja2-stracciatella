@@ -60,10 +60,7 @@ enum LightFlags : UINT32
 	LIGHT_NODE_DRAWN_NO_DIR  = 1 << DIRECTION_IRRELEVANT, // Indicates destination and source are the same tile
 	LIGHT_NODE_DRAWN_NONWALL = 1 << 10,
 	LIGHT_ROOF_ONLY        = 0x00001000, // light only rooftops
-	LIGHT_IGNORE_WALLS     = 0x00002000, // doesn't take walls into account
-	LIGHT_BACKLIGHT        = 0x00004000, // light does not light objs, trees
 	LIGHT_NEW_RAY          = 0x00008000, // start of new ray in linked list
-	LIGHT_EVERYTHING       = 0x00010000, // light up everything
 	LIGHT_FAKE             = 0x10000000  // "fake" light for display only
 };
 
@@ -628,7 +625,7 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 
 	bool fFake = uiFlags & LIGHT_FAKE ? true : false;
 
-	if (!(uiFlags & LIGHT_ROOF_ONLY) || (uiFlags & LIGHT_EVERYTHING))
+	if (!(uiFlags & LIGHT_ROOF_ONLY))
 	{
 		pStruct = gpWorldLevelData[uiTile].pStructHead;
 		while(pStruct)
@@ -685,9 +682,6 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 				pObject = pObject->pNext;
 			}
 
-			if(uiFlags&LIGHT_BACKLIGHT)
-				ubShadeAdd = (INT16)ubShade*7/10;
-
 			pMerc = gpWorldLevelData[uiTile].pMercHead;
 			while(pMerc != NULL)
 			{
@@ -697,7 +691,7 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 		}
 	}
 
-	if((uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
+	if(uiFlags & LIGHT_ROOF_ONLY)
 	{
 		pRoof = gpWorldLevelData[uiTile].pRoofHead;
 		while(pRoof!=NULL)
@@ -741,7 +735,7 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 
 	bool fFake = uiFlags & LIGHT_FAKE ? true : false;
 
-	if (!(uiFlags & LIGHT_ROOF_ONLY) || (uiFlags & LIGHT_EVERYTHING))
+	if (!(uiFlags & LIGHT_ROOF_ONLY))
 	{
 		pStruct = gpWorldLevelData[uiTile].pStructHead;
 		while(pStruct)
@@ -798,9 +792,6 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 				pObject = pObject->pNext;
 			}
 
-			if(uiFlags&LIGHT_BACKLIGHT)
-				ubShadeSubstract = (INT16)ubShade * 7 / 10;
-
 			pMerc = gpWorldLevelData[uiTile].pMercHead;
 			while(pMerc!=NULL)
 			{
@@ -810,7 +801,7 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 		}
 	}
 
-	if((uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
+	if(uiFlags & LIGHT_ROOF_ONLY)
 	{
 		pRoof = gpWorldLevelData[uiTile].pRoofHead;
 		while(pRoof!=NULL)
@@ -966,9 +957,6 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 	INT16 iXPos, iYPos, iEndY, iEndX;
 	UINT16 usCurNode=0, usFlags=0;
 	BOOLEAN fInsertNodes=FALSE;
-
-	if((iEndPointX > 0) && (iEndPointY > 0))
-		usFlags=LIGHT_BACKLIGHT;
 
 	/* We'll always draw top to bottom, to reduce the number of cases we have to
 		handle, and to make lines between the same endpoints draw the same pixels */
@@ -1463,7 +1451,7 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 			continue;
 		}
 
-		LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
+		LIGHT_NODE* const pLight = &t->lights[usNodeIndex];
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
@@ -1505,7 +1493,7 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 
 		if (!filter.illuminateNothing && pLight->ubLight)
 		{
-			UINT32 uiFlags = (UINT32)(usNodeIndex & LIGHT_BACKLIGHT);
+			UINT32 uiFlags = 0;
 			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
 			if (l->uiFlags & LIGHT_SPR_ONROOF)   uiFlags |= LIGHT_ROOF_ONLY;
 
@@ -1622,7 +1610,7 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 		const UINT16 usNodeIndex = t->rays[uiCount];
 		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
-			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
+			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex];
 			//Kris:  added map boundary checking!!!
 			if(LightHideWall(
 				(INT16) std::clamp(int(iX + pLight->iDX), 0, WORLD_COLS - 1),
@@ -1670,7 +1658,7 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 			continue;
 		}
 
-		LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
+		LIGHT_NODE* const pLight = &t->lights[usNodeIndex];
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
@@ -1712,7 +1700,7 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 
 		if (!filter.illuminateNothing && pLight->ubLight)
 		{
-			UINT32 uiFlags = (UINT32)(usNodeIndex & LIGHT_BACKLIGHT);
+			UINT32 uiFlags = 0;
 			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
 			if (l->uiFlags & LIGHT_SPR_ONROOF)   uiFlags |= LIGHT_ROOF_ONLY;
 
