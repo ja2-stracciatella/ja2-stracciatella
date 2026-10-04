@@ -32,7 +32,6 @@ static INT8 gbFadeSpeed = 1;
 static BOOLEAN gfDontRestartSong   = FALSE;
 
 
-static BOOLEAN MusicFadeIn(void);
 static void MusicStop(void);
 
 
@@ -57,7 +56,7 @@ void MusicPlay(const ST::string* pFilename)
 
 	gfMusicEnded	= FALSE;
 	fMusicPlaying	= TRUE;
-	MusicFadeIn();
+	fMusicFadingIn  = TRUE;
 }
 
 
@@ -136,19 +135,6 @@ static BOOLEAN MusicFadeOut(void)
 	return(FALSE);
 }
 
-
-//		Fades in the current song.
-//
-//	Returns:	TRUE if the music has begun fading in, FALSE if an error occurred
-static BOOLEAN MusicFadeIn(void)
-{
-	if(uiMusicHandle!=NO_SAMPLE)
-	{
-		fMusicFadingIn=TRUE;
-		return(TRUE);
-	}
-	return(FALSE);
-}
 
 void MusicPoll(void)
 {
