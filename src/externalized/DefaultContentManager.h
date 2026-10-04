@@ -145,6 +145,8 @@ public:
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const override;
 
+	virtual const LightTemplate* getLightTemplateByName(const ST::string name) const override;
+
 	virtual const GamePolicy* getGamePolicy() const override;
 	virtual const IMPPolicy* getIMPPolicy() const override;
 	virtual const StrategicAIPolicy* getStrategicAIPolicy() const override;
@@ -234,6 +236,8 @@ protected:
 	std::map<uint16_t, uint16_t> m_mapItemReplacements;
 	std::multimap<MusicMode, const ST::string> m_musicMap;
 
+	std::vector<std::unique_ptr<LightTemplate const>> m_lightTemplates;
+
 	std::vector<const SmokeEffectModel*> m_smokeEffects;
 	std::vector<const ExplosionAnimationModel*> m_explosionAnimations;
 	std::vector<const ExplosiveCalibreModel*> m_explosiveCalibres;
@@ -307,6 +311,7 @@ protected:
 	bool loadArmyData();
 	bool loadMusicModeList(MusicMode mode, const JsonValue& array);
 	bool loadMusic();
+	bool loadLightTemplates();
 
 	const DealerInventory * loadDealerInventory(const ST::string& fileName);
 	bool loadAllDealersAndInventory();

@@ -53,6 +53,7 @@ class VehicleModel;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct ExplosiveModel;
+struct LightTemplate;
 struct LoadingScreen;
 struct MagazineModel;
 class MagazinesContainer;
@@ -158,6 +159,8 @@ public:
 	virtual const ShippingDestinationModel* getPrimaryShippingDestination() const = 0;
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
+
+	virtual const LightTemplate* getLightTemplateByName(const ST::string name) const = 0;
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;

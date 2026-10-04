@@ -41,6 +41,7 @@
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
 #include "content/NPCQuoteInfo.h"
+#include "content/LightTemplate.h"
 #include "mercs/MERCListingModel.h"
 #include "MercProfile.h"
 #include "mercs/MercProfileInfo.h"
@@ -777,6 +778,18 @@ bool DefaultContentManager::loadMusic()
 	return true;
 }
 
+bool DefaultContentManager::loadLightTemplates()
+{
+	auto json = readJsonDataFile("light-templates.json");
+
+	for (auto& element : json.toVec()) {
+		auto lightTmpl = LightTemplate::deserialize(element);
+		m_lightTemplates.push_back(std::move(lightTmpl));
+	}
+
+	return true;
+}
+
 void DefaultContentManager::readWeaponTable(
 	const ST::string& fileName,
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
@@ -914,6 +927,7 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 
 	loadArmyData();
 	loadMusic();
+	loadLightTemplates();
 
 	auto replacement_json = readJsonDataFileWithSchema("tactical-map-item-replacements.json");
 
@@ -1090,6 +1104,16 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 
 	SLOGD("Choosing music index {} of {} : '{}'", index, count, lower->second);
 	return &lower->second;
+}
+
+const LightTemplate* DefaultContentManager::getLightTemplateByName(const ST::string name) const
+{
+	for (auto i = m_lightTemplates.begin(); i != m_lightTemplates.end(); i++) {
+		if (i->get()->name == name) {
+			return i->get();
+		}
+	}
+	throw DataError(ST::format("LightTemplate is not defined for {}", name));
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const

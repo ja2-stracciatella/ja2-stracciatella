@@ -1785,45 +1785,11 @@ void LightSave(LightTemplate const* const t, const ST::string& pFilename)
 	* the file wasn't loaded. */
 static LightTemplate* LightLoad(const ST::string& pFilename)
 {
-	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
-
-	struct FILE_LIGHT_NODE
-	{
-		INT16 iDX;
-		INT16 iDY;
-		UINT8 uiFlags;
-		UINT8 ubLight;
-	};
-
-	UINT16 numLights;
-	hFile->read(&numLights, sizeof(UINT16));
-	std::vector<FILE_LIGHT_NODE> fileLights;
-	fileLights.assign(numLights, FILE_LIGHT_NODE{});
-	hFile->read(fileLights.data(), sizeof(FILE_LIGHT_NODE) * numLights);
-
-	// Widen the template file's uiFlag to 16 bit
-	std::vector<LIGHT_NODE> lights;
-	lights.reserve(fileLights.size());
-	std::transform(fileLights.begin(), fileLights.end(),
-					std::back_inserter(lights),
-					[](const FILE_LIGHT_NODE& val) {
-						LIGHT_NODE lightNode;
-						lightNode.iDX     = val.iDX;
-						lightNode.iDY     = val.iDY;
-						lightNode.uiFlags = static_cast<UINT16>(val.uiFlags);
-						lightNode.ubLight = val.ubLight;
-						return lightNode;
-	});
-
-	UINT16 numRays;
-	hFile->read(&numRays, sizeof(UINT16));
-	std::vector<UINT16> rays;
-	rays.assign(numRays, 0);
-	hFile->read(rays.data(), sizeof(UINT16) * numRays);
+	LightTemplate* const cmTmpl = const_cast<LightTemplate*>(GCM->getLightTemplateByName(pFilename));
 
 	LightTemplate* const t = LightGetFree();
-	t->lights   = std::move(lights);
-	t->rays     = std::move(rays);
+	t->lights   = cmTmpl->lights;
+	t->rays     = cmTmpl->rays;
 	t->name     = pFilename;
 	return t;
 }
