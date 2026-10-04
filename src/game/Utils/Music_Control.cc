@@ -32,28 +32,31 @@ static INT8 gbFadeSpeed = 1;
 static BOOLEAN gfDontRestartSong   = FALSE;
 
 
-static BOOLEAN MusicFadeIn(void);
 static void MusicStop(void);
-static void MusicStopCallback(void* pData);
 
 
 void MusicPlay(const ST::string* pFilename)
 {
 	MusicStop();
 
-	uiMusicHandle = SoundPlay(pFilename->c_str(), 0, 64, 1, MusicStopCallback, NULL);
+	uiMusicHandle = SoundPlay(pFilename->c_str(), 0, 64, 1, [](void *)
+		{
+			SLOGD("Music EndCallback {} {}", uiMusicHandle, gubMusicMode);
+			gfMusicEnded  = TRUE;
+			uiMusicHandle = NO_SAMPLE;
+		}, nullptr);
 
-	if(uiMusicHandle!=SOUND_ERROR)
+	if (uiMusicHandle == SOUND_ERROR && IsSoundEnabled())
 	{
-		SLOGD("Music Play {} {}", uiMusicHandle, gubMusicMode);
-
-		gfMusicEnded	= FALSE;
-		fMusicPlaying	= TRUE;
-		MusicFadeIn();
+		SLOGE("Music Play Error: file '{}' mode {}", *pFilename, gubMusicMode);
 		return;
 	}
 
-	SLOGE("Music Play Error {} {}", uiMusicHandle, gubMusicMode);
+	SLOGD("Music Play {} {}", uiMusicHandle, gubMusicMode);
+
+	gfMusicEnded	= FALSE;
+	fMusicPlaying	= TRUE;
+	fMusicFadingIn  = TRUE;
 }
 
 
@@ -91,14 +94,6 @@ void MusicSetVolume(UINT32 uiVolume)
 }
 
 
-//********************************************************************************
-// MusicGetVolume
-//
-//		Gets the volume on the currently playing music.
-//
-//	Returns:	TRUE if the volume was set, FALSE if an error occurred
-//
-//********************************************************************************
 UINT32 MusicGetVolume(void)
 {
 		return(uiMusicVolume);
@@ -140,19 +135,6 @@ static BOOLEAN MusicFadeOut(void)
 	return(FALSE);
 }
 
-
-//		Fades in the current song.
-//
-//	Returns:	TRUE if the music has begun fading in, FALSE if an error occurred
-static BOOLEAN MusicFadeIn(void)
-{
-	if(uiMusicHandle!=NO_SAMPLE)
-	{
-		fMusicFadingIn=TRUE;
-		return(TRUE);
-	}
-	return(FALSE);
-}
 
 void MusicPoll(void)
 {
@@ -336,15 +318,6 @@ static void StartMusicBasedOnMode(void)
 		default:
 			MusicFadeOut();
 	}
-}
-
-
-static void MusicStopCallback(void* pData)
-{
-	SLOGD("Music EndCallback {} {}", uiMusicHandle, gubMusicMode);
-
-	gfMusicEnded  = TRUE;
-	uiMusicHandle = NO_SAMPLE;
 }
 
 
