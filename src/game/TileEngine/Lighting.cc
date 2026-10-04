@@ -361,7 +361,12 @@ struct IlluminationFilter
 			// IF WE ARE A WINDOW, DO NOT BLOCK!
 			if (ubTravelCost == TRAVELCOST_WALL && FindStructure(windowTileNo, STRUCTURE_WALLNWINDOW))
 			{
-				if (windowTileNo == dstTileNo)
+				if (IsDirectionDiagonal(srcToDstDir))
+				{
+					blocked = true;
+					illuminateNothing = true;
+				}
+				else if (windowTileNo == dstTileNo)
 				{
 					if (srcToDstDir == NORTH)
 					{
