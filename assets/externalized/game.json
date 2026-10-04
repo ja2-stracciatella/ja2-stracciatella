@@ -13,6 +13,8 @@
   //  Press 'alt+r' to reload
   //  Press 'ctrl+q' to swap hand items
   //  Press 'shift+j' to climb through open window
+  //  Press 'shift+s' in the sector inventory to stack and sort it.
+  //  Press 'shift+r' in the sector inventory to refill the mercs' copies of the item pointed at.
   "extra_hotkeys": true,
 
   //  Press d in realtime mode to manually start turn based mode.
