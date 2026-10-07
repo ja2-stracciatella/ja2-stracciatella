@@ -15,6 +15,7 @@
 #include "Input.h"
 #include "Interface_Dialogue.h"
 #include "ItemModel.h"
+#include "ItemSystem.h"
 #include "Items.h"
 #include "Keys.h"
 #include "Line.h"
@@ -44,6 +45,7 @@
 #include "WordWrap.h"
 #include <string_theory/format>
 #include <string_theory/string>
+#include <iterator>
 
 
 #define QUEST_DBS_FONT_TITLE			FONT14ARIAL
@@ -260,8 +262,6 @@ static const ST::string QuestDebugText[] =
 	"Left Arrow:  Previous Quote",
 	"Right Arrow: Next Quote",
 	"ESC:         To Stop the merc from Talking",
-	"",
-	""
 };
 
 
@@ -315,6 +315,7 @@ enum
 	QUEST_DBS_RIGHT_ARROW_NEXT_QUOTE,
 	QUEST_DBS_ESC_TOP_STOP_TALKING
 };
+static_assert(std::size(QuestDebugText) == QUEST_DBS_ESC_TOP_STOP_TALKING + 1);
 
 
 static const ST::string PocketText[] = {
@@ -338,6 +339,7 @@ static const ST::string PocketText[] = {
 	"Smallpock7",
 	"Smallpock8"
 };
+static_assert(std::size(PocketText) == NUM_INV_SLOTS);
 
 
 typedef void (*LISTBOX_DISPLAY_FNCTN)();    // Define Display Callback function
@@ -491,6 +493,18 @@ static GUIButtonRef guiQDPgDownButtonButton;
 
 static void DisplaySelectedItem(void);
 static void DisplaySelectedNPC(void);
+
+
+static ST::string const& GetItemShortName(int itemIndex)
+{
+	if (auto * item = GCM->getItem(itemIndex, ItemSystem::nothrow); item)
+	{
+		ST::string const& ItemName = item->getShortName();
+		if (!ItemName.empty()) return ItemName;
+	}
+
+	return QuestDebugText[QUEST_DBS_NO_ITEM];
+}
 
 
 void QuestDebugScreenInit()
@@ -827,7 +841,7 @@ static void EnterQuestDebugSystem(void)
 
 	if( giHaveSelectedItem != -1 )
 	{
-		ST::string zItemDesc = ST::format("{} - {}", giHaveSelectedItem, GCM->getItem(giHaveSelectedItem)->getShortName());
+		ST::string zItemDesc = ST::format("{} - {}", giHaveSelectedItem, GetItemShortName(giHaveSelectedItem));
 		guiQuestDebugCurItemButton->SpecifyText(zItemDesc);
 
 		gItemListBox.sCurSelectedItem = (INT16)giHaveSelectedItem;
@@ -1290,7 +1304,7 @@ static void DisplayFactInformation(void)
 }
 
 
-static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugExitButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -1366,7 +1380,7 @@ static void DisplayFactList(void)
 }
 
 
-static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -1384,7 +1398,7 @@ static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -1701,10 +1715,8 @@ static void DisplaySelectedItem(void)
 		// display the names of the NPC's
 	for( i=gpActiveListBox->usItemDisplayedOnTopOfList; i< gpActiveListBox->usItemDisplayedOnTopOfList+gpActiveListBox->usNumDisplayedItems; i++)
 	{
-		auto ItemName = GCM->getItem(i)->getShortName();
-		if (ItemName.empty()) ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
-
-		DrawTextToScreen(ItemName, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(GetItemShortName(i), usPosX, usPosY, 0,
+			QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		usPosY += usFontHeight;
 	}
 
@@ -1718,8 +1730,7 @@ static void DisplaySelectedItem(void)
 
 		SetFontShadow(NO_SHADOW);
 
-		ST::string ItemName = GCM->getItem(gpActiveListBox->sCurSelectedItem)->getShortName();
-		if (ItemName.empty()) ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
+		ST::string const& ItemName = GetItemShortName(gpActiveListBox->sCurSelectedItem);
 
 		DrawTextToScreen(ItemName, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		SetFontShadow(DEFAULT_SHADOW);
@@ -1878,7 +1889,7 @@ static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 static void CalcPositionOfNewScrollBoxLocation(void);
 
 
-static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
+static void ScrollAreaRegionCallBack(MOUSE_REGION *, UINT32 iReason)
 {
 	if (iReason & (MSYS_CALLBACK_REASON_POINTER_UP | MSYS_CALLBACK_REASON_POINTER_REPEAT))
 	{
@@ -2016,7 +2027,7 @@ static void CalcPositionOfNewScrollBoxLocation(void)
 static void AddNPCToGridNo(INT32 iGridNo);
 
 
-static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2029,17 +2040,19 @@ static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, UINT32 
 static void AddItemToGridNo(INT32 iGridNo);
 
 
-static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
-		ST::string zTemp = ST::format("{} where the {} will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], GCM->getItem(gItemListBox.sCurSelectedItem)->getShortName());
+		ST::string zTemp = ST::format("{} where the {} will be added.",
+			QuestDebugText[QUEST_DBS_ENTER_GRID_NUM],
+			GetItemShortName(gItemListBox.sCurSelectedItem));
 		TextEntryBox( zTemp, AddItemToGridNo );
 	}
 }
 
 
-static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2068,7 +2081,7 @@ static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, UINT32 rea
 static void ChangeDayNumber(INT32 iDayToChangeTo);
 
 
-static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2080,7 +2093,7 @@ static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2092,7 +2105,7 @@ static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason
 static void RefreshAllNPCInventory(void);
 
 
-static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2124,7 +2137,7 @@ static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, UINT32 reas
 }
 
 
-static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* const btn, UINT32 const reason)
+static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *, UINT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2155,7 +2168,7 @@ static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* const btn, U
 static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom);
 
 
-static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2170,7 +2183,7 @@ static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, U
 }
 
 
-static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *, UINT32 reason);
 static void DestroyQuestDebugTextInputBoxes(void);
 static void InitQuestDebugTextInputBoxes(void);
 
@@ -2275,7 +2288,7 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const ST::string& p
 }
 
 
-static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
+static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION *, UINT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2292,7 +2305,7 @@ static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion
 }
 
 
-static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2399,6 +2412,7 @@ static void AddNPCToGridNo(INT32 iGridNo)
 
 
 static void AddItemToGridNo(INT32 iGridNo)
+try
 {
 	OBJECTTYPE		Object;
 
@@ -2419,6 +2433,7 @@ static void AddItemToGridNo(INT32 iGridNo)
 		AddItemToPool(iGridNo, &Object, INVISIBLE, 0, 0, 0);
 	}
 }
+catch (...) {}
 
 
 static void AddKeyToGridNo(INT32 iKeyID)
@@ -2458,7 +2473,7 @@ static void ChangeDayNumber(INT32 iDayToChangeTo)
 }
 
 
-static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason);
+static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON *, UINT32 reason);
 
 
 static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
@@ -2540,7 +2555,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 					DrawTextToScreen(PocketText[i], QUEST_DBS_NPC_INV_POPUP_X+10, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 					//Display the contents of the pocket
-					DrawTextToScreen(GCM->getItem(s->inv[i].usItem)->getShortName(), QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+					DrawTextToScreen(GetItemShortName(s->inv[i].usItem), QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 					usPosY += usFontHeight;
 				}
 			}
@@ -2552,7 +2567,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 }
 
 
-static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2564,7 +2579,7 @@ static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, UINT32 re
 static INT16 IsMercInTheSector(UINT16 usMercID);
 
 
-static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -2658,7 +2673,7 @@ static void ChangeFactState(INT32 iNumber)
 }
 
 
-static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -2674,7 +2689,7 @@ static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_POINTER_UP)
 	{
@@ -3035,7 +3050,7 @@ static void DisplayQDSCurrentlyQuoteNum(void)
 }
 
 
-static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -3047,7 +3062,7 @@ static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, UINT32 reas
 }
 
 
-static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, UINT32 reason)
+static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
