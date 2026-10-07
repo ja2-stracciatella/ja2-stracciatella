@@ -2,7 +2,6 @@
 
 # How to configure Doxyfile:
 # https://www.doxygen.nl/manual/index.html
-# https://www.doxygen.nl/manual/starting.html
 
 PROJECT_NAME           = "JA2 Stracciatella"
 
@@ -174,6 +173,9 @@ RECURSIVE              = YES
 # files are included.
 
 EXAMPLE_PATTERNS       = *
+
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
 
 # When the SEARCHENGINE tag is enabled Doxygen will generate a search box for
 # the HTML output. The underlying search engine uses JavaScript and DHTML and
