@@ -4,27 +4,29 @@
  * of this class or inheriting from it there should not be any reason to
  * include this file instead of ContentManager.h.
  */
-#include "AmmoTypeModel.h"
+#include "ContentManager.h"
+
 #include "AIMListingModel.h"
+#include "AmmoTypeModel.h"
+#include "ArmourModel.h"
 #include "BinaryProfileData.h"
 #include "CalibreModel.h"
 #include "Containers.h"
-#include "ContentManager.h"
 #include "ContentMusic.h"
+#include "ExplosiveModel.h"
 #include "GameRes.h"
 #include "IEDT.h"
 #include "Json.h"
+#include "LightTemplate.h"
 #include "MagazineModel.h"
-#include "ExplosiveModel.h"
-#include "ArmourModel.h"
 #include "StringEncodingTypes.h"
 #include "Types.h"
 #include "WeaponModels.h"
 
 #include <cstdint>
-#include <string_theory/string>
 #include <map>
 #include <memory>
+#include <string_theory/string>
 #include <string_view>
 #include <vector>
 
@@ -145,7 +147,7 @@ public:
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const override;
 
-	virtual const LightTemplate* getLightTemplateByName(const ST::string name) const override;
+	virtual const LightTemplate& getLightTemplateByName(const ST::string &name) override;
 
 	virtual const GamePolicy* getGamePolicy() const override;
 	virtual const IMPPolicy* getIMPPolicy() const override;
@@ -236,7 +238,7 @@ protected:
 	std::map<uint16_t, uint16_t> m_mapItemReplacements;
 	std::multimap<MusicMode, const ST::string> m_musicMap;
 
-	std::vector<std::unique_ptr<LightTemplate const>> m_lightTemplates;
+	Containers::Named<uint8_t, LightTemplate> m_lightTemplates;
 
 	std::vector<const SmokeEffectModel*> m_smokeEffects;
 	std::vector<const ExplosionAnimationModel*> m_explosionAnimations;

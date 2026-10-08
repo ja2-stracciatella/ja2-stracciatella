@@ -41,7 +41,6 @@
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
 #include "content/NPCQuoteInfo.h"
-#include "content/LightTemplate.h"
 #include "mercs/MERCListingModel.h"
 #include "MercProfile.h"
 #include "mercs/MercProfileInfo.h"
@@ -783,8 +782,7 @@ bool DefaultContentManager::loadLightTemplates()
 	auto json = readJsonDataFile("light-templates.json");
 
 	for (auto& element : json.toVec()) {
-		auto lightTmpl = LightTemplate::deserialize(element);
-		m_lightTemplates.push_back(std::move(lightTmpl));
+		m_lightTemplates.add(LightTemplate::deserialize(element));
 	}
 
 	return true;
@@ -1106,14 +1104,9 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 	return &lower->second;
 }
 
-const LightTemplate* DefaultContentManager::getLightTemplateByName(const ST::string name) const
+const LightTemplate& DefaultContentManager::getLightTemplateByName(const ST::string &name)
 {
-	for (auto i = m_lightTemplates.begin(); i != m_lightTemplates.end(); i++) {
-		if (i->get()->name == name) {
-			return i->get();
-		}
-	}
-	throw DataError(ST::format("LightTemplate is not defined for {}", name));
+	return *(m_lightTemplates.byName(name));
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const

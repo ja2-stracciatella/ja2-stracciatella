@@ -26,10 +26,13 @@ std::unique_ptr<LightTemplate> LightTemplate::deserialize(const JsonValue& json)
 						return lightNode;
 	});
 
-	auto lightTmpl = std::make_unique<LightTemplate>();
-	lightTmpl.get()->name = jTmpl.GetString("name");
-	lightTmpl.get()->rays = std::move(rays);
-	lightTmpl.get()->lights = std::move(lights);
+	auto index = static_cast<uint8_t>(jTmpl.GetInt("index"));
+	auto internalName = jTmpl.GetString("internalName");
 
-	return lightTmpl;
+	return std::make_unique<LightTemplate>(
+		index,
+		std::move(internalName),
+		std::move(rays),
+		std::move(lights)
+	);
 }

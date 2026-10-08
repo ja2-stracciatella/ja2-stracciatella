@@ -160,7 +160,7 @@ public:
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
 
-	virtual const LightTemplate* getLightTemplateByName(const ST::string name) const = 0;
+	virtual const LightTemplate& getLightTemplateByName(const ST::string &name) = 0;
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;

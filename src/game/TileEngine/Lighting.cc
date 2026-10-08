@@ -14,21 +14,23 @@
 * Written by Derek Beland, April 14, 1997
 *
 ***************************************************************************************/
-#include "HImage.h"
-#include "Overhead.h"
-#include "math.h"
-#include "Structure.h"
-#include "VObject.h"
-#include "WorldDef.h"
-#include "RenderWorld.h"
+#include "Lighting.h"
+
 #include "Debug.h"
+#include "Environment.h"
+#include "FileMan.h"
+#include "HImage.h"
 #include "Isometric_Utils.h"
+#include "LightTemplate.h"
+#include "math.h"
+#include "Overhead.h"
+#include "PathAI.h"
+#include "RenderWorld.h"
+#include "Structure.h"
 #include "Sys_Globals.h"
 #include "TileDef.h"
-#include "Lighting.h"
-#include "FileMan.h"
-#include "Environment.h"
-#include "PathAI.h"
+#include "VObject.h"
+#include "WorldDef.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -64,22 +66,6 @@ enum LightFlags : UINT32
 	LIGHT_FAKE             = 0x10000000  // "fake" light for display only
 };
 
-// stucture of node in linked list for lights
-struct LIGHT_NODE
-{
-	INT16 iDX;
-	INT16 iDY;
-	UINT16 uiFlags;
-	UINT8 ubLight;
-};
-
-
-struct LightTemplate
-{
-	std::vector<LIGHT_NODE> lights;
-	std::vector<UINT16> rays;
-	ST::string name;
-};
 
 static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 
@@ -498,7 +484,7 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 
 	t->lights.clear();
 	t->rays.clear();
-	t->name = ""; // clear() before ST 3.4
+	t->internalName = ""; // clear() before ST 3.4
 
 	return TRUE;
 }
@@ -1422,7 +1408,7 @@ LightTemplate* LightCreateOmni(const UINT8 ubIntensity, const INT16 iRadius)
 
 	LightGenerateElliptical(t, ubIntensity, iRadius * DISTANCE_SCALE, iRadius * DISTANCE_SCALE);
 
-	t->name = ST::format("LTO{}.LHT", iRadius);
+	t->internalName = ST::format("LTO{}.LHT", iRadius);
 
 	return t;
 }
@@ -1763,7 +1749,7 @@ void LightSave(LightTemplate const* const t, const ST::string& pFilename)
 {
 	if (t->lights.empty()) throw std::logic_error("Tried to save invalid light template");
 
-	const ST::string& pName = (pFilename.empty() ? t->name : pFilename);
+	const ST::string& pName = (pFilename.empty() ? t->internalName : pFilename);
 	AutoSGPFile f(FileMan::openForWriting(pName));
 	Assert(t->lights.size() <= UINT16_MAX);
 	UINT16 numLights = static_cast<UINT16>(t->lights.size());
@@ -1778,12 +1764,9 @@ void LightSave(LightTemplate const* const t, const ST::string& pFilename)
 	* the file wasn't loaded. */
 static LightTemplate* LightLoad(const ST::string& pFilename)
 {
-	LightTemplate* const cmTmpl = const_cast<LightTemplate*>(GCM->getLightTemplateByName(pFilename));
-
 	LightTemplate* const t = LightGetFree();
-	t->lights   = cmTmpl->lights;
-	t->rays     = cmTmpl->rays;
-	t->name     = pFilename;
+	*t = GCM->getLightTemplateByName(pFilename);
+
 	return t;
 }
 
@@ -1794,7 +1777,7 @@ static LightTemplate* LightLoadCachedTemplate(const ST::string& pFilename)
 {
 	FOR_EACH_LIGHT_TEMPLATE(t)
 	{
-		if (pFilename.compare_i(t->name) == 0) return t;
+		if (pFilename.compare_i(t->internalName) == 0) return t;
 	}
 	return LightLoad(pFilename);
 }
@@ -2089,7 +2072,7 @@ void CreateTilePaletteTables(const HVOBJECT pObj)
 
 const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 {
-	return l->light_template->name.c_str();
+	return l->light_template->internalName.c_str();
 }
 
 
