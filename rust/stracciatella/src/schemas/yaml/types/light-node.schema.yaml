@@ -1,0 +1,10 @@
+title: Light Node
+description: Offset from the center tile, flags and brightness.
+type: array
+minItems: 4
+maxItems: 4
+items:
+  - $ref: types/int16.schema.yaml
+  - $ref: types/int16.schema.yaml
+  - $ref: types/uint16.schema.yaml
+  - $ref: types/uint8.schema.yaml

@@ -779,7 +779,7 @@ bool DefaultContentManager::loadMusic()
 
 bool DefaultContentManager::loadLightTemplates()
 {
-	auto json = readJsonDataFile("light-templates.json");
+	auto json = readJsonDataFileWithSchema("light-templates.json");
 
 	for (auto& element : json.toVec()) {
 		m_lightTemplates.add(LightTemplate::deserialize(element));

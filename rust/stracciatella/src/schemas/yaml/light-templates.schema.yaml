@@ -1,0 +1,33 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Light Templates
+items:
+  type: object
+  title: Light Template
+  description: Defines how far the light spreads, in which directions and how brightly
+  properties:
+    index:
+      title: Internal numeric id
+      $ref: types/uint8.schema.yaml
+    internalName:
+      type: string
+      title: Internal name
+    rays:
+      type: array
+      title: Rays
+      description: Sequences of indices into the lights array. 32768 marks the start of a new sequence/ray.
+        The radius of the illumination can be deduced from the first ray. E.g. "32768,1,2,3,4,5,32768" means it's 4 (because "1" is the center tile).
+      items:
+        $ref: types/uint16.schema.yaml
+    lights:
+      type: array
+      title: Lights
+      description: Contains all the light nodes which are all the tiles that can be potentially lit up.
+        Defined as offsets from the center with a brightness value.
+      items:
+        $ref: types/light-node.schema.yaml
+  required:
+  - index
+  - internalName
+  - rays
+  - lights
