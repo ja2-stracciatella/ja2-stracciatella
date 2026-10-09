@@ -1765,7 +1765,7 @@ void LightSave(LightTemplate const* const t, const ST::string& pFilename)
 static LightTemplate* LightLoad(const ST::string& pFilename)
 {
 	LightTemplate* const t = LightGetFree();
-	*t = GCM->getLightTemplateByName(pFilename);
+	*t = *(GCM->lightTemplates()->byName(pFilename));
 
 	return t;
 }

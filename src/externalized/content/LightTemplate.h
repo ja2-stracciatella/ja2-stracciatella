@@ -39,3 +39,7 @@ struct LightTemplate : public Containers::NamedEntity<uint8_t>
 
 	static std::unique_ptr<LightTemplate> deserialize(const JsonValue& json);
 };
+
+class LightTemplatesContainer : public Containers::Named<uint8_t, LightTemplate> {
+	
+};

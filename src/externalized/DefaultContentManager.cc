@@ -1104,9 +1104,9 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 	return &lower->second;
 }
 
-const LightTemplate& DefaultContentManager::getLightTemplateByName(const ST::string &name)
+const LightTemplatesContainer* DefaultContentManager::lightTemplates() const
 {
-	return *(m_lightTemplates.byName(name));
+	return &m_lightTemplates;
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const

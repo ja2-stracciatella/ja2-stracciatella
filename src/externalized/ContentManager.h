@@ -32,6 +32,7 @@ class SmokeEffectModel;
 class GarrisonGroupModel;
 class IMPPolicy;
 class ExplosiveCalibreModel;
+class LightTemplatesContainer;
 class LoadingScreenModel;
 class MercProfile;
 class MercProfileInfo;
@@ -53,7 +54,6 @@ class VehicleModel;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct ExplosiveModel;
-struct LightTemplate;
 struct LoadingScreen;
 struct MagazineModel;
 class MagazinesContainer;
@@ -160,7 +160,7 @@ public:
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
 
-	virtual const LightTemplate& getLightTemplateByName(const ST::string &name) = 0;
+	virtual const LightTemplatesContainer* lightTemplates() const = 0;
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;

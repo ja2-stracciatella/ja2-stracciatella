@@ -147,7 +147,7 @@ public:
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const override;
 
-	virtual const LightTemplate& getLightTemplateByName(const ST::string &name) override;
+	virtual const LightTemplatesContainer* lightTemplates() const override;
 
 	virtual const GamePolicy* getGamePolicy() const override;
 	virtual const IMPPolicy* getIMPPolicy() const override;
@@ -238,7 +238,7 @@ protected:
 	std::map<uint16_t, uint16_t> m_mapItemReplacements;
 	std::multimap<MusicMode, const ST::string> m_musicMap;
 
-	Containers::Named<uint8_t, LightTemplate> m_lightTemplates;
+	LightTemplatesContainer m_lightTemplates;
 
 	std::vector<const SmokeEffectModel*> m_smokeEffects;
 	std::vector<const ExplosionAnimationModel*> m_explosionAnimations;
