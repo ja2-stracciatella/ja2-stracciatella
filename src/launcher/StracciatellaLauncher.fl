@@ -120,7 +120,15 @@ class StracciatellaLauncher {open
           } {
             Fl_Output gameSettingsOutput {
               label {Game Settings:}
-              xywh {20 75 480 30} align 5 resizable
+              xywh {20 75 350 30} align 5 resizable
+            }
+            Fl_Button editSettingsButton {
+              label {Edit Settings}
+              tooltip {Copy game.json to the data folder in the stracciatella home if needed and open it in the system text editor. The copy overrides game.json from the game and from enabled mods, and is not updated when the game is.} xywh {375 75 90 30}
+            }
+            Fl_Button resetSettingsButton {
+              label {@reload}
+              tooltip {Delete the customized game.json and go back to the one from the game or enabled mods. Use this if the game fails to start after an update.} xywh {470 75 30 30} box THIN_UP_BOX
             }
           }
           Fl_Group {} {open

@@ -103,10 +103,17 @@ on their features.");
         o->labelcolor((Fl_Color)24);
         o->hide();
         { Fl_Group* o = new Fl_Group(10, 60, 500, 45);
-          { gameSettingsOutput = new Fl_Output(20, 75, 480, 30, "Game Settings:");
+          { gameSettingsOutput = new Fl_Output(20, 75, 350, 30, "Game Settings:");
             gameSettingsOutput->align(Fl_Align(FL_ALIGN_TOP_LEFT));
             Fl_Group::current()->resizable(gameSettingsOutput);
           } // Fl_Output* gameSettingsOutput
+          { editSettingsButton = new Fl_Button(375, 75, 90, 30, "Edit Settings");
+            editSettingsButton->tooltip("Copy game.json to the data folder in the stracciatella home if needed and open it in the system text editor. The copy overrides game.json from the game and from enabled mods, and is not updated when the game is.");
+          } // Fl_Button* editSettingsButton
+          { resetSettingsButton = new Fl_Button(470, 75, 30, 30, "@reload");
+            resetSettingsButton->tooltip("Delete the customized game.json and go back to the one from the game or enabled mods. Use this if the game fails to start after an update.");
+            resetSettingsButton->box(FL_THIN_UP_BOX);
+          } // Fl_Button* resetSettingsButton
           o->end();
         } // Fl_Group* o
         { Fl_Group* o = new Fl_Group(10, 115, 500, 52);
