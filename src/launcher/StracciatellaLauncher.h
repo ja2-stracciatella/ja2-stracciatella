@@ -38,6 +38,8 @@ public:
   Fl_Browser *availableModsBrowser;
   Fl_Text_Display *modDetails;
   Fl_Output *gameSettingsOutput;
+  Fl_Button *editSettingsButton;
+  Fl_Button *resetSettingsButton;
   Fl_Value_Input *resolutionXInput;
   Fl_Value_Input *resolutionYInput;
   Fl_Menu_Button *predefinedResolutionMenuButton;
