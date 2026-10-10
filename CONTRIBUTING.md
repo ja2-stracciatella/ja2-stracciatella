@@ -1,16 +1,37 @@
-[JA2 Stracciatella](https://ja2-stracciatella.github.io/) is a community driven open source project that welcomes all. It has a few maintainers, who keep the big picture in mind, and a long list of contributors. The code can be forked, poked, twisted and hacked. It can be customized, extended, and collaboratively developed. You are invited to do so and join us!
+# Contributing
 
-That being said, not all contributions are welcome, since the project has a defined scope: a portable, cleaned-up JA2 with a limited set of (chocolate) additions. Large gameplay changes as seen in the 1.13 mod are therefore scoffed upon.
+Play the game and see what bothers you. If you find a bug, [report it](https://github.com/ja2-stracciatella/ja2-stracciatella/issues/new/choose).
 
-### Where to start?
+If you are not a developer, there are many other possibilities which do not require programming skills to help JA2 Stracciatella to evolve. For example, you can help by retesting bug reports labelled with [retest](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3Aretest), help triage bugs, test solutions, research, write documentation, create mods and more.
 
-Play the game and see what bothers you, what bug you hit, then report it and try to fix it. If you don't have an itch to scratch, we suggest looking at our bug tracker, for example the [help wanted](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) list.
+## Where to start?
 
-Instructions on building and IDE setup can be found in [COMPILATION](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/COMPILATION.md). Consider reading (or contributing to) our [docs]([docs/](https://github.com/ja2-stracciatella/ja2-stracciatella/tree/master/docs) directory. Code-specific documentation can be generated locally there.
+If you don't have an itch to scratch, we suggest looking at our [bug tracker](https://github.com/ja2-stracciatella/ja2-stracciatella/issues), for example the [help wanted](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) list.
 
-If you are not a developer, there are many other possibilities which do not require programming skills to help JA2 Stracciatella to evolve. For example, you can help by retesting bug reports labelled with [retest](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3Aretest), help triage bugs, test solutions, research, create mods and more.
+Instructions on building and IDE setup can be found in [COMPILATION](COMPILATION.md). Read our [docs](docs) directory, where code-specific documentation can be generated locally.
+
+## Contributing code
+
+Pull requests with bug fixes are very welcome. That being said, **not all code contributions are welcome**, since the project has a defined scope: a portable, cleaned-up JA2 with a limited set of (chocolate) additions. Large gameplay changes as seen in the 1.13 mod are therefore scoffed upon.
+
+### How to make a pull request
+
+1. [Fork](https://docs.github.com/pull-requests/how-tos/work-with-forks/fork-a-repo) the project.
+2. [Create](https://github.com/git-guides#create-a-branch) a branch (`git checkout -b my_feature_branch`).
+3. Write and test your new code logic on the branch.
+4. [Add](https://github.com/git-guides/git-add) your changes to stage them.
+5. [Commit](https://github.com/git-guides/git-commit) your changes (`git commit -am "description of your changes"`).
+6. [Push](https://github.com/git-guides/git-push) to the branch (`git push origin my_feature_branch`).
+7. [Create a pull request](https://docs.github.com/pull-requests/how-tos/create-pull-requests/creating-a-pull-request) from your branch into `master`.
 
 ### Axioms of Style
+
+Please don't reformat the code for the sake of it, because it will make the merge process harder. Instead, use the following settings in your editor:
+
+- Display tabs as 8 spaces.
+- Indent with tabs.
+
+If you add new code, please don't add spaces after opening or before closing parentheses.
 
 1. When in doubt, follow the style of the existing function or file.
 1.1. When creating a new file, follow the style of existing related files
