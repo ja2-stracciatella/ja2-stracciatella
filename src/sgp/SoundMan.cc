@@ -22,12 +22,9 @@
 
 #include <algorithm>
 #include <assert.h>
-#include <cmath>
-#include <climits>
 #include <vector>
 #include <iterator>
 #include <stdexcept>
-#include <atomic>
 #include <mutex>
 #include <condition_variable>
 
@@ -85,7 +82,6 @@ enum
 #define SOUND_MAX_CHANNELS 16 // number of mixer channels
 
 // The audio device will be opened with the following values
-#define SOUND_FREQ      44100
 #define SOUND_FORMAT    SDL_AUDIO_S16
 #define SOUND_MA_SOUND_FORMAT ma_format::ma_format_s16
 #define SOUND_CHANNELS  2
@@ -537,7 +533,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 	}
 }
 
-static int SoundServiceBuffers(void *_ptr)
+static int SoundServiceBuffers(void *)
 {
 	SLOGD("Started SoundManBufferServiceThread");
 	while (1) {
@@ -1002,15 +998,17 @@ static BOOLEAN SoundInitHardware(void)
 			throw std::runtime_error(ST::format("SDL_InitSubSystem returned error: {}", SDL_GetError()).c_str());
 		}
 
-		SDL_zero(gTargetAudioSpec);
-		gTargetAudioSpec.freq     = SOUND_FREQ;
-		gTargetAudioSpec.format   = SOUND_FORMAT;
-		gTargetAudioSpec.channels = SOUND_CHANNELS;
-
-		SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &gTargetAudioSpec, SoundCallback, nullptr);
+		SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr, SoundCallback, nullptr);
 		if (!stream) {
 			throw std::runtime_error(ST::format("SDL_OpenAudioDeviceStream returned error: {}", SDL_GetError()).c_str());
 		}
+
+		// This lets SDL decide the optimal output sample rate but we must force
+		// 2 channels and signed 16-bit format because our code is based on these specs.
+		SDL_GetAudioStreamFormat(stream, nullptr, &gTargetAudioSpec);
+		gTargetAudioSpec.format = SOUND_FORMAT;
+		gTargetAudioSpec.channels = SOUND_CHANNELS;
+		SDL_SetAudioStreamFormat(stream, nullptr, &gTargetAudioSpec);
 		gAudioStream = stream;
 		gAudioDeviceID = SDL_GetAudioStreamDevice(stream);
 
