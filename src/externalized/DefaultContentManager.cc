@@ -777,6 +777,17 @@ bool DefaultContentManager::loadMusic()
 	return true;
 }
 
+bool DefaultContentManager::loadLightTemplates()
+{
+	auto json = readJsonDataFileWithSchema("light-templates.json");
+
+	for (auto& element : json.toVec()) {
+		m_lightTemplates.add(LightTemplate::deserialize(element));
+	}
+
+	return true;
+}
+
 void DefaultContentManager::readWeaponTable(
 	const ST::string& fileName,
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
@@ -914,6 +925,7 @@ bool DefaultContentManager::loadGameData(TranslatableString::Loader& stringLoade
 
 	loadArmyData();
 	loadMusic();
+	loadLightTemplates();
 
 	auto replacement_json = readJsonDataFileWithSchema("tactical-map-item-replacements.json");
 
@@ -1090,6 +1102,11 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 
 	SLOGD("Choosing music index {} of {} : '{}'", index, count, lower->second);
 	return &lower->second;
+}
+
+const LightTemplatesContainer* DefaultContentManager::lightTemplates() const
+{
+	return &m_lightTemplates;
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const

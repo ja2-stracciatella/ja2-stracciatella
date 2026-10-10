@@ -32,6 +32,7 @@ class SmokeEffectModel;
 class GarrisonGroupModel;
 class IMPPolicy;
 class ExplosiveCalibreModel;
+class LightTemplatesContainer;
 class LoadingScreenModel;
 class MercProfile;
 class MercProfileInfo;
@@ -158,6 +159,8 @@ public:
 	virtual const ShippingDestinationModel* getPrimaryShippingDestination() const = 0;
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
+
+	virtual const LightTemplatesContainer* lightTemplates() const = 0;
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;
