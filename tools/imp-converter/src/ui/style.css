@@ -1,0 +1,221 @@
+/* The converter's look: the game's laptop (sirOS), drawn in CSS. */
+:root {
+  --desk: #0d0e10;
+  --bevel-hi: #f4f4f4; --face: #c6c6c6; --bevel-mid: #8d8d8d; --bevel-lo: #3e3e3e;
+  --title-a: #000c8c; --title-b: #3353e8;
+  --panel-ink: #ececec; --panel-dim: #b9bcc0;
+  --gold: #f6c409;
+  --good: #7ed957; --mid: #e8d44a; --low: #e0574a;
+  --well: #1b1c1f;
+  --meter: #9aa01c;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh; padding: 32px 16px;
+  background:
+    radial-gradient(ellipse at 50% -10%, #2b2e36 0%, transparent 60%),
+    var(--desk);
+  font: 13px/1.35 Arial, Helvetica, sans-serif;
+  color: var(--panel-ink);
+}
+
+/* ---- sirOS window ---- */
+.window {
+  max-width: 880px; margin: 0 auto;
+  background: var(--face);
+  border: 2px solid; border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
+  box-shadow: 0 0 0 1px #000, 0 24px 60px rgba(0,0,0,.7);
+  padding: 3px;
+}
+.titlebar {
+  display: flex; align-items: center; gap: 10px; height: 30px; padding: 0 4px 0 6px;
+  background: linear-gradient(90deg, var(--title-a), var(--title-b) 75%, #4a6af5);
+  color: #fff; font: 700 15px/1 Arial, sans-serif; letter-spacing: .01em;
+  text-shadow: 1px 1px 0 #000a4a;
+}
+.titlebar .glyph { width: 20px; height: 20px; background: #111; border: 1px solid #fff; display: grid; place-items: center; font: 700 11px/1 "Times New Roman", serif; color: #d32; }
+.titlebar .grow { flex: 1; }
+.btn {
+  font: 700 12px/1 Arial, sans-serif; color: #111; cursor: pointer; white-space: nowrap;
+  padding: 7px 14px; background: linear-gradient(#dedede, #b6b6b6);
+  border: 2px solid; border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
+  box-shadow: 0 0 0 1px #000;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.btn:active:not(:disabled) { border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo); padding: 8px 13px 6px 15px; }
+.btn:disabled { color: #7a7a7a; cursor: default; text-shadow: 1px 1px 0 #eee; }
+.btn img { width: 18px; height: 18px; }
+.btn:focus-visible, .row:focus-visible, .drop:focus-visible { outline: 2px dotted var(--gold); outline-offset: 2px; }
+.titlebar .x { padding: 2px 6px; font-size: 14px; }
+
+.body {
+  display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 3px; margin-top: 3px;
+}
+.marble {
+  background-color: #4b4e52;
+  background-image: url("../../public/ui/marble-grey.png");
+  background-size: 256px 256px;
+  image-rendering: pixelated;
+}
+.panel {
+  border: 2px solid; border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
+  padding: 12px;
+}
+.panel > * { image-rendering: auto; }
+h2 {
+  margin: 0 0 8px; font: 700 11px/1 Arial, sans-serif; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--panel-dim); text-shadow: 1px 1px 0 #000;
+}
+.inset {
+  background: rgba(10,10,12,.55);
+  border: 2px solid; border-color: var(--bevel-lo) var(--bevel-mid) var(--bevel-mid) var(--bevel-lo);
+}
+
+/* ---- left: files and merc list ---- */
+.drop {
+  display: grid; justify-items: center; gap: 6px; padding: 16px 10px; text-align: center; cursor: pointer;
+  color: var(--panel-ink); text-shadow: 1px 1px 0 #000;
+  border: 2px dashed #9da2a8; background: rgba(0,0,0,.28);
+}
+.drop.over { border-color: var(--gold); background: rgba(246,196,9,.08); }
+.drop b { font-size: 14px; }
+.drop small { color: var(--panel-dim); }
+.drop img { width: 32px; height: 32px; }
+.list { margin-top: 12px; display: flex; flex-direction: column; gap: 4px; min-height: 120px; padding: 4px; }
+.row {
+  display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  padding: 4px; cursor: pointer; border: 1px solid transparent; color: var(--panel-ink);
+  text-shadow: 1px 1px 0 #000;
+}
+.row:hover { background: rgba(255,255,255,.06); }
+.row[aria-selected="true"] { border-color: var(--gold); background: rgba(246,196,9,.07); }
+.row[aria-selected="true"] .nick { color: var(--gold); }
+.thumb { width: 48px; height: 43px; background: #000; overflow: hidden; display: grid; place-items: center; }
+.thumb .none { color: #6c7178; font: 700 18px/1 Arial, sans-serif; }
+.thumb img { image-rendering: pixelated; display: block; }
+.nick { font-weight: 700; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta { font-size: 11px; color: var(--panel-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lamp { width: 9px; height: 9px; border-radius: 50%; background: #3a3a3a; box-shadow: inset 0 0 0 1px #000; }
+.lamp.ok { background: #3fe03f; box-shadow: 0 0 6px #3fe03f, inset 0 0 0 1px #0a4a0a; }
+.lamp.wait { background: #e8c230; box-shadow: 0 0 6px #e8c230, inset 0 0 0 1px #5a4700; }
+.lamp.bad { background: #e0413a; box-shadow: 0 0 6px #e0413a, inset 0 0 0 1px #4a0a0a; }
+.empty { color: var(--panel-dim); text-align: center; padding: 26px 8px; font-size: 12px; text-shadow: 1px 1px 0 #000; }
+
+/* ---- right: the merc ---- */
+.dossier { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; }
+.body > *, .dossier > * { min-width: 0; }
+.dossier .stats, .dossier .record, .dossier .actions { grid-column: 1 / -1; }
+.portrait {
+  width: 216px; padding: 3px; background: #000;
+  border: 2px solid; border-color: var(--bevel-lo) var(--bevel-mid) var(--bevel-mid) var(--bevel-lo);
+}
+.portrait .pic { width: 212px; height: 244px; background: radial-gradient(#23272d, #07080a); display: grid; place-items: center; overflow: hidden; }
+.portrait .pic img { width: 212px; height: 244px; image-rendering: pixelated; display: block; }
+.portrait .pic .none { color: #6c7178; font: 700 56px/1 Arial, sans-serif; }
+.plate {
+  margin-top: 3px; padding: 5px 6px; text-align: center; background: #0e0f11; color: #fff;
+  font: 700 14px/1 Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase;
+}
+.who { text-shadow: 1px 1px 0 #000; }
+.who .name { font: 700 22px/1.1 Arial, sans-serif; margin: 0; }
+.who .sub { color: var(--panel-dim); margin: 3px 0 12px; font-size: 12px; }
+.who .skills { margin: -4px 0 12px; color: var(--gold); font-weight: 700; font-size: 13px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px 20px; text-shadow: 1px 1px 0 #000; }
+.facts h3 { margin: 0 0 5px; padding-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,.18); font: 700 10px/1 Arial, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--panel-dim); }
+.facts dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; margin: 0; font-size: 12px; }
+.facts dt { color: var(--panel-dim); }
+.facts dd { margin: 0; text-align: right; font-weight: 700; }
+
+/* Editable fields look like printed values until you point at them. */
+.num, .pick {
+  font: inherit; color: inherit; background: transparent; border: 1px solid transparent; text-shadow: inherit;
+}
+.num { width: 100%; min-width: 0; padding: 1px 2px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; -moz-appearance: textfield; }
+.num::-webkit-inner-spin-button, .num::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+/* Fields grow with their content where the browser can (field-sizing), and
+   fall back to a fixed width elsewhere. */
+.num.wide { width: 6.5em; field-sizing: content; min-width: 1.6em; }
+.record .num.wide { width: 3.6em; color: var(--panel-ink); }
+.pick { field-sizing: content; }
+@supports (field-sizing: content) { .num.wide, .record .num.wide { width: auto; } }
+.cash { display: inline-flex; align-items: center; justify-content: flex-end; gap: 1px; }
+.pick {
+  appearance: none; -webkit-appearance: none; cursor: pointer; font-weight: 700; text-align: right; text-align-last: right;
+  padding: 1px 14px 1px 4px; max-width: 100%;
+  background: linear-gradient(45deg, transparent 50%, currentColor 50%) right 5px top 55% / 4px 4px no-repeat,
+              linear-gradient(-45deg, transparent 50%, currentColor 50%) right 1px top 55% / 4px 4px no-repeat;
+}
+.pick option { background: #1b1c1f; color: #ececec; }
+.who .skills { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; }
+.who .skills .pick { text-align: left; text-align-last: left; color: var(--gold); font-size: 13px; }
+.looks { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; margin: 0; padding: 7px 4px 4px; font-size: 12px; text-shadow: 1px 1px 0 #000; }
+.looks dt { color: var(--panel-dim); }
+.looks dd { margin: 0; text-align: right; font-weight: 700; }
+.pick optgroup { background: #1b1c1f; color: var(--panel-dim); font-style: normal; }
+.names { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 8px 10px; margin: 0 0 14px; }
+.names small { font-weight: 400; letter-spacing: .02em; text-transform: none; color: #8c9096; }
+.names label { display: grid; gap: 3px; font: 700 10px/1 Arial, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--panel-dim); text-shadow: 1px 1px 0 #000; }
+.txt {
+  width: 100%; min-width: 0; padding: 4px 6px; font: 700 13px/1.2 Arial, sans-serif; letter-spacing: 0; text-transform: none;
+  color: var(--panel-ink); background: rgba(8,9,11,.6); text-shadow: 1px 1px 0 #000;
+  border: 2px solid; border-color: var(--bevel-lo) var(--bevel-mid) var(--bevel-mid) var(--bevel-lo);
+}
+.txt:hover { border-color: #2a2a2a #b4b4b4 #b4b4b4 #2a2a2a; }
+.txt:focus { outline: none; border-color: var(--gold); background: #0b0c0e; }
+.num:hover, .pick:hover { border-color: rgba(255,255,255,.28); }
+.num:focus, .pick:focus { outline: none; background-color: #0b0c0e; border-color: var(--gold); }
+.pair { display: flex; align-items: center; font-weight: 700; }
+.pair .num { width: 2.6em; }
+.edited { color: var(--gold); letter-spacing: .05em; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; padding: 10px 14px; }
+.stat { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(48px, 110px); gap: 8px; align-items: center; padding: 3px 0; text-shadow: 1px 1px 0 #000; }
+.stat .k { color: var(--panel-dim); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stat .v { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.meter { height: 7px; background: #07080a; box-shadow: inset 0 0 0 1px #000; position: relative; }
+.meter i { position: absolute; inset: 1px auto 1px 1px; background: linear-gradient(#c3c83a, var(--meter)); }
+.stat.health { grid-column: 1 / -1; grid-template-columns: 90px 76px minmax(0, 1fr); padding-bottom: 8px; }
+.stat.health .meter { height: 14px; }
+.stat.health .meter i { background: linear-gradient(#f0493b, #a8140c 60%, #7a0c06); }
+.record { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 0; color: var(--panel-dim); font-size: 12px; text-shadow: 1px 1px 0 #000; }
+.record b { color: var(--panel-ink); }
+.actions { margin-top: 0; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.note { color: var(--panel-dim); font-size: 12px; text-shadow: 1px 1px 0 #000; }
+
+.statusbar {
+  margin-top: 3px; display: flex; align-items: center; gap: 12px; padding: 5px 8px; color: #111;
+  border: 2px solid; border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
+  font-size: 12px;
+}
+.statusbar .grow { flex: 1; }
+.statusbar .mode { padding: 2px 6px; border: 1px solid; border-color: var(--bevel-mid) var(--bevel-hi) var(--bevel-hi) var(--bevel-mid); }
+
+@media (max-width: 760px) {
+  .body { grid-template-columns: 1fr; }
+  .dossier { grid-template-columns: 1fr; justify-items: center; }
+  .dossier .stats, .dossier .record, .dossier .actions { justify-self: stretch; }
+  .who { text-align: center; }
+  .dossier > div:nth-child(2) { width: 100%; }
+  .names { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr; }
+  .dossier > div:last-child { width: 100%; }
+}
+
+/* Things the converter could not bring over, and what the game would refuse. */
+.issues { grid-column: 1 / -1; margin: 0; padding: 8px 10px 8px 26px; font-size: 12px; text-shadow: 1px 1px 0 #000; background: rgba(0,0,0,.35); border-left: 3px solid var(--gold); }
+.issues.bad { border-left-color: var(--low); }
+.issues li + li { margin-top: 2px; }
+.txt.missing { border-color: var(--gold); background: rgba(246,196,9,.1); }
+
+/* In place of a portrait until the player's FACES.SLF is given. */
+.facesHint {
+  display: grid; gap: 8px; justify-items: center; padding: 14px; margin: 0 10px; cursor: pointer;
+  font: 700 14px/1.2 Arial, sans-serif; color: var(--gold); text-shadow: 1px 1px 0 #000;
+  background: rgba(0,0,0,.35); border: 2px dashed #9da2a8;
+}
+.facesHint small { font-weight: 400; font-size: 11px; color: var(--panel-dim); }
+.facesHint:hover { border-color: var(--gold); }
+
+/* Level, gender and build under the name: edited in place, like the skills. */
+.who .sub { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; }
+.who .sub .pick { text-align: left; text-align-last: left; color: var(--panel-ink); font-size: 12px; }
