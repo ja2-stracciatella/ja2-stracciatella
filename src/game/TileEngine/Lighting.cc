@@ -17,20 +17,15 @@
 #include "Lighting.h"
 
 #include "Debug.h"
-#include "Environment.h"
 #include "FileMan.h"
 #include "HImage.h"
-#include "Isometric_Utils.h"
 #include "LightTemplate.h"
-#include "math.h"
 #include "Overhead.h"
 #include "PathAI.h"
 #include "RenderWorld.h"
 #include "Structure.h"
 #include "Sys_Globals.h"
-#include "TileDef.h"
 #include "VObject.h"
-#include "WorldDef.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -61,9 +56,9 @@ enum LightFlags : UINT32
 	LIGHT_NODE_DRAWN_FULLY   = 1 << 8,    // Indicates there is nothing to illuminate in this tile anymore
 	LIGHT_NODE_DRAWN_NO_DIR  = 1 << DIRECTION_IRRELEVANT, // Indicates destination and source are the same tile
 	LIGHT_NODE_DRAWN_NONWALL = 1 << 10,
-	LIGHT_ROOF_ONLY        = 0x00001000, // light only rooftops
-	LIGHT_NEW_RAY          = 0x00008000, // start of new ray in linked list
-	LIGHT_FAKE             = 0x10000000  // "fake" light for display only
+	LIGHT_ROOF_ONLY        = 1 << 13, // light only rooftops
+	LIGHT_NEW_RAY          = 1 << 15, // start of new ray in linked list
+	LIGHT_FAKE             = 1 << 28  // "fake" light for display only
 };
 
 
@@ -299,181 +294,170 @@ static void LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, con
 	t->rays.insert(t->rays.begin() + usIndex, 1, usNodeIndex);
 }
 
-
-struct IlluminationFilter
+IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags)
 {
-	bool            blocked{};                           // Light propagation can be blocked, but some structures still might need illumination
-	bool            illuminateNothing{};
-	bool            illuminateOrientedBlocksOnly{};      // Illuminate only oriented light-blocking structures (like walls and doors)
-	Orientation     allowedOrients{ ORIENT_NONE };
-	WorldDirections srcToDstDir{ DIRECTION_IRRELEVANT }; // Direction from source to destination tile
-	int32_t         baseGridNo{};                        // E.g. open door slab and its frame (base) can be in different tiles
+	UINT16 dstTileNo = MAPROWCOLTOPOS(iY, iX);
+	UINT16 srcTileNo = MAPROWCOLTOPOS(iSrcY, iSrcX);
 
-	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags)
+	if (dstTileNo >= GRIDSIZE || srcTileNo >= GRIDSIZE)
 	{
-		UINT16 dstTileNo = MAPROWCOLTOPOS(iY, iX);
-		UINT16 srcTileNo = MAPROWCOLTOPOS(iSrcY, iSrcX);
+		blocked = true;
+		illuminateNothing = true;
+		return;
+	}
 
-		if (dstTileNo >= GRIDSIZE || srcTileNo >= GRIDSIZE)
+	if (gpWorldLevelData[dstTileNo].sHeight > gpWorldLevelData[srcTileNo].sHeight)
+	{
+		return;
+	}
+
+	if (dstTileNo == srcTileNo)
+	{
+		return;
+	}
+
+	srcToDstDir = static_cast<WorldDirections>(atan8(iSrcX, iSrcY, iX, iY));
+
+	if (spriteFlags & LIGHT_SPR_ONROOF)
+	{	// there are no light-blocking structures on roofs, so we can skip all the checks
+		return;
+	}
+
+	UINT8 ubTravelCost = gubWorldMovementCosts[dstTileNo][srcToDstDir][0];
+
+	GridNo windowTileNo = srcToDstDir == NORTH || srcToDstDir == WEST ? dstTileNo : srcTileNo;
+
+	if (gpWorldLevelData[windowTileNo].pStructHead)
+	{
+		// IF WE ARE A WINDOW, DO NOT BLOCK!
+		if (ubTravelCost == TRAVELCOST_WALL && FindStructure(windowTileNo, STRUCTURE_WALLNWINDOW))
 		{
-			blocked = true;
-			illuminateNothing = true;
-			return;
-		}
-
-		if (gpWorldLevelData[dstTileNo].sHeight > gpWorldLevelData[srcTileNo].sHeight)
-		{
-			return;
-		}
-
-		if (dstTileNo == srcTileNo)
-		{
-			return;
-		}
-
-		srcToDstDir = static_cast<WorldDirections>(atan8(iSrcX, iSrcY, iX, iY));
-
-		if (spriteFlags & LIGHT_SPR_ONROOF)
-		{	// there are no light-blocking structures on roofs, so we can skip all the checks
-			return;
-		}
-
-		UINT8 ubTravelCost = gubWorldMovementCosts[dstTileNo][srcToDstDir][0];
-
-		GridNo windowTileNo = srcToDstDir == NORTH || srcToDstDir == WEST ? dstTileNo : srcTileNo;
-
-		if (gpWorldLevelData[windowTileNo].pStructHead)
-		{
-			// IF WE ARE A WINDOW, DO NOT BLOCK!
-			if (ubTravelCost == TRAVELCOST_WALL && FindStructure(windowTileNo, STRUCTURE_WALLNWINDOW))
+			if (IsDirectionDiagonal(srcToDstDir))
 			{
-				if (IsDirectionDiagonal(srcToDstDir))
-				{
-					blocked = true;
-					illuminateNothing = true;
-				}
-				else if (windowTileNo == dstTileNo)
-				{
-					if (srcToDstDir == NORTH)
-					{
-						allowedOrients = ORIENT_LEFT;
-					}
-					else if (srcToDstDir == WEST)
-					{
-						allowedOrients = ORIENT_RIGHT;
-					}
-				}
-				return;
+				blocked = true;
+				illuminateNothing = true;
 			}
+			else if (windowTileNo == dstTileNo)
+			{
+				if (srcToDstDir == NORTH)
+				{
+					allowedOrients = ORIENT_LEFT;
+				}
+				else if (srcToDstDir == WEST)
+				{
+					allowedOrients = ORIENT_RIGHT;
+				}
+			}
+			return;
 		}
+	}
 
-		if (ubTravelCost == TRAVELCOST_WALL)
+	if (ubTravelCost == TRAVELCOST_WALL)
+	{
+		blocked = true;
+		if (srcToDstDir == NORTH)
+		{
+			illuminateOrientedBlocksOnly = true;
+			allowedOrients = ORIENT_LEFT;
+		}
+		else if (srcToDstDir == WEST)
+		{
+			illuminateOrientedBlocksOnly = true;
+			allowedOrients = ORIENT_RIGHT;
+		}
+		else
+		{
+			illuminateNothing = true;
+		}
+		return;
+	}
+
+	if (IS_TRAVELCOST_DOOR(ubTravelCost))
+	{
+		ubTravelCost = DoorTravelCost(NULL, dstTileNo, ubTravelCost, TRUE, &baseGridNo);
+
+		if (IS_TRAVELCOST_OPEN_DOOR(ubTravelCost) && baseGridNo != srcTileNo)
 		{
 			blocked = true;
+			illuminateOrientedBlocksOnly = true;
 			if (srcToDstDir == NORTH)
 			{
-				illuminateOrientedBlocksOnly = true;
-				allowedOrients = ORIENT_LEFT;
+				allowedOrients = ORIENT_RIGHT;
 			}
 			else if (srcToDstDir == WEST)
 			{
-				illuminateOrientedBlocksOnly = true;
-				allowedOrients = ORIENT_RIGHT;
+				allowedOrients = ORIENT_LEFT;
 			}
 			else
-			{
+			{	// this includes diagonal directions
 				illuminateNothing = true;
 			}
 			return;
 		}
-
-		if (IS_TRAVELCOST_DOOR(ubTravelCost))
+		else
 		{
-			ubTravelCost = DoorTravelCost(NULL, dstTileNo, ubTravelCost, TRUE, &baseGridNo);
-
-			if (IS_TRAVELCOST_OPEN_DOOR(ubTravelCost) && baseGridNo != srcTileNo)
-			{
-				blocked = true;
-				illuminateOrientedBlocksOnly = true;
-				if (srcToDstDir == NORTH)
-				{
-					allowedOrients = ORIENT_RIGHT;
-				}
-				else if (srcToDstDir == WEST)
-				{
-					allowedOrients = ORIENT_LEFT;
-				}
-				else
-				{	// this includes diagonal directions
-					illuminateNothing = true;
-				}
-				return;
-			}
-			else
-			{
-				baseGridNo = 0;
-			}
-
-			if (ubTravelCost == TRAVELCOST_DOOR || IS_TRAVELCOST_DOOR(ubTravelCost))
-			{
-				blocked = true;
-				illuminateOrientedBlocksOnly = true;
-				if (srcToDstDir == NORTH)
-				{
-					allowedOrients = ORIENT_LEFT;
-				}
-				else if (srcToDstDir == WEST)
-				{
-					allowedOrients = ORIENT_RIGHT;
-				}
-				else
-				{	// this includes diagonal directions
-					illuminateNothing = true;
-				}
-				return;
-			}
+			baseGridNo = 0;
 		}
 
-		if (ubTravelCost == TRAVELCOST_OBSTACLE)
-		{
-			STRUCTURE* pStruct = gpWorldLevelData[dstTileNo].pStructureHead;
-			while (pStruct)
-			{
-				if (pStruct->fFlags & (STRUCTURE_PASSABLE | STRUCTURE_ANYDOOR | STRUCTURE_WALLSTUFF | STRUCTURE_TREE) ||
-					pStruct->ubStructureHeight < STANDING_CUBES || pStruct->sCubeOffset == PROFILE_Z_SIZE)
-				{
-					pStruct = pStruct->pNext;
-					continue;
-				}
-
-				UINT8 boxColumnCount = 0;
-
-				for (auto& row : *pStruct->pShape)
-				{
-					for (auto& elem : row)
-					{	// count columns that are at least 3 boxes high
-						if (elem == 0b0111 || elem == 0b1111)
-						{
-							boxColumnCount++;
-						}
-					}
-				}
-
-				if (boxColumnCount >= MIN_BOX_COLUMNS)
-				{
-					blocked = true;
-					return;
-				}
-
-				pStruct = pStruct->pNext;
-			}
-		}
-
-		if (ubTravelCost == TRAVELCOST_CAVEWALL)
+		if (ubTravelCost == TRAVELCOST_DOOR || IS_TRAVELCOST_DOOR(ubTravelCost))
 		{
 			blocked = true;
+			illuminateOrientedBlocksOnly = true;
+			if (srcToDstDir == NORTH)
+			{
+				allowedOrients = ORIENT_LEFT;
+			}
+			else if (srcToDstDir == WEST)
+			{
+				allowedOrients = ORIENT_RIGHT;
+			}
+			else
+			{	// this includes diagonal directions
+				illuminateNothing = true;
+			}
 			return;
 		}
+	}
+
+	if (ubTravelCost == TRAVELCOST_OBSTACLE)
+	{
+		STRUCTURE* pStruct = gpWorldLevelData[dstTileNo].pStructureHead;
+		while (pStruct)
+		{
+			if (pStruct->fFlags & (STRUCTURE_PASSABLE | STRUCTURE_ANYDOOR | STRUCTURE_WALLSTUFF | STRUCTURE_TREE) ||
+				pStruct->ubStructureHeight < STANDING_CUBES || pStruct->sCubeOffset == PROFILE_Z_SIZE)
+			{
+				pStruct = pStruct->pNext;
+				continue;
+			}
+
+			UINT8 boxColumnCount = 0;
+
+			for (auto& row : *pStruct->pShape)
+			{
+				for (auto& elem : row)
+				{	// count columns that are at least 3 boxes high
+					if (elem == 0b0111 || elem == 0b1111)
+					{
+						boxColumnCount++;
+					}
+				}
+			}
+
+			if (boxColumnCount >= MIN_BOX_COLUMNS)
+			{
+				blocked = true;
+				return;
+			}
+
+			pStruct = pStruct->pNext;
+		}
+	}
+
+	if (ubTravelCost == TRAVELCOST_CAVEWALL)
+	{
+		blocked = true;
+		return;
 	}
 };
 
@@ -1414,7 +1398,7 @@ LightTemplate* LightCreateOmni(const UINT8 ubIntensity, const INT16 iRadius)
 }
 
 
-BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
+BOOLEAN LightDraw(LIGHT_SPRITE* const l)
 {
 	LightTemplate* const t = l->light_template;
 	if (t->lights.empty()) return FALSE;
@@ -1431,6 +1415,10 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 	INT32 srcX = centerX;
 	INT32 srcY = centerY;
 
+	UINT32 spriteFlags = 0;
+	if (l->uiFlags & MERC_LIGHT)         spriteFlags |= LIGHT_FAKE;
+	if (l->uiFlags & LIGHT_SPR_ONROOF)   spriteFlags |= LIGHT_ROOF_ONLY;
+
 	Assert(t->rays.size() <= UINT16_MAX);
 	for (UINT16 uiCount = 0; uiCount < static_cast<UINT16>(t->rays.size()); ++uiCount)
 	{
@@ -1446,7 +1434,11 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
-		IlluminationFilter filter{ srcX, srcY, dstX, dstY, l->uiFlags };
+		IlluminationFilter filter{ srcX, srcY, dstX, dstY, spriteFlags };
+
+		// When later erasing this node we'll need this in case the blocking structure
+		// will have changed (structure getting destroyed or a door opened/closed)
+		l->initialFilters[uiCount] = filter;
 
 		srcX = centerX;
 		srcY = centerY;
@@ -1484,19 +1476,15 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 
 		if (!filter.illuminateNothing && pLight->ubLight)
 		{
-			UINT32 uiFlags = 0;
-			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
-			if (l->uiFlags & LIGHT_SPR_ONROOF)   uiFlags |= LIGHT_ROOF_ONLY;
-
 			if (filter.baseGridNo)
 			{ // make a detour to the structure's base tile
 				INT16 baseX, baseY;
 				ConvertGridNoToXY(filter.baseGridNo, &baseX, &baseY);
-				LightAddTile(baseX, baseY, pLight->ubLight, uiFlags, filter);
+				LightAddTile(baseX, baseY, pLight->ubLight, spriteFlags, filter);
 			}
 			else
 			{
-				LightAddTile(dstX, dstY, pLight->ubLight, uiFlags, filter);
+				LightAddTile(dstX, dstY, pLight->ubLight, spriteFlags, filter);
 			}
 
 			pLight->uiFlags |= (1 << filter.srcToDstDir);
@@ -1621,7 +1609,7 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 
 
 // Reverts all tiles a given light affects to their natural light levels.
-static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
+static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 {
 	LightTemplate* const t = l->light_template;
 	if (t->lights.empty()) return FALSE;
@@ -1638,6 +1626,10 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 	INT32 srcX = centerX;
 	INT32 srcY = centerY;
 
+	UINT32 spriteFlags = 0;
+	if (l->uiFlags & MERC_LIGHT)         spriteFlags |= LIGHT_FAKE;
+	if (l->uiFlags & LIGHT_SPR_ONROOF)   spriteFlags |= LIGHT_ROOF_ONLY;
+
 	Assert(t->rays.size() <= UINT16_MAX);
 	for (UINT16 uiCount = 0; uiCount < static_cast<UINT16>(t->rays.size()); ++uiCount)
 	{
@@ -1650,10 +1642,11 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 		}
 
 		LIGHT_NODE* const pLight = &t->lights[usNodeIndex];
+
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
-		IlluminationFilter filter{ srcX, srcY, dstX, dstY, l->uiFlags };
+		IlluminationFilter& filter{ l->initialFilters[uiCount] };
 
 		srcX = centerX;
 		srcY = centerY;
@@ -1691,19 +1684,15 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 
 		if (!filter.illuminateNothing && pLight->ubLight)
 		{
-			UINT32 uiFlags = 0;
-			if (l->uiFlags & MERC_LIGHT)         uiFlags |= LIGHT_FAKE;
-			if (l->uiFlags & LIGHT_SPR_ONROOF)   uiFlags |= LIGHT_ROOF_ONLY;
-
 			if (filter.baseGridNo)
 			{ // make a detour to the structure's base tile
 				INT16 baseX, baseY;
 				ConvertGridNoToXY(filter.baseGridNo, &baseX, &baseY);
-				LightSubtractTile(baseX, baseY, pLight->ubLight, uiFlags, filter);
+				LightSubtractTile(baseX, baseY, pLight->ubLight, spriteFlags, filter);
 			}
 			else
 			{
-				LightSubtractTile(dstX, dstY, pLight->ubLight, uiFlags, filter);
+				LightSubtractTile(dstX, dstY, pLight->ubLight, spriteFlags, filter);
 			}
 
 			pLight->uiFlags |= (1 << filter.srcToDstDir);
@@ -1842,6 +1831,8 @@ try
 	l->iY          = WORLD_ROWS + 1;
 
 	l->light_template = LightLoadCachedTemplate(pName);
+
+	l->initialFilters.resize(l->light_template->rays.size());
 
 	l->uiFlags |= LIGHT_SPR_ACTIVE;
 	return l;
