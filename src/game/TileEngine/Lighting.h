@@ -1,7 +1,7 @@
 #ifndef _LIGHTING_H_
 #define _LIGHTING_H_
 
-#include "JA2Types.h"
+#include "Isometric_Utils.h"
 
 
 /****************************************************************************************
@@ -55,12 +55,26 @@
 struct LightTemplate;
 
 
+struct IlluminationFilter
+{
+	bool            blocked{};                           // Light spread into a tile can be blocked by a wall in it, this wall might still need to be lit up
+	bool            illuminateNothing{};
+	bool            illuminateOrientedBlocksOnly{};      // Illuminate only oriented light-blocking structures (like walls and doors)
+	Orientation     allowedOrients{ ORIENT_NONE };
+	WorldDirections srcToDstDir{ DIRECTION_IRRELEVANT }; // Direction from source to destination tile
+	int32_t         baseGridNo{};                        // E.g. open door slab and its frame (base) can be in different tiles
+
+	IlluminationFilter() {};
+	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags);
+};
+
 // structure of light instance, or sprite (a copy of the template)
 struct LIGHT_SPRITE
 {
 	INT16         iX, iY;
 	LightTemplate *light_template;
 	UINT32        uiFlags;
+	std::vector<IlluminationFilter> initialFilters;
 };
 
 
@@ -81,7 +95,7 @@ void LightSetBaseLevel(UINT8 iIntensity);
 // Creates an omni (circular) light
 LightTemplate* LightCreateOmni(UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y
-BOOLEAN LightDraw(const LIGHT_SPRITE* l);
+BOOLEAN LightDraw(LIGHT_SPRITE* const l);
 // Save a light list into a file
 void LightSave(LightTemplate const*, const ST::string& filename);
 
@@ -107,6 +121,9 @@ BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
 /* Reset all tiles in the world to the ambient light level and redraw all active
 	* lights. */
 void LightSpriteRenderAll();
+
+// Update illumination after opening/closing doors or structure destruction
+void UpdateLightSpritesOnStructureChange(GridNo structCell);
 
 // Turns on/off power to a light
 void LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
