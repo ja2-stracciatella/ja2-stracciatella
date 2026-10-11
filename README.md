@@ -5,7 +5,7 @@
 [![Coverity Scan](https://img.shields.io/coverity/scan/8431.svg?style=flat-square&label=Coverity%20Scan)](https://scan.coverity.com/projects/ja2-stracciatella-ja2-stracciatella)
 [![Current Release](https://img.shields.io/github/downloads/ja2-stracciatella/ja2-stracciatella/v0.22.1/total)](https://github.com/ja2-stracciatella/ja2-stracciatella/releases/tag/v0.22.1)
 
-JA2 Stracciatella ports the classic 1999 PC tactical game [*Jagged Alliance 2*](https://en.wikipedia.org/wiki/Jagged_Alliance_2) to a wider range of platforms while improving game stability, fixing bugs and providing a mod development platform.
+JA2 Stracciatella ports the classic 1999 PC tactical game [*Jagged Alliance 2*](https://en.wikipedia.org/wiki/Jagged_Alliance_2) to a wider range of platforms while improving stability, fixing bugs and providing a mod development platform.
 
 We are a community-driven open source project that welcomes all. We have a few maintainers who keep the big picture in mind, and a long list of contributors. The project is hosted on [GitHub](https://github.com/ja2-stracciatella/ja2-stracciatella) where it can be forked, customized, extended, and collaboratively developed.
 

@@ -8,11 +8,13 @@ If you are not a developer, there are many other possibilities which do not requ
 
 If you don't have an itch to scratch, we suggest looking at our [bug tracker](https://github.com/ja2-stracciatella/ja2-stracciatella/issues), for example the [help wanted](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) list.
 
-Instructions on building and IDE setup can be found in [COMPILATION](COMPILATION.md). Read our [docs](docs) directory, where code-specific documentation can be generated locally.
+Instructions on building and IDE setup can be found in [COMPILATION](COMPILATION.md). 
+
+Read our [docs](docs) directory, where C++ documentation can be generated.
 
 ## Contributing code
 
-Pull requests with bug fixes are very welcome. That being said, **not all code contributions are welcome**, since the project has a defined scope: a portable, cleaned-up JA2 with a limited set of (chocolate) additions. Large gameplay changes as seen in the 1.13 mod are therefore scoffed upon.
+Fixes and modernizations are very welcome. Large gameplay changes as seen in total overhaul mods (such as 1.13) will quite likely not be accepted. However, we do invite changes to the modding interface (Lua bindings, data externalizations) which allow for reimagined gameplay through 3rd-party mods.
 
 ### How to make a pull request
 
