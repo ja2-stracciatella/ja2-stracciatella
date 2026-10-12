@@ -996,7 +996,7 @@ static BOOLEAN SoundInitHardware(void)
 		SDL_GetAudioStreamFormat(stream, nullptr, &gTargetAudioSpec);
 		gTargetAudioSpec.format = SOUND_FORMAT;
 		gTargetAudioSpec.channels = SOUND_CHANNELS;
-		SDL_SetAudioStreamFormat(stream, nullptr, &gTargetAudioSpec);
+		SDL_SetAudioStreamFormat(stream, &gTargetAudioSpec, nullptr);
 		gAudioStream = stream;
 		gAudioDeviceID = SDL_GetAudioStreamDevice(stream);
 
