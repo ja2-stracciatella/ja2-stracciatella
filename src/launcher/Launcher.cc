@@ -119,45 +119,46 @@ void Launcher::loadJa2Json() {
 }
 
 void Launcher::show() {
-	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
-	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
-	gameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	saveGameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	browseJa2DirectoryButton->callback((Fl_Callback *) openGameDirectorySelector, (void *) (this));
-	browseSaveGameDirectoryButton->callback((Fl_Callback *) openSaveGameDirectorySelector, (void *) (this));
-	gameVersionInput->callback( (Fl_Callback*)selectGameVersion, (void*)(this) );
-	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
-	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	editorButton->callback(startEditor, this);
+	playButton->callback(startGame, this);
+	gameDirectoryInput->callback(widgetChanged, this);
+	saveGameDirectoryInput->callback(widgetChanged, this);
+	browseJa2DirectoryButton->callback(openGameDirectorySelector, this);
+	browseSaveGameDirectoryButton->callback(openSaveGameDirectorySelector, this);
+	gameVersionInput->callback(selectGameVersion, this);
+	guessVersionButton->callback(guessVersion, this);
+	scalingModeChoice->callback(widgetChanged, this);
+	resolutionXInput->callback(widgetChanged, this);
+	resolutionYInput->callback(widgetChanged, this);
 	RustPointer<char> game_json_path(findPathFromAssetsDir("externalized/game.json", true, true));
 	if (game_json_path) {
-		gameSettingsOutput->value(game_json_path.get());
-	} else {
-		gameSettingsOutput->value("failed to find path to game.json");
+		this->gameJsonPath = game_json_path.get();
 	}
-	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	updateGameSettingsPath();
+	editSettingsButton->callback(openGameSettings, this);
+	resetSettingsButton->callback(resetGameSettings, this);
+	fullscreenCheckbox->callback(widgetChanged, this);
+	playSoundsCheckbox->callback(widgetChanged, this);
 	RustPointer<char> ja2_json_path(findPathFromStracciatellaHome(this->engineOptions.get(), "ja2.json", false, true));
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path.get());
 	} else {
 		ja2JsonPathOutput->value("failed to find path to ja2.json");
 	}
-	ja2JsonReloadBtn->callback( (Fl_Callback*)reloadJa2Json, (void*)(this) );
-	ja2JsonSaveBtn->callback( (Fl_Callback*)saveJa2Json, (void*)(this) );
+	ja2JsonReloadBtn->callback(reloadJa2Json, this);
+	ja2JsonSaveBtn->callback(saveJa2Json, this);
 
 	auto nmods = ModManager_getAvailableModsLength(this->modManager.get());
 	for (size_t i = 0; i < nmods; ++i) {
 		RustPointer<Mod> mod(ModManager_getAvailableModByIndex(this->modManager.get(), i));
 		RustPointer<char> modId(Mod_getId(mod.get()));
 	}
-	availableModsBrowser->callback( (Fl_Callback*)selectAvailableMods, (void*)(this) );
-	enabledModsBrowser->callback( (Fl_Callback*)selectEnabledMods, (void*)(this) );
-	enableModsButton->callback( (Fl_Callback*)enableMods, (void*)(this) );
-	disableModsButton->callback( (Fl_Callback*)disableMods, (void*)(this) );
-	moveDownModsButton->callback( (Fl_Callback*)moveDownMods, (void*)(this) );
-	moveUpModsButton->callback( (Fl_Callback*)moveUpMods, (void*)(this) );
+	availableModsBrowser->callback(selectAvailableMods, this);
+	enabledModsBrowser->callback(selectEnabledMods, this);
+	enableModsButton->callback(enableMods, this);
+	disableModsButton->callback(disableMods, this);
+	moveDownModsButton->callback(moveDownMods, this);
+	moveUpModsButton->callback(moveUpMods, this);
 
 	populateChoices();
 	initializeInputsFromDefaults();
@@ -373,6 +374,122 @@ void Launcher::openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 	}
 }
 
+// The copy in the home data dir is the one the user edits. It overrides the
+// game.json shipped with the game and any from enabled mods, and it is not
+// updated with the game, so it can go stale or miss keys a newer version
+// requires. Reset deletes it.
+ST::string Launcher::userGameJsonPath() {
+	RustPointer<char> path(findPathFromStracciatellaHome(this->engineOptions.get(), "data/game.json", false, true));
+	return path ? ST::string(path.get()) : ST::string();
+}
+
+void Launcher::updateGameSettingsPath() {
+	ST::string userPath = userGameJsonPath();
+	bool hasUserCopy = !userPath.empty() && FileMan::isFile(userPath);
+	if (hasUserCopy) {
+		gameSettingsOutput->value(userPath.c_str());
+	} else if (!this->gameJsonPath.empty()) {
+		gameSettingsOutput->value(this->gameJsonPath.c_str());
+	} else {
+		gameSettingsOutput->value("failed to find path to game.json");
+	}
+	if (hasUserCopy || !this->gameJsonPath.empty()) {
+		editSettingsButton->activate();
+	} else {
+		editSettingsButton->deactivate();
+	}
+	if (hasUserCopy) {
+		resetSettingsButton->activate();
+	} else {
+		resetSettingsButton->deactivate();
+	}
+}
+
+void Launcher::openGameSettings(Fl_Widget* btn, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	ST::string userPath = window->userGameJsonPath();
+	if (userPath.empty()) {
+		showError("Failed to find the stracciatella home directory");
+		return;
+	}
+
+	if (!FileMan::isFile(userPath)) {
+		if (window->gameJsonPath.empty()) {
+			return;
+		}
+		try {
+			FileMan::createDir(FileMan::getParentPath(userPath, false));
+			AutoSGPFile src(FileMan::openForReading(window->gameJsonPath));
+			ST::string contents = src->readStringToEnd();
+			AutoSGPFile dst(FileMan::openForWriting(userPath));
+			dst->write(contents.c_str(), contents.size());
+		} catch (const std::runtime_error& ex) {
+			SLOGE("Failed to copy game.json to {}: {}", userPath, ex.what());
+			showError(ST::format("Failed to copy game.json to {}:\n{}", userPath, ex.what()));
+			return;
+		}
+		window->updateGameSettingsPath();
+	}
+
+	// The handler registered for .json is rarely a text editor, so ask for one
+	// explicitly on the platforms that have the notion of a system text editor.
+	RustPointer<VecCString> args(VecCString_create());
+#ifdef _WIN32
+	const char* editor = "notepad.exe";
+	VecCString_push(args.get(), userPath.c_str());
+#elif defined(__APPLE__)
+	// -t picks the editor registered for plain text instead of the one for .json
+	const char* editor = "/usr/bin/open";
+	VecCString_push(args.get(), "-t");
+	VecCString_push(args.get(), userPath.c_str());
+#else
+	// There is no system text editor here, and xdg-open dispatches on
+	// application/json, which browsers commonly claim. Launch the handler
+	// registered for plain text instead and keep xdg-open as the fallback for
+	// desktops without gtk-launch.
+	const char* editor = "/bin/sh";
+	VecCString_push(args.get(), "-c");
+	VecCString_push(args.get(),
+		"handler=$(xdg-mime query default text/plain 2>/dev/null); "
+		"if [ -n \"$handler\" ]; then "
+		"gtk-launch \"$handler\" \"$1\" 2>/dev/null && exit 0; "
+		"fi; "
+		"exec xdg-open \"$1\"");
+	VecCString_push(args.get(), "sh");
+	VecCString_push(args.get(), userPath.c_str());
+#endif
+
+	// Fire and forget. The editor outlives this handle, and keeping it in
+	// subProcess would make the launcher treat the game as running.
+	RustPointer<SubProcess> editorProcess(Subprocess_new(editor, args.get()));
+	if (!editorProcess) {
+		showRustError();
+	}
+}
+
+void Launcher::resetGameSettings(Fl_Widget* btn, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	ST::string userPath = window->userGameJsonPath();
+	if (userPath.empty() || !FileMan::isFile(userPath)) {
+		window->updateGameSettingsPath();
+		return;
+	}
+
+	ST::string question = ST::format("This deletes your customized game settings in\n{}\nand restores the defaults shipped with the game.\nAre you sure you want to continue?", userPath);
+	int choice = fl_choice("%s", "Cancel", "Reset", 0, question.c_str());
+	if (choice != 1) {
+		return;
+	}
+
+	try {
+		FileMan::deleteFile(userPath);
+	} catch (const std::runtime_error& ex) {
+		SLOGE("Failed to delete {}: {}", userPath, ex.what());
+		showError(ex.what());
+	}
+	window->updateGameSettingsPath();
+}
+
 void Launcher::startExecutable(bool asEditor) {
 	if (gameIsRunning()) {
 		return;
@@ -477,6 +594,10 @@ void Launcher::maintainSubProcessState(void* userdata) {
 				}
 
 				SLOGE("{}", error);
+				ST::string userGameJson = window->userGameJsonPath();
+				if (!userGameJson.empty() && FileMan::isFile(userGameJson)) {
+					error = ST::format("{}\n\nYou are using customized game settings from\n{}\nIf they are from an older version of the game, use the reset button next to Edit Settings.", error, userGameJson);
+				}
 				error = ST::format("{}\n\nYou will be taken to the logs tab, where you can investigate the error.", error);
 
 				showError(error);
