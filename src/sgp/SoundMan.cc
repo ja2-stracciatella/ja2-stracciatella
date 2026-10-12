@@ -9,6 +9,7 @@
 #include "Debug.h"
 #include "Random.h"
 #include "SoundMan.h"
+#include "SGPFile.h"
 #include "Timer.h"
 
 #include "ContentManager.h"
@@ -98,10 +99,7 @@ struct SAMPLETAG
 {
 	ST::string pName;  // Path to sample data
 
-	UINT8* pInMemoryBuffer; // pointer to sample data memory (if playing from an in-memory buffer)
-	UINT32 uiBufferSize; // The size of the in-memory buffer
-	ma_format eInMemoryFormat;
-	UINT32 uiInMemoryChannels;
+	std::vector<UINT8> audioData;  // contains sample data (if playing from an in-memory buffer)
 
 	ma_data_converter* pDataConverter; // pointer to a data converter that decodes the data from pData
 
@@ -233,7 +231,7 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 	return SoundStartSample(sample, channel, volume, pan, loop, end_callback, data);
 }
 
-static SAMPLETAG* SoundLoadBuffer(UINT8* buf, UINT32 bufSize, ma_format format, UINT32 channels, int freq);
+static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8> & buf, ma_format format, UINT32 channels, int freq);
 static BOOLEAN    SoundCleanCache(void);
 static SAMPLETAG* SoundGetEmptySample(void);
 
@@ -254,15 +252,12 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 	else if (depth == 16) format = ma_format_s16;
 	else return SOUND_ERROR;
 
-	UINT32 uiBufferSize = buf.size();
-	UINT8* inMemoryBuffer = new UINT8[uiBufferSize]{};
-	memcpy(inMemoryBuffer, buf.data(), uiBufferSize);
 	if (format == ma_format_s16) {
 		// We expect the Endianess for the Smacker buffer to be little endian, but ma_format_s16 is native endian, so we need to do some conversion
-		convertLittleEndianBufferToNativeEndianU16(inMemoryBuffer, uiBufferSize);
+		convertLittleEndianBufferToNativeEndianU16(buf.data(), buf.size());
 	}
 
-	SAMPLETAG* s = SoundLoadBuffer(inMemoryBuffer, uiBufferSize, format, channels, rate);
+	SAMPLETAG* s = SoundLoadBuffer(buf, format, channels, rate);
 	if (s == NULL) return SOUND_ERROR;
 
 	s->pName           = name;
@@ -490,7 +485,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 				throw std::runtime_error(ST::format("ma_decoder_read_pcm_frames: {}", ma_result_description(result)).c_str());
 			}
 		} else if (sample->pDataConverter != NULL) {
-			auto bytesPerFrame = ma_get_bytes_per_frame(sample->eInMemoryFormat, sample->uiInMemoryChannels);
+			auto bytesPerFrame = ma_get_bytes_per_frame(sample->pDataConverter->formatIn, sample->pDataConverter->channelsIn);
 
 			ma_uint64 posInBytes;
 			maResultToRuntimeError(ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos, &posInBytes), "ma_data_converter_get_required_input_frame_count");
@@ -499,14 +494,14 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			ma_uint64 requiredInputFrameCount;
 			maResultToRuntimeError(ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite, &requiredInputFrameCount), "ma_data_converter_get_required_input_frame_count");
 			// We might not have as many bytes available
-			auto availableFrames = std::min(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
+			auto availableFrames = std::min(requiredInputFrameCount * bytesPerFrame, sample->audioData.size() - posInBytes) / bytesPerFrame;
 
 			ma_uint64 expectedOutputFrameCount;
 			maResultToRuntimeError(ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames, &expectedOutputFrameCount), "ma_data_converter_get_expected_output_frame_count");
 
 			maResultToRuntimeError(ma_data_converter_process_pcm_frames(
 				sample->pDataConverter,
-				sample->pInMemoryBuffer + posInBytes,
+				&sample->audioData[posInBytes],
 				&availableFrames,
 				pFramesInClientFormat,
 				&expectedOutputFrameCount
@@ -645,7 +640,7 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
  * The sound system will take over ownership over the buffer
  *
  * Returns: The sample if successful, NULL otherwise. */
-static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma_format format, UINT32 channels, int freq)
+static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8> & buf, ma_format format, UINT32 channels, int freq)
 {
 	try {
 		SAMPLETAG* s = SoundGetEmptySample();
@@ -667,12 +662,10 @@ static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma
 		ma_data_converter* converter = (ma_data_converter*)ma_malloc(sizeof(ma_data_converter), NULL);
 		maResultToRuntimeError(ma_data_converter_init(&config, NULL, converter), "ma_data_converter_init");
 
-		s->pInMemoryBuffer = inMemoryBuffer;
-		s->uiBufferSize = uiBufferSize;
-		s->pDataConverter = converter;
-		s->eInMemoryFormat = format;
-		s->uiInMemoryChannels = channels;
+		// Take ownership of the sound data
+		s->audioData.swap(buf);		
 
+		s->pDataConverter = converter;
 		s->uiFlags |= SAMPLE_ALLOCATED;
 
 		SLOGD("SoundLoadBuffer Success");
@@ -725,7 +718,6 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		return NULL;
 	}
 
-	UINT8* inMemoryBuffer = NULL;
 	SGPFile* hFile = NULL;
 	SDL_IOStream* rwOps = NULL;
 	ma_decoder* decoder = NULL;
@@ -742,18 +734,19 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		}
 
 		hFile = GCM->openGameResForReading(pFilename);
-		rwOps = hFile->getRwOps();
 		auto hFileLen = hFile->size();
 		if (hFileLen <= SOUND_FILE_STREAMING_THRESHOLD) {
 			// If the file length is below the streaming threshold we store the raw data in the inMemoryBuffer
-			inMemoryBuffer = new UINT8[hFileLen]{};
-			if (SDL_ReadIO(rwOps, inMemoryBuffer, hFileLen) != hFileLen) {
-				throw std::runtime_error("Could not read the whole file");
-			}
-			SDL_CloseIO(rwOps);
-			rwOps = SDL_IOFromConstMem(inMemoryBuffer, hFileLen);
+			s->audioData.resize(hFileLen);
+			hFile->read(s->audioData.data(), hFileLen);
+			DeleteSGPFile(hFile);
+			rwOps = SDL_IOFromConstMem(s->audioData.data(), hFileLen);
 			hFile = NULL;
 			isStreamed = FALSE;
+		}
+		else
+		{
+			rwOps = hFile->getRwOps();
 		}
 
 		// Initialize decoder to convert WAV/MP3/OGG data to raw sample data
@@ -764,7 +757,6 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 			throw std::runtime_error(ST::format("Error initializing sound decoder for file \"{}\"- {}", pFilename, ma_result_description(result)).c_str());
 		}
 		s->pFile = hFile;
-		s->pInMemoryBuffer = inMemoryBuffer;
 		s->pRWOps = rwOps;
 		s->pDecoder = decoder;
 		s->pName = pFilename;
@@ -871,10 +863,6 @@ static void SoundFreeSample(SAMPLETAG* s)
 	}
 	if (s->pRWOps != NULL) {
 		SDL_CloseIO(s->pRWOps);
-	}
-	// Note: s->pFile is closed and deleted by SDL_RWclose implicitly, but s->pInMemoryBuffer is not
-	if (s->pInMemoryBuffer != NULL) {
-		delete[] s->pInMemoryBuffer;
 	}
 	*s = SAMPLETAG{};
 }
