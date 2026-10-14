@@ -1444,6 +1444,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 			DoPOWPathChecks();
 		}
 
+		UpdateLightCoverageOnStructureChange(sGridNo, ubRadius);
 	}
 
 	// do sight checks if something damaged or smoke stuff involved

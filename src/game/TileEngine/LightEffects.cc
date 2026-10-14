@@ -1,12 +1,11 @@
-#include "LoadSaveLightEffect.h"
-#include "WorldDef.h"
 #include "LightEffects.h"
-#include "Isometric_Utils.h"
-#include "Lighting.h"
+
 #include "Game_Clock.h"
+#include "Lighting.h"
+#include "LightTemplate.h"
+#include "LoadSaveLightEffect.h"
 #include "OppList.h"
 #include "Tactical_Save.h"
-#include "Campaign_Types.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -14,6 +13,7 @@
 #include <algorithm>
 
 #define NUM_LIGHT_EFFECT_SLOTS 25
+#define MAX_COVERAGE_RANGE 15 // Max light source radius (break light) 11 plus 4 to make up for length of multi-tile structures
 
 
 // GLOBAL FOR LIGHT LISTING
@@ -48,7 +48,7 @@ static LIGHTEFFECT* GetFreeLightEffect(void)
 static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 {
 	// Build light....
-	ST::string LightName = ST::format("Light{}", pLight->bRadius);
+	ST::string LightName = ST::format("Light{}", pLight->decayStage);
 
 	// Delete old one if one exists...
 	if (pLight->light != NULL)
@@ -71,7 +71,7 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 }
 
 
-LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, UINT8 radius, UINT8 duration)
+LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, UINT8 decayStage, UINT8 duration)
 {
 	LIGHTEFFECT* const l = GetFreeLightEffect();
 	if (l == NULL) return NULL;
@@ -83,7 +83,7 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, UINT8 radius, UINT8 duration)
 	l->light              = NULL;
 	l->uiTimeOfLastUpdate = GetWorldTotalSeconds();
 	l->ubDuration = duration;
-	l->bRadius    = radius;
+	l->decayStage = decayStage;
 	l->bAge       = 0;
 	l->fAllocated = TRUE;
 
@@ -98,7 +98,6 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, UINT8 radius, UINT8 duration)
 
 void DecayLightEffects(const UINT32 uiTime, const bool updateSightings)
 {
-	// age all active tear gas clouds, deactivate those that are just dispersing
 	FOR_EACH_LIGHTEFFECT(l)
 	{
 		// ATE: Do this every so ofte, to acheive the effect we want...
@@ -113,18 +112,15 @@ void DecayLightEffects(const UINT32 uiTime, const bool updateSightings)
 		{
 			l->bAge++;
 
-			// if this cloud remains effective (duration not reached)
 			if (l->bAge >= l->ubDuration)
 			{
 				fDelete = TRUE;
 				break;
 			}
 
-			// calculate the new cloud radius
-			// cloud expands by 1 every turn outdoors, and every other turn indoors
-			if (l->bAge % 2) l->bRadius--;
+			if (l->bAge % 2) l->decayStage--;
 
-			if (l->bRadius == 0)
+			if (l->decayStage == 0)
 			{
 				fDelete = TRUE;
 				break;
@@ -141,6 +137,53 @@ void DecayLightEffects(const UINT32 uiTime, const bool updateSightings)
 
 		// Handle sight here....
 		if (updateSightings) AllTeamsLookForAll(FALSE);
+	}
+}
+
+
+void UpdateLightCoverageOnStructureChange(GridNo structGridNo, UINT8 rangeExtension)
+{
+	FOR_EACH(LIGHT_SPRITE, lSpr, LightSprites)
+	{
+		if (lSpr->uiFlags == 0) break;
+		if (!(lSpr->uiFlags & LIGHT_SPR_ACTIVE) ||
+			!(lSpr->uiFlags & LIGHT_SPR_ON))
+		{
+			continue;
+		}
+
+		INT16 posY = lSpr->iY;
+		INT16 posX = lSpr->iX;
+		INT16 lightSrcGridNo = MAPROWCOLTOPOS(posY, posX);
+		INT16 distance = SpacesAway(lightSrcGridNo, structGridNo);
+
+		if (distance > (MAX_COVERAGE_RANGE + rangeExtension)) continue;
+
+		LIGHTEFFECT* parentLightEffect = nullptr;
+
+		for (LIGHTEFFECT* lEff = gLightEffectData; lEff != gLightEffectData + guiNumLightEffects; ++lEff)
+		{
+			if (!lEff->fAllocated) continue;
+			if (lEff->light == lSpr)
+			{
+				parentLightEffect = lEff;
+				break;
+			}
+		}
+
+		if (parentLightEffect)
+		{
+			UpdateLightingSprite(parentLightEffect);
+		}
+		else
+		{
+			ST::string sprName = lSpr->light_template->internalName;
+			LightSpriteDestroy(lSpr);
+			LIGHT_SPRITE* const updatedSpr = LightSpriteCreate(sprName);
+
+			LightSpritePower(updatedSpr, TRUE);
+			LightSpritePosition(updatedSpr, posX, posY);
+		}
 	}
 }
 
