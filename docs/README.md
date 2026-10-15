@@ -4,6 +4,11 @@ Technical docs directory for a developer audience.
 
 Player-centric documentation can be found on the [project website](https://ja2-stracciatella.github.io/) and in the original *Jagged Alliance 2* game manual.
 
+## Guides
+
+- [Debugging](DEBUG.md)
+- [Modding](MODDING.md)
+
 ## C++ source documentation
 
 C++ source code documentation is generated using [Doxygen](https://www.doxygen.nl).
