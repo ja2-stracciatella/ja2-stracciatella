@@ -34,6 +34,9 @@ extern BOOLEAN gfTurnBasedAI;
 constexpr bool DONTADDTURNCOST = false;
 constexpr bool ADDTURNCOST     = true;
 
+// for MinAPsToAttack(): the shot is banked for the end of a move, not for right now
+constexpr bool AFTER_MOVING = true;
+
 enum
 {
 	URGENCY_LOW = 0,

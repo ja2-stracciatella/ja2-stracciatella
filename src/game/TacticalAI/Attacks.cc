@@ -1961,7 +1961,7 @@ INT16 AdvanceToFiringRange( SOLDIERTYPE * pSoldier, INT16 sClosestOpponent )
 	INT8   bAttackCost, bTrueActionPoints;
 	UINT16 usActionData;
 
-	bAttackCost = MinAPsToAttack(pSoldier, sClosestOpponent, ADDTURNCOST);
+	bAttackCost = MinAPsToAttack(pSoldier, sClosestOpponent, ADDTURNCOST, AFTER_MOVING);
 
 	if (bAttackCost >= pSoldier->bActionPoints)
 	{

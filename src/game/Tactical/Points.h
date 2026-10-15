@@ -291,11 +291,14 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost );
 void UnusedAPsToBreath(SOLDIERTYPE *pSold);
 INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT16 usMovementMode);
-UINT8 MinAPsToAttack(SOLDIERTYPE *, GridNo, bool add_turning_cost);
+// after_moving: the attack happens at the end of a move, which lowers the weapon, so
+// charge the raise even if the soldier is fire-ready right now. It is a what-if query
+// (used to reserve APs before moving) and leaves the soldier untouched.
+UINT8 MinAPsToAttack(SOLDIERTYPE *, GridNo, bool add_turning_cost, bool after_moving = false);
 INT8  MinPtsToMove(const SOLDIERTYPE* pSoldier);
 INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode);
 INT8 PtsToMoveDirection(const SOLDIERTYPE* pSoldier, UINT8 bDirection);
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE&, GridNo, bool add_turning_cost);
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE&, GridNo, bool add_turning_cost, bool after_moving = false);
 BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
 void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
@@ -333,7 +336,7 @@ INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos );
 
 INT8 GetAPsToJumpOver(const SOLDIERTYPE* pSoldier);
 
-void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const*, GridNo, UINT8 ubAddTurningCost, BOOLEAN* charge_turning, BOOLEAN* charge_raise);
+void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const*, GridNo, UINT8 ubAddTurningCost, BOOLEAN* charge_turning, BOOLEAN* charge_raise, bool after_moving = false);
 
 UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot);
 INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );

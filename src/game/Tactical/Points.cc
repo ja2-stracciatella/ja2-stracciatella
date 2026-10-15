@@ -961,7 +961,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool con
 static UINT8 MinAPsToPunch(SOLDIERTYPE const&, GridNo, bool add_turning_cost);
 
 
-UINT8 MinAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool const add_turning_cost)
+UINT8 MinAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool const add_turning_cost, bool const after_moving)
 {
 	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
 	UINT16            item    = in_hand.usItem;
@@ -977,7 +977,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE * const s, GridNo const grid_no, bool const add
 		case IC_GUN:
 		case IC_LAUNCHER:
 		case IC_TENTACLES:
-		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(*s, grid_no, add_turning_cost);
+		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(*s, grid_no, add_turning_cost, after_moving);
 		case IC_GRENADE:
 		case IC_THROWN:         return MinAPsToThrow(*s, grid_no, add_turning_cost);
 		case IC_NONE:
@@ -1048,7 +1048,7 @@ UINT8 BaseAPsToShootOrStab(INT8 const bAPs, INT8 const bAimSkill, OBJECTTYPE con
 }
 
 
-void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo grid_no, UINT8 const ubAddTurningCost, BOOLEAN* const charge_turning, BOOLEAN* const charge_raise)
+void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo grid_no, UINT8 const ubAddTurningCost, BOOLEAN* const charge_turning, BOOLEAN* const charge_raise, bool const after_moving)
 {
 	bool adding_turning_cost = FALSE;
 	if (ubAddTurningCost)
@@ -1072,13 +1072,13 @@ void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo gr
 	}
 	*charge_turning = adding_turning_cost;
 
-	// Do we need to ready weapon?
+	// Do we need to ready weapon? Moving lowers it, so after a move we always do.
 	*charge_raise = GCM->getItem(s->inv[HANDPOS].usItem)->getItemClass() != IC_THROWING_KNIFE &&
-			!(gAnimControl[s->usAnimState].uiFlags & (ANIM_FIREREADY | ANIM_FIRE));
+			(after_moving || !(gAnimControl[s->usAnimState].uiFlags & (ANIM_FIREREADY | ANIM_FIRE)));
 }
 
 
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_cost)
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_cost, bool const after_moving)
 {
 	OBJECTTYPE const& in_hand = s.inv[HANDPOS];
 	UINT16     const  item =
@@ -1086,7 +1086,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 
 	BOOLEAN	adding_turning_cost;
 	BOOLEAN	adding_raise_gun_cost;
-	GetAPChargeForShootOrStabWRTGunRaises(&s, gridno, add_turning_cost, &adding_turning_cost, &adding_raise_gun_cost);
+	GetAPChargeForShootOrStabWRTGunRaises(&s, gridno, add_turning_cost, &adding_turning_cost, &adding_raise_gun_cost, after_moving);
 
 	int	ap_cost = AP_MIN_AIM_ATTACK;
 
@@ -1126,7 +1126,8 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	if (adding_raise_gun_cost)
 	{
 		ap_cost += GetAPsToReadyWeapon(&s, s.usAnimState);
-		s.fDontChargeReadyAPs = FALSE;
+		// an after_moving cost is hypothetical, so it must not change the soldier
+		if (!after_moving) s.fDontChargeReadyAPs = FALSE;
 	}
 
 	if (gridno != NOWHERE)
