@@ -8,7 +8,7 @@ There are many ways to help:
 * [Re-test](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3Aretest) bug reports that could use additional information.
 * Test proposed [pull request](https://github.com/ja2-stracciatella/ja2-stracciatella/pulls) solutions.
 * Write documentation
-* Create mods
+* Create [mods](docs/MODDING.md)
 
 And many more!
 
