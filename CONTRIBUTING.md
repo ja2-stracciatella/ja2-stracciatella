@@ -2,7 +2,7 @@
 
 There are many ways to help:
 
-* Download and playtest [nightly](https://ja2-stracciatella.github.io/download/#nightlies) development versions of JA2 Stracciatella.
+* Play-test [nightly](https://ja2-stracciatella.github.io/download/#nightlies) development versions of JA2 Stracciatella.
 * [Report bugs](https://github.com/ja2-stracciatella/ja2-stracciatella/issues/new/choose) or suggest enhancements.
 * Help triage bug reports.
 * [Re-test](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3Aretest) bug reports that could use additional information.
