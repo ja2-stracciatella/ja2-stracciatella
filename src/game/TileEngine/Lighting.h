@@ -122,8 +122,6 @@ BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
 	* lights. */
 void LightSpriteRenderAll();
 
-// Update illumination after opening/closing doors or structure destruction
-void UpdateLightSpritesOnStructureChange(GridNo structCell);
 
 // Turns on/off power to a light
 void LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);

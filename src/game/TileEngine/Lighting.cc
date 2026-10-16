@@ -1434,11 +1434,8 @@ BOOLEAN LightDraw(LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
-		IlluminationFilter filter{ srcX, srcY, dstX, dstY, spriteFlags };
-
-		// When later erasing this node we'll need this in case the blocking structure
-		// will have changed (structure getting destroyed or a door opened/closed)
-		l->initialFilters[uiCount] = filter;
+		IlluminationFilter& filter = l->initialFilters[uiCount];
+		filter = { srcX, srcY, dstX, dstY, spriteFlags };
 
 		srcX = centerX;
 		srcY = centerY;
