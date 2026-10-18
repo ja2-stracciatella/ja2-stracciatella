@@ -318,7 +318,7 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 
 	srcToDstDir = static_cast<WorldDirections>(atan8(iSrcX, iSrcY, iX, iY));
 
-	if (spriteFlags & LIGHT_SPR_ONROOF)
+	if (spriteFlags & LIGHT_ROOF_ONLY)
 	{	// there are no light-blocking structures on roofs, so we can skip all the checks
 		return;
 	}
