@@ -28,6 +28,7 @@
 #include "Tactical_Save.h"
 #include "Soldier_Macros.h"
 #include "OppList.h"
+#include "Player_Command.h"
 #include "Soldier_Ani.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
@@ -335,6 +336,10 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 			// Mark the sector as visited (flying around in the chopper doesn't, so
 			// this does it as soon as we get off it)
 			SetSectorFlag(s.sSector, SF_ALREADY_VISITED);
+
+			// Likewise the heli group never takes control of the sectors it flies
+			// over, so claim the sector once someone is actually on the ground
+			SetThisSectorAsPlayerControlled(s.sSector, FALSE);
 		}
 
 		SetSoldierExitHelicopterInsertionData(&s);
