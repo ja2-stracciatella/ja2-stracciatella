@@ -38,10 +38,6 @@ struct MAPCREATE_STRUCT
 extern MAPCREATE_STRUCT gMapInformation;
 
 void SaveMapInformation( HWFILE fp );
-
-struct SUMMARYFILE;
-void UpdateSummaryInfo(SUMMARYFILE*);
-
 void LoadMapInformation(HWFILE);
 void ValidateAndUpdateMapVersionIfNecessary(void);
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo );
