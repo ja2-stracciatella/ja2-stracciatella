@@ -1,5 +1,7 @@
 # Doxyfile 1.18.0
 
+# This file is used to generate C++ documentation
+
 # How to configure Doxyfile:
 # https://www.doxygen.nl/manual/index.html
 
@@ -119,7 +121,7 @@ SHOW_NAMESPACES        = NO
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../../src/
+INPUT                  = ../src/
 
 # If the value of the INPUT tag contains directories, you can use the
 # FILE_PATTERNS tag to specify one or more wildcard patterns (like *.cpp and
@@ -176,24 +178,3 @@ EXAMPLE_PATTERNS       = *
 
 GENERATE_HTML          = YES
 GENERATE_LATEX         = NO
-
-# When the SEARCHENGINE tag is enabled Doxygen will generate a search box for
-# the HTML output. The underlying search engine uses JavaScript and DHTML and
-# should work on any modern browser. Note that when using HTML help
-# (GENERATE_HTMLHELP), Qt help (GENERATE_QHP), or docsets (GENERATE_DOCSET)
-# there is already a search function so this one should typically be disabled.
-# For large projects the JavaScript based search engine can be slow, then
-# enabling SERVER_BASED_SEARCH may provide a better solution. It is possible to
-# search using the keyboard; to jump to the search box use <access key> + S
-# (what the <access key> is depends on the OS and browser, but it is typically
-# <CTRL>, <ALT>/<option>, or both). Inside the search box use the <cursor down
-# key> to jump into the search results window, the results can be navigated
-# using the <cursor keys>. Press <Enter> to select an item or <escape> to cancel
-# the search. The filter options can be selected when the cursor is inside the
-# search box by pressing <Shift>+<cursor down>. Also here use the <cursor keys>
-# to select a filter and <Enter> or <escape> to activate or cancel the filter
-# option.
-# The default value is: YES.
-# This tag requires that the tag GENERATE_HTML is set to YES.
-
-SEARCHENGINE           = NO
