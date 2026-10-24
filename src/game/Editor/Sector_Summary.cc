@@ -1,3 +1,4 @@
+#include "Animation_Data.h"
 #include "Directories.h"
 #include "EditScreen.h"
 #include "HImage.h"
@@ -26,6 +27,7 @@
 #include "Summary_Info.h"
 #include "Animated_ProgressBar.h"
 #include "WorldDat.h"
+#include "WorldDef.h"
 #include "World_Items.h"
 #include "Debug.h"
 #include "Soldier_Create.h"
@@ -235,6 +237,9 @@ static void SummaryToggleGridCallback(GUI_BUTTON* btn, UINT32 reason);
 static void SummaryToggleLevelCallback(GUI_BUTTON* btn, UINT32 reason);
 static void SummaryToggleProgressCallback(GUI_BUTTON* btn, UINT32 reason);
 static void SummaryUpdateCallback(GUI_BUTTON* btn, UINT32 reason);
+static void UpdateSummaryInfo(SUMMARYFILE *);
+static BOOLEAN EvaluateWorld(const ST::string& pSector, UINT8 ubLevel);
+static void WriteSectorSummaryUpdate(const ST::string &filename, UINT8 ubLevel, SUMMARYFILE *);
 
 
 void CreateSummaryWindow()
@@ -2108,7 +2113,7 @@ static void LoadGlobalSummary(void)
 static void UpdateMasterProgress(void);
 
 
-void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, SUMMARYFILE* const sf)
+static void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, SUMMARYFILE* const sf)
 {
 	bool ext = filename.ends_with(".dat", ST::case_insensitive);
 	AssertMsg(ext, "Illegal sector summary filename.");
@@ -2584,3 +2589,364 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		}
 	}
 }
+
+
+//This function is used to avoid conflicts between minor version updates and sector summary info.
+//By updating the summary info in conjunction with minor version updates, we can avoid these conflicts
+//and really prevent major map updates.
+
+// Keep this in sync with the definition in Map_Information.cc
+#define MINOR_MAP_VERSION 25
+void UpdateSummaryInfo( SUMMARYFILE *pSummary )
+{
+	if( pSummary->MapInfo.ubMapVersion == MINOR_MAP_VERSION )
+		return;
+	if( pSummary->MapInfo.ubMapVersion < 9 )
+	{
+		//See bug 10
+		pSummary->ubCivSchedules = 0;
+	}
+	if( pSummary->MapInfo.ubMapVersion < 12 )
+	{
+		pSummary->MapInfo.sCenterGridNo = -1;
+	}
+	if( pSummary->MapInfo.ubMapVersion < 16 )
+	{
+		pSummary->MapInfo.sIsolatedGridNo = -1;
+	}
+}
+
+#define MAP_FULLSOLDIER_SAVED			0x00000001
+#define MAP_WORLDLIGHTS_SAVED			0x00000004
+#define MAP_WORLDITEMS_SAVED			0x00000008
+#define MAP_EXITGRIDS_SAVED			0x00000010
+#define MAP_DOORTABLE_SAVED			0x00000020
+#define MAP_EDGEPOINTS_SAVED			0x00000040
+#define MAP_AMBIENTLIGHTLEVEL_SAVED		0x00000080
+#define MAP_NPCSCHEDULES_SAVED			0x00000100
+
+/* This is a specialty function that is very similar to LoadWorld, except that
+ * it doesn't actually load the world, it instead evaluates the map and
+ * generates summary information for use within the summary editor.  The header
+ * is defined in Summary Info.h, not worlddef.h -- though it's not likely this
+ * is going to be used anywhere where it would matter. */
+static BOOLEAN EvaluateWorld(const ST::string& pSector, const UINT8 ubLevel)
+try
+{
+	// Make sure the file exists... if not, then return false
+	ST::string filename = ST::format("{}{}{.0d}{}.dat",
+		pSector,
+		ubLevel % 4 != 0 ? "_b" : "",
+		ubLevel % 4,
+		ubLevel     >= 4 ? "_a" : ""
+	);
+
+	if (gfMajorUpdate)
+	{
+		LoadWorld(filename);
+		SaveWorldAbsolute(filename);
+	}
+
+	AutoSGPFile f(GCM->openMapForReading(filename));
+
+	ST::string str = ST::format("Analyzing map {}", filename);
+	if (!gfUpdatingNow)
+	{
+		SetRelativeStartAndEndPercentage(0, 0, 100, str);
+	}
+	else
+	{
+		SetRelativeStartAndEndPercentage(0, (UINT16)MasterStart, (UINT16)MasterEnd, str);
+	}
+
+	RenderProgressBar(0, 0);
+
+	//clear the summary file info
+	SUMMARYFILE* const pSummary = new SUMMARYFILE{};
+	pSummary->ubSummaryVersion = GLOBAL_SUMMARY_VERSION;
+	pSummary->dMajorMapVersion = getMajorMapVersion();
+
+	//skip JA2 Version ID
+	FLOAT	dMajorMapVersion;
+	f->read(&dMajorMapVersion, sizeof(dMajorMapVersion));
+	if (dMajorMapVersion >= 4.00)
+	{
+		f->seek(sizeof(UINT8), FILE_SEEK_FROM_CURRENT);
+	}
+
+	//Read FLAGS FOR WORLD
+	UINT32 uiFlags;
+	f->read(&uiFlags, sizeof(uiFlags));
+
+	//Read tilesetID
+	INT32 iTilesetID;
+	f->read(&iTilesetID, sizeof(iTilesetID));
+	pSummary->ubTilesetID = (UINT8)iTilesetID;
+
+	// Skip soldier size and height values
+	f->seek(sizeof(UINT32) + (1 + 1) * WORLD_MAX, FILE_SEEK_FROM_CURRENT);
+
+	// Skip all layers
+	INT32 skip = 0;
+	for (UINT32 row = 0; row != WORLD_ROWS; ++row)
+	{
+		if (row % 16 == 0) RenderProgressBar(0, row * 90 / WORLD_ROWS + 1); // 1 - 90
+
+		UINT8 combine[WORLD_COLS][4];
+		f->read(combine, sizeof(combine));
+		for (UINT8 const (*i)[4] = combine; i != endof(combine); ++i)
+		{
+			skip +=
+				((*i)[0] & 0x0F) * 2 + // #land
+				((*i)[1] & 0x0F) * 3 + // #objects
+				((*i)[1] >> 4)   * 2 + // #structs
+				((*i)[2] & 0x0F) * 2 + // #shadows
+				((*i)[2] >> 4)   * 2 + // #roof
+				((*i)[3] & 0x0F) * 2;  // #on roof
+		}
+	}
+	f->seek(skip, FILE_SEEK_FROM_CURRENT);
+
+	//extract highest room number
+	UINT8 max_room = 0;
+	for (INT32 row = 0; row != WORLD_ROWS; ++row)
+	{
+		UINT8 room[WORLD_COLS];
+		f->read(room, sizeof(room));
+		for (INT32 col = 0; col != WORLD_COLS; ++col)
+		{
+			if (max_room < room[col]) max_room = room[col];
+		}
+	}
+	pSummary->ubNumRooms = max_room;
+
+	if (uiFlags & MAP_WORLDITEMS_SAVED)
+	{
+		RenderProgressBar(0, 91);
+		//Important:  Saves the file position (byte offset) of the position where the numitems
+		//            resides.  Checking this value and comparing to usNumItems will ensure validity.
+		pSummary->uiNumItemsPosition = f->pos();
+		//get number of items (for now)
+		UINT32 n_items;
+		f->read(&n_items, sizeof(n_items));
+		pSummary->usNumItems = n_items;
+		//Skip the contents of the world items.
+		f->seek(sizeof(WORLDITEM) * n_items, FILE_SEEK_FROM_CURRENT);
+	}
+
+	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED) f->seek(3, FILE_SEEK_FROM_CURRENT);
+
+	if (uiFlags & MAP_WORLDLIGHTS_SAVED)
+	{
+		RenderProgressBar(0, 92);
+
+		//skip number of light palette entries
+		UINT8 n_light_colours;
+		f->read(&n_light_colours, sizeof(n_light_colours));
+		f->seek(sizeof(SGPPaletteEntry) * n_light_colours, FILE_SEEK_FROM_CURRENT);
+
+		//get number of lights
+		f->read(&pSummary->usNumLights, sizeof(pSummary->usNumLights));
+		//skip the light loading
+		for (INT32 n = pSummary->usNumLights; n != 0; --n)
+		{
+			f->seek(24 /* size of a LIGHT_SPRITE on disk */, FILE_SEEK_FROM_CURRENT);
+			UINT8 ubStrLen;
+			f->read(&ubStrLen, sizeof(ubStrLen));
+			f->seek(ubStrLen, FILE_SEEK_FROM_CURRENT);
+		}
+	}
+
+	//read the mapinformation
+	f->read(&pSummary->MapInfo, sizeof(pSummary->MapInfo));
+
+	if (uiFlags & MAP_FULLSOLDIER_SAVED)
+	{
+		RenderProgressBar(0, 94);
+
+		pSummary->uiEnemyPlacementPosition = f->pos();
+
+		for (INT32 i = 0; i < pSummary->MapInfo.ubNumIndividuals; ++i)
+		{
+			BASIC_SOLDIERCREATE_STRUCT basic;
+			ExtractBasicSoldierCreateStructFromFile(f, basic);
+
+			TEAMSUMMARY* pTeam = NULL;
+			switch (basic.bTeam)
+			{
+				case ENEMY_TEAM:    pTeam = &pSummary->EnemyTeam;    break;
+				case CREATURE_TEAM: pTeam = &pSummary->CreatureTeam; break;
+				case MILITIA_TEAM:  pTeam = &pSummary->RebelTeam;    break;
+				case CIV_TEAM:      pTeam = &pSummary->CivTeam;      break;
+			}
+
+			if (basic.bOrders == RNDPTPATROL || basic.bOrders == POINTPATROL)
+			{ //make sure the placement has at least one waypoint.
+				if (!basic.bPatrolCnt)
+				{
+					++pSummary->ubEnemiesReqWaypoints;
+				}
+			}
+			else if (basic.bPatrolCnt)
+			{
+				++pSummary->ubEnemiesHaveWaypoints;
+			}
+
+			if (basic.fPriorityExistance) ++pTeam->ubExistance;
+
+			switch (basic.bRelativeAttributeLevel)
+			{
+				case 0:	++pTeam->ubBadA;   break;
+				case 1:	++pTeam->ubPoorA;  break;
+				case 2:	++pTeam->ubAvgA;   break;
+				case 3:	++pTeam->ubGoodA;  break;
+				case 4:	++pTeam->ubGreatA; break;
+			}
+
+			switch (basic.bRelativeEquipmentLevel)
+			{
+				case 0:	++pTeam->ubBadE;   break;
+				case 1:	++pTeam->ubPoorE;  break;
+				case 2:	++pTeam->ubAvgE;   break;
+				case 3:	++pTeam->ubGoodE;  break;
+				case 4:	++pTeam->ubGreatE; break;
+			}
+
+			SOLDIERCREATE_STRUCT priority;
+			if (basic.fDetailedPlacement)
+			{ //skip static priority placement
+
+				// Always use windows format because here we are loading a map
+				// file, not a user save
+				ExtractSoldierCreateFromFile(f, &priority, false);
+
+				if (priority.ubProfile != NO_PROFILE)
+					++pTeam->ubProfile;
+				else
+					++pTeam->ubDetailed;
+
+				if (basic.bTeam == CIV_TEAM)
+				{
+					if (priority.ubScheduleID) ++pSummary->ubCivSchedules;
+					switch (priority.bBodyType)
+					{
+						case COW:      ++pSummary->ubCivCows; break;
+						case BLOODCAT: ++pSummary->ubCivBloodcats; break;
+					}
+				}
+			}
+
+			if (basic.bTeam == ENEMY_TEAM)
+			{
+				switch (basic.ubSoldierClass)
+				{
+					case SOLDIER_CLASS_ADMINISTRATOR:
+						++pSummary->ubNumAdmins;
+						if (basic.fPriorityExistance) ++pSummary->ubAdminExistance;
+						if (basic.fDetailedPlacement)
+						{
+							if (priority.ubProfile != NO_PROFILE)
+								++pSummary->ubAdminProfile;
+							else
+								++pSummary->ubAdminDetailed;
+						}
+						break;
+
+					case SOLDIER_CLASS_ELITE:
+						++pSummary->ubNumElites;
+						if (basic.fPriorityExistance) ++pSummary->ubEliteExistance;
+						if (basic.fDetailedPlacement)
+						{
+							if (priority.ubProfile != NO_PROFILE)
+								++pSummary->ubEliteProfile;
+							else
+								++pSummary->ubEliteDetailed;
+						}
+						break;
+
+					case SOLDIER_CLASS_ARMY:
+						++pSummary->ubNumTroops;
+						if (basic.fPriorityExistance) ++pSummary->ubTroopExistance;
+						if (basic.fDetailedPlacement)
+						{
+							if (priority.ubProfile != NO_PROFILE)
+								++pSummary->ubTroopProfile;
+							else
+								++pSummary->ubTroopDetailed;
+						}
+						break;
+				}
+			}
+			else if (basic.bTeam == CREATURE_TEAM)
+			{
+				if (basic.bBodyType == BLOODCAT) ++pTeam->ubNumAnimals;
+			}
+			++pTeam->ubTotal;
+		}
+		RenderProgressBar(0, 96);
+	}
+
+	if (uiFlags & MAP_EXITGRIDS_SAVED)
+	{
+		RenderProgressBar(0, 98);
+
+		UINT16 cnt;
+		f->read(&cnt, sizeof(cnt));
+
+		for (INT32 n = cnt; n != 0; --n)
+		{
+			UINT16 usMapIndex;
+			f->read(&usMapIndex, sizeof(usMapIndex));
+			EXITGRID exitGrid;
+			f->read(&exitGrid, 5 /* XXX sic! The 6th byte luckily is padding */);
+			for (INT32 loop = 0;; ++loop)
+			{
+				if (loop >= pSummary->ubNumExitGridDests)
+				{
+					if (loop >= 4)
+					{
+						pSummary->fTooManyExitGridDests = TRUE;
+					}
+					else
+					{
+						++pSummary->ubNumExitGridDests;
+						++pSummary->usExitGridSize[loop];
+						EXITGRID* const eg = &pSummary->ExitGrid[loop];
+						eg->usGridNo      = exitGrid.usGridNo;
+						eg->ubGotoSector = exitGrid.ubGotoSector;
+					}
+					break;
+				}
+
+				const EXITGRID* const eg = &pSummary->ExitGrid[loop];
+				if (eg->usGridNo      == exitGrid.usGridNo      &&
+						eg->ubGotoSector == exitGrid.ubGotoSector)
+				{ //same destination.
+					++pSummary->usExitGridSize[loop];
+					break;
+				}
+			}
+		}
+	}
+
+	if (uiFlags & MAP_DOORTABLE_SAVED)
+	{
+		f->read(&pSummary->ubNumDoors, sizeof(pSummary->ubNumDoors));
+
+		for (INT32 n = pSummary->ubNumDoors; n != 0; --n)
+		{
+			DOOR Door;
+			f->read(&Door, sizeof(Door));
+
+			if      (Door.ubLockID && Door.ubTrapID) ++pSummary->ubNumDoorsLockedAndTrapped;
+			else if (Door.ubLockID)                  ++pSummary->ubNumDoorsLocked;
+			else if (Door.ubTrapID)                  ++pSummary->ubNumDoorsTrapped;
+		}
+	}
+
+	RenderProgressBar(0, 100);
+
+	WriteSectorSummaryUpdate(filename, ubLevel, pSummary);
+	return TRUE;
+}
+catch (...) { return FALSE; }

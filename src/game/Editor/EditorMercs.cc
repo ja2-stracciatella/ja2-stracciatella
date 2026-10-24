@@ -141,9 +141,6 @@ OBJECTTYPE *gpMercSlotItem[9] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 //processing functions by referring to this array to get the appropriate slot.
 INT8 gbMercSlotTypes[9] = { HELMETPOS, VESTPOS, LEGPOS, HANDPOS, SECONDHANDPOS,
 														BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS };
-//returns the usItem index of specified slot in the currently selected merc.
-#define GetSelectedMercSlotItemIndex( x )  (gpSelected->pDetailedPlacement->Inv[gbMercSlotTypes[x]].usItem)
-#define GetSelectedMercSlot( x )  (&gpSelected->pDetailedPlacement->Inv[gbMercSlotTypes[x]])
 //values indicating which merc inventory slot is hilited and which slot is selected.
 INT8 gbCurrHilite = -1;
 INT8 gbCurrSelect = -1;

@@ -251,36 +251,4 @@ void ValidateAndUpdateMapVersionIfNecessary()
 	AutoCalculateItemNoOverwriteStatus() ;
 }
 
-#include "Summary_Info.h"
-//This function is used to avoid conflicts between minor version updates and sector summary info.
-//By updating the summary info in conjunction with minor version updates, we can avoid these conflicts
-//and really prevent major map updates.
-void UpdateSummaryInfo( SUMMARYFILE *pSummary )
-{
-	if( pSummary->MapInfo.ubMapVersion == MINOR_MAP_VERSION )
-		return;
-	if( pSummary->MapInfo.ubMapVersion < 9 )
-	{
-		//See bug 10
-		pSummary->ubCivSchedules = 0;
-	}
-	if( pSummary->MapInfo.ubMapVersion < 12 )
-	{
-		pSummary->MapInfo.sCenterGridNo = -1;
-	}
-	if( pSummary->MapInfo.ubMapVersion < 16 )
-	{
-		pSummary->MapInfo.sIsolatedGridNo = -1;
-	}
-}
-
-
-#ifdef WITH_UNITTESTS
-#include "gtest/gtest.h"
-
-TEST(MapInformation, asserts)
-{
-	EXPECT_EQ(sizeof(MAPCREATE_STRUCT), 100u);
-}
-
-#endif
+static_assert(sizeof(MAPCREATE_STRUCT) == 100);

@@ -1,12 +1,9 @@
 #include "ArmourModel.h"
 #include "Campaign_Types.h"
-#include "Directories.h"
 #include "Interface_Control.h"
 #include "Interface_Panels.h"
-#include "LoadSaveMercProfile.h"
 #include "MapScreen.h"
 #include "Merc_Hiring.h"
-#include "Debug.h"
 #include "math.h"
 #include "WorldDef.h"
 #include "Soldier_Control.h"
@@ -22,20 +19,17 @@
 #include "Soldier_Create.h"
 #include "Soldier_Add.h"
 #include "OppList.h"
-#include "Weapons.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Squads.h"
 #include "Quests.h"
 #include "Interface_Dialogue.h"
 #include "GameSettings.h"
-#include "Interface_Utils.h"
 #include "StrategicMap.h"
 #include "Game_Event_Hook.h"
 #include "Map_Information.h"
 #include "History.h"
 #include "Personnel.h"
 #include "Items.h"
-#include "GameRes.h"
 #include "Faces.h"
 #include "Observable.h"
 
@@ -46,7 +40,6 @@
 #include "MercProfile.h"
 #include "Strategic.h"
 
-extern BOOLEAN gfProfileDataLoaded;
 
 Observable<SOLDIERTYPE*> OnRPCRecruited;
 
@@ -230,8 +223,6 @@ void LoadMercProfiles()
 
 	// Initialize mercs' status
 	StartSomeMercsOnAssignment();
-
-	gfProfileDataLoaded = TRUE;
 
 	// no better place..heh?.. will load faces for profiles that are 'extern'.....won't have soldiertype instances
 	PreloadExternalNPCFaces();

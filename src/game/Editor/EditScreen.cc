@@ -81,7 +81,6 @@
 
 static BOOLEAN gfCorruptMap        = FALSE;
 static BOOLEAN gfCorruptSchedules  = FALSE;
-BOOLEAN        gfProfileDataLoaded = FALSE;
 
 
 // These are global variables used by the main game loop
@@ -205,9 +204,10 @@ static void EditModeInit(void)
 	gfRealGunNut = gGameOptions.fGunNut;
 	gGameOptions.fGunNut = TRUE;
 
-
-	if( !gfProfileDataLoaded )
+	if (gMercProfiles[0].zName.empty())
+	{
 		LoadMercProfiles();
+	}
 
 	ClearTacticalMessageQueue( );
 
