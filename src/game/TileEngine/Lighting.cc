@@ -318,7 +318,7 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 
 	srcToDstDir = static_cast<WorldDirections>(atan8(iSrcX, iSrcY, iX, iY));
 
-	if (spriteFlags & LIGHT_SPR_ONROOF)
+	if (spriteFlags & LIGHT_ROOF_ONLY)
 	{	// there are no light-blocking structures on roofs, so we can skip all the checks
 		return;
 	}
@@ -594,8 +594,6 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 		return( FALSE );
 	}
 
-	gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
-
 	UINT8 ubShadeAdd = ubShade;
 
 	bool fFake = uiFlags & LIGHT_FAKE ? true : false;
@@ -703,8 +701,6 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 	{
 		return( FALSE );
 	}
-
-	gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
 
 	UINT8 ubShadeSubstract = ubShade;
 
@@ -1997,7 +1993,7 @@ static void LightSpriteDirty(LIGHT_SPRITE const* const l)
 	AddBaseDirtyRect(iLeft_s, iTop_s, (INT16)(iLeft_s + t->width), (INT16)(iTop_s + t->height));
 #endif
 
-	SetRenderFlags(RENDER_FLAG_MARKED);
+	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
