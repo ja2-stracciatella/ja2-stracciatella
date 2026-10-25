@@ -94,14 +94,12 @@ struct SUMMARYFILE
 	//					// 400 total bytes
 };
 
+static_assert(sizeof(TEAMSUMMARY) == 15);
+static_assert(sizeof(SUMMARYFILE) == 416);
 
 extern BOOLEAN gfAutoLoadA9;
 
-extern BOOLEAN EvaluateWorld(const ST::string& pSector, UINT8 ubLevel);
-void WriteSectorSummaryUpdate(const ST::string &filename, UINT8 ubLevel, SUMMARYFILE*);
-
 extern BOOLEAN gfMustForceUpdateAllMaps;
-extern BOOLEAN gfMajorUpdate;
 void ApologizeOverrideAndForceUpdateEverything(void);
 
 #endif
