@@ -83,7 +83,9 @@ void HandleTacticalEndTurn()
 
 	UINT32 const now = GetWorldTotalSeconds();
 
-	if (uiTimeSinceLastStrategicUpdate - now > 1200)
+	// once every 20 game minutes; the operands used to be swapped, so the unsigned
+	// difference wrapped and corpses (and their crows) were handled every turn
+	if (now - uiTimeSinceLastStrategicUpdate > 1200)
 	{
 		HandleRottingCorpses();
 		uiTimeSinceLastStrategicUpdate = now;

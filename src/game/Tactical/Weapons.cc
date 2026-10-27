@@ -690,8 +690,7 @@ static void UseGun(SOLDIERTYPE * const pSoldier, GridNo const sTargetGridNo)
 		// above
 		if (IsOnOurTeam(*pSoldier) &&
 			pSoldier->target != NULL  &&
-			(!pSoldier->bDoBurst || pSoldier->bDoBurst == 2) &&
-			gTacticalStatus.uiFlags & INCOMBAT)
+			(!pSoldier->bDoBurst || pSoldier->bDoBurst == 2))
 		{
 			const SOLDIERTYPE* const tgt = pSoldier->target;
 			if (SoldierToSoldierBodyPartChanceToGetThrough(pSoldier, tgt, pSoldier->bAimShotLocation) > 0)
