@@ -1525,7 +1525,7 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 }
 
 
-static void SummaryOkayCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummaryOkayCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -1563,7 +1563,7 @@ static void SummaryToggleAlternateCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void SummarySciFiCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummarySciFiCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -1578,7 +1578,7 @@ static void SummarySciFiCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void SummaryRealCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummaryRealCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -1593,7 +1593,7 @@ static void SummaryRealCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void SummaryEnemyCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummaryEnemyCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -1897,7 +1897,7 @@ static void SummaryToggleLevelCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void SummaryLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummaryLoadMapCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -1940,7 +1940,7 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void SummarySaveMapCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummarySaveMapCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -1950,7 +1950,7 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, UINT32 reason)
 }
 
 
-static void SummaryOverrideCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummaryOverrideCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -2177,7 +2177,7 @@ static void ReportError(const ST::string& pSector, UINT8 ubLevel)
 	}
 	MPrint(10, yp, ST::format("Skipping update for {}.  Probably due to tileset conflicts...", str));
 	InvalidateScreen();
-	yp++;
+	yp += 12;
 }
 
 
@@ -2265,7 +2265,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 }
 
 
-static void SummaryUpdateCallback(GUI_BUTTON* btn, UINT32 reason)
+static void SummaryUpdateCallback(GUI_BUTTON *, UINT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_POINTER_UP )
 	{
@@ -2418,8 +2418,6 @@ void ApologizeOverrideAndForceUpdateEverything()
 			}
 		}
 	}
-
-	EvaluateWorld( "p3_m.dat", 0 );
 
 	RemoveProgressBar( 2 );
 	gfUpdatingNow = FALSE;
@@ -2634,12 +2632,10 @@ static BOOLEAN EvaluateWorld(const ST::string& pSector, const UINT8 ubLevel)
 try
 {
 	// Make sure the file exists... if not, then return false
-	ST::string filename = ST::format("{}{}{.0d}{}.dat",
-		pSector,
-		ubLevel % 4 != 0 ? "_b" : "",
-		ubLevel % 4,
-		ubLevel     >= 4 ? "_a" : ""
-	);
+	auto const sec{ SGPSector::FromShortString(pSector, ubLevel % 4) };
+	// Tell GetMapFilename to add "_a" if necessary.
+	gfUseAlternateMap = ubLevel >= 4;
+	auto const filename{ GetMapFileName(sec, gfUseAlternateMap) };
 
 	if (gfMajorUpdate)
 	{
