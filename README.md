@@ -49,17 +49,13 @@ We are continuing the venerable JA2 Stracciatella project, started by Tron in 20
 
 He did an amazing job of cleaning up the JA2 sources and making them portable. The work was massive - there are over *7000 commits* in the original [svn repository](svn://tron.homeunix.org/ja2/trunk).
 
-Though the [original project homepage](http://tron.homeunix.org/ja2)
-is no longer available, some history can be found in the [JA2-Stracciatella
-Q&A](https://thepit.ja-galaxy-forum.com/index.php?t=msg&th=13222) thread on The Bear's Pit forums, or on the
-[Wayback Machine](https://web.archive.org/web/20140204204243/http://tron.homeunix.org/ja2).
+Though the [original project homepage](http://tron.homeunix.org/ja2) is no longer available, some history can be found in the [JA2-Stracciatella Q&A](https://thepit.ja-galaxy-forum.com/index.php?t=msg&th=13222) thread on The Bear's Pit forums, or on the [Wayback Machine](https://web.archive.org/web/20140204204243/http://tron.homeunix.org/ja2).
 
 More history available on the [Stracciatella project homepage](https://ja2-stracciatella.github.io/history).
 
 ## License
 
-Unless specified explicitly in the commit message, all changes since `commit 8287b98`
-are released to the public domain. All libraries in `dependencies/lib-*` have their own licenses.
+Unless specified explicitly in the commit message, all changes since `commit 8287b98` are released to the public domain. All libraries in `dependencies/lib-*` have their own licenses.
 
 It is not known under which license Tron released his changes. All we know, the source codes were publicly available in his svn repository.
 
