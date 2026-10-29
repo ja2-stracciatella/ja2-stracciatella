@@ -1225,6 +1225,33 @@ static void SaveMercProfiles(HWFILE const f)
 	f->write(impSlotStates, sizeof(impSlotStates));
 }
 
+/* TEMPORARY: remove around 2027-05, together with its two calls and its test.
+ *
+ * Exists only for issue #2576. Builds from #2460 (2026-09-02) on made an I.M.P.
+ * in a slot past 164 with no approach factors, and from #2472 (2026-09-24) on
+ * in every slot, so the character's leadership counted for nothing when
+ * talking an NPC round. Their reputation tolerance was 0 instead of 101 too,
+ * which sinks morale every day it is below 50, and their opinions of the other
+ * mercs were all 0. New characters get these from GiveIMPCharacterDefaults;
+ * this mends the few that were made in between, in saves and in exported
+ * mercprofile.*.json files. Nothing in play changes an approach factor, so all
+ * four at 0 is the mark of such a character. Opinions it has learned since are
+ * kept. */
+static void RepairIMPWithoutApproachFactors(MERCPROFILESTRUCT& p)
+{
+	if (std::any_of(std::begin(p.usApproachFactor), std::end(p.usApproachFactor),
+		[](UINT16 const factor) { return factor != 0; })) return;
+
+	MERCPROFILESTRUCT defaults{};
+	GiveIMPCharacterDefaults(defaults);
+	std::copy(std::begin(defaults.usApproachFactor), std::end(defaults.usApproachFactor), std::begin(p.usApproachFactor));
+	p.bReputationTolerance = defaults.bReputationTolerance;
+	for (size_t i = 0; i != lengthof(p.bMercOpinion); ++i)
+	{
+		if (p.bMercOpinion[i] == 0) p.bMercOpinion[i] = defaults.bMercOpinion[i];
+	}
+}
+
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
 	return ST::format("mercprofile.{}.json", nickname);
@@ -1259,6 +1286,7 @@ ProfileID IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 	MERCPROFILESTRUCT& profile_new = gMercProfiles[profile];
 	profile_new = profile_saved;
 	profile_new.bMercStatus = MERC_OK;
+	RepairIMPWithoutApproachFactors(profile_new); // TEMPORARY, see there
 	// The slot is not held until the player confirms the character.
 	profile_new.impSlotState = IMPSlotState::FREE;
 	return profile;
@@ -1361,6 +1389,12 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 	BYTE impSlotStates[NUM_PROFILES];
 	f->read(impSlotStates, profiles_in_save);
 	for (UINT32 i = 0; i != profiles_in_save; ++i) gMercProfiles[i].impSlotState = static_cast<IMPSlotState>(impSlotStates[i]);
+
+	// TEMPORARY, see RepairIMPWithoutApproachFactors
+	for (MERCPROFILESTRUCT& p : gMercProfiles)
+	{
+		if (p.impSlotState == IMPSlotState::TAKEN) RepairIMPWithoutApproachFactors(p);
+	}
 }
 
 
@@ -2682,6 +2716,25 @@ TEST(SaveLoadGameTest, mercProfilesFromOlderSave)
 	}
 
 	GCM = oldGCM;
+}
+
+// TEMPORARY, goes with RepairIMPWithoutApproachFactors
+TEST(SaveLoadGame, anIMPWithoutApproachFactorsIsRepaired)
+{
+	MERCPROFILESTRUCT p{};
+	p.bMercOpinion[66] = 4; // learned since, kept
+	RepairIMPWithoutApproachFactors(p);
+	for (UINT16 const factor : p.usApproachFactor) EXPECT_EQ(factor, 100);
+	EXPECT_EQ(p.bReputationTolerance, 101);
+	EXPECT_EQ(p.bMercOpinion[16], 8);
+	EXPECT_EQ(p.bMercOpinion[66], 4);
+
+	MERCPROFILESTRUCT q{};
+	q.usApproachFactor[1] = 75; // has its own, left alone
+	RepairIMPWithoutApproachFactors(q);
+	EXPECT_EQ(q.usApproachFactor[0], 0);
+	EXPECT_EQ(q.usApproachFactor[1], 75);
+	EXPECT_EQ(q.bMercOpinion[16], 0);
 }
 
 #endif
