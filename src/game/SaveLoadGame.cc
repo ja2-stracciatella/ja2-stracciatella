@@ -1230,7 +1230,9 @@ static void SaveMercProfiles(HWFILE const f)
  * Exists only for issue #2576. Builds from #2460 (2026-09-02) on made an I.M.P.
  * in a slot past 164 with no approach factors, and from #2472 (2026-09-24) on
  * in every slot, so the character's leadership counted for nothing when
- * talking an NPC round. New characters get them from GiveIMPCharacterDefaults;
+ * talking an NPC round. Their reputation tolerance was 0 instead of 101 too,
+ * which sinks morale every day it is below 50, and their opinions of the other
+ * mercs were all 0. New characters get these from GiveIMPCharacterDefaults;
  * this mends the few that were made in between, in saves and in exported
  * mercprofile.*.json files. Nothing in play changes an approach factor, so all
  * four at 0 is the mark of such a character. Opinions it has learned since are
@@ -1243,6 +1245,7 @@ static void RepairIMPWithoutApproachFactors(MERCPROFILESTRUCT& p)
 	MERCPROFILESTRUCT defaults{};
 	GiveIMPCharacterDefaults(defaults);
 	std::copy(std::begin(defaults.usApproachFactor), std::end(defaults.usApproachFactor), std::begin(p.usApproachFactor));
+	p.bReputationTolerance = defaults.bReputationTolerance;
 	for (size_t i = 0; i != lengthof(p.bMercOpinion); ++i)
 	{
 		if (p.bMercOpinion[i] == 0) p.bMercOpinion[i] = defaults.bMercOpinion[i];
@@ -2722,6 +2725,7 @@ TEST(SaveLoadGame, anIMPWithoutApproachFactorsIsRepaired)
 	p.bMercOpinion[66] = 4; // learned since, kept
 	RepairIMPWithoutApproachFactors(p);
 	for (UINT16 const factor : p.usApproachFactor) EXPECT_EQ(factor, 100);
+	EXPECT_EQ(p.bReputationTolerance, 101);
 	EXPECT_EQ(p.bMercOpinion[16], 8);
 	EXPECT_EQ(p.bMercOpinion[66], 4);
 

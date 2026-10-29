@@ -204,6 +204,10 @@ void GiveIMPCharacterDefaults(MERCPROFILESTRUCT& p)
 	// leadership count for nothing when talking an NPC round.
 	for (auto& factor : p.usApproachFactor) factor = 100;
 
+	// Never minds the player's reputation. At 0 the character's morale would
+	// sink further every day it is below 50.
+	p.bReputationTolerance = 101;
+
 	// The opinion of each of the first 75 profiles, the same in all six slots.
 	static INT8 const opinions[lengthof(p.bMercOpinion)] =
 	{
@@ -670,6 +674,7 @@ TEST_F(IMPSlotTest, aCharacterMadeInAFreeSlotCarriesWhatItWasGiven)
 
 	// it can talk an NPC round like the game's own I.M.P.s could
 	for (UINT16 const factor : p.usApproachFactor) EXPECT_EQ(factor, 100);
+	EXPECT_EQ(p.bReputationTolerance, 101);
 	EXPECT_EQ(p.bMercOpinion[16], 8);
 	EXPECT_EQ(p.bMercOpinion[66], -6);
 
