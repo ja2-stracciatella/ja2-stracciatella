@@ -4,6 +4,7 @@
     <string name="floating_action_button_start_text">Start the game</string>
     <string name="tab_text_data">Data</string>
     <string name="tab_text_settings">Settings</string>
+    <string name="tab_text_game_settings">Game</string>
     <string name="tab_text_logs">Logs</string>
     <string name="select_directory_button_label">Choose</string>
     <string name="game_dir_title_text">Original Jagged Alliance 2 Game Directory</string>
@@ -35,6 +36,14 @@
     <string name="debug_mode_info_title_text">Debug Mode</string>
     <string name="debug_mode_info_text">In case you run into issues, you can enable debug mode. This will result in more logs being written in order to be able to debug issues.</string>
     <string name="debug_mode_label">Enable Debug Mode</string>
+    <string name="game_settings_info_title_text">Game Settings</string>
+    <string name="game_settings_info_text">Change the settings from game.json, which influence the game in general. Only the settings you change are saved, the others keep their default values. Changes take effect the next time the game starts. Some settings, such as the starting cash, only take effect in a new campaign.</string>
+    <string name="game_settings_reset_all_button">Reset all to defaults</string>
+    <string name="game_settings_reset_all_confirmation">Reset all game settings to their default values?</string>
+    <string name="game_settings_reset_button">Reset to default (%1$s)</string>
+    <string name="game_settings_enabled_label">Enabled</string>
+    <string name="game_settings_invalid_value">Invalid value, it will not be saved</string>
+    <string name="game_settings_load_error">Could not load the game settings: %1$s</string>
     <string name="continue_action">Continue</string>
     <string name="common_mistakes_no_game_dir_selected_title">No game directory selected</string>
     <string name="common_mistakes_no_game_dir_selected_description">You have not selected a game directory yet. Please set a game directory containing an unmodified Jagged Alliance 2 installation.</string>
