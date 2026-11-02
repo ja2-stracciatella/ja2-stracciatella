@@ -423,6 +423,8 @@ endif()
 
 add_custom_target(package-appimage
     COMMAND rm -rf *.AppImage
+    COMMAND mkdir -p AppDir
+    COMMAND cp -i ../assets/icons/logo-256.png AppDir/ja2-stracciatella.png
     COMMAND linuxdeploy --appdir AppDir --output appimage
     COMMAND mv *.AppImage ${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}.AppImage
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
