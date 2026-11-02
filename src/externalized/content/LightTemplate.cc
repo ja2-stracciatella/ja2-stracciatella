@@ -23,6 +23,9 @@ std::unique_ptr<LightTemplate> LightTemplate::deserialize(const JsonValue& json)
 						lightNode.iDY = static_cast<int16_t>(jLight[1].toInt());
 						lightNode.uiFlags = static_cast<uint16_t>(jLight[2].toUInt());
 						lightNode.ubLight = static_cast<uint8_t>(jLight[3].toUInt());
+						lightNode.sector = static_cast<CircleSectors>(jLight[4].toUInt());
+						lightNode.adjTileNorthIdx = static_cast<uint16_t>(jLight[5].toUInt());
+						lightNode.adjTileWestIdx = static_cast<uint16_t>(jLight[6].toUInt());
 						return lightNode;
 	});
 

@@ -2,7 +2,7 @@
 #define _LIGHTING_H_
 
 #include "Isometric_Utils.h"
-
+#include "LightTemplate.h"
 
 /****************************************************************************************
 * JA2 Lighting Module
@@ -58,14 +58,16 @@ struct LightTemplate;
 struct IlluminationFilter
 {
 	bool            blocked{};                           // Light spread into a tile can be blocked by a wall in it, this wall might still need to be lit up
-	bool            illuminateNothing{};
-	bool            illuminateOrientedBlocksOnly{};      // Illuminate only oriented light-blocking structures (like walls and doors)
+	bool            doNothing{};
+	bool            doOrientedBlocksOnly{};              // Illuminate only oriented light-blocking structures (like walls and doors)
+	bool            doAdjacentWallN{};
+	bool            doAdjacentWallW{};
 	Orientation     allowedOrients{ ORIENT_NONE };
 	WorldDirections srcToDstDir{ DIRECTION_IRRELEVANT }; // Direction from source to destination tile
 	int32_t         baseGridNo{};                        // E.g. open door slab and its frame (base) can be in different tiles
 
 	IlluminationFilter() {};
-	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags);
+	IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags, CircleSectors region);
 };
 
 // structure of light instance, or sprite (a copy of the template)

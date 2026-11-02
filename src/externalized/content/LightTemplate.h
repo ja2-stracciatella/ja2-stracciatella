@@ -5,6 +5,15 @@
 
 #include <stdint.h>
 
+enum CircleSectors : uint8_t
+{
+	QUADRANT_NONE,
+	QUADRANT_NE,
+	QUADRANT_NW,
+	QUADRANT_SW,
+	QUADRANT_SE,
+};
+
 // stucture of node in linked list for lights
 struct LIGHT_NODE
 {
@@ -12,6 +21,9 @@ struct LIGHT_NODE
 	int16_t  iDY;
 	uint16_t uiFlags;
 	uint8_t  ubLight;
+	CircleSectors  sector;
+	uint16_t adjTileNorthIdx;
+	uint16_t adjTileWestIdx;
 };
 
 struct LightTemplate : public Containers::NamedEntity<uint8_t>
