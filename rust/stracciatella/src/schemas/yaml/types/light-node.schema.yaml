@@ -1,10 +1,13 @@
 title: Light Node
-description: Offset from the center tile, flags and brightness.
+description: Offset from the center tile, flags, brightness, quadrant designation and adjacent tile indices.
 type: array
-minItems: 4
-maxItems: 4
+minItems: 7
+maxItems: 7
 items:
   - $ref: types/int16.schema.yaml
   - $ref: types/int16.schema.yaml
   - $ref: types/uint16.schema.yaml
   - $ref: types/uint8.schema.yaml
+  - $ref: types/uint8.schema.yaml
+  - $ref: types/uint16.schema.yaml
+  - $ref: types/uint16.schema.yaml

@@ -19,7 +19,6 @@
 #include "Debug.h"
 #include "FileMan.h"
 #include "HImage.h"
-#include "LightTemplate.h"
 #include "Overhead.h"
 #include "PathAI.h"
 #include "RenderWorld.h"
@@ -46,13 +45,9 @@
 enum LightFlags : UINT32
 {
 	LIGHT_NODE_DRAWN_N       = 1 << NORTH,
-	LIGHT_NODE_DRAWN_NE      = 1 << NORTHEAST,
 	LIGHT_NODE_DRAWN_E       = 1 << EAST,
-	LIGHT_NODE_DRAWN_SE      = 1 << SOUTHEAST,
 	LIGHT_NODE_DRAWN_S       = 1 << SOUTH,
-	LIGHT_NODE_DRAWN_SW      = 1 << SOUTHWEST,
 	LIGHT_NODE_DRAWN_W       = 1 << WEST,
-	LIGHT_NODE_DRAWN_NW      = 1 << NORTHWEST,
 	LIGHT_NODE_DRAWN_FULLY   = 1 << 8,    // Indicates there is nothing to illuminate in this tile anymore
 	LIGHT_NODE_DRAWN_NO_DIR  = 1 << DIRECTION_IRRELEVANT, // Indicates destination and source are the same tile
 	LIGHT_NODE_DRAWN_NONWALL = 1 << 10,
@@ -60,7 +55,6 @@ enum LightFlags : UINT32
 	LIGHT_NEW_RAY          = 1 << 15, // start of new ray in linked list
 	LIGHT_FAKE             = 1 << 28  // "fake" light for display only
 };
-
 
 static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 
@@ -294,7 +288,19 @@ static void LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, con
 	t->rays.insert(t->rays.begin() + usIndex, 1, usNodeIndex);
 }
 
-IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags)
+
+static bool TestForWallInAdjacentTile(GridNo dstTileNo, WorldDirections dir)
+{
+	GridNo adjGridNo = dstTileNo + DirIncrementer[dir];
+	if (gubWorldMovementCosts[adjGridNo][dir][0] == TRAVELCOST_WALL)
+	{
+		return true;
+	}
+	return false;
+}
+
+
+IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32 iY, UINT32 spriteFlags, CircleSectors region)
 {
 	UINT16 dstTileNo = MAPROWCOLTOPOS(iY, iX);
 	UINT16 srcTileNo = MAPROWCOLTOPOS(iSrcY, iSrcX);
@@ -302,7 +308,7 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 	if (dstTileNo >= GRIDSIZE || srcTileNo >= GRIDSIZE)
 	{
 		blocked = true;
-		illuminateNothing = true;
+		doNothing = true;
 		return;
 	}
 
@@ -325,28 +331,33 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 
 	UINT8 ubTravelCost = gubWorldMovementCosts[dstTileNo][srcToDstDir][0];
 
-	GridNo windowTileNo = srcToDstDir == NORTH || srcToDstDir == WEST ? dstTileNo : srcTileNo;
+	Orientation possibleOrients = ORIENT_NONE;
+
+	if (IsDirectionDiagonal(srcToDstDir) && ubTravelCost >= TRAVELCOST_BLOCKED)
+	{
+		blocked = true;
+		doNothing = true;
+		return;
+	}
+	else if (srcToDstDir == NORTH)
+	{
+		possibleOrients = ORIENT_LEFT;
+	}
+	else if (srcToDstDir == WEST)
+	{
+		possibleOrients = ORIENT_RIGHT;
+	}
+
+	GridNo windowTileNo = possibleOrients ? dstTileNo : srcTileNo;
 
 	if (gpWorldLevelData[windowTileNo].pStructHead)
 	{
 		// IF WE ARE A WINDOW, DO NOT BLOCK!
 		if (ubTravelCost == TRAVELCOST_WALL && FindStructure(windowTileNo, STRUCTURE_WALLNWINDOW))
 		{
-			if (IsDirectionDiagonal(srcToDstDir))
+			if (windowTileNo == dstTileNo)
 			{
-				blocked = true;
-				illuminateNothing = true;
-			}
-			else if (windowTileNo == dstTileNo)
-			{
-				if (srcToDstDir == NORTH)
-				{
-					allowedOrients = ORIENT_LEFT;
-				}
-				else if (srcToDstDir == WEST)
-				{
-					allowedOrients = ORIENT_RIGHT;
-				}
+				allowedOrients = possibleOrients;
 			}
 			return;
 		}
@@ -355,19 +366,14 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 	if (ubTravelCost == TRAVELCOST_WALL)
 	{
 		blocked = true;
-		if (srcToDstDir == NORTH)
+		if (possibleOrients)
 		{
-			illuminateOrientedBlocksOnly = true;
-			allowedOrients = ORIENT_LEFT;
-		}
-		else if (srcToDstDir == WEST)
-		{
-			illuminateOrientedBlocksOnly = true;
-			allowedOrients = ORIENT_RIGHT;
+			allowedOrients = possibleOrients;
+			doOrientedBlocksOnly = true;
 		}
 		else
 		{
-			illuminateNothing = true;
+			doNothing = true;
 		}
 		return;
 	}
@@ -379,18 +385,14 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 		if (IS_TRAVELCOST_OPEN_DOOR(ubTravelCost) && baseGridNo != srcTileNo)
 		{
 			blocked = true;
-			illuminateOrientedBlocksOnly = true;
-			if (srcToDstDir == NORTH)
+			if (possibleOrients)
 			{
-				allowedOrients = ORIENT_RIGHT;
-			}
-			else if (srcToDstDir == WEST)
-			{
-				allowedOrients = ORIENT_LEFT;
+				doOrientedBlocksOnly = true;
+				allowedOrients = srcToDstDir == NORTH ? ORIENT_RIGHT : ORIENT_LEFT;
 			}
 			else
-			{	// this includes diagonal directions
-				illuminateNothing = true;
+			{
+				doNothing = true;
 			}
 			return;
 		}
@@ -402,21 +404,26 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 		if (ubTravelCost == TRAVELCOST_DOOR || IS_TRAVELCOST_DOOR(ubTravelCost))
 		{
 			blocked = true;
-			illuminateOrientedBlocksOnly = true;
-			if (srcToDstDir == NORTH)
+			if (possibleOrients)
 			{
-				allowedOrients = ORIENT_LEFT;
-			}
-			else if (srcToDstDir == WEST)
-			{
-				allowedOrients = ORIENT_RIGHT;
+				doOrientedBlocksOnly = true;
+				allowedOrients = possibleOrients;
 			}
 			else
-			{	// this includes diagonal directions
-				illuminateNothing = true;
+			{
+				doNothing = true;
 			}
 			return;
 		}
+	}
+
+	if (region == QUADRANT_NW || region == QUADRANT_NE)
+	{
+		doAdjacentWallN = TestForWallInAdjacentTile(dstTileNo, NORTH);
+	}
+	if (region == QUADRANT_NW || region == QUADRANT_SW)
+	{
+		doAdjacentWallW = TestForWallInAdjacentTile(dstTileNo, WEST);
 	}
 
 	if (ubTravelCost == TRAVELCOST_OBSTACLE)
@@ -447,6 +454,17 @@ IlluminationFilter::IlluminationFilter(INT32 iSrcX, INT32 iSrcY, INT32 iX, INT32
 			if (boxColumnCount >= MIN_BOX_COLUMNS)
 			{
 				blocked = true;
+				if (region == QUADRANT_NONE)
+				{
+					if (possibleOrients || srcToDstDir == EAST)
+					{
+						doAdjacentWallN = TestForWallInAdjacentTile(dstTileNo, NORTH);
+					}
+					if (possibleOrients || srcToDstDir == SOUTH)
+					{
+						doAdjacentWallW = TestForWallInAdjacentTile(dstTileNo, WEST);
+					}
+				}
 				return;
 			}
 
@@ -614,13 +632,13 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 					isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
 					wallOrient = pStruct->pStructureData->ubWallOrientation;
 				}
-				else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
+				else if (filter.doOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
 				{
 					isOrientedBlock = true;
 					wallOrient = filter.allowedOrients;
 				}
 
-				if ((filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
+				if ((filter.doOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
 					(isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
 					tileType == FIRSTCLIFFHANG)
 				{
@@ -635,7 +653,7 @@ static BOOLEAN LightAddTile(const INT16 iX, const INT16 iY, const UINT8 ubShade,
 
 		ubShadeAdd = ubShade;
 
-		if ( !filter.illuminateOrientedBlocksOnly )
+		if ( !filter.doOrientedBlocksOnly )
 		{
 			pLand = gpWorldLevelData[uiTile].pLandHead;
 
@@ -722,13 +740,13 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 					isOrientedBlock = pStruct->pStructureData->fFlags & (STRUCTURE_WALLSTUFF | STRUCTURE_ANYDOOR);
 					wallOrient = pStruct->pStructureData->ubWallOrientation;
 				}
-				else if (filter.illuminateOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
+				else if (filter.doOrientedBlocksOnly && tileType >= FIRSTWALLDECAL && tileType <= EIGTHWALLDECAL)
 				{
 					isOrientedBlock = true;
 					wallOrient = filter.allowedOrients;
 				}
 
-				if ((filter.illuminateOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
+				if ((filter.doOrientedBlocksOnly && (!isOrientedBlock || !(wallOrient & filter.allowedOrients))) ||
 					(isOrientedBlock && filter.allowedOrients == ORIENT_NONE) ||
 					tileType == FIRSTCLIFFHANG)
 				{
@@ -743,7 +761,7 @@ static BOOLEAN LightSubtractTile(const INT16 iX, const INT16 iY, const UINT8 ubS
 
 		ubShadeSubstract = ubShade;
 
-		if ( !filter.illuminateOrientedBlocksOnly )
+		if ( !filter.doOrientedBlocksOnly )
 		{
 			pLand = gpWorldLevelData[uiTile].pLandHead;
 
@@ -1430,8 +1448,10 @@ BOOLEAN LightDraw(LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
+		CircleSectors& region = pLight->sector;
+
 		IlluminationFilter& filter = l->initialFilters[uiCount];
-		filter = { srcX, srcY, dstX, dstY, spriteFlags };
+		filter = { srcX, srcY, dstX, dstY, spriteFlags, region };
 
 		srcX = centerX;
 		srcY = centerY;
@@ -1456,18 +1476,13 @@ BOOLEAN LightDraw(LIGHT_SPRITE* const l)
 			continue;
 		}
 
-		bool isDstInSWQuadrant = pLight->iDX < 0 && pLight->iDY > 0;
-		bool isDstInNEQuadrant = pLight->iDX > 0 && pLight->iDY < 0;
-		bool isDstInNWQuadrant = pLight->iDX < 0 && pLight->iDY < 0;
-		bool isDstInSEQuadrant = pLight->iDX > 0 && pLight->iDY > 0;
-
-		if (pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL && !isDstInSEQuadrant && !filter.illuminateOrientedBlocksOnly)
+		if (pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL && region != QUADRANT_SE && !filter.doOrientedBlocksOnly)
 		{
 			pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
 			continue;
 		}
 
-		if (!filter.illuminateNothing && pLight->ubLight)
+		if (!filter.doNothing && pLight->ubLight)
 		{
 			if (filter.baseGridNo)
 			{ // make a detour to the structure's base tile
@@ -1480,17 +1495,40 @@ BOOLEAN LightDraw(LIGHT_SPRITE* const l)
 				LightAddTile(dstX, dstY, pLight->ubLight, spriteFlags, filter);
 			}
 
+			if (filter.doAdjacentWallN)
+			{
+				IlluminationFilter tempFilter{};
+				tempFilter.doOrientedBlocksOnly = true;
+				tempFilter.allowedOrients = ORIENT_LEFT;
+				LightAddTile(dstX, dstY - 1, pLight->ubLight - 1, spriteFlags, tempFilter);
+				if (pLight->adjTileNorthIdx)
+				{
+					t->lights[pLight->adjTileNorthIdx].uiFlags |= LIGHT_NODE_DRAWN_N;
+				}
+			}
+			if (filter.doAdjacentWallW)
+			{
+				IlluminationFilter tempFilter{};
+				tempFilter.doOrientedBlocksOnly = true;
+				tempFilter.allowedOrients = ORIENT_RIGHT;
+				LightAddTile(dstX - 1, dstY, pLight->ubLight - 1, spriteFlags, tempFilter);
+				if (pLight->adjTileWestIdx)
+				{
+					t->lights[pLight->adjTileWestIdx].uiFlags |= LIGHT_NODE_DRAWN_W;
+				}
+			}
+
 			pLight->uiFlags |= (1 << filter.srcToDstDir);
 
 			// Destination tile is on a cardinal direction or in SE
-			if ( (centerX == dstX || centerY == dstY) || isDstInSEQuadrant)
+			if (region == QUADRANT_NONE || region == QUADRANT_SE)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
 			}
-			else if (filter.illuminateOrientedBlocksOnly)
+			else if (filter.doOrientedBlocksOnly)
 			{
 			}
-			else if (isDstInSWQuadrant || isDstInNEQuadrant)
+			else if (region == QUADRANT_SW || region == QUADRANT_NE)
 			{
 				if (filter.srcToDstDir == WEST || filter.srcToDstDir == NORTH)
 				{
@@ -1501,7 +1539,7 @@ BOOLEAN LightDraw(LIGHT_SPRITE* const l)
 					pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 				}
 			}
-			else if (isDstInNWQuadrant)
+			else if (region == QUADRANT_NW)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 			}
@@ -1639,6 +1677,8 @@ static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 		const INT16 dstX = centerX + pLight->iDX;
 		const INT16 dstY = centerY + pLight->iDY;
 
+		CircleSectors& region = pLight->sector;
+
 		IlluminationFilter& filter{ l->initialFilters[uiCount] };
 
 		srcX = centerX;
@@ -1664,18 +1704,13 @@ static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 			continue;
 		}
 
-		bool isDstInSWQuadrant = pLight->iDX < 0 && pLight->iDY > 0;
-		bool isDstInNEQuadrant = pLight->iDX > 0 && pLight->iDY < 0;
-		bool isDstInNWQuadrant = pLight->iDX < 0 && pLight->iDY < 0;
-		bool isDstInSEQuadrant = pLight->iDX > 0 && pLight->iDY > 0;
-
-		if (pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL && !isDstInSEQuadrant && !filter.illuminateOrientedBlocksOnly)
+		if (pLight->uiFlags & LIGHT_NODE_DRAWN_NONWALL && region != QUADRANT_SE && !filter.doOrientedBlocksOnly)
 		{
 			pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
 			continue;
 		}
 
-		if (!filter.illuminateNothing && pLight->ubLight)
+		if (!filter.doNothing && pLight->ubLight)
 		{
 			if (filter.baseGridNo)
 			{ // make a detour to the structure's base tile
@@ -1688,17 +1723,40 @@ static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 				LightSubtractTile(dstX, dstY, pLight->ubLight, spriteFlags, filter);
 			}
 
+			if (filter.doAdjacentWallN)
+			{
+				IlluminationFilter tempFilter{};
+				tempFilter.doOrientedBlocksOnly = true;
+				tempFilter.allowedOrients = ORIENT_LEFT;
+				LightSubtractTile(dstX, dstY - 1, pLight->ubLight - 1, spriteFlags, tempFilter);
+				if (pLight->adjTileNorthIdx)
+				{
+					t->lights[pLight->adjTileNorthIdx].uiFlags |= LIGHT_NODE_DRAWN_N;
+				}
+			}
+			if (filter.doAdjacentWallW)
+			{
+				IlluminationFilter tempFilter{};
+				tempFilter.doOrientedBlocksOnly = true;
+				tempFilter.allowedOrients = ORIENT_RIGHT;
+				LightSubtractTile(dstX - 1, dstY, pLight->ubLight - 1, spriteFlags, tempFilter);
+				if (pLight->adjTileWestIdx)
+				{
+					t->lights[pLight->adjTileWestIdx].uiFlags |= LIGHT_NODE_DRAWN_W;
+				}
+			}
+
 			pLight->uiFlags |= (1 << filter.srcToDstDir);
 
 			// Destination tile is on a cardinal direction or in SE
-			if ((centerX == dstX || centerY == dstY) || isDstInSEQuadrant)
+			if (region == QUADRANT_NONE || region == QUADRANT_SE)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_FULLY;
 			}
-			else if (filter.illuminateOrientedBlocksOnly)
+			else if (filter.doOrientedBlocksOnly)
 			{
 			}
-			else if (isDstInSWQuadrant || isDstInNEQuadrant)
+			else if (region == QUADRANT_SW || region == QUADRANT_NE)
 			{
 				if (filter.srcToDstDir == WEST || filter.srcToDstDir == NORTH)
 				{
@@ -1709,7 +1767,7 @@ static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 					pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 				}
 			}
-			else if (isDstInNWQuadrant)
+			else if (region == QUADRANT_NW)
 			{
 				pLight->uiFlags |= LIGHT_NODE_DRAWN_NONWALL;
 			}
