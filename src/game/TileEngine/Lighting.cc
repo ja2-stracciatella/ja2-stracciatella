@@ -2123,7 +2123,7 @@ const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 
 TEST(Lighting, asserts)
 {
-	EXPECT_EQ(sizeof(LIGHT_NODE), 8u);
+	EXPECT_EQ(sizeof(LIGHT_NODE), 12u);
 }
 
 #endif
