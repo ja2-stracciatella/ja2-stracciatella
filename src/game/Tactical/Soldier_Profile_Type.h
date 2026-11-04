@@ -331,7 +331,9 @@ struct MERCPROFILESTRUCT
 
 	/* Contract */
 	INT8 bMercStatus; //The status of the merc. If negative, see flags at the top of this file. Positive: The number of days the merc is away for. 0: Not hired but ready to be.
-	INT8 bReputationTolerance;
+	// 101 never minds the player's reputation or a low morale. At 0 a character's
+	// morale sinks further every day it is below 50.
+	INT8 bReputationTolerance{ 101 };
 	INT8 bDeathRate;
 	UINT32 uiDayBecomesAvailable; //day the merc will be available. used with the bMercStatus
 	INT16 sSalary;
@@ -395,7 +397,9 @@ struct MERCPROFILESTRUCT
 	INT8 bThreatenDefaultResponseUsedRecently;
 
 	INT8 bApproached;
-	UINT16 usApproachFactor[4];
+	// A factor of 0 makes the character's leadership count for nothing when
+	// talking an NPC round.
+	UINT16 usApproachFactor[4]{ 100, 100, 100, 100 };
 	UINT8 ubApproachVal[4];
 	UINT8 ubApproachMod[3][4];
 	/* Statistics */

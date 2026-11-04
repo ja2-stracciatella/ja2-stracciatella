@@ -1232,8 +1232,9 @@ static void SaveMercProfiles(HWFILE const f)
  * in every slot, so the character's leadership counted for nothing when
  * talking an NPC round. Their reputation tolerance was 0 instead of 101 too,
  * which sinks morale every day it is below 50, and their opinions of the other
- * mercs were all 0. New characters get these from GiveIMPCharacterDefaults;
- * this mends the few that were made in between, in saves and in exported
+ * mercs were all 0. New characters get the first two from the defaults of
+ * MERCPROFILESTRUCT and the opinions from GiveIMPCharacterOpinions; this mends
+ * the few that were made in between, in saves and in exported
  * mercprofile.*.json files. Nothing in play changes an approach factor, so all
  * four at 0 is the mark of such a character. Opinions it has learned since are
  * kept. */
@@ -1243,7 +1244,7 @@ static void RepairIMPWithoutApproachFactors(MERCPROFILESTRUCT& p)
 		[](UINT16 const factor) { return factor != 0; })) return;
 
 	MERCPROFILESTRUCT defaults{};
-	GiveIMPCharacterDefaults(defaults);
+	GiveIMPCharacterOpinions(defaults);
 	std::copy(std::begin(defaults.usApproachFactor), std::end(defaults.usApproachFactor), std::begin(p.usApproachFactor));
 	p.bReputationTolerance = defaults.bReputationTolerance;
 	for (size_t i = 0; i != lengthof(p.bMercOpinion); ++i)
@@ -2722,6 +2723,8 @@ TEST(SaveLoadGameTest, mercProfilesFromOlderSave)
 TEST(SaveLoadGame, anIMPWithoutApproachFactorsIsRepaired)
 {
 	MERCPROFILESTRUCT p{};
+	for (auto& factor : p.usApproachFactor) factor = 0;
+	p.bReputationTolerance = 0;
 	p.bMercOpinion[66] = 4; // learned since, kept
 	RepairIMPWithoutApproachFactors(p);
 	for (UINT16 const factor : p.usApproachFactor) EXPECT_EQ(factor, 100);
@@ -2730,10 +2733,13 @@ TEST(SaveLoadGame, anIMPWithoutApproachFactorsIsRepaired)
 	EXPECT_EQ(p.bMercOpinion[66], 4);
 
 	MERCPROFILESTRUCT q{};
+	for (auto& factor : q.usApproachFactor) factor = 0;
+	q.bReputationTolerance = 0;
 	q.usApproachFactor[1] = 75; // has its own, left alone
 	RepairIMPWithoutApproachFactors(q);
 	EXPECT_EQ(q.usApproachFactor[0], 0);
 	EXPECT_EQ(q.usApproachFactor[1], 75);
+	EXPECT_EQ(q.bReputationTolerance, 0);
 	EXPECT_EQ(q.bMercOpinion[16], 0);
 }
 

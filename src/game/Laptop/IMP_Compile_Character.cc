@@ -197,18 +197,10 @@ INT32 FindIMPPortraitByFace(UINT8 const ubFaceIndex)
 }
 
 
-void GiveIMPCharacterDefaults(MERCPROFILESTRUCT& p)
+void GiveIMPCharacterOpinions(MERCPROFILESTRUCT& p)
 {
-	// What the game's own slots at 51 to 56 carried in prof.dat. Every other
-	// slot starts out empty, and an approach factor of 0 makes the character's
-	// leadership count for nothing when talking an NPC round.
-	for (auto& factor : p.usApproachFactor) factor = 100;
-
-	// Never minds the player's reputation. At 0 the character's morale would
-	// sink further every day it is below 50.
-	p.bReputationTolerance = 101;
-
-	// The opinion of each of the first 75 profiles, the same in all six slots.
+	// What the game's own slots at 51 to 56 carried in prof.dat: the opinion of
+	// each of the first 75 profiles, the same in all six.
 	static INT8 const opinions[lengthof(p.bMercOpinion)] =
 	{
 		2, 2, 4, 1, 1, 3, 2, 4, 2, 1,
@@ -256,7 +248,7 @@ void CreateACharacterFromPlayerEnteredStats(void)
 
 	p.bExpLevel = GCM->getIMPPolicy()->getStartingLevel();
 
-	GiveIMPCharacterDefaults(p);
+	GiveIMPCharacterOpinions(p);
 
 	// Clears MERC_HAS_NO_TEXT_FILE, which loading the profiles stamps on every
 	// slot with no dialogue file named after it. That is all of them past the six
