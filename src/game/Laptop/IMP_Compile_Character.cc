@@ -197,6 +197,25 @@ INT32 FindIMPPortraitByFace(UINT8 const ubFaceIndex)
 }
 
 
+void GiveIMPCharacterOpinions(MERCPROFILESTRUCT& p)
+{
+	// What the game's own slots at 51 to 56 carried in prof.dat: the opinion of
+	// each of the first 75 profiles, the same in all six.
+	static INT8 const opinions[lengthof(p.bMercOpinion)] =
+	{
+		2, 2, 4, 1, 1, 3, 2, 4, 2, 1,
+		4, 3, 5, 4, 2, 3, 8, 0, 3, 0,
+		2, 1, 2, 2, 2, 3, 4, 4, 3, 4,
+		1, 6, 2, 3, 3, 3, 4, 3, 1, 2,
+		0, 0, 0, 0, 0, 0, 3, 0, 4, 2,
+		2, 0, 0, 0, 0, 0, 0, 3, 1, -2,
+		1, 2, 0, 1, 1, 0, -6, 0, 3, 2,
+		4, 0, 1, 2, 0
+	};
+	std::copy(std::begin(opinions), std::end(opinions), std::begin(p.bMercOpinion));
+}
+
+
 void CreateACharacterFromPlayerEnteredStats(void)
 {
 	MERCPROFILESTRUCT& p = GetProfile(GetIMPSlotInProgress());
@@ -228,6 +247,8 @@ void CreateACharacterFromPlayerEnteredStats(void)
 	p.bAttitude = iAttitude;
 
 	p.bExpLevel = GCM->getIMPPolicy()->getStartingLevel();
+
+	GiveIMPCharacterOpinions(p);
 
 	// Clears MERC_HAS_NO_TEXT_FILE, which loading the profiles stamps on every
 	// slot with no dialogue file named after it. That is all of them past the six
@@ -642,6 +663,12 @@ TEST_F(IMPSlotTest, aCharacterMadeInAFreeSlotCarriesWhatItWasGiven)
 	EXPECT_EQ(p.zNickname, "Testy");
 	EXPECT_EQ(p.bSex, FEMALE);
 	EXPECT_EQ(p.bMercStatus, MERC_OK);
+
+	// it can talk an NPC round like the game's own I.M.P.s could
+	for (UINT16 const factor : p.usApproachFactor) EXPECT_EQ(factor, 100);
+	EXPECT_EQ(p.bReputationTolerance, 101);
+	EXPECT_EQ(p.bMercOpinion[16], 8);
+	EXPECT_EQ(p.bMercOpinion[66], -6);
 
 	// and the character is one of the player's own, in a profile that says
 	// nothing about itself

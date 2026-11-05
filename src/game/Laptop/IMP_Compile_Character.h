@@ -20,6 +20,10 @@ void AddSkillToSkillList( INT8 bSkill );
 void ResetSkillsAttributesAndPersonality( void );
 void HandleMercStatsForChangesInFace( void );
 
+/** Give a character the opinions the game's own I.M.P. slots carried in
+ * prof.dat, whichever slot it is made in. */
+void GiveIMPCharacterOpinions( MERCPROFILESTRUCT& p );
+
 /** Number of profiles the data marks as I.M.P. slots. */
 UINT8 GetNumberOfIMPSlots( void );
 
