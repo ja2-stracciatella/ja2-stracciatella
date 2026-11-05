@@ -52,8 +52,12 @@ class GameSetting(
         }
     }
 
-    // A text describing the allowed values, or null if any value of the type is allowed
+    // A text describing the allowed values, or null if any value of the type is allowed.
+    // Ranges that only reflect the storage type (e.g. int32) are not meaningful to players and are omitted.
     fun rangeText(): String? {
+        if (minimum != null && maximum != null && Pair(minimum, maximum) in storageTypeRanges) {
+            return null
+        }
         return when {
             minimum != null && maximum != null -> "${formatLimit(minimum)} – ${formatLimit(maximum)}"
             minimum != null -> "≥ ${formatLimit(minimum)}"
@@ -79,6 +83,18 @@ class GameSetting(
 
     fun accepts(value: JsonPrimitive): Boolean {
         return value.isString == (type == GameSettingType.TEXT) && parse(value.content) != null
+    }
+
+    private companion object {
+        // The ranges of the integer types in the schema's types dir (int8.schema.yaml etc.)
+        val storageTypeRanges = setOf(
+            Pair(Byte.MIN_VALUE.toDouble(), Byte.MAX_VALUE.toDouble()),
+            Pair(Short.MIN_VALUE.toDouble(), Short.MAX_VALUE.toDouble()),
+            Pair(Int.MIN_VALUE.toDouble(), Int.MAX_VALUE.toDouble()),
+            Pair(0.0, UByte.MAX_VALUE.toDouble()),
+            Pair(0.0, UShort.MAX_VALUE.toDouble()),
+            Pair(0.0, UInt.MAX_VALUE.toDouble())
+        )
     }
 }
 
@@ -307,13 +323,21 @@ class GameSettings private constructor(
             return GameSetting(
                 path,
                 titlePrefix?.let { "$it / $title" } ?: title,
-                stringOf(schema, "description")?.trim(),
+                stringOf(schema, "description")?.let { descriptionWithoutType(it) },
                 type,
                 value,
                 (schema["minimum"] as? JsonPrimitive)?.content?.toDoubleOrNull(),
                 (schema["maximum"] as? JsonPrimitive)?.content?.toDoubleOrNull(),
                 stringOf(schema, "pattern")?.let { Regex(it) }
             )
+        }
+
+        // The schema build appends "Type: <title of the referenced type>" to descriptions (see build.rs),
+        // which is meant for modders, not players
+        private val typeLine = Regex("""\n+Type: [^\n]*\s*$""")
+
+        private fun descriptionWithoutType(description: String): String? {
+            return description.replace(typeLine, "").trim().ifEmpty { null }
         }
 
         private fun propertySchema(schema: JsonObject, key: String): JsonObject? {
