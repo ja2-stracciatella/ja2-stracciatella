@@ -26,21 +26,48 @@ enum class GameSettingType {
 class GameSetting(
     val path: List<String>,
     val title: String,
+    val description: String?,
     val type: GameSettingType,
-    val defaultValue: JsonPrimitive
+    val defaultValue: JsonPrimitive,
+    private val minimum: Double?,
+    private val maximum: Double?,
+    private val pattern: Regex?
 ) {
     // JSON pointer (RFC 6901) of the setting, as used in the patch file
     val pointer: String = path.joinToString("") { "/" + it.replace("~", "~0").replace("/", "~1") }
 
-    // Returns null if the input is not a valid value for the type of the setting
+    // Returns null if the input is not a valid value for the setting according to its schema
     fun parse(input: String): JsonPrimitive? {
         return when (type) {
             GameSettingType.BOOLEAN -> input.toBooleanStrictOrNull()?.let { JsonPrimitive(it) }
-            GameSettingType.INTEGER -> input.trim().toLongOrNull()?.let { JsonPrimitive(it) }
-            GameSettingType.DECIMAL -> input.trim().toDoubleOrNull()?.takeIf { it.isFinite() }
+            GameSettingType.INTEGER -> input.trim().toLongOrNull()
+                ?.takeIf { isInRange(it.toDouble()) }
                 ?.let { JsonPrimitive(it) }
-            GameSettingType.TEXT -> JsonPrimitive(input)
+            GameSettingType.DECIMAL -> input.trim().toDoubleOrNull()
+                ?.takeIf { it.isFinite() && isInRange(it) }
+                ?.let { JsonPrimitive(it) }
+            // Patterns in json schemas are not anchored
+            GameSettingType.TEXT -> input.takeIf { pattern?.containsMatchIn(it) ?: true }
+                ?.let { JsonPrimitive(it) }
         }
+    }
+
+    // A text describing the allowed values, or null if any value of the type is allowed
+    fun rangeText(): String? {
+        return when {
+            minimum != null && maximum != null -> "${formatLimit(minimum)} – ${formatLimit(maximum)}"
+            minimum != null -> "≥ ${formatLimit(minimum)}"
+            maximum != null -> "≤ ${formatLimit(maximum)}"
+            else -> null
+        }
+    }
+
+    private fun isInRange(value: Double): Boolean {
+        return (minimum == null || value >= minimum) && (maximum == null || value <= maximum)
+    }
+
+    private fun formatLimit(limit: Double): String {
+        return if (limit % 1.0 == 0.0) limit.toLong().toString() else limit.toString()
     }
 
     fun isSameValue(a: JsonPrimitive, b: JsonPrimitive): Boolean {
@@ -63,7 +90,10 @@ class GameSettingsSection(
 /**
  * The settings from game.json that can be changed in the launcher.
  *
- * The defaults are read from game.json in the APK assets. Changed values are written
+ * The settings, their titles, descriptions and allowed values are taken from the json schema
+ * of game.json, which is compiled into the game library. Settings that are not described there
+ * are not shown. The defaults and the order of the settings are read from game.json in the APK assets,
+ * as the schema has neither. Changed values are written
  * as a JSON patch to game.patch.json in the data dir within stracciatella home, which
  * the game applies on top of game.json.
  */
@@ -141,8 +171,8 @@ class GameSettings private constructor(
     companion object {
         private const val logTag = "GameSettings"
         private const val gameJsonAsset = "externalized/game.json"
+        private const val gameJsonSchemaPath = "game.json"
         private const val patchFilename = ".ja2/data/game.patch.json"
-        private val acronyms = setOf("ai", "ap", "cth", "fps", "gui", "imp")
         private val jsonFormat = Json {
             prettyPrint = true
         }
@@ -150,7 +180,14 @@ class GameSettings private constructor(
         fun load(context: Context): GameSettings {
             val text = context.assets.open(gameJsonAsset).bufferedReader().use { it.readText() }
             val gameJson = Json.parseToJsonElement(stripComments(text)).jsonObject
-            val sections = buildSections(gameJson)
+            val schemaText = try {
+                NativeSchemas.getSchemaForPath(gameJsonSchemaPath)
+            } catch (e: LinkageError) {
+                // The game library could not be loaded
+                throw IOException("Could not read the schema of $gameJsonSchemaPath: ${e.message}", e)
+            } ?: throw IOException("No schema for $gameJsonSchemaPath")
+            val schema = Json.parseToJsonElement(schemaText).jsonObject
+            val sections = buildSections(gameJson, schema)
             val settingsByPointer = sections.flatMap { it.settings }.associateBy { it.pointer }
 
             val patchFile = File(context.filesDir, patchFilename)
@@ -170,7 +207,7 @@ class GameSettings private constructor(
                         if (isSetValue && setting != null && value != null && setting.accepts(value)) {
                             overrides[setting.pointer] = value
                         } else if (isSetValue && (setting != null || !exists(gameJson, path!!))) {
-                            // The setting was removed, moved or changed its type in game.json since the value
+                            // The setting was removed, moved or changed its type or allowed values since the value
                             // was saved. The value no longer applies, and could stop the game from starting.
                             Log.i(logTag, "Dropping outdated value for $path from $patchFile")
                             dirty = true
@@ -190,22 +227,24 @@ class GameSettings private constructor(
             return GameSettings(sections, patchFile, overrides, foreignOperations, dirty)
         }
 
-        private fun buildSections(gameJson: JsonObject): List<GameSettingsSection> {
+        // The order of the properties is lost when the schema is compiled into the library, so follow game.json
+        private fun buildSections(gameJson: JsonObject, schema: JsonObject): List<GameSettingsSection> {
             val sections = mutableListOf<GameSettingsSection>()
             var topLevelSettings = mutableListOf<GameSetting>()
             for ((key, value) in gameJson) {
+                val propertySchema = propertySchema(schema, key) ?: continue
                 if (value is JsonObject) {
                     if (topLevelSettings.isNotEmpty()) {
                         sections.add(GameSettingsSection(null, topLevelSettings))
                         topLevelSettings = mutableListOf()
                     }
                     val settings = mutableListOf<GameSetting>()
-                    collectSettings(listOf(key), value, settings)
+                    collectSettings(listOf(key), null, value, propertySchema, settings)
                     if (settings.isNotEmpty()) {
-                        sections.add(GameSettingsSection(humanize(key), settings))
+                        sections.add(GameSettingsSection(titleOf(key, propertySchema), settings))
                     }
                 } else {
-                    createSetting(listOf(key), value)?.let { topLevelSettings.add(it) }
+                    createSetting(listOf(key), null, value, propertySchema)?.let { topLevelSettings.add(it) }
                 }
             }
             if (topLevelSettings.isNotEmpty()) {
@@ -214,33 +253,79 @@ class GameSettings private constructor(
             return sections
         }
 
-        private fun collectSettings(path: List<String>, json: JsonObject, settings: MutableList<GameSetting>) {
+        // Objects below the section level are shown as a title prefix of their settings
+        private fun collectSettings(
+            path: List<String>,
+            titlePrefix: String?,
+            json: JsonObject,
+            schema: JsonObject,
+            settings: MutableList<GameSetting>
+        ) {
             for ((key, value) in json) {
+                val propertySchema = propertySchema(schema, key) ?: continue
                 if (value is JsonObject) {
-                    collectSettings(path + key, value, settings)
+                    val title = titleOf(key, propertySchema)
+                    collectSettings(
+                        path + key,
+                        titlePrefix?.let { "$it / $title" } ?: title,
+                        value,
+                        propertySchema,
+                        settings
+                    )
                 } else {
-                    createSetting(path + key, value)?.let { settings.add(it) }
+                    createSetting(path + key, titlePrefix, value, propertySchema)?.let { settings.add(it) }
                 }
             }
         }
 
-        // Arrays and nulls are not supported, the launcher leaves them untouched
-        private fun createSetting(path: List<String>, value: JsonElement): GameSetting? {
+        // Arrays, nulls and values that do not match the type in the schema are not supported,
+        // the launcher leaves them untouched
+        private fun createSetting(
+            path: List<String>,
+            titlePrefix: String?,
+            value: JsonElement,
+            schema: JsonObject
+        ): GameSetting? {
             if (value !is JsonPrimitive || value.contentOrNull == null) {
                 return null
             }
             val content = value.content
-            val type = when {
-                value.isString -> GameSettingType.TEXT
-                content == "true" || content == "false" -> GameSettingType.BOOLEAN
-                content.toLongOrNull() != null -> GameSettingType.INTEGER
-                content.toDoubleOrNull() != null -> GameSettingType.DECIMAL
-                else -> return null
-            }
-            // Settings within an object are shown in a section titled after the object
-            val titlePath = if (path.size > 1) path.drop(1) else path
-            val title = titlePath.joinToString(" / ") { humanize(it) }
-            return GameSetting(path, title, type, value)
+            val type = when (stringOf(schema, "type")) {
+                "boolean" -> GameSettingType.BOOLEAN.takeIf { !value.isString && content.toBooleanStrictOrNull() != null }
+                "integer" -> GameSettingType.INTEGER.takeIf { !value.isString && content.toLongOrNull() != null }
+                "number" -> when {
+                    value.isString -> null
+                    // The game reads some numbers as integers, keep them integers
+                    content.toLongOrNull() != null -> GameSettingType.INTEGER
+                    content.toDoubleOrNull() != null -> GameSettingType.DECIMAL
+                    else -> null
+                }
+                "string" -> GameSettingType.TEXT.takeIf { value.isString }
+                else -> null
+            } ?: return null
+            val title = titleOf(path.last(), schema)
+            return GameSetting(
+                path,
+                titlePrefix?.let { "$it / $title" } ?: title,
+                stringOf(schema, "description")?.trim(),
+                type,
+                value,
+                (schema["minimum"] as? JsonPrimitive)?.content?.toDoubleOrNull(),
+                (schema["maximum"] as? JsonPrimitive)?.content?.toDoubleOrNull(),
+                stringOf(schema, "pattern")?.let { Regex(it) }
+            )
+        }
+
+        private fun propertySchema(schema: JsonObject, key: String): JsonObject? {
+            return (schema["properties"] as? JsonObject)?.get(key) as? JsonObject
+        }
+
+        private fun stringOf(schema: JsonObject, name: String): String? {
+            return (schema[name] as? JsonPrimitive)?.takeIf { it.isString }?.content
+        }
+
+        private fun titleOf(key: String, schema: JsonObject): String {
+            return stringOf(schema, "title") ?: key.replace('_', ' ').replaceFirstChar { it.uppercase() }
         }
 
         // Whether the JSON pointer (RFC 6901) refers to a value within json
@@ -262,16 +347,6 @@ class GameSettings private constructor(
                 } ?: return false
             }
             return true
-        }
-
-        private fun humanize(key: String): String {
-            return key.split('_').filter { it.isNotEmpty() }.mapIndexed { index, word ->
-                when {
-                    word in acronyms -> word.uppercase()
-                    index == 0 -> word.replaceFirstChar { it.uppercase() }
-                    else -> word
-                }
-            }.joinToString(" ")
         }
 
         // game.json contains comments, which are not valid json

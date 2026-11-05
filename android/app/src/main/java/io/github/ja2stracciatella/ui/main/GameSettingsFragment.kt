@@ -99,6 +99,16 @@ class GameSettingsFragment : Fragment() {
     private fun addSetting(inflater: LayoutInflater, settings: GameSettings, setting: GameSetting) {
         val item = LauncherGameSettingItemBinding.inflate(inflater, binding.gameSettingsList, true)
         item.gameSettingTitle.text = setting.title
+        val description = listOfNotNull(
+            // The descriptions are markdown, the code markers are the only markup that disturbs as plain text
+            setting.description?.replace("`", ""),
+            setting.rangeText()?.let { getString(R.string.game_settings_allowed_values, it) }
+        ).joinToString("\n\n")
+        if (description.isEmpty()) {
+            item.gameSettingDescription.visibility = View.GONE
+        } else {
+            item.gameSettingDescription.text = description
+        }
         item.gameSettingResetButton.text =
             getString(R.string.game_settings_reset_button, setting.defaultValue.content)
 

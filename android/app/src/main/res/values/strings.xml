@@ -4,7 +4,7 @@
     <string name="floating_action_button_start_text">Start the game</string>
     <string name="tab_text_data">Data</string>
     <string name="tab_text_settings">Settings</string>
-    <string name="tab_text_game_settings">Game</string>
+    <string name="tab_text_game_settings">Customization</string>
     <string name="tab_text_logs">Logs</string>
     <string name="select_directory_button_label">Choose</string>
     <string name="game_dir_title_text">Original Jagged Alliance 2 Game Directory</string>
@@ -43,6 +43,7 @@
     <string name="game_settings_reset_button">Reset to default (%1$s)</string>
     <string name="game_settings_enabled_label">Enabled</string>
     <string name="game_settings_invalid_value">Invalid value, it will not be saved</string>
+    <string name="game_settings_allowed_values">Allowed values: %1$s</string>
     <string name="game_settings_load_error">Could not load the game settings: %1$s</string>
     <string name="continue_action">Continue</string>
     <string name="common_mistakes_no_game_dir_selected_title">No game directory selected</string>
