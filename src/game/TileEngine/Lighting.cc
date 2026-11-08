@@ -19,6 +19,7 @@
 #include "Debug.h"
 #include "FileMan.h"
 #include "HImage.h"
+#include "LightTemplate.h"
 #include "Overhead.h"
 #include "PathAI.h"
 #include "RenderWorld.h"
