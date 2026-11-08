@@ -18,7 +18,6 @@
 #include "Handle_UI.h"
 #include "Event_Pump.h"
 #include "OppList.h"
-#include "LightEffects.h"
 #include "Lighting.h"
 #include "AI.h"
 #include "RenderWorld.h"
@@ -1609,8 +1608,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 							MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->ubDoorOpeningNoise, NOISE_CREAKING);
 							//gfDelayResolvingBestSighting = FALSE;
-
-							UpdateLightCoverageOnStructureChange(pSoldier->sPendingActionData2);
 
 							gInterruptProvoker = pSoldier;
 							AllTeamsLookForAll( TRUE );
