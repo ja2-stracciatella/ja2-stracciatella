@@ -1655,9 +1655,6 @@ static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 	const INT16 centerX = l->iX;
 	const INT16 centerY = l->iY;
 
-	INT32 srcX = centerX;
-	INT32 srcY = centerY;
-
 	UINT32 spriteFlags = 0;
 	if (l->uiFlags & MERC_LIGHT)         spriteFlags |= LIGHT_FAKE;
 	if (l->uiFlags & LIGHT_SPR_ONROOF)   spriteFlags |= LIGHT_ROOF_ONLY;
@@ -1666,12 +1663,7 @@ static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 	for (UINT16 uiCount = 0; uiCount < static_cast<UINT16>(t->rays.size()); ++uiCount)
 	{
 		const UINT16 usNodeIndex = t->rays[uiCount];
-		if (usNodeIndex & LIGHT_NEW_RAY)
-		{
-			srcX = centerX;
-			srcY = centerY;
-			continue;
-		}
+		if (usNodeIndex & LIGHT_NEW_RAY) continue;
 
 		LIGHT_NODE* const pLight = &t->lights[usNodeIndex];
 
@@ -1682,17 +1674,9 @@ static BOOLEAN LightErase(LIGHT_SPRITE* const l)
 
 		IlluminationFilter& filter{ l->initialFilters[uiCount] };
 
-		srcX = centerX;
-		srcY = centerY;
-
 		if (filter.blocked)
 		{
 			uiCount = LightFindNextRay(t, uiCount);
-		}
-		else
-		{
-			srcX += pLight->iDX;
-			srcY += pLight->iDY;
 		}
 
 		bool areSrcAndDstSame = filter.srcToDstDir == DIRECTION_IRRELEVANT;
