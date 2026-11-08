@@ -215,7 +215,7 @@ void LoadKeyTableFromSaveedGameFile(HWFILE);
 // Returns a doors status value, NULL if not found
 DOOR_STATUS *GetDoorStatus( INT16 sGridNo );
 
-bool AllMercsLookForDoor(GridNo);
+bool AllMercsLookForDoor(STRUCTURE const& doorStruct, GridNo const gridno);
 
 void MercLooksForDoors(SOLDIERTYPE const&);
 

@@ -2,7 +2,6 @@
 #define _LIGHTING_H_
 
 #include "Isometric_Utils.h"
-#include "LightTemplate.h"
 
 /****************************************************************************************
 * JA2 Lighting Module
@@ -53,7 +52,7 @@
 
 
 struct LightTemplate;
-
+enum CircleSectors : UINT8;
 
 struct IlluminationFilter
 {

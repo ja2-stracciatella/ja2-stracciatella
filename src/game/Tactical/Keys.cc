@@ -1,40 +1,42 @@
-#include "Directories.h"
-#include "Font_Control.h"
-#include "Handle_Items.h"
-#include "ItemModel.h"
-#include "LoadSaveData.h"
-#include "Soldier_Profile.h"
-#include "Types.h"
-#include "Soldier_Control.h"
 #include "Keys.h"
-#include "Debug.h"
-#include "SkillCheck.h"
-#include "OppList.h"
-#include "Items.h"
-#include "Weapons.h"
+
+#include "Adjacency.h"
 #include "AI.h"
-#include "Message.h"
-#include "Text.h"
-#include "Explosion_Control.h"
-#include "Isometric_Utils.h"
-#include "StrategicMap.h"
-#include "Tactical_Save.h"
-#include "Campaign_Types.h"
-#include "LOS.h"
-#include "TileDat.h"
-#include "Overhead.h"
-#include "Structure.h"
-#include "RenderWorld.h"
-#include "WorldMan.h"
-#include "Random.h"
-#include "WorldDef.h"
 #include "Campaign.h"
-#include "Sound_Control.h"
-#include "Interface.h"
-#include "MapScreen.h"
+#include "Campaign_Types.h"
+#include "Debug.h"
+#include "Directories.h"
+#include "Explosion_Control.h"
+#include "Font_Control.h"
 #include "Game_Clock.h"
 #include "Handle_Doors.h"
+#include "Handle_Items.h"
+#include "Interface.h"
+#include "Isometric_Utils.h"
+#include "ItemModel.h"
+#include "Items.h"
+#include "LoadSaveData.h"
+#include "LOS.h"
 #include "Map_Screen_Interface.h"
+#include "MapScreen.h"
+#include "Message.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "PathAI.h"
+#include "Random.h"
+#include "RenderWorld.h"
+#include "SkillCheck.h"
+#include "Soldier_Control.h"
+#include "Soldier_Profile.h"
+#include "Sound_Control.h"
+#include "StrategicMap.h"
+#include "Structure.h"
+#include "Tactical_Save.h"
+#include "Text.h"
+#include "TileDat.h"
+#include "Types.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -942,10 +944,8 @@ static bool IsCloseEnoughAndHasLOS(SOLDIERTYPE const& s, GridNo const gridno, IN
 }
 
 
-static INT8 const g_dirs[] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 
-
-bool AllMercsLookForDoor(GridNo const gridno)
+bool AllMercsLookForDoor(STRUCTURE const& doorStruct, GridNo const gridno)
 {
 	if (!GetDoorStatus(gridno)) return false;
 
@@ -956,21 +956,61 @@ bool AllMercsLookForDoor(GridNo const gridno)
 		if (s.sGridNo == NOWHERE) continue;
 		if (!s.bInSector)         continue;
 
-		INT16 const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gridno, 0);
-		if (IsCloseEnoughAndHasLOS(s, gridno, dist_visible)) return true;
+		GridNo adjGridNo;
+		AdjacentTileInfo::RelativeDefines wallRelDefs;
 
-		// Now try other adjacent gridnos
-		for (INT32 dir = 0; dir != 8; ++dir)
+		for (const AdjacentTileInfo& tile : adjacentTiles)
 		{
-			GridNo const new_gridno   = NewGridNo(gridno, DirectionInc(g_dirs[dir]));
-			INT16  const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, new_gridno, 0);
-			if (IsCloseEnoughAndHasLOS(s, new_gridno, dist_visible)) return true;
+			if (!(doorStruct.fFlags & tile.doorType)) continue;
+
+			// skip if the door can't be interacted with with minimal AP cost from this tile
+			if (tile.open_AP != HANDLE_DOOR_OPEN && tile.close_AP != HANDLE_DOOR_OPEN) continue;
+
+			wallRelDefs = tile.relativeTo[GetBitPositionIndex(doorStruct.ubWallOrientation)];
+			adjGridNo = gridno + wallRelDefs.incRelToBase;
+
+			if (wallRelDefs.dirToTest != DIRECTION_IRRELEVANT)
+			{	// skip tiles with a wall block between them and this door
+				if (gubWorldMovementCosts[adjGridNo][wallRelDefs.dirToTest][0] == TRAVELCOST_WALL) continue;
+			}
+
+			if (s.sGridNo == adjGridNo)
+			{
+				WorldDirections testedDir;
+				if (wallRelDefs.dirToTest == DIRECTION_IRRELEVANT)
+				{
+					testedDir = static_cast<WorldDirections>(OppositeDirection(wallRelDefs.dirToTurnTo));
+				}
+				else
+				{
+					testedDir = wallRelDefs.dirToTest;
+				}
+				if (IS_TRAVELCOST_DOOR(gubWorldMovementCosts[adjGridNo][testedDir][0])) return true;
+			}
+
+			INT16 const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, adjGridNo, 0);
+			if (IsCloseEnoughAndHasLOS(s, adjGridNo, dist_visible))
+			{
+				// marker of a tile that has the door opening towards it
+				if ( !(doorStruct.fFlags & (STRUCTURE_GARAGEDOOR | STRUCTURE_SLIDINGDOOR)) &&
+					 tile.open_AP == HANDLE_DOOR_OPEN && tile.close_AP == HANDLE_DOOR_OPEN ) return true;
+				INT16 adjTileDist = CardinalSpacesAway(s.sGridNo, adjGridNo);
+				INT16 altTileDist;
+				if (adjGridNo == gridno)
+				{
+					GridNo oppToBaseGridNo = NewGridNo(gridno, DirectionInc(wallRelDefs.dirToTurnTo));
+					altTileDist = CardinalSpacesAway(s.sGridNo, oppToBaseGridNo);
+				}
+				else
+				{
+					altTileDist = CardinalSpacesAway(s.sGridNo, gridno);
+				}
+				if (adjTileDist < altTileDist) return true;
+			}
 		}
 	}
-
 	return false;
 }
-
 
 static bool InternalIsPerceivedDifferentThanReality(DOOR_STATUS const&);
 static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const&, bool dirty);
@@ -983,23 +1023,72 @@ void MercLooksForDoors(SOLDIERTYPE const& s)
 	{
 		if (!InternalIsPerceivedDifferentThanReality(d)) continue;
 
-		GridNo const gridno       = d.sGridNo;
-		INT16  const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gridno, 0);
+		GridNo const gridno = d.sGridNo;
+		STRUCTURE const& doorStruct = *FindStructure(gridno, STRUCTURE_ANYDOOR);
+		GridNo adjGridNo;
+		AdjacentTileInfo::RelativeDefines wallRelDefs;
 
-		if (IsCloseEnoughAndHasLOS(s, gridno, dist_visible))
+		for (const AdjacentTileInfo& tile : adjacentTiles)
 		{
-sees_door:
-			InternalUpdateDoorsPerceivedValue(d);
-			InternalUpdateDoorGraphicFromStatus(d, true);
-			break;
-		}
+			if (!(doorStruct.fFlags & tile.doorType)) continue;
 
-		// Now try other adjacent gridnos
-		for (INT32 dir = 0; dir != 8; ++dir)
-		{
-			GridNo const new_gridno = NewGridNo(gridno, DirectionInc(g_dirs[dir]));
-			// XXX It seems strage that AllMercsLookForDoor() calculates a new dist_visible, but MercLooksForDoors() does not
-			if (IsCloseEnoughAndHasLOS(s, new_gridno, dist_visible)) goto sees_door;
+			// skip if the door can't be interacted with with minimal AP cost from this tile
+			if (tile.open_AP != HANDLE_DOOR_OPEN && tile.close_AP != HANDLE_DOOR_OPEN) continue;
+
+			wallRelDefs = tile.relativeTo[GetBitPositionIndex(doorStruct.ubWallOrientation)];
+			adjGridNo = gridno + wallRelDefs.incRelToBase;
+
+			bool isTileVisible = false;
+			if (wallRelDefs.dirToTest != DIRECTION_IRRELEVANT)
+			{	// skip tiles with a wall block between them and this door
+				if (gubWorldMovementCosts[adjGridNo][wallRelDefs.dirToTest][0] == TRAVELCOST_WALL) continue;
+			}
+
+			if (s.sGridNo == adjGridNo)
+			{
+				WorldDirections testedDir;
+				if (wallRelDefs.dirToTest == DIRECTION_IRRELEVANT)
+				{
+					testedDir = static_cast<WorldDirections>(OppositeDirection(wallRelDefs.dirToTurnTo));
+				}
+				else
+				{
+					testedDir = wallRelDefs.dirToTest;
+				}
+				if (IS_TRAVELCOST_DOOR(gubWorldMovementCosts[adjGridNo][testedDir][0])) isTileVisible = true;
+			}
+
+			if (!isTileVisible)
+			{
+				INT16 const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, adjGridNo, 0);
+				if (IsCloseEnoughAndHasLOS(s, adjGridNo, dist_visible))
+				{
+					// marker of a tile that has the door opening towards it
+					if ( !(doorStruct.fFlags & (STRUCTURE_GARAGEDOOR | STRUCTURE_SLIDINGDOOR)) &&
+						 tile.open_AP == HANDLE_DOOR_OPEN && tile.close_AP == HANDLE_DOOR_OPEN) isTileVisible = true;
+					else
+					{
+						INT16 adjTileDist = CardinalSpacesAway(s.sGridNo, adjGridNo);
+						INT16 altTileDist;
+						if (adjGridNo == gridno)
+						{
+							GridNo oppToBaseGridNo = NewGridNo(gridno, DirectionInc(wallRelDefs.dirToTurnTo));
+							altTileDist = CardinalSpacesAway(s.sGridNo, oppToBaseGridNo);
+						}
+						else
+						{
+							altTileDist = CardinalSpacesAway(s.sGridNo, gridno);
+						}
+						if (adjTileDist < altTileDist) isTileVisible = true;
+					}
+				}
+			}
+			if (isTileVisible)
+			{
+				InternalUpdateDoorsPerceivedValue(d);
+				InternalUpdateDoorGraphicFromStatus(d, true);
+				break;
+			}
 		}
 	}
 }

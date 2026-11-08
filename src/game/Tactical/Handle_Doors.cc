@@ -899,7 +899,7 @@ try
 			{
 				// If an AI guy... do LOS check first....
 				// If guy is visible... OR fading...
-				if (pSoldier->bVisible == -1 && !AllMercsLookForDoor(sGridNo) && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
+				if (pSoldier->bVisible == -1 && !AllMercsLookForDoor(*pStructure, sGridNo) && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 				{
 					fDoAnimation = FALSE;
 				}
@@ -908,7 +908,7 @@ try
 		else
 		{
 			// door opening by action item... just do a LOS check
-			if (!AllMercsLookForDoor(sGridNo))
+			if (!AllMercsLookForDoor(*pStructure, sGridNo))
 			{
 				fDoAnimation = FALSE;
 			}
@@ -976,7 +976,7 @@ try
 			{
 				// If an AI guy... do LOS check first....
 				// If guy is visible... OR fading...
-				if (pSoldier->bVisible == -1 && !AllMercsLookForDoor(sGridNo) && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
+				if (pSoldier->bVisible == -1 && !AllMercsLookForDoor(*pStructure, sGridNo) && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 				{
 					fDoAnimation = FALSE;
 				}
@@ -985,7 +985,7 @@ try
 		else
 		{
 			// door opening by action item... just do a LOS check
-			if (!AllMercsLookForDoor(sGridNo))
+			if (!AllMercsLookForDoor(*pStructure, sGridNo))
 			{
 				fDoAnimation = FALSE;
 			}
