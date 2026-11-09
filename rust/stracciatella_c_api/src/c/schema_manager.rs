@@ -24,6 +24,22 @@ pub extern "C" fn SchemaManager_destroy(mod_manager: *mut SchemaManager) {
     let _drop_me = from_ptr(mod_manager);
 }
 
+/// Gets the json schema for a path in externalized dir as a string, or null if there is none.
+/// The caller is responsible for the returned memory.
+#[unsafe(no_mangle)]
+pub extern "C" fn SchemaManager_getSchemaForPath(
+    ptr: *const SchemaManager,
+    path: *const c_char,
+) -> *mut c_char {
+    let schema_manager = unsafe_ref(ptr);
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+
+    match schema_manager.get(&path) {
+        Some(schema) => c_string_from_str(schema.as_str()).into_raw(),
+        None => std::ptr::null_mut(),
+    }
+}
+
 /// Gets a schema for a path in externalized dir
 #[unsafe(no_mangle)]
 pub extern "C" fn SchemaManager_validateValueForPath(
