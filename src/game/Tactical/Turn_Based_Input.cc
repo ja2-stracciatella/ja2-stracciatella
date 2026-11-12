@@ -1161,7 +1161,7 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 		fDeleteDown = FALSE;
 	}
 
-	if (_KeyDown(SDLK_END))
+	if (_KeyDown(SDLK_END) && !_KeyDown(SHIFT))
 	{
 		DisplayGridNoVisibleToSoldierGrid( );
 
@@ -1641,11 +1641,14 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case SDLK_END:
 		{
-			SOLDIERTYPE* const sel = GetSelectedMan();
-			if (sel && CheckForMercContMove(sel))
+			if (!gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, SDLK_END)))
 			{
-				ContinueMercMovement(sel);
-				ErasePath();
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel && CheckForMercContMove(sel))
+				{
+					ContinueMercMovement(sel);
+					ErasePath();
+				}
 			}
 			break;
 		}
@@ -1729,6 +1732,19 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 				*new_event = M_ON_TERRAIN;
 			}
 			break;
+
+		case SDLK_END:
+		{
+			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, SDLK_END)))
+			{
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel && CheckForMercContMove(sel))
+				{
+					ContinueMercMovement(sel);
+					ErasePath();
+				}
+			}
+		}
 
 	case 'j':
 		if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'j')))

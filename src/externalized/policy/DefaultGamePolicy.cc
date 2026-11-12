@@ -1,5 +1,6 @@
 #include "DefaultGamePolicy.h"
 #include "Types.h"
+#include "Input.h"
 
 DefaultGamePolicy::DefaultGamePolicy(const JsonValue& json)
 {
@@ -132,6 +133,7 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
 		{
 			switch(key)
 			{
+				case SDLK_END:
 				case 'j':         return extra_hotkeys;
 			}
 		}
