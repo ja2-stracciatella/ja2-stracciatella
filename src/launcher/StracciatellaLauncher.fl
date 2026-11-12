@@ -116,66 +116,69 @@ class StracciatellaLauncher {open
           xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {open
-            xywh {10 60 500 45}
-          } {
-            Fl_Output gameSettingsOutput {
-              label {Game Settings:}
-              xywh {20 75 350 30} align 5 resizable
-            }
-            Fl_Button editSettingsButton {
-              label {Edit Settings}
-              tooltip {Copy game.json to the data folder in the stracciatella home if needed and open it in the system text editor. The copy overrides game.json from the game and from enabled mods, and is not updated when the game is.} xywh {375 75 90 30}
-            }
-            Fl_Button resetSettingsButton {
-              label {@reload}
-              tooltip {Delete the customized game.json and go back to the one from the game or enabled mods. Use this if the game fails to start after an update.} xywh {470 75 30 30} box THIN_UP_BOX
-            }
-          }
-          Fl_Group {} {open
-            tooltip {Specify the resolution for tactical screen rendering. Texts and sprites become very small at higher internal resolutions. Note that menus and the strategic map screen are always rendered at 640x480.} xywh {10 115 500 52}
+            tooltip {Specify the resolution for tactical screen rendering. Texts and sprites become very small at higher internal resolutions. Note that menus and the strategic map screen are always rendered at 640x480.} xywh {10 60 500 52}
           } {
             Fl_Value_Input resolutionXInput {
               label {Internal Resolution:}
-              xywh {20 130 75 30} align 5 minimum 640 maximum 0 value 640
+              xywh {20 75 75 30} align 5 minimum 640 maximum 0 value 640
             }
             Fl_Box {} {
               label x
-              xywh {95 130 20 30}
+              xywh {95 75 20 30}
             }
             Fl_Value_Input resolutionYInput {
-              xywh {115 130 75 30} labeltype NO_LABEL align 5 minimum 480 maximum 0 value 480
+              xywh {115 75 75 30} labeltype NO_LABEL align 5 minimum 480 maximum 0 value 480
             }
             Fl_Menu_Button predefinedResolutionMenuButton {
               label Predefined open
-              xywh {210 130 110 30}
+              xywh {210 75 110 30}
             } {}
             Fl_Group {} {
               label resizable open
-              xywh {415 115 30 30} labeltype NO_LABEL align 17 resizable
+              xywh {415 60 30 30} labeltype NO_LABEL align 17 resizable
             } {}
             Fl_Box invalidResolutionLabel {
               label {invalid!}
-              tooltip {the resolution must be at least 640x480, the original game resolution} xywh {340 130 160 30} labelfont 1 labelcolor 1 align 20
+              tooltip {the resolution must be at least 640x480, the original game resolution} xywh {340 75 160 30} labelfont 1 labelcolor 1 align 20
             }
           }
           Fl_Group {} {open
-            tooltip {Choose a scaling mode to stretch the game video to fit the screen. Linear and Near-Perfect modes stretch the video to match any window sizes, but the image may look blurred. Pixel-Perfect can only scale up by integer (1x, 2x and so on) but gives sharp images.} xywh {10 170 500 55}
+            tooltip {Choose a scaling mode to stretch the game video to fit the screen. Linear and Near-Perfect modes stretch the video to match any window sizes, but the image may look blurred. Pixel-Perfect can only scale up by integer (1x, 2x and so on) but gives sharp images.} xywh {10 115 500 55}
           } {
             Fl_Choice scalingModeChoice {
               label {Scaling Mode:} open
-              xywh {20 185 480 30} down_box BORDER_BOX align 5 resizable
+              xywh {20 130 480 30} down_box BORDER_BOX align 5 resizable
             } {}
           }
           Fl_Group {} {open
-            xywh {10 220 500 65}
+            xywh {10 165 500 65}
           } {
             Fl_Check_Button fullscreenCheckbox {
               label Fullscreen
-              tooltip {Check to run in a borderless full-screen window} xywh {20 225 95 30} down_box DOWN_BOX
+              tooltip {Check to run in a borderless full-screen window} xywh {20 170 95 30} down_box DOWN_BOX
             }
             Fl_Check_Button playSoundsCheckbox {
               label {Play Sounds}
-              xywh {20 255 109 30} down_box DOWN_BOX value 1
+              xywh {20 200 109 30} down_box DOWN_BOX value 1
+            }
+          }
+        }
+        Fl_Group gameSettingsTab {
+          label {@circle Game } open
+          xywh {0 50 520 300} labelcolor 24 hide
+        } {
+          Fl_Scroll gameSettingsScroll {open
+            xywh {10 55 500 250} type VERTICAL resizable
+          } {}
+          Fl_Group {} {open
+            xywh {10 310 500 35}
+          } {
+            Fl_Output gameSettingsPatchOutput {
+              tooltip {The game settings you changed are saved to this file. They apply on top of game.json and the enabled mods.} xywh {20 312 380 30} color 49 resizable
+            }
+            Fl_Button gameSettingsResetAllButton {
+              label {Reset All}
+              tooltip {Reset all game settings to their defaults} xywh {410 312 90 30}
             }
           }
         }

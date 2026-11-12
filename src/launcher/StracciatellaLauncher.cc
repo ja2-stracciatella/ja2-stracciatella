@@ -102,48 +102,34 @@ on their features.");
       { Fl_Group* o = new Fl_Group(0, 50, 520, 300, "@menu Settings ");
         o->labelcolor((Fl_Color)24);
         o->hide();
-        { Fl_Group* o = new Fl_Group(10, 60, 500, 45);
-          { gameSettingsOutput = new Fl_Output(20, 75, 350, 30, "Game Settings:");
-            gameSettingsOutput->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-            Fl_Group::current()->resizable(gameSettingsOutput);
-          } // Fl_Output* gameSettingsOutput
-          { editSettingsButton = new Fl_Button(375, 75, 90, 30, "Edit Settings");
-            editSettingsButton->tooltip("Copy game.json to the data folder in the stracciatella home if needed and open it in the system text editor. The copy overrides game.json from the game and from enabled mods, and is not updated when the game is.");
-          } // Fl_Button* editSettingsButton
-          { resetSettingsButton = new Fl_Button(470, 75, 30, 30, "@reload");
-            resetSettingsButton->tooltip("Delete the customized game.json and go back to the one from the game or enabled mods. Use this if the game fails to start after an update.");
-            resetSettingsButton->box(FL_THIN_UP_BOX);
-          } // Fl_Button* resetSettingsButton
-          o->end();
-        } // Fl_Group* o
-        { Fl_Group* o = new Fl_Group(10, 115, 500, 52);
+        { Fl_Group* o = new Fl_Group(10, 60, 500, 52);
           o->tooltip("Specify the resolution for tactical screen rendering. Texts and sprites becom\
 e very small at higher internal resolutions. Note that menus and the strategic\
  map screen are always rendered at 640x480.");
-          { resolutionXInput = new Fl_Value_Input(20, 130, 75, 30, "Internal Resolution:");
+          { resolutionXInput = new Fl_Value_Input(20, 75, 75, 30, "Internal Resolution:");
             resolutionXInput->minimum(640);
             resolutionXInput->maximum(0);
             resolutionXInput->value(640);
             resolutionXInput->align(Fl_Align(FL_ALIGN_TOP_LEFT));
           } // Fl_Value_Input* resolutionXInput
-          { new Fl_Box(95, 130, 20, 30, "x");
+          { new Fl_Box(95, 75, 20, 30, "x");
           } // Fl_Box* o
-          { resolutionYInput = new Fl_Value_Input(115, 130, 75, 30);
+          { resolutionYInput = new Fl_Value_Input(115, 75, 75, 30);
             resolutionYInput->labeltype(FL_NO_LABEL);
             resolutionYInput->minimum(480);
             resolutionYInput->maximum(0);
             resolutionYInput->value(480);
             resolutionYInput->align(Fl_Align(FL_ALIGN_TOP_LEFT));
           } // Fl_Value_Input* resolutionYInput
-          { predefinedResolutionMenuButton = new Fl_Menu_Button(210, 130, 110, 30, "Predefined");
+          { predefinedResolutionMenuButton = new Fl_Menu_Button(210, 75, 110, 30, "Predefined");
           } // Fl_Menu_Button* predefinedResolutionMenuButton
-          { Fl_Group* o = new Fl_Group(415, 115, 30, 30, "resizable");
+          { Fl_Group* o = new Fl_Group(415, 60, 30, 30, "resizable");
             o->labeltype(FL_NO_LABEL);
             o->align(Fl_Align(FL_ALIGN_TOP|FL_ALIGN_INSIDE));
             o->end();
             Fl_Group::current()->resizable(o);
           } // Fl_Group* o
-          { invalidResolutionLabel = new Fl_Box(340, 130, 160, 30, "invalid!");
+          { invalidResolutionLabel = new Fl_Box(340, 75, 160, 30, "invalid!");
             invalidResolutionLabel->tooltip("the resolution must be at least 640x480, the original game resolution");
             invalidResolutionLabel->labelfont(1);
             invalidResolutionLabel->labelcolor((Fl_Color)1);
@@ -151,24 +137,24 @@ e very small at higher internal resolutions. Note that menus and the strategic\
           } // Fl_Box* invalidResolutionLabel
           o->end();
         } // Fl_Group* o
-        { Fl_Group* o = new Fl_Group(10, 170, 500, 55);
+        { Fl_Group* o = new Fl_Group(10, 115, 500, 55);
           o->tooltip("Choose a scaling mode to stretch the game video to fit the screen. Linear and\
  Near-Perfect modes stretch the video to match any window sizes, but the image\
  may look blurred. Pixel-Perfect can only scale up by integer (1x, 2x and so o\
 n) but gives sharp images.");
-          { scalingModeChoice = new Fl_Choice(20, 185, 480, 30, "Scaling Mode:");
+          { scalingModeChoice = new Fl_Choice(20, 130, 480, 30, "Scaling Mode:");
             scalingModeChoice->down_box(FL_BORDER_BOX);
             scalingModeChoice->align(Fl_Align(FL_ALIGN_TOP_LEFT));
             Fl_Group::current()->resizable(scalingModeChoice);
           } // Fl_Choice* scalingModeChoice
           o->end();
         } // Fl_Group* o
-        { Fl_Group* o = new Fl_Group(10, 220, 500, 65);
-          { fullscreenCheckbox = new Fl_Check_Button(20, 225, 95, 30, "Fullscreen");
+        { Fl_Group* o = new Fl_Group(10, 165, 500, 65);
+          { fullscreenCheckbox = new Fl_Check_Button(20, 170, 95, 30, "Fullscreen");
             fullscreenCheckbox->tooltip("Check to run in a borderless full-screen window");
             fullscreenCheckbox->down_box(FL_DOWN_BOX);
           } // Fl_Check_Button* fullscreenCheckbox
-          { playSoundsCheckbox = new Fl_Check_Button(20, 255, 109, 30, "Play Sounds");
+          { playSoundsCheckbox = new Fl_Check_Button(20, 200, 109, 30, "Play Sounds");
             playSoundsCheckbox->down_box(FL_DOWN_BOX);
             playSoundsCheckbox->value(1);
           } // Fl_Check_Button* playSoundsCheckbox
@@ -176,6 +162,28 @@ n) but gives sharp images.");
         } // Fl_Group* o
         o->end();
       } // Fl_Group* o
+      { gameSettingsTab = new Fl_Group(0, 50, 520, 300, "@circle Game ");
+        gameSettingsTab->labelcolor((Fl_Color)24);
+        gameSettingsTab->hide();
+        { gameSettingsScroll = new Fl_Scroll(10, 55, 500, 250);
+          gameSettingsScroll->type(2);
+          gameSettingsScroll->end();
+          Fl_Group::current()->resizable(gameSettingsScroll);
+        } // Fl_Scroll* gameSettingsScroll
+        { Fl_Group* o = new Fl_Group(10, 310, 500, 35);
+          { gameSettingsPatchOutput = new Fl_Output(20, 312, 380, 30);
+            gameSettingsPatchOutput->tooltip("The game settings you changed are saved to this file. They apply on top of ga\
+me.json and the enabled mods.");
+            gameSettingsPatchOutput->color(FL_BACKGROUND_COLOR);
+            Fl_Group::current()->resizable(gameSettingsPatchOutput);
+          } // Fl_Output* gameSettingsPatchOutput
+          { gameSettingsResetAllButton = new Fl_Button(410, 312, 90, 30, "Reset All");
+            gameSettingsResetAllButton->tooltip("Reset all game settings to their defaults");
+          } // Fl_Button* gameSettingsResetAllButton
+          o->end();
+        } // Fl_Group* o
+        gameSettingsTab->end();
+      } // Fl_Group* gameSettingsTab
       { logsTab = new Fl_Group(0, 50, 520, 300, "@square Logs");
         logsTab->labelcolor((Fl_Color)24);
         logsTab->hide();

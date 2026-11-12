@@ -9,6 +9,8 @@
 #include "Launcher.h"
 
 #include "FL/Fl_Native_File_Chooser.H"
+#include <FL/Fl_Float_Input.H>
+#include <FL/Fl_Int_Input.H>
 #include <FL/Fl_PNG_Image.H>
 #include <FL/fl_ask.H>
 #include <string_theory/string>
@@ -67,6 +69,11 @@ void showRustError() {
 	} else {
 		showError("showRustError called but no rust error is present");
 	}
+}
+
+// FLTK draws & as an underline for the next character and @ as the start of a symbol
+ST::string escapeLabel(const char* label) {
+	return ST::string(label).replace("&", "&&").replace("@", "@@");
 }
 
 ST::string encodePath(const char* path) {
@@ -130,15 +137,9 @@ void Launcher::show() {
 	scalingModeChoice->callback(widgetChanged, this);
 	resolutionXInput->callback(widgetChanged, this);
 	resolutionYInput->callback(widgetChanged, this);
-	RustPointer<char> game_json_path(findPathFromAssetsDir("externalized/game.json", true, true));
-	if (game_json_path) {
-		this->gameJsonPath = game_json_path.get();
-	}
-	updateGameSettingsPath();
-	editSettingsButton->callback(openGameSettings, this);
-	resetSettingsButton->callback(resetGameSettings, this);
 	fullscreenCheckbox->callback(widgetChanged, this);
 	playSoundsCheckbox->callback(widgetChanged, this);
+	gameSettingsResetAllButton->callback(resetAllGameSettings, this);
 	RustPointer<char> ja2_json_path(findPathFromStracciatellaHome(this->engineOptions.get(), "ja2.json", false, true));
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path.get());
@@ -237,7 +238,184 @@ void Launcher::initializeInputsFromDefaults() {
 
 	fullscreenCheckbox->value(EngineOptions_shouldStartInFullscreen(this->engineOptions.get()) ? 1 : 0);
 	playSoundsCheckbox->value(EngineOptions_shouldStartWithoutSound(this->engineOptions.get()) ? 0 : 1);
+	loadGameSettings();
 	update(false);
+}
+
+void Launcher::syncModsToEngineOptions() {
+	EngineOptions_clearMods(this->engineOptions.get());
+	int nitems = enabledModsBrowser->size();
+	for (int item = 1; item <= nitems; ++item) {
+		char* modId = static_cast<char*>(enabledModsBrowser->data(item));
+		EngineOptions_pushMod(this->engineOptions.get(), modId);
+	}
+}
+
+// The defaults of the game settings depend on the enabled mods, so this is
+// called whenever they change. Changed values are saved right away, so
+// nothing is lost.
+void Launcher::loadGameSettings() {
+	syncModsToEngineOptions();
+	gameSettings.reset(GameSettings_load(this->engineOptions.get(), this->modManager.get()));
+	if (gameSettings) {
+		gameSettingsError.clear();
+		RustPointer<char> patchPath(GameSettings_getPatchPath(gameSettings.get()));
+		gameSettingsPatchOutput->value(patchPath.get());
+		gameSettingsResetAllButton->activate();
+	} else {
+		RustPointer<char> err(getRustError());
+		gameSettingsError = err ? err.get() : "unknown error";
+		SLOGE("{}", gameSettingsError);
+		gameSettingsPatchOutput->value("");
+		gameSettingsResetAllButton->deactivate();
+	}
+	buildGameSettingRows();
+}
+
+void Launcher::buildGameSettingRows() {
+	gameSettingRows.clear();
+	gameSettingsScroll->scroll_to(0, 0);
+	gameSettingsScroll->clear();
+	gameSettingsScroll->begin();
+
+	const int rowHeight = 25;
+	const int x = gameSettingsScroll->x() + 5;
+	const int w = gameSettingsScroll->w() - Fl::scrollbar_size() - 10;
+	const int labelWidth = w * 3 / 5;
+	int y = gameSettingsScroll->y() + 5;
+
+	size_t nsettings = gameSettings ? GameSettings_getSettingsLength(gameSettings.get()) : 0;
+	if (nsettings == 0) {
+		ST::string message = gameSettings
+			? ST::string("There are no game settings to change.")
+			: ST::format("The game settings could not be loaded: {}", gameSettingsError);
+		Fl_Box* box = new Fl_Box(x, y, w, gameSettingsScroll->h() - 10);
+		box->copy_label(escapeLabel(message.c_str()).c_str());
+		box->align(FL_ALIGN_TOP_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_WRAP);
+	}
+
+	std::optional<size_t> lastSection;
+	for (size_t i = 0; i < nsettings; i++) {
+		size_t section = GameSettings_getSettingSection(gameSettings.get(), i);
+		if (section != lastSection) {
+			if (lastSection) {
+				y += 10;
+			}
+			RustPointer<char> sectionTitle(GameSettings_getSectionTitle(gameSettings.get(), section));
+			if (sectionTitle) {
+				Fl_Box* box = new Fl_Box(x, y, w, rowHeight);
+				box->copy_label(escapeLabel(sectionTitle.get()).c_str());
+				box->labelfont(FL_HELVETICA_BOLD);
+				box->labelsize(FL_NORMAL_SIZE + 2);
+				box->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+				y += rowHeight;
+			}
+			lastSection = section;
+		}
+
+		RustPointer<char> title(GameSettings_getSettingTitle(gameSettings.get(), i));
+		RustPointer<char> description(GameSettings_getSettingDescription(gameSettings.get(), i));
+		RustPointer<char> allowedValues(GameSettings_getSettingAllowedValues(gameSettings.get(), i));
+		RustPointer<char> value(GameSettings_getSettingValue(gameSettings.get(), i));
+		ST::string tooltip = description ? description.get() : "";
+		if (allowedValues) {
+			if (!tooltip.empty()) {
+				tooltip += "\n\n";
+			}
+			tooltip += ST::format("Allowed values: {}", allowedValues.get());
+		}
+
+		auto row = std::make_unique<GameSettingRow>();
+		row->launcher = this;
+		row->index = i;
+		GameSettingType type = GameSettings_getSettingType(gameSettings.get(), i);
+		if (type == GameSettingType::Boolean) {
+			Fl_Check_Button* check = new Fl_Check_Button(x, y, w, rowHeight);
+			// A box that draws the background, so the label can change its font
+			check->box(FL_FLAT_BOX);
+			check->down_box(FL_DOWN_BOX);
+			check->copy_label(escapeLabel(title.get()).c_str());
+			check->value(strcmp(value.get(), "true") == 0 ? 1 : 0);
+			row->label = check;
+			row->input = check;
+		} else {
+			Fl_Box* label = new Fl_Box(x, y, labelWidth, rowHeight);
+			label->box(FL_FLAT_BOX);
+			label->copy_label(escapeLabel(title.get()).c_str());
+			label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+			int inputX = x + labelWidth + 5;
+			int inputW = w - labelWidth - 5;
+			Fl_Input* input;
+			if (type == GameSettingType::Integer) {
+				input = new Fl_Int_Input(inputX, y, inputW, rowHeight);
+			} else if (type == GameSettingType::Decimal) {
+				input = new Fl_Float_Input(inputX, y, inputW, rowHeight);
+			} else {
+				input = new Fl_Input(inputX, y, inputW, rowHeight);
+			}
+			input->value(value.get());
+			input->when(FL_WHEN_CHANGED);
+			row->label = label;
+			row->input = input;
+		}
+		if (!tooltip.empty()) {
+			row->label->copy_tooltip(tooltip.c_str());
+			row->input->copy_tooltip(tooltip.c_str());
+		}
+		row->input->callback(gameSettingChanged, row.get());
+		updateGameSettingRow(*row, true);
+		gameSettingRows.push_back(std::move(row));
+		y += rowHeight + 2;
+	}
+
+	gameSettingsScroll->end();
+	gameSettingsScroll->redraw();
+}
+
+void Launcher::updateGameSettingRow(const GameSettingRow& row, bool valid) {
+	bool modified = gameSettings && GameSettings_isSettingModified(gameSettings.get(), row.index);
+	row.label->labelfont(modified ? FL_HELVETICA_BOLD : FL_HELVETICA);
+	row.label->redraw();
+	if (row.input != row.label) {
+		row.input->color(valid ? FL_BACKGROUND2_COLOR : fl_rgb_color(255, 200, 200));
+		row.input->redraw();
+	}
+}
+
+void Launcher::gameSettingChanged(Fl_Widget* widget, void* userdata) {
+	GameSettingRow* row = static_cast<GameSettingRow*>(userdata);
+	Launcher* window = row->launcher;
+	if (!window->gameSettings) {
+		return;
+	}
+	const char* value;
+	if (row->input == row->label) {
+		value = static_cast<Fl_Check_Button*>(widget)->value() ? "true" : "false";
+	} else {
+		value = static_cast<Fl_Input*>(widget)->value();
+	}
+	// Invalid values are not saved, the input is highlighted until it is fixed
+	bool valid = GameSettings_setSettingValue(window->gameSettings.get(), row->index, value);
+	if (valid && !GameSettings_save(window->gameSettings.get())) {
+		showRustError();
+	}
+	window->updateGameSettingRow(*row, valid);
+}
+
+void Launcher::resetAllGameSettings(Fl_Widget* btn, void* userdata) {
+	Launcher* window = static_cast<Launcher*>(userdata);
+	if (!window->gameSettings) {
+		return;
+	}
+	fl_message_title("Reset All");
+	if (fl_choice("Reset all game settings to their defaults?", "Cancel", "Reset", 0) != 1) {
+		return;
+	}
+	GameSettings_resetAll(window->gameSettings.get());
+	if (!GameSettings_save(window->gameSettings.get())) {
+		showRustError();
+	}
+	window->buildGameSettingRows();
 }
 
 int Launcher::writeJsonFile() {
@@ -247,12 +425,7 @@ int Launcher::writeJsonFile() {
 	EngineOptions_setVanillaGameDir(this->engineOptions.get(), gameDirectoryInput->value());
 	EngineOptions_setSaveGameDir(this->engineOptions.get(), saveGameDirectoryInput->value());
 
-	EngineOptions_clearMods(this->engineOptions.get());
-	int nitems = enabledModsBrowser->size();
-	for (int item = 1; item <= nitems; ++item) {
-		char* modId = static_cast<char*>(enabledModsBrowser->data(item));
-		EngineOptions_pushMod(this->engineOptions.get(), modId);
-	}
+	syncModsToEngineOptions();
 
 	int x = (int)resolutionXInput->value();
 	int y = (int)resolutionYInput->value();
@@ -374,122 +547,6 @@ void Launcher::openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 	}
 }
 
-// The copy in the home data dir is the one the user edits. It overrides the
-// game.json shipped with the game and any from enabled mods, and it is not
-// updated with the game, so it can go stale or miss keys a newer version
-// requires. Reset deletes it.
-ST::string Launcher::userGameJsonPath() {
-	RustPointer<char> path(findPathFromStracciatellaHome(this->engineOptions.get(), "data/game.json", false, true));
-	return path ? ST::string(path.get()) : ST::string();
-}
-
-void Launcher::updateGameSettingsPath() {
-	ST::string userPath = userGameJsonPath();
-	bool hasUserCopy = !userPath.empty() && FileMan::isFile(userPath);
-	if (hasUserCopy) {
-		gameSettingsOutput->value(userPath.c_str());
-	} else if (!this->gameJsonPath.empty()) {
-		gameSettingsOutput->value(this->gameJsonPath.c_str());
-	} else {
-		gameSettingsOutput->value("failed to find path to game.json");
-	}
-	if (hasUserCopy || !this->gameJsonPath.empty()) {
-		editSettingsButton->activate();
-	} else {
-		editSettingsButton->deactivate();
-	}
-	if (hasUserCopy) {
-		resetSettingsButton->activate();
-	} else {
-		resetSettingsButton->deactivate();
-	}
-}
-
-void Launcher::openGameSettings(Fl_Widget* btn, void* userdata) {
-	Launcher* window = static_cast< Launcher* >( userdata );
-	ST::string userPath = window->userGameJsonPath();
-	if (userPath.empty()) {
-		showError("Failed to find the stracciatella home directory");
-		return;
-	}
-
-	if (!FileMan::isFile(userPath)) {
-		if (window->gameJsonPath.empty()) {
-			return;
-		}
-		try {
-			FileMan::createDir(FileMan::getParentPath(userPath, false));
-			AutoSGPFile src(FileMan::openForReading(window->gameJsonPath));
-			ST::string contents = src->readStringToEnd();
-			AutoSGPFile dst(FileMan::openForWriting(userPath));
-			dst->write(contents.c_str(), contents.size());
-		} catch (const std::runtime_error& ex) {
-			SLOGE("Failed to copy game.json to {}: {}", userPath, ex.what());
-			showError(ST::format("Failed to copy game.json to {}:\n{}", userPath, ex.what()));
-			return;
-		}
-		window->updateGameSettingsPath();
-	}
-
-	// The handler registered for .json is rarely a text editor, so ask for one
-	// explicitly on the platforms that have the notion of a system text editor.
-	RustPointer<VecCString> args(VecCString_create());
-#ifdef _WIN32
-	const char* editor = "notepad.exe";
-	VecCString_push(args.get(), userPath.c_str());
-#elif defined(__APPLE__)
-	// -t picks the editor registered for plain text instead of the one for .json
-	const char* editor = "/usr/bin/open";
-	VecCString_push(args.get(), "-t");
-	VecCString_push(args.get(), userPath.c_str());
-#else
-	// There is no system text editor here, and xdg-open dispatches on
-	// application/json, which browsers commonly claim. Launch the handler
-	// registered for plain text instead and keep xdg-open as the fallback for
-	// desktops without gtk-launch.
-	const char* editor = "/bin/sh";
-	VecCString_push(args.get(), "-c");
-	VecCString_push(args.get(),
-		"handler=$(xdg-mime query default text/plain 2>/dev/null); "
-		"if [ -n \"$handler\" ]; then "
-		"gtk-launch \"$handler\" \"$1\" 2>/dev/null && exit 0; "
-		"fi; "
-		"exec xdg-open \"$1\"");
-	VecCString_push(args.get(), "sh");
-	VecCString_push(args.get(), userPath.c_str());
-#endif
-
-	// Fire and forget. The editor outlives this handle, and keeping it in
-	// subProcess would make the launcher treat the game as running.
-	RustPointer<SubProcess> editorProcess(Subprocess_new(editor, args.get()));
-	if (!editorProcess) {
-		showRustError();
-	}
-}
-
-void Launcher::resetGameSettings(Fl_Widget* btn, void* userdata) {
-	Launcher* window = static_cast< Launcher* >( userdata );
-	ST::string userPath = window->userGameJsonPath();
-	if (userPath.empty() || !FileMan::isFile(userPath)) {
-		window->updateGameSettingsPath();
-		return;
-	}
-
-	ST::string question = ST::format("This deletes your customized game settings in\n{}\nand restores the defaults shipped with the game.\nAre you sure you want to continue?", userPath);
-	int choice = fl_choice("%s", "Cancel", "Reset", 0, question.c_str());
-	if (choice != 1) {
-		return;
-	}
-
-	try {
-		FileMan::deleteFile(userPath);
-	} catch (const std::runtime_error& ex) {
-		SLOGE("Failed to delete {}: {}", userPath, ex.what());
-		showError(ex.what());
-	}
-	window->updateGameSettingsPath();
-}
-
 void Launcher::startExecutable(bool asEditor) {
 	if (gameIsRunning()) {
 		return;
@@ -594,10 +651,6 @@ void Launcher::maintainSubProcessState(void* userdata) {
 				}
 
 				SLOGE("{}", error);
-				ST::string userGameJson = window->userGameJsonPath();
-				if (!userGameJson.empty() && FileMan::isFile(userGameJson)) {
-					error = ST::format("{}\n\nYou are using customized game settings from\n{}\nIf they are from an older version of the game, use the reset button next to Edit Settings.", error, userGameJson);
-				}
 				error = ST::format("{}\n\nYou will be taken to the logs tab, where you can investigate the error.", error);
 
 				showError(error);
@@ -863,6 +916,7 @@ void Launcher::enableMods(Fl_Widget* widget, void* userdata) {
 		window->selectEnabledMods(widget, userdata);
 		window->enabledModsBrowser->redraw();
 		window->availableModsBrowser->redraw();
+		window->loadGameSettings();
 		window->update(true);
 	}
 }
@@ -891,6 +945,7 @@ void Launcher::disableMods(Fl_Widget* widget, void* userdata) {
 		window->selectAvailableMods(widget, userdata);
 		window->enabledModsBrowser->redraw();
 		window->availableModsBrowser->redraw();
+		window->loadGameSettings();
 		window->update(true);
 	}
 }
@@ -911,6 +966,7 @@ void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 	}
 
 	window->enabledModsBrowser->redraw();
+	window->loadGameSettings();
 	window->update(true);
 }
 
@@ -930,6 +986,7 @@ void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 	}
 
 	window->enabledModsBrowser->redraw();
+	window->loadGameSettings();
 	window->update(true);
 }
 

@@ -12,10 +12,11 @@
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Output.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Menu_Button.H>
 #include <FL/Fl_Check_Button.H>
+#include <FL/Fl_Scroll.H>
+#include <FL/Fl_Output.H>
 
 class StracciatellaLauncher {
 public:
@@ -37,9 +38,6 @@ public:
   Fl_Button *moveDownModsButton;
   Fl_Browser *availableModsBrowser;
   Fl_Text_Display *modDetails;
-  Fl_Output *gameSettingsOutput;
-  Fl_Button *editSettingsButton;
-  Fl_Button *resetSettingsButton;
   Fl_Value_Input *resolutionXInput;
   Fl_Value_Input *resolutionYInput;
   Fl_Menu_Button *predefinedResolutionMenuButton;
@@ -47,6 +45,10 @@ public:
   Fl_Choice *scalingModeChoice;
   Fl_Check_Button *fullscreenCheckbox;
   Fl_Check_Button *playSoundsCheckbox;
+  Fl_Group *gameSettingsTab;
+  Fl_Scroll *gameSettingsScroll;
+  Fl_Output *gameSettingsPatchOutput;
+  Fl_Button *gameSettingsResetAllButton;
   Fl_Group *logsTab;
   Fl_Text_Display *logsDisplay;
   Fl_Output *ja2JsonPathOutput;

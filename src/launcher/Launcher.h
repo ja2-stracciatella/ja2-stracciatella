@@ -8,8 +8,10 @@
 
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <set>
 #include <optional>
+#include <vector>
 
 struct sortMods {
     bool operator() (ST::string a, ST::string b) const {
@@ -18,6 +20,17 @@ struct sortMods {
 };
 
 #define SIMPLIFIED_CHINESE_MOD_NAME "simplified-chinese-localization"
+
+class Launcher;
+
+// The widgets of a single setting in the game settings tab
+struct GameSettingRow {
+	Launcher* launcher;
+	size_t index;
+	// The widget that shows the title, the input itself for check buttons
+	Fl_Widget* label;
+	Fl_Widget* input;
+};
 
 class Launcher : public StracciatellaLauncher {
 public:
@@ -35,7 +48,10 @@ private:
 	RustPointer<ModManager> modManager;
 	std::optional<RustPointer<SubProcess>> subProcess;
 	Fl_Text_Buffer logsBuffer;
-	ST::string gameJsonPath;
+	RustPointer<GameSettings> gameSettings;
+	std::vector<std::unique_ptr<GameSettingRow>> gameSettingRows;
+	// Why the game settings could not be loaded, if they could not
+	ST::string gameSettingsError;
 
 	void populateChoices();
 	void startExecutable(bool asEditor);
@@ -43,15 +59,17 @@ private:
 	bool gameIsRunning();
 	void update(bool changed);
 	void updateLogs();
-	ST::string userGameJsonPath();
-	void updateGameSettingsPath();
 	void showModDetails(const ST::string& modName);
 	void hideModDetails();
+	void syncModsToEngineOptions();
+	void loadGameSettings();
+	void buildGameSettingRows();
+	void updateGameSettingRow(const GameSettingRow& row, bool valid);
 	static bool checkGameDirectoryForCommonMistakes(const ST::string& gameDir);
 	static void openGameDirectorySelector(Fl_Widget *btn, void *userdata);
 	static void openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata);
-	static void openGameSettings(Fl_Widget* btn, void* userdata);
-	static void resetGameSettings(Fl_Widget* btn, void* userdata);
+	static void gameSettingChanged(Fl_Widget* widget, void* userdata);
+	static void resetAllGameSettings(Fl_Widget* btn, void* userdata);
 	static void startGame(Fl_Widget* btn, void* userdata);
 	static void startEditor(Fl_Widget* btn, void* userdata);
 	static void guessVersion(Fl_Widget* btn, void* userdata);
