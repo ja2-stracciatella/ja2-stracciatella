@@ -9,6 +9,8 @@
 #include "Launcher.h"
 
 #include "FL/Fl_Native_File_Chooser.H"
+#include <FL/Fl_Float_Input.H>
+#include <FL/Fl_Int_Input.H>
 #include <FL/Fl_PNG_Image.H>
 #include <FL/fl_ask.H>
 #include <string_theory/string>
@@ -69,6 +71,11 @@ void showRustError() {
 	}
 }
 
+// FLTK draws & as an underline for the next character and @ as the start of a symbol
+ST::string escapeLabel(const char* label) {
+	return ST::string(label).replace("&", "&&").replace("@", "@@");
+}
+
 ST::string encodePath(const char* path) {
 	if (path == nullptr) {
 		return ST::string();
@@ -119,45 +126,40 @@ void Launcher::loadJa2Json() {
 }
 
 void Launcher::show() {
-	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
-	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
-	gameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	saveGameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	browseJa2DirectoryButton->callback((Fl_Callback *) openGameDirectorySelector, (void *) (this));
-	browseSaveGameDirectoryButton->callback((Fl_Callback *) openSaveGameDirectorySelector, (void *) (this));
-	gameVersionInput->callback( (Fl_Callback*)selectGameVersion, (void*)(this) );
-	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
-	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	RustPointer<char> game_json_path(findPathFromAssetsDir("externalized/game.json", true, true));
-	if (game_json_path) {
-		gameSettingsOutput->value(game_json_path.get());
-	} else {
-		gameSettingsOutput->value("failed to find path to game.json");
-	}
-	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	editorButton->callback(startEditor, this);
+	playButton->callback(startGame, this);
+	gameDirectoryInput->callback(widgetChanged, this);
+	saveGameDirectoryInput->callback(widgetChanged, this);
+	browseJa2DirectoryButton->callback(openGameDirectorySelector, this);
+	browseSaveGameDirectoryButton->callback(openSaveGameDirectorySelector, this);
+	gameVersionInput->callback(selectGameVersion, this);
+	guessVersionButton->callback(guessVersion, this);
+	scalingModeChoice->callback(widgetChanged, this);
+	resolutionXInput->callback(widgetChanged, this);
+	resolutionYInput->callback(widgetChanged, this);
+	fullscreenCheckbox->callback(widgetChanged, this);
+	playSoundsCheckbox->callback(widgetChanged, this);
+	gameSettingsResetAllButton->callback(resetAllGameSettings, this);
 	RustPointer<char> ja2_json_path(findPathFromStracciatellaHome(this->engineOptions.get(), "ja2.json", false, true));
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path.get());
 	} else {
 		ja2JsonPathOutput->value("failed to find path to ja2.json");
 	}
-	ja2JsonReloadBtn->callback( (Fl_Callback*)reloadJa2Json, (void*)(this) );
-	ja2JsonSaveBtn->callback( (Fl_Callback*)saveJa2Json, (void*)(this) );
+	ja2JsonReloadBtn->callback(reloadJa2Json, this);
+	ja2JsonSaveBtn->callback(saveJa2Json, this);
 
 	auto nmods = ModManager_getAvailableModsLength(this->modManager.get());
 	for (size_t i = 0; i < nmods; ++i) {
 		RustPointer<Mod> mod(ModManager_getAvailableModByIndex(this->modManager.get(), i));
 		RustPointer<char> modId(Mod_getId(mod.get()));
 	}
-	availableModsBrowser->callback( (Fl_Callback*)selectAvailableMods, (void*)(this) );
-	enabledModsBrowser->callback( (Fl_Callback*)selectEnabledMods, (void*)(this) );
-	enableModsButton->callback( (Fl_Callback*)enableMods, (void*)(this) );
-	disableModsButton->callback( (Fl_Callback*)disableMods, (void*)(this) );
-	moveDownModsButton->callback( (Fl_Callback*)moveDownMods, (void*)(this) );
-	moveUpModsButton->callback( (Fl_Callback*)moveUpMods, (void*)(this) );
+	availableModsBrowser->callback(selectAvailableMods, this);
+	enabledModsBrowser->callback(selectEnabledMods, this);
+	enableModsButton->callback(enableMods, this);
+	disableModsButton->callback(disableMods, this);
+	moveDownModsButton->callback(moveDownMods, this);
+	moveUpModsButton->callback(moveUpMods, this);
 
 	populateChoices();
 	initializeInputsFromDefaults();
@@ -236,7 +238,184 @@ void Launcher::initializeInputsFromDefaults() {
 
 	fullscreenCheckbox->value(EngineOptions_shouldStartInFullscreen(this->engineOptions.get()) ? 1 : 0);
 	playSoundsCheckbox->value(EngineOptions_shouldStartWithoutSound(this->engineOptions.get()) ? 0 : 1);
+	loadGameSettings();
 	update(false);
+}
+
+void Launcher::syncModsToEngineOptions() {
+	EngineOptions_clearMods(this->engineOptions.get());
+	int nitems = enabledModsBrowser->size();
+	for (int item = 1; item <= nitems; ++item) {
+		char* modId = static_cast<char*>(enabledModsBrowser->data(item));
+		EngineOptions_pushMod(this->engineOptions.get(), modId);
+	}
+}
+
+// The defaults of the game settings depend on the enabled mods, so this is
+// called whenever they change. Changed values are saved right away, so
+// nothing is lost.
+void Launcher::loadGameSettings() {
+	syncModsToEngineOptions();
+	gameSettings.reset(GameSettings_load(this->engineOptions.get(), this->modManager.get()));
+	if (gameSettings) {
+		gameSettingsError.clear();
+		RustPointer<char> patchPath(GameSettings_getPatchPath(gameSettings.get()));
+		gameSettingsPatchOutput->value(patchPath.get());
+		gameSettingsResetAllButton->activate();
+	} else {
+		RustPointer<char> err(getRustError());
+		gameSettingsError = err ? err.get() : "unknown error";
+		SLOGE("{}", gameSettingsError);
+		gameSettingsPatchOutput->value("");
+		gameSettingsResetAllButton->deactivate();
+	}
+	buildGameSettingRows();
+}
+
+void Launcher::buildGameSettingRows() {
+	gameSettingRows.clear();
+	gameSettingsScroll->scroll_to(0, 0);
+	gameSettingsScroll->clear();
+	gameSettingsScroll->begin();
+
+	const int rowHeight = 25;
+	const int x = gameSettingsScroll->x() + 5;
+	const int w = gameSettingsScroll->w() - Fl::scrollbar_size() - 10;
+	const int labelWidth = w * 3 / 5;
+	int y = gameSettingsScroll->y() + 5;
+
+	size_t nsettings = gameSettings ? GameSettings_getSettingsLength(gameSettings.get()) : 0;
+	if (nsettings == 0) {
+		ST::string message = gameSettings
+			? ST::string("There are no game settings to change.")
+			: ST::format("The game settings could not be loaded: {}", gameSettingsError);
+		Fl_Box* box = new Fl_Box(x, y, w, gameSettingsScroll->h() - 10);
+		box->copy_label(escapeLabel(message.c_str()).c_str());
+		box->align(FL_ALIGN_TOP_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_WRAP);
+	}
+
+	std::optional<size_t> lastSection;
+	for (size_t i = 0; i < nsettings; i++) {
+		size_t section = GameSettings_getSettingSection(gameSettings.get(), i);
+		if (section != lastSection) {
+			if (lastSection) {
+				y += 10;
+			}
+			RustPointer<char> sectionTitle(GameSettings_getSectionTitle(gameSettings.get(), section));
+			if (sectionTitle) {
+				Fl_Box* box = new Fl_Box(x, y, w, rowHeight);
+				box->copy_label(escapeLabel(sectionTitle.get()).c_str());
+				box->labelfont(FL_HELVETICA_BOLD);
+				box->labelsize(FL_NORMAL_SIZE + 2);
+				box->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+				y += rowHeight;
+			}
+			lastSection = section;
+		}
+
+		RustPointer<char> title(GameSettings_getSettingTitle(gameSettings.get(), i));
+		RustPointer<char> description(GameSettings_getSettingDescription(gameSettings.get(), i));
+		RustPointer<char> allowedValues(GameSettings_getSettingAllowedValues(gameSettings.get(), i));
+		RustPointer<char> value(GameSettings_getSettingValue(gameSettings.get(), i));
+		ST::string tooltip = description ? description.get() : "";
+		if (allowedValues) {
+			if (!tooltip.empty()) {
+				tooltip += "\n\n";
+			}
+			tooltip += ST::format("Allowed values: {}", allowedValues.get());
+		}
+
+		auto row = std::make_unique<GameSettingRow>();
+		row->launcher = this;
+		row->index = i;
+		GameSettingType type = GameSettings_getSettingType(gameSettings.get(), i);
+		if (type == GameSettingType::Boolean) {
+			Fl_Check_Button* check = new Fl_Check_Button(x, y, w, rowHeight);
+			// A box that draws the background, so the label can change its font
+			check->box(FL_FLAT_BOX);
+			check->down_box(FL_DOWN_BOX);
+			check->copy_label(escapeLabel(title.get()).c_str());
+			check->value(strcmp(value.get(), "true") == 0 ? 1 : 0);
+			row->label = check;
+			row->input = check;
+		} else {
+			Fl_Box* label = new Fl_Box(x, y, labelWidth, rowHeight);
+			label->box(FL_FLAT_BOX);
+			label->copy_label(escapeLabel(title.get()).c_str());
+			label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+			int inputX = x + labelWidth + 5;
+			int inputW = w - labelWidth - 5;
+			Fl_Input* input;
+			if (type == GameSettingType::Integer) {
+				input = new Fl_Int_Input(inputX, y, inputW, rowHeight);
+			} else if (type == GameSettingType::Decimal) {
+				input = new Fl_Float_Input(inputX, y, inputW, rowHeight);
+			} else {
+				input = new Fl_Input(inputX, y, inputW, rowHeight);
+			}
+			input->value(value.get());
+			input->when(FL_WHEN_CHANGED);
+			row->label = label;
+			row->input = input;
+		}
+		if (!tooltip.empty()) {
+			row->label->copy_tooltip(tooltip.c_str());
+			row->input->copy_tooltip(tooltip.c_str());
+		}
+		row->input->callback(gameSettingChanged, row.get());
+		updateGameSettingRow(*row, true);
+		gameSettingRows.push_back(std::move(row));
+		y += rowHeight + 2;
+	}
+
+	gameSettingsScroll->end();
+	gameSettingsScroll->redraw();
+}
+
+void Launcher::updateGameSettingRow(const GameSettingRow& row, bool valid) {
+	bool modified = gameSettings && GameSettings_isSettingModified(gameSettings.get(), row.index);
+	row.label->labelfont(modified ? FL_HELVETICA_BOLD : FL_HELVETICA);
+	row.label->redraw();
+	if (row.input != row.label) {
+		row.input->color(valid ? FL_BACKGROUND2_COLOR : fl_rgb_color(255, 200, 200));
+		row.input->redraw();
+	}
+}
+
+void Launcher::gameSettingChanged(Fl_Widget* widget, void* userdata) {
+	GameSettingRow* row = static_cast<GameSettingRow*>(userdata);
+	Launcher* window = row->launcher;
+	if (!window->gameSettings) {
+		return;
+	}
+	const char* value;
+	if (row->input == row->label) {
+		value = static_cast<Fl_Check_Button*>(widget)->value() ? "true" : "false";
+	} else {
+		value = static_cast<Fl_Input*>(widget)->value();
+	}
+	// Invalid values are not saved, the input is highlighted until it is fixed
+	bool valid = GameSettings_setSettingValue(window->gameSettings.get(), row->index, value);
+	if (valid && !GameSettings_save(window->gameSettings.get())) {
+		showRustError();
+	}
+	window->updateGameSettingRow(*row, valid);
+}
+
+void Launcher::resetAllGameSettings(Fl_Widget* btn, void* userdata) {
+	Launcher* window = static_cast<Launcher*>(userdata);
+	if (!window->gameSettings) {
+		return;
+	}
+	fl_message_title("Reset All");
+	if (fl_choice("Reset all game settings to their defaults?", "Cancel", "Reset", 0) != 1) {
+		return;
+	}
+	GameSettings_resetAll(window->gameSettings.get());
+	if (!GameSettings_save(window->gameSettings.get())) {
+		showRustError();
+	}
+	window->buildGameSettingRows();
 }
 
 int Launcher::writeJsonFile() {
@@ -246,12 +425,7 @@ int Launcher::writeJsonFile() {
 	EngineOptions_setVanillaGameDir(this->engineOptions.get(), gameDirectoryInput->value());
 	EngineOptions_setSaveGameDir(this->engineOptions.get(), saveGameDirectoryInput->value());
 
-	EngineOptions_clearMods(this->engineOptions.get());
-	int nitems = enabledModsBrowser->size();
-	for (int item = 1; item <= nitems; ++item) {
-		char* modId = static_cast<char*>(enabledModsBrowser->data(item));
-		EngineOptions_pushMod(this->engineOptions.get(), modId);
-	}
+	syncModsToEngineOptions();
 
 	int x = (int)resolutionXInput->value();
 	int y = (int)resolutionYInput->value();
@@ -742,6 +916,7 @@ void Launcher::enableMods(Fl_Widget* widget, void* userdata) {
 		window->selectEnabledMods(widget, userdata);
 		window->enabledModsBrowser->redraw();
 		window->availableModsBrowser->redraw();
+		window->loadGameSettings();
 		window->update(true);
 	}
 }
@@ -770,6 +945,7 @@ void Launcher::disableMods(Fl_Widget* widget, void* userdata) {
 		window->selectAvailableMods(widget, userdata);
 		window->enabledModsBrowser->redraw();
 		window->availableModsBrowser->redraw();
+		window->loadGameSettings();
 		window->update(true);
 	}
 }
@@ -790,6 +966,7 @@ void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 	}
 
 	window->enabledModsBrowser->redraw();
+	window->loadGameSettings();
 	window->update(true);
 }
 
@@ -809,6 +986,7 @@ void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 	}
 
 	window->enabledModsBrowser->redraw();
+	window->loadGameSettings();
 	window->update(true);
 }
 
