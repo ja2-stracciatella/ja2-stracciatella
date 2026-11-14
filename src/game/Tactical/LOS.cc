@@ -702,6 +702,11 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 		iDistance += 1;
 	}
 
+	if (FIXEDPT_FRACTIONAL_RESOLUTION % iDistance == 0)
+	{	// see visual explanation in #2587
+		iDistance += 1;
+	}
+
 	if ( iDistance > iSightLimit)
 	{
 		// out of visual range
@@ -3240,6 +3245,11 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 	{
 		iDistance += 1;
 		d2DDistance = (FLOAT) ( iDistance);
+	}
+
+	if (FIXEDPT_FRACTIONAL_RESOLUTION % iDistance == 0)
+	{	// see visual explanation in #2587
+		iDistance += 1;
 	}
 
 	ddOrigHorizAngle = atan2( dDeltaY, dDeltaX );
