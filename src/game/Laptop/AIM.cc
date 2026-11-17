@@ -9,7 +9,6 @@
 #include "VObject.h"
 #include "Timer_Control.h"
 #include "WordWrap.h"
-#include "EMail.h"
 #include "Game_Clock.h"
 #include "Text.h"
 #include "LaptopSave.h"
@@ -689,9 +688,6 @@ static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw)
 			{
 				BltVideoObject(FRAME_BUFFER, guiFlowerAdvertisement, 0, WARNING_X, WARNING_Y);
 
-				// redraw new mail warning, and create new mail button, if nessacary
-				fReDrawNewMailFlag = TRUE;
-
 				//Display Aim Warning Text
 				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT14ARIAL, FONT_GREEN, AimScreenText[AIM_INFO_6], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
@@ -717,10 +713,6 @@ static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw)
 		else
 		{
 			BltVideoObject(FRAME_BUFFER, guiFlowerAdvertisement, ubSubImage, WARNING_X, WARNING_Y);
-
-			// redraw new mail warning, and create new mail button, if nessacary
-			fReDrawNewMailFlag = TRUE;
-
 			ubSubImage++;
 		}
 
@@ -746,10 +738,6 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 		DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, AIM_WARNING_FONT, FONT_RED, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
-
-		// redraw new mail warning, and create new mail button, if nessacary
-		fReDrawNewMailFlag = TRUE;
-
 		if( fInit )
 			uiLastTime = uiCurTime;
 	}
@@ -805,10 +793,6 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 			{
 				//Blit the ad
 				BltVideoObject(FRAME_BUFFER, ad_image, 0, WARNING_X, WARNING_Y);
-
-				// redraw new mail warning, and create new mail button, if nessacary
-				fReDrawNewMailFlag = TRUE;
-
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
@@ -831,10 +815,6 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 			{
 				//Blit the ad
 				BltVideoObject(FRAME_BUFFER, ad_image, ubSubImage, WARNING_X, WARNING_Y);
-
-				// redraw new mail warning, and create new mail button, if nessacary
-				fReDrawNewMailFlag = TRUE;
-
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
@@ -850,10 +830,6 @@ static BOOLEAN DisplayAd(const BOOLEAN fInit, const BOOLEAN fRedraw, const UINT1
 		else
 		{
 			BltVideoObject(FRAME_BUFFER, ad_image, ubSubImage, WARNING_X, WARNING_Y);
-
-			// redraw new mail warning, and create new mail button, if nessacary
-			fReDrawNewMailFlag = TRUE;
-
 			ubSubImage++;
 		}
 
@@ -977,9 +953,6 @@ static BOOLEAN DisplayBobbyRAd(BOOLEAN fInit, BOOLEAN fRedraw)
 
 				ubSubImage = AIM_AD_BOBBYR_AD__NUM_SUBIMAGES - 1;
 			}
-
-			// redraw new mail warning, and create new mail button, if nessacary
-			fReDrawNewMailFlag = TRUE;
 
 			InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 		}
