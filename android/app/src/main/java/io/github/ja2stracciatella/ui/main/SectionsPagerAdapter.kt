@@ -17,6 +17,9 @@ class SectionsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         if (position == 1) {
             return SettingsFragment()
         }
+        if (position == 2) {
+            return GameSettingsFragment()
+        }
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
         return LogsTabFragment()
@@ -30,6 +33,7 @@ class SectionsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         private val TAB_TITLES = arrayOf(
             R.string.tab_text_data,
             R.string.tab_text_settings,
+            R.string.tab_text_game_settings,
             R.string.tab_text_logs
         )
 

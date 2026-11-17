@@ -30,6 +30,13 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Visualizer.cc
 )
 
+if (ANDROID)
+    set(LOCAL_JA2_SOURCES
+        ${LOCAL_JA2_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/AndroidJni.cc
+    )
+endif()
+
 if (WITH_UNITTESTS)
     set(LOCAL_JA2_SOURCES
         ${LOCAL_JA2_SOURCES}
