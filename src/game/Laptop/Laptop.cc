@@ -466,7 +466,6 @@ static void EnterLaptop(void)
 
 	// reset redraw flag and redraw new mail
 	fReDrawScreenFlag  = FALSE;
-	fReDrawNewMailFlag = TRUE;
 
 	// sub page
 	giCurrentSubPage = 0;
@@ -622,7 +621,6 @@ void ExitLaptop(void)
 	fNewWWW = TRUE;
 	DeleteBookmark();
 	DeleteLoadPending();
-	fReDrawNewMailFlag = FALSE;
 
 	//pause the game because we dont want time to advance in the laptop
 	UnPauseGame();
@@ -1148,9 +1146,6 @@ ScreenID LaptopScreenHandle()
 
 	// check to see if new mail box needs to be displayed
 	ShouldNewMailBeDisplayed();
-
-	// check to see if new mail box needs to be displayed
-	ReDrawNewMailBox();
 
 	// look for unread email
 	LookForUnread();

@@ -169,7 +169,6 @@ extern BOOLEAN fUnReadMailFlag;
 extern BOOLEAN fNewMailFlag;
 extern BOOLEAN  fOldNewMailFlag;
 extern BOOLEAN fDisplayMessageFlag;
-extern BOOLEAN fReDrawNewMailFlag;
 extern BOOLEAN fOpenMostRecentUnReadFlag;
 extern Email* pEmailList;
 extern Email* MailToDelete;
@@ -191,7 +190,6 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 void DisplayNewMailBox(void);
 void CreateDestroyNewMailButton(void);
 void CreateDestroyDeleteNoticeMailButton(void);
-void ReDrawNewMailBox( void );
 void ShutDownEmailList(void);
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData );
 
