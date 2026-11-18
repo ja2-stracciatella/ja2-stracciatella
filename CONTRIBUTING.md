@@ -1,20 +1,24 @@
 # Contributing
 
-Play the game and see what bothers you. If you find a bug, [report it](https://github.com/ja2-stracciatella/ja2-stracciatella/issues/new/choose).
+There are many ways to help:
 
-If you are not a developer, there are many other possibilities which do not require programming skills to help JA2 Stracciatella to evolve. For example, you can help by retesting bug reports labelled with [retest](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3Aretest), help triage bugs, test solutions, research, write documentation, create mods and more.
+* Play-test [nightly](https://ja2-stracciatella.github.io/download/#nightlies) development versions of JA2 Stracciatella.
+* [Report bugs](https://github.com/ja2-stracciatella/ja2-stracciatella/issues/new/choose) or suggest enhancements.
+* Help triage bug reports.
+* [Re-test](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3Aretest) bug reports that could use additional information.
+* Test proposed [pull request](https://github.com/ja2-stracciatella/ja2-stracciatella/pulls) solutions.
+* Write documentation
+* Create [mods](docs/MODDING.md)
 
-## Where to start?
-
-If you don't have an itch to scratch, we suggest looking at our [bug tracker](https://github.com/ja2-stracciatella/ja2-stracciatella/issues), for example the [help wanted](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) list.
-
-Instructions on building and IDE setup can be found in [COMPILATION](COMPILATION.md). 
-
-Read our [docs](docs) directory, where C++ documentation can be generated.
+And many more!
 
 ## Contributing code
 
-Fixes and modernizations are very welcome. Large gameplay changes as seen in total overhaul mods (such as 1.13) will quite likely not be accepted. However, we do invite changes to the modding interface (Lua bindings, data externalizations) which allow for reimagined gameplay through 3rd-party mods.
+Fixes and modernizations are very welcome. Large gameplay overhauls (such as in the 1.13 mod) will quite likely not be accepted. Instead, we invite changes to the modding interface (Lua bindings, data externalizations) which allow for reimagined gameplay through 3rd-party mods.
+
+Browse our [bug tracker](https://github.com/ja2-stracciatella/ja2-stracciatella/issues) for ideas on what can be fixed. For example, the [help wanted](https://github.com/ja2-stracciatella/ja2-stracciatella/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) list.
+
+Read our [technical docs](docs) directory, where C++ documentation can be generated. Build and IDE setup instructions can be found in [COMPILATION](COMPILATION.md).
 
 ### How to make a pull request
 
