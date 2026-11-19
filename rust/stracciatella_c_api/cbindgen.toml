@@ -28,6 +28,7 @@ struct RustDelete
 	void operator()(VecU8* ptr) const { VecU8_destroy(ptr); }
 	void operator()(VecUSize* ptr) const { VecUSize_destroy(ptr); }
 	void operator()(Vfs* ptr) const { Vfs_destroy(ptr); }
+	void operator()(GameSettings* ptr) const { GameSettings_destroy(ptr); }
 	void operator()(ModManager* ptr) const { ModManager_destroy(ptr); }
 	void operator()(Mod* ptr) const { Mod_destroy(ptr); }
 	void operator()(SchemaManager* ptr) const { SchemaManager_destroy(ptr); }

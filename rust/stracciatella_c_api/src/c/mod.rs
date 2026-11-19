@@ -5,6 +5,7 @@
 
 pub mod config;
 pub mod fs;
+pub mod game_settings;
 pub mod json;
 pub mod logger;
 pub mod misc;

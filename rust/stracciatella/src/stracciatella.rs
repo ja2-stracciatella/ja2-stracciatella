@@ -9,6 +9,7 @@ pub mod android;
 pub mod config;
 pub mod file_formats;
 pub mod fs;
+pub mod game_settings;
 pub mod guess;
 pub mod json;
 pub mod logger;

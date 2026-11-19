@@ -176,6 +176,72 @@ impl Vfs {
         Ok(())
     }
 
+    /// Returns the path of the data dir in stracciatella home, which does not need to exist
+    pub fn home_data_dir(engine_options: &EngineOptions) -> PathBuf {
+        fs::resolve_existing_components(
+            Path::new(DATA_DIR),
+            Some(&engine_options.stracciatella_home),
+            true,
+        )
+    }
+
+    /// Adds the data dir in stracciatella home as a layer if it exists.
+    /// The SLF files in it are not added.
+    pub fn add_home_data_dir(
+        &mut self,
+        engine_options: &EngineOptions,
+    ) -> Result<Option<Arc<dyn VfsLayer>>, VfsInitError> {
+        let home_data_dir = Vfs::home_data_dir(engine_options);
+        if home_data_dir.exists() {
+            Ok(Some(self.add_dir(&home_data_dir)?))
+        } else {
+            Ok(None)
+        }
+    }
+
+    /// Adds the data dir of a mod and the SLF files in it as layers
+    pub fn add_mod_data_dir(&mut self, mod_path: &ModPath) -> Result<(), VfsInitError> {
+        match mod_path.join(DATA_DIR) {
+            ModPath::Path(p) => {
+                let p = fs::resolve_existing_components(&p, None, true);
+                let layer = self.add_dir(&p)?;
+                self.add_slf_files_from(layer, false)?;
+            }
+            #[cfg(target_os = "android")]
+            ModPath::AndroidAssetPath(p) => {
+                let layer = android::AssetManagerFs::new(&p).map_err(|e| VfsInitError {
+                    path: p.into(),
+                    error: e,
+                })?;
+                self.entries.push(layer.clone());
+                self.add_slf_files_from(layer, false)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Adds the externalized data dir as a layer
+    pub fn add_externalized_dir(
+        &mut self,
+        engine_options: &EngineOptions,
+    ) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
+        #[cfg(not(target_os = "android"))]
+        {
+            let externalized_dir = fs::resolve_existing_components(
+                Path::new(EXTERNALIZED_DIR),
+                Some(&engine_options.assets_dir),
+                true,
+            );
+            self.add_dir(&externalized_dir)
+        }
+        // On android the externalized dir comes from APK assets
+        #[cfg(target_os = "android")]
+        {
+            let _ = engine_options;
+            self.add_android_assets(&Path::new(EXTERNALIZED_DIR))
+        }
+    }
+
     /// Initializes the VFS overlays from EngineOptions
     pub fn init(
         &mut self,
@@ -198,59 +264,24 @@ impl Vfs {
         }
 
         // First is home data dir (does not need to exist)
-        let home_data_dir = fs::resolve_existing_components(
-            &PathBuf::from(DATA_DIR),
-            Some(&engine_options.stracciatella_home),
-            true,
-        );
-        if home_data_dir.exists() {
-            let layer = self.add_dir(&home_data_dir)?;
+        if let Some(layer) = self.add_home_data_dir(engine_options)? {
             // home data dir can include slf files
             self.add_slf_files_from(layer, false)?;
         }
 
         // Add mod directories
         for mod_id in engine_options.mods.iter().rev() {
-            let mod_path = mod_manager
+            let m = mod_manager
                 .get_mod_by_id(mod_id)
-                .map(|m| m.path())
                 .ok_or_else(|| VfsInitError {
                     path: mod_id.into(),
                     error: ErrorKind::NotFound.into(),
                 })?;
-            let mod_path = mod_path.join(DATA_DIR);
-
-            match mod_path {
-                ModPath::Path(p) => {
-                    let p = fs::resolve_existing_components(&p, None, true);
-                    let layer = self.add_dir(&p)?;
-                    self.add_slf_files_from(layer, false)?;
-                }
-                #[cfg(target_os = "android")]
-                ModPath::AndroidAssetPath(p) => {
-                    let layer = android::AssetManagerFs::new(&p).map_err(|e| VfsInitError {
-                        path: p.into(),
-                        error: e,
-                    })?;
-                    self.entries.push(layer.clone());
-                    self.add_slf_files_from(layer, false)?;
-                }
-            }
+            self.add_mod_data_dir(m.path())?;
         }
 
         // Next is externalized data dir (required)
-        #[cfg(not(target_os = "android"))]
-        let externalized_layer = {
-            let externalized_dir = fs::resolve_existing_components(
-                Path::new(EXTERNALIZED_DIR),
-                Some(&engine_options.assets_dir),
-                true,
-            );
-            self.add_dir(&externalized_dir)
-        }?;
-        // On android the externalized dir comes from APK assets
-        #[cfg(target_os = "android")]
-        let externalized_layer = self.add_android_assets(&Path::new(EXTERNALIZED_DIR))?;
+        let externalized_layer = self.add_externalized_dir(engine_options)?;
 
         // Next is vanilla data dir (required)
         let data_dir_layer = self.add_dir(&vanilla_data_dir)?;
@@ -311,6 +342,15 @@ impl Vfs {
 
     /// Opens a json file and applies optional patches on higher priority VFS layers
     pub fn read_patched_json(&self, path: &Nfc) -> io::Result<Value> {
+        self.read_patched_json_skipping_patches_in(path, &[])
+    }
+
+    /// Like `read_patched_json`, but ignores the patches in the given layers
+    pub fn read_patched_json_skipping_patches_in(
+        &self,
+        path: &Nfc,
+        skipped_patch_layers: &[usize],
+    ) -> io::Result<Value> {
         if path
             .as_str()
             .rsplit('.')
@@ -347,7 +387,7 @@ impl Vfs {
         // Order patches from lowest to highest priority
         for patch_layer in patch_layers.iter().rev() {
             // Ignore patches with lower priority than the highest priority layer
-            if patch_layer > highest_prio_file_layer {
+            if patch_layer > highest_prio_file_layer || skipped_patch_layers.contains(patch_layer) {
                 continue;
             }
 
