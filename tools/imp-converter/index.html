@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I.M.P. Profile Converter</title>
+<!-- The little "sir" of the title bar. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='1' y='1' width='30' height='30' fill='%23111' stroke='%23fff' stroke-width='2'/><text x='16' y='21' text-anchor='middle' font-family='Times New Roman,serif' font-weight='700' font-size='15' fill='%23dd3322'>sir</text></svg>">
+<link rel="stylesheet" href="./src/ui/style.css">
+</head>
+<body>
+<div class="window" role="application" aria-label="I.M.P. Profile Converter">
+  <div class="titlebar">
+    <span class="glyph">sir</span>
+    <span>I.M.P. Profile Converter</span>
+    <span class="grow"></span>
+    <button class="btn x" type="button" aria-label="Close" disabled>✕</button>
+  </div>
+
+  <div class="body">
+    <section class="panel marble" aria-label="Profiles">
+      <h2>Profiles</h2>
+      <label class="drop" id="drop" tabindex="0">
+        <img id="iconOpen" alt="">
+        <b>Drop mercprofile files</b>
+        <small>or click to browse · binary or .json<br>drop Data/FACES.SLF here to see portraits</small>
+        <input id="file" type="file" multiple hidden>
+      </label>
+      <div class="list inset" id="list" role="listbox" aria-label="Mercs"><div class="empty">The converter hasn't started.<br>This is its source page: open <b>dist/imp-converter.html</b> after <code>npm run build</code>, or use <code>npm run dev</code>.</div></div>
+    </section>
+
+    <section class="panel marble" aria-live="polite" id="detail"></section>
+  </div>
+
+  <div class="statusbar">
+    <span id="count"></span>
+    <span class="grow"></span>
+    <label class="btn" title="Show the portraits from your game's Data/FACES.SLF. It is read here and never uploaded."><span id="facesState">Portraits…</span><input id="faces" type="file" accept=".slf,.SLF" hidden></label>
+    <span class="mode" id="mode">…</span>
+    <button class="btn" type="button" id="saveAll" disabled><img class="iconSave" alt="">Save all</button>
+  </div>
+</div>
+<script type="module" src="./src/ui/main.ts"></script>
+</body>
+</html>
